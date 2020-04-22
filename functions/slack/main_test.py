@@ -13,7 +13,7 @@
 
 import json
 
-import apiclient
+import googleapiclient
 import mock
 import os
 import pytest
@@ -25,27 +25,36 @@ with open('config.json', 'r') as f:
 config = json.loads(data)
 
 
-kg_search = apiclient.discovery.build('kgsearch', 'v1',
+kg_search = googleapiclient.discovery.build('kgsearch', 'v1',
                                       developerKey=os.environ['API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
 class Request(object):
-    def __init__(self):
-        pass
+    def __init__(self, data=b''):
+        self.data = data
+
+    def get_data(self):
+        return self.data
 
 
 class TestGCFPySlackSample(object):
-    def test_verify_web_hook_request_form_empty(self):
+    def test_verify_signature_request_form_empty(self):
         with pytest.raises(ValueError):
-            main.verify_web_hook({})
+            request = Request()
+            request.headers = {}
+            main.verify_signature(request)
 
-    def test_verify_web_hook_token_incorrect(self):
+    def test_verify_signature_token_incorrect(self):
         with pytest.raises(ValueError):
-            main.verify_web_hook({'token': 123})
+            request = Request()
+            request.headers = {'X-Slack-Signature': '12345'}
+            main.verify_signature(request)
 
     def test_verify_web_hook_valid_request(self):
-        main.verify_web_hook({'token': config['SLACK_TOKEN']})
+        request = Request()
+        request.headers = {'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']}
+        main.verify_signature(request)
 
     def test_format_slack_message(self):
         message = main.format_slack_message('lion', example_response)
@@ -72,8 +81,10 @@ class TestGCFPySlackSample(object):
             search.execute.return_value = example_response
             request = Request()
             request.method = 'POST'
+            request.headers = {
+                'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']
+            }
             request.form = {
-                'token': config['SLACK_TOKEN'],
                 'text': 'lion'
             }
 

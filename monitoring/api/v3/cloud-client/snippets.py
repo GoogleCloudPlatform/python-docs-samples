@@ -15,14 +15,13 @@
 import argparse
 import os
 import pprint
-import random
 import time
+import uuid
 
 from google.cloud import monitoring_v3
 
 
-# Avoid collisions with other runs
-RANDOM_SUFFIX = str(random.randint(1000, 9999))
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 
 def create_metric_descriptor(project_id):
@@ -30,7 +29,7 @@ def create_metric_descriptor(project_id):
     client = monitoring_v3.MetricServiceClient()
     project_name = client.project_path(project_id)
     descriptor = monitoring_v3.types.MetricDescriptor()
-    descriptor.type = 'custom.googleapis.com/my_metric' + RANDOM_SUFFIX
+    descriptor.type = 'custom.googleapis.com/my_metric' + str(uuid.uuid4())
     descriptor.metric_kind = (
         monitoring_v3.enums.MetricDescriptor.MetricKind.GAUGE)
     descriptor.value_type = (
@@ -55,7 +54,7 @@ def write_time_series(project_id):
     project_name = client.project_path(project_id)
 
     series = monitoring_v3.types.TimeSeries()
-    series.metric.type = 'custom.googleapis.com/my_metric' + RANDOM_SUFFIX
+    series.metric.type = 'custom.googleapis.com/my_metric' + str(uuid.uuid4())
     series.resource.type = 'gce_instance'
     series.resource.labels['instance_id'] = '1234567890123456789'
     series.resource.labels['zone'] = 'us-central1-f'
@@ -205,29 +204,6 @@ def get_metric_descriptor(metric_name):
     # [END monitoring_get_descriptor]
 
 
-class MissingProjectIdError(Exception):
-    pass
-
-
-def project_id():
-    """Retreives the project id from the environment variable.
-
-    Raises:
-        MissingProjectIdError -- When not set.
-
-    Returns:
-        str -- the project name
-    """
-    project_id = (os.environ['GOOGLE_CLOUD_PROJECT'] or
-                  os.environ['GCLOUD_PROJECT'])
-
-    if not project_id:
-        raise MissingProjectIdError(
-            'Set the environment variable ' +
-            'GCLOUD_PROJECT to your Google Cloud Project Id.')
-    return project_id
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Demonstrates Monitoring API operations.')
@@ -310,25 +286,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'create-metric-descriptor':
-        create_metric_descriptor(project_id())
+        create_metric_descriptor(PROJECT_ID)
     if args.command == 'list-metric-descriptors':
-        list_metric_descriptors(project_id())
+        list_metric_descriptors(PROJECT_ID)
     if args.command == 'get-metric-descriptor':
         get_metric_descriptor(args.metric_type_name)
     if args.command == 'delete-metric-descriptor':
         delete_metric_descriptor(args.metric_descriptor_name)
     if args.command == 'list-resources':
-        list_monitored_resources(project_id())
+        list_monitored_resources(PROJECT_ID)
     if args.command == 'get-resource':
         get_monitored_resource_descriptor(
-            project_id(), args.resource_type_name)
+            PROJECT_ID, args.resource_type_name)
     if args.command == 'write-time-series':
-        write_time_series(project_id())
+        write_time_series(PROJECT_ID)
     if args.command == 'list-time-series':
-        list_time_series(project_id())
+        list_time_series(PROJECT_ID)
     if args.command == 'list-time-series-header':
-        list_time_series_header(project_id())
+        list_time_series_header(PROJECT_ID)
     if args.command == 'list-time-series-reduce':
-        list_time_series_reduce(project_id())
+        list_time_series_reduce(PROJECT_ID)
     if args.command == 'list-time-series-aggregate':
-        list_time_series_aggregate(project_id())
+        list_time_series_aggregate(PROJECT_ID)

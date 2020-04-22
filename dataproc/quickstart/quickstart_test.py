@@ -29,10 +29,10 @@ STAGING_BUCKET = 'py-dataproc-qs-bucket-{}'.format(str(uuid.uuid4()))
 JOB_FILE_NAME = 'sum.py'
 JOB_FILE_PATH = 'gs://{}/{}'.format(STAGING_BUCKET, JOB_FILE_NAME)
 SORT_CODE = (
-  "import pyspark\n"
-  "sc = pyspark.SparkContext()\n"
-  "rdd = sc.parallelize((1,2,3,4,5))\n"
-  "sum = rdd.reduce(lambda x, y: x + y)\n"
+    "import pyspark\n"
+    "sc = pyspark.SparkContext()\n"
+    "rdd = sc.parallelize((1,2,3,4,5))\n"
+    "sum = rdd.reduce(lambda x, y: x + y)\n"
 )
 
 
@@ -58,12 +58,13 @@ def setup_teardown():
             cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
     blob.delete()
+    bucket.delete()
 
 
 def test_quickstart(capsys):
     quickstart.quickstart(PROJECT_ID, REGION, CLUSTER_NAME, JOB_FILE_PATH)
-
     out, _ = capsys.readouterr()
+
     assert 'Cluster created successfully' in out
     assert 'Submitted job' in out
     assert 'finished with state DONE:' in out

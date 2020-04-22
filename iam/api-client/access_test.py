@@ -14,7 +14,10 @@
 
 import os
 import pytest
-import random
+import uuid
+
+from googleapiclient import errors
+from retrying import retry
 
 import access
 import service_accounts
@@ -26,11 +29,16 @@ GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 GCP_ROLE = "roles/owner"
 
 
+def retry_if_conflict(exception):
+    return (isinstance(exception, errors.HttpError)
+            and 'There were concurrent policy changes' in str(exception))
+
+
 @pytest.fixture(scope="module")
 def test_member():
     # section to create service account to test policy updates.
-    rand = str(random.randint(0, 1000))
-    name = "python-test-" + rand
+    # we use the first portion of uuid4 because full version is too long.
+    name = "python-test-" + str(uuid.uuid4()).split('-')[0]
     email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
     member = "serviceAccount:" + email
     service_accounts.create_service_account(
@@ -50,24 +58,36 @@ def test_get_policy(capsys):
 
 
 def test_modify_policy_add_role(test_member, capsys):
-    policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
-    out, _ = capsys.readouterr()
-    assert u"etag" in out
+    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
+           stop_max_attempt_number=5, retry_on_exception=retry_if_conflict)
+    def test_call():
+        policy = access.get_policy(GCLOUD_PROJECT, version=3)
+        access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
+        out, _ = capsys.readouterr()
+        assert u"etag" in out
+    test_call()
 
 
 def test_modify_policy_remove_member(test_member, capsys):
-    policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    access.modify_policy_remove_member(policy, GCP_ROLE, test_member)
-    out, _ = capsys.readouterr()
-    assert "iam.gserviceaccount.com" in out
+    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
+           stop_max_attempt_number=5, retry_on_exception=retry_if_conflict)
+    def test_call():
+        policy = access.get_policy(GCLOUD_PROJECT, version=3)
+        access.modify_policy_remove_member(policy, GCP_ROLE, test_member)
+        out, _ = capsys.readouterr()
+        assert "iam.gserviceaccount.com" in out
+    test_call()
 
 
 def test_set_policy(capsys):
-    policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    access.set_policy(GCLOUD_PROJECT, policy)
-    out, _ = capsys.readouterr()
-    assert u"etag" in out
+    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
+           stop_max_attempt_number=5, retry_on_exception=retry_if_conflict)
+    def test_call():
+        policy = access.get_policy(GCLOUD_PROJECT, version=3)
+        access.set_policy(GCLOUD_PROJECT, policy)
+        out, _ = capsys.readouterr()
+        assert u"etag" in out
+    test_call()
 
 
 def test_permissions(capsys):

@@ -16,6 +16,7 @@ import os
 
 import mock
 import pytest
+from gcp_devrel.testing import eventually_consistent
 
 import quickstart
 
@@ -36,6 +37,8 @@ def mock_project_path():
 
 
 def test_quickstart(capsys, mock_project_path):
-    quickstart.run_quickstart()
-    out, _ = capsys.readouterr()
-    assert 'wrote' in out
+    @eventually_consistent.call
+    def _():
+        quickstart.run_quickstart()
+        out, _ = capsys.readouterr()
+        assert 'wrote' in out

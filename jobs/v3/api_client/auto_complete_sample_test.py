@@ -12,19 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+import re
 
-def test_auto_complete_sample(capsys):
-    import auto_complete_sample
-    import re
+from gcp_devrel.testing import eventually_consistent
 
-    auto_complete_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = (
-        '.*completionResults.*'
-        'suggestion.*Google.*type.*COMPANY_NAME.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-    )
-    assert re.search(expected, out)
+import auto_complete_sample
+
+
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = auto_complete_sample.set_up()
+    yield company_name
+    auto_complete_sample.tear_down(company_name, job_name)
+
+
+def test_auto_complete_sample(company_name, capsys):
+    @eventually_consistent.call
+    def _():
+        auto_complete_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        expected = (
+            '.*completionResults.*'
+            'suggestion.*Google.*type.*COMPANY_NAME.*\n'
+            '.*completionResults.*'
+            'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
+            '.*completionResults.*'
+            'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
+        )
+        assert re.search(expected, out)

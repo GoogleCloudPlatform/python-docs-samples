@@ -14,12 +14,13 @@
 from __future__ import absolute_import
 
 import os
+import uuid
 
 from detect_intent_with_texttospeech_response import \
     detect_intent_with_texttospeech_response
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_{}'.format(uuid.uuid4())
 TEXTS = ["hello"]
 
 

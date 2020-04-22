@@ -68,7 +68,10 @@ def create_inspect_template(
         "limits": {"max_findings_per_request": max_findings},
     }
 
-    inspect_template = {"inspect_config": inspect_config, "display_name": display_name}
+    inspect_template = {
+        "inspect_config": inspect_config,
+        "display_name": display_name,
+    }
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -114,12 +117,18 @@ def list_inspect_templates(project):
         print("Template {}:".format(template.name))
         if template.display_name:
             print("  Display Name: {}".format(template.display_name))
-        print("  Created: {}".format(human_readable_time(template.create_time)))
-        print("  Updated: {}".format(human_readable_time(template.update_time)))
+        print(
+            "  Created: {}".format(human_readable_time(template.create_time))
+        )
+        print(
+            "  Updated: {}".format(human_readable_time(template.update_time))
+        )
 
         config = template.inspect_config
         print(
-            "  InfoTypes: {}".format(", ".join([it.name for it in config.info_types]))
+            "  InfoTypes: {}".format(
+                ", ".join([it.name for it in config.info_types])
+            )
         )
         print("  Minimum likelihood: {}".format(config.min_likelihood))
         print("  Include quotes: {}".format(config.include_quote))
@@ -176,7 +185,8 @@ if __name__ == "__main__":
     parser_create = subparsers.add_parser("create", help="Create a template.")
     parser_create.add_argument(
         "--template_id",
-        help="The id of the template. If omitted, an id will be randomly " "generated",
+        help="The id of the template. If omitted, an id will be randomly "
+        "generated",
     )
     parser_create.add_argument(
         "--display_name", help="The optional display name of the template."
@@ -229,7 +239,9 @@ if __name__ == "__main__":
     )
 
     parser_delete = subparsers.add_parser("delete", help="Delete a template.")
-    parser_delete.add_argument("template_id", help="The id of the template to delete.")
+    parser_delete.add_argument(
+        "template_id", help="The id of the template to delete."
+    )
     parser_delete.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",

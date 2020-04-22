@@ -14,7 +14,7 @@
 
 """Test script for Identity-Aware Proxy code samples."""
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 
 import make_iap_request
 import validate_jwt

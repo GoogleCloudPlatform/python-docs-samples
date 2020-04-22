@@ -14,6 +14,7 @@
 
 import flask
 import pytest
+import os
 
 import main
 
@@ -22,6 +23,41 @@ import main
 @pytest.fixture(scope="module")
 def app():
     return flask.Flask(__name__)
+
+
+def test_parse_xml(app):
+    with app.test_request_context(method='GET', data="<baz>foo</baz>"):
+        res = main.parse_xml(flask.request)
+        assert res == "{\n  \"baz\": \"foo\"\n}"
+
+
+def test_parse_multipart_data(app, capsys):
+    with app.test_request_context(method='POST', data={'foo': 'bar'}):
+        res = main.parse_multipart(flask.request)
+        out, _ = capsys.readouterr()
+        assert res == 'Done!'
+        assert out == 'Processed field: foo\n'
+
+
+def test_parse_multipart_files(app, capsys):
+    with open(__file__, 'rb') as file:
+        with app.test_request_context(method='POST', data={'test.py': file}):
+            res = main.parse_multipart(flask.request)
+            out, _ = capsys.readouterr()
+            assert res == 'Done!'
+            assert out == 'Processed file: test.py\n'
+
+
+def test_get_signed_url(app, capsys):
+    json = {
+        'bucket': os.getenv('GCLOUD_PROJECT'),
+        'filename': 'test.txt',
+        'contentType': 'text/plain'
+    }
+
+    with app.test_request_context(method='POST', json=json):
+        url = main.get_signed_url(flask.request)
+        assert 'https://storage.googleapis.com/' in url
 
 
 def test_cors_enabled_function_preflight(app):

@@ -25,7 +25,7 @@ BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 
 @pytest.fixture(scope="function")
-def create_dataset():
+def dataset_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
     display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -39,8 +39,8 @@ def create_dataset():
     yield dataset_id
 
 
-def test_delete_dataset(capsys, create_dataset):
+def test_delete_dataset(capsys, dataset_id):
     # delete dataset
-    delete_dataset.delete_dataset(PROJECT_ID, create_dataset)
+    delete_dataset.delete_dataset(PROJECT_ID, dataset_id)
     out, _ = capsys.readouterr()
     assert "Dataset deleted." in out

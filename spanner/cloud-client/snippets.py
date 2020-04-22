@@ -1392,6 +1392,49 @@ def query_data_with_timestamp_parameter(instance_id, database_id):
     # [END spanner_query_with_timestamp_parameter]
 
 
+def query_data_with_query_options(instance_id, database_id):
+    """Queries sample data using SQL with query options."""
+    # [START spanner_query_with_query_options]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues',
+            query_options={'optimizer_version': '1'}
+        )
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, LastUpdateTime: {}".format(
+                *row))
+    # [END spanner_query_with_query_options]
+
+
+def create_client_with_query_options(instance_id, database_id):
+    """Create a client with query options."""
+    # [START spanner_create_client_with_query_options]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client(
+        query_options={'optimizer_version': '1'}
+    )
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues'
+        )
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, LastUpdateTime: {}".format(
+                *row))
+    # [END spanner_create_client_with_query_options]
+
+
 if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -1506,6 +1549,12 @@ if __name__ == '__main__':  # noqa: C901
     subparsers.add_parser(
         'query_data_with_timestamp_parameter',
         help=query_data_with_timestamp_parameter.__doc__)
+    subparsers.add_parser(
+        'query_data_with_query_options',
+        help=query_data_with_query_options.__doc__)
+    subparsers.add_parser(
+        'create_client_with_query_options',
+        help=create_client_with_query_options.__doc__)
 
     args = parser.parse_args()
 
@@ -1607,3 +1656,7 @@ if __name__ == '__main__':  # noqa: C901
         query_data_with_string(args.instance_id, args.database_id)
     elif args.command == 'query_data_with_timestamp_parameter':
         query_data_with_timestamp_parameter(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_query_options':
+        query_data_with_query_options(args.instance_id, args.database_id)
+    elif args.command == 'create_client_with_query_options':
+        create_client_with_query_options(args.instance_id, args.database_id)

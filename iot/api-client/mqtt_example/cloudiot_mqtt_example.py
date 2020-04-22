@@ -66,7 +66,7 @@ def create_jwt(project_id, private_key_file, algorithm):
             # The time that the token was issued at
             'iat': datetime.datetime.utcnow(),
             # The time the token expires.
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20),
             # The audience field should always be set to the GCP project id.
             'aud': project_id
     }
@@ -481,6 +481,11 @@ def mqtt_device_demo(args):
 
 def main():
     args = parse_command_line_args()
+
+    if args.command.startswith('gateway'):
+        if (args.gateway_id is None):
+            print('Error: For gateway commands you must specify a gateway ID')
+            return
 
     if args.command == 'gateway_listen':
         listen_for_messages(

@@ -14,11 +14,12 @@
 from __future__ import absolute_import
 
 import os
+import uuid
 
 from detect_intent_texts import detect_intent_texts
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_{}'.format(uuid.uuid4())
 TEXTS = ["hello", "book a meeting room", "Mountain View",
          "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]
 

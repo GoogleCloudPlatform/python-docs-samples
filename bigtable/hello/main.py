@@ -75,7 +75,7 @@ def main(project_id, instance_id, table_id):
         #
         #     https://cloud.google.com/bigtable/docs/schema-design
         row_key = 'greeting{}'.format(i).encode()
-        row = table.row(row_key)
+        row = table.direct_row(row_key)
         row.set_cell(column_family_id,
                      column,
                      value,
