@@ -16,52 +16,81 @@
 
 import os
 
-import manage_dataset
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
+
+import manage_dataset
+import testing_lib
+
 
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = testing_lib.create_dataset(PROJECT_ID)
 
     yield dataset
 
     # tear down
-    manage_dataset.delete_dataset(dataset.name)
+    testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.mark.flaky(max_runs=3)
-def test_create_dataset(capsys):
-    response = manage_dataset.create_dataset(PROJECT_ID)
+@pytest.fixture(scope='module')
+def cleaner():
+    resource_names = []
+
+    yield resource_names
+
+    for resource_name in resource_names:
+        testing_lib.delete_dataset(resource_name)
+
+
+def test_create_dataset(cleaner, capsys):
+
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        return manage_dataset.create_dataset(PROJECT_ID)
+
+    response = run_sample()
+    cleaner.append(response.name)
+
     out, _ = capsys.readouterr()
     assert "The dataset resource name:" in out
 
-    # clean up
-    manage_dataset.delete_dataset(response.name)
 
-
-@pytest.mark.flaky(max_runs=3)
 def test_list_dataset(capsys, dataset):
-    manage_dataset.list_datasets(PROJECT_ID)
+
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        manage_dataset.list_datasets(PROJECT_ID)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert dataset.name in out
 
 
-@pytest.mark.flaky(max_runs=3)
 def test_get_dataset(capsys, dataset):
-    manage_dataset.get_dataset(dataset.name)
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        manage_dataset.get_dataset(dataset.name)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert "The dataset resource name:" in out
 
 
-@pytest.mark.flaky(max_runs=3)
-def test_delete_dataset(capsys):
-    # Creates a dataset.
-    response = manage_dataset.create_dataset(PROJECT_ID)
+def test_delete_dataset(capsys, dataset):
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        manage_dataset.delete_dataset(dataset.name)
 
-    manage_dataset.delete_dataset(response.name)
+    run_sample()
     out, _ = capsys.readouterr()
     assert "Dataset deleted." in out
