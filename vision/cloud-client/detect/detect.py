@@ -836,7 +836,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
         requests=[async_request])
 
     print('Waiting for the operation to finish.')
-    operation.result(timeout=180)
+    operation.result(timeout=300)
 
     # Once the request has completed and the output has been
     # written to GCS, we can list all the output files.

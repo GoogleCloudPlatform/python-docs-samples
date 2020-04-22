@@ -13,14 +13,28 @@
 
 import os
 import re
+import tempfile
 
 from crud_object import main
+import pytest
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_main(capsys):
-    main(BUCKET, __file__)
+@pytest.fixture()
+def test_file():
+    _, file_path = tempfile.mkstemp()
+
+    with open(file_path, "w+b") as f:
+        f.write(b"hello world")
+
+    yield file_path
+
+    os.remove(file_path)
+
+
+def test_main(capsys, test_file):
+    main(BUCKET, test_file)
     out, err = capsys.readouterr()
 
     assert not re.search(r'Downloaded file [!]=', out)

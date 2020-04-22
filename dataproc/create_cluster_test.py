@@ -31,7 +31,7 @@ def teardown():
     yield
 
     cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
+        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
     })
     # Client library function
     operation = cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)

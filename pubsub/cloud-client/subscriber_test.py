@@ -52,7 +52,9 @@ def topic(publisher_client):
 
 @pytest.fixture(scope="module")
 def subscriber_client():
-    yield pubsub_v1.SubscriberClient()
+    subscriber_client = pubsub_v1.SubscriberClient()
+    yield subscriber_client
+    subscriber_client.close()
 
 
 @pytest.fixture(scope="module")
