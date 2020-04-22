@@ -16,100 +16,81 @@
 
 import os
 
-import create_annotation_spec_set
-import create_instruction
-from google.cloud import datalabeling_v1beta1 as datalabeling
-from google.api_core.client_options import ClientOptions
-import import_data
-import label_text
-import manage_dataset
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
+
+import label_text
+import testing_lib
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/input.csv'
+INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
+                       '/instruction/test.pdf')
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = testing_lib.create_dataset(PROJECT_ID)
 
-    # import some data to it
-    import_data.import_data(dataset.name, 'TEXT', INPUT_GCS_URI)
+    testing_lib.import_data(dataset.name, 'TEXT', INPUT_GCS_URI)
 
     yield dataset
 
     # tear down
-    manage_dataset.delete_dataset(dataset.name)
+    testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def annotation_spec_set():
     # create a temporary annotation_spec_set
-    response = create_annotation_spec_set.create_annotation_spec_set(
-        PROJECT_ID)
+    response = testing_lib.create_annotation_spec_set(PROJECT_ID)
 
     yield response
 
-    # tear down
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.delete_annotation_spec_set(response.name)
+    testing_lib.delete_annotation_spec_set(response.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def instruction():
     # create a temporary instruction
-    instruction = create_instruction.create_instruction(
-            PROJECT_ID, 'TEXT',
-            'gs://cloud-samples-data/datalabeling/instruction/test.pdf')
+    instruction = testing_lib.create_instruction(
+        PROJECT_ID, 'IMAGE', INSTRUCTION_GCS_URI)
 
     yield instruction
 
     # tear down
-    client = datalabeling.DataLabelingServiceClient()
+    testing_lib.delete_instruction(instruction.name)
 
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
 
-    client.delete_instruction(instruction.name)
+@pytest.fixture(scope='module')
+def cleaner():
+    resource_names = []
+
+    yield resource_names
+
+    for resource_name in resource_names:
+        testing_lib.cancel_operation(resource_name)
 
 
 # Passing in dataset as the last argument in test_label_image since it needs
 # to be deleted before the annotation_spec_set can be deleted.
-@pytest.mark.slow
-def test_label_text(capsys, annotation_spec_set, instruction, dataset):
+def test_label_text(capsys, annotation_spec_set, instruction, dataset, cleaner):
 
-    # Start labeling.
-    response = label_text.label_text(
-        dataset.name,
-        instruction.name,
-        annotation_spec_set.name
-    )
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        # Start labeling.
+        return label_text.label_text(
+            dataset.name, instruction.name, annotation_spec_set.name)
+
+    response = run_sample()
+    cleaner.append(response.operation.name)
+
     out, _ = capsys.readouterr()
     assert 'Label_text operation name: ' in out
-    operation_name = response.operation.name
 
     # Cancels the labeling operation.
     response.cancel()
     assert response.cancelled() is True
-
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.transport._operations_client.cancel_operation(
-            operation_name)
