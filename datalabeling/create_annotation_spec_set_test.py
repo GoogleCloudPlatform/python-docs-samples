@@ -39,7 +39,8 @@ def cleaner():
 
 def test_create_annotation_spec_set(cleaner, capsys):
 
-    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         return create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
 
