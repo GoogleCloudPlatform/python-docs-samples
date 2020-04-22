@@ -51,7 +51,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
         headers={'Authorization': 'Bearer {}'.format(
             google_open_id_connect_token)}, **kwargs)
     if resp.status_code == 403:
-        raise Exception('Service account {} does not have permission to '
+        raise Exception('Service account does not have permission to '
                         'access the IAP-protected application.')
     elif resp.status_code != 200:
         raise Exception(
