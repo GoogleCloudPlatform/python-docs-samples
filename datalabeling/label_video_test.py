@@ -87,7 +87,7 @@ def test_label_video(
             dataset.name, instruction.name, annotation_spec_set.name)
 
     response = run_sample()
-    cleaner.append(response)
+    cleaner.append(response.operation.name)
 
     out, _ = capsys.readouterr()
     assert 'Label_video operation name: ' in out
