@@ -1,4 +1,4 @@
-# Copyright 2020 Google
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -9,24 +9,18 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
 import os
+import parse_table_beta
 
-import video_detect_logo_beta
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
-
-def test_sample_annotate_video(capsys):
-    local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
-
-    video_detect_logo_beta.sample_annotate_video(local_file_path=local_file_path)
-
+def test_parse_table(capsys):
+    parse_table_beta.parse_table(PROJECT_ID, INPUT_URI)
     out, _ = capsys.readouterr()
-
-    assert "Description" in out
-    assert "Confidence" in out
-    assert "Start Time Offset" in out
-    assert "End Time Offset" in out
+    assert 'Table' in out
+    assert 'Header Row' in out
