@@ -104,7 +104,10 @@ def test_fhir_store():
                 project_id, cloud_region, dataset_id, fhir_store_id
             )
         except HttpError as err:
-            # The API returns 403 when the FHIR store doesn't exist.
+            # The API returns 404 when the FHIR store doesn't exist.
+            # The API returns 403 when the dataset doesn't exist, so
+            # if we try to delete a FHIR store when the parent dataset
+            # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
                 print(
                     "Got exception {} while deleting FHIR store".format(err.resp.status)
@@ -127,7 +130,10 @@ def crud_fhir_store_id():
                 project_id, cloud_region, dataset_id, fhir_store_id
             )
         except HttpError as err:
-            # The API returns 403 when the FHIR store doesn't exist.
+            # The API returns 404 when the FHIR store doesn't exist.
+            # The API returns 403 when the dataset doesn't exist, so
+            # if we try to delete a FHIR store when the parent dataset
+            # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
                 print(
                     "Got exception {} while deleting FHIR store".format(err.resp.status)
