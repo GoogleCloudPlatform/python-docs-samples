@@ -177,8 +177,6 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
     out, _ = capsys.readouterr()
 
-    print(out)
-
     assert "Got Patient resource" in out
 
 
@@ -194,8 +192,6 @@ def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     out, _ = capsys.readouterr()
-
-    print(out)
 
     assert "Updated Patient resource" in out
 
@@ -236,8 +232,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
 
     out, _ = capsys.readouterr()
 
-    print(out)
-
     # list_resource_history test
     assert "History for Patient resource" in out
     # get_resource_history test
@@ -276,7 +270,5 @@ def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     out, _ = capsys.readouterr()
-
-    print(out)
 
     assert "Deleted Patient resource" in out
