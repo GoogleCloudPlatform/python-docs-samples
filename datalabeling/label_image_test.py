@@ -35,6 +35,7 @@ def dataset():
     # create a temporary dataset
     dataset = testing_lib.create_dataset(PROJECT_ID)
 
+    testing_lib.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
     yield dataset
 
     # tear down
