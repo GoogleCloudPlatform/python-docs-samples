@@ -30,7 +30,7 @@ INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
                        '/instruction/test.pdf')
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def dataset():
     # create a temporary dataset
     dataset = testing_lib.create_dataset(PROJECT_ID)
@@ -42,7 +42,7 @@ def dataset():
     testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def annotation_spec_set():
     # create a temporary annotation_spec_set
     response = testing_lib.create_annotation_spec_set(PROJECT_ID)
@@ -52,7 +52,7 @@ def annotation_spec_set():
     testing_lib.delete_annotation_spec_set(response.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def instruction():
     # create a temporary instruction
     instruction = testing_lib.create_instruction(
