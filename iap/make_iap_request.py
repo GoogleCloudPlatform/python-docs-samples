@@ -39,7 +39,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     if 'timeout' not in kwargs:
         kwargs['timeout'] = 90
 
-    # Obtain an OpenID Connect token from metadata server or using service
+    # Obtain an OpenID Connect (OIDC) token from metadata server or using service
     # account.
     google_open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
 
