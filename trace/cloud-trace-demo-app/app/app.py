@@ -80,4 +80,3 @@ if __name__ == "__main__":
     createMiddleWare(StackdriverExporter())
     # [END trace_demo_create_exporter]
     app.run(debug=True, host='0.0.0.0', port=8080)
-    
