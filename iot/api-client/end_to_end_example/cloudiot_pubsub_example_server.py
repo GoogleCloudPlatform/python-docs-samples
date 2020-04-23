@@ -45,7 +45,7 @@ import time
 from google.cloud import pubsub
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 
 
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
@@ -58,8 +58,8 @@ class Server(object):
     """Represents the state of the server."""
 
     def __init__(self, service_account_json):
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            service_account_json, API_SCOPES)
+        credentials = service_account.Credentials.from_service_account_file(
+            service_account_json).with_scopes(API_SCOPES)
         if not credentials:
             sys.exit('Could not load service account credential '
                      'from {}'.format(service_account_json))

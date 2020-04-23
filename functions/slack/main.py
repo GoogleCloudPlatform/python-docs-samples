@@ -17,7 +17,7 @@ import hmac
 import json
 import os
 
-import apiclient
+import googleapiclient
 from flask import jsonify
 
 with open('config.json', 'r') as f:
@@ -25,7 +25,7 @@ with open('config.json', 'r') as f:
 config = json.loads(data)
 
 
-kgsearch = apiclient.discovery.build(
+kgsearch = googleapiclient.discovery.build(
     'kgsearch',
     'v1',
     developerKey=os.environ.get('API_KEY') or config.get('KG_API_KEY'),
