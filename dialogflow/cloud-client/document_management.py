@@ -30,6 +30,7 @@ import argparse
 
 KNOWLEDGE_TYPES = ['KNOWLEDGE_TYPE_UNSPECIFIED', 'FAQ', 'EXTRACTIVE_QA']
 
+
 # [START dialogflow_create_document]]
 def create_document(project_id, knowledge_base_id, display_name, mime_type,
                     knowledge_type, content_uri):
@@ -69,6 +70,7 @@ def create_document(project_id, knowledge_base_id, display_name, mime_type,
         print('    - {}'.format(KNOWLEDGE_TYPES[knowledge_type]))
     print(' - Source: {}\n'.format(document.content_uri))
 # [END dialogflow_create_document]]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
