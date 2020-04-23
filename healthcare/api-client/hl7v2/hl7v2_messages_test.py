@@ -17,7 +17,7 @@ import pytest
 import sys
 import uuid
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
@@ -83,8 +83,9 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_file)
 
     hl7v2_message_id = ""
-    @eventually_consistent.call
-    def _():
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
             service_account_json,
             project_id,
@@ -96,6 +97,8 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_name = hl7v2_messages_list[0].get('name')
         nonlocal hl7v2_message_id
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+
+    eventually_consistent_test()
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -131,8 +134,9 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_file)
 
     hl7v2_message_id = ""
-    @eventually_consistent.call
-    def _():
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
             service_account_json,
             project_id,
@@ -144,6 +148,8 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_name = hl7v2_messages_list[0].get('name')
         nonlocal hl7v2_message_id
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+
+    eventually_consistent_test()
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -179,8 +185,9 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_file)
 
     hl7v2_message_id = ""
-    @eventually_consistent.call
-    def _():
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
             service_account_json,
             project_id,
@@ -192,6 +199,8 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_name = hl7v2_messages_list[0].get('name')
         nonlocal hl7v2_message_id
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+
+    eventually_consistent_test()
 
     hl7v2_messages.patch_hl7v2_message(
         service_account_json,
