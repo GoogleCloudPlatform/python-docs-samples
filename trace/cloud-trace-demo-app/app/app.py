@@ -33,6 +33,7 @@ app = Flask(__name__)
 # [START trace_demo_middleware]
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
+
 def createMiddleWare(exporter):
     # Configure a flask middleware that listens for each request and applies automatic tracing.
     # This needs to be set up before the application starts.
