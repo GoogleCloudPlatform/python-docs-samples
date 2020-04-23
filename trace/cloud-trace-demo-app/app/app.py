@@ -14,13 +14,14 @@
 """
 A sample app demonstrating Stackdriver Trace
 """
-
+# [START trace_demo_imports]
 from flask import Flask
 from opencensus.trace import execution_context
 from opencensus.trace.propagation import google_cloud_format
 from opencensus.trace.samplers import AlwaysOnSampler
 from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+# [END trace_demo_imports]
 
 import requests
 import argparse
@@ -29,6 +30,7 @@ import random
 
 app = Flask(__name__)
 
+# [START trace_demo_middleware]
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
 
@@ -41,6 +43,7 @@ def createMiddleWare(exporter):
         propagator=propagator,
         sampler=AlwaysOnSampler())
     return middleware
+# [END trace_demo_middleware]
 
 
 @app.route('/')
@@ -55,6 +58,7 @@ def template_test():
         return output_string, 200
     # Endpoint is the next service to send string to.
     data = {'body': output_string}
+    # [START trace_context_header]
     trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
     response = requests.get(
         url,
@@ -62,6 +66,7 @@ def template_test():
         headers={
           'X-Cloud-Trace-Context' : trace_context_header}
     )
+    # [END trace_context_header]
     return response.text + app.config['keyword']
 
 
@@ -72,5 +77,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     app.config['keyword'] = args.keyword
     app.config['endpoint'] = args.endpoint
+    # [START trace_demo_create_exporter]
     createMiddleWare(StackdriverExporter())
+    # [END trace_demo_create_exporter]
     app.run(debug=True, host='0.0.0.0', port=8080)
