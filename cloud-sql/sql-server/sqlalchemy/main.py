@@ -69,7 +69,7 @@ db = sqlalchemy.create_engine(
     # new connection from the pool. After the specified amount of time, an
     # exception will be thrown.
     pool_timeout=30,  # 30 seconds
-    # [END cloud_sql_server_sqlalchemy_limit]
+    # [END cloud_sql_server_sqlalchemy_timeout]
     # [START cloud_sql_server_sqlalchemy_lifetime]
     # 'pool_recycle' is the maximum number of seconds a connection can persist.
     # Connections that live longer than the specified amount of time will be
