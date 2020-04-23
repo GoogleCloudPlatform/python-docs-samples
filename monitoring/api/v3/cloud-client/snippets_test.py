@@ -48,7 +48,8 @@ def write_time_series():
 
 def test_get_delete_metric_descriptor(capsys, custom_metric_descriptor):
     try:
-        @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+        @backoff.on_exception(
+            backoff.expo, (AssertionError, NotFound), max_time=60)
         def eventually_consistent_test():
             snippets.get_metric_descriptor(custom_metric_descriptor)
             out, _ = capsys.readouterr()
