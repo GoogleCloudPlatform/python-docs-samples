@@ -27,9 +27,9 @@ import argparse
 def lookup_bigquery_dataset(project_id, dataset_id):
     # [START datacatalog_lookup_dataset]
     """Retrieves Data Catalog entry for the given BigQuery Dataset."""
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}'\
         .format(project_id, dataset_id)
@@ -42,9 +42,9 @@ def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
     """Retrieves Data Catalog entry for the given BigQuery Dataset by
     sql_resource.
     """
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     sql_resource = 'bigquery.dataset.`{}`.`{}`'.format(project_id, dataset_id)
 
@@ -53,9 +53,9 @@ def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
 
 def lookup_bigquery_table(project_id, dataset_id, table_id):
     """Retrieves Data Catalog entry for the given BigQuery Table."""
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}' \
                     '/tables/{}'\
@@ -68,9 +68,9 @@ def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
     """Retrieves Data Catalog entry for the given BigQuery Table by
     sql_resource.
     """
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     sql_resource = 'bigquery.table.`{}`.`{}`.`{}`'.format(
         project_id, dataset_id, table_id)
@@ -80,9 +80,9 @@ def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
 
 def lookup_pubsub_topic(project_id, topic_id):
     """Retrieves Data Catalog entry for the given Pub/Sub Topic."""
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     resource_name = '//pubsub.googleapis.com/projects/{}/topics/{}'\
         .format(project_id, topic_id)
@@ -94,9 +94,9 @@ def lookup_pubsub_topic_sql_resource(project_id, topic_id):
     """Retrieves Data Catalog entry for the given Pub/Sub Topic by
     sql_resource.
     """
-    from google.cloud import datacatalog_v1beta1
+    from google.cloud import datacatalog_v1
 
-    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+    datacatalog = datacatalog_v1.DataCatalogClient()
 
     sql_resource = 'pubsub.topic.`{}`.`{}`'.format(project_id, topic_id)
 
