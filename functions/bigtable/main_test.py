@@ -21,8 +21,8 @@ bigtable.Client = MagicMock()
 
 def test_main():
     import main
-    bigtable_mock = main.bigtable.instance().table().__enter__()
-    bigtable_mock.read_rows.__iter__.return_value = [{
+
+    bigtable_mock = main.table.read_rows.return_value = [{
       "row_key": "phone#1234",
       "stats_summary": {
         "os_build".encode("utf-8"): [
