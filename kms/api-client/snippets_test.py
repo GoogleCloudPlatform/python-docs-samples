@@ -20,12 +20,10 @@ from google.api_core.exceptions import Aborted, GoogleAPICallError
 from google.cloud import kms_v1
 from google.cloud.kms_v1 import enums
 from google.iam.v1.policy_pb2 import Policy
-
+import backoff
 import pytest
 
 import snippets
-
-from gcp_devrel.testing import eventually_consistent
 
 
 def create_key_helper(key_id, purpose, algorithm, t):
@@ -181,6 +179,8 @@ class TestKMSSnippets:
             self.member,
             self.role)
 
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
         def check_policy():
             policy = snippets.get_crypto_key_policy(
                 self.project_id,
@@ -192,8 +192,9 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert found
-        eventually_consistent.call(check_policy,
-                                   exceptions=(Aborted, AssertionError))
+
+        check_policy()
+
         # remove member
         snippets.remove_member_from_crypto_key_policy(
             self.project_id,
@@ -203,7 +204,9 @@ class TestKMSSnippets:
             self.member,
             self.role)
 
-        def check_policy():
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
+        def check_policy_again():
             policy = snippets.get_crypto_key_policy(
                 self.project_id,
                 self.location,
@@ -214,9 +217,8 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert not found
-        eventually_consistent.call(
-            check_policy,
-            exceptions=(Aborted, AssertionError))
+
+        check_policy_again()
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
