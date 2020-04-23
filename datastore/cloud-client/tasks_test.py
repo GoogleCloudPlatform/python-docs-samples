@@ -13,8 +13,7 @@
 
 import os
 
-from gcp_devrel.testing import eventually_consistent
-from flaky import flaky
+import backoff
 from google.cloud import datastore
 import pytest
 
@@ -35,12 +34,12 @@ def client():
             [x.key for x in client.query(kind='Task').fetch()])
 
 
-@flaky
+@pytest.mark.flaky
 def test_create_client():
     tasks.create_client(PROJECT)
 
 
-@flaky
+@pytest.mark.flaky
 def test_add_task(client):
     task_key = tasks.add_task(client, 'Test task')
     task = client.get(task_key)
@@ -48,7 +47,7 @@ def test_add_task(client):
     assert task['description'] == 'Test task'
 
 
-@flaky
+@pytest.mark.flaky
 def test_mark_done(client):
     task_key = tasks.add_task(client, 'Test task')
     tasks.mark_done(client, task_key.id)
@@ -57,35 +56,37 @@ def test_mark_done(client):
     assert task['done']
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_tasks(client):
     task1_key = tasks.add_task(client, 'Test task 1')
     task2_key = tasks.add_task(client, 'Test task 2')
 
-    @eventually_consistent.call
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def _():
         task_list = tasks.list_tasks(client)
         assert [x.key for x in task_list] == [task1_key, task2_key]
 
 
-@flaky
+@pytest.mark.flaky
 def test_delete_task(client):
     task_key = tasks.add_task(client, 'Test task 1')
     tasks.delete_task(client, task_key.id)
     assert client.get(task_key) is None
 
 
-@flaky
+@pytest.mark.flaky
 def test_format_tasks(client):
     task1_key = tasks.add_task(client, 'Test task 1')
     tasks.add_task(client, 'Test task 2')
     tasks.mark_done(client, task1_key.id)
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def run_sample():
         output = tasks.format_tasks(tasks.list_tasks(client))
 
         assert 'Test task 1' in output
         assert 'Test task 2' in output
         assert 'done' in output
         assert 'created' in output
+
+    run_sample()
