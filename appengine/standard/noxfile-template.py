@@ -113,10 +113,23 @@ if _GAE_ROOT is None:
     _GAE_ROOT = tempfile.mkdtemp()
 
 
+def find_download_appengine_sdk_py(filename):
+    """Find a file with the given name upwards."""
+    d = os.getcwd()
+    while d != '/':
+        fullpath = os.path.join(d, filename)
+        if os.path.isfile(fullpath):
+            return fullpath
+        d = os.path.abspath(d + "/../")
+
+
 def _setup_appengine_sdk(session):
     """Installs the App Engine SDK, if needed."""
     session.env["GAE_SDK_PATH"] = os.path.join(_GAE_ROOT, "google_appengine")
-    session.run("gcp-devrel-py-tools", "download-appengine-sdk", _GAE_ROOT)
+    download_appengine_sdk_py = find_download_appengine_sdk_py(
+        'download-appengine-sdk.py')
+    session.install("requests")
+    session.run("python", download_appengine_sdk_py, _GAE_ROOT)
 
 
 @nox.session(python=ALL_VERSIONS)

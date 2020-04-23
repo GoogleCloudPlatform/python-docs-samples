@@ -12,9 +12,9 @@
 # limitations under the License.
 
 import os
-import re
+import uuid
 
-from gcp_devrel.testing.flaky import flaky
+import pytest
 
 from create_instance import main
 
@@ -22,20 +22,19 @@ PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_main(capsys):
+    instance_name = 'test-instance-{}'.format(uuid.uuid4())
     main(
         PROJECT,
         BUCKET,
         'us-central1-f',
-        'test-instance',
+        instance_name,
         wait=False)
 
     out, _ = capsys.readouterr()
 
-    expected_output = re.compile(
-        (r'Instances in project .* and zone us-central1-.* - test-instance'
-         r'.*Deleting instance.*done..$'),
-        re.DOTALL)
-
-    assert re.search(expected_output, out)
+    assert "Instances in project" in out
+    assert "zone us-central1-f" in out
+    assert instance_name in out
+    assert "Deleting instance" in out
