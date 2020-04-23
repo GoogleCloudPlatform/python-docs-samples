@@ -19,8 +19,8 @@ from google.cloud.bigtable.row_set import RowSet
 instance_id = 'testing-instance'
 table_id = 'mobile-time-series'
 
-bigtable = bigtable.Client()
-instance = bigtable.instance(instance_id)
+client = bigtable.Client()
+instance = client.instance(instance_id)
 table = instance.table(table_id)
 
 def bigtable_read_data(request):
