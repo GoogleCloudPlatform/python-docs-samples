@@ -278,6 +278,7 @@ class TestContainerAnalysisSamples:
             'note_name': client.note_path(PROJECT_ID, note_id),
             'resource_uri': self.image_url,
             'vulnerability': {
+                'effective_severity': Severity.CRITICAL,
                 'package_issue': [
                     {
                         'affected_cpe_uri': 'your-uri-here',
