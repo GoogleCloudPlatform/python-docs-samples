@@ -15,7 +15,7 @@
 import os
 import uuid
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 from google.cloud import pubsub_v1
 import pytest
 
@@ -110,19 +110,23 @@ def subscription_async(subscriber_client, topic):
 
 
 def test_list_in_topic(subscription_admin, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         subscriber.list_subscriptions_in_topic(PROJECT, TOPIC)
         out, _ = capsys.readouterr()
         assert subscription_admin in out
 
+    eventually_consistent_test()
+
 
 def test_list_in_project(subscription_admin, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         subscriber.list_subscriptions_in_project(PROJECT)
         out, _ = capsys.readouterr()
         assert subscription_admin in out
+
+    eventually_consistent_test()
 
 
 def test_create(subscriber_client):
@@ -137,9 +141,11 @@ def test_create(subscriber_client):
 
     subscriber.create_subscription(PROJECT, TOPIC, SUBSCRIPTION_ADMIN)
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         assert subscriber_client.get_subscription(subscription_path)
+
+    eventually_consistent_test()
 
 
 def test_create_push(subscriber_client):
@@ -155,9 +161,11 @@ def test_create_push(subscriber_client):
         PROJECT, TOPIC, SUBSCRIPTION_ADMIN, ENDPOINT
     )
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         assert subscriber_client.get_subscription(subscription_path)
+
+    eventually_consistent_test()
 
 
 def test_update(subscriber_client, subscription_admin, capsys):
@@ -170,10 +178,12 @@ def test_update(subscriber_client, subscription_admin, capsys):
 def test_delete(subscriber_client, subscription_admin):
     subscriber.delete_subscription(PROJECT, SUBSCRIPTION_ADMIN)
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         with pytest.raises(Exception):
             subscriber_client.get_subscription(subscription_admin)
+
+    eventually_consistent_test()
 
 
 def _publish_messages(publisher_client, topic):
