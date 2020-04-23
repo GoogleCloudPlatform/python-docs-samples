@@ -1,0 +1,44 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "meta": {
+    "lastUpdated": "2018-03-11T11:22:16Z"
+  },
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "name": [
+          {
+            "family": "Smith",
+            "given": [
+              "Darcy"
+            ]
+          }
+        ],
+        "gender": "female",
+        "address": [
+          {
+            "line": [
+              "123 Main St."
+            ],
+            "city": "Anycity",
+            "state": "CA",
+            "postalCode": "12345"
+          }
+        ]
+      },
+      "request": {
+        "method": "POST",
+	"url": "Patient"
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "url": "Patient/1234567890"
+      }
+    }
+  ]
+}

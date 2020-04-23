@@ -367,7 +367,7 @@ def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
     vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
     filtered_list = []
     for v in vulnerabilities:
-        if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
+        if v.effective_severity == Severity.HIGH or v.effective_severity == Severity.CRITICAL:
             filtered_list.append(v)
     return filtered_list
 # [END containeranalysis_filter_vulnerability_occurrences]

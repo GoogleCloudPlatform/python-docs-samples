@@ -15,7 +15,7 @@
 import os
 
 # Import py.test hooks and fixtures for App Engine
-from gcp_devrel.testing.appengine import (
+from appengine_helper import (
     login,
     pytest_configure,
     pytest_runtest_call,
