@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 from google.cloud import logging
 import pytest
 
 import snippets
+
 
 TEST_LOGGER_NAME = 'example_log'
 
@@ -31,18 +32,20 @@ def example_log():
 
 
 def test_list(example_log, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
         snippets.list_entries(TEST_LOGGER_NAME)
         out, _ = capsys.readouterr()
         assert example_log in out
+
+    eventually_consistent_test()
 
 
 def test_write():
     snippets.write_entry(TEST_LOGGER_NAME)
 
 
-def test_delete(example_log):
-    @eventually_consistent.call
-    def _():
-        snippets.delete_logger(TEST_LOGGER_NAME)
+def test_delete(example_log, capsys):
+    snippets.delete_logger(TEST_LOGGER_NAME)
+    out, _ = capsys.readouterr()
+    assert TEST_LOGGER_NAME in out
