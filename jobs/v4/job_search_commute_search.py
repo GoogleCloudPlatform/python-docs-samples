@@ -14,15 +14,15 @@
 
 # [START job_search_commute_search]
 
-from google.cloud import talent_v4beta1
-from google.cloud.talent_v4beta1 import enums
+from google.cloud import talent
+from google.cloud.talent import enums
 import six
 
 
-def sample_search_jobs(project_id, tenant_id):
+def search_jobs(project_id, tenant_id):
     """Search Jobs using commute distance"""
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
@@ -40,7 +40,7 @@ def sample_search_jobs(project_id, tenant_id):
     seconds = 1800
     travel_duration = {"seconds": seconds}
     latitude = 37.422408
-    longitude = 122.084068
+    longitude = -122.084068
     start_coordinates = {"latitude": latitude, "longitude": longitude}
     commute_filter = {
         "commute_method": commute_method,

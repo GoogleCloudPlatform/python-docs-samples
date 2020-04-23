@@ -14,11 +14,11 @@
 
 # [START job_search_histogram_search]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_search_jobs(project_id, tenant_id, query):
+def search_jobs(project_id, tenant_id, query):
     """
     Search Jobs with histogram queries
 
@@ -28,7 +28,7 @@ def sample_search_jobs(project_id, tenant_id, query):
       https://godoc.org/google.golang.org/genproto/googleapis/cloud/talent/v4beta1#SearchJobsRequest
     """
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'

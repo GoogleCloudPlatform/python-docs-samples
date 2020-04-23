@@ -14,11 +14,11 @@
 
 # [START job_search_batch_update_jobs]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_batch_update_jobs(
+def batch_update_jobs(
     project_id,
     tenant_id,
     job_name_one,
@@ -46,11 +46,11 @@ def sample_batch_update_jobs(
       tenant_id Identifier of the Tenant
     """
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
-    # job_name_one = 'job name, e.g. projects/your-project/tenants/tenant-id/jobs/job-id'
+    # job_name_one = 'job name, projects/your-project/tenants/tenant-id/jobs/job-id'
     # company_name_one = 'Company name, e.g. projects/your-project/companies/company-id'
     # requisition_id_one = 'Job requisition ID, aka Posting ID. Unique per job.'
     # title_one = 'Software Engineer'
@@ -58,7 +58,7 @@ def sample_batch_update_jobs(
     # job_application_url_one = 'https://www.example.org/job-posting/123'
     # address_one = '1600 Amphitheatre Parkway, Mountain View, CA 94043'
     # language_code_one = 'en-US'
-    # job_name_two = 'job name, e.g. projects/your-project/tenants/tenant-id/jobs/job-id'
+    # job_name_two = 'job name, projects/your-project/tenants/tenant-id/jobs/job-id'
     # company_name_two = 'Company name, e.g. projects/your-project/companies/company-id'
     # requisition_id_two = 'Job requisition ID, aka Posting ID. Unique per job.'
     # title_two = 'Quality Assurance'

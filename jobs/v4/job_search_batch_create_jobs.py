@@ -14,11 +14,11 @@
 
 # [START job_search_batch_create_jobs]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_batch_create_jobs(
+def batch_create_jobs(
     project_id,
     tenant_id,
     company_name_one,
@@ -44,7 +44,7 @@ def sample_batch_create_jobs(
       tenant_id Identifier of the Tenant
     """
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'

@@ -14,29 +14,20 @@
 
 # [START job_search_create_job]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_create_job(
-    project_id,
-    tenant_id,
-    company_name,
-    requisition_id,
-    title,
-    description,
-    job_application_url,
-    address_one,
-    address_two,
-    language_code,
+def create_job(
+    project_id, tenant_id, company_id, requisition_id, job_application_url,
 ):
     """Create Job"""
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
-    # company_name = 'Company name, e.g. projects/your-project/companies/company-id'
+    # company_id = 'Company name, e.g. projects/your-project/companies/company-id'
     # requisition_id = 'Job requisition ID, aka Posting ID. Unique per job.'
     # title = 'Software Engineer'
     # description = 'This is a description of this <i>wonderful</i> job!'
@@ -49,34 +40,27 @@ def sample_create_job(
         project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(company_name, six.binary_type):
-        company_name = company_name.decode("utf-8")
+    if isinstance(company_id, six.binary_type):
+        company_id = company_id.decode("utf-8")
     if isinstance(requisition_id, six.binary_type):
         requisition_id = requisition_id.decode("utf-8")
-    if isinstance(title, six.binary_type):
-        title = title.decode("utf-8")
-    if isinstance(description, six.binary_type):
-        description = description.decode("utf-8")
     if isinstance(job_application_url, six.binary_type):
         job_application_url = job_application_url.decode("utf-8")
-    if isinstance(address_one, six.binary_type):
-        address_one = address_one.decode("utf-8")
-    if isinstance(address_two, six.binary_type):
-        address_two = address_two.decode("utf-8")
-    if isinstance(language_code, six.binary_type):
-        language_code = language_code.decode("utf-8")
     parent = client.tenant_path(project_id, tenant_id)
     uris = [job_application_url]
     application_info = {"uris": uris}
-    addresses = [address_one, address_two]
+    addresses = [
+        "1600 Amphitheatre Parkway, Mountain View, CA 94043",
+        "111 8th Avenue, New York, NY 10011",
+    ]
     job = {
-        "company": company_name,
+        "company": company_id,
         "requisition_id": requisition_id,
-        "title": title,
-        "description": description,
+        "title": "Software Developer",
+        "description": "Develop, maintain the software solutions.",
         "application_info": application_info,
         "addresses": addresses,
-        "language_code": language_code,
+        "language_code": "en-US",
     }
 
     response = client.create_job(parent, job)

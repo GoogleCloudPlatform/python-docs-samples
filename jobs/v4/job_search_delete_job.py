@@ -14,14 +14,14 @@
 
 # [START job_search_delete_job]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_delete_job(project_id, tenant_id, job_id):
+def delete_job(project_id, tenant_id, job_id):
     """Delete Job"""
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'

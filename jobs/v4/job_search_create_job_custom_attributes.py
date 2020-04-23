@@ -14,20 +14,18 @@
 
 # [START job_search_create_job_custom_attributes]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_create_job(
-    project_id, tenant_id, company_name, requisition_id, language_code
-):
+def create_job(project_id, tenant_id, company_id, requisition_id):
     """Create Job with Custom Attributes"""
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
-    # company_name = 'Company name, e.g. projects/your-project/companies/company-id'
+    # company_id = 'Company name, e.g. projects/your-project/companies/company-id'
     # requisition_id = 'Job requisition ID, aka Posting ID. Unique per job.'
     # language_code = 'en-US'
 
@@ -35,17 +33,26 @@ def sample_create_job(
         project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(company_name, six.binary_type):
-        company_name = company_name.decode("utf-8")
-    if isinstance(requisition_id, six.binary_type):
-        requisition_id = requisition_id.decode("utf-8")
-    if isinstance(language_code, six.binary_type):
-        language_code = language_code.decode("utf-8")
+    if isinstance(company_id, six.binary_type):
+        company_id = company_id.decode("utf-8")
+
+    # Custom attribute can be string or numeric value,
+    # and can be filtered in search queries.
+    # https://cloud.google.com/talent-solution/job-search/docs/custom-attributes
+    custom_attribute = talent.types.CustomAttribute()
+    custom_attribute.filterable = True
+    custom_attribute.string_values.append("Intern")
+    custom_attribute.string_values.append("Apprenticeship")
+
     parent = client.tenant_path(project_id, tenant_id)
+
     job = {
-        "company": company_name,
+        "company": company_id,
+        "title": "Software Engineer",
         "requisition_id": requisition_id,
-        "language_code": language_code,
+        "description": "This is a description of this job",
+        "language_code": "en-US",
+        "custom_attributes": {"FOR_STUDENTS": custom_attribute},
     }
 
     response = client.create_job(parent, job)

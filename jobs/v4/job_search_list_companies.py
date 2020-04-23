@@ -14,14 +14,14 @@
 
 # [START job_search_list_companies]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_list_companies(project_id, tenant_id):
+def list_companies(project_id, tenant_id):
     """List Companies"""
 
-    client = talent_v4beta1.CompanyServiceClient()
+    client = talent.CompanyServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'

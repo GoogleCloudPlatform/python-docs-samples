@@ -14,14 +14,14 @@
 
 # [START job_search_create_tenant]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_create_tenant(project_id, external_id):
+def create_tenant(project_id, external_id):
     """Create Tenant for scoping resources, e.g. companies and jobs"""
 
-    client = talent_v4beta1.TenantServiceClient()
+    client = talent.TenantServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # external_id = 'Your Unique Identifier for Tenant'

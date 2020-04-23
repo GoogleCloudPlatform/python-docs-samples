@@ -14,14 +14,14 @@
 
 # [START job_search_get_job]
 
-from google.cloud import talent_v4beta1
+from google.cloud import talent
 import six
 
 
-def sample_get_job(project_id, tenant_id, job_id):
+def get_job(project_id, tenant_id, job_id):
     """Get Job"""
 
-    client = talent_v4beta1.JobServiceClient()
+    client = talent.JobServiceClient()
 
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'

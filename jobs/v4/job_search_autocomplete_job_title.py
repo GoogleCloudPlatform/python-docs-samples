@@ -15,11 +15,11 @@
 # [START job_search_autocomplete_job_title]
 
 from google.cloud import talent_v4beta1
-from google.cloud.talent_v4beta1 import enums
+from google.cloud.talent import enums
 import six
 
 
-def sample_complete_query(project_id, tenant_id, query, num_results, language_code):
+def complete_query(project_id, tenant_id, query):
     """Complete job title given partial text (autocomplete)"""
 
     client = talent_v4beta1.CompletionClient()
@@ -27,8 +27,6 @@ def sample_complete_query(project_id, tenant_id, query, num_results, language_co
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # query = '[partially typed job title]'
-    # num_results = 5
-    # language_code = 'en-US'
 
     if isinstance(project_id, six.binary_type):
         project_id = project_id.decode("utf-8")
@@ -37,13 +35,13 @@ def sample_complete_query(project_id, tenant_id, query, num_results, language_co
     if isinstance(query, six.binary_type):
         query = query.decode("utf-8")
 
-    if isinstance(language_code, six.binary_type):
-        language_code = language_code.decode("utf-8")
     parent = client.tenant_path(project_id, tenant_id)
-    language_codes = [language_code]
 
     response = client.complete_query(
-        parent, query, num_results, language_codes=language_codes
+        parent,
+        query,
+        page_size=5,  # limit for number of results
+        language_codes=["en-US"],  # language code
     )
     for result in response.completion_results:
         print("Suggested title: {}".format(result.suggestion))
