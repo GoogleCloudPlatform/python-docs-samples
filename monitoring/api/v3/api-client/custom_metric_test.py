@@ -27,6 +27,7 @@ import time
 import backoff
 import googleapiclient.discovery
 import pytest
+from googleapiclient.errors import HttpError
 
 from custom_metric import create_custom_metric
 from custom_metric import delete_metric_descriptor
@@ -52,7 +53,6 @@ def client():
     return googleapiclient.discovery.build('monitoring', 'v3')
 
 
-@pytest.mark.flaky
 def test_custom_metric(client):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     # Use a constant seed so psuedo random number is known ahead of time
@@ -69,12 +69,16 @@ def test_custom_metric(client):
             client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
 
         # wait until metric has been created, use the get call to wait until
-        # a response comes back with the new metric
+        # a response comes back with the new metric with 10 retries.
         custom_metric = None
-        while not custom_metric:
+        retry_count = 0
+        while not custom_metric and retry_count < 10:
             time.sleep(1)
+            retry_count += 1
             custom_metric = get_custom_metric(
                 client, PROJECT_RESOURCE, METRIC_RESOURCE)
+        # Make sure we get the custom metric
+        assert custom_metric
 
         write_timeseries_value(client, PROJECT_RESOURCE,
                                METRIC_RESOURCE, INSTANCE_ID,
@@ -82,10 +86,13 @@ def test_custom_metric(client):
 
         # Sometimes on new metric descriptors, writes have a delay in being
         # read back. Use eventually_consistent to account for this.
-        @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+        @backoff.on_exception(
+            backoff.expo, (AssertionError, HttpError), max_time=120)
         def eventually_consistent_test():
             response = read_timeseries(
                 client, PROJECT_RESOURCE, METRIC_RESOURCE)
+            # Make sure the value is not empty.
+            assert 'timeSeries' in response
             value = int(
                 response['timeSeries'][0]['points'][0]['value']['int64Value'])
             # using seed of 1 will create a value of 1
