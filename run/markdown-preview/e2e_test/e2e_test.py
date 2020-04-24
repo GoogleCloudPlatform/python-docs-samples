@@ -26,7 +26,7 @@ def services():
 
     # Build and Deploy Cloud Run Services
     subprocess.run(
-        ["gcloud", "builds", "submit", "--config", 
+        ["gcloud", "builds", "submit", "--config",
          "e2e_test/test_setup.yaml", "--quiet"]
     )
 
