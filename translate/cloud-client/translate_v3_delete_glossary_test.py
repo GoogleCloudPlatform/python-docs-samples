@@ -21,6 +21,7 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_delete_glossary(capsys):
     # setup
     glossary_id = "test-{}".format(uuid.uuid4())

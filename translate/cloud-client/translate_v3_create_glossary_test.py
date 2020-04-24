@@ -21,18 +21,21 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
-    glossary_id = "test-{}".format(uuid.uuid4())
-    translate_v3_create_glossary.create_glossary(
-        PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
-    )
-    out, _ = capsys.readouterr()
-    # assert
-    assert "Created:" in out
-    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
-
-    # clean up after use
     try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+        glossary_id = "test-{}".format(uuid.uuid4())
+        translate_v3_create_glossary.create_glossary(
+            PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
+        )
+        out, _ = capsys.readouterr()
+        # assert
+        assert "Created:" in out
+        assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
+    finally:
+        # clean up after use
+        try:
+            translate_v3_delete_glossary.delete_glossary(
+                PROJECT_ID, glossary_id)
+        except Exception:
+            pass
