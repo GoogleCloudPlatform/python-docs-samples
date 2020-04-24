@@ -26,7 +26,7 @@ endpoints:
 backend:
   rules:
     - selector: "*"
-      address: grpc://grpc-bookstore.default.svc.cluster.local
+      address: grpc://GRPC_SERVICE.default.svc.cluster.local
       disable_auth: true
 
 #
