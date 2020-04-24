@@ -21,13 +21,10 @@ import os
 
 @pytest.fixture()
 def services():
-    # Change into parent directory to access renderer and editor directories
-    os.chdir("..")
-
     # Build and Deploy Cloud Run Services
     subprocess.run(
         ["gcloud", "builds", "submit", "--config",
-         "e2e_test/test_setup.yaml", "--quiet"]
+         "e2e_test_setup.yaml", "--quiet"]
     )
 
     # Get the URL for the editor and the token
