@@ -18,27 +18,28 @@
 # the Python client library and a json configuration.
 
 # [START dataproc_create_cluster]
-
 import google.cloud.dataproc_v1beta2.proto.clusters_pb2 as clusters
 import google.protobuf.json_format as json_format
 from google.cloud import dataproc_v1beta2
+from jinja2 import Template
 
 
-def create_cluster(cluster_json_path, region):
-    '''
+def create_cluster(cluster_json_path, cluster_name, region):
+    """
     This function takes an external JSON with cluster
     configuration and creates the cluster.
     :param project_id: project id of the service account
     :param region: region where needs to be created
     :return: returns the cluster client instance
-    '''
+    """
     cluster_client = dataproc_v1beta2.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # The JOSN is created under the clusterconfig folder
+    # The json is created under the cluster config folder
     with open(cluster_json_path, 'r') as f:
-        cluster_json = f.read()
+        cluster_json_template = Template(f.read())
+        cluster_json = cluster_json_template.render(cluster_name=cluster_name)
         cluster_config = json_format.Parse(cluster_json, clusters.Cluster())
 
     project_id = cluster_config.project_id

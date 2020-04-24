@@ -18,6 +18,7 @@
 # the Python client library and a json configuration.
 
 import os
+import uuid
 
 import pytest
 from google.cloud import dataproc_v1 as dataproc
@@ -26,7 +27,7 @@ from dataproc import create_cluster_json
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 REGION = 'us-central1'
-CLUSTER_NAME = 'my-cluster'
+CLUSTER_NAME = 'py-cc-test-{}'.format(str(uuid.uuid4()))
 CLUSTER_JSON_PATH='..\\clusterconfig\\dataproc-cluster.json'
 
 
@@ -45,7 +46,7 @@ def teardown():
 
 def test_cluster_create(capsys):
     # Wrapper function for client library function
-    create_cluster_json.create_cluster(CLUSTER_JSON_PATH, REGION)
+    create_cluster_json.create_cluster(CLUSTER_JSON_PATH,CLUSTER_NAME,REGION)
 
     out, _ = capsys.readouterr()
     assert CLUSTER_NAME in out

@@ -1,11 +1,11 @@
 {
   "project_id": "YOUR_PROJECT_ID",
-  "cluster_name": "my-cluster",
+  "cluster_name": "{{cluster_name}}",
   "labels": {
     "applicationname": "sample"
   },
   "config": {
-    "config_bucket": "my-bucket",
+    "config_bucket": "YOUR_CONFIG_BUCKET",
     "gce_cluster_config": {
       "zone_uri": "us-central1-a",
       "metadata": {},
