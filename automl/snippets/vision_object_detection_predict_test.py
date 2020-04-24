@@ -14,6 +14,8 @@
 
 import os
 
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import automl
 import pytest
 
@@ -32,12 +34,17 @@ def verify_model_state():
     if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
         # Deploy model if it is not deployed
         response = client.deploy_model(model_full_id)
-        response.result()
+        response.result(600)  # 10 minutes
 
 
 def test_vision_object_detection_predict(capsys, verify_model_state):
-    verify_model_state
     file_path = "resources/salad.jpg"
-    vision_object_detection_predict.predict(PROJECT_ID, MODEL_ID, file_path)
+
+    # Retry the sample upon DeadlineExceeded, with a hard deadline of 5 mins.
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=300)
+    def run_sample():
+        vision_object_detection_predict.predict(PROJECT_ID, MODEL_ID, file_path)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert "Predicted class name:" in out
