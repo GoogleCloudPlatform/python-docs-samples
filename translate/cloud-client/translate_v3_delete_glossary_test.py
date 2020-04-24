@@ -13,9 +13,12 @@
 # limitations under the License.
 
 import os
+import uuid
+
+import pytest
+
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
-import uuid
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
