@@ -16,7 +16,6 @@ import json
 import pytest
 import subprocess
 from urllib import request
-import os
 
 
 @pytest.fixture()
