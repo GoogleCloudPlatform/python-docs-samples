@@ -831,7 +831,7 @@ def delete_data_with_dml(instance_id, database_id):
 
     def delete_singers(transaction):
         row_ct = transaction.execute_update(
-            "DELETE Singers WHERE FirstName = 'Alice'"
+            "DELETE FROM Singers WHERE FirstName = 'Alice'"
         )
 
         print("{} record(s) deleted.".format(row_ct))
@@ -1055,7 +1055,7 @@ def delete_data_with_partitioned_dml(instance_id, database_id):
     database = instance.database(database_id)
 
     row_ct = database.execute_partitioned_dml(
-        "DELETE Singers WHERE SingerId > 10"
+        "DELETE FROM Singers WHERE SingerId > 10"
     )
 
     print("{} record(s) deleted.".format(row_ct))
