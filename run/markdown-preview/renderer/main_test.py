@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import main
-import os
 import pytest
 
 

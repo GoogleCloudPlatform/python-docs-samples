@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import main
-import os
 import pytest
 
 
@@ -31,6 +30,7 @@ def test_editor_handler(client):
     assert r.status_code == 200
     assert "<title>Markdown Editor</title>" in body
     assert "This UI allows a user to write Markdown text" in body
+
 
 def test_render_handler_errors(client):
     r = client.get("/render")

@@ -27,7 +27,7 @@ def new_request(data):
 
     url = os.environ.get("EDITOR_UPSTREAM_RENDER_URL")
     unauthenticated = os.environ.get("EDITOR_UPSTREAM_UNAUTHENTICATED", False)
-    
+
     req = urllib.request.Request(url, data=data.encode())
 
     if not unauthenticated:
