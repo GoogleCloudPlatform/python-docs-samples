@@ -19,20 +19,34 @@ from google.cloud import bigtable
 bigtable.Client = MagicMock()
 
 
+class TestingRow:
+
+    def __init__(self, object):
+        self.row_key = object['row_key']
+        self.cells = object['cells']
+
+class TestingCell:
+
+    def __init__(self, object):
+        self.value = object['value']
+
 def test_main():
     import main
 
-    bigtable_mock = main.table.read_rows.return_value = [{
-      "row_key": "phone#1234",
-      "stats_summary": {
-        "os_build".encode("utf-8"): [
-          {"value": "a"}
-        ]
-      }
-    }]
+    bigtable_mock = main.table.read_rows.return_value = [
+      TestingRow({
+        'row_key': "phone#1234".encode('utf-8'),
+        "cells":
+            {
+              "stats_summary": {
+                "os_build".encode("utf-8"): [
+                  TestingCell({"value": "PQ2A.190405.003".encode('utf-8')})
+                ]
+              }
+            }
+
+      })]
 
     response = main.bigtable_read_data(None)
 
-    assert 'SingerID' in response
-    assert 'AlbumID' in response
-    assert 'Album' in response
+    assert 'Rowkey: phone#1234, os_build: PQ2A.190405.003' in response

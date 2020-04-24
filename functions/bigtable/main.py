@@ -23,6 +23,7 @@ client = bigtable.Client()
 instance = client.instance(instance_id)
 table = instance.table(table_id)
 
+
 def bigtable_read_data(request):
     prefix = 'phone#'
     end_key = prefix[:-1] + chr(ord(prefix[-1]) + 1)
@@ -33,10 +34,7 @@ def bigtable_read_data(request):
                                     end_key.encode("utf-8"))
 
     rows = table.read_rows(row_set=row_set)
-    print(rows)
     for row in rows:
-        print("in loop")
-        print(row.row_key.decode('utf-8'))
         output = 'Rowkey: {}, os_build: {}'.format(row.row_key.decode('utf-8'),
                                                    row.cells["stats_summary"][
                                                        "os_build".encode(
