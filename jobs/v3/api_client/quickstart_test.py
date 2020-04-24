@@ -14,6 +14,7 @@
 
 import pytest
 
+
 @pytest.mark.flaky
 def test_quickstart(capsys):
     import quickstart
