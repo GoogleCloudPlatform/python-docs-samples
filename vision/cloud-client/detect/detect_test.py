@@ -16,6 +16,7 @@ import os
 import uuid
 
 from google.cloud import storage
+import pytest
 
 import detect
 
@@ -208,6 +209,7 @@ def test_detect_crop_hints_uri(capsys):
     assert 'bounds: ' in out
 
 
+@pytest.mark.flaky
 def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
