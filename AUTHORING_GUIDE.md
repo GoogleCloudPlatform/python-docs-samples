@@ -285,6 +285,8 @@ for system testing, as shown in [this
 example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard/localtesting/datastore_test.py).
 * All tests should be independent of one another and order-independent.
 * We use parallel processing for tests, so tests should be capable of running in parallel with one another.
+* Use pytest's fixture for resource setup and teardown, instead of
+  having them in the test itself.
 
 ### Arrange, Act, Assert
 
@@ -320,10 +322,22 @@ that embodies assumptions about the behavior of the APIs.
 When tests need temporary resources (such as a temp file or folder), they
 should create reasonable names for these resources with a UUID attached to
 assure uniqueness. Use the Python ```uuid``` package from the standard
-library to generate UUIDs for resource names.
+library to generate UUIDs for resource names. For example:
 
-All temporary resources should be explicitly deleted when
-testing is complete. 
+```python
+glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
+```
+
+or:
+
+```python
+# If full uuid4 is too long, use hex representation.
+encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+```
+
+All temporary resources should be explicitly deleted when testing is
+complete. Use pytest's fixture for cleaning up these resouces instead
+of doing it in test itself.
 
 ### Console Output
 
@@ -342,7 +356,7 @@ including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
 __Note:__ As a temporary workaround, each project currently uses first
-`noxfile-template.py` found in a parent folder above the current sample. In 
+`noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
 `noxfile-template.py` as `noxfile.py` in the folder of the project you want to
 run tests.
