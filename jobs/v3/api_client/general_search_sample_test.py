@@ -15,7 +15,7 @@
 import pytest
 import re
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 
 import general_search_sample
 
@@ -28,8 +28,8 @@ def company_and_job():
 
 
 def test_general_search_sample(company_and_job, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
         general_search_sample.run_sample(
             company_and_job[0], company_and_job[1])
         out, _ = capsys.readouterr()
@@ -41,3 +41,5 @@ def test_general_search_sample(company_and_job, capsys):
                     '.*matchingJobs.*\n'
                     '.*matchingJobs.*\n')
         assert re.search(expected, out, re.DOTALL)
+
+    eventually_consistent_test()

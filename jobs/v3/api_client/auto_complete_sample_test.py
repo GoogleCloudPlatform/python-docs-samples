@@ -15,7 +15,7 @@
 import pytest
 import re
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 
 import auto_complete_sample
 
@@ -28,8 +28,8 @@ def company_name():
 
 
 def test_auto_complete_sample(company_name, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
         auto_complete_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
         expected = (
@@ -41,3 +41,5 @@ def test_auto_complete_sample(company_name, capsys):
             'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
         )
         assert re.search(expected, out)
+
+    eventually_consistent_test()
