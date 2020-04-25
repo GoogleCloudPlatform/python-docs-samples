@@ -285,6 +285,9 @@ for system testing, as shown in [this
 example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard/localtesting/datastore_test.py).
 * All tests should be independent of one another and order-independent.
 * We use parallel processing for tests, so tests should be capable of running in parallel with one another.
+* Use pytest's fixture for resource setup and teardown, instead of
+  having them in the test itself.
+* Avoid infinite loops.
 
 ### Arrange, Act, Assert
 
@@ -320,10 +323,22 @@ that embodies assumptions about the behavior of the APIs.
 When tests need temporary resources (such as a temp file or folder), they
 should create reasonable names for these resources with a UUID attached to
 assure uniqueness. Use the Python ```uuid``` package from the standard
-library to generate UUIDs for resource names.
+library to generate UUIDs for resource names. For example:
 
-All temporary resources should be explicitly deleted when
-testing is complete. 
+```python
+glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
+```
+
+or:
+
+```python
+# If full uuid4 is too long, use hex representation.
+encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+```
+
+All temporary resources should be explicitly deleted when testing is
+complete. Use pytest's fixture for cleaning up these resouces instead
+of doing it in test itself.
 
 ### Console Output
 
@@ -333,8 +348,43 @@ is expected. Strive to verify the content of the output rather than the syntax.
 For example, the test might verify that a string is included in the output,
 without taking a dependency on where that string occurs in the output.
 
-### Running tests
+### Avoid infinite loops
 
+Never put potential infinite loops in the test code path. A typical
+example is about gRPC's LongRunningOperations. Make sure you pass the
+timeout parameter to the `result()` call.
+
+Good:
+
+```python
+# will raise google.api_core.GoogleAPICallError after 60 seconds
+operation.result(60)
+```
+
+Bad:
+
+```python
+operation.result()  # this could wait forever.
+```
+
+We recommend the timeout parameter to be around the number that gives
+you more than 90% success rate. Don't put too long a timeout.
+
+Now this test is inevitably flaky, so consider marking the test as
+`flaky` as follows:
+
+```python
+
+@pytest.mark.flaky(max_runs=3, min_passes=1)
+def my_flaky_test():
+    # test that involves LRO poling with the timeout
+```
+
+This combination will give you very high success rate with fixed test
+execution time (0.999 success rate and 180 seconds operation wait time
+in the worst case in this example).
+
+### Running tests
 
 Automated testing for samples in `python-docs-samples` is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
@@ -342,7 +392,7 @@ including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
 __Note:__ As a temporary workaround, each project currently uses first
-`noxfile-template.py` found in a parent folder above the current sample. In 
+`noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
 `noxfile-template.py` as `noxfile.py` in the folder of the project you want to
 run tests.
@@ -372,7 +422,6 @@ To run a specific test from a specific following:
 ```console
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
-
 
 ### Test Environment Setup
 
