@@ -29,12 +29,12 @@ def enable_bucket_lifecycle_management(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     rules = bucket.lifecycle_rules
 
-    print("Lifecycle management for bucket {} is {}".format(bucket_name, list(rules)))
+    print("Lifecycle management rules for bucket {} are {}".format(bucket_name, list(rules)))
     bucket.add_lifecycle_delete_rule(age=2)
     bucket.patch()
 
     rules = bucket.lifecycle_rules
-    print("Lifecycle management is enable for bucket {} and rule is {}".format(bucket_name, list(rules)))
+    print("Lifecycle management is enable for bucket {} and the rules are {}".format(bucket_name, list(rules)))
 
     return bucket
 

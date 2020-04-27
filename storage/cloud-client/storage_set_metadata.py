@@ -31,7 +31,7 @@ def set_blob_metadata(bucket_name, blob_name):
     metadata = {'color': 'Red', 'name': 'Test'}
     blob.metadata = metadata
 
-    print("The metadata of a blob {} is {}".format(blob.name, blob.metadata))
+    print("The metadata for the blob {} is {}".format(blob.name, blob.metadata))
 
 
 # [END storage_get_metadata]

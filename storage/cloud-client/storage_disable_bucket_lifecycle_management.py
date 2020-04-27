@@ -31,7 +31,7 @@ def disable_bucket_lifecycle_management(bucket_name):
     bucket.patch()
     rules = bucket.lifecycle_rules
 
-    print("Lifecycle management is disable for bucket {} and rule is {}".format(bucket_name, list(rules)))
+    print("Lifecycle management is disable for bucket {} and the rules are {}".format(bucket_name, list(rules)))
     return bucket
 
 
