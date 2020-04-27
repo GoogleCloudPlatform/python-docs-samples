@@ -240,7 +240,7 @@ SQLAlchemy==1.3.12
 If a sample has testing requirements that differ from its runtime requirements
 (such as dependencies on [pytest](http://pytest.org/en/latest/) or other
 testing libraries), the testing requirements may be listed in a separate
-`requirements-testing.txt` file instead of the main `requirements.txt` file.
+`requirements-test.txt` file instead of the main `requirements.txt` file.
 
 ### Region Tags
 
