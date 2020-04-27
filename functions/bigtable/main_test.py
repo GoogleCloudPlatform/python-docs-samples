@@ -25,15 +25,17 @@ class TestingRow:
         self.row_key = object['row_key']
         self.cells = object['cells']
 
+
 class TestingCell:
 
     def __init__(self, object):
         self.value = object['value']
 
+
 def test_main():
     import main
 
-    bigtable_mock = main.table.read_rows.return_value = [
+    main.table.read_rows.return_value = [
       TestingRow({
         'row_key': "phone#1234".encode('utf-8'),
         "cells":
