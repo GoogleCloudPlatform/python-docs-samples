@@ -14,7 +14,6 @@
 import os
 import uuid
 
-from flaky import flaky
 from google.cloud import dns
 from google.cloud.exceptions import NotFound
 
@@ -57,7 +56,7 @@ def zone(client):
             pass
 
 
-@flaky
+@pytest.mark.flaky
 def test_create_zone(client):
     zone = main.create_zone(
         PROJECT,
@@ -70,7 +69,7 @@ def test_create_zone(client):
     assert zone.description == TEST_ZONE_DESCRIPTION
 
 
-@flaky
+@pytest.mark.flaky
 def test_get_zone(client, zone):
     zone = main.get_zone(PROJECT, TEST_ZONE_NAME)
 
@@ -79,27 +78,27 @@ def test_get_zone(client, zone):
     assert zone.description == TEST_ZONE_DESCRIPTION
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_zones(client, zone):
     zones = main.list_zones(PROJECT)
 
     assert TEST_ZONE_NAME in zones
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_resource_records(client, zone):
     records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
     assert records
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_changes(client, zone):
     changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
 
 
-@flaky
+@pytest.mark.flaky
 def test_delete_zone(client, zone):
     main.delete_zone(PROJECT, TEST_ZONE_NAME)

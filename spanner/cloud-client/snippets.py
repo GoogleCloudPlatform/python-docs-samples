@@ -52,7 +52,7 @@ def create_database(instance_id, database_id):
     operation = database.create()
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created database {} on instance {}'.format(
         database_id, instance_id))
@@ -213,7 +213,7 @@ def add_index(instance_id, database_id):
         'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the AlbumsByAlbumTitle index.')
 # [END spanner_create_index]
@@ -306,7 +306,7 @@ def add_storing_index(instance_id, database_id):
         'STORING (MarketingBudget)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the AlbumsByAlbumTitle2 index.')
 # [END spanner_create_storing_index]
@@ -355,7 +355,7 @@ def add_column(instance_id, database_id):
         'ALTER TABLE Albums ADD COLUMN MarketingBudget INT64'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the MarketingBudget column.')
 # [END spanner_add_column]
@@ -509,7 +509,7 @@ def create_table_with_timestamp(instance_id, database_id):
     ])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created Performances table on database {} on instance {}'.format(
         database_id, instance_id))
@@ -554,7 +554,7 @@ def add_timestamp_column(instance_id, database_id):
         'OPTIONS(allow_commit_timestamp=true)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Altered table "Albums" on database {} on instance {}.'.format(
         database_id, instance_id))
@@ -1122,7 +1122,7 @@ def create_table_with_datatypes(instance_id, database_id):
     ])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created Venues table on database {} on instance {}'.format(
         database_id, instance_id))
