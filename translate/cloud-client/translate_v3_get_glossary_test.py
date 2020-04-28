@@ -20,14 +20,17 @@ import translate_v3_delete_glossary
 import translate_v3_get_glossary
 import uuid
 
-from google.api_core.exceptions import GoogleAPICallError, DeadlineExceeded, RetryError
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError, RetryError
 from google.cloud.exceptions import NotFound
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
+
 @backoff.on_exception(
-    backoff.expo, (GoogleAPICallError, DeadlineExceeded, RetryError), max_time=60)
+    backoff.expo, (DeadlineExceeded, GoogleAPICallError,
+                   RetryError), max_time=60
+)
 @pytest.fixture(scope="session")
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
@@ -40,8 +43,7 @@ def glossary():
 
     # cleanup
     try:
-        translate_v3_delete_glossary.delete_glossary(
-            PROJECT_ID, glossary_id)
+        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
     except NotFound as e:
         # Ignoring this case.
         print("Got NotFound, detail: {}".format(str(e)))

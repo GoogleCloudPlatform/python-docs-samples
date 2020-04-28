@@ -20,7 +20,7 @@ import pytest
 
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
-from google.api_core.exceptions import GoogleAPICallError, DeadlineExceeded, RetryError
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError, RetryError
 from google.cloud.exceptions import NotFound
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
@@ -28,7 +28,9 @@ GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
 @backoff.on_exception(
-    backoff.expo, (GoogleAPICallError, DeadlineExceeded, RetryError), max_time=60)
+    backoff.expo, (DeadlineExceeded, GoogleAPICallError,
+                   RetryError), max_time=60
+)
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
     try:
