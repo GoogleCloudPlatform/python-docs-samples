@@ -37,8 +37,4 @@ def test_create_glossary(capsys):
         assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
     finally:
         # clean up after use
-        try:
-            translate_v3_delete_glossary.delete_glossary(
-                PROJECT_ID, glossary_id)
-        except Exception:
-            pass
+        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)

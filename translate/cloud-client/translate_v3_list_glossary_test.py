@@ -33,14 +33,12 @@ def glossary():
 
     yield glossary_id
 
-    try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+    # clean up
+    translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
 
 
 def test_list_glossary(capsys, glossary):
-    translate_v3_list_glossary.sample_list_glossaries(PROJECT_ID)
+    translate_v3_list_glossary.list_glossaries(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert glossary in out
     assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
