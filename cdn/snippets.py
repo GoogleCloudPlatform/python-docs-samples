@@ -179,7 +179,7 @@ if __name__ == '__main__':
             help="Sign a URL prefix to grant temporary authorized access.")
     sign_url_prefix_parser.add_argument(
             'url', help='The request URL.')
-    sign_cookie_parser.add_argument(
+    sign_url_prefix_parser.add_argument(
             'url_prefix', help='The URL prefix to sign.')
     sign_url_prefix_parser.add_argument(
             'key_name',
