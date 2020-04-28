@@ -116,6 +116,34 @@ def list_datasets(project_id, compute_region, filter_=None):
     return result
 
 
+def get_dataset(project_id, compute_region, dataset_display_name):
+    """Get the dataset."""
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_display_name = 'DATASET_DISPLAY_NAME_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
+    client = automl.TablesClient(project=project_id, region=compute_region)
+
+    # Get complete detail of the dataset.
+    dataset = client.get_dataset(dataset_display_name=dataset_display_name)
+
+    # Display the dataset information.
+    print("Dataset name: {}".format(dataset.name))
+    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
+    print("Dataset display name: {}".format(dataset.display_name))
+    print("Dataset metadata:")
+    print("\t{}".format(dataset.tables_dataset_metadata))
+    print("Dataset example count: {}".format(dataset.example_count))
+    print("Dataset create time:")
+    print("\tseconds: {}".format(dataset.create_time.seconds))
+    print("\tnanos: {}".format(dataset.create_time.nanos))
+
+    return dataset
+
+
 def import_data(project_id, compute_region, dataset_display_name, path):
     """Import structured data."""
     # [START automl_tables_import_data]
@@ -186,6 +214,11 @@ if __name__ == "__main__":
     )
     list_datasets_parser.add_argument("--filter_")
 
+    get_dataset_parser = subparsers.add_parser(
+        "get_dataset", help=get_dataset.__doc__
+    )
+    get_dataset_parser.add_argument("--dataset_display_name")
+
     import_data_parser = subparsers.add_parser(
         "import_data", help=import_data.__doc__
     )
@@ -205,6 +238,8 @@ if __name__ == "__main__":
         create_dataset(project_id, compute_region, args.dataset_name)
     if args.command == "list_datasets":
         list_datasets(project_id, compute_region, args.filter_)
+    if args.command == "get_dataset":
+        get_dataset(project_id, compute_region, args.dataset_display_name)
     if args.command == "import_data":
         import_data(
             project_id, compute_region, args.dataset_display_name, args.path
