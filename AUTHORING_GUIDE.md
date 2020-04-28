@@ -408,24 +408,24 @@ from googleapiclient.errors import HttpError
 @pytest.fixture(scope='module')
 def test_resource():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
-	def create_resource():
-		try:
-			return client.projects().imaginaryResource().create(
-				name=resource_id, body=body).execute()
-		except HttpError as e:
-		    if '409' in str(e):
-			    # Ignore this case and get the existing one.
-				return client.projects().imaginaryResource().get(
-					name=resource_id).execute()
-		    else:
-			    raise
+    def create_resource():
+        try:
+            return client.projects().imaginaryResource().create(
+                name=resource_id, body=body).execute()
+        except HttpError as e:
+            if '409' in str(e):
+                # Ignore this case and get the existing one.
+                return client.projects().imaginaryResource().get(
+                    name=resource_id).execute()
+            else:
+                raise
 
-	resource = create_resource()
+    resource = create_resource()
 
-	yield resource
+    yield resource
 
-	# cleanup
-	...
+    # cleanup
+    ...
 ```
 
 ### Running tests
