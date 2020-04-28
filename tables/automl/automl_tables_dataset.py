@@ -186,69 +186,11 @@ if __name__ == "__main__":
     )
     list_datasets_parser.add_argument("--filter_")
 
-    list_table_specs_parser = subparsers.add_parser(
-        "list_table_specs", help=list_table_specs.__doc__
-    )
-    list_table_specs_parser.add_argument("--dataset_display_name")
-    list_table_specs_parser.add_argument("--filter_")
-
-    list_column_specs_parser = subparsers.add_parser(
-        "list_column_specs", help=list_column_specs.__doc__
-    )
-    list_column_specs_parser.add_argument("--dataset_display_name")
-    list_column_specs_parser.add_argument("--filter_")
-
-    get_dataset_parser = subparsers.add_parser(
-        "get_dataset", help=get_dataset.__doc__
-    )
-    get_dataset_parser.add_argument("--dataset_display_name")
-
-    get_table_spec_parser = subparsers.add_parser(
-        "get_table_spec", help=get_table_spec.__doc__
-    )
-    get_table_spec_parser.add_argument("--dataset_id")
-    get_table_spec_parser.add_argument("--table_spec_id")
-
-    get_column_spec_parser = subparsers.add_parser(
-        "get_column_spec", help=get_column_spec.__doc__
-    )
-    get_column_spec_parser.add_argument("--dataset_id")
-    get_column_spec_parser.add_argument("--table_spec_id")
-    get_column_spec_parser.add_argument("--column_spec_id")
-
     import_data_parser = subparsers.add_parser(
         "import_data", help=import_data.__doc__
     )
     import_data_parser.add_argument("--dataset_display_name")
     import_data_parser.add_argument("--path")
-
-    export_data_parser = subparsers.add_parser(
-        "export_data", help=export_data.__doc__
-    )
-    export_data_parser.add_argument("--dataset_display_name")
-    export_data_parser.add_argument("--gcs_uri")
-
-    update_dataset_parser = subparsers.add_parser(
-        "update_dataset", help=update_dataset.__doc__
-    )
-    update_dataset_parser.add_argument("--dataset_display_name")
-    update_dataset_parser.add_argument("--target_column_spec_name")
-    update_dataset_parser.add_argument("--weight_column_spec_name")
-    update_dataset_parser.add_argument("--ml_use_column_spec_name")
-
-    update_table_spec_parser = subparsers.add_parser(
-        "update_table_spec", help=update_table_spec.__doc__
-    )
-    update_table_spec_parser.add_argument("--dataset_display_name")
-    update_table_spec_parser.add_argument("--time_column_spec_display_name")
-
-    update_column_spec_parser = subparsers.add_parser(
-        "update_column_spec", help=update_column_spec.__doc__
-    )
-    update_column_spec_parser.add_argument("--dataset_display_name")
-    update_column_spec_parser.add_argument("--column_spec_display_name")
-    update_column_spec_parser.add_argument("--type_code")
-    update_column_spec_parser.add_argument("--nullable", type=bool)
 
     delete_dataset_parser = subparsers.add_parser(
         "delete_dataset", help=delete_dataset.__doc__
@@ -263,63 +205,9 @@ if __name__ == "__main__":
         create_dataset(project_id, compute_region, args.dataset_name)
     if args.command == "list_datasets":
         list_datasets(project_id, compute_region, args.filter_)
-    if args.command == "list_table_specs":
-        list_table_specs(
-            project_id, compute_region, args.dataset_display_name, args.filter_
-        )
-    if args.command == "list_column_specs":
-        list_column_specs(
-            project_id, compute_region, args.dataset_display_name, args.filter_
-        )
-    if args.command == "get_dataset":
-        get_dataset(project_id, compute_region, args.dataset_display_name)
-    if args.command == "get_table_spec":
-        get_table_spec(
-            project_id,
-            compute_region,
-            args.dataset_display_name,
-            args.table_spec_id,
-        )
-    if args.command == "get_column_spec":
-        get_column_spec(
-            project_id,
-            compute_region,
-            args.dataset_display_name,
-            args.table_spec_id,
-            args.column_spec_id,
-        )
     if args.command == "import_data":
         import_data(
             project_id, compute_region, args.dataset_display_name, args.path
-        )
-    if args.command == "export_data":
-        export_data(
-            project_id, compute_region, args.dataset_display_name, args.gcs_uri
-        )
-    if args.command == "update_dataset":
-        update_dataset(
-            project_id,
-            compute_region,
-            args.dataset_display_name,
-            args.target_column_spec_name,
-            args.weight_column_spec_name,
-            args.ml_use_column_spec_name,
-        )
-    if args.command == "update_table_spec":
-        update_table_spec(
-            project_id,
-            compute_region,
-            args.dataset_display_name,
-            args.time_column_spec_display_name,
-        )
-    if args.command == "update_column_spec":
-        update_column_spec(
-            project_id,
-            compute_region,
-            args.dataset_display_name,
-            args.column_spec_display_name,
-            args.type_code,
-            args.nullable,
         )
     if args.command == "delete_dataset":
         delete_dataset(project_id, compute_region, args.dataset_display_name)
