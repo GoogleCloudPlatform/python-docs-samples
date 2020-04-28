@@ -28,7 +28,7 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 @backoff.on_exception(
-    backoff.expo, (GoogleAPICallError, DeadlineExceeded), max_time=60)
+    backoff.expo, (GoogleAPICallError, DeadlineExceeded, RetryError), max_time=60)
 @pytest.fixture(scope="session")
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""

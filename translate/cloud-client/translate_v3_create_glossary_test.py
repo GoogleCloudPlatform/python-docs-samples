@@ -28,7 +28,7 @@ GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
 @backoff.on_exception(
-    backoff.expo, (GoogleAPICallError, DeadlineExceeded), max_time=60)
+    backoff.expo, (GoogleAPICallError, DeadlineExceeded, RetryError), max_time=60)
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
     try:
