@@ -15,17 +15,16 @@
 
 import time
 from os import environ
+import uuid
 
 from google.api_core.exceptions import Aborted, GoogleAPICallError
 from google.cloud import kms_v1
 from google.cloud.kms_v1 import enums
 from google.iam.v1.policy_pb2 import Policy
-
+import backoff
 import pytest
 
 import snippets
-
-from gcp_devrel.testing import eventually_consistent
 
 
 def create_key_helper(key_id, purpose, algorithm, t):
@@ -65,7 +64,7 @@ def setup_module(module):
 
 class TestKMSSnippets:
     project_id = environ['GCLOUD_PROJECT']
-    keyring_id = 'kms-samples'
+    keyring_id = 'kms-samples-{}'.format(uuid.uuid4().hex)
     location = 'global'
     parent = 'projects/{}/locations/{}'.format(project_id, location)
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
@@ -85,7 +84,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="There's currently no method to delete keyrings, \
                               so we should avoid creating resources")
     def test_create_key_ring(self):
-        ring_id = self.keyring_id + '-testcreate' + str(int(time.time()))
+        ring_id = self.keyring_id + '-test-create-{}'.format(uuid.uuid4().hex)
         snippets.create_key_ring(self.project_id, self.location, ring_id)
         client = kms_v1.KeyManagementServiceClient()
         result = client.get_key_ring(client.key_ring_path(self.project_id,
@@ -96,7 +95,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="Deleting keys isn't instant, so we should avoid \
                               creating a large number of them in our tests")
     def test_create_crypto_key(self):
-        key_id = self.sym_id + '-test' + str(int(time.time()))
+        key_id = self.sym_id + '-test-{}'.format(uuid.uuid4().hex)
         snippets.create_crypto_key(self.project_id, self.location,
                                    self.keyring_id, key_id)
         c = kms_v1.KeyManagementServiceClient()
@@ -181,6 +180,8 @@ class TestKMSSnippets:
             self.member,
             self.role)
 
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
         def check_policy():
             policy = snippets.get_crypto_key_policy(
                 self.project_id,
@@ -192,8 +193,9 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert found
-        eventually_consistent.call(check_policy,
-                                   exceptions=(Aborted, AssertionError))
+
+        check_policy()
+
         # remove member
         snippets.remove_member_from_crypto_key_policy(
             self.project_id,
@@ -203,7 +205,9 @@ class TestKMSSnippets:
             self.member,
             self.role)
 
-        def check_policy():
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
+        def check_policy_again():
             policy = snippets.get_crypto_key_policy(
                 self.project_id,
                 self.location,
@@ -214,9 +218,8 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert not found
-        eventually_consistent.call(
-            check_policy,
-            exceptions=(Aborted, AssertionError))
+
+        check_policy_again()
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,

@@ -1,0 +1,40 @@
+type: google.api.Service
+config_version: 3
+
+#
+# Name of the service configuration.
+#
+name: API_NAME.endpoints.ESP_PROJECT_ID.cloud.goog
+
+#
+# API title to appear in the user interface (Google Cloud Console).
+#
+title: gRPC Bookstore API In Cloud Run Anthos
+apis:
+- name: endpoints.examples.bookstore.Bookstore
+
+#
+# Create a DNS record to map your service nameto IP address
+#
+endpoints:
+  - name: API_NAME.endpoints.ESP_PROJECT_ID.cloud.goog
+    target: INGRESS_IP
+
+#
+# Specify the backend address to route to
+#
+backend:
+  rules:
+    - selector: "*"
+      address: grpc://GRPC_SERVICE.default.svc.cluster.local
+      disable_auth: true
+
+#
+# API usage restrictions.
+#
+usage:
+  rules:
+  # ListShelves methods can be called without an API Key.
+  - selector: endpoints.examples.bookstore.Bookstore.ListShelves
+    allow_unregistered_calls: true
+      

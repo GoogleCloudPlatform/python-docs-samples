@@ -24,16 +24,17 @@ import os
 import random
 import time
 
-from gcp_devrel.testing import eventually_consistent
-from flaky import flaky
+import backoff
 import googleapiclient.discovery
 import pytest
+from googleapiclient.errors import HttpError
 
 from custom_metric import create_custom_metric
 from custom_metric import delete_metric_descriptor
 from custom_metric import get_custom_metric
 from custom_metric import read_timeseries
 from custom_metric import write_timeseries_value
+
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 
@@ -52,7 +53,6 @@ def client():
     return googleapiclient.discovery.build('monitoring', 'v3')
 
 
-@flaky
 def test_custom_metric(client):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     # Use a constant seed so psuedo random number is known ahead of time
@@ -64,29 +64,42 @@ def test_custom_metric(client):
     INSTANCE_ID = "test_instance"
     METRIC_KIND = "GAUGE"
 
-    custom_metric_descriptor = create_custom_metric(
-        client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
+    try:
+        custom_metric_descriptor = create_custom_metric(
+            client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
 
-    # wait until metric has been created, use the get call to wait until
-    # a response comes back with the new metric
-    custom_metric = None
-    while not custom_metric:
-        time.sleep(1)
-        custom_metric = get_custom_metric(
-            client, PROJECT_RESOURCE, METRIC_RESOURCE)
+        # wait until metric has been created, use the get call to wait until
+        # a response comes back with the new metric with 10 retries.
+        custom_metric = None
+        retry_count = 0
+        while not custom_metric and retry_count < 10:
+            time.sleep(1)
+            retry_count += 1
+            custom_metric = get_custom_metric(
+                client, PROJECT_RESOURCE, METRIC_RESOURCE)
+        # Make sure we get the custom metric
+        assert custom_metric
 
-    write_timeseries_value(client, PROJECT_RESOURCE,
-                           METRIC_RESOURCE, INSTANCE_ID,
-                           METRIC_KIND)
+        write_timeseries_value(client, PROJECT_RESOURCE,
+                               METRIC_RESOURCE, INSTANCE_ID,
+                               METRIC_KIND)
 
-    # Sometimes on new metric descriptors, writes have a delay in being
-    # read back. Use eventually_consistent to account for this.
-    @eventually_consistent.call
-    def _():
-        response = read_timeseries(client, PROJECT_RESOURCE, METRIC_RESOURCE)
-        value = int(
-            response['timeSeries'][0]['points'][0]['value']['int64Value'])
-        # using seed of 1 will create a value of 1
-        assert value == pseudo_random_value
+        # Sometimes on new metric descriptors, writes have a delay in being
+        # read back. Use eventually_consistent to account for this.
+        @backoff.on_exception(
+            backoff.expo, (AssertionError, HttpError), max_time=120)
+        def eventually_consistent_test():
+            response = read_timeseries(
+                client, PROJECT_RESOURCE, METRIC_RESOURCE)
+            # Make sure the value is not empty.
+            assert 'timeSeries' in response
+            value = int(
+                response['timeSeries'][0]['points'][0]['value']['int64Value'])
+            # using seed of 1 will create a value of 1
+            assert value == pseudo_random_value
 
-    delete_metric_descriptor(client, custom_metric_descriptor['name'])
+        eventually_consistent_test()
+
+    finally:
+        # cleanup
+        delete_metric_descriptor(client, custom_metric_descriptor['name'])

@@ -16,7 +16,7 @@ import os
 import time
 import uuid
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 from google.cloud import pubsub_v1
 import mock
 import pytest
@@ -75,11 +75,13 @@ def _make_sleep_patch():
 
 
 def test_list(client, topic_admin, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         publisher.list_topics(PROJECT)
         out, _ = capsys.readouterr()
         assert topic_admin in out
+
+    eventually_consistent_test()
 
 
 def test_create(client):
@@ -91,18 +93,22 @@ def test_create(client):
 
     publisher.create_topic(PROJECT, TOPIC_ADMIN)
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         assert client.get_topic(topic_path)
+
+    eventually_consistent_test()
 
 
 def test_delete(client, topic_admin):
     publisher.delete_topic(PROJECT, TOPIC_ADMIN)
 
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         with pytest.raises(Exception):
             client.get_topic(client.topic_path(PROJECT, TOPIC_ADMIN))
+
+    eventually_consistent_test()
 
 
 def test_publish(topic_publish, capsys):
