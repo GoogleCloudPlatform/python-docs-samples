@@ -69,34 +69,32 @@ def test_speech_transcription(capsys):
     assert "cultural" in out
 
 
-@pytest.mark.slow
+# Flaky timeout
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text_gcs(capsys):
     analyze.video_detect_text_gcs("gs://cloud-samples-data/video/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
-
-    text_exists = False
-    out_upper = out.upper()
-    for possible_text in POSSIBLE_TEXTS:
-        if possible_text.upper() in out_upper:
-            text_exists = True
-    assert text_exists
+    assert 'Text' in out
 
 
-@pytest.mark.slow
+# Flaky timeout
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text(capsys):
     analyze.video_detect_text("resources/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
     assert 'Text' in out
 
 
-@pytest.mark.slow
+# Flaky timeout
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects_gcs(capsys):
     analyze.track_objects_gcs("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
     assert "cat" in out
 
 
-@pytest.mark.slow
+# Flaky timeout
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     analyze.track_objects(in_file)

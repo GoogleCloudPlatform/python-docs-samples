@@ -13,8 +13,7 @@
 
 import os
 
-from gcp_devrel.testing import eventually_consistent
-from flaky import flaky
+import backoff
 from google.cloud import datastore
 import pytest
 
@@ -43,7 +42,7 @@ def client():
     client.cleanup()
 
 
-@flaky
+@pytest.mark.flaky
 class TestDatastoreSnippets:
     # These tests mostly just test the absence of exceptions.
     def test_incomplete_key(self, client):
@@ -106,19 +105,19 @@ class TestDatastoreSnippets:
     def test_batch_delete(self, client):
         snippets.batch_delete(client)
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_unindexed_property_query(self, client):
         tasks = snippets.unindexed_property_query(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_basic_query(self, client):
         tasks = snippets.basic_query(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_projection_query(self, client):
         priorities, percents = snippets.projection_query(client)
         client.entities_to_delete.extend(
@@ -139,59 +138,60 @@ class TestDatastoreSnippets:
             client.entities_to_delete.append(
                 snippets.insert(client))
 
-        @eventually_consistent.call
-        def _():
+        @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+        def run_sample():
             results = snippets.cursor_paging(client)
             page_one, cursor_one, page_two, cursor_two = results
 
             assert len(page_one) == 5
             assert len(page_two)
             assert cursor_one
+        run_sample()
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_property_filter(self, client):
         tasks = snippets.property_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_composite_filter(self, client):
         tasks = snippets.composite_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_key_filter(self, client):
         tasks = snippets.key_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_ascending_sort(self, client):
         tasks = snippets.ascending_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_descending_sort(self, client):
         tasks = snippets.descending_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_multi_sort(self, client):
         tasks = snippets.multi_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_keys_only_query(self, client):
         keys = snippets.keys_only_query(client)
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert keys
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_distinct_on_query(self, client):
         tasks = snippets.distinct_on_query(client)
         client.entities_to_delete.extend(tasks)
@@ -246,7 +246,7 @@ class TestDatastoreSnippets:
         assert task_list
         assert tasks_in_list
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_namespace_run_query(self, client):
         all_namespaces, filtered_namespaces = snippets.namespace_run_query(
             client)
@@ -254,7 +254,7 @@ class TestDatastoreSnippets:
         assert filtered_namespaces
         assert 'google' in filtered_namespaces
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_kind_run_query(self, client):
         kinds = snippets.kind_run_query(client)
         client.entities_to_delete.extend(
@@ -262,7 +262,7 @@ class TestDatastoreSnippets:
         assert kinds
         assert 'Task' in kinds
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_property_run_query(self, client):
         kinds = snippets.property_run_query(client)
         client.entities_to_delete.extend(
@@ -270,13 +270,13 @@ class TestDatastoreSnippets:
         assert kinds
         assert 'Task' in kinds
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_property_by_kind_run_query(self, client):
         reprs = snippets.property_by_kind_run_query(client)
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert reprs
 
-    @eventually_consistent.mark
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_index_merge_queries(self, client):
         snippets.index_merge_queries(client)
