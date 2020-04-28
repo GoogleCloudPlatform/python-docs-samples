@@ -24,10 +24,14 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def index():
     data = request.get_data(as_text=True)
-    # Sanitizes input
-    data = bleach.clean(data)
     # Parses the markdown and outputs the formatted HTML
-    return markdown.markdown(data)
+    html = markdown.markdown(data)
+    
+    # Keep the paragraph tags
+    bleach.sanitizer.ALLOWED_TAGS.append('p') 
+    # Sanitize and return
+    clean = bleach.clean(html, strip=True) 
+    return clean
 
 
 if __name__ == "__main__":

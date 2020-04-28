@@ -1,8 +1,7 @@
 steps:
 - # Build the renderer image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', 
-         '--tag=gcr.io/$PROJECT_ID/renderer', 'renderer/.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/renderer', 'renderer/.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
@@ -10,32 +9,35 @@ steps:
 
 - # Deploy to Cloud Run
   name: gcr.io/cloud-builders/gcloud
-  args: ['run', 'deploy', 'renderer',
-         '--image', 'gcr.io/$PROJECT_ID/renderer',
-         '--region', 'us-central1',
-         '--platform', 'managed',
-         '--no-allow-unauthenticated'
-  ]
+  args: 
+  - run
+  - deploy
+  - renderer
+  - --image
+  - gcr.io/$PROJECT_ID/renderer
+  - --region
+  - us-central1
+  - --platform
+  - managed
+  - --no-allow-unauthenticated
 
 - # Get the Renderer URL and save to workspace
   name: gcr.io/cloud-builders/gcloud
   entrypoint: /bin/bash
-  args: ['-c', "gcloud run \
-                --platform managed \
-                --region us-central1 \
-                services describe renderer \
-                --format='value(status.url)' > /workspace/renderer_url.txt"]
-
-- # Check the URL is populated
-  name: gcr.io/cloud-builders/gcloud
-  entrypoint: /bin/bash
-  args: ['-c', "url=$(< /workspace/renderer_url.txt) && \
-                if [ -z $url ]; then echo 'Missing Renderer URL'; exit 1; fi"]
+  args: 
+  - -c
+  - |
+    get_url() {
+        gcloud run --platform managed --region us-central1 services describe \
+        renderer --format='value(status.url)'
+    }
+    echo $(get_url) > /workspace/renderer_url.txt
+    url=$(< /workspace/renderer_url.txt) && if [ -z $url ]; \
+      then echo 'Missing Renderer URL'; exit 1; fi
 
 - # Build the editor image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', 
-         '--tag=gcr.io/$PROJECT_ID/editor', 'editor/.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/editor', 'editor/.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
@@ -44,14 +46,14 @@ steps:
 - # Deploy with renderer url environment variable
   name: gcr.io/cloud-builders/gcloud
   entrypoint: /bin/bash
-  args: ['-c', "gcloud run deploy editor \
-                --image gcr.io/$PROJECT_ID/editor \
-                --region us-central1 \
-                --platform managed \
-                --set-env-vars EDITOR_UPSTREAM_RENDER_URL=$(cat /workspace/renderer_url.txt) \
-                --no-allow-unauthenticated"]
+  args: 
+  - -c
+  - "gcloud run deploy editor --image gcr.io/$PROJECT_ID/editor \
+  --region us-central1 --platform managed \
+  --set-env-vars EDITOR_UPSTREAM_RENDER_URL=$(cat /workspace/renderer_url.txt) \
+  --no-allow-unauthenticated"
 
-images: [
-  'gcr.io/$PROJECT_ID/renderer',
-  'gcr.io/$PROJECT_ID/editor'
-]
+
+images: 
+  - 'gcr.io/$PROJECT_ID/renderer'
+  - 'gcr.io/$PROJECT_ID/editor'
