@@ -13,26 +13,33 @@
 # limitations under the License.
 
 import os
-import random
+import uuid
+
+from googleapiclient.errors import HttpError
 
 import service_accounts
 
 
 def test_service_accounts(capsys):
     project_id = os.environ['GCLOUD_PROJECT']
-    rand = str(random.randint(0, 1000))
-    name = 'python-test-' + rand
+    name = 'python-test-{}'.format(str(uuid.uuid4()).split('-')[0])
     email = name + '@' + project_id + '.iam.gserviceaccount.com'
 
-    service_accounts.create_service_account(
-        project_id, name, 'Py Test Account')
-    service_accounts.list_service_accounts(
-        project_id)
-    service_accounts.rename_service_account(
-        email, 'Updated Py Test Account')
-    service_accounts.disable_service_account(
-        email)
-    service_accounts.enable_service_account(
-        email)
-    service_accounts.delete_service_account(
-        email)
+    try:
+        service_accounts.create_service_account(
+            project_id, name, 'Py Test Account')
+        service_accounts.list_service_accounts(project_id)
+        service_accounts.rename_service_account(
+            email, 'Updated Py Test Account')
+        service_accounts.disable_service_account(email)
+        service_accounts.enable_service_account(email)
+        service_accounts.delete_service_account(email)
+    finally:
+        try:
+            service_accounts.delete_service_account(email)
+        except HttpError as e:
+            # When the service account doesn't exist, the service returns 403.
+            if '403' in str(e):
+                print("Ignoring 403 error upon cleanup.")
+            else:
+                raise
