@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import os
 import pytest
 import translate_v3_create_glossary
@@ -20,10 +21,14 @@ import translate_v3_delete_glossary
 import translate_v3_translate_text_with_glossary
 import uuid
 
+from google.api_core.exceptions import GoogleAPICallError, DeadlineExceeded, RetryError
+from google.cloud.exceptions import NotFound
+
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
-
+@backoff.on_exception(
+    backoff.expo, (GoogleAPICallError, DeadlineExceeded), max_time=60)
 @pytest.fixture(scope="session")
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
@@ -34,7 +39,13 @@ def glossary():
 
     yield glossary_id
 
-    translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
+    # cleanup
+    try:
+        translate_v3_delete_glossary.delete_glossary(
+            PROJECT_ID, glossary_id)
+    except NotFound as e:
+        # Ignoring this case.
+        print("Got NotFound, detail: {}".format(str(e)))
 
 
 def test_translate_text_with_glossary(capsys, glossary):

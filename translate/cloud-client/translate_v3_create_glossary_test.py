@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import os
 import uuid
 
@@ -19,11 +20,15 @@ import pytest
 
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
+from google.api_core.exceptions import GoogleAPICallError, DeadlineExceeded, RetryError
+from google.cloud.exceptions import NotFound
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
+@backoff.on_exception(
+    backoff.expo, (GoogleAPICallError, DeadlineExceeded), max_time=60)
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
     try:
@@ -36,5 +41,10 @@ def test_create_glossary(capsys):
         assert "Created:" in out
         assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
     finally:
-        # clean up after use
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
+        # cleanup
+        try:
+            translate_v3_delete_glossary.delete_glossary(
+                PROJECT_ID, glossary_id)
+        except NotFound as e:
+            # Ignoring this case.
+            print("Got NotFound, detail: {}".format(str(e)))
