@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import bleach
 from flask import Flask, request
 import markdown
 import os
@@ -23,6 +24,8 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def index():
     data = request.get_data(as_text=True)
+    # Sanitizes input 
+    data = bleach.clean(data)
     # Parses the markdown and outputs the formatted HTML
     return markdown.markdown(data)
 
