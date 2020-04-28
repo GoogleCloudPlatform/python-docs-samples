@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def index():
     data = request.get_data(as_text=True)
-    # Sanitizes input 
+    # Sanitizes input
     data = bleach.clean(data)
     # Parses the markdown and outputs the formatted HTML
     return markdown.markdown(data)

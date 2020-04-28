@@ -46,7 +46,7 @@ def test_render_handler_errors(client):
 def test_missing_upstream_url(client):
     del os.environ["EDITOR_UPSTREAM_RENDER_URL"]
     with pytest.raises(Exception) as e:
-        client.post("/render", 
+        client.post("/render",
                     data=json.dumps({"data": "**strong text**"}),
                     headers={"Content-Type": "application/json"})
     assert "EDITOR_UPSTREAM_RENDER_URL missing" not in str(e.value)

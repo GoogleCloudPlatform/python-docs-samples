@@ -23,7 +23,7 @@ app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def index():
     # Render the default template
-    f = open('templates/markdown.md')
+    f = open("templates/markdown.md")
     return render_template("index.html", default=f.read())
 
 

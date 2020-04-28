@@ -22,8 +22,14 @@ from urllib import request
 def services():
     # Build and Deploy Cloud Run Services
     subprocess.run(
-        ["gcloud", "builds", "submit", "--config",
-         "e2e_test_setup.yaml", "--quiet"]
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            "--config",
+            "e2e_test_setup.yaml",
+            "--quiet",
+        ]
     )
 
     # Get the URL for the editor and the token
