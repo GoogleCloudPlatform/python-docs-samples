@@ -397,7 +397,7 @@ All the RPCs are inevitably flaky. It can fail for many reasons. The
 cases.
 
 The old api-client doesn't retry automatically, so consider using
-(`backoff`)[https://pypi.org/project/backoff/] for retrying. Here is a
+[`backoff`](https://pypi.org/project/backoff/) for retrying. Here is a
 simple example:
 
 ```python
