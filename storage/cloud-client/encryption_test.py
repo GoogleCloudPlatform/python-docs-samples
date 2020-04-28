@@ -71,7 +71,11 @@ def test_blob():
 
     yield blob.name, content
 
+    # To delete an encrypted blob, you have to provide the same key
+    # used for the blob. When you provide a wrong key, you'll get
+    # NotFound.
     try:
+        # Clean up for the case that the rotation didn't occur.
         blob.delete()
     except NotFound as e:
         # For the case that the rotation succeeded.
