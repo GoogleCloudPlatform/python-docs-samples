@@ -15,6 +15,7 @@
 
 import time
 from os import environ
+import uuid
 
 from google.api_core.exceptions import Aborted, GoogleAPICallError
 from google.cloud import kms_v1
@@ -63,7 +64,7 @@ def setup_module(module):
 
 class TestKMSSnippets:
     project_id = environ['GCLOUD_PROJECT']
-    keyring_id = 'kms-samples'
+    keyring_id = 'kms-samples-{}'.format(uuid.uuid4().hex)
     location = 'global'
     parent = 'projects/{}/locations/{}'.format(project_id, location)
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
@@ -83,7 +84,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="There's currently no method to delete keyrings, \
                               so we should avoid creating resources")
     def test_create_key_ring(self):
-        ring_id = self.keyring_id + '-testcreate' + str(int(time.time()))
+        ring_id = self.keyring_id + '-test-create-{}'.format(uuid.uuid4().hex)
         snippets.create_key_ring(self.project_id, self.location, ring_id)
         client = kms_v1.KeyManagementServiceClient()
         result = client.get_key_ring(client.key_ring_path(self.project_id,
@@ -94,7 +95,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="Deleting keys isn't instant, so we should avoid \
                               creating a large number of them in our tests")
     def test_create_crypto_key(self):
-        key_id = self.sym_id + '-test' + str(int(time.time()))
+        key_id = self.sym_id + '-test-{}'.format(uuid.uuid4().hex)
         snippets.create_crypto_key(self.project_id, self.location,
                                    self.keyring_id, key_id)
         c = kms_v1.KeyManagementServiceClient()
