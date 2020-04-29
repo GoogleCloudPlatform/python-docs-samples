@@ -14,18 +14,24 @@
 
 import json
 import pytest
+import random
 import subprocess
 from urllib import request
 
 
 @pytest.fixture()
 def services():
+    #Unique suffix to create distinct service names
+    suffix = random.randint(100000,999999)
+
     # Build and Deploy Cloud Run Services
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "--substitutions",
+            f"_SUFFIX={suffix}",
             "--config",
             "e2e_test_setup.yaml",
             "--quiet",
@@ -41,7 +47,7 @@ def services():
             "--region=us-central1",
             "services",
             "describe",
-            "editor",
+            f"editor-{suffix}",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
@@ -54,11 +60,11 @@ def services():
     yield editor, token
 
     subprocess.run(
-        ["gcloud", "run", "services", "delete", "editor",
+        ["gcloud", "run", "services", "delete", f"editor-{suffix}",
          "--platform", "managed", "--region", "us-central1", "--quiet"]
     )
     subprocess.run(
-        ["gcloud", "run", "services", "delete", "renderer",
+        ["gcloud", "run", "services", "delete", f"renderer-{suffix}",
          "--platform", "managed", "--region", "us-central1", "--quiet"]
     )
 

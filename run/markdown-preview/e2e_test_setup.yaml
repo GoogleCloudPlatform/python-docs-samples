@@ -1,20 +1,20 @@
 steps:
 - # Build the renderer image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', '--tag=gcr.io/$PROJECT_ID/renderer', 'renderer/.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/renderer-${_SUFFIX}', 'renderer/.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
-  args: ['push', 'gcr.io/$PROJECT_ID/renderer']
+  args: ['push', 'gcr.io/$PROJECT_ID/renderer-${_SUFFIX}']
 
 - # Deploy to Cloud Run
   name: gcr.io/cloud-builders/gcloud
   args: 
   - run
   - deploy
-  - renderer
+  - renderer-${_SUFFIX}
   - --image
-  - gcr.io/$PROJECT_ID/renderer
+  - gcr.io/$PROJECT_ID/renderer-${_SUFFIX}
   - --region
   - us-central1
   - --platform
@@ -29,7 +29,7 @@ steps:
   - |
     get_url() {
         gcloud run --platform managed --region us-central1 services describe \
-        renderer --format='value(status.url)'
+        renderer-${_SUFFIX} --format='value(status.url)'
     }
     echo $(get_url) > /workspace/renderer_url.txt
     url=$(< /workspace/renderer_url.txt) && if [ -z $url ]; \
@@ -37,23 +37,23 @@ steps:
 
 - # Build the editor image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', '--tag=gcr.io/$PROJECT_ID/editor', 'editor/.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/editor-${_SUFFIX}', 'editor/.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
-  args: ['push', 'gcr.io/$PROJECT_ID/editor']
+  args: ['push', 'gcr.io/$PROJECT_ID/editor-${_SUFFIX}']
 
 - # Deploy with renderer url environment variable
   name: gcr.io/cloud-builders/gcloud
   entrypoint: /bin/bash
   args: 
   - -c
-  - "gcloud run deploy editor --image gcr.io/$PROJECT_ID/editor \
+  - "gcloud run deploy editor-${_SUFFIX} --image gcr.io/$PROJECT_ID/editor-${_SUFFIX} \
   --region us-central1 --platform managed \
   --set-env-vars EDITOR_UPSTREAM_RENDER_URL=$(cat /workspace/renderer_url.txt) \
   --no-allow-unauthenticated"
 
 
 images: 
-  - 'gcr.io/$PROJECT_ID/renderer'
-  - 'gcr.io/$PROJECT_ID/editor'
+  - 'gcr.io/$PROJECT_ID/renderer-${_SUFFIX}'
+  - 'gcr.io/$PROJECT_ID/editor-${_SUFFIX}'
