@@ -460,7 +460,7 @@ test as flaky with 3 retries, then we have the success rate of:
 It's still around 82% success rate. You'll see about 2 failures out of
 10 runs.
 
-Instead, we should retry each RPCs. For example, if we retry 5 times,
+Instead, we should retry each RPCs. For example, if we retry 3 times,
 the success rate of a single RPC will be:
 
 ```
