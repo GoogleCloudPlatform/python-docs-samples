@@ -247,7 +247,7 @@ def delete_registry(
         return 'Registry deleted'
     except HttpError:
         print('Error, registry not deleted')
-        return 'Registry not deleted'
+        raise
     # [END iot_delete_registry]
 
 
@@ -391,10 +391,10 @@ def create_registry(
         return response
     except HttpError:
         print('Error, registry not created')
-        return ""
+        raise
     except AlreadyExists:
         print('Error, registry already exists')
-        return ""
+        raise
     # [END iot_create_registry]
 
 
@@ -422,12 +422,12 @@ def open_registry(
     # registry_id = 'your-registry-id'
     print('Creating registry')
 
-    response = create_registry(
-        service_account_json, project_id, cloud_region,
-        pubsub_topic, registry_id)
-
-    if response == '':
-        # Device registry already exists
+    try:
+        response = create_registry(
+            service_account_json, project_id, cloud_region,
+            pubsub_topic, registry_id)
+    except AlreadyExists:
+        # Device registry already exists. We just re-use the existing one.
         print(
             'Registry {} already exists - looking it up instead.'.format(
                 registry_id))
