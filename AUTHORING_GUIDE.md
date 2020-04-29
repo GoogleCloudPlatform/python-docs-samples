@@ -288,7 +288,8 @@ example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/
 * Use pytest's fixture for resource setup and teardown, instead of
   having them in the test itself.
 * Avoid infinite loops.
-* Retry RPCs
+* Retry RPCs.
+* Avoid consecutive RPCs.
 
 ### Arrange, Act, Assert
 
@@ -427,6 +428,58 @@ def test_resource():
     # cleanup
     ...
 ```
+
+### Avoid consecutive RPCs
+
+In this section, we discuss the need for retrying RPCs from a
+different perspective; success rate.
+
+If you have consecutive unretried RPCs, the success rate of your code
+will be significantly (and kind of exponentially) lowered. Here is an
+extreme example.
+
+Let's say:
+
+* You need to create and destroy 4 resources to run the test.
+* All the RPCs have a success rate of 0.9 for simplicity.
+
+If you run those 8 RPCs consecutively without retry, the whole success
+rate will be:
+
+```
+0.9^8 = 0.43046721
+```
+
+This test is inevitably very flaky. So build cop potentially mark the
+test as flaky with 3 retries, then we have the success rate of:
+
+```
+1 - (1-0.43046721)^3 = .81526201642132020987
+```
+
+It's still around 82% success rate. You'll see about 2 failures out of
+10 runs.
+
+Instead, we should retry each RPCs. For example, if we retry 5 times,
+the success rate of a single RPC will be:
+
+```
+1 - (1-0.9)^3 = 0.999
+```
+
+Then the whole success rate will be:
+
+```
+0.999^8 = .99202794406994402799
+```
+
+This test is still flaky, but you'll only see 1 failures out of 125
+runs. If you additionally mark it with `flaky` (with the default of
+just 1 retry), you'll only see about 1 failure out of 27 years of
+nightly builds.
+
+As you can see, you can get much higher success rate if you retry each
+RPCs, instead of just blindly marking a test as `flaky`.
 
 ### Running tests
 
