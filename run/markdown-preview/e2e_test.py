@@ -53,11 +53,13 @@ def services():
 
     yield editor, token
 
-
-def tear_down():
-    subprocess.run(["gcloud", "run", "services", "delete", "editor", "--quiet"])
     subprocess.run(
-        ["gcloud", "run", "services", "delete", "renderer", "--quiet"]
+        ["gcloud", "run", "services", "delete", "editor",
+         "--platform", "managed", "--region", "us-central1", "--quiet"]
+    )
+    subprocess.run(
+        ["gcloud", "run", "services", "delete", "renderer",
+         "--platform", "managed", "--region", "us-central1", "--quiet"]
     )
 
 
@@ -80,4 +82,3 @@ def test_end_to_end(services):
 
     body = response.read()
     assert "<p><strong>strong text</strong></p>" in body.decode()
-    tear_down()
