@@ -32,7 +32,13 @@ def change_file_storage_class(bucket_name, blob_name):
     blob = bucket.get_blob(blob_name)
     blob.update_storage_class(constants.NEARLINE_STORAGE_CLASS)
 
-    print("Blob {} in bucket {} had its storage class set to {}. ".format(blob_name, bucket_name, blob.storage_class))
+    print(
+        "Blob {} in bucket {} had its storage class set to {}".format(
+            blob_name,
+            bucket_name,
+            blob.storage_class
+        )
+    )
     return blob
 
 

@@ -34,6 +34,7 @@ def change_default_storage_class(bucket_name):
     print("Default storage class for bucket {} has been set to {}".format(bucket_name, bucket.storage_class))
     return bucket
 
+
 # [END storage_change_default_storage_class]
 
 if __name__ == "__main__":

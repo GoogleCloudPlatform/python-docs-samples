@@ -41,7 +41,7 @@ def copy_file_archived_generation(
     )
 
     print(
-        "Generation {} of the Blob {} in bucket {} copied to blob {} in bucket {}.".format(
+        "Generation {} of the blob {} in bucket {} copied to blob {} in bucket {}.".format(
             source_blob.generation,
             source_blob.name,
             source_bucket.name,

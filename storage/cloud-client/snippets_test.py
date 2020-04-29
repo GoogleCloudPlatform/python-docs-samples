@@ -271,28 +271,36 @@ def test_cors_configuration(test_bucket, capsys):
 
 
 def test_list_blobs_archived_generation(test_blob, capsys):
-    storage_list_file_archived_generations.list_file_archived_generations(test_blob.bucket.name)
+    storage_list_file_archived_generations.list_file_archived_generations(
+        test_blob.bucket.name
+    )
     out, _ = capsys.readouterr()
     assert str(test_blob.generation) in out
 
 
 def test_delete_blobs_archived_generation(test_blob, capsys):
-    storage_delete_file_archived_generation.delete_file_archived_generation(test_blob.bucket.name, test_blob.name,
-                                                                            test_blob.generation)
+    storage_delete_file_archived_generation.delete_file_archived_generation(
+        test_blob.bucket.name, test_blob.name, test_blob.generation
+    )
     out, _ = capsys.readouterr()
     assert "blob " + test_blob.name + " was deleted" in out
-    assert test_blob.bucket.get_blob(test_blob.name, generation=test_blob.generation) is None
+    blob = test_blob.bucket.get_blob(test_blob.name, generation=test_blob.generation)
+    assert blob is None
 
 
 def test_change_default_storage_class(test_bucket, capsys):
-    bucket = storage_change_default_storage_class.change_default_storage_class(test_bucket)
+    bucket = storage_change_default_storage_class.change_default_storage_class(
+        test_bucket
+    )
     out, _ = capsys.readouterr()
     assert "Default storage class for bucket" in out
     assert bucket.storage_class == 'COLDLINE'
 
 
 def test_change_file_storage_class(test_blob, capsys):
-    blob = storage_change_file_storage_class.change_file_storage_class(test_blob.bucket.name, test_blob.name)
+    blob = storage_change_file_storage_class.change_file_storage_class(
+        test_blob.bucket.name, test_blob.name
+    )
     out, _ = capsys.readouterr()
     assert "Blob {} in bucket {}". format(blob.name, blob.bucket.name) in out
     assert blob.storage_class == 'NEARLINE'
