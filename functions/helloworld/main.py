@@ -98,6 +98,7 @@ def hello_pubsub(event, context):
     else:
         name = 'World'
     print('Hello {}!'.format(name))
+    return
 # [END functions_helloworld_pubsub]
 
 
