@@ -127,12 +127,19 @@ def cloud_run(session):
 
     # Only update gcloud on Kokoro.
     if os.environ.get("KOKORO_JOB_NAME", ""):
+        # Update gcloud
         session.run("gcloud", "components", "update", "--quiet")
+
+        # Activate service account
         key_file = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
         session.run(
             "gcloud", "auth", "activate-service-account",
             "--key-file={}".format(key_file)
         )
+
+        # Set gcloud project
+        project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+        session.run("gcloud", "config", "set", "project", project)
 
     session.run(
         "pytest",
