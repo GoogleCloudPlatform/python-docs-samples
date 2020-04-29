@@ -16,15 +16,13 @@
 from google.cloud import bigtable
 from google.cloud.bigtable.row_set import RowSet
 
-instance_id = 'testing-instance'
-table_id = 'mobile-time-series'
-
 client = bigtable.Client()
-instance = client.instance(instance_id)
-table = instance.table(table_id)
 
 
 def bigtable_read_data(request):
+    instance = client.instance(request.headers.get("instance_id"))
+    table = instance.table(request.headers.get("table_id"))
+
     prefix = 'phone#'
     end_key = prefix[:-1] + chr(ord(prefix[-1]) + 1)
 
