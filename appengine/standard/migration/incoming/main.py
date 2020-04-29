@@ -17,8 +17,8 @@ Authenticate requests coming from other App Engine instances.
 """
 
 # [START gae_python_app_identity_incoming]
-import google.oauth2.id_token
-import google.auth.transport.requests
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 import webapp2
 
@@ -36,13 +36,13 @@ def get_app_id(request):
     # service account, which will identify the application ID. They will
     # have to include at token in an Authorization header to be recognized
     # by this method.
-    auth_header = request.header.get('Authorization', None)
+    auth_header = request.headers.get('Authorization', None)
     if auth_header is None:
         return None
 
     # The auth_header must be in the form Authorization: Bearer token.
     bearer, token = auth_header.split()
-    if bearer.lower != 'bearer':
+    if bearer.lower() != 'bearer':
         return None
 
     try:
@@ -61,7 +61,8 @@ def get_app_id(request):
 class MainPage(webapp2.RequestHandler):
     allowed_app_ids = [
         'other-app-id',
-        'other-app-id-2'
+        'other-app-id-2',
+        'engelkenodecloudstoragesample'
     ]
 
     def get(self):

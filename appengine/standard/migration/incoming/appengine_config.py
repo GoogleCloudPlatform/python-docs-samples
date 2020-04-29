@@ -12,14 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python27
-threadsafe: yes
-api_version: 1
+# [START vendor]
+from google.appengine.ext import vendor
 
-libraries:
-- name: ssl
-  version: latest
-
-handlers:
-- url: .*
-  script: main.app
+# Add any libraries installed in the "lib" folder.
+vendor.add('lib')
+# [END vendor]
