@@ -13,16 +13,18 @@
 # limitations under the License.
 
 import json
-import pytest
 import random
 import subprocess
 from urllib import request
+import uuid
+
+import pytest
 
 
 @pytest.fixture()
 def services():
     #Unique suffix to create distinct service names
-    suffix = random.randint(100000,999999)
+    suffix = uuid.uuid4().hex
 
     # Build and Deploy Cloud Run Services
     subprocess.run(
