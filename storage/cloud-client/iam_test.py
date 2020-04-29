@@ -23,6 +23,7 @@ import storage_add_bucket_iam_member
 import storage_add_bucket_conditional_iam_binding
 import storage_view_bucket_iam_members
 import storage_remove_bucket_conditional_iam_binding
+import storage_set_bucket_public_iam
 
 MEMBER = "group:dpebot@google.com"
 ROLE = "roles/storage.legacyBucketReader"
@@ -108,5 +109,18 @@ def test_remove_bucket_conditional_iam_binding(bucket):
     }
     assert not any(
         (binding["role"] == ROLE and binding.get("condition") == condition)
+        for binding in policy.bindings
+    )
+
+
+def test_set_bucket_public_iam(bucket):
+    role = "roles/storage.objectViewer"
+    member = "allUsers"
+    storage_set_bucket_public_iam.set_bucket_public_iam(
+        bucket.name, role, member
+    )
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    assert any(
+        binding["role"] == role and member in binding["members"]
         for binding in policy.bindings
     )

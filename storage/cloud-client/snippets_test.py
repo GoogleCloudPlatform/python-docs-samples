@@ -42,6 +42,13 @@ import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
 import storage_generate_signed_post_policy_v4
 import storage_set_bucket_default_kms_key
+import storage_create_bucket_class_location
+import storage_bucket_delete_default_kms_key
+import storage_get_service_account
+import storage_download_public_file
+import storage_define_bucket_website_configuration
+import storage_object_get_kms_key
+import storage_compose_file
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
@@ -249,3 +256,81 @@ def test_copy_blob(test_blob):
 
     assert bucket.get_blob("test_copy_blob") is not None
     assert bucket.get_blob(test_blob.name) is not None
+
+
+def test_create_bucket_class_location():
+    bucket = storage_create_bucket_class_location.create_bucket_class_location(
+        "storage-snippets-test"
+    )
+
+    assert bucket.location == 'US'
+    assert bucket.storage_class == "COLDLINE"
+    bucket.delete(force=True)
+
+
+def test_bucket_delete_default_kms_key(test_bucket, capsys):
+    storage_bucket_delete_default_kms_key.bucket_delete_default_kms_key(
+        test_bucket.name
+    )
+
+    out, _ = capsys.readouterr()
+    assert test_bucket.default_kms_key_name is None
+    assert test_bucket.name in out
+
+
+def test_get_service_account(capsys):
+    storage_get_service_account.get_service_account()
+    out, _ = capsys.readouterr()
+
+    assert "@gs-project-accounts.iam.gserviceaccount.com" in out
+
+
+def test_download_public_file(test_blob):
+    storage_make_public.make_blob_public(test_blob.bucket.name, test_blob.name)
+    with tempfile.NamedTemporaryFile() as dest_file:
+        storage_download_public_file.download_public_file(
+            test_blob.bucket.name, test_blob.name, dest_file.name
+        )
+
+        assert dest_file.read()
+
+
+def test_define_bucket_website_configuration(test_bucket):
+    bucket = storage_define_bucket_website_configuration.\
+        define_bucket_website_configuration(test_bucket.name, "index.html", "404.html")
+
+    website_val = {
+        "mainPageSuffix": "index.html",
+        "notFoundPage": "404.html"
+    }
+
+    assert bucket._properties["website"] == website_val
+
+
+def test_object_get_kms_key(test_bucket):
+    with tempfile.NamedTemporaryFile() as source_file:
+        storage_upload_with_kms_key.upload_blob_with_kms(
+            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY
+        )
+    kms_key = storage_object_get_kms_key.object_get_kms_key(
+        test_bucket.name, "test_upload_blob_encrypted"
+    )
+
+    assert kms_key.startswith(KMS_KEY)
+
+
+def test_storage_compose_file(test_bucket):
+    source_files = ["test_upload_blob_1", "test_upload_blob_2"]
+    blob_list = []
+    for source in source_files:
+        blob = test_bucket.blob(source)
+        blob.upload_from_string(source)
+        blob_list.append(blob)
+
+    with tempfile.NamedTemporaryFile() as dest_file:
+        destination = storage_compose_file.compose_file(
+            test_bucket.name, blob_list, dest_file.name
+        )
+        composed = destination.download_as_string()
+
+        assert composed.decode("utf-8") == source_files[0] + source_files[1]
