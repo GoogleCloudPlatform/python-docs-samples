@@ -38,4 +38,3 @@ def enable_versioning(bucket_name):
 
 if __name__ == "__main__":
     enable_versioning(bucket_name=sys.argv[1])
-
