@@ -52,6 +52,7 @@ def bucket():
     bucket.delete(force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
     translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
         "gs://cloud-samples-data/translation/text_with_glossary.txt",
