@@ -46,7 +46,7 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
         form += "  <input name='{}' value='{}' type='hidden'/>\n".format(key, value)
 
     form += "  <input type='file' name='file'/><br />\n"
-    form += "  <input type='submit' value='Upload File' name='submit'/><br />\n"
+    form += "  <input type='submit' value='Upload File' /><br />\n"
     form += "</form>"
 
     print(form)
