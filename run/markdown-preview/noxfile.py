@@ -128,6 +128,11 @@ def cloud_run(session):
     # Only update gcloud on Kokoro.
     if os.environ.get("KOKORO_JOB_NAME", ""):
         session.run("gcloud", "components", "update", "--quiet")
+        key_file = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
+        session.run(
+            "gcloud", "auth", "activate-service-account",
+            "--key-file={}".format(key_file)
+        )
 
     session.run(
         "pytest",
