@@ -49,4 +49,4 @@ def test_missing_upstream_url(client):
         client.post("/render",
                     data=json.dumps({"data": "**strong text**"}),
                     headers={"Content-Type": "application/json"})
-    assert "EDITOR_UPSTREAM_RENDER_URL missing" not in str(e.value)
+    assert "EDITOR_UPSTREAM_RENDER_URL missing" in str(e.value)
