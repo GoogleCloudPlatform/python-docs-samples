@@ -12,25 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import backoff
 import os
+import uuid
+
+import backoff
 import pytest
+
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
+from google.cloud.exceptions import NotFound
+
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
 import translate_v3_list_glossary
-import uuid
 
-from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError, RetryError
-from google.cloud.exceptions import NotFound
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
-@backoff.on_exception(
-    backoff.expo, (DeadlineExceeded, GoogleAPICallError,
-                   RetryError), max_time=60
-)
 @pytest.fixture(scope="session")
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
@@ -42,11 +41,17 @@ def glossary():
     yield glossary_id
 
     # clean up
-    try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except NotFound as e:
-        # Ignoring this case.
-        print("Got NotFound, detail: {}".format(str(e)))
+    @backoff.on_exception(
+        backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
+    )
+    def delete_glossary():
+        try:
+            translate_v3_delete_glossary.delete_glossary(
+                PROJECT_ID, glossary_id)
+        except NotFound as e:
+            # Ignoring this case.
+            print("Got NotFound, detail: {}".format(str(e)))
+    delete_glossary()
 
 
 def test_list_glossary(capsys, glossary):
