@@ -32,8 +32,8 @@ PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_ZONE = os.environ['BIGTABLE_ZONE']
 SIZE_CHANGE_STEP = 3
 INSTANCE_ID_FORMAT = 'metric-scale-test-{}'
-BIGTABLE_INSTANCE = INSTANCE_ID_FORMAT.format(str(uuid.uuid4())[:15])
-BIGTABLE_DEV_INSTANCE = INSTANCE_ID_FORMAT.format(str(uuid.uuid4())[:15])
+BIGTABLE_INSTANCE = INSTANCE_ID_FORMAT.format(str(uuid.uuid4())[:10])
+BIGTABLE_DEV_INSTANCE = INSTANCE_ID_FORMAT.format(str(uuid.uuid4())[:10])
 
 
 # System tests to verify API calls succeed
