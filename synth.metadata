@@ -1,0 +1,11 @@
+{
+  "sources": [
+    {
+      "git": {
+        "name": ".",
+        "remote": "git@github.com:googlecloudplatform/python-docs-samples",
+        "sha": "0bb97ac0ab2a498759ea47dbf26b8b1b4d0e7ca7"
+      }
+    }
+  ]
+}
