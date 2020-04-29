@@ -16,6 +16,8 @@ import os
 import uuid
 import pytest
 
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import bigtable
 
 from .write_batch import write_batch
@@ -55,22 +57,37 @@ def table_id(bigtable_instance):
 
 
 def test_writes(capsys, table_id):
-    write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
 
+    # `row.commit()` sometimes ends up with DeadlineExceeded, so now
+    # we put retries with a hard deadline.
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    def _write_simple():
+        write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    _write_simple()
     out, _ = capsys.readouterr()
     assert 'Successfully wrote row' in out
 
-    write_increment(PROJECT, BIGTABLE_INSTANCE, table_id)
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    def _write_increment():
+        write_increment(PROJECT, BIGTABLE_INSTANCE, table_id)
 
+    _write_increment()
     out, _ = capsys.readouterr()
     assert 'Successfully updated row' in out
 
-    write_conditional(PROJECT, BIGTABLE_INSTANCE, table_id)
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    def _write_conditional():
+        write_conditional(PROJECT, BIGTABLE_INSTANCE, table_id)
 
+    _write_conditional()
     out, _ = capsys.readouterr()
     assert 'Successfully updated row\'s os_name' in out
 
-    write_batch(PROJECT, BIGTABLE_INSTANCE, table_id)
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    def _write_batch():
+        write_batch(PROJECT, BIGTABLE_INSTANCE, table_id)
 
+    _write_batch()
     out, _ = capsys.readouterr()
     assert 'Successfully wrote 2 rows' in out
