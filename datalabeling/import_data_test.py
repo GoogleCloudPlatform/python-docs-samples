@@ -16,27 +16,36 @@
 
 import os
 
-import import_data
-import manage_dataset
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
+
+import import_data
+import testing_lib
+
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = testing_lib.create_dataset(PROJECT_ID)
 
     yield dataset
 
     # tear down
-    manage_dataset.delete_dataset(dataset.name)
+    testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.mark.slow
 def test_import_data(capsys, dataset):
-    import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
+
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert 'Dataset resource name: ' in out

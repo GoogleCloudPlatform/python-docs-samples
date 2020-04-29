@@ -14,7 +14,7 @@
 
 """Test script for Identity-Aware Proxy code samples."""
 
-from flaky import flaky
+import pytest
 
 import make_iap_request
 import validate_jwt
@@ -34,7 +34,7 @@ IAP_APP_ID = 'gcp-devrel-iap-reflect'
 IAP_PROJECT_NUMBER = '320431926067'
 
 
-@flaky
+@pytest.mark.flaky
 def test_main(capsys):
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back

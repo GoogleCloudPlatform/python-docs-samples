@@ -13,7 +13,8 @@
 # limitations under the License.
 
 import os
-from flaky import flaky
+
+import pytest
 
 from product_search import get_similar_products_file, get_similar_products_uri
 
@@ -31,7 +32,7 @@ IMAGE_URI_1 = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'
 FILTER = 'style=womens'
 
 
-@flaky(max_runs=5, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_get_similar_products_file(capsys):
     get_similar_products_file(
         PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1,
