@@ -24,13 +24,8 @@ import storage_download_file_requester_pays
 import storage_get_requester_pays_status
 
 
-# We should not use the same bucket as other tests are using.
-# First look at REQUESTER_PAYS_TEST_BUCKET and fall back to
-# ${CLOUD_STORAGE_BUCKET} + '-requester-pays-test'.
-BUCKET = os.environ.get(
-    "REQUESTER_PAYS_TEST_BUCKET",
-    "{}-requester-pays-test".format(os.environ["CLOUD_STORAGE_BUCKET"])
-)
+# We use a different bucket from other tests.
+BUCKET = os.environ["REQUESTER_PAYS_TEST_BUCKET"]
 PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
