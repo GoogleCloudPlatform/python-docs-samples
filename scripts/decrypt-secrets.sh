@@ -20,6 +20,7 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
-openssl aes-256-cbc -k "$1" -in testing/secrets.tar.enc -out secrets.tar -d
+openssl aes-256-cbc -k "$1" -md sha256 \
+	-in testing/secrets.tar.enc -out secrets.tar -d
 tar xvf secrets.tar
 rm secrets.tar
