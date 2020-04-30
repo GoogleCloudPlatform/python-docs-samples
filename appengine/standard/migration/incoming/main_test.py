@@ -17,19 +17,9 @@ import webtest
 import main
 
 
-def test_app(testbed):
+def test_get():
     app = webtest.TestApp(main.app)
 
-    response = app.get('/', status=403)
+    response = app.get('/')
 
-    response = app.get('/', headers={
-        'X-Appengine-Inbound-Appid': 'other-app-id'
-    })
-    assert response.status_int == 200
-
-    try:
-        info = google.oauth2.id_token.verify_token(
-            token,
-            google.auth.transport.requests.Request(),
-            audience
-        )
+    assert response.status_int == 403

@@ -61,8 +61,7 @@ def get_app_id(request):
 class MainPage(webapp2.RequestHandler):
     allowed_app_ids = [
         'other-app-id',
-        'other-app-id-2',
-        'engelkenodecloudstoragesample'
+        'other-app-id-2'
     ]
 
     def get(self):
