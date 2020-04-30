@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This sample creates a secure two-service application running on Cloud Run. 
+# This test builds and deploys the two secure services 
+# to test that they interact properly together.
+
 import json
 import subprocess
 from urllib import request
@@ -36,7 +40,7 @@ def services():
             "--config",
             "e2e_test_setup.yaml",
             "--quiet",
-        ]
+        ], check=True
     )
 
     # Get the URL for the editor and the token
@@ -52,21 +56,25 @@ def services():
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
+        check=True
     ).stdout.strip()
 
     token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE
+        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE,
+        check=True
     ).stdout.strip()
 
     yield editor, token
 
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"editor-{suffix}",
-         "--platform", "managed", "--region", "us-central1", "--quiet"]
+         "--platform", "managed", "--region", "us-central1", "--quiet"], 
+         check=True
     )
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"renderer-{suffix}",
-         "--platform", "managed", "--region", "us-central1", "--quiet"]
+         "--platform", "managed", "--region", "us-central1", "--quiet"],
+         check=True
     )
 
 
