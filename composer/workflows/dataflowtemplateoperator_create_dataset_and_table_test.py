@@ -1,9 +1,15 @@
 from google.cloud import bigquery
 import google.cloud.exceptions
 import pytest
+import uuid
+import os
 from . import dataflowtemplateoperator_create_dataset_and_table_helper as helper
 
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+
 client = bigquery.Client()
+
+dataset_UUID = str(uuid.uuid4()).split("-")[0]
 
 expected_schema = schema = [
     bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
@@ -14,35 +20,13 @@ expected_schema = schema = [
     bigquery.SchemaField("latest_measurement", "DATE", mode="NULLABLE"),
 ]
 
-expected_table_id = f"{client.project}.average_weather.average_weather"
-expected_dataset_id = f"{client.project}.average_weather"
+def test_creation():
+    dataset = helper.create_dataset(PROJECT_ID, dataset_UUID)
+    table = helper.create_table(PROJECT_ID, dataset_UUID)
 
-
-@pytest.fixture(scope="module")
-def dataset():
-    try:
-        dataset = client.get_dataset(expected_dataset_id)
-    except google.cloud.exceptions.NotFound:
-        dataset = helper.create_dataset()
-
-    yield dataset
+    assert table.table_id == "average_weather"
+    assert dataset.dataset_id == dataset_UUID
+    assert table.schema == expected_schema
 
     client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
-
-
-@pytest.fixture(scope="module")
-def table():
-    try:
-        table = client.get_table(expected_table_id)
-    except google.cloud.exceptions.NotFound:
-        table = helper.create_table()
-
-    yield table
-
     client.delete_table(table, not_found_ok=True)
-
-
-def test_creation(dataset, table):
-    assert table.table_id == "average_weather"
-    assert dataset.dataset_id == "average_weather"
-    assert table.schema == expected_schema

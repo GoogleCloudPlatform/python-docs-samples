@@ -14,23 +14,31 @@
 
 # [START composer_dataflow_dag]
 
+
+"""Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
+wordcount example, and deletes the cluster.
+
+This DAG relies on three Airflow variables
+https://airflow.apache.org/concepts.html#variables
+* project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
+* gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
+  created.
+* gcs_bucket - Google Cloud Storage bucket where you've stored the User Defined 
+Function (.js), the input file (.txt), and the JSON schema (.json).
+  See https://cloud.google.com/storage/docs/creating-buckets for creating a
+  bucket.
+"""
+
 import datetime
 
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 from airflow import models
 
-# [END composer_dataflow_dag]
-
 bucket_path = "gs://" + models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce_zone")
 
-# [START composer_dataflow_dag]
-
-
-# TODO: Replace all instances of project_id with your project id.
-# TODO: Replace bucket_name with your bucket name.
 
 default_args = {
     # Tell airflow to start one day ago, so that it runs as soon as you upload it
