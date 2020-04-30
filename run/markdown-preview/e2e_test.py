@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample creates a secure two-service application running on Cloud Run. 
-# This test builds and deploys the two secure services 
+# This sample creates a secure two-service application running on Cloud Run.
+# This test builds and deploys the two secure services
 # to test that they interact properly together.
 
 import json
@@ -68,13 +68,13 @@ def services():
 
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"editor-{suffix}",
-         "--platform", "managed", "--region", "us-central1", "--quiet"], 
-         check=True
+         "--platform", "managed", "--region", "us-central1", "--quiet"],
+        check=True
     )
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"renderer-{suffix}",
          "--platform", "managed", "--region", "us-central1", "--quiet"],
-         check=True
+        check=True
     )
 
 
