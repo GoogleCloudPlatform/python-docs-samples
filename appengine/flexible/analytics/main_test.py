@@ -28,20 +28,21 @@ def app(monkeypatch):
     return main.app.test_client()
 
 
-@responses.activate
-def test_tracking(app):
-    responses.add(
-        responses.POST,
-        re.compile(r'.*'),
-        body='{}',
-        content_type='application/json')
+class TestGaeFlexAnalyticsTrackEvent(unittest.TestCase):
+    @responses.activate
+    def test_tracking(self, app):
+        responses.add(
+            responses.POST,
+            re.compile(r'.*'),
+            body='{}',
+            content_type='application/json')
 
-    r = app.get('/')
+        r = app.get('/')
 
-    assert r.status_code == 200
-    assert 'Event tracked' in r.data.decode('utf-8')
+        assert r.status_code == 200
+        assert 'Event tracked' in r.data.decode('utf-8')
 
-    assert len(responses.calls) == 1
-    request_body = responses.calls[0].request.body
-    assert 'tid=1234' in request_body
-    assert 'ea=test+action' in request_body
+        assert len(responses.calls) == 1
+        request_body = responses.calls[0].request.body
+        assert 'tid=1234' in request_body
+        assert 'ea=test+action' in request_body

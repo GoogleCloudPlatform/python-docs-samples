@@ -35,46 +35,47 @@ def test_index(app):
     assert r.status_code == 200
 
 
-@responses.activate
-def test_send_error(app):
-    responses.add(
-        responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='Test error',
-        status=500)
+class TestGaeFlexMailgunSimpleMessage(unittest.TestCase):
+    @responses.activate
+    def test_send_error(self, app):
+        responses.add(
+            responses.POST,
+            'https://api.mailgun.net/v3/example.com/messages',
+            body='Test error',
+            status=500)
 
-    with pytest.raises(requests.exceptions.HTTPError):
-        app.post('/send/email', data={
+        with pytest.raises(requests.exceptions.HTTPError):
+            app.post('/send/email', data={
+                'recipient': 'user@example.com',
+                'submit': 'Send simple email'})
+
+
+    @responses.activate
+    def test_send_simple(app):
+        responses.add(
+            responses.POST,
+            'https://api.mailgun.net/v3/example.com/messages',
+            body='')
+
+        response = app.post('/send/email', data={
             'recipient': 'user@example.com',
             'submit': 'Send simple email'})
+        assert response.status_code == 200
+        assert len(responses.calls) == 1
 
 
-@responses.activate
-def test_send_simple(app):
-    responses.add(
-        responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='')
+    @responses.activate
+    def test_send_complex(app, monkeypatch):
+        import main
+        monkeypatch.chdir(os.path.dirname(main.__file__))
 
-    response = app.post('/send/email', data={
-        'recipient': 'user@example.com',
-        'submit': 'Send simple email'})
-    assert response.status_code == 200
-    assert len(responses.calls) == 1
+        responses.add(
+            responses.POST,
+            'https://api.mailgun.net/v3/example.com/messages',
+            body='')
 
-
-@responses.activate
-def test_send_complex(app, monkeypatch):
-    import main
-    monkeypatch.chdir(os.path.dirname(main.__file__))
-
-    responses.add(
-        responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='')
-
-    response = app.post('/send/email', data={
-        'recipient': 'user@example.com',
-        'submit': 'Send complex email'})
-    assert response.status_code == 200
-    assert len(responses.calls) == 1
+        response = app.post('/send/email', data={
+            'recipient': 'user@example.com',
+            'submit': 'Send complex email'})
+        assert response.status_code == 200
+        assert len(responses.calls) == 1

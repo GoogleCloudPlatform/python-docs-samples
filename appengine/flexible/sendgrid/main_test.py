@@ -32,18 +32,19 @@ def test_get(app):
     assert r.status_code == 200
 
 
-@mock.patch('python_http_client.client.Client._make_request')
-def test_post(make_request_mock, app):
-    response = mock.Mock()
-    response.getcode.return_value = 200
-    response.read.return_value = 'OK'
-    response.info.return_value = {}
-    make_request_mock.return_value = response
+class TestGaeFlexSendgrid(unittest.TestCase):
+    @mock.patch('python_http_client.client.Client._make_request')
+    def test_post(self, make_request_mock, app):
+        response = mock.Mock()
+        response.getcode.return_value = 200
+        response.read.return_value = 'OK'
+        response.info.return_value = {}
+        make_request_mock.return_value = response
 
-    app.post('/send/email', data={
-        'to': 'user@example.com'
-    })
+        app.post('/send/email', data={
+            'to': 'user@example.com'
+        })
 
-    assert make_request_mock.called
-    request = make_request_mock.call_args[0][1]
-    assert 'user@example.com' in request.data.decode('utf-8')
+        assert make_request_mock.called
+        request = make_request_mock.call_args[0][1]
+        assert 'user@example.com' in request.data.decode('utf-8')

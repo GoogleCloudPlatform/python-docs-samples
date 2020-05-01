@@ -35,19 +35,20 @@ def test_index(app):
     assert r.status_code == 200
 
 
-@responses.activate
-def test_send_email(app):
-    responses.add(
-        responses.POST,
-        re.compile(r'.*'),
-        body='{"test": "message"}',
-        content_type='application/json')
+class TestGaeFlexMailjetSendMessage(unittest.TestCase):
+    @responses.activate
+    def test_send_email(self, app):
+        responses.add(
+            responses.POST,
+            re.compile(r'.*'),
+            body='{"test": "message"}',
+            content_type='application/json')
 
-    r = app.post('/send/email', data={'to': 'user@example.com'})
+        r = app.post('/send/email', data={'to': 'user@example.com'})
 
-    assert r.status_code == 200
-    assert 'test' in r.data.decode('utf-8')
+        assert r.status_code == 200
+        assert 'test' in r.data.decode('utf-8')
 
-    assert len(responses.calls) == 1
-    request_body = responses.calls[0].request.body
-    assert 'user@example.com' in request_body
+        assert len(responses.calls) == 1
+        request_body = responses.calls[0].request.body
+        assert 'user@example.com' in request_body
