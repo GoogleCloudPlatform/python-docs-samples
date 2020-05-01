@@ -19,6 +19,6 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
 def test_list_languages(capsys):
-    translate_v3_get_supported_languages.sample_get_supported_languages(PROJECT_ID)
+    translate_v3_get_supported_languages.get_supported_languages(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "zh-CN" in out

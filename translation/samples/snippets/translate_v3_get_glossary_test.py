@@ -13,11 +13,18 @@
 # limitations under the License.
 
 import os
+import uuid
+
+import backoff
 import pytest
+
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
+from google.cloud.exceptions import NotFound
+
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
 import translate_v3_get_glossary
-import uuid
+
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
@@ -33,10 +40,18 @@ def glossary():
 
     yield glossary_id
 
-    try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+    # cleanup
+    @backoff.on_exception(
+        backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
+    )
+    def delete_glossary():
+        try:
+            translate_v3_delete_glossary.delete_glossary(
+                PROJECT_ID, glossary_id)
+        except NotFound as e:
+            # Ignoring this case.
+            print("Got NotFound, detail: {}".format(str(e)))
+    delete_glossary()
 
 
 def test_get_glossary(capsys, glossary):
