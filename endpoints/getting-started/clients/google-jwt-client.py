@@ -69,6 +69,7 @@ def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
     }
     response = requests.get(url, headers=headers)
     print(response.status_code, response.content)
+    response.raise_for_status()
 
 # [END endpoints_jwt_request]
 
