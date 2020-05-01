@@ -67,6 +67,7 @@ def test_translate_text(capsys):
     assert 'Translated Text:' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_batch_translate_text(capsys, bucket):
     beta_snippets.batch_translate_text(
         PROJECT_ID,
@@ -96,6 +97,7 @@ def test_list_languages_with_target(capsys):
     assert u'Display Name: albanska' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
@@ -125,6 +127,7 @@ def test_translate_text_with_glossary(capsys, glossary):
     assert 'cuenta' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_delete_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     beta_snippets.delete_glossary(PROJECT_ID, unique_glossary_id)

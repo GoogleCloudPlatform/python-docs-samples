@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import googleapiclient.discovery
 
@@ -32,20 +33,22 @@ def test_create_disk():
     google_public_key = generate_wrapped_rsa_key.get_google_public_cert_key()
     wrapped_rsa_key = generate_wrapped_rsa_key.wrap_rsa_key(
         google_public_key, key_bytes)
+    disk_name = 'new-encrypted-disk-{}'.format(uuid.uuid4().hex)
 
-    # Create the disk, if the encryption key is invalid, this will raise.
-    compute.disks().insert(
-        project=PROJECT,
-        zone='us-central1-f',
-        body={
-            'name': 'new-encrypted-disk',
-            'diskEncryptionKey': {
-                'rsaEncryptedKey': wrapped_rsa_key.decode('utf-8')
-            }
-        }).execute()
-
-    # Delete the disk.
-    compute.disks().delete(
-        project=PROJECT,
-        zone='us-central1-f',
-        disk='new-encrypted-disk').execute()
+    try:
+        # Create the disk, if the encryption key is invalid, this will raise.
+        compute.disks().insert(
+            project=PROJECT,
+            zone='us-central1-f',
+            body={
+                'name': disk_name,
+                'diskEncryptionKey': {
+                    'rsaEncryptedKey': wrapped_rsa_key.decode('utf-8')
+                }
+            }).execute()
+    finally:
+        # Delete the disk.
+        compute.disks().delete(
+            project=PROJECT,
+            zone='us-central1-f',
+            disk=disk_name).execute()

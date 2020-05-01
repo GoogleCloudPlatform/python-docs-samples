@@ -42,7 +42,8 @@ WORDCOUNT_JAR = (
     'file:///usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar'
 )
 # Arguments to pass to Cloud Dataproc job.
-wordcount_args = ['wordcount', 'gs://pub/shakespeare/rose.txt', output_file]
+input_file = 'gs://pub/shakespeare/rose.txt'
+wordcount_args = ['wordcount', input_file, output_file]
 
 yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
