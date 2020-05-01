@@ -13,10 +13,14 @@
 # limitations under the License.
 
 import os
-import pytest
-import translate_v3_batch_translate_text
 import uuid
+
+import pytest
+
 from google.cloud import storage
+
+import translate_v3_batch_translate_text
+
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
