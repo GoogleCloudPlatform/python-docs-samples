@@ -18,7 +18,7 @@ FROM python:3.8-slim
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
-COPY requirements.txt .
+COPY requirements.txt ./
 
 # Install production dependencies.
 RUN pip install -r requirements.txt
@@ -26,7 +26,7 @@ RUN pip install -r requirements.txt
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . .
+COPY . ./
 
 # Run the web service on container startup. 
 # Use gunicorn webserver with one worker process and 8 threads.
