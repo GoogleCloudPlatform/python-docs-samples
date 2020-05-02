@@ -1,8 +1,26 @@
-from google.cloud import bigquery
-import google.cloud.exceptions
-import pytest
-import uuid
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This script is a helper function to the Dataflow Template Operator Tutorial.
+# It helps the user set up a BigQuery dataset and table that is needed
+# for the tutorial.
+
 import os
+import uuid
+
+from google.cloud import bigquery
+
 from . import dataflowtemplateoperator_create_dataset_and_table_helper as helper
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
@@ -20,13 +38,18 @@ expected_schema = schema = [
     bigquery.SchemaField("latest_measurement", "DATE", mode="NULLABLE"),
 ]
 
+
 def test_creation():
-    dataset = helper.create_dataset(PROJECT_ID, dataset_UUID)
-    table = helper.create_table(PROJECT_ID, dataset_UUID)
+    try:
 
-    assert table.table_id == "average_weather"
-    assert dataset.dataset_id == dataset_UUID
-    assert table.schema == expected_schema
+        dataset = helper.create_dataset(PROJECT_ID, dataset_UUID)
+        table = helper.create_table(PROJECT_ID, dataset_UUID)
 
-    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
-    client.delete_table(table, not_found_ok=True)
+        assert table.table_id == "average_weather"
+        assert dataset.dataset_id == dataset_UUID
+        assert table.schema == expected_schema
+
+    finally:
+
+        client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+        client.delete_table(table, not_found_ok=True)

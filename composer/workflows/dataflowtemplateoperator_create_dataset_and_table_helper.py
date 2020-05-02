@@ -26,8 +26,9 @@ from google.cloud import bigquery
 def create_dataset(project, dataset_uuid):
     # [START composer_dataflow_dataset_table_creation]
 
-    # Make sure to set your Google application credentials beforehand. See instructions here: https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
-   
+    # Make sure to set your Google application credentials beforehand.
+    # See instructions here: https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
+
     # Construct a BigQuery client object.
     client = bigquery.Client()
 
@@ -38,6 +39,8 @@ def create_dataset(project, dataset_uuid):
 
     # [END composer_dataflow_dataset_table_creation]
 
+    # dataset_id is being reassigned here in order to test dataset creation
+    # with a unique uuid in the _test.py file.
     dataset_id = f"{project}.{dataset_uuid}"
 
     # [START composer_dataflow_dataset_table_creation]
@@ -70,6 +73,8 @@ def create_table(project, dataset_id):
 
     # [END composer_dataflow_dataset_table_creation]
 
+    # table_id is being reassigned here in order to test table creation
+    # with a unique uuid in the _test.py file.
     table_id = f"{client.project}.{dataset_id}.average_weather"
 
     # [START composer_dataflow_dataset_table_creation]
@@ -88,4 +93,3 @@ def create_table(project, dataset_id):
 
     # [END composer_dataflow_dataset_table_creation]
     return table
-
