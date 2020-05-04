@@ -30,7 +30,8 @@ def make_request():
     url = request.form['url']
     token = id_token.fetch_id_token(reqs.Request(), url)
 
-    resp = requests.get(url,
+    resp = requests.get(
+        url,
         headers={'Authorization': 'Bearer {}'.format(token)}
     )
 
