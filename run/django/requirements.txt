@@ -1,0 +1,7 @@
+django==3.0.5
+django-storages[google]==1.9.1
+django-environ==0.4.5
+# mysqlclient==1.4.1  # Uncomment this line if using MySQL
+psycopg2-binary==2.8.4 
+gunicorn
+google-cloud-secret-manager==0.2.0
