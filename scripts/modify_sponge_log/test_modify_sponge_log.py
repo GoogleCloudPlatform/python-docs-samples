@@ -35,10 +35,10 @@ import modify_sponge_log
         "test_data/multi_props",
     ])
 def test_files(request):
-    original_file_src = '{}/sponge_log.xml'.format(request.param)
+    original_file_src = '{}/original.xml'.format(request.param)
     expected_file_src = '{}/expected.xml'.format(request.param)
     d = tempfile.TemporaryDirectory()
-    original_file = '{}/sponge_log.xml'.format(d.name)
+    original_file = '{}/original.xml'.format(d.name)
     expected_file = '{}/expected.xml'.format(d.name)
     shutil.copyfile(original_file_src, original_file)
     shutil.copyfile(expected_file_src, expected_file)
