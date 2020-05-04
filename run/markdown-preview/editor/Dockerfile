@@ -1,4 +1,4 @@
-# Copyright 2019 Google, LLC.
+# Copyright 2020 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_broken_dockerfile]
-
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.8
+FROM python:3.8-slim
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
@@ -35,5 +33,3 @@ COPY . ./
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-
-# [END run_broken_dockerfile]
