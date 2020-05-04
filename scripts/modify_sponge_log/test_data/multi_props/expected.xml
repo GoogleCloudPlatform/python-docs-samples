@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite errors="0" failures="0" hostname="tmatsuo.c.googlers.com" name="pytest" skipped="0" tests="1" time="76.301" timestamp="2020-05-02T01:07:17.204499">
+    <testcase classname="dialogflow.cloud-client.create_document_test" name="test_dialogflow_create_document_plus_dialogflow_delete_document__create_document" time="75.857">
+      <properties>
+        <property name="region_tags" value="dialogflow_create_document" />
+        <property name="region_tags" value="dialogflow_delete_document" />
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

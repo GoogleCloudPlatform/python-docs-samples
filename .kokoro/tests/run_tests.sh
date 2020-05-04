@@ -117,6 +117,9 @@ for file in **/requirements.txt; do
       $KOKORO_GFILE_DIR/linux_amd64/buildcop
     fi
 
+    # Modify the xunit log to inject the sample region tags.
+    python ${ROOT}/scripts/modify_sponge_log/modify_sponge_log.py || true
+
     if [[ $EXIT -ne 0 ]]; then
       RTN=1
       echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
