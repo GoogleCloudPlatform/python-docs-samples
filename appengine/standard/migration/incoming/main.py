@@ -20,6 +20,7 @@ Authenticate requests coming from other App Engine instances.
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
+import logging
 import webapp2
 
 
@@ -54,7 +55,8 @@ def get_app_id(request):
         else:
             return incoming_app_id
     except Exception as e:
-        # report or log if desired, then...
+        # report or log if desired, as here:
+        logging.warning('Request has bad OAuth2 id token.')
         return None
 
 
