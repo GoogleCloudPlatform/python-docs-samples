@@ -25,6 +25,7 @@ import pytest
 
 import modify_sponge_log
 
+
 @pytest.fixture(
     scope="function",
     params=[

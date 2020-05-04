@@ -18,6 +18,7 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
+import sys
 from xml.etree import ElementTree
 
 
@@ -28,6 +29,7 @@ It will parse an xml file named `sponge_log.xml` and extracts
 
 The only command line argument is the filename for the xml file.
 """
+
 
 def extract_region_tags(t):
     ret = []
