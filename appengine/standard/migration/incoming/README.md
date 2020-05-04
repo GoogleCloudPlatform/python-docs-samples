@@ -4,7 +4,7 @@ This sample application shows how an App Engine for Python 2.7 app can verify
 the caller's identity for a request from an App Engine for Python 2.7 or
 App Engine for Python 3.7 app.
 
-Requests from an App Engine for Python 2.7 app that uses `urlfetch` have
+Requests from an App Engine for Python 2.7 app that use `urlfetch` have
 a trustworthy `X-Appengine-Inbound-Appid` header that can be used to verify
 the calling app's identity.
 
