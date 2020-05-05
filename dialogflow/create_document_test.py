@@ -47,6 +47,7 @@ def setup_teardown():
     client.delete_knowledge_base(knowledge_base_path, force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_document(capsys):
     document_management.create_document(
         PROJECT_ID, pytest.KNOWLEDGE_BASE_ID, DOCUMENT_DISPLAY_NAME,
