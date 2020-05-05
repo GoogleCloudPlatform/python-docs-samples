@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2020 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,14 +17,17 @@
 
 def use_logging_handler():
     # [START logging_handler_setup]
-    # Imports the Google Cloud client library
+    # Imports the Cloud Logging client library
     import google.cloud.logging
 
     # Instantiates a client
     client = google.cloud.logging.Client()
 
-    # Connects the logger to the root logging handler; by default this captures
-    # all logs at INFO level and higher
+    # Retrieves a Cloud Logging handler based on the environment
+    # you're running in and integrates the handler with the
+    # Python logging module. By default this captures all logs
+    # at INFO level and higher
+    client.get_default_handler()
     client.setup_logging()
     # [END logging_handler_setup]
 
