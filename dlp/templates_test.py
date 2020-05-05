@@ -13,21 +13,23 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import google.api_core.exceptions
 import google.cloud.storage
 
 import templates
 
-
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-TEST_TEMPLATE_ID = 'test-template'
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
+GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+TEST_TEMPLATE_ID = "test-template" + UNIQUE_STRING
 
 
 def test_create_list_and_delete_template(capsys):
     try:
         templates.create_inspect_template(
-            GCLOUD_PROJECT, ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             template_id=TEST_TEMPLATE_ID,
         )
     except google.api_core.exceptions.InvalidArgument:
@@ -39,7 +41,8 @@ def test_create_list_and_delete_template(capsys):
 
         # Try again and move on.
         templates.create_inspect_template(
-            GCLOUD_PROJECT, ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             template_id=TEST_TEMPLATE_ID,
         )
 

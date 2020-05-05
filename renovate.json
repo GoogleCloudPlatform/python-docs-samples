@@ -1,0 +1,8 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "prConcurrentLimit": 0,
+  "rebaseWhen": "never",
+  "masterIssue": true
+}

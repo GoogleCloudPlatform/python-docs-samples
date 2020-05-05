@@ -31,8 +31,9 @@ def run_sample():
         print('Request Id: %s' %
               response.get('metadata').get('requestId'))
         print('Companies:')
-        for company in response.get('companies'):
-            print('%s' % company.get('name'))
+        if response.get('companies') is not None:
+            for company in response.get('companies'):
+                print('%s' % company.get('name'))
         print('')
 
     except Error as e:

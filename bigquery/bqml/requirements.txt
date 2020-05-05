@@ -1,4 +1,4 @@
-google-cloud-bigquery[pandas]==1.9.0
-flaky==3.5.3
-mock==2.0.0
-pytest==4.2.0
+pandas==1.0.3
+google-cloud-bigquery==1.24.0
+flaky==3.6.1
+mock==4.0.2

@@ -36,6 +36,7 @@ def synthesize_text(text):
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.types.VoiceSelectionParams(
         language_code='en-US',
+        name='en-US-Standard-C',
         ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE)
 
     audio_config = texttospeech.types.AudioConfig(
@@ -68,6 +69,7 @@ def synthesize_ssml(ssml):
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.types.VoiceSelectionParams(
         language_code='en-US',
+        name='en-US-Standard-C',
         ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE)
 
     audio_config = texttospeech.types.AudioConfig(

@@ -1,0 +1,2 @@
+google-cloud-automl==0.10.0
+google-cloud-storage==1.28.0

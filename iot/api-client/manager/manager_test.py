@@ -16,10 +16,10 @@ import datetime
 import os
 import sys
 import time
+import uuid
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
-from gcp_devrel.testing.flaky import flaky
 from google.cloud import pubsub
 import pytest
 
@@ -32,22 +32,24 @@ ca_cert_path = '../mqtt_example/resources/roots.pem'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+
+# This format is used in the `clean_up_registries()` below.
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)
 def clean_up_registries():
-    all_registries = manager.list_registries(
-        service_account_json, project_id, cloud_region)
+    all_registries = list(manager.list_registries(
+        service_account_json, project_id, cloud_region))
 
     for registry in all_registries:
-        registry_id = registry.get('id')
+        registry_id = registry.id
         if registry_id.find('test-registry-') == 0:
             time_str = registry_id[
                 registry_id.rfind('-') + 1: len(registry_id)]
@@ -61,11 +63,11 @@ def clean_up_registries():
                 client = manager.get_client(service_account_json)
                 gateways = client.projects().locations().registries().devices(
                     ).list(
-                        parent=registry.get('name'),
+                        parent=registry.name,
                         fieldMask='config,gatewayConfig'
                     ).execute().get('devices', [])
                 devices = client.projects().locations().registries().devices(
-                    ).list(parent=registry.get('name')).execute().get(
+                    ).list(parent=registry.name).execute().get(
                         'devices', [])
 
                 # Unbind devices from each gateway and delete
@@ -73,7 +75,7 @@ def clean_up_registries():
                     gateway_id = gateway.get('id')
                     bound = client.projects().locations().registries().devices(
                         ).list(
-                            parent=registry.get('name'),
+                            parent=registry.name,
                             gatewayListOptions_associationsGatewayId=gateway_id
                         ).execute()
                     if 'devices' in bound:
@@ -87,7 +89,7 @@ def clean_up_registries():
                                     parent=registry.get('name'),
                                     body=bind_request).execute()
                     gateway_name = '{}/devices/{}'.format(
-                        registry.get('name'), gateway_id)
+                        registry.name, gateway_id)
                     client.projects().locations().registries().devices(
                         ).delete(name=gateway_name).execute()
 
@@ -95,7 +97,7 @@ def clean_up_registries():
                 # Assumption is that the devices are not bound to gateways
                 for device in devices:
                     device_name = '{}/devices/{}'.format(
-                        registry.get('name'), device.get('id'))
+                        registry.name, device.get('id'))
                     print(device_name)
                     remove_device = True
                     try:
@@ -111,7 +113,7 @@ def clean_up_registries():
 
                 # Delete the old test registry
                 client.projects().locations().registries().delete(
-                    name=registry.get('name')).execute()
+                    name=registry.name).execute()
 
 
 @pytest.fixture(scope='module')
@@ -137,7 +139,7 @@ def test_create_delete_registry(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
 
     # Clean up
     manager.delete_registry(
@@ -167,7 +169,8 @@ def test_get_iam_permissions(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
+    assert 'dpebot' in out
     assert 'etag' in out
 
     # Clean up
@@ -193,10 +196,14 @@ def test_add_delete_unauth_device(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
     out, _ = capsys.readouterr()
     assert 'UNAUTH' in out
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_add_config_unauth_device(test_topic, capsys):
     device_id = device_id_template.format('UNAUTH')
     manager.open_registry(
@@ -215,9 +222,16 @@ def test_add_config_unauth_device(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
+    manager.get_config_versions(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
     manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
+
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
 
     out, _ = capsys.readouterr()
     assert 'Set device configuration' in out
@@ -252,7 +266,6 @@ def test_add_delete_rs256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : RSA_X509_PEM' in out
-    assert 'State: {' in out
 
 
 def test_add_delete_es256_device(test_topic, capsys):
@@ -282,7 +295,6 @@ def test_add_delete_es256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : ES256_PEM' in out
-    assert 'State: {' in out
 
 
 def test_add_patch_delete_rs256(test_topic, capsys):
@@ -353,7 +365,7 @@ def test_add_patch_delete_es256(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
-@flaky
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_send_command(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
@@ -364,7 +376,7 @@ def test_send_command(test_topic, capsys):
     devices = manager.list_devices(
             service_account_json, project_id, cloud_region, registry_id)
     for device in devices:
-        if device.get('id') == device_id:
+        if device.id == device_id:
             exists = True
 
     if not exists:
@@ -382,7 +394,6 @@ def test_send_command(test_topic, capsys):
 
     # Pre-process commands
     for i in range(1, 5):
-        client.loop()
         time.sleep(1)
 
     manager.send_command(
@@ -392,10 +403,11 @@ def test_send_command(test_topic, capsys):
 
     # Process commands
     for i in range(1, 5):
-        client.loop()
         time.sleep(1)
 
     # Clean up
+    client.loop_stop()
+    client.disconnect()
     manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
@@ -426,7 +438,7 @@ def test_create_gateway(test_topic, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert 'Created gateway' in out
+    assert 'Created Gateway' in out
 
 
 def test_list_gateways(test_topic, capsys):

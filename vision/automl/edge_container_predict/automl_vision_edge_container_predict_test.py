@@ -37,14 +37,17 @@ import pytest
 
 # The absolute path of the current file. This will locate the model_path when
 # run docker containers.
-ROOT_DIR = os.environ.get('KOKORO_ROOT', os.path.abspath(os.path.dirname(__file__)))
+ROOT_DIR = os.environ.get(
+    'KOKORO_ROOT', os.path.abspath(os.path.dirname(__file__)))
 MODEL_PATH = os.path.join(ROOT_DIR, 'model_path')
 
 IMAGE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'test.jpg')
 # The cpu docker gcs path is from 'Edge container tutorial'.
-CPU_DOCKER_GCS_PATH = 'gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest'
+CPU_DOCKER_GCS_PATH = '{}'.format(
+  'gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest')
 # The path of a sample saved model.
-SAMPLE_SAVED_MODEL = 'gs://cloud-samples-data/vision/edge_container_predict/saved_model.pb'
+SAMPLE_SAVED_MODEL = '{}'.format(
+    'gs://cloud-samples-data/vision/edge_container_predict/saved_model.pb')
 # Container Name.
 NAME = 'AutomlVisionEdgeContainerPredictTest'
 # Port Number.

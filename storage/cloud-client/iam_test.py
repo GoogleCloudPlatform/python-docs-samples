@@ -12,34 +12,101 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from google.cloud import storage
 import pytest
+import re
+import time
+import uuid
 
-import iam
+import storage_remove_bucket_iam_member
+import storage_add_bucket_iam_member
+import storage_add_bucket_conditional_iam_binding
+import storage_view_bucket_iam_members
+import storage_remove_bucket_conditional_iam_binding
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-MEMBER = 'group:dpebot@google.com'
-ROLE = 'roles/storage.legacyBucketReader'
+MEMBER = "group:dpebot@google.com"
+ROLE = "roles/storage.legacyBucketReader"
+
+CONDITION_TITLE = "match-prefix"
+CONDITION_DESCRIPTION = "Applies to objects matching a prefix"
+CONDITION_EXPRESSION = (
+    'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")'
+)
 
 
 @pytest.fixture
 def bucket():
-    yield storage.Client().bucket(BUCKET)
+    bucket = None
+    while bucket is None or bucket.exists():
+        storage_client = storage.Client()
+        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket = storage_client.bucket(bucket_name)
+        bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    storage_client.create_bucket(bucket)
+    yield bucket
+    time.sleep(3)
+    bucket.delete(force=True)
 
 
-def test_view_bucket_iam_members():
-    iam.view_bucket_iam_members(BUCKET)
+def test_view_bucket_iam_members(capsys, bucket):
+    storage_view_bucket_iam_members.view_bucket_iam_members(bucket.name)
+    assert re.match("Role: .*, Members: .*", capsys.readouterr().out)
 
 
 def test_add_bucket_iam_member(bucket):
-    iam.add_bucket_iam_member(
-        BUCKET, ROLE, MEMBER)
-    assert MEMBER in bucket.get_iam_policy()[ROLE]
+    storage_add_bucket_iam_member.add_bucket_iam_member(bucket.name, ROLE, MEMBER)
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    assert any(
+        binding["role"] == ROLE and MEMBER in binding["members"]
+        for binding in policy.bindings
+    )
+
+
+def test_add_bucket_conditional_iam_binding(bucket):
+    storage_add_bucket_conditional_iam_binding.add_bucket_conditional_iam_binding(
+        bucket.name,
+        ROLE,
+        CONDITION_TITLE,
+        CONDITION_DESCRIPTION,
+        CONDITION_EXPRESSION,
+        {MEMBER},
+    )
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    assert any(
+        binding["role"] == ROLE
+        and binding["members"] == {MEMBER}
+        and binding["condition"]
+        == {
+            "title": CONDITION_TITLE,
+            "description": CONDITION_DESCRIPTION,
+            "expression": CONDITION_EXPRESSION,
+        }
+        for binding in policy.bindings
+    )
 
 
 def test_remove_bucket_iam_member(bucket):
-    iam.remove_bucket_iam_member(
-        BUCKET, ROLE, MEMBER)
-    assert MEMBER not in bucket.get_iam_policy()[ROLE]
+    storage_remove_bucket_iam_member.remove_bucket_iam_member(bucket.name, ROLE, MEMBER)
+
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    assert not any(
+        binding["role"] == ROLE and MEMBER in binding["members"]
+        for binding in policy.bindings
+    )
+
+
+def test_remove_bucket_conditional_iam_binding(bucket):
+    storage_remove_bucket_conditional_iam_binding.remove_bucket_conditional_iam_binding(
+        bucket.name, ROLE, CONDITION_TITLE, CONDITION_DESCRIPTION, CONDITION_EXPRESSION
+    )
+
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    condition = {
+        "title": CONDITION_TITLE,
+        "description": CONDITION_DESCRIPTION,
+        "expression": CONDITION_EXPRESSION,
+    }
+    assert not any(
+        (binding["role"] == ROLE and binding.get("condition") == condition)
+        for binding in policy.bindings
+    )

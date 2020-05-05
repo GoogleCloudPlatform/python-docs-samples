@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,9 +64,10 @@ def unique_glossary_id():
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
-    assert 'Zdravo svet' in out
+    assert 'Translated Text:' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_batch_translate_text(capsys, bucket):
     beta_snippets.batch_translate_text(
         PROJECT_ID,
@@ -77,7 +79,7 @@ def test_batch_translate_text(capsys, bucket):
 
 
 def test_detect_language(capsys):
-    beta_snippets.detect_language(PROJECT_ID, 'Hæ sæta')
+    beta_snippets.detect_language(PROJECT_ID, u'Hæ sæta')
     out, _ = capsys.readouterr()
     assert 'is' in out
 
@@ -95,11 +97,11 @@ def test_list_languages_with_target(capsys):
     assert u'Display Name: albanska' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
     assert 'Created' in out
-    assert PROJECT_ID in out
     assert unique_glossary_id in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
@@ -120,15 +122,15 @@ def test_list_glossary(capsys, glossary):
 
 def test_translate_text_with_glossary(capsys, glossary):
     beta_snippets.translate_text_with_glossary(
-            PROJECT_ID, glossary, 'directions')
+            PROJECT_ID, glossary, 'account')
     out, _ = capsys.readouterr()
-    assert 'direcciones' in out
+    assert 'cuenta' in out
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_delete_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     beta_snippets.delete_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
-    assert PROJECT_ID in out
     assert 'us-central1' in out
     assert unique_glossary_id in out

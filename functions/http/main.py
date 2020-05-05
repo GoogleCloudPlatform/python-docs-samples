@@ -85,6 +85,9 @@ def parse_multipart(request):
     # This code will process each file uploaded
     files = request.files.to_dict()
     for file_name, file in files.items():
+        # Note: GCF may not keep files saved locally between invocations.
+        # If you want to preserve the uploaded files, you should save them
+        # to another location (such as a Cloud Storage bucket).
         file.save(get_file_path(file_name))
         print('Processed file: %s' % file_name)
 
@@ -108,8 +111,9 @@ def get_signed_url(request):
     request_json = request.get_json()
 
     # Get a reference to the destination file in GCS
+    bucket_name = request_json['bucket']
     file_name = request_json['filename']
-    file = storage_client.bucket('my-bucket').blob(file_name)
+    file = storage_client.bucket(bucket_name).blob(file_name)
 
     # Create a temporary upload URL
     expires_at_ms = datetime.now() + timedelta(seconds=30)

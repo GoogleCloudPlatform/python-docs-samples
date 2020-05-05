@@ -1,0 +1,23 @@
+{
+  "name": "Streaming beam Python flex template",
+  "description": "Streaming beam example for python flex template.",
+  "parameters": [
+    {
+      "name": "input_subscription",
+      "label": "Input PubSub subscription.",
+      "helpText": "Name of the input PubSub subscription to consume from.",
+      "regexes": [
+        "[/:-_.a-zA-Z0-9]+"
+      ]
+    },
+    {
+      "name": "output_table",
+      "label": "BigQuery output table name.",
+      "helpText": "Name of the BigQuery output table name.",
+      "is_optional": true,
+      "regexes": [
+        "[/:-_.a-zA-Z0-9]+"
+      ]
+    }
+  ]
+}

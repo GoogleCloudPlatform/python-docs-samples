@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from google.cloud import firestore
 import pytest
@@ -20,10 +21,26 @@ import snippets
 
 os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
+
+
+class TestFirestoreClient(firestore.Client):
+    def __init__(self, *args, **kwargs):
+        self._UNIQUE_STRING = UNIQUE_STRING
+        self._super = super(TestFirestoreClient, self)
+        self._super.__init__(*args, **kwargs)
+
+    def collection(self, collection_name, *args, **kwargs):
+        collection_name += '-{}'.format(self._UNIQUE_STRING)
+        return self._super.collection(collection_name, *args, **kwargs)
+
+
+snippets.firestore.Client = TestFirestoreClient
+
 
 @pytest.fixture
 def db():
-    yield firestore.Client()
+    yield snippets.firestore.Client()
 
 
 def test_quickstart_new_instance():
@@ -52,6 +69,33 @@ def test_add_data_types():
 
 def test_add_example_data():
     snippets.add_example_data()
+
+
+def test_array_contains_any(db):
+    query = snippets.array_contains_any_queries(db)
+
+    expected = {'SF', 'LA', 'DC'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
+
+
+def test_query_filter_in_query_without_array(db):
+    query = snippets.in_query_without_array(db)
+
+    expected = {'SF', 'LA', 'DC', 'TOK'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
+
+
+def test_query_filter_in_query_with_array(db):
+    query = snippets.in_query_with_array(db)
+
+    expected = {'DC'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
 
 
 def test_add_custom_class_with_id():
@@ -223,21 +267,14 @@ def test_cursor_multiple_conditions():
     snippets.cursor_multiple_conditions()
 
 
-def test_delete_single_doc():
-    snippets.delete_single_doc()
-
-
-def test_delete_field(db):
-    db.collection('cities').document('Beijing').set({'capital': True})
-    snippets.delete_field()
-
-
+@pytest.mark.flaky(max_runs=3)
 def test_listen_document(capsys):
     snippets.listen_document()
     out, _ = capsys.readouterr()
     assert 'Received document snapshot: SF' in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_listen_multiple(capsys):
     snippets.listen_multiple()
     out, _ = capsys.readouterr()
@@ -245,12 +282,22 @@ def test_listen_multiple(capsys):
     assert 'SF' in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_listen_for_changes(capsys):
     snippets.listen_for_changes()
     out, _ = capsys.readouterr()
     assert 'New city: MTV' in out
     assert 'Modified city: MTV' in out
     assert 'Removed city: MTV' in out
+
+
+def test_delete_single_doc():
+    snippets.delete_single_doc()
+
+
+def test_delete_field(db):
+    db.collection('cities').document('BJ').set({'capital': True})
+    snippets.delete_field()
 
 
 def test_delete_full_collection():

@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -58,5 +58,5 @@ def test_print_name(publisher_client):
         start_time
     ], stdout=subprocess.PIPE)
     logs = str(log_process.communicate()[0])
-    assert 'Hello, {}!'.format(name) in logs
+    assert 'Hello {}!'.format(name) in logs
 # [END functions_pubsub_system_test]

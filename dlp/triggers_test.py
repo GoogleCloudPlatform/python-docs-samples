@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import google.api_core.exceptions
 import google.cloud.storage
@@ -21,15 +22,15 @@ import pytest
 
 import triggers
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
+GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
+TEST_TRIGGER_ID = "test-trigger" + UNIQUE_STRING
 
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
-RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
-RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
-TEST_TRIGGER_ID = 'test-trigger'
 
-
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def bucket():
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
@@ -53,7 +54,10 @@ def bucket():
 
     # Delete the files.
     for blob in blobs:
-        blob.delete()
+        try:
+            blob.delete()
+        except google.cloud.exceptions.NotFound:
+            print("Issue during teardown, missing blob")
 
     # Attempt to delete the bucket; this will only work if it is empty.
     bucket.delete()
@@ -62,8 +66,10 @@ def bucket():
 def test_create_list_and_delete_trigger(bucket, capsys):
     try:
         triggers.create_trigger(
-            GCLOUD_PROJECT, bucket.name, 7,
-            ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            bucket.name,
+            7,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             trigger_id=TEST_TRIGGER_ID,
         )
     except google.api_core.exceptions.InvalidArgument:
@@ -75,8 +81,10 @@ def test_create_list_and_delete_trigger(bucket, capsys):
 
         # Try again and move on.
         triggers.create_trigger(
-            GCLOUD_PROJECT, bucket.name, 7,
-            ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            bucket.name,
+            7,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             trigger_id=TEST_TRIGGER_ID,
             auto_populate_timespan=True,
         )

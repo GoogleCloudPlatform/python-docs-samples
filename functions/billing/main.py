@@ -13,23 +13,25 @@
 # limitations under the License.
 
 # [START functions_billing_limit]
+# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 import base64
 import json
-# [END functions_billing_stop]
 import os
+# [END functions_billing_stop]
 # [END functions_billing_limit]
+# [END functions_billing_limit_appengine]
 
 # [START functions_billing_limit]
+# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
-
 # [END functions_billing_stop]
 # [END functions_billing_limit]
+# [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
-from slackclient import SlackClient
+import slack
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
@@ -46,7 +48,7 @@ BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
 
 CHANNEL_ID = 'C0XXXXXX'
 
-slack_client = SlackClient(BOT_ACCESS_TOKEN)
+slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 
 
 def notify_slack(data, context):
@@ -63,7 +65,7 @@ def notify_slack(data, context):
 # [END functions_billing_slack]
 
 
-# [START functions_billing_limit]
+# [START functions_billing_stop]
 def stop_billing(data, context):
     pubsub_data = base64.b64decode(data['data']).decode('utf-8')
     pubsub_json = json.loads(pubsub_data)
@@ -77,7 +79,6 @@ def stop_billing(data, context):
         'cloudbilling',
         'v1',
         cache_discovery=False,
-        credentials=GoogleCredentials.get_application_default()
     )
 
     projects = billing.projects()
@@ -127,7 +128,6 @@ def limit_use(data, context):
         'compute',
         'v1',
         cache_discovery=False,
-        credentials=GoogleCredentials.get_application_default()
     )
     instances = compute.instances()
 
@@ -142,6 +142,9 @@ def __list_running_instances(project_id, zone, instances):
     @return {Promise} Array of names of running instances
     """
     res = instances.list(project=project_id, zone=zone).execute()
+
+    if 'items' not in res:
+        return []
 
     items = res['items']
     running_names = [i['name'] for i in items if i['status'] == 'RUNNING']
@@ -166,3 +169,35 @@ def __stop_instances(project_id, zone, instance_names, instances):
           instance=name).execute()
         print(f'Instance stopped successfully: {name}')
 # [END functions_billing_limit]
+
+
+# [START functions_billing_limit_appengine]
+APP_NAME = os.getenv('GCP_PROJECT')
+
+
+def limit_use_appengine(data, context):
+    pubsub_data = base64.b64decode(data['data']).decode('utf-8')
+    pubsub_json = json.loads(pubsub_data)
+    cost_amount = pubsub_json['costAmount']
+    budget_amount = pubsub_json['budgetAmount']
+    if cost_amount <= budget_amount:
+        print(f'No action necessary. (Current cost: {cost_amount})')
+        return
+
+    appengine = discovery.build(
+        'appengine',
+        'v1',
+        cache_discovery=False
+    )
+    apps = appengine.apps()
+
+    # Get the target app's serving status
+    target_app = apps.get(appsId=APP_NAME).execute()
+    current_status = target_app['servingStatus']
+
+    # Disable target app, if necessary
+    if current_status == 'SERVING':
+        print(f'Attempting to disable app {APP_NAME}...')
+        body = {'servingStatus': 'USER_DISABLED'}
+        apps.patch(appsId=APP_NAME, updateMask='serving_status', body=body).execute()
+# [END functions_billing_limit_appengine]

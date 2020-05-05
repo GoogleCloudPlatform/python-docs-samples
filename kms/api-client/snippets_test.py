@@ -15,12 +15,13 @@
 
 import time
 from os import environ
+import uuid
 
-from google.api_core.exceptions import GoogleAPICallError
+from google.api_core.exceptions import Aborted, GoogleAPICallError
 from google.cloud import kms_v1
 from google.cloud.kms_v1 import enums
 from google.iam.v1.policy_pb2 import Policy
-
+import backoff
 import pytest
 
 import snippets
@@ -51,7 +52,7 @@ def setup_module(module):
     except GoogleAPICallError:
         # keyring already exists
         pass
-    s = create_key_helper(t.symId,
+    s = create_key_helper(t.sym_id,
                           enums.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
                           enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
                           GOOGLE_SYMMETRIC_ENCRYPTION,
@@ -63,15 +64,15 @@ def setup_module(module):
 
 class TestKMSSnippets:
     project_id = environ['GCLOUD_PROJECT']
-    keyring_id = 'kms-samples'
+    keyring_id = 'kms-samples-{}'.format(uuid.uuid4().hex)
     location = 'global'
     parent = 'projects/{}/locations/{}'.format(project_id, location)
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
     version = '1'
 
-    symId = 'symmetric'
+    sym_id = 'symmetric'
 
-    sym = '{}/cryptoKeys/{}'.format(keyring_path, symId)
+    sym = '{}/cryptoKeys/{}'.format(keyring_path, sym_id)
     sym_version = '{}/cryptoKeyVersions/{}'.format(sym, version)
 
     message = 'test message 123'
@@ -83,7 +84,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="There's currently no method to delete keyrings, \
                               so we should avoid creating resources")
     def test_create_key_ring(self):
-        ring_id = self.keyring_id + '-testcreate' + str(int(time.time()))
+        ring_id = self.keyring_id + '-test-create-{}'.format(uuid.uuid4().hex)
         snippets.create_key_ring(self.project_id, self.location, ring_id)
         client = kms_v1.KeyManagementServiceClient()
         result = client.get_key_ring(client.key_ring_path(self.project_id,
@@ -94,7 +95,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="Deleting keys isn't instant, so we should avoid \
                               creating a large number of them in our tests")
     def test_create_crypto_key(self):
-        key_id = self.symId + '-test' + str(int(time.time()))
+        key_id = self.sym_id + '-test-{}'.format(uuid.uuid4().hex)
         snippets.create_crypto_key(self.project_id, self.location,
                                    self.keyring_id, key_id)
         c = kms_v1.KeyManagementServiceClient()
@@ -108,30 +109,30 @@ class TestKMSSnippets:
     def test_key_change_version_state(self):
         client = kms_v1.KeyManagementServiceClient()
         name = client.crypto_key_version_path(self.project_id, self.location,
-                                              self.keyring_id, self.symId,
+                                              self.keyring_id, self.sym_id,
                                               self.version)
         state_enum = enums.CryptoKeyVersion.CryptoKeyVersionState
         # test disable
         snippets.disable_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DISABLED
         # test destroy
         snippets.destroy_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DESTROY_SCHEDULED
         # test restore
         snippets.restore_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DISABLED
         # test re-enable
         snippets.enable_crypto_key_version(self.project_id, self.location,
-                                           self.keyring_id, self.symId,
+                                           self.keyring_id, self.sym_id,
                                            self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.ENABLED
@@ -171,48 +172,65 @@ class TestKMSSnippets:
     # tests get/add/remove policy members
     def test_key_policy(self):
         # add member
-        snippets.add_member_to_crypto_key_policy(self.project_id,
-                                                 self.location,
-                                                 self.keyring_id,
-                                                 self.symId,
-                                                 self.member,
-                                                 self.role)
-        policy = snippets.get_crypto_key_policy(self.project_id,
-                                                self.location,
-                                                self.keyring_id,
-                                                self.symId)
-        found = False
-        for b in list(policy.bindings):
-            if b.role == self.role and self.member in b.members:
-                found = True
-        assert found
+        snippets.add_member_to_crypto_key_policy(
+            self.project_id,
+            self.location,
+            self.keyring_id,
+            self.sym_id,
+            self.member,
+            self.role)
+
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
+        def check_policy():
+            policy = snippets.get_crypto_key_policy(
+                self.project_id,
+                self.location,
+                self.keyring_id,
+                self.sym_id)
+            found = False
+            for b in list(policy.bindings):
+                if b.role == self.role and self.member in b.members:
+                    found = True
+            assert found
+
+        check_policy()
+
         # remove member
-        snippets.remove_member_from_crypto_key_policy(self.project_id,
-                                                      self.location,
-                                                      self.keyring_id,
-                                                      self.symId,
-                                                      self.member,
-                                                      self.role)
-        policy = snippets.get_crypto_key_policy(self.project_id,
-                                                self.location,
-                                                self.keyring_id,
-                                                self.symId)
-        found = False
-        for b in list(policy.bindings):
-            if b.role == self.role and self.member in b.members:
-                found = True
-        assert not found
+        snippets.remove_member_from_crypto_key_policy(
+            self.project_id,
+            self.location,
+            self.keyring_id,
+            self.sym_id,
+            self.member,
+            self.role)
+
+        @backoff.on_exception(
+            backoff.expo, (Aborted, AssertionError), max_time=60)
+        def check_policy_again():
+            policy = snippets.get_crypto_key_policy(
+                self.project_id,
+                self.location,
+                self.keyring_id,
+                self.sym_id)
+            found = False
+            for b in list(policy.bindings):
+                if b.role == self.role and self.member in b.members:
+                    found = True
+            assert not found
+
+        check_policy_again()
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
                                                   self.location,
                                                   self.keyring_id,
-                                                  self.symId,
+                                                  self.sym_id,
                                                   self.message_bytes)
         plain_bytes = snippets.decrypt_symmetric(self.project_id,
                                                  self.location,
                                                  self.keyring_id,
-                                                 self.symId,
+                                                 self.sym_id,
                                                  cipher_bytes)
         assert plain_bytes == self.message_bytes
         assert cipher_bytes != self.message_bytes

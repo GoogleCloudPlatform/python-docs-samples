@@ -19,7 +19,7 @@ Before you can run or deploy the sample, you will need to do the following:
         $ gcloud pubsub subscriptions create [your-subscription-name] \
             --topic [your-topic-name] \
             --push-endpoint \
-                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages/token=[your-token] \
+                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages?token=[your-token] \
             --ack-deadline 30
 
 3. Update the environment variables in ``app.yaml``.

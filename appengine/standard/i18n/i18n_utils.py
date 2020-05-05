@@ -19,7 +19,7 @@
 The idea of this example, especially for how to translate strings in
 Javascript is originally from an implementation of Django i18n.
 """
-
+from __future__ import print_function
 
 import gettext
 import json
@@ -30,6 +30,11 @@ import jinja2
 import webapp2
 
 from webob import Request
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 def _get_plural_forms(js_translations):
@@ -49,7 +54,7 @@ def _get_plural_forms(js_translations):
         for l in js_translations._catalog[''].split('\n'):
             if l.startswith('Plural-Forms:'):
                 plural = l.split(':', 1)[1].strip()
-                print "plural is %s" % plural
+                print('plural is {}'.format(plural))
     if plural is not None:
         for raw_element in plural.split(';'):
             element = raw_element.strip()
@@ -57,7 +62,7 @@ def _get_plural_forms(js_translations):
                 n_plural = int(element.split('=', 1)[1])
             elif element.startswith('plural='):
                 plural = element.split('=', 1)[1]
-                print "plural is now %s" % plural
+                print('plural is now {}'.format(plural))
     else:
         n_plural = 2
         plural = '(n == 1) ? 0 : 1'
@@ -83,9 +88,9 @@ def convert_translations_to_dict(js_translations):
     for key, value in js_translations._catalog.items():
         if key == '':
             continue
-        if type(key) in (str, unicode):
+        if isinstance(key, basestring):
             translations_dict['catalog'][key] = value
-        elif type(key) == tuple:
+        elif isinstance(key, tuple):
             if key[0] not in translations_dict['catalog']:
                 translations_dict['catalog'][key[0]] = [''] * n_plural
             translations_dict['catalog'][key[0]][int(key[1])] = value
