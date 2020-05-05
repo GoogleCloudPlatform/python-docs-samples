@@ -29,6 +29,7 @@ import storage_download_file
 import storage_get_bucket_labels
 import storage_get_bucket_metadata
 import storage_get_metadata
+import storage_set_metadata
 import storage_list_buckets
 import storage_list_files_with_prefix
 import storage_list_files
@@ -49,6 +50,10 @@ import storage_download_public_file
 import storage_define_bucket_website_configuration
 import storage_object_get_kms_key
 import storage_compose_file
+import storage_enable_versioning
+import storage_disable_versioning
+import storage_enable_bucket_lifecycle_management
+import storage_disable_bucket_lifecycle_management
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
@@ -163,6 +168,12 @@ def test_blob_metadata(test_blob, capsys):
     assert test_blob.name in out
 
 
+def test_set_blob_metadata(test_blob, capsys):
+    storage_set_metadata.set_blob_metadata(test_blob.bucket.name, test_blob.name)
+    out, _ = capsys.readouterr()
+    assert test_blob.name in out
+
+
 def test_delete_blob(test_blob):
     storage_delete_file.delete_blob(test_blob.bucket.name, test_blob.name)
 
@@ -256,6 +267,33 @@ def test_copy_blob(test_blob):
 
     assert bucket.get_blob("test_copy_blob") is not None
     assert bucket.get_blob(test_blob.name) is not None
+
+
+def test_versioning(test_bucket, capsys):
+    bucket = storage_enable_versioning.enable_versioning(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Versioning was enabled for bucket" in out
+    assert bucket.versioning_enabled is True
+
+    bucket = storage_disable_versioning.disable_versioning(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Versioning was disabled for bucket" in out
+    assert bucket.versioning_enabled is False
+
+
+def test_bucket_lifecycle_management(test_bucket, capsys):
+    bucket = storage_enable_bucket_lifecycle_management.\
+        enable_bucket_lifecycle_management(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "[]" in out
+    assert "Lifecycle management is enable" in out
+    assert len(list(bucket.lifecycle_rules)) > 0
+
+    bucket = storage_disable_bucket_lifecycle_management.\
+        disable_bucket_lifecycle_management(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "[]" in out
+    assert len(list(bucket.lifecycle_rules)) == 0
 
 
 def test_create_bucket_class_location():

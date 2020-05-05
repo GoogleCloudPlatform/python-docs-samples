@@ -14,9 +14,9 @@
 
 import os
 
+import backoff
 import mock
 import pytest
-from gcp_devrel.testing import eventually_consistent
 
 import quickstart
 
@@ -37,8 +37,10 @@ def mock_project_path():
 
 
 def test_quickstart(capsys, mock_project_path):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         quickstart.run_quickstart()
         out, _ = capsys.readouterr()
         assert 'wrote' in out
+
+    eventually_consistent_test()

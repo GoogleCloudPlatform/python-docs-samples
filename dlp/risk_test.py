@@ -232,7 +232,7 @@ def test_k_anonymity_analysis_single_field(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -272,7 +272,7 @@ def test_l_diversity_analysis_single_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -314,7 +314,7 @@ def test_k_map_estimate_analysis_single_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):

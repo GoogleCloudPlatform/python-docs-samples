@@ -16,11 +16,12 @@ import os
 import random
 import string
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 from google.cloud import logging
 import pytest
 
 import export
+
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 TEST_SINK_NAME_TMPL = 'example_sink_{}'
@@ -53,11 +54,13 @@ def example_sink():
 
 
 def test_list(example_sink, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
         export.list_sinks()
         out, _ = capsys.readouterr()
         assert example_sink.name in out
+
+    eventually_consistent_test()
 
 
 def test_create(capsys):
