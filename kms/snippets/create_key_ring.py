@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2017 Google, Inc
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-import argparse
 
+# [START kms_create_key_ring]
+def create_key_ring(project_id, location_id, id):
+    """
+    Creates a new key ring in Cloud KMS
 
-# [START kms_quickstart]
-def quickstart(project_id, location_id):
+    Args:
+        project_id (string): Google Cloud project ID (e.g. 'my-project').
+        location_id (string): Cloud KMS location (e.g. 'us-east1').
+        id (string): ID of the key ring to create (e.g. 'my-key-ring').
+
+    Returns:
+        KeyRing: Cloud KMS key ring.
+
+    """
+
     # Import the client library.
     from google.cloud import kms
 
@@ -27,23 +36,11 @@ def quickstart(project_id, location_id):
     # Build the parent location name.
     location_name = client.location_path(project_id, location_id)
 
+    # Build the key ring.
+    key_ring = {}
+
     # Call the API.
-    key_rings = client.list_key_rings(location_name)
-
-    # Example of iterating over key rings.
-    for key_ring in key_rings:
-        print(key_ring.name)
-
-    return key_rings
-# [END kms_quickstart]
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('location_id', help='id of the KMS location')
-    args = parser.parse_args()
-
-    quickstart(args.project_id, args.location_id)
+    created_key_ring = client.create_key_ring(location_name, id, key_ring)
+    print('Created key ring: {}'.format(created_key_ring.name))
+    return created_key_ring
+# [END kms_create_key_ring]
