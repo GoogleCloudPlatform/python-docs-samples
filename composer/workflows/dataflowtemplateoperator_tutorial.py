@@ -15,19 +15,21 @@
 # [START composer_dataflow_dag]
 
 
-"""Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
-wordcount example, and deletes the cluster.
+# Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
+# wordcount example, and deletes the cluster.
 
-This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
-* project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
-* gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
-  created.
-* gcs_bucket - Google Cloud Storage bucket where you've stored the User Defined 
-Function (.js), the input file (.txt), and the JSON schema (.json).
-  See https://cloud.google.com/storage/docs/creating-buckets for creating a
-  bucket.
-"""
+# This DAG relies on three Airflow variables
+# https://airflow.apache.org/concepts.html#variables
+# * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
+# * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
+#   created.
+# * gce_region - Google Compute Engine region where Cloud Dataflow cluster should be
+#   created.
+# Learn more about the difference between the two here:
+# https://cloud.google.com/compute/docs/regions-zones
+# * gcs_bucket - Google Cloud Storage bucket where you've stored the User Defined 
+# Function (.js), the input file (.txt), and the JSON schema (.json).
+
 
 import datetime
 
