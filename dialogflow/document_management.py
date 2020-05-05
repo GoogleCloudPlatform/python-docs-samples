@@ -60,7 +60,7 @@ def create_document(project_id, knowledge_base_id, display_name, mime_type,
 
     response = client.create_document(knowledge_base_path, document)
     print('Waiting for results...')
-    document = response.result(timeout=90)
+    document = response.result(timeout=120)
     print('Created Document:')
     print(' - Display Name: {}'.format(document.display_name))
     print(' - Knowledge ID: {}'.format(document.name))
