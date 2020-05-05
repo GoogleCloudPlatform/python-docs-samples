@@ -21,14 +21,14 @@ import google.oauth2.id_token
 
 firebase_request_adapter = requests.Request()
 
-# [START gae_python37_datastore_store_and_fetch_user_times]
+# [START gae_python38_datastore_store_and_fetch_user_times]
 datastore_client = datastore.Client()
 
-# [END gae_python37_datastore_store_and_fetch_user_times]
+# [END gae_python38_datastore_store_and_fetch_user_times]
 app = Flask(__name__)
 
 
-# [START gae_python37_datastore_store_and_fetch_user_times]
+# [START gae_python38_datastore_store_and_fetch_user_times]
 def store_time(email, dt):
     entity = datastore.Entity(key=datastore_client.key('User', email, 'visit'))
     entity.update({
@@ -46,10 +46,10 @@ def fetch_times(email, limit):
     times = query.fetch(limit=limit)
 
     return times
-# [END gae_python37_datastore_store_and_fetch_user_times]
+# [END gae_python38_datastore_store_and_fetch_user_times]
 
 
-# [START gae_python37_datastore_render_user_times]
+# [START gae_python38_datastore_render_user_times]
 @app.route('/')
 def root():
     # Verify Firebase auth.
@@ -79,7 +79,7 @@ def root():
     return render_template(
         'index.html',
         user_data=claims, error_message=error_message, times=times)
-# [END gae_python37_datastore_render_user_times]
+# [END gae_python38_datastore_render_user_times]
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_python37_cloudsql_mysql]
+# [START gae_python38_cloudsql_mysql]
 import os
 
 from flask import Flask
@@ -51,7 +51,7 @@ def main():
     cnx.close()
 
     return str(current_time)
-# [END gae_python37_cloudsql_mysql]
+# [END gae_python38_cloudsql_mysql]
 
 
 if __name__ == '__main__':

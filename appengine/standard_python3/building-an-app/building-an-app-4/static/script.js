@@ -17,13 +17,13 @@
 
 window.addEventListener('load', function () {
   
-  // [START gae_python37_auth_signout]
+  // [START gae_python38_auth_signout]
   document.getElementById('sign-out').onclick = function () {
     firebase.auth().signOut();
   };
-  // [END gae_python37_auth_signout]
+  // [END gae_python38_auth_signout]
 
-  // [START gae_python37_auth_UIconfig_variable]
+  // [START gae_python38_auth_UIconfig_variable]
   // FirebaseUI config.
   var uiConfig = {
     signInSuccessUrl: '/',
@@ -36,9 +36,9 @@ window.addEventListener('load', function () {
     // Terms of service url.
     tosUrl: '<your-tos-url>'
   };
-  // [END gae_python37_auth_UIconfig_variable]
+  // [END gae_python38_auth_UIconfig_variable]
 
-  // [START gae_python37_auth_request]
+  // [START gae_python38_auth_request]
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in, so display the "sign out" button and login info.
@@ -69,5 +69,5 @@ window.addEventListener('load', function () {
     console.log(error);
     alert('Unable to log in: ' + error)
   });
-  // [END gae_python37_auth_request]
+  // [END gae_python38_auth_request]
 });
