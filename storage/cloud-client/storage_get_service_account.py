@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,11 @@ def get_service_account():
     storage_client = storage.Client()
 
     email = storage_client.get_service_account_email()
-    print("The GCS service account for project {} is: {} " .format(storage_client.project, email))
+    print(
+        "The GCS service account for project {} is: {} ".format(
+            storage_client.project, email
+        )
+    )
 
 
 # [END storage_get_service_account]

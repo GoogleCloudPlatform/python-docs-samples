@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -32,8 +32,11 @@ def define_bucket_website_configuration(bucket_name, main_page_suffix, not_found
     bucket.configure_website(main_page_suffix, not_found_page)
     bucket.patch()
 
-    print("Static website bucket {} is set up to use {} as the index page and {} as the 404 page"
-          .format(bucket.name, main_page_suffix, not_found_page))
+    print(
+        "Static website bucket {} is set up to use {} as the index page and {} as the 404 page".format(
+            bucket.name, main_page_suffix, not_found_page
+        )
+    )
     return bucket
 
 

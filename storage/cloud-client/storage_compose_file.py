@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,11 @@ def compose_file(bucket_name, sources, destination_blob_name):
     destination.content_type = "text/plain"
     destination.compose(sources)
 
-    print("Composed new object {} in the bucket {}".format(destination_blob_name, bucket.name))
+    print(
+        "Composed new object {} in the bucket {}".format(
+            destination_blob_name, bucket.name
+        )
+    )
     return destination
 
 
@@ -40,7 +44,5 @@ def compose_file(bucket_name, sources, destination_blob_name):
 
 if __name__ == "__main__":
     compose_file(
-        bucket_name=sys.argv[1],
-        sources=sys.argv[2],
-        destination_blob_name=sys.argv[3],
+        bucket_name=sys.argv[1], sources=sys.argv[2], destination_blob_name=sys.argv[3],
     )

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ def bucket_delete_default_kms_key(bucket_name):
     bucket.patch()
 
     print("Default KMS key was removed from {}".format(bucket.name))
+    return bucket
 
 
 # [END storage_bucket_delete_default_kms_key]

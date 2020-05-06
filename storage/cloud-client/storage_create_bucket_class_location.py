@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -30,8 +30,11 @@ def create_bucket_class_location(bucket_name):
     bucket.storage_class = "COLDLINE"
     new_bucket = storage_client.create_bucket(bucket, location="us")
 
-    print("Created bucket {} in {} with storage class {}"
-          .format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
+    print(
+        "Created bucket {} in {} with storage class {}".format(
+            new_bucket.name, new_bucket.location, new_bucket.storage_class
+        )
+    )
     return new_bucket
 
 

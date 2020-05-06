@@ -107,6 +107,17 @@ def test_blob(test_bucket):
     yield blob
 
 
+@pytest.fixture
+def test_bucket_create():
+    """Yields a bucket object that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    yield bucket
+    bucket.delete(force=True)
+
+
 def test_list_buckets(test_bucket, capsys):
     storage_list_buckets.list_buckets()
     out, _ = capsys.readouterr()
@@ -211,9 +222,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
     )
 
     requests.put(
-        url,
-        data=content,
-        headers={"content-type": "application/octet-stream"},
+        url, data=content, headers={"content-type": "application/octet-stream"},
     )
 
     bucket = storage.Client().bucket(test_bucket.name)
@@ -224,9 +233,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
 def test_generate_signed_policy_v4(test_bucket, capsys):
     blob_name = "storage_snippets_test_form"
     short_name = storage_generate_signed_post_policy_v4
-    form = short_name.generate_signed_post_policy_v4(
-        test_bucket.name, blob_name
-    )
+    form = short_name.generate_signed_post_policy_v4(test_bucket.name, blob_name)
     assert "name='key' value='{}'".format(blob_name) in form
     assert "name='x-goog-signature'" in form
     assert "name='x-goog-date'" in form
@@ -245,9 +252,7 @@ def test_rename_blob(test_blob):
     except google.cloud.exceptions.exceptions.NotFound:
         pass
 
-    storage_move_file.rename_blob(
-        bucket.name, test_blob.name, "test_rename_blob"
-    )
+    storage_move_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
 
     assert bucket.get_blob("test_rename_blob") is not None
     assert bucket.get_blob(test_blob.name) is None
@@ -282,42 +287,49 @@ def test_versioning(test_bucket, capsys):
 
 
 def test_bucket_lifecycle_management(test_bucket, capsys):
-    bucket = storage_enable_bucket_lifecycle_management.\
-        enable_bucket_lifecycle_management(test_bucket)
+    bucket = storage_enable_bucket_lifecycle_management.enable_bucket_lifecycle_management(
+        test_bucket
+    )
     out, _ = capsys.readouterr()
     assert "[]" in out
     assert "Lifecycle management is enable" in out
     assert len(list(bucket.lifecycle_rules)) > 0
 
-    bucket = storage_disable_bucket_lifecycle_management.\
-        disable_bucket_lifecycle_management(test_bucket)
+    bucket = storage_disable_bucket_lifecycle_management.disable_bucket_lifecycle_management(
+        test_bucket
+    )
     out, _ = capsys.readouterr()
     assert "[]" in out
     assert len(list(bucket.lifecycle_rules)) == 0
 
 
-def test_create_bucket_class_location():
+def test_create_bucket_class_location(test_bucket_create):
     bucket = storage_create_bucket_class_location.create_bucket_class_location(
-        "storage-snippets-test"
+        test_bucket_create.name
     )
 
-    assert bucket.location == 'US'
+    assert bucket.location == "US"
     assert bucket.storage_class == "COLDLINE"
-    bucket.delete(force=True)
 
 
 def test_bucket_delete_default_kms_key(test_bucket, capsys):
-    storage_bucket_delete_default_kms_key.bucket_delete_default_kms_key(
+    test_bucket.default_kms_key_name = KMS_KEY
+    test_bucket.patch()
+
+    assert test_bucket.default_kms_key_name == KMS_KEY
+
+    bucket = storage_bucket_delete_default_kms_key.bucket_delete_default_kms_key(
         test_bucket.name
     )
 
     out, _ = capsys.readouterr()
-    assert test_bucket.default_kms_key_name is None
-    assert test_bucket.name in out
+    assert bucket.default_kms_key_name is None
+    assert bucket.name in out
 
 
 def test_get_service_account(capsys):
     storage_get_service_account.get_service_account()
+
     out, _ = capsys.readouterr()
 
     assert "@gs-project-accounts.iam.gserviceaccount.com" in out
@@ -330,17 +342,15 @@ def test_download_public_file(test_blob):
             test_blob.bucket.name, test_blob.name, dest_file.name
         )
 
-        assert dest_file.read()
+        assert dest_file.read() == b"Hello, is it me you're looking for?"
 
 
 def test_define_bucket_website_configuration(test_bucket):
-    bucket = storage_define_bucket_website_configuration.\
-        define_bucket_website_configuration(test_bucket.name, "index.html", "404.html")
+    bucket = storage_define_bucket_website_configuration.define_bucket_website_configuration(
+        test_bucket.name, "index.html", "404.html"
+    )
 
-    website_val = {
-        "mainPageSuffix": "index.html",
-        "notFoundPage": "404.html"
-    }
+    website_val = {"mainPageSuffix": "index.html", "notFoundPage": "404.html"}
 
     assert bucket._properties["website"] == website_val
 

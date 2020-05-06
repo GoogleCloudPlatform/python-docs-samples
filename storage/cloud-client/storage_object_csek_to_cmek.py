@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -32,9 +32,7 @@ def object_csek_to_cmek(bucket_name, blob_name, encryption_key, kms_key_name):
     bucket = storage_client.bucket(bucket_name)
 
     current_encryption_key = base64.b64decode(encryption_key)
-    source_blob = bucket.blob(
-        blob_name, encryption_key=current_encryption_key
-    )
+    source_blob = bucket.blob(blob_name, encryption_key=current_encryption_key)
 
     dest = bucket.blob(blob_name, kms_key_name=kms_key_name)
     token, rewritten, total = dest.rewrite(source_blob)
@@ -42,8 +40,11 @@ def object_csek_to_cmek(bucket_name, blob_name, encryption_key, kms_key_name):
     while token is not None:
         token, rewritten, total = dest.rewrite(source_blob, token=token)
 
-    print("Blob {} in bucket {} is now managed by the KMS key {} instead of a customer-supplied encryption key"
-          .format(blob_name, bucket_name, kms_key_name))
+    print(
+        "Blob {} in bucket {} is now managed by the KMS key {} instead of a customer-supplied encryption key".format(
+            blob_name, bucket_name, kms_key_name
+        )
+    )
     return dest
 
 

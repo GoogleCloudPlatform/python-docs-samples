@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,5 @@ def set_bucket_public_iam(bucket_name, role, member):
 
 if __name__ == "__main__":
     set_bucket_public_iam(
-        bucket_name=sys.argv[1],
-        role=sys.argv[2],
-        member=sys.argv[3],
+        bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3],
     )
