@@ -25,10 +25,10 @@ USE_MULTI_PROJECT = True
 
 # Currently I use my personal project for prototyping.
 PROJECT_TABLE = {
-    'python2.7': 'python-docs-samples-test',
-    'python3.6': 'python-docs-samples-test',
-    'python3.7': 'python-docs-samples-test',
-    'python3.8': 'tmatsuo-test',
+    'python2.7': 'python-docs-samples-tests',
+    'python3.6': 'python-docs-samples-tests',
+    'python3.7': 'tmatsuo-test',
+    'python3.8': 'python-docs-samples-tests',
 }
 
 
