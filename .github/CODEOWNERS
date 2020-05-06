@@ -16,7 +16,7 @@
 /bigtable/                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
 /blog/                          @GoogleCloudPlatform/python-samples-owners
 /cdn/                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
-/cloud-sql/                     @GoogleCloudPlatform/sql-dpe @GoogleCloudPlatform/python-samples-owners
+/cloud-sql/                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/                      @GoogleCloudPlatform/python-samples-owners
 /composer/                      @leahecole @GoogleCloudPlatform/python-samples-owners
 /compute/                       @djmailhot @GoogleCloudPlatform/python-samples-owners
