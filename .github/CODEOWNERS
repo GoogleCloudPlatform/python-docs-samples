@@ -25,7 +25,7 @@
 /dataflow/                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
 /dataproc/                      @bradmiro @GoogleCloudPlatform/python-samples-owners
-/datastore/                     @andrewsg @GoogleCloudPlatform/python-samples-owners
+/datastore/                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
 /dialogflow/                    @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /dlp/                           @GoogleCloudPlatform/python-samples-owners
 /dns/                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
