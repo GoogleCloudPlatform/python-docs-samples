@@ -23,6 +23,7 @@ for this test, but it could be changed to a different project.
 import os
 import random
 import time
+import uuid
 
 import backoff
 import googleapiclient.discovery
@@ -43,8 +44,7 @@ PROJECT_RESOURCE = "projects/{}".format(PROJECT)
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
-METRIC_NAME = ''.join(
-    random.choice('0123456789ABCDEF') for i in range(16))
+METRIC_NAME = uuid.uuid4().hex
 METRIC_RESOURCE = "{}/{}".format(
     CUSTOM_METRIC_DOMAIN, METRIC_NAME)
 METRIC_KIND = "GAUGE"
