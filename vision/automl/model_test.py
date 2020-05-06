@@ -20,8 +20,6 @@ import os
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
-import automl_vision_model
-
 project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
 
