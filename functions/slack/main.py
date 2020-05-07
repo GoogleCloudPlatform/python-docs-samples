@@ -14,21 +14,16 @@
 # [START functions_slack_setup]
 import hashlib
 import hmac
-import json
 import os
 
-import googleapiclient
+import googleapiclient.discovery
 from flask import jsonify
-
-with open('config.json', 'r') as f:
-    data = f.read()
-config = json.loads(data)
 
 
 kgsearch = googleapiclient.discovery.build(
     'kgsearch',
     'v1',
-    developerKey=os.environ.get('API_KEY') or config.get('KG_API_KEY'),
+    developerKey=os.environ['KG_API_KEY'],
     cache_discovery=False)
 # [END functions_slack_setup]
 
@@ -41,7 +36,7 @@ def verify_signature(request):
 
     req = str.encode('v0:{}:'.format(timestamp)) + request.get_data()
     request_digest = hmac.new(
-        str.encode(config['SLACK_SECRET']),
+        str.encode(os.environ['SLACK_SECRET']),
         req, hashlib.sha256
     ).hexdigest()
     request_hash = 'v0={}'.format(request_digest)
