@@ -18,6 +18,7 @@ import os
 
 import backoff
 from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import RetryError
 import pytest
 
 import manage_dataset
@@ -40,6 +41,14 @@ def dataset():
 
 @pytest.fixture(scope='module')
 def cleaner():
+    # First delete old datasets.
+    try:
+        testing_lib.delete_old_datasets(PROJECT_ID)
+    # We see occational RetryError while deleting old datasets.
+    # We can just ignore it and move on.
+    except RetryError as e:
+        print("delete_old_datasets failed: detail {}".format(e))
+
     resource_names = []
 
     yield resource_names
