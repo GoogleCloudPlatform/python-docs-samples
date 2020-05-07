@@ -177,6 +177,47 @@ def import_data(project_id, compute_region, dataset_display_name, path):
     # [END automl_tables_import_data]
 
 
+def update_dataset(
+    project_id,
+    compute_region,
+    dataset_display_name,
+    target_column_spec_name=None,
+    weight_column_spec_name=None,
+    test_train_column_spec_name=None,
+):
+    """Update dataset."""
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_display_name = 'DATASET_DISPLAY_NAME_HERE'
+    # target_column_spec_name = 'TARGET_COLUMN_SPEC_NAME_HERE' or None
+    # weight_column_spec_name = 'WEIGHT_COLUMN_SPEC_NAME_HERE' or None
+    # test_train_column_spec_name = 'TEST_TRAIN_COLUMN_SPEC_NAME_HERE' or None
+
+    from google.cloud import automl_v1beta1 as automl
+
+    client = automl.TablesClient(project=project_id, region=compute_region)
+
+    if target_column_spec_name is not None:
+        response = client.set_target_column(
+            dataset_display_name=dataset_display_name,
+            column_spec_display_name=target_column_spec_name,
+        )
+        print("Target column updated. {}".format(response))
+    if weight_column_spec_name is not None:
+        response = client.set_weight_column(
+            dataset_display_name=dataset_display_name,
+            column_spec_display_name=weight_column_spec_name,
+        )
+        print("Weight column updated. {}".format(response))
+    if test_train_column_spec_name is not None:
+        response = client.set_test_train_column(
+            dataset_display_name=dataset_display_name,
+            column_spec_display_name=test_train_column_spec_name,
+        )
+        print("Test/train column updated. {}".format(response))
+
+
 def delete_dataset(project_id, compute_region, dataset_display_name):
     """Delete a dataset"""
     # [START automl_tables_delete_dataset]
@@ -225,6 +266,14 @@ if __name__ == "__main__":
     import_data_parser.add_argument("--dataset_display_name")
     import_data_parser.add_argument("--path")
 
+    update_dataset_parser = subparsers.add_parser(
+        "update_dataset", help=update_dataset.__doc__
+    )
+    update_dataset_parser.add_argument("--dataset_display_name")
+    update_dataset_parser.add_argument("--target_column_spec_name")
+    update_dataset_parser.add_argument("--weight_column_spec_name")
+    update_dataset_parser.add_argument("--ml_use_column_spec_name")
+
     delete_dataset_parser = subparsers.add_parser(
         "delete_dataset", help=delete_dataset.__doc__
     )
@@ -243,6 +292,15 @@ if __name__ == "__main__":
     if args.command == "import_data":
         import_data(
             project_id, compute_region, args.dataset_display_name, args.path
+        )
+    if args.command == "update_dataset":
+        update_dataset(
+            project_id,
+            compute_region,
+            args.dataset_display_name,
+            args.target_column_spec_name,
+            args.weight_column_spec_name,
+            args.ml_use_column_spec_name,
         )
     if args.command == "delete_dataset":
         delete_dataset(project_id, compute_region, args.dataset_display_name)

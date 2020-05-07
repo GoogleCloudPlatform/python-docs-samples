@@ -81,6 +81,21 @@ def test_dataset_create_import_delete(capsys):
         automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
 
+def test_dataset_update(capsys):
+    dataset = ensure_dataset_ready()
+    automl_tables_dataset.update_dataset(
+        PROJECT,
+        REGION,
+        dataset.display_name,
+        target_column_spec_name="Deposit",
+        weight_column_spec_name="Balance",
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Target column updated." in out
+    assert "Weight column updated." in out
+
+
 def test_list_datasets():
     ensure_dataset_ready()
     assert (
