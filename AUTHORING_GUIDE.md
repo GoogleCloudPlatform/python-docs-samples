@@ -288,6 +288,7 @@ example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/
 * Use pytest's fixture for resource setup and teardown, instead of
   having them in the test itself.
 * Avoid infinite loops.
+* Retry RPCs
 
 ### Arrange, Act, Assert
 
@@ -332,8 +333,13 @@ glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
 or:
 
 ```python
-# If full uuid4 is too long, use hex representation.
+# If full uuid4 is too long, use its hex representation.
 encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+```
+
+```python
+# If the hex representation is also too long, slice it.
+encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex[:5]
 ```
 
 All temporary resources should be explicitly deleted when testing is
@@ -383,6 +389,44 @@ def my_flaky_test():
 This combination will give you very high success rate with fixed test
 execution time (0.999 success rate and 180 seconds operation wait time
 in the worst case in this example).
+
+### Retry RPCs
+
+All the RPCs are inevitably flaky. It can fail for many reasons. The
+`google-cloud` Python client retries requests automatically for most
+cases.
+
+The old api-client doesn't retry automatically, so consider using
+[`backoff`](https://pypi.org/project/backoff/) for retrying. Here is a
+simple example:
+
+```python
+
+import backoff
+from googleapiclient.errors import HttpError
+
+@pytest.fixture(scope='module')
+def test_resource():
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create_resource():
+        try:
+            return client.projects().imaginaryResource().create(
+                name=resource_id, body=body).execute()
+        except HttpError as e:
+            if '409' in str(e):
+                # Ignore this case and get the existing one.
+                return client.projects().imaginaryResource().get(
+                    name=resource_id).execute()
+            else:
+                raise
+
+    resource = create_resource()
+
+    yield resource
+
+    # cleanup
+    ...
+```
 
 ### Running tests
 
