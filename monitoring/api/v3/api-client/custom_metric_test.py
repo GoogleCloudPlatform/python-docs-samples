@@ -23,6 +23,7 @@ for this test, but it could be changed to a different project.
 import os
 import random
 import time
+import uuid
 
 import backoff
 import googleapiclient.discovery
@@ -37,15 +38,16 @@ from custom_metric import write_timeseries_value
 
 
 PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT_RESOURCE = "projects/{}".format(PROJECT)
 
 """ Custom metric domain for all custom metrics"""
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
-METRIC_NAME = ''.join(
-    random.choice('0123456789ABCDEF') for i in range(16))
+METRIC_NAME = uuid.uuid4().hex
 METRIC_RESOURCE = "{}/{}".format(
     CUSTOM_METRIC_DOMAIN, METRIC_NAME)
+METRIC_KIND = "GAUGE"
 
 
 @pytest.fixture(scope='module')
@@ -53,8 +55,31 @@ def client():
     return googleapiclient.discovery.build('monitoring', 'v3')
 
 
-def test_custom_metric(client):
-    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
+@pytest.fixture(scope='module')
+def custom_metric(client):
+    custom_metric_descriptor = create_custom_metric(
+        client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
+
+    # wait until metric has been created, use the get call to wait until
+    # a response comes back with the new metric with 10 retries.
+    custom_metric = None
+    retry_count = 0
+    while not custom_metric and retry_count < 10:
+        time.sleep(1)
+        retry_count += 1
+        custom_metric = get_custom_metric(
+            client, PROJECT_RESOURCE, METRIC_RESOURCE)
+
+    # make sure we get the custom_metric
+    assert custom_metric
+
+    yield custom_metric
+
+    # cleanup
+    delete_metric_descriptor(client, custom_metric_descriptor['name'])
+
+
+def test_custom_metric(client, custom_metric):
     # Use a constant seed so psuedo random number is known ahead of time
     random.seed(1)
     pseudo_random_value = random.randint(0, 10)
@@ -62,44 +87,27 @@ def test_custom_metric(client):
     random.seed(1)
 
     INSTANCE_ID = "test_instance"
-    METRIC_KIND = "GAUGE"
 
-    try:
-        custom_metric_descriptor = create_custom_metric(
-            client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
-
-        # wait until metric has been created, use the get call to wait until
-        # a response comes back with the new metric with 10 retries.
-        custom_metric = None
-        retry_count = 0
-        while not custom_metric and retry_count < 10:
-            time.sleep(1)
-            retry_count += 1
-            custom_metric = get_custom_metric(
-                client, PROJECT_RESOURCE, METRIC_RESOURCE)
-        # Make sure we get the custom metric
-        assert custom_metric
-
+    # It's rare, but write can fail with HttpError 500, so we retry.
+    @backoff.on_exception(backoff.expo, HttpError, max_time=120)
+    def write_value():
         write_timeseries_value(client, PROJECT_RESOURCE,
                                METRIC_RESOURCE, INSTANCE_ID,
                                METRIC_KIND)
+    write_value()
 
-        # Sometimes on new metric descriptors, writes have a delay in being
-        # read back. Use eventually_consistent to account for this.
-        @backoff.on_exception(
-            backoff.expo, (AssertionError, HttpError), max_time=120)
-        def eventually_consistent_test():
-            response = read_timeseries(
-                client, PROJECT_RESOURCE, METRIC_RESOURCE)
-            # Make sure the value is not empty.
-            assert 'timeSeries' in response
-            value = int(
-                response['timeSeries'][0]['points'][0]['value']['int64Value'])
-            # using seed of 1 will create a value of 1
-            assert value == pseudo_random_value
+    # Sometimes on new metric descriptors, writes have a delay in being
+    # read back. Use backoff to account for this.
+    @backoff.on_exception(
+        backoff.expo, (AssertionError, HttpError), max_time=120)
+    def eventually_consistent_test():
+        response = read_timeseries(
+            client, PROJECT_RESOURCE, METRIC_RESOURCE)
+        # Make sure the value is not empty.
+        assert 'timeSeries' in response
+        value = int(
+            response['timeSeries'][0]['points'][0]['value']['int64Value'])
+        # using seed of 1 will create a value of 1
+        assert value == pseudo_random_value
 
-        eventually_consistent_test()
-
-    finally:
-        # cleanup
-        delete_metric_descriptor(client, custom_metric_descriptor['name'])
+    eventually_consistent_test()
