@@ -175,7 +175,10 @@ class TestContainerAnalysisSamples:
                 time.sleep(SLEEP_TIME)
                 samples.delete_occurrence(basename(occ.name), PROJECT_ID)
                 time.sleep(SLEEP_TIME)
-            job_done.wait(timeout=60)
+            # We saw occational failure with 60 seconds timeout, so we bumped it
+            # to 180 seconds.
+            # See also: python-docs-samples/issues/2894
+            job_done.wait(timeout=180)
             print('done. msg_count = {}'.format(receiver.msg_count))
             assert message_count <= receiver.msg_count
         finally:
