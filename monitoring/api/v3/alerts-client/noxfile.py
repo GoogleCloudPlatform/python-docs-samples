@@ -19,10 +19,17 @@ from pathlib import Path
 
 import nox
 
+# Proposed TEST_CONFIG.
+# You can have a file `testconfig` or something and it will be injected into
+# the generated noxfile.py.
+TEST_CONFIG = {
+    'use_multi_project': True,
+    'ignored_versions': ["2.7"],
+    'other_configs': ['other value1', 'other value2'],
+}
 
-# Switch to use the multi project override.
-USE_MULTI_PROJECT = True
 
+# This is a fixed dictionary in the template.
 # Currently I use my personal project for prototyping.
 PROJECT_TABLE = {
     'python2.7': 'python-docs-samples-tests',
@@ -33,31 +40,26 @@ PROJECT_TABLE = {
 
 
 def get_pytest_env_vars():
-    """Returns a dict for pytest invocation."""
+    """Returns a dict for pytest invocation.
 
+    Currently only use cse is to override env vars for test project.
+    """
     ret = {}
 
-    # Currently only use cse is to override env vars for test project.
-    if not USE_MULTI_PROJECT:
-        return ret
+    if TEST_CONFIG.get('use_multi_project', False):
+        # KOKORO_JOB_NAME is in the following format:
+        # cloud-devrel/python-docs-samples/pythonN.M/BUILD_TYPE(e.g: continuous)
+        # Currently we only look at the python version.
+        kokoro_job_name = os.environ.get('KOKORO_JOB_NAME')
+        if kokoro_job_name:
+            parts = kokoro_job_name.split('/')
+            if len(parts) >= 2:
+                # build_type = parts[-1]
+                python_version = parts[-2]
 
-    # KOKORO_JOB_NAME is in the following format:
-    # cloud-devrel/python-docs-samples/pythonN.M/(continuous|periodic|presubmit)
-    # Currently we only look at the python version.
-
-    kokoro_job_name = os.environ.get('KOKORO_JOB_NAME')
-    if not kokoro_job_name:
-        return ret
-    parts = kokoro_job_name.split('/')
-    if len(parts) < 2:
-        return ret
-
-    # build_type = parts[-1]
-    python_version = parts[-2]
-
-    if python_version in PROJECT_TABLE:
-        ret['GOOGLE_CLOUD_PROJECT'] = PROJECT_TABLE[python_version]
-        ret['GCLOUD_PROJECT'] = PROJECT_TABLE[python_version]
+                if python_version in PROJECT_TABLE:
+                    ret['GOOGLE_CLOUD_PROJECT'] = PROJECT_TABLE[python_version]
+                    ret['GCLOUD_PROJECT'] = PROJECT_TABLE[python_version]
 
     return ret
 
@@ -67,7 +69,7 @@ def get_pytest_env_vars():
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["2.7"]
+IGNORED_VERSIONS = TEST_CONFIG.get('ignored_versions', {})
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
