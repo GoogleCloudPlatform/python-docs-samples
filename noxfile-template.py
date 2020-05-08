@@ -22,7 +22,7 @@ import nox
 
 # `TEST_CONFIG` dict is a configuration hook that allows users to
 # modify the test configurations. The values here should be in sync
-# with `.test_config.py`. Users will copy `.test_config.py` into their
+# with `test_config.py`. Users will copy `test_config.py` into their
 # directory and modify it.
 
 TEST_CONFIG = {
