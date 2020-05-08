@@ -16,11 +16,10 @@ from __future__ import print_function
 
 import os
 from pathlib import Path
-# Good old print debug
-import pprint
 import sys
 
 import nox
+
 
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
@@ -60,25 +59,18 @@ TEST_CONFIG = {
     'envs': {},
 }
 
-pp = pprint.PrettyPrinter(indent=4)
 
 try:
+    # Ensure we can import noxfile_config in the project's directory.
     sys.path.append('.')
-    print("sys.path")
-    pp.pprint(sys.path)
     from noxfile_config import TEST_CONFIG_OVERRIDE
-    import noxfile_config
-    print('noxfile_config.__file__')
-    print(noxfile_config.__file__)
-except ImportError:
-    print('importing noxfile_config failed')
+except ImportError as e:
+    print("No user noxfile_config found: detail: {}".format(e))
     TEST_CONFIG_OVERRIDE = {}
 
 # Update the TEST_CONFIG with the user supplied values.
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
-print("TEST_CONFIG:")
-pp.pprint(TEST_CONFIG)
 
 def get_pytest_env_vars():
     """Returns a dict for pytest invocation."""
@@ -92,8 +84,6 @@ def get_pytest_env_vars():
 
     # Apply user supplied envs.
     ret.update(TEST_CONFIG['envs'])
-    print("pytest_env_vars:")
-    pp.pprint(ret)
     return ret
 
 
