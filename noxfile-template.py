@@ -48,16 +48,17 @@ TEST_CONFIG = {
 
     # An envvar key for determining the build specific project. Normally you
     # don't have to modify this.
-    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT_ENV',
+    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     'envs': {},
 }
 
-TEST_CONFIG_OVERRIDE = {}
-# Placeholder for inserting USER's TEST_CONFIG_OVERRIDE
-# End of user's TEST_CONFIG_OVERRIDE
+try:
+    from test_config import TEST_CONFIG_OVERRIDE
+except ImportError:
+    TEST_CONFIG_OVERRIDE = {}
 
 # Update the TEST_CONFIG with user supplied values.
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)

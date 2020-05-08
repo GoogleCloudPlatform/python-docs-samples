@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+# Temporary set BUILD_SPECIFIC_GCLOUD_PROJECT in this file.
+os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = 'tmatsuo-test'
+
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
 # You can copy this file into your directory, then it will be injected
@@ -43,7 +48,7 @@ TEST_CONFIG_OVERRIDE = {
 
     # An envvar key for determining the build specific project. Normally you
     # don't have to modify this.
-    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT_ENV',
+    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
