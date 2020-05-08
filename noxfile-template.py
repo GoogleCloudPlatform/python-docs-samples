@@ -16,6 +16,9 @@ from __future__ import print_function
 
 import os
 from pathlib import Path
+# Good old print debug
+import pprint
+import sys
 
 import nox
 
@@ -57,17 +60,22 @@ TEST_CONFIG = {
     'envs': {},
 }
 
+pp = pprint.PrettyPrinter(indent=4)
+
 try:
+    print("sys.path")
+    pp.pprint(sys.path)
     from noxfile_config import TEST_CONFIG_OVERRIDE
+    import noxfile_config
+    print('noxfile_config.__file__')
+    print(noxfile_config.__file__)
 except ImportError:
+    print('importing noxfile_config failed')
     TEST_CONFIG_OVERRIDE = {}
 
 # Update the TEST_CONFIG with the user supplied values.
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
-# Good old print debug
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
 print("TEST_CONFIG:")
 pp.pprint(TEST_CONFIG)
 
