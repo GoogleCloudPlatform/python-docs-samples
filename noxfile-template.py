@@ -65,6 +65,11 @@ except ImportError:
 # Update the TEST_CONFIG with the user supplied values.
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
+# Good old print debug
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+print("TEST_CONFIG:")
+pp.pprint(TEST_CONFIG)
 
 def get_pytest_env_vars():
     """Returns a dict for pytest invocation."""
@@ -78,6 +83,8 @@ def get_pytest_env_vars():
 
     # Apply user supplied envs.
     ret.update(TEST_CONFIG['envs'])
+    print("pytest_env_vars:")
+    pp.pprint(ret)
     return ret
 
 
