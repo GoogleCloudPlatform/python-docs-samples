@@ -181,7 +181,9 @@ def py(session):
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
+        session.skip("SKIPPED: {} tests are disabled for this sample.".format(
+            session.python
+        ))
 
 
 #
@@ -192,7 +194,7 @@ def py(session):
 def cloud_run(session):
     """Run tests for cloud run."""
     if 'cloud_run' not in TEST_CONFIG['opt_in_sessions']:
-        print('SKIPPED: cloud_run tests are disabled for this sample.')
+        session.skip('SKIPPED: cloud_run tests are disabled for this sample.')
         return
 
     if os.path.exists("requirements.txt"):
