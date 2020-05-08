@@ -63,6 +63,7 @@ TEST_CONFIG = {
 pp = pprint.PrettyPrinter(indent=4)
 
 try:
+    sys.path.append('.')
     print("sys.path")
     pp.pprint(sys.path)
     from noxfile_config import TEST_CONFIG_OVERRIDE
