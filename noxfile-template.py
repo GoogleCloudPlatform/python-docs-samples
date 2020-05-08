@@ -20,12 +20,71 @@ from pathlib import Path
 import nox
 
 
+# `TEST_CONFIG` dict is a configuration hook that allows users to
+# modify the test configurations. The values here should be in sync
+# with `.test_config.py`. Users will copy `.test_config.py` into their
+# directory and modify it.
+
+TEST_CONFIG = {
+    # You can opt out from the test for specific Python versions.
+    'ignored_versions': ["2.7"],
+
+    # Declare optional test sessions you want to opt-in. Currently we
+    # have the following optional test sessions:
+    #     'cloud_run' # Test session for Cloud Run application.
+    'opt_in_sessions': [],
+
+    # Only relevant for the `cloud_run` session. Specify the file
+    # names for your e2e test.
+    'cloud_run_e2e_test_files': ['e2e_test.py'],
+
+    # If set to True, the test will install the library from the root
+    # of the repository.
+    'install_library_from_source': False,
+
+    # Set to True if you want to use the Cloud Project configured for each
+    # build.
+    'use_build_specific_project': False,
+
+    # An envvar key for determining the build specific project. Normally you
+    # don't have to modify this.
+    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT_ENV',
+
+    # A dictionary you want to inject into your test. Don't put any
+    # secrets here. These values will override predefined values.
+    'envs': {},
+}
+
+TEST_CONFIG_OVERRIDE = {}
+# Placeholder for inserting USER's TEST_CONFIG_OVERRIDE
+# End of user's TEST_CONFIG_OVERRIDE
+
+# Update the TEST_CONFIG with user supplied values.
+TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
+
+
+def get_pytest_env_vars():
+    """Returns a dict for pytest invocation."""
+    ret = {}
+
+    # Override the GCLOUD_PROJECT
+    if TEST_CONFIG['use_build_specific_project']:
+        env_key = TEST_CONFIG['build_specific_project_env']
+        # This should error out if not set.
+        ret['GOOGLE_CLOUD_PROJECT'] = os.environ[env_key]
+        ret['GCLOUD_PROJECT'] = os.environ[env_key]
+
+    # Apply user supplied envs.
+    ret.update(TEST_CONFIG['envs'])
+    return ret
+
+
 # DO NOT EDIT - automatically generated.
 # All versions used to tested samples.
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["2.7"]
+IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
@@ -109,7 +168,8 @@ def _session_tests(session, post_install=None):
         # Pytest will return 5 when no tests are collected. This can happen
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
-        success_codes=[0, 5]
+        success_codes=[0, 5],
+        env=get_pytest_env_vars()
     )
 
 
@@ -121,6 +181,52 @@ def py(session):
     else:
         print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
 
+
+#
+# cloud_run session
+#
+
+@nox.session
+def cloud_run(session):
+    """Run tests for cloud run."""
+    if 'cloud_run' not in TEST_CONFIG['opt_in_sessions']:
+        print('SKIPPED: cloud_run tests are disabled for this sample.')
+        return
+
+    if os.path.exists("requirements.txt"):
+        session.install("-r", "requirements.txt")
+
+    if os.path.exists("requirements-test.txt"):
+        session.install("-r", "requirements-test.txt")
+
+    user_envs = get_pytest_env_vars()
+
+    # Only update gcloud on Kokoro.
+    if os.environ.get("KOKORO_JOB_NAME"):
+        # Update gcloud
+        session.run("gcloud", "components", "update", "--quiet")
+
+        # Activate service account
+        key_file = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+        session.run(
+            "gcloud", "auth", "activate-service-account",
+            "--key-file={}".format(key_file)
+        )
+
+        # Set gcloud project
+        project = user_envs['GCLOUD_PROJECT']
+        session.run("gcloud", "config", "set", "project", project)
+
+    test_files = TEST_CONFIG['cloud_run_e2e_test_files']
+    session.run(
+        "pytest",
+        *(PYTEST_COMMON_ARGS + session.posargs + test_files),
+        # Pytest will return 5 when no tests are collected. This can happen
+        # on travis where slow and flaky tests are excluded.
+        # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
+        success_codes=[0, 5],
+        env=user_envs
+    )
 
 #
 # Readmegen
