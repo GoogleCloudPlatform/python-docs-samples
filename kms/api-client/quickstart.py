@@ -13,37 +13,41 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-import argparse
+import os
 
 
-# [START kms_quickstart]
-def quickstart(project_id, location_id):
-    # Import the client library.
-    from google.cloud import kms
+def run_quickstart():
+    # [START kms_quickstart]
+    # Imports the Google APIs client library
+    from google.cloud import kms_v1
 
-    # Create the client.
-    client = kms.KeyManagementServiceClient()
+    # Your Google Cloud Platform project ID
+    project_id = 'YOUR_PROJECT_ID'
+    # [END kms_quickstart]
+    project_id = os.environ['GCLOUD_PROJECT']
+    # [START kms_quickstart]
 
-    # Build the parent location name.
-    location_name = client.location_path(project_id, location_id)
+    # Lists keys in the "global" location.
+    location = 'global'
 
-    # Call the API.
-    key_rings = client.list_key_rings(location_name)
+    # Creates an API client for the KMS API.
+    client = kms_v1.KeyManagementServiceClient()
 
-    # Example of iterating over key rings.
-    for key_ring in key_rings:
-        print(key_ring.name)
+    # The resource name of the location associated with the key rings.
+    parent = client.location_path(project_id, location)
 
-    return key_rings
-# [END kms_quickstart]
+    # Lists key rings
+    response = client.list_key_rings(parent)
+    response_list = list(response)
+
+    if len(response_list) > 0:
+        print('Key rings:')
+        for key_ring in response_list:
+            print(key_ring.name)
+    else:
+        print('No key rings found.')
+    # [END kms_quickstart]
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('location_id', help='id of the KMS location')
-    args = parser.parse_args()
-
-    quickstart(args.project_id, args.location_id)
+    run_quickstart()

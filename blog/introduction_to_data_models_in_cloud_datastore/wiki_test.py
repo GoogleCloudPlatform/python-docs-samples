@@ -13,13 +13,13 @@
 
 import os
 
-import pytest
+from flaky import flaky
 
 from wiki import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 
 
-@pytest.mark.flaky
+@flaky
 def test_main():
     main(PROJECT)

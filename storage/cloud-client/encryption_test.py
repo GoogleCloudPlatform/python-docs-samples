@@ -15,9 +15,7 @@
 import base64
 import os
 import tempfile
-import uuid
 
-from google.api_core.exceptions import NotFound
 from google.cloud import storage
 from google.cloud.storage import Blob
 import pytest
@@ -56,36 +54,18 @@ def test_upload_encrypted_blob():
         )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(BUCKET)
-    blob_name = "test_blob_{}".format(uuid.uuid4().hex)
     blob = Blob(
-        blob_name,
+        "encryption_test_sigil",
         bucket,
         encryption_key=TEST_ENCRYPTION_KEY_DECODED,
     )
     content = "Hello, is it me you're looking for?"
     blob.upload_from_string(content)
-
-    yield blob.name, content
-
-    # To delete an encrypted blob, you have to provide the same key
-    # used for the blob. When you provide a wrong key, you'll get
-    # NotFound.
-    try:
-        # Clean up for the case that the rotation didn't occur.
-        blob.delete()
-    except NotFound as e:
-        # For the case that the rotation succeeded.
-        print("Ignoring 404, detail: {}".format(e))
-        blob = Blob(
-            blob_name,
-            bucket,
-            encryption_key=TEST_ENCRYPTION_KEY_2_DECODED
-        )
-        blob.delete()
+    return blob.name, content
 
 
 def test_download_blob(test_blob):

@@ -13,17 +13,20 @@
 
 import json
 
-import googleapiclient.discovery
+import googleapiclient
 import mock
 import os
 import pytest
 
 import main
 
+with open('config.json', 'r') as f:
+    data = f.read()
+config = json.loads(data)
 
-kg_search = googleapiclient.discovery.build(
-    'kgsearch', 'v1',
-    developerKey=os.environ['KG_API_KEY'])
+
+kg_search = googleapiclient.discovery.build('kgsearch', 'v1',
+                                      developerKey=os.environ['API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
@@ -50,9 +53,7 @@ class TestGCFPySlackSample(object):
 
     def test_verify_web_hook_valid_request(self):
         request = Request()
-        request.headers = {
-            'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']
-        }
+        request.headers = {'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']}
         main.verify_signature(request)
 
     def test_format_slack_message(self):

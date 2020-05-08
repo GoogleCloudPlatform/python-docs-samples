@@ -23,6 +23,7 @@ for this test, but it could be changed to a different project.
 import os
 import re
 
+from flaky import flaky
 import googleapiclient.discovery
 import pytest
 
@@ -37,7 +38,7 @@ def client():
     return googleapiclient.discovery.build('monitoring', 'v3')
 
 
-@pytest.mark.flaky
+@flaky
 def test_list_monitored_resources(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_monitored_resource_descriptors(
@@ -48,7 +49,7 @@ def test_list_monitored_resources(client, capsys):
     assert regex.search(stdout) is not None
 
 
-@pytest.mark.flaky
+@flaky
 def test_list_metrics(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_metric_descriptors(
@@ -59,7 +60,7 @@ def test_list_metrics(client, capsys):
     assert regex.search(stdout) is not None
 
 
-@pytest.mark.flaky
+@flaky
 def test_list_timeseries(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_timeseries(

@@ -1,2 +1,0 @@
-cryptography==2.9.2
-pem==20.1.0

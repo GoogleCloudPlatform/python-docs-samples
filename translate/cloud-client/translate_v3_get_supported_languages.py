@@ -16,7 +16,7 @@
 from google.cloud import translate
 
 
-def get_supported_languages(project_id="YOUR_PROJECT_ID"):
+def sample_get_supported_languages(project_id="YOUR_PROJECT_ID"):
     """Getting a list of supported language codes."""
 
     client = translate.TranslationServiceClient()

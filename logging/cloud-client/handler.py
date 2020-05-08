@@ -17,17 +17,14 @@
 
 def use_logging_handler():
     # [START logging_handler_setup]
-    # Imports the Cloud Logging client library
+    # Imports the Google Cloud client library
     import google.cloud.logging
 
     # Instantiates a client
     client = google.cloud.logging.Client()
 
-    # Retrieves a Cloud Logging handler based on the environment
-    # you're running in and integrates the handler with the
-    # Python logging module. By default this captures all logs
-    # at INFO level and higher
-    client.get_default_handler()
+    # Connects the logger to the root logging handler; by default this captures
+    # all logs at INFO level and higher
     client.setup_logging()
     # [END logging_handler_setup]
 

@@ -14,14 +14,14 @@
 import os
 import re
 
-import pytest
+from flaky import flaky
 
 from customer_supplied_keys import main
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-@pytest.mark.flaky
+@flaky
 def test_main(capsys):
     main(BUCKET, __file__)
     out, err = capsys.readouterr()
