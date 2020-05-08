@@ -143,7 +143,7 @@ def cloud_run(session):
 
     session.run(
         "pytest",
-        *(PYTEST_COMMON_ARGS + session.posargs + ["e2e_test.py"]),
+        *(PYTEST_COMMON_ARGS + ["-k", "e2e"] + session.posargs),
         # Pytest will return 5 when no tests are collected. This can happen
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
