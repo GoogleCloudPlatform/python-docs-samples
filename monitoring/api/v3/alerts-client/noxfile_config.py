@@ -12,22 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-# Temporary set BUILD_SPECIFIC_GCLOUD_PROJECT in this file.
-kokoro_job_name = os.environ.get('KOKORO_JOB_NAME')
-if kokoro_job_name and 'python3.7' in kokoro_job_name:
-    os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = 'tmatsuo-test'
-else:
-    os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = os.environ['GCLOUD_PROJECT']
-
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
 # You can copy this file into your directory, then it will be inported from
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/test_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
@@ -42,17 +33,11 @@ TEST_CONFIG_OVERRIDE = {
     # names for your e2e test.
     'cloud_run_e2e_test_files': ['e2e_test.py'],
 
-    # If set to True, the test will install the library from the root
-    # of the repository.
-    'install_library_from_source': False,
-
-    # Set to True if you want to use the Cloud Project configured for each
-    # build.
-    'use_build_specific_project': True,
-
-    # An envvar key for determining the build specific project. Normally you
-    # don't have to modify this.
-    'build_specific_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+    # An envvar key for determining the project id to use. Change it
+    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using
+    # a build specific Cloud project.
+    # 'gcloud_project_env': 'GCLOUD_PROJECT',
+    'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
