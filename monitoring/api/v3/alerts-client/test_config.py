@@ -15,7 +15,11 @@
 import os
 
 # Temporary set BUILD_SPECIFIC_GCLOUD_PROJECT in this file.
-os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = 'tmatsuo-test'
+kokoro_job_name = os.environ.get('KOKORO_JOB_NAME')
+if 'python3.7' in: kokoro_job_name:
+    os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = 'tmatsuo-test'
+else:
+    os.environ['BUILD_SPECIFIC_GCLOUD_PROJECT'] = os.environ['GCLOUD_PROJECT']
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
