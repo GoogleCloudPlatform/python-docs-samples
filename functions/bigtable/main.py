@@ -33,12 +33,10 @@ def bigtable_read_data(request):
 
     rows = table.read_rows(row_set=row_set)
     for row in rows:
-        output = 'Rowkey: {}, os_build: {}'.format(row.row_key.decode('utf-8'),
-                                                   row.cells["stats_summary"][
-                                                       "os_build".encode(
-                                                         'utf-8')][
-                                                       0].value.decode(
-                                                     'utf-8'))
+        output = 'Rowkey: {}, os_build: {}'.format(
+          row.row_key.decode('utf-8'),
+          row.cells["stats_summary"]["os_build".encode('utf-8')][0]
+              .value.decode('utf-8'))
         outputs.append(output)
 
     return '\n'.join(outputs)
