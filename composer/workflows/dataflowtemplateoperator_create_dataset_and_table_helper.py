@@ -47,6 +47,11 @@ def create_dataset_and_table(project, location, dataset_name):
     # Construct a full Dataset object to send to the API.
     dataset = bigquery.Dataset(dataset_id)
 
+    # Set the location to your desired location for the dataset. 
+    # For more information, see this link:
+    # https://cloud.google.com/bigquery/docs/locations
+    dataset.location = location
+
     # Send the dataset to the API for creation.
     # Raises google.api_core.exceptions.Conflict if the Dataset already
     # exists within the project.

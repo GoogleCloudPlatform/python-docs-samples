@@ -29,7 +29,7 @@ client = bigquery.Client()
 
 dataset_UUID = str(uuid.uuid4()).split("-")[0]
 
-expected_schema = schema = [
+expected_schema = [
     bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
     bigquery.SchemaField("average_temperature", "INTEGER", mode="REQUIRED"),
     bigquery.SchemaField("month", "STRING", mode="REQUIRED"),
