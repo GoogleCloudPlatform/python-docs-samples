@@ -17,6 +17,9 @@ import pytest
 import sys
 import uuid
 
+import backoff
+from requests.exceptions import HTTPError
+
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
 import datasets
@@ -32,6 +35,11 @@ bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json"
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
+
+
+# A giveup callback for backoff.
+def fatal_code(e):
+    return 400 <= e.response.status_code < 500
 
 
 @pytest.fixture(scope="module")
@@ -258,37 +266,56 @@ def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
-    encounter_response = fhir_resources.create_encounter(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
 
-    encounter_resource_id = encounter_response.json()["id"]
-
-    fhir_resources.create_observation(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-        encounter_resource_id,
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
     )
+    def create_encounter():
+        encounter_response = fhir_resources.create_encounter(
+            service_account_json,
+            base_url,
+            project_id,
+            cloud_region,
+            dataset_id,
+            fhir_store_id,
+            test_patient,
+        )
 
-    fhir_resources.conditional_delete_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        return encounter_response.json()["id"]
+
+    encounter_resource_id = create_encounter()
+
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
     )
+    def create_observation():
+        fhir_resources.create_observation(
+            service_account_json,
+            base_url,
+            project_id,
+            cloud_region,
+            dataset_id,
+            fhir_store_id,
+            test_patient,
+            encounter_resource_id,
+        )
+
+    create_observation()
+
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
+    )
+    def conditional_delete_resource():
+        fhir_resources.conditional_delete_resource(
+            service_account_json,
+            base_url,
+            project_id,
+            cloud_region,
+            dataset_id,
+            fhir_store_id,
+        )
+
+    conditional_delete_resource()
 
     out, _ = capsys.readouterr()
 
