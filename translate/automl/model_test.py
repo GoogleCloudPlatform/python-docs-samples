@@ -29,7 +29,7 @@ compute_region = "us-central1"
 @pytest.fixture
 def model():
     client = automl.AutoMlClient()
-    model_name = "test_" + str(uuid.uuid4())
+    model_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
     project_location = client.location_path(project_id, compute_region)
     my_model = {
         "display_name": model_name,
