@@ -16,7 +16,6 @@ import argparse
 import os
 
 from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
 
@@ -67,14 +66,9 @@ def create_fhir_store(
         .create(parent=fhir_store_parent, body=body, fhirStoreId=fhir_store_id)
     )
 
-    try:
-        response = request.execute()
-        print("Created FHIR store: {}".format(fhir_store_id))
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not created: {}".format(e))
-        return ""
-
+    response = request.execute()
+    print("Created FHIR store: {}".format(fhir_store_id))
+    return response
 
 # [END healthcare_create_fhir_store]
 
@@ -98,14 +92,9 @@ def delete_fhir_store(
         .delete(name=fhir_store_name)
     )
 
-    try:
-        response = request.execute()
-        print("Deleted FHIR store: {}".format(fhir_store_id))
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not deleted: {}".format(e))
-        return ""
-
+    response = request.execute()
+    print("Deleted FHIR store: {}".format(fhir_store_id))
+    return response
 
 # [END healthcare_delete_fhir_store]
 
@@ -202,16 +191,11 @@ def patch_fhir_store(
         .patch(name=fhir_store_name, updateMask="notificationConfig", body=patch)
     )
 
-    try:
-        response = request.execute()
-        print(
-            "Patched FHIR store {} with Cloud Pub/Sub topic: None".format(fhir_store_id)
-        )
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not patched: {}".format(e))
-        return ""
-
+    response = request.execute()
+    print(
+        "Patched FHIR store {} with Cloud Pub/Sub topic: None".format(fhir_store_id)
+    )
+    return response
 
 # [END healthcare_patch_fhir_store]
 
@@ -238,14 +222,9 @@ def export_fhir_store_gcs(
         .export(name=fhir_store_name, body=body)
     )
 
-    try:
-        response = request.execute()
-        print("Exported FHIR resources to bucket: gs://{}".format(gcs_uri))
-        return response
-    except HttpError as e:
-        print("Error, FHIR resources not exported: {}".format(e))
-        return ""
-
+    response = request.execute()
+    print("Exported FHIR resources to bucket: gs://{}".format(gcs_uri))
+    return response
 
 # [END healthcare_export_fhir_resources_gcs]
 
@@ -278,14 +257,9 @@ def import_fhir_resources(
         .import_(name=fhir_store_name, body=body)
     )
 
-    try:
-        response = request.execute()
-        print("Imported FHIR resources: {}".format(gcs_uri))
-        return response
-    except HttpError as e:
-        print("Error, FHIR resources not imported: {}".format(e))
-        return ""
-
+    response = request.execute()
+    print("Imported FHIR resources: {}".format(gcs_uri))
+    return response
 
 # [END healthcare_import_fhir_resources]
 
