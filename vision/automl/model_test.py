@@ -20,8 +20,6 @@ import os
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
-import automl_vision_model
-
 project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
 
@@ -41,40 +39,5 @@ def test_model_create_status_delete(capsys):
     operation_name = response.operation.name
     assert operation_name
 
-    # get operation status
-    automl_vision_model.get_operation_status(operation_name)
-    out, _ = capsys.readouterr()
-    assert "Operation status: " in out
-
     # cancel operation
     response.cancel()
-
-
-def test_model_list_get_evaluate(capsys):
-    # list models
-    automl_vision_model.list_models(project_id, compute_region, "")
-    out, _ = capsys.readouterr()
-    list_models_output = out.splitlines()
-    assert "Model id: " in list_models_output[2]
-
-    # get model
-    model_id = list_models_output[2].split()[2]
-    automl_vision_model.get_model(project_id, compute_region, model_id)
-    out, _ = capsys.readouterr()
-    assert "Model name: " in out
-
-    # list model evaluations
-    automl_vision_model.list_model_evaluations(
-        project_id, compute_region, model_id, ""
-    )
-    out, _ = capsys.readouterr()
-    list_evals_output = out.splitlines()
-    assert "name: " in list_evals_output[1]
-
-    # get model evaluation
-    model_evaluation_id = list_evals_output[1].split("/")[-1][:-1]
-    automl_vision_model.get_model_evaluation(
-        project_id, compute_region, model_id, model_evaluation_id
-    )
-    out, _ = capsys.readouterr()
-    assert "evaluation_metric" in out

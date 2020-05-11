@@ -13,10 +13,10 @@
 /automl/                        @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /bigquery/                      @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigquery_storage/              @shollyman @GoogleCloudPlatform/python-samples-owners
-/bigtable/                      @billyjacobson @GoogleCloudPlatform/python-samples-owners
+/bigtable/                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
 /blog/                          @GoogleCloudPlatform/python-samples-owners
 /cdn/                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
-/cloud-sql/                     @kvg @GoogleCloudPlatform/python-samples-owners
+/cloud-sql/                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/                      @GoogleCloudPlatform/python-samples-owners
 /composer/                      @leahecole @GoogleCloudPlatform/python-samples-owners
 /compute/                       @djmailhot @GoogleCloudPlatform/python-samples-owners
@@ -25,13 +25,13 @@
 /dataflow/                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
 /dataproc/                      @bradmiro @GoogleCloudPlatform/python-samples-owners
-/datastore/                     @andrewsg @GoogleCloudPlatform/python-samples-owners
+/datastore/                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
 /dialogflow/                    @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /dlp/                           @GoogleCloudPlatform/python-samples-owners
 /dns/                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
 /endpoints/                     @DanSanche @GoogleCloudPlatform/python-samples-owners
 /error_reporting/               @GoogleCloudPlatform/python-samples-owners
-/firestore/                     @BenWhitehead @GoogleCloudPlatform/python-samples-owners
+/firestore/                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
 /functions/                     @grant @GoogleCloudPlatform/python-samples-owners
 /healthcare/                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/                           @melaniedejong @GoogleCloudPlatform/python-samples-owners
@@ -53,7 +53,7 @@
 /scheduler/                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/                       @mmmarklu @GoogleCloudPlatform/python-samples-owners
 /speech/                        @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/storage/                       @crwilcox @GoogleCloudPlatform/python-samples-owners
+/storage/                       @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/python-samples-owners
 /tables/automl/                 @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/                  @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
