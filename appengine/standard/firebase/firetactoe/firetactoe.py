@@ -32,7 +32,7 @@ from google.appengine.api import app_identity
 from google.appengine.api import users
 from google.appengine.ext import ndb
 import httplib2
-from oauth2client.client import GoogleCredentials
+import google.auth
 
 
 _FIREBASE_CONFIG = '_firebase_config.html'
@@ -80,8 +80,7 @@ def _get_http():
     http = httplib2.Http()
     # Use application default credentials to make the Firebase calls
     # https://firebase.google.com/docs/reference/rest/database/user-auth
-    creds = GoogleCredentials.get_application_default().create_scoped(
-        _FIREBASE_SCOPES)
+    creds, _ = google.auth.default(scopes=[_FIREBASE_SCOPES])
     creds.authorize(http)
     return http
 
