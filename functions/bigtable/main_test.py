@@ -42,27 +42,11 @@ def table_id():
     timestamp = datetime.datetime(2019, 5, 1)
     rows = [
       table.direct_row("phone#4c410523#20190501"),
-      table.direct_row("phone#4c410523#20190502"),
-      table.direct_row("phone#4c410523#20190505"),
-      table.direct_row("phone#5c10102#20190501"),
-      table.direct_row("phone#5c10102#20190502"),
+      table.direct_row("phone#4c410523#20190502")
     ]
 
-    rows[0].set_cell("stats_summary", "connected_cell", 1, timestamp)
-    rows[0].set_cell("stats_summary", "connected_wifi", 1, timestamp)
     rows[0].set_cell("stats_summary", "os_build", "PQ2A.190405.003", timestamp)
-    rows[1].set_cell("stats_summary", "connected_cell", 1, timestamp)
-    rows[1].set_cell("stats_summary", "connected_wifi", 1, timestamp)
     rows[1].set_cell("stats_summary", "os_build", "PQ2A.190405.004", timestamp)
-    rows[2].set_cell("stats_summary", "connected_cell", 0, timestamp)
-    rows[2].set_cell("stats_summary", "connected_wifi", 1, timestamp)
-    rows[2].set_cell("stats_summary", "os_build", "PQ2A.190406.000", timestamp)
-    rows[3].set_cell("stats_summary", "connected_cell", 1, timestamp)
-    rows[3].set_cell("stats_summary", "connected_wifi", 1, timestamp)
-    rows[3].set_cell("stats_summary", "os_build", "PQ2A.190401.002", timestamp)
-    rows[4].set_cell("stats_summary", "connected_cell", 1, timestamp)
-    rows[4].set_cell("stats_summary", "connected_wifi", 0, timestamp)
-    rows[4].set_cell("stats_summary", "os_build", "PQ2A.190406.000", timestamp)
 
     table.mutate_rows(rows)
 
@@ -81,6 +65,4 @@ def test_main(table_id):
 
     assert """Rowkey: phone#4c410523#20190501, os_build: PQ2A.190405.003
 Rowkey: phone#4c410523#20190502, os_build: PQ2A.190405.004
-Rowkey: phone#4c410523#20190505, os_build: PQ2A.190406.000
-Rowkey: phone#5c10102#20190501, os_build: PQ2A.190401.002
-Rowkey: phone#5c10102#20190502, os_build: PQ2A.190406.000""" in response
+""" in response
