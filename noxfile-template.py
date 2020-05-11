@@ -58,7 +58,7 @@ def _determine_local_import_names(start_dir):
 #   E501: line too long
 #   I202: Additional newline in a section of imports
 #
-# We also need to specify the default rules which are ignored:
+# We also need to specify the rules which are ignored by default:
 # ['E226', 'W504', 'E126', 'E123', 'W503', 'E24', 'E704', 'E121']
 FLAKE8_COMMON_ARGS = [
     "--show-source",
