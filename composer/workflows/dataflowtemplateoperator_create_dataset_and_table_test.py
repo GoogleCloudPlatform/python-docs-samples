@@ -41,9 +41,9 @@ expected_schema = schema = [
 
 def test_creation():
     try:
-
-        dataset = helper.create_dataset(PROJECT_ID, dataset_UUID)
-        table = helper.create_table(PROJECT_ID, dataset_UUID)
+        result = helper.create_dataset_and_table(PROJECT_ID, "US", dataset_UUID)
+        dataset = result[0]
+        table = result[1]
 
         assert table.table_id == "average_weather"
         assert dataset.dataset_id == dataset_UUID

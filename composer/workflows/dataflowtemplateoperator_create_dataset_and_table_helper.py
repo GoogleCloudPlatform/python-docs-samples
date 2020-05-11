@@ -16,40 +16,36 @@
 # It helps the user set up a BigQuery dataset and table that is needed
 # for the tutorial.
 
+import argparse
+
 # [START composer_dataflow_dataset_table_creation]
+
+# Make sure to follow the quickstart setup instructions beforehand.
+# See instructions here:
+# https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
+
+# Before running the sample, be sure to install the bigquery library
+# in your local environment by running pip install google.cloud.bigquery
+
+# If you choose to download the library, you can also run the sample with the
+#  following command:
+#    python dataflowtemplateoperator_create_dataset_and_table_helper.py \
+#    PROJECT_ID \
+#    LOCATION
+#   where `PROJECT_ID` is your Google Cloud Project ID and `LOCATION` is where you
+#   want the location of your BigQuery dataset.
 
 from google.cloud import bigquery
 
-# [END composer_dataflow_dataset_table_creation]
 
-
-def create_dataset(project, dataset_uuid):
-    # [START composer_dataflow_dataset_table_creation]
-
-    # Make sure to set your Google application credentials beforehand.
-    # See instructions here: https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
-
+def create_dataset_and_table(project, location, dataset_name):
     # Construct a BigQuery client object.
-    client = bigquery.Client()
+    client = bigquery.Client(project)
 
-    # TODO(developer): Set project to your GCP Project ID.
-    # project = "your-client-project"
-
-    dataset_id = f"{project}.average_weather"
-
-    # [END composer_dataflow_dataset_table_creation]
-
-    # dataset_id is being reassigned here in order to test dataset creation
-    # with a unique uuid in the _test.py file.
-    dataset_id = f"{project}.{dataset_uuid}"
-
-    # [START composer_dataflow_dataset_table_creation]
+    dataset_id = f"{project}.{dataset_name}"
 
     # Construct a full Dataset object to send to the API.
     dataset = bigquery.Dataset(dataset_id)
-
-    # TODO(developer): Fill out this location appropriately.
-    # dataset.location = your-data-location
 
     # Send the dataset to the API for creation.
     # Raises google.api_core.exceptions.Conflict if the Dataset already
@@ -57,27 +53,11 @@ def create_dataset(project, dataset_uuid):
     dataset = client.create_dataset(dataset)  # Make an API request.
 
     print(f"Created dataset {client.project}.{dataset.dataset_id}")
-    # [END composer_dataflow_dataset_table_creation]
-
-    return dataset
-
-
-def create_table(project, dataset_id):
-
-    client = bigquery.Client()
-    # [START composer_dataflow_dataset_table_creation]
 
     # Create a table from this dataset.
 
-    table_id = f"{client.project}.average_weather.average_weather"
+    table_id = f"{client.project}.{dataset_name}.average_weather"
 
-    # [END composer_dataflow_dataset_table_creation]
-
-    # table_id is being reassigned here in order to test table creation
-    # with a unique uuid in the _test.py file.
-    table_id = f"{client.project}.{dataset_id}.average_weather"
-
-    # [START composer_dataflow_dataset_table_creation]
     schema = [
         bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
         bigquery.SchemaField("average_temperature", "INTEGER", mode="REQUIRED"),
@@ -92,4 +72,17 @@ def create_table(project, dataset_id):
     print(f"Created table {table.project}.{table.dataset_id}.{table.table_id}")
 
     # [END composer_dataflow_dataset_table_creation]
-    return table
+    return dataset, table
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Create BQ dataset and table")
+    parser.add_argument("project", metavar="P", type=str, help="your GCP project ID")
+    parser.add_argument(
+        "location",
+        metavar="L",
+        type=str,
+        help='where your dataset should reside (i.e., "U.S."',
+    )
+    args = parser.parse_args()
+    create_dataset_and_table(args.project, args.location, "average_weather")
