@@ -142,11 +142,12 @@ GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 def readmegen(session, path):
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
+    dir_ = os.path.dirname(path)
 
-    if os.path.exists(os.path.join(path, "requirements.txt")):
-        session.install("-r", os.path.join(path, "requirements.txt"))
+    if os.path.exists(os.path.join(dir_, "requirements.txt")):
+        session.install("-r", os.path.join(dir_, "requirements.txt"))
 
-    in_file = os.path.join(path, "README.rst.in")
+    in_file = os.path.join(dir_, "README.rst.in")
     session.run(
         "python", _get_repo_root() + "/scripts/readme-gen/readme_gen.py", in_file
     )
