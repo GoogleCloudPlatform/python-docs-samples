@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 from google.cloud import automl_v1beta1 as automl
 import pytest
@@ -26,27 +26,31 @@ project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
 
 
-def test_model_create_status_delete(capsys):
-    # create model
+@pytest.fixture
+def model():
     client = automl.AutoMlClient()
-    model_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    model_name = "test_" + str(uuid.uuid4())
     project_location = client.location_path(project_id, compute_region)
     my_model = {
         "display_name": model_name,
         "dataset_id": "3876092572857648864",
         "translation_model_metadata": {"base_model": ""},
     }
-    response = client.create_model(project_location, my_model)
-    operation_name = response.operation.name
+    operation = client.create_model(project_location, my_model)
+
+    yield operation
+
+    operation.cancel()
+
+
+def test_model_create_status_delete(capsys, model):
+    operation_name = model.operation.name
     assert operation_name
 
     # get operation status
     automl_translation_model.get_operation_status(operation_name)
     out, _ = capsys.readouterr()
     assert "Operation status: " in out
-
-    # cancel operation
-    response.cancel()
 
 
 def test_model_list_get_evaluate(capsys):

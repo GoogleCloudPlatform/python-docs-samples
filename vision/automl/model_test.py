@@ -16,6 +16,7 @@
 
 import datetime
 import os
+import uuid
 
 from google.cloud import automl_v1beta1 as automl
 import pytest
@@ -24,10 +25,10 @@ project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
 
 
-def test_model_create_status_delete(capsys):
-    # create model
+@pytest.fixture
+def model():
     client = automl.AutoMlClient()
-    model_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    model_name = "test_" + str(uuid.uuid4())
     project_location = client.location_path(project_id, compute_region)
     my_model = {
         "display_name": model_name,
@@ -35,8 +36,12 @@ def test_model_create_status_delete(capsys):
         "image_classification_model_metadata": {"train_budget": 24},
     }
     response = client.create_model(project_location, my_model)
-    operation_name = response.operation.name
-    assert operation_name
 
-    # cancel operation
+    yield response
+
     response.cancel()
+
+
+def test_model_create_status_delete(capsys, model):
+    operation_name = model.operation.name
+    assert operation_name
