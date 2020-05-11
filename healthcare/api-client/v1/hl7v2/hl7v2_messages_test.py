@@ -193,7 +193,7 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
     )
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    @backoff.on_exception(backoff.expo, (AssertionError, HttpError), max_time=60)
     def run_eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
             project_id, cloud_region, dataset_id, hl7v2_store_id
