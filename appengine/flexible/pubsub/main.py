@@ -39,6 +39,7 @@ MESSAGES = []
 # and reduce publish latency.
 publisher = pubsub_v1.PublisherClient()
 
+
 # [START gae_flex_pubsub_index]
 @app.route('/', methods=['GET', 'POST'])
 def index():
