@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import os
+
 import set_endpoint
+
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
