@@ -15,11 +15,12 @@
 import os
 import uuid
 
-import google.cloud.pubsub
 import google.cloud.bigquery
+import google.cloud.pubsub
 import pytest
 
 import risk
+
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
@@ -34,6 +35,7 @@ STRING_BOOLEAN_FIELD = "Gender"
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
+
 
 # Create new custom topic/subscription
 @pytest.fixture(scope="module")
