@@ -39,6 +39,7 @@ MESSAGES = []
 TOKENS = []
 CLAIMS = []
 
+
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
 def index():
