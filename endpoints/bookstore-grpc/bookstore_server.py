@@ -16,8 +16,8 @@
 
 import argparse
 from concurrent import futures
-import time
 import os
+import time
 
 from google.protobuf import struct_pb2
 import grpc
@@ -26,6 +26,7 @@ import bookstore
 import bookstore_pb2
 import bookstore_pb2_grpc
 import status
+
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 

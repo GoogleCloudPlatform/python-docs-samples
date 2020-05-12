@@ -18,8 +18,8 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
-import os
 import json
+import os
 
 
 # [START dlp_inspect_string]
