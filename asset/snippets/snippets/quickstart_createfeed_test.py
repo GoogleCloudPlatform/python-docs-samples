@@ -18,10 +18,11 @@ import json
 import os
 import time
 
+from google.cloud import pubsub_v1
+from google.cloud import resource_manager
+
 import quickstart_createfeed
 import quickstart_deletefeed
-from google.cloud import resource_manager
-from google.cloud import pubsub_v1
 
 json_data = open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).read()
 data = json.loads(json_data)
