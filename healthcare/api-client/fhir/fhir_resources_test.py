@@ -13,18 +13,19 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import uuid
 
 import backoff
+import pytest
 from requests.exceptions import HTTPError
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import fhir_stores
-import fhir_resources
+import datasets  # noqa
+import fhir_stores  # noqa
+import fhir_resources  # noqa
+
 
 cloud_region = "us-central1"
 base_url = "https://healthcare.googleapis.com/v1beta1"
