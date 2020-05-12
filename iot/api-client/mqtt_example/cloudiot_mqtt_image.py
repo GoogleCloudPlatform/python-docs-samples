@@ -25,7 +25,7 @@ from google.cloud import pubsub
 
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import cloudiot_mqtt_example
+import cloudiot_mqtt_example  # noqa
 
 
 # [START iot_mqtt_image]
