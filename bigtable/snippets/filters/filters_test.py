@@ -12,14 +12,15 @@
 # limitations under the License.
 
 
+import datetime
 import os
 import uuid
 
-import datetime
-import pytest
 from google.cloud import bigtable
+import pytest
 
 import filter_snippets
+
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']

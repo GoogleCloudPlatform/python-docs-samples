@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 # [START bqml_data_scientist_tutorial_import_and_client]
 from google.cloud import bigquery
 # [END bqml_data_scientist_tutorial_import_and_client]
 import pytest
-import uuid
+
 
 # [START bqml_data_scientist_tutorial_import_and_client]
 client = bigquery.Client()

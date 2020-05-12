@@ -13,11 +13,11 @@
 # limitations under the License.
 
 import os
-
 import random
 
-import pytest
 from google.cloud import bigtable
+import pytest
+
 from main import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
