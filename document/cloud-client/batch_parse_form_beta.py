@@ -14,9 +14,10 @@
 
 
 # [START documentai_batch_parse_form_beta]
+import re
+
 from google.cloud import documentai_v1beta2 as documentai
 from google.cloud import storage
-import re
 
 
 def batch_parse_form(

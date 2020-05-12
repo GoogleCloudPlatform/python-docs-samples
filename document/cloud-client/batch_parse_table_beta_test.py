@@ -12,11 +12,14 @@
 # See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
-import batch_parse_table_beta
 import os
-import pytest
 import uuid
+
 from google.cloud import storage
+import pytest
+
+import batch_parse_table_beta
+
 
 BUCKET = 'document-ai-{}'.format(uuid.uuid4())
 OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
