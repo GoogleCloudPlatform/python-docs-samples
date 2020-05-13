@@ -12,17 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import storage
-import pytest
 import re
 import time
 import uuid
 
-import storage_remove_bucket_iam_member
-import storage_add_bucket_iam_member
+from google.cloud import storage
+import pytest
+
 import storage_add_bucket_conditional_iam_binding
-import storage_view_bucket_iam_members
+import storage_add_bucket_iam_member
 import storage_remove_bucket_conditional_iam_binding
+import storage_remove_bucket_iam_member
+import storage_view_bucket_iam_members
+
 
 MEMBER = "group:dpebot@google.com"
 ROLE = "roles/storage.legacyBucketReader"

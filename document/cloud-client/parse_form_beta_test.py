@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import os
+
 import parse_form_beta
+
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/form.pdf'
