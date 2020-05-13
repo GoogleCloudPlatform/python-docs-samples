@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START gae_python38_app]
+import logging
+
 from flask import Flask, request
 
 # Enable cloud debugger
@@ -23,7 +25,6 @@ except ImportError:
     pass
 
 # Adjust logging level to INFO
-import logging
 logging.basicConfig(level=logging.INFO)
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
