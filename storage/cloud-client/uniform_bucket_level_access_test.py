@@ -15,12 +15,11 @@
 import time
 
 from google.cloud import storage
-
 import pytest
 
-import storage_get_uniform_bucket_level_access
 import storage_disable_uniform_bucket_level_access
 import storage_enable_uniform_bucket_level_access
+import storage_get_uniform_bucket_level_access
 
 
 @pytest.fixture()
