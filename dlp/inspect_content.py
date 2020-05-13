@@ -18,8 +18,8 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
-import os
 import json
+import os
 
 
 # [START dlp_inspect_string]
@@ -220,7 +220,9 @@ def inspect_table(
     headers = [{"name": val} for val in data["header"]]
     rows = []
     for row in data["rows"]:
-        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+        rows.append(
+            {"values": [{"string_value": cell_val} for cell_val in row]}
+        )
 
     table = {}
     table["headers"] = headers
@@ -471,6 +473,7 @@ def inspect_gcs_file(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -634,6 +637,7 @@ def inspect_datastore(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -800,6 +804,7 @@ def inspect_bigquery(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -978,7 +983,9 @@ if __name__ == "__main__":
     )
 
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
-    parser_file.add_argument("filename", help="The path to the file to inspect.")
+    parser_file.add_argument(
+        "filename", help="The path to the file to inspect."
+    )
     parser_file.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
@@ -1121,10 +1128,12 @@ if __name__ == "__main__":
         "datastore", help="Inspect files on Google Datastore."
     )
     parser_datastore.add_argument(
-        "datastore_project", help="The Google Cloud project id of the target Datastore."
+        "datastore_project",
+        help="The Google Cloud project id of the target Datastore.",
     )
     parser_datastore.add_argument(
-        "kind", help='The kind of the Datastore entity to inspect, e.g. "Person".'
+        "kind",
+        help='The kind of the Datastore entity to inspect, e.g. "Person".',
     )
     parser_datastore.add_argument(
         "topic_id",
@@ -1200,7 +1209,8 @@ if __name__ == "__main__":
         "bigquery", help="Inspect files on Google BigQuery."
     )
     parser_bigquery.add_argument(
-        "bigquery_project", help="The Google Cloud project id of the target table."
+        "bigquery_project",
+        help="The Google Cloud project id of the target table.",
     )
     parser_bigquery.add_argument(
         "dataset_id", help="The ID of the target BigQuery dataset."

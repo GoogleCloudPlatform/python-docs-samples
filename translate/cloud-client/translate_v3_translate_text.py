@@ -16,7 +16,7 @@
 from google.cloud import translate
 
 
-def sample_translate_text(project_id="YOUR_PROJECT_ID"):
+def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
     """Translating Text."""
 
     client = translate.TranslationServiceClient()
@@ -27,7 +27,7 @@ def sample_translate_text(project_id="YOUR_PROJECT_ID"):
     # https://cloud.google.com/translate/docs/supported-formats
     response = client.translate_text(
         parent=parent,
-        contents=["Hello, world!"],
+        contents=[text],
         mime_type="text/plain",  # mime types: text/plain, text/html
         source_language_code="en-US",
         target_language_code="fr",

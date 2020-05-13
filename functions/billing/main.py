@@ -26,7 +26,6 @@ import os
 # [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
 # [END functions_billing_stop]
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
@@ -36,13 +35,11 @@ import slack
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
-# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 PROJECT_ID = os.getenv('GCP_PROJECT')
 PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_stop]
 # [END functions_billing_limit]
-# [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
 
@@ -82,7 +79,6 @@ def stop_billing(data, context):
         'cloudbilling',
         'v1',
         cache_discovery=False,
-        credentials=GoogleCredentials.get_application_default()
     )
 
     projects = billing.projects()
@@ -132,7 +128,6 @@ def limit_use(data, context):
         'compute',
         'v1',
         cache_discovery=False,
-        credentials=GoogleCredentials.get_application_default()
     )
     instances = compute.instances()
 
@@ -192,8 +187,7 @@ def limit_use_appengine(data, context):
     appengine = discovery.build(
         'appengine',
         'v1',
-        cache_discovery=False,
-        credentials=GoogleCredentials.get_application_default()
+        cache_discovery=False
     )
     apps = appengine.apps()
 

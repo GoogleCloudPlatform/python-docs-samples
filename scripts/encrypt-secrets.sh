@@ -24,7 +24,6 @@ read -s -p "Enter password for encryption: " PASSWORD
 echo
 
 tar cvf secrets.tar testing/{service-account.json,client-secrets.json,test-env.sh}
-openssl aes-256-cbc -k "$PASSWORD" -in secrets.tar -out testing/secrets.tar.enc
+openssl aes-256-cbc -k "$PASSWORD" -md sha256 \
+	-in secrets.tar -out testing/secrets.tar.enc
 rm secrets.tar
-
-travis encrypt "SECRETS_PASSWORD=$PASSWORD" --add --override

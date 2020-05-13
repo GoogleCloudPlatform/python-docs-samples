@@ -9,6 +9,7 @@ echo "Fetching the external IP of service a"
 endpoint=""
 for run in {1..20}
 do
+  echo "Attempt #${run} to fetch the external IP of service a..."
   sleep 5
   endpoint=`kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
   if [[ "$endpoint" != "" ]]; then
@@ -27,10 +28,11 @@ kubectl apply -f app/demo-service-b.yaml
 rm app/demo-service-b.yaml
 
 ################## Set up service c ###########################
-echo "Fetching the external IP of the service b"
+echo "Fetching the external IP of service b"
 endpoint=""
 for run in {1..20}
 do
+  echo "Attempt #${run} to fetch the external IP of service b..."
   sleep 5
   endpoint=`kubectl get svc cloud-trace-demo-b -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
   if [[ "$endpoint" != "" ]]; then

@@ -31,8 +31,10 @@ sudo python -m pytest automl_vision_edge_container_predict_test.py
 import os
 import subprocess
 import time
-import automl_vision_edge_container_predict as predict
+
 import pytest
+
+import automl_vision_edge_container_predict as predict  # noqa
 
 
 # The absolute path of the current file. This will locate the model_path when

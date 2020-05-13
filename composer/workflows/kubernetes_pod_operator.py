@@ -16,6 +16,7 @@
 
 # [START composer_kubernetespodoperator]
 import datetime
+
 from airflow import models
 from airflow.contrib.kubernetes import secret
 from airflow.contrib.operators import kubernetes_pod_operator
@@ -38,6 +39,14 @@ secret_env = secret.Secret(
     secret='airflow-secrets',
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
+secret_volume = secret.Secret(
+    'volume',
+    # Path where we mount the secret as volume
+    '/var/secrets/google',
+    # Name of Kubernetes Secret
+    'service-account',
+    # Key in the form of service account file name
+    'service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
 
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -118,10 +127,12 @@ with models.DAG(
         startup_timeout_seconds=300,
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
-        secrets=[secret_env],
+        secrets=[secret_env, secret_volume],
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
-        env_vars={'EXAMPLE_VAR': '/example/value'})
+        env_vars={
+            'EXAMPLE_VAR': '/example/value',
+            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
     kubernetes_affinity_ex = kubernetes_pod_operator.KubernetesPodOperator(

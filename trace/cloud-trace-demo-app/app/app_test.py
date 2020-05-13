@@ -15,9 +15,10 @@
 A sample app demonstrating Stackdriver Trace
 """
 
-import app
-import mock
 import httpretty
+import mock
+
+import app
 
 
 def test_send_response():
