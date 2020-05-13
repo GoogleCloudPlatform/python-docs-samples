@@ -16,6 +16,12 @@ import os
 import time
 import uuid
 
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding, utils
+from google.cloud import kms
+from google.cloud.kms_v1.proto import resources_pb2
 import pytest
 
 from create_key_asymmetric_decrypt import create_key_asymmetric_decrypt
@@ -49,14 +55,6 @@ from update_key_set_primary import update_key_set_primary
 from update_key_update_labels import update_key_update_labels
 from verify_asymmetric_ec import verify_asymmetric_ec
 from verify_asymmetric_rsa import verify_asymmetric_rsa
-
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding, utils
-
-from google.cloud import kms
-from google.cloud.kms_v1.proto import resources_pb2
 
 
 @pytest.fixture(scope="module")
