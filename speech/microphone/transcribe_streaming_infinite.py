@@ -28,9 +28,9 @@ Example usage:
 
 # [START speech_transcribe_infinite_streaming]
 
-import time
 import re
 import sys
+import time
 
 from google.cloud import speech
 import pyaudio
