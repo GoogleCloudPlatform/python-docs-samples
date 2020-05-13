@@ -14,14 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six.moves.urllib.request import urlopen
 import os
 import uuid
 
 from google.cloud import storage
 import pytest
+from six.moves.urllib.request import urlopen
 
 import beta_snippets
+
 
 POSSIBLE_TEXTS = [
     "Google",
@@ -128,6 +129,7 @@ def test_detect_text_gcs(capsys):
     beta_snippets.video_detect_text_gcs(in_file)
     out, _ = capsys.readouterr()
     assert 'Text' in out
+
 
 # Flaky InvalidArgument
 @pytest.mark.flaky(max_runs=3, min_passes=1)
