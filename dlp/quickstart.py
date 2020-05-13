@@ -17,8 +17,8 @@ categories and info types."""
 
 from __future__ import print_function
 
-import sys
 import argparse
+import sys
 
 
 def quickstart(project_id):

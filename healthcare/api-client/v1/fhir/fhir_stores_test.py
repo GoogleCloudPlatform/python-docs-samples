@@ -17,14 +17,15 @@ import sys
 import uuid
 
 import backoff
-import pytest
-from googleapiclient.errors import HttpError
 from google.cloud import storage
+from googleapiclient.errors import HttpError
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import fhir_stores
+import datasets  # noqa
+import fhir_stores  # noqa
+
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
