@@ -20,13 +20,15 @@ Attached health checks should query the '/health' path.
 """
 
 from ctypes import c_bool
-from flask import Flask, make_response, render_template
 from multiprocessing import Process, Value
 from random import random
 from re import sub
-from requests import get
 from socket import gethostname
 from time import sleep
+
+from flask import Flask, make_response, render_template
+from requests import get
+
 
 PORT_NUMBER = 80
 

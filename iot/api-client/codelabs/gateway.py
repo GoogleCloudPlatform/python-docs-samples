@@ -143,7 +143,7 @@ def on_publish(unused_client, userdata, mid):
 
 
 def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
-    print('on_subscribe: mid {}, qos {granted_qos}'.format(mid))
+    print('on_subscribe: mid {}, qos {}'.format(mid, granted_qos))
     try:
         client_addr, response = gateway_state.pending_subscribes[mid]
         udpSerSock.sendto(response.encode(), client_addr)
