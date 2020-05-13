@@ -16,13 +16,13 @@ import os
 import sys
 
 # Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import cloudiot_mqtt_image
-import manager
-from fixtures import test_topic # noqa
-from fixtures import test_subscription # noqa
-from fixtures import test_registry_id # noqa
-from fixtures import test_device_id # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+import cloudiot_mqtt_image  # noqa
+import manager  # noqa
+from fixtures import test_topic  # noqa
+from fixtures import test_subscription  # noqa
+from fixtures import test_registry_id  # noqa
+from fixtures import test_device_id  # noqa
 
 
 cloud_region = 'us-central1'

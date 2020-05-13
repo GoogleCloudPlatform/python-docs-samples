@@ -14,16 +14,17 @@
 
 import os
 import uuid
-import pytest
 
 import backoff
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import bigtable
+import pytest
 
 from .write_batch import write_batch
 from .write_conditionally import write_conditional
 from .write_increment import write_increment
 from .write_simple import write_simple
+
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']

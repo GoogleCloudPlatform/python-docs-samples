@@ -27,8 +27,8 @@ import uuid
 
 import backoff
 import googleapiclient.discovery
-import pytest
 from googleapiclient.errors import HttpError
+import pytest
 
 from custom_metric import create_custom_metric
 from custom_metric import delete_metric_descriptor

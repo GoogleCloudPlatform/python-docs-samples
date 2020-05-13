@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-import pytest
 import airflow.utils.db
+import pytest
 
 
 @pytest.fixture(autouse=True, scope="session")

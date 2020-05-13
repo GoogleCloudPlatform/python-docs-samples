@@ -14,10 +14,13 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
-import beta_snippets
+
 from google.cloud import storage
+import pytest
+
+import beta_snippets
+
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
