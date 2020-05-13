@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import time
 
+import pytest
+
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))  # noqa
-import datasets
-import dicom_stores
-import dicomweb
+import datasets  # noqa
+import dicom_stores  # noqa
+import dicomweb  # noqa
 
 cloud_region = 'us-central1'
 base_url = 'https://healthcare.googleapis.com/v1beta1'

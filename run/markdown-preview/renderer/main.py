@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import bleach
 from flask import Flask, request
 import markdown
-import os
 
 
 app = Flask(__name__)
