@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
-import os
 import json
+import os
+
 import pytest
+
+import main  # noqa I100  for parent lint
 
 
 @pytest.fixture
