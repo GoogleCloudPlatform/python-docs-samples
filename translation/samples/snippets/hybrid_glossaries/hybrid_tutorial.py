@@ -14,15 +14,15 @@
 
 
 # [START translate_hybrid_imports]
+import html
 import io
 import os
-import html
 
 # Imports the Google Cloud client libraries
 from google.api_core.exceptions import AlreadyExists
+from google.cloud import texttospeech
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
-from google.cloud import texttospeech
 # [END translate_hybrid_imports]
 
 

@@ -14,7 +14,9 @@
 # limitations under the License.
 
 import os
+
 import translate_v3_translate_text_with_model
+
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 MODEL_ID = "TRL3128559826197068699"

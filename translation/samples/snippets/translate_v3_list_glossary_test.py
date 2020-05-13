@@ -16,10 +16,9 @@ import os
 import uuid
 
 import backoff
-import pytest
-
 from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
 from google.cloud.exceptions import NotFound
+import pytest
 
 import translate_v3_create_glossary
 import translate_v3_delete_glossary

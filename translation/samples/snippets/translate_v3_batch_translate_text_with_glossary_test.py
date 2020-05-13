@@ -16,11 +16,10 @@ import os
 import uuid
 
 import backoff
-import pytest
-
 from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
-from google.cloud.exceptions import NotFound
 from google.cloud import storage
+from google.cloud.exceptions import NotFound
+import pytest
 
 import translate_v3_batch_translate_text_with_glossary
 import translate_v3_create_glossary

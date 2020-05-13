@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import os
+
 import translate_v3_get_supported_languages_with_target as get_supported_langs
+
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
