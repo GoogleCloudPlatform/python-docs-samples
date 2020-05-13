@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 
 # [START storage_generate_upload_signed_url_v4]
-from google.cloud import storage
 import datetime
+# [END storage_generate_upload_signed_url_v4]
+import sys
+# [START storage_generate_upload_signed_url_v4]
+
+from google.cloud import storage
 
 
 def generate_upload_signed_url_v4(bucket_name, blob_name):
@@ -39,7 +42,7 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
         version="v4",
         # This URL is valid for 15 minutes
         expiration=datetime.timedelta(minutes=15),
-        # Allow GET requests using this URL.
+        # Allow PUT requests using this URL.
         method="PUT",
         content_type="application/octet-stream",
     )

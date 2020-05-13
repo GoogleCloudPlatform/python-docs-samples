@@ -15,20 +15,21 @@
 import time
 
 from google.cloud import storage
-
 import pytest
 
-import storage_get_uniform_bucket_level_access
 import storage_disable_uniform_bucket_level_access
 import storage_enable_uniform_bucket_level_access
+import storage_get_uniform_bucket_level_access
 
 
 @pytest.fixture()
 def bucket():
-    """Creates a test bucket and deletes it upon completion."""
-    client = storage.Client()
-    bucket_name = "uniform-bucket-level-access-" + str(int(time.time()))
-    bucket = client.create_bucket(bucket_name)
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "uniform-bucket-level-access-{}".format(int(time.time()))
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
     yield bucket
     time.sleep(3)
     bucket.delete(force=True)

@@ -14,8 +14,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
+import uuid
 
 import dialogflow_v2beta1 as dialogflow
 import pytest
@@ -23,10 +23,8 @@ import pytest
 import document_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-KNOWLEDGE_BASE_NAME = 'knowledge_' \
-                      + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-DOCUMENT_DISPLAY_NAME = 'test_document_' \
-                     + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+KNOWLEDGE_BASE_NAME = 'knowledge_{}'.format(uuid.uuid4())
+DOCUMENT_DISPLAY_NAME = 'test_document_{}'.format(uuid.uuid4())
 pytest.KNOWLEDGE_BASE_ID = None
 
 
@@ -49,6 +47,7 @@ def setup_teardown():
     client.delete_knowledge_base(knowledge_base_path, force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_document(capsys):
     document_management.create_document(
         PROJECT_ID, pytest.KNOWLEDGE_BASE_ID, DOCUMENT_DISPLAY_NAME,

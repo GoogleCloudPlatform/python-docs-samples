@@ -13,23 +13,26 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import time
+import uuid
 
-from google.cloud import exceptions, storage
+from google.cloud import exceptions
+from google.cloud import storage
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import fhir_stores
+import datasets  # noqa
+import fhir_stores  # noqa
+
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-dataset_id = "test_dataset_{}".format(int(time.time()))
-fhir_store_id = "test_fhir_store-{}".format(int(time.time()))
+dataset_id = "test_dataset_{}".format(uuid.uuid4())
+fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 
 gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")

@@ -12,12 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
 
-def test_commute_search_sample(capsys):
-    import commute_search_sample
-    import re
+import backoff
+import pytest
 
-    commute_search_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*1600 Amphitheatre Pkwy.*')
-    assert re.search(expected, out)
+import commute_search_sample
+
+
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = commute_search_sample.set_up()
+    yield company_name
+    commute_search_sample.tear_down(company_name, job_name)
+
+
+def test_commute_search_sample(company_name, capsys):
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
+        commute_search_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        expected = ('.*matchingJobs.*1600 Amphitheatre Pkwy.*')
+        assert re.search(expected, out)
+
+    eventually_consistent_test()

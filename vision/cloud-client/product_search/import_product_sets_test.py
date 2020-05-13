@@ -15,9 +15,8 @@
 import os
 import uuid
 
-import pytest
-
 from google.cloud import storage
+import pytest
 
 from import_product_sets import import_product_sets
 from product_in_product_set_management import list_products_in_product_set

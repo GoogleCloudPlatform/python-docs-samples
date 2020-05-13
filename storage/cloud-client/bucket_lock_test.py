@@ -13,22 +13,23 @@
 # limitations under the License.
 
 import time
+import uuid
 
 from google.cloud import storage
-
 import pytest
 
-import storage_set_retention_policy
-import storage_lock_retention_policy
-import storage_get_retention_policy
-import storage_get_default_event_based_hold
-import storage_enable_default_event_based_hold
 import storage_disable_default_event_based_hold
-import storage_set_event_based_hold
+import storage_enable_default_event_based_hold
+import storage_get_default_event_based_hold
+import storage_get_retention_policy
+import storage_lock_retention_policy
 import storage_release_event_based_hold
-import storage_set_temporary_hold
 import storage_release_temporary_hold
 import storage_remove_retention_policy
+import storage_set_event_based_hold
+import storage_set_retention_policy
+import storage_set_temporary_hold
+
 
 BLOB_NAME = "storage_snippets_test_sigil"
 BLOB_CONTENT = "Hello, is it me you're looking for?"
@@ -36,12 +37,14 @@ BLOB_CONTENT = "Hello, is it me you're looking for?"
 RETENTION_POLICY = 5
 
 
-@pytest.fixture()
+@pytest.fixture
 def bucket():
-    """Creates a test bucket and deletes it upon completion."""
-    client = storage.Client()
-    bucket_name = "bucket-lock-" + str(int(time.time()))
-    bucket = client.create_bucket(bucket_name)
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "bucket-lock-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
     yield bucket
     bucket.delete(force=True)
 

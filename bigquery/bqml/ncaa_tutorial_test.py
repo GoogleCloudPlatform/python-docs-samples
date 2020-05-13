@@ -14,6 +14,7 @@
 
 import io
 import os
+import uuid
 
 # [START bqml_ncaa_tutorial_import_and_client]
 from google.cloud import bigquery
@@ -22,6 +23,10 @@ import pytest
 
 # [START bqml_ncaa_tutorial_import_and_client]
 client = bigquery.Client()
+# We use a unique dataset ID for this example to avoid collisions with
+# other invocations of this tutorial.  In practice, you could leverage
+# a persistent dataset and not create/destroy it with each invocation.
+dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
 # [END bqml_ncaa_tutorial_import_and_client]
 
 
@@ -29,12 +34,12 @@ client = bigquery.Client()
 def delete_dataset():
     yield
     client.delete_dataset(
-        client.dataset('bqml_tutorial'), delete_contents=True)
+        client.dataset(dataset_id), delete_contents=True)
 
 
 def test_ncaa_tutorial(delete_dataset):
     # [START bqml_ncaa_tutorial_create_dataset]
-    dataset = bigquery.Dataset(client.dataset('bqml_tutorial'))
+    dataset = bigquery.Dataset(client.dataset(dataset_id))
     dataset.location = 'US'
     client.create_dataset(dataset)
     # [END bqml_ncaa_tutorial_create_dataset]
@@ -42,23 +47,17 @@ def test_ncaa_tutorial(delete_dataset):
     # Create the tables used by the tutorial
     # Note: the queries are saved to a file. This should be updated to use the
     # saved queries once the library supports running saved queries.
-    query_filepath_to_table_name = {
-        'feature_input_query.sql': 'cume_games',
-        'training_data_query.sql': 'wide_games'
-    }
+    query_files = ['feature_input_query.sql', 'training_data_query.sql']
     resources_directory = os.path.join(os.path.dirname(__file__), 'resources')
-    for query_filepath, table_name in query_filepath_to_table_name.items():
-        table_ref = dataset.table(table_name)
-        job_config = bigquery.QueryJobConfig()
-        job_config.destination = table_ref
+    for fname in query_files:
         query_filepath = os.path.join(
-            resources_directory, query_filepath)
-        sql = io.open(query_filepath, 'r', encoding='utf-8').read()
-        client.query(sql, job_config=job_config).result()
+            resources_directory, fname)
+        sql = io.open(query_filepath, 'r', encoding='utf-8').read().format(dataset_id)
+        client.query(sql).result()
 
     # [START bqml_ncaa_tutorial_create_model]
     sql = """
-        CREATE OR REPLACE MODEL `bqml_tutorial.ncaa_model`
+        CREATE OR REPLACE MODEL `{0}.ncaa_model`
         OPTIONS (
             model_type='linear_reg',
             max_iteration=50 ) AS
@@ -69,11 +68,11 @@ def test_ncaa_tutorial(delete_dataset):
                 total_three_points_att),
             total_three_points_att as label
         FROM
-            `bqml_tutorial.wide_games`
+            `{0}.wide_games`
         WHERE
             # remove the game to predict
             game_id != 'f1063e80-23c7-486b-9a5e-faa52beb2d83'
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_create_model]
@@ -83,8 +82,8 @@ def test_ncaa_tutorial(delete_dataset):
         SELECT
             *
         FROM
-            ML.TRAINING_INFO(MODEL `bqml_tutorial.ncaa_model`)
-    """
+            ML.TRAINING_INFO(MODEL `{}.ncaa_model`)
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_get_training_statistics]
@@ -96,13 +95,13 @@ def test_ncaa_tutorial(delete_dataset):
                 *,
                 total_three_points_att AS label
             FROM
-                `bqml_tutorial.wide_games` )
+                `{0}.wide_games` )
         SELECT
             *
         FROM
-            ML.EVALUATE(MODEL `bqml_tutorial.ncaa_model`,
+            ML.EVALUATE(MODEL `{0}.ncaa_model`,
                 TABLE eval_table)
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_evaluate_model]
@@ -113,7 +112,7 @@ def test_ncaa_tutorial(delete_dataset):
             SELECT
                 *
             FROM
-                `bqml_tutorial.wide_games`
+                `{0}.wide_games`
             WHERE
                 game_id='f1063e80-23c7-486b-9a5e-faa52beb2d83' )
         SELECT
@@ -125,7 +124,7 @@ def test_ncaa_tutorial(delete_dataset):
                 game_id,
                 predicted_label AS predicted_total_three_points_att
             FROM
-                ML.PREDICT(MODEL `bqml_tutorial.ncaa_model`,
+                ML.PREDICT(MODEL `{0}.ncaa_model`,
                 table game_to_predict) ) AS predict
         JOIN (
             SELECT
@@ -135,7 +134,7 @@ def test_ncaa_tutorial(delete_dataset):
                 game_to_predict) AS truth
         ON
             predict.game_id = truth.game_id
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_predict_outcomes]

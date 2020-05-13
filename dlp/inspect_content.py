@@ -18,8 +18,8 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
-import os
 import json
+import os
 
 
 # [START dlp_inspect_string]
@@ -473,6 +473,7 @@ def inspect_gcs_file(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -636,6 +637,7 @@ def inspect_datastore(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -802,6 +804,7 @@ def inspect_bigquery(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
