@@ -14,7 +14,6 @@
 
 # [START app]
 import base64
-from flask import current_app, Flask, render_template, request
 import json
 import logging
 import os
@@ -22,6 +21,8 @@ import os
 from google.auth.transport import requests
 from google.cloud import pubsub_v1
 from google.oauth2 import id_token
+
+from flask import current_app, Flask, render_template, request
 
 
 app = Flask(__name__)
