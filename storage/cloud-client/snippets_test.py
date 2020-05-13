@@ -22,31 +22,31 @@ import google.cloud.exceptions
 import pytest
 import requests
 
-import storage_copy_file
 import storage_add_bucket_label
+import storage_copy_file
 import storage_delete_file
+import storage_disable_bucket_lifecycle_management
+import storage_disable_versioning
 import storage_download_file
-import storage_get_bucket_labels
-import storage_get_bucket_metadata
-import storage_get_metadata
-import storage_set_metadata
-import storage_list_buckets
-import storage_list_files_with_prefix
-import storage_list_files
-import storage_make_public
-import storage_remove_bucket_label
-import storage_move_file
-import storage_upload_file
-import storage_upload_with_kms_key
+import storage_enable_bucket_lifecycle_management
+import storage_enable_versioning
+import storage_generate_signed_post_policy_v4
 import storage_generate_signed_url_v2
 import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
-import storage_generate_signed_post_policy_v4
+import storage_get_bucket_labels
+import storage_get_bucket_metadata
+import storage_get_metadata
+import storage_list_buckets
+import storage_list_files
+import storage_list_files_with_prefix
+import storage_make_public
+import storage_move_file
+import storage_remove_bucket_label
 import storage_set_bucket_default_kms_key
-import storage_enable_versioning
-import storage_disable_versioning
-import storage_enable_bucket_lifecycle_management
-import storage_disable_bucket_lifecycle_management
+import storage_set_metadata
+import storage_upload_file
+import storage_upload_with_kms_key
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 

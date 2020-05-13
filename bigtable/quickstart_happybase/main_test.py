@@ -20,6 +20,7 @@ import pytest
 
 from main import main
 
+
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_FORMAT = 'quickstart-hb-test-{}'

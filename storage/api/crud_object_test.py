@@ -15,8 +15,10 @@ import os
 import re
 import tempfile
 
-from crud_object import main
 import pytest
+
+from crud_object import main
+
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 

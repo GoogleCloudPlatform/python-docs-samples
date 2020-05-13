@@ -14,9 +14,10 @@
 
 
 # [START tts_ssml_address_imports]
+import html
+
 from google.cloud import texttospeech
 
-import html
 # [END tts_ssml_address_imports]
 
 

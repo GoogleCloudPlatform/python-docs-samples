@@ -14,10 +14,10 @@
 
 import os
 import uuid
-import pytest
 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
+import pytest
 
 import quickstart
 

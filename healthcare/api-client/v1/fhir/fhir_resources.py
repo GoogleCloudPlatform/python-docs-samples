@@ -82,7 +82,7 @@ def create_encounter(
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient."""
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
@@ -139,7 +139,7 @@ def create_observation(
     an Encounter.
     """
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(

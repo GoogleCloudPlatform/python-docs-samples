@@ -14,11 +14,14 @@
 
 # [START run_imageproc_controller]
 import base64
-from flask import Flask, request
 import json
 import os
 import sys
+
+from flask import Flask, request
+
 import image
+
 
 app = Flask(__name__)
 
