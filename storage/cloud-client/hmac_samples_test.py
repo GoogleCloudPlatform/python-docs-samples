@@ -20,8 +20,8 @@ set in order to run.
 
 import os
 
-from google.cloud import storage
 import google.api_core.exceptions
+from google.cloud import storage
 import pytest
 
 import storage_activate_hmac_key
