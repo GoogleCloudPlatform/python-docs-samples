@@ -28,7 +28,7 @@ TIMEOUT = 10    # Wait this many seconds for background calls to finish
 app = Flask(__name__)
 
 
-@app.route('/') # Fetch and return remote page asynchronously
+@app.route('/')     # Fetch and return remote page asynchronously
 def get_async():
     # [START requests_get]
     session = FuturesSession()
@@ -44,7 +44,7 @@ def get_async():
     # [END requests_get]
 
 
-@app.route('/callback') # Fetch and return remote pages using callback
+@app.route('/callback')     # Fetch and return remote pages using callback
 def get_callback():
     global response_text
     global counter
@@ -63,7 +63,6 @@ def get_callback():
         response_text += 'Response number {} is {} bytes from {}\n'.format(
             counter, len(resp.text), resp.url)
 
-    
     session = FuturesSession()
     urls = [
         'https://google.com/',
