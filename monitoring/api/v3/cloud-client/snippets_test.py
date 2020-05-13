@@ -14,10 +14,10 @@
 
 import os
 import re
-import pytest
 
 import backoff
 from google.api_core.exceptions import NotFound
+import pytest
 
 import snippets
 
