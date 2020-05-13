@@ -56,7 +56,7 @@ def get_app_id(request):
             return incoming_app_id
     except Exception as e:
         # report or log if desired, as here:
-        logging.warning('Request has bad OAuth2 id token.')
+        logging.warning('Request has bad OAuth2 id token: {}'.format(e))
         return None
 
 
