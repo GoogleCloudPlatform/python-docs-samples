@@ -2,7 +2,7 @@ google-api-python-client==1.8.2
 google-auth==1.14.2
 google-auth-httplib2==0.0.3
 google-cloud-iot==1.0.0
-google-cloud-pubsub==1.4.2
+google-cloud-pubsub==1.4.3
 google-cloud-storage==1.28.0
 cryptography==2.9.2
 paho-mqtt==1.5.0
