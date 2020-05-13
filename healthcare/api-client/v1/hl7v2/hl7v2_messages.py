@@ -208,7 +208,7 @@ def patch_hl7v2_message(
     """Updates the message."""
     client = get_client()
     hl7v2_message_parent = "projects/{}/locations/{}".format(
-        project_id, cloud_region, dataset_id, hl7v2_store_id
+        project_id, cloud_region
     )
     hl7v2_message_name = "{}/datasets/{}/hl7V2Stores/{}/messages/{}".format(
         hl7v2_message_parent, dataset_id, hl7v2_store_id, hl7v2_message_id

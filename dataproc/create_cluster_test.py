@@ -14,9 +14,9 @@
 
 import os
 import uuid
-import pytest
 
 from google.cloud import dataproc_v1 as dataproc
+import pytest
 
 import create_cluster
 

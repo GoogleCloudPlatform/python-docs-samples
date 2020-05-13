@@ -24,8 +24,9 @@ import pytest
 
 import storage_download_encrypted_file
 import storage_generate_encryption_key
-import storage_upload_encrypted_file
 import storage_rotate_encryption_key
+import storage_upload_encrypted_file
+
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 

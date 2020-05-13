@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 
 import os
-import pytest
 import uuid
 
-from quickstart import quickstart
+from google.api_core import exceptions
+from google.cloud import secretmanager
+import pytest
+
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
 from create_secret import create_secret
@@ -29,10 +31,8 @@ from iam_grant_access import iam_grant_access
 from iam_revoke_access import iam_revoke_access
 from list_secret_versions import list_secret_versions
 from list_secrets import list_secrets
+from quickstart import quickstart
 from update_secret import update_secret
-
-from google.api_core import exceptions
-from google.cloud import secretmanager
 
 
 @pytest.fixture()
