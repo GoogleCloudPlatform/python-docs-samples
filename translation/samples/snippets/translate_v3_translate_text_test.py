@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import os
+
 import translate_v3_translate_text
+
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 

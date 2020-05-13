@@ -15,9 +15,8 @@
 import os
 import uuid
 
-import pytest
-
 from google.cloud import storage
+import pytest
 
 import translate_v3_batch_translate_text
 
