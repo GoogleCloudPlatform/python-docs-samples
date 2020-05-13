@@ -15,8 +15,8 @@
 import argparse
 import os
 
-from googleapiclient import discovery
 from google.oauth2 import service_account
+from googleapiclient import discovery
 
 
 # [START healthcare_get_client]

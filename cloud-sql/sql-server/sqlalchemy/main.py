@@ -18,9 +18,12 @@ import os
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
-from sqlalchemy import Table
 from sqlalchemy import Column
-from sqlalchemy import DateTime, Integer, String
+from sqlalchemy import DateTime
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Table
+
 
 app = Flask(__name__)
 

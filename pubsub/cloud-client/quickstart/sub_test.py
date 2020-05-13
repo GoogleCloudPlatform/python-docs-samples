@@ -13,16 +13,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import mock
 import os
-import pytest
 import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
+import mock
+import pytest
 
-import sub
+import sub  # noqa
 
 
 UUID = uuid.uuid4().hex
