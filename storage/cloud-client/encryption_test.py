@@ -24,9 +24,9 @@ import pytest
 
 import storage_download_encrypted_file
 import storage_generate_encryption_key
-import storage_upload_encrypted_file
-import storage_rotate_encryption_key
 import storage_object_csek_to_cmek
+import storage_rotate_encryption_key
+import storage_upload_encrypted_file
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]

@@ -14,10 +14,11 @@
 
 import pytest
 
+import quickstart
+
 
 @pytest.mark.flaky
 def test_quickstart(capsys):
-    import quickstart
 
     quickstart.run_sample()
     out, _ = capsys.readouterr()

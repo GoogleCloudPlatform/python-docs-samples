@@ -13,18 +13,19 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import uuid
 
 import backoff
 from googleapiclient.errors import HttpError
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import hl7v2_stores
-import hl7v2_messages
+import datasets  # noqa
+import hl7v2_messages  # noqa
+import hl7v2_stores  # noqa
+
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -193,7 +194,7 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
     )
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    @backoff.on_exception(backoff.expo, (AssertionError, HttpError), max_time=60)
     def run_eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
             project_id, cloud_region, dataset_id, hl7v2_store_id

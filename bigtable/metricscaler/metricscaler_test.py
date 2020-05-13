@@ -18,10 +18,10 @@ import os
 import time
 import uuid
 
-import pytest
 from google.cloud import bigtable
 from google.cloud.bigtable import enums
 from mock import patch
+import pytest
 
 from metricscaler import get_cpu_load
 from metricscaler import get_storage_utilization

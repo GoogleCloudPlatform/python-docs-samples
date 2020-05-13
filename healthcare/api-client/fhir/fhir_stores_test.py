@@ -13,17 +13,19 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import time
 import uuid
 
-from google.cloud import exceptions, storage
+from google.cloud import exceptions
+from google.cloud import storage
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import fhir_stores
+import datasets  # noqa
+import fhir_stores  # noqa
+
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
