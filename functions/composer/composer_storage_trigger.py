@@ -18,10 +18,11 @@ import google.auth
 import google.auth.compute_engine.credentials
 import google.auth.iam
 from google.auth.transport.requests import Request
+from google.oauth2 import id_token
 import google.oauth2.credentials
 import google.oauth2.service_account
 import requests
-from google.oauth2 import id_token
+
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
