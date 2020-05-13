@@ -25,6 +25,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
 @app.route('/', methods=['POST'])
 def make_request():
     url = request.form['url']
