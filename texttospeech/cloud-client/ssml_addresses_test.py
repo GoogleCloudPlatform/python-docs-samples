@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from ssml_addresses import text_to_ssml
-from ssml_addresses import ssml_to_audio
-
 import os
+
+from ssml_addresses import ssml_to_audio
+from ssml_addresses import text_to_ssml
 
 
 def test_text_to_ssml(capsys):

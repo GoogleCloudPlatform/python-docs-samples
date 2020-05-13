@@ -18,15 +18,15 @@ import time
 import uuid
 
 import backoff
-from googleapiclient.errors import HttpError
-from google.cloud import pubsub
 from google.api_core.exceptions import AlreadyExists
 from google.api_core.exceptions import NotFound
+from google.cloud import pubsub
+from googleapiclient.errors import HttpError
 import pytest
 
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import manager
+import manager  # noqa
 
 
 cloud_region = 'us-central1'

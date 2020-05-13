@@ -17,24 +17,26 @@
 #   nox -s "py27(sample='./dataflow/run_template')"
 #   nox -s "py36(sample='./dataflow/run_template')"
 
-import flask
+from datetime import datetime
 import json
 import os
-import pytest
 import time
 import uuid
 
-from datetime import datetime
+import flask
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import pytest
 from werkzeug.urls import url_encode
 
 import main
+
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 dataflow = build('dataflow', 'v1b3')
+
 
 # Create a fake "app" for generating test request contexts.
 @pytest.fixture(scope="module")

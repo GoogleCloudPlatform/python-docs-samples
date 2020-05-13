@@ -22,9 +22,9 @@ import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import fhir_stores
-import fhir_resources
+import datasets  # noqa
+import fhir_stores  # noqa
+import fhir_resources  # noqa
 
 base_url = "https://healthcare.googleapis.com/v1"
 cloud_region = "us-central1"

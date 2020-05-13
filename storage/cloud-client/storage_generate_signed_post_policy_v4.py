@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 
 # [START storage_generate_signed_post_policy_v4]
-from google.cloud import storage
 import datetime
+# [END storage_generate_signed_post_policy_v4]
+import sys
+# [START storage_generate_signed_post_policy_v4]
+
+from google.cloud import storage
 
 
 def generate_signed_post_policy_v4(bucket_name, blob_name):

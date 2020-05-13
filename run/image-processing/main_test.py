@@ -14,14 +14,14 @@
 
 # NOTE:
 # These tests are unit tests that mock Pub/Sub.
-
 import base64
 import json
-import main
+import uuid
+
 import mock
 import pytest
 
-from uuid import uuid4
+import main
 
 
 @pytest.fixture
@@ -55,8 +55,8 @@ def test_minimally_valid_message(client):
 
 
 def test_call_to_blur_image(client, capsys):
-    filename = str(uuid4())
-    blur_bucket = 'blurred-bucket-' + str(uuid4())
+    filename = str(uuid.uuid4())
+    blur_bucket = 'blurred-bucket-' + str(uuid.uuid4())
 
     data_json = json.dumps({'name': filename, 'bucket': blur_bucket})
     data = base64.b64encode(data_json.encode()).decode()
