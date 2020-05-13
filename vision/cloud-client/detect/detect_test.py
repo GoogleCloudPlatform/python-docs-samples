@@ -209,7 +209,7 @@ def test_detect_crop_hints_uri(capsys):
     assert 'bounds: ' in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
