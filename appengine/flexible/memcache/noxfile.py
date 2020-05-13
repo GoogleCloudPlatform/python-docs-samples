@@ -34,10 +34,6 @@ TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 #
 
 
-# Ignore I202 "Additional newline in a section of imports." to accommodate
-# region tags in import blocks. Since we specify an explicit ignore, we also
-# have to explicitly ignore the list of default ignores:
-# `E121,E123,E126,E226,E24,E704,W503,W504` as shown by `flake8 --help`.
 def _determine_local_import_names(start_dir):
     """Determines all import names that should be considered "local".
 
@@ -54,13 +50,23 @@ def _determine_local_import_names(start_dir):
     ]
 
 
+# Linting with flake8.
+#
+# We ignore the following rules:
+#   E203: whitespace before ‘:’
+#   E266: too many leading ‘#’ for block comment
+#   E501: line too long
+#   I202: Additional newline in a section of imports
+#
+# We also need to specify the rules which are ignored by default:
+# ['E226', 'W504', 'E126', 'E123', 'W503', 'E24', 'E704', 'E121']
 FLAKE8_COMMON_ARGS = [
     "--show-source",
     "--builtin=gettext",
     "--max-complexity=20",
     "--import-order-style=google",
     "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I100,I201,I202",
+    "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
     "--max-line-length=88",
 ]
 
@@ -142,11 +148,12 @@ GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 def readmegen(session, path):
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
+    dir_ = os.path.dirname(path)
 
-    if os.path.exists(os.path.join(path, "requirements.txt")):
-        session.install("-r", os.path.join(path, "requirements.txt"))
+    if os.path.exists(os.path.join(dir_, "requirements.txt")):
+        session.install("-r", os.path.join(dir_, "requirements.txt"))
 
-    in_file = os.path.join(path, "README.rst.in")
+    in_file = os.path.join(dir_, "README.rst.in")
     session.run(
         "python", _get_repo_root() + "/scripts/readme-gen/readme_gen.py", in_file
     )
