@@ -13,16 +13,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import pytest
+import os
 import random
 import string
-import os
 import time
 
 from google.api_core import exceptions
+import pytest
 
 import automl_tables_dataset
+
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
 REGION = "us-central1"
