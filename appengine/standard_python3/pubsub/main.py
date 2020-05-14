@@ -18,11 +18,10 @@ import json
 import logging
 import os
 
+from flask import current_app, Flask, render_template, request
 from google.auth.transport import requests
 from google.cloud import pubsub_v1
 from google.oauth2 import id_token
-
-from flask import current_app, Flask, render_template, request
 
 
 app = Flask(__name__)
