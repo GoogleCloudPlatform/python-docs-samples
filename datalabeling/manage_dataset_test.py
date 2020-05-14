@@ -17,8 +17,8 @@
 import os
 
 import backoff
-from google.api_core.exceptions import DeadlineExceeded
 from google.api_core.exceptions import RetryError
+from google.api_core.exceptions import ServerError
 import pytest
 
 import manage_dataset
@@ -60,7 +60,7 @@ def cleaner():
 def test_create_dataset(cleaner, capsys):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         return manage_dataset.create_dataset(PROJECT_ID)
 
@@ -75,7 +75,7 @@ def test_create_dataset(cleaner, capsys):
 def test_list_dataset(capsys, dataset):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         manage_dataset.list_datasets(PROJECT_ID)
 
@@ -86,7 +86,7 @@ def test_list_dataset(capsys, dataset):
 
 def test_get_dataset(capsys, dataset):
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         manage_dataset.get_dataset(dataset.name)
 
@@ -97,7 +97,7 @@ def test_get_dataset(capsys, dataset):
 
 def test_delete_dataset(capsys, dataset):
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         manage_dataset.delete_dataset(dataset.name)
 

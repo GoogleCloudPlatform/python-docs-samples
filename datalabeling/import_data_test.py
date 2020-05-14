@@ -17,7 +17,7 @@
 import os
 
 import backoff
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import ServerError
 import pytest
 
 import import_data
@@ -42,7 +42,7 @@ def dataset():
 def test_import_data(capsys, dataset):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
 
