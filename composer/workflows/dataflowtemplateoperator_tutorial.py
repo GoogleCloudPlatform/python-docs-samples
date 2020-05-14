@@ -37,7 +37,7 @@ from airflow.utils.dates import days_ago
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 from airflow import models
 
-bucket_path = "gs://" + models.Variable.get("bucket_name")
+bucket_path = models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce_zone")
 gce_region = models.Variable.get("gce_region")
@@ -80,7 +80,7 @@ with models.DAG(
         parameters={
             "javascriptTextTransformFunctionName": "transformCSVtoJSON",
             "JSONPath": bucket_path + "/jsonSchema.json",
-            "javascriptTextTransformGcsPath": bucket_path + "/inputFile.txt",
+            "javascriptTextTransformGcsPath": bucket_path + "/transformCSVtoJSON.js",
             "inputFilePattern": bucket_path + "/inputFile.txt",
             "outputTable": project_id + ":average_weather.average_weather",
             "outputDeadletterTable": project_id + ":average_weather.average_weather",
