@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START storage_object_csek_to_cmek]
+import base64
+# [END storage_object_csek_to_cmek]
 import sys
 
 # [START storage_object_csek_to_cmek]
 from google.cloud import storage
-import base64
 
 
 def object_csek_to_cmek(bucket_name, blob_name, encryption_key, kms_key_name):
