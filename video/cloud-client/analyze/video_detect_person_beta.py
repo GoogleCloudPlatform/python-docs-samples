@@ -14,6 +14,7 @@
 
 # [START video_detect_person_beta]
 import io
+
 from google.cloud import videointelligence_v1p3beta1 as videointelligence
 
 

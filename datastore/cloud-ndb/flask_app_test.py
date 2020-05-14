@@ -16,8 +16,8 @@ import uuid
 
 
 import backoff
-import pytest
 from google.cloud import ndb
+import pytest
 
 import flask_app
 

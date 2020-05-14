@@ -31,8 +31,8 @@ from flask import request
 from google.appengine.api import app_identity
 from google.appengine.api import users
 from google.appengine.ext import ndb
-import httplib2
-from oauth2client.client import GoogleCredentials
+from google.auth.transport.requests import AuthorizedSession
+import google.auth
 
 
 _FIREBASE_CONFIG = '_firebase_config.html'
@@ -73,17 +73,13 @@ def _get_firebase_db_url():
     return url.group(1)
 
 
-# Memoize the authorized http, to avoid fetching new access tokens
+# Memoize the authorized session, to avoid fetching new access tokens
 @lru_cache()
-def _get_http():
-    """Provides an authed http object."""
-    http = httplib2.Http()
-    # Use application default credentials to make the Firebase calls
-    # https://firebase.google.com/docs/reference/rest/database/user-auth
-    creds = GoogleCredentials.get_application_default().create_scoped(
-        _FIREBASE_SCOPES)
-    creds.authorize(http)
-    return http
+def _get_session():
+    """Provides an authed requests session object."""
+    creds, _ = google.auth.default(scopes=[_FIREBASE_SCOPES])
+    authed_session = AuthorizedSession(creds)
+    return authed_session
 
 
 def _send_firebase_message(u_id, message=None):
@@ -95,9 +91,9 @@ def _send_firebase_message(u_id, message=None):
     url = '{}/channels/{}.json'.format(_get_firebase_db_url(), u_id)
 
     if message:
-        return _get_http().request(url, 'PATCH', body=message)
+        return _get_session().patch(url, body=message)
     else:
-        return _get_http().request(url, 'DELETE')
+        return _get_session().delete(url)
 
 
 def create_custom_token(uid, valid_minutes=60):
