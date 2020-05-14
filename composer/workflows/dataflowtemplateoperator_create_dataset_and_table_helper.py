@@ -25,12 +25,11 @@
 # Before running the sample, be sure to install the bigquery library
 # in your local environment by running pip install google.cloud.bigquery
 
-# TODO(developer): Uncomment these lines and replace with your values
-# project = 'your-project' # Your GCP Project
-# location = 'US' # the location where you want your BigQuery data to reside. For more info on possible locations see https://cloud.google.com/bigquery/docs/locations
-
-
 from google.cloud import bigquery
+
+# TODO(developer): Replace with your values
+project = 'your-project'  # Your GCP Project
+location = 'US'  # the location where you want your BigQuery data to reside. For more info on possible locations see https://cloud.google.com/bigquery/docs/locations
 
 
 def create_dataset_and_table(project, location, dataset_name):
@@ -42,7 +41,7 @@ def create_dataset_and_table(project, location, dataset_name):
     # Construct a full Dataset object to send to the API.
     dataset = bigquery.Dataset(dataset_id)
 
-    # Set the location to your desired location for the dataset. 
+    # Set the location to your desired location for the dataset.
     # For more information, see this link:
     # https://cloud.google.com/bigquery/docs/locations
     dataset.location = location

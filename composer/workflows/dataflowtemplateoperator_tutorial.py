@@ -33,9 +33,9 @@ Function (.js), the input file (.txt), and the JSON schema (.json).
 
 import datetime
 
+from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 from airflow.utils.dates import days_ago
-from airflow import models
 
 bucket_path = models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
