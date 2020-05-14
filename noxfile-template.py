@@ -211,7 +211,7 @@ def cloud_run(session):
 
     user_envs = get_pytest_env_vars()
 
-    # Only update gcloud on Kokoro.
+    # Activate service account on Kokoro.
     if os.environ.get("KOKORO_JOB_NAME"):
         # Activate service account
         key_file = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -219,10 +219,6 @@ def cloud_run(session):
             "gcloud", "auth", "activate-service-account",
             "--key-file={}".format(key_file)
         )
-
-        # Set gcloud project
-        project = user_envs['GCLOUD_PROJECT']
-        session.run("gcloud", "config", "set", "project", project)
 
     test_files = TEST_CONFIG['cloud_run_e2e_test_files']
     session.run(
