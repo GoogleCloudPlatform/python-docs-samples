@@ -27,6 +27,7 @@ import flask
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pytest
+import backoff
 from werkzeug.urls import url_encode
 
 import main
@@ -44,10 +45,26 @@ def app():
     return flask.Flask(__name__)
 
 
+
+
 @pytest.fixture(scope="function")
-def dataflow_jobs_cancel():
-    def _dataflow_jobs_cancel(job_id):
-        # Wait time until the job can be cancelled.
+def dataflow_job_id(request):
+    label = request.param
+    print("label")
+    print(label)
+    job_id = datetime.now().strftime('{}-%Y%m%d-%H%M%S-{}'.format(
+        label, uuid.uuid4().hex[:5]))
+    print(job_id)
+
+    
+    yield job_id
+
+    dataflow_jobs_cancel(job_id)
+
+#TODO address infinite loop
+@backoff.on_exception(backoff.expo, HttpError, max_time=120)
+def dataflow_jobs_cancel(job_id):
+     # Wait time until the job can be cancelled.
         state = None
         while state != 'JOB_STATE_RUNNING':
             job = dataflow.projects().jobs().get(
@@ -64,44 +81,37 @@ def dataflow_jobs_cancel():
             body={'requestedState': 'JOB_STATE_CANCELLED'}
         )
         request.execute()
-    return _dataflow_jobs_cancel
 
 
-def unique_job_name(label):
-    return datetime.now().strftime('{}-%Y%m%d-%H%M%S-{}'.format(
-        label, uuid.uuid4().hex))
 
 
-def test_run_template_python_empty_args(app):
+@pytest.mark.parametrize('dataflow_job_id',[('test_run_template_empty')], indirect=True)
+def test_run_template_python_empty_args(app, dataflow_job_id):
     project = PROJECT
-    job = unique_job_name('test_run_template_empty')
     template = 'gs://dataflow-templates/latest/Word_Count'
     with pytest.raises(HttpError):
-        main.run(project, job, template)
+        main.run(project, dataflow_job_id, template)
 
-
-def test_run_template_python(app, dataflow_jobs_cancel):
+@pytest.mark.parametrize('dataflow_job_id',[('test_run_template_python')], indirect=True)
+def test_run_template_python(app, dataflow_job_id):
     project = PROJECT
-    job = unique_job_name('test_run_template_python')
     template = 'gs://dataflow-templates/latest/Word_Count'
     parameters = {
         'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
         'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
     }
-    res = main.run(project, job, template, parameters)
-    dataflow_jobs_cancel(res['job']['id'])
-
+    res = main.run(project, dataflow_job_id, template, parameters)
 
 def test_run_template_http_empty_args(app):
     with app.test_request_context():
         with pytest.raises(KeyError):
             main.run_template(flask.request)
 
-
-def test_run_template_http_url(app, dataflow_jobs_cancel):
+@pytest.mark.parametrize('dataflow_job_id',[('test_run_template_url')], indirect=True)
+def test_run_template_http_url(app, dataflow_job_id):
     args = {
         'project': PROJECT,
-        'job': unique_job_name('test_run_template_url'),
+        'job': dataflow_job_id,
         'template': 'gs://dataflow-templates/latest/Word_Count',
         'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
         'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
@@ -109,13 +119,12 @@ def test_run_template_http_url(app, dataflow_jobs_cancel):
     with app.test_request_context('/?' + url_encode(args)):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        dataflow_jobs_cancel(data['job']['id'])
 
-
-def test_run_template_http_data(app, dataflow_jobs_cancel):
+@pytest.mark.parametrize('dataflow_job_id',[('test_run_template_data')], indirect=True)
+def test_run_template_http_data(app, dataflow_job_id):
     args = {
         'project': PROJECT,
-        'job': unique_job_name('test_run_template_data'),
+        'job': dataflow_job_id,
         'template': 'gs://dataflow-templates/latest/Word_Count',
         'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
         'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
@@ -123,13 +132,12 @@ def test_run_template_http_data(app, dataflow_jobs_cancel):
     with app.test_request_context(data=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        dataflow_jobs_cancel(data['job']['id'])
 
-
-def test_run_template_http_json(app, dataflow_jobs_cancel):
+@pytest.mark.parametrize('dataflow_job_id',[('test_run_template_json')], indirect=True)
+def test_run_template_http_json(app, dataflow_job_id):
     args = {
         'project': PROJECT,
-        'job': unique_job_name('test_run_template_json'),
+        'job': dataflow_job_id,
         'template': 'gs://dataflow-templates/latest/Word_Count',
         'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
         'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
@@ -137,4 +145,3 @@ def test_run_template_http_json(app, dataflow_jobs_cancel):
     with app.test_request_context(json=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        dataflow_jobs_cancel(data['job']['id'])
