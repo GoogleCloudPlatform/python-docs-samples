@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, request
 import json
 import os
 import sys
+
+from flask import Flask, request
+
 
 app = Flask(__name__)
 

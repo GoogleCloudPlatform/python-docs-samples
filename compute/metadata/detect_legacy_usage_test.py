@@ -1,6 +1,7 @@
+import json
+
 import mock
 import requests
-import json
 
 import detect_legacy_usage
 

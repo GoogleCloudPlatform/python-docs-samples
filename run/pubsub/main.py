@@ -14,9 +14,11 @@
 
 # [START run_pubsub_server_setup]
 import base64
-from flask import Flask, request
 import os
 import sys
+
+from flask import Flask, request
+
 
 app = Flask(__name__)
 # [END run_pubsub_server_setup]

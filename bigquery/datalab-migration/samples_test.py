@@ -16,10 +16,10 @@ import time
 
 import google.auth
 import google.datalab
-import pytest
 import IPython
-from IPython.testing import tools
 from IPython.terminal import interactiveshell
+from IPython.testing import tools
+import pytest
 
 
 # Get default project

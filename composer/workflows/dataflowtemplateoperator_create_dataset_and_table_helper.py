@@ -16,8 +16,6 @@
 # It helps the user set up a BigQuery dataset and table that is needed
 # for the tutorial.
 
-import argparse
-
 # [START composer_dataflow_dataset_table_creation]
 
 # Make sure to follow the quickstart setup instructions beforehand.
@@ -27,15 +25,11 @@ import argparse
 # Before running the sample, be sure to install the bigquery library
 # in your local environment by running pip install google.cloud.bigquery
 
-# If you choose to download the library, you can also run the sample with the
-#  following command:
-#    python dataflowtemplateoperator_create_dataset_and_table_helper.py \
-#    PROJECT_ID \
-#    LOCATION
-#   where `PROJECT_ID` is your Google Cloud Project ID and `LOCATION` is where you
-#   want the location of your BigQuery dataset.
-
 from google.cloud import bigquery
+
+# TODO(developer): Replace with your values
+project = 'your-project'  # Your GCP Project
+location = 'US'  # the location where you want your BigQuery data to reside. For more info on possible locations see https://cloud.google.com/bigquery/docs/locations
 
 
 def create_dataset_and_table(project, location, dataset_name):
@@ -47,7 +41,7 @@ def create_dataset_and_table(project, location, dataset_name):
     # Construct a full Dataset object to send to the API.
     dataset = bigquery.Dataset(dataset_id)
 
-    # Set the location to your desired location for the dataset. 
+    # Set the location to your desired location for the dataset.
     # For more information, see this link:
     # https://cloud.google.com/bigquery/docs/locations
     dataset.location = location
@@ -81,13 +75,4 @@ def create_dataset_and_table(project, location, dataset_name):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Create BQ dataset and table")
-    parser.add_argument("project", metavar="P", type=str, help="your GCP project ID")
-    parser.add_argument(
-        "location",
-        metavar="L",
-        type=str,
-        help='where your dataset should reside (i.e., "U.S."',
-    )
-    args = parser.parse_args()
-    create_dataset_and_table(args.project, args.location, "average_weather")
+    create_dataset_and_table(project, location, "average_weather")

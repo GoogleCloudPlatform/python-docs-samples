@@ -13,16 +13,19 @@
 # limitations under the License.
 
 import os
+import time
 
 import backoff
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import FailedPrecondition
 from google.cloud import datalabeling_v1beta1 as datalabeling
 
 import create_annotation_spec_set as annotation_spec_set_sample
 import create_instruction as instruction_sample
-import manage_dataset as dataset_sample
 import import_data as import_sample
+import manage_dataset as dataset_sample
+
 
 RETRY_DEADLINE = 60
 
@@ -46,6 +49,27 @@ def create_dataset(project_id):
 @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=RETRY_DEADLINE)
 def delete_dataset(name):
     return dataset_sample.delete_dataset(name)
+
+
+def delete_old_datasets(project_id):
+    client = create_client()
+    formatted_project_name = client.project_path(project_id)
+
+    response = client.list_datasets(formatted_project_name)
+    # It will delete datasets created more than 2 hours ago
+    cutoff_time = time.time() - 7200
+    for element in response:
+        if element.create_time.seconds < cutoff_time:
+            print("Deleting {}".format(element.name))
+            try:
+                dataset_sample.delete_dataset(element.name)
+            except FailedPrecondition as e:
+                # We're always getting FailedPrecondition with 400
+                # resource conflict. I don't know why.
+                print("Deleting {} failed.".format(element.name))
+                print("Detail: {}".format(e))
+            # To avoid quota error
+            time.sleep(1)
 
 
 @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=RETRY_DEADLINE)
