@@ -44,13 +44,10 @@ TEST_CONFIG = {
     #     'cloud_run' # Test session for Cloud Run application.
     'opt_in_sessions': [],
 
-    # Only relevant for the `cloud_run` session. Specify the file
-    # names for your e2e test.
-    'cloud_run_e2e_test_files': ['e2e_test.py'],
-
     # An envvar key for determining the project id to use. Change it
-    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using
-    # a build specific Cloud project.
+    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
+    # build specific Cloud project. You can also use your own string
+    # to use your own Cloud project.
     'gcloud_project_env': 'GCLOUD_PROJECT',
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
@@ -143,11 +140,25 @@ def lint(session):
     session.install("flake8", "flake8-import-order")
 
     local_names = _determine_local_import_names(".")
-    args = FLAKE8_COMMON_ARGS + [
+    options = [
         "--application-import-names",
-        ",".join(local_names),
-        ".",
+        ",".join(local_names)
     ]
+
+    # We currently look at pytest.ini for flake8 config.
+    # You can add your own exclude and ignore by using `extend-`
+    #
+    # Example config:
+    # [flake8]
+    # extend-ignore = I100
+    # extend-exclude = myapp1,myapp2
+    if os.path.isfile("pytest.ini"):
+        options += [
+            "--append-config",
+            "pytest.ini",
+        ]
+    options.append(".")
+    args = FLAKE8_COMMON_ARGS + options
     session.run("flake8", *args)
 
 
@@ -199,37 +210,10 @@ def py(session):
 @nox.session
 def cloud_run(session):
     """Run tests for cloud run."""
-    if 'cloud_run' not in TEST_CONFIG['opt_in_sessions']:
+    if 'cloud_run' in TEST_CONFIG['opt_in_sessions']:
+        _session_tests(session)
+    else:
         session.skip('SKIPPED: cloud_run tests are disabled for this sample.')
-        return
-
-    if os.path.exists("requirements.txt"):
-        session.install("-r", "requirements.txt")
-
-    if os.path.exists("requirements-test.txt"):
-        session.install("-r", "requirements-test.txt")
-
-    user_envs = get_pytest_env_vars()
-
-    # Activate service account on Kokoro.
-    if os.environ.get("KOKORO_JOB_NAME"):
-        # Activate service account
-        key_file = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-        session.run(
-            "gcloud", "auth", "activate-service-account",
-            "--key-file={}".format(key_file)
-        )
-
-    test_files = TEST_CONFIG['cloud_run_e2e_test_files']
-    session.run(
-        "pytest",
-        *(PYTEST_COMMON_ARGS + session.posargs + test_files),
-        # Pytest will return 5 when no tests are collected. This can happen
-        # on travis where slow and flaky tests are excluded.
-        # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
-        success_codes=[0, 5],
-        env=user_envs
-    )
 
 #
 # Readmegen

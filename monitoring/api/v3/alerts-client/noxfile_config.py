@@ -29,13 +29,10 @@ TEST_CONFIG_OVERRIDE = {
     #     'cloud_run' # Test session for Cloud Run application.
     'opt_in_sessions': [],
 
-    # Only relevant for the `cloud_run` session. Specify the file
-    # names for your e2e test.
-    'cloud_run_e2e_test_files': ['e2e_test.py'],
-
     # An envvar key for determining the project id to use. Change it
-    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using
-    # a build specific Cloud project.
+    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
+    # build specific Cloud project. You can also use your own string
+    # to use your own Cloud project.
     # 'gcloud_project_env': 'GCLOUD_PROJECT',
     'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
