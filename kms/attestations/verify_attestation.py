@@ -14,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This sample demonstrates how to verify HSM attestations using certificate
-bundles obtained from Cloud HSM.
+"""This application verifies HSM attestations using certificate bundles
+obtained from Cloud HSM.
 
 For more information, visit https://cloud.google.com/kms/docs/attest-key.
 """
 
 # [START verify_attestations]
+import argparse
 import gzip
 
 from cryptography import exceptions
@@ -69,3 +70,17 @@ def verify(attestation_file, bundle_file):
                 continue
         return False
 # [END verify_attestations]
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+            description=__doc__)
+    parser.add_argument('attestation_file', help="Name of attestation file.")
+    parser.add_argument('bundle_file', help="Name of certificate bundle file.")
+
+    args = parser.parse_args()
+
+    if verify(args.attestation_file, args.bundle_file):
+        print('Signature verified.')
+    else:
+        print('Signature verification failed.')
