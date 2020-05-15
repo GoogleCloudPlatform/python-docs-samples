@@ -43,6 +43,11 @@ SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
+
+# For cloud-run session, we activate the service account for gcloud sdk.
+gcloud auth activate-service-account \
+       --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
 cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
