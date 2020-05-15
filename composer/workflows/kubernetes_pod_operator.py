@@ -16,6 +16,7 @@
 
 # [START composer_kubernetespodoperator]
 import datetime
+
 from airflow import models
 from airflow.contrib.kubernetes import secret
 from airflow.contrib.operators import kubernetes_pod_operator
