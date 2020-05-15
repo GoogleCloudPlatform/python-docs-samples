@@ -12,6 +12,9 @@ product:
       and many others. Stackdriver's Alerting API allows you to create,
       delete, and make back up copies of your alert policies.
 
+required_api_url: https://pantheon.corp.google.com/apis/library/monitoring.googleapis.com
+required_role: Monitoring Admin
+
 setup:
 - auth
 - install_deps
