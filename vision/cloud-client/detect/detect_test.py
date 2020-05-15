@@ -17,7 +17,6 @@ import uuid
 
 import backoff
 from google.cloud import storage
-import pytest
 
 import detect
 
@@ -243,7 +242,6 @@ def test_detect_crop_hints_uri(capsys):
     assert 'bounds: ' in out
 
 
-@pytest.mark.skip("It's constantly failing.")
 def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
@@ -253,7 +251,8 @@ def test_async_detect_document(capsys):
 
     assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
 
-    uri = 'gs://{}/vision/document/custom_0773375000.pdf'.format(ASSET_BUCKET)
+    uri = 'gs://{}/vision/document/custom_0773375000_title_only.pdf'.format(
+        ASSET_BUCKET)
     detect.async_detect_document(
         gcs_source_uri=uri,
         gcs_destination_uri=GCS_DESTINATION_URI)
