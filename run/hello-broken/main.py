@@ -13,10 +13,12 @@
 # limitations under the License.
 
 # [START run_broken_service]
-from flask import Flask
 import json
 import os
 import sys
+
+from flask import Flask
+
 
 app = Flask(__name__)
 

@@ -19,8 +19,8 @@ import json
 import logging
 
 import apache_beam as beam
-import apache_beam.transforms.window as window
 from apache_beam.options.pipeline_options import PipelineOptions
+import apache_beam.transforms.window as window
 
 
 class GroupWindowsIntoBatches(beam.PTransform):

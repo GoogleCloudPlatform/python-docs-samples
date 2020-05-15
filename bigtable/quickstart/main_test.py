@@ -14,10 +14,12 @@
 
 import os
 import random
+
+from google.cloud import bigtable
 import pytest
 
 from main import main
-from google.cloud import bigtable
+
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
