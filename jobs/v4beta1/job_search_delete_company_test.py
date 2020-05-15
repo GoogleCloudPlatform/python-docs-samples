@@ -17,8 +17,8 @@ import uuid
 
 import pytest
 
-import job_search_delete_company
 import job_search_create_company
+import job_search_delete_company
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]

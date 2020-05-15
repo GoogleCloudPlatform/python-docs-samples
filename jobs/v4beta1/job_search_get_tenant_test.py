@@ -14,6 +14,7 @@
 
 
 import os
+
 import job_search_get_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]

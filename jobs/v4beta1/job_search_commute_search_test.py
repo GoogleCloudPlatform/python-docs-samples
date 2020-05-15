@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+
 import job_search_commute_search
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
