@@ -17,7 +17,7 @@
 import os
 
 import backoff
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import ServerError
 import pytest
 
 import create_instruction
@@ -42,7 +42,7 @@ def cleaner():
 def test_create_instruction(cleaner, capsys):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         return create_instruction.create_instruction(
             PROJECT_ID, 'IMAGE', INSTRUCTION_GCS_URI)
