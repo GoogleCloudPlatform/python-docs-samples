@@ -84,4 +84,3 @@ if __name__ == '__main__':
         print('Signature verified.')
     else:
         print('Signature verification failed.')
-
