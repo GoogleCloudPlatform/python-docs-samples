@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storage_object_csek_to_cmek]
 import base64
-# [END storage_object_csek_to_cmek]
 import sys
 
 # [START storage_object_csek_to_cmek]
@@ -36,18 +34,18 @@ def object_csek_to_cmek(bucket_name, blob_name, encryption_key, kms_key_name):
     current_encryption_key = base64.b64decode(encryption_key)
     source_blob = bucket.blob(blob_name, encryption_key=current_encryption_key)
 
-    dest = bucket.blob(blob_name, kms_key_name=kms_key_name)
-    token, rewritten, total = dest.rewrite(source_blob)
+    destination_blob = bucket.blob(blob_name, kms_key_name=kms_key_name)
+    token, rewritten, total = destination_blob.rewrite(source_blob)
 
     while token is not None:
-        token, rewritten, total = dest.rewrite(source_blob, token=token)
+        token, rewritten, total = destination_blob.rewrite(source_blob, token=token)
 
     print(
         "Blob {} in bucket {} is now managed by the KMS key {} instead of a customer-supplied encryption key".format(
             blob_name, bucket_name, kms_key_name
         )
     )
-    return dest
+    return destination_blob
 
 
 # [END storage_object_csek_to_cmek]

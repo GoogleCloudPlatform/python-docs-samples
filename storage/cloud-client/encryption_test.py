@@ -119,7 +119,7 @@ def test_rotate_encryption_key(test_blob):
 def test_object_csek_to_cmek(test_blob):
     test_blob_name, test_blob_content = test_blob
     cmek_blob = storage_object_csek_to_cmek.object_csek_to_cmek(
-        BUCKET, test_blob_name, TEST_ENCRYPTION_KEY, KMS_KEY
+        BUCKET, test_blob_name, TEST_ENCRYPTION_KEY_2, KMS_KEY
     )
 
     assert cmek_blob.download_as_string(), test_blob_content
