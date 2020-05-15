@@ -13,11 +13,13 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
 
-import custom_roles
 import googleapiclient.errors
+import pytest
+
+import custom_roles
+
 
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
