@@ -80,11 +80,11 @@ with models.DAG(
         parameters={
             "javascriptTextTransformFunctionName": "transformCSVtoJSON",
             "JSONPath": bucket_path + "/jsonSchema.json",
-            "javascriptTextTransformGcsPath": bucket_path + "/inputFile.txt",
+            "javascriptTextTransformGcsPath": bucket_path + "/transformCSVtoJSON.js",
             "inputFilePattern": bucket_path + "/inputFile.txt",
             "outputTable": project_id + ":average_weather.average_weather",
-            "outputDeadletterTable": project_id + ":average_weather.average_weather",
-            "bigQueryLoadingTemporaryDirectory": bucket_path + "/tmp/",
+            "outputDeadletterTable": project_id + ":average_weather.average_weather_error_records",
+            "bigQueryLoadingTemporaryDirectory": bucket_path + "/tmp",
         },
     )
 
