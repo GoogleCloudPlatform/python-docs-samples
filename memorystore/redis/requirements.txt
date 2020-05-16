@@ -13,5 +13,5 @@
 # [START memorystore_requirements]
 Flask==1.1.2
 gunicorn==20.0.4
-redis==3.4.1
+redis==3.5.0
 # [END memorystore_requirements]

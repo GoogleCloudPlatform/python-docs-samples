@@ -18,7 +18,7 @@ import os
 
 from google.cloud import pubsub_v1
 from google.cloud import storage
-from google.cloud import translate
+from google.cloud import translate_v2 as translate
 from google.cloud import vision
 
 vision_client = vision.ImageAnnotatorClient()
@@ -27,10 +27,6 @@ publisher = pubsub_v1.PublisherClient()
 storage_client = storage.Client()
 
 project_id = os.environ['GCP_PROJECT']
-
-with open('config.json') as f:
-    data = f.read()
-config = json.loads(data)
 # [END functions_ocr_setup]
 
 
@@ -55,10 +51,11 @@ def detect_text(bucket, filename):
     print('Detected language {} for text {}.'.format(src_lang, text))
 
     # Submit a message to the bus for each target language
-    for target_lang in config.get('TO_LANG', []):
-        topic_name = config['TRANSLATE_TOPIC']
+    to_langs = os.environ['TO_LANG'].split(',')
+    for target_lang in to_langs:
+        topic_name = os.environ['TRANSLATE_TOPIC']
         if src_lang == target_lang or src_lang == 'und':
-            topic_name = config['RESULT_TOPIC']
+            topic_name = os.environ['RESULT_TOPIC']
         message = {
             'text': text,
             'filename': filename,
@@ -120,7 +117,7 @@ def translate_text(event, context):
     translated_text = translate_client.translate(text,
                                                  target_language=target_lang,
                                                  source_language=src_lang)
-    topic_name = config['RESULT_TOPIC']
+    topic_name = os.environ['RESULT_TOPIC']
     message = {
         'text': translated_text['translatedText'],
         'filename': filename,
@@ -147,7 +144,7 @@ def save_result(event, context):
 
     print('Received request to save file {}.'.format(filename))
 
-    bucket_name = config['RESULT_BUCKET']
+    bucket_name = os.environ['RESULT_BUCKET']
     result_filename = '{}_{}.txt'.format(filename, lang)
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)

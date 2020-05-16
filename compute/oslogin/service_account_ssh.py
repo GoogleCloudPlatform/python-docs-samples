@@ -21,13 +21,15 @@ on the same internal VPC network.
 """
 
 # [START imports_and_variables]
-import time
-import subprocess
-import uuid
-import logging
-import requests
 import argparse
+import logging
+import subprocess
+import time
+import uuid
+
 import googleapiclient.discovery
+import requests
+
 
 # Global variables
 SERVICE_ACCOUNT_METADATA_URL = (

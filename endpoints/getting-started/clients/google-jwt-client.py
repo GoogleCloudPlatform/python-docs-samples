@@ -68,9 +68,9 @@ def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
         'content-type': 'application/json'
     }
     response = requests.get(url, headers=headers)
-
+    print(response.status_code, response.content)
     response.raise_for_status()
-    return response.text
+
 # [END endpoints_jwt_request]
 
 
@@ -96,4 +96,4 @@ if __name__ == '__main__':
                                args.sa_email,
                                args.audience,
                                expiry_length)
-    print(make_jwt_request(keyfile_jwt, args.host))
+    make_jwt_request(keyfile_jwt, args.host)
