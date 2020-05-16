@@ -43,6 +43,11 @@ SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
+
+# For cloud-run session, we activate the service account for gcloud sdk.
+gcloud auth activate-service-account \
+       --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
 cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
@@ -79,16 +84,6 @@ for file in **/requirements.txt; do
           # echo -e "\n Skipping $file: no changes in folder.\n"
           continue
         fi
-    fi
-
-    # Skip unsupported Python versions for Cloud Functions
-    # (Some GCF samples' dependencies don't support them)
-    if [[ "$file" == "functions/"* ]]; then
-      PYTHON_VERSION="$(python --version 2>&1)"
-      if [[ "$PYTHON_VERSION" == "Python 2."* || "$PYTHON_VERSION" == "Python 3.5"* ]]; then
-        # echo -e "\n Skipping $file: Python $PYTHON_VERSION is not supported by Cloud Functions.\n"
-        continue
-      fi
     fi
 
     echo "------------------------------------------------------------"
