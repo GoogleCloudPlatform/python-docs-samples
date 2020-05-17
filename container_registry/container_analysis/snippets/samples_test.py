@@ -267,7 +267,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version_start': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
@@ -288,7 +288,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
