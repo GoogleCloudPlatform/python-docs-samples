@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.exceptions import NotFound
 import pytest
 
 import job_search_create_company
@@ -36,6 +37,11 @@ def company():
     company_id = company_name.split("/")[-1]
 
     yield company_id
+
+    try:
+        job_search_delete_company.delete_company(PROJECT_ID, TENANT_ID, company)
+    except NotFound as e:
+        print("Ignoring NotFound upon cleanup, details: {}".format(e))
 
 
 def test_delete_company(capsys, company):

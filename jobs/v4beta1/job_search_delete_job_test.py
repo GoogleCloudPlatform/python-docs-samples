@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.exceptions import NotFound
 import pytest
 
 import job_search_create_job
@@ -28,7 +29,7 @@ POST_UNIQUE_ID = "TEST_POST_{}".format(uuid.uuid4())[:20]
 
 @pytest.fixture(scope="module")
 def job():
-    # create a temporary company
+    # create a temporary job
     job_name = job_search_create_job.create_job(
         PROJECT_ID, TENANT_ID, COMPANY_ID, POST_UNIQUE_ID, "www.jobUrl.com"
     )
@@ -37,6 +38,11 @@ def job():
     job_id = job_name.split("/")[-1]
 
     yield job_id
+
+    try:
+        job_search_delete_job.delete_job(PROJECT_ID, TENANT_ID, job_id)
+    except NotFound as e:
+        print("Ignoring NotFound upon cleanup, details: {}".format(e))
 
 
 def test_delete_job(capsys, job):
