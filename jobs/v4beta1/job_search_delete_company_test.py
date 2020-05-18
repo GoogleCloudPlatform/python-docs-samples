@@ -15,6 +15,10 @@
 import os
 import uuid
 
+<<<<<<< HEAD
+=======
+from google.api_core.exceptions import NotFound
+>>>>>>> e454c4e2bb70245a74b2fa54984f9bc98beea43a
 import pytest
 
 import job_search_create_company
@@ -37,6 +41,14 @@ def company():
 
     yield company_id
 
+<<<<<<< HEAD
+=======
+    try:
+        job_search_delete_company.delete_company(PROJECT_ID, TENANT_ID, company)
+    except NotFound as e:
+        print("Ignoring NotFound upon cleanup, details: {}".format(e))
+
+>>>>>>> e454c4e2bb70245a74b2fa54984f9bc98beea43a
 
 def test_delete_company(capsys, company):
     out, _ = capsys.readouterr()
