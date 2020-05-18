@@ -15,14 +15,8 @@
 import os
 import uuid
 
-<<<<<<< HEAD
 from google.api_core.exceptions import NotFound
-=======
-<<<<<<< HEAD
-=======
-from google.api_core.exceptions import NotFound
->>>>>>> e454c4e2bb70245a74b2fa54984f9bc98beea43a
->>>>>>> 69d471afe69d31ab0a5f22c35b33c1884c705863
+
 import pytest
 
 import job_search_create_job
