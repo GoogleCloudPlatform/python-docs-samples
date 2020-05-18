@@ -1,1 +1,1 @@
-dialogflow==0.8.0
+dialogflow==1.0.0
