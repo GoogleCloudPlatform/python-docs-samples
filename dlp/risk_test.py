@@ -15,11 +15,12 @@
 import os
 import uuid
 
-import google.cloud.pubsub
 import google.cloud.bigquery
+import google.cloud.pubsub
 import pytest
 
 import risk
+
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
@@ -34,6 +35,7 @@ STRING_BOOLEAN_FIELD = "Gender"
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
+
 
 # Create new custom topic/subscription
 @pytest.fixture(scope="module")
@@ -232,7 +234,7 @@ def test_k_anonymity_analysis_single_field(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -272,7 +274,7 @@ def test_l_diversity_analysis_single_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -314,7 +316,7 @@ def test_k_map_estimate_analysis_single_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):

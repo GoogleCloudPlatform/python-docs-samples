@@ -22,33 +22,45 @@ import google.cloud.exceptions
 import pytest
 import requests
 
-import storage_copy_file
 import storage_add_bucket_label
+import storage_bucket_delete_default_kms_key
+import storage_change_default_storage_class
+import storage_change_file_storage_class
+import storage_compose_file
+import storage_copy_file
+import storage_copy_file_archived_generation
+import storage_cors_configuration
+import storage_create_bucket_class_location
+import storage_define_bucket_website_configuration
 import storage_delete_file
+import storage_delete_file_archived_generation
+import storage_disable_bucket_lifecycle_management
+import storage_disable_versioning
 import storage_download_file
-import storage_get_bucket_labels
-import storage_get_bucket_metadata
-import storage_get_metadata
-import storage_list_buckets
-import storage_list_files_with_prefix
-import storage_list_files
-import storage_make_public
-import storage_remove_bucket_label
-import storage_move_file
-import storage_upload_file
-import storage_upload_with_kms_key
+import storage_download_public_file
+import storage_enable_bucket_lifecycle_management
+import storage_enable_versioning
+import storage_generate_signed_post_policy_v4
 import storage_generate_signed_url_v2
 import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
-import storage_generate_signed_post_policy_v4
-import storage_set_bucket_default_kms_key
-import storage_cors_configuration
-import storage_remove_cors_configuration
+import storage_get_bucket_labels
+import storage_get_bucket_metadata
+import storage_get_metadata
+import storage_get_service_account
+import storage_list_buckets
 import storage_list_file_archived_generations
-import storage_delete_file_archived_generation
-import storage_change_default_storage_class
-import storage_change_file_storage_class
-import storage_copy_file_archived_generation
+import storage_list_files
+import storage_list_files_with_prefix
+import storage_make_public
+import storage_move_file
+import storage_object_get_kms_key
+import storage_remove_bucket_label
+import storage_remove_cors_configuration
+import storage_set_bucket_default_kms_key
+import storage_set_metadata
+import storage_upload_file
+import storage_upload_with_kms_key
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
@@ -100,6 +112,17 @@ def test_blob(test_bucket):
     blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
+
+
+@pytest.fixture
+def test_bucket_create():
+    """Yields a bucket object that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    yield bucket
+    bucket.delete(force=True)
 
 
 def test_list_buckets(test_bucket, capsys):
@@ -163,6 +186,12 @@ def test_blob_metadata(test_blob, capsys):
     assert test_blob.name in out
 
 
+def test_set_blob_metadata(test_blob, capsys):
+    storage_set_metadata.set_blob_metadata(test_blob.bucket.name, test_blob.name)
+    out, _ = capsys.readouterr()
+    assert test_blob.name in out
+
+
 def test_delete_blob(test_blob):
     storage_delete_file.delete_blob(test_blob.bucket.name, test_blob.name)
 
@@ -200,9 +229,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
     )
 
     requests.put(
-        url,
-        data=content,
-        headers={"content-type": "application/octet-stream"},
+        url, data=content, headers={"content-type": "application/octet-stream"},
     )
 
     bucket = storage.Client().bucket(test_bucket.name)
@@ -213,9 +240,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
 def test_generate_signed_policy_v4(test_bucket, capsys):
     blob_name = "storage_snippets_test_form"
     short_name = storage_generate_signed_post_policy_v4
-    form = short_name.generate_signed_post_policy_v4(
-        test_bucket.name, blob_name
-    )
+    form = short_name.generate_signed_post_policy_v4(test_bucket.name, blob_name)
     assert "name='key' value='{}'".format(blob_name) in form
     assert "name='x-goog-signature'" in form
     assert "name='x-goog-date'" in form
@@ -234,9 +259,7 @@ def test_rename_blob(test_blob):
     except google.cloud.exceptions.exceptions.NotFound:
         pass
 
-    storage_move_file.rename_blob(
-        bucket.name, test_blob.name, "test_rename_blob"
-    )
+    storage_move_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
 
     assert bucket.get_blob("test_rename_blob") is not None
     assert bucket.get_blob(test_blob.name) is None
@@ -258,6 +281,116 @@ def test_copy_blob(test_blob):
     assert bucket.get_blob(test_blob.name) is not None
 
 
+def test_versioning(test_bucket, capsys):
+    bucket = storage_enable_versioning.enable_versioning(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Versioning was enabled for bucket" in out
+    assert bucket.versioning_enabled is True
+
+    bucket = storage_disable_versioning.disable_versioning(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Versioning was disabled for bucket" in out
+    assert bucket.versioning_enabled is False
+
+
+def test_bucket_lifecycle_management(test_bucket, capsys):
+    bucket = storage_enable_bucket_lifecycle_management.enable_bucket_lifecycle_management(
+        test_bucket
+    )
+    out, _ = capsys.readouterr()
+    assert "[]" in out
+    assert "Lifecycle management is enable" in out
+    assert len(list(bucket.lifecycle_rules)) > 0
+
+    bucket = storage_disable_bucket_lifecycle_management.disable_bucket_lifecycle_management(
+        test_bucket
+    )
+    out, _ = capsys.readouterr()
+    assert "[]" in out
+    assert len(list(bucket.lifecycle_rules)) == 0
+
+
+def test_create_bucket_class_location(test_bucket_create):
+    bucket = storage_create_bucket_class_location.create_bucket_class_location(
+        test_bucket_create.name
+    )
+
+    assert bucket.location == "US"
+    assert bucket.storage_class == "COLDLINE"
+
+
+def test_bucket_delete_default_kms_key(test_bucket, capsys):
+    test_bucket.default_kms_key_name = KMS_KEY
+    test_bucket.patch()
+
+    assert test_bucket.default_kms_key_name == KMS_KEY
+
+    bucket = storage_bucket_delete_default_kms_key.bucket_delete_default_kms_key(
+        test_bucket.name
+    )
+
+    out, _ = capsys.readouterr()
+    assert bucket.default_kms_key_name is None
+    assert bucket.name in out
+
+
+def test_get_service_account(capsys):
+    storage_get_service_account.get_service_account()
+
+    out, _ = capsys.readouterr()
+
+    assert "@gs-project-accounts.iam.gserviceaccount.com" in out
+
+
+def test_download_public_file(test_blob):
+    storage_make_public.make_blob_public(test_blob.bucket.name, test_blob.name)
+    with tempfile.NamedTemporaryFile() as dest_file:
+        storage_download_public_file.download_public_file(
+            test_blob.bucket.name, test_blob.name, dest_file.name
+        )
+
+        assert dest_file.read() == b"Hello, is it me you're looking for?"
+
+
+def test_define_bucket_website_configuration(test_bucket):
+    bucket = storage_define_bucket_website_configuration.define_bucket_website_configuration(
+        test_bucket.name, "index.html", "404.html"
+    )
+
+    website_val = {"mainPageSuffix": "index.html", "notFoundPage": "404.html"}
+
+    assert bucket._properties["website"] == website_val
+
+
+def test_object_get_kms_key(test_bucket):
+    with tempfile.NamedTemporaryFile() as source_file:
+        storage_upload_with_kms_key.upload_blob_with_kms(
+            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY
+        )
+    kms_key = storage_object_get_kms_key.object_get_kms_key(
+        test_bucket.name, "test_upload_blob_encrypted"
+    )
+
+    assert kms_key.startswith(KMS_KEY)
+
+
+def test_storage_compose_file(test_bucket):
+    source_files = ["test_upload_blob_1", "test_upload_blob_2"]
+    blob_list = []
+    for source in source_files:
+        blob = test_bucket.blob(source)
+        blob.upload_from_string(source)
+        blob_list.append(blob)
+
+    with tempfile.NamedTemporaryFile() as dest_file:
+        destination = storage_compose_file.compose_file(
+            test_bucket.name, blob_list, dest_file.name
+        )
+        composed = destination.download_as_string()
+
+        assert composed.decode("utf-8") == source_files[0] + source_files[1]
+
+
 def test_cors_configuration(test_bucket, capsys):
     bucket = storage_cors_configuration.cors_configuration(test_bucket)
     out, _ = capsys.readouterr()
@@ -268,14 +401,6 @@ def test_cors_configuration(test_bucket, capsys):
     out, _ = capsys.readouterr()
     assert "Remove CORS policies for bucket" in out
     assert len(bucket.cors) == 0
-
-
-def test_list_blobs_archived_generation(test_blob, capsys):
-    storage_list_file_archived_generations.list_file_archived_generations(
-        test_blob.bucket.name
-    )
-    out, _ = capsys.readouterr()
-    assert str(test_blob.generation) in out
 
 
 def test_delete_blobs_archived_generation(test_blob, capsys):
@@ -320,3 +445,11 @@ def test_copy_file_archived_generation(test_blob):
 
     assert bucket.get_blob("test_copy_blob") is not None
     assert bucket.get_blob(test_blob.name) is not None
+
+
+def test_list_blobs_archived_generation(test_blob, capsys):
+    storage_list_file_archived_generations.list_file_archived_generations(
+        test_blob.bucket.name
+    )
+    out, _ = capsys.readouterr()
+    assert str(test_blob.generation) in out

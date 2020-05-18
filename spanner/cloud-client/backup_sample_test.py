@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import random
+import string
 
 from google.cloud import spanner
 import pytest
-import random
-import string
 
 import backup_sample
 
@@ -51,7 +51,7 @@ def spanner_instance():
         spanner_client.project_name, 'regional-us-central1')
     instance = spanner_client.instance(INSTANCE_ID, instance_config)
     op = instance.create()
-    op.result(30)  # block until completion
+    op.result(120)  # block until completion
     yield instance
     instance.delete()
 

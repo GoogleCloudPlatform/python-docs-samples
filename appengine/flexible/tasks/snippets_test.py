@@ -13,8 +13,9 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
+
+import pytest
 
 import snippets
 
