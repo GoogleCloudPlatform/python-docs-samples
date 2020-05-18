@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import mock
+import pytest
+
 import composer_storage_trigger
+
 
 # handles error in JSON body
 @mock.patch('composer_storage_trigger.make_iap_request',
@@ -24,6 +26,7 @@ def test_json_body_error(make_iap_request_mock):
     trigger_event = None
     with pytest.raises(Exception):
         composer_storage_trigger.trigger_dag(trigger_event)
+
 
 # handles error in IAP response
 @mock.patch('composer_storage_trigger.make_iap_request',
