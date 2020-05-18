@@ -3,5 +3,5 @@ google-cloud-bigquery-storage==0.8.0
 pandas==0.25.3; python_version > '3.0'
 pandas==0.24.2; python_version < '3.0'
 pandas-gbq==0.13.2
-pyarrow==0.17.0
+pyarrow==0.17.1
 grpcio==1.28.1
