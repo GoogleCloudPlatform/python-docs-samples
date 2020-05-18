@@ -24,11 +24,12 @@ import pytest
 
 import storage_download_encrypted_file
 import storage_generate_encryption_key
+import storage_object_csek_to_cmek
 import storage_rotate_encryption_key
 import storage_upload_encrypted_file
 
-
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
 TEST_ENCRYPTION_KEY = "brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0="
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
@@ -113,3 +114,12 @@ def test_rotate_encryption_key(test_blob):
 
         downloaded_content = dest_file.read().decode("utf-8")
         assert downloaded_content == test_blob_content
+
+
+def test_object_csek_to_cmek(test_blob):
+    test_blob_name, test_blob_content = test_blob
+    cmek_blob = storage_object_csek_to_cmek.object_csek_to_cmek(
+        BUCKET, test_blob_name, TEST_ENCRYPTION_KEY_2, KMS_KEY
+    )
+
+    assert cmek_blob.download_as_string(), test_blob_content

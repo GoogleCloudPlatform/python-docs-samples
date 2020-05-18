@@ -17,7 +17,7 @@
 import os
 
 import backoff
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import ServerError
 import pytest
 
 import create_annotation_spec_set
@@ -40,7 +40,7 @@ def cleaner():
 def test_create_annotation_spec_set(cleaner, capsys):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         return create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
 

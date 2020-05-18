@@ -39,7 +39,7 @@ import requests
 
 # [END functions_tips_connection_pooling]
 
-from functools import reduce
+from functools import reduce  # noqa I100
 
 
 # Placeholder
