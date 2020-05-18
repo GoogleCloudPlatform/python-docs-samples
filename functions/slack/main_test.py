@@ -48,7 +48,6 @@ class TestGCFPySlackSample(object):
             request.headers = {'X-Slack-Signature': '12345'}
             main.verify_signature(request)
 
-    @pytest.mark.skip("broken")
     def test_verify_web_hook_valid_request(self):
         request = Request()
         request.headers = {
@@ -74,7 +73,6 @@ class TestGCFPySlackSample(object):
         assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
-    @pytest.mark.skip("broken")
     def test_kg_search(self):
         with mock.patch.object(main, 'kgsearch'):
             entities = main.kgsearch.entities.return_value
