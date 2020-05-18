@@ -37,7 +37,7 @@ from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 from airflow.utils.dates import days_ago
 
-bucket_path = models.Variable.get("bucket_name")
+bucket_path = models.Variable.get("bucket_path")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce_zone")
 gce_region = models.Variable.get("gce_region")
@@ -74,17 +74,16 @@ with models.DAG(
         # The name of the template that you're using.
         # Below is a list of all the templates you can use.
         # For versions in non-production environments, use the subfolder 'latest'
-        # https://cloud.google.com/dataflow/docs/guides/templates/provided-streaming#gcstexttobigquerystream
+        # https://cloud.google.com/dataflow/docs/guides/templates/provided-batch#gcstexttobigquery
         template="gs://dataflow-templates/latest/Stream_GCS_Text_to_BigQuery",
         # Use the link above to specify the correct parameters for your template.
         parameters={
             "javascriptTextTransformFunctionName": "transformCSVtoJSON",
-            "JSONPath": bucket_path + "/jsonSchema.json",
-            "javascriptTextTransformGcsPath": bucket_path + "/transformCSVtoJSON.js",
-            "inputFilePattern": bucket_path + "/inputFile.txt",
-            "outputTable": project_id + ":average_weather.average_weather",
-            "outputDeadletterTable": project_id + ":average_weather.average_weather_error_records",
-            "bigQueryLoadingTemporaryDirectory": bucket_path + "/tmp",
+            "JSONPath": bucket_path+"/jsonSchema.json",
+            "javascriptTextTransformGcsPath": bucket_path+"/transformCSVtoJSON.js",
+            "inputFilePattern": bucket_path+"/inputFile.txt",
+            "outputTable": project_id+":average_weather.average_weather",
+            "bigQueryLoadingTemporaryDirectory": bucket_path+"/tmp/",
         },
     )
 
