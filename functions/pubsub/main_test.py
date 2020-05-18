@@ -16,7 +16,6 @@ import base64
 import os
 
 from mock import MagicMock
-import pytest
 
 import main
 
@@ -44,7 +43,7 @@ def test_functions_pubsub_publish_should_publish_message():
 
 
 def test_functions_pubsub_subscribe_should_print_message(capsys):
-    pubsub_message = {"data": base64.b64encode(b"Hello, world!") }
+    pubsub_message = {"data": base64.b64encode(b"Hello, world!")}
 
     main.subscribe(pubsub_message, None)
 
