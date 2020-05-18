@@ -135,25 +135,11 @@ def lint(session):
     session.install("flake8", "flake8-import-order")
 
     local_names = _determine_local_import_names(".")
-    options = [
+    args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
-        ",".join(local_names)
+        ",".join(local_names),
+        "."
     ]
-
-    # We currently look at pytest.ini for flake8 config.
-    # You can add your own exclude and ignore by using `extend-`
-    #
-    # Example config:
-    # [flake8]
-    # extend-ignore = I100
-    # extend-exclude = myapp1,myapp2
-    if os.path.isfile("pytest.ini"):
-        options += [
-            "--append-config",
-            "pytest.ini",
-        ]
-    options.append(".")
-    args = FLAKE8_COMMON_ARGS + options
     session.run("flake8", *args)
 
 
