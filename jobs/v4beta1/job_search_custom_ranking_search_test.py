@@ -13,6 +13,10 @@
 # limitations under the License.
 
 import os
+<<<<<<< HEAD
+=======
+
+>>>>>>> 69d471afe69d31ab0a5f22c35b33c1884c705863
 import job_search_custom_ranking_search
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
