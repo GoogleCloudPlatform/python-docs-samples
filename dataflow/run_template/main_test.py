@@ -57,15 +57,20 @@ def dataflow_job_name(request):
     yield job_name
 
     # cancel the Dataflow job after running the test
-    dataflow_jobs_cancel(job_name)
+    # no need to cancel after the empty_args test - it won't create a job and cancellation will throw an error
+    if job_name != "test_run_template_empty":
+        dataflow_jobs_cancel(job_name)
+    else:
+        print("No active jobs to cancel, cancelling skipped.")
 
 
 # Takes in a Dataflow job name and returns its job ID
 def get_job_id_from_name(job_name):
-    # list the 100 most recent Dataflow jobs
+    # list the 50 most recent Dataflow jobs
     jobs_request = dataflow.projects().jobs().list(
         projectId=PROJECT,
-        pageSize=50  # only return the 50 most recent results - our job is likely to be in here. If the job is not found, first try increasing this number
+        filter="ACTIVE",
+        pageSize=50  # only return the 50 most recent results - our job is likely to be in here. If the job is not found, first try increasing this number. For more info see:https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
     )
     response = jobs_request.execute()
 
@@ -73,7 +78,6 @@ def get_job_id_from_name(job_name):
     for job in response['jobs']:
         if job['name'] == job_name:
             return job['id']
-
     # if we don't find a job, just return
     return
 
