@@ -61,7 +61,7 @@ def publish(request):
 
 # [START functions_pubsub_subscribe]
 # Triggered from a message on a Cloud Pub/Sub topic.
-def subscribe(event):
+def subscribe(event, _ = None):
     # Print out the data from Pub/Sub, to prove that it worked
     print(base64.b64decode(event['data']))
 # [END functions_pubsub_subscribe]
