@@ -1,4 +1,4 @@
-google-cloud-dlp==0.14.0
+google-cloud-dlp==0.15.0
 google-cloud-storage==1.28.0
 google-cloud-pubsub==1.4.3
 google-cloud-datastore==1.12.0

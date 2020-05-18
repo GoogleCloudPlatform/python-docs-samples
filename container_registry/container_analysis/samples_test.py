@@ -29,6 +29,7 @@ from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
 from grafeas.grafeas_v1.gapic.enums import NoteKind
 from grafeas.grafeas_v1.gapic.enums import Severity
 from grafeas.grafeas_v1.gapic.enums import Version
+import pytest
 
 import samples
 
@@ -145,6 +146,7 @@ class TestContainerAnalysisSamples:
         # clean up
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
+    @pytest.mark.flaky(max_runs=3, min_passes=1)
     def test_pubsub(self):
         # create topic if needed
         client = SubscriberClient()
@@ -265,7 +267,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version_start': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
@@ -286,7 +288,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
