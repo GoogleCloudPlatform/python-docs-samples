@@ -38,6 +38,7 @@ RUN apt-get update \
     libexpat1-dev \
     libffi-dev \
     liblzma-dev \
+    libmagickwand-dev \
     libreadline-dev \
     libsnappy-dev \
     libssl-dev \
