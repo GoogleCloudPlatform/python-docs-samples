@@ -14,13 +14,8 @@
 
 # [START composer_trigger]
 
-import google.auth
-import google.auth.compute_engine.credentials
-import google.auth.iam
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
-import google.oauth2.credentials
-import google.oauth2.service_account
 import requests
 
 
@@ -59,7 +54,8 @@ def trigger_dag(data, context=None):
         + '/dag_runs'
     )
     # Make a POST request to IAP which then Triggers the DAG
-    make_iap_request(webserver_url, client_id, method='POST', json={"conf":data})
+    make_iap_request(
+        webserver_url, client_id, method='POST', json={"conf": data})
 
 
 # This code is copied from

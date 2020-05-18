@@ -16,8 +16,8 @@ import hashlib
 import hmac
 import os
 
-import googleapiclient.discovery
 from flask import jsonify
+import googleapiclient.discovery
 
 
 kgsearch = googleapiclient.discovery.build(
