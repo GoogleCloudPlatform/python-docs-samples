@@ -14,9 +14,10 @@
 
 # [START functions_pubsub_setup]
 import base64
-from google.cloud import pubsub_v1
 import json
 import os
+
+from google.cloud import pubsub_v1
 
 
 # Instantiates a Pub/Sub client
