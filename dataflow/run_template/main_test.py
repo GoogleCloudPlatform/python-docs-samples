@@ -58,8 +58,8 @@ def dataflow_job_name(request):
 
     # cancel the Dataflow job after running the test
     # no need to cancel after the empty_args test - it won't create a job and cancellation will throw an error
-    if job_name != "test_run_template_empty":
-        dataflow_jobs_cancel(job_name)
+    if label != "test_run_template_empty":
+      dataflow_jobs_cancel(job_name)
     else:
         print("No active jobs to cancel, cancelling skipped.")
 
