@@ -160,7 +160,7 @@ def _session_tests(session, post_install=None):
     if os.path.exists("requirements-test.txt"):
         session.install("-r", "requirements-test.txt")
 
-    if _is_client_library_repo() and INSTALL_LIBRARY_FROM_SOURCE:
+    if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
 
     if post_install:
@@ -187,11 +187,6 @@ def py(session):
             session.python
         ))
 
-
-def _is_client_library_repo():
-    """Returns true if in a client library repository"""
-    root = _get_repo_root()
-    return os.path.exists(os.path.join(root, "setup.py"))
 
 #
 # Readmegen
