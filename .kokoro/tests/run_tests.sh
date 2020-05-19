@@ -104,9 +104,11 @@ for file in **/requirements.txt; do
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
-    # If this is a periodic build, send the test log to the Build Cop Bot.
-    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
+    # If REPORT_TO_BUILD_COP_BOT is set to "True", send the test log
+    # to the Build Cop Bot.
+    # See:
+    # https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+    if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "True" ]]; then
       chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
       $KOKORO_GFILE_DIR/linux_amd64/buildcop
     fi
