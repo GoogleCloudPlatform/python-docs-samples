@@ -50,7 +50,6 @@ gcloud auth activate-service-account \
 
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
-source "${KOKORO_GFILE_DIR}/talent_sln_secrets.txt"
 cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
 
 # For Datalabeling samples to hit the testing endpoint
