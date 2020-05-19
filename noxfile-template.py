@@ -88,6 +88,7 @@ IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
+INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
 #
 # Style Checks
 #
@@ -159,6 +160,9 @@ def _session_tests(session, post_install=None):
     if os.path.exists("requirements-test.txt"):
         session.install("-r", "requirements-test.txt")
 
+    if _is_client_library_repo() and INSTALL_LIBRARY_FROM_SOURCE:
+        session.install("-e", _get_repo_root())
+
     if post_install:
         post_install(session)
 
@@ -183,6 +187,10 @@ def py(session):
             session.python
         ))
 
+def _is_client_library_repo():
+    """Returns true if in a client library repository"""
+    root = _get_repo_root()
+    return os.path.exists(os.path.join(root, "setup.py"))
 
 #
 # Readmegen
