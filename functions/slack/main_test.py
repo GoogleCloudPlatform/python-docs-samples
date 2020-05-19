@@ -12,10 +12,10 @@
 # limitations under the License.
 
 import json
+import os
 
 import googleapiclient.discovery
 import mock
-import os
 import pytest
 
 import main
