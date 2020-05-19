@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import os
-import time
+import uuid
 
 from google.cloud import pubsub_v1
 from google.cloud import resource_manager
@@ -24,9 +24,9 @@ import quickstart_createfeed
 import quickstart_deletefeed
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-ASSET_NAME = 'assets-{}'.format(int(time.time()))
-FEED_ID = 'feed-{}'.format(int(time.time()))
-TOPIC = 'topic-{}'.format(int(time.time()))
+ASSET_NAME = 'assets-{}'.format(uuid.uuid4().hex)
+FEED_ID = 'feed-{}'.format(uuid.uuid4().hex)
+TOPIC = 'topic-{}'.format(uuid.uuid4().hex)
 
 
 def test_delete_feed(capsys):

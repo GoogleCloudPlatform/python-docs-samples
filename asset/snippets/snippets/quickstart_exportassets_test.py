@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import os
-import time
+import uuid
 
 from google.cloud import storage
 import pytest
@@ -23,7 +23,7 @@ import pytest
 import quickstart_exportassets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = 'assets-{}'.format(int(time.time()))
+BUCKET = 'assets-{}'.format(uuid.uuid4().hex)
 
 
 @pytest.fixture(scope='module')
