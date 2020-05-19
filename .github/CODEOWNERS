@@ -32,7 +32,7 @@
 /endpoints/                     @DanSanche @GoogleCloudPlatform/python-samples-owners
 /error_reporting/               @GoogleCloudPlatform/python-samples-owners
 /firestore/                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
-/functions/                     @grant @GoogleCloudPlatform/python-samples-owners
+/functions/                     @ace-n @GoogleCloudPlatform/python-samples-owners
 /healthcare/                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/                           @melaniedejong @GoogleCloudPlatform/python-samples-owners
 /iap/                           @GoogleCloudPlatform/python-samples-owners
