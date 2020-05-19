@@ -46,7 +46,6 @@ def publish(request):
         'data': {'message': message},
     })
     message_bytes = message_json.encode('utf-8')
-    print(message_bytes)
 
     # Publishes a message
     try:
