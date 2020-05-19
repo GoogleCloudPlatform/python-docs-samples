@@ -59,7 +59,7 @@ def dataflow_job_name(request):
     # cancel the Dataflow job after running the test
     # no need to cancel after the empty_args test - it won't create a job and cancellation will throw an error
     if label != "test_run_template_empty":
-      dataflow_jobs_cancel(job_name)
+        dataflow_jobs_cancel(job_name)
     else:
         print("No active jobs to cancel, cancelling skipped.")
 
@@ -89,7 +89,7 @@ def dataflow_jobs_cancel(job_name):
     job_id = get_job_id_from_name(job_name)
 
     if job_id:
-      # Cancel the Dataflow job if it exists. If it doesn't, job_id will be equal to None. For more info, see: https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
+        # Cancel the Dataflow job if it exists. If it doesn't, job_id will be equal to None. For more info, see: https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
         request = dataflow.projects().jobs().update(
             projectId=PROJECT,
             jobId=job_id,
