@@ -18,5 +18,7 @@ steps:
     - name: 'gcr.io/cloud-builders/docker'
       args: ['build', '-t', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', '.']
       dir: '.kokoro/docker'
+    - name: gcr.io/cloud-builders/docker
+      args: ['tag', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', 'gcr.io/$PROJECT_ID/python-samples-testing-docker:$SHORT_SHA']
 images:
      - 'gcr.io/$PROJECT_ID/python-samples-testing-docker'
