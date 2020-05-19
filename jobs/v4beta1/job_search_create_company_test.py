@@ -21,14 +21,13 @@ import job_search_create_company
 import job_search_delete_company
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 COMPANY_EXT_ID = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
 
 
-def test_create_company(capsys, cleaner):
+def test_create_company(capsys, tenant, cleaner):
     # create company
     company_name = job_search_create_company.create_company(
-        PROJECT_ID, TENANT_ID, "Test Company Name", COMPANY_EXT_ID
+        PROJECT_ID, tenant, "Test Company Name", COMPANY_EXT_ID
     )
     out, _ = capsys.readouterr()
     assert "Created" in out
@@ -40,10 +39,10 @@ def test_create_company(capsys, cleaner):
 
 
 @pytest.fixture(scope="module")
-def cleaner():
+def cleaner(tenant):
     companies = []
 
     yield companies
 
     for company_id in companies:
-        job_search_delete_company.delete_company(PROJECT_ID, TENANT_ID, company_id)
+        job_search_delete_company.delete_company(PROJECT_ID, tenant, company_id)

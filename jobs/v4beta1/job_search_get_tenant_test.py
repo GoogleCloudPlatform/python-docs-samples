@@ -18,7 +18,6 @@ import os
 import job_search_get_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
 def test_get_tenant(capsys, tenant):

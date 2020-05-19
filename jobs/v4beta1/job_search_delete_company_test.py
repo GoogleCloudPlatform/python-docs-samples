@@ -23,15 +23,14 @@ import job_search_create_company
 import job_search_delete_company
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 COMPANY_EXT_ID = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
 
 
 @pytest.fixture(scope="module")
-def company():
+def company(tenant):
     # create a temporary company
     company_name = job_search_create_company.create_company(
-        PROJECT_ID, TENANT_ID, "Test Company Name", COMPANY_EXT_ID
+        PROJECT_ID, tenant, "Test Company Name", COMPANY_EXT_ID
     )
 
     # extract company id
@@ -40,14 +39,14 @@ def company():
     yield company_id
 
     try:
-        job_search_delete_company.delete_company(PROJECT_ID, TENANT_ID, company)
+        job_search_delete_company.delete_company(PROJECT_ID, tenant, company)
     except NotFound as e:
         print("Ignoring NotFound upon cleanup, details: {}".format(e))
 
 
-def test_delete_company(capsys, company):
+def test_delete_company(capsys, tenant, company):
     out, _ = capsys.readouterr()
 
-    job_search_delete_company.delete_company(PROJECT_ID, TENANT_ID, company)
+    job_search_delete_company.delete_company(PROJECT_ID, tenant, company)
     out, _ = capsys.readouterr()
     assert "Deleted" in out

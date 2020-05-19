@@ -21,15 +21,13 @@ import job_search_create_job
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
-COMPANY_ID = os.environ["JOB_SEARCH_COMPANY_ID"]
 JOB_EXT_UNIQUE_ID = "TEST_JOB_{}".format(uuid.uuid4())
 
 
-def test_create_job(capsys, cleaner):
+def test_create_job(capsys, tenant, company, cleaner):
     # create a job
     job_name = job_search_create_job.create_job(
-        PROJECT_ID, TENANT_ID, COMPANY_ID, JOB_EXT_UNIQUE_ID, "www.example.com"
+        PROJECT_ID, tenant, company, JOB_EXT_UNIQUE_ID, "www.example.com"
     )
     out, _ = capsys.readouterr()
     assert "Created job:" in out
@@ -40,10 +38,10 @@ def test_create_job(capsys, cleaner):
 
 
 @pytest.fixture(scope="module")
-def cleaner():
+def cleaner(tenant):
     jobs = []
 
     yield jobs
 
     for job_id in jobs:
-        job_search_delete_job.delete_job(PROJECT_ID, TENANT_ID, job_id)
+        job_search_delete_job.delete_job(PROJECT_ID, tenant, job_id)

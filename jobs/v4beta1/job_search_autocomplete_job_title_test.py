@@ -17,10 +17,9 @@ import os
 import job_search_autocomplete_job_title
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
-def test_autocomplete_job_title(capsys):
-    job_search_autocomplete_job_title.complete_query(PROJECT_ID, TENANT_ID, "Software")
+def test_autocomplete_job_title(capsys, tenant):
+    job_search_autocomplete_job_title.complete_query(PROJECT_ID, tenant, "Software")
     out, _ = capsys.readouterr()
     assert "Suggested title:" in out

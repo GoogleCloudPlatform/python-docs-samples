@@ -21,14 +21,12 @@ import job_search_create_job_custom_attributes
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
-COMPANY_ID = os.environ["JOB_SEARCH_COMPANY_ID"]
 JOB_EXT_UNIQUE_ID = "TEST_JOB_{}".format(uuid.uuid4())
 
 
-def test_create_job_with_attributes(capsys, cleaner):
+def test_create_job_with_attributes(capsys, tenant, company, cleaner):
     job_name = job_search_create_job_custom_attributes.create_job(
-        PROJECT_ID, TENANT_ID, COMPANY_ID, JOB_EXT_UNIQUE_ID
+        PROJECT_ID, tenant, company, JOB_EXT_UNIQUE_ID
     )
     out, _ = capsys.readouterr()
     assert "Created job:" in out
@@ -39,10 +37,10 @@ def test_create_job_with_attributes(capsys, cleaner):
 
 
 @pytest.fixture(scope="module")
-def cleaner():
+def cleaner(tenant):
     jobs = []
 
     yield jobs
 
     for job_id in jobs:
-        job_search_delete_job.delete_job(PROJECT_ID, TENANT_ID, job_id)
+        job_search_delete_job.delete_job(PROJECT_ID, tenant, job_id)
