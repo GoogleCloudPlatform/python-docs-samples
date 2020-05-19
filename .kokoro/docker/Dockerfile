@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:16.10
 
 ENV DEBIAN_FRONTEND noninteractive
 
