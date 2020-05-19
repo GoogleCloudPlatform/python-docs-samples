@@ -33,10 +33,13 @@ def list_companies(project_id, tenant_id):
     parent = client.tenant_path(project_id, tenant_id)
 
     # Iterate over all results
-    for response_item in client.list_companies(parent):
-        print("Company Name: {}".format(response_item.name))
-        print("Display Name: {}".format(response_item.display_name))
-        print("External ID: {}".format(response_item.external_id))
+    results = []
+    for company in client.list_companies(parent):
+        results.append(company.name)
+        print("Company Name: {}".format(company.name))
+        print("Display Name: {}".format(company.display_name))
+        print("External ID: {}".format(company.external_id))
+    return results
 
 
 # [END job_search_list_companies]

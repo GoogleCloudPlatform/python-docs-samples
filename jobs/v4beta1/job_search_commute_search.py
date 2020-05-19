@@ -50,14 +50,17 @@ def search_jobs(project_id, tenant_id):
     job_query = {"commute_filter": commute_filter}
 
     # Iterate over all results
+    results = []
     for response_item in client.search_jobs(
         parent, request_metadata, job_query=job_query
     ):
         print("Job summary: {}".format(response_item.job_summary))
         print("Job title snippet: {}".format(response_item.job_title_snippet))
         job = response_item.job
+        results.append(job.name)
         print("Job name: {}".format(job.name))
         print("Job title: {}".format(job.title))
+    return results
 
 
 # [END job_search_commute_search]

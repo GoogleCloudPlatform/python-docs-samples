@@ -49,14 +49,17 @@ def search_jobs(project_id, tenant_id, query):
     histogram_queries = [histogram_queries_element]
 
     # Iterate over all results
+    results = []
     for response_item in client.search_jobs(
         parent, request_metadata, histogram_queries=histogram_queries
     ):
         print("Job summary: {}".format(response_item.job_summary))
         print("Job title snippet: {}".format(response_item.job_title_snippet))
         job = response_item.job
+        results.append(job)
         print("Job name: {}".format(job.name))
         print("Job title: {}".format(job.title))
+    return results
 
 
 # [END job_search_histogram_search]

@@ -16,11 +16,9 @@ import os
 import job_search_get_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
-JOB_ID = os.environ["JOB_SEARCH_JOB_ID"]
 
 
-def test_job_search_get_job(capsys):
-    job_search_get_job.get_job(PROJECT_ID, TENANT_ID, JOB_ID)
+def test_job_search_get_job(capsys, tenant, job):
+    job_search_get_job.get_job(PROJECT_ID, tenant, job)
     out, _ = capsys.readouterr()
     assert "Job name:" in out

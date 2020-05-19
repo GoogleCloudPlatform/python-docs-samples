@@ -17,10 +17,9 @@ import os
 import job_search_commute_search
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
-def test_commute_search(capsys):
-    job_search_commute_search.search_jobs(PROJECT_ID, TENANT_ID)
-    out, _ = capsys.readouterr()
-    assert "Job summary:" in out
+def test_commute_search(tenant):
+    jobs = job_search_commute_search.search_jobs(PROJECT_ID, tenant)
+    for job in jobs:
+        assert "projects/" in job

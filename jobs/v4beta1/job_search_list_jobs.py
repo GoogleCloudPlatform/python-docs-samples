@@ -36,11 +36,21 @@ def list_jobs(project_id, tenant_id, filter_):
     parent = client.tenant_path(project_id, tenant_id)
 
     # Iterate over all results
-    for response_item in client.list_jobs(parent, filter_):
-        print("Job name: {}".format(response_item.name))
-        print("Job requisition ID: {}".format(response_item.requisition_id))
-        print("Job title: {}".format(response_item.title))
-        print("Job description: {}".format(response_item.description))
+    results = []
+    for job in client.list_jobs(parent, filter_):
+        results.append(job.name)
+        print("Job name: {}".format(job.name))
+        print("Job requisition ID: {}".format(job.requisition_id))
+        print("Job title: {}".format(job.title))
+        print("Job description: {}".format(job.description))
+    return results
 
 
 # [END job_search_list_jobs]
+list_jobs(
+    "python-docs-samples-tests",
+    "b603d325-3fb5-4979-8994-eba4ecf726f4",
+    'companyName="projects/{}/companies/{}"'.format(
+        "python-docs-samples-tests", "4c0b9887-8f69-429b-bc67-a072ef55ec3e"
+    ),
+)

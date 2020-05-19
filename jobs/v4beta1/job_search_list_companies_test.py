@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import os
+
 import job_search_list_companies
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
-def test_list_companies(capsys):
-    job_search_list_companies.list_companies(PROJECT_ID, TENANT_ID)
-    out, _ = capsys.readouterr()
-    assert "Company Name:" in out
+def test_list_companies(tenant):
+    results = job_search_list_companies.list_companies(PROJECT_ID, tenant)
+    for company in results:
+        assert "projects/" in company.name

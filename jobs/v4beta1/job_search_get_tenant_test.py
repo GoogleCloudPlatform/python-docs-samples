@@ -21,7 +21,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
-def test_get_tenant(capsys):
-    job_search_get_tenant.get_tenant(PROJECT_ID, TENANT_ID)
+def test_get_tenant(capsys, tenant):
+    job_search_get_tenant.get_tenant(PROJECT_ID, tenant)
     out, _ = capsys.readouterr()
     assert "Name: " in out
