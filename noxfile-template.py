@@ -187,6 +187,7 @@ def py(session):
             session.python
         ))
 
+
 def _is_client_library_repo():
     """Returns true if in a client library repository"""
     root = _get_repo_root()
