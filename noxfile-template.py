@@ -88,6 +88,7 @@ IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
+INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
 #
 # Style Checks
 #
@@ -158,6 +159,9 @@ def _session_tests(session, post_install=None):
 
     if os.path.exists("requirements-test.txt"):
         session.install("-r", "requirements-test.txt")
+
+    if INSTALL_LIBRARY_FROM_SOURCE:
+        session.install("-e", _get_repo_root())
 
     if post_install:
         post_install(session)
