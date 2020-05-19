@@ -16,7 +16,7 @@
 
 import json
 import os
-import time
+import uuid
 
 from google.cloud import pubsub_v1
 from google.cloud import resource_manager
@@ -27,9 +27,9 @@ import quickstart_deletefeed
 json_data = open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).read()
 data = json.loads(json_data)
 PROJECT = data['project_id']
-ASSET_NAME = 'assets-{}'.format(int(time.time()))
-FEED_ID = 'feed-{}'.format(int(time.time()))
-TOPIC = 'topic-{}'.format(int(time.time()))
+ASSET_NAME = 'assets-{}'.format(uuid.uuid4().hex)
+FEED_ID = 'feed-{}'.format(uuid.uuid4().hex)
+TOPIC = 'topic-{}'.format(uuid.uuid4().hex)
 
 
 def test_create_feed(capsys):
