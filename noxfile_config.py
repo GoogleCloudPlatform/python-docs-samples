@@ -24,11 +24,6 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     'ignored_versions': ["2.7"],
 
-    # Declare optional test sessions you want to opt-in. Currently we
-    # have the following optional test sessions:
-    #     'cloud_run' # Test session for Cloud Run application.
-    'opt_in_sessions': [],
-
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string

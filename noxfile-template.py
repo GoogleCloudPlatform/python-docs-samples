@@ -39,11 +39,6 @@ TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
     'ignored_versions': ["2.7"],
 
-    # Declare optional test sessions you want to opt-in. Currently we
-    # have the following optional test sessions:
-    #     'cloud_run' # Test session for Cloud Run application.
-    'opt_in_sessions': [],
-
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
@@ -140,25 +135,11 @@ def lint(session):
     session.install("flake8", "flake8-import-order")
 
     local_names = _determine_local_import_names(".")
-    options = [
+    args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
-        ",".join(local_names)
+        ",".join(local_names),
+        "."
     ]
-
-    # We currently look at pytest.ini for flake8 config.
-    # You can add your own exclude and ignore by using `extend-`
-    #
-    # Example config:
-    # [flake8]
-    # extend-ignore = I100
-    # extend-exclude = myapp1,myapp2
-    if os.path.isfile("pytest.ini"):
-        options += [
-            "--append-config",
-            "pytest.ini",
-        ]
-    options.append(".")
-    args = FLAKE8_COMMON_ARGS + options
     session.run("flake8", *args)
 
 
@@ -202,18 +183,6 @@ def py(session):
             session.python
         ))
 
-
-#
-# cloud_run session
-#
-
-@nox.session
-def cloud_run(session):
-    """Run tests for cloud run."""
-    if 'cloud_run' in TEST_CONFIG['opt_in_sessions']:
-        _session_tests(session)
-    else:
-        session.skip('SKIPPED: cloud_run tests are disabled for this sample.')
 
 #
 # Readmegen

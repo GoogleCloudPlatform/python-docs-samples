@@ -15,15 +15,17 @@
 # limitations under the License.
 
 import os
-import time
+import uuid
 
+import backoff
+from google.api_core.exceptions import InvalidArgument
 from google.cloud import storage
 import pytest
 
 import quickstart_batchgetassetshistory
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = 'assets-{}'.format(int(time.time()))
+BUCKET = 'assets-{}'.format(uuid.uuid4().hex)
 
 
 @pytest.fixture(scope='module')
@@ -47,12 +49,15 @@ def asset_bucket(storage_client):
 def test_batch_get_assets_history(asset_bucket, capsys):
     bucket_asset_name = '//storage.googleapis.com/{}'.format(BUCKET)
     asset_names = [bucket_asset_name, ]
-    # There's some delay between bucket creation and when it's reflected in the
-    # backend.
-    time.sleep(15)
-    quickstart_batchgetassetshistory.batch_get_assets_history(
-        PROJECT, asset_names)
-    out, _ = capsys.readouterr()
 
-    if not out:
+    @backoff.on_exception(
+        backoff.expo, (AssertionError, InvalidArgument), max_time=30
+    )
+    def eventually_consistent_test():
+        quickstart_batchgetassetshistory.batch_get_assets_history(
+            PROJECT, asset_names)
+        out, _ = capsys.readouterr()
+
         assert bucket_asset_name in out
+
+    eventually_consistent_test()
