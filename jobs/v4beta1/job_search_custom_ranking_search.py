@@ -45,6 +45,7 @@ def search_jobs(project_id, tenant_id):
     order_by = "custom_ranking desc"
 
     # Iterate over all results
+    results = []
     for response_item in client.search_jobs(
         parent,
         request_metadata,
@@ -54,8 +55,10 @@ def search_jobs(project_id, tenant_id):
         print("Job summary: {}".format(response_item.job_summary))
         print("Job title snippet: {}".format(response_item.job_title_snippet))
         job = response_item.job
+        results.append(job.name)
         print("Job name: {}".format(job.name))
         print("Job title: {}".format(job.title))
+    return results
 
 
 # [END job_search_custom_ranking_search]

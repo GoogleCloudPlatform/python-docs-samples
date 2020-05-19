@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import os
+
 import job_search_custom_ranking_search
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_ID = os.environ["JOB_SEARCH_TENANT_ID"]
 
 
-def test_search_jobs_custom_ranking(capsys):
-    job_search_custom_ranking_search.search_jobs(PROJECT_ID, TENANT_ID)
-    out, _ = capsys.readouterr()
-    assert "Job summary:" in out
+def test_search_jobs_custom_ranking(tenant):
+    jobs = job_search_custom_ranking_search.search_jobs(PROJECT_ID, tenant)
+    for job in jobs:
+        assert "projects/" in job
