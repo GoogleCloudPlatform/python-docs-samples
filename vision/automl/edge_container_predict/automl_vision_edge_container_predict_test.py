@@ -60,7 +60,9 @@ PORT_NUMBER = 8505
 def edge_container_predict_server_port():
     # set up
     # Pull the CPU docker.
-    subprocess.check_output(['docker', 'pull', CPU_DOCKER_GCS_PATH])
+    subprocess.check_output(
+        ['docker', 'pull', CPU_DOCKER_GCS_PATH],
+        env={'DOCKER_API_VERSION': '1.38'})
 
     # Get the sample saved model.
     if not os.path.exists(MODEL_PATH):
