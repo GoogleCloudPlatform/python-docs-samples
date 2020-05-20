@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG FROM_SUFFIX
-FROM tensorflow/serving:1.14.0${FROM_SUFFIX}
+ARG TF_SERVING_IMAGE_TAG
+FROM tensorflow/serving:${TF_SERVING_IMAGE_TAG}
 
 ENV GCS_READ_CACHE_MAX_STALENESS 300
 ENV GCS_STAT_CACHE_MAX_AGE 300
