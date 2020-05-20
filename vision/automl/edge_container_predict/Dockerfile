@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM tensorflow/serving:1.14.0
+FROM tensorflow/serving:1.15.0
 
 ENV GCS_READ_CACHE_MAX_STALENESS 300
 ENV GCS_STAT_CACHE_MAX_AGE 300
