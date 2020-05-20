@@ -15,8 +15,6 @@
 import os
 import uuid
 
-import pytest
-
 import job_search_delete_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
