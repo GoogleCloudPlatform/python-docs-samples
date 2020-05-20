@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import uuid
 
 import job_search_delete_company
 
