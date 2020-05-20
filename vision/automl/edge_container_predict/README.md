@@ -69,3 +69,10 @@ The outputs are
 ```bash
 sudo docker stop ${CONTAINER_NAME}
 ```
+
+Note: The docker image is uploaded with the following command.
+
+```bash
+gcloud builds --project=cloud-devrel-public-resources \
+  submit --config cloudbuild.yaml
+```
