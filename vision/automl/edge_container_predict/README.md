@@ -18,10 +18,10 @@ $ PORT=8505
 +   Step 1. Pull the Docker image.
 
 ```bash
-# This is a CPU TFServing 1.12.0 with some default settings compiled from
+# This is a CPU TFServing 1.14.0 with some default settings compiled from
 # https://hub.docker.com/r/tensorflow/serving.
-$ DOCKER_GCS_DIR=gcr.io/automl-vision-ondevice
-$ CPU_DOCKER_GCS_PATH=${DOCKER_GCS_DIR}/gcloud-container-1.12.0:latest
+$ DOCKER_GCS_DIR=gcr.io/cloud-devrel-public-resources
+$ CPU_DOCKER_GCS_PATH=${DOCKER_GCS_DIR}/gcloud-container-1.14.0:latest
 $ sudo docker pull ${CPU_DOCKER_GCS_PATH}
 ```
 

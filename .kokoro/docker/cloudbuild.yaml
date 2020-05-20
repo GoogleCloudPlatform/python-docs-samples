@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Format: //devtools/kokoro/config/proto/build.proto
+timeout: 7200s  # 2 hours
 
-# Tell the trampoline which build file to use.
-env_vars: {
-    key: "TRAMPOLINE_BUILD_FILE"
-    value: "github/python-docs-samples/.kokoro/tests/run_tests.sh"
-}
-
-env_vars: {
-    key: "REPORT_TO_BUILD_COP_BOT"
-    value: "True"
-}
+steps:
+    - name: 'gcr.io/cloud-builders/docker'
+      args: ['build', '-t', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', '.']
+      dir: '.kokoro/docker'
+    - name: gcr.io/cloud-builders/docker
+      args: ['tag', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', 'gcr.io/$PROJECT_ID/python-samples-testing-docker:$SHORT_SHA']
+images:
+     - 'gcr.io/$PROJECT_ID/python-samples-testing-docker'
