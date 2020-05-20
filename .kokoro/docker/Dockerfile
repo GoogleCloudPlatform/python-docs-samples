@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Sometimes renovate tries to update it to 16.10. I don't think it's
+# worthwhile because 16.04 is an LTS release. Maybe we should think
+# about upgrading to 18.04 (the next LTS) instead.
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
