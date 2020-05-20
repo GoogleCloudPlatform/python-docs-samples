@@ -18,7 +18,6 @@ import uuid
 import job_search_delete_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_EXT_UNIQUE_ID = "TEST_TENANT_{}".format(uuid.uuid4())
 
 
 def test_delete_tenant(capsys, tenant):

@@ -18,7 +18,6 @@ import uuid
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-POST_UNIQUE_ID = "TEST_POST_{}".format(uuid.uuid4().hex)[:20]
 
 
 def test_delete_job(capsys, tenant, job):
