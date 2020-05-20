@@ -15,11 +15,8 @@
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
-
 import pytest
 
-import job_search_create_job
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
