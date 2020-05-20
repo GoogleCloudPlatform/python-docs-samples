@@ -60,19 +60,22 @@ PORT_NUMBER = 8505
 def edge_container_predict_server_port():
     # set up
     # Pull the CPU docker.
-    subprocess.check_output(['docker', 'pull', CPU_DOCKER_GCS_PATH])
+    subprocess.check_output(
+        ['docker', 'pull', CPU_DOCKER_GCS_PATH],
+        env={'DOCKER_API_VERSION': '1.38'})
 
     # Get the sample saved model.
     if not os.path.exists(MODEL_PATH):
         os.mkdir(MODEL_PATH)
     subprocess.check_output(
-            ['gsutil', '-m', 'cp', SAMPLE_SAVED_MODEL, MODEL_PATH])
+        ['gsutil', '-m', 'cp', SAMPLE_SAVED_MODEL, MODEL_PATH])
 
     # Start the CPU docker.
     subprocess.Popen(['docker', 'run', '--rm', '--name', NAME, '-v',
                       MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
                       str(PORT_NUMBER) + ':8501', '-t',
-                      CPU_DOCKER_GCS_PATH])
+                      CPU_DOCKER_GCS_PATH],
+                     env={'DOCKER_API_VERSION': '1.38'})
     # Sleep a few seconds to wait for the container running.
     time.sleep(10)
 
@@ -80,9 +83,12 @@ def edge_container_predict_server_port():
 
     # tear down
     # Stop the container.
-    subprocess.check_output(['docker', 'stop', NAME])
+    subprocess.check_output(
+        ['docker', 'stop', NAME], env={'DOCKER_API_VERSION': '1.38'})
     # Remove the docker image.
-    subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
+    subprocess.check_output(
+        ['docker', 'rmi', CPU_DOCKER_GCS_PATH],
+        env={'DOCKER_API_VERSION': '1.38'})
 
 
 def test_edge_container_predict(capsys, edge_container_predict_server_port):
