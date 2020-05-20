@@ -46,7 +46,7 @@ MODEL_PATH = os.path.join(ROOT_DIR, 'model_path')
 IMAGE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'test.jpg')
 # The cpu docker gcs path is from 'Edge container tutorial'.
 CPU_DOCKER_GCS_PATH = '{}'.format(
-  'gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest')
+  'gcr.io/cloud-devrel-public-resources/gcloud-container-1.14.0:latest')
 # The path of a sample saved model.
 SAMPLE_SAVED_MODEL = '{}'.format(
     'gs://cloud-samples-data/vision/edge_container_predict/saved_model.pb')
