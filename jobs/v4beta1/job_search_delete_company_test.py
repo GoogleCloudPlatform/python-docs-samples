@@ -26,24 +26,6 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 COMPANY_EXT_ID = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
 
 
-@pytest.fixture(scope="module")
-def company(tenant):
-    # create a temporary company
-    company_name = job_search_create_company.create_company(
-        PROJECT_ID, tenant, "Test Company Name", COMPANY_EXT_ID
-    )
-
-    # extract company id
-    company_id = company_name.split("/")[-1]
-
-    yield company_id
-
-    try:
-        job_search_delete_company.delete_company(PROJECT_ID, tenant, company)
-    except NotFound as e:
-        print("Ignoring NotFound upon cleanup, details: {}".format(e))
-
-
 def test_delete_company(capsys, tenant, company):
     out, _ = capsys.readouterr()
 

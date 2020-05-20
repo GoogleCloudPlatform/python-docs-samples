@@ -28,16 +28,13 @@ import job_search_delete_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-COMPANY_EXT_ID = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
-POST_UNIQUE_ID = "TEST_POST_{}".format(uuid.uuid4())[:20]
-TENANT_EXT_UNIQUE_ID = "TEST_TENANT_{}".format(uuid.uuid4())
-
 
 @pytest.fixture(scope="module")
 def tenant():
+    tenant_ext_unique_id = "TEST_TENANT_{}".format(uuid.uuid4())
     # create a temporary tenant
     tenant_name = job_search_create_tenant.create_tenant(
-        PROJECT_ID, TENANT_EXT_UNIQUE_ID
+        PROJECT_ID, tenant_ext_unique_id
     )
 
     # extract company id
@@ -53,9 +50,11 @@ def tenant():
 
 @pytest.fixture(scope="module")
 def company(tenant):
+    company_ext_id = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
+
     # create a temporary company
     company_name = job_search_create_company.create_company(
-        PROJECT_ID, tenant, "Test Company Name", COMPANY_EXT_ID
+        PROJECT_ID, tenant, "Test Company Name", company_ext_id
     )
 
     # extract company id
@@ -71,9 +70,10 @@ def company(tenant):
 
 @pytest.fixture(scope="module")
 def job(tenant, company):
+    post_unique_id = "TEST_POST_{}".format(uuid.uuid4().hex)[:20]
     # create a temporary job
     job_name = job_search_create_job.create_job(
-        PROJECT_ID, tenant, company, POST_UNIQUE_ID, "www.jobUrl.com"
+        PROJECT_ID, tenant, company, post_unique_id, "www.jobUrl.com"
     )
 
     # extract company id

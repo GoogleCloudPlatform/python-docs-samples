@@ -23,25 +23,7 @@ import job_search_create_job
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-POST_UNIQUE_ID = "TEST_POST_{}".format(uuid.uuid4())[:20]
-
-
-@pytest.fixture(scope="module")
-def job(tenant, company):
-    # create a temporary job
-    job_name = job_search_create_job.create_job(
-        PROJECT_ID, tenant, company, POST_UNIQUE_ID, "www.jobUrl.com"
-    )
-
-    # extract company id
-    job_id = job_name.split("/")[-1]
-
-    yield job_id
-
-    try:
-        job_search_delete_job.delete_job(PROJECT_ID, tenant, job_id)
-    except NotFound as e:
-        print("Ignoring NotFound upon cleanup, details: {}".format(e))
+POST_UNIQUE_ID = "TEST_POST_{}".format(uuid.uuid4().hex)[:20]
 
 
 def test_delete_job(capsys, tenant, job):
