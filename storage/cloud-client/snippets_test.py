@@ -24,11 +24,16 @@ import requests
 
 import storage_add_bucket_label
 import storage_bucket_delete_default_kms_key
+import storage_change_default_storage_class
+import storage_change_file_storage_class
 import storage_compose_file
 import storage_copy_file
+import storage_copy_file_archived_generation
+import storage_cors_configuration
 import storage_create_bucket_class_location
 import storage_define_bucket_website_configuration
 import storage_delete_file
+import storage_delete_file_archived_generation
 import storage_disable_bucket_lifecycle_management
 import storage_disable_versioning
 import storage_download_file
@@ -44,12 +49,14 @@ import storage_get_bucket_metadata
 import storage_get_metadata
 import storage_get_service_account
 import storage_list_buckets
+import storage_list_file_archived_generations
 import storage_list_files
 import storage_list_files_with_prefix
 import storage_make_public
 import storage_move_file
 import storage_object_get_kms_key
 import storage_remove_bucket_label
+import storage_remove_cors_configuration
 import storage_set_bucket_default_kms_key
 import storage_set_metadata
 import storage_upload_file
@@ -382,3 +389,67 @@ def test_storage_compose_file(test_bucket):
         composed = destination.download_as_string()
 
         assert composed.decode("utf-8") == source_files[0] + source_files[1]
+
+
+def test_cors_configuration(test_bucket, capsys):
+    bucket = storage_cors_configuration.cors_configuration(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Set CORS policies for bucket" in out
+    assert len(bucket.cors) > 0
+
+    bucket = storage_remove_cors_configuration.remove_cors_configuration(test_bucket)
+    out, _ = capsys.readouterr()
+    assert "Remove CORS policies for bucket" in out
+    assert len(bucket.cors) == 0
+
+
+def test_delete_blobs_archived_generation(test_blob, capsys):
+    storage_delete_file_archived_generation.delete_file_archived_generation(
+        test_blob.bucket.name, test_blob.name, test_blob.generation
+    )
+    out, _ = capsys.readouterr()
+    assert "blob " + test_blob.name + " was deleted" in out
+    blob = test_blob.bucket.get_blob(test_blob.name, generation=test_blob.generation)
+    assert blob is None
+
+
+def test_change_default_storage_class(test_bucket, capsys):
+    bucket = storage_change_default_storage_class.change_default_storage_class(
+        test_bucket
+    )
+    out, _ = capsys.readouterr()
+    assert "Default storage class for bucket" in out
+    assert bucket.storage_class == 'COLDLINE'
+
+
+def test_change_file_storage_class(test_blob, capsys):
+    blob = storage_change_file_storage_class.change_file_storage_class(
+        test_blob.bucket.name, test_blob.name
+    )
+    out, _ = capsys.readouterr()
+    assert "Blob {} in bucket {}". format(blob.name, blob.bucket.name) in out
+    assert blob.storage_class == 'NEARLINE'
+
+
+def test_copy_file_archived_generation(test_blob):
+    bucket = storage.Client().bucket(test_blob.bucket.name)
+
+    try:
+        bucket.delete_blob("test_copy_blob")
+    except google.cloud.exceptions.NotFound:
+        pass
+
+    storage_copy_file_archived_generation.copy_file_archived_generation(
+        bucket.name, test_blob.name, bucket.name, "test_copy_blob", test_blob.generation
+    )
+
+    assert bucket.get_blob("test_copy_blob") is not None
+    assert bucket.get_blob(test_blob.name) is not None
+
+
+def test_list_blobs_archived_generation(test_blob, capsys):
+    storage_list_file_archived_generations.list_file_archived_generations(
+        test_blob.bucket.name
+    )
+    out, _ = capsys.readouterr()
+    assert str(test_blob.generation) in out
