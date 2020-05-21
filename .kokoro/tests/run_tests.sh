@@ -43,7 +43,8 @@ gcloud components update
 
 # Use secrets acessor service account to get secrets
 gcloud auth activate-service-account \
-      --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json"
+      --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
+      --project="cloud-devrel-kokoro-resources"
 ./scripts/decrypt-secrets.sh
 
 source ./testing/test-env.sh
