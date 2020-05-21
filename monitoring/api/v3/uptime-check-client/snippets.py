@@ -31,6 +31,10 @@ def create_uptime_check_config(project_name, host_name=None,
     config.monitored_resource.labels.update(
         {'host': host_name or 'example.com'})
     config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.GET
+    # Uncomment if you want a POST check
+    # config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.POST
+    # config.http_check.content_type = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED
+    # config.http_check.body = 'foo=bar'
     config.http_check.path = '/'
     config.http_check.port = 80
     config.timeout.seconds = 10
