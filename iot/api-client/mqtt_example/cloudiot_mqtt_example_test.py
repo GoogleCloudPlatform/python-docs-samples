@@ -184,6 +184,9 @@ def test_gateway_send_data_for_device(
 
     out, _ = capsys.readouterr()
     assert 'Publishing message 5/5' in out
+    assert 'Received message' in out
+    # We know we sometimes get 'Out of memory' in the output.
+    # We'd like to know when this occurs with verbose log output.
     assert 'Out of memory' not in out  # Indicates could not connect
 
 
