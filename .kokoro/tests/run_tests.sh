@@ -37,10 +37,6 @@ cd github/python-docs-samples
 # install nox for testing
 pip install -q nox
 
-# update gcloud version
-# TODO: move this to the docker image
-gcloud components update
-
 # Use secrets acessor service account to get secrets
 gcloud auth activate-service-account \
       --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
