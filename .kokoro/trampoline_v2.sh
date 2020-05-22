@@ -170,7 +170,7 @@ fi
 
 
 update_cache="false"
-if [[ -n "${TRAMPOLINE_IMAGE_SOURCE:-}" ]]; then
+if [[ "${TRAMPOLINE_IMAGE_SOURCE:-none}" != "none" ]]; then
     # Build the Docker image from the source.
     context_dir=$(dirname "${TRAMPOLINE_IMAGE_SOURCE}")
     docker_build_flags=(

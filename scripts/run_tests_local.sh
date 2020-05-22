@@ -50,6 +50,10 @@ directory="$(realpath "$1")"
 relative_dir=${directory#"${PROJECT_ROOT}/"}
 export RUN_TESTS_DIRS="${relative_dir}"
 
+if [[ -z "${TRAMPOLINE_IMAGE_SOURCE:-}" ]]; then
+    export TRAMPOLINE_IMAGE_SOURCE="none"
+fi
+
 if [[ $# -ge 2 ]]; then
     sessions=("${@:2}")
 fi
