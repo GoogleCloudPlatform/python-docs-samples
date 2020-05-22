@@ -36,10 +36,14 @@
 #
 # TRAMPOLINE_IMAGE: The docker image to use.
 # TRAMPOLINE_IMAGE_SOURCE: The location of the Dockerfile.
-# RUN_TESTS_SESSION: The nox session to run.
+# TRAMPOLINE_IMAGE_UPLOAD:
+#     (true|false): Whether to upload the Docker image after the
+#                   successful builds.
 # TRAMPOLINE_BUILD_FILE: The script to run in the docker container.
-# RUN_TESTS_DIR: A colon separated directory list relative to the
-#                project root.
+#
+# Potentially there are some repo specific envvars in .trampolinerc in
+# the project root.
+
 
 set -euo pipefail
 
@@ -55,10 +59,12 @@ else
   readonly IO_COLOR_RESET=""
 fi
 
-# Logs a message using the given color. The first argument must be one of the
-# IO_COLOR_* variables defined above, such as "${IO_COLOR_YELLOW}". The
-# remaining arguments will be logged in the given color. The log message will
-# also have an RFC-3339 timestamp prepended (in UTC).
+# Logs a message using the given color. The first argument must be one
+# of the IO_COLOR_* variables defined above, such as
+# "${IO_COLOR_YELLOW}". The remaining arguments will be logged in the
+# given color. The log message will also have an RFC-3339 timestamp
+# prepended (in UTC). You can disable the color output by setting
+# TERM=vt100.
 function log_impl() {
     local color="$1"
     shift
@@ -278,11 +284,10 @@ else
     log_red "Build finished with ${test_retval}"
 fi
 
-if [[ "${RUNNING_IN_CI}" == "true" ]] && \
-       [[ "${update_cache}" == "true" ]] && \
-       [[ -z "${KOKORO_GITHUB_PULL_REQUEST_NUMBER:-}" ]] && \
-       [[ $test_retval == 0 ]]; then
-    # Only upload it when the test passes.
+# Only upload it when the test passes.
+if [[ "${update_cache}" == "true" ]] && \
+       [[ $test_retval == 0 ]] && \
+       [[ "${TRAMPOLINE_IMAGE_UPLOAD:-false}" == "true" ]]; then
     log_yellow "Uploading the Docker image."
     if docker push "${TRAMPOLINE_IMAGE}"; then
 	log_green "Finished uploading the Docker image."
