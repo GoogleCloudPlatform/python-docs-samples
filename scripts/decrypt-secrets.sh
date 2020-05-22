@@ -20,7 +20,6 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
-openssl aes-256-cbc -k "$1" -md sha256 \
-	-in testing/secrets.tar.enc -out secrets.tar -d
-tar xvf secrets.tar
-rm secrets.tar
+gcloud secrets versions access latest --secret="python-docs-samples-test-env" > testing/test-env.sh
+gcloud secrets versions access latest --secret="python-docs-samples-service-account" > testing/service-account.json
+gcloud secrets versions access latest --secret="python-docs-samples-client-secrets" > testing/client-secrets.json
