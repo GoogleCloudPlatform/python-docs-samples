@@ -136,13 +136,16 @@ for file in **/requirements.txt; do
 
     # If no local noxfile exists, copy the one from root
     if [[ ! -f "noxfile.py" ]]; then
-      PARENT_DIR=$(cd ../ && pwd)
-      while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
-      do
-        PARENT_DIR=$(dirname "$PARENT_DIR")
-      done
-      cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
-      echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
+	PARENT_DIR=$(cd ../ && pwd)
+	while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
+	do
+            PARENT_DIR=$(dirname "$PARENT_DIR")
+	done
+	cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
+	echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
+	cleanup_noxfile=1
+    else
+	cleanup_noxfile=0
     fi
 
     # Use nox to execute the tests for the project.
@@ -165,8 +168,10 @@ for file in **/requirements.txt; do
       echo -e "\n Testing completed.\n"
     fi
 
-    # Remove noxfile.py if it's not tracked by git.
-    git ls-files --error-unmatch noxfile.py > /dev/null 2>&1 | rm noxfile.py
+    # Remove noxfile.py if we copied.
+    if [[ $cleanup_noxfile -eq 1 ]]; then
+	rm noxfile.py
+    fi
 
 done
 cd "$ROOT"
