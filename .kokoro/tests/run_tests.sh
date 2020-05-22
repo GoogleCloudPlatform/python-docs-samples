@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,10 +31,17 @@ if [[ $* == *--only-diff-head* ]]; then
     DIFF_FROM="HEAD~.."
 fi
 
-cd github/python-docs-samples
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+    PROJECT_ROOT="github/python-docs-samples"
+fi
+
+cd "${PROJECT_ROOT}"
+
+# add user's pip binary path to PATH
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # install nox for testing
-pip install -q nox
+pip install --user -q nox
 
 # Use secrets acessor service account to get secrets
 if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
@@ -63,9 +69,12 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
 # Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
-./cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> cloud_sql_proxy.log &
+wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
+     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
+${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+       ${HOME}/cloud_sql_proxy.log &
+${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+       ${HOME}/cloud_sql_proxy.log &
 echo -e "\nCloud SQL proxy started."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
