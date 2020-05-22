@@ -37,9 +37,11 @@ cd github/python-docs-samples
 # install nox for testing
 pip install -q nox
 
-# Unencrypt and extract secrets
-SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
-./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
+# Use secrets acessor service account to get secrets
+gcloud auth activate-service-account \
+      --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
+      --project="cloud-devrel-kokoro-resources"
+./scripts/decrypt-secrets.sh
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
