@@ -38,6 +38,8 @@
 # TRAMPOLINE_IMAGE_SOURCE: The location of the Dockerfile.
 # RUN_TESTS_SESSION: The nox session to run.
 # TRAMPOLINE_BUILD_FILE: The script to run in the docker container.
+# RUN_TESTS_DIR: A colon separated directory list relative to the
+#                project root.
 
 set -euo pipefail
 
@@ -245,12 +247,13 @@ fi
 # Passing down env vars
 for e in "${pass_down_envvars[@]}"
 do
-    docker_flags+=("--env" "${e}=${!e}")
+    if [[ -n "${!e:-}" ]]; then
+	docker_flags+=("--env" "${e}=${!e}")
+    fi
 done
 
 # If arguments are given, all arguments will become the commands run
 # in the container, otherwise run TRAMPOLINE_BUILD_FILE.
-
 if [[ $# -ge 1 ]]; then
     log_yellow "Running the given commands '" "${@:1}" "' in the container."
     readonly commands=("${@:1}")

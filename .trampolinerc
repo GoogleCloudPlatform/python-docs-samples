@@ -18,6 +18,10 @@ required_envvars+=(
 )
 
 pass_down_envvars+=(
+    "BUILD_SPECIFIC_GCLOUD_PROJECT"
+    "REPORT_TO_BUILD_COP_BOT"
+    # The nox session to run.
+    "RUN_TESTS_DIRS"
     "RUN_TESTS_SESSION"
 )
 

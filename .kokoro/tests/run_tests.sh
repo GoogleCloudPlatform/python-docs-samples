@@ -101,8 +101,27 @@ for file in **/requirements.txt; do
     file=$(dirname "$file")
     cd "$file"
 
+    # First we look up the environment variable `RUN_TESTS_DIRS`. If
+    # the value is set, we'll iterate through the colon separated
+    # directory list.
+    if [[ -n "${RUN_TESTS_DIRS:-}" ]]; then
+	IFS=":"
+	read -ra run_tests_dirs <<< "${RUN_TESTS_DIRS}"
+	match=0
+	for d in "${run_tests_dirs[@]}"; do
+	    # If the current dir starts with one of the
+	    # RUN_TESTS_DIRS, we should run the tests.
+	    if [[ "${file}" = "${d}"* ]]; then
+		match=1
+		break
+	    fi
+	done
+	IFS=" "
+	if [[ $match -eq 0 ]]; then
+	    continue
+	fi
     # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
+    elif [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then
@@ -145,6 +164,9 @@ for file in **/requirements.txt; do
     else
       echo -e "\n Testing completed.\n"
     fi
+
+    # Remove noxfile.py if it's not tracked by git.
+    git ls-files --error-unmatch noxfile.py > /dev/null 2>&1 | rm noxfile.py
 
 done
 cd "$ROOT"
