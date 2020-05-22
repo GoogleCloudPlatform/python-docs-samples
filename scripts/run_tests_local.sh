@@ -18,10 +18,14 @@
 # This script is a helper script for running tests with
 # .kokoro/trampoline_v2.sh.
 # run_tests_local.sh directory (sessions..)
+#
+# Example for running lint, py-3.6 and py-3.7 for cdn directory:
+# $ cd cdn
+# $ ../scripts/run_tests_local.sh .
 
 set -euo pipefail
 
-sessions=(
+default_sessions=(
     "lint"
     "py-3.6"
     "py-3.7"
@@ -56,6 +60,8 @@ fi
 
 if [[ $# -ge 2 ]]; then
     sessions=("${@:2}")
+else
+    sessions=("${default_sessions[@]}")
 fi
 
 echo "Running tests for directory: ${directory}"
