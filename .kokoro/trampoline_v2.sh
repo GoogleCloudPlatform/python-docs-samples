@@ -88,6 +88,15 @@ function log_red() {
   log_impl "${IO_COLOR_RED}" "$@"
 }
 
+readonly tmpdir=$(mktemp -d -t ci-XXXXXXXX)
+readonly tmphome="${tmpdir}/h"
+mkdir -p "${tmphome}"
+
+function cleanup() {
+    rm -rf "${tmpdir}"
+}
+trap cleanup EXIT
+
 function repo_root() {
     local dir="$1"
     while [[ ! -d "${dir}/.git" ]]; do
@@ -95,10 +104,6 @@ function repo_root() {
     done
     echo "${dir}"
 }
-
-readonly tmpdir=$(mktemp -d -t ci-XXXXXXXX)
-readonly tmphome="${tmpdir}/h"
-mkdir -p "${tmphome}"
 
 PROGRAM_PATH="$(realpath "$0")"
 PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
