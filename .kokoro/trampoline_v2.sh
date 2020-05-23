@@ -286,7 +286,9 @@ if [[ $# -ge 1 ]]; then
     readonly commands=("${@:1}")
 else
     log_yellow "Running the tests in a Docker container."
-    readonly commands=("/v/${TRAMPOLINE_BUILD_FILE}")
+    # Temporary workaround to remove unnecessary prefix.
+    real_build_file=${TRAMPOLINE_BUILD_FILE#"github/python-docs-samples/"}
+    readonly commands=("/v/${real_build_file}")
 fi
 
 echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
