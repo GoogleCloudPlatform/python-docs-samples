@@ -249,10 +249,8 @@ docker_flags=(
     # Pass down the USER.
     "--env" "USER=${user_name}"
 
-    # Mount the project directory inside the Docker container.  To
-    # allow docker in docker correctly mount the volume, we use the
-    # same path for the volume.
-    "--volume" "${PWD}:/v"
+    # Mount the project directory inside the Docker container.
+    "--volume" "${PROJECT_ROOT}:/v"
     "--workdir" "/v"
     "--env" "PROJECT_ROOT=/v"
 
