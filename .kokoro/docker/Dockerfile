@@ -161,4 +161,17 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 # Enable redis-server on boot.
 RUN sudo systemctl enable redis-server.service
 
+# Create a user and allow sudo
+ARG UID=0
+ARG GID=0
+ARG USERNAME=kbuilder
+ARG DOCKER_GID=999
+
+# Allow access docker socker in the host.
+RUN groupadd -g ${DOCKER_GID} "host-docker"
+RUN groupadd -g ${GID} "${USERNAME}"
+RUN useradd -d /h -u ${UID} -g ${GID} ${USERNAME}
+RUN adduser "${USERNAME}" "host-docker"
+RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 CMD ["python3.6"]

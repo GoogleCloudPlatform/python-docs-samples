@@ -180,6 +180,17 @@ else
 fi
 
 
+# The default user for a Docker container has uid 0 (root). To avoid
+# creating root-owned files in the build directory we tell docker to
+# use the current user ID.
+user_uid="$(id -u)"
+user_gid="$(id -g)"
+user_name="$(id -un)"
+
+# To allow docker in docker, we add the user to the docker group in
+# the host os.
+docker_gid=$(cut -d: -f3 < <(getent group docker))
+
 update_cache="false"
 if [[ "${TRAMPOLINE_IMAGE_SOURCE:-none}" != "none" ]]; then
     # Build the Docker image from the source.
@@ -187,6 +198,10 @@ if [[ "${TRAMPOLINE_IMAGE_SOURCE:-none}" != "none" ]]; then
     docker_build_flags=(
 	"-f" "${TRAMPOLINE_IMAGE_SOURCE}"
 	"-t" "${TRAMPOLINE_IMAGE}"
+	"--build-arg" "UID=${user_uid}"
+	"--build-arg" "GID=${user_gid}"
+	"--build-arg" "USERNAME=${user_name}"
+	"--build-arg" "DOCKER_GID=${docker_gid}"
     )
     if [[ "${has_cache}" == "true" ]]; then
 	docker_build_flags+=("--cache-from" "${TRAMPOLINE_IMAGE}")
@@ -207,13 +222,6 @@ else
     fi
 fi
 
-# The default user for a Docker container has uid 0 (root). To avoid
-# creating root-owned files in the build directory we tell docker to
-# use the current user ID.
-docker_uid="$(id -u)"
-docker_gid="$(id -g)"
-docker_user="$(id -un)"
-
 # We use an array for the flags so they are easier to document.
 docker_flags=(
     # Remove the container after it exists.
@@ -233,21 +241,27 @@ docker_flags=(
     # Tells scripts whether they are running as part of CI or not.
     "--env" "RUNNING_IN_CI=${RUNNING_IN_CI:-no}"
 
-    # Run the docker script and this user id. Because the docker image gets to
+    # Run the docker script with the user id. Because the docker image gets to
     # write in ${PWD} you typically want this to be your user id.
-    "--user" "${docker_uid}:${docker_gid}"
+    # Also to allow docker in docker, we use docker gid on the host.
+    "--user" "${user_uid}:${docker_gid}"
 
     # Pass down the USER.
-    "--env" "USER=${docker_user}"
+    "--env" "USER=${user_name}"
 
-    # Mount the project directory inside the Docker container.
-    "--volume" "${PWD}:/v"
-    "--workdir" "/v"
-    "--env" "PROJECT_ROOT=/v"
+    # Mount the project directory inside the Docker container.  To
+    # allow docker in docker correctly mount the volume, we use the
+    # same path for the volume.
+    "--volume" "${PWD}:${PWD}"
+    "--workdir" "${PWD}"
+    "--env" "PROJECT_ROOT=${PWD}"
 
     # Mount the temporary home directory.
     "--volume" "${tmphome}:/h"
     "--env" "HOME=/h"
+
+    # Allow docker in docker.
+    "--volume" "/var/run/docker.sock:/var/run/docker.sock"
 )
 
 # Add an option for nicer output if the build gets a tty.
@@ -270,7 +284,7 @@ if [[ $# -ge 1 ]]; then
     readonly commands=("${@:1}")
 else
     log_yellow "Running the tests in a Docker container."
-    readonly commands=("/v/${TRAMPOLINE_BUILD_FILE}")
+    readonly commands=("${PWD}/${TRAMPOLINE_BUILD_FILE}")
 fi
 
 echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
