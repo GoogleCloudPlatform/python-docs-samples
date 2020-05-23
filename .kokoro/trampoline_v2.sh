@@ -252,9 +252,9 @@ docker_flags=(
     # Mount the project directory inside the Docker container.  To
     # allow docker in docker correctly mount the volume, we use the
     # same path for the volume.
-    "--volume" "${PWD}:${PWD}"
-    "--workdir" "${PWD}"
-    "--env" "PROJECT_ROOT=${PWD}"
+    "--volume" "${PWD}:/v"
+    "--workdir" "/v"
+    "--env" "PROJECT_ROOT=/v"
 
     # Mount the temporary home directory.
     "--volume" "${tmphome}:/h"
@@ -262,6 +262,10 @@ docker_flags=(
 
     # Allow docker in docker.
     "--volume" "/var/run/docker.sock:/var/run/docker.sock"
+
+    # Mount the /tmp so that docker in docker can mount the files
+    # there correctly.
+    "--volume" "/tmp:/tmp"
 )
 
 # Add an option for nicer output if the build gets a tty.
@@ -284,7 +288,7 @@ if [[ $# -ge 1 ]]; then
     readonly commands=("${@:1}")
 else
     log_yellow "Running the tests in a Docker container."
-    readonly commands=("${PWD}/${TRAMPOLINE_BUILD_FILE}")
+    readonly commands=("/v/${TRAMPOLINE_BUILD_FILE}")
 fi
 
 echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
