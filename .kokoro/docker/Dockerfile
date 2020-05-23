@@ -167,11 +167,19 @@ ARG GID=0
 ARG USERNAME=kbuilder
 ARG DOCKER_GID=999
 
-# Allow access docker socker in the host.
-RUN groupadd -g ${DOCKER_GID} "host-docker"
-RUN groupadd -g ${GID} "${USERNAME}"
-RUN useradd -d /h -u ${UID} -g ${GID} ${USERNAME}
-RUN adduser "${USERNAME}" "host-docker"
+# Add a new user to the container image.
+# To allow access to the docker socket on the host, we use the docker
+# group on the host.
+
+# First make sure the group exists. Ignore a failure in case
+# there is already a group with that id.
+RUN groupadd -g ${DOCKER_GID} "host-docker" | true
+
+# Add a new user with the caller's uid and the docker goup id on the
+# host.
+RUN useradd -d /h -u ${UID} -g ${DOCKER_GID} ${USERNAME}
+
+# Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 CMD ["python3.6"]
