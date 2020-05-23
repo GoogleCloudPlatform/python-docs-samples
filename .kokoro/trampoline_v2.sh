@@ -234,10 +234,6 @@ docker_flags=(
     # isolation, just for packaging our dev tools.
     "--privileged"
 
-    # Pass down the KOKORO_GFILE_DIR
-    "--volume" "${KOKORO_GFILE_DIR:-/dev/shm}:/gfile"
-    "--env" "KOKORO_GFILE_DIR=/gfile"
-
     # Tells scripts whether they are running as part of CI or not.
     "--env" "RUNNING_IN_CI=${RUNNING_IN_CI:-no}"
 
@@ -264,7 +260,16 @@ docker_flags=(
     # Mount the /tmp so that docker in docker can mount the files
     # there correctly.
     "--volume" "/tmp:/tmp"
+
+    # Pass down the KOKORO_GFILE_DIR and KOKORO_KEYSTORE_DIR
+    # TODO(tmatsuo): This part is not portable.
+    "--env" "TRAMPOLINE_SECRET_DIR=/secrets"
+    "--volume" "${KOKORO_GFILE_DIR:-/dev/shm}:/secrets/gfile"
+    "--env" "KOKORO_GFILE_DIR=/secrets/gfile"
+    "--volume" "${KOKORO_KEYSTORE_DIR:-/dev/shm}:/secrets/keystore"
+    "--env" "KOKORO_KEYSTORE_DIR=/secrets/keystore"
 )
+
 
 # Add an option for nicer output if the build gets a tty.
 if [[ -t 0 ]]; then
