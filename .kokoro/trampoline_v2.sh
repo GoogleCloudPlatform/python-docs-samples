@@ -148,7 +148,14 @@ required_envvars=(
 )
 
 pass_down_envvars=(
-    # Default empty list.
+    # KOKORO dynamic variables.
+    "KOKORO_BUILD_NUMBER"
+    "KOKORO_BUILD_ID"
+    "KOKORO_JOB_NAME"
+    "KOKORO_GIT_COMMIT"
+    "KOKORO_GITHUB_COMMIT"
+    "KOKORO_GITHUB_PULL_REQUEST_NUMBER"
+    "KOKORO_GITHUB_PULL_REQUEST_COMMIT"
 )
 
 if [[ -f "${PROJECT_ROOT}/.trampolinerc" ]]; then
