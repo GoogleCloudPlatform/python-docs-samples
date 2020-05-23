@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import tempfile
 
 from google.cloud import storage
 
@@ -22,7 +23,6 @@ import gcs_example_mqtt_device as device
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 cloud_region = 'us-central1'
-destination_file_name = 'destination-file.bin'
 project_id = os.environ['GCLOUD_PROJECT']
 
 
@@ -41,8 +41,10 @@ def test_blob():
 
 
 def test_download_blob(test_blob, capsys):
-    device.download_blob(gcs_bucket, test_blob.name, destination_file_name)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        destination_file_name = os.path.join(tmp_dir, 'destination-file.bin')
+        device.download_blob(gcs_bucket, test_blob.name, destination_file_name)
 
-    out, _ = capsys.readouterr()
-    assert 'Config {} downloaded to {}.'.format(
-        test_blob.name, destination_file_name) in out
+        out, _ = capsys.readouterr()
+        assert 'Config {} downloaded to {}.'.format(
+            test_blob.name, destination_file_name) in out
