@@ -116,11 +116,19 @@ PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
 PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
 
 RUNNING_IN_CI="false"
+TRAMPOLINE_V2="true"
 
-if [[ -n "${KOKORO_GFILE_DIR:-}" ]]; then
+# If it's running on Kokoro, RUNNING_IN_CI will be true and
+# TRAMPOLINE_CI is set to 'kokoro'. Both envvars will be passing down
+# to the container for telling which CI system we're in.
+if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
     # descriptive env var for indicating it's on CI.
     RUNNING_IN_CI="true"
+    TRAMPOLINE_CI="kokoro"
+fi
 
+# Configure the service account for pulling the docker image.
+if [[ -n "${KOKORO_GFILE_DIR:-}" ]]; then
     # Now we're re-using the trampoline service account.
     # Potentially we can pass down this key into Docker for
     # bootstrapping secret.
@@ -148,6 +156,13 @@ required_envvars=(
 )
 
 pass_down_envvars=(
+    # TRAMPOLINE_V2 variables.
+    # Tells scripts whether they are running as part of CI or not.
+    "RUNNING_IN_CI"
+    # Indicates which CI system we're in.
+    "TRAMPOLINE_CI"
+    # Indicates we're running trampoline_v2.
+    "TRAMPOLINE_V2"
     # KOKORO dynamic variables.
     "KOKORO_BUILD_NUMBER"
     "KOKORO_BUILD_ID"
@@ -241,9 +256,6 @@ docker_flags=(
     # isolation, just for packaging our dev tools.
     "--privileged"
 
-    # Tells scripts whether they are running as part of CI or not.
-    "--env" "RUNNING_IN_CI=${RUNNING_IN_CI:-no}"
-
     # Run the docker script with the user id. Because the docker image gets to
     # write in ${PWD} you typically want this to be your user id.
     # Also to allow docker in docker, we use docker gid on the host.
@@ -267,7 +279,6 @@ docker_flags=(
     # Mount the /tmp so that docker in docker can mount the files
     # there correctly.
     "--volume" "/tmp:/tmp"
-
     # Pass down the KOKORO_GFILE_DIR and KOKORO_KEYSTORE_DIR
     # TODO(tmatsuo): This part is not portable.
     "--env" "TRAMPOLINE_SECRET_DIR=/secrets"
@@ -276,7 +287,6 @@ docker_flags=(
     "--volume" "${KOKORO_KEYSTORE_DIR:-/dev/shm}:/secrets/keystore"
     "--env" "KOKORO_KEYSTORE_DIR=/secrets/keystore"
 )
-
 
 # Add an option for nicer output if the build gets a tty.
 if [[ -t 0 ]]; then
