@@ -162,8 +162,9 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 RUN sudo systemctl enable redis-server.service
 
 # Create a user and allow sudo
-ARG UID=0
-ARG GID=0
+
+# kbuilder uid on the default Kokoro image
+ARG UID=1000
 ARG USERNAME=kbuilder
 ARG DOCKER_GID=999
 
