@@ -306,15 +306,17 @@ done
 if [[ $# -ge 1 ]]; then
     log_yellow "Running the given commands '" "${@:1}" "' in the container."
     readonly commands=("${@:1}")
+    echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
+    docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
 else
     log_yellow "Running the tests in a Docker container."
     # Temporary workaround to remove unnecessary prefix.
     real_build_file=${TRAMPOLINE_BUILD_FILE#"github/python-docs-samples/"}
-    readonly commands=("/v/${real_build_file}")
+    docker_flags+=("--entrypoint=${real_build_file}")
+    echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
+    docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
 fi
 
-echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
-docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
 
 test_retval=$?
 
