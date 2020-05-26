@@ -11,6 +11,8 @@ product:
     analyzing data to find meaningful insights, use familiar SQL, and take
     advantage of our pay-as-you-go model.
 
+required_role: BigQuery Admin
+
 setup:
 - auth
 - install_deps
