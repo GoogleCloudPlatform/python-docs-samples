@@ -40,6 +40,8 @@
 #     (true|false): Whether to upload the Docker image after the
 #                   successful builds.
 # TRAMPOLINE_BUILD_FILE: The script to run in the docker container.
+# TRAMPOLINE_WORKSPACE: The workspace path in the docker container.
+#                       Defaults to /workspace.
 #
 # Potentially there are some repo specific envvars in .trampolinerc in
 # the project root.
@@ -118,6 +120,9 @@ PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
 RUNNING_IN_CI="false"
 TRAMPOLINE_V2="true"
 
+# The workspace in the container, defaults to /workspace.
+TRAMPOLINE_WORKSPACE="${TRAMPOLINE_WORKSPACE:-/workspace}"
+
 # If it's running on Kokoro, RUNNING_IN_CI will be true and
 # TRAMPOLINE_CI is set to 'kokoro'. Both envvars will be passing down
 # to the container for telling which CI system we're in.
@@ -137,10 +142,10 @@ if [[ -n "${KOKORO_GFILE_DIR:-}" ]]; then
     mkdir -p "${tmpdir}/gcloud"
     gcloud_config_dir="${tmpdir}/gcloud"
 
-    log "Using isolated gcloud config: ${gcloud_config_dir}."
+    log_yellow "Using isolated gcloud config: ${gcloud_config_dir}."
     export CLOUDSDK_CONFIG="${gcloud_config_dir}"
 
-    log "Using ${SERVICE_ACCOUNT_KEY_FILE} for authentication."
+    log_yellow "Using ${SERVICE_ACCOUNT_KEY_FILE} for authentication."
     gcloud auth activate-service-account \
 	   --key-file "${SERVICE_ACCOUNT_KEY_FILE}"
     gcloud auth configure-docker --quiet
@@ -268,9 +273,9 @@ docker_flags=(
     "--env" "USER=${user_name}"
 
     # Mount the project directory inside the Docker container.
-    "--volume" "${PROJECT_ROOT}:/v"
-    "--workdir" "/v"
-    "--env" "PROJECT_ROOT=/v"
+    "--volume" "${PROJECT_ROOT}:${TRAMPOLINE_WORKSPACE}"
+    "--workdir" "${TRAMPOLINE_WORKSPACE}"
+    "--env" "PROJECT_ROOT=${TRAMPOLINE_WORKSPACE}"
 
     # Mount the temporary home directory.
     "--volume" "${tmphome}:/h"
