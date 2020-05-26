@@ -38,9 +38,16 @@ cd github/python-docs-samples
 pip install -q nox
 
 # Use secrets acessor service account to get secrets
-gcloud auth activate-service-account \
-      --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
-      --project="cloud-devrel-kokoro-resources"
+if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
+    gcloud auth activate-service-account \
+	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
+	   --project="cloud-devrel-kokoro-resources"
+fi
+
+# This script will create 3 files:
+# - testing/test-env.sh
+# - testing/service-account.json
+# - testing/client-secrets.json
 ./scripts/decrypt-secrets.sh
 
 source ./testing/test-env.sh
@@ -51,12 +58,9 @@ gcloud auth activate-service-account \
        --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
 
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
-source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
 
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
-# Required for "run/image-processing" && "functions/imagemagick"
-apt-get -qq update  && apt-get -qq install libmagickwand-dev > /dev/null
 
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
@@ -70,6 +74,17 @@ set +e
 # Use RTN to return a non-zero value if the test fails.
 RTN=0
 ROOT=$(pwd)
+
+# If some files in .kokoro directory have any changes, we will test everything.
+test_all="true"
+if [[ -n "${DIFF_FROM:-}" ]]; then
+    git diff --quiet "$DIFF_FROM" .kokoro/docker .kokoro/tests
+    CHANGED=$?
+    if [[ "$CHANGED" -eq 0 ]]; then
+        test_all="false"
+    fi
+fi
+
 # Find all requirements.txt in the repository (may break on whitespace).
 for file in **/requirements.txt; do
     cd "$ROOT"
@@ -78,7 +93,7 @@ for file in **/requirements.txt; do
     cd "$file"
 
     # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ "$DIFF_FROM" != "" ]]; then
+    if [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then

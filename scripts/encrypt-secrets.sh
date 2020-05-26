@@ -20,6 +20,17 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
-gcloud secrets versions add "python-docs-samples-test-env" --data-file="testing/test-env.sh"
-gcloud secrets versions add "python-docs-samples-service-account" --data-file="testing/service-account.json"
-gcloud secrets versions add "python-docs-samples-client-secrets" --data-file="testing/client-secrets.json"
+# Use SECRET_MANAGER_PROJECT if set, fallback to cloud-devrel-kokoro-resources.
+PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
+
+gcloud secrets versions add "python-docs-samples-test-env" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/test-env.sh"
+
+gcloud secrets versions add "python-docs-samples-service-account" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/service-account.json"
+
+gcloud secrets versions add "python-docs-samples-client-secrets" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/client-secrets.json"
