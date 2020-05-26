@@ -230,6 +230,9 @@ if [[ "${TRAMPOLINE_IMAGE_SOURCE:-none}" != "none" ]]; then
     fi
 
     log_yellow "Start building the docker image."
+    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+	echo "docker build" "${docker_build_flags[@]}" "${context_dir}"
+    fi
     if docker build "${docker_build_flags[@]}" "${context_dir}"; then
 	log_green "Finished building the docker image."
 	update_cache="true"
@@ -306,14 +309,18 @@ done
 if [[ $# -ge 1 ]]; then
     log_yellow "Running the given commands '" "${@:1}" "' in the container."
     readonly commands=("${@:1}")
-    echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
+    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+	echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
+    fi
     docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
 else
     log_yellow "Running the tests in a Docker container."
     # Temporary workaround to remove unnecessary prefix.
     real_build_file=${TRAMPOLINE_BUILD_FILE#"github/python-docs-samples/"}
     docker_flags+=("--entrypoint=${real_build_file}")
-    echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
+    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+	echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
+    fi
     docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
 fi
 

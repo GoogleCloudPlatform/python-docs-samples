@@ -60,3 +60,9 @@ fi
 if [[ -z "${TRAMPOLINE_IMAGE_UPLOAD:-}" ]]; then
     TRAMPOLINE_IMAGE_UPLOAD="false"
 fi
+
+if [[ -z "${TRAMPOLINE_SHOW_COMMAND:-}" ]]; then
+    # We are sure there's no secrets in the command line in docker
+    # bulid and docker run commands.
+    TRAMPOLINE_SHOW_COMMAND="true"
+fi
