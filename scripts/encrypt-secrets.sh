@@ -22,4 +22,4 @@ cd $ROOT
 
 gcloud secrets versions add "python-docs-samples-test-env" --data-file="testing/test-env.sh"
 gcloud secrets versions add "python-docs-samples-service-account" --data-file="testing/service-account.json"
-gcloud secrets versions add "python-docs-samples-client-secrets" --data-file="testing/test-env.sh"
+gcloud secrets versions add "python-docs-samples-client-secrets" --data-file="testing/client-secrets.json"
