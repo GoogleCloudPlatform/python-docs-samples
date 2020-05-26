@@ -37,8 +37,8 @@ if [[ -z "${TRAMPOLINE_IMAGE:-}" ]]; then
     # TRAMPOLINE_IMAGE="gcr.io/cloud-devrel-kokoro-resources/python-samples-testing-docker"
 fi
 
-if [[ -z "${TRAMPOLINE_IMAGE_SOURCE:-}" ]]; then
-    # TRAMPOLINE_IMAGE_SOURCE=".kokoro/docker/Dockerfile"
+if [[ -z "${TRAMPOLINE_DOCKERFILE:-}" ]]; then
+    # TRAMPOLINE_DOCKERFILE=".kokoro/docker/Dockerfile"
 fi
 
 if [[ -z "${TRAMPOLINE_BUILD_FILE:-}" ]]; then

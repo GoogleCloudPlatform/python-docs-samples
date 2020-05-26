@@ -35,7 +35,7 @@
 # You can optionally change these environment variables:
 #
 # TRAMPOLINE_IMAGE: The docker image to use.
-# TRAMPOLINE_IMAGE_SOURCE: The location of the Dockerfile.
+# TRAMPOLINE_DOCKERFILE: The location of the Dockerfile.
 # TRAMPOLINE_IMAGE_UPLOAD:
 #     (true|false): Whether to upload the Docker image after the
 #                   successful builds.
@@ -219,11 +219,11 @@ user_name="$(id -un)"
 docker_gid=$(cut -d: -f3 < <(getent group docker))
 
 update_cache="false"
-if [[ "${TRAMPOLINE_IMAGE_SOURCE:-none}" != "none" ]]; then
+if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
     # Build the Docker image from the source.
-    context_dir=$(dirname "${TRAMPOLINE_IMAGE_SOURCE}")
+    context_dir=$(dirname "${TRAMPOLINE_DOCKERFILE}")
     docker_build_flags=(
-	"-f" "${TRAMPOLINE_IMAGE_SOURCE}"
+	"-f" "${TRAMPOLINE_DOCKERFILE}"
 	"-t" "${TRAMPOLINE_IMAGE}"
 	"--build-arg" "UID=${user_uid}"
 	"--build-arg" "GID=${user_gid}"

@@ -54,8 +54,8 @@ directory="$(realpath "$1")"
 relative_dir=${directory#"${PROJECT_ROOT}/"}
 export RUN_TESTS_DIRS="${relative_dir}"
 
-if [[ -z "${TRAMPOLINE_IMAGE_SOURCE:-}" ]]; then
-    export TRAMPOLINE_IMAGE_SOURCE="none"
+if [[ -z "${TRAMPOLINE_DOCKERFILE:-}" ]]; then
+    export TRAMPOLINE_DOCKERFILE="none"
 fi
 
 if [[ $# -ge 2 ]]; then
