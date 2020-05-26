@@ -59,7 +59,12 @@ def edge_container_predict_server_port():
         ['docker', 'pull', CPU_DOCKER_GCS_PATH],
         env={'DOCKER_API_VERSION': '1.38'})
 
-    model_path = tempfile.TemporaryDirectory()
+    if os.environ.get('TRAMPOLINE_V2') == 'true':
+        # Use /tmp
+        model_path = tempfile.TemporaryDirectory()
+    else:
+        # Use project directory with Trampoline V1.
+        model_path = tempfile.TemporaryDirectory(dir=os.path.dirname(__file__))
     print("Using model_path: {}".format(model_path))
     # Get the sample saved model.
     subprocess.check_output(
