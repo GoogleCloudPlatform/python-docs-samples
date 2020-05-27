@@ -152,11 +152,11 @@ for file in **/requirements.txt; do
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
-    # If REPORT_TO_BUILD_COP_BOT is set to "True", send the test log
+    # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
     # to the Build Cop Bot.
     # See:
     # https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "True" ]]; then
+    if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "true" ]]; then
       chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
       $KOKORO_GFILE_DIR/linux_amd64/buildcop
     fi
