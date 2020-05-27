@@ -320,9 +320,7 @@ if [[ $# -ge 1 ]]; then
     docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
 else
     log_yellow "Running the tests in a Docker container."
-    # Temporary workaround to remove unnecessary prefix.
-    real_build_file=${TRAMPOLINE_BUILD_FILE#"github/python-docs-samples/"}
-    docker_flags+=("--entrypoint=${real_build_file}")
+    docker_flags+=("--entrypoint=${TRAMPOLINE_BUILD_FILE}")
     if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
 	echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
     fi
