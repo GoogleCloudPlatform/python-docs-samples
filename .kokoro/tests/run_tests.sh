@@ -43,18 +43,17 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # install nox for testing
 pip install --user -q nox
 
-# Use secrets acessor service account to get secrets
+# Use secrets acessor service account to get secrets.
 if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
     gcloud auth activate-service-account \
 	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
 	   --project="cloud-devrel-kokoro-resources"
+    # This script will create 3 files:
+    # - testing/test-env.sh
+    # - testing/service-account.json
+    # - testing/client-secrets.json
+    ./scripts/decrypt-secrets.sh
 fi
-
-# This script will create 3 files:
-# - testing/test-env.sh
-# - testing/service-account.json
-# - testing/client-secrets.json
-./scripts/decrypt-secrets.sh
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
@@ -175,8 +174,5 @@ for file in **/requirements.txt; do
 
 done
 cd "$ROOT"
-
-# Workaround for Kokoro permissions issue: delete secrets
-rm testing/{test-env.sh,client-secrets.json,service-account.json}
 
 exit "$RTN"
