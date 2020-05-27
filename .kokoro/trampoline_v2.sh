@@ -176,6 +176,9 @@ pass_down_envvars=(
     "KOKORO_GITHUB_COMMIT"
     "KOKORO_GITHUB_PULL_REQUEST_NUMBER"
     "KOKORO_GITHUB_PULL_REQUEST_COMMIT"
+    # For Build Cop Bot
+    "KOKORO_GITHUB_COMMIT_URL"
+    "KOKORO_GITHUB_PULL_REQUEST_URL"
 )
 
 if [[ -f "${PROJECT_ROOT}/.trampolinerc" ]]; then
