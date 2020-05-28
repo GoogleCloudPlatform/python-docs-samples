@@ -108,7 +108,7 @@ def test_custom_metric(client, custom_metric):
         assert 'timeSeries' in response
         value = int(
             response['timeSeries'][0]['points'][0]['value']['int64Value'])
-        # We override the report value with MONITORING_TEST_REPORT_VALUE env var
+        # using seed of 1 will create a value of 1
         assert pseudo_random_value == value
 
     eventually_consistent_test()
