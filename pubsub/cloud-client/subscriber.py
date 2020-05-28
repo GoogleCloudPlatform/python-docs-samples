@@ -72,14 +72,63 @@ def create_subscription(project_id, topic_name, subscription_name):
         project_id, subscription_name
     )
 
-    subscription = subscriber.create_subscription(
-        subscription_path, topic_path
-    )
+    subscription = subscriber.create_subscription(subscription_path, topic_path)
 
     print("Subscription created: {}".format(subscription))
 
     subscriber.close()
     # [END pubsub_create_pull_subscription]
+
+
+def create_subscription_with_dead_letter_topic(
+    project_id, topic_name, subscription_name, dead_letter_topic_name
+):
+    """Create a subscription with dead letter policy."""
+    # [START pubsub_dead_letter_create_subscription]
+    from google.cloud import pubsub_v1
+    from google.cloud.pubsub_v1.types import DeadLetterPolicy
+
+    # TODO project_id = "Your Google Cloud Project ID"
+    # This is an existing topic that the subscription with dead letter policy
+    # is attached to.
+    # TODO topic_name = "Your Pub/Sub topic name"
+    # This is an existing subscription with a dead letter policy.
+    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # This is an existing dead letter topic that the subscription with dead
+    # letter policy will forward dead letter messages to.
+    # TODO dead_letter_topic_name = "Your Pub/Sub dead letter topic name"
+
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name
+    )
+    dead_letter_topic_path = subscriber.topic_path(
+        project_id, dead_letter_topic_name
+    )
+
+    dead_letter_policy = DeadLetterPolicy(
+        dead_letter_topic=dead_letter_topic_path, max_delivery_attempts=10
+    )
+
+    subscription = subscriber.create_subscription(
+        subscription_path, topic_path, dead_letter_policy=dead_letter_policy
+    )
+
+    print("Subscription created: {}".format(subscription.name))
+    print(
+        "It will forward dead letter messages to: {}".format(
+            subscription.dead_letter_policy.dead_letter_topic
+        )
+    )
+    print(
+        "After {} delivery attempts.".format(
+            subscription.dead_letter_policy.max_delivery_attempts
+        )
+    )
+
+    subscriber.close()
+    # [END pubsub_dead_letter_create_subscription]
 
 
 def create_push_subscription(
@@ -134,7 +183,9 @@ def delete_subscription(project_id, subscription_name):
     # [END pubsub_delete_subscription]
 
 
-def update_subscription(project_id, subscription_name, endpoint):
+def update_push_subscription(
+    project_id, topic_name, subscription_name, endpoint
+):
     """
     Updates an existing Pub/Sub subscription's push endpoint URL.
     Note that certain properties of a subscription, such as
@@ -156,19 +207,125 @@ def update_subscription(project_id, subscription_name, endpoint):
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
     subscription = pubsub_v1.types.Subscription(
-        name=subscription_path, push_config=push_config
+        name=subscription_path, topic=topic_name, push_config=push_config
     )
 
     update_mask = {"paths": {"push_config"}}
 
-    subscriber.update_subscription(subscription, update_mask)
-    result = subscriber.get_subscription(subscription_path)
+    result = subscriber.update_subscription(subscription, update_mask)
 
     print("Subscription updated: {}".format(subscription_path))
     print("New endpoint for subscription is: {}".format(result.push_config))
 
     subscriber.close()
     # [END pubsub_update_push_configuration]
+
+
+def update_subscription_with_dead_letter_policy(
+    project_id, topic_name, subscription_name, dead_letter_topic_name
+):
+    """Update a subscription's dead letter policy."""
+    # [START pubsub_dead_letter_update_subscription]
+    from google.cloud import pubsub_v1
+    from google.cloud.pubsub_v1.types import DeadLetterPolicy
+
+    # TODO project_id = "Your Google Cloud Project ID"
+    # This is an existing topic that the subscription with dead letter policy
+    # is attached to.
+    # TODO topic_name = "Your Pub/Sub topic name"
+    # This is an existing subscription with a dead letter policy.
+    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # This is an existing dead letter topic that the subscription with dead
+    # letter policy will forward dead letter messages to.
+    # TODO dead_letter_topic_name = "Your Pub/Sub dead letter topic name"
+
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name
+    )
+    dead_letter_topic_path = subscriber.topic_path(
+        project_id, dead_letter_topic_name
+    )
+
+    subscription_before_update = subscriber.get_subscription(subscription_path)
+    print("Before the update: {}".format(subscription_before_update))
+
+    subscription_before_update.HasField("dead_letter_policy")
+
+    assert 'dead_letter_policy' in properties
+    update_mask = {"paths": {"dead_letter_policy": {"max_delivery_attempts"}}}
+
+    # Construct a dead letter policy you expect to have after the update.
+    dead_letter_policy = DeadLetterPolicy(
+        dead_letter_topic=dead_letter_topic_path, max_delivery_attempts=20
+    )
+
+    # Construct the subscription with the dead letter policy you expect to have
+    # after the update. Here, values in the required fields (name, topic) help
+    # identify the subscription.
+    subscription = pubsub_v1.types.Subscription(
+        name=subscription_path,
+        topic=topic_path,
+        dead_letter_policy=dead_letter_policy,
+    )
+
+    subscription_after_update = subscriber.update_subscription(
+        subscription, update_mask
+    )
+
+    print("After the update: {}".format(subscription_after_update))
+
+    subscriber.close()
+    # [END pubsub_dead_letter_update_subscription]
+    return subscription_after_update
+
+
+def remove_dead_letter_policy(project_id, topic_name, subscription_name):
+    """Remove dead letter policy from a subscription."""
+    # [START pubsub_dead_letter_remove]
+    from google.cloud import pubsub_v1
+    from google.cloud.pubsub_v1.types import DeadLetterPolicy
+
+    # TODO project_id = "Your Google Cloud Project ID"
+    # This is an existing topic that the subscription with dead letter policy
+    # is attached to.
+    # TODO topic_name = "Your Pub/Sub topic name"
+    # This is an existing subscription with a dead letter policy.
+    # TODO subscription_name = "Your Pub/Sub subscription name"
+
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name
+    )
+
+    subscription_before_update = subscriber.get_subscription(subscription_path)
+    print("Before removing the policy: {}".format(subscription_before_update))
+
+    update_mask = {
+        "paths": {"dead_letter_policy": {"dead_letter_topic"}},
+        "paths": {"dead_letter_policy": {"max_delivery_attempts"}},
+    }
+
+    # Construct the subscription with the dead letter policy you expect to have
+    # after the update. Here, values in the required fields (name, topic) help
+    # identify the subscription.
+    subscription = pubsub_v1.types.Subscription(
+        name=subscription_path, topic=topic_path
+    )
+
+    subscription_after_update = subscriber.update_subscription(
+        subscription, update_mask
+    )
+
+    print("After removing the policy: {}".format(subscription_after_update))
+
+    import inspect
+
+    subscriber.close()
+    # [END pubsub_dead_letter_remove]
+    return subscription_after_update
 
 
 def receive_messages(project_id, subscription_name, timeout=None):
@@ -461,6 +618,46 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     # [END pubsub_subscriber_error_listener]
 
 
+def receive_messages_with_delivery_attempts(
+    project_id, subscription_name, timeout=None
+):
+    # [START  pubsub_dead_letter_delivery_attempt]
+    from google.cloud import pubsub_v1
+
+    # TODO project_id        = "Your Google Cloud Project ID"
+    # TODO subscription_name = "Your Pubsub subscription name"
+
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name
+    )
+
+    def callback(message):
+        print("Received message: {}".format(message))
+        print("With delivery attempts: {}".format(message.delivery_attempt))
+        message.ack()
+
+    streaming_pull_future = subscriber.subscribe(
+        subscription_path, callback=callback
+    )
+    print("Listening for messages on {}..\n".format(subscription_path))
+
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        # When `timeout` is not set, result() will block indefinitely,
+        # unless an exception is encountered first.
+        try:
+            streaming_pull_future.result(timeout=timeout)
+        except Exception as e:
+            streaming_pull_future.cancel()
+            print(
+                "Listening for messages on {} threw an exception: {}.".format(
+                    subscription_name, e
+                )
+            )
+    # [END  pubsub_dead_letter_delivery_attempt]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -470,12 +667,12 @@ if __name__ == "__main__":
 
     subparsers = parser.add_subparsers(dest="command")
     list_in_topic_parser = subparsers.add_parser(
-        "list_in_topic", help=list_subscriptions_in_topic.__doc__
+        "list-in-topic", help=list_subscriptions_in_topic.__doc__
     )
     list_in_topic_parser.add_argument("topic_name")
 
     list_in_project_parser = subparsers.add_parser(
-        "list_in_project", help=list_subscriptions_in_project.__doc__
+        "list-in-project", help=list_subscriptions_in_project.__doc__
     )
 
     create_parser = subparsers.add_parser(
@@ -483,6 +680,14 @@ if __name__ == "__main__":
     )
     create_parser.add_argument("topic_name")
     create_parser.add_argument("subscription_name")
+
+    create_with_dead_letter_policy_parser = subparsers.add_parser(
+        "create-with-dead-letter-policy",
+        help=create_subscription_with_dead_letter_topic.__doc__,
+    )
+    create_with_dead_letter_policy_parser.add_argument("topic_name")
+    create_with_dead_letter_policy_parser.add_argument("subscription_name")
+    create_with_dead_letter_policy_parser.add_argument("dead_letter_topic_name")
 
     create_push_parser = subparsers.add_parser(
         "create-push", help=create_push_subscription.__doc__
@@ -496,11 +701,26 @@ if __name__ == "__main__":
     )
     delete_parser.add_argument("subscription_name")
 
-    update_parser = subparsers.add_parser(
-        "update", help=update_subscription.__doc__
+    update_push_parser = subparsers.add_parser(
+        "update-push", help=update_push_subscription.__doc__
     )
-    update_parser.add_argument("subscription_name")
-    update_parser.add_argument("endpoint")
+    update_push_parser.add_argument("topic_name")
+    update_push_parser.add_argument("subscription_name")
+    update_push_parser.add_argument("endpoint")
+
+    update_dead_letter_policy_parser = subparsers.add_parser(
+        "update-dead-letter-policy",
+        help=update_subscription_with_dead_letter_policy.__doc__,
+    )
+    update_dead_letter_policy_parser.add_argument("topic_name")
+    update_dead_letter_policy_parser.add_argument("subscription_name")
+    update_dead_letter_policy_parser.add_argument("dead_letter_topic_name")
+
+    remove_dead_letter_policy_parser = subparsers.add_parser(
+        "remove-dead-letter-policy", help=remove_dead_letter_policy.__doc__
+    )
+    remove_dead_letter_policy_parser.add_argument("topic_name")
+    remove_dead_letter_policy_parser.add_argument("subscription_name")
 
     receive_parser = subparsers.add_parser(
         "receive", help=receive_messages.__doc__
@@ -539,22 +759,38 @@ if __name__ == "__main__":
     )
 
     listen_for_errors_parser = subparsers.add_parser(
-        "listen_for_errors", help=listen_for_errors.__doc__
+        "listen-for-errors", help=listen_for_errors.__doc__
     )
     listen_for_errors_parser.add_argument("subscription_name")
-    listen_for_errors_parser.add_argument(
+    listen_for_errors_parser.add_argument("--timeout", default=None, type=float)
+
+    receive_messages_with_delivery_attempts_parser = subparsers.add_parser(
+        "receive-messages-with-delivery-attempts",
+        help=receive_messages_with_delivery_attempts.__doc__,
+    )
+    receive_messages_with_delivery_attempts_parser.add_argument(
+        "subscription_name"
+    )
+    receive_messages_with_delivery_attempts_parser.add_argument(
         "--timeout", default=None, type=float
     )
 
     args = parser.parse_args()
 
-    if args.command == "list_in_topic":
+    if args.command == "list-in-topic":
         list_subscriptions_in_topic(args.project_id, args.topic_name)
-    elif args.command == "list_in_project":
+    elif args.command == "list-in-project":
         list_subscriptions_in_project(args.project_id)
     elif args.command == "create":
         create_subscription(
             args.project_id, args.topic_name, args.subscription_name
+        )
+    elif args.command == "create-with-dead-letter-policy":
+        create_subscription_with_dead_letter_topic(
+            args.project_id,
+            args.topic_name,
+            args.subscription_name,
+            args.dead_letter_topic_name,
         )
     elif args.command == "create-push":
         create_push_subscription(
@@ -565,9 +801,23 @@ if __name__ == "__main__":
         )
     elif args.command == "delete":
         delete_subscription(args.project_id, args.subscription_name)
-    elif args.command == "update":
-        update_subscription(
-            args.project_id, args.subscription_name, args.endpoint
+    elif args.command == "update-push":
+        update_push_subscription(
+            args.project_id,
+            args.topic_name,
+            args.subscription_name,
+            args.endpoint,
+        )
+    elif args.command == "update-dead-letter-policy":
+        update_subscription_with_dead_letter_policy(
+            args.project_id,
+            args.topic_name,
+            args.subscription_name,
+            args.dead_letter_topic_name,
+        )
+    elif args.command == "remove-dead-letter-policy":
+        remove_dead_letter_policy(
+            args.project_id, args.topic_name, args.subscription_name
         )
     elif args.command == "receive":
         receive_messages(args.project_id, args.subscription_name, args.timeout)
@@ -585,7 +835,9 @@ if __name__ == "__main__":
         synchronous_pull_with_lease_management(
             args.project_id, args.subscription_name
         )
-    elif args.command == "listen_for_errors":
-        listen_for_errors(
+    elif args.command == "listen-for-errors":
+        listen_for_errors(args.project_id, args.subscription_name, args.timeout)
+    elif args.command == "receive-messages-with-delivery-attempts":
+        receive_messages_with_delivery_attempts(
             args.project_id, args.subscription_name, args.timeout
         )
