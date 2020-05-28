@@ -29,8 +29,9 @@ def list_subscriptions_in_topic(project_id, topic_name):
     # [START pubsub_list_topic_subscriptions]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_name = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_name)
@@ -45,7 +46,8 @@ def list_subscriptions_in_project(project_id):
     # [START pubsub_list_subscriptions]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
+    # TODO(developer)
+    # project_id = "your-project-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     project_path = subscriber.project_path(project_id)
@@ -62,9 +64,10 @@ def create_subscription(project_id, topic_name, subscription_name):
     # [START pubsub_create_pull_subscription]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_name = "your-topic-id"
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -86,15 +89,17 @@ def create_subscription_with_dead_letter_topic(
     from google.cloud import pubsub_v1
     from google.cloud.pubsub_v1.types import DeadLetterPolicy
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # This is an existing topic that the subscription with dead letter policy
-    # is attached to.
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # This is an existing subscription with a dead letter policy.
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # This is an existing dead letter topic that the subscription with dead
-    # letter policy will forward dead letter messages to.
-    # TODO dead_letter_topic_name = "Your Pub/Sub dead letter topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # endpoint = "https://my-test-project.appspot.com/push"
+    # TODO(developer): This is an existing topic that the subscription
+    # with dead letter policy is attached to.
+    # topic_name = "your-topic-id"
+    # TODO(developer): This is an existing subscription with a dead letter policy.
+    # subscription_name = "your-subscription-id"
+    # TODO(developer): This is an existing dead letter topic that the subscription
+    # with dead letter policy will forward dead letter messages to.
+    # dead_letter_topic_name = "your-dead-letter-topic-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -105,9 +110,10 @@ def create_subscription_with_dead_letter_topic(
         dead_letter_topic=dead_letter_topic_path, max_delivery_attempts=10
     )
 
-    subscription = subscriber.create_subscription(
-        subscription_path, topic_path, dead_letter_policy=dead_letter_policy
-    )
+    with subscriber:
+        subscription = subscriber.create_subscription(
+            subscription_path, topic_path, dead_letter_policy=dead_letter_policy
+        )
 
     print("Subscription created: {}".format(subscription.name))
     print(
@@ -120,8 +126,6 @@ def create_subscription_with_dead_letter_topic(
             subscription.dead_letter_policy.max_delivery_attempts
         )
     )
-
-    subscriber.close()
     # [END pubsub_dead_letter_create_subscription]
 
 
@@ -130,10 +134,11 @@ def create_push_subscription(project_id, topic_name, subscription_name, endpoint
     # [START pubsub_create_push_subscription]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO endpoint = "https://my-test-project.appspot.com/push"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_name = "your-topic-id"
+    # subscription_name = "your-subscription-id"
+    # endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -157,8 +162,9 @@ def delete_subscription(project_id, subscription_name):
     # [START pubsub_delete_subscription]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -180,10 +186,11 @@ def update_push_subscription(project_id, topic_name, subscription_name, endpoint
     # [START pubsub_update_push_configuration]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO endpoint = "https://my-test-project.appspot.com/push"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_name = "your-topic-id"
+    # subscription_name = "your-subscription-id"
+    # endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -211,17 +218,18 @@ def update_subscription_with_dead_letter_policy(
     """Update a subscription's dead letter policy."""
     # [START pubsub_dead_letter_update_subscription]
     from google.cloud import pubsub_v1
-    from google.cloud.pubsub_v1.types import DeadLetterPolicy
+    from google.cloud.pubsub_v1.types import DeadLetterPolicy, FieldMask
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # This is an existing topic that the subscription with dead letter policy
-    # is attached to.
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # This is an existing subscription with a dead letter policy.
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # This is an existing dead letter topic that the subscription with dead
-    # letter policy will forward dead letter messages to.
-    # TODO dead_letter_topic_name = "Your Pub/Sub dead letter topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # TODO(developer): This is an existing topic that the subscription
+    # with dead letter policy is attached to.
+    # topic_name = "your-topic-name"
+    # TODO(developer): This is an existing subscription with a dead letter policy.
+    # subscription_name = "your-subscription-id"
+    # TODO(developer): This is an existing dead letter topic that the subscription
+    # with dead letter policy will forward dead letter messages to.
+    # dead_letter_topic_name = "your-dead-letter-topic-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -231,9 +239,8 @@ def update_subscription_with_dead_letter_policy(
     subscription_before_update = subscriber.get_subscription(subscription_path)
     print("Before the update: {}".format(subscription_before_update))
 
-    subscription_before_update.HasField("dead_letter_policy")
-
-    update_mask = {"paths": {"dead_letter_policy": {"max_delivery_attempts"}}}
+    # Indicates which fields in the provided subscription to update.
+    update_mask = FieldMask(paths=["dead_letter_policy.max_delivery_attempts"])
 
     # Construct a dead letter policy you expect to have after the update.
     dead_letter_policy = DeadLetterPolicy(
@@ -247,13 +254,12 @@ def update_subscription_with_dead_letter_policy(
         name=subscription_path, topic=topic_path, dead_letter_policy=dead_letter_policy,
     )
 
-    subscription_after_update = subscriber.update_subscription(
-        subscription, update_mask
-    )
+    with subscriber:
+        subscription_after_update = subscriber.update_subscription(
+            subscription, update_mask
+        )
 
     print("After the update: {}".format(subscription_after_update))
-
-    subscriber.close()
     # [END pubsub_dead_letter_update_subscription]
     return subscription_after_update
 
@@ -262,13 +268,15 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     """Remove dead letter policy from a subscription."""
     # [START pubsub_dead_letter_remove]
     from google.cloud import pubsub_v1
+    from google.cloud.pubsub_v1.types import FieldMask
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # This is an existing topic that the subscription with dead letter policy
-    # is attached to.
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # This is an existing subscription with a dead letter policy.
-    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # TODO(developer): This is an existing topic that the subscription
+    # with dead letter policy is attached to.
+    # topic_name = "your-topic-name"
+    # TODO(developer): This is an existing subscription with a dead letter policy.
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -277,25 +285,27 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     subscription_before_update = subscriber.get_subscription(subscription_path)
     print("Before removing the policy: {}".format(subscription_before_update))
 
-    update_mask = {
-        "paths": {{"dead_letter_policy": {"dead_letter_topic"}}},  # noqa
-        "paths": {{"dead_letter_policy": {"max_delivery_attempts"}}}  # noqa
-    }
+    # Indicates which fields in the provided subscription to update.
+    update_mask = FieldMask(
+        paths=[
+            "dead_letter_policy.dead_letter_topic",
+            "dead_letter_policy.max_delivery_attempts",
+        ]
+    )
 
-    # Construct the subscription with the dead letter policy you expect to have
+    # Construct the subscription with a dead letter policy you expect to have
     # after the update. Here, values in the required fields (name, topic) help
     # identify the subscription.
     subscription = pubsub_v1.types.Subscription(
         name=subscription_path, topic=topic_path
     )
 
-    subscription_after_update = subscriber.update_subscription(
-        subscription, update_mask
-    )
+    with subscriber:
+        subscription_after_update = subscriber.update_subscription(
+            subscription, update_mask
+        )
 
     print("After removing the policy: {}".format(subscription_after_update))
-
-    subscriber.close()
     # [END pubsub_dead_letter_remove]
     return subscription_after_update
 
@@ -304,12 +314,14 @@ def receive_messages(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
+    from concurrent.futures import TimeoutError
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = 5.0  # "How long the subscriber should listen for
-    # messages in seconds"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
+    # Number of seconds the subscriber should listen for messages
+    # timeout = 5.0
 
     subscriber = pubsub_v1.SubscriberClient()
     # The `subscription_path` method creates a fully qualified identifier
@@ -329,7 +341,7 @@ def receive_messages(project_id, subscription_name, timeout=None):
             # When `timeout` is not set, result() will block indefinitely,
             # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
-        except:  # noqa
+        except TimeoutError:
             streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull]
     # [END pubsub_quickstart_subscriber]
@@ -341,12 +353,14 @@ def receive_messages_with_custom_attributes(
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
     # [START pubsub_subscriber_async_pull_custom_attributes]
+    from concurrent.futures import TimeoutError
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = 5.0  # "How long the subscriber should listen for
-    # messages in seconds"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
+    # Number of seconds the subscriber should listen for messages
+    # timeout = 5.0
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -369,7 +383,7 @@ def receive_messages_with_custom_attributes(
             # When `timeout` is not set, result() will block indefinitely,
             # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
-        except:  # noqa
+        except TimeoutError:
             streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull_custom_attributes]
     # [END pubsub_subscriber_sync_pull_custom_attributes]
@@ -378,12 +392,14 @@ def receive_messages_with_custom_attributes(
 def receive_messages_with_flow_control(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
+    from concurrent.futures import TimeoutError
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = 5.0  # "How long the subscriber should listen for
-    # messages in seconds"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
+    # Number of seconds the subscriber should listen for messages
+    # timeout = 5.0
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -406,7 +422,7 @@ def receive_messages_with_flow_control(project_id, subscription_name, timeout=No
             # When `timeout` is not set, result() will block indefinitely,
             # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
-        except:  # noqa
+        except TimeoutError:
             streaming_pull_future.cancel()
     # [END pubsub_subscriber_flow_settings]
 
@@ -416,8 +432,9 @@ def synchronous_pull(project_id, subscription_name):
     # [START pubsub_subscriber_sync_pull]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -455,8 +472,9 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
 
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -535,10 +553,11 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     # [START pubsub_subscriber_error_listener]
     from google.cloud import pubsub_v1
 
-    # TODO project_id        = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pubsub subscription name"
-    # TODO timeout = 5.0  # "How long the subscriber should listen for
-    # messages in seconds"
+    # TODO(developer)
+    # project_id = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
+    # Number of seconds the subscriber should listen for messages
+    # timeout = 5.0
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -570,10 +589,12 @@ def receive_messages_with_delivery_attempts(
     project_id, subscription_name, timeout=None
 ):
     # [START  pubsub_dead_letter_delivery_attempt]
+    from concurrent.futures import TimeoutError
     from google.cloud import pubsub_v1
 
-    # TODO project_id        = "Your Google Cloud Project ID"
-    # TODO subscription_name = "Your Pubsub subscription name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # subscription_name = "your-subscription-id"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
@@ -592,13 +613,8 @@ def receive_messages_with_delivery_attempts(
         # unless an exception is encountered first.
         try:
             streaming_pull_future.result(timeout=timeout)
-        except Exception as e:
+        except TimeoutError:
             streaming_pull_future.cancel()
-            print(
-                "Listening for messages on {} threw an exception: {}.".format(
-                    subscription_name, e
-                )
-            )
     # [END  pubsub_dead_letter_delivery_attempt]
 
 

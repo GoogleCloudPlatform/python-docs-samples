@@ -338,4 +338,4 @@ def test_remove_dead_letter_policy(subscriber_client, subscription_dlq):
         PROJECT, TOPIC, SUBSCRIPTION_DLQ
     )
 
-    assert not subscription_after_update.HasField("dead_letter_policy")
+    assert subscription_after_update.dead_letter_policy.dead_letter_topic == ""
