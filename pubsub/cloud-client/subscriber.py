@@ -278,10 +278,8 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     print("Before removing the policy: {}".format(subscription_before_update))
 
     update_mask = {
-        "paths": {
-            {"dead_letter_policy": {"dead_letter_topic"}},
-            {"dead_letter_policy": {"max_delivery_attempts"}},
-        }
+        "paths": {{"dead_letter_policy": {"dead_letter_topic"}}},  # noqa
+        "paths": {{"dead_letter_policy": {"max_delivery_attempts"}}}  # noqa
     }
 
     # Construct the subscription with the dead letter policy you expect to have
