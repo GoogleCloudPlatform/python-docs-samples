@@ -80,11 +80,8 @@ def custom_metric(client):
 
 
 def test_custom_metric(client, custom_metric):
-    # Use a constant seed so psuedo random number is known ahead of time
-    random.seed(1)
     pseudo_random_value = random.randint(0, 10)
-    # Reseed it
-    random.seed(1)
+    os.environ['MONITORING_TEST_REPORT_VALUE'] = str(pseudo_random_value)
 
     INSTANCE_ID = "test_instance"
 
@@ -107,7 +104,7 @@ def test_custom_metric(client, custom_metric):
         assert 'timeSeries' in response
         value = int(
             response['timeSeries'][0]['points'][0]['value']['int64Value'])
-        # using seed of 1 will create a value of 1
-        assert value == pseudo_random_value
+        # We override the report value with MONITORING_TEST_REPORT_VALUE env var
+        assert pseudo_random_value == value
 
     eventually_consistent_test()
