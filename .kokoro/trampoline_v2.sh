@@ -240,9 +240,7 @@ if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
 	"-f" "${TRAMPOLINE_DOCKERFILE}"
 	"-t" "${TRAMPOLINE_IMAGE}"
 	"--build-arg" "UID=${user_uid}"
-	"--build-arg" "GID=${user_gid}"
 	"--build-arg" "USERNAME=${user_name}"
-	"--build-arg" "DOCKER_GID=${docker_gid}"
     )
     if [[ "${has_cache}" == "true" ]]; then
 	docker_build_flags+=("--cache-from" "${TRAMPOLINE_IMAGE}")
@@ -280,6 +278,8 @@ docker_flags=(
 
     # Run the docker script with the user id. Because the docker image gets to
     # write in ${PWD} you typically want this to be your user id.
+    # To allow docker in docker, we need to use docker gid on the host.
+    # Now we passing the wrong one in order to see the build report failure.
     "--user" "${user_uid}:${user_gid}"
 
     # Pass down the USER.

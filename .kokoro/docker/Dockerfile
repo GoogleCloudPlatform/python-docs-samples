@@ -166,19 +166,12 @@ RUN sudo systemctl enable redis-server.service
 # kbuilder uid on the default Kokoro image
 ARG UID=1000
 ARG USERNAME=kbuilder
-ARG DOCKER_GID=999
 
 # Add a new user to the container image.
-# To allow access to the docker socket on the host, we use the docker
-# group on the host.
+# This is needed for ssh and sudo access.
 
-# First make sure the group exists. Ignore a failure in case
-# there is already a group with that id.
-RUN groupadd -g ${DOCKER_GID} "host-docker" | true
-
-# Add a new user with the caller's uid and the docker goup id on the
-# host.
-RUN useradd -d /h -u ${UID} -g ${DOCKER_GID} ${USERNAME}
+# Add a new user with the caller's uid and the username.
+RUN useradd -d /h -u ${UID} ${USERNAME}
 
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
