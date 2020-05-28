@@ -27,34 +27,12 @@ db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
 cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
 
-app = Flask(__name__)
-
-logger = logging.getLogger()
-
-# [START cloud_sql_postgres_sqlalchemy_create]
-# The SQLAlchemy engine will help manage interactions, including automatically
-# managing a pool of connections to your database
-db = sqlalchemy.create_engine(
-    # Equivalent URL:
-    # postgres+pg8000://<db_user>:<db_pass>@/<db_name>?unix_sock=/cloudsql/<cloud_sql_instance_name>/.s.PGSQL.5432
-    sqlalchemy.engine.url.URL(
-        drivername='postgres+pg8000',
-        username=db_user,
-        password=db_pass,
-        database=db_name,
-        query={
-            'unix_sock': '/cloudsql/{}/.s.PGSQL.5432'.format(
-                cloud_sql_connection_name)
-        }
-    ),
-    # ... Specify additional properties here.
-    # [START_EXCLUDE]
-
+db_config = {
     # [START cloud_sql_postgres_sqlalchemy_limit]
     # Pool size is the maximum number of permanent connections to keep.
-    pool_size=5,
+    "pool_size": 5,
     # Temporarily exceeds the set pool_size if no connections are available.
-    max_overflow=2,
+    "max_overflow": 2,
     # The total number of concurrent connections for your application will be
     # a total of pool_size and max_overflow.
     # [END cloud_sql_postgres_sqlalchemy_limit]
@@ -68,19 +46,89 @@ db = sqlalchemy.create_engine(
     # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
     # new connection from the pool. After the specified amount of time, an
     # exception will be thrown.
-    pool_timeout=30,  # 30 seconds
+    "pool_timeout": 30,  # 30 seconds
     # [END cloud_sql_postgres_sqlalchemy_timeout]
 
     # [START cloud_sql_postgres_sqlalchemy_lifetime]
     # 'pool_recycle' is the maximum number of seconds a connection can persist.
     # Connections that live longer than the specified amount of time will be
     # reestablished
-    pool_recycle=1800,  # 30 minutes
+    "pool_recycle": 1800,  # 30 minutes
     # [END cloud_sql_postgres_sqlalchemy_lifetime]
+}
 
-    # [END_EXCLUDE]
-)
-# [END cloud_sql_postgres_sqlalchemy_create]
+app = Flask(__name__)
+
+logger = logging.getLogger()
+
+
+def init_connection_engine():
+    if os.environ.get("DB_HOST"):
+        return init_tcp_connection_engine()
+    else:
+        return init_unix_connection_engine()
+
+
+def init_tcp_connection_engine():
+    # [START cloud_sql_postgres_sqlalchemy_create_tcp]
+    db_scoket_addr = os.environ.get("DB_HOST").split(":")
+
+    # Extract host and port from socket address
+    db_host = db_scoket_addr[0]
+    db_port = int(db_scoket_addr[1])
+
+    return sqlalchemy.create_engine(
+        # Equivalent URL:
+        # postgres+pg8000://<db_user>:<db_pass>@/<db_name>?unix_sock=/cloudsql/<cloud_sql_instance_name>/.s.PGSQL.5432
+        sqlalchemy.engine.url.URL(
+            drivername="postgres+pg8000",
+            username=db_user,
+            password=db_pass,
+            host=db_host,
+            port=db_port,
+            database=db_name
+        ),
+        # ... Specify additional properties here.
+        # [START_EXCLUDE]
+        **db_config
+        # [END_EXCLUDE]
+    )
+    # [END cloud_sql_postgres_sqlalchemy_create_tcp]
+
+
+def init_unix_connection_engine():
+    # [START cloud_sql_postgres_sqlalchemy_create_socket]
+    if os.environ.get("DB_SOCKET_PATH"):
+        socket_path = os.environ.get("DB_SOCKET_PATH")
+    else:
+        socket_path = "/cloudsql"
+
+    return sqlalchemy.create_engine(
+        # Equivalent URL:
+        # postgres+pg8000://<db_user>:<db_pass>@/<db_name>
+        #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
+        sqlalchemy.engine.url.URL(
+            drivername="postgres+pg8000",
+            username=db_user,
+            password=db_pass,
+            database=db_name,
+            query={
+                "unix_sock": "{}/{}/.s.PGSQL.5432".format(
+                    socket_path,
+                    cloud_sql_connection_name)
+            }
+        ),
+        # ... Specify additional properties here.
+        # [START_EXCLUDE]
+        **db_config
+        # [END_EXCLUDE]
+    )
+    # [END cloud_sql_postgres_sqlalchemy_create_socket]
+
+
+# The SQLAlchemy engine will help manage interactions, including automatically
+# managing a pool of connections to your database
+db = init_connection_engine()
 
 
 @app.before_first_request
