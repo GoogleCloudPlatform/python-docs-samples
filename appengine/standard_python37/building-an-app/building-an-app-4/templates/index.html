@@ -9,8 +9,6 @@
 </head>
 <body>
 
-<h1>Datastore and Firebase Auth Example</h1>
-
 <!-- See https://github.com/firebase/firebaseui-web. -->
 <!-- [START gae_python37_auth_init_firebase] -->
 <!-- *******************************************************************************************
@@ -26,11 +24,13 @@
   }
 </script>
 <!-- [START gae_python37_auth_include_firebaseui] -->
-<script src="https://cdn.firebase.com/libs/firebaseui/2.6.2/firebaseui.js"></script>
-<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.6.2/firebaseui.css">
+<script src="https://cdn.firebase.com/libs/firebaseui/4.5.0/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.5.0/firebaseui.css">
 <!-- [END gae_python37_auth_include_firebaseui] -->
 	
 <!-- [START gae_python37_auth_firebase_html] -->
+<h1>Datastore and Firebase Auth Example</h1>
+
 <div id="firebaseui-auth-container"></div>
 
 <button id="sign-out" hidden=true>Sign Out</button>
