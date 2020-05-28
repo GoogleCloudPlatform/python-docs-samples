@@ -116,6 +116,9 @@ function repo_root() {
     echo "${dir}"
 }
 
+# Temporarily limit the test to vision/automl
+RUN_TESTS_DIRS="vision/automl"
+
 PROGRAM_PATH="$(realpath "$0")"
 PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
 PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
