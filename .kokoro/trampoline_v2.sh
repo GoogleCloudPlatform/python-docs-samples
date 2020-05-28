@@ -279,8 +279,7 @@ docker_flags=(
     # Run the docker script with the user id. Because the docker image gets to
     # write in ${PWD} you typically want this to be your user id.
     # To allow docker in docker, we need to use docker gid on the host.
-    # Now we passing the wrong one in order to see the build report failure.
-    "--user" "${user_uid}:${user_gid}"
+    "--user" "${user_uid}:${docker_gid}"
 
     # Pass down the USER.
     "--env" "USER=${user_name}"
