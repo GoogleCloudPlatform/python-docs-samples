@@ -133,7 +133,7 @@ if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
 fi
 
 # Configure the service account for pulling the docker image.
-if [[ -n "${KOKORO_GFILE_DIR:-}" ]]; then
+if [[ "${TRAMPOLINE_CI:-}" == "kokoro" ]]; then
     # Now we're re-using the trampoline service account.
     # Potentially we can pass down this key into Docker for
     # bootstrapping secret.
