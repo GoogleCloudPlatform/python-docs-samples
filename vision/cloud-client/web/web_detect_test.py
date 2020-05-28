@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 import web_detect
 
 ASSET_BUCKET = "cloud-samples-data"
@@ -24,6 +26,7 @@ def test_detect_file(capsys):
     assert 'description' in out.lower()
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_web_gsuri(capsys):
     file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
                  ASSET_BUCKET))

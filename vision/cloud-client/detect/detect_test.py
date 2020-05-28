@@ -15,8 +15,8 @@
 import os
 import uuid
 
+import backoff
 from google.cloud import storage
-import pytest
 
 import detect
 
@@ -142,19 +142,40 @@ def test_detect_properties_uri(capsys):
     assert 'frac' in out
 
 
+def only_sample_error(e):
+    """A callback for giving up upon Exceptions.
+
+    Giving up upon any Exceptions other than the ones that sample code
+    throws at the end of the function.
+    """
+    return 'https://cloud.google.com/apis/design/errors' not in str(e)
+
+
 # Vision 1.1 tests
 def test_detect_web(capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
-    detect.detect_web(file_name)
+
+    @backoff.on_exception(
+        backoff.expo, Exception, max_time=60, giveup=only_sample_error)
+    def run_sample():
+        detect.detect_web(file_name)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert 'best guess label: palace of fine arts' in out.lower()
 
 
 def test_detect_web_uri(capsys):
     file_name = 'gs://{}/vision/landmark/pofa.jpg'.format(ASSET_BUCKET)
-    detect.detect_web_uri(file_name)
+
+    @backoff.on_exception(
+        backoff.expo, Exception, max_time=60, giveup=only_sample_error)
+    def run_sample():
+        detect.detect_web_uri(file_name)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert 'best guess label: palace of fine arts' in out.lower()
 
@@ -163,7 +184,13 @@ def test_detect_web_with_geo(capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/city.jpg')
-    detect.web_entities_include_geo_results(file_name)
+
+    @backoff.on_exception(
+        backoff.expo, Exception, max_time=60, giveup=only_sample_error)
+    def run_sample():
+        detect.web_entities_include_geo_results(file_name)
+
+    run_sample()
     out, _ = capsys.readouterr()
     out = out.lower()
     assert 'description' in out
@@ -171,7 +198,13 @@ def test_detect_web_with_geo(capsys):
 
 def test_detect_web_with_geo_uri(capsys):
     file_name = 'gs://{}/vision/web/city.jpg'.format(ASSET_BUCKET)
-    detect.web_entities_include_geo_results_uri(file_name)
+
+    @backoff.on_exception(
+        backoff.expo, Exception, max_time=60, giveup=only_sample_error)
+    def run_sample():
+        detect.web_entities_include_geo_results_uri(file_name)
+
+    run_sample()
     out, _ = capsys.readouterr()
     out = out.lower()
     assert 'description' in out
@@ -209,7 +242,6 @@ def test_detect_crop_hints_uri(capsys):
     assert 'bounds: ' in out
 
 
-@pytest.mark.flaky
 def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
@@ -219,7 +251,8 @@ def test_async_detect_document(capsys):
 
     assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
 
-    uri = 'gs://{}/vision/document/custom_0773375000.pdf'.format(ASSET_BUCKET)
+    uri = 'gs://{}/vision/document/custom_0773375000_title_only.pdf'.format(
+        ASSET_BUCKET)
     detect.async_detect_document(
         gcs_source_uri=uri,
         gcs_destination_uri=GCS_DESTINATION_URI)

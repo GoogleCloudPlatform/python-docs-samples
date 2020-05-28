@@ -18,14 +18,15 @@ import time
 
 import pytest
 
-# Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import cloudiot_mqtt_example
-import manager
 from fixtures import test_topic # noqa
 from fixtures import test_registry_id # noqa
 from fixtures import test_device_id # noqa
 from fixtures import device_and_gateways # noqa
+# Add manager for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
+import cloudiot_mqtt_example  # noqa
+import manager  # noqa
+
 
 cloud_region = 'us-central1'
 ca_cert_path = 'resources/roots.pem'
@@ -183,6 +184,9 @@ def test_gateway_send_data_for_device(
 
     out, _ = capsys.readouterr()
     assert 'Publishing message 5/5' in out
+    assert 'Received message' in out
+    # We know we sometimes get 'Out of memory' in the output.
+    # We'd like to know when this occurs with verbose log output.
     assert 'Out of memory' not in out  # Indicates could not connect
 
 

@@ -16,9 +16,9 @@ from __future__ import absolute_import
 
 import os
 import uuid
-import pytest
 
 import dialogflow_v2beta1 as dialogflow
+import pytest
 
 import knowledge_base_management
 

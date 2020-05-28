@@ -15,8 +15,8 @@
 # NOTE:
 # These unit tests mock logging.
 
-
 import pytest
+
 import main
 
 
