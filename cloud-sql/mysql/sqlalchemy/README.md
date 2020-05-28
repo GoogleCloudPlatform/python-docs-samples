@@ -32,22 +32,77 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 
 To run this application locally, download and install the `cloud_sql_proxy` by
 following the instructions
-[here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the
-proxy has been downloaded, use the following commands to create the `/cloudsql`
-directory and give the user running the proxy the appropriate permissions:
+[here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
+
+Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
+On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
+connection.
+
+### Launch proxy with TCP
+
+To run the sample locally with a TCP connection, set environment variables and launch the proxy as
+shown below.
+
+#### Linux / Mac OS
+Use these terminal commands to initialize environment variables:
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export DB_HOST='127.0.0.1:3306'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
+```
+
+Then use this command to launch the proxy in the background:
+```bash
+./cloud_sql_proxy -instances=<project-id>:<region>:<instance-name>=tcp:3306 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+```
+
+#### Windows/PowerShell
+Use these PowerShell commands to initialize environment variables:
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="<CREDENTIALS_JSON_FILE>"
+$env:DB_HOST="127.0.0.1:3306"
+$env:DB_USER="<DB_USER_NAME>"
+$env:DB_PASS="<DB_PASSWORD>"
+$env:DB_NAME="<DB_NAME>"
+```
+
+Then use this command to launch the proxy in a separate PowerShell session:
+```powershell
+Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<project-id>:<region>:<instance-name>=tcp:3306 -credential_file=<CREDENTIALS_JSON_FILE>"
+```
+
+### Launch proxy with Unix Domain Socket
+NOTE: this option is currently only supported on Linux and Mac OS. Windows users should use the
+[Launch proxy with TCP](#launch-proxy-with-tcp) option.
+
+To use a Unix socket, you'll need to create the `/cloudsql` directory and give write access to the
+user running the proxy. Use these commands to create the directory and set permissions:
 ```bash
 sudo mkdir /cloudsql
 sudo chown -R $USER /cloudsql
 ```
 
-Once the `/cloudsql` directory is ready, use the following command to start the proxy in the
-background:
+Use these terminal commands to initialize environment variables:
 ```bash
-./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
 ```
+
+Then use this command to launch the proxy in the background:
+```bash
+./cloud_sql_proxy -dir=/cloudsql --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+```
+
 Note: Make sure to run the command under a user with write access in the 
 `/cloudsql` directory. This proxy will use this folder to create a unix socket
 the application will use to connect to Cloud SQL. 
+
+### Testing the application
 
 Next, setup install the requirements into a virtual enviroment:
 ```bash
