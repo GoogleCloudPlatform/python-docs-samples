@@ -30,7 +30,6 @@ To run locally:
 # [START all]
 import argparse
 import datetime
-import os
 import pprint
 import random
 import time
@@ -104,12 +103,6 @@ def get_custom_data_point():
     """Dummy method to return a mock measurement for demonstration purposes.
     Returns a random number between 0 and 10"""
     length = random.randint(0, 10)
-    # [END all]
-    # Just in case, terminate the region tag.
-    # If there's an envvar "MONITORING_TEST_REPORT_VALUE" is set, use it.
-    if 'MONITORING_TEST_REPORT_VALUE' in os.environ:
-        length = int(os.environ.get('MONITORING_TEST_REPORT_VALUE'))
-    # [START all]
     print("reporting timeseries value {}".format(str(length)))
     return length
 
