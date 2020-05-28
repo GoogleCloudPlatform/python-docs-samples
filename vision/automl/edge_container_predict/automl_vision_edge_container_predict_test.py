@@ -30,18 +30,13 @@ sudo python -m pytest automl_vision_edge_container_predict_test.py
 
 import os
 import subprocess
+import tempfile
 import time
 
 import pytest
 
 import automl_vision_edge_container_predict as predict  # noqa
 
-
-# The absolute path of the current file. This will locate the model_path when
-# run docker containers.
-ROOT_DIR = os.environ.get(
-    'KOKORO_ROOT', os.path.abspath(os.path.dirname(__file__)))
-MODEL_PATH = os.path.join(ROOT_DIR, 'model_path')
 
 IMAGE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'test.jpg')
 # The cpu docker gcs path is from 'Edge container tutorial'.
@@ -60,19 +55,27 @@ PORT_NUMBER = 8505
 def edge_container_predict_server_port():
     # set up
     # Pull the CPU docker.
-    subprocess.check_output(['docker', 'pull', CPU_DOCKER_GCS_PATH])
-
-    # Get the sample saved model.
-    if not os.path.exists(MODEL_PATH):
-        os.mkdir(MODEL_PATH)
     subprocess.check_output(
-            ['gsutil', '-m', 'cp', SAMPLE_SAVED_MODEL, MODEL_PATH])
+        ['docker', 'pull', CPU_DOCKER_GCS_PATH],
+        env={'DOCKER_API_VERSION': '1.38'})
+
+    if os.environ.get('TRAMPOLINE_V2') == 'true':
+        # Use /tmp
+        model_path = tempfile.TemporaryDirectory()
+    else:
+        # Use project directory with Trampoline V1.
+        model_path = tempfile.TemporaryDirectory(dir=os.path.dirname(__file__))
+    print("Using model_path: {}".format(model_path))
+    # Get the sample saved model.
+    subprocess.check_output(
+        ['gsutil', '-m', 'cp', SAMPLE_SAVED_MODEL, model_path.name])
 
     # Start the CPU docker.
     subprocess.Popen(['docker', 'run', '--rm', '--name', NAME, '-v',
-                      MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
+                      model_path.name + ':/tmp/mounted_model/0001', '-p',
                       str(PORT_NUMBER) + ':8501', '-t',
-                      CPU_DOCKER_GCS_PATH])
+                      CPU_DOCKER_GCS_PATH],
+                     env={'DOCKER_API_VERSION': '1.38'})
     # Sleep a few seconds to wait for the container running.
     time.sleep(10)
 
@@ -80,9 +83,14 @@ def edge_container_predict_server_port():
 
     # tear down
     # Stop the container.
-    subprocess.check_output(['docker', 'stop', NAME])
+    subprocess.check_output(
+        ['docker', 'stop', NAME], env={'DOCKER_API_VERSION': '1.38'})
     # Remove the docker image.
-    subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
+    subprocess.check_output(
+        ['docker', 'rmi', CPU_DOCKER_GCS_PATH],
+        env={'DOCKER_API_VERSION': '1.38'})
+    # Remove the temporery directory.
+    model_path.cleanup()
 
 
 def test_edge_container_predict(capsys, edge_container_predict_server_port):
