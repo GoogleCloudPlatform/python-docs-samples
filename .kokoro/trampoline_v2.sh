@@ -32,16 +32,19 @@
 # Then run the script.
 # .kokoro/trampoline_v2.sh
 #
-# You can optionally change these environment variables:
-#
+# These environment variables are required:
 # TRAMPOLINE_IMAGE: The docker image to use.
 # TRAMPOLINE_DOCKERFILE: The location of the Dockerfile.
+#
+# You can optionally change these environment variables:
 # TRAMPOLINE_IMAGE_UPLOAD:
 #     (true|false): Whether to upload the Docker image after the
 #                   successful builds.
 # TRAMPOLINE_BUILD_FILE: The script to run in the docker container.
 # TRAMPOLINE_WORKSPACE: The workspace path in the docker container.
 #                       Defaults to /workspace.
+# TRAMPOLINE_SKIP_DOWNLOAD_IMAGE: Skip downloading the image when you
+#                                 know you have the image locally.
 #
 # Potentially there are some repo specific envvars in .trampolinerc in
 # the project root.
@@ -194,19 +197,24 @@ do
     fi
 done
 
-log_yellow "Preparing Docker image."
-# Download the docker image specified by `TRAMPOLINE_IMAGE`
-
-set +e  # ignore error on docker operations
-# We may want to add --max-concurrent-downloads flag.
-
-log_yellow "Start pulling the Docker image: ${TRAMPOLINE_IMAGE}."
-if docker pull "${TRAMPOLINE_IMAGE}"; then
-    log_green "Finished pulling the Docker image: ${TRAMPOLINE_IMAGE}."
+if [[ "${TRAMPOLINE_SKIP_DOWNLOAD_IMAGE:-false}" == "true" ]]; then
+    log_yellow "Re-using the local Docker image."
     has_cache="true"
 else
-    log_red "Failed pulling the Docker image: ${TRAMPOLINE_IMAGE}."
-    has_cache="false"
+    log_yellow "Preparing Docker image."
+    # Download the docker image specified by `TRAMPOLINE_IMAGE`
+
+    set +e  # ignore error on docker operations
+    # We may want to add --max-concurrent-downloads flag.
+
+    log_yellow "Start pulling the Docker image: ${TRAMPOLINE_IMAGE}."
+    if docker pull "${TRAMPOLINE_IMAGE}"; then
+	log_green "Finished pulling the Docker image: ${TRAMPOLINE_IMAGE}."
+	has_cache="true"
+    else
+	log_red "Failed pulling the Docker image: ${TRAMPOLINE_IMAGE}."
+	has_cache="false"
+    fi
 fi
 
 

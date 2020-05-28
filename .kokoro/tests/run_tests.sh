@@ -68,12 +68,12 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
 # Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
-     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
-${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+sudo wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
+     -O /bin/cloud_sql_proxy && sudo chmod +x /bin/cloud_sql_proxy
+cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
        ${HOME}/cloud_sql_proxy.log &
-${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
-       ${HOME}/cloud_sql_proxy.log &
+cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+       ${HOME}/cloud_sql_proxy-postgres.log &
 echo -e "\nCloud SQL proxy started."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
@@ -102,12 +102,23 @@ for file in **/requirements.txt; do
 
     # First we look up the environment variable `RUN_TESTS_DIRS`. If
     # the value is set, we'll iterate through the colon separated
-    # directory list.
+    # directory list. If the target directory is not under any
+    # directory in the list, we skip this directory.
+    # This environment variables are primarily for
+    # `scripts/run_tests_local.sh`.
+    #
+    # The value must be a colon separated list of relative paths from
+    # the project root.
+    #
+    # Example:
+    #   cdn:appengine/flexible
+    #     run tests for `cdn` and `appengine/flexible` directories.
+    #   logging/cloud-client
+    #     only run tests for `logging/cloud-client` directory.
+    #
     if [[ -n "${RUN_TESTS_DIRS:-}" ]]; then
-	IFS=":"
-	read -ra run_tests_dirs <<< "${RUN_TESTS_DIRS}"
 	match=0
-	for d in "${run_tests_dirs[@]}"; do
+	for d in $(echo "${RUN_TESTS_DIRS}" | tr ":" "\n"); do
 	    # If the current dir starts with one of the
 	    # RUN_TESTS_DIRS, we should run the tests.
 	    if [[ "${file}" = "${d}"* ]]; then
@@ -115,12 +126,12 @@ for file in **/requirements.txt; do
 		break
 	    fi
 	done
-	IFS=" "
 	if [[ $match -eq 0 ]]; then
 	    continue
 	fi
+    fi
     # If $DIFF_FROM is set, use it to check for changes in this directory.
-    elif [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
+    if [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then

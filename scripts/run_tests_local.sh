@@ -54,9 +54,8 @@ directory="$(realpath "$1")"
 relative_dir=${directory#"${PROJECT_ROOT}/"}
 export RUN_TESTS_DIRS="${relative_dir}"
 
-if [[ -z "${TRAMPOLINE_DOCKERFILE:-}" ]]; then
-    export TRAMPOLINE_DOCKERFILE="none"
-fi
+# We want to test this directory regardless of whether there's a change.
+export TRAMPOLINE_BUILD_FILE=".kokoro/tests/run_tests.sh"
 
 if [[ $# -ge 2 ]]; then
     sessions=("${@:2}")
@@ -71,4 +70,7 @@ for session in "${sessions[@]}"
 do
     export RUN_TESTS_SESSION="${session}"
     "${PROJECT_ROOT}/.kokoro/trampoline_v2.sh"
+    # We can re-use the image after the first iteration.
+    export TRAMPOLINE_SKIP_DOWNLOAD_IMAGE="true"
+    export TRAMPOLINE_DOCKERFILE="none"
 done
