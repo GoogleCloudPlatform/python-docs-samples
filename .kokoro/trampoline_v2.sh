@@ -357,3 +357,5 @@ if [[ "${update_cache}" == "true" ]] && \
 	log_red "Failed uploading the Docker image."
     fi
 fi
+
+exit "${test_retval}"
