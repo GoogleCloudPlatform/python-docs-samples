@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-def run_natality_tutorial():
+def run_natality_tutorial(override_values={}):
     # [START bigquery_query_natality_tutorial]
     """Create a Google BigQuery linear regression input table.
 
@@ -37,8 +37,14 @@ def run_natality_tutorial():
     client = bigquery.Client()
 
     # Prepare a reference to a new dataset for storing the query results.
-    dataset_ref = client.dataset('natality_regression')
-    dataset = bigquery.Dataset(dataset_ref)
+    dataset_id = 'natality_regression'
+    # [END bigquery_query_natality_tutorial]
+    # To facilitate testing, we replace values with alternatives
+    # provided by the testing harness.
+    dataset_id = override_values.get("dataset_id", dataset_id)
+    # [START bigquery_query_natality_tutorial]
+
+    dataset = bigquery.Dataset(client.dataset(dataset_id))
 
     # Create the new BigQuery dataset.
     dataset = client.create_dataset(dataset)
