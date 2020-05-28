@@ -68,9 +68,7 @@ def create_subscription(project_id, topic_name, subscription_name):
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     subscription = subscriber.create_subscription(subscription_path, topic_path)
 
@@ -100,12 +98,8 @@ def create_subscription_with_dead_letter_topic(
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
-    dead_letter_topic_path = subscriber.topic_path(
-        project_id, dead_letter_topic_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    dead_letter_topic_path = subscriber.topic_path(project_id, dead_letter_topic_name)
 
     dead_letter_policy = DeadLetterPolicy(
         dead_letter_topic=dead_letter_topic_path, max_delivery_attempts=10
@@ -131,9 +125,7 @@ def create_subscription_with_dead_letter_topic(
     # [END pubsub_dead_letter_create_subscription]
 
 
-def create_push_subscription(
-    project_id, topic_name, subscription_name, endpoint
-):
+def create_push_subscription(project_id, topic_name, subscription_name, endpoint):
     """Create a new push subscription on the given topic."""
     # [START pubsub_create_push_subscription]
     from google.cloud import pubsub_v1
@@ -145,9 +137,7 @@ def create_push_subscription(
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
@@ -171,9 +161,7 @@ def delete_subscription(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     subscriber.delete_subscription(subscription_path)
 
@@ -183,9 +171,7 @@ def delete_subscription(project_id, subscription_name):
     # [END pubsub_delete_subscription]
 
 
-def update_push_subscription(
-    project_id, topic_name, subscription_name, endpoint
-):
+def update_push_subscription(project_id, topic_name, subscription_name, endpoint):
     """
     Updates an existing Pub/Sub subscription's push endpoint URL.
     Note that certain properties of a subscription, such as
@@ -200,9 +186,7 @@ def update_push_subscription(
     # TODO endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
@@ -241,19 +225,14 @@ def update_subscription_with_dead_letter_policy(
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
-    dead_letter_topic_path = subscriber.topic_path(
-        project_id, dead_letter_topic_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    dead_letter_topic_path = subscriber.topic_path(project_id, dead_letter_topic_name)
 
     subscription_before_update = subscriber.get_subscription(subscription_path)
     print("Before the update: {}".format(subscription_before_update))
 
     subscription_before_update.HasField("dead_letter_policy")
 
-    assert 'dead_letter_policy' in properties
     update_mask = {"paths": {"dead_letter_policy": {"max_delivery_attempts"}}}
 
     # Construct a dead letter policy you expect to have after the update.
@@ -265,9 +244,7 @@ def update_subscription_with_dead_letter_policy(
     # after the update. Here, values in the required fields (name, topic) help
     # identify the subscription.
     subscription = pubsub_v1.types.Subscription(
-        name=subscription_path,
-        topic=topic_path,
-        dead_letter_policy=dead_letter_policy,
+        name=subscription_path, topic=topic_path, dead_letter_policy=dead_letter_policy,
     )
 
     subscription_after_update = subscriber.update_subscription(
@@ -285,7 +262,6 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     """Remove dead letter policy from a subscription."""
     # [START pubsub_dead_letter_remove]
     from google.cloud import pubsub_v1
-    from google.cloud.pubsub_v1.types import DeadLetterPolicy
 
     # TODO project_id = "Your Google Cloud Project ID"
     # This is an existing topic that the subscription with dead letter policy
@@ -296,16 +272,16 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     subscription_before_update = subscriber.get_subscription(subscription_path)
     print("Before removing the policy: {}".format(subscription_before_update))
 
     update_mask = {
-        "paths": {"dead_letter_policy": {"dead_letter_topic"}},
-        "paths": {"dead_letter_policy": {"max_delivery_attempts"}},
+        "paths": {
+            {"dead_letter_policy": {"dead_letter_topic"}},
+            {"dead_letter_policy": {"max_delivery_attempts"}},
+        }
     }
 
     # Construct the subscription with the dead letter policy you expect to have
@@ -320,8 +296,6 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     )
 
     print("After removing the policy: {}".format(subscription_after_update))
-
-    import inspect
 
     subscriber.close()
     # [END pubsub_dead_letter_remove]
@@ -342,17 +316,13 @@ def receive_messages(project_id, subscription_name, timeout=None):
     subscriber = pubsub_v1.SubscriberClient()
     # The `subscription_path` method creates a fully qualified identifier
     # in the form `projects/{project_id}/subscriptions/{subscription_name}`
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     def callback(message):
         print("Received message: {}".format(message))
         message.ack()
 
-    streaming_pull_future = subscriber.subscribe(
-        subscription_path, callback=callback
-    )
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
     print("Listening for messages on {}..\n".format(subscription_path))
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
@@ -381,9 +351,7 @@ def receive_messages_with_custom_attributes(
     # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     def callback(message):
         print("Received message: {}".format(message.data))
@@ -394,9 +362,7 @@ def receive_messages_with_custom_attributes(
                 print("{}: {}".format(key, value))
         message.ack()
 
-    streaming_pull_future = subscriber.subscribe(
-        subscription_path, callback=callback
-    )
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
     print("Listening for messages on {}..\n".format(subscription_path))
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
@@ -411,9 +377,7 @@ def receive_messages_with_custom_attributes(
     # [END pubsub_subscriber_sync_pull_custom_attributes]
 
 
-def receive_messages_with_flow_control(
-    project_id, subscription_name, timeout=None
-):
+def receive_messages_with_flow_control(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
     from google.cloud import pubsub_v1
@@ -424,9 +388,7 @@ def receive_messages_with_flow_control(
     # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     def callback(message):
         print("Received message: {}".format(message.data))
@@ -460,9 +422,7 @@ def synchronous_pull(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     NUM_MESSAGES = 3
 
@@ -501,9 +461,7 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     NUM_MESSAGES = 2
     ACK_DEADLINE = 30
@@ -542,15 +500,11 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
             if process.is_alive():
                 # `ack_deadline_seconds` must be between 10 to 600.
                 subscriber.modify_ack_deadline(
-                    subscription_path,
-                    [ack_id],
-                    ack_deadline_seconds=ACK_DEADLINE,
+                    subscription_path, [ack_id], ack_deadline_seconds=ACK_DEADLINE,
                 )
                 logger.info(
                     "{}: Reset ack deadline for {} for {}s".format(
-                        time.strftime("%X", time.gmtime()),
-                        msg_data,
-                        ACK_DEADLINE,
+                        time.strftime("%X", time.gmtime()), msg_data, ACK_DEADLINE,
                     )
                 )
 
@@ -589,17 +543,13 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     def callback(message):
         print("Received message: {}".format(message))
         message.ack()
 
-    streaming_pull_future = subscriber.subscribe(
-        subscription_path, callback=callback
-    )
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
     print("Listening for messages on {}..\n".format(subscription_path))
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
@@ -628,18 +578,14 @@ def receive_messages_with_delivery_attempts(
     # TODO subscription_name = "Your Pubsub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     def callback(message):
         print("Received message: {}".format(message))
         print("With delivery attempts: {}".format(message.delivery_attempt))
         message.ack()
 
-    streaming_pull_future = subscriber.subscribe(
-        subscription_path, callback=callback
-    )
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
     print("Listening for messages on {}..\n".format(subscription_path))
 
     # Wrap subscriber in a 'with' block to automatically call close() when done.
@@ -660,8 +606,7 @@ def receive_messages_with_delivery_attempts(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Your Google Cloud project ID")
 
@@ -675,9 +620,7 @@ if __name__ == "__main__":
         "list-in-project", help=list_subscriptions_in_project.__doc__
     )
 
-    create_parser = subparsers.add_parser(
-        "create", help=create_subscription.__doc__
-    )
+    create_parser = subparsers.add_parser("create", help=create_subscription.__doc__)
     create_parser.add_argument("topic_name")
     create_parser.add_argument("subscription_name")
 
@@ -696,9 +639,7 @@ if __name__ == "__main__":
     create_push_parser.add_argument("subscription_name")
     create_push_parser.add_argument("endpoint")
 
-    delete_parser = subparsers.add_parser(
-        "delete", help=delete_subscription.__doc__
-    )
+    delete_parser = subparsers.add_parser("delete", help=delete_subscription.__doc__)
     delete_parser.add_argument("subscription_name")
 
     update_push_parser = subparsers.add_parser(
@@ -722,9 +663,7 @@ if __name__ == "__main__":
     remove_dead_letter_policy_parser.add_argument("topic_name")
     remove_dead_letter_policy_parser.add_argument("subscription_name")
 
-    receive_parser = subparsers.add_parser(
-        "receive", help=receive_messages.__doc__
-    )
+    receive_parser = subparsers.add_parser("receive", help=receive_messages.__doc__)
     receive_parser.add_argument("subscription_name")
     receive_parser.add_argument("--timeout", default=None, type=float)
 
@@ -741,9 +680,7 @@ if __name__ == "__main__":
         "receive-flow-control", help=receive_messages_with_flow_control.__doc__
     )
     receive_with_flow_control_parser.add_argument("subscription_name")
-    receive_with_flow_control_parser.add_argument(
-        "--timeout", default=None, type=float
-    )
+    receive_with_flow_control_parser.add_argument("--timeout", default=None, type=float)
 
     synchronous_pull_parser = subparsers.add_parser(
         "receive-synchronously", help=synchronous_pull.__doc__
@@ -754,9 +691,7 @@ if __name__ == "__main__":
         "receive-synchronously-with-lease",
         help=synchronous_pull_with_lease_management.__doc__,
     )
-    synchronous_pull_with_lease_management_parser.add_argument(
-        "subscription_name"
-    )
+    synchronous_pull_with_lease_management_parser.add_argument("subscription_name")
 
     listen_for_errors_parser = subparsers.add_parser(
         "listen-for-errors", help=listen_for_errors.__doc__
@@ -768,9 +703,7 @@ if __name__ == "__main__":
         "receive-messages-with-delivery-attempts",
         help=receive_messages_with_delivery_attempts.__doc__,
     )
-    receive_messages_with_delivery_attempts_parser.add_argument(
-        "subscription_name"
-    )
+    receive_messages_with_delivery_attempts_parser.add_argument("subscription_name")
     receive_messages_with_delivery_attempts_parser.add_argument(
         "--timeout", default=None, type=float
     )
@@ -782,9 +715,7 @@ if __name__ == "__main__":
     elif args.command == "list-in-project":
         list_subscriptions_in_project(args.project_id)
     elif args.command == "create":
-        create_subscription(
-            args.project_id, args.topic_name, args.subscription_name
-        )
+        create_subscription(args.project_id, args.topic_name, args.subscription_name)
     elif args.command == "create-with-dead-letter-policy":
         create_subscription_with_dead_letter_topic(
             args.project_id,
@@ -794,19 +725,13 @@ if __name__ == "__main__":
         )
     elif args.command == "create-push":
         create_push_subscription(
-            args.project_id,
-            args.topic_name,
-            args.subscription_name,
-            args.endpoint,
+            args.project_id, args.topic_name, args.subscription_name, args.endpoint,
         )
     elif args.command == "delete":
         delete_subscription(args.project_id, args.subscription_name)
     elif args.command == "update-push":
         update_push_subscription(
-            args.project_id,
-            args.topic_name,
-            args.subscription_name,
-            args.endpoint,
+            args.project_id, args.topic_name, args.subscription_name, args.endpoint,
         )
     elif args.command == "update-dead-letter-policy":
         update_subscription_with_dead_letter_policy(
@@ -832,9 +757,7 @@ if __name__ == "__main__":
     elif args.command == "receive-synchronously":
         synchronous_pull(args.project_id, args.subscription_name)
     elif args.command == "receive-synchronously-with-lease":
-        synchronous_pull_with_lease_management(
-            args.project_id, args.subscription_name
-        )
+        synchronous_pull_with_lease_management(args.project_id, args.subscription_name)
     elif args.command == "listen-for-errors":
         listen_for_errors(args.project_id, args.subscription_name, args.timeout)
     elif args.command == "receive-messages-with-delivery-attempts":
