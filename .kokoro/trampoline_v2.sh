@@ -269,8 +269,7 @@ docker_flags=(
 
     # Run the docker script with the user id. Because the docker image gets to
     # write in ${PWD} you typically want this to be your user id.
-    # Also to allow docker in docker, we use docker gid on the host.
-    "--user" "${user_uid}:${docker_gid}"
+    "--user" "${user_uid}:${user_gid}"
 
     # Pass down the USER.
     "--env" "USER=${user_name}"
