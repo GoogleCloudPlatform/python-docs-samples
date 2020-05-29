@@ -76,14 +76,20 @@ Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<proj
 NOTE: this option is currently only supported on Linux and Mac OS. Windows users should use the
 [Launch proxy with TCP](#launch-proxy-with-tcp) option.
 
-To use a Unix socket, you'll need to create the `/cloudsql` directory and give write access to the
-user running the proxy. Use these commands to create the directory and set permissions:
+To use a Unix socket, you'll need to create a directory and give write access to the user running
+the proxy. For example:
+
 ```bash
 sudo mkdir /cloudsql
 sudo chown -R $USER /cloudsql
 ```
 
-Use these terminal commands to initialize environment variables:
+You'll also need to initialize an environment variable containing the directory you just created:
+```bash
+export DB_SOCKET_PATH=/path/to/the/new/directory
+```
+
+Use these terminal commands to initialize other environment variables as well:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
@@ -94,7 +100,7 @@ export DB_NAME='<DB_NAME>'
 
 Then use this command to launch the proxy in the background:
 ```bash
-./cloud_sql_proxy -dir=/cloudsql --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+./cloud_sql_proxy -dir=$DB_SOCKET_PATH --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 ### Testing the application
