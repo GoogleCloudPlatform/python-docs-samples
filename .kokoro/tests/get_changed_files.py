@@ -21,8 +21,8 @@ import requests
 
 
 _PR_URL_TEMPLATE = (
-    'https://api.github.com/repos/googleapis/google-cloud-python/pulls/'
-    '{}/files'
+    'https://api.github.com/repos/GoogleCloudPlatform/python-docs-samples/'
+    'pulls/{}/files'
 )
 
 
