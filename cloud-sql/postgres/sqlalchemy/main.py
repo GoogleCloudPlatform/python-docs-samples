@@ -71,11 +71,11 @@ def init_connection_engine():
 
 def init_tcp_connection_engine(db_config):
     # [START cloud_sql_postgres_sqlalchemy_create_tcp]
-    db_scoket_addr = os.environ.get("DB_HOST").split(":")
+    db_socket_addr = os.environ.get("DB_HOST").split(":")
 
     # Extract host and port from socket address
-    db_host = db_scoket_addr[0]
-    db_port = int(db_scoket_addr[1])
+    db_host = db_socket_addr[0]
+    db_port = int(db_socket_addr[1])
 
     return sqlalchemy.create_engine(
         # Equivalent URL:
