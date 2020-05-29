@@ -68,11 +68,11 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
 # Run Cloud SQL proxy (background process exit when script does)
-sudo wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
-     -O /bin/cloud_sql_proxy && sudo chmod +x /bin/cloud_sql_proxy
-cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
+     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
+${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
        ${HOME}/cloud_sql_proxy.log &
-cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
        ${HOME}/cloud_sql_proxy-postgres.log &
 echo -e "\nCloud SQL proxy started."
 
