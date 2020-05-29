@@ -63,3 +63,4 @@ export OBJECT_DETECTION_MODEL_ID=
 
 # For test driver (testing/run_tests.sh)
 export GITHUB_ACCESS_TOKEN=
+export GITHUB_USERNAME=

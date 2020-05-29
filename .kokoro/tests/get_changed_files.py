@@ -29,12 +29,13 @@ _PR_URL_TEMPLATE = (
 
 def get_changed_files_from_pr(pr):
     url = _PR_URL_TEMPLATE.format(pr)
-    headers = {}
-    if 'GITHUB_ACCESS_TOKEN' in os.environ:
-        headers['Authorization'] = 'token %'.format(
-            os.environ.get('GITHUB_ACCESS_TOKEN'))
+    session = requests.Session()
+    if 'GITHUB_ACCESS_TOKEN' in os.environ and 'GITHUB_USERNAME' in os.environ:
+       session.auth = (
+           os.environ.get('GITHUB_USERNAME'),
+           os.environ.get('GITHUB_ACCESS_TOKEN'))
     while url is not None:
-        response = requests.get(url, headers=headers)
+        response = session.get(url)
         for info in response.json():
             yield info['filename']
         url = response.links.get('next', {}).get('url')
