@@ -26,15 +26,15 @@ cd github/python-docs-samples
 
 # For debugging
 pip --version
-python --version
-/usr/bin/env python --version
+python3 --version
+/usr/bin/env python3 --version
 pip install requests
 
 # `--only-diff-pr`: detect
 changed_files=()
 if [[ $* == *--only-diff-pr* ]]; then
     # Get the changed files with this PR
-    mapfile -t changed_files < <( .kokoro/tests/get_changed_files.py )
+    mapfile -t changed_files < <( python3 .kokoro/tests/get_changed_files.py )
     echo "Changed files:"
     echo "${changed_files[@]}"
 fi
