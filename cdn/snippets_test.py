@@ -16,6 +16,8 @@
 
 """Tests for snippets."""
 
+# Dummy change for testing the change detector
+
 import datetime
 
 import snippets
