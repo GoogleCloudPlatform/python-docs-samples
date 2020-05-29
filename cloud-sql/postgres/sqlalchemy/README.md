@@ -80,9 +80,8 @@ To use a Unix socket, you'll need to create a directory and give write access to
 the proxy. For example:
 
 ```bash
-sudo mkdir /cloudsql
-sudo chown -R $USER /cloudsql
-```
+sudo mkdir /path/to/the/new/directory
+sudo chown -R $USER /path/to/the/new/directory
 
 You'll also need to initialize an environment variable containing the directory you just created:
 ```bash
