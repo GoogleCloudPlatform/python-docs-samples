@@ -24,7 +24,7 @@ DIFF_FROM=""
 
 # `--only-diff-master will only run tests on project changes on the last common commit from the master branch.
 if [[ $* == *--only-diff-master* ]]; then
-  git diff --quiet "$DIFF_FROM" .kokoro/tests .kokoro/docker
+  git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker
   CHANGED=$?
   if [[ "$CHANGED" -eq 0 ]]; then
     DIFF_FROM="origin/master..."
