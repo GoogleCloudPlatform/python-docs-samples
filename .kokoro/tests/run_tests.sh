@@ -22,17 +22,25 @@ shopt -s globstar
 
 DIFF_FROM=""
 
-# `--only-diff-master will only run tests on project changes from the master branch.
-if [[ $* == *--only-diff-master* ]]; then
-    DIFF_FROM="origin/master.."
+cd github/python-docs-samples
+
+# `--only-diff-pr`: detect
+changed_files=()
+if [[ $* == *--only-diff-pr* ]]; then
+    # Get the changed files with this PR
+    pip install requests
+    mapfile -t changed_files < <( .kokoro/tests/get_changed_files.py )
+    echo "Changed files:"
+    echo "${changed_files[@]}"
 fi
+
+# We exit early for prototyping
+exit 0
 
 # `--only-diff-master will only run tests on project changes from the previous commit.
 if [[ $* == *--only-diff-head* ]]; then
     DIFF_FROM="HEAD~.."
 fi
-
-cd github/python-docs-samples
 
 # install nox for testing
 pip install -q nox
