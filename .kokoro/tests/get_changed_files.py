@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright (C) 2020 Google LLC
 #
@@ -28,9 +28,12 @@ _PR_URL_TEMPLATE = (
 
 def get_changed_files_from_pr(pr):
     url = _PR_URL_TEMPLATE.format(pr)
-    ret = ''
+    headers = {}
+    if 'GITHUB_ACCESS_TOKEN' in os.environ:
+        headers['Authorization'] = 'token %'.format(
+            os.environ.get('GITHUB_ACCESS_TOKEN'))
     while url is not None:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         for info in response.json():
             yield info['filename']
         url = response.links.get('next', {}).get('url')
@@ -41,5 +44,5 @@ if __name__ == '__main__':
     if 'KOKORO_GITHUB_PULL_REQUEST_NUMBER' in os.environ:
         for f in get_changed_files_from_pr(
             os.environ.get('KOKORO_GITHUB_PULL_REQUEST_NUMBER')):
-            print f
+            print(f)
     # Other cases are not supported.
