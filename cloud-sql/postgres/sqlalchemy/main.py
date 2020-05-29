@@ -79,7 +79,7 @@ def init_tcp_connection_engine(db_config):
 
     return sqlalchemy.create_engine(
         # Equivalent URL:
-        # postgres+pg8000://<db_user>:<db_pass>@/<db_name>?unix_sock=/cloudsql/<cloud_sql_instance_name>/.s.PGSQL.5432
+        # postgres+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
         sqlalchemy.engine.url.URL(
             drivername="postgres+pg8000",
             username=db_user,
