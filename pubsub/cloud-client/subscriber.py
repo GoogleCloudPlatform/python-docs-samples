@@ -293,9 +293,8 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
         ]
     )
 
-    # Construct the subscription with a dead letter policy you expect to have
-    # after the update. Here, values in the required fields (name, topic) help
-    # identify the subscription.
+    # Construct the subscription (without any dead letter policy) that you
+    # expect to have after the update.
     subscription = pubsub_v1.types.Subscription(
         name=subscription_path, topic=topic_path
     )
