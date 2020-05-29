@@ -75,6 +75,12 @@ else
     test_all="true"
 fi
 
+# Debug output
+echo "Changed files:"
+echo "${changed_files[@]}"
+echo "diff_mode: ${diff_mode}"
+echo "test_all: ${test_all}"
+
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
 ./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
@@ -87,12 +93,6 @@ set +e
 # Use RTN to return a non-zero value if the test fails.
 RTN=0
 ROOT=$(pwd)
-
-# Debug output
-echo "Changed files:"
-echo "${changed_files[@]}"
-echo "diff_mode: ${diff_mode}"
-echo "test_all: ${test_all}"
 
 # Find all requirements.txt in the repository (may break on whitespace).
 for file in **/requirements.txt; do
@@ -131,7 +131,7 @@ for file in **/requirements.txt; do
     fi
 
     # Use nox to execute the tests for the project.
-    Echo "Temporarily disabled the tests."
+    echo "Temporarily disabled the tests."
     # nox -s "$RUN_TESTS_SESSION"
 
     EXIT=$?
