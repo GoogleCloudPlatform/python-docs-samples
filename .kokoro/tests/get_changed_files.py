@@ -18,6 +18,7 @@ import os
 import sys
 
 import requests
+import subprocess
 
 
 _PR_URL_TEMPLATE = (
@@ -39,10 +40,18 @@ def get_changed_files_from_pr(pr):
         url = response.links.get('next', {}).get('url')
 
 
+def get_changed_files_from_base(base):
+    return subprocess.check_output([
+        'git', 'diff', '--name-only', f'{base}..HEAD',
+    ], stderr=subprocess.DEVNULL).decode('utf8').strip().split('\n')
+
+
 if __name__ == '__main__':
     #  TODO: portability issue
     if 'KOKORO_GITHUB_PULL_REQUEST_NUMBER' in os.environ:
         for f in get_changed_files_from_pr(
             os.environ.get('KOKORO_GITHUB_PULL_REQUEST_NUMBER')):
             print(f)
-    # Other cases are not supported.
+    else:
+        for f in get_changed_files_from_base('HEAD~1'):
+            print(f)

@@ -20,24 +20,7 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
-DIFF_FROM=""
-
 cd github/python-docs-samples
-
-# For .kokoro/tests/get_changed_files.py
-pip install -q requests
-
-# `--only-diff-pr`: detect the changed files in the pull requests.
-changed_files=()
-if [[ $* == *--only-diff-pr* ]]; then
-    # Get the changed files with this PR
-    mapfile -t changed_files < <( python3 .kokoro/tests/get_changed_files.py )
-fi
-
-# `--only-diff-master will only run tests on project changes from the previous commit.
-if [[ $* == *--only-diff-head* ]]; then
-    DIFF_FROM="HEAD~.."
-fi
 
 # install nox for testing
 pip install -q nox
@@ -67,6 +50,31 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
+# For .kokoro/tests/get_changed_files.py
+pip install -q requests
+
+# `--only-diff`: detect the changed files in the pull requests or the
+# last commit.
+changed_files=()
+if [[ $* == *--only-diff* ]]; then
+    # Get the changed files with this PR
+    diff_mode="true"
+    mapfile -t changed_files < <( python3 .kokoro/tests/get_changed_files.py )
+    # If some files in .kokoro directory have any changes, we will
+    # test everything.
+    test_all="false"
+    for changed_file in "${changed_files[@]}"
+    do
+	if [[ "${changed_file}" == ".kokoro/docker/"* ]] || \
+	       [[ "${changed_file}" == ".kokoro/tests/"* ]]; then
+	    test_all="true"
+	fi
+    done
+else
+    diff_mode="false"
+    test_all="true"
+fi
+
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
 ./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
@@ -80,34 +88,11 @@ set +e
 RTN=0
 ROOT=$(pwd)
 
-# If some files in .kokoro directory have any changes, we will test everything.
-if [[ -n "${DIFF_FROM:-}" ]]; then
-    test_all="true"
-    git diff --quiet "$DIFF_FROM" .kokoro/docker .kokoro/tests
-    CHANGED=$?
-    if [[ "$CHANGED" -eq 0 ]]; then
-        test_all="false"
-    fi
-elif [[ "${#changed_files[@]}" -ne 0 ]]; then
-    test_all="false"
-    for changed_file in "${changed_files[@]}"
-    do
-	if [[ "${changed_file}" == ".kokoro/docker/"* ]] || \
-	       [[ "${changed_file}" == ".kokoro/tests/"* ]]; then
-	    test_all="true"
-	fi
-    done
-else
-    test_all="true"
-fi
-
 # Debug output
 echo "Changed files:"
 echo "${changed_files[@]}"
+echo "diff_mode: ${diff_mode}"
 echo "test_all: ${test_all}"
-
-# We exit early for prototyping
-exit 0
 
 # Find all requirements.txt in the repository (may break on whitespace).
 for file in **/requirements.txt; do
@@ -116,14 +101,18 @@ for file in **/requirements.txt; do
     file=$(dirname "$file")
     cd "$file"
 
-    # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
-        git diff --quiet "$DIFF_FROM" .
-        CHANGED=$?
-        if [[ "$CHANGED" -eq 0 ]]; then
-          # echo -e "\n Skipping $file: no changes in folder.\n"
-          continue
-        fi
+    # Skip unchanged directories.
+    if [[ "${diff_mode}" == "true" ]] && [[ "${test_all}" == "false" ]]; then
+	should_test="false"
+	for changed_file in "${changed_files[@]}"
+	do
+	    if [[ "${changed_file}" == "${file}"* ]]; then
+		should_test="true"
+	    fi
+	done
+	if [[ "${should_test}" == "false" ]]; then
+	    continue
+	fi
     fi
 
     echo "------------------------------------------------------------"
@@ -142,7 +131,9 @@ for file in **/requirements.txt; do
     fi
 
     # Use nox to execute the tests for the project.
-    nox -s "$RUN_TESTS_SESSION"
+    Echo "Temporarily disabled the tests."
+    # nox -s "$RUN_TESTS_SESSION"
+
     EXIT=$?
 
     # If REPORT_TO_BUILD_COP_BOT is set to "True", send the test log
