@@ -1,4 +1,4 @@
-pandas==1.0.3
+pandas==1.0.4
 google-cloud-bigquery==1.24.0
 flaky==3.6.1
 mock==4.0.2
