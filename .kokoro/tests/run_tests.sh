@@ -24,23 +24,15 @@ DIFF_FROM=""
 
 cd github/python-docs-samples
 
-# For debugging
-pip --version
-python3 --version
-/usr/bin/env python3 --version
-pip install requests
+# For .kokoro/tests/get_changed_files.py
+pip install -q requests
 
-# `--only-diff-pr`: detect
+# `--only-diff-pr`: detect the changed files in the pull requests.
 changed_files=()
 if [[ $* == *--only-diff-pr* ]]; then
     # Get the changed files with this PR
     mapfile -t changed_files < <( python3 .kokoro/tests/get_changed_files.py )
-    echo "Changed files:"
-    echo "${changed_files[@]}"
 fi
-
-# We exit early for prototyping
-exit 0
 
 # `--only-diff-master will only run tests on project changes from the previous commit.
 if [[ $* == *--only-diff-head* ]]; then
@@ -89,14 +81,33 @@ RTN=0
 ROOT=$(pwd)
 
 # If some files in .kokoro directory have any changes, we will test everything.
-test_all="true"
 if [[ -n "${DIFF_FROM:-}" ]]; then
+    test_all="true"
     git diff --quiet "$DIFF_FROM" .kokoro/docker .kokoro/tests
     CHANGED=$?
     if [[ "$CHANGED" -eq 0 ]]; then
         test_all="false"
     fi
+elif [[ "${#changed_files[@]}" -ne 0 ]]; then
+    test_all="false"
+    for changed_file in "${changed_files[@]}"
+    do
+	if [[ "${changed_file}" == ".kokoro/docker/"* ]] || \
+	       [[ "${changed_file}" == ".kokoro/tests/"* ]]; then
+	    test_all="true"
+	fi
+    done
+else
+    test_all="true"
 fi
+
+# Debug output
+echo "Changed files:"
+echo "${changed_files[@]}"
+echo "test_all: ${test_all}"
+
+# We exit early for prototyping
+exit 0
 
 # Find all requirements.txt in the repository (may break on whitespace).
 for file in **/requirements.txt; do
