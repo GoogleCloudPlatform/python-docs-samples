@@ -21,6 +21,10 @@ shopt -s globstar
 
 DIFF_FROM=""
 
+# We need to temporarily turn off -e for detecting changes in the test
+# driver.
+set +e
+
 # `--only-diff-master` will only run tests on project changes on the
 # last common commit from the master branch.
 if [[ $* == *--only-diff-master* ]]; then
@@ -33,6 +37,9 @@ if [[ $* == *--only-diff-master* ]]; then
 	echo "Changes to test driver files detected. Running full tests."
     fi
 fi
+
+# Turning on the -e again.
+set -e
 
 # `--only-diff-head` will only run tests on project changes from the
 # previous commit.
