@@ -21,12 +21,23 @@ shopt -s globstar
 
 DIFF_FROM=""
 
-# `--only-diff-master will only run tests on project changes from the master branch.
+# `--only-diff-master` will only run tests on project changes on the
+# last common commit from the master branch.
 if [[ $* == *--only-diff-master* ]]; then
-    DIFF_FROM="origin/master.."
+    set +e
+    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="origin/master..."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
 fi
 
-# `--only-diff-master will only run tests on project changes from the previous commit.
+# `--only-diff-head` will only run tests on project changes from the
+# previous commit.
 if [[ $* == *--only-diff-head* ]]; then
     DIFF_FROM="HEAD~.."
 fi
@@ -83,16 +94,6 @@ set +e
 RTN=0
 ROOT=$(pwd)
 
-# If some files in .kokoro directory have any changes, we will test everything.
-test_all="true"
-if [[ -n "${DIFF_FROM:-}" ]]; then
-    git diff --quiet "$DIFF_FROM" .kokoro/docker .kokoro/tests
-    CHANGED=$?
-    if [[ "$CHANGED" -eq 0 ]]; then
-        test_all="false"
-    fi
-fi
-
 # Find all requirements.txt in the repository (may break on whitespace).
 for file in **/requirements.txt; do
     cd "$ROOT"
@@ -131,7 +132,7 @@ for file in **/requirements.txt; do
 	fi
     fi
     # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ -n "${DIFF_FROM:-}" ]] && [[ "${test_all}" == "false" ]]; then
+    if [[ -n "${DIFF_FROM:-}" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then
