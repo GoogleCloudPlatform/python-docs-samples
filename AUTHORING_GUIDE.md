@@ -434,11 +434,15 @@ Because all tests are system tests that use live resources, running tests
 requires a Google Cloud project with billing enabled, as covered under
 [Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 
-Once you have your project created and configured, you'll need to set environment
-variables to identify the project and resources to be used by tests. See
+Once you have your project created and configured, you'll need to set
+environment variables to identify the project and resources to be used
+by tests. See
 [testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every test
-needs all of these variables.
+for a list of all environment variables used by all tests. Not every
+test needs all of these variables. All required environment variables
+should be listed in the README and `testing/test-env.tmpl.sh`. If you
+find one is missing, please add instructions for setting it as part of
+your PR.
 
 We suggest that you copy this file as follows:
 
@@ -467,10 +471,6 @@ This repository supports two ways to run tests locally.
 #### nox setup
 
 Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
-
-#### Docker setup
-
-Install [Docker](https://www.docker.com/). Allow the local user to run Docker.
 
 ### Running tests with nox
 
@@ -513,9 +513,10 @@ nox -s py-3.7 -- snippets_test.py:test_list_blobs
 
 ### Running tests with Docker
 
-If you have Docker installed, you can use `scripts/run_tests_local.sh`
-helper script to run the tests. For example, let's say you want to
-modify code in `cdn` directory, then you can do:
+If you have [Docker](https://www.docker.com) installed and runnable by
+the local user, you can use `scripts/run_tests_local.sh` helper script
+to run the tests. For example, let's say you want to modify the code
+in `cdn` directory, then you can do:
 
 ```sh
 $ cd cdn
