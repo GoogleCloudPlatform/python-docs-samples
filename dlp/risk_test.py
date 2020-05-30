@@ -38,7 +38,7 @@ BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
 
 # Create new custom topic/subscription
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def topic_id():
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()
@@ -53,7 +53,7 @@ def topic_id():
     publisher.delete_topic(topic_path)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def subscription_id(topic_id):
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
@@ -160,7 +160,7 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_numerical_risk_analysis(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -172,13 +172,14 @@ def test_numerical_risk_analysis(
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
     assert "Value Range:" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_string_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -190,14 +191,14 @@ def test_categorical_risk_analysis_on_string_field(
         UNIQUE_FIELD,
         topic_id,
         subscription_id,
-        timeout=180,
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_number_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -209,13 +210,14 @@ def test_categorical_risk_analysis_on_number_field(
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -227,6 +229,7 @@ def test_k_anonymity_analysis_single_field(
         topic_id,
         subscription_id,
         [NUMERIC_FIELD],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -246,6 +249,7 @@ def test_k_anonymity_analysis_multiple_fields(
         topic_id,
         subscription_id,
         [NUMERIC_FIELD, REPEATED_FIELD],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -253,7 +257,7 @@ def test_k_anonymity_analysis_multiple_fields(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -266,6 +270,7 @@ def test_l_diversity_analysis_single_field(
         subscription_id,
         UNIQUE_FIELD,
         [NUMERIC_FIELD],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -287,6 +292,7 @@ def test_l_diversity_analysis_multiple_field(
         subscription_id,
         UNIQUE_FIELD,
         [NUMERIC_FIELD, REPEATED_FIELD],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -295,7 +301,7 @@ def test_l_diversity_analysis_multiple_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -308,6 +314,7 @@ def test_k_map_estimate_analysis_single_field(
         subscription_id,
         [NUMERIC_FIELD],
         ["AGE"],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -329,6 +336,7 @@ def test_k_map_estimate_analysis_multiple_field(
         subscription_id,
         [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
         ["AGE", "GENDER"],
+        timeout=30,
     )
 
     out, _ = capsys.readouterr()
@@ -337,7 +345,7 @@ def test_k_map_estimate_analysis_multiple_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
     topic_id, subscription_id, bigquery_project
 ):
@@ -351,4 +359,5 @@ def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
             subscription_id,
             [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
             ["AGE"],
+            timeout=30,
         )
