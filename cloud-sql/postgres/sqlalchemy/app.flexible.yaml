@@ -22,7 +22,7 @@ runtime_config:
 # Choose to enable either a TCP or Unix domain socket for your database connection
 # # Enable a Unix domain socket
 # beta_settings:
-#   cloud_sql_instances: INSTANCE_CONNECTION_NAME
+#   cloud_sql_instances: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
 
 # Enable a TCP domain socket
 beta_settings:
