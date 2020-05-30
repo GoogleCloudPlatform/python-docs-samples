@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 import uuid
 
 import google.cloud.bigquery
@@ -36,7 +37,8 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT=30
+TIMEOUT = 30
+
 
 # Create new custom topic/subscription
 # We observe sometimes all the tests in this file fail. In a
@@ -164,7 +166,7 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
-def delay():
+def delay(err, *args):
     # 20 mins of delay. This sounds like too long a delay, but we
     # occasionally observe consequtive time block where operations are
     # slow which leads to the test failures. These situations tend to
