@@ -125,12 +125,26 @@ Navigate towards `http://127.0.0.1:8080` to verify your application is running c
 To run on GAE-Standard, create an App Engine project by following the setup for these 
 [instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
 
-First, update `app.yaml` with the correct values to pass the environment 
+First, update `app.standard.yaml` with the correct values to pass the environment 
 variables into the runtime.
 
 Next, the following command will deploy the application to your Google Cloud project:
 ```bash
-gcloud app deploy
+gcloud app deploy app.standard.yaml
+```
+
+## Google App Engine Flexible
+
+To run on GAE-Flexible, create an App Engine project by following the setup for these 
+[instructions](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin).
+
+First, update `app.flexible.yaml` with the correct values to pass the environment 
+variables into the runtime. Also update this file to configure either a TCP or a
+Unix domain socket connection to your database.
+
+Next, the following command will deploy the application to your Google Cloud project:
+```bash
+gcloud app deploy app.flexible.yaml
 ```
 
 ## Deploy to Cloud Run
