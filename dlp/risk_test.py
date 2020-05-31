@@ -172,14 +172,12 @@ def delay(err, *args):
     # slow which leads to the test failures. These situations tend to
     # get self healed in 20 minutes or so, so I'm trying this strategy.
     #
-    # The worst case execution time becomes longer, but I think it
-    # will give us higher success rate.
-    #
-    # There are ten tests, and each tests has 30 seconds wait time
-    # and retried 1 times, so the worst case latency for the waits are:
-    # 210 minutes (3 hours 30 minutes).
-    # This might cause time out on Kokoro.
-    time.sleep(60*20)
+    # There are 10 tests, so we don't want the retry delay happening
+    # for all the tests. When we exhaust the MAX_FLAKY_WAIT, we retry
+    # the test immediately.
+    wait_time = min(pytest.MAX_FLAKY_WAIT, 60*20)
+    pytest.MAX_FLAKY_WAIT -= wait_time
+    time.sleep(wait_time)
     return True
 
 
