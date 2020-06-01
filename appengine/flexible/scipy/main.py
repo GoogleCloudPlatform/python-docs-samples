@@ -16,6 +16,7 @@ import logging
 import os
 
 from flask import Flask
+from flask import request
 import imageio
 from PIL import Image
 
@@ -30,8 +31,7 @@ def resize():
     img = Image.fromarray(imageio.imread(image_path))
     img_tinted = img.resize((300, 300))
 
-    output_image_path = os.path.join(
-        app_path, 'assets/resized_google_logo.jpg')
+    output_image_path = request.args.get('output_image_path')
     # Write the tinted image back to disk
     imageio.imwrite(output_image_path, img_tinted)
     return "Image resized."

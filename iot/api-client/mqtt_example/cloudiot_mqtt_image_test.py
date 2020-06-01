@@ -14,6 +14,7 @@
 # limitations under the License.
 import os
 import sys
+import tempfile
 
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
@@ -63,8 +64,9 @@ def test_image_recv(
         cloud_region, test_registry_id, test_device_id, rsa_private_path,
         ca_cert_path, image_path, project_id, service_account_json)
 
-    cloudiot_mqtt_image.receive_image(
-        project_id, test_subscription.name, 'test', 'png', 120)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        cloudiot_mqtt_image.receive_image(
+            project_id, test_subscription.name, tmp_dir + '/test', 'png', 120)
 
     out, _ = capsys.readouterr()
     assert 'Received image' in out

@@ -12,6 +12,13 @@ product:
       and many others. Stackdriver's Alerting API allows you to create,
       delete, and make back up copies of your alert policies.
 
+required_api_url: https://console.cloud.google.com/apis/library/monitoring.googleapis.com
+required_role: Monitoring Admin
+other_required_steps: >
+    Please visit [the Cloud Console UI of this
+    API](https://console.cloud.google.com/monitoring) and create a new
+    Workspace with the same name of your Cloud project.
+
 setup:
 - auth
 - install_deps

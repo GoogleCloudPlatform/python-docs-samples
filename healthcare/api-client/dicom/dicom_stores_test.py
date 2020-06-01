@@ -14,8 +14,9 @@
 
 import os
 import sys
-import time
+import uuid
 
+from google.cloud import pubsub_v1
 import pytest
 
 # Add datasets for bootstrapping datasets for testing
@@ -28,9 +29,9 @@ cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test_dataset-{}'.format(int(time.time()))
-dicom_store_id = 'test_dicom_store_{}'.format(int(time.time()))
-pubsub_topic = 'test_pubsub_topic_{}'.format(int(time.time()))
+dataset_id = 'test_dataset-{}'.format(uuid.uuid4())
+dicom_store_id = 'test_dicom_store_{}'.format(uuid.uuid4())
+pubsub_topic = 'test_pubsub_topic_{}'.format(uuid.uuid4())
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 bucket = os.environ['CLOUD_STORAGE_BUCKET']
@@ -55,6 +56,19 @@ def test_dataset():
         project_id,
         cloud_region,
         dataset_id)
+
+
+@pytest.fixture(scope='module')
+def test_pubsub_topic():
+    # Create the Pub/Sub topic
+    pubsub_client = pubsub_v1.PublisherClient()
+    topic_path = pubsub_client.topic_path(project_id, pubsub_topic)
+    pubsub_client.create_topic(topic_path)
+
+    yield pubsub_topic
+
+    # Delete the Pub/Sub topic
+    pubsub_client.delete_topic(topic_path)
 
 
 def test_CRUD_dicom_store(test_dataset, capsys):
@@ -94,7 +108,7 @@ def test_CRUD_dicom_store(test_dataset, capsys):
     assert 'Deleted DICOM store' in out
 
 
-def test_patch_dicom_store(test_dataset, capsys):
+def test_patch_dicom_store(test_dataset, test_pubsub_topic, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,
         project_id,
@@ -108,7 +122,7 @@ def test_patch_dicom_store(test_dataset, capsys):
         cloud_region,
         dataset_id,
         dicom_store_id,
-        pubsub_topic)
+        test_pubsub_topic)
 
     # Clean up
     dicom_stores.delete_dicom_store(
