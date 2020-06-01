@@ -110,8 +110,8 @@ def delete_data(instance_id, database_id):
     albums_to_delete = spanner.KeySet(
         keys=[[2, 1], [2, 3]])
 
-    # Delete a range of rows where the column key is >=3
-    singers_range = spanner.KeyRange(start_closed=[3])
+    # Delete a range of rows where the column key is >=3 and <5
+    singers_range = spanner.KeyRange(start_closed=[3], end_open=[5])
     singers_to_delete = spanner.KeySet(
         ranges=[singers_range])
 
