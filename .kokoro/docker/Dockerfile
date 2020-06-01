@@ -161,4 +161,19 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 # Enable redis-server on boot.
 RUN sudo systemctl enable redis-server.service
 
+# Create a user and allow sudo
+
+# kbuilder uid on the default Kokoro image
+ARG UID=1000
+ARG USERNAME=kbuilder
+
+# Add a new user to the container image.
+# This is needed for ssh and sudo access.
+
+# Add a new user with the caller's uid and the username.
+RUN useradd -d /h -u ${UID} ${USERNAME}
+
+# Allow nopasswd sudo
+RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 CMD ["python3.6"]

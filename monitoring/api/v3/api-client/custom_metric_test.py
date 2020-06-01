@@ -83,14 +83,15 @@ def test_custom_metric(client, custom_metric):
     # Use a constant seed so psuedo random number is known ahead of time
     random.seed(1)
     pseudo_random_value = random.randint(0, 10)
-    # Reseed it
-    random.seed(1)
 
     INSTANCE_ID = "test_instance"
 
     # It's rare, but write can fail with HttpError 500, so we retry.
     @backoff.on_exception(backoff.expo, HttpError, max_time=120)
     def write_value():
+        # Reseed it to make sure the sample code will pick the same
+        # value.
+        random.seed(1)
         write_timeseries_value(client, PROJECT_RESOURCE,
                                METRIC_RESOURCE, INSTANCE_ID,
                                METRIC_KIND)
@@ -108,6 +109,6 @@ def test_custom_metric(client, custom_metric):
         value = int(
             response['timeSeries'][0]['points'][0]['value']['int64Value'])
         # using seed of 1 will create a value of 1
-        assert value == pseudo_random_value
+        assert pseudo_random_value == value
 
     eventually_consistent_test()

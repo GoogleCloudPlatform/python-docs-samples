@@ -20,6 +20,14 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
+# Prevent it from overriding files.
+if [[ -f "testing/test-env.sh" ]] || \
+       [[ -f "testing/service-account.json" ]] || \
+       [[ -f "testing/client-secrets.json" ]]; then
+    echo "One or more target files exist, aborting."
+    exit 1
+fi
+
 # Use SECRET_MANAGER_PROJECT if set, fallback to cloud-devrel-kokoro-resources.
 PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
 
