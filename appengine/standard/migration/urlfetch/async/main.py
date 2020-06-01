@@ -18,7 +18,6 @@ import logging
 from flask import Flask, make_response
 
 # [START imports]
-import requests
 from requests_futures.sessions import FuturesSession
 from time import sleep
 # [END imports]
