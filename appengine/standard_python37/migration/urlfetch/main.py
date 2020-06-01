@@ -13,10 +13,9 @@
 # limitations under the License.
 
 from flask import Flask, render_template, request
-import requests
-
-from google.oauth2 import id_token
 from google.auth.transport import requests as reqs
+from google.oauth2 import id_token
+import requests
 
 app = Flask(__name__)
 
