@@ -150,7 +150,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 272.0.0
+ENV CLOUD_SDK_VERSION 293.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
@@ -160,5 +160,20 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 
 # Enable redis-server on boot.
 RUN sudo systemctl enable redis-server.service
+
+# Create a user and allow sudo
+
+# kbuilder uid on the default Kokoro image
+ARG UID=1000
+ARG USERNAME=kbuilder
+
+# Add a new user to the container image.
+# This is needed for ssh and sudo access.
+
+# Add a new user with the caller's uid and the username.
+RUN useradd -d /h -u ${UID} ${USERNAME}
+
+# Allow nopasswd sudo
+RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 CMD ["python3.6"]
