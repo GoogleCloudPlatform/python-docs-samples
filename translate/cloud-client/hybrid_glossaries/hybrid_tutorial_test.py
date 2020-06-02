@@ -40,8 +40,7 @@ def test_vision_non_standard_format():
 
     # Generate text
     text = pic_to_text('resources/non_standard_format.png')
-    with open("bad-output", "w") as f:
-        f.write(text)
+
     # Read expected text
     with open('resources/non_standard_format.txt') as f:
         expected_text = f.read()
