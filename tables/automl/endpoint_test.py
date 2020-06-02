@@ -15,12 +15,7 @@
 # limitations under the License.
 import os
 
-from google.api_core import exceptions
-import pytest
-
 import automl_tables_set_endpoint
-from google.cloud import automl_v1beta1 as automl
-from google.api_core.client_options import ClientOptions
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
 
