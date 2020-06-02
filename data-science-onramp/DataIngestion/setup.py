@@ -25,22 +25,34 @@ except Py4JJavaError:
 # path = "/".join(["gs:/", bucket_name, "dirty_data", ".csv.gz"])
 
 ''' START MAKING DATA DIRTY '''
+def random_select(items, cum_weights):
+    return choices(items, cum_weights=cum_weights, k=1)[0]
+
 def tripduration(duration):
     seed(time_ns())
-    return choices([duration, None, randint(-1000,-1)], 
-        cum_weights=[0.9, 0.95, 1], k=1)[0]
+    seconds = str(duration) + " s"
+    minutes = str(float(duration) / 60) + " min"
+    hours = str(float(duration) / 3600) + " h"
+    return random_select([seconds, minutes, hours, None, str(randint(-1000,-1))], 
+        cum_weights=[0.3, 0.6, 0.9, 0.95, 1])
 
-def start_station_name(name):
+def station_name(name):
     seed(time_ns()+1)
     return choice([name, name.replace("&", "/")])
 
 def starttime(t):
     seed(time_ns()+2)
-    return choices([t, None], cum_weights=[0.95, 1], k=1)[0]
+    return random_select([t, None], cum_weights=[0.95, 1])
 
 def stoptime(t):
     seed(time_ns()+3)
-    return choices([t, None], cum_weights=[0.95, 1], k=1)[0]
+    return random_select([t, None], cum_weights=[0.95, 1])
+
+def remove_data(offset):
+    def user_defined_function(s):
+        seed(time_ns() + offset)
+        return random_select([s, None], cum_weights=[0.95, 1])
+    return user_defined_function
 
 def usertype(user):
     seed(time_ns()+4)
@@ -56,17 +68,17 @@ def gender(s):
 id = lambda x: x
 
 udfs = [
-    UserDefinedFunction(tripduration, IntegerType()), # tripduration
+    UserDefinedFunction(tripduration, StringType()), # tripduration
     UserDefinedFunction(starttime, StringType()), # starttime
     UserDefinedFunction(stoptime, StringType()), # stoptime
     UserDefinedFunction(id, IntegerType()), # start_station_id
-    UserDefinedFunction(start_station_name, StringType()), # start_station_name
-    UserDefinedFunction(id, FloatType()), # start_station_latitude
-    UserDefinedFunction(id, FloatType()), # start_station_longitude
+    UserDefinedFunction(station_name, StringType()), # start_station_name
+    UserDefinedFunction(remove_data(42), FloatType()), # start_station_latitude
+    UserDefinedFunction(remove_data(24), FloatType()), # start_station_longitude
     UserDefinedFunction(id, IntegerType()), # end_station_id
-    UserDefinedFunction(id, StringType()), # end_station_name
-    UserDefinedFunction(id, FloatType()), # end_station_latitude
-    UserDefinedFunction(id, FloatType()), # end_station_longitude
+    UserDefinedFunction(station_name, StringType()), # end_station_name
+    UserDefinedFunction(remove_data(100), FloatType()), # end_station_latitude
+    UserDefinedFunction(remove_data(200), FloatType()), # end_station_longitude
     UserDefinedFunction(id, IntegerType()), # bikeid
     UserDefinedFunction(usertype, StringType()), # usertype
     UserDefinedFunction(id, IntegerType()), # birth_year
@@ -80,7 +92,6 @@ new_df = df.select(*[udf(column).alias(name) for udf, column, name in zip(udfs, 
 new_df.show(100, False)
 
 '''BACKFILLING'''
-
 # Save to GCS bucket
 # (
 #     df
