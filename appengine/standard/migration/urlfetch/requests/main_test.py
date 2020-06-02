@@ -20,7 +20,7 @@ import main
 apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
 apiproxy_stub_map.apiproxy.RegisterStub(
     'urlfetch',
-    urlfetch_stub.URLFetchServiceStub()
+    url_fetch_stub.URLFetchServiceStub()
 )
 
 
