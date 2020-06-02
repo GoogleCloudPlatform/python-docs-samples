@@ -14,7 +14,6 @@
 
 import os
 import subprocess
-import sys
 
 from flask import Flask, make_response, request
 
@@ -35,9 +34,6 @@ def index():
 
     except Exception as e:
         print("error: {}".format(e))
-
-        # Flush the stdout to avoid log buffering.
-        sys.stdout.flush()
 
         # If no graphviz definition or bad graphviz def, return 400
         if "syntax" in str(e):
