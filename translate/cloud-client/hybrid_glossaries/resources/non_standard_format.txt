@@ -19,11 +19,11 @@ $10
 Firebase Fruit Salad
 watermelon, honeydew melon,
 and pineapple
+$6
 Compute Engine Burger
 quarter-pound burger with
 cheddar cheese
 $10
-$6
 BigQuery BLT
 bacon, lettuce, and tomato
 sandwich

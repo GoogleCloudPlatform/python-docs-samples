@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import re
 import sys
 
 from hybrid_tutorial import create_glossary
@@ -28,21 +29,19 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 
 def test_vision_standard_format():
-
-    expected_text = 'This is\na test!\n'
-    alt_expected_text = 'This\nis\na test!\n'
-
     # Generate text using Vision API
     text = pic_to_text('resources/standard_format.jpeg')
 
-    assert (text == expected_text) or (text == alt_expected_text)
+    assert re.match("This\s?is\s?a\s?test!\s?", text)
+
 
 
 def test_vision_non_standard_format():
 
     # Generate text
     text = pic_to_text('resources/non_standard_format.png')
-
+    with open("bad-output", "w") as f:
+        f.write(text)
     # Read expected text
     with open('resources/non_standard_format.txt') as f:
         expected_text = f.read()
