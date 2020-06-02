@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from google.appengine.api import apiproxy_stub_map
-from google.apphosting.api import url_fetch_stub
+from google3.apphosting.api import url_fetch_stub
 
 import main
 
