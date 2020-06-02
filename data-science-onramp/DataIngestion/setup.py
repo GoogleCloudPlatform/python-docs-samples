@@ -12,7 +12,7 @@ from time import time_ns
 # Create a SparkSession under the name "reddit". Viewable via the Spark UI
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
-# bucket_name = sys.argv[1]
+bucket_name = sys.argv[1]
 
 table = "bigquery-public-data.new_york_citibike.citibike_trips"
 
@@ -22,37 +22,23 @@ try:
 except Py4JJavaError:
     print(f"{table} does not exist. ")
 
-# path = "/".join(["gs:/", bucket_name, "dirty_data", ".csv.gz"])
-
 ''' START MAKING DATA DIRTY '''
+
 def random_select(items, cum_weights):
     return choices(items, cum_weights=cum_weights, k=1)[0]
 
+# Converts trip duration to other units
 def tripduration(duration):
     seed(time_ns())
     seconds = str(duration) + " s"
     minutes = str(float(duration) / 60) + " min"
     hours = str(float(duration) / 3600) + " h"
-    return random_select([seconds, minutes, hours, None, str(randint(-1000,-1))], 
-        cum_weights=[0.3, 0.6, 0.9, 0.95, 1])
+    return random_select([seconds, minutes, hours, str(randint(-1000,-1))], 
+        cum_weights=[0.3, 0.6, 0.9, 1])
 
 def station_name(name):
     seed(time_ns()+1)
     return choice([name, name.replace("&", "/")])
-
-def starttime(t):
-    seed(time_ns()+2)
-    return random_select([t, None], cum_weights=[0.95, 1])
-
-def stoptime(t):
-    seed(time_ns()+3)
-    return random_select([t, None], cum_weights=[0.95, 1])
-
-def remove_data(offset):
-    def user_defined_function(s):
-        seed(time_ns() + offset)
-        return random_select([s, None], cum_weights=[0.95, 1])
-    return user_defined_function
 
 def usertype(user):
     seed(time_ns()+4)
@@ -65,38 +51,66 @@ def gender(s):
     return choice([s, s.upper(), s.lower(), 
         s[0] if len(s) > 0 else "", s[0].lower() if len(s) > 0 else ""])
 
+# Converts long and lat to DMS notation
+def convertAngle(angle):
+    degrees = int(angle)
+    minutes = int((angle - degrees) * 60) 
+    seconds = int((angle - degrees - minutes/60) * 3600)
+    new_angle = str(degrees) + u"\u00B0" + str(minutes) + "'" + str(seconds) + '"'
+    return random_select([str(angle), new_angle], cum_weights=[0.55, 1])
+
+# Master function that calls the appopriate function per column 
+def dirty_data(proc_func, allow_none):
+    def udf(col_value):
+        if allow_none:
+            return random_select([None, proc_func(col_value)], cum_weights=[0.05, 1])
+        else:
+            return proc_func(col_value)
+    return udf
+
 id = lambda x: x
 
+# Declare data transformations for each column in dataframe
 udfs = [
-    UserDefinedFunction(tripduration, StringType()), # tripduration
-    UserDefinedFunction(starttime, StringType()), # starttime
-    UserDefinedFunction(stoptime, StringType()), # stoptime
-    UserDefinedFunction(id, IntegerType()), # start_station_id
-    UserDefinedFunction(station_name, StringType()), # start_station_name
-    UserDefinedFunction(remove_data(42), FloatType()), # start_station_latitude
-    UserDefinedFunction(remove_data(24), FloatType()), # start_station_longitude
-    UserDefinedFunction(id, IntegerType()), # end_station_id
-    UserDefinedFunction(station_name, StringType()), # end_station_name
-    UserDefinedFunction(remove_data(100), FloatType()), # end_station_latitude
-    UserDefinedFunction(remove_data(200), FloatType()), # end_station_longitude
-    UserDefinedFunction(id, IntegerType()), # bikeid
-    UserDefinedFunction(usertype, StringType()), # usertype
-    UserDefinedFunction(id, IntegerType()), # birth_year
-    UserDefinedFunction(gender, StringType()), # gender
-    UserDefinedFunction(id, StringType()), # customer_plan
+    (dirty_data(tripduration, True), StringType()), # tripduration
+    (dirty_data(id, True), StringType()), # starttime
+    (dirty_data(id, True), StringType()), # stoptime
+    (id, IntegerType()), # start_station_id
+    (dirty_data(station_name, False), StringType()), # start_station_name
+    (dirty_data(convertAngle, True), StringType()), # start_station_latitude
+    (dirty_data(convertAngle, True), StringType()), # start_station_longitude
+    (id, IntegerType()), # end_station_id
+    (dirty_data(station_name, False), StringType()), # end_station_name
+    (dirty_data(convertAngle, True), StringType()), # end_station_latitude
+    (dirty_data(convertAngle, True), StringType()), # end_station_longitude
+    (id, IntegerType()), # bikeid
+    (dirty_data(usertype, False), StringType()), # usertype
+    (id, IntegerType()), # birth_year
+    (dirty_data(gender, False), StringType()), # gender
+    (id, StringType()), # customer_plan
 ]
 
+# Apply dirty transformations to df
 names = df.schema.names
+new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name) 
+    for udf, column, name in zip(udfs, df.columns, names)])
 
-new_df = df.select(*[udf(column).alias(name) for udf, column, name in zip(udfs, df.columns, names)])
-new_df.show(100, False)
+# Duplicate about 5% of the rows
+dup_df = df.where("rand() > 0.05")
+
+# Create final dirty dataframe
+df = new_df.union(dup_df)
+df.show()
 
 '''BACKFILLING'''
+
 # Save to GCS bucket
-# (
-#     df
-#     .coalesce(1)
-#     .write
-#     .options(codec="org.apache.hadoop.io.compress.GzipCodec")
-#     .csv(path)
-# )
+path = "/".join(["gs:/", bucket_name, "dirty_data", ".csv.gz"])
+
+(
+    df
+    .coalesce(1)
+    .write
+    .options(codec="org.apache.hadoop.io.compress.GzipCodec")
+    .csv(path)
+)
