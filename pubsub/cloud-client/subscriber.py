@@ -309,7 +309,7 @@ def remove_dead_letter_policy(project_id, topic_name, subscription_name):
     return subscription_after_update
 
 
-def receive_messages(project_id, subscription_name, timeout):
+def receive_messages(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
