@@ -678,7 +678,7 @@ if __name__ == "__main__":
 
     receive_parser = subparsers.add_parser("receive", help=receive_messages.__doc__)
     receive_parser.add_argument("subscription_name")
-    receive_parser.add_argument("--timeout", default=None, type=float)
+    receive_parser.add_argument("timeout", default=None, type=float, nargs="?")
 
     receive_with_custom_attributes_parser = subparsers.add_parser(
         "receive-custom-attributes",
@@ -686,14 +686,16 @@ if __name__ == "__main__":
     )
     receive_with_custom_attributes_parser.add_argument("subscription_name")
     receive_with_custom_attributes_parser.add_argument(
-        "--timeout", default=None, type=float
+        "timeout", default=None, type=float, nargs="?"
     )
 
     receive_with_flow_control_parser = subparsers.add_parser(
         "receive-flow-control", help=receive_messages_with_flow_control.__doc__
     )
     receive_with_flow_control_parser.add_argument("subscription_name")
-    receive_with_flow_control_parser.add_argument("--timeout", default=None, type=float)
+    receive_with_flow_control_parser.add_argument(
+        "timeout", default=None, type=float, nargs="?"
+    )
 
     synchronous_pull_parser = subparsers.add_parser(
         "receive-synchronously", help=synchronous_pull.__doc__
@@ -710,7 +712,9 @@ if __name__ == "__main__":
         "listen-for-errors", help=listen_for_errors.__doc__
     )
     listen_for_errors_parser.add_argument("subscription_name")
-    listen_for_errors_parser.add_argument("--timeout", default=None, type=float)
+    listen_for_errors_parser.add_argument(
+        "timeout", default=None, type=float, nargs="?"
+    )
 
     receive_messages_with_delivery_attempts_parser = subparsers.add_parser(
         "receive-messages-with-delivery-attempts",
@@ -718,7 +722,7 @@ if __name__ == "__main__":
     )
     receive_messages_with_delivery_attempts_parser.add_argument("subscription_name")
     receive_messages_with_delivery_attempts_parser.add_argument(
-        "--timeout", default=None, type=float
+        "timeout", default=None, type=float, nargs="?"
     )
 
     args = parser.parse_args()
