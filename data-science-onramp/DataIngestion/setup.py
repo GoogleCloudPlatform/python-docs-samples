@@ -29,7 +29,6 @@ def random_select(items, cum_weights):
 
 # Converts trip duration to other units
 def tripduration(duration):
-    seed(time_ns())
     seconds = str(duration) + " s"
     minutes = str(float(duration) / 60) + " min"
     hours = str(float(duration) / 3600) + " h"
@@ -37,17 +36,14 @@ def tripduration(duration):
         cum_weights=[0.3, 0.6, 0.9, 1])
 
 def station_name(name):
-    seed(time_ns()+1)
     return choice([name, name.replace("&", "/")])
 
 def usertype(user):
-    seed(time_ns()+4)
     return choice([user, user.upper(), user.lower(), 
         "sub" if user == "Subscriber" else user, 
         "cust" if user == "Customer" else user])
 
 def gender(s):
-    seed(time_ns()+4)
     return choice([s, s.upper(), s.lower(), 
         s[0] if len(s) > 0 else "", s[0].lower() if len(s) > 0 else ""])
 
@@ -62,6 +58,7 @@ def convertAngle(angle):
 # Master function that calls the appopriate function per column 
 def dirty_data(proc_func, allow_none):
     def udf(col_value):
+        seed(hash(col_value) + time_ns())
         if allow_none:
             return random_select([None, proc_func(col_value)], cum_weights=[0.05, 1])
         else:
@@ -100,7 +97,7 @@ dup_df = df.where("rand() > 0.05")
 
 # Create final dirty dataframe
 df = new_df.union(dup_df)
-df.show()
+df.show(n=200)
 
 '''BACKFILLING'''
 
