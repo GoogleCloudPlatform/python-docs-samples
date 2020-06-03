@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import time
 import uuid
 
 import google.cloud.bigquery
@@ -37,14 +36,14 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT = 30
+TIMEOUT = 60  # 1 minutes
 
 
 # Create new custom topic/subscription
 # We observe sometimes all the tests in this file fail. In a
 # hypothesis where DLP service somehow loses the connection to the
 # topic, now we use function scope for Pub/Sub fixtures.
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def topic_id():
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()
@@ -59,7 +58,7 @@ def topic_id():
     publisher.delete_topic(topic_path)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def subscription_id(topic_id):
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
@@ -166,22 +165,7 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
-def delay(err, *args):
-    # 20 mins of delay. This sounds like too long a delay, but we
-    # occasionally observe consequtive time block where operations are
-    # slow which leads to the test failures. These situations tend to
-    # get self healed in 20 minutes or so, so I'm trying this strategy.
-    #
-    # There are 10 tests, so we don't want the retry delay happening
-    # for all the tests. When we exhaust the MAX_FLAKY_WAIT, we retry
-    # the test immediately.
-    wait_time = min(pytest.MAX_FLAKY_WAIT, 60*20)
-    pytest.MAX_FLAKY_WAIT -= wait_time
-    time.sleep(wait_time)
-    return True
-
-
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_numerical_risk_analysis(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -200,7 +184,7 @@ def test_numerical_risk_analysis(
     assert "Value Range:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_categorical_risk_analysis_on_string_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -219,7 +203,7 @@ def test_categorical_risk_analysis_on_string_field(
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_categorical_risk_analysis_on_number_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -238,7 +222,7 @@ def test_categorical_risk_analysis_on_number_field(
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_k_anonymity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -258,7 +242,7 @@ def test_k_anonymity_analysis_single_field(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -278,7 +262,7 @@ def test_k_anonymity_analysis_multiple_fields(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_l_diversity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -300,7 +284,7 @@ def test_l_diversity_analysis_single_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -322,7 +306,7 @@ def test_l_diversity_analysis_multiple_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_k_map_estimate_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -344,7 +328,7 @@ def test_k_map_estimate_analysis_single_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -366,7 +350,7 @@ def test_k_map_estimate_analysis_multiple_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1, rerun_filter=delay)
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
     topic_id, subscription_id, bigquery_project
 ):

@@ -14,6 +14,15 @@ This directory contains samples for Google Data Loss Prevention. `Google Data Lo
 
 .. _Google Data Loss Prevention: https://cloud.google.com/dlp/docs/
 
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/dlp.googleapis.com
+
+
+To run the sample, you need to have the following roles:
+* `DLP Administrator`
+* `DLP API Service Agent`
+
+
+
 Setup
 -------------------------------------------------------------------------------
 
@@ -58,15 +67,6 @@ Install Dependencies
 .. _pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/
 
-#. For running *_test.py files, install test dependencies
-
-    .. code-block:: bash
-
-        $ pip install -r requirements-test.txt
-        $ pytest inspect_content_test.py
-
-** *_test.py files are demo wrappers and make API calls. You may get rate limited for making high number of requests. **
-
 Samples
 -------------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python quickstart.py <project-id>
+    $ python quickstart.py
 
 
 Inspect Content
@@ -101,15 +101,16 @@ To run this sample:
 
     $ python inspect_content.py
 
-    usage: inspect_content.py [-h] {string,file,gcs,datastore,bigquery} ...
+    usage: inspect_content.py [-h] {string,table,file,gcs,datastore,bigquery} ...
 
     Sample app that uses the Data Loss Prevention API to inspect a string, a local
     file or a file on Google Cloud Storage.
 
     positional arguments:
-      {string,file,gcs,datastore,bigquery}
+      {string,table,file,gcs,datastore,bigquery}
                             Select how to submit content to the API.
         string              Inspect a string.
+        table               Inspect a table.
         file                Inspect a local file.
         gcs                 Inspect files on Google Cloud Storage.
         datastore           Inspect files on Google Datastore.
@@ -135,13 +136,14 @@ To run this sample:
 
     $ python redact.py
 
-    usage: redact.py [-h] [--project PROJECT] [--info_types INFO_TYPES]
+    usage: redact.py [-h] [--project PROJECT]
+                     [--info_types INFO_TYPES [INFO_TYPES ...]]
                      [--min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}]
                      [--mime_type MIME_TYPE]
                      filename output_filename
 
-    Sample app that uses the Data Loss Prevent API to redact the contents of a
-    string or an image file.
+    Sample app that uses the Data Loss Prevent API to redact the contents of an
+    image file.
 
     positional arguments:
       filename              The path to the file to inspect.
@@ -151,7 +153,7 @@ To run this sample:
       -h, --help            show this help message and exit
       --project PROJECT     The Google Cloud project id to use as a parent
                             resource.
-      --info_types INFO_TYPES
+      --info_types INFO_TYPES [INFO_TYPES ...]
                             Strings representing info types to look for. A full
                             list of info categories and types is available from
                             the API. Examples include "FIRST_NAME", "LAST_NAME",
