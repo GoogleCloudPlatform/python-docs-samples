@@ -59,8 +59,9 @@ def numerical_risk_analysis(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Location info of the BigQuery table.
     source_table = {
@@ -70,7 +71,7 @@ def numerical_risk_analysis(
     }
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Configure risk analysis job
     # Give the name of the numeric column to compute risk metrics for
@@ -86,11 +87,7 @@ def numerical_risk_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        # The DlpJobName in the Pub/Sub message has the location indicator
-        # and we need to remove that part for comparison.
-        dlp_job_name = message.attributes["DlpJobName"].replace(
-            '/locations/global', '')
-        if dlp_job_name == operation.name:
+        if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -173,8 +170,9 @@ def categorical_risk_analysis(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Location info of the BigQuery table.
     source_table = {
@@ -184,7 +182,7 @@ def categorical_risk_analysis(
     }
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Configure risk analysis job
     # Give the name of the numeric column to compute risk metrics for
@@ -200,11 +198,7 @@ def categorical_risk_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        # The DlpJobName in the Pub/Sub message has the location indicator
-        # and we need to remove that part for comparison.
-        dlp_job_name = message.attributes["DlpJobName"].replace(
-            '/locations/global', '')
-        if dlp_job_name == operation.name:
+        if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -302,7 +296,8 @@ def k_anonymity_analysis(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Location info of the BigQuery table.
     source_table = {
@@ -318,7 +313,7 @@ def k_anonymity_analysis(
     quasi_ids = map(map_fields, quasi_ids)
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Configure risk analysis job
     # Give the name of the numeric column to compute risk metrics for
@@ -332,11 +327,7 @@ def k_anonymity_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        # The DlpJobName in the Pub/Sub message has the location indicator
-        # and we need to remove that part for comparison.
-        dlp_job_name = message.attributes["DlpJobName"].replace(
-            '/locations/global', '')
-        if dlp_job_name == operation.name:
+        if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -437,7 +428,8 @@ def l_diversity_analysis(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Location info of the BigQuery table.
     source_table = {
@@ -453,7 +445,7 @@ def l_diversity_analysis(
     quasi_ids = map(map_fields, quasi_ids)
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Configure risk analysis job
     # Give the name of the numeric column to compute risk metrics for
@@ -472,11 +464,7 @@ def l_diversity_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        # The DlpJobName in the Pub/Sub message has the location indicator
-        # and we need to remove that part for comparison.
-        dlp_job_name = message.attributes["DlpJobName"].replace(
-            '/locations/global', '')
-        if dlp_job_name == operation.name:
+        if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -590,8 +578,9 @@ def k_map_estimate_analysis(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Location info of the BigQuery table.
     source_table = {
@@ -614,7 +603,7 @@ def k_map_estimate_analysis(
     quasi_ids = map(map_fields, quasi_ids, info_types)
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Configure risk analysis job
     # Give the name of the numeric column to compute risk metrics for
@@ -633,11 +622,7 @@ def k_map_estimate_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        # The DlpJobName in the Pub/Sub message has the location indicator
-        # and we need to remove that part for comparison.
-        dlp_job_name = message.attributes["DlpJobName"].replace(
-            '/locations/global', '')
-        if dlp_job_name == operation.name:
+        if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
