@@ -15,11 +15,11 @@
 steps:
 - # Build the renderer image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', '--tag=gcr.io/$PROJECT_ID/sys-package:$COMMIT_SHA', '.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/sys-package-${_SUFFIX}', '.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
-  args: ['push', 'gcr.io/$PROJECT_ID/sys-package:$COMMIT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/sys-package-${_SUFFIX}']
 
 - # Deploy to Cloud Run
   name: gcr.io/cloud-builders/gcloud
@@ -28,7 +28,7 @@ steps:
   - deploy
   - sys-package-${_SUFFIX}
   - --image
-  - gcr.io/$PROJECT_ID/sys-package:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/sys-package-${_SUFFIX}
   - --region
   - us-central1
   - --platform
@@ -36,5 +36,5 @@ steps:
   - --no-allow-unauthenticated
 
 images: 
-  - 'gcr.io/$PROJECT_ID/sys-package:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/sys-package-${_SUFFIX}'
 
