@@ -59,7 +59,9 @@ def convertAngle(angle):
 def dirty_data(proc_func, allow_none):
     def udf(col_value):
         seed(hash(col_value) + time_ns())
-        if allow_none:
+        if col_value == None:
+            return col_value
+        elif allow_none:
             return random_select([None, proc_func(col_value)], cum_weights=[0.05, 1])
         else:
             return proc_func(col_value)
@@ -93,7 +95,7 @@ new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
     for udf, column, name in zip(udfs, df.columns, names)])
 
 # Duplicate about 5% of the rows
-dup_df = df.where("rand() > 0.05")
+dup_df = new_df.where("rand() > 0.05")
 
 # Create final dirty dataframe
 df = new_df.union(dup_df)
@@ -102,11 +104,11 @@ df.show(n=200)
 '''BACKFILLING'''
 
 # Save to GCS bucket
-path = "/".join(["gs:/", bucket_name, "dirty_data", ".csv.gz"])
+path = "/".join(["gs:/", bucket_name, "dirty_data5", ".csv.gz"])
 
 (
     df
-    .coalesce(1)
+    #.coalesce(1)
     .write
     .options(codec="org.apache.hadoop.io.compress.GzipCodec")
     .csv(path)
