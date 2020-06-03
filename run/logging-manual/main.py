@@ -14,7 +14,6 @@
 
 import json
 import os
-import sys
 
 from flask import Flask, request
 
@@ -51,9 +50,6 @@ def index():
 
     print(json.dumps(entry))
     # [END run_manual_logging]
-
-    # Flush the stdout to avoid log buffering.
-    sys.stdout.flush()
 
     return 'Hello Logger!'
 

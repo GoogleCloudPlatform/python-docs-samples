@@ -428,7 +428,51 @@ def test_resource():
     ...
 ```
 
-### Running tests
+### Test Environment Setup
+
+Because all tests are system tests that use live resources, running tests
+requires a Google Cloud project with billing enabled, as covered under
+[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+
+Once you have your project created and configured, you'll need to set
+environment variables to identify the project and resources to be used
+by tests. See
+[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
+for a list of all environment variables used by all tests. Not every
+test needs all of these variables. All required environment variables
+should be listed in the README and `testing/test-env.tmpl.sh`. If you
+find one is missing, please add instructions for setting it as part of
+your PR.
+
+We suggest that you copy this file as follows:
+
+```sh
+$ cp testing/test-env.tmpl.sh testing/test-env.sh
+$ editor testing/test-env.sh  # change the value of `GCLOUD_PROJECT`.
+```
+
+You can easily `source` this file for exporting the environment variables.
+
+#### Development environment setup
+
+This repository supports two ways to run tests locally.
+
+1. nox
+
+    This is the recommended way. Setup takes little more efforts than
+    the second one, but the test execution will be faster.
+
+2. Docker
+
+    This is another way of running the tests. Setup is easier because
+    you only need to instal Docker. The test execution will be bit
+    slower than the first one.
+
+#### nox setup
+
+Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
+
+### Running tests with nox
 
 Automated testing for samples in `python-docs-samples` is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
@@ -467,17 +511,23 @@ To run a specific test from a specific following:
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
 
-### Test Environment Setup
+### Running tests with Docker
 
-Because all tests are system tests that use live resources, running tests
-requires a Google Cloud project with billing enabled, as covered under
-[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+If you have [Docker](https://www.docker.com) installed and runnable by
+the local user, you can use `scripts/run_tests_local.sh` helper script
+to run the tests. For example, let's say you want to modify the code
+in `cdn` directory, then you can do:
 
-Once you have your project created and configured, you'll need to set environment
-variables to identify the project and resources to be used by tests. See
-[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every test
-needs all of these variables.
+```sh
+$ cd cdn
+$ ../scripts/run_tests_local.sh .
+# This will run the default sessions; lint, py-3.6, and py-3.7
+$ ../scripts/run_tests_local.sh . lint
+# Running only lint
+```
+
+If your test needs a service account, you have to create a service
+account and download the JSON key to `testing/service-account.json`.
 
 ### Google Cloud Storage Resources
 

@@ -31,25 +31,84 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 ## Running locally
 
 To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the proxy has been downloaded, use the following commands to create the `/cloudsql`
-directory and give the user running the proxy the appropriate permissions:
+following the instructions [here](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
+
+Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
+On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
+connection.
+
+### Launch proxy with TCP
+
+To run the sample locally with a TCP connection, set environment variables and launch the proxy as
+shown below.
+
+#### Linux / Mac OS
+Use these terminal commands to initialize environment variables:
 ```bash
-sudo mkdir /cloudsql
-sudo chown -R $USER /cloudsql
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export DB_HOST='127.0.0.1:5432'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
 ```
 
-Once the `/cloudsql` directory is ready, use the following command to start the proxy in the
-background:
+Then use this command to launch the proxy in the background:
 ```bash
-./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
+./cloud_sql_proxy -instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
+#### Windows/PowerShell
+Use these PowerShell commands to initialize environment variables:
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="<CREDENTIALS_JSON_FILE>"
+$env:DB_HOST="127.0.0.1:5432"
+$env:DB_USER="<DB_USER_NAME>"
+$env:DB_PASS="<DB_PASSWORD>"
+$env:DB_NAME="<DB_NAME>"
+```
+
+Then use this command to launch the proxy in a separate PowerShell session:
+```powershell
+Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=<CREDENTIALS_JSON_FILE>"
+```
+
+### Launch proxy with Unix Domain Socket
+NOTE: this option is currently only supported on Linux and Mac OS. Windows users should use the
+[Launch proxy with TCP](#launch-proxy-with-tcp) option.
+
+To use a Unix socket, you'll need to create a directory and give write access to the user running
+the proxy. For example:
+
+```bash
+sudo mkdir /path/to/the/new/directory
+sudo chown -R $USER /path/to/the/new/directory
+
+You'll also need to initialize an environment variable containing the directory you just created:
+```bash
+export DB_SOCKET_PATH=/path/to/the/new/directory
+```
+
+Use these terminal commands to initialize other environment variables as well:
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export DB_USER='<DB_USER_NAME>'
+export DB_PASS='<DB_PASSWORD>'
+export DB_NAME='<DB_NAME>'
+```
+
+Then use this command to launch the proxy in the background:
+```bash
+./cloud_sql_proxy -dir=$DB_SOCKET_PATH --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+```
+
+### Testing the application
 Next, setup install the requirements into a virtual enviroment:
 ```bash
 virtualenv --python python3 env
 source env/bin/activate
 pip install -r requirements.txt
-```
+`````
 
 Finally, start the application:
 ```bash
@@ -63,12 +122,26 @@ Navigate towards `http://127.0.0.1:8080` to verify your application is running c
 To run on GAE-Standard, create an App Engine project by following the setup for these 
 [instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
 
-First, update `app.yaml` with the correct values to pass the environment 
+First, update `app.standard.yaml` with the correct values to pass the environment 
 variables into the runtime.
 
 Next, the following command will deploy the application to your Google Cloud project:
 ```bash
-gcloud app deploy
+gcloud app deploy app.standard.yaml
+```
+
+## Google App Engine Flexible
+
+To run on GAE-Flexible, create an App Engine project by following the setup for these 
+[instructions](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin).
+
+First, update `app.flexible.yaml` with the correct values to pass the environment 
+variables into the runtime. Also update this file to configure either a TCP or a
+Unix domain socket connection to your database.
+
+Next, the following command will deploy the application to your Google Cloud project:
+```bash
+gcloud app deploy app.flexible.yaml
 ```
 
 ## Deploy to Cloud Run
