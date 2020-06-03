@@ -1,15 +1,15 @@
 import os, uuid
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
+from time import sleep
 
-waiting_callback = False
+waiting_cluster_callback = False
 
 # Set variables
 project = os.environ['GCLOUD_PROJECT']
 region = "us-central1"
 zone = "us-central1-a"
 cluster_name = 'setup-test-{}'.format(str(uuid.uuid4()))
-
 
 def test_setup(capsys):
     '''Create GCS Bucket'''
@@ -33,15 +33,29 @@ def test_setup(capsys):
         'cluster_name': cluster_name,
         'config': {
             'gce_cluster_config': {
-                'zone_uri': zone_uri
+                'zone_uri': zone_uri,
+                "metadata": {
+                    "PIP_PACKAGES": "google-cloud-storage"
+                },
             },
             'master_config': {
                 'num_instances': 1,
-                'machine_type_uri': 'n1-standard-1'
+                'machine_type_uri': 'n1-standard-8'
             },
             'worker_config': {
-                'num_instances': 2,
-                'machine_type_uri': 'n1-standard-1'
+                'num_instances': 8,
+                'machine_type_uri': 'n1-standard-8'
+            },
+            "initialization_actions": [
+                {
+                    "executable_file": "gs://dataproc-initialization-actions/python/pip-install.sh",
+                }
+            ],
+            "software_config": {
+                "image_version": "1.5.4-debian10",
+                "optional_components": [
+                    "ANACONDA"
+                ],
             }
         }
     }
@@ -51,8 +65,11 @@ def test_setup(capsys):
     })
     cluster = cluster_client.create_cluster(project, region, cluster_data)
     cluster.add_done_callback(callback)
-    global waiting_callback
-    waiting_callback = True
+
+    global waiting_cluster_callback
+    waiting_cluster_callback = True
+
+    wait_for_cluster_creation()
 
     '''Submit job'''
     job_details = {
@@ -60,18 +77,40 @@ def test_setup(capsys):
             'cluster_name': cluster_name
         },
         'pyspark_job': {
-            'main_python_file_uri': job_file_name
-        }
+            'main_python_file_uri': job_file_name,
+        'args': [
+            bucket_name,
+        ]
+        },
     }
 
     job_client = dataproc.JobControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
+    
     result = job_client.submit_job(project_id=project, region=region, job=job_details)
     job_id = result.reference.job_id
+    
+    out, _ = capsys.readouterr()
 
+    assert type(out) == str
+    assert len(out) > 0
+    assert "male" in out
+    assert "MALE" in out
+    assert "F" in out
+    assert "M" in out
+    assert "female" in out
+    assert "FEMALE" in out
+    assert "Subscriber" in out
+    assert "subscriber" in out
+    assert "SUBSCRIBER" in out
+    assert "sub" in out
 
 def callback(operation_future):
-    global waiting_callback
-    waiting_callback = False
+    global waiting_cluster_callback
+    waiting_cluster_callback = False
 
+def wait_for_cluster_creation():
+    while True:
+        if not waiting_cluster_callback:
+            break

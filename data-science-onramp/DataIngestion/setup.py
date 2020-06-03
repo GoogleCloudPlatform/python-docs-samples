@@ -1,5 +1,4 @@
 import sys
-import os
 
 from pyspark.sql import SparkSession
 from py4j.protocol import Py4JJavaError
@@ -13,7 +12,7 @@ from time import time_ns
 # Create a SparkSession under the name "reddit". Viewable via the Spark UI
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
-bucket_name = os.environ['BUCKET_NAME']
+bucket_name = sys.argv[1]
 
 table = "bigquery-public-data.new_york_citibike.citibike_trips"
 
@@ -22,6 +21,7 @@ try:
     df = spark.read.format('bigquery').option('table', table).load()
 except Py4JJavaError:
     print(f"{table} does not exist. ")
+    sys.exit(0)
 
 ''' START MAKING DATA DIRTY '''
 
@@ -101,11 +101,13 @@ dup_df = new_df.where("rand() > 0.05")
 # Create final dirty dataframe
 df = new_df.union(dup_df)
 df.show(n=200)
+# df.where("rand() > 0.01").show(n=200)
+print("Dataframe printed")
 
 '''BACKFILLING'''
 
 # Save to GCS bucket
-path = "/".join(["gs:/", bucket_name, "dirty_data5", ".csv.gz"])
+path = "/".join(["gs:/", bucket_name, "raw_data", ".csv.gz"])
 
 (
     df
