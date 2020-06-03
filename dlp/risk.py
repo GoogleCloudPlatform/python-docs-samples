@@ -86,7 +86,11 @@ def numerical_risk_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        if message.attributes["DlpJobName"] == operation.name:
+        # The DlpJobName in the Pub/Sub message has the location indicator
+        # and we need to remove that part for comparison.
+        dlp_job_name = message.attributes["DlpJobName"].replace(
+            '/locations/global', '')
+        if dlp_job_name == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -196,7 +200,11 @@ def categorical_risk_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        if message.attributes["DlpJobName"] == operation.name:
+        # The DlpJobName in the Pub/Sub message has the location indicator
+        # and we need to remove that part for comparison.
+        dlp_job_name = message.attributes["DlpJobName"].replace(
+            '/locations/global', '')
+        if dlp_job_name == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -324,7 +332,11 @@ def k_anonymity_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        if message.attributes["DlpJobName"] == operation.name:
+        # The DlpJobName in the Pub/Sub message has the location indicator
+        # and we need to remove that part for comparison.
+        dlp_job_name = message.attributes["DlpJobName"].replace(
+            '/locations/global', '')
+        if dlp_job_name == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -460,7 +472,11 @@ def l_diversity_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        if message.attributes["DlpJobName"] == operation.name:
+        # The DlpJobName in the Pub/Sub message has the location indicator
+        # and we need to remove that part for comparison.
+        dlp_job_name = message.attributes["DlpJobName"].replace(
+            '/locations/global', '')
+        if dlp_job_name == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 
@@ -617,7 +633,11 @@ def k_map_estimate_analysis(
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     def callback(message):
-        if message.attributes["DlpJobName"] == operation.name:
+        # The DlpJobName in the Pub/Sub message has the location indicator
+        # and we need to remove that part for comparison.
+        dlp_job_name = message.attributes["DlpJobName"].replace(
+            '/locations/global', '')
+        if dlp_job_name == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
 

@@ -486,7 +486,11 @@ def inspect_gcs_file(
 
     def callback(message):
         try:
-            if message.attributes["DlpJobName"] == operation.name:
+            # The DlpJobName in the Pub/Sub message has the location indicator
+            # and we need to remove that part for comparison.
+            dlp_job_name = message.attributes["DlpJobName"].replace(
+                '/locations/global', '')
+            if dlp_job_name == operation.name:
                 # This is the message we're looking for, so acknowledge it.
                 message.ack()
 
@@ -650,7 +654,11 @@ def inspect_datastore(
 
     def callback(message):
         try:
-            if message.attributes["DlpJobName"] == operation.name:
+            # The DlpJobName in the Pub/Sub message has the location indicator
+            # and we need to remove that part for comparison.
+            dlp_job_name = message.attributes["DlpJobName"].replace(
+                '/locations/global', '')
+            if dlp_job_name == operation.name:
                 # This is the message we're looking for, so acknowledge it.
                 message.ack()
 
@@ -817,7 +825,11 @@ def inspect_bigquery(
 
     def callback(message):
         try:
-            if message.attributes["DlpJobName"] == operation.name:
+            # The DlpJobName in the Pub/Sub message has the location indicator
+            # and we need to remove that part for comparison.
+            dlp_job_name = message.attributes["DlpJobName"].replace(
+                '/locations/global', '')
+            if dlp_job_name == operation.name:
                 # This is the message we're looking for, so acknowledge it.
                 message.ack()
 
