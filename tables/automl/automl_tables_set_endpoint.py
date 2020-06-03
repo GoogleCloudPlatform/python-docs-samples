@@ -27,4 +27,7 @@ def create_client_with_endpoint(gcp_project_id):
     )
     # [END automl_set_endpoint]
 
+    # do simple test to check client connectivity
+    print(client.list_datasets())
+
     return client

@@ -21,7 +21,6 @@ PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 def test_client_creation(capsys):
-    client = automl_tables_set_endpoint.create_client_with_endpoint(PROJECT)
-    print(client.list_datasets())
+    automl_tables_set_endpoint.create_client_with_endpoint(PROJECT)
     out, _ = capsys.readouterr()
     assert "GRPCIterator" in out
