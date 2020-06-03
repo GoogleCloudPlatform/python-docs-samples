@@ -78,15 +78,20 @@ def test_setup(capsys):
         },
         'pyspark_job': {
             'main_python_file_uri': job_file_name,
-        'args': [
-            bucket_name,
-        ]
+            'args': [
+                bucket_name,
+            ],
+            "jar_file_uris": [
+                "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+            ],
         },
     }
 
     job_client = dataproc.JobControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
+
+    sleep(90)
     
     result = job_client.submit_job(project_id=project, region=region, job=job_details)
     job_id = result.reference.job_id
