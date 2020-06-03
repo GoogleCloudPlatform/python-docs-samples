@@ -1,4 +1,5 @@
 import sys
+import os
 
 from pyspark.sql import SparkSession
 from py4j.protocol import Py4JJavaError
@@ -12,7 +13,7 @@ from time import time_ns
 # Create a SparkSession under the name "reddit". Viewable via the Spark UI
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
-bucket_name = sys.argv[1]
+bucket_name = os.environ['BUCKET_NAME']
 
 table = "bigquery-public-data.new_york_citibike.citibike_trips"
 
