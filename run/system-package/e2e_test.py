@@ -16,11 +16,9 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
-import json
 import os
 import subprocess
 from urllib import request
-from urllib import parse
 import uuid
 
 import pytest
@@ -102,4 +100,3 @@ def test_end_to_end(services):
     body = response.read()
     # Response is a png
     assert b"PNG" in body
-
