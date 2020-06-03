@@ -193,21 +193,28 @@ def text_to_speech(text, outfile):
     client = texttospeech.TextToSpeechClient()
 
     # Sets the text input to be synthesized
-    synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml)
+    synthesis_input = texttospeech.SynthesisInput(ssml=ssml)
 
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
-    voice = texttospeech.types.VoiceSelectionParams(
+    voice = texttospeech.VoiceSelectionParams(
         language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
+        ssml_gender=texttospeech.SsmlVoiceGender.MALE)
 
     # Selects the type of audio file to return
-    audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3)
 
     # Performs the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
-    response = client.synthesize_speech(synthesis_input, voice, audio_config)
+
+    request = texttospeech.SynthesizeSpeechRequest(
+        input=synthesis_input,
+        voice=voice,
+        audio_config=audio_config
+    )
+
+    response = client.synthesize_speech(request=request)
 
     # Writes the synthetic audio to the output file.
     with open(outfile, 'wb') as out:
