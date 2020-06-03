@@ -15,6 +15,7 @@
 import os
 import re
 import sys
+import uuid
 
 from hybrid_tutorial import create_glossary
 from hybrid_tutorial import pic_to_text
@@ -55,7 +56,7 @@ def test_create_and_delete_glossary():
     from beta_snippets import delete_glossary
 
     languages = ['fr', 'en']
-    glossary_name = 'test-glossary'
+    glossary_name = f'test-glossary-{uuid.uuid4()}'
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
 
     # create_glossary will raise an exception if creation fails
