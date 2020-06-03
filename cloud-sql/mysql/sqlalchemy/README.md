@@ -87,7 +87,7 @@ sudo chown -R $USER /cloudsql
 
 You'll also need to initialize an environment variable containing the directory you just created:
 ```bash
-export DB_SOCKET_PATH=/path/to/the/new/directory
+export DB_SOCKET_DIR=/path/to/the/new/directory
 ```
 
 Use these terminal commands to initialize other environment variables as well:
@@ -101,7 +101,7 @@ export DB_NAME='<DB_NAME>'
 
 Then use this command to launch the proxy in the background:
 ```bash
-./cloud_sql_proxy -dir=$DB_SOCKET_PATH --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 ### Testing the application
