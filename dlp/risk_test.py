@@ -37,7 +37,7 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT = 30
+TIMEOUT = 180  # 3 minutes
 
 
 # Create new custom topic/subscription
