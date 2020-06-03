@@ -40,7 +40,7 @@ DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
-TIMEOUT = 180  # 3 minutes
+TIMEOUT = 300  # 5 minutes
 
 
 @pytest.fixture(scope="module")
