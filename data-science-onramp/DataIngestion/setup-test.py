@@ -52,8 +52,7 @@ def test_setup(capsys):
             },
             "initialization_actions": [
                 {
-                    "executable_file": "gs://dataproc-initialization-actions/ \
-                        python/pip-install.sh",
+                    "executable_file": "gs://dataproc-initialization-actions/python/pip-install.sh",
                 }
             ],
             "software_config": {
@@ -85,6 +84,7 @@ def test_setup(capsys):
             'main_python_file_uri': job_file_name,
             'args': [
                 bucket_name,
+                "0.01",
             ],
             "jar_file_uris": [
                 "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
@@ -96,7 +96,7 @@ def test_setup(capsys):
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    sleep(90)
+    sleep(120)  # Wait for job to complete
 
     result = job_client.submit_job(project_id=project, region=region,
                                    job=job_details)
@@ -104,20 +104,58 @@ def test_setup(capsys):
     job_id = result.reference.job_id
     print('Submitted job \"{}\".'.format(job_id))
 
-    out, _ = capsys.readouterr()
+    # Get job output
+    cluster_info = cluster_client.get_cluster(project, region, cluster_name)
+    bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
+    output_blob = (
+        'google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'
+        .format(cluster_info.cluster_uuid, job_id))
+    out = bucket.blob(output_blob)
 
     assert type(out) == str
     assert len(out) > 0
+
+    # tripDuration
+
+    # starttime
+
+    # stoptime
+
+    # start_station_id
+
+    # start_station_latitude
+
+    # start_station_longitude
+
+    # end_station_id
+
+    # end_station_name
+
+    # end_station_latitude
+
+    # end_station_longitude
+
+    # bikeid
+
+    # birth_year
+
+    # gender
+    assert "M" in out
     assert "male" in out
     assert "MALE" in out
     assert "F" in out
-    assert "M" in out
     assert "female" in out
     assert "FEMALE" in out
+
+    # customer_plan
     assert "Subscriber" in out
     assert "subscriber" in out
     assert "SUBSCRIBER" in out
     assert "sub" in out
+    assert "Customer" in out
+    assert "customer" in out
+    assert "CUSTOMER" in out
+    assert "cust" in out
 
 
 def callback(operation_future):

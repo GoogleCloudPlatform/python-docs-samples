@@ -14,12 +14,22 @@ from pyspark.sql.types import IntegerType, StringType
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
 bucket_name = sys.argv[1]
+amt = None
+
+try:
+    amt = sys.argv[2]
+except IndexError:
+    print("No amount specified")
 
 table = "bigquery-public-data.new_york_citibike.citibike_trips"
 
 # If the table doesn't exist simply continue
 try:
     df = spark.read.format('bigquery').option('table', table).load()
+    if amt:
+        df = df.where("rand() < " + amt)
+        print("Dataframe size: " + str(df.count()))
+
 except Py4JJavaError:
     print(f"{table} does not exist. ")
     sys.exit(0)
@@ -111,7 +121,7 @@ new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
                      for udf, column, name in zip(udfs, df.columns, names)])
 
 # Duplicate about 5% of the rows
-dup_df = new_df.where("rand() > 0.05")
+dup_df = new_df.where("rand() < 0.05")
 
 # Create final dirty dataframe
 df = new_df.union(dup_df)
@@ -135,5 +145,5 @@ print("Dataframe printed")
 spark.conf.set('temporaryGcsBucket', bucket_name)
 
 df.write.format('bigquery') \
-  .option('table', table + "_DIRTY") \
+  .option('table', "new_york_citibike_trips.RAW_DATA") \
   .save()
