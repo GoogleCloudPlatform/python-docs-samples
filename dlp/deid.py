@@ -83,8 +83,72 @@ def deidentify_with_mask(
 
 # [END dlp_deidentify_masking]
 
+# [START dlp_deidentify_replace]
+def deidentify_with_replace(
+    project,
+    string,
+    info_types,
+    replacement_str=None,
+):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+    string by replacing matched input values with a value you specify.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        string: The string to deidentify (will be treated as text).
+        replacement_str: The string to replace all values that match given
+            info types.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        "info_types": [{"name": info_type} for info_type in info_types]
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {
+                        "replace_config": {
+                            "new_value": {
+                                "string_value": replacement_str,
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    # Construct item
+    item = {"value": string}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+# [END dlp_deidentify_replace]
 
 # [START dlp_deidentify_fpe]
+
+
 def deidentify_with_fpe(
     project,
     string,
@@ -476,6 +540,28 @@ if __name__ == "__main__":
         help="The character to mask matching sensitive data with.",
     )
 
+    replace_parser = subparsers.add_parser(
+        "deid_replace",
+        help="Deidentify sensitive data in a string by replacing it with "
+        "another string.",
+    )
+    replace_parser.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
+    replace_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    replace_parser.add_argument("item", help="The string to deidentify.")
+    replace_parser.add_argument("replacement_str", help="The string to "
+                                "replace all matched values with.")
+
     fpe_parser = subparsers.add_parser(
         "deid_fpe",
         help="Deidentify sensitive data in a string using Format Preserving "
@@ -635,6 +721,13 @@ if __name__ == "__main__":
             args.info_types,
             masking_character=args.masking_character,
             number_to_mask=args.number_to_mask,
+        )
+    elif args.content == "deid_replace":
+        deidentify_with_replace(
+            args.project,
+            args.item,
+            args.info_types,
+            replacement_str=args.replacement_str,
         )
     elif args.content == "deid_fpe":
         deidentify_with_fpe(
