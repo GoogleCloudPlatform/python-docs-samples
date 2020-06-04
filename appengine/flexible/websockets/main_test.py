@@ -37,7 +37,10 @@ def server():
 
     bind_to = '127.0.0.1:{}'.format(port)
     server = subprocess.Popen(
-        ['gunicorn', '-b', bind_to, '-k' 'flask_sockets.worker', 'main:app'])
+        ['gunicorn', '-b', bind_to, '-k' 'flask_sockets.worker', 'main:app'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
 
     # Wait until the server responds before proceeding.
     @retry(wait_fixed=50, stop_max_delay=5000)
