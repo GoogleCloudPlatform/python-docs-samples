@@ -80,6 +80,7 @@ def dirty_data(proc_func, allow_none):
     return udf
 
 
+# Identity funciton for columns that should not change
 def id(x):
     return x
 
