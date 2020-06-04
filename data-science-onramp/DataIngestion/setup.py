@@ -3,6 +3,8 @@ import sys
 
 from time import time_ns
 
+from google.cloud import bigquery
+
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 
@@ -14,10 +16,11 @@ from pyspark.sql.types import IntegerType, StringType
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
 bucket_name = sys.argv[1]
-amt = None
+test = False
 
 try:
-    amt = sys.argv[2]
+    sys.argv[2]
+    test = True
 except IndexError:
     print("No amount specified")
 
@@ -26,10 +29,6 @@ table = "bigquery-public-data.new_york_citibike.citibike_trips"
 # If the table doesn't exist simply continue
 try:
     df = spark.read.format('bigquery').option('table', table).load()
-    if amt:
-        df = df.where("rand() < " + amt)
-        print("Dataframe size: " + str(df.count()))
-
 except Py4JJavaError:
     print(f"{table} does not exist. ")
     sys.exit(0)
@@ -121,29 +120,25 @@ new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
                      for udf, column, name in zip(udfs, df.columns, names)])
 
 # Duplicate about 5% of the rows
-dup_df = new_df.where("rand() < 0.05")
+dup_df = new_df.sample(False, 0.0001, seed=42)
 
 # Create final dirty dataframe
 df = new_df.union(dup_df)
-df.show(n=200)
-# df.where("rand() > 0.01").show(n=200)
+df.sample(False, 0.0001, seed=50).show(n=200)
 print("Dataframe printed")
 
-'''BACKFILLING'''
+'''Write to BigQuery'''
+if not test:
+    # Create BigQuery Dataset
+    client = bigquery.Client()
+    dataset_id = '{}.new_york_citibike_trips'.format(client.project)
+    dataset = bigquery.Dataset(dataset_id)
+    dataset.location = "US"
+    dataset = client.create_dataset(dataset)
 
-# Save to GCS bucket
-# path = "/".join(["gs:/", bucket_name, "raw_data", ".csv.gz"])
+    # Saving the data to BigQuery
+    spark.conf.set('temporaryGcsBucket', bucket_name)
 
-# (
-#     df
-#     .write
-#     .options(codec="org.apache.hadoop.io.compress.GzipCodec")
-#     .csv(path)
-# )
-
-# Saving the data to BigQuery
-spark.conf.set('temporaryGcsBucket', bucket_name)
-
-df.write.format('bigquery') \
-  .option('table', "new_york_citibike_trips.RAW_DATA") \
-  .save()
+    df.write.format('bigquery') \
+        .option('table', dataset_id + ".RAW_DATA") \
+        .save()

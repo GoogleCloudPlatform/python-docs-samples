@@ -1,4 +1,5 @@
 import os
+import re
 
 from time import sleep
 import uuid
@@ -20,8 +21,6 @@ def test_setup(capsys):
     storage_client = storage.Client()
     bucket_name = 'setup-test-code-{}'.format(str(uuid.uuid4()))
     bucket = storage_client.create_bucket(bucket_name)
-
-    assert True # remove
 
     '''Upload file'''
     destination_blob_name = "setup.py"
@@ -49,12 +48,13 @@ def test_setup(capsys):
                 'machine_type_uri': 'n1-standard-8'
             },
             'worker_config': {
-                'num_instances': 2,
+                'num_instances': 6,
                 'machine_type_uri': 'n1-standard-8'
             },
             "initialization_actions": [
                 {
-                    "executable_file": "gs://dataproc-initialization-actions/python/pip-install.sh",
+                    "executable_file": ("gs://dataproc-initialization-actions/"
+                                        "python/pip-install.sh"),
                 }
             ],
             "software_config": {
@@ -77,8 +77,6 @@ def test_setup(capsys):
 
     wait_for_cluster_creation()
 
-    assert True # remove
-
     '''Submit job'''
     job_details = {
         'placement': {
@@ -88,7 +86,7 @@ def test_setup(capsys):
             'main_python_file_uri': job_file_name,
             'args': [
                 bucket_name,
-                "0.001",
+                "--test",
             ],
             "jar_file_uris": [
                 "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
@@ -100,14 +98,13 @@ def test_setup(capsys):
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-
     result = job_client.submit_job(project_id=project, region=region,
                                    job=job_details)
 
     job_id = result.reference.job_id
     print('Submitted job \"{}\".'.format(job_id))
 
-    sleep(3 * 60)  # Wait for job to complete
+    sleep(6 * 60)  # Wait for job to complete
 
     # Get job output
     cluster_info = cluster_client.get_cluster(project, region, cluster_name)
@@ -117,32 +114,17 @@ def test_setup(capsys):
         .format(cluster_info.cluster_uuid, job_id))
     out = bucket.blob(output_blob).download_as_string().decode("utf-8")
 
-    # assert type(out) == str
-    # assert len(out) > 0
-
     # tripDuration
+    assert re.search("[0-9] s", out)
+    assert re.search("[0-9] m", out)
+    assert re.search("[0-9] h", out)
 
-    # starttime
-
-    # stoptime
-
-    # start_station_id
-
-    # start_station_latitude
-
-    # start_station_longitude
-
-    # end_station_id
-
-    # end_station_name
-
-    # end_station_latitude
-
-    # end_station_longitude
-
-    # bikeid
+    # station latitude & longitude
+    assert re.search(u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
 
     # birth_year
+    assert re.search("19[0-9][0-9]\\|", out)
+    assert re.search("20[0-9][0-9]\\|", out)
 
     # gender
     assert "M" in out
@@ -151,6 +133,9 @@ def test_setup(capsys):
     assert "F" in out
     assert "female" in out
     assert "FEMALE" in out
+    assert "u" in out
+    assert "unknown" in out
+    assert "UNKNOWN" in out
 
     # customer_plan
     assert "Subscriber" in out
@@ -161,6 +146,8 @@ def test_setup(capsys):
     assert "customer" in out
     assert "CUSTOMER" in out
     assert "cust" in out
+
+    assert "null" in out
 
 
 def callback(operation_future):
