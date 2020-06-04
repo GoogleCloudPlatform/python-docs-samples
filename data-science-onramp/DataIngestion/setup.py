@@ -122,11 +122,18 @@ print("Dataframe printed")
 '''BACKFILLING'''
 
 # Save to GCS bucket
-path = "/".join(["gs:/", bucket_name, "raw_data", ".csv.gz"])
+# path = "/".join(["gs:/", bucket_name, "raw_data", ".csv.gz"])
 
-(
-    df
-    .write
-    .options(codec="org.apache.hadoop.io.compress.GzipCodec")
-    .csv(path)
-)
+# (
+#     df
+#     .write
+#     .options(codec="org.apache.hadoop.io.compress.GzipCodec")
+#     .csv(path)
+# )
+
+# Saving the data to BigQuery
+spark.conf.set('temporaryGcsBucket', bucket_name)
+
+df.write.format('bigquery') \
+  .option('table', table + "_DIRTY") \
+  .save()
