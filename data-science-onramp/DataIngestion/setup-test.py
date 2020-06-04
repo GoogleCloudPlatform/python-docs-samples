@@ -1,7 +1,10 @@
-import os, uuid
+import os
+
+from time import sleep
+import uuid
+
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-from time import sleep
 
 waiting_cluster_callback = False
 
@@ -10,6 +13,7 @@ project = os.environ['GCLOUD_PROJECT']
 region = "us-central1"
 zone = "us-central1-a"
 cluster_name = 'setup-test-{}'.format(str(uuid.uuid4()))
+
 
 def test_setup(capsys):
     '''Create GCS Bucket'''
@@ -48,7 +52,8 @@ def test_setup(capsys):
             },
             "initialization_actions": [
                 {
-                    "executable_file": "gs://dataproc-initialization-actions/python/pip-install.sh",
+                    "executable_file": "gs://dataproc-initialization-actions/ \
+                        python/pip-install.sh",
                 }
             ],
             "software_config": {
@@ -92,10 +97,13 @@ def test_setup(capsys):
     })
 
     sleep(90)
-    
-    result = job_client.submit_job(project_id=project, region=region, job=job_details)
+
+    result = job_client.submit_job(project_id=project, region=region,
+                                   job=job_details)
+
     job_id = result.reference.job_id
-    
+    print('Submitted job \"{}\".'.format(job_id))
+
     out, _ = capsys.readouterr()
 
     assert type(out) == str
@@ -111,9 +119,11 @@ def test_setup(capsys):
     assert "SUBSCRIBER" in out
     assert "sub" in out
 
+
 def callback(operation_future):
     global waiting_cluster_callback
     waiting_cluster_callback = False
+
 
 def wait_for_cluster_creation():
     while True:
