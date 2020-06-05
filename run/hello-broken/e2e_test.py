@@ -96,13 +96,13 @@ def test_end_to_end(services):
 
     # Broken
     with pytest.raises(Exception) as e:
-        req = request.Request(service, headers={"Authorization": f"Bearer {token}",},)
+        req = request.Request(service, headers={"Authorization": f"Bearer {token}"})
         request.urlopen(req)
     assert "HTTP Error 500: Internal Server Error" in str(e.value)
 
     # Improved
     req = request.Request(
-        f"{service}/improved", headers={"Authorization": f"Bearer {token}",},
+        f"{service}/improved", headers={"Authorization": f"Bearer {token}"}
     )
     response = request.urlopen(req)
     assert response.status == 200
