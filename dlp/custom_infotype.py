@@ -41,7 +41,9 @@ def omit_name_if_also_email(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Construct a list of infoTypes for DLP to locate in `content_string`
+    # Construct a list of infoTypes for DLP to locate in `content_string`. See
+    # https://cloud.google.com/dlp/docs/concepts-infotypes for more information
+    # about supported infoTypes.
     info_types_to_locate = [{"name": "PERSON_NAME"}, {"name": "EMAIL_ADDRESS"}]
 
     # Construct the configuration dictionary that will only match on PERSON_NAME
