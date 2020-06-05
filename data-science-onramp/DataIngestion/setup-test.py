@@ -7,6 +7,8 @@ import uuid
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 
+import pytest
+
 waiting_cluster_callback = False
 
 # Set variables
@@ -15,12 +17,37 @@ region = "us-central1"
 zone = "us-central1-a"
 cluster_name = 'setup-test-{}'.format(str(uuid.uuid4()))
 
+bucket_name = 'setup-test-code-{}'.format(str(uuid.uuid4()))
+
+@pytest.fixture(autouse=True)
+def teardown():
+    yield
+
+    cluster_client = dataproc.ClusterControllerClient(client_options={
+        'api_endpoint': f'{region}-dataproc.googleapis.com:443'
+    })
+
+    try:
+        operation = cluster_client.delete_cluster(project, region, cluster_name)
+        operation.result()
+    except:
+        ...
+
+    storage_client = storage.Client()
+    try:
+        bucket = storage_client.get_bucket(bucket_name)
+        bucket.delete(force=True)
+    except:
+        ...
+
 
 def test_setup(capsys):
     '''Create GCS Bucket'''
     storage_client = storage.Client()
-    bucket_name = 'setup-test-code-{}'.format(str(uuid.uuid4()))
-    bucket = storage_client.create_bucket(bucket_name)
+    try:
+        bucket = storage_client.create_bucket(bucket_name)
+    except:
+        assert False
 
     '''Upload file'''
     destination_blob_name = "setup.py"
@@ -69,7 +96,11 @@ def test_setup(capsys):
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
-    cluster = cluster_client.create_cluster(project, region, cluster_data)
+
+    try:
+        cluster = cluster_client.create_cluster(project, region, cluster_data)
+    except:
+        assert False
     cluster.add_done_callback(callback)
 
     global waiting_cluster_callback
@@ -104,7 +135,7 @@ def test_setup(capsys):
     job_id = result.reference.job_id
     print('Submitted job \"{}\".'.format(job_id))
 
-    sleep(6 * 60)  # Wait for job to complete
+    wait_for_job(job_client, job_id)
 
     # Get job output
     cluster_info = cluster_client.get_cluster(project, region, cluster_name)
@@ -147,6 +178,7 @@ def test_setup(capsys):
     assert "CUSTOMER" in out
     assert "cust" in out
 
+    # Missing data
     assert "null" in out
 
 
@@ -159,3 +191,12 @@ def wait_for_cluster_creation():
     while True:
         if not waiting_cluster_callback:
             break
+
+
+def wait_for_job(job_client, job_id):
+    while True:
+        job = job_client.get_job(project, region, job_id)
+        if job.status.State.Name(job.status.state) == "ERROR":
+            assert False # Test fails
+        elif job.status.State.Name(job.status.state) == "DONE":
+            return
