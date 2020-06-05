@@ -16,8 +16,10 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
+import json
 import os
 import subprocess
+import time
 from urllib import request
 import uuid
 
@@ -58,18 +60,22 @@ def services():
             "--region=us-central1",
             "services",
             "describe",
-            f"hello-{suffix}",
+            f"logging-{suffix}",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
         check=True,
     ).stdout.strip()
 
-    token = subprocess.run(
+    id_token = subprocess.run(
         ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
     ).stdout.strip()
 
-    yield service, token
+    access_token = subprocess.run(
+        ["gcloud", "auth", "print-access-token"], stdout=subprocess.PIPE, check=True
+    ).stdout.strip()
+
+    yield service, id_token, access_token, project, f"logging-{suffix}"
 
     subprocess.run(
         [
@@ -77,7 +83,7 @@ def services():
             "run",
             "services",
             "delete",
-            f"hello-{suffix}",
+            f"logging-{suffix}",
             "--project",
             project,
             "--platform",
@@ -94,18 +100,58 @@ def test_end_to_end(services):
     service = services[0].decode()
     token = services[1].decode()
 
-    # Broken
-    with pytest.raises(Exception) as e:
-        req = request.Request(service, headers={"Authorization": f"Bearer {token}",},)
-        request.urlopen(req)
-    assert "HTTP Error 500: Internal Server Error" in str(e.value)
-
-    # Improved
+    # Test that the service is responding
     req = request.Request(
-        f"{service}/improved", headers={"Authorization": f"Bearer {token}",},
+        service,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "X-Cloud-Trace-Context": "foo/bar",
+        },
     )
     response = request.urlopen(req)
     assert response.status == 200
 
     body = response.read()
-    assert "Hello World" == body.decode()
+    assert body.decode() == "Hello Logger!"
+
+    # Test that the logs are writing properly to stackdriver
+    time.sleep(10)  # Slight delay writing to stackdriver
+    access_token = services[2].decode()
+    project = services[3]
+    service_name = services[4]
+    response = stackdriver_request(service_name, project, access_token)
+
+    entries = json.loads(response).get("entries")
+    assert entries
+
+
+def stackdriver_request(service_name, project, access_token):
+    # Stackdriver API request
+    logging_url = "https://logging.googleapis.com/v2/entries:list"
+    filters = (
+        "resource.type=cloud_run_revision "
+        "AND severity=NOTICE "
+        f"AND resource.labels.service_name={service_name} "
+        "AND jsonPayload.component=arbitrary-property"
+    )
+
+    print(filters)
+    data = json.dumps(
+        {
+            "resourceNames": [f"projects/{project}"],
+            "filter": filters,
+            "orderBy": "timestamp desc",
+        }
+    )
+
+    req = request.Request(
+        logging_url,
+        data=data.encode(),
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+    )
+    response = request.urlopen(req)
+    return response.read().decode()

@@ -15,25 +15,27 @@
 steps:
 - # Build the renderer image
   name: gcr.io/cloud-builders/docker:latest
-  args: ['build', '--tag=gcr.io/$PROJECT_ID/hello-${_SUFFIX}', '.']
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/logging-${_SUFFIX}', '.']
 
 - # Push the container image to Container Registry
   name: gcr.io/cloud-builders/docker
-  args: ['push', 'gcr.io/$PROJECT_ID/hello-${_SUFFIX}']
+  args: ['push', 'gcr.io/$PROJECT_ID/logging-${_SUFFIX}']
 
 - # Deploy to Cloud Run
   name: gcr.io/cloud-builders/gcloud
   args: 
   - run
   - deploy
-  - hello-${_SUFFIX}
+  - logging-${_SUFFIX}
   - --image
-  - gcr.io/$PROJECT_ID/hello-${_SUFFIX}
+  - gcr.io/$PROJECT_ID/logging-${_SUFFIX}
   - --region
   - us-central1
   - --platform
   - managed
+  - --set-env-vars
+  - GOOGLE_CLOUD_PROJECT=$PROJECT_ID
   - --no-allow-unauthenticated
 
 images: 
-  - 'gcr.io/$PROJECT_ID/hello-${_SUFFIX}'
+  - 'gcr.io/$PROJECT_ID/logging-${_SUFFIX}'
