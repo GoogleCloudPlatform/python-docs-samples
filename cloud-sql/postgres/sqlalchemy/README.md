@@ -41,7 +41,8 @@ export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
 ```bash
@@ -58,7 +59,8 @@ $env:DB_PASS="<DB_PASSWORD>"
 $env:DB_NAME="<DB_NAME>"
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
 Then use this command to launch the proxy in a separate PowerShell session:
 ```powershell
@@ -90,7 +92,8 @@ export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
 ```bash

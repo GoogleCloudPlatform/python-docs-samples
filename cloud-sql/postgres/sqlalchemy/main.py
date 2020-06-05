@@ -65,7 +65,8 @@ def init_connection_engine():
 def init_tcp_connection_engine(db_config):
     # [START cloud_sql_postgres_sqlalchemy_create_tcp]
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/kms/ to help keep secrets secret.
+    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
+    # secrets secret.
     db_user = os.environ["DB_USER"]
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
@@ -99,7 +100,8 @@ def init_tcp_connection_engine(db_config):
 def init_unix_connection_engine(db_config):
     # [START cloud_sql_postgres_sqlalchemy_create_socket]
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/kms/ to help keep secrets secret.
+    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
+    # secrets secret.
     db_user = os.environ["DB_USER"]
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
