@@ -53,6 +53,11 @@ def server():
 
     server.kill()
 
+    # Dump the logs for debugging
+    out, err = server.communicate()
+    print("gunicorn stdout: {}".format(out))
+    print("gunicorn stderr: {}".format(err))
+
 
 def test_http(server):
     result = requests.get('http://{}/'.format(server))
