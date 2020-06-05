@@ -23,23 +23,19 @@ from google.cloud import pubsub_v1
 # [END pubsub_quickstart_sub_deps]
 
 
-def sub(project_id, subscription_name):
+def sub(project_id, subscription_id):
     """Receives messages from a Pub/Sub subscription."""
     # [START pubsub_quickstart_sub_client]
     # Initialize a Subscriber client
     subscriber_client = pubsub_v1.SubscriberClient()
     # [END pubsub_quickstart_sub_client]
     # Create a fully qualified identifier in the form of
-    # `projects/{project_id}/subscriptions/{subscription_name}`
-    subscription_path = subscriber_client.subscription_path(
-        project_id, subscription_name
-    )
+    # `projects/{project_id}/subscriptions/{subscription_id}`
+    subscription_path = subscriber_client.subscription_path(project_id, subscription_id)
 
     def callback(message):
         print(
-            "Received message {} of message ID {}\n".format(
-                message, message.message_id
-            )
+            "Received message {} of message ID {}\n".format(message, message.message_id)
         )
         # Acknowledge the message. Unack'ed messages will be redelivered.
         message.ack()
@@ -62,13 +58,12 @@ def sub(project_id, subscription_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
-    parser.add_argument("subscription_name", help="Pub/Sub subscription name")
+    parser.add_argument("subscription_id", help="Pub/Sub subscription ID")
 
     args = parser.parse_args()
 
-    sub(args.project_id, args.subscription_name)
+    sub(args.project_id, args.subscription_id)
 # [END pubsub_quickstart_sub_all]
