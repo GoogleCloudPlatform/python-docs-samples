@@ -339,13 +339,12 @@ To run this sample:
 .. code-block:: bash
 
     $ python deid.py
-
-    usage: deid.py [-h] {deid_mask,deid_fpe,reid_fpe,deid_date_shift} ...
+    usage: deid.py [-h] {deid_mask,deid_fpe,reid_fpe,deid_date_shift,redact} ...
 
     Uses of the Data Loss Prevention API for deidentifying sensitive data.
 
     positional arguments:
-      {deid_mask,deid_fpe,reid_fpe,deid_date_shift}
+      {deid_mask,deid_fpe,reid_fpe,deid_date_shift,redact}
                             Select how to submit content to the API.
         deid_mask           Deidentify sensitive data in a string by masking it
                             with a character.
@@ -355,6 +354,8 @@ To run this sample:
                             Preserving Encryption (FPE).
         deid_date_shift     Deidentify dates in a CSV file by pseudorandomly
                             shifting them.
+        redact              Redact sensitive data in a string by replacing it with
+                            the info type of the data.
 
     optional arguments:
       -h, --help            show this help message and exit
