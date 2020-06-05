@@ -21,13 +21,13 @@ import argparse
 
 # [START dlp_deidentify_masking]
 def deidentify_with_mask(
-    project, string, info_types, masking_character=None, number_to_mask=0
+    project, input_str, info_types, masking_character=None, number_to_mask=0
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        item: The string to deidentify (will be treated as text).
+        input_str: The string to deidentify (will be treated as text).
         masking_character: The character to mask matching sensitive data with.
         number_to_mask: The maximum number of sensitive characters to mask in
             a match. If omitted or set to zero, the API will default to no
@@ -67,7 +67,7 @@ def deidentify_with_mask(
     }
 
     # Construct item
-    item = {"value": string}
+    item = {"value": input_str}
 
     # Call the API
     response = dlp.deidentify_content(
@@ -86,15 +86,16 @@ def deidentify_with_mask(
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
     project,
-    string,
+    input_str,
     info_types,
-    replacement_str=None,
+    replacement_str="REPLACEMENT_STR",
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing matched input values with a value you specify.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        string: The string to deidentify (will be treated as text).
+        input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
         replacement_str: The string to replace all values that match given
             info types.
     Returns:
@@ -131,7 +132,7 @@ def deidentify_with_replace(
     }
 
     # Construct item
-    item = {"value": string}
+    item = {"value": input_str}
 
     # Call the API
     response = dlp.deidentify_content(
@@ -151,7 +152,7 @@ def deidentify_with_replace(
 
 def deidentify_with_fpe(
     project,
-    string,
+    input_str,
     info_types,
     alphabet=None,
     surrogate_type=None,
@@ -162,7 +163,7 @@ def deidentify_with_fpe(
     string using Format Preserving Encryption (FPE).
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        item: The string to deidentify (will be treated as text).
+        input_str: The string to deidentify (will be treated as text).
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
             rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
@@ -230,7 +231,7 @@ def deidentify_with_fpe(
     }
 
     # Convert string to item
-    item = {"value": string}
+    item = {"value": input_str}
 
     # Call the API
     response = dlp.deidentify_content(
@@ -250,7 +251,7 @@ def deidentify_with_fpe(
 # [START dlp_reidentify_fpe]
 def reidentify_with_fpe(
     project,
-    string,
+    input_str,
     alphabet=None,
     surrogate_type=None,
     key_name=None,
@@ -260,7 +261,7 @@ def reidentify_with_fpe(
     string that was encrypted by Format Preserving Encryption (FPE).
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        item: The string to deidentify (will be treated as text).
+        input_str: The string to deidentify (will be treated as text).
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
             rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
@@ -319,7 +320,7 @@ def reidentify_with_fpe(
     }
 
     # Convert string to item
-    item = {"value": string}
+    item = {"value": input_str}
 
     # Call the API
     response = dlp.reidentify_content(
