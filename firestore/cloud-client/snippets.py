@@ -239,9 +239,8 @@ def get_custom_class():
 def get_simple_query():
     db = firestore.Client()
     # [START get_simple_query]
-    collection_ref = db.collection(u'cities').where(u'capital', u'==', True)
-    # Note: the CollectionReference get() method is a deprecated alias for stream()
-    docs = collection_ref.stream()
+    # Note: Use of CollectionRef stream() is prefered to get()
+    docs = db.collection(u'cities').where(u'capital', u'==', True).stream()
 
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
