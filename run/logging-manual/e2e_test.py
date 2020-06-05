@@ -98,13 +98,16 @@ def services():
 
 def test_end_to_end(services):
     service = services[0].decode()
-    token = services[1].decode()
+    id_token = services[1].decode()
+    access_token = services[2].decode()
+    project = services[3]
+    service_name = services[4]
 
     # Test that the service is responding
     req = request.Request(
         service,
         headers={
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {id_token}",
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
@@ -116,9 +119,6 @@ def test_end_to_end(services):
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
-    access_token = services[2].decode()
-    project = services[3]
-    service_name = services[4]
     response = stackdriver_request(service_name, project, access_token)
 
     entries = json.loads(response).get("entries")
@@ -135,7 +135,6 @@ def stackdriver_request(service_name, project, access_token):
         "AND jsonPayload.component=arbitrary-property"
     )
 
-    print(filters)
     data = json.dumps(
         {
             "resourceNames": [f"projects/{project}"],
