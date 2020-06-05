@@ -442,6 +442,8 @@ def redact_sensitive_data(project, string, info_types):
     Args:
         project: The Google Cloud project id to use as a parent resource.
         item: The string to redact (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
     Returns:
         None; the response from the API is printed to the terminal.
     """
