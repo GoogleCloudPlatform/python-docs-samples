@@ -1,8 +1,6 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes Pub/Sub messages.
-
-For more details on how to work with this sample read the [Google Cloud Run Node.js Samples README](https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run).
+This sample shows how to create a service that processes Authenticated Pub/Sub messages.
 
 ## Setup
 
@@ -15,7 +13,7 @@ gcloud auth login
 Then make sure your project is configured via
 
 ```sh
-gcloud config set project
+gcloud config set project [PROJECT-ID]
 ```
 
 ## Quickstart
