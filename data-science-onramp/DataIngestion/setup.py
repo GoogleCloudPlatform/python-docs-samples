@@ -12,61 +12,66 @@ from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import IntegerType, StringType
 
 
-# Create a SparkSession under the name "reddit". Viewable via the Spark UI
+# Create a SparkSession under the name "setup". Viewable via the Spark UI
 spark = SparkSession.builder.appName("setup").getOrCreate()
 
 bucket_name = sys.argv[1]
-test = False
+upload = True  # Whether to upload data to BigQuery
 
+# Check whether or not results should be uploaded
 try:
     sys.argv[2]
-    test = True
+    upload = False
 except IndexError:
-    print("No amount specified")
+    print("Results will be uploaded to BigQuery")
 
 table = "bigquery-public-data.new_york_citibike.citibike_trips"
 
-# If the table doesn't exist simply continue
+# Check if table exists
 try:
     df = spark.read.format('bigquery').option('table', table).load()
 except Py4JJavaError:
     print(f"{table} does not exist. ")
     sys.exit(0)
 
-''' START MAKING DATA DIRTY '''
+# START MAKING DATA DIRTY
 
 
 def random_select(items, cum_weights):
+    '''Picks an item according to the cumulative weights'''
     return choices(items, cum_weights=cum_weights, k=1)[0]
 
 
-# Converts trip duration to other units
 def tripduration(duration):
+    '''Converts trip duration to other units'''
     seconds = str(duration) + " s"
     minutes = str(float(duration) / 60) + " min"
     hours = str(float(duration) / 3600) + " h"
     return random_select([seconds, minutes, hours, str(randint(-1000, -1))],
-                         cum_weights=[0.3, 0.6, 0.9, 1])
+                         [0.3, 0.6, 0.9, 1])
 
 
 def station_name(name):
+    '''Replaces '&' with '/' with a 50% chance'''
     return choice([name, name.replace("&", "/")])
 
 
 def usertype(user):
+    '''Manipulates the user type string'''
     return choice([user, user.upper(), user.lower(),
                   "sub" if user == "Subscriber" else user,
                    "cust" if user == "Customer" else user])
 
 
 def gender(s):
+    '''Manipulates the gender string'''
     return choice([s, s.upper(), s.lower(),
                   s[0] if len(s) > 0 else "",
                    s[0].lower() if len(s) > 0 else ""])
 
 
-# Converts long and lat to DMS notation
 def convertAngle(angle):
+    '''Converts long and lat to DMS notation'''
     degrees = int(angle)
     minutes = int((angle - degrees) * 60)
     seconds = int((angle - degrees - minutes/60) * 3600)
@@ -75,8 +80,9 @@ def convertAngle(angle):
     return random_select([str(angle), new_angle], cum_weights=[0.55, 1])
 
 
-# Master function that calls the appopriate function per column
 def dirty_data(proc_func, allow_none):
+    '''Master function returns a user defined function
+    that transforms the column data'''
     def udf(col_value):
         seed(hash(col_value) + time_ns())
         if col_value is None:
@@ -89,7 +95,6 @@ def dirty_data(proc_func, allow_none):
     return udf
 
 
-# Identity function for columns that should not change
 def id(x):
     return x
 
@@ -119,16 +124,16 @@ names = df.schema.names
 new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
                      for udf, column, name in zip(udfs, df.columns, names)])
 
-# Duplicate about 5% of the rows
+# Duplicate about 0.01% of the rows
 dup_df = new_df.sample(False, 0.0001, seed=42)
 
 # Create final dirty dataframe
 df = new_df.union(dup_df)
 df.sample(False, 0.0001, seed=50).show(n=200)
-print("Dataframe printed")
+print("Dataframe sample printed")
 
-'''Write to BigQuery'''
-if not test:
+# Write to BigQuery
+if upload:
     # Create BigQuery Dataset
     client = bigquery.Client()
     dataset_id = '{}.new_york_citibike_trips'.format(client.project)

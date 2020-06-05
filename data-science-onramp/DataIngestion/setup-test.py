@@ -1,62 +1,66 @@
 import os
 import re
 
-from time import sleep
 import uuid
+
+from google.api_core.exceptions import GoogleAPICallError
 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
+from google.cloud.exceptions import NotFound
 
 import pytest
 
 waiting_cluster_callback = False
 
-# Set variables
+# Set global variables
 project = os.environ['GCLOUD_PROJECT']
 region = "us-central1"
 zone = "us-central1-a"
 cluster_name = 'setup-test-{}'.format(str(uuid.uuid4()))
-
 bucket_name = 'setup-test-code-{}'.format(str(uuid.uuid4()))
+
 
 @pytest.fixture(autouse=True)
 def teardown():
     yield
 
+    # Delete cluster
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': f'{region}-dataproc.googleapis.com:443'
     })
 
     try:
-        operation = cluster_client.delete_cluster(project, region, cluster_name)
+        operation = cluster_client.delete_cluster(project, region,
+                                                  cluster_name)
         operation.result()
-    except:
-        ...
+    except GoogleAPICallError:
+        pass
 
+    # Delete GCS bucket
     storage_client = storage.Client()
     try:
         bucket = storage_client.get_bucket(bucket_name)
         bucket.delete(force=True)
-    except:
-        ...
+    except NotFound:
+        pass
 
 
 def test_setup(capsys):
-    '''Create GCS Bucket'''
-    storage_client = storage.Client()
-    try:
-        bucket = storage_client.create_bucket(bucket_name)
-    except:
-        assert False
+    '''Tests setup.py by submitting it to a dataproc cluster'''
 
-    '''Upload file'''
+    # Create GCS Bucket
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(bucket_name)
+
+    # Upload file
     destination_blob_name = "setup.py"
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename("setup.py")
 
     job_file_name = "gs://" + bucket_name + "/setup.py"
 
-    '''Create Cluster'''
+    # Create cluster configuration
     zone_uri = \
         'https://www.googleapis.com/compute/v1/projects/{}/zones/{}'.format(
             project, zone)
@@ -93,22 +97,21 @@ def test_setup(capsys):
         }
     }
 
+    # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    try:
-        cluster = cluster_client.create_cluster(project, region, cluster_data)
-    except:
-        assert False
+    cluster = cluster_client.create_cluster(project, region, cluster_data)
     cluster.add_done_callback(callback)
 
+    # Wait for cluster to provision
     global waiting_cluster_callback
     waiting_cluster_callback = True
 
     wait_for_cluster_creation()
 
-    '''Submit job'''
+    # Create job configuration
     job_details = {
         'placement': {
             'cluster_name': cluster_name
@@ -125,6 +128,7 @@ def test_setup(capsys):
         },
     }
 
+    # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
@@ -135,6 +139,7 @@ def test_setup(capsys):
     job_id = result.reference.job_id
     print('Submitted job \"{}\".'.format(job_id))
 
+    # Wait for job to complete
     wait_for_job(job_client, job_id)
 
     # Get job output
@@ -183,20 +188,23 @@ def test_setup(capsys):
 
 
 def callback(operation_future):
+    '''Sets a flag to stop waiting'''
     global waiting_cluster_callback
     waiting_cluster_callback = False
 
 
 def wait_for_cluster_creation():
+    '''Waits for cluster to create'''
     while True:
         if not waiting_cluster_callback:
             break
 
 
 def wait_for_job(job_client, job_id):
+    '''Waits for job to finish'''
     while True:
         job = job_client.get_job(project, region, job_id)
-        if job.status.State.Name(job.status.state) == "ERROR":
-            assert False # Test fails
-        elif job.status.State.Name(job.status.state) == "DONE":
+        assert job.status.State.Name(job.status.state) != "ERROR"
+
+        if job.status.State.Name(job.status.state) == "DONE":
             return
