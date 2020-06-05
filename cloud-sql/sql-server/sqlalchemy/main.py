@@ -38,10 +38,11 @@ def init_tcp_connection_engine():
     db_user = os.environ["DB_USER"]
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
+    db_host = os.environ["DB_HOST"]
 
     # Extract host and port from environment variable DB_HOST
-    host_args = os.environ["DB_HOST"].split(":")
-    host, port = host_args[0], int(host_args[1])
+    host_args = db_host.split(":")
+    db_hostname, db_port = host_args[0], int(host_args[1])
 
     # The SQLAlchemy engine will help manage interactions, including automatically
     # managing a pool of connections to your database
@@ -53,8 +54,8 @@ def init_tcp_connection_engine():
             username=db_user,
             password=db_pass,
             database=db_name,
-            host=host,
-            port=port,
+            host=db_hostname,
+            port=db_port,
             query={"driver": "ODBC Driver 17 for SQL Server"},
         ),
         # ... Specify additional properties here.
