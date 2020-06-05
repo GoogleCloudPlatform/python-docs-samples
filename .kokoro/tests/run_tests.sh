@@ -108,7 +108,8 @@ test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 if [[ -z "${DIFF_FROM:-}"  ]]; then
     testing/btlr run "**/requirements.txt" -- "${test_prog}"
 else
-    testing/btlr run "**/requirements.txt" --git-diff "${DIFF_FROM}" -- \
+    echo "Running btlr with DIFF_FROM: ${DIFF_FROM}"
+    testing/btlr run "**/requirements.txt" --git-diff "${DIFF_FROM} ." -- \
 		 "${test_prog}"
 fi
 
