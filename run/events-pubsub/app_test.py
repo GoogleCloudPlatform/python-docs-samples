@@ -4,8 +4,6 @@ import json
 
 import ast
 
-import pytest
-
 from app import app
 import unittest 
 

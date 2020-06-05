@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def hello_world():
-    return 'GET Success!', 200
+    return 'GET Success!\n', 200
 
 @app.route('/', methods=['POST'])
 def event_handler():

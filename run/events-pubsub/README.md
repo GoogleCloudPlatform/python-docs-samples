@@ -27,6 +27,8 @@ gcloud run deploy cloudrun-events-pubsub \
  --image gcr.io/$(gcloud config get-value project)/cloudrun-events-pubsub
 ```
 
+When asked if you want to allow unauthenticateddd invocations, say no 
+
 Retrieve container URL from the gcloud run deploy command executed above and store it as seen below
 
 ```sh
@@ -70,10 +72,3 @@ gcloud pubsub topics publish my-topic --message="Hello there"
 ```
 
 You may observe the Run service receiving an event in Cloud Logging.
-
-You may also observe the post_count field being incremented from pubsub events by
-using the following command:
-
-```sh
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" -X $MY_RUN_SERVICE
-```
