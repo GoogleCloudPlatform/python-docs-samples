@@ -42,8 +42,11 @@ def server():
         stderr=subprocess.PIPE
     )
 
+    # With btlr, there can be many processes are spawned and the
+    # server might be in a tight memory situation, so let's wait for 2
+    # mins.
     # Wait until the server responds before proceeding.
-    @retry(wait_fixed=50, stop_max_delay=5000)
+    @retry(wait_fixed=50, stop_max_delay=120000)
     def check_server(url):
         requests.get(url)
 
