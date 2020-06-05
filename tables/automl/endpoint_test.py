@@ -1,4 +1,6 @@
-# Copyright 2018 Google LLC
+#!/usr/bin/env python
+
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,14 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
-runtime: python37
+import automl_tables_set_endpoint
 
-# Remember - storing secrets in plaintext is potentially unsafe. Consider using
-# something like https://cloud.google.com/secret-manager/docs/overview to help keep
-# secrets secret.
-env_variables:
-  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
-  DB_USER: my-db-user
-  DB_PASS: my-db-pass
-  DB_NAME: my_db
+PROJECT = os.environ["GCLOUD_PROJECT"]
+
+
+def test_client_creation(capsys):
+    automl_tables_set_endpoint.create_client_with_endpoint(PROJECT)
+    out, _ = capsys.readouterr()
+    assert "GRPCIterator" in out
