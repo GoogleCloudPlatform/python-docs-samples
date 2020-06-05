@@ -4,6 +4,7 @@ FROM python:3.7-slim
 
 # Copy local code to the container image.
 ENV APP_HOME /app
+ENV PORT 8080
 WORKDIR $APP_HOME
 COPY . ./
 
