@@ -28,3 +28,4 @@ credentials.dat
 env/
 .idea
 data-science-onramp/DataIngestion/noxfile.py
+data-science-onramp/data-ingestion/noxfile.py
