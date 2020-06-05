@@ -1,3 +1,4 @@
+# [START run_events_pubsub_dockerfile]
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
 FROM python:3.7-slim
@@ -16,3 +17,4 @@ RUN pip install Flask gunicorn
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+# [END run_events_pubsub_dockerfile]

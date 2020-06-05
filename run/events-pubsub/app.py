@@ -1,11 +1,13 @@
+# [START run_events_pubsub_server_setup]
 import os
 import json
 import base64
 
 from flask import Flask, request
-
 app = Flask(__name__)
+# [END run_events_pubsub_server_setup]
 
+# [START run_events_pubsub_handler]
 @app.route('/', methods=['GET'])
 def hello_world():
     return 'GET Success!\n', 200
@@ -25,6 +27,9 @@ def event_handler():
 	base64_message = body['message']['data']
 	name = base64.b64decode(base64_message).decode()
 	return {'message': 'Hello {0}! ID: {1}'.format(name, request.headers['ce-id'])}, 200
+# [END run_events_pubsub_handler]
 
+# [START run_pubsub_server]
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+# [END run_pubsub_server]
