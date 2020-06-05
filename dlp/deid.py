@@ -436,7 +436,7 @@ def deidentify_with_date_shift(
 
 
 # [START dlp_redact_sensitive_data]
-def redact_sensitive_data(project, string, info_types):
+def redact_sensitive_data(project, item, info_types):
     """Uses the Data Loss Prevention API to redact sensitive data in a
     string by replacing it with the info type.
     Args:
@@ -475,15 +475,12 @@ def redact_sensitive_data(project, string, info_types):
         }
     }
 
-    # Construct item
-    item = {"value": string}
-
     # Call the API
     response = dlp.deidentify_content(
         parent,
         inspect_config=inspect_config,
         deidentify_config=deidentify_config,
-        item=item,
+        item={"value": item},
     )
 
     # Print out the results.
@@ -752,6 +749,6 @@ if __name__ == "__main__":
     elif args.content == "redact":
         redact_sensitive_data(
             args.project,
-            string=args.item,
+            item=args.item,
             info_types=args.info_types,
         )
