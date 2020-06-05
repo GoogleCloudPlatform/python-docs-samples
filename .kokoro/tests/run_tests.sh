@@ -105,13 +105,26 @@ ROOT=$(pwd)
 
 test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
-if [[ -z "${DIFF_FROM:-}"  ]]; then
-    testing/btlr run "**/requirements.txt" -- "${test_prog}"
-else
-    echo "Running btlr with DIFF_FROM: ${DIFF_FROM}"
-    testing/btlr run "**/requirements.txt" --git-diff "${DIFF_FROM} ." -- \
-		 "${test_prog}"
+btlr_args=(
+    "run"
+    "**/requirements.txt"
+)
+
+if [[ -n "${DIFF_FROM:-}"  ]]; then
+    btlr_args+=(
+	"--git-diff"
+	"${DIFF_FROM} ."
+    )
 fi
+
+btlr_args+=(
+    "--"
+    "${test_prog}"
+)
+
+echo "testing/btlr" "${btlr_args[@]}"
+
+testing/btlr "${btlr_args[@]}"
 
 RTN=$?
 cd "$ROOT"
