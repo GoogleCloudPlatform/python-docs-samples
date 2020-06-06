@@ -137,6 +137,7 @@ def exported_model_predict():
     print(response.json())
     # [END automl_tables_exported_model_predict]
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
