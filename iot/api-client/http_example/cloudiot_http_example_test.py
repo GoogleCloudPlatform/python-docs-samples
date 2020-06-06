@@ -14,6 +14,7 @@
 import os
 import sys
 import time
+import uuid
 
 from google.cloud import pubsub
 import pytest

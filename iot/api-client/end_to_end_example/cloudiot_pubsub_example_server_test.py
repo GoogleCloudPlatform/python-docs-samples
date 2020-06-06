@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 import cloudiot_pubsub_example_server as example_server
 
