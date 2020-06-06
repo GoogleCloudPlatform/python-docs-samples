@@ -112,6 +112,31 @@ def batch_predict(
     # [END automl_tables_batch_predict]
 
 
+def exported_model_predict():
+    """Make a prediction for the exported model."""
+    # [START automl_tables_exported_model_predict]
+    import requests
+
+    response = requests.post(
+        "http://localhost:8080/predict",
+        json={
+            "instances": [
+                {
+                    "categorical_col": "mouse",
+                    "num_array_col": [1, 2, 3],
+                    "struct_col": {"foo": "piano", "bar": "2019-05-17T23:56:09.05Z"},
+                },
+                {
+                    "categorical_col": "dog",
+                    "num_array_col": [5, 6, 7],
+                    "struct_col": {"foo": "guitar", "bar": "2019-06-17T23:56:09.05Z"},
+                },
+            ]
+        },
+    )
+    print(response.json())
+    # [END automl_tables_exported_model_predict]
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -129,6 +154,8 @@ if __name__ == "__main__":
     batch_predict_parser.add_argument("--model_display_name")
     batch_predict_parser.add_argument("--input_path")
     batch_predict_parser.add_argument("--output_path")
+
+    subparsers.add_parser("exported_model_predict", help=predict.__doc__)
 
     project_id = os.environ["PROJECT_ID"]
     compute_region = os.environ["REGION_NAME"]
@@ -148,3 +175,6 @@ if __name__ == "__main__":
             args.input_path,
             args.output_path,
         )
+
+    if args.command == "exported_model_predict":
+        exported_model_predict()
