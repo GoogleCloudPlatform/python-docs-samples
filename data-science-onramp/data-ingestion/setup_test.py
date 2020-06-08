@@ -11,62 +11,25 @@ from google.cloud.exceptions import NotFound
 
 import pytest
 
-waiting_cluster_callback = False
 
 # Set global variables
-project = os.environ['GCLOUD_PROJECT']
-region = "us-central1"
-zone = "us-central1-a"
-cluster_name = 'setup-test-{}'.format(str(uuid.uuid4()))
-bucket_name = 'setup-test-code-{}'.format(str(uuid.uuid4()))
+PROJECT = os.environ['GCLOUD_PROJECT']
+REGION = "us-central1"
+ZONE = "us-central1-a"
+CLUSTER_NAME = f'setup-test-{uuid.uuid4()}'
+BUCKET_NAME = f'setup-test-code-{uuid.uuid4()}'
+
+BUCKET = None
 
 
 @pytest.fixture(autouse=True)
-def teardown():
-    yield
-
-    # Delete cluster
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{region}-dataproc.googleapis.com:443'
-    })
-
-    try:
-        operation = cluster_client.delete_cluster(project, region,
-                                                  cluster_name)
-        operation.result()
-    except GoogleAPICallError:
-        pass
-
-    # Delete GCS bucket
-    storage_client = storage.Client()
-    try:
-        bucket = storage_client.get_bucket(bucket_name)
-        bucket.delete(force=True)
-    except NotFound:
-        pass
-
-
-def test_setup(capsys):
-    '''Tests setup.py by submitting it to a dataproc cluster'''
-
-    # Create GCS Bucket
-    storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-
-    # Upload file
-    destination_blob_name = "setup.py"
-    blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename("setup.py")
-
-    job_file_name = "gs://" + bucket_name + "/setup.py"
-
+def setup_and_teardown_cluster():
     # Create cluster configuration
     zone_uri = \
-        'https://www.googleapis.com/compute/v1/projects/{}/zones/{}'.format(
-            project, zone)
+        f'https://www.googleapis.com/compute/v1/projects/{PROJECT}/zones/{ZONE}'
     cluster_data = {
-        'project_id': project,
-        'cluster_name': cluster_name,
+        'project_id': PROJECT,
+        'cluster_name': CLUSTER_NAME,
         'config': {
             'gce_cluster_config': {
                 'zone_uri': zone_uri,
@@ -99,27 +62,59 @@ def test_setup(capsys):
 
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
 
-    cluster = cluster_client.create_cluster(project, region, cluster_data)
-    cluster.add_done_callback(callback)
+    operation = cluster_client.create_cluster(PROJECT, REGION, cluster_data)
 
     # Wait for cluster to provision
-    global waiting_cluster_callback
-    waiting_cluster_callback = True
+    operation.result()
 
-    wait_for_cluster_creation()
+    yield
+
+    # Delete cluster
+    cluster_client = dataproc.ClusterControllerClient(client_options={
+        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
+    })
+
+    operation = cluster_client.delete_cluster(PROJECT, REGION,
+                                              CLUSTER_NAME)
+    operation.result()
+
+
+@pytest.fixture(autouse=True)
+def setup_and_teardown_bucket():
+    global BUCKET
+    # Create GCS Bucket
+    storage_client = storage.Client()
+    BUCKET = storage_client.create_bucket(BUCKET_NAME)
+
+    yield
+
+    # Delete GCS bucket
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET_NAME)
+    bucket.delete(force=True)
+
+def test_setup(capsys):
+    '''Tests setup.py by submitting it to a dataproc cluster'''
+
+    # Upload file
+    destination_blob_name = "setup.py"
+    blob = BUCKET.blob(destination_blob_name)
+    blob.upload_from_filename("setup.py")
+
+    job_file_name = "gs://" + BUCKET_NAME + "/setup.py"
 
     # Create job configuration
     job_details = {
         'placement': {
-            'cluster_name': cluster_name
+            'cluster_name': CLUSTER_NAME
         },
         'pyspark_job': {
             'main_python_file_uri': job_file_name,
             'args': [
-                bucket_name,
+                BUCKET_NAME,
                 "--test",
             ],
             "jar_file_uris": [
@@ -130,25 +125,21 @@ def test_setup(capsys):
 
     # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
 
-    result = job_client.submit_job(project_id=project, region=region,
+    response = job_client.submit_job(project_id=PROJECT, region=REGION,
                                    job=job_details)
 
-    job_id = result.reference.job_id
+    job_id = response.reference.job_id
     print('Submitted job \"{}\".'.format(job_id))
 
     # Wait for job to complete
-    wait_for_job(job_client, job_id)
+    result = response.add_done_callback(callback)
 
     # Get job output
-    cluster_info = cluster_client.get_cluster(project, region, cluster_name)
-    bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
-    output_blob = (
-        'google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'
-        .format(cluster_info.cluster_uuid, job_id))
-    out = bucket.blob(output_blob).download_as_string().decode("utf-8")
+    output_location = result.driver_output_resource_uri() + ".000000000"
+    output = BUCKET.blob(output_location).download_as_string().decode("utf-8")
 
     # tripDuration
     assert re.search("[0-9] s", out)
@@ -186,25 +177,5 @@ def test_setup(capsys):
     # Missing data
     assert "null" in out
 
-
 def callback(operation_future):
-    '''Sets a flag to stop waiting'''
-    global waiting_cluster_callback
-    waiting_cluster_callback = False
-
-
-def wait_for_cluster_creation():
-    '''Waits for cluster to create'''
-    while True:
-        if not waiting_cluster_callback:
-            break
-
-
-def wait_for_job(job_client, job_id):
-    '''Waits for job to finish'''
-    while True:
-        job = job_client.get_job(project, region, job_id)
-        assert job.status.State.Name(job.status.state) != "ERROR"
-
-        if job.status.State.Name(job.status.state) == "DONE":
-            return
+    return operation_future.result()
