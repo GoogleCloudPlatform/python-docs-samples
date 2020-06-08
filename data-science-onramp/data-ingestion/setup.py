@@ -12,31 +12,11 @@ from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import IntegerType, StringType
 
 
-# Create a SparkSession under the name "setup". Viewable via the Spark UI
-spark = SparkSession.builder.appName("setup").getOrCreate()
+BUCKET_NAME = sys.argv[1] 
+TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
 
-bucket_name = sys.argv[1]
-upload = True  # Whether to upload data to BigQuery
-
-# Check whether or not results should be uploaded
-if len(sys.arv) > 1:
-    upload = False
-    print("Not uploading results to BigQuery")
-else:
-    print("Results will be uploaded to BigQuery")
-
-table = "bigquery-public-data.new_york_citibike.citibike_trips"
-
-# Check if table exists
-try:
-    df = spark.read.format('bigquery').option('table', table).load()
-except Py4JJavaError:
-    print(f"{table} does not exist. ")
-    sys.exit(0)
 
 # START MAKING DATA DIRTY
-
-
 def random_select(items, weights):
     '''Picks an item according to the cumulative weights'''
     return random.choices(items, weights=weights, k=1)[0]
@@ -81,6 +61,8 @@ def convert_angle(angle):
     return random_select([str(angle), new_angle], [0.55, 0.45])
 
 
+# This function is nested since a UserDefinedFunction is
+# expected to take a single argument
 def dirty_data(proc_func, allow_none):
     '''Master function returns a user defined function
     that transforms the column data'''
@@ -99,42 +81,9 @@ def dirty_data(proc_func, allow_none):
 def id(x):
     return x
 
+def write_to_bigquery(df):
+    '''Write a dataframe to BigQuery'''
 
-# Declare data transformations for each column in dataframe
-udfs = [
-    (dirty_data(trip_duration, True), StringType()),  # tripduration
-    (dirty_data(id, True), StringType()),  # starttime
-    (dirty_data(id, True), StringType()),  # stoptime
-    (id, IntegerType()),  # start_station_id
-    (dirty_data(station_name, False), StringType()),  # start_station_name
-    (dirty_data(convert_angle, True), StringType()),  # start_station_latitude
-    (dirty_data(convert_angle, True), StringType()),  # start_station_longitude
-    (id, IntegerType()),  # end_station_id
-    (dirty_data(station_name, False), StringType()),  # end_station_name
-    (dirty_data(convert_angle, True), StringType()),  # end_station_latitude
-    (dirty_data(convert_angle, True), StringType()),  # end_station_longitude
-    (id, IntegerType()),  # bikeid
-    (dirty_data(user_type, False), StringType()),  # usertype
-    (id, IntegerType()),  # birth_year
-    (dirty_data(gender, False), StringType()),  # gender
-    (id, StringType()),  # customer_plan
-]
-
-# Apply dirty transformations to df
-names = df.schema.names
-new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
-                     for udf, column, name in zip(udfs, df.columns, names)])
-
-# Duplicate about 0.01% of the rows
-dup_df = new_df.sample(False, 0.0001, seed=42)
-
-# Create final dirty dataframe
-df = new_df.union(dup_df)
-df.sample(False, 0.0001, seed=50).show(n=200)
-print("Dataframe sample printed")
-
-# Write to BigQuery
-if upload:
     # Create BigQuery Dataset
     client = bigquery.Client()
     dataset_id = f'{client.project}.new_york_citibike_trips'
@@ -143,8 +92,68 @@ if upload:
     dataset = client.create_dataset(dataset)
 
     # Saving the data to BigQuery
-    spark.conf.set('temporaryGcsBucket', bucket_name)
+    spark.conf.set('temporaryGcsBucket', BUCKET_NAME)
 
     df.write.format('bigquery') \
         .option('table', dataset_id + ".RAW_DATA") \
         .save()
+
+def main():
+    # Create a SparkSession under the name "setup". Viewable via the Spark UI
+    spark = SparkSession.builder.appName("setup").getOrCreate()
+
+    upload = True  # Whether to upload data to BigQuery
+
+    # Check whether or not results should be uploaded
+    if len(sys.argv) > 1:
+        upload = False
+        print("Not uploading results to BigQuery")
+    else:
+        print("Results will be uploaded to BigQuery")
+
+    # Check if table exists
+    try:
+        df = spark.read.format('bigquery').option('table', TABLE).load()
+    except Py4JJavaError:
+        print(f"{TABLE} does not exist. ")
+        sys.exit(0)
+
+    # Declare data transformations for each column in dataframe
+    udfs = [
+        (dirty_data(trip_duration, True), StringType()),  # tripduration
+        (dirty_data(id, True), StringType()),  # starttime
+        (dirty_data(id, True), StringType()),  # stoptime
+        (id, IntegerType()),  # start_station_id
+        (dirty_data(station_name, False), StringType()),  # start_station_name
+        (dirty_data(convert_angle, True), StringType()),  # start_station_latitude
+        (dirty_data(convert_angle, True), StringType()),  # start_station_longitude
+        (id, IntegerType()),  # end_station_id
+        (dirty_data(station_name, False), StringType()),  # end_station_name
+        (dirty_data(convert_angle, True), StringType()),  # end_station_latitude
+        (dirty_data(convert_angle, True), StringType()),  # end_station_longitude
+        (id, IntegerType()),  # bikeid
+        (dirty_data(user_type, False), StringType()),  # usertype
+        (id, IntegerType()),  # birth_year
+        (dirty_data(gender, False), StringType()),  # gender
+        (id, StringType()),  # customer_plan
+    ]
+
+    # Apply dirty transformations to df
+    names = df.schema.names
+    new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
+                         for udf, column, name in zip(udfs, df.columns, names)])
+
+    # Duplicate about 0.01% of the rows
+    dup_df = new_df.sample(False, 0.0001, seed=42)
+
+    # Create final dirty dataframe
+    df = new_df.union(dup_df)
+    df.sample(False, 0.0001, seed=50).show(n=200)
+    print("Dataframe sample printed")
+
+    if upload:
+        write_to_bigquery(df)
+
+
+if __name__ == '__main__':
+    main()
