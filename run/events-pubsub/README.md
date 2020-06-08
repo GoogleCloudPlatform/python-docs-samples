@@ -1,6 +1,7 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes Authenticated Pub/Sub messages.
+This sample shows how to create a service that processes Authenticated Pub/Sub 
+messages.
 
 ## Setup
 
@@ -29,7 +30,8 @@ gcloud run deploy cloudrun-events-pubsub \
 
 When asked if you want to allow unauthenticateddd invocations, say no 
 
-Retrieve container URL from the gcloud run deploy command executed above and store it as seen below
+Retrieve container URL from the gcloud run deploy command executed above and 
+store it as seen below
 
 ```sh
 MY_RUN_SERVICE=<container_running_instance_url>
@@ -53,7 +55,8 @@ gcloud alpha events triggers create pubsub-trigger \
 Finally we need to enable authenticated calls to the pub/sub trigger. 
 
 1. Login to google cloud console.
-2. Navigate to the pub/sub products page, and select subscriptions from the left side tab bar.
+2. Navigate to the pub/sub products page, and select subscriptions from the left 
+side tab bar.
 3. Click on your pubsub-trigger then click edit.
 4. Check off enable authentication.
 5. Select the appropriate service account and paste in the value for
@@ -65,7 +68,8 @@ your environment variable MY_RUN_SERVICE into the optional audience field.
 Get a response from your Cloud Run Service
 
 ```sh
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $MY_RUN_SERVICE
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+$MY_RUN_SERVICE
 ```
 
 Test your Cloud Run service by publishing a message to the topic: 
@@ -74,4 +78,5 @@ Test your Cloud Run service by publishing a message to the topic:
 gcloud pubsub topics publish my-topic --message="Hello there"
 ```
 
-You may observe the Run service receiving an event in Cloud Logging.
+You can verify a successful response by going to your run instance and viewing 
+the Logs
