@@ -26,8 +26,14 @@ def company_name():
     email_alert_search_sample.tear_down(company_name, job_name)
 
 
+def retry_delay():
+    # Always wait 60 seconds
+    yield 60
+
+
 def test_email_alert_search_sample(company_name, capsys):
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+
+    @backoff.on_exception(retry_delay, AssertionError, max_time=240)
     def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
