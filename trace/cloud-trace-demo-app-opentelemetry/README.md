@@ -1,4 +1,4 @@
-# cloud-trace-demo-app
+# cloud-trace-demo-app-opentelemetry
 
 Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/). This includes necessary tools.
 
