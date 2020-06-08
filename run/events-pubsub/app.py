@@ -1,6 +1,6 @@
 # [START run_events_pubsub_server_setup]
-import os
 import base64
+import os
 
 from flask import Flask, request
 app = Flask(__name__)

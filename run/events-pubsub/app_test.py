@@ -1,6 +1,6 @@
-import base64
-
 import ast
+
+import base64
 
 import unittest
 
