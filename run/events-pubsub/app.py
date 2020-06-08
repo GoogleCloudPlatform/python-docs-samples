@@ -1,6 +1,5 @@
 # [START run_events_pubsub_server_setup]
 import os
-import json
 import base64
 
 from flask import Flask, request

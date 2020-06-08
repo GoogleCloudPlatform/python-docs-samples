@@ -1,11 +1,10 @@
-import requests
 import base64
-import json
 
 import ast
 
-from app import app
 import unittest
+
+from app import app
 
 
 class TestCase(unittest.TestCase):
