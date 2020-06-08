@@ -12,7 +12,7 @@ from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import IntegerType, StringType
 
 
-BUCKET_NAME = sys.argv[1] 
+BUCKET_NAME = sys.argv[1]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
 
 
@@ -81,7 +81,8 @@ def dirty_data(proc_func, allow_none):
 def id(x):
     return x
 
-def write_to_bigquery(df):
+
+def write_to_bigquery(spark, df):
     '''Write a dataframe to BigQuery'''
 
     # Create BigQuery Dataset
@@ -97,6 +98,7 @@ def write_to_bigquery(df):
     df.write.format('bigquery') \
         .option('table', dataset_id + ".RAW_DATA") \
         .save()
+
 
 def main():
     # Create a SparkSession under the name "setup". Viewable via the Spark UI
@@ -143,16 +145,16 @@ def main():
     new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
                          for udf, column, name in zip(udfs, df.columns, names)])
 
+    new_df.sample(False, 0.0001, seed=50).show(n=100)
+
     # Duplicate about 0.01% of the rows
-    dup_df = new_df.sample(False, 0.0001, seed=42)
+    dup_df = new_df.sample(True, 0.0001, seed=42)
 
     # Create final dirty dataframe
     df = new_df.union(dup_df)
-    df.sample(False, 0.0001, seed=50).show(n=200)
-    print("Dataframe sample printed")
 
     if upload:
-        write_to_bigquery(df)
+        write_to_bigquery(spark, df)
 
 
 if __name__ == '__main__':

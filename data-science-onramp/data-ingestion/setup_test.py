@@ -3,11 +3,8 @@ import re
 
 import uuid
 
-from google.api_core.exceptions import GoogleAPICallError
-
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-from google.cloud.exceptions import NotFound
 
 import pytest
 
@@ -52,7 +49,7 @@ def setup_and_teardown_cluster():
                 }
             ],
             "software_config": {
-                "image_version": "1.4-debian10",
+                "image_version": "1.5.4-debian10",
                 "optional_components": [
                     "ANACONDA"
                 ],
@@ -96,6 +93,7 @@ def setup_and_teardown_bucket():
     bucket = storage_client.get_bucket(BUCKET_NAME)
     bucket.delete(force=True)
 
+
 def test_setup(capsys):
     '''Tests setup.py by submitting it to a dataproc cluster'''
 
@@ -129,22 +127,15 @@ def test_setup(capsys):
     })
 
     response = job_client.submit_job_as_operation(project_id=PROJECT, region=REGION,
-                                   job=job_details)
+                                                  job=job_details)
 
     # Wait for job to complete
     result = response.result()
 
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
-    })
-
-    cluster_info = cluster_client.get_cluster(PROJECT, REGION, CLUSTER_NAME)
-
     # Get job output
-    output_location = result.driver_output_resource_uri + "000000000" # + "driveroutput.000000000"
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
-    output = bucket.blob(output_location).download_as_string().decode("utf-8")
+    output_location = result.driver_output_resource_uri + ".000000000"
+    blob = get_blob_from_path(output_location)
+    out = blob.download_as_string().decode("utf-8")
 
     # tripDuration
     assert re.search("[0-9] s", out)
@@ -181,3 +172,10 @@ def test_setup(capsys):
 
     # Missing data
     assert "null" in out
+
+
+def get_blob_from_path(path):
+    bucket_name = re.search("dataproc.+?/", path).group(0)[0:-1]
+    bucket = storage.Client().get_bucket(bucket_name)
+    output_location = re.search("google-cloud-dataproc.+", path).group(0)
+    return bucket.blob(output_location)
