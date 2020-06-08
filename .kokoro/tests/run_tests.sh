@@ -109,7 +109,7 @@ btlr_args=(
     "run"
     "**/requirements.txt"
     "--max-concurrency"
-    "50"
+    "30"
 )
 
 if [[ -n "${DIFF_FROM:-}"  ]]; then
