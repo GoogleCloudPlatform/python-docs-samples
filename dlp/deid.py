@@ -435,6 +435,61 @@ def deidentify_with_date_shift(
 # [END dlp_deidentify_date_shift]
 
 
+# [START dlp_redact_sensitive_data]
+def redact_sensitive_data(project, item, info_types):
+    """Uses the Data Loss Prevention API to redact sensitive data in a
+    string by replacing it with the info type.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        item: The string to redact (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        "info_types": [{"name": info_type} for info_type in info_types]
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {
+                        "replace_with_info_type_config": {}
+                    }
+                }
+            ]
+        }
+    }
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item={"value": item},
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+
+# [END dlp_redact_sensitive_data]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -626,6 +681,30 @@ if __name__ == "__main__":
         "key_name.",
     )
 
+    redact_parser = subparsers.add_parser(
+        "redact",
+        help="Redact sensitive data in a string by replacing it with the "
+        "info type of the data.",
+    )
+    redact_parser.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
+    redact_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    redact_parser.add_argument(
+        "item",
+        help="The string to redact."
+        "Example: 'My credit card is 4242 4242 4242 4242'",
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -666,4 +745,10 @@ if __name__ == "__main__":
             context_field_id=args.context_field_id,
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
+        )
+    elif args.content == "redact":
+        redact_sensitive_data(
+            args.project,
+            item=args.item,
+            info_types=args.info_types,
         )
