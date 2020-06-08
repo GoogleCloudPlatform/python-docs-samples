@@ -29,7 +29,7 @@ def delete_queue(project,
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # Get the fully qualified path to queue
+    # Get the fully qualified path to queue.
     queue = client.queue_path(project, location, queue_name)
 
     # Use the client to delete the queue.

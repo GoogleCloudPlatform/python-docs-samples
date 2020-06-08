@@ -30,13 +30,13 @@ def list_queues(project,
     # Construct the fully qualified location path.
     parent = client.location_path(project, location)
 
-    # Use the client to obtain the queues
+    # Use the client to obtain the queues.
     response = client.list_queues(parent)
 
-    # Convert the response to a list containing all queues
+    # Convert the response to a list containing all queues.
     queue_list = list(response)
 
-    # Print the results
+    # Print the results.
     for queue in queue_list:
         print(queue.name)
 

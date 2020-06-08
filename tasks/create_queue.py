@@ -31,7 +31,7 @@ def create_queue(project,
     # Construct the fully qualified location path.
     parent = client.location_path(project, location)
 
-    # Construct Queue
+    # Construct the queue.
     queue = {
         'name': client.queue_path(project, location, queue_name)
     }
