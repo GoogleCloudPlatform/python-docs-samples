@@ -50,12 +50,15 @@ gcloud alpha events triggers create pubsub-trigger \
 --parameters topic=my-topic
 ```
 
-Enable authenticated calls to the pub/sub trigger by going to your google cloud console in a browser,
-navigating to the pub/sub products page, navigate to subscriptions and click on your pubsub-trigger.
+Finally we need to enable authenticated calls to the pub/sub trigger. 
 
-You must then click edit, and check off enable authentication. Click the appropriate service account 
-and paste in your environment variable MY_RUN_SERVICE into the optional audience field. You must now
-scroll down and select update for the changes to take place. 
+1. Login to google cloud console.
+2. Navigate to the pub/sub products page, and select subscriptions from the left side tab bar.
+3. Click on your pubsub-trigger then click edit.
+4. Check off enable authentication.
+5. Select the appropriate service account and paste in the value for
+your environment variable MY_RUN_SERVICE into the optional audience field.  
+6. Scroll down and click update for the changes to take place. 
 
 ## Test
 
