@@ -21,8 +21,7 @@ env_variables:
   DB_USER: <your-username>
   DB_PASS: <your-password>
   DB_NAME: <your-db-name>
-  # Whether the app is deployed or running locally
-  DEPLOYED: true
+  DB_HOST: 172.17.0.1:<PORT>
 
 beta_settings:
-  cloud_sql_instances: <project-name>:<region-name>:<instance-name>=tcp:1433
+  cloud_sql_instances: <project-name>:<region-name>:<instance-name>=tcp:<PORT>
