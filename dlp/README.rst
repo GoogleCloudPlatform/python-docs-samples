@@ -136,37 +136,21 @@ To run this sample:
 
     $ python redact.py
 
-    usage: redact.py [-h] [--project PROJECT]
-                     [--info_types INFO_TYPES [INFO_TYPES ...]]
-                     [--min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}]
-                     [--mime_type MIME_TYPE]
-                     filename output_filename
+    usage: redact.py [-h] {info_types,all_text} ...
 
     Sample app that uses the Data Loss Prevent API to redact the contents of an
     image file.
 
     positional arguments:
-      filename              The path to the file to inspect.
-      output_filename       The path to which the redacted image will be written.
+      {info_types,all_text}
+                            Select which content should be redacted.
+        info_types          Redact specific infoTypes from an image.
+        all_text            Redact all text from an image. The MIME type of the
+                            file is inferred via the Python standard library's
+                            mimetypes module.
 
     optional arguments:
       -h, --help            show this help message and exit
-      --project PROJECT     The Google Cloud project id to use as a parent
-                            resource.
-      --info_types INFO_TYPES [INFO_TYPES ...]
-                            Strings representing info types to look for. A full
-                            list of info categories and types is available from
-                            the API. Examples include "FIRST_NAME", "LAST_NAME",
-                            "EMAIL_ADDRESS". If unspecified, the three above
-                            examples will be used.
-      --min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}
-                            A string representing the minimum likelihood threshold
-                            that constitutes a match.
-      --mime_type MIME_TYPE
-                            The MIME type of the file. If not specified, the type
-                            is inferred via the Python standard library's
-                            mimetypes module.
-
 
 
 Metadata

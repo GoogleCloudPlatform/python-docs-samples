@@ -44,3 +44,17 @@ def test_redact_image_file(tempdir, capsys):
 
     out, _ = capsys.readouterr()
     assert output_filepath in out
+
+
+def test_redact_image_all_text(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+    output_filepath = os.path.join(tempdir, "redacted.png")
+
+    redact.redact_image_all_text(
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+    )
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out
