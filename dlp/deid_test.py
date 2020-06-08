@@ -185,3 +185,17 @@ def test_reidentify_with_fpe(capsys):
     out, _ = capsys.readouterr()
 
     assert "731997681" not in out
+
+
+def test_redact_sensitive_data(capsys):
+    url_to_redact = "https://cloud.google.com"
+    deid.redact_sensitive_data(
+        GCLOUD_PROJECT,
+        "My favorite site is " + url_to_redact,
+        ["URL"],
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert url_to_redact not in out
+    assert "My favorite site is [URL]" in out
