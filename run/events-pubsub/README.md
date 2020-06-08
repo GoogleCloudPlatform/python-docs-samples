@@ -75,7 +75,7 @@ $MY_RUN_SERVICE
 Test your Cloud Run service by publishing a message to the topic: 
 
 ```sh
-gcloud pubsub topics publish my-topic --message="Hello there"
+gcloud pubsub topics publish my-topic --message="John Doe"
 ```
 
 You can verify a successful response by going to your run instance and viewing 
