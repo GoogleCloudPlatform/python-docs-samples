@@ -8,26 +8,34 @@ app = Flask(__name__)
 # [END run_events_pubsub_server_setup]
 
 # [START run_events_pubsub_handler]
+
+
 @app.route('/', methods=['GET'])
 def hello_world():
     return 'GET Success!\n', 200
 
+
 @app.route('/', methods=['POST'])
 def event_handler():
-	body = json.loads(request.json)
+    body = request.json
 
-	if 'message' not in body or 'data' not in body['message']:
-		msg = 'invalid Pub/Sub message format'
-		return {'err': msg}, 400
+    if 'message' not in body or 'data' not in body['message']:
+        msg = 'invalid Pub/Sub message format'
+        return {'err': msg}, 400
 
-	if 'ce-id' not in request.headers:
-		msg = 'missing ce-id field in Pub/Sub headers'
-		return {'err': msg}, 400
+    if 'ce-id' not in request.headers:
+        msg = 'missing ce-id field in Pub/Sub headers'
+        return {'err': msg}, 400
 
-	base64_message = body['message']['data']
-	name = base64.b64decode(base64_message).decode()
-	return {'message': 'Hello {0}! ID: {1}'.format(name, request.headers['ce-id'])}, 200
+    base64_message = body['message']['data']
+    name = base64.b64decode(base64_message).decode()
+
+    return {'message': 'Hello {0}! ID: {1}'.format(
+            name,
+            request.headers['ce-id']
+            )}, 200
 # [END run_events_pubsub_handler]
+
 
 # [START run_pubsub_server]
 if __name__ == "__main__":
