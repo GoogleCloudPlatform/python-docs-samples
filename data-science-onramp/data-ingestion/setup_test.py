@@ -128,17 +128,14 @@ def test_setup(capsys):
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
 
-    response = job_client.submit_job(project_id=PROJECT, region=REGION,
+    response = job_client.submit_job_as_operation(project_id=PROJECT, region=REGION,
                                    job=job_details)
 
-    job_id = response.reference.job_id
-    print('Submitted job \"{}\".'.format(job_id))
-
     # Wait for job to complete
-    result = response.add_done_callback(callback)
+    result = response.result()
 
     # Get job output
-    output_location = result.driver_output_resource_uri() + ".000000000"
+    output_location = result.driver_output_resource_uri + ".000000000"
     output = BUCKET.blob(output_location).download_as_string().decode("utf-8")
 
     # tripDuration
