@@ -27,3 +27,4 @@ credentials.dat
 .DS_store
 env/
 .idea
+data-science-onramp/data-ingestion/noxfile.py
