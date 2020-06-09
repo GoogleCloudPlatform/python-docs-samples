@@ -18,22 +18,29 @@ import time
 
 from flask import Flask, redirect, url_for
 
-
 # [START trace_setup_python_configure]
 from opencensus.ext.stackdriver import trace_exporter as stackdriver_exporter
 import opencensus.trace.tracer
 
+from flask import Flask
+import requests
+from opentelemetry import trace, propagators
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
+
 
 def initialize_tracer(project_id):
-    exporter = stackdriver_exporter.StackdriverExporter(
-        project_id=project_id
+    trace.set_tracer_provider(TracerProvider())
+    cloud_trace_exporter = CloudTraceSpanExporter()
+    trace.get_tracer_provider().add_span_processor(
+        SimpleExportSpanProcessor(cloud_trace_exporter)
     )
-    tracer = opencensus.trace.tracer.Tracer(
-        exporter=exporter,
-        sampler=opencensus.trace.tracer.samplers.AlwaysOnSampler()
-    )
+    opentelemetry_tracer = trace.get_tracer(__name__)
 
-    return tracer
+    return opentelemetry_tracer
+
+
 # [END trace_setup_python_configure]
 
 
@@ -49,14 +56,14 @@ def root():
 @app.route('/index.html', methods=['GET'])
 def index():
     tracer = app.config['TRACER']
-    tracer.start_span(name='index')
+    with tracer.start_as_current_span("index"):
+        # Add up to 1 sec delay, weighted toward zero
+        time.sleep(random.random() ** 2)
+        result = "Tracing requests"
 
-    # Add up to 1 sec delay, weighted toward zero
-    time.sleep(random.random() ** 2)
-    result = "Tracing requests"
-
-    tracer.end_span()
     return result
+
+
 # [END trace_setup_python_quickstart]
 
 
