@@ -954,6 +954,7 @@ def update_document_increment(db):
     washington_ref.update({"population": firestore.Increment(50)})
     # [END fs_update_document_increment]
 
+
 def list_document_subcollections():
     db = firestore.Client()
     # [START fs_list_document_subcollections]
