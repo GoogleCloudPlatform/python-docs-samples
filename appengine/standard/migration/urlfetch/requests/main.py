@@ -18,12 +18,12 @@ import logging
 from flask import Flask
 
 # [START imports]
+from google.appengine.api import apiproxy_stub_map
 import requests
-import requests_toolbelt.adapters.appengine
 
-# Use the App Engine Requests adapter. This makes sure that Requests uses
-# URLFetch.
-requests_toolbelt.adapters.appengine.monkeypatch()
+apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
+apiproxy_stub_map.apiproxy.RegisterStub('urlfetch',
+urlfetch_stub.URLFetchServiceStub())
 # [END imports]
 
 app = Flask(__name__)
