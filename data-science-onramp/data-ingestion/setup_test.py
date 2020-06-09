@@ -31,49 +31,47 @@ JOB_DETAILS = {  # Job configuration
         ],
     },
 }
+CLUSTER_DATA = {  # Create cluster configuration
+    'project_id': PROJECT,
+    'cluster_name': CLUSTER_NAME,
+    'config': {
+        'gce_cluster_config': {
+            'zone_uri': '',
+            "metadata": {
+                "PIP_PACKAGES": "google-cloud-storage"
+            },
+        },
+        'master_config': {
+            'num_instances': 1,
+            'machine_type_uri': 'n1-standard-8'
+        },
+        'worker_config': {
+            'num_instances': 6,
+            'machine_type_uri': 'n1-standard-8'
+        },
+        "initialization_actions": [
+            {
+                "executable_file": ("gs://dataproc-initialization-actions/"
+                                    "python/pip-install.sh"),
+            }
+        ],
+        "software_config": {
+            "image_version": "1.5.4-debian10",
+            "optional_components": [
+                "ANACONDA"
+            ],
+        }
+    }
+}
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
-    # Create cluster configuration
-    cluster_data = {
-        'project_id': PROJECT,
-        'cluster_name': CLUSTER_NAME,
-        'config': {
-            'gce_cluster_config': {
-                'zone_uri': '',
-                "metadata": {
-                    "PIP_PACKAGES": "google-cloud-storage"
-                },
-            },
-            'master_config': {
-                'num_instances': 1,
-                'machine_type_uri': 'n1-standard-8'
-            },
-            'worker_config': {
-                'num_instances': 6,
-                'machine_type_uri': 'n1-standard-8'
-            },
-            "initialization_actions": [
-                {
-                    "executable_file": ("gs://dataproc-initialization-actions/"
-                                        "python/pip-install.sh"),
-                }
-            ],
-            "software_config": {
-                "image_version": "1.5.4-debian10",
-                "optional_components": [
-                    "ANACONDA"
-                ],
-            }
-        }
-    }
-
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
     })
-    operation = cluster_client.create_cluster(PROJECT, REGION, cluster_data)
+    operation = cluster_client.create_cluster(PROJECT, REGION, CLUSTER_DATA)
 
     # Wait for cluster to provision
     operation.result()
@@ -111,7 +109,7 @@ def get_blob_from_path(path):
 
 
 def is_in_table(value, out):
-    return re.search(f"\| *{value}\|", out)
+    return re.search(f"\\| *{value}\\|", out)
 
 
 def test_setup():
