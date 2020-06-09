@@ -16,7 +16,6 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
-import json
 import os
 import subprocess
 import time
