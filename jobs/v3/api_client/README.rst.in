@@ -4,12 +4,18 @@ product:
   name: Google Cloud Talent Solution API
   short_name: CTS
   url: https://cloud.google.com/talent-solution/job-search/docs/
-  description: > 
+  description: >
     `Cloud Talent Solution` is a service that brings machine learning to your job
-     search experience, returning high quality results to job seekers far beyond 
-     the limitations of typical keyword-based methods. Once integrated with your 
-     job content, Cloud Talent Solution automatically detects and infers various 
+     search experience, returning high quality results to job seekers far beyond
+     the limitations of typical keyword-based methods. Once integrated with your
+     job content, Cloud Talent Solution automatically detects and infers various
      kinds of data, such as related titles, seniority, and industry.
+
+required_api_url: https://console.cloud.google.com/apis/library/jobs.googleapis.com
+required_role: Talent Solution Job Editor
+other_required_steps: >
+    Visit [Data logging page](https://console.cloud.google.com/talent-solution/data-permission-onboard) and enable the Data logging on your cloud project and connect at least one service account.
+
 
 setup:
 - auth
