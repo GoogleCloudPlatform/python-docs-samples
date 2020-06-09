@@ -108,9 +108,14 @@ test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 btlr_args=(
     "run"
     "**/requirements.txt"
-    "--max-concurrency"
-    "30"
 )
+
+if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
+    btlr_args+=(
+	"--max-concurrency"
+	"${NUM_TEST_WORKERS}"
+    )
+fi
 
 if [[ -n "${DIFF_FROM:-}"  ]]; then
     btlr_args+=(
