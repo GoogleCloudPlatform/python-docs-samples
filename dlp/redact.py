@@ -123,7 +123,7 @@ def redact_image(
 
 
 if __name__ == "__main__":
-    default_project = os.environ.get("GCLOUD_PROJECT")
+    default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
 

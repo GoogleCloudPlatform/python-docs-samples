@@ -20,7 +20,7 @@ import pytest
 
 import redact
 
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 
 

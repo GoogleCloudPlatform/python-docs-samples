@@ -24,7 +24,7 @@ import create_instruction
 import testing_lib
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
                        '/instruction/test.pdf')
 
