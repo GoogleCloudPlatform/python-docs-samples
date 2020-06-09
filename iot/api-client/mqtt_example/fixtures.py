@@ -36,7 +36,7 @@ topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 subscription_name = 'test-device-images-{}'.format(uuid.uuid4())
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid4(), int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 
 
 @pytest.fixture(scope='session')
