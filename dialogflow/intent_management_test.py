@@ -19,7 +19,7 @@ import uuid
 
 import intent_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 INTENT_DISPLAY_NAME = 'test_{}'.format(uuid.uuid4())
 MESSAGE_TEXTS = [
     'fake_message_text_for_testing_1',
