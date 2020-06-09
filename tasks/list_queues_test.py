@@ -16,15 +16,10 @@ import os
 
 import list_queues
 
-TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+TEST_PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
 
 
 def test_list_queues():
-    result = list_queues.list_queues(
-        TEST_PROJECT_ID, TEST_LOCATION)
-    assert(result)
-
-
-if __name__ == '__main__':
-    test_list_queues()
+    result = list_queues.list_queues(TEST_PROJECT_ID, TEST_LOCATION)
+    assert result

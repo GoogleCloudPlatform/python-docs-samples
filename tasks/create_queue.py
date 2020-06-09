@@ -12,15 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
-
-import argparse
-
-
-def create_queue(project,
-                 queue_name,
-                 location):
-    # [START cloud_tasks_create_queue]
+# [START cloud_tasks_create_queue]
+def create_queue(project, queue_name, location):
     """Create a task queue."""
 
     from google.cloud import tasks_v2
@@ -31,10 +24,8 @@ def create_queue(project,
     # Construct the fully qualified location path.
     parent = client.location_path(project, location)
 
-    # Construct the queue.
-    queue = {
-        'name': client.queue_path(project, location, queue_name)
-    }
+    # Construct the create queue request.
+    queue = {'name': client.queue_path(project, location, queue_name)}
 
     # Use the client to create the queue.
     response = client.create_queue(parent, queue)
@@ -42,32 +33,3 @@ def create_queue(project,
     print('Created queue {}'.format(response.name))
     return response
 # [END cloud_tasks_create_queue]
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=create_queue.__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument(
-        '--project',
-        help='Project to add the queue to.',
-        required=True,
-    )
-
-    parser.add_argument(
-        '--queue',
-        help='ID (short name) of the queue to be created.',
-        required=True,
-    )
-
-    parser.add_argument(
-        '--location',
-        help='Location of the project to add the queue to.',
-        required=True,
-    )
-
-    args = parser.parse_args()
-
-    create_queue(
-        args.project, args.queue, args.location)

@@ -16,16 +16,13 @@ import os
 
 import create_queue
 
-TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+TEST_PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
 TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
 
 
 def test_create_queue():
     result = create_queue.create_queue(
-        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
+        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION
+    )
     assert TEST_QUEUE_NAME in result.name
-
-
-if __name__ == '__main__':
-    test_create_queue()
