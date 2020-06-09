@@ -27,7 +27,7 @@ from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 
 def initialize_tracer(project_id):
     trace.set_tracer_provider(TracerProvider())
-    cloud_trace_exporter = CloudTraceSpanExporter()
+    cloud_trace_exporter = CloudTraceSpanExporter(project_id)
     trace.get_tracer_provider().add_span_processor(
         SimpleExportSpanProcessor(cloud_trace_exporter)
     )
