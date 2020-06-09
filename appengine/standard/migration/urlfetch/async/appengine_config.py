@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.appengine.api import apiproxy_stub_map
+from google.appengine.api import urlfetch_stub
 from google.appengine.ext import vendor
 
 # Add any libraries installed in the "lib" folder.
@@ -19,6 +21,8 @@ vendor.add('lib')
 
 import requests_toolbelt.adapters.appengine  # noqa: E402
 
-# Use the App Engine Requests adapter. This makes sure that Requests uses
-# URLFetch.
-requests_toolbelt.adapters.appengine.monkeypatch()
+apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
+apiproxy_stub_map.apiproxy.RegisterStub(
+    'urlfetch',
+    urlfetch_stub.URLFetchServiceStub()
+)

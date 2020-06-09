@@ -19,12 +19,7 @@ from flask import Flask, make_response
 
 # [START imports]
 from requests_futures.sessions import FuturesSession
-import requests_toolbelt.adapters.appengine
 from time import sleep
-
-# Use the App Engine Requests adapter. This makes sure that Requests uses
-# URLFetch.
-requests_toolbelt.adapters.appengine.monkeypatch()
 # [END imports]
 
 
