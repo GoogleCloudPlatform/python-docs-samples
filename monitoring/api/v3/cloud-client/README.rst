@@ -16,6 +16,14 @@ This directory contains samples for Google Stackdriver Monitoring API. Stackdriv
 
 .. _Google Stackdriver Monitoring API: https://cloud.google.com/monitoring/docs/
 
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/monitoring.googleapis.com
+
+To run the sample, you need to have `Monitoring Admin` role.
+
+
+Please visit [the Cloud Console UI of this API](https://console.cloud.google.com/monitoring) and create a new Workspace with the same name of your Cloud project.
+
+
 Setup
 -------------------------------------------------------------------------------
 

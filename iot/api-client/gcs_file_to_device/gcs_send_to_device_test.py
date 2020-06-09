@@ -15,6 +15,7 @@
 import os
 import sys
 import tempfile
+import time
 import uuid
 
 from google.cloud import pubsub
@@ -36,7 +37,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))
 device_id = 'test-device-{}'.format(str(uuid.uuid4()))
-registry_id = 'test-registry-{}'.format(str(uuid.uuid4()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 
 cloud_region = 'us-central1'
