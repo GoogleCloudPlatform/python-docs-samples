@@ -157,7 +157,7 @@ def test_track_objects_gcs():
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
-    project_id = os.environ["GCLOUD_PROJECT"]
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
     beta_snippets.streaming_automl_classification(video_path, project_id, model_id)
     out, _ = capsys.readouterr()
