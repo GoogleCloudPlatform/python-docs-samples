@@ -318,5 +318,5 @@ def test_collection_group_query(db):
                      u'Beijing Ancient Observatory'}
 
 
-def test_list_document_subcollections(db):
-    snippets.list_document_subcollections(db)
+def test_list_document_subcollections():
+    snippets.list_document_subcollections()

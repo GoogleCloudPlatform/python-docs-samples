@@ -955,6 +955,7 @@ def update_document_increment(db):
     # [END fs_update_document_increment]
 
 def list_document_subcollections(db):
+    db = firestore.Client()
     # [START fs_list_document_subcollections]
     collections = db.collection('cities').document('SF').collections()
     for collection in collections:
