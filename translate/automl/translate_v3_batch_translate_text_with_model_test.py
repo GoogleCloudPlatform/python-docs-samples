@@ -21,14 +21,14 @@ import pytest
 import translate_v3_batch_translate_text_with_model
 
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 MODEL_ID = "TRL3128559826197068699"
 
 
 @pytest.fixture(scope="function")
 def bucket():
     """Create a temporary bucket to store annotation output."""
-    bucket_name = str(uuid.uuid1())
+    bucket_name = f'tmp-{uuid.uuid4().hex}'
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 

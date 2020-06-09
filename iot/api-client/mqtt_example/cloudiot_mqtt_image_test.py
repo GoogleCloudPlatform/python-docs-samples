@@ -29,7 +29,7 @@ from fixtures import test_device_id  # noqa
 cloud_region = 'us-central1'
 ca_cert_path = 'resources/roots.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 image_path = './resources/owlister_hootie.png'
 

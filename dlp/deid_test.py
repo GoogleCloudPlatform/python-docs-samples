@@ -22,7 +22,7 @@ import deid
 
 HARMFUL_STRING = "My SSN is 372819127"
 HARMLESS_STRING = "My favorite color is blue"
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (
     "CiQAz0hX4+go8fJwn80Fr8pVImwx+tmZdqU7JL+7TN/S5JxBU9gSSQDhFHpFVy"
     "uzJps0YH9ls480mU+JLG7jI/0lL04i6XJRWqmI6gUSZRUtECYcLH5gXK4SXHlL"
@@ -86,6 +86,16 @@ def test_deidentify_with_mask_masking_number_specified(capsys):
 
     out, _ = capsys.readouterr()
     assert "My SSN is *******27" in out
+
+
+def test_deidentify_with_replace(capsys):
+    deid.deidentify_with_replace(
+        GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"],
+        replacement_str="REPLACEMENT_STR"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "My SSN is REPLACEMENT_STR" in out
 
 
 def test_deidentify_with_fpe(capsys):
