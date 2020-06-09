@@ -28,7 +28,7 @@ gcloud run deploy cloudrun-events-pubsub \
  --image gcr.io/$(gcloud config get-value project)/cloudrun-events-pubsub
 ```
 
-When asked if you want to allow unauthenticateddd invocations, say no 
+When asked if you want to allow unauthenticated invocations, say no 
 
 Retrieve container URL from the gcloud run deploy command executed above and 
 store it as seen below
