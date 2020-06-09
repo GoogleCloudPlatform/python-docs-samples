@@ -22,7 +22,7 @@ import pytest
 
 import knowledge_base_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 KNOWLEDGE_BASE_NAME = 'knowledge_{}'.format(uuid.uuid4())
 pytest.KNOWLEDGE_BASE_ID = None
 

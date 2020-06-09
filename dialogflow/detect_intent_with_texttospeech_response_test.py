@@ -19,7 +19,7 @@ import uuid
 from detect_intent_with_texttospeech_response import \
     detect_intent_with_texttospeech_response
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 SESSION_ID = 'test_{}'.format(uuid.uuid4())
 TEXTS = ["hello"]
 
