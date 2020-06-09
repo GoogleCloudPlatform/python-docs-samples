@@ -21,6 +21,10 @@ vendor.add('lib')
 
 import requests_toolbelt.adapters.appengine  # noqa: E402
 
+# Use the App Engine Requests adapter. This makes sure that Requests uses
+# URLFetch.
+requests_toolbelt.adapters.appengine.monkeypatch()
+
 apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
 apiproxy_stub_map.apiproxy.RegisterStub(
     'urlfetch',
