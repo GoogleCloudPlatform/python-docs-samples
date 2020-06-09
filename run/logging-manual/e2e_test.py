@@ -23,6 +23,8 @@ import time
 from urllib import request
 import uuid
 
+from google.cloud import logging_v2
+
 import pytest
 
 
@@ -71,11 +73,7 @@ def services():
         ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
     ).stdout.strip()
 
-    access_token = subprocess.run(
-        ["gcloud", "auth", "print-access-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
-
-    yield service, id_token, access_token, project, f"logging-{suffix}"
+    yield service, id_token, project, f"logging-{suffix}"
 
     subprocess.run(
         [
@@ -99,9 +97,8 @@ def services():
 def test_end_to_end(services):
     service = services[0].decode()
     id_token = services[1].decode()
-    access_token = services[2].decode()
-    project = services[3]
-    service_name = services[4]
+    project = services[2]
+    service_name = services[3]
 
     # Test that the service is responding
     req = request.Request(
@@ -119,15 +116,8 @@ def test_end_to_end(services):
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
-    response = stackdriver_request(service_name, project, access_token)
-
-    entries = json.loads(response).get("entries")
-    assert entries
-
-
-def stackdriver_request(service_name, project, access_token):
-    # Stackdriver API request
-    logging_url = "https://logging.googleapis.com/v2/entries:list"
+    client = logging_v2.LoggingServiceV2Client()
+    resource_names = [f"projects/{project}"]
     filters = (
         "resource.type=cloud_run_revision "
         "AND severity=NOTICE "
@@ -135,22 +125,11 @@ def stackdriver_request(service_name, project, access_token):
         "AND jsonPayload.component=arbitrary-property"
     )
 
-    data = json.dumps(
-        {
-            "resourceNames": [f"projects/{project}"],
-            "filter": filters,
-            "orderBy": "timestamp desc",
-        }
-    )
+    # Retry a maximum number of 10 times to find results in stackdriver
+    for x in range(10):
+        iterator = client.list_log_entries(resource_names, filter_=filters)
+        for entry in iterator:
+            # If there are any results, exit loop
+            break
 
-    req = request.Request(
-        logging_url,
-        data=data.encode(),
-        headers={
-            "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        },
-    )
-    response = request.urlopen(req)
-    return response.read().decode()
+    assert iterator.num_results
