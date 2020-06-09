@@ -17,7 +17,7 @@ import os
 import instantiate_inline_workflow_template
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 REGION = 'us-central1'
 
 
