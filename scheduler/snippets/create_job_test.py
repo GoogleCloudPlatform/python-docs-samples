@@ -16,7 +16,7 @@ import os
 
 import create_job
 
-TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = os.getenv('LOCATION_ID', 'us-central1')
 
 
