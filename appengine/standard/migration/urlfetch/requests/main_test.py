@@ -12,16 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.appengine.api import apiproxy_stub_map
-from google3.apphosting.api import url_fetch_stub
-
 import main
-
-apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
-apiproxy_stub_map.apiproxy.RegisterStub(
-    'urlfetch',
-    url_fetch_stub.URLFetchServiceStub()
-)
 
 
 def test_index():
