@@ -33,7 +33,7 @@ import pytest
 
 import samples
 
-PROJECT_ID = environ['GCLOUD_PROJECT']
+PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 SLEEP_TIME = 1
 TRY_LIMIT = 20
 
