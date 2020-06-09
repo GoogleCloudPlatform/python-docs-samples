@@ -20,7 +20,7 @@ import pytest
 
 import video_object_tracking_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 DATASET_ID = "VOT2823376535338090496"
 OPERATION_ID = None
 
