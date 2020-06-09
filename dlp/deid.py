@@ -435,7 +435,7 @@ def deidentify_with_date_shift(
 # [END dlp_deidentify_date_shift]
 
 
-# [START dlp_deidentify_replace]
+# [START dlp_deidentify_replace_infotype]
 def deidentify_with_replace_infotype(project, item, info_types):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing it with the info type.
@@ -487,7 +487,7 @@ def deidentify_with_replace_infotype(project, item, info_types):
     print(response.item.value)
 
 
-# [END dlp_deidentify_replace]
+# [END dlp_deidentify_replace_infotype]
 
 
 if __name__ == "__main__":
@@ -681,12 +681,12 @@ if __name__ == "__main__":
         "key_name.",
     )
 
-    replace_parser = subparsers.add_parser(
-        "replace",
+    replace_with_infotype_parser = subparsers.add_parser(
+        "replace_with_infotype",
         help="Deidentify sensitive data in a string by replacing it with the "
         "info type of the data."
     )
-    replace_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
@@ -695,11 +695,11 @@ if __name__ == "__main__":
         "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
-    replace_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "project",
         help="The Google Cloud project id to use as a parent resource.",
     )
-    replace_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "item",
         help="The string to deidentify."
         "Example: 'My credit card is 4242 4242 4242 4242'",
@@ -746,7 +746,7 @@ if __name__ == "__main__":
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
         )
-    elif args.content == "replace":
+    elif args.content == "replace_with_infotype":
         deidentify_with_replace_infotype(
             args.project,
             item=args.item,
