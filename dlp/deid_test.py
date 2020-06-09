@@ -197,9 +197,9 @@ def test_reidentify_with_fpe(capsys):
     assert "731997681" not in out
 
 
-def test_redact_sensitive_data(capsys):
+def test_deidentify_with_replace_infotype(capsys):
     url_to_redact = "https://cloud.google.com"
-    deid.redact_sensitive_data(
+    deid.deidentify_with_replace_infotype(
         GCLOUD_PROJECT,
         "My favorite site is " + url_to_redact,
         ["URL"],
