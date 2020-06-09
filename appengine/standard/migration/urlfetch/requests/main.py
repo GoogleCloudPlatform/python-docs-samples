@@ -23,8 +23,10 @@ from google.appengine.api import urlfetch_stub
 import requests
 
 apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
-apiproxy_stub_map.apiproxy.RegisterStub('urlfetch',
-urlfetch_stub.URLFetchServiceStub())
+apiproxy_stub_map.apiproxy.RegisterStub(
+    'urlfetch',
+    urlfetch_stub.URLFetchServiceStub()
+)
 # [END imports]
 
 app = Flask(__name__)
