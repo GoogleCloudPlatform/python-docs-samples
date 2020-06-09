@@ -22,7 +22,7 @@ cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
 topic_id = 'test-device-events-{}'.format(int(time.time()))
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)

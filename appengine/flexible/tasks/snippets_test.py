@@ -19,7 +19,7 @@ import pytest
 
 import snippets
 
-TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
 QUEUE_NAME_1 = "queue-{}".format(uuid.uuid4())
 QUEUE_NAME_2 = "queue-{}".format(uuid.uuid4())

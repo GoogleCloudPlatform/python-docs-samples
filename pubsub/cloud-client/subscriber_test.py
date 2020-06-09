@@ -22,7 +22,7 @@ import pytest
 import subscriber
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "subscription-test-topic-" + UUID
 DEAD_LETTER_TOPIC = "subscription-test-dead-letter-topic-" + UUID
 SUBSCRIPTION_ADMIN = "subscription-test-subscription-admin-" + UUID

@@ -40,7 +40,7 @@ def test_main(capsys):
 
     # Initialize variables.
     cmd = 'uname -a'
-    project = os.environ['GCLOUD_PROJECT']
+    project = os.environ['GOOGLE_CLOUD_PROJECT']
     test_id = 'oslogin-test-{id}'.format(id=str(random.randint(0, 1000000)))
     zone = 'us-east1-d'
     image_family = 'projects/debian-cloud/global/images/family/debian-9'

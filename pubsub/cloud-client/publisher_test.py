@@ -24,7 +24,7 @@ import pytest
 import publisher
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC_ADMIN = "publisher-test-topic-admin-" + UUID
 TOPIC_PUBLISH = "publisher-test-topic-publish-" + UUID
 
