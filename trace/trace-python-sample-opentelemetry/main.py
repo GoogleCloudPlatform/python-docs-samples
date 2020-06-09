@@ -19,11 +19,6 @@ import time
 from flask import Flask, redirect, url_for
 
 # [START trace_setup_python_configure]
-from opencensus.ext.stackdriver import trace_exporter as stackdriver_exporter
-import opencensus.trace.tracer
-
-from flask import Flask
-import requests
 from opentelemetry import trace, propagators
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
