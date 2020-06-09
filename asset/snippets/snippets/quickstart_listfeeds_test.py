@@ -18,7 +18,7 @@ import os
 
 import quickstart_listfeeds
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def test_list_feeds(capsys):

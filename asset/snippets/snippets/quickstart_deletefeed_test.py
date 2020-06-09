@@ -23,7 +23,7 @@ from google.cloud import resource_manager
 import quickstart_createfeed
 import quickstart_deletefeed
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 ASSET_NAME = 'assets-{}'.format(uuid.uuid4().hex)
 FEED_ID = 'feed-{}'.format(uuid.uuid4().hex)
 TOPIC = 'topic-{}'.format(uuid.uuid4().hex)

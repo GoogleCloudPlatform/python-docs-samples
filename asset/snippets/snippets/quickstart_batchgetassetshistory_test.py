@@ -24,7 +24,7 @@ import pytest
 
 import quickstart_batchgetassetshistory
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = 'assets-{}'.format(uuid.uuid4().hex)
 
 
