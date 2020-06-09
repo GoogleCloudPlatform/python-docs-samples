@@ -23,8 +23,8 @@
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
 
-    # We only run the e2e test in py37 session.
-    'ignored_versions': ["2.7", "3.6", "3.8"],
+    # We only run the cloud run tests in py38 session.
+    'ignored_versions': ["2.7", "3.6", "3.7"],
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a

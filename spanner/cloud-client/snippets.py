@@ -106,14 +106,23 @@ def delete_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    singers_to_delete = spanner.KeySet(
-        keys=[[1], [2], [3], [4], [5]])
+    # Delete individual rows
     albums_to_delete = spanner.KeySet(
-        keys=[[1, 1], [1, 2], [2, 1], [2, 2], [2, 3]])
+        keys=[[2, 1], [2, 3]])
+
+    # Delete a range of rows where the column key is >=3 and <5
+    singers_range = spanner.KeyRange(start_closed=[3], end_open=[5])
+    singers_to_delete = spanner.KeySet(
+        ranges=[singers_range])
+
+    # Delete remaining Singers rows, which will also delete the remaining
+    # Albums rows because Albums was defined with ON DELETE CASCADE
+    remaining_singers = spanner.KeySet(all_=True)
 
     with database.batch() as batch:
         batch.delete('Albums', albums_to_delete)
         batch.delete('Singers', singers_to_delete)
+        batch.delete('Singers', remaining_singers)
 
     print('Deleted data.')
 # [END spanner_delete_data]

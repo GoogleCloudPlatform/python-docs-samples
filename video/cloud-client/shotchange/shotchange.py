@@ -39,7 +39,7 @@ def analyze_shots(path):
     # [START video_shot_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
-    operation = video_client.annotate_video(path, features=features)
+    operation = video_client.annotate_video(input_uri=path, features=features)
     # [END video_shot_tutorial_construct_request]
     print('\nProcessing video for shot change annotations:')
 

@@ -23,6 +23,13 @@ To run the sample, you need to enable the API at: {{required_api_url}}
 To run the sample, you need to have `{{required_role}}` role.
 {% endif %}
 
+{% if required_roles %}
+To run the sample, you need to have the following roles:
+{% for role in required_roles %}
+* `{{role}}`
+{% endfor %}
+{% endif %}
+
 {{other_required_steps}}
 
 {% if setup %}
