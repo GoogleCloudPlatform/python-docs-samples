@@ -1,9 +1,14 @@
-google-cloud-monitoring==1.0.0
-google-cloud-trace==0.23.0
-opencensus==0.7.7
 Flask==1.1.2
-opencensus-ext-stackdriver==0.7.2
-opencensus-ext-flask==0.7.3
-opencensus-context==0.1.1
+-e git+https://github.com/aravinsiva/opentelemetry-python.git@17741abadc9ee2e229f3ce250fd06e604cb11980#egg=opentelemetry_api&subdirectory=opentelemetry-api
+opentelemetry-auto-instrumentation==0.8b0
+opentelemetry-exporter-cloud-trace @ file:///usr/local/google/home/aravins/Documents/opentelemetry-python/ext/opentelemetry-exporter-cloud-trace
+opentelemetry-ext-flask==0.8b0
+-e git+https://github.com/aravinsiva/opentelemetry-python.git@17741abadc9ee2e229f3ce250fd06e604cb11980#egg=opentelemetry_ext_grpc&subdirectory=ext/opentelemetry-ext-grpc
+opentelemetry-ext-jaeger==0.8b0
+opentelemetry-ext-requests==0.8b0
+opentelemetry-ext-wsgi==0.8b0
+-e git+https://github.com/aravinsiva/opentelemetry-python.git@17741abadc9ee2e229f3ce250fd06e604cb11980#egg=opentelemetry_sdk&subdirectory=opentelemetry-sdk
 grpcio==1.29.0
 httpretty==1.0.2
+google-cloud-monitoring==1.0.0
+google-cloud-trace==0.23.0
