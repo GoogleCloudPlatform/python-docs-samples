@@ -20,7 +20,7 @@ import pytest
 from product_management import create_product, delete_product, list_products
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'

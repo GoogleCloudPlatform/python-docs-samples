@@ -22,7 +22,7 @@ import pytest
 
 import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_ZONE_NAME = 'test-zone' + str(uuid.uuid4())
 TEST_ZONE_DNS_NAME = 'theadora.is.'
 TEST_ZONE_DESCRIPTION = 'Test zone'

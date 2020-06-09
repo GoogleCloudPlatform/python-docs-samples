@@ -20,7 +20,7 @@ import os
 
 import submit_job_to_cluster
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 CLUSTER_NAME = 'testcluster3'
 ZONE = 'us-central1-b'
