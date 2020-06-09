@@ -17,7 +17,7 @@ import os
 import set_endpoint_beta
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 
 

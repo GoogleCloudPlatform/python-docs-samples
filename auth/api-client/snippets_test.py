@@ -21,7 +21,7 @@ import snippets
 
 
 def test_implicit():
-    snippets.implicit(os.environ['GCLOUD_PROJECT'])
+    snippets.implicit(os.environ['GOOGLE_CLOUD_PROJECT'])
 
 
 def test_explicit():
@@ -31,7 +31,7 @@ def test_explicit():
     open_mock = mock.mock_open(read_data=creds_file_data)
 
     with mock.patch('io.open', open_mock):
-        snippets.explicit(os.environ['GCLOUD_PROJECT'])
+        snippets.explicit(os.environ['GOOGLE_CLOUD_PROJECT'])
 
 
 def test_explicit_compute_engine():

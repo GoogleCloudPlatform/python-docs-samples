@@ -20,7 +20,7 @@ import pytest
 import quickstart
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture
