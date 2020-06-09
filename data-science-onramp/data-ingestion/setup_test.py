@@ -12,24 +12,36 @@ import pytest
 # Set global variables
 PROJECT = os.environ['GCLOUD_PROJECT']
 REGION = "us-central1"
-ZONE = "us-central1-a"
 CLUSTER_NAME = f'setup-test-{uuid.uuid4()}'
 BUCKET_NAME = f'setup-test-code-{uuid.uuid4()}'
-
-BUCKET = None
+DESTINATION_BLOB_NAME = "setup.py"
+JOB_FILE_NAME = f'gs://{BUCKET_NAME}/setup.py'
+JOB_DETAILS = {  # Job configuration
+    'placement': {
+        'cluster_name': CLUSTER_NAME
+    },
+    'pyspark_job': {
+        'main_python_file_uri': JOB_FILE_NAME,
+        'args': [
+            BUCKET_NAME,
+            "--test",
+        ],
+        "jar_file_uris": [
+                "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+        ],
+    },
+}
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
     # Create cluster configuration
-    zone_uri = \
-        f'https://www.googleapis.com/compute/v1/projects/{PROJECT}/zones/{ZONE}'
     cluster_data = {
         'project_id': PROJECT,
         'cluster_name': CLUSTER_NAME,
         'config': {
             'gce_cluster_config': {
-                'zone_uri': zone_uri,
+                'zone_uri': '',
                 "metadata": {
                     "PIP_PACKAGES": "google-cloud-storage"
                 },
@@ -59,9 +71,8 @@ def setup_and_teardown_cluster():
 
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
+        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
     })
-
     operation = cluster_client.create_cluster(PROJECT, REGION, cluster_data)
 
     # Wait for cluster to provision
@@ -70,10 +81,6 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
-    })
-
     operation = cluster_client.delete_cluster(PROJECT, REGION,
                                               CLUSTER_NAME)
     operation.result()
@@ -81,53 +88,41 @@ def setup_and_teardown_cluster():
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_bucket():
-    global BUCKET
     # Create GCS Bucket
     storage_client = storage.Client()
-    BUCKET = storage_client.create_bucket(BUCKET_NAME)
+    bucket = storage_client.create_bucket(BUCKET_NAME)
+
+    # Upload file
+    blob = bucket.blob(DESTINATION_BLOB_NAME)
+    blob.upload_from_filename("setup.py")
 
     yield
 
     # Delete GCS bucket
-    storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET_NAME)
     bucket.delete(force=True)
 
 
-def test_setup(capsys):
+def get_blob_from_path(path):
+    bucket_name = re.search("dataproc.+?/", path).group(0)[0:-1]
+    bucket = storage.Client().get_bucket(bucket_name)
+    output_location = re.search("google-cloud-dataproc.+", path).group(0)
+    return bucket.blob(output_location)
+
+
+def is_in_table(value, out):
+    return re.search(f"\| *{value}\|", out)
+
+
+def test_setup():
     '''Tests setup.py by submitting it to a dataproc cluster'''
-
-    # Upload file
-    destination_blob_name = "setup.py"
-    blob = BUCKET.blob(destination_blob_name)
-    blob.upload_from_filename("setup.py")
-
-    job_file_name = "gs://" + BUCKET_NAME + "/setup.py"
-
-    # Create job configuration
-    job_details = {
-        'placement': {
-            'cluster_name': CLUSTER_NAME
-        },
-        'pyspark_job': {
-            'main_python_file_uri': job_file_name,
-            'args': [
-                BUCKET_NAME,
-                "--test",
-            ],
-            "jar_file_uris": [
-                "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-            ],
-        },
-    }
 
     # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
+        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
     })
-
     response = job_client.submit_job_as_operation(project_id=PROJECT, region=REGION,
-                                                  job=job_details)
+                                                  job=JOB_DETAILS)
 
     # Wait for job to complete
     result = response.result()
@@ -150,32 +145,28 @@ def test_setup(capsys):
     assert re.search("20[0-9][0-9]\\|", out)
 
     # gender
-    assert "M" in out
-    assert "male" in out
-    assert "MALE" in out
-    assert "F" in out
-    assert "female" in out
-    assert "FEMALE" in out
-    assert "u" in out
-    assert "unknown" in out
-    assert "UNKNOWN" in out
+    assert is_in_table("M", out)
+    assert is_in_table("m", out)
+    assert is_in_table("male", out)
+    assert is_in_table("MALE", out)
+    assert is_in_table("F", out)
+    assert is_in_table("f", out)
+    assert is_in_table("female", out)
+    assert is_in_table("FEMALE", out)
+    assert is_in_table("U", out)
+    assert is_in_table("u", out)
+    assert is_in_table("unknown", out)
+    assert is_in_table("UNKNOWN", out)
 
     # customer_plan
-    assert "Subscriber" in out
-    assert "subscriber" in out
-    assert "SUBSCRIBER" in out
-    assert "sub" in out
-    assert "Customer" in out
-    assert "customer" in out
-    assert "CUSTOMER" in out
-    assert "cust" in out
+    assert is_in_table("Subscriber", out)
+    assert is_in_table("subscriber", out)
+    assert is_in_table("SUBSCRIBER", out)
+    assert is_in_table("sub", out)
+    assert is_in_table("Customer", out)
+    assert is_in_table("customer", out)
+    assert is_in_table("CUSTOMER", out)
+    assert is_in_table("cust", out)
 
     # Missing data
-    assert "null" in out
-
-
-def get_blob_from_path(path):
-    bucket_name = re.search("dataproc.+?/", path).group(0)[0:-1]
-    bucket = storage.Client().get_bucket(bucket_name)
-    output_location = re.search("google-cloud-dataproc.+", path).group(0)
-    return bucket.blob(output_location)
+    assert is_in_table("null", out)

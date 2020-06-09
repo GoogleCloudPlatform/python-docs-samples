@@ -46,8 +46,8 @@ def user_type(user):
 
 def gender(s):
     '''Manipulates the gender string'''
-    return random.choice([s, s.upper(), s.lower(),
-                         s[0] if len(s) > 0 else "",
+    return random.choice([s.upper(), s.lower(),
+                         s[0].upper() if len(s) > 0 else "",
                          s[0].lower() if len(s) > 0 else ""])
 
 
@@ -78,7 +78,9 @@ def dirty_data(proc_func, allow_none):
     return udf
 
 
-def id(x):
+# This function is required because we need to apply a
+# function for every column and some columns do not change
+def identity(x):
     return x
 
 
@@ -118,26 +120,26 @@ def main():
         df = spark.read.format('bigquery').option('table', TABLE).load()
     except Py4JJavaError:
         print(f"{TABLE} does not exist. ")
-        sys.exit(0)
+        return
 
     # Declare data transformations for each column in dataframe
     udfs = [
         (dirty_data(trip_duration, True), StringType()),  # tripduration
-        (dirty_data(id, True), StringType()),  # starttime
-        (dirty_data(id, True), StringType()),  # stoptime
-        (id, IntegerType()),  # start_station_id
+        (dirty_data(identity, True), StringType()),  # starttime
+        (dirty_data(identity, True), StringType()),  # stoptime
+        (identity, IntegerType()),  # start_station_id
         (dirty_data(station_name, False), StringType()),  # start_station_name
         (dirty_data(convert_angle, True), StringType()),  # start_station_latitude
         (dirty_data(convert_angle, True), StringType()),  # start_station_longitude
-        (id, IntegerType()),  # end_station_id
+        (identity, IntegerType()),  # end_station_id
         (dirty_data(station_name, False), StringType()),  # end_station_name
         (dirty_data(convert_angle, True), StringType()),  # end_station_latitude
         (dirty_data(convert_angle, True), StringType()),  # end_station_longitude
-        (id, IntegerType()),  # bikeid
+        (identity, IntegerType()),  # bikeid
         (dirty_data(user_type, False), StringType()),  # usertype
-        (id, IntegerType()),  # birth_year
+        (identity, IntegerType()),  # birth_year
         (dirty_data(gender, False), StringType()),  # gender
-        (id, StringType()),  # customer_plan
+        (identity, StringType()),  # customer_plan
     ]
 
     # Apply dirty transformations to df
@@ -145,10 +147,10 @@ def main():
     new_df = df.select(*[UserDefinedFunction(*udf)(column).alias(name)
                          for udf, column, name in zip(udfs, df.columns, names)])
 
-    new_df.sample(False, 0.0001, seed=50).show(n=100)
+    new_df.sample(False, 0.0001).show(n=100)
 
     # Duplicate about 0.01% of the rows
-    dup_df = new_df.sample(True, 0.0001, seed=42)
+    dup_df = new_df.sample(True, 0.0001)
 
     # Create final dirty dataframe
     df = new_df.union(dup_df)
