@@ -17,7 +17,7 @@ import os
 import translate_v3_get_supported_languages_with_target as get_supported_langs
 
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_list_languages_with_target(capsys):
