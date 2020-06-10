@@ -59,24 +59,39 @@ SUBSCRIPTION=$(basename $(gcloud pubsub subscriptions list \
 --format 'value(name)'))
 ```
 
+Note, this assumes you only have one subscription. If you have multiple 
+subscriptions then you must update your SUBSCRIPTION variable accordingly. 
+
+You can list your subscriptions by using the following optional command:
+
+```sh
+gcloud pubsub subscriptions list --format 'value(name)'
+```
+
 Finally we need to enable authenticated calls to the pub/sub trigger otherwise
 cloud run will reject the incoming unauthenticated pubsub trigger requests. 
+
+First we must choose a service account. You can list your service accounts via
+
+```sh
+gcloud iam service-accounts list
+```
+
+Choose an email and save it to a variable
+
+```sh
+SERVICE_ACCOUNT=<service_account_email>
+```
 
 Update pubsub subscription by doing the following:
 
 ```sh
 gcloud pubsub subscriptions update $SUBSCRIPTION \
---push-auth-service-account=<your_service_account> \
+--push-auth-service-account=$SERVICE_ACCOUNT \
 --push-auth-token-audience=$MY_RUN_SERVICE \
 --push-endpoint= $(gcloud pubsub subscriptions describe $SUBSCRIPTION --format \
 'value(pushConfig.pushEndpoint)')
 ```
-
-Note, this assumes you only have one subscription. If you have multiple 
-subscriptions then you must update your SUBSCRIPTION variable accordingly. 
-
-You can find valid service accounts by looking up your IAM members and finding
-a valid email. 
 
 ## Test
 
