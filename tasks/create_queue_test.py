@@ -28,18 +28,13 @@ TEST_QUEUE_NAME = f'my-queue-{uuid.uuid4().hex}'
 @pytest.fixture()
 def test_queue():
     client = tasks_v2.CloudTasksClient()
-    parent = client.location_path(TEST_PROJECT_ID, TEST_LOCATION)
-    queue = {
-        # The fully qualified path to the queue
-        'name': client.queue_path(
-            TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME),
-    }
-    q = client.create_queue(parent, queue)
+    q = create_queue.create_queue(TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
 
     yield q
 
     client.delete_queue(q.name)
 
 
-def test_create_queue(test_queue):
-    assert TEST_QUEUE_NAME in test_queue.name
+def test_create_queue(capsys, test_queue):
+    out, _ = capsys.readouterr()
+    assert 'Created queue' in out
