@@ -53,7 +53,7 @@ gcloud alpha events triggers create pubsub-trigger \
 ```
 
 Then store the pubsub subscription name into a variable for future commands. 
-First you can list your subscriptions by using the following command:
+First list your subscriptions by using the following command:
 
 ```sh
 basename -a $(gcloud pubsub subscriptions list --format 'value(name)')
@@ -86,16 +86,17 @@ Update pubsub subscription by doing the following:
 gcloud pubsub subscriptions update $SUBSCRIPTION \
 --push-auth-service-account=$SERVICE_ACCOUNT \
 --push-auth-token-audience=$MY_RUN_SERVICE \
---push-endpoint= $(gcloud pubsub subscriptions describe $SUBSCRIPTION --format \
+--push-endpoint=$(gcloud pubsub subscriptions describe $SUBSCRIPTION --format \
 'value(pushConfig.pushEndpoint)')
 ```
+
+In future versions of gcloud you won't need to use the --push-endpoint flag
 
 ## Test
 
 Get a response from your Cloud Run Service using the following curl command.
-Also note the string "V29ybGQ=" is simply the word "World" encoded using base64
-encoding. All pubsub messages encode the message.data field using base64 
-encoding
+Please note that the string "V29ybGQ=" is simply the word "World" encoded using
+base64 encoding. All pubsub events have a base64 encoded message.data field.
 
 ```sh
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
@@ -103,7 +104,8 @@ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
 --header "Content-Type: application/json" $MY_RUN_SERVICE 
 ```
 
-If everything is working you should have received a response of "Hello World!"
+If everything is working you should have received a response of 
+"Hello World!"
 
 Now let's try sending an event using pubsub using the following gcloud command:
 
@@ -111,8 +113,8 @@ Now let's try sending an event using pubsub using the following gcloud command:
 gcloud pubsub topics publish my-topic --message="John Doe"
 ```
 
-You may use this command to view and search through logs for all responses 
-containing the textPayload of `Found message {name}!`
+You may use the following command to view and search through logs for all 
+responses containing the textPayload of `Hello {name}!`
 
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
