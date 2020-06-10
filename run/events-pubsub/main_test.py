@@ -42,7 +42,7 @@ def test_invalid_mimetype(client):
 
 def test_minimally_valid_message(client, capsys):
     r = client.post('/', json={'message': True})
-    assert r.status_code == 204
+    assert r.status_code == 200
 
     out, _ = capsys.readouterr()
     assert 'Hello World!' in out
@@ -53,7 +53,7 @@ def test_populated_message(client, capsys):
     data = base64.b64encode(name.encode()).decode()
 
     r = client.post('/', json={'message': {'data': data}})
-    assert r.status_code == 204
+    assert r.status_code == 200
 
     out, _ = capsys.readouterr()
     assert f'Hello {name}!' in out

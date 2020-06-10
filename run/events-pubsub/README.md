@@ -52,7 +52,18 @@ gcloud alpha events triggers create pubsub-trigger \
 --parameters topic=my-topic
 ```
 
-Finally we need to enable authenticated calls to the pub/sub trigger. 
+Finally we need to enable authenticated calls to the pub/sub trigger otherwise
+cloud run will reject the incoming unauthenticated pubsub trigger requests. 
+
+via command line
+
+```sh
+gcloud pubsub subscriptions update my-topic \
+--push-auth-service-account <iam-email>\
+--push-auth-token-audience $MY_RUN_SERVICE
+```
+
+via google cloud console 
 
 1. Login to google cloud console.
 2. Navigate to the pub/sub products page, and select subscriptions from the left 
@@ -65,18 +76,33 @@ your environment variable MY_RUN_SERVICE into the optional audience field.
 
 ## Test
 
-Get a response from your Cloud Run Service
+Get a response from your Cloud Run Service using the following curl command.
+Also note the string "V29ybGQ=" is simply the word "World" encoded using base64
+encoding. All pubsub messages encode the message.data field using base64 
+encoding
 
 ```sh
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-$MY_RUN_SERVICE
+--data '{"message": {"data": "V29ybGQ="}}' \
+--header "Content-Type: application/json" $MY_RUN_SERVICE 
 ```
 
-Test your Cloud Run service by publishing a message to the topic: 
+If everything is working you should have received a response of "Hello World!"
+
+Now let's try sending an event using pubsub using the following gcloud command:
 
 ```sh
 gcloud pubsub topics publish my-topic --message="John Doe"
 ```
 
-You can verify a successful response by going to your run instance and viewing 
-the Logs
+You may use this command to view and search through logs for all responses 
+containing the textPayload of `Found message {name}!`
+
+```sh
+gcloud logging read "resource.type=cloud_run_revision AND \
+resource.labels.service_name=cloudrun-events-pubsub" --project \
+$(gcloud config get-value project) --limit 100 | grep Hello
+```
+
+If the pubsub trigger was setup successfully, you should have seen 
+Hello John Doe somewhere in the above output.

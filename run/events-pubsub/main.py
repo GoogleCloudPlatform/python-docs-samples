@@ -46,7 +46,7 @@ def index():
 
     print(f'Hello {name}!')
 
-    return ('', 204)
+    return (f'Found message {name}!', 200)
 # [END run_events_pubsub_handler]
 
 # [START run_events_pubsub_server]
