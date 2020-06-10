@@ -65,7 +65,13 @@ subscriptions then you must update your SUBSCRIPTION variable accordingly.
 You can list your subscriptions by using the following optional command:
 
 ```sh
-gcloud pubsub subscriptions list --format 'value(name)'
+basename -a $(gcloud pubsub subscriptions list --format 'value(name)')
+```
+
+Grab a subscription name, only copy the  and save it to a variable as shown below
+
+```sh
+SUBSCRIPTION=<pubsub_subscription_name>
 ```
 
 Finally we need to enable authenticated calls to the pub/sub trigger otherwise
