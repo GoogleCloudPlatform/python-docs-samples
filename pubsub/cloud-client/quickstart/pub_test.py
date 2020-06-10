@@ -25,7 +25,7 @@ import pub  # noqa
 
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "quickstart-pub-test-topic-" + UUID
 
 

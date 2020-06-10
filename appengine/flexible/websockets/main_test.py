@@ -37,10 +37,16 @@ def server():
 
     bind_to = '127.0.0.1:{}'.format(port)
     server = subprocess.Popen(
-        ['gunicorn', '-b', bind_to, '-k' 'flask_sockets.worker', 'main:app'])
+        ['gunicorn', '-b', bind_to, '-k' 'flask_sockets.worker', 'main:app'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
 
+    # With btlr, there can be many processes are spawned and the
+    # server might be in a tight memory situation, so let's wait for 2
+    # mins.
     # Wait until the server responds before proceeding.
-    @retry(wait_fixed=50, stop_max_delay=5000)
+    @retry(wait_fixed=50, stop_max_delay=120000)
     def check_server(url):
         requests.get(url)
 
@@ -49,6 +55,11 @@ def server():
     yield bind_to
 
     server.kill()
+
+    # Dump the logs for debugging
+    out, err = server.communicate()
+    print("gunicorn stdout: {}".format(out))
+    print("gunicorn stderr: {}".format(err))
 
 
 def test_http(server):
