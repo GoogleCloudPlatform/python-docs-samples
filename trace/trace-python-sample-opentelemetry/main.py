@@ -39,7 +39,6 @@ def initialize_tracer(project_id):
 
 # [END trace_setup_python_configure]
 
-
 app = Flask(__name__)
 
 
