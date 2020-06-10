@@ -13,15 +13,35 @@
 # limitations under the License.
 
 import os
+import uuid
+
+from google.cloud import tasks_v2
+import pytest
 
 import create_http_task
 
 TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
+TEST_QUEUE_NAME = f'my-queue-{uuid.uuid4().hex}'
 
 
-def test_create_http_task():
+@pytest.fixture()
+def test_queue():
+    client = tasks_v2.CloudTasksClient()
+    parent = client.location_path(TEST_PROJECT_ID, TEST_LOCATION)
+    queue = {
+        # The fully qualified path to the queue
+        'name': client.queue_path(
+            TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME),
+    }
+    q = client.create_queue(parent, queue)
+
+    yield q
+
+    client.delete_queue(q.name)
+
+
+def test_create_http_task(test_queue):
     url = 'https://example.com/task_handler'
     result = create_http_task.create_http_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url)
