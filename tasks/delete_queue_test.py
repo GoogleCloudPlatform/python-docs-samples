@@ -37,7 +37,7 @@ def test_queue():
     }
     q = client.create_queue(parent, queue)
 
-    return q
+    yield q
 
 
 def test_delete_queue(capsys, test_queue):
