@@ -16,7 +16,6 @@
 import base64
 import json
 import os
-import sys
 
 from flask import Flask, request
 
@@ -62,8 +61,6 @@ def index():
 
         try:
             image.blur_offensive_images(data)
-            # Flush the stdout to avoid log buffering.
-            sys.stdout.flush()
             return ('', 204)
 
         except Exception as e:

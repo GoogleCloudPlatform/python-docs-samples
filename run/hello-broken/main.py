@@ -15,7 +15,6 @@
 # [START run_broken_service]
 import json
 import os
-import sys
 
 from flask import Flask
 
@@ -34,9 +33,6 @@ def index():
         print("Environment validation failed.")
         raise Exception("Missing required service parameter.")
     # [END run_broken_service_problem]
-
-    # Flush the stdout to avoid log buffering.
-    sys.stdout.flush()
 
     return f"Hello {NAME}"
 # [END run_broken_service]
@@ -57,9 +53,6 @@ def improved():
         }
         print(json.dumps(error_message))
     # [END run_broken_service_upgrade]
-
-    # Flush the stdout to avoid log buffering.
-    sys.stdout.flush()
 
     return f"Hello {NAME}"
 

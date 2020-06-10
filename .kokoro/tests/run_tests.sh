@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,24 +21,59 @@ shopt -s globstar
 
 DIFF_FROM=""
 
-# `--only-diff-master will only run tests on project changes from the master branch.
+# `--only-diff-master` will only run tests on project changes on the
+# last common commit from the master branch.
 if [[ $* == *--only-diff-master* ]]; then
-    DIFF_FROM="origin/master.."
+    set +e
+    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="origin/master..."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
 fi
 
-# `--only-diff-master will only run tests on project changes from the previous commit.
+# `--only-diff-head` will only run tests on project changes from the
+# previous commit.
 if [[ $* == *--only-diff-head* ]]; then
-    DIFF_FROM="HEAD~.."
+    set +e
+    git diff --quiet "HEAD~.." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="HEAD~.."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
 fi
 
-cd github/python-docs-samples
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+    PROJECT_ROOT="github/python-docs-samples"
+fi
+
+cd "${PROJECT_ROOT}"
+
+# add user's pip binary path to PATH
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # install nox for testing
-pip install -q nox
+pip install --user -q nox
 
-# Unencrypt and extract secrets
-SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
-./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
+# Use secrets acessor service account to get secrets.
+if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
+    gcloud auth activate-service-account \
+	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
+	   --project="cloud-devrel-kokoro-resources"
+    # This script will create 3 files:
+    # - testing/test-env.sh
+    # - testing/service-account.json
+    # - testing/client-secrets.json
+    ./scripts/decrypt-secrets.sh
+fi
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
@@ -49,18 +83,17 @@ gcloud auth activate-service-account \
        --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
 
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
-source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
-cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
 
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
-# Required for "run/image-processing" && "functions/imagemagick"
-apt-get -qq update  && apt-get -qq install libmagickwand-dev > /dev/null
 
 # Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
-./cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> cloud_sql_proxy.log &
+wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
+     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
+${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+       ${HOME}/cloud_sql_proxy.log &
+${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+       ${HOME}/cloud_sql_proxy-postgres.log &
 echo -e "\nCloud SQL proxy started."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
@@ -69,60 +102,38 @@ set +e
 # Use RTN to return a non-zero value if the test fails.
 RTN=0
 ROOT=$(pwd)
-# Find all requirements.txt in the repository (may break on whitespace).
-for file in **/requirements.txt; do
-    cd "$ROOT"
-    # Navigate to the project folder.
-    file=$(dirname "$file")
-    cd "$file"
 
-    # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ "$DIFF_FROM" != "" ]]; then
-        git diff --quiet "$DIFF_FROM" .
-        CHANGED=$?
-        if [[ "$CHANGED" -eq 0 ]]; then
-          # echo -e "\n Skipping $file: no changes in folder.\n"
-          continue
-        fi
-    fi
+test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
-    echo "------------------------------------------------------------"
-    echo "- testing $file"
-    echo "------------------------------------------------------------"
+btlr_args=(
+    "run"
+    "**/requirements.txt"
+    "--max-concurrency"
+    "30"
+)
 
-    # If no local noxfile exists, copy the one from root
-    if [[ ! -f "noxfile.py" ]]; then
-      PARENT_DIR=$(cd ../ && pwd)
-      while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
-      do
-        PARENT_DIR=$(dirname "$PARENT_DIR")
-      done
-      cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
-      echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
-    fi
+if [[ -n "${DIFF_FROM:-}"  ]]; then
+    btlr_args+=(
+	"--git-diff"
+	"${DIFF_FROM} ."
+    )
+fi
 
-    # Use nox to execute the tests for the project.
-    nox -s "$RUN_TESTS_SESSION"
-    EXIT=$?
+btlr_args+=(
+    "--"
+    "${test_prog}"
+)
 
-    # If this is a periodic build, send the test log to the Build Cop Bot.
-    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
-      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-      $KOKORO_GFILE_DIR/linux_amd64/buildcop
-    fi
+echo "testing/btlr" "${btlr_args[@]}"
 
-    if [[ $EXIT -ne 0 ]]; then
-      RTN=1
-      echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
-    else
-      echo -e "\n Testing completed.\n"
-    fi
+testing/btlr "${btlr_args[@]}"
 
-done
+RTN=$?
 cd "$ROOT"
 
-# Workaround for Kokoro permissions issue: delete secrets
-rm testing/{test-env.sh,client-secrets.json,service-account.json}
+# Remove secrets if we used decrypt-secrets.sh.
+if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
+    rm testing/{test-env.sh,client-secrets.json,service-account.json}
+fi
 
 exit "$RTN"
