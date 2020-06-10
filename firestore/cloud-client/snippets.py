@@ -953,3 +953,13 @@ def update_document_increment(db):
 
     washington_ref.update({"population": firestore.Increment(50)})
     # [END fs_update_document_increment]
+
+
+def list_document_subcollections():
+    db = firestore.Client()
+    # [START fs_list_document_subcollections]
+    collections = db.collection('cities').document('SF').collections()
+    for collection in collections:
+        for doc in collection.stream():
+            print(f'{doc.id} => {doc.to_dict()}')
+    # [END fs_list_document_subcollections]

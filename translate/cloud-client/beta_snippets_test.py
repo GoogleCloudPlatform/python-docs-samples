@@ -22,7 +22,7 @@ import pytest
 import beta_snippets
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture(scope='function')

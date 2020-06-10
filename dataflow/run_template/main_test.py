@@ -34,7 +34,7 @@ from werkzeug.urls import url_encode
 import main
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 dataflow = build('dataflow', 'v1b3')

@@ -34,7 +34,7 @@ device_id_template = 'test-device-{}'
 rsa_cert_path = 'resources/rsa_cert.pem'
 topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 subscription_name = 'test-device-images-{}'.format(uuid.uuid4())
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 

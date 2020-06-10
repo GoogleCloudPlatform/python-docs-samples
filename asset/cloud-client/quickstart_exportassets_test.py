@@ -22,7 +22,7 @@ import pytest
 
 import quickstart_exportassets
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = 'assets-{}'.format(uuid.uuid4().hex)
 
 

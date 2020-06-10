@@ -33,7 +33,7 @@ rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
 topic_id = 'test-device-events-{}'.format(int(time.time()))
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
