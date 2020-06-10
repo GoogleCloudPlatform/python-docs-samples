@@ -13,21 +13,29 @@
 # limitations under the License.
 
 import os
+import uuid
+import pytest
 
+import create_queue
 import delete_queue
-from google.api_core import exceptions
+
 
 TEST_PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
 
 
-def test_delete_queue(capsys):
-    try:
-        delete_queue.delete_queue(
-            TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION
-        )
-        out, _ = capsys.readouterr()
-        assert 'Deleted Queue' in out
-    except exceptions.NotFound:
-        pass
+@pytest.fixture
+def queue_name():
+    queue_name = 'test-queue-{}'.format(uuid.uuid4().hex)
+    create_queue.create_queue(
+        TEST_PROJECT_ID, queue_name, TEST_LOCATION
+    )
+    return queue_name
+
+
+def test_delete_queue(capsys, queue_name):
+    delete_queue.delete_queue(
+        TEST_PROJECT_ID, queue_name, TEST_LOCATION
+    )
+    out, _ = capsys.readouterr()
+    assert 'Deleted queue' in out
