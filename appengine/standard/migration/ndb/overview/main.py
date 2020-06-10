@@ -25,9 +25,10 @@ import cgi
 import textwrap
 import urllib
 
-from google.appengine.ext import ndb
-
 import webapp2
+
+from google.cloud import ndb
+client = ndb.Client()
 
 
 # [START greeting]
@@ -39,16 +40,18 @@ class Greeting(ndb.Model):
 
 # [START query]
     @classmethod
-    def query_book(cls, ancestor_key):
-        return cls.query(ancestor=ancestor_key).order(-cls.date)
+    with client.context():
+        def query_book(cls, ancestor_key):
+            return cls.query(ancestor=ancestor_key).order(-cls.date)
 
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.out.write('<html><body>')
         guestbook_name = self.request.get('guestbook_name')
-        ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
-        greetings = Greeting.query_book(ancestor_key).fetch(20)
+        with client.context():
+            ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
+            greetings = Greeting.query_book(ancestor_key).fetch(20)
 # [END query]
 
         greeting_blockquotes = []
@@ -87,11 +90,15 @@ class SubmitForm(webapp2.RequestHandler):
     def post(self):
         # We set the parent key on each 'Greeting' to ensure each guestbook's
         # greetings are in the same entity group.
+        with client.context():
         guestbook_name = self.request.get('guestbook_name')
-            greeting = Greeting(parent=ndb.Key("Book",
-                                              guestbook_name or "*notitle*"),
-                                content=self.request.get('content'))
-            greeting.put()
+                greeting = Greeting(
+                        parent=ndb.Key("Book",
+                        guestbook_name or "*notitle*"
+                    ),
+                    content=self.request.get('content')
+                )
+                greeting.put()
 # [END submit]
         self.redirect('/?' + urllib.urlencode(
             {'guestbook_name': guestbook_name}))
