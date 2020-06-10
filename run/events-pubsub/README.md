@@ -1,6 +1,6 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes Authenticated Pub/Sub 
+This sample shows how to create a service that processes authenticated Pub/Sub 
 messages.
 
 ## Setup
