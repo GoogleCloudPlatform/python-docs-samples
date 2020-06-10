@@ -19,7 +19,7 @@ import pytest
 
 import snippets
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 class CleanupClient(datastore.Client):

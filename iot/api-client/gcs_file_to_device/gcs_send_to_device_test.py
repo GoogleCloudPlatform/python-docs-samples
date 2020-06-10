@@ -32,7 +32,7 @@ import manager  # noqa
 
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))

@@ -1,0 +1,15 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+env_variables:
+    CLOUD_STORAGE_BUCKET: "REPLACE THIS WITH YOUR EXISTING BUCKET NAME"
+    BLOB_NAME: "my-demo-blob"
+
+libraries:
+  - name: ssl
+    version: latest
+
+handlers:
+  - url: /.*
+    script: main.app
