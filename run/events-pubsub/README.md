@@ -52,23 +52,14 @@ gcloud alpha events triggers create pubsub-trigger \
 --parameters topic=my-topic
 ```
 
-Then store the pubsub subscription name into a variable for future commands:
-
-```sh
-SUBSCRIPTION=$(basename $(gcloud pubsub subscriptions list \
---format 'value(name)'))
-```
-
-Note, this assumes you only have one subscription. If you have multiple 
-subscriptions then you must update your SUBSCRIPTION variable accordingly. 
-
-You can list your subscriptions by using the following optional command:
+Then store the pubsub subscription name into a variable for future commands. 
+First you can list your subscriptions by using the following command:
 
 ```sh
 basename -a $(gcloud pubsub subscriptions list --format 'value(name)')
 ```
 
-Grab a subscription name, only copy the  and save it to a variable as shown below
+Grab a subscription name and save it to a variable SUBSCRIPTION
 
 ```sh
 SUBSCRIPTION=<pubsub_subscription_name>
