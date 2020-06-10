@@ -24,7 +24,7 @@ import pytest
 import automl_tables_dataset
 
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_DATASET = "do_not_delete_this_table"
 GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"

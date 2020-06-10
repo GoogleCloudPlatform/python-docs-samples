@@ -23,7 +23,7 @@ from google.cloud import bigquery
 
 from . import dataflowtemplateoperator_create_dataset_and_table_helper as helper
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 client = bigquery.Client()
 
