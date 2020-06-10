@@ -23,7 +23,7 @@ Authentication
 
 This sample requires you to have authentication setup. Refer to the
 `Authentication Getting Started Guide`_ for instructions on setting up
-credentials for applications.
+credentials for applications (only for authentication).
 
 .. _Authentication Getting Started Guide:
     https://cloud.google.com/docs/authentication/getting-started
@@ -31,25 +31,31 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
-#. Clone python-docs-samples and change directory to the sample directory you want to use.
+#. Clone python-docs-samples:
 
     .. code-block:: bash
 
         $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+#. Change directory to the sample directory you want to use:
+
+    .. code-block:: bash
+
+        $ cd python-docs-samples/trace/trace-python-sample-opentelemetry
+
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions:
 
    .. _Python Development Environment Setup Guide:
        https://cloud.google.com/python/setup
 
-#. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
+#. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+:
 
     .. code-block:: bash
 
         $ virtualenv env
         $ source env/bin/activate
 
-#. Install the dependencies needed to run the samples.
+#. Install the dependencies needed to run the samples:
 
     .. code-block:: bash
 

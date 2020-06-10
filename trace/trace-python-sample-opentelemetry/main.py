@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 import argparse
 import random
 import time
+import os
 
 from flask import Flask, redirect, url_for
 
@@ -51,10 +52,10 @@ def root():
 @app.route('/index.html', methods=['GET'])
 def index():
     tracer = app.config['TRACER']
-    with tracer.start_as_current_span("index"):
+    with tracer.start_as_current_span('index'):
         # Add up to 1 sec delay, weighted toward zero
         time.sleep(random.random() ** 2)
-        result = "Tracing requests"
+        result = 'Tracing requests'
 
     return result
 
@@ -68,7 +69,8 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--project_id', help='Project ID you want to access.', required=True)
+        '--project_id', help='Project ID you want to access.',
+        default=os.environ['GOOGLE_CLOUD_PROJECT'], required=True)
     args = parser.parse_args()
 
     tracer = initialize_tracer(args.project_id)
