@@ -121,23 +121,87 @@ def redact_image(
 
 # [END dlp_redact_image]
 
+# [START dlp_redact_image_all_text]
+
+
+def redact_image_all_text(
+    project,
+    filename,
+    output_filename,
+):
+    """Uses the Data Loss Prevention API to redact all text in an image.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        output_filename: The path to which the redacted image will be written.
+
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the image_redaction_configs, indicating to DLP that all text in
+    # the input image should be redacted.
+    image_redaction_configs = [{
+        "redact_all_text": True,
+    }]
+
+    # Construct the byte_item, containing the file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type": "IMAGE", "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Call the API.
+    response = dlp.redact_image(
+        parent,
+        image_redaction_configs=image_redaction_configs,
+        byte_item=byte_item,
+    )
+
+    # Write out the results.
+    with open(output_filename, mode="wb") as f:
+        f.write(response.redacted_image)
+
+    print("Wrote {byte_count} to {filename}".format(
+        byte_count=len(response.redacted_image), filename=output_filename))
+
+
+# [END dlp_redact_image_all_text]
 
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
-    parser = argparse.ArgumentParser(description=__doc__)
-
-    parser.add_argument("filename", help="The path to the file to inspect.")
-    parser.add_argument(
-        "output_filename",
-        help="The path to which the redacted image will be written.",
-    )
-    parser.add_argument(
+    common_args_parser = argparse.ArgumentParser(add_help=False)
+    common_args_parser.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
         default=default_project,
     )
-    parser.add_argument(
+    common_args_parser.add_argument(
+        "filename", help="The path to the file to inspect.")
+    common_args_parser.add_argument(
+        "output_filename",
+        help="The path to which the redacted image will be written.",
+    )
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(
+        dest="content", help="Select which content should be redacted.")
+    subparsers.required = True
+
+    info_types_parser = subparsers.add_parser(
+        "info_types",
+        help="Redact specific infoTypes from an image.",
+        parents=[common_args_parser],
+    )
+    info_types_parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
@@ -146,7 +210,7 @@ if __name__ == "__main__":
         "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
-    parser.add_argument(
+    info_types_parser.add_argument(
         "--min_likelihood",
         choices=[
             "LIKELIHOOD_UNSPECIFIED",
@@ -159,19 +223,33 @@ if __name__ == "__main__":
         help="A string representing the minimum likelihood threshold that "
         "constitutes a match.",
     )
-    parser.add_argument(
+    info_types_parser.add_argument(
         "--mime_type",
         help="The MIME type of the file. If not specified, the type is "
         "inferred via the Python standard library's mimetypes module.",
     )
 
+    all_text_parser = subparsers.add_parser(
+        "all_text",
+        help="Redact all text from an image. The MIME type of the file is "
+        "inferred via the Python standard library's mimetypes module.",
+        parents=[common_args_parser],
+    )
+
     args = parser.parse_args()
 
-    redact_image(
-        args.project,
-        args.filename,
-        args.output_filename,
-        args.info_types,
-        min_likelihood=args.min_likelihood,
-        mime_type=args.mime_type,
-    )
+    if args.content == "info_types":
+        redact_image(
+            args.project,
+            args.filename,
+            args.output_filename,
+            args.info_types,
+            min_likelihood=args.min_likelihood,
+            mime_type=args.mime_type,
+        )
+    elif args.content == "all_text":
+        redact_image_all_text(
+            args.project,
+            args.filename,
+            args.output_filename,
+        )
