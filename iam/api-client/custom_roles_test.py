@@ -21,7 +21,7 @@ import pytest
 import custom_roles
 
 
-GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
+GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 CUSTOM_ROLE_NAME = "pythonTestCustomRole"
 CUSTOM_ROLE_TITLE = "Python Test Custom Role"

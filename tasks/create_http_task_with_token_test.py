@@ -16,7 +16,7 @@ import os
 
 import create_http_task_with_token
 
-TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
 TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
 TEST_SERVICE_ACCOUNT = (

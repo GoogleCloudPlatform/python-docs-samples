@@ -20,7 +20,7 @@ import pytest
 
 import video_classification_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 DATASET_ID = "VCN510437278078730240"
 OPERATION_ID = None
 

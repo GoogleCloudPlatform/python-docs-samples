@@ -500,13 +500,13 @@ def deidentify_with_date_shift(
 # [END dlp_deidentify_date_shift]
 
 
-# [START dlp_redact_sensitive_data]
-def redact_sensitive_data(project, item, info_types):
-    """Uses the Data Loss Prevention API to redact sensitive data in a
+# [START dlp_deidentify_replace_infotype]
+def deidentify_with_replace_infotype(project, item, info_types):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing it with the info type.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        item: The string to redact (will be treated as text).
+        item: The string to deidentify (will be treated as text).
         info_types: A list of strings representing info types to look for.
             A full list of info type categories can be fetched from the API.
     Returns:
@@ -552,7 +552,7 @@ def redact_sensitive_data(project, item, info_types):
     print(response.item.value)
 
 
-# [END dlp_redact_sensitive_data]
+# [END dlp_deidentify_replace_infotype]
 
 
 if __name__ == "__main__":
@@ -768,12 +768,12 @@ if __name__ == "__main__":
         "key_name.",
     )
 
-    redact_parser = subparsers.add_parser(
-        "redact",
-        help="Redact sensitive data in a string by replacing it with the "
-        "info type of the data.",
+    replace_with_infotype_parser = subparsers.add_parser(
+        "replace_with_infotype",
+        help="Deidentify sensitive data in a string by replacing it with the "
+        "info type of the data."
     )
-    redact_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
@@ -782,13 +782,13 @@ if __name__ == "__main__":
         "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
-    redact_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "project",
         help="The Google Cloud project id to use as a parent resource.",
     )
-    redact_parser.add_argument(
+    replace_with_infotype_parser.add_argument(
         "item",
-        help="The string to redact."
+        help="The string to deidentify."
         "Example: 'My credit card is 4242 4242 4242 4242'",
     )
 
@@ -840,8 +840,8 @@ if __name__ == "__main__":
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
         )
-    elif args.content == "redact":
-        redact_sensitive_data(
+    elif args.content == "replace_with_infotype":
+        deidentify_with_replace_infotype(
             args.project,
             item=args.item,
             info_types=args.info_types,
