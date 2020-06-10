@@ -138,6 +138,7 @@ def deidentify_with_redact(
     # Print out the results.
     print(response.item.value)
 
+
 # [END dlp_deidentify_redact]
 
 # [START dlp_deidentify_replace]
