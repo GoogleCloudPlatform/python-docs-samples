@@ -1,13 +1,10 @@
 import random
 import sys
-
 from time import time_ns
 
 from google.cloud import bigquery
-
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import IntegerType, StringType
 
@@ -56,7 +53,7 @@ def convert_angle(angle):
     degrees = int(angle)
     minutes = int((angle - degrees) * 60)
     seconds = int((angle - degrees - minutes/60) * 3600)
-    new_angle = str(degrees) + u"\u00B0" + \
+    new_angle = str(degrees) + "\u00B0" + \
         str(minutes) + "'" + str(seconds) + '"'
     return random_select([str(angle), new_angle], [0.55, 0.45])
 
@@ -78,13 +75,7 @@ def dirty_data(proc_func, allow_none):
     return udf
 
 
-# This function is required because we need to apply a
-# function for every column and some columns do not change
-def identity(x):
-    return x
-
-
-def write_to_bigquery(spark, df):
+def write_to_bigquery(df):
     '''Write a dataframe to BigQuery'''
 
     # Create BigQuery Dataset
@@ -95,10 +86,9 @@ def write_to_bigquery(spark, df):
     dataset = client.create_dataset(dataset)
 
     # Saving the data to BigQuery
-    spark.conf.set('temporaryGcsBucket', BUCKET_NAME)
-
     df.write.format('bigquery') \
         .option('table', dataset_id + ".RAW_DATA") \
+        .option("temporaryGcsBucket", BUCKET_NAME) \
         .save()
 
 
@@ -109,7 +99,7 @@ def main():
     upload = True  # Whether to upload data to BigQuery
 
     # Check whether or not results should be uploaded
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         upload = False
         print("Not uploading results to BigQuery")
     else:
@@ -125,21 +115,21 @@ def main():
     # Declare data transformations for each column in dataframe
     udfs = [
         (dirty_data(trip_duration, True), StringType()),  # tripduration
-        (dirty_data(identity, True), StringType()),  # starttime
-        (dirty_data(identity, True), StringType()),  # stoptime
-        (identity, IntegerType()),  # start_station_id
+        (dirty_data(lambda x: x, True), StringType()),  # starttime
+        (dirty_data(lambda x: x, True), StringType()),  # stoptime
+        (lambda x: x, IntegerType()),  # start_station_id
         (dirty_data(station_name, False), StringType()),  # start_station_name
         (dirty_data(convert_angle, True), StringType()),  # start_station_latitude
         (dirty_data(convert_angle, True), StringType()),  # start_station_longitude
-        (identity, IntegerType()),  # end_station_id
+        (lambda x: x, IntegerType()),  # end_station_id
         (dirty_data(station_name, False), StringType()),  # end_station_name
         (dirty_data(convert_angle, True), StringType()),  # end_station_latitude
         (dirty_data(convert_angle, True), StringType()),  # end_station_longitude
-        (identity, IntegerType()),  # bikeid
+        (lambda x: x, IntegerType()),  # bikeid
         (dirty_data(user_type, False), StringType()),  # usertype
-        (identity, IntegerType()),  # birth_year
+        (lambda x: x, IntegerType()),  # birth_year
         (dirty_data(gender, False), StringType()),  # gender
-        (identity, StringType()),  # customer_plan
+        (lambda x: x, StringType()),  # customer_plan
     ]
 
     # Apply dirty transformations to df
@@ -156,7 +146,7 @@ def main():
     df = new_df.union(dup_df)
 
     if upload:
-        write_to_bigquery(spark, df)
+        write_to_bigquery(df)
 
 
 if __name__ == '__main__':

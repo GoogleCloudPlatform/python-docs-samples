@@ -1,13 +1,10 @@
 import os
 import re
-
 import uuid
 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-
 import pytest
-
 
 # Set global variables
 PROJECT = os.environ['GCLOUD_PROJECT']
