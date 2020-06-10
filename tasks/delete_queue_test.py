@@ -15,7 +15,7 @@
 import os
 import uuid
 
-from google.cloud import tasks_v2
+from google.cloud import exceptions, tasks_v2
 import pytest
 
 import delete_queue
@@ -38,6 +38,13 @@ def test_queue():
     q = client.create_queue(parent, queue)
 
     yield q
+
+    try:
+        # Attempt to delete the queue in case the sample failed.
+        client.delete_queue(q.name)
+    except exceptions.NotFound:
+        # The queue was successfully deleted, nothing to do.
+        pass
 
 
 def test_delete_queue(capsys, test_queue):
