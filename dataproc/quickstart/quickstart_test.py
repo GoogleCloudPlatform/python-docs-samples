@@ -22,7 +22,7 @@ import pytest
 import quickstart
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 REGION = 'us-central1'
 CLUSTER_NAME = 'py-qs-test-{}'.format(str(uuid.uuid4()))
 STAGING_BUCKET = 'py-dataproc-qs-bucket-{}'.format(str(uuid.uuid4()))
