@@ -52,27 +52,31 @@ gcloud alpha events triggers create pubsub-trigger \
 --parameters topic=my-topic
 ```
 
+Then store the pubsub subscription name into a variable for future commands:
+
+```sh
+SUBSCRIPTION=$(basename $(gcloud pubsub subscriptions list \
+--format 'value(name)'))
+```
+
 Finally we need to enable authenticated calls to the pub/sub trigger otherwise
 cloud run will reject the incoming unauthenticated pubsub trigger requests. 
 
-via command line
+Update pubsub subscription by doing the following:
 
 ```sh
-gcloud pubsub subscriptions update my-topic \
---push-auth-service-account <iam-email>\
---push-auth-token-audience $MY_RUN_SERVICE
+gcloud pubsub subscriptions update $SUBSCRIPTION \
+--push-auth-service-account=<your_service_account> \
+--push-auth-token-audience=$MY_RUN_SERVICE \
+--push-endpoint= $(gcloud pubsub subscriptions describe $SUBSCRIPTION --format \
+'value(pushConfig.pushEndpoint)')
 ```
 
-via google cloud console 
+Note, this assumes you only have one subscription. If you have multiple 
+subscriptions then you must update your SUBSCRIPTION variable accordingly. 
 
-1. Login to google cloud console.
-2. Navigate to the pub/sub products page, and select subscriptions from the left 
-side tab bar.
-3. Click on your pubsub-trigger then click edit.
-4. Check off enable authentication.
-5. Select the appropriate service account and paste in the value for
-your environment variable MY_RUN_SERVICE into the optional audience field.  
-6. Scroll down and click update for the changes to take place. 
+You can find valid service accounts by looking up your IAM members and finding
+a valid email. 
 
 ## Test
 
