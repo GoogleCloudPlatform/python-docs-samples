@@ -59,7 +59,7 @@ class MicrophoneStream:
 
         return self
 
-    def __exit__(self, type = None, value = None, traceback = None):
+    def __exit__(self, type=None, value=None, traceback=None):
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
@@ -105,16 +105,17 @@ def listen_print_loop(responses):
     The responses passed is a generator that will block until a response
     is provided by the server.
     """
+    translation = ''
+    source = ''
     for response in responses:
         # Once the transcription settles, the response contains the
         # END_OF_SINGLE_UTTERANCE event.
         if (response.speech_event_type ==
-            mediatranslation.StreamingTranslateSpeechResponse.SpeechEventType.END_OF_SINGLE_UTTERANCE):
+          mediatranslation.StreamingTranslateSpeechResponse.SpeechEventType.END_OF_SINGLE_UTTERANCE):
 
             print(u'\nFinal translation: {0}'.format(translation))
             print(u'Final recognition result: {0}'.format(source))
             return 0
-
 
         result = response.result
         translation = result.text_translation_result.translation
