@@ -134,11 +134,11 @@ def inspect_with_medical_record_number_custom_regex_detector(
         for finding in response.result.findings:
             try:
                 if finding.quote:
-                    print("Quote: {}".format(finding.quote))
+                    print(f"Quote: {finding.quote}")
             except AttributeError:
                 pass
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
 
