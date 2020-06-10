@@ -14,28 +14,35 @@
 
 import os
 import uuid
+
+from google.cloud import tasks_v2
 import pytest
 
-import create_queue
 import delete_queue
 
 
 TEST_PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
+TEST_QUEUE_NAME = f'my-queue-{uuid.uuid4().hex}'
 
 
-@pytest.fixture
-def queue_name():
-    queue_name = 'test-queue-{}'.format(uuid.uuid4().hex)
-    create_queue.create_queue(
-        TEST_PROJECT_ID, queue_name, TEST_LOCATION
-    )
-    return queue_name
+@pytest.fixture()
+def test_queue():
+    client = tasks_v2.CloudTasksClient()
+    parent = client.location_path(TEST_PROJECT_ID, TEST_LOCATION)
+    queue = {
+        # The fully qualified path to the queue
+        'name': client.queue_path(
+            TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME),
+    }
+    q = client.create_queue(parent, queue)
+
+    return q
 
 
-def test_delete_queue(capsys, queue_name):
+def test_delete_queue(capsys, test_queue):
     delete_queue.delete_queue(
-        TEST_PROJECT_ID, queue_name, TEST_LOCATION
+        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION
     )
     out, _ = capsys.readouterr()
     assert 'Deleted queue' in out
