@@ -33,6 +33,4 @@ def list_queues(project, location):
 
     if response.num_results == 0:
         print('No queues found!')
-
-    return response
 # [END cloud_tasks_list_queues]
