@@ -70,8 +70,7 @@ def detect_faces(local_file_path="path/to/your/video-file.mp4"):
             print("\tright : {}".format(box.right))
             print("\tbottom: {}".format(box.bottom))
 
-            # Attributes include glasses, headwear, facial hair, smiling,
-            # direction of gaze, etc.
+            # Attributes include glasses, headwear, smiling, direction of gaze
             print("Attributes:")
             for attribute in timestamped_object.attributes:
                 print(
