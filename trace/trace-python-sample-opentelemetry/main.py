@@ -51,10 +51,10 @@ def root():
 @app.route('/index.html', methods=['GET'])
 def index():
     tracer = app.config['TRACER']
-    with tracer.start_as_current_span('index'):
-        # Add up to 1 sec delay, weighted toward zero
-        time.sleep(random.random() ** 2)
-        result = 'Tracing requests'
+    tracer.start_as_current_span(name='index')
+    # Add up to 1 sec delay, weighted toward zero
+    time.sleep(random.random() ** 2)
+    result = 'Tracing requests'
 
     return result
 
