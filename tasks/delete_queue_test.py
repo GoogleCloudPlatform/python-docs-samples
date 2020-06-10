@@ -43,8 +43,8 @@ def test_queue():
         # Attempt to delete the queue in case the sample failed.
         client.delete_queue(q.name)
     except exceptions.NotFound:
-        # The queue was successfully deleted, nothing to do.
-        pass
+        # The queue was already successfully deleted.
+        print('Queue already deleted successfully')
 
 
 def test_delete_queue(capsys, test_queue):
