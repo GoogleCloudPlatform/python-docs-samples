@@ -23,7 +23,12 @@ If you are using the provided image, skip to the next section.
     `docker build -t gcr.io/${PROJECT-ID}/cloud-trace-demo .`
 6. Upload Image to Container Registry:
     `gcloud docker -- push gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
-
+    
+    If you are using your own image, please change the image variable in the following files to
+    gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1:
+    * [YAML](./app/demo-service-a.yaml)
+    * [template B](./app/demo-service-b.yaml.template)
+    * [template C](./app/demo-service-c.yaml.template)
 #### Create a GKE cluster
 7. Enable Google Cloud and set up region and zone.
     `gcloud init`
@@ -34,17 +39,13 @@ If you are using the provided image, skip to the next section.
 
 #### Send Requests to See Generated Traces
 
-10. If you are using your own image, please change the image variable in the following files:
-    * [YAML](./app/demo-service-a.yaml)
-    * [template B](./app/demo-service-b.yaml.template)
-    * [template C](./app/demo-service-c.yaml.template)
-11. Run setup.sh to apply the YAML files.
+10. Run setup.sh to apply the YAML files, which deploys all three services to GKE
     `./setup.sh`
-12. Send request to the last service:
+11. Send request to Service C:
 
     `curl -w "\n" $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
+12. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     ![Screenshot](./example.png)
-14. Clean up GKE cluster/pods/services
+13. Clean up GKE cluster/pods/services
     `gcloud container clusters delete demo`

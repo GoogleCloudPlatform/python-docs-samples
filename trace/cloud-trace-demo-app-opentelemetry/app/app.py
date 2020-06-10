@@ -47,7 +47,7 @@ def template_test():
     output_string = app.config['keyword']
     # If there is no endpoint, return the output string.
     url = app.config['endpoint']
-    if url == "":
+    if not url:
         return output_string, 200
     # Endpoint is the next service to send string to.
     data = {'body': output_string}
