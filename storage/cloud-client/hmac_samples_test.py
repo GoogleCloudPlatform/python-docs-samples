@@ -31,8 +31,14 @@ import storage_delete_hmac_key
 import storage_get_hmac_key
 import storage_list_hmac_keys
 
+# We are reaching maximum number of HMAC keys on the service account.
+# We change the service account based on the value of
+# RUN_TESTS_SESSION in noxfile_config.py.
+# The reason we can not use multiple project is that our new projects
+# are enforced to have
+# 'constraints/iam.disableServiceAccountKeyCreation' policy.
 
-PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+PROJECT_ID = os.environ["MAIN_GOOGLE_CLOUD_PROJECT"]
 SERVICE_ACCOUNT_EMAIL = os.environ["HMAC_KEY_TEST_SERVICE_ACCOUNT"]
 STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
