@@ -19,7 +19,7 @@ import uuid
 
 import detect_intent_knowledge
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 SESSION_ID = 'session_{}'.format(uuid.uuid4())
 KNOWLEDGE_BASE_ID = 'MjEwMjE4MDQ3MDQwMDc0NTQ3Mg'
 TEXTS = ['Where is my data stored?']

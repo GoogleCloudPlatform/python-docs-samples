@@ -28,7 +28,7 @@ import pytest
 
 import list_resources
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 

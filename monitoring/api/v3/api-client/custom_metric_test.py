@@ -37,7 +37,7 @@ from custom_metric import read_timeseries
 from custom_metric import write_timeseries_value
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 PROJECT_RESOURCE = "projects/{}".format(PROJECT)
 
 """ Custom metric domain for all custom metrics"""

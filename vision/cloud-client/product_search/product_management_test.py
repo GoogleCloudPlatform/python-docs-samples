@@ -22,7 +22,7 @@ from product_management import (
     purge_orphan_products, update_product_labels)
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'

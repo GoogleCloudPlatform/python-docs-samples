@@ -29,7 +29,7 @@ import fhir_resources  # noqa
 
 cloud_region = "us-central1"
 base_url = "https://healthcare.googleapis.com/v1beta1"
-project_id = os.environ["GCLOUD_PROJECT"]
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")

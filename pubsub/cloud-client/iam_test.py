@@ -21,7 +21,7 @@ import pytest
 import iam
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "iam-test-topic-" + UUID
 SUBSCRIPTION = "iam-test-subscription-" + UUID
 
