@@ -28,10 +28,10 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     envelope = request.get_json()
-    print(envelope)
-    print(f'Storage event {envelope}')
+    print(f'Storage Headers: {request.headers}\n Storage Data: {envelope}', 
+    	200)
 
-    return (f'Storage event {envelope}', 200)
+    return ('', 204)
 # [END run_events_pubsub_handler]
 
 

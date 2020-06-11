@@ -4,9 +4,13 @@ This sample shows how to create a service that processes GCS events
 
 ## Setup
 
+Login to gcloud
+
 ```sh
 gcloud auth login
 ```
+
+Configure project id
 
 ```sh
 gcloud config set project [PROJECT-ID]
@@ -34,7 +38,6 @@ gcloud builds submit \
 gcloud run deploy $MY_RUN_SERVICE \
  --image gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER \
  --allow-unauthenticated
-
 ```
 
 Create a bucket 
@@ -78,8 +81,11 @@ Test your Cloud Run service by publishing a message to the topic:
 gsutil defstorageclass set NEARLINE gs://$MY_GCS_BUCKET
 ```
 
-You may observe the Run service receiving an event in Cloud Logging.
+You may observe the Run service printing upon receiving an event in 
+Cloud Logging.
+
 ```sh
-gcloud logging read "projects/$(gcloud config get-value \
-project)/logs/cloudaudit.googleapis.com%2Factivity" --format=json
+gcloud logging read "resource.type=cloud_run_revision AND \
+resource.labels.service_name=$MY_RUN_SERVICE" --project \
+$(gcloud config get-value project) --limit 200 --format 'value(textPayload)'
 ```

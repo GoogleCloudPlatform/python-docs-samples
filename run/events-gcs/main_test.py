@@ -27,6 +27,6 @@ def client():
 
 def test_endpoint(client):
     r = client.post('/', json={'message': 'hello'})
-    assert r.status_code == 200
+    assert r.status_code == 204
 
 
