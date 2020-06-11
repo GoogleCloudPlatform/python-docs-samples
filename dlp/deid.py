@@ -83,6 +83,64 @@ def deidentify_with_mask(
 
 # [END dlp_deidentify_masking]
 
+# [START dlp_deidentify_redact]
+def deidentify_with_redact(
+    project,
+    input_str,
+    info_types,
+):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+    string by redacting matched input values.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        "info_types": [{"name": info_type} for info_type in info_types]
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {
+                        "redact_config": {}
+                    }
+                }
+            ]
+        }
+    }
+
+    # Construct item
+    item = {"value": input_str}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+
+# [END dlp_deidentify_redact]
+
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
     project,
