@@ -28,7 +28,7 @@ from google.cloud import vision
 
 # [START translate_hybrid_project_id]
 # extract GCP project id
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
 # [END translate_hybrid_project_id]
 
 
@@ -193,28 +193,21 @@ def text_to_speech(text, outfile):
     client = texttospeech.TextToSpeechClient()
 
     # Sets the text input to be synthesized
-    synthesis_input = texttospeech.SynthesisInput(ssml=ssml)
+    synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml)
 
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
-    voice = texttospeech.VoiceSelectionParams(
+    voice = texttospeech.types.VoiceSelectionParams(
         language_code='en-US',
-        ssml_gender=texttospeech.SsmlVoiceGender.MALE)
+        ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
 
     # Selects the type of audio file to return
-    audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3)
+    audio_config = texttospeech.types.AudioConfig(
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
 
     # Performs the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
-
-    request = texttospeech.SynthesizeSpeechRequest(
-        input=synthesis_input,
-        voice=voice,
-        audio_config=audio_config
-    )
-
-    response = client.synthesize_speech(request=request)
+    response = client.synthesize_speech(synthesis_input, voice, audio_config)
 
     # Writes the synthetic audio to the output file.
     with open(outfile, 'wb') as out:
