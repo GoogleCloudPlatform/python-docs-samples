@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START all]
-from flask import Flask, escape, redirect, render_template, request
+from flask import Flask, redirect, render_template, request
 from google.cloud import ndb
 
 try:
@@ -38,6 +38,7 @@ class Greeting(ndb.Model):
         def query_book(cls, ancestor_key):
             return cls.query(ancestor=ancestor_key).order(-cls.date)
 
+
 @app.route('/', methods=['GET'])
 def display_guestbook():
     guestbook_name = request.args.get('guestbook_name', '')
@@ -49,8 +50,8 @@ def display_guestbook():
 
     greeting_blockquotes = [greeting.content for greeting in greetings]
     return render_template('index.html',
-      greeting_blockquotes=greeting_blockquotes,
-      guestbook_name=guestbook_name
+        greeting_blockquotes=greeting_blockquotes,
+        guestbook_name=guestbook_name
     )
 
 
@@ -65,10 +66,10 @@ def update_guestbook():
     with client.context():
         print('Guestbook name from the URL: {}'.format(guestbook_name))
         greeting = Greeting(
-                parent=ndb.Key("Book",
+            parent=ndb.Key("Book",
                 guestbook_name or "*notitle*"
             ),
-            content = request.form.get('content', None)
+            content=request.form.get('content', None)
         )
         greeting.put()
 # [END submit]

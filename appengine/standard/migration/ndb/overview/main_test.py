@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import webtest
-
+import pytest
 import main
 
 
-def test_app(testbed):
-    app = webtest.TestApp(main.app)
+@pytest.fixture
+def app():
+    import main
+    main.app.testing = True
+    return main.app.test_client()
+
+def test_app(app):
     response = app.get('/')
-    assert response.status_int == 200
+    assert response.status_code == 200
