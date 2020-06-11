@@ -375,21 +375,21 @@ def reidentify_free_text_with_fpe_using_surrogate(
     unwrapped_key = base64.b64decode(unwrapped_key)
 
     # Construct Deidentify Config
+    transformation = {
+        "primitive_transformation": {
+            "crypto_replace_ffx_fpe_config": {
+                "crypto_key": {
+                    "unwrapped": {"key": unwrapped_key}
+                },
+                "common_alphabet": alphabet,
+                "surrogate_info_type": {"name": surrogate_type},
+            }
+        }
+    }
+
     reidentify_config = {
         "info_type_transformations": {
-            "transformations": [
-                {
-                    "primitive_transformation": {
-                        "crypto_replace_ffx_fpe_config": {
-                            "crypto_key": {
-                                "unwrapped": {"key": unwrapped_key}
-                            },
-                            "common_alphabet": alphabet,
-                            "surrogate_info_type": {"name": surrogate_type},
-                        }
-                    }
-                }
-            ]
+            "transformations": [transformation]
         }
     }
 
