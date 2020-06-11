@@ -26,3 +26,11 @@ def test_omit_name_if_also_email(capsys):
     # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
     assert len(info_types) == 1
     assert info_types[0] == "EMAIL_ADDRESS"
+
+
+def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
+    custom_infotype.inspect_with_medical_record_number_custom_regex_detector(
+        GCLOUD_PROJECT, "Patients MRN 444-5-22222")
+
+    out, _ = capsys.readouterr()
+    assert "Info type: C_MRN" in out

@@ -348,7 +348,6 @@ def receive_messages(project_id, subscription_id, timeout=None):
 
 def receive_messages_with_custom_attributes(project_id, subscription_id, timeout=None):
     """Receives messages from a pull subscription."""
-    # [START pubsub_subscriber_sync_pull_custom_attributes]
     # [START pubsub_subscriber_async_pull_custom_attributes]
     from concurrent.futures import TimeoutError
     from google.cloud import pubsub_v1
@@ -383,7 +382,6 @@ def receive_messages_with_custom_attributes(project_id, subscription_id, timeout
         except TimeoutError:
             streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull_custom_attributes]
-    # [END pubsub_subscriber_sync_pull_custom_attributes]
 
 
 def receive_messages_with_flow_control(project_id, subscription_id, timeout=None):
