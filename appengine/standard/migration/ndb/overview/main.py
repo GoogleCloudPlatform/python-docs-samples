@@ -50,9 +50,9 @@ def display_guestbook():
 
     greeting_blockquotes = [greeting.content for greeting in greetings]
     return render_template('index.html',
-        greeting_blockquotes=greeting_blockquotes,
-        guestbook_name=guestbook_name
-    )
+            greeting_blockquotes=greeting_blockquotes,
+            guestbook_name=guestbook_name
+        )
 
 
 # [START submit]
@@ -66,11 +66,9 @@ def update_guestbook():
     with client.context():
         print('Guestbook name from the URL: {}'.format(guestbook_name))
         greeting = Greeting(
-            parent=ndb.Key("Book",
-                guestbook_name or "*notitle*"
-            ),
-            content=request.form.get('content', None)
-        )
+                parent=ndb.Key("Book", guestbook_name or "*notitle*"),
+                content=request.form.get('content', None)
+            )
         greeting.put()
 # [END submit]
 
