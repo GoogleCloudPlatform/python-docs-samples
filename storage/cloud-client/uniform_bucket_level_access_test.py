@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 from google.cloud import storage
 import pytest
@@ -32,8 +33,8 @@ def bucket():
     os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "uniform-bucket-level-access-{}".format(int(time.time()))
-        bucket = storage.Client().bucket(bucket_name)
+        bucket_name = "uniform-bucket-level-access-{}".format(uuid.uuid4().hex)
+        bucket = tsorage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
     time.sleep(3)
