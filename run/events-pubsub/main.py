@@ -46,8 +46,9 @@ def index():
 
     print(f'Hello {name}!')
 
-    return (f'Found message {name}!', 200)
+    return (f'Hello {name}', 200)
 # [END run_events_pubsub_handler]
+
 
 # [START run_events_pubsub_server]
 if __name__ == "__main__":
