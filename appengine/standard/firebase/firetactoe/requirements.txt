@@ -3,3 +3,4 @@ requests==2.23.0
 requests_toolbelt==0.9.1
 google-auth==1.17.0
 functools32==3.2.3.post2; python_version < "3"
+rsa==4.0
