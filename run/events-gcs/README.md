@@ -1,68 +1,84 @@
-# Events for cloud run Google Cloud Storage tutorial
+# Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes authenticated Cloud 
-Storage events. 
+This sample shows how to create a service that processes GCS events
 
 ## Setup
-
-First ensure you are authorized to your gcloud account via 
 
 ```sh
 gcloud auth login
 ```
 
-Then make sure your project is configured via
-
 ```sh
 gcloud config set project [PROJECT-ID]
 ```
 
-Configure with environment variables
-
 ```sh
-MY_RUN_CONTAINER=events-container
-MY_RUN_SERVICE=hello-events
-MY_GCS_BUCKET=single-region-bucket
+MY_RUN_SERVICE=gcs-service
+MY_RUN_CONTAINER=gcs-container
+
+MY_TOPIC=gcs-topic
+
+MY_PUBSUB_TRIGGER=pubsub-trigger
+MY_GCS_TRIGGER=gcs-trigger
+
+MY_GCS_BUCKET=gcs-bucket
 ```
 
 ## Quickstart
 
-Create and upload your service
+Deploy your Cloud Run service:
 
 ```sh
 gcloud builds submit \
- --tag gcr.io/$(gcloud config get-value project)/"$MY_RUN_CONTAINER"
-gcloud run deploy "$MY_RUN_SERVICE" \
- --image gcr.io/$(gcloud config get-value project)/"$MY_RUN_CONTAINER"
+ --tag gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER
+gcloud run deploy $MY_RUN_SERVICE \
+ --image gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER \
+ --allow-unauthenticated
+
 ```
 
-Create a bucket
+Create a bucket 
 
 ```sh
 gsutil mb -p $(gcloud config get-value project) -l \
 us-central1 gs://"$MY_GCS_BUCKET"
 ```
 
-Create a trigger
+Create a Cloud Pub/Sub topic:
 
 ```sh
-gcloud alpha events triggers create my-gcs-trigger \
+gcloud pubsub topics create $MY_TOPIC
+```
+
+Create a Cloud Pub/Sub trigger:
+
+```sh
+gcloud alpha events triggers create $MY_PUBSUB_TRIGGER \
+--target-service $MY_RUN_SERVICE \
+--type com.google.cloud.pubsub.topic.publish \
+--parameters topic=$MY_TOPIC
+```
+
+Create Cloud Storage trigger
+
+```sh
+gcloud alpha events triggers create $MY_GCS_TRIGGER \
  --target-service "$MY_RUN_SERVICE" \
  --type com.google.cloud.auditlog.event \
  --parameters methodName=storage.buckets.update \
  --parameters serviceName=storage.googleapis.com \
- --parameters resourceName=projects/_/buckets/"$MY_GCS_BUCKET" 
+ --parameters resourceName=projects/_/buckets/"$MY_GCS_BUCKET"
 ```
 
-Send event
+## Test
+
+Test your Cloud Run service by publishing a message to the topic: 
 
 ```sh
 gsutil defstorageclass set NEARLINE gs://$MY_GCS_BUCKET
-gsutil defstorageclass set STANDARD gs://$MY_GCS_BUCKET
 ```
 
-Read logs
-
+You may observe the Run service receiving an event in Cloud Logging.
 ```sh
 gcloud logging read "projects/$(gcloud config get-value \
 project)/logs/cloudaudit.googleapis.com%2Factivity" --format=json
