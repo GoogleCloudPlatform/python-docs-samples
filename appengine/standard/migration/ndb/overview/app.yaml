@@ -19,3 +19,7 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.2"
+- name: setuptools
+  version: 36.6.0
+- name: grpcio
+  version: 1.0.0

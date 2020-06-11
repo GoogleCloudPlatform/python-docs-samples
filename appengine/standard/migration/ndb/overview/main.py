@@ -12,22 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Cloud Datastore NDB API guestbook sample.
-
-This sample is used on this page:
-    https://cloud.google.com/appengine/docs/python/ndb/
-
-For more information, see README.md
-"""
-
 # [START all]
-import cgi
-import textwrap
-import urllib
-
-import webapp2
-
+from flask import Flask, escape, redirect, request
 from google.cloud import ndb
+
+try:
+    from urllib import urlencode
+except Exception:
+    from urllib.parse import urlencode
+
+app = Flask(__name__)
 client = ndb.Client()
 
 
@@ -39,73 +33,77 @@ class Greeting(ndb.Model):
 # [END greeting]
 
 # [START query]
-    @classmethod
     with client.context():
+        @classmethod
         def query_book(cls, ancestor_key):
             return cls.query(ancestor=ancestor_key).order(-cls.date)
 
+@app.route('/', methods=['GET'])
+def display_guestbook():
+    page = '<html><body>'
 
-class MainPage(webapp2.RequestHandler):
-    def get(self):
-        self.response.out.write('<html><body>')
-        guestbook_name = self.request.get('guestbook_name')
-        with client.context():
-            ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
-            greetings = Greeting.query_book(ancestor_key).fetch(20)
+    guestbook_name = request.args.get('guestbook_name', '')
+    with client.context():
+        ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
+        greetings = Greeting.query_book(ancestor_key).fetch(20)
 # [END query]
 
-        greeting_blockquotes = []
-        for greeting in greetings:
-            greeting_blockquotes.append(
-                '<blockquote>%s</blockquote>' % cgi.escape(greeting.content))
+    greeting_blockquotes = []
+    for greeting in greetings:
+        greeting_blockquotes.append(
+            '<blockquote>%s</blockquote>' % escape(greeting.content))
 
-        self.response.out.write(textwrap.dedent("""\
-            <html>
-              <body>
-                {blockquotes}
-                <form action="/sign?{sign}" method="post">
-                  <div>
-                    <textarea name="content" rows="3" cols="60">
-                    </textarea>
-                  </div>
-                  <div>
-                    <input type="submit" value="Sign Guestbook">
-                  </div>
-                </form>
-                <hr>
-                <form>
-                  Guestbook name:
-                    <input value="{guestbook_name}" name="guestbook_name">
-                    <input type="submit" value="switch">
-                </form>
-              </body>
-            </html>""").format(
-                blockquotes='\n'.join(greeting_blockquotes),
-                sign=urllib.urlencode({'guestbook_name': guestbook_name}),
-                guestbook_name=cgi.escape(guestbook_name)))
+    body = """
+        <html>
+          <body>
+            {blockquotes}
+            <form action="/sign" method="post">
+              <div>
+                <textarea name="content" rows="3" cols="60">
+                </textarea>
+              </div>
+              <div>
+                <input type="submit" value="Sign Guestbook">
+              </div>
+            </form>
+            <hr>
+            <form>
+              Guestbook name:
+                <input value="{guestbook_name}" name="guestbook_name">
+                <input type="submit" value="switch">
+            </form>
+          </body>
+        </html >
+    """
+
+    page += body.format(
+        blockquotes='\n'.join(greeting_blockquotes),
+        guestbook_name = escape(guestbook_name)
+    )
+
+    return page
 
 
 # [START submit]
-class SubmitForm(webapp2.RequestHandler):
-    def post(self):
-        # We set the parent key on each 'Greeting' to ensure each guestbook's
-        # greetings are in the same entity group.
-        with client.context():
-        guestbook_name = self.request.get('guestbook_name')
-                greeting = Greeting(
-                        parent=ndb.Key("Book",
-                        guestbook_name or "*notitle*"
-                    ),
-                    content=self.request.get('content')
-                )
-                greeting.put()
+@app.route('/sign', methods=['POST'])
+def update_guestbook():
+    # We set the parent key on each 'Greeting' to ensure each guestbook's
+    # greetings are in the same entity group.
+    with client.context():
+        guestbook_name = request.args.get('guestbook_name', '')
+        greeting = Greeting(
+                parent=ndb.Key("Book",
+                guestbook_name or "*notitle*"
+            ),
+            content = request.form.get('content', None)
+        )
+        greeting.put()
 # [END submit]
-        self.redirect('/?' + urllib.urlencode(
-            {'guestbook_name': guestbook_name}))
+    return redirect('/?' + urlencode(
+        {'guestbook_name': request.form.get('guestbook_name', '')}))
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/sign', SubmitForm)
-])
+if __name__ == '__main__':
+    # This is used when running locally.
+    app.run(host='127.0.0.1', port=8080, debug=True)
 # [END all]
