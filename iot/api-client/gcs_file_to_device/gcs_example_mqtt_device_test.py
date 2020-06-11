@@ -23,7 +23,7 @@ import gcs_example_mqtt_device as device
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 cloud_region = 'us-central1'
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture(scope='module')

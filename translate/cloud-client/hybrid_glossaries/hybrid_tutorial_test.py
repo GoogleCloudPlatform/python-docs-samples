@@ -23,7 +23,7 @@ from hybrid_tutorial import text_to_speech
 from hybrid_tutorial import translate_text
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 # VISION TESTS

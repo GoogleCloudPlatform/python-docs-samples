@@ -29,7 +29,7 @@ import inspect_content
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
@@ -40,7 +40,7 @@ DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
-TIMEOUT = 300  # 5 minutes
+TIMEOUT = 900  # 15 minutes
 
 
 @pytest.fixture(scope="module")
