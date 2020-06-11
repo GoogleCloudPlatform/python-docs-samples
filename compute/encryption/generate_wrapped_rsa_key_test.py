@@ -18,7 +18,7 @@ import googleapiclient.discovery
 
 import generate_wrapped_rsa_key
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def test_main():

@@ -42,7 +42,7 @@ def client():
 
 @pytest.fixture()
 def project_id():
-    return os.environ['GCLOUD_PROJECT']
+    return os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture()
