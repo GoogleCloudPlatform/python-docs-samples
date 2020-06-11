@@ -38,5 +38,5 @@ def calling_function(request):
     function_headers = {'Authorization': f'bearer {jwt}'}
     function_response = requests.get(function_url, headers=function_headers)
 
-    return function_response.content
+    return function_response.text
 # [END functions_bearer_token]
