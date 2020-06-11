@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START all]
-from flask import Flask, escape, redirect, request
+from flask import Flask, escape, redirect, render_template, request
 from google.cloud import ndb
 
 try:
@@ -40,48 +40,18 @@ class Greeting(ndb.Model):
 
 @app.route('/', methods=['GET'])
 def display_guestbook():
-    page = '<html><body>'
-
     guestbook_name = request.args.get('guestbook_name', '')
+    print('GET guestbook name is {}'.format(guestbook_name))
     with client.context():
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
 # [END query]
 
-    greeting_blockquotes = []
-    for greeting in greetings:
-        greeting_blockquotes.append(
-            '<blockquote>%s</blockquote>' % escape(greeting.content))
-
-    body = """
-        <html>
-          <body>
-            {blockquotes}
-            <form action="/sign" method="post">
-              <div>
-                <textarea name="content" rows="3" cols="60">
-                </textarea>
-              </div>
-              <div>
-                <input type="submit" value="Sign Guestbook">
-              </div>
-            </form>
-            <hr>
-            <form>
-              Guestbook name:
-                <input value="{guestbook_name}" name="guestbook_name">
-                <input type="submit" value="switch">
-            </form>
-          </body>
-        </html >
-    """
-
-    page += body.format(
-        blockquotes='\n'.join(greeting_blockquotes),
-        guestbook_name = escape(guestbook_name)
+    greeting_blockquotes = [greeting.content for greeting in greetings]
+    return render_template('index.html',
+      greeting_blockquotes=greeting_blockquotes,
+      guestbook_name=guestbook_name
     )
-
-    return page
 
 
 # [START submit]
@@ -89,8 +59,11 @@ def display_guestbook():
 def update_guestbook():
     # We set the parent key on each 'Greeting' to ensure each guestbook's
     # greetings are in the same entity group.
+    guestbook_name = request.form.get('guestbook_name', '')
+    print('Guestbook name from the form: {}'.format(guestbook_name))
+
     with client.context():
-        guestbook_name = request.args.get('guestbook_name', '')
+        print('Guestbook name from the URL: {}'.format(guestbook_name))
         greeting = Greeting(
                 parent=ndb.Key("Book",
                 guestbook_name or "*notitle*"
@@ -99,8 +72,8 @@ def update_guestbook():
         )
         greeting.put()
 # [END submit]
-    return redirect('/?' + urlencode(
-        {'guestbook_name': request.form.get('guestbook_name', '')}))
+
+    return redirect('/?' + urlencode({'guestbook_name': guestbook_name}))
 
 
 if __name__ == '__main__':
