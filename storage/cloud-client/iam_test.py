@@ -113,7 +113,6 @@ def test_remove_bucket_iam_member(public_bucket):
         public_bucket.name, ROLE, MEMBER)
 
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
-    print(policy)
     assert not any(
         binding["role"] == ROLE and MEMBER in binding["members"]
         for binding in policy.bindings
