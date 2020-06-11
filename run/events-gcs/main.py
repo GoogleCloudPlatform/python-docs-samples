@@ -28,25 +28,10 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     envelope = request.get_json()
-    if not envelope:
-        msg = 'no Pub/Sub message received'
-        print(f'error: {msg}')
-        return f'Bad Request: {msg}', 400
+    print(envelope)
+    print(f'Storage event {envelope}')
 
-    if not isinstance(envelope, dict) or 'message' not in envelope:
-        msg = 'invalid Pub/Sub message format'
-        print(f'error: {msg}')
-        return f'Bad Request: {msg}', 400
-
-    pubsub_message = envelope['message']
-
-    name = 'World'
-    if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
-        name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
-
-    print(f'Hello {name}!')
-
-    return (f'Hello {name}', 200)
+    return (f'Storage event {envelope}', 200)
 # [END run_events_pubsub_handler]
 
 
