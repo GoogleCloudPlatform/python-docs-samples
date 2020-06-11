@@ -18,34 +18,47 @@ If you are using Cloud Shell, skip to the next section.
 If you are using the provided image, skip to the next section.
 
 4. Get default project id and set environment variable:
+
     `PROJECT_ID=$(gcloud config get-value project)`
 5. Build Image:
+
     `docker build -t gcr.io/${PROJECT-ID}/cloud-trace-demo .`
 6. Upload Image to Container Registry:
+
     `gcloud docker -- push gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
     
-    If you are using your own image, please change the image variable in the following files to
-    gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1:
+7. Change the image variables of the following files to:
+    
+    `gcr.ip/${PROJECT-ID}/cloud-trace-demo-test:v1`
+    
     * [YAML](./app/demo-service-a.yaml)
     * [template B](./app/demo-service-b.yaml.template)
     * [template C](./app/demo-service-c.yaml.template)
+    
 #### Create a GKE cluster
-7. Enable Google Cloud and set up region and zone.
+
+8. Enable Google Cloud and set up region and zone.
+
     `gcloud init`
-8. Enable the GKE API & billing:
+9. Enable the GKE API & billing:
+
     `gcloud services enable container.googleapis.com`
-9. Create a GKE cluster named "demo":
+10. Create a GKE cluster named "demo":
+
     `gcloud container clusters create demo`
 
 #### Send Requests to See Generated Traces
 
-10. Run setup.sh to apply the YAML files, which deploys all three services to GKE
+11. Run setup.sh to apply the YAML files, which deploys all three services to GKE:
+
     `./setup.sh`
-11. Send request to Service C:
+12. Send request to Service C:
 
     `curl -w "\n" $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
 12. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
-    ![Screenshot](./example.png)
-13. Clean up GKE cluster/pods/services
+    
+    ![Screenshot](example-trace.png)
+13. Clean up GKE cluster/pods/services:
+
     `gcloud container clusters delete demo`
