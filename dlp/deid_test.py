@@ -88,6 +88,14 @@ def test_deidentify_with_mask_masking_number_specified(capsys):
     assert "My SSN is *******27" in out
 
 
+def test_deidentify_with_redact(capsys):
+    deid.deidentify_with_redact(
+        GCLOUD_PROJECT, HARMFUL_STRING + "!", ["US_SOCIAL_SECURITY_NUMBER"]
+    )
+    out, _ = capsys.readouterr()
+    assert "My SSN is !" in out
+
+
 def test_deidentify_with_replace(capsys):
     deid.deidentify_with_replace(
         GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"],
