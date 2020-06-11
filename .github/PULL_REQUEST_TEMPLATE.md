@@ -6,7 +6,7 @@ Note: It's a good idea to open an issue first for discussion.
 
 ## Checklist
 - [ ] I have followed [Sample Guidelines from AUTHORING_GUIDE.MD](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md)
-- [ ] README is updated (if needed)
+- [ ] README is updated to include [all relevant information](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#readme-file)
 - [ ] **Tests** pass:   `nox -s py-3.6` (see [Test Enviroment Setup](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#test-environment-setup))
 - [ ] **Lint** pass:   `nox -s lint` (see [Test Enviroment Setup](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#test-environment-setup))
 - [ ] These samples need a new **API enabled** to pass (let us know which ones)
