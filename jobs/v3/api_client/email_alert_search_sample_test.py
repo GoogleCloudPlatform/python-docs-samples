@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import pytest
 import re
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
+import pytest
 
 import email_alert_search_sample
 
@@ -27,10 +26,18 @@ def company_name():
     email_alert_search_sample.tear_down(company_name, job_name)
 
 
+def retry_delay():
+    # Always wait 60 seconds
+    yield 60
+
+
 def test_email_alert_search_sample(company_name, capsys):
-    @eventually_consistent.call
-    def _():
+
+    @backoff.on_exception(retry_delay, AssertionError, max_time=240)
+    def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
         expected = ('.*matchingJobs.*')
         assert re.search(expected, out)
+
+    eventually_consistent_test()

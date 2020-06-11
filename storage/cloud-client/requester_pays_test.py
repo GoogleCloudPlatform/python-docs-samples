@@ -19,12 +19,14 @@ from google.cloud import storage
 import pytest
 
 import storage_disable_requester_pays
-import storage_enable_requester_pays
 import storage_download_file_requester_pays
+import storage_enable_requester_pays
 import storage_get_requester_pays_status
 
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
-PROJECT = os.environ["GCLOUD_PROJECT"]
+
+# We use a different bucket from other tests.
+BUCKET = os.environ["REQUESTER_PAYS_TEST_BUCKET"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_enable_requester_pays(capsys):

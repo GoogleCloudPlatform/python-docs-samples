@@ -7,14 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_read_simple 1'] = '''Reading data for phone#4c410523#20190501:
-Column Family stats_summary
-\tconnected_cell: \x00\x00\x00\x00\x00\x00\x00\x01 @2019-05-01 00:00:00+00:00
-\tconnected_wifi: \x00\x00\x00\x00\x00\x00\x00\x01 @2019-05-01 00:00:00+00:00
-\tos_build: PQ2A.190405.003 @2019-05-01 00:00:00+00:00
-
-'''
-
 snapshots['test_read_row_partial 1'] = '''Reading data for phone#4c410523#20190501:
 Column Family stats_summary
 \tos_build: PQ2A.190405.003 @2019-05-01 00:00:00+00:00
@@ -138,5 +130,13 @@ Column Family stats_summary
 Reading data for phone#5c10102#20190502:
 Column Family stats_summary
 \tos_build: PQ2A.190406.000 @2019-05-01 00:00:00+00:00
+
+'''
+
+snapshots['test_read_row 1'] = '''Reading data for phone#4c410523#20190501:
+Column Family stats_summary
+\tconnected_cell: \x00\x00\x00\x00\x00\x00\x00\x01 @2019-05-01 00:00:00+00:00
+\tconnected_wifi: \x00\x00\x00\x00\x00\x00\x00\x01 @2019-05-01 00:00:00+00:00
+\tos_build: PQ2A.190405.003 @2019-05-01 00:00:00+00:00
 
 '''

@@ -20,11 +20,17 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
-read -s -p "Enter password for encryption: " PASSWORD
-echo
+# Use SECRET_MANAGER_PROJECT if set, fallback to cloud-devrel-kokoro-resources.
+PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
 
-tar cvf secrets.tar testing/{service-account.json,client-secrets.json,test-env.sh}
-openssl aes-256-cbc -k "$PASSWORD" -in secrets.tar -out testing/secrets.tar.enc
-rm secrets.tar
+gcloud secrets versions add "python-docs-samples-test-env" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/test-env.sh"
 
-travis encrypt "SECRETS_PASSWORD=$PASSWORD" --add --override
+gcloud secrets versions add "python-docs-samples-service-account" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/service-account.json"
+
+gcloud secrets versions add "python-docs-samples-client-secrets" \
+       --project="${PROJECT_ID}" \
+       --data-file="testing/client-secrets.json"

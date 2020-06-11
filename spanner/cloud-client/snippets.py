@@ -52,7 +52,7 @@ def create_database(instance_id, database_id):
     operation = database.create()
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created database {} on instance {}'.format(
         database_id, instance_id))
@@ -106,14 +106,23 @@ def delete_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    singers_to_delete = spanner.KeySet(
-        keys=[[1], [2], [3], [4], [5]])
+    # Delete individual rows
     albums_to_delete = spanner.KeySet(
-        keys=[[1, 1], [1, 2], [2, 1], [2, 2], [2, 3]])
+        keys=[[2, 1], [2, 3]])
+
+    # Delete a range of rows where the column key is >=3 and <5
+    singers_range = spanner.KeyRange(start_closed=[3], end_open=[5])
+    singers_to_delete = spanner.KeySet(
+        ranges=[singers_range])
+
+    # Delete remaining Singers rows, which will also delete the remaining
+    # Albums rows because Albums was defined with ON DELETE CASCADE
+    remaining_singers = spanner.KeySet(all_=True)
 
     with database.batch() as batch:
         batch.delete('Albums', albums_to_delete)
         batch.delete('Singers', singers_to_delete)
+        batch.delete('Singers', remaining_singers)
 
     print('Deleted data.')
 # [END spanner_delete_data]
@@ -213,7 +222,7 @@ def add_index(instance_id, database_id):
         'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the AlbumsByAlbumTitle index.')
 # [END spanner_create_index]
@@ -306,7 +315,7 @@ def add_storing_index(instance_id, database_id):
         'STORING (MarketingBudget)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the AlbumsByAlbumTitle2 index.')
 # [END spanner_create_storing_index]
@@ -355,7 +364,7 @@ def add_column(instance_id, database_id):
         'ALTER TABLE Albums ADD COLUMN MarketingBudget INT64'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Added the MarketingBudget column.')
 # [END spanner_add_column]
@@ -509,7 +518,7 @@ def create_table_with_timestamp(instance_id, database_id):
     ])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created Performances table on database {} on instance {}'.format(
         database_id, instance_id))
@@ -554,7 +563,7 @@ def add_timestamp_column(instance_id, database_id):
         'OPTIONS(allow_commit_timestamp=true)'])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Altered table "Albums" on database {} on instance {}.'.format(
         database_id, instance_id))
@@ -831,7 +840,7 @@ def delete_data_with_dml(instance_id, database_id):
 
     def delete_singers(transaction):
         row_ct = transaction.execute_update(
-            "DELETE Singers WHERE FirstName = 'Alice'"
+            "DELETE FROM Singers WHERE FirstName = 'Alice'"
         )
 
         print("{} record(s) deleted.".format(row_ct))
@@ -1055,7 +1064,7 @@ def delete_data_with_partitioned_dml(instance_id, database_id):
     database = instance.database(database_id)
 
     row_ct = database.execute_partitioned_dml(
-        "DELETE Singers WHERE SingerId > 10"
+        "DELETE FROM Singers WHERE SingerId > 10"
     )
 
     print("{} record(s) deleted.".format(row_ct))
@@ -1122,7 +1131,7 @@ def create_table_with_datatypes(instance_id, database_id):
     ])
 
     print('Waiting for operation to complete...')
-    operation.result()
+    operation.result(120)
 
     print('Created Venues table on database {} on instance {}'.format(
         database_id, instance_id))

@@ -18,8 +18,8 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
-import os
 import json
+import os
 
 
 # [START dlp_inspect_string]
@@ -459,11 +459,12 @@ def inspect_gcs_file(
     url = "gs://{}/{}".format(bucket, filename)
     storage_config = {"cloud_storage_options": {"file_set": {"url": url}}}
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -623,11 +624,12 @@ def inspect_datastore(
         }
     }
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -790,11 +792,12 @@ def inspect_bigquery(
         }
     }
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -858,7 +861,7 @@ def inspect_bigquery(
 
 
 if __name__ == "__main__":
-    default_project = os.environ.get("GCLOUD_PROJECT")
+    default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(

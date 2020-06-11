@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import re
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
+import pytest
 
 import commute_search_sample
 
@@ -28,9 +28,11 @@ def company_name():
 
 
 def test_commute_search_sample(company_name, capsys):
-    @eventually_consistent.call
-    def _():
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
         commute_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
         expected = ('.*matchingJobs.*1600 Amphitheatre Pkwy.*')
         assert re.search(expected, out)
+
+    eventually_consistent_test()

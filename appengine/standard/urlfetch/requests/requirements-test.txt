@@ -1,2 +1,1 @@
 pytest==4.6.9
-gcp-devrel-py-tools==0.0.15

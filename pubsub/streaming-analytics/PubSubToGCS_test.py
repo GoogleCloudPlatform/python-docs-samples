@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
 import uuid
 
@@ -21,10 +20,11 @@ from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.test_utils import TempDir
 from apache_beam.transforms.window import TimestampedValue
+import mock
 
 import PubSubToGCS
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 UUID = uuid.uuid1().hex
 

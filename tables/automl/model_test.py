@@ -13,10 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 import random
 import string
-import os
 import time
 
 from google.api_core import exceptions
@@ -24,7 +23,8 @@ from google.api_core import exceptions
 import automl_tables_model
 import dataset_test
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_MODEL = "do_not_delete_this_model_0"
 GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"

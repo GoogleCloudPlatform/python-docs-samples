@@ -15,16 +15,17 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
+import pytest
 
-import pub
+import pub  # noqa
+
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "quickstart-pub-test-topic-" + UUID
 
 

@@ -12,9 +12,9 @@
 # limitations under the License.
 
 import os
+import time
 import uuid
 
-from flaky import flaky
 from google.cloud import dns
 from google.cloud.exceptions import NotFound
 
@@ -22,10 +22,15 @@ import pytest
 
 import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 TEST_ZONE_NAME = 'test-zone' + str(uuid.uuid4())
 TEST_ZONE_DNS_NAME = 'theadora.is.'
 TEST_ZONE_DESCRIPTION = 'Test zone'
+
+
+def delay_rerun(*args):
+    time.sleep(5)
+    return True
 
 
 @pytest.yield_fixture
@@ -57,7 +62,7 @@ def zone(client):
             pass
 
 
-@flaky
+@pytest.mark.flaky
 def test_create_zone(client):
     zone = main.create_zone(
         PROJECT,
@@ -70,7 +75,7 @@ def test_create_zone(client):
     assert zone.description == TEST_ZONE_DESCRIPTION
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
 def test_get_zone(client, zone):
     zone = main.get_zone(PROJECT, TEST_ZONE_NAME)
 
@@ -79,27 +84,27 @@ def test_get_zone(client, zone):
     assert zone.description == TEST_ZONE_DESCRIPTION
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
 def test_list_zones(client, zone):
     zones = main.list_zones(PROJECT)
 
     assert TEST_ZONE_NAME in zones
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
 def test_list_resource_records(client, zone):
     records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
     assert records
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
 def test_list_changes(client, zone):
     changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
 
 
-@flaky
+@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
 def test_delete_zone(client, zone):
     main.delete_zone(PROJECT, TEST_ZONE_NAME)

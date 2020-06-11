@@ -18,15 +18,15 @@ import time
 import uuid
 
 import backoff
-from googleapiclient.errors import HttpError
-from google.cloud import pubsub
 from google.api_core.exceptions import AlreadyExists
 from google.api_core.exceptions import NotFound
+from google.cloud import pubsub
+from googleapiclient.errors import HttpError
 import pytest
 
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import manager
+import manager  # noqa
 
 
 cloud_region = 'us-central1'
@@ -34,9 +34,9 @@ device_id_template = 'test-device-{}'
 rsa_cert_path = 'resources/rsa_cert.pem'
 topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 subscription_name = 'test-device-images-{}'.format(uuid.uuid4())
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid4(), int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 
 
 @pytest.fixture(scope='session')

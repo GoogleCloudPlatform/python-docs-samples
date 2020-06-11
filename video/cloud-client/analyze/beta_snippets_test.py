@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six.moves.urllib.request import urlopen
 import os
 import uuid
 
-import beta_snippets
 from google.cloud import storage
 import pytest
-from flaky import flaky
+from six.moves.urllib.request import urlopen
+
+import beta_snippets
 
 
 POSSIBLE_TEXTS = [
@@ -53,7 +53,7 @@ def video_path(tmpdir_factory):
 @pytest.fixture(scope="function")
 def bucket():
     # Create a temporaty bucket to store annotation output.
-    bucket_name = str(uuid.uuid1())
+    bucket_name = f'tmp-{uuid.uuid4().hex}'
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
@@ -114,7 +114,7 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
 
 
 # Flaky timeout
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     beta_snippets.video_detect_text(in_file)
@@ -123,7 +123,7 @@ def test_detect_text(capsys):
 
 
 # Flaky timeout
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text_gcs(capsys):
     in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
     beta_snippets.video_detect_text_gcs(in_file)
@@ -131,7 +131,8 @@ def test_detect_text_gcs(capsys):
     assert 'Text' in out
 
 
-@pytest.mark.slow
+# Flaky InvalidArgument
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     beta_snippets.track_objects(in_file)
@@ -154,9 +155,9 @@ def test_track_objects_gcs():
 
 
 # Flaky Gateway
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
-    project_id = os.environ["GCLOUD_PROJECT"]
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
     beta_snippets.streaming_automl_classification(video_path, project_id, model_id)
     out, _ = capsys.readouterr()
