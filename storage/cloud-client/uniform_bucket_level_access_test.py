@@ -34,7 +34,7 @@ def bucket():
     bucket = None
     while bucket is None or bucket.exists():
         bucket_name = "uniform-bucket-level-access-{}".format(uuid.uuid4().hex)
-        bucket = tsorage.Client().bucket(bucket_name)
+        bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
     time.sleep(3)
