@@ -16,7 +16,7 @@
 from google.cloud import translate
 
 
-def list_glossaries(project_id="YOUR_PROJECT_ID"):
+def sample_list_glossaries(project_id="YOUR_PROJECT_ID"):
     """List Glossaries."""
 
     client = translate.TranslationServiceClient()
