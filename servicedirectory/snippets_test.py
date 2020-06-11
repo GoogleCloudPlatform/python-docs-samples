@@ -19,7 +19,7 @@ import pytest
 import snippets
 from google.cloud import servicedirectory_v1beta1
 
-PROJECT_ID = environ['GCLOUD_PROJECT']
+PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 LOCATION_ID = environ['GCLOUD_LOCATION']
 NAMESPACE_ID = 'test-namespace'
 SERVICE_ID = 'test-service'
