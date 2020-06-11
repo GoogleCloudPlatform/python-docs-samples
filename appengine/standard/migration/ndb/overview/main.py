@@ -49,7 +49,8 @@ def display_guestbook():
 # [END query]
 
     greeting_blockquotes = [greeting.content for greeting in greetings]
-    return render_template('index.html',
+    return render_template(
+            'index.html',
             greeting_blockquotes=greeting_blockquotes,
             guestbook_name=guestbook_name
         )
