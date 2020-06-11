@@ -55,6 +55,8 @@ def list_subscriptions_in_project(project_id):
     for subscription in subscriber.list_subscriptions(project_path):
         print(subscription.name)
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_list_subscriptions]
 
@@ -77,6 +79,8 @@ def create_subscription(project_id, topic_id, subscription_id):
 
     print("Subscription created: {}".format(subscription))
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_create_pull_subscription]
 
@@ -153,6 +157,8 @@ def create_push_subscription(project_id, topic_id, subscription_id, endpoint):
     print("Push subscription created: {}".format(subscription))
     print("Endpoint for subscription is: {}".format(endpoint))
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_create_push_subscription]
 
@@ -173,6 +179,8 @@ def delete_subscription(project_id, subscription_id):
 
     print("Subscription deleted: {}".format(subscription_path))
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_delete_subscription]
 
@@ -208,6 +216,8 @@ def update_push_subscription(project_id, topic_id, subscription_id, endpoint):
     print("Subscription updated: {}".format(subscription_path))
     print("New endpoint for subscription is: {}".format(result.push_config))
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_update_push_configuration]
 
@@ -539,6 +549,8 @@ def synchronous_pull_with_lease_management(project_id, subscription_id):
         )
     )
 
+    # Close the underlying gPRC channel. Alternatively, wrap subscriber in
+    # a 'with' block to automatically call close() when done.
     subscriber.close()
     # [END pubsub_subscriber_sync_pull_with_lease]
 
