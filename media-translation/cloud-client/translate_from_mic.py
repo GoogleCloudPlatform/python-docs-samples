@@ -23,13 +23,14 @@ from __future__ import division
 
 import itertools
 
-from google.cloud import mediatranslation
+from google.cloud import mediatranslation as media
 import pyaudio
 from six.moves import queue
 
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+SpeechEventType = media.StreamingTranslateSpeechResponse.SpeechEventType
 
 
 class MicrophoneStream:
@@ -111,7 +112,7 @@ def listen_print_loop(responses):
         # Once the transcription settles, the response contains the
         # END_OF_SINGLE_UTTERANCE event.
         if (response.speech_event_type ==
-          mediatranslation.StreamingTranslateSpeechResponse.SpeechEventType.END_OF_SINGLE_UTTERANCE):
+                SpeechEventType.END_OF_SINGLE_UTTERANCE):
 
             print(u'\nFinal translation: {0}'.format(translation))
             print(u'Final recognition result: {0}'.format(source))
@@ -128,24 +129,24 @@ def listen_print_loop(responses):
 def do_translation_loop():
     print('Begin speaking...')
 
-    client = mediatranslation.SpeechTranslationServiceClient()
+    client = media.SpeechTranslationServiceClient()
 
-    speech_config = mediatranslation.TranslateSpeechConfig(
+    speech_config = media.TranslateSpeechConfig(
         audio_encoding='linear16',
         source_language_code='en-US',
         target_language_code='es-ES')
 
-    config = mediatranslation.StreamingTranslateSpeechConfig(
+    config = media.StreamingTranslateSpeechConfig(
         audio_config=speech_config, single_utterance=True)
 
     # The first request contains the configuration.
     # Note that audio_content is explicitly set to None.
-    first_request = mediatranslation.StreamingTranslateSpeechRequest(
+    first_request = media.StreamingTranslateSpeechRequest(
         streaming_config=config, audio_content=None)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
-        mic_requests = (mediatranslation.StreamingTranslateSpeechRequest(
+        mic_requests = (media.StreamingTranslateSpeechRequest(
             audio_content=content,
             streaming_config=config)
             for content in audio_generator)
