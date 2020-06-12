@@ -23,6 +23,7 @@ import deid
 HARMFUL_STRING = "My SSN is 372819127"
 HARMLESS_STRING = "My favorite color is blue"
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
+UNWRAPPED_KEY = "YWJjZGVmZ2hpamtsbW5vcA=="
 WRAPPED_KEY = (
     "CiQAz0hX4+go8fJwn80Fr8pVImwx+tmZdqU7JL+7TN/S5JxBU9gSSQDhFHpFVy"
     "uzJps0YH9ls480mU+JLG7jI/0lL04i6XJRWqmI6gUSZRUtECYcLH5gXK4SXHlL"
@@ -203,6 +204,24 @@ def test_reidentify_with_fpe(capsys):
     out, _ = capsys.readouterr()
 
     assert "731997681" not in out
+
+
+def test_reidentify_free_text_with_fpe_using_surrogate(capsys):
+    labeled_fpe_string = "My phone number is PHONE_TOKEN(10):9617256398"
+
+    deid.reidentify_free_text_with_fpe_using_surrogate(
+        GCLOUD_PROJECT,
+        labeled_fpe_string,
+        surrogate_type="PHONE_TOKEN",
+        unwrapped_key=UNWRAPPED_KEY,
+        alphabet="NUMERIC",
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "PHONE_TOKEN" not in out
+    assert "9617256398" not in out
+    assert "My phone number is" in out
 
 
 def test_deidentify_with_replace_infotype(capsys):
