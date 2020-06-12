@@ -19,6 +19,8 @@ import os
 from flask import Flask, request
 
 
+required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
+
 app = Flask(__name__)
 # [END run_events_pubsub_server_setup]
 
@@ -26,6 +28,12 @@ app = Flask(__name__)
 # [START run_events_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
+    for field in required_fields:
+        if field not in request.headers:
+            errmsg = f'Bad Request: missing required header {field}'
+            print(errmsg)
+            return errmsg, 400
+
     envelope = request.get_json()
     if not envelope:
         msg = 'no Pub/Sub message received'
