@@ -53,7 +53,7 @@ def list_subscriptions_in_project(project_id):
     project_path = subscriber.project_path(project_id)
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         for subscription in subscriber.list_subscriptions(project_path):
             print(subscription.name)
@@ -75,7 +75,7 @@ def create_subscription(project_id, topic_id, subscription_id):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
@@ -149,7 +149,7 @@ def create_push_subscription(project_id, topic_id, subscription_id, endpoint):
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         subscription = subscriber.create_subscription(
             subscription_path, topic_path, push_config
@@ -173,7 +173,7 @@ def delete_subscription(project_id, subscription_id):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         subscriber.delete_subscription(subscription_path)
 
@@ -208,7 +208,7 @@ def update_push_subscription(project_id, topic_id, subscription_id, endpoint):
     update_mask = {"paths": {"push_config"}}
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         result = subscriber.update_subscription(subscription, update_mask)
 
@@ -442,7 +442,7 @@ def synchronous_pull(project_id, subscription_id):
     NUM_MESSAGES = 3
 
     # Wrap the subscriber in a 'with' block to automatically call close() to
-    # close the underslying gRPC channel when done.
+    # close the underlying gRPC channel when done.
     with subscriber:
         # The subscriber pulls a specific number of messages.
         response = subscriber.pull(subscription_path, max_messages=NUM_MESSAGES)
