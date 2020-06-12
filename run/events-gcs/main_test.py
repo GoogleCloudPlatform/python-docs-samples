@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import base64
-from uuid import uuid4
-
 import pytest
 
 import main
@@ -28,5 +25,3 @@ def client():
 def test_endpoint(client):
     r = client.post('/', json={'message': 'hello'})
     assert r.status_code == 204
-
-

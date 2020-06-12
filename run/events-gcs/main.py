@@ -14,7 +14,6 @@
 # [START run_events_pubsub_server_setup]
 
 # [START run_events_pubsub_server_setup]
-import base64
 import os
 
 from flask import Flask, request
@@ -28,8 +27,7 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     envelope = request.get_json()
-    print(f'Storage Headers: {request.headers}\n Storage Data: {envelope}', 
-    	200)
+    print(f'Storage Headers: {request.headers}\n Storage Data: {envelope}', 200)
 
     return ('', 204)
 # [END run_events_pubsub_handler]
