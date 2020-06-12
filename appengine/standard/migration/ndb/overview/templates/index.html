@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <title>Guestbook</title>
+</head>
+
+<body>
+    {% for greeting in greeting_blockquotes %}
+    <blockquote>{{ greeting }}</blockquote>
+    {% endfor %}
+
+    <form action="/sign" method="post">
+    <div>
+        <textarea name="content" rows="3" cols="60"></textarea>
+    </div>
+    <div>
+        <input type="submit" value="Sign Guestbook" />
+        <input type="hidden" name="guestbook_name" value="{{ guestbook_name }}"/>
+    </div>
+    </form>
+
+    <hr>
+
+    <form action="/" method="GET">
+    Guestbook name:
+        <input name="guestbook_name" value="{{guestbook_name}}" />
+        <input type="submit" value="switch" />
+    </form>
+</body>
+</html >
