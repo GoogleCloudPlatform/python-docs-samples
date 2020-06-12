@@ -21,9 +21,7 @@ Configure environment variables:
 ```sh
 MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
-
 MY_GCS_TRIGGER=gcs-trigger
-
 MY_GCS_BUCKET=gcs-bucket
 ```
 
@@ -71,5 +69,5 @@ Cloud Logging:
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
 resource.labels.service_name=$MY_RUN_SERVICE" --project \
-$(gcloud config get-value project) --limit 50 --format 'value(textPayload)'
+$(gcloud config get-value project) --limit 30 --format 'value(textPayload)'
 ```
