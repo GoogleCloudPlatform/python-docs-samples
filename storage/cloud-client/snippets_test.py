@@ -105,10 +105,37 @@ def test_bucket():
     bucket.delete(force=True)
 
 
+@pytest.fixture(scope="function")
+def test_public_bucket():
+    # The new projects don't allow to make a bucket available to public, so
+    # for some tests we need to use the old main project for now.
+    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
+    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
+    bucket = None
+    while bucket is None or bucket.exists():
+        storage_client = storage.Client()
+        bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
+        bucket = storage_client.bucket(bucket_name)
+    storage_client.create_bucket(bucket)
+    yield bucket
+    bucket.delete(force=True)
+    # Set the value back.
+    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
+
+
 @pytest.fixture
 def test_blob(test_bucket):
     """Yields a blob that is deleted after the test completes."""
     bucket = test_bucket
+    blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
+    blob.upload_from_string("Hello, is it me you're looking for?")
+    yield blob
+
+
+@pytest.fixture(scope="function")
+def test_public_blob(test_public_bucket):
+    """Yields a blob that is deleted after the test completes."""
+    bucket = test_public_bucket
     blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
@@ -196,10 +223,11 @@ def test_delete_blob(test_blob):
     storage_delete_file.delete_blob(test_blob.bucket.name, test_blob.name)
 
 
-def test_make_blob_public(test_blob):
-    storage_make_public.make_blob_public(test_blob.bucket.name, test_blob.name)
+def test_make_blob_public(test_public_blob):
+    storage_make_public.make_blob_public(
+        test_public_blob.bucket.name, test_public_blob.name)
 
-    r = requests.get(test_blob.public_url)
+    r = requests.get(test_public_blob.public_url)
     assert r.text == "Hello, is it me you're looking for?"
 
 
@@ -342,11 +370,12 @@ def test_get_service_account(capsys):
     assert "@gs-project-accounts.iam.gserviceaccount.com" in out
 
 
-def test_download_public_file(test_blob):
-    storage_make_public.make_blob_public(test_blob.bucket.name, test_blob.name)
+def test_download_public_file(test_public_blob):
+    storage_make_public.make_blob_public(
+        test_public_blob.bucket.name, test_public_blob.name)
     with tempfile.NamedTemporaryFile() as dest_file:
         storage_download_public_file.download_public_file(
-            test_blob.bucket.name, test_blob.name, dest_file.name
+            test_public_blob.bucket.name, test_public_blob.name, dest_file.name
         )
 
         assert dest_file.read() == b"Hello, is it me you're looking for?"
