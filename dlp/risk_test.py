@@ -23,8 +23,8 @@ import risk
 
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
-GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
-TABLE_PROJECT = os.environ.get("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
+TABLE_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 TOPIC_ID = "dlp-test" + UNIQUE_STRING
 SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
 UNIQUE_FIELD = "Name"
@@ -36,7 +36,7 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT = 60  # 1 minutes
+TIMEOUT = 120  # 2 minutes
 
 
 # Create new custom topic/subscription

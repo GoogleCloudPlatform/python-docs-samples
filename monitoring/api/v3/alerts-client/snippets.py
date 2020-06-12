@@ -239,7 +239,7 @@ def project_id():
     Returns:
         str -- the project name
     """
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 
     if not project_id:
         raise MissingProjectIdError(
