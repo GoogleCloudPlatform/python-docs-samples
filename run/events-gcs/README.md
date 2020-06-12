@@ -80,7 +80,7 @@ gcloud alpha events triggers create $MY_GCS_TRIGGER \
 Test your Cloud Run service by publishing a message to the topic: 
 
 ```sh
-gsutil defstorageclass set NEARLINE gs://$MY_GCS_BUCKET
+gsutil defstorageclass set STANDARD gs://$MY_GCS_BUCKET
 ```
 
 You may observe the Run service printing upon receiving an event in 
