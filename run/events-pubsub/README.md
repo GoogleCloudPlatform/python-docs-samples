@@ -19,9 +19,9 @@ gcloud config set project [PROJECT-ID]
 Configure environment variables:
 
 ```sh
-MY_RUN_SERVICE=gcs-service
-MY_RUN_CONTAINER=gcs-container
-MY_TOPIC=gcs-topic
+MY_RUN_SERVICE=pubsub-service
+MY_RUN_CONTAINER=pubsub-container
+MY_TOPIC=pubsub-topic
 MY_PUBSUB_TRIGGER=pubsub-trigger
 ```
 
