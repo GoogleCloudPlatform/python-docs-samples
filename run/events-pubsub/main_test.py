@@ -53,7 +53,8 @@ def test_minimally_valid_message(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert 'Hello World!' in out
+    ce_id = header_data['Ce-Id']
+    assert f'Hello, World! ID: {ce_id}' in out
 
 
 def test_populated_message(client, capsys):
@@ -64,7 +65,8 @@ def test_populated_message(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f'Hello {name}!' in out
+    ce_id = header_data['Ce-Id']
+    assert f'Hello, {name}! ID: {ce_id}' in out
 
 
 def test_missing_required_fields(client, capsys):

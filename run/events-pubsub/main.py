@@ -51,9 +51,10 @@ def index():
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
-    print(f'Hello {name}!')
-
-    return (f'Hello {name}', 200)
+    ce_id = request.headers.get('Ce-Id')
+    resp = f'Hello, {name}! ID: {ce_id}'
+    print(resp)
+    return (resp, 200)
 # [END run_events_pubsub_handler]
 
 
