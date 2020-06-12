@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START run_events_pubsub_server_setup]
-
-# [START run_events_pubsub_server_setup]
 import os
 
 from flask import Flask, request
