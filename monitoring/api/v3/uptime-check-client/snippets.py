@@ -31,7 +31,6 @@ def create_uptime_check_config_get(project_name, host_name=None,
     config.monitored_resource.labels.update(
         {'host': host_name or 'example.com'})
     config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.GET
-    # config.http_check.body = 'foo=bar'
     config.http_check.path = '/'
     config.http_check.port = 80
     config.timeout.seconds = 10
@@ -68,9 +67,6 @@ def create_uptime_check_config_post(project_name, host_name=None,
 # [START monitoring_uptime_check_update]
 def update_uptime_check_config(config_name, new_display_name=None,
                                new_http_check_path=None,
-                               new_request_method=None,
-                               new_content_type=None,
-                               new_body=None):
     client = monitoring_v3.UptimeCheckServiceClient()
     config = client.get_uptime_check_config(config_name)
     field_mask = monitoring_v3.types.FieldMask()
@@ -80,15 +76,6 @@ def update_uptime_check_config(config_name, new_display_name=None,
     if new_http_check_path:
         field_mask.paths.append('http_check.path')
         config.http_check.path = new_http_check_path
-    if new_request_method:
-        field_mask.paths.append('http_check.request_method')
-        config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.POST
-    if new_content_type:
-        field_mask.paths.append('http_check.content_type')
-        config.http_check.content_type = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED
-    if new_body:
-        field_mask.paths.append('http_check.body')
-        config.http_check.body = 'foo=bar'
     client.update_uptime_check_config(config, field_mask)
 # [END monitoring_uptime_check_update]
 
@@ -233,18 +220,6 @@ if __name__ == '__main__':
         '-p', '--uptime_check_path',
         required=False,
     )
-    update_uptime_check_config_parser.add_argument(
-        '-r_m', '--request_method',
-        required=False,
-    )
-    update_uptime_check_config_parser.add_argument(
-        '-c_t', '--content_type',
-        required=False,
-    )
-    update_uptime_check_config_parser.add_argument(
-        '-b', '--body',
-        required=False,
-    )
 
     args = parser.parse_args()
 
@@ -270,8 +245,7 @@ if __name__ == '__main__':
     elif args.command == 'update-uptime-check-config':
         if not args.display_name and not args.uptime_check_path:
             print('Nothing to update.  Pass --display_name or '
-                  '--uptime_check_path or --request_method or '
-                  '--content_type or --body.')
+                  '--uptime_check_path.')
         else:
             update_uptime_check_config(args.name, args.display_name,
                                        args.uptime_check_path)
