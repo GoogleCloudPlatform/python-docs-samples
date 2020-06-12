@@ -15,7 +15,8 @@
 import os
 import uuid
 
-from google.cloud import exceptions, tasks_v2
+from google.api_core import exceptions
+from google.cloud import tasks_v2
 import pytest
 
 import delete_queue
