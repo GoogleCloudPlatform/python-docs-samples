@@ -13,13 +13,30 @@
 # limitations under the License.
 
 import os
+import uuid
+
+from google.cloud import talent
+import pytest
 
 import job_search_list_tenants
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-def test_list_tenants(capsys):
+@pytest.fixture(scope="module")
+def test_tenant():
+    client = talent.TenantServiceClient()
+    external_id = f'test_tenant_{uuid.uuid4().hex}'
+    parent = client.project_path(PROJECT_ID)
+    tenant = {"external_id": external_id}
+    resp = client.create_tenant(parent, tenant)
+
+    yield resp
+
+    client.delete_tenant(resp.name)
+
+
+def test_list_tenants(capsys, test_tenant):
     job_search_list_tenants.list_tenants(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "Tenant Name:" in out
