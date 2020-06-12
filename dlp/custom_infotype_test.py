@@ -43,3 +43,23 @@ def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
 
     out, _ = capsys.readouterr()
     assert "Info type: C_MRN" in out
+
+
+def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
+        capsys):
+    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+        GCLOUD_PROJECT, "just a number 444-5-22222")
+
+    out, _ = capsys.readouterr()
+    assert "Info type: C_MRN" in out
+    assert "Likelihood: 3" in out
+
+
+def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(
+        capsys):
+    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+        GCLOUD_PROJECT, "Patients MRN 444-5-22222")
+
+    out, _ = capsys.readouterr()
+    assert "Info type: C_MRN" in out
+    assert "Likelihood: 5" in out
