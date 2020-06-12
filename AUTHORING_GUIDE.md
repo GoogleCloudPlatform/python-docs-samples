@@ -483,7 +483,13 @@ __Note:__ As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
 `noxfile-template.py` as `noxfile.py` in the folder of the project you want to
-run tests.
+run tests:
+
+```console
+cp noxfile-template.py PRODUCT/noxfile.py
+cd PRODUCT/
+nox -s lint
+```
 
 To use nox, install it globally with `pip`:
 
