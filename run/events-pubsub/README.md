@@ -1,29 +1,27 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes GCS events
+This sample shows how to create a service that processes GCS events.
 
 ## Setup
 
-Login to gcloud
+Login to gcloud:
 
 ```sh
 gcloud auth login
 ```
 
-Configure project id
+Configure project id:
 
 ```sh
 gcloud config set project [PROJECT-ID]
 ```
 
-Configure environment variables 
+Configure environment variables:
 
 ```sh
 MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
-
 MY_TOPIC=gcs-topic
-
 MY_PUBSUB_TRIGGER=pubsub-trigger
 ```
 
@@ -68,5 +66,5 @@ Cloud Logging.
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
 resource.labels.service_name=$MY_RUN_SERVICE" --project \
-$(gcloud config get-value project) --limit 100 | grep Hello
+$(gcloud config get-value project) --limit 30 --format 'value(textPayload)'
 ```
