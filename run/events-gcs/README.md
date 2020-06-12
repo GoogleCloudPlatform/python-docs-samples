@@ -22,9 +22,6 @@ Configure environment variables
 MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
 
-MY_TOPIC=gcs-topic
-
-MY_PUBSUB_TRIGGER=pubsub-trigger
 MY_GCS_TRIGGER=gcs-trigger
 
 MY_GCS_BUCKET=gcs-bucket
@@ -47,21 +44,6 @@ Create a bucket
 ```sh
 gsutil mb -p $(gcloud config get-value project) -l \
 us-central1 gs://"$MY_GCS_BUCKET"
-```
-
-Create a Cloud Pub/Sub topic:
-
-```sh
-gcloud pubsub topics create $MY_TOPIC
-```
-
-Create a Cloud Pub/Sub trigger:
-
-```sh
-gcloud alpha events triggers create $MY_PUBSUB_TRIGGER \
---target-service $MY_RUN_SERVICE \
---type com.google.cloud.pubsub.topic.publish \
---parameters topic=$MY_TOPIC
 ```
 
 Create Cloud Storage trigger
@@ -89,5 +71,5 @@ Cloud Logging.
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
 resource.labels.service_name=$MY_RUN_SERVICE" --project \
-$(gcloud config get-value project) --limit 200 --format 'value(textPayload)'
+$(gcloud config get-value project) --limit 50 --format 'value(textPayload)'
 ```
