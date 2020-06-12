@@ -51,6 +51,19 @@ if [[ $* == *--only-diff-head* ]]; then
     fi
 fi
 
+# Because Kokoro runs presubmit builds simalteneously, we often see
+# quota related errors. I think we can avoid this by changing the
+# order of tests to execute (e.g. reverse order for py-3.8
+# build). Currently there's no easy way to do that with btlr, so we
+# temporarily wait few minutes to avoid quota issue for py-3.8
+# presubmit build.
+if [[ "${RUN_TESTS_SESSION}" == "py-3.8" ]] \
+       && [[ "${KOKORO_JOB_NAME}" == *presubmit ]]; then
+    echo -n "Detected py-3.8 presubmit build,"
+    echo "Wait few minutes to avoid quota issues."
+    sleep 5m
+fi
+
 if [[ -z "${PROJECT_ROOT:-}" ]]; then
     PROJECT_ROOT="github/python-docs-samples"
 fi
