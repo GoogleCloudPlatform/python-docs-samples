@@ -486,6 +486,7 @@ order to simulate this locally, you need to copy + rename the parent
 run tests:
 
 ```console
+cd python-docs-samples
 cp noxfile-template.py PRODUCT/noxfile.py
 cd PRODUCT/
 nox -s lint
