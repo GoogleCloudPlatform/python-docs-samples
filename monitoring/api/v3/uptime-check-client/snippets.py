@@ -22,7 +22,7 @@ from google.cloud import monitoring_v3
 import tabulate
 
 
-# [START monitoring_uptime_check_create_get]
+# [START monitoring_uptime_check_create]
 def create_uptime_check_config_get(project_name, host_name=None,
                                display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
@@ -40,9 +40,7 @@ def create_uptime_check_config_get(project_name, host_name=None,
     new_config = client.create_uptime_check_config(project_name, config)
     pprint.pprint(new_config)
     return new_config
-# [END monitoring_uptime_check_create_get]
 
-# [START monitoring_uptime_check_create_post]
 def create_uptime_check_config_post(project_name, host_name=None,
                                display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
@@ -62,7 +60,7 @@ def create_uptime_check_config_post(project_name, host_name=None,
     new_config = client.create_uptime_check_config(project_name, config)
     pprint.pprint(new_config)
     return new_config
-# [END monitoring_uptime_check_create_post]
+# [END monitoring_uptime_check_create]
  
 # [START monitoring_uptime_check_update]
 def update_uptime_check_config(config_name, new_display_name=None,
