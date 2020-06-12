@@ -16,6 +16,8 @@ Configure project id
 gcloud config set project [PROJECT-ID]
 ```
 
+Configure environment variables 
+
 ```sh
 MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
