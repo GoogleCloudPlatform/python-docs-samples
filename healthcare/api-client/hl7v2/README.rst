@@ -17,6 +17,16 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 .. _Cloud Healthcare API: https://cloud.google.com/healthcare/docs
 
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+
+
+To run the sample, you need to have the following roles:
+* `Healthcare Dataset Administrator`
+* `Healthcare HL7v2 Store Administrator`
+* `Healthcare HL7v2 Message Editor`
+
+
+
 Setup
 -------------------------------------------------------------------------------
 
