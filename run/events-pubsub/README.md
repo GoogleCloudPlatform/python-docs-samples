@@ -1,20 +1,30 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes authenticated Pub/Sub 
-messages.
+This sample shows how to create a service that processes GCS events
 
 ## Setup
 
-First ensure you are authorized to your gcloud account via 
+Login to gcloud
 
 ```sh
 gcloud auth login
 ```
 
-Then make sure your project is configured via
+Configure project id
 
 ```sh
 gcloud config set project [PROJECT-ID]
+```
+
+Configure environment variables 
+
+```sh
+MY_RUN_SERVICE=gcs-service
+MY_RUN_CONTAINER=gcs-container
+
+MY_TOPIC=gcs-topic
+
+MY_PUBSUB_TRIGGER=pubsub-trigger
 ```
 
 ## Quickstart
@@ -23,104 +33,40 @@ Deploy your Cloud Run service:
 
 ```sh
 gcloud builds submit \
- --tag gcr.io/$(gcloud config get-value project)/cloudrun-events-pubsub
-gcloud run deploy cloudrun-events-pubsub \
- --image gcr.io/$(gcloud config get-value project)/cloudrun-events-pubsub
-```
-
-When asked if you want to allow unauthenticated invocations, say no 
-
-Retrieve container URL from the gcloud run deploy command executed above and 
-store it as seen below
-
-```sh
-MY_RUN_SERVICE=<container_running_instance_url>
+ --tag gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER
+gcloud run deploy $MY_RUN_SERVICE \
+ --image gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER \
+ --allow-unauthenticated
 ```
 
 Create a Cloud Pub/Sub topic:
 
 ```sh
-gcloud pubsub topics create my-topic
+gcloud pubsub topics create $MY_TOPIC
 ```
 
 Create a Cloud Pub/Sub trigger:
 
 ```sh
-gcloud alpha events triggers create pubsub-trigger \
---target-service cloudrun-events-pubsub \
+gcloud alpha events triggers create $MY_PUBSUB_TRIGGER \
+--target-service $MY_RUN_SERVICE \
 --type com.google.cloud.pubsub.topic.publish \
---parameters topic=my-topic
+--parameters topic=$MY_TOPIC
 ```
-
-Then store the pubsub subscription name into a variable for future commands. 
-First list your subscriptions by using the following command:
-
-```sh
-basename -a $(gcloud pubsub subscriptions list --format 'value(name)')
-```
-
-Grab a subscription name and save it to a variable SUBSCRIPTION
-
-```sh
-SUBSCRIPTION=<pubsub_subscription_name>
-```
-
-Finally we need to enable authenticated calls to the pub/sub trigger otherwise
-cloud run will reject the incoming unauthenticated pubsub trigger requests. 
-
-First we must choose a service account. You can list your service accounts via
-
-```sh
-gcloud iam service-accounts list
-```
-
-Choose an email and save it to a variable
-
-```sh
-SERVICE_ACCOUNT=<service_account_email>
-```
-
-Update pubsub subscription by doing the following:
-
-```sh
-gcloud pubsub subscriptions update $SUBSCRIPTION \
---push-auth-service-account=$SERVICE_ACCOUNT \
---push-auth-token-audience=$MY_RUN_SERVICE \
---push-endpoint=$(gcloud pubsub subscriptions describe $SUBSCRIPTION --format \
-'value(pushConfig.pushEndpoint)')
-```
-
-In future versions of gcloud you won't need to use the --push-endpoint flag
 
 ## Test
 
-Get a response from your Cloud Run Service using the following curl command.
-Please note that the string "V29ybGQ=" is simply the word "World" encoded using
-base64 encoding. All pubsub events have a base64 encoded message.data field.
+Test your Cloud Run service by publishing a message to the topic: 
 
 ```sh
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
---data '{"message": {"data": "V29ybGQ="}}' \
---header "Content-Type: application/json" $MY_RUN_SERVICE 
+gcloud pubsub topics publish $MY_TOPIC --message="John Doe"
 ```
 
-If everything is working you should have received a response of 
-"Hello World!"
-
-Now let's try sending an event using pubsub using the following gcloud command:
-
-```sh
-gcloud pubsub topics publish my-topic --message="John Doe"
-```
-
-You may use the following command to view and search through logs for all 
-responses containing the textPayload of `Hello {name}!`
+You may observe the Cloud Run service printing upon receiving an event in 
+Cloud Logging.
 
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
-resource.labels.service_name=cloudrun-events-pubsub" --project \
+resource.labels.service_name=$MY_RUN_SERVICE" --project \
 $(gcloud config get-value project) --limit 100 | grep Hello
 ```
-
-If the pubsub trigger was setup successfully, you should have seen 
-Hello John Doe somewhere in the above output.
