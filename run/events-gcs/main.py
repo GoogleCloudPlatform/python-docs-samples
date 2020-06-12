@@ -17,6 +17,8 @@ import os
 from flask import Flask, request
 
 
+required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
+
 app = Flask(__name__)
 # [END run_events_pubsub_server_setup]
 
@@ -24,10 +26,20 @@ app = Flask(__name__)
 # [START run_events_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
-    ce_subject = request.headers.get('Ce-Subject')
-    print(f"GCS CloudEvent type: {ce_subject}", 200)
+    for field in required_fields:
+        if field not in request.headers:
+            errmsg = f'Bad Request: missing required header {field}'
+            print(errmsg)
+            return errmsg, 400
 
-    return ('', 204)
+    if 'Ce-Subject' not in request.headers:
+        errmsg = 'Bad Request: expected header Ce-Subject'
+        print(errmsg)
+        return errmsg, 400
+
+    ce_subject = request.headers.get('Ce-Subject')
+    print(f'GCS CloudEvent type: {ce_subject}')
+    return (f'GCS CloudEvent type: {ce_subject}', 200)
 # [END run_events_pubsub_handler]
 
 
