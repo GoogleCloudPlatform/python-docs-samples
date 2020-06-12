@@ -63,7 +63,7 @@ Test your Cloud Run service by publishing a message to the topic:
 gsutil defstorageclass set STANDARD gs://$MY_GCS_BUCKET
 ```
 
-You may observe the Cloud Run service printing upon receiving an event in 
+Observe the Cloud Run service printing upon receiving an event in 
 Cloud Logging:
 
 ```sh
