@@ -13,11 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START bigtable_reads_imports]
+# [START bigtable_reads_print]
 from google.cloud import bigtable
 import google.cloud.bigtable.row_filters as row_filters
 from google.cloud.bigtable.row_set import RowSet
-# [END bigtable_reads_imports]
+
+# Write your function here!
+# [START_EXCLUDE]
+
 
 # [START bigtable_reads_row]
 def read_row(project_id, instance_id, table_id):
@@ -130,9 +133,9 @@ def read_filter(project_id, instance_id, table_id):
 
 
 # [END bigtable_reads_filter]
+# [END_EXCLUDE]
 
 
-# [START bigtable_reads_print]
 def print_row(row):
     print("Reading data for {}:".format(row.row_key.decode('utf-8')))
     for cf, cols in sorted(row.cells.items()):
