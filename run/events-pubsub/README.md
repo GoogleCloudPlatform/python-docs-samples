@@ -1,6 +1,6 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes GCS events.
+This sample shows how to create a service that processes Pub/Sub events.
 
 ## Setup
 
