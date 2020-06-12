@@ -1,22 +1,22 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes GCS events
+This sample shows how to create a service that processes GCS events.
 
 ## Setup
 
-Login to gcloud
+Login to gcloud:
 
 ```sh
 gcloud auth login
 ```
 
-Configure project id
+Configure project id:
 
 ```sh
 gcloud config set project [PROJECT-ID]
 ```
 
-Configure environment variables 
+Configure environment variables:
 
 ```sh
 MY_RUN_SERVICE=gcs-service
@@ -39,14 +39,14 @@ gcloud run deploy $MY_RUN_SERVICE \
  --allow-unauthenticated
 ```
 
-Create a bucket 
+Create a bucket:
 
 ```sh
 gsutil mb -p $(gcloud config get-value project) -l \
 us-central1 gs://"$MY_GCS_BUCKET"
 ```
 
-Create Cloud Storage trigger
+Create Cloud Storage trigger:
 
 ```sh
 gcloud alpha events triggers create $MY_GCS_TRIGGER \
@@ -66,7 +66,7 @@ gsutil defstorageclass set STANDARD gs://$MY_GCS_BUCKET
 ```
 
 You may observe the Cloud Run service printing upon receiving an event in 
-Cloud Logging.
+Cloud Logging:
 
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
