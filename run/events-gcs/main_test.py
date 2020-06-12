@@ -13,7 +13,7 @@
 # limitations under the License.
 import copy
 
-import uuid
+from uuid import uuid4
 
 import pytest
 
@@ -22,7 +22,7 @@ import main
 
 required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
 
-header_data = {field: str(uuid.uuid4()) for field in required_fields}
+header_data = {field: str(uuid4()) for field in required_fields}
 
 
 @pytest.fixture
