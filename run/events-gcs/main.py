@@ -24,8 +24,8 @@ app = Flask(__name__)
 # [START run_events_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
-    envelope = request.get_json()
-    print(f'Storage Headers: {request.headers}\n Storage Data: {envelope}', 200)
+    ce_subject = request.headers.get('Ce-Subject')
+    print(f"GCS CloudEvent type: {ce_subject}", 200)
 
     return ('', 204)
 # [END run_events_pubsub_handler]
