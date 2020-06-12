@@ -27,8 +27,12 @@ def search_all_resources(scope,
     from google.cloud import asset_v1
 
     client = asset_v1.AssetServiceClient()
-    response = client.search_all_resources(scope, query, asset_types, page_size,
-                                           order_by)
+    response = client.search_all_resources(
+        scope,
+        query=query,
+        asset_types=asset_types,
+        page_size=page_size,
+        order_by=order_by)
     for page in response.pages:
         for resource in page:
             print(resource)

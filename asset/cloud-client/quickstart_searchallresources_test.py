@@ -18,7 +18,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import InvalidArgument
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 import pytest
 
@@ -41,7 +41,7 @@ def asset_dataset(bigquery_client):
 
     try:
         bigquery_client.delete_dataset(dataset)
-    except Exception as e:
+    except NotFound as e:
         print('Failed to delete dataset {}'.format(DATASET))
         raise e
 
@@ -54,7 +54,7 @@ def test_search_all_resources(asset_dataset, capsys):
         backoff.expo, (AssertionError, InvalidArgument), max_time=30
     )
     def eventually_consistent_test():
-        quickstart_searchallresources.search_all_resources(scope, query)
+        quickstart_searchallresources.search_all_resources(scope, query=query)
         out, _ = capsys.readouterr()
 
         assert DATASET in out

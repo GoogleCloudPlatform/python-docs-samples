@@ -23,7 +23,8 @@ def search_all_iam_policies(scope, query=None, page_size=None):
     from google.cloud import asset_v1
 
     client = asset_v1.AssetServiceClient()
-    response = client.search_all_iam_policies(scope, query, page_size)
+    response = client.search_all_iam_policies(
+        scope, query=query, page_size=page_size)
     for page in response.pages:
         for policy in page:
             print(policy)
