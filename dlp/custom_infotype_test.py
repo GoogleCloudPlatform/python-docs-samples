@@ -28,6 +28,15 @@ def test_omit_name_if_also_email(capsys):
     assert info_types[0] == "EMAIL_ADDRESS"
 
 
+def test_inspect_with_person_name_w_custom_hotword(capsys):
+    custom_infotype.inspect_with_person_name_w_custom_hotword(
+        GCLOUD_PROJECT, "patient's name is John Doe.", "patient")
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PERSON_NAME" in out
+    assert "Likelihood: 5" in out
+
+
 def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
     custom_infotype.inspect_with_medical_record_number_custom_regex_detector(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222")
