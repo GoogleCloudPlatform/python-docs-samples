@@ -119,7 +119,7 @@ else:
 # [END db_setup]
 
 # Use a in-memort sqlite3 database when testing in Kokoro
-if os.getenv('TRAMPOLINE_IMAGE', None):
+if os.getenv('TRAMPOLINE_CI', None):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
