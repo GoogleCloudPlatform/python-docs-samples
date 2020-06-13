@@ -26,7 +26,7 @@ import tabulate
 def create_uptime_check_config_get(project_name, host_name=None,
                                display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
-    config.display_name = display_name or 'New uptime check'
+    config.display_name = display_name or 'New GET uptime check'
     config.monitored_resource.type = 'uptime_url'
     config.monitored_resource.labels.update(
         {'host': host_name or 'example.com'})
@@ -44,13 +44,13 @@ def create_uptime_check_config_get(project_name, host_name=None,
 def create_uptime_check_config_post(project_name, host_name=None,
                                display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
-    config.display_name = display_name or 'New uptime check'
+    config.display_name = display_name or 'New POST uptime check'
     config.monitored_resource.type = 'uptime_url'
     config.monitored_resource.labels.update(
         {'host': host_name or 'example.com'})
     config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.POST
     config.http_check.content_type = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED
-    config.http_check.body = 'foo=bar'
+    config.http_check.body = 'foo=bar'.encode('utf-8')
     config.http_check.path = '/'
     config.http_check.port = 80
     config.timeout.seconds = 10
@@ -64,7 +64,7 @@ def create_uptime_check_config_post(project_name, host_name=None,
  
 # [START monitoring_uptime_check_update]
 def update_uptime_check_config(config_name, new_display_name=None,
-                               new_http_check_path=None,
+                               new_http_check_path=None):
     client = monitoring_v3.UptimeCheckServiceClient()
     config = client.get_uptime_check_config(config_name)
     field_mask = monitoring_v3.types.FieldMask()
@@ -108,6 +108,8 @@ def get_uptime_check_config(config_name):
 
 
 # [START monitoring_uptime_check_delete]
+# `config_name` is the `name` field of an UptimeCheckConfig.
+# See https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.uptimeCheckConfigs#UptimeCheckConfig.
 def delete_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     client.delete_uptime_check_config(config_name)
