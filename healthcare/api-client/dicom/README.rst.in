@@ -14,6 +14,17 @@ product:
 
     .. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
 
+required_api_url: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+required_roles:
+- Healthcare Dataset Administrator
+- Healthcare DICOM Store Administrator
+- Healthcare DICOM Editor
+- Healthcare DICOM Viewer
+
+other_required_steps: >
+    You also need to give write access for the storage bucket to the Healthcare
+    Service agent service account.
+
 setup:
 - auth
 - install_deps

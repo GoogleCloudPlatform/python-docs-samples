@@ -15,9 +15,8 @@
 import os
 import uuid
 
-import pytest
-
 from google.cloud import storage
+import pytest
 
 from import_product_sets import import_product_sets
 from product_in_product_set_management import list_products_in_product_set
@@ -26,7 +25,7 @@ from product_set_management import delete_product_set, list_product_sets
 from reference_image_management import list_reference_images
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 FILENAME = uuid.uuid4()

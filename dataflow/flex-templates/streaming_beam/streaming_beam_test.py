@@ -12,7 +12,6 @@
 
 import multiprocessing as mp
 import os
-import pytest
 import subprocess as sp
 import tempfile
 import time
@@ -20,8 +19,10 @@ import uuid
 
 from google.cloud import bigquery
 from google.cloud import pubsub
+import pytest
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 UUID = str(uuid.uuid4()).split('-')[0]
 DATASET = 'beam_samples_{}'.format(UUID)
 TABLE = 'streaming_beam_sql'

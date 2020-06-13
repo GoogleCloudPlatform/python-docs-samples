@@ -16,7 +16,7 @@
 from google.cloud import translate
 
 
-def sample_detect_language(project_id="YOUR_PROJECT_ID"):
+def detect_language(project_id="YOUR_PROJECT_ID"):
     """Detecting the language of a text string."""
 
     client = translate.TranslationServiceClient()

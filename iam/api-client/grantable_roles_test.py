@@ -18,7 +18,7 @@ import grantable_roles
 
 
 def test_service_accounts(capsys):
-    project = os.environ['GCLOUD_PROJECT']
+    project = os.environ['GOOGLE_CLOUD_PROJECT']
     resource = '//cloudresourcemanager.googleapis.com/projects/' + project
     grantable_roles.view_grantable_roles(resource)
     out, _ = capsys.readouterr()

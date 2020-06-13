@@ -174,7 +174,7 @@ def delete_inspect_template(project, template_id):
 
 
 if __name__ == "__main__":
-    default_project = os.environ.get("GCLOUD_PROJECT")
+    default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(

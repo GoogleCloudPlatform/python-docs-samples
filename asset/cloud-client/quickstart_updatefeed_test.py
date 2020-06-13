@@ -15,19 +15,20 @@
 # limitations under the License.
 
 import os
-import time
+import uuid
+
+from google.cloud import pubsub_v1
+from google.cloud import resource_manager
 
 import quickstart_createfeed
 import quickstart_deletefeed
 import quickstart_updatefeed
-from google.cloud import resource_manager
-from google.cloud import pubsub_v1
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-ASSET_NAME = 'assets-{}'.format(int(time.time()))
-FEED_ID = 'feed-{}'.format(int(time.time()))
-TOPIC = 'topic-{}'.format(int(time.time()))
-NEW_TOPIC = 'new-topic-{}'.format(int(time.time()))
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+ASSET_NAME = 'assets-{}'.format(uuid.uuid4().hex)
+FEED_ID = 'feed-{}'.format(uuid.uuid4().hex)
+TOPIC = 'topic-{}'.format(uuid.uuid4().hex)
+NEW_TOPIC = 'new-topic-{}'.format(uuid.uuid4().hex)
 
 
 def test_update_feed(capsys):

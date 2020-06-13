@@ -14,12 +14,14 @@
 
 import os
 import random
+
+from google.cloud import bigtable
 import pytest
 
 from main import main
-from google.cloud import bigtable
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_FORMAT = 'quickstart-test-{}'
 TABLE_ID_RANGE = 10000

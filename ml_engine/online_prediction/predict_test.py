@@ -15,7 +15,6 @@
 import json
 import socket
 
-from flaky import flaky
 import pytest
 
 import predict
@@ -42,21 +41,21 @@ with open('resources/census_example_bytes.pb', 'rb') as f:
     BYTESTRING = f.read()
 
 
-@flaky
+@pytest.mark.flaky
 def test_predict_json():
     result = predict.predict_json(
         PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
 
 
-@flaky
+@pytest.mark.flaky
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
         predict.predict_json(
             PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
 
 
-@flaky
+@pytest.mark.flaky
 def test_census_example_to_bytes():
     import tensorflow as tf
     b = predict.census_to_example_bytes(JSON)
@@ -64,7 +63,7 @@ def test_census_example_to_bytes():
         BYTESTRING)
 
 
-@flaky(max_runs=6)
+@pytest.mark.flaky(max_runs=6)
 def test_predict_examples():
     result = predict.predict_examples(
         PROJECT, MODEL, [BYTESTRING, BYTESTRING], version=EXAMPLES_VERSION)

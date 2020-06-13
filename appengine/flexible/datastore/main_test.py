@@ -21,4 +21,4 @@ def test_index():
 
     r = client.get('/', environ_base={'REMOTE_ADDR': '127.0.0.1'})
     assert r.status_code == 200
-    assert '127.0' in r.data.decode('utf-8')
+    assert 'Last 10 visits' in r.data.decode('utf-8')

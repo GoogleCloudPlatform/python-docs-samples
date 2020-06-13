@@ -43,9 +43,9 @@ from threading import Lock
 import time
 
 from google.cloud import pubsub
+from google.oauth2 import service_account
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
 
 
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']

@@ -12,21 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import uuid
 
 from google.cloud import storage
 import pytest
 
-import storage_remove_file_owner
-import storage_remove_bucket_owner
-import storage_remove_bucket_default_owner
-import storage_add_file_owner
-import storage_add_bucket_owner
 import storage_add_bucket_default_owner
-import storage_print_bucket_acl_for_user
+import storage_add_bucket_owner
+import storage_add_file_owner
 import storage_print_bucket_acl
-import storage_print_file_acl_for_user
+import storage_print_bucket_acl_for_user
 import storage_print_file_acl
+import storage_print_file_acl_for_user
+import storage_remove_bucket_default_owner
+import storage_remove_bucket_owner
+import storage_remove_file_owner
 
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
@@ -39,6 +40,11 @@ TEST_EMAIL = (
 @pytest.fixture(scope="module")
 def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
+
+    # The new projects have uniform bucket-level access and our tests don't
+    # pass with those buckets. We need to use the old main project for now.
+    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
+    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
     bucket = None
     while bucket is None or bucket.exists():
         bucket_name = "acl-test-{}".format(uuid.uuid4())
@@ -46,6 +52,8 @@ def test_bucket():
     bucket.create()
     yield bucket
     bucket.delete(force=True)
+    # Set the value back.
+    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
 
 
 @pytest.fixture
