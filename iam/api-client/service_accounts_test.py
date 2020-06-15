@@ -22,21 +22,23 @@ import service_accounts
 
 def test_service_accounts(capsys):
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-    name = 'python-test-{}'.format(str(uuid.uuid4()).split('-')[0])
-    email = name + '@' + project_id + '.iam.gserviceaccount.com'
+    name = f'test-{uuid.uuid4().hex[:25]}'
 
     try:
-        service_accounts.create_service_account(
+        acct = service_accounts.create_service_account(
             project_id, name, 'Py Test Account')
+        assert('uniqueId' in acct)
+
+        unique_id = acct['uniqueId']
         service_accounts.list_service_accounts(project_id)
         service_accounts.rename_service_account(
-            email, 'Updated Py Test Account')
-        service_accounts.disable_service_account(email)
-        service_accounts.enable_service_account(email)
-        service_accounts.delete_service_account(email)
+            unique_id, 'Updated Py Test Account')
+        service_accounts.disable_service_account(unique_id)
+        service_accounts.enable_service_account(unique_id)
+        service_accounts.delete_service_account(unique_id)
     finally:
         try:
-            service_accounts.delete_service_account(email)
+            service_accounts.delete_service_account(unique_id)
         except HttpError as e:
             # When the service account doesn't exist, the service returns 403.
             if '403' in str(e):
