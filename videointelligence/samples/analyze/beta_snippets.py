@@ -62,7 +62,7 @@ def speech_transcription(input_uri):
     )
 
     operation = video_client.annotate_video(
-        input_uri, features=features, video_context=video_context
+        input_uri=input_uri, features=features, video_context=video_context
     )
 
     print("\nProcessing video for speech transcription.")
