@@ -57,6 +57,7 @@ def template_test():
         params=data
     )
     # [START trace_context_header]
+
     context = tracer.get_current_span()
     propagator.inject(set_header_into_requests_request, request_to_downstream, context=context)
     session = requests.Session()
@@ -73,11 +74,11 @@ def get_header_from_flask_request(request, key):
     return request.header.get_all(key)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--keyword", default="", help="name of the service.")
-    parser.add_argument("--endpoint", default="",
-                        help="endpoint to dispatch appended string, simply respond if not set")
+    parser.add_argument('--keyword', default='', help='name of the service.')
+    parser.add_argument('--endpoint', default='',
+                        help='endpoint to dispatch appended string, simply respond if not set')
     args = parser.parse_args()
     app.config['keyword'] = args.keyword
     app.config['endpoint'] = args.endpoint

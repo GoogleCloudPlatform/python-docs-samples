@@ -18,31 +18,34 @@ A sample app demonstrating Stackdriver Trace
 import httpretty
 
 import app
+import pdb
 
 
 def test_send_response():
-    service_keyword = "Hello"
+    service_keyword = 'Hello'
     app.app.testing = True
     app.app.config['keyword'] = service_keyword
-    app.app.config['endpoint'] = ""
+    app.app.config['endpoint'] = ''
     client = app.app.test_client()
     resp = client.get('/')
     assert resp.status_code == 200
     assert service_keyword in resp.data.decode('utf-8')
+    print (resp.status_code == 200)
+    print (service_keyword in resp.data.decode('utf-8'))
 
 
 @httpretty.activate
 def test_request_url_with_trace_context():
-    service1_keyword = "World"
-    service2_url = "http://example.com"
-    service2_keyword = "Hello"
+    service1_keyword = 'World'
+    service2_url = 'http://example.com'
+    service2_keyword = 'Hello'
     app.app.testing = True
     app.app.config['keyword'] = service1_keyword
     app.app.config['endpoint'] = service2_url
 
     def request_callback(request, uri, response_headers):
         # Assert that the request is sent with a trace context
-        assert request.headers.get("X-Cloud-Trace-Context")
+        assert request.headers.get('X-Cloud-Trace-Context')
         return [200, response_headers, service2_keyword]
 
     httpretty.register_uri(httpretty.GET, service2_url, body=request_callback)
