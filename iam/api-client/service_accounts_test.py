@@ -22,7 +22,7 @@ import service_accounts
 
 def test_service_accounts(capsys):
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-    name = 'python-test-{}'.format(str(uuid.uuid4()).split('-')[0])
+    name = f'test-{uuid.uuid4().hex[:25]}'
     email = name + '@' + project_id + '.iam.gserviceaccount.com'
 
     try:
