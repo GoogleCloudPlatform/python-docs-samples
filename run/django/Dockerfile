@@ -5,7 +5,10 @@ FROM python:3.8-slim
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# Install dependencies.
+# Removes output stream buffering, allowing for more efficient logging
+ENV PYTHONUNBUFFERED 1
+
+# Install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
