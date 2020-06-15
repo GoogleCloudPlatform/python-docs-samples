@@ -19,8 +19,8 @@ import main
 
 
 class Response(object):
-    def __init__(self, content=u''):
-        self.content = content
+    def __init__(self, text=u''):
+        self.text = text
 
 
 @mock.patch("main.requests")

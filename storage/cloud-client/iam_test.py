@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 import time
 import uuid
@@ -36,7 +37,7 @@ CONDITION_EXPRESSION = (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def bucket():
     bucket = None
     while bucket is None or bucket.exists():
@@ -48,6 +49,26 @@ def bucket():
     yield bucket
     time.sleep(3)
     bucket.delete(force=True)
+
+
+@pytest.fixture(scope="function")
+def public_bucket():
+    # The new projects don't allow to make a bucket available to public, so
+    # we need to use the old main project for now.
+    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
+    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
+    bucket = None
+    while bucket is None or bucket.exists():
+        storage_client = storage.Client()
+        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket = storage_client.bucket(bucket_name)
+        bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    storage_client.create_bucket(bucket)
+    yield bucket
+    time.sleep(3)
+    bucket.delete(force=True)
+    # Set the value back.
+    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
 
 
 def test_view_bucket_iam_members(capsys, bucket):
@@ -87,10 +108,11 @@ def test_add_bucket_conditional_iam_binding(bucket):
     )
 
 
-def test_remove_bucket_iam_member(bucket):
-    storage_remove_bucket_iam_member.remove_bucket_iam_member(bucket.name, ROLE, MEMBER)
+def test_remove_bucket_iam_member(public_bucket):
+    storage_remove_bucket_iam_member.remove_bucket_iam_member(
+        public_bucket.name, ROLE, MEMBER)
 
-    policy = bucket.get_iam_policy(requested_policy_version=3)
+    policy = public_bucket.get_iam_policy(requested_policy_version=3)
     assert not any(
         binding["role"] == ROLE and MEMBER in binding["members"]
         for binding in policy.bindings
@@ -114,13 +136,13 @@ def test_remove_bucket_conditional_iam_binding(bucket):
     )
 
 
-def test_set_bucket_public_iam(bucket):
+def test_set_bucket_public_iam(public_bucket):
     role = "roles/storage.objectViewer"
     member = "allUsers"
     storage_set_bucket_public_iam.set_bucket_public_iam(
-        bucket.name, role, member
+        public_bucket.name, role, member
     )
-    policy = bucket.get_iam_policy(requested_policy_version=3)
+    policy = public_bucket.get_iam_policy(requested_policy_version=3)
     assert any(
         binding["role"] == role and member in binding["members"]
         for binding in policy.bindings
