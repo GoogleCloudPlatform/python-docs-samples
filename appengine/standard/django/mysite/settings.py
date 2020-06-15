@@ -134,7 +134,7 @@ else:
     }
 # [END db_setup]
 
-# Use a in-memort sqlite3 database when testing in Kokoro
+# Use a in-memory sqlite3 database when testing in CI systems
 if os.getenv('TRAMPOLINE_CI', None):
     DATABASES = {
         'default': {
