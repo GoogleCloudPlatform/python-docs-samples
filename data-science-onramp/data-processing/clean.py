@@ -117,13 +117,18 @@ def compute_end(duration, start, end):
     '''Calculates end time from duration and start time if null.'''
     return compute_time(duration, start, end)[2]
 
+def backfill(df):
+    path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
+    df.write.options(codec='org.apache.hadoop.io.compress.GzipCodec').csv(path)
+
 def main():
-    '''...'''
     # Create a SparkSession under the name 'clean'. Viewable via the Spark UI
     spark = SparkSession.builder.appName('clean').getOrCreate()
 
+    # Whether to backfill data to GCS bucket
+    upload = True
+
     # Check if table exists
-    
     try:
         df = spark.read.format('bigquery').option('table', TABLE).load()
     except Py4JJavaError:
@@ -165,7 +170,10 @@ def main():
     for name, obj in multi_udfs.items():
         df = df.withColumn(name, UserDefinedFunction(*obj['udf'])(*obj['params']))
 
-    df.show(n=100)
+    if upload:
+        backfill(df)
+    else:
+        df.show(n=100)
 
 if __name__ == '__main__':
     main()
