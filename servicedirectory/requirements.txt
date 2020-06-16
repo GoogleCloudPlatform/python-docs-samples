@@ -1,0 +1,1 @@
+google-cloud-service-directory==0.3.0
