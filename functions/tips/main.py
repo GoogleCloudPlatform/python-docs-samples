@@ -204,7 +204,7 @@ def avoid_infinite_retries(data, context):
 
     # Do what the function is supposed to do
     print('Processed {} (age {}ms)'.format(context.event_id, event_age_ms))
-    return
+    return  # To retry the execution, raise an exception here
 # [END functions_tips_infinite_retries]
 
 
