@@ -106,7 +106,7 @@ def get_blob_from_path(path):
 
 
 def is_in_table(value, out):
-    return re.search(f"\\| *{value}\\|", out)
+    return re.search(f"\\|{value} *\\|", out)
 
 
 def test_setup():
@@ -128,16 +128,16 @@ def test_setup():
     out = blob.download_as_string().decode("utf-8")
 
     # tripDuration
-    assert re.search("[0-9] s", out)
-    assert re.search("[0-9] m", out)
-    assert re.search("[0-9] h", out)
+    assert is_in_table("(\\d+(?:\\.\\d+)?) s", out)
+    assert is_in_table("(\\d+(?:\\.\\d+)?) min", out)
+    assert is_in_table("(\\d+(?:\\.\\d+)?) h", out)
 
     # station latitude & longitude
-    assert re.search(u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
+    assert is_in_table("[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
 
     # birth_year
-    assert re.search("19[0-9][0-9]\\|", out)
-    assert re.search("20[0-9][0-9]\\|", out)
+    assert is_in_table("19[0-9][0-9]", out)
+    assert is_in_table("20[0-9][0-9]", out)
 
     # gender
     assert is_in_table("M", out)
