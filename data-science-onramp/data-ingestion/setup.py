@@ -10,7 +10,7 @@ from pyspark.sql.types import StringType
 
 BUCKET_NAME = sys.argv[1]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
-RAW_DATASET_NAME = "new_york_citibike_trips5"
+RAW_DATASET_NAME = "new_york_citibike_trips"
 RAW_TABLE_NAME = "RAW_DATA"
 
 
@@ -77,7 +77,7 @@ def write_to_bigquery(df):
 
     # Saving the data to BigQuery
     df.write.format('bigquery') \
-        .option('table', dataset_id + f".{RAW_TABLE_NAME}") \
+        .option('table', f"{dataset_id}.{RAW_TABLE_NAME}") \
         .option("temporaryGcsBucket", BUCKET_NAME) \
         .save()
 
