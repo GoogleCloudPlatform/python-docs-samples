@@ -4,8 +4,8 @@ import sys
 from google.cloud import bigquery
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import UserDefinedFunction, when, expr
-from pyspark.sql.types import IntegerType, StringType
+from pyspark.sql.functions import expr, UserDefinedFunction, when
+from pyspark.sql.types import StringType
 
 
 BUCKET_NAME = sys.argv[1]
@@ -23,8 +23,8 @@ def trip_duration(duration):
     minutes = str(float(duration) / 60) + " min"
     hours = str(float(duration) / 3600) + " h"
     return random.choices([seconds, minutes, hours,
-                         str(random.randint(-1000, -1))],
-                         weights=[0.3, 0.3, 0.3, 0.1])[0]
+                          str(random.randint(-1000, -1))],
+                          weights=[0.3, 0.3, 0.3, 0.1])[0]
 
 
 def station_name(name):
@@ -117,7 +117,7 @@ def main():
             'usertype': (user_type, StringType()),
             'gender': (gender, StringType()),
     }
-    
+
     # Declare which columns to set some values to null randomly
     null_columns = [
             'tripduration',
@@ -147,6 +147,7 @@ def main():
         write_to_bigquery(df)
     else:
         df.sample(True, 0.0001).show(n=500, truncate=False)
+
 
 if __name__ == '__main__':
     main()
