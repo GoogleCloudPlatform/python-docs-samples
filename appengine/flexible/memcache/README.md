@@ -17,7 +17,7 @@ to do so is to use a Bitnami click-to-deploy:
 
 https://bitnami.com/stack/memcached/cloud/google
 
-Built-in Memcache for Flexible environments is currently in a whitelist-only alpha. To have your project whitelisted,
+Built-in Memcache for Flexible environments is currently in a allowlist-only alpha. To have your project allowlisted,
 see the signup form here:
 
 https://cloud.google.com/appengine/docs/flexible/python/upgrading#memcache_service

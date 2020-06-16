@@ -4,7 +4,7 @@ Cloud Healthcare API Python Samples
 ===============================================================================
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/datasets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/v1/datasets/README.rst
 
 
 This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`_ implements healthcare-native protocols and formats to accelerate ingestion, storage, analysis, and integration of healthcare data with cloud-based applications.
@@ -16,6 +16,13 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 
 .. _Cloud Healthcare API: https://cloud.google.com/healthcare/docs
+
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+
+To run the sample, you need to have `Healthcare Dataset Administrator` role.
+
+
+
 
 Setup
 -------------------------------------------------------------------------------
@@ -68,7 +75,7 @@ Datasets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/datasets/datasets.py,healthcare/api-client/datasets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/v1/datasets/datasets.py,healthcare/api-client/v1/datasets/README.rst
 
 
 
@@ -80,8 +87,8 @@ To run this sample:
     $ python datasets.py
 
     usage: datasets.py [-h] [--project_id PROJECT_ID]
-                       [--cloud_region CLOUD_REGION]
-                       [--dataset_id DATASET_ID] [--time_zone TIME_ZONE]
+                       [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+                       [--time_zone TIME_ZONE]
                        [--destination_dataset_id DESTINATION_DATASET_ID]
                        [--keeplist_tags KEEPLIST_TAGS] [--member MEMBER]
                        [--role ROLE]
