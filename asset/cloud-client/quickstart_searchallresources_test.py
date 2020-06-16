@@ -15,10 +15,10 @@
 # limitations under the License.
 
 import os
+import time
 import uuid
 
-import backoff
-from google.api_core.exceptions import InvalidArgument, NotFound
+from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 import pytest
 
@@ -49,14 +49,8 @@ def asset_dataset(bigquery_client):
 def test_search_all_resources(asset_dataset, capsys):
     scope = "projects/{}".format(PROJECT)
     query = "name:{}".format(DATASET)
+    time.sleep(10)
+    quickstart_searchallresources.search_all_resources(scope, query=query)
+    out, _ = capsys.readouterr()
 
-    @backoff.on_exception(
-        backoff.expo, (AssertionError, InvalidArgument), max_time=30
-    )
-    def eventually_consistent_test():
-        quickstart_searchallresources.search_all_resources(scope, query=query)
-        out, _ = capsys.readouterr()
-
-        assert DATASET in out
-
-    eventually_consistent_test()
+    assert DATASET in out
