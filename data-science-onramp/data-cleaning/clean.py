@@ -1,11 +1,10 @@
-import os
 import sys
 import re
 import datetime
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import UserDefinedFunction, lit
+from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import StringType, IntegerType, FloatType
 
 
@@ -15,61 +14,67 @@ TABLE = f'{PROJECT_ID}.new_york_citibike_trips.RAW_DATA'
 
 def trip_duration(duration):
     '''Convert trip duration to seconds.'''
-    if duration:
-        number = re.match('\d*.\d', duration)
-        if number:
-            number = float(number[0])
-        else:
-            return None
+    if not duration:
+        return None
+    
+    time = re.match('\d*.\d', duration)
 
-        if 's' in duration:
-            return int(number)
-        elif 'm' in duration:
-            return int(number * 60)
-        elif 'h' in duration:
-            return int(number * 60 * 60)
-        else:
-            if number < 0:
-                return None
-            else:
-                return int(number)
+    if not time:
+        return None
+
+    time = float(time[0])
+
+    if time < 0:
+        return None
+
+    if 'm' in duration:
+        time *= 60
+    elif 'h' in duration:
+        time *= 60 * 60
+    
+    return int(time)
 
 def station_name(name):
     '''Replaces '/' with '&'.'''
-    if name:
-        return name.replace('/', '&')
+    return name.replace('/', '&') if name else None
 
 def user_type(user):
     '''Converts user type to 'Subscriber' or 'Customer'.'''
-    if user:
-        if user.lower().startswith('sub'):
-            return 'Subscriber'
-        elif user.lower().startswith('cust'):
-            return 'Customer'
-        else:
-            return None
+    if not user:
+        return None
+    
+    if user.lower().startswith('sub'):
+        return 'Subscriber'
+    elif user.lower().startswith('cust'):
+        return 'Customer'
+    else:
+        return None
 
-def gender(s):
+def gender(g):
     '''Converts gender to 'Male' or 'Female' or '''
-    if s:
-        if s.lower().startswith('m'):
-            return 'Male'
-        elif s.lower().startswith('f'):
-            return 'Female'
-        else:
-            return None
+    if not g:
+        return None
+    
+    if g.lower().startswith('m'):
+        return 'Male'
+    elif g.lower().startswith('f'):
+        return 'Female'
+    else:
+        return None
 
 def angle(a):
     '''Converts DMS notation to angles.'''
-    if a:
-        dms = re.match('(-?\d*).(-?\d*)\'(-?\d*)"', a)
-        if dms:
-            return int(dms[1]) + int(dms[2])/60 + int(dms[3])/(60 * 60)
-        else:
-            try:
-                return float(a)
-            except ValueError:
-                return None
+    if not a:
+        return None
+    
+    dms = re.match('(-?\d*).(-?\d*)\'(-?\d*)"', a)
+    if dms:
+        return int(dms[1]) + int(dms[2])/60 + int(dms[3])/(60 * 60)
+    else:
+        try:
+            return float(a)
+        except ValueError:
+            return None
 
 def compute_time(duration, start, end):
     '''Calculates duration, start time, and end time from each other if one value is null.'''
@@ -118,15 +123,20 @@ def compute_end(duration, start, end):
     return compute_time(duration, start, end)[2]
 
 def backfill(df):
+    '''Writes a dataframe to a GCP bucket.'''
     path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
     df.write.options(codec='org.apache.hadoop.io.compress.GzipCodec').csv(path)
+    return path
 
 def main():
-    # Create a SparkSession under the name 'clean'. Viewable via the Spark UI
-    spark = SparkSession.builder.appName('clean').getOrCreate()
+    # Create a SparkSession under the name 'data_cleaning'. Viewable via the Spark UI
+    spark = SparkSession.builder.appName('data_cleaning').getOrCreate()
 
     # Whether to backfill data to GCS bucket
     upload = True
+    if '--test' in sys.argv:
+        upload = False
+        print('Results will not be backfilled into GCS bucket')
 
     # Check if table exists
     try:
@@ -171,9 +181,10 @@ def main():
         df = df.withColumn(name, UserDefinedFunction(*obj['udf'])(*obj['params']))
 
     if upload:
-        backfill(df)
-    else:
-        df.show(n=100)
+        gcs_path = backfill(df)
+    
+    df.sample(False, 0.0001).show(n=100)
 
 if __name__ == '__main__':
     main()
+    
