@@ -15,7 +15,6 @@
 # limitations under the License.
 
 from os import environ
-import pytest
 import snippets
 from google.cloud import servicedirectory_v1beta1
 
@@ -28,7 +27,7 @@ ADDRESS = '1.2.3.4'
 PORT = 443
 
 
-def teardown_module(module):
+def teardown_module():
   client = servicedirectory_v1beta1.RegistrationServiceClient()
   response = client.list_namespaces(
       parent='projects/{0}/locations/{1}'.format(PROJECT_ID, LOCATION_ID))

@@ -17,8 +17,8 @@
 from os import environ
 import pytest
 import quickstart
-from google.cloud import servicedirectory_v1beta1
 from google.api_core import exceptions
+from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 LOCATION_ID = environ['GOOGLE_CLOUD_LOCATION']
@@ -29,10 +29,9 @@ def test_list_namespace():
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
   namespace = servicedirectory_v1beta1.Namespace(
-      name='projects/{0}/locations/{1}/namespaces/{2}'.format(
-          PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
+      name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
 
-  created = False;
+  created = False
   try:
     response = client.get_namespace(name=namespace.name)
   except exceptions.NotFound as e:

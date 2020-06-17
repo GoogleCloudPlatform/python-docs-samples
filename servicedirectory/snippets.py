@@ -23,8 +23,7 @@ def create_namespace(project_id, location_id, namespace_id):
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
   namespace = servicedirectory_v1beta1.Namespace(
-      name='projects/{0}/locations/{1}/namespaces/{2}'.format(
-          project_id, location_id, namespace_id))
+      name=client.namespace_path(project_id, location_id, namespace_id))
 
   response = client.create_namespace(
       parent='projects/{0}/locations/{1}'.format(project_id, location_id),
@@ -42,8 +41,7 @@ def delete_namespace(project_id, location_id, namespace_id):
 
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
-  namespace_name = 'projects/{0}/locations/{1}/namespaces/{2}'.format(
-      project_id, location_id, namespace_id)
+  namespace_name = client.namespace_path(project_id, location_id, namespace_id)
 
   client.delete_namespace(name=namespace_name)
 
@@ -56,12 +54,11 @@ def create_service(project_id, location_id, namespace_id, service_id):
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
   service = servicedirectory_v1beta1.Service(
-      name='projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
-          project_id, location_id, namespace_id, service_id))
+      name=client.service_path(project_id, location_id, namespace_id,
+                               service_id))
 
   response = client.create_service(
-      parent='projects/{0}/locations/{1}/namespaces/{2}'.format(
-          project_id, location_id, namespace_id),
+      parent=client.namespace_path(project_id, location_id, namespace_id),
       service=service,
       service_id=service_id,
   )
@@ -76,8 +73,8 @@ def delete_service(project_id, location_id, namespace_id, service_id):
 
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
-  service_name = 'projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
-      project_id, location_id, namespace_id, service_id)
+  service_name = client.service_path(project_id, location_id, namespace_id,
+                                     service_id)
 
   client.delete_service(name=service_name)
 
@@ -90,7 +87,7 @@ def resolve_service(project_id, location_id, namespace_id, service_id):
   client = servicedirectory_v1beta1.LookupServiceClient()
 
   request = servicedirectory_v1beta1.ResolveServiceRequest(
-      name='projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
+      name=servicedirectory_v1beta1.RegistrationServiceClient().service_path(
           project_id, location_id, namespace_id, service_id))
 
   response = client.resolve_service(request=request)
@@ -110,17 +107,17 @@ def create_endpoint(project_id, location_id, namespace_id, service_id,
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
   endpoint = servicedirectory_v1beta1.Endpoint(
-      name='projects/{0}/locations/{1}/namespaces/{2}/services/{3}/endpoints/{4}'
-      .format(project_id, location_id, namespace_id, service_id, endpoint_id),
+      name=client.endpoint_path(project_id, location_id, namespace_id,
+                                service_id, endpoint_id),
       address=address,
       port=port)
 
   response = client.create_endpoint(
-      parent='projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
-          project_id, location_id, namespace_id, service_id),
+      parent=client.service_path(project_id, location_id, namespace_id,
+                                 service_id),
       endpoint=endpoint,
       endpoint_id=endpoint_id,
-    )
+  )
 
   print('Created endpoint {0}.'.format(response.name))
 
@@ -133,8 +130,8 @@ def delete_endpoint(project_id, location_id, namespace_id, service_id,
 
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
-  endpoint_name = 'projects/{0}/locations/{1}/namespaces/{2}/services/{3}/endpoints/{4}'.format(
-      project_id, location_id, namespace_id, service_id, endpoint_id)
+  endpoint_name = client.endpoint_path(project_id, location_id, namespace_id,
+                                       service_id, endpoint_id)
 
   client.delete_endpoint(name=endpoint_name)
 
