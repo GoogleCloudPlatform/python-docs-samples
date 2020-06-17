@@ -384,6 +384,8 @@ def update_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
+    # The body shown works with a Patient resource and is not guaranteed
+    # to work with other types of FHIR resources.
     body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
     response = session.put(resource_path, headers=headers, json=body)
@@ -422,6 +424,8 @@ def patch_resource(
 
     headers = {"Content-Type": "application/json-patch+json"}
 
+    # The body shown works with a Patient resource and is not guaranteed
+    # to work with other types of FHIR resources.
     body = json.dumps([{"op": "replace", "path": "/active", "value": False}])
 
     response = session.patch(resource_path, headers=headers, data=body)
