@@ -20,7 +20,7 @@ import snippets
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
-LOCATION_ID = environ['GCLOUD_LOCATION']
+LOCATION_ID = environ['GOOGLE_CLOUD_LOCATION']
 NAMESPACE_ID = 'test-namespace'
 SERVICE_ID = 'test-service'
 ENDPOINT_ID = 'test-endpoint'
@@ -33,13 +33,7 @@ def teardown_module(module):
   response = client.list_namespaces(
       parent='projects/{0}/locations/{1}'.format(PROJECT_ID, LOCATION_ID))
   for namespace in response.namespaces:
-    client.delete_namespace(
-        name=namespace.name,
-        metadata=[[
-            'x-goog-request-params',
-            'name=projects/{0}/locations/{1}/namespaces/{2}'.format(
-                PROJECT_ID, LOCATION_ID, namespace.name)
-        ]])
+    client.delete_namespace(name=namespace.name)
 
 
 def test_create_namespace():
