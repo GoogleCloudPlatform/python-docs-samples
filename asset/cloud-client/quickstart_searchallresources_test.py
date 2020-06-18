@@ -50,7 +50,8 @@ def test_search_all_resources(asset_dataset, capsys):
     scope = "projects/{}".format(PROJECT)
     query = "name:{}".format(DATASET)
 
-    # The test will fail before the dataset creation event goes to CAI.
+    # Dataset creation takes some time to propagate, so the dataset is not
+    # immediately searchable. Need some time before the snippet will pass.
     @backoff.on_exception(
         backoff.expo, (AssertionError), max_time=30
     )
