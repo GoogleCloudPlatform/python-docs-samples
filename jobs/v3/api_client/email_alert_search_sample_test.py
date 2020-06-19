@@ -33,7 +33,7 @@ def retry_delay():
 
 def test_email_alert_search_sample(company_name, capsys):
 
-    @backoff.on_exception(retry_delay, AssertionError, max_time=240)
+    @backoff.on_exception(retry_delay, AssertionError, max_time=300)
     def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
