@@ -4,6 +4,6 @@ google-cloud-storage==1.30.0
 google-cloud-automl==1.0.1
 =======
 google-cloud-translate==2.0.1
-google-cloud-storage==1.28.1
+google-cloud-storage==1.29.0
 google-cloud-automl==0.10.0
 >>>>>>> 1a45813d (chore(deps): update dependency google-cloud-storage to v1.28.0 [(#3260)](https://github.com/GoogleCloudPlatform/python-docs-samples/issues/3260))
