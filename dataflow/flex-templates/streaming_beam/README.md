@@ -100,7 +100,7 @@ transforms the message data, and writes the results to a
 [BigQuery](https://cloud.google.com/bigquery) table.
 
 * [Dockerfile](Dockerfile)
-* [streaming_beam.py](streaming_beam)
+* [streaming_beam.py](streaming_beam.py)
 * [metadata.json](metadata.json)
 
 ### Building a container image
