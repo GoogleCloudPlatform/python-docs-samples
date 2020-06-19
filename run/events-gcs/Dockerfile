@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_events_pubsub_dockerfile]
+# [START run_events_gcs_dockerfile]
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
@@ -38,4 +38,4 @@ COPY . ./
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-# [END run_events_pubsub_dockerfile]
+# [END run_events_gcs_dockerfile]
