@@ -29,7 +29,7 @@ If you are using the provided image, skip to the next section.
     
 7. Change the image variables of the following files to:
     
-    `gcr.ip/${PROJECT-ID}/cloud-trace-demo-test:v1`
+    `gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
     
     * [YAML](./app/demo-service-a.yaml)
     * [template B](./app/demo-service-b.yaml.template)
@@ -55,7 +55,7 @@ If you are using the provided image, skip to the next section.
 12. Send request to Service C:
 
     `curl -w "\n" $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-12. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
+12. Visit [Trace List](https://console.cloud.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     
     ![Screenshot](example-trace.png)

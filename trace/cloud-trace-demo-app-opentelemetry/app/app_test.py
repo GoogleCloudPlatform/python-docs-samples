@@ -30,9 +30,6 @@ def test_send_response():
     resp = client.get('/')
     assert resp.status_code == 200
     assert service_keyword in resp.data.decode('utf-8')
-    print (resp.status_code == 200)
-    print (service_keyword in resp.data.decode('utf-8'))
-
 
 @httpretty.activate
 def test_request_url_with_trace_context():
