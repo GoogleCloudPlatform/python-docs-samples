@@ -19,7 +19,7 @@ import datetime
 from google.cloud import bigtable
 import google.cloud.bigtable.row_filters as row_filters
 
-# Write your function here!
+# Write your code here.
 # [START_EXCLUDE]
 
 

@@ -20,13 +20,15 @@ import uuid
 
 from google.cloud import bigtable
 from google.cloud.bigtable import enums
-from mock import patch
-import pytest
 
 from metricscaler import get_cpu_load
 from metricscaler import get_storage_utilization
 from metricscaler import main
 from metricscaler import scale_bigtable
+
+from mock import patch
+import pytest
+
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BIGTABLE_ZONE = os.environ['BIGTABLE_ZONE']

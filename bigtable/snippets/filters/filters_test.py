@@ -16,9 +16,11 @@ import datetime
 import os
 import uuid
 
-import filter_snippets
 from google.cloud import bigtable
+
 import pytest
+
+import filter_snippets
 
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']

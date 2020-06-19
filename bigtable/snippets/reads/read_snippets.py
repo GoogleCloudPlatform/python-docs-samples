@@ -18,7 +18,7 @@ from google.cloud import bigtable
 import google.cloud.bigtable.row_filters as row_filters
 from google.cloud.bigtable.row_set import RowSet
 
-# Write your function here!
+# Write your code here.
 # [START_EXCLUDE]
 
 
