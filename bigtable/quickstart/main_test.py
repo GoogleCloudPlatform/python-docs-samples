@@ -16,8 +16,9 @@ import os
 import random
 
 from google.cloud import bigtable
-from main import main
 import pytest
+
+from main import main
 
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
