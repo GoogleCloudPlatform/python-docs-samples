@@ -1,10 +1,12 @@
-# Copyright 2020 Google LLC
+#!/usr/bin/env python
+
+# Copyright 2020 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,21 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Format: //devtools/kokoro/config/proto/build.proto
+import os
 
-# Tell the trampoline which build file to use.
-env_vars: {
-    key: "TRAMPOLINE_BUILD_FILE"
-    value: ".kokoro/tests/run_tests.sh"
-}
+import quickstart_searchalliampolicies
 
-env_vars: {
-    key: "REPORT_TO_BUILD_COP_BOT"
-    value: "true"
-}
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
-# Tell Trampoline to upload the Docker image after successfull build.
-env_vars: {
-    key: "TRAMPOLINE_IMAGE_UPLOAD"
-    value: "true"
-}
+
+def test_search_all_iam_policies(capsys):
+    scope = "projects/{}".format(PROJECT)
+    query = "policy:roles/owner"
+    quickstart_searchalliampolicies.search_all_iam_policies(scope, query=query)
+    out, _ = capsys.readouterr()
+    assert "roles/owner" in out
