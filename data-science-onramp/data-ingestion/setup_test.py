@@ -34,9 +34,6 @@ CLUSTER_DATA = {  # Create cluster configuration
     'config': {
         'gce_cluster_config': {
             'zone_uri': '',
-            "metadata": {
-                "PIP_PACKAGES": "google-cloud-storage"
-            },
         },
         'master_config': {
             'num_instances': 1,
@@ -46,12 +43,6 @@ CLUSTER_DATA = {  # Create cluster configuration
             'num_instances': 6,
             'machine_type_uri': 'n1-standard-8'
         },
-        "initialization_actions": [
-            {
-                "executable_file": ("gs://dataproc-initialization-actions/"
-                                    "python/pip-install.sh"),
-            }
-        ],
         "software_config": {
             "image_version": "1.5.4-debian10",
             "optional_components": [
