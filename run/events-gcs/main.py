@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START run_events_pubsub_server_setup]
+# [START run_events_gcs_server_setup]
 import os
 
 from flask import Flask, request
@@ -20,10 +20,10 @@ from flask import Flask, request
 required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
 
 app = Flask(__name__)
-# [END run_events_pubsub_server_setup]
+# [END run_events_gcs_server_setup]
 
 
-# [START run_events_pubsub_handler]
+# [START run_events_gcs_handler]
 @app.route('/', methods=['POST'])
 def index():
     for field in required_fields:
@@ -40,10 +40,10 @@ def index():
     ce_subject = request.headers.get('Ce-Subject')
     print(f'GCS CloudEvent type: {ce_subject}')
     return (f'GCS CloudEvent type: {ce_subject}', 200)
-# [END run_events_pubsub_handler]
+# [END run_events_gcs_handler]
 
 
-# [START run_events_pubsub_server]
+# [START run_events_gcs_server]
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-# [END run_events_pubsub_server]
+# [END run_events_gcs_server]
