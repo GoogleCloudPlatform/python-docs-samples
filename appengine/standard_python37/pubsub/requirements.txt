@@ -2,3 +2,5 @@ Flask==1.1.2
 google-api-python-client==1.9.3
 google-auth==1.17.2
 google-cloud-pubsub==1.6.0
+google-auth==1.18.0
+google-cloud-pubsub==1.6.0
