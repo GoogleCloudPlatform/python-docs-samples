@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START bigtable_filters_limit_timestamp_range]
+import datetime
+
+# [END bigtable_filters_limit_timestamp_range]
+
 # [START bigtable_filters_limit_row_sample]
 # [START bigtable_filters_limit_row_regex]
 # [START bigtable_filters_limit_cells_per_col]
@@ -53,11 +58,6 @@ import google.cloud.bigtable.row_filters as row_filters
 # [END bigtable_filters_composing_interleave]
 # [END bigtable_filters_composing_condition]
 
-# [START bigtable_filters_limit_timestamp_range]
-import datetime
-
-
-# [END bigtable_filters_limit_timestamp_range]
 
 # [START bigtable_filters_limit_row_sample]
 def filter_limit_row_sample(project_id, instance_id, table_id):

@@ -46,7 +46,7 @@ def sample_async_batch_annotate_images(
     operation = client.async_batch_annotate_images(requests, output_config)
 
     print("Waiting for operation to complete...")
-    response = operation.result()
+    response = operation.result(90)
 
     # The output is written to GCS with the provided output_uri as prefix
     gcs_output_uri = response.output_config.gcs_destination.uri

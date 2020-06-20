@@ -19,7 +19,7 @@ import uuid
 from detect_intent_with_sentiment_analysis import \
     detect_intent_with_sentiment_analysis
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 SESSION_ID = 'test_{}'.format(uuid.uuid4())
 TEXTS = ["hello", "book a meeting room", "Mountain View",
          "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]

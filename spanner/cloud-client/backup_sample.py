@@ -42,7 +42,7 @@ def create_backup(instance_id, database_id, backup_id):
     operation = backup.create()
 
     # Wait for backup operation to complete.
-    operation.result()
+    operation.result(1200)
 
     # Verify that the backup is ready.
     backup.reload()
@@ -68,7 +68,7 @@ def restore_database(instance_id, new_database_id, backup_id):
     operation = new_database.restore(backup)
 
     # Wait for restore operation to complete.
-    operation.result()
+    operation.result(1200)
 
     # Newly created database has restore information.
     new_database.reload()

@@ -13,12 +13,15 @@
 # limitations under the License.
 
 import os
-import pytest
-import translate_v3_batch_translate_text
 import uuid
-from google.cloud import storage
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+from google.cloud import storage
+import pytest
+
+import translate_v3_batch_translate_text
+
+
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture(scope="function")
@@ -33,6 +36,7 @@ def bucket():
     bucket.delete(force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_batch_translate_text(capsys, bucket):
     translate_v3_batch_translate_text.batch_translate_text(
         "gs://cloud-samples-data/translation/text.txt",

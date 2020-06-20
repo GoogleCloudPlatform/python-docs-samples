@@ -13,14 +13,18 @@
 # limitations under the License.
 
 import os
-import translate_v3_create_glossary
-import translate_v3_delete_glossary
 import uuid
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+import pytest
+
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
+
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_delete_glossary(capsys):
     # setup
     glossary_id = "test-{}".format(uuid.uuid4())

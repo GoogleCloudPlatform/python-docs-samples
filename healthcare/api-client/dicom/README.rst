@@ -17,6 +17,18 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 .. _Cloud Healthcare API: https://cloud.google.com/healthcare/docs
 
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+
+
+To run the sample, you need to have the following roles:
+* `Healthcare Dataset Administrator`
+* `Healthcare DICOM Store Administrator`
+* `Healthcare DICOM Editor`
+* `Healthcare DICOM Viewer`
+
+You also need to give write access for the storage bucket to the Healthcare Service agent service account.
+
+
 Setup
 -------------------------------------------------------------------------------
 
@@ -167,12 +179,13 @@ To run this sample:
                        [--base_url BASE_URL] [--project_id PROJECT_ID]
                        [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
                        [--dicom_store_id DICOM_STORE_ID] [--dcm_file DCM_FILE]
-                       [--study_uid STUDY_UID]
-                       {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-delete-study}
+                       [--study_uid STUDY_UID] [--series_uid SERIES_UID]
+                       [--instance_uid INSTANCE_UID]
+                       {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-search-studies,dicomweb-retrieve-instance,dicomweb-retrieve-rendered,dicomweb-delete-study}
                        ...
 
     positional arguments:
-      {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-delete-study}
+      {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-search-studies,dicomweb-retrieve-instance,dicomweb-retrieve-rendered,dicomweb-delete-study}
         dicomweb-store-instance
                             Handles the POST requests specified in the DICOMweb
                             standard.
@@ -180,6 +193,15 @@ To run this sample:
                             Handles the GET requests specified in DICOMweb
                             standard.
         dicomweb-retrieve-study
+                            Handles the GET requests specified in the DICOMweb
+                            standard.
+        dicomweb-search-studies
+                            Handles the GET requests specified in the DICOMweb
+                            standard.
+        dicomweb-retrieve-instance
+                            Handles the GET requests specified in the DICOMweb
+                            standard.
+        dicomweb-retrieve-rendered
                             Handles the GET requests specified in the DICOMweb
                             standard.
         dicomweb-delete-study
@@ -202,6 +224,10 @@ To run this sample:
       --dcm_file DCM_FILE   File name for DCM file to store.
       --study_uid STUDY_UID
                             Unique identifier for a study.
+      --series_uid SERIES_UID
+                            Unique identifier for a series.
+      --instance_uid INSTANCE_UID
+                            Unique identifier for an instance.
 
 
 

@@ -21,7 +21,7 @@ import uuid
 from google.cloud import monitoring_v3
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def create_metric_descriptor(project_id):

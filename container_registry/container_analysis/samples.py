@@ -32,7 +32,7 @@ def create_note(note_id, project_id):
                 {
                     'affected_cpe_uri': 'your-uri-here',
                     'affected_package': 'your-package-here',
-                    'min_affected_version': {
+                    'affected_version_start': {
                         'kind': Version.VersionKind.MINIMUM
                     },
                     'fixed_version': {
@@ -88,7 +88,7 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
                 {
                     'affected_cpe_uri': 'your-uri-here',
                     'affected_package': 'your-package-here',
-                    'min_affected_version': {
+                    'affected_version': {
                         'kind': Version.VersionKind.MINIMUM
                     },
                     'fixed_version': {
@@ -367,7 +367,7 @@ def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
     vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
     filtered_list = []
     for v in vulnerabilities:
-        if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
+        if v.effective_severity == Severity.HIGH or v.effective_severity == Severity.CRITICAL:
             filtered_list.append(v)
     return filtered_list
 # [END containeranalysis_filter_vulnerability_occurrences]

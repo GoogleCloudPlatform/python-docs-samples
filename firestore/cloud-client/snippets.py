@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import datetime
+import threading
 from time import sleep
 
 from google.cloud import firestore
@@ -60,7 +61,7 @@ def quickstart_get_collection():
     docs = users_ref.stream()
 
     for doc in docs:
-        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        print(f'{doc.id} => {doc.to_dict()}')
     # [END quickstart_get_collection]
 
 
@@ -148,9 +149,14 @@ class City(object):
 
     def __repr__(self):
         return(
-            u'City(name={}, country={}, population={}, capital={}, regions={})'
-            .format(self.name, self.country, self.population, self.capital,
-                    self.regions))
+            f'City(\
+                name={self.name}, \
+                country={self.country}, \
+                population={self.population}, \
+                capital={self.capital}, \
+                regions={self.regions}\
+            )'
+        )
 # [END custom_class_def]
 
 
@@ -218,7 +224,7 @@ def get_check_exists():
 
     doc = doc_ref.get()
     if doc.exists:
-        print(u'Document data: {}'.format(doc.to_dict()))
+        print(f'Document data: {doc.to_dict()}')
     else:
         print(u'No such document!')
     # [END get_check_exists]
@@ -238,10 +244,11 @@ def get_custom_class():
 def get_simple_query():
     db = firestore.Client()
     # [START get_simple_query]
+    # Note: Use of CollectionRef stream() is prefered to get()
     docs = db.collection(u'cities').where(u'capital', u'==', True).stream()
 
     for doc in docs:
-        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        print(f'{doc.id} => {doc.to_dict()}')
     # [END get_simple_query]
 
 
@@ -254,7 +261,7 @@ def array_contains_filter():
     # [END fs_array_contains_filter]
     docs = query.stream()
     for doc in docs:
-        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        print(f'{doc.id} => {doc.to_dict()}')
 
 
 def get_full_collection():
@@ -263,7 +270,7 @@ def get_full_collection():
     docs = db.collection(u'cities').stream()
 
     for doc in docs:
-        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        print(f'{doc.id} => {doc.to_dict()}')
     # [END get_full_collection]
 
 
@@ -331,7 +338,7 @@ def update_doc_array():
     city_ref.update({u'regions': firestore.ArrayRemove([u'east_coast'])})
     # [END fs_update_doc_array]
     city = city_ref.get()
-    print(u'Updated the regions field of the DC. {}'.format(city.to_dict()))
+    print(f'Updated the regions field of the DC. {city.to_dict()}')
 
 
 def update_multiple():
@@ -621,7 +628,7 @@ def snapshot_cursors():
     # [END fs_start_at_snapshot_query_cursor]
     results = start_at_snapshot.limit(10).stream()
     for doc in results:
-        print(u'{}'.format(doc.id))
+        print(f'{doc.id}')
 
     return results
 
@@ -660,10 +667,14 @@ def listen_document():
     db = firestore.Client()
     # [START listen_document]
 
+    # Create an Event for notifying main thread.
+    callback_done = threading.Event()
+
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(doc_snapshot, changes, read_time):
         for doc in doc_snapshot:
-            print(u'Received document snapshot: {}'.format(doc.id))
+            print(f'Received document snapshot: {doc.id}')
+        callback_done.set()
 
     doc_ref = db.collection(u'cities').document(u'SF')
 
@@ -680,7 +691,8 @@ def listen_document():
         u'population': 860000
     }
     doc_ref.set(data)
-    sleep(3)
+    # Wait for the callback.
+    callback_done.wait(timeout=60)
     # [START detach_listener]
     # Terminate watch on a document
     doc_watch.unsubscribe()
@@ -691,12 +703,16 @@ def listen_multiple():
     db = firestore.Client()
     # [START listen_multiple]
 
+    # Create an Event for notifying main thread.
+    callback_done = threading.Event()
+
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(col_snapshot, changes, read_time):
         print(u'Callback received query snapshot.')
         print(u'Current cities in California:')
         for doc in col_snapshot:
-            print(u'{}'.format(doc.id))
+            print(f'{doc.id}')
+        callback_done.set()
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
 
@@ -713,8 +729,8 @@ def listen_multiple():
         u'population': 860000
     }
     db.collection(u'cities').document(u'SF').set(data)
-    sleep(1)
-
+    # Wait for the callback.
+    callback_done.wait(timeout=60)
     query_watch.unsubscribe()
 
 
@@ -722,17 +738,21 @@ def listen_for_changes():
     db = firestore.Client()
     # [START listen_for_changes]
 
+    # Create an Event for notifying main thread.
+    delete_done = threading.Event()
+
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(col_snapshot, changes, read_time):
         print(u'Callback received query snapshot.')
         print(u'Current cities in California: ')
         for change in changes:
             if change.type.name == 'ADDED':
-                print(u'New city: {}'.format(change.document.id))
+                print(f'New city: {change.document.id}')
             elif change.type.name == 'MODIFIED':
-                print(u'Modified city: {}'.format(change.document.id))
+                print(f'Modified city: {change.document.id}')
             elif change.type.name == 'REMOVED':
-                print(u'Removed city: {}'.format(change.document.id))
+                print(f'Removed city: {change.document.id}')
+                delete_done.set()
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
 
@@ -763,7 +783,9 @@ def listen_for_changes():
 
     # Delete document
     mtv_document.delete()
-    sleep(1)
+
+    # Wait for the callback captures the deletion.
+    delete_done.wait(timeout=60)
     query_watch.unsubscribe()
 
 
@@ -819,7 +841,7 @@ def delete_full_collection():
         deleted = 0
 
         for doc in docs:
-            print(u'Deleting doc {} => {}'.format(doc.id, doc.to_dict()))
+            print(f'Deleting doc {doc.id} => {doc.to_dict()}')
             doc.reference.delete()
             deleted = deleted + 1
 
@@ -889,7 +911,7 @@ def collection_group_query(db):
         .where(u'type', u'==', u'museum')
     docs = museums.stream()
     for doc in docs:
-        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+        print(f'{doc.id} => {doc.to_dict()}')
     # [END fs_collection_group_query]
     return docs
 
@@ -931,3 +953,13 @@ def update_document_increment(db):
 
     washington_ref.update({"population": firestore.Increment(50)})
     # [END fs_update_document_increment]
+
+
+def list_document_subcollections():
+    db = firestore.Client()
+    # [START fs_list_document_subcollections]
+    collections = db.collection('cities').document('SF').collections()
+    for collection in collections:
+        for doc in collection.stream():
+            print(f'{doc.id} => {doc.to_dict()}')
+    # [END fs_list_document_subcollections]

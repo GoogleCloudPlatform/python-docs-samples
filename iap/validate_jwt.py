@@ -23,7 +23,7 @@ For applications running in the App Engine standard environment, use
 App Engine's Users API instead.
 """
 # [START iap_validate_jwt]
-import jwt
+from google.auth import jwt
 import requests
 
 
@@ -70,18 +70,21 @@ def validate_iap_jwt_from_compute_engine(iap_jwt, cloud_project_number,
 
 def _validate_iap_jwt(iap_jwt, expected_audience):
     try:
-        key_id = jwt.get_unverified_header(iap_jwt).get('kid')
+        # Retrieve public key for token signature verification.
+        key_id = jwt.decode_header(iap_jwt).get('kid')
         if not key_id:
             return (None, None, '**ERROR: no key ID**')
         key = get_iap_key(key_id)
-        decoded_jwt = jwt.decode(
-            iap_jwt, key,
-            algorithms=['ES256'],
-            issuer='https://cloud.google.com/iap',
-            audience=expected_audience)
+
+        # Verify token signature, expiry and audience.
+        decoded_jwt = jwt.decode(iap_jwt, certs=key, audience=expected_audience)
+
+        # Verify token issuer.
+        if decoded_jwt.get('iss') != 'https://cloud.google.com/iap':
+            return (None, None, '**ERROR: invalid issuer**')
+
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
-    except (jwt.exceptions.InvalidTokenError,
-            requests.exceptions.RequestException) as e:
+    except (ValueError, requests.exceptions.RequestException) as e:
         return (None, None, '**ERROR: JWT validation error {}**'.format(e))
 
 

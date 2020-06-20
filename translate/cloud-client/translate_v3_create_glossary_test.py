@@ -13,26 +13,42 @@
 # limitations under the License.
 
 import os
-import translate_v3_create_glossary
-import translate_v3_delete_glossary
 import uuid
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+import backoff
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
+from google.cloud.exceptions import NotFound
+import pytest
+
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
+
+
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
-    glossary_id = "test-{}".format(uuid.uuid4())
-    translate_v3_create_glossary.create_glossary(
-        PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
-    )
-    out, _ = capsys.readouterr()
-    # assert
-    assert "Created:" in out
-    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
-
-    # clean up after use
     try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+        glossary_id = "test-{}".format(uuid.uuid4())
+        translate_v3_create_glossary.create_glossary(
+            PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
+        )
+        out, _ = capsys.readouterr()
+        # assert
+        assert "Created:" in out
+        assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
+    finally:
+        # cleanup
+        @backoff.on_exception(
+            backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
+        )
+        def delete_glossary():
+            try:
+                translate_v3_delete_glossary.delete_glossary(
+                    PROJECT_ID, glossary_id)
+            except NotFound as e:
+                # Ignoring this case.
+                print("Got NotFound, detail: {}".format(str(e)))
+        delete_glossary()

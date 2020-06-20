@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
+
 import main
 
 
 def test_index():
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     main.app.testing = True
     main.app.config['TRACER'] = main.initialize_tracer(project_id)
     client = main.app.test_client()
@@ -28,7 +29,7 @@ def test_index():
 
 
 def test_redirect():
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     main.app.testing = True
     main.app.config['TRACER'] = main.initialize_tracer(project_id)
     client = main.app.test_client()

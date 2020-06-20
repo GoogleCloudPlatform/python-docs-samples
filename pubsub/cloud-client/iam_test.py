@@ -21,7 +21,7 @@ import pytest
 import iam
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "iam-test-topic-" + UUID
 SUBSCRIPTION = "iam-test-subscription-" + UUID
 
@@ -56,9 +56,7 @@ def subscriber_client():
 
 @pytest.fixture
 def subscription(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION
-    )
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION)
 
     try:
         subscriber_client.delete_subscription(subscription_path)

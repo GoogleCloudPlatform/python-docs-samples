@@ -13,20 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import mock
 import os
-import pytest
 import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
+import mock
+import pytest
 
-import sub
+import sub  # noqa
 
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 TOPIC = "quickstart-sub-test-topic-" + UUID
 SUBSCRIPTION = "quickstart-sub-test-topic-sub-" + UUID
 
@@ -49,9 +48,7 @@ def topic_path():
 
 @pytest.fixture(scope="module")
 def subscription_path(topic_path):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION
-    )
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION)
 
     try:
         subscription = subscriber_client.create_subscription(
@@ -83,9 +80,7 @@ def test_sub(monkeypatch, topic_path, subscription_path, capsys):
     monkeypatch.setattr(pubsub_v1, "SubscriberClient", mock_client_constructor)
 
     def mock_subscribe(subscription_path, callback=None):
-        real_future = real_client.subscribe(
-            subscription_path, callback=callback
-        )
+        real_future = real_client.subscribe(subscription_path, callback=callback)
         mock_future = mock.Mock(spec=real_future, wraps=real_future)
 
         def mock_result():

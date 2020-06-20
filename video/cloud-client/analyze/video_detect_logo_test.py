@@ -14,11 +14,15 @@
 
 import os
 
+import pytest
+
 import video_detect_logo
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+# Flaky Bad Gateway
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_logo(capsys):
     local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
 

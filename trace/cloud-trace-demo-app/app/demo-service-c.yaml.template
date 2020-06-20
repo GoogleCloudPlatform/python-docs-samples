@@ -22,7 +22,7 @@ spec:
         - python
         args:
         - app.py
-        - --keyword=!\n
+        - --keyword=!
         - --endpoint=http://{{ endpoint }}
         ports:
         - containerPort: 8080

@@ -46,15 +46,15 @@ def get_callback(api_future, data, ref):
     return callback
 
 
-def pub(project_id, topic_name):
+def pub(project_id, topic_id):
     """Publishes a message to a Pub/Sub topic."""
     # [START pubsub_quickstart_pub_client]
     # Initialize a Publisher client.
     client = pubsub_v1.PublisherClient()
     # [END pubsub_quickstart_pub_client]
     # Create a fully qualified identifier in the form of
-    # `projects/{project_id}/topics/{topic_name}`
-    topic_path = client.topic_path(project_id, topic_name)
+    # `projects/{project_id}/topics/{topic_id}`
+    topic_path = client.topic_path(project_id, topic_id)
 
     # Data sent to Cloud Pub/Sub must be a bytestring.
     data = b"Hello, World!"
@@ -75,13 +75,12 @@ def pub(project_id, topic_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
-    parser.add_argument("topic_name", help="Pub/Sub topic name")
+    parser.add_argument("topic_id", help="Pub/Sub topic ID")
 
     args = parser.parse_args()
 
-    pub(args.project_id, args.topic_name)
+    pub(args.project_id, args.topic_id)
 # [END pubsub_quickstart_pub_all]

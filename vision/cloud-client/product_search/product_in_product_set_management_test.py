@@ -25,7 +25,7 @@ from product_set_management import (
     create_product_set, delete_product_set)
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'

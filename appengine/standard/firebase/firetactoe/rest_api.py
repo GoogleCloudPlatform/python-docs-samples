@@ -21,25 +21,23 @@ except ImportError:
 # [START rest_writing_data]
 import json
 
-import httplib2
-from oauth2client.client import GoogleCredentials
+from google.auth.transport.requests import AuthorizedSession
+import google.auth
 
 _FIREBASE_SCOPES = [
     'https://www.googleapis.com/auth/firebase.database',
     'https://www.googleapis.com/auth/userinfo.email']
 
 
-# Memoize the authorized http, to avoid fetching new access tokens
+# Memoize the authorized session, to avoid fetching new access tokens
 @lru_cache()
-def _get_http():
-    """Provides an authed http object."""
-    http = httplib2.Http()
+def _get_session():
+    """Provides an authed requests session object."""
+    creds, _ = google.auth.default(scopes=[_FIREBASE_SCOPES])
     # Use application default credentials to make the Firebase calls
     # https://firebase.google.com/docs/reference/rest/database/user-auth
-    creds = GoogleCredentials.get_application_default().create_scoped(
-        _FIREBASE_SCOPES)
-    creds.authorize(http)
-    return http
+    authed_session = AuthorizedSession(creds)
+    return authed_session
 
 
 def firebase_put(path, value=None):
@@ -52,7 +50,7 @@ def firebase_put(path, value=None):
         path - the url to the Firebase object to write.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='PUT', body=value)
+    response, content = _get_session().put(path, body=value)
     return json.loads(content)
 
 
@@ -66,7 +64,7 @@ def firebase_patch(path, value=None):
         path - the url to the Firebase object to write.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='PATCH', body=value)
+    response, content = _get_session().patch(path, body=value)
     return json.loads(content)
 
 
@@ -82,7 +80,7 @@ def firebase_post(path, value=None):
         path - the url to the Firebase list to append to.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='POST', body=value)
+    response, content = _get_session().post(path, body=value)
     return json.loads(content)
 # [END rest_writing_data]
 
@@ -97,7 +95,7 @@ def firebase_get(path):
     Args:
         path - the url to the Firebase object to read.
     """
-    response, content = _get_http().request(path, method='GET')
+    response, content = _get_session().get(path)
     return json.loads(content)
 
 
@@ -111,4 +109,4 @@ def firebase_delete(path):
     Args:
         path - the url to the Firebase object to delete.
     """
-    response, content = _get_http().request(path, method='DELETE')
+    response, content = _get_session().delete(path)

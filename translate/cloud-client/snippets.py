@@ -76,7 +76,7 @@ def translate_text_with_model(target, text, model='nmt'):
     # [START translate_text_with_model]
     """Translates text into the target language.
 
-    Make sure your project is whitelisted.
+    Make sure your project is allowlisted.
 
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages

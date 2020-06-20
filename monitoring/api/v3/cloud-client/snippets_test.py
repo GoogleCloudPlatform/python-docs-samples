@@ -14,15 +14,15 @@
 
 import os
 import re
-import pytest
 
-from gcp_devrel.testing import eventually_consistent
+import backoff
 from google.api_core.exceptions import NotFound
-
+import pytest
 
 import snippets
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture(scope="function")
@@ -48,12 +48,14 @@ def write_time_series():
 
 def test_get_delete_metric_descriptor(capsys, custom_metric_descriptor):
     try:
-        @eventually_consistent.call
-        def __():
+        @backoff.on_exception(
+            backoff.expo, (AssertionError, NotFound), max_time=60)
+        def eventually_consistent_test():
             snippets.get_metric_descriptor(custom_metric_descriptor)
+            out, _ = capsys.readouterr()
+            assert 'DOUBLE' in out
 
-        out, _ = capsys.readouterr()
-        assert 'DOUBLE' in out
+        eventually_consistent_test()
     finally:
         snippets.delete_metric_descriptor(custom_metric_descriptor)
         out, _ = capsys.readouterr()

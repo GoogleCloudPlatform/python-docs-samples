@@ -29,7 +29,8 @@ def list_topics(project_id):
     # [START pubsub_list_topics]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
+    # TODO(developer)
+    # project_id = "your-project-id"
 
     publisher = pubsub_v1.PublisherClient()
     project_path = publisher.project_path(project_id)
@@ -39,17 +40,18 @@ def list_topics(project_id):
     # [END pubsub_list_topics]
 
 
-def create_topic(project_id, topic_name):
+def create_topic(project_id, topic_id):
     """Create a new Pub/Sub topic."""
     # [START pubsub_quickstart_create_topic]
     # [START pubsub_create_topic]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     topic = publisher.create_topic(topic_path)
 
@@ -58,16 +60,17 @@ def create_topic(project_id, topic_name):
     # [END pubsub_create_topic]
 
 
-def delete_topic(project_id, topic_name):
+def delete_topic(project_id, topic_id):
     """Deletes an existing Pub/Sub topic."""
     # [START pubsub_delete_topic]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     publisher.delete_topic(topic_path)
 
@@ -75,19 +78,20 @@ def delete_topic(project_id, topic_name):
     # [END pubsub_delete_topic]
 
 
-def publish_messages(project_id, topic_name):
+def publish_messages(project_id, topic_id):
     """Publishes multiple messages to a Pub/Sub topic."""
     # [START pubsub_quickstart_publisher]
     # [START pubsub_publish]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
     # The `topic_path` method creates a fully qualified identifier
-    # in the form `projects/{project_id}/topics/{topic_name}`
-    topic_path = publisher.topic_path(project_id, topic_name)
+    # in the form `projects/{project_id}/topics/{topic_id}`
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     for n in range(1, 10):
         data = u"Message number {}".format(n)
@@ -102,17 +106,18 @@ def publish_messages(project_id, topic_name):
     # [END pubsub_publish]
 
 
-def publish_messages_with_custom_attributes(project_id, topic_name):
+def publish_messages_with_custom_attributes(project_id, topic_id):
     """Publishes multiple messages with custom attributes
     to a Pub/Sub topic."""
     # [START pubsub_publish_custom_attributes]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     for n in range(1, 10):
         data = u"Message number {}".format(n)
@@ -128,18 +133,19 @@ def publish_messages_with_custom_attributes(project_id, topic_name):
     # [END pubsub_publish_custom_attributes]
 
 
-def publish_messages_with_error_handler(project_id, topic_name):
+def publish_messages_with_error_handler(project_id, topic_id):
     # [START pubsub_publish_messages_error_handler]
     """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     import time
 
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     futures = dict()
 
@@ -172,13 +178,14 @@ def publish_messages_with_error_handler(project_id, topic_name):
     # [END pubsub_publish_messages_error_handler]
 
 
-def publish_messages_with_batch_settings(project_id, topic_name):
+def publish_messages_with_batch_settings(project_id, topic_id):
     """Publishes multiple messages to a Pub/Sub topic with batch settings."""
     # [START pubsub_publisher_batch_settings]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     # Configure the batch to publish as soon as there is ten messages,
     # one kilobyte of data, or one second has passed.
@@ -188,7 +195,7 @@ def publish_messages_with_batch_settings(project_id, topic_name):
         max_latency=1,  # default 10 ms
     )
     publisher = pubsub_v1.PublisherClient(batch_settings)
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     # Resolve the publish future in a separate thread.
     def callback(future):
@@ -207,13 +214,14 @@ def publish_messages_with_batch_settings(project_id, topic_name):
     # [END pubsub_publisher_batch_settings]
 
 
-def publish_messages_with_retry_settings(project_id, topic_name):
+def publish_messages_with_retry_settings(project_id, topic_id):
     """Publishes messages with custom retry settings."""
     # [START pubsub_publisher_retry_settings]
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO(developer)
+    # project_id = "your-project-id"
+    # topic_id = "your-topic-id"
 
     # Configure the retry settings. Defaults will be overwritten.
     retry_settings = {
@@ -252,7 +260,7 @@ def publish_messages_with_retry_settings(project_id, topic_name):
     }
 
     publisher = pubsub_v1.PublisherClient(client_config=retry_settings)
-    topic_path = publisher.topic_path(project_id, topic_name)
+    topic_path = publisher.topic_path(project_id, topic_id)
 
     for n in range(1, 10):
         data = u"Message number {}".format(n)
@@ -267,8 +275,7 @@ def publish_messages_with_retry_settings(project_id, topic_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Your Google Cloud project ID")
 
@@ -276,57 +283,52 @@ if __name__ == "__main__":
     subparsers.add_parser("list", help=list_topics.__doc__)
 
     create_parser = subparsers.add_parser("create", help=create_topic.__doc__)
-    create_parser.add_argument("topic_name")
+    create_parser.add_argument("topic_id")
 
     delete_parser = subparsers.add_parser("delete", help=delete_topic.__doc__)
-    delete_parser.add_argument("topic_name")
+    delete_parser.add_argument("topic_id")
 
-    publish_parser = subparsers.add_parser(
-        "publish", help=publish_messages.__doc__
-    )
-    publish_parser.add_argument("topic_name")
+    publish_parser = subparsers.add_parser("publish", help=publish_messages.__doc__)
+    publish_parser.add_argument("topic_id")
 
     publish_with_custom_attributes_parser = subparsers.add_parser(
         "publish-with-custom-attributes",
         help=publish_messages_with_custom_attributes.__doc__,
     )
-    publish_with_custom_attributes_parser.add_argument("topic_name")
+    publish_with_custom_attributes_parser.add_argument("topic_id")
 
     publish_with_error_handler_parser = subparsers.add_parser(
-        "publish-with-error-handler",
-        help=publish_messages_with_error_handler.__doc__,
+        "publish-with-error-handler", help=publish_messages_with_error_handler.__doc__,
     )
-    publish_with_error_handler_parser.add_argument("topic_name")
+    publish_with_error_handler_parser.add_argument("topic_id")
 
     publish_with_batch_settings_parser = subparsers.add_parser(
         "publish-with-batch-settings",
         help=publish_messages_with_batch_settings.__doc__,
     )
-    publish_with_batch_settings_parser.add_argument("topic_name")
+    publish_with_batch_settings_parser.add_argument("topic_id")
 
     publish_with_retry_settings_parser = subparsers.add_parser(
         "publish-with-retry-settings",
         help=publish_messages_with_retry_settings.__doc__,
     )
-    publish_with_retry_settings_parser.add_argument("topic_name")
+    publish_with_retry_settings_parser.add_argument("topic_id")
 
     args = parser.parse_args()
 
     if args.command == "list":
         list_topics(args.project_id)
     elif args.command == "create":
-        create_topic(args.project_id, args.topic_name)
+        create_topic(args.project_id, args.topic_id)
     elif args.command == "delete":
-        delete_topic(args.project_id, args.topic_name)
+        delete_topic(args.project_id, args.topic_id)
     elif args.command == "publish":
-        publish_messages(args.project_id, args.topic_name)
+        publish_messages(args.project_id, args.topic_id)
     elif args.command == "publish-with-custom-attributes":
-        publish_messages_with_custom_attributes(
-            args.project_id, args.topic_name
-        )
+        publish_messages_with_custom_attributes(args.project_id, args.topic_id)
     elif args.command == "publish-with-error-handler":
-        publish_messages_with_error_handler(args.project_id, args.topic_name)
+        publish_messages_with_error_handler(args.project_id, args.topic_id)
     elif args.command == "publish-with-batch-settings":
-        publish_messages_with_batch_settings(args.project_id, args.topic_name)
+        publish_messages_with_batch_settings(args.project_id, args.topic_id)
     elif args.command == "publish-with-retry-settings":
-        publish_messages_with_retry_settings(args.project_id, args.topic_name)
+        publish_messages_with_retry_settings(args.project_id, args.topic_id)

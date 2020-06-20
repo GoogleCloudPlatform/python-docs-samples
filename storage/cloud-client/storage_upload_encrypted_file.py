@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 
 # [START storage_upload_encrypted_file]
-from google.cloud import storage
 import base64
+# [END storage_upload_encrypted_file]
+import sys
+# [START storage_upload_encrypted_file]
+
+from google.cloud import storage
 
 
 def upload_encrypted_blob(

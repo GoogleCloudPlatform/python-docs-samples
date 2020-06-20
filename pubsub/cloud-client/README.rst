@@ -74,7 +74,7 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python publisher.py
+    $ python publisher.py --help
 
     usage: publisher.py [-h]
                         project_id
@@ -124,11 +124,11 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python subscriber.py
+    $ python subscriber.py --help
 
     usage: subscriber.py [-h]
                          project_id
-                         {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen_for_errors}
+                         {list-in-topic,list-in-project,create,create-with-dead-letter-policy,create-push,delete,update-push,update-dead-letter-policy,remove-dead-letter-policy,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen-for-errors,receive-messages-with-delivery-attempts}
                          ...
 
     This application demonstrates how to perform basic operations on
@@ -139,15 +139,21 @@ To run this sample:
 
     positional arguments:
       project_id            Your Google Cloud project ID
-      {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen_for_errors}
-        list_in_topic       Lists all subscriptions for a given topic.
-        list_in_project     Lists all subscriptions in the current project.
+      {list-in-topic,list-in-project,create,create-with-dead-letter-policy,create-push,delete,update-push,update-dead-letter-policy,remove-dead-letter-policy,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen-for-errors,receive-messages-with-delivery-attempts}
+        list-in-topic       Lists all subscriptions for a given topic.
+        list-in-project     Lists all subscriptions in the current project.
         create              Create a new pull subscription on the given topic.
+        create-with-dead-letter-policy
+                            Create a subscription with dead letter policy.
         create-push         Create a new push subscription on the given topic.
         delete              Deletes an existing Pub/Sub topic.
-        update              Updates an existing Pub/Sub subscription's push
+        update-push         Updates an existing Pub/Sub subscription's push
                             endpoint URL. Note that certain properties of a
                             subscription, such as its topic, are not modifiable.
+        update-dead-letter-policy
+                            Update a subscription's dead letter policy.
+        remove-dead-letter-policy
+                            Remove dead letter policy from a subscription.
         receive             Receives messages from a pull subscription.
         receive-custom-attributes
                             Receives messages from a pull subscription.
@@ -158,8 +164,9 @@ To run this sample:
                             Pulling messages synchronously.
         receive-synchronously-with-lease
                             Pulling messages synchronously with lease management
-        listen_for_errors   Receives messages and catches errors from a pull
+        listen-for-errors   Receives messages and catches errors from a pull
                             subscription.
+        receive-messages-with-delivery-attempts
 
     optional arguments:
       -h, --help            show this help message and exit

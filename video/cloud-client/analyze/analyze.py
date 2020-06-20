@@ -44,7 +44,7 @@ def analyze_explicit_content(path):
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.EXPLICIT_CONTENT_DETECTION]
 
-    operation = video_client.annotate_video(path, features=features)
+    operation = video_client.annotate_video(input_uri=path, features=features)
     print("\nProcessing video for explicit content annotations:")
 
     result = operation.result(timeout=90)
@@ -70,7 +70,7 @@ def analyze_labels(path):
     context = videointelligence.types.VideoContext(label_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features=features, video_context=context
+        input_uri=path, features=features, video_context=context
     )
     print("\nProcessing video for label annotations:")
 
@@ -233,7 +233,7 @@ def analyze_shots(path):
     """ Detects camera shot changes. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
-    operation = video_client.annotate_video(path, features=features)
+    operation = video_client.annotate_video(input_uri=path, features=features)
     print("\nProcessing video for shot change annotations:")
 
     result = operation.result(timeout=90)
@@ -263,7 +263,7 @@ def speech_transcription(path):
     )
 
     operation = video_client.annotate_video(
-        path, features=features, video_context=video_context
+        input_uri=path, features=features, video_context=video_context
     )
 
     print("\nProcessing video for speech transcription.")

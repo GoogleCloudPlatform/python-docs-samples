@@ -11,12 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flaky import flaky
+
+import pytest
+
+import quickstart
 
 
-@flaky
+@pytest.mark.flaky
 def test_quickstart(capsys):
-    import quickstart
 
     quickstart.run_sample()
     out, _ = capsys.readouterr()

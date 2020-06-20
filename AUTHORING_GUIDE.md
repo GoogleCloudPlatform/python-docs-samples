@@ -240,7 +240,7 @@ SQLAlchemy==1.3.12
 If a sample has testing requirements that differ from its runtime requirements
 (such as dependencies on [pytest](http://pytest.org/en/latest/) or other
 testing libraries), the testing requirements may be listed in a separate
-`requirements-testing.txt` file instead of the main `requirements.txt` file.
+`requirements-test.txt` file instead of the main `requirements.txt` file.
 
 ### Region Tags
 
@@ -285,6 +285,10 @@ for system testing, as shown in [this
 example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard/localtesting/datastore_test.py).
 * All tests should be independent of one another and order-independent.
 * We use parallel processing for tests, so tests should be capable of running in parallel with one another.
+* Use pytest's fixture for resource setup and teardown, instead of
+  having them in the test itself.
+* Avoid infinite loops.
+* Retry RPCs
 
 ### Arrange, Act, Assert
 
@@ -320,10 +324,27 @@ that embodies assumptions about the behavior of the APIs.
 When tests need temporary resources (such as a temp file or folder), they
 should create reasonable names for these resources with a UUID attached to
 assure uniqueness. Use the Python ```uuid``` package from the standard
-library to generate UUIDs for resource names.
+library to generate UUIDs for resource names. For example:
 
-All temporary resources should be explicitly deleted when
-testing is complete. 
+```python
+glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
+```
+
+or:
+
+```python
+# If full uuid4 is too long, use its hex representation.
+encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+```
+
+```python
+# If the hex representation is also too long, slice it.
+encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex[:5]
+```
+
+All temporary resources should be explicitly deleted when testing is
+complete. Use pytest's fixture for cleaning up these resouces instead
+of doing it in test itself.
 
 ### Console Output
 
@@ -333,8 +354,125 @@ is expected. Strive to verify the content of the output rather than the syntax.
 For example, the test might verify that a string is included in the output,
 without taking a dependency on where that string occurs in the output.
 
-### Running tests
+### Avoid infinite loops
 
+Never put potential infinite loops in the test code path. A typical
+example is about gRPC's LongRunningOperations. Make sure you pass the
+timeout parameter to the `result()` call.
+
+Good:
+
+```python
+# will raise google.api_core.GoogleAPICallError after 60 seconds
+operation.result(60)
+```
+
+Bad:
+
+```python
+operation.result()  # this could wait forever.
+```
+
+We recommend the timeout parameter to be around the number that gives
+you more than 90% success rate. Don't put too long a timeout.
+
+Now this test is inevitably flaky, so consider marking the test as
+`flaky` as follows:
+
+```python
+
+@pytest.mark.flaky(max_runs=3, min_passes=1)
+def my_flaky_test():
+    # test that involves LRO poling with the timeout
+```
+
+This combination will give you very high success rate with fixed test
+execution time (0.999 success rate and 180 seconds operation wait time
+in the worst case in this example).
+
+### Retry RPCs
+
+All the RPCs are inevitably flaky. It can fail for many reasons. The
+`google-cloud` Python client retries requests automatically for most
+cases.
+
+The old api-client doesn't retry automatically, so consider using
+[`backoff`](https://pypi.org/project/backoff/) for retrying. Here is a
+simple example:
+
+```python
+
+import backoff
+from googleapiclient.errors import HttpError
+
+@pytest.fixture(scope='module')
+def test_resource():
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create_resource():
+        try:
+            return client.projects().imaginaryResource().create(
+                name=resource_id, body=body).execute()
+        except HttpError as e:
+            if '409' in str(e):
+                # Ignore this case and get the existing one.
+                return client.projects().imaginaryResource().get(
+                    name=resource_id).execute()
+            else:
+                raise
+
+    resource = create_resource()
+
+    yield resource
+
+    # cleanup
+    ...
+```
+
+### Test Environment Setup
+
+Because all tests are system tests that use live resources, running tests
+requires a Google Cloud project with billing enabled, as covered under
+[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+
+Once you have your project created and configured, you'll need to set
+environment variables to identify the project and resources to be used
+by tests. See
+[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
+for a list of all environment variables used by all tests. Not every
+test needs all of these variables. All required environment variables
+should be listed in the README and `testing/test-env.tmpl.sh`. If you
+find one is missing, please add instructions for setting it as part of
+your PR.
+
+We suggest that you copy this file as follows:
+
+```sh
+$ cp testing/test-env.tmpl.sh testing/test-env.sh
+$ editor testing/test-env.sh  # change the value of `GCLOUD_PROJECT`.
+```
+
+You can easily `source` this file for exporting the environment variables.
+
+#### Development environment setup
+
+This repository supports two ways to run tests locally.
+
+1. nox
+
+    This is the recommended way. Setup takes little more efforts than
+    the second one, but the test execution will be faster.
+
+2. Docker
+
+    This is another way of running the tests. Setup is easier because
+    you only need to instal Docker. The test execution will be bit
+    slower than the first one.
+
+#### nox setup
+
+Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
+
+### Running tests with nox
 
 Automated testing for samples in `python-docs-samples` is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
@@ -342,7 +480,7 @@ including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
 __Note:__ As a temporary workaround, each project currently uses first
-`noxfile-template.py` found in a parent folder above the current sample. In 
+`noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
 `noxfile-template.py` as `noxfile.py` in the folder of the project you want to
 run tests.
@@ -373,18 +511,23 @@ To run a specific test from a specific following:
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
 
+### Running tests with Docker
 
-### Test Environment Setup
+If you have [Docker](https://www.docker.com) installed and runnable by
+the local user, you can use `scripts/run_tests_local.sh` helper script
+to run the tests. For example, let's say you want to modify the code
+in `cdn` directory, then you can do:
 
-Because all tests are system tests that use live resources, running tests
-requires a Google Cloud project with billing enabled, as covered under
-[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+```sh
+$ cd cdn
+$ ../scripts/run_tests_local.sh .
+# This will run the default sessions; lint, py-3.6, and py-3.7
+$ ../scripts/run_tests_local.sh . lint
+# Running only lint
+```
 
-Once you have your project created and configured, you'll need to set environment
-variables to identify the project and resources to be used by tests. See
-[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every test
-needs all of these variables.
+If your test needs a service account, you have to create a service
+account and download the JSON key to `testing/service-account.json`.
 
 ### Google Cloud Storage Resources
 

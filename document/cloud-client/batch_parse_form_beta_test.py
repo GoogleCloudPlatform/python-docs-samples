@@ -12,15 +12,18 @@
 # See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
-import batch_parse_form_beta
 import os
-import pytest
 import uuid
+
 from google.cloud import storage
+import pytest
+
+import batch_parse_form_beta
+
 
 BUCKET = 'document-ai-{}'.format(uuid.uuid4())
 OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 BATCH_OUTPUT_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 

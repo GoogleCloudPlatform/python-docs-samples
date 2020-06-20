@@ -1,3 +1,2 @@
 pytest==4.6.9
-gcp-devrel-py-tools==0.0.15
 WebTest==2.0.34
