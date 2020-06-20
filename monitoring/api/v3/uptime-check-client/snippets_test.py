@@ -36,7 +36,6 @@ class UptimeFixture:
         self.project_name = snippets.project_name()
 
     def __enter__(self):
-        print('test');
 	# Create an uptime check config (GET request).
         self.config_get = snippets.create_uptime_check_config_get(
             self.project_name, display_name=random_name(10))
