@@ -54,13 +54,17 @@ def sample_analyze_entities(text_content):
     encoding_type = enums.EncodingType.UTF8
 
     response = client.analyze_entities(document, encoding_type=encoding_type)
+
     # Loop through entitites returned from the API
     for entity in response.entities:
         print(u"Representative name for the entity: {}".format(entity.name))
+
         # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
         print(u"Entity type: {}".format(enums.Entity.Type(entity.type).name))
+
         # Get the salience score associated with the entity in the [0, 1.0] range
         print(u"Salience score: {}".format(entity.salience))
+
         # Loop over the metadata associated with entity. For many known entities,
         # the metadata is a Wikipedia URL (wikipedia_url) and Knowledge Graph MID (mid).
         # Some entity types may have additional metadata, e.g. ADDRESS entities
@@ -72,6 +76,7 @@ def sample_analyze_entities(text_content):
         # The API currently supports proper noun mentions.
         for mention in entity.mentions:
             print(u"Mention text: {}".format(mention.text.content))
+
             # Get the mention type, e.g. PROPER for proper noun
             print(
                 u"Mention type: {}".format(enums.EntityMention.Type(mention.type).name)
