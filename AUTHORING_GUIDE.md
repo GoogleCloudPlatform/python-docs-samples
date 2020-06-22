@@ -481,22 +481,10 @@ __Note:__ As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
 `noxfile-template.py` as `noxfile.py` in the folder of the project (containing the `requirements.txt` for the file) you want to
-run tests:
-
 ```console
 cd python-docs-samples
-cp noxfile-template.py PRODUCT/noxfile.py
-cd PRODUCT/
-nox -s lint
-```
-or if you use subdirectories that contain `requirements.txt`, you'll need to
-copy it into each subdirectory and run lint from there:
-
-```console
-cd python-docs-samples
-cp noxfile-template.py PRODUCT/EXAMPLE/noxfile.py
-cd PRODUCT/EXAMPLE/
-nox -s lint
+cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
+cd PATH/TO/YOUR/PROJECT/
 ```
 
 
