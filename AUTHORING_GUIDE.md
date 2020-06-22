@@ -489,6 +489,16 @@ cp noxfile-template.py PRODUCT/noxfile.py
 cd PRODUCT/
 nox -s lint
 ```
+or if you use subdirectories that contain `requirements.txt`, you'll need to
+copy it into each subdirectory and run lint from there:
+
+```console
+cd python-docs-samples
+cp noxfile-template.py PRODUCT/EXAMPLE/noxfile.py
+cd PRODUCT/EXAMPLE/
+nox -s lint
+```
+
 
 To use nox, install it globally with `pip`:
 
