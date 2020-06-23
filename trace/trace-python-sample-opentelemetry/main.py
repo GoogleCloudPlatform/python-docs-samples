@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import argparse
+import os
 import random
 import time
-import os
 
 from flask import Flask, redirect, url_for
 
 # [START trace_setup_python_configure]
-from opentelemetry import trace, propagators
+from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
@@ -42,19 +42,19 @@ def initialize_tracer(project_id):
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def root():
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
 # [START trace_setup_python_quickstart]
-@app.route('/index.html', methods=['GET'])
+@app.route("/index.html", methods=["GET"])
 def index():
-    tracer = app.config['TRACER']
-    tracer.start_as_current_span(name='index')
+    tracer = app.config["TRACER"]
+    tracer.start_as_current_span(name="index")
     # Add up to 1 sec delay, weighted toward zero
     time.sleep(random.random() ** 2)
-    result = 'Tracing requests'
+    result = "Tracing requests"
 
     return result
 
@@ -62,17 +62,19 @@ def index():
 # [END trace_setup_python_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--project_id', help='Project ID you want to access.',
-        default=os.environ['GOOGLE_CLOUD_PROJECT'], required=True)
+        "--project_id",
+        help="Project ID you want to access.",
+        default=os.environ["GOOGLE_CLOUD_PROJECT"],
+        required=True,
+    )
     args = parser.parse_args()
 
     tracer = initialize_tracer(args.project_id)
-    app.config['TRACER'] = tracer
+    app.config["TRACER"] = tracer
 
     app.run()
