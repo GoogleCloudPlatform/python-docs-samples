@@ -133,14 +133,14 @@ if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
     # descriptive env var for indicating it's on CI.
     RUNNING_IN_CI="true"
     TRAMPOLINE_CI="kokoro"
+    # We should be able to use the default service account.
+    log_yellow "Configuring Container Registry access"
+    gcloud auth list
+    gcloud auth configure-docker --quiet
 fi
 
 # Configure the service account for pulling the docker image.
-if [[ "${TRAMPOLINE_CI:-}" == "kokoro" ]]; then
-    # Now we're re-using the trampoline service account.
-    # Potentially we can pass down this key into Docker for
-    # bootstrapping secret.
-    SERVICE_ACCOUNT_KEY_FILE="${KOKORO_GFILE_DIR}/kokoro-trampoline.service-account.json"
+if [[ -n "${TRAMPOLINE_SERVICE_ACCOUNT:-}" ]]; then
 
     mkdir -p "${tmpdir}/gcloud"
     gcloud_config_dir="${tmpdir}/gcloud"
@@ -148,11 +148,13 @@ if [[ "${TRAMPOLINE_CI:-}" == "kokoro" ]]; then
     log_yellow "Using isolated gcloud config: ${gcloud_config_dir}."
     export CLOUDSDK_CONFIG="${gcloud_config_dir}"
 
-    log_yellow "Using ${SERVICE_ACCOUNT_KEY_FILE} for authentication."
+    log_yellow "Using ${TRAMPOLINE_SERVICE_ACCOUNT} for authentication."
     gcloud auth activate-service-account \
-	   --key-file "${SERVICE_ACCOUNT_KEY_FILE}"
+	   --key-file "${TRAMPOLINE_SERVICE_ACCOUNT}"
+    log_yellow "Configuring Container Registry access"
     gcloud auth configure-docker --quiet
 fi
+
 
 log_yellow "Changing to the project root: ${PROJECT_ROOT}."
 cd "${PROJECT_ROOT}"
