@@ -19,7 +19,7 @@ import snippets
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
-LOCATION_ID = environ['GOOGLE_CLOUD_LOCATION']
+LOCATION_ID = 'us-east1'
 NAMESPACE_ID = 'test-namespace'
 SERVICE_ID = 'test-service'
 ENDPOINT_ID = 'test-endpoint'

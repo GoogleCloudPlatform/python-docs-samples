@@ -21,10 +21,11 @@ from google.api_core import exceptions
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
-LOCATION_ID = environ['GOOGLE_CLOUD_LOCATION']
+LOCATION_ID = 'us-east1'
 NAMESPACE_ID = 'test-namespace'
 
 
+@pytest.fixture(scope='module')
 def test_list_namespace():
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
