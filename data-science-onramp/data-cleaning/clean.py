@@ -49,7 +49,7 @@ def user_type_udf(user):
         return 'Customer'
 
 def gender_udf(gender):
-    '''Converts gender to 'Male' or 'Female' or '''
+    '''Converts gender to 'Male' or 'Female'.'''
     if not gender:
         return None
     
@@ -123,69 +123,61 @@ def compute_end_udf(duration, start, end):
     '''Calculates end time from duration and start time if null.'''
     return compute_time(duration, start, end)[2]
 
-def upload_to_gcs(df):
-    '''Writes a dataframe to a GCP bucket.'''
-    path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
-    df.write.options(codec='org.apache.hadoop.io.compress.GzipCodec').csv(path)
-    print('Data successfully uploaded to ' + path)
 
-def main():
-    # Create a SparkSession under the name 'data_cleaning'. Viewable via the Spark UI
+if __name__ == '__main__':
+    # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName('data_cleaning').getOrCreate()
 
-    # Whether to upload data to GCS bucket
-    upload = True
-    if '--test' in sys.argv:
-        upload = False
-        print('Results will not be uploaded to GCS')
-
-    # Check if table exists
+    # Load data into dataframe if table exists
     try:
         df = spark.read.format('bigquery').option('table', TABLE).load()
     except Py4JJavaError:
-        print(f'{TABLE} does not exist. ')
-        return
+        print(f'{TABLE} does not exist.')
+        raise 
 
-    # Single-parameter column transformations
+    # Single-parameter udfs
     udfs = {
-        'start_station_name': (station_name_udf, StringType()),
-        'end_station_name': (station_name_udf, StringType()),
-        'tripduration': (trip_duration_udf, IntegerType()),
-        'usertype': (user_type_udf, StringType()),
-        'gender': (gender_udf, StringType()),
-        'start_station_latitude': (angle_udf, FloatType()),
-        'start_station_longitude': (angle_udf, FloatType()),
-        'end_station_latitude': (angle_udf, FloatType()),
-        'end_station_longitude': (angle_udf, FloatType())
+        'start_station_name': UserDefinedFunction(station_name_udf, StringType()),
+        'end_station_name': UserDefinedFunction(station_name_udf, StringType()),
+        'tripduration': UserDefinedFunction(trip_duration_udf, IntegerType()),
+        'usertype': UserDefinedFunction(user_type_udf, StringType()),
+        'gender': UserDefinedFunction(gender_udf, StringType()),
+        'start_station_latitude': UserDefinedFunction(angle_udf, FloatType()),
+        'start_station_longitude': UserDefinedFunction(angle_udf, FloatType()),
+        'end_station_latitude': UserDefinedFunction(angle_udf, FloatType()),
+        'end_station_longitude': UserDefinedFunction(angle_udf, FloatType())
     }
 
     for name, udf in udfs.items():
-        df = df.withColumn(name, UserDefinedFunction(*udf)(name))
+        df = df.withColumn(name, udf(name))
 
-    # Multiple-parameter column transformations
+    # Multi-parameter udfs
     multi_udfs = {
         'tripduration': {
-            'udf': (compute_duration_udf, IntegerType()),
+            'udf': UserDefinedFunction(compute_duration_udf, IntegerType()),
             'params': ('tripduration', 'starttime', 'stoptime')
         },
         'starttime': {
-            'udf': (compute_start_udf, StringType()),
+            'udf': UserDefinedFunction(compute_start_udf, StringType()),
             'params': ('tripduration', 'starttime', 'stoptime')
         },
         'stoptime': {
-            'udf': (compute_end_udf, StringType()),
+            'udf': UserDefinedFunction(compute_end_udf, StringType()),
             'params': ('tripduration', 'starttime', 'stoptime')
         }
     }
 
     for name, obj in multi_udfs.items():
-        df = df.withColumn(name, UserDefinedFunction(*obj['udf'])(*obj['params']))
+        df = df.withColumn(name, obj['udf'](*obj['params']))
 
-    if upload:
-        upload_to_gcs(df)
-    
+    # Display sample of 100 rows
     df.sample(False, 0.001).show(n=100)
 
-if __name__ == '__main__':
-    main()
+    # Write results to GCS
+    if '--test' in sys.argv:
+        print('Data will not be uploaded to GCS')
+    else:
+        path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
+        df.write.options(codec='org.apache.hadoop.io.compress.GzipCodec').csv(path, mode='overwrite')
+        print('Data successfully uploaded to ' + path)
     
