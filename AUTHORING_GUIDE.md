@@ -480,8 +480,13 @@ as well as automated README generation.
 __Note:__ As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
-`noxfile-template.py` as `noxfile.py` in the folder of the project you want to
-run tests.
+`noxfile-template.py` as `noxfile.py` in the folder of the project (containing the `requirements.txt` for the file) you want to
+```console
+cd python-docs-samples
+cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
+cd PATH/TO/YOUR/PROJECT/
+```
+
 
 To use nox, install it globally with `pip`:
 
