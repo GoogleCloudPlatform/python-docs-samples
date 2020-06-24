@@ -26,15 +26,21 @@ NAMESPACE_ID = 'test-namespace'
 
 
 @pytest.fixture(scope='module')
-def test_list_namespace():
-  client = servicedirectory_v1beta1.RegistrationServiceClient()
+def client():
+  return servicedirectory_v1beta1.RegistrationServiceClient()
 
-  namespace = servicedirectory_v1beta1.Namespace(
+
+@pytest.fixture(scope='module')
+def namespace(client):
+  return servicedirectory_v1beta1.Namespace(
       name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
 
+
+@pytest.fixture(scope='module')
+def list_namespace(client, namespace):
   created = False
   try:
-    response = client.get_namespace(name=namespace.name)
+    client.get_namespace(name=namespace.name)
   except exceptions.NotFound as e:
     client.create_namespace(
         parent='projects/{0}/locations/{1}'.format(PROJECT_ID, LOCATION_ID),
@@ -43,9 +49,11 @@ def test_list_namespace():
     )
     created = True
 
-  response = quickstart.list_namespaces(PROJECT_ID, LOCATION_ID)
-
-  assert namespace in response.namespaces
+  yield quickstart.list_namespaces(PROJECT_ID, LOCATION_ID)
 
   if created:
     client.delete_namespace(name=namespace.name)
+
+
+def test_list_namespace(namespace, list_namespace):
+  assert namespace in list_namespace.namespaces
