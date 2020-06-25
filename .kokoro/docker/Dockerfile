@@ -15,7 +15,7 @@
 # Sometimes renovate tries to update it to 16.10. I don't think it's
 # worthwhile because 16.04 is an LTS release. Maybe we should think
 # about upgrading to 18.04 (the next LTS) instead.
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -34,7 +34,9 @@ RUN apt-get update \
     build-essential \
     ca-certificates \
     curl \
+    dirmngr \
     git \
+    gpg-agent \
     graphviz \
     libbz2-dev \
     libdb5.3-dev \
@@ -51,6 +53,7 @@ RUN apt-get update \
     software-properties-common \
     ssh \
     sudo \
+    systemd \
     tcl \
     tcl-dev \
     tk \
@@ -94,6 +97,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 # Install the desired versions of Python.
 RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
+    && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
       # 2.7.17 (Benjamin Peterson)
       C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
@@ -123,7 +127,7 @@ RUN set -ex \
         && make install \
         && ldconfig \
   ; done \
-  && rm -r "${GNUPGHOME}" \
+  && rm -rf "${GNUPGHOME}" \
   && rm -rf /usr/src/python* \
   && rm -rf ~/.cache/
 
