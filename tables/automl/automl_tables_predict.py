@@ -80,6 +80,7 @@ def predict(
 
     # [END automl_tables_predict]
 
+
 def batch_predict_bq(
     project_id,
     compute_region,
@@ -105,8 +106,8 @@ def batch_predict_bq(
                                     bigquery_output_uri=bq_output_uri,
                                     model_display_name=model_display_name)
     print("Making batch prediction... ")
-    # `response` is a async operation descriptor, 
-    # you can register a callback for the operation to compelete via `add_done_callback`:
+    # `response` is a async operation descriptor,
+    # you can register a callback for the operation to complete via `add_done_callback`:
     # def callback(operation_future):
     #   result = operation_future.result()
     # response.add_done_callback(callback)
@@ -115,11 +116,13 @@ def batch_predict_bq(
     response.result()
     # AutoML puts predictions in a newly generated dataset with a name by a mask "prediction_" + model_id + "_" + timestamp
     # here's how to get the dataset name:
-    dataset_name = job.metadata.batch_predict_details.output_info.bigquery_output_dataset
-    
-    print("Batch prediction complete.\n{}".format(response.metadata))
+    dataset_name = response.metadata.batch_predict_details.output_info.bigquery_output_dataset
+
+    print("Batch prediction complete.\nResults are in '{}' dataset.\n{}".format(
+        dataset_name, response.metadata))
 
     # [END automl_tables_batch_predict_bq]
+
 
 def batch_predict(
     project_id,
@@ -146,15 +149,15 @@ def batch_predict(
                                     gcs_output_uri_prefix=gcs_output_uri,
                                     model_display_name=model_display_name)
     print("Making batch prediction... ")
-    # `response` is a async operation descriptor, 
-    # you can register a callback for the operation to compelete via `add_done_callback`:
+    # `response` is a async operation descriptor,
+    # you can register a callback for the operation to complete via `add_done_callback`:
     # def callback(operation_future):
     #   result = operation_future.result()
     # response.add_done_callback(callback)
     #
     # or block the thread polling for the operation's results:
     response.result()
-    
+
     print("Batch prediction complete.\n{}".format(response.metadata))
 
     # [END automl_tables_batch_predict]
