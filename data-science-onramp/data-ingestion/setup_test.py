@@ -13,6 +13,10 @@ CLUSTER_NAME = f'setup-test-{uuid.uuid4()}'
 BUCKET_NAME = f'setup-test-code-{uuid.uuid4()}'
 DESTINATION_BLOB_NAME = "setup.py"
 JOB_FILE_NAME = f'gs://{BUCKET_NAME}/setup.py'
+TABLE_NAMES = [
+    "new_york_citibike_trips",
+    "gas_prices",
+]
 JOB_DETAILS = {  # Job configuration
     'placement': {
         'cluster_name': CLUSTER_NAME
@@ -97,8 +101,11 @@ def get_blob_from_path(path):
 
 
 def is_in_table(value, out):
-    return re.search(f"\\|{value} *\\|", out)
+    return re.search(f"\\| *{value} *\\|", out)
 
+
+def table_printed(table_name, out):
+    return re.search(f"Table {table_name} printed", out)
 
 def test_setup():
     '''Tests setup.py by submitting it to a dataproc cluster'''
@@ -117,6 +124,10 @@ def test_setup():
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
     out = blob.download_as_string().decode("utf-8")
+
+    # check that tables were printed
+    for table_name in TABLE_NAMES:
+        assert table_printed(table_name, out)
 
     # tripDuration
     assert is_in_table("(\\d+(?:\\.\\d+)?) s", out)
