@@ -120,15 +120,16 @@ PROGRAM_PATH="$(realpath "$0")"
 PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
 PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
 
-RUNNING_IN_CI="false"
-TRAMPOLINE_V2="true"
+RUNNING_IN_CI="${RUNNING_IN_CI:-false}"
+TRAMPOLINE_VERSION="2.0.0"
 
 # The workspace in the container, defaults to /workspace.
 TRAMPOLINE_WORKSPACE="${TRAMPOLINE_WORKSPACE:-/workspace}"
 
-# If it's running on Kokoro, RUNNING_IN_CI will be true and
-# TRAMPOLINE_CI is set to 'kokoro'. Both envvars will be passing down
-# to the container for telling which CI system we're in.
+# Detect which CI systems we're in. If we're in any of the CI systems
+# we support, `RUNNING_IN_CI` will be true and `TRAMPOLINE_CI` will be
+# the name of the CI system. Both envvars will be passing down to the
+# container for telling which CI system we're in.
 if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
     # descriptive env var for indicating it's on CI.
     RUNNING_IN_CI="true"
@@ -137,6 +138,9 @@ if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
     log_yellow "Configuring Container Registry access"
     gcloud auth list
     gcloud auth configure-docker --quiet
+elif [[ "${TRAVIS:-}" == "true" ]]; then
+    RUNNING_IN_CI="true"
+    TRAMPOLINE_CI="travis"
 fi
 
 # Configure the service account for pulling the docker image.
@@ -171,8 +175,8 @@ pass_down_envvars=(
     "RUNNING_IN_CI"
     # Indicates which CI system we're in.
     "TRAMPOLINE_CI"
-    # Indicates we're running trampoline_v2.
-    "TRAMPOLINE_V2"
+    # Indicates the version of the script.
+    "TRAMPOLINE_VERSION"
     # KOKORO dynamic variables.
     "KOKORO_BUILD_NUMBER"
     "KOKORO_BUILD_ID"
@@ -249,12 +253,28 @@ if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
     if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
 	echo "docker build" "${docker_build_flags[@]}" "${context_dir}"
     fi
-    if docker build "${docker_build_flags[@]}" "${context_dir}"; then
-	log_green "Finished building the docker image."
-	update_cache="true"
+
+    # ON CI systems, we want to suppress docker build logs, only
+    # output the logs when it fails.
+    if [[ "${RUNNING_IN_CI:-}" == "true" ]]; then
+	if docker build "${docker_build_flags[@]}" "${context_dir}" \
+		  > "${tmpdir}/docker_build.log" 2>&1; then
+	    log_green "Finished building the docker image."
+	    update_cache="true"
+	else
+	    log_red "Failed to build the Docker image, aborting."
+	    log_yellow "Dumping the build logs:"
+	    cat "${tmpdir}/docker_build.log"
+	    exit 1
+	fi
     else
-	log_red "Failed to build the Docker image. Aborting."
-	exit 1
+	if docker build "${docker_build_flags[@]}" "${context_dir}"; then
+	    log_green "Finished building the docker image."
+	    update_cache="true"
+	else
+	    log_red "Failed to build the Docker image, aborting."
+	    exit 1
+	fi
     fi
 else
     if [[ "${has_cache}" != "true" ]]; then
