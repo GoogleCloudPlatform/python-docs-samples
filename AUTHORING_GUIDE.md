@@ -532,6 +532,13 @@ $ ../scripts/run_tests_local.sh . lint
 If your test needs a service account, you have to create a service
 account and download the JSON key to `testing/service-account.json`.
 
+On MacOS systems, you also need to install `coreutils` to use
+`scripts/run_tests_local.sh`. Here is how to install it with `brew`:
+
+```sh
+$ brew install coreutils
+```
+
 ### Google Cloud Storage Resources
 
 Certain samples require integration with Google Cloud Storage (GCS), most
