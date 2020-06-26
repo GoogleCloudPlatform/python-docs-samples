@@ -36,7 +36,7 @@ import slack
 
 # [START functions_billing_limit]
 # [START functions_billing_stop]
-PROJECT_ID = os.getenv('GCP_PROJECT')
+PROJECT_ID = os.getenv('PROJECT_ID')
 PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_stop]
 # [END functions_billing_limit]
@@ -74,6 +74,10 @@ def stop_billing(data, context):
     if cost_amount <= budget_amount:
         print(f'No action necessary. (Current cost: {cost_amount})')
         return
+    
+    if PROJECT_ID is None:
+        print('No project specified with environment variable')
+        return
 
     billing = discovery.build(
         'cloudbilling',
@@ -83,8 +87,17 @@ def stop_billing(data, context):
 
     projects = billing.projects()
 
-    if __is_billing_enabled(PROJECT_NAME, projects):
-        print(__disable_billing_for_project(PROJECT_NAME, projects))
+    try:
+        billing_enabled = __is_billing_enabled(PROJECT_NAME, projects)
+    except:
+        billing_enabled = True
+        print('Unable to determine if billing is enabled on specified project, assuming true')
+
+    if billing_enabled:
+        try:
+            __disable_billing_for_project(PROJECT_NAME, projects)
+        except:
+            print('Failed to disable billing, possibly check permissions')
     else:
         print('Billing already disabled')
 
