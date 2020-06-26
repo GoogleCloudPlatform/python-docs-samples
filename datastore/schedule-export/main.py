@@ -3,8 +3,20 @@ import json
 import os
 
 from googleapiclient.discovery import build
+from googleapiclient.discovery_cache.base import Cache
 
-datastore = build('datastore', 'v1')
+
+class MemoryCache(Cache):
+    _CACHE = {}
+
+    def get(self, url):
+        return MemoryCache._CACHE.get(url)
+
+    def set(self, url, content):
+        MemoryCache._CACHE[url] = content
+
+
+datastore = build('datastore', 'v1', cache=MemoryCache())
 project_id = os.environ.get('GCP_PROJECT')
 
 
