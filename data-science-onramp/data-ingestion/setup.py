@@ -1,17 +1,37 @@
 import random
 import sys
+import pandas as pd
 
 from google.cloud import bigquery
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import expr, UserDefinedFunction, when
-from pyspark.sql.types import StringType
+from pyspark.sql.types import FloatType, StringType, StructField, StructType
 
 
 BUCKET_NAME = sys.argv[1]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
-RAW_DATASET_NAME = "new_york_citibike_trips"
-RAW_TABLE_NAME = "RAW_DATA"
+DATASET_NAME = "data_science_onramp"
+RAW_TABLE_NAME = "new_york_citibike_trips"
+EXTERNAL_DATASETS = {
+    "gas_prices": {
+        "url": "https://data.ny.gov/api/views/wuxr-ni2i/rows.csv",
+        "schema": StructType([
+            StructField("Date", StringType(), True),
+            StructField("New_York_State_Average_USD_per_Gal",
+                        FloatType(), True),
+            StructField("Albany_Average_USD_per_Gal", FloatType(), True),
+            StructField("Blinghamton_Average_USD_per_Gal", FloatType(), True),
+            StructField("Buffalo_Average_USD_per_Gal", FloatType(), True),
+            StructField("Nassau_Average_USD_per_Gal", FloatType(), True),
+            StructField("New_York_City_Average_USD_per_Gal",
+                        FloatType(), True),
+            StructField("Rochester_Average_USD_per_Gal", FloatType(), True),
+            StructField("Syracuse_Average_USD_per_Gal", FloatType(), True),
+            StructField("Utica_Average_USD_per_Gal", FloatType(), True),
+        ]),
+    },
+}
 
 
 # START MAKING DATA DIRTY
@@ -65,23 +85,39 @@ def convert_angle(angle):
                           weights=[0.55, 0.45])[0]
 
 
-def write_to_bigquery(df):
-    '''Write a dataframe to BigQuery'''
-
+def create_bigquery_dataset():
     # Create BigQuery Dataset
     client = bigquery.Client()
-    dataset_id = f'{client.project}.{RAW_DATASET_NAME}'
+    dataset_id = f'{client.project}.{DATASET_NAME}'
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
     dataset = client.create_dataset(dataset)
 
+
+def write_to_bigquery(df, table_name):
+    '''Write a dataframe to BigQuery'''
+    client = bigquery.Client()
+    dataset_id = f'{client.project}.{DATASET_NAME}'
+
     # Saving the data to BigQuery
     df.write.format('bigquery') \
-        .option('table', f"{dataset_id}.{RAW_TABLE_NAME}") \
+        .option('table', f"{dataset_id}.{table_name}") \
         .option("temporaryGcsBucket", BUCKET_NAME) \
         .save()
 
-    print("Table successfully written to BigQuery")
+    print(f"Table {table_name} successfully written to BigQuery")
+
+
+def print_df(df, table_name):
+    '''Print 20 rows from dataframe and a random sample'''
+    # first 100 rows for smaller tables
+    df.show()
+
+    # random sample for larger tables
+    # for small tables this will be empty
+    df.sample(True, 0.0001).show(n=500, truncate=False)
+
+    print(f"Table {table_name} printed")
 
 
 def main():
@@ -91,11 +127,24 @@ def main():
     upload = True  # Whether to upload data to BigQuery
 
     # Check whether or not results should be uploaded
-    if len(sys.argv) > 2:
+    if '--test' in sys.argv:
         upload = False
         print("Not uploading results to BigQuery")
     else:
+        create_bigquery_dataset()
         print("Results will be uploaded to BigQuery")
+
+    # Ingest External Datasets
+
+    for table_name, data in EXTERNAL_DATASETS.items():
+        print(f'Creating dataframe for {table_name}')
+        df = spark.createDataFrame(pd.read_csv(data["url"]),
+                                   schema=data["schema"])
+
+        if upload:
+            write_to_bigquery(df, table_name)
+        else:
+            print_df(df, table_name)
 
     # Check if table exists
     try:
@@ -135,6 +184,7 @@ def main():
 
     # Randomly set about 5% of the values in some columns to null
     for name in null_columns:
+
         df = df.withColumn(name, when(expr("rand() < 0.05"), None).otherwise(df[name]))
 
     # Duplicate about 0.01% of the rows
@@ -144,9 +194,9 @@ def main():
     df = df.union(dup_df)
 
     if upload:
-        write_to_bigquery(df)
+        write_to_bigquery(df, RAW_TABLE_NAME)
     else:
-        df.sample(True, 0.0001).show(n=500, truncate=False)
+        print_df(df, RAW_TABLE_NAME)
 
 
 if __name__ == '__main__':
