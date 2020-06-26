@@ -40,6 +40,7 @@ def create_http_task(project,
     # location = 'us-central1'
     # url = 'https://example.com/task_handler'
     # payload = 'hello'
+    # serviceAccountEmail = 'service-account@my-project-id.iam.gserviceaccount.com';
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
