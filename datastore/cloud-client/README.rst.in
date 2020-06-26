@@ -4,9 +4,15 @@ product:
   name: Google Cloud Datastore
   short_name: Cloud Datastore
   url: https://cloud.google.com/datastore/docs
-  description: > 
+  description: >
     `Google Cloud Datastore`_ is a NoSQL document database built for automatic
     scaling, high performance, and ease of application development.
+
+required_role: Datastore Import Export Admin
+other_required_steps: >
+    Set environment variables:
+      `GOOGLE_CLOUD_PROJECT` - Google Cloud project id
+      `CLOUD_STORAGE_BUCKET` - Google Cloud Storage bucket name
 
 setup:
 - auth

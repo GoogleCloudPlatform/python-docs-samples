@@ -14,6 +14,15 @@ This directory contains samples for Google Cloud Datastore. `Google Cloud Datast
 
 .. _Google Cloud Datastore: https://cloud.google.com/datastore/docs
 
+
+To run the sample, you need to have `Datastore Import Export Admin` role.
+
+
+Set environment variables:
+  `GOOGLE_CLOUD_PROJECT` - Google Cloud project id
+  `CLOUD_STORAGE_BUCKET` - Google Cloud Storage bucket name
+
+
 Setup
 -------------------------------------------------------------------------------
 
