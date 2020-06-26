@@ -13,10 +13,12 @@
 
 import os
 import pytest
+from retrying import retry
 
 import admin
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
 class TestDatastoreAdminSnippets:
@@ -35,3 +37,10 @@ class TestDatastoreAdminSnippets:
 
     def test_list_index(self):
         assert admin.list_indexes(PROJECT)
+
+    @retry(stop_max_attempt_number=3, stop_max_delay=540000)
+    def test_export_import_entities(self):
+        response = admin.export_entities(PROJECT, "gs://" + BUCKET)
+        assert response
+
+        assert admin.import_entities(PROJECT, response.output_url)
