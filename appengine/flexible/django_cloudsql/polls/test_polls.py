@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+# Copyright 2020 Google LLC. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,4 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Create your tests here.
+from django.test import Client, TestCase  # noqa: 401
+
+
+class PollViewTests(TestCase):
+    def test_index_view(self):
+        response = self.client.get('/')
+        assert response.status_code == 200
+        assert 'Hello, world' in str(response.content)
