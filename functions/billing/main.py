@@ -36,7 +36,7 @@ import slack
 
 # [START functions_billing_limit]
 # [START functions_billing_stop]
-PROJECT_ID = os.getenv('PROJECT_ID')
+PROJECT_ID = os.getenv('GCP_PROJECT')
 PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_stop]
 # [END functions_billing_limit]
@@ -74,7 +74,7 @@ def stop_billing(data, context):
     if cost_amount <= budget_amount:
         print(f'No action necessary. (Current cost: {cost_amount})')
         return
-    
+
     if PROJECT_ID is None:
         print('No project specified with environment variable')
         return
@@ -87,17 +87,10 @@ def stop_billing(data, context):
 
     projects = billing.projects()
 
-    try:
-        billing_enabled = __is_billing_enabled(PROJECT_NAME, projects)
-    except:
-        billing_enabled = True
-        print('Unable to determine if billing is enabled on specified project, assuming true')
+    billing_enabled = __is_billing_enabled(PROJECT_NAME, projects)
 
     if billing_enabled:
-        try:
-            __disable_billing_for_project(PROJECT_NAME, projects)
-        except:
-            print('Failed to disable billing, possibly check permissions')
+        __disable_billing_for_project(PROJECT_NAME, projects)
     else:
         print('Billing already disabled')
 
@@ -108,19 +101,25 @@ def __is_billing_enabled(project_name, projects):
     @param {string} project_name Name of project to check if billing is enabled
     @return {bool} Whether project has billing enabled or not
     """
-    res = projects.getBillingInfo(name=project_name).execute()
-    return res['billingEnabled']
+    try:
+        res = projects.getBillingInfo(name=project_name).execute()
+        return res['billingEnabled']
+    except Exception:
+        print('Unable to determine if billing is enabled on specified project, assuming billing is enabled')
+        return True
 
 
 def __disable_billing_for_project(project_name, projects):
     """
     Disable billing for a project by removing its billing account
     @param {string} project_name Name of project disable billing on
-    @return {string} Text containing response from disabling billing
     """
     body = {'billingAccountName': ''}  # Disable billing
-    res = projects.updateBillingInfo(name=project_name, body=body).execute()
-    print(f'Billing disabled: {json.dumps(res)}')
+    try:
+        res = projects.updateBillingInfo(name=project_name, body=body).execute()
+        print(f'Billing disabled: {json.dumps(res)}')
+    except Exception:
+        print('Failed to disable billing, possibly check permissions')
 # [END functions_billing_stop]
 
 
