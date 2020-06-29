@@ -153,7 +153,7 @@ def create_observation(
 
     body = {
         "resourceType": "Observation",
-        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
+        "code": {"coding": [{"system": "http://loinc.org", "code": "8867-4", "display": "Heart rate"}]},
         "status": "final",
         "subject": {"reference": "Patient/{}".format(patient_id)},
         "effectiveDateTime": "2019-01-01T00:00:00+00:00",
