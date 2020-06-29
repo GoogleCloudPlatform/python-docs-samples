@@ -50,7 +50,7 @@ def analyze_explicit_content(path):
     result = operation.result(timeout=90)
     print("\nFinished processing.")
 
-    # first result is retrieved because a single video was processed
+    # Retrieve first result because a single video was processed
     for frame in result.annotation_results[0].explicit_annotation.frames:
         likelihood = enums.Likelihood(frame.pornography_likelihood)
         frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
