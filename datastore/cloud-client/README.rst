@@ -22,6 +22,8 @@ Set environment variables:
   `GOOGLE_CLOUD_PROJECT` - Google Cloud project id
   `CLOUD_STORAGE_BUCKET` - Google Cloud Storage bucket name
 
+For entities import/export you also need a `Storage Admin`, or `Storage Owner` role set in your Service Account.
+
 
 Setup
 -------------------------------------------------------------------------------

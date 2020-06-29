@@ -12,10 +12,11 @@
 # limitations under the License.
 
 import os
+
+import admin
 import pytest
 from retrying import retry
 
-import admin
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
