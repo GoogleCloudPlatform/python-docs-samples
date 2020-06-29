@@ -17,6 +17,8 @@ from __future__ import print_function
 import random
 import string
 
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
 
 import snippets
@@ -63,8 +65,17 @@ def test_update_uptime_config(capsys):
     new_display_name = random_name(10)
     new_uptime_check_path = '/' + random_name(10)
     with UptimeFixture() as fixture:
-        snippets.update_uptime_check_config(
-            fixture.config.name, new_display_name, new_uptime_check_path)
+
+        # We sometimes see the permission error saying the resource
+        # may not exist. Weirdly DeadlineExceeded instnace is raised
+        # in this case.
+        @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=120)
+        def call_sample():
+            snippets.update_uptime_check_config(
+                fixture.config.name, new_display_name, new_uptime_check_path)
+
+        call_sample()
+
         out, _ = capsys.readouterr()
         snippets.get_uptime_check_config(fixture.config.name)
         out, _ = capsys.readouterr()

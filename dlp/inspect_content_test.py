@@ -161,6 +161,16 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
+def test_inspect_string_basic(capsys):
+    test_string = "String with a phone number: 234-555-6789"
+
+    inspect_content.inspect_string_basic(GCLOUD_PROJECT, test_string)
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Quote: 234-555-6789" in out
+
+
 def test_inspect_string(capsys):
     test_string = "My name is Gary Smith and my email is gary@example.com"
 

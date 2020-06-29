@@ -83,6 +83,64 @@ def deidentify_with_mask(
 
 # [END dlp_deidentify_masking]
 
+# [START dlp_deidentify_redact]
+def deidentify_with_redact(
+    project,
+    input_str,
+    info_types,
+):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+    string by redacting matched input values.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        "info_types": [{"name": info_type} for info_type in info_types]
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {
+                        "redact_config": {}
+                    }
+                }
+            ]
+        }
+    }
+
+    # Construct item
+    item = {"value": input_str}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+
+# [END dlp_deidentify_redact]
+
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
     project,
@@ -335,6 +393,173 @@ def reidentify_with_fpe(
 
 
 # [END dlp_reidentify_fpe]
+
+
+# [START dlp_deidentify_free_text_with_fpe_using_surrogate]
+def deidentify_free_text_with_fpe_using_surrogate(
+    project,
+    input_str,
+    alphabet="NUMERIC",
+    info_type="PHONE_NUMBER",
+    surrogate_type="PHONE_TOKEN",
+    unwrapped_key="YWJjZGVmZ2hpamtsbW5vcA==",
+):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+       string using Format Preserving Encryption (FPE).
+       The encryption is performed with an unwrapped key.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        alphabet: The set of characters to replace sensitive ones with. For
+            more information, see https://cloud.google.com/dlp/docs/reference/
+            rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+        info_type: The name of the info type to de-identify
+        surrogate_type: The name of the surrogate custom info type to use. Can
+            be essentially any arbitrary string, as long as it doesn't appear
+            in your dataset otherwise.
+        unwrapped_key: The base64-encoded AES-256 key to use.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # The unwrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    import base64
+
+    unwrapped_key = base64.b64decode(unwrapped_key)
+
+    # Construct de-identify config
+    transformation = {
+        "info_types": [{"name": info_type}],
+        "primitive_transformation": {
+            "crypto_replace_ffx_fpe_config": {
+                "crypto_key": {
+                    "unwrapped": {"key": unwrapped_key}
+                },
+                "common_alphabet": alphabet,
+                "surrogate_info_type": {"name": surrogate_type},
+            }
+        }
+    }
+
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [transformation]
+        }
+    }
+
+    # Construct the inspect config, trying to finding all PII with likelihood
+    # higher than UNLIKELY
+    inspect_config = {
+        "info_types": [{"name": info_type}],
+        "min_likelihood": "UNLIKELY"
+    }
+
+    # Convert string to item
+    item = {"value": input_str}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
+
+    # Print results
+    print(response.item.value)
+
+
+# [END dlp_deidentify_free_text_with_fpe_using_surrogate]
+
+
+# [START dlp_reidentify_free_text_with_fpe_using_surrogate]
+def reidentify_free_text_with_fpe_using_surrogate(
+    project,
+    input_str,
+    alphabet="NUMERIC",
+    surrogate_type="PHONE_TOKEN",
+    unwrapped_key="YWJjZGVmZ2hpamtsbW5vcA==",
+):
+    """Uses the Data Loss Prevention API to reidentify sensitive data in a
+    string that was encrypted by Format Preserving Encryption (FPE) with
+    surrogate type. The encryption is performed with an unwrapped key.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        alphabet: The set of characters to replace sensitive ones with. For
+            more information, see https://cloud.google.com/dlp/docs/reference/
+            rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+        surrogate_type: The name of the surrogate custom info type to used
+            during the encryption process.
+        unwrapped_key: The base64-encoded AES-256 key to use.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # The unwrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    import base64
+
+    unwrapped_key = base64.b64decode(unwrapped_key)
+
+    # Construct Deidentify Config
+    transformation = {
+        "primitive_transformation": {
+            "crypto_replace_ffx_fpe_config": {
+                "crypto_key": {
+                    "unwrapped": {"key": unwrapped_key}
+                },
+                "common_alphabet": alphabet,
+                "surrogate_info_type": {"name": surrogate_type},
+            }
+        }
+    }
+
+    reidentify_config = {
+        "info_type_transformations": {
+            "transformations": [transformation]
+        }
+    }
+
+    inspect_config = {
+        "custom_info_types": [
+            {"info_type": {"name": surrogate_type}, "surrogate_type": {}}
+        ]
+    }
+
+    # Convert string to item
+    item = {"value": input_str}
+
+    # Call the API
+    response = dlp.reidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        reidentify_config=reidentify_config,
+        item=item,
+    )
+
+    # Print results
+    print(response.item.value)
+
+
+# [END dlp_reidentify_free_text_with_fpe_using_surrogate]
 
 
 # [START dlp_deidentify_date_shift]
