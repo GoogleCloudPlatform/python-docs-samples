@@ -1,1 +1,2 @@
-google-cloud-firestore==1.7.0
+# google-cloud-firestore==1.7.0
+git+https://github.com/googleapis/python-firestore.git
