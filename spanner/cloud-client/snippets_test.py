@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import time
 import uuid
 
@@ -22,19 +21,27 @@ import pytest
 import snippets
 
 
+def unique_instance_id():
+    """ Creates a unique id for the database. """
+    return f'test-instance-{uuid.uuid4().hex[:10]}'
+
+
 def unique_database_id():
     """ Creates a unique id for the database. """
     return f'test-db-{uuid.uuid4().hex[:10]}'
 
 
-INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = unique_instance_id()
 DATABASE_ID = unique_database_id()
 
 
 @pytest.fixture(scope='module')
 def spanner_instance():
+    snippets.create_instance(INSTANCE_ID)
     spanner_client = spanner.Client()
-    return spanner_client.instance(INSTANCE_ID)
+    instance = spanner_client.instance(INSTANCE_ID)
+    yield instance
+    instance.delete()
 
 
 @pytest.fixture(scope='module')
@@ -44,6 +51,11 @@ def database(spanner_instance):
     db = spanner_instance.database(DATABASE_ID)
     yield db
     db.drop()
+
+
+def test_create_instance(spanner_instance):
+    # Reload will only succeed if the instance exists.
+    spanner_instance.reload()
 
 
 def test_create_database(database):
