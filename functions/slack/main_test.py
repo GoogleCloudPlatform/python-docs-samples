@@ -58,8 +58,8 @@ class TestGCFPySlackSample(object):
     def test_format_slack_message(self):
         message = main.format_slack_message('lion', example_response)
 
-        assert 'lion' in message['text'].lower()
-        assert 'lion' in message['attachments'][0]['title'].lower()
+        # Just make sure there's a result.
+        assert 'title' in message['attachments'][0]
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_make_search_request(self):
@@ -68,9 +68,8 @@ class TestGCFPySlackSample(object):
             search = entities.search.return_value
             search.execute.return_value = example_response
             message = main.make_search_request('lion')
-
-        assert 'lion' in message['text'].lower()
-        assert 'lion' in message['attachments'][0]['title'].lower()
+        # Just make sure there's a result.
+        assert 'title' in message['attachments'][0]
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_kg_search(self):
