@@ -15,6 +15,7 @@ class MemoryCache(Cache):
     def set(self, url, content):
         MemoryCache._CACHE[url] = content
 
+
 # The default cache (file_cache) is unavailable when using oauth2client >= 4.0.0 or google-auth,
 # and it will log worrisome messages unless given another interface to use.
 datastore = build('datastore', 'v1', cache=MemoryCache())
