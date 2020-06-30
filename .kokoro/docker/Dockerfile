@@ -94,19 +94,12 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+COPY fetch_gpg_keys.sh /tmp
 # Install the desired versions of Python.
 RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
     && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      # 2.7.17 (Benjamin Peterson)
-      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.4.10, 3.5.9 (Larry Hastings)
-      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.6.9, 3.7.5 (Ned Deily)
-      0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.0 (Łukasz Langa)
-      E3FF2839C048B25C084DEBE9B26995E310250568 \
+    && /tmp/fetch_gpg_keys.sh \
     && for PYTHON_VERSION in 2.7.18 3.6.10 3.7.7 3.8.3; do \
         wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
