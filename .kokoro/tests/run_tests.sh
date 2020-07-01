@@ -51,6 +51,26 @@ if [[ $* == *--only-diff-head* ]]; then
     fi
 fi
 
+# Because Kokoro runs presubmit builds simalteneously, we often see
+# quota related errors. I think we can avoid this by changing the
+# order of tests to execute (e.g. reverse order for py-3.8
+# build). Currently there's no easy way to do that with btlr, so we
+# temporarily wait few minutes to avoid quota issue for some
+# presubmit builds.
+if [[ "${KOKORO_JOB_NAME}" == *presubmit ]] \
+       && [[ -z "${DIFF_FROM:-}" ]]; then
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.7" ]]; then
+	echo -n "Detected py-3.7 presubmit full build,"
+	echo "Wait 5 minutes to avoid quota issues."
+	sleep 5m
+    fi
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.8" ]]; then
+	echo -n "Detected py-3.8 presubmit full build,"
+	echo "Wait 10 minutes to avoid quota issues."
+	sleep 10m
+    fi
+fi
+
 if [[ -z "${PROJECT_ROOT:-}" ]]; then
     PROJECT_ROOT="github/python-docs-samples"
 fi
@@ -63,11 +83,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # install nox for testing
 pip install --user -q nox
 
-# Use secrets acessor service account to get secrets.
-if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
-    gcloud auth activate-service-account \
-	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
-	   --project="cloud-devrel-kokoro-resources"
+# On kokoro, we should be able to use the default service account. We
+# need to somehow bootstrap the secrets on other CI systems.
+if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then
     # This script will create 3 files:
     # - testing/test-env.sh
     # - testing/service-account.json
@@ -108,9 +126,14 @@ test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 btlr_args=(
     "run"
     "**/requirements.txt"
-    "--max-concurrency"
-    "30"
 )
+
+if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
+    btlr_args+=(
+	"--max-concurrency"
+	"${NUM_TEST_WORKERS}"
+    )
+fi
 
 if [[ -n "${DIFF_FROM:-}"  ]]; then
     btlr_args+=(

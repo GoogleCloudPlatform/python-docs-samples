@@ -49,7 +49,7 @@
 /opencensus/                    @GoogleCloudPlatform/python-samples-owners
 /profiler/                      @jqll @GoogleCloudPlatform/python-samples-owners
 /pubsub/                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
-/run/                           @averikitsch @GoogleCloudPlatform/python-samples-owners
+/run/                           @dinagraves @GoogleCloudPlatform/python-samples-owners
 /scheduler/                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners

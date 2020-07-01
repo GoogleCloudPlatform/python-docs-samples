@@ -26,8 +26,9 @@ import automl_tables_dataset
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-STATIC_DATASET = "do_not_delete_this_table"
-GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"
+STATIC_DATASET = "do_not_delete_this_table_python"
+GCS_DATASET = ("gs://python-docs-samples-tests-automl-tables-test"
+               "/bank-marketing.csv")
 
 ID = "{rand}_{time}".format(
     rand="".join(
