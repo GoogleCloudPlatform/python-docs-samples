@@ -15,14 +15,15 @@ This directory contains samples for Google Cloud Datastore. `Google Cloud Datast
 .. _Google Cloud Datastore: https://cloud.google.com/datastore/docs
 
 
-To run the sample, you need to have `Datastore Import Export Admin` role.
 
 
 Set environment variables:
   `GOOGLE_CLOUD_PROJECT` - Google Cloud project id
   `CLOUD_STORAGE_BUCKET` - Google Cloud Storage bucket name
 
-For entities import/export you also need a `Storage Admin`, or `Storage Owner` role set in your Service Account.
+Roles to be set in your Service Account and App Engine default service account:
+  `Datastore Import Export Admin`, or `Cloud Datastore Owner`, or `Owner`
+  `Storage Admin`, or `Owner`
 
 
 Setup

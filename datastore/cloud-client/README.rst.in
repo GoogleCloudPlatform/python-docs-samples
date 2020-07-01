@@ -8,14 +8,14 @@ product:
     `Google Cloud Datastore`_ is a NoSQL document database built for automatic
     scaling, high performance, and ease of application development.
 
-required_role: Datastore Import Export Admin
 other_required_steps: >
     Set environment variables:
       `GOOGLE_CLOUD_PROJECT` - Google Cloud project id
       `CLOUD_STORAGE_BUCKET` - Google Cloud Storage bucket name
 
-    For entities import/export you also need a `Storage Admin`, or
-    `Storage Owner` role set in your Service Account.
+    Roles to be set in your Service Account and App Engine default service account:
+      `Datastore Import Export Admin`, or `Cloud Datastore Owner`, or `Owner`
+      `Storage Admin`, or `Owner`
 
 setup:
 - auth

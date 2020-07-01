@@ -15,7 +15,7 @@ import os
 
 import admin
 import pytest
-from retrying import retry
+import backoff
 
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -39,7 +39,7 @@ class TestDatastoreAdminSnippets:
     def test_list_index(self):
         assert admin.list_indexes(PROJECT)
 
-    @retry(stop_max_attempt_number=3, stop_max_delay=540000)
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=3, max_time=540000)
     def test_export_import_entities(self):
         response = admin.export_entities(PROJECT, "gs://" + BUCKET)
         assert response
