@@ -13,50 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START bigtable_filters_limit_timestamp_range]
+# [START bigtable_filters_print]
 import datetime
 
-# [END bigtable_filters_limit_timestamp_range]
-
-# [START bigtable_filters_limit_row_sample]
-# [START bigtable_filters_limit_row_regex]
-# [START bigtable_filters_limit_cells_per_col]
-# [START bigtable_filters_limit_cells_per_row]
-# [START bigtable_filters_limit_cells_per_row_offset]
-# [START bigtable_filters_limit_col_family_regex]
-# [START bigtable_filters_limit_col_qualifier_regex]
-# [START bigtable_filters_limit_col_range]
-# [START bigtable_filters_limit_value_range]
-# [START bigtable_filters_limit_value_regex]
-# [START bigtable_filters_limit_timestamp_range]
-# [START bigtable_filters_limit_block_all]
-# [START bigtable_filters_limit_pass_all]
-# [START bigtable_filters_modify_strip_value]
-# [START bigtable_filters_modify_apply_label]
-# [START bigtable_filters_composing_chain]
-# [START bigtable_filters_composing_interleave]
-# [START bigtable_filters_composing_condition]
 from google.cloud import bigtable
 import google.cloud.bigtable.row_filters as row_filters
 
-# [END bigtable_filters_limit_row_sample]
-# [END bigtable_filters_limit_row_regex]
-# [END bigtable_filters_limit_cells_per_col]
-# [END bigtable_filters_limit_cells_per_row]
-# [END bigtable_filters_limit_cells_per_row_offset]
-# [END bigtable_filters_limit_col_family_regex]
-# [END bigtable_filters_limit_col_qualifier_regex]
-# [END bigtable_filters_limit_col_range]
-# [END bigtable_filters_limit_value_range]
-# [END bigtable_filters_limit_value_regex]
-# [END bigtable_filters_limit_timestamp_range]
-# [END bigtable_filters_limit_block_all]
-# [END bigtable_filters_limit_pass_all]
-# [END bigtable_filters_modify_strip_value]
-# [END bigtable_filters_modify_apply_label]
-# [END bigtable_filters_composing_chain]
-# [END bigtable_filters_composing_interleave]
-# [END bigtable_filters_composing_condition]
+# Write your code here.
+# [START_EXCLUDE]
 
 
 # [START bigtable_filters_limit_row_sample]
@@ -307,26 +271,9 @@ def filter_composing_condition(project_id, instance_id, table_id):
 
 
 # [END bigtable_filters_composing_condition]
+# [END_EXCLUDE]
 
 
-# [START bigtable_filters_limit_row_sample]
-# [START bigtable_filters_limit_row_regex]
-# [START bigtable_filters_limit_cells_per_col]
-# [START bigtable_filters_limit_cells_per_row]
-# [START bigtable_filters_limit_cells_per_row_offset]
-# [START bigtable_filters_limit_col_family_regex]
-# [START bigtable_filters_limit_col_qualifier_regex]
-# [START bigtable_filters_limit_col_range]
-# [START bigtable_filters_limit_value_range]
-# [START bigtable_filters_limit_value_regex]
-# [START bigtable_filters_limit_timestamp_range]
-# [START bigtable_filters_limit_block_all]
-# [START bigtable_filters_limit_pass_all]
-# [START bigtable_filters_modify_strip_value]
-# [START bigtable_filters_modify_apply_label]
-# [START bigtable_filters_composing_chain]
-# [START bigtable_filters_composing_interleave]
-# [START bigtable_filters_composing_condition]
 def print_row(row):
     print("Reading data for {}:".format(row.row_key.decode('utf-8')))
     for cf, cols in sorted(row.cells.items()):
@@ -340,21 +287,4 @@ def print_row(row):
                                             cell.value.decode('utf-8'),
                                             cell.timestamp, labels))
     print("")
-# [END bigtable_filters_limit_row_sample]
-# [END bigtable_filters_limit_row_regex]
-# [END bigtable_filters_limit_cells_per_col]
-# [END bigtable_filters_limit_cells_per_row]
-# [END bigtable_filters_limit_cells_per_row_offset]
-# [END bigtable_filters_limit_col_family_regex]
-# [END bigtable_filters_limit_col_qualifier_regex]
-# [END bigtable_filters_limit_col_range]
-# [END bigtable_filters_limit_value_range]
-# [END bigtable_filters_limit_value_regex]
-# [END bigtable_filters_limit_timestamp_range]
-# [END bigtable_filters_limit_block_all]
-# [END bigtable_filters_limit_pass_all]
-# [END bigtable_filters_modify_strip_value]
-# [END bigtable_filters_modify_apply_label]
-# [END bigtable_filters_composing_chain]
-# [END bigtable_filters_composing_interleave]
-# [END bigtable_filters_composing_condition]
+# [END bigtable_filters_print]

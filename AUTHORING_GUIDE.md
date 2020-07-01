@@ -167,9 +167,7 @@ def download_encrypted_blob(
     blob.download_to_filename(
         destination_file_name, encryption_key=encryption_key)
 
-    print('Blob {} downloaded to {}.'.format(
-        source_blob_name,
-        destination_file_name))
+    print(f'Blob {source_blob_name} downloaded to {destination_file_name}.'
 ```
 
 Note the verbose parameter names and the extended description that helps the
@@ -197,7 +195,7 @@ and increased cognitive load.
 Argument types should be documented using Python type annotations as
 introduced in [PEP 484](https://www.python.org/dev/peps/pep-0484/). For example:
 
-```
+```py
 def hello_world(name: string):
     print(f"Hello {name}!")
 ```
@@ -327,19 +325,19 @@ assure uniqueness. Use the Python ```uuid``` package from the standard
 library to generate UUIDs for resource names. For example:
 
 ```python
-glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
+glossary_id = f'test-glossary-{uuid.uuid4()}'
 ```
 
 or:
 
 ```python
 # If full uuid4 is too long, use its hex representation.
-encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+encrypted_disk_name = f'test-disk-{uuid.uuid4().hex}'
 ```
 
 ```python
 # If the hex representation is also too long, slice it.
-encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex[:5]
+encrypted_disk_name = f'test-disk-{uuid.uuid4().hex[:5]}'
 ```
 
 All temporary resources should be explicitly deleted when testing is
@@ -482,8 +480,13 @@ as well as automated README generation.
 __Note:__ As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
-`noxfile-template.py` as `noxfile.py` in the folder of the project you want to
-run tests.
+`noxfile-template.py` as `noxfile.py` in the folder of the project (containing the `requirements.txt` for the file) you want to
+```console
+cd python-docs-samples
+cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
+cd PATH/TO/YOUR/PROJECT/
+```
+
 
 To use nox, install it globally with `pip`:
 
@@ -528,6 +531,13 @@ $ ../scripts/run_tests_local.sh . lint
 
 If your test needs a service account, you have to create a service
 account and download the JSON key to `testing/service-account.json`.
+
+On MacOS systems, you also need to install `coreutils` to use
+`scripts/run_tests_local.sh`. Here is how to install it with `brew`:
+
+```sh
+$ brew install coreutils
+```
 
 ### Google Cloud Storage Resources
 

@@ -59,7 +59,7 @@ def edge_container_predict_server_port():
         ['docker', 'pull', CPU_DOCKER_GCS_PATH],
         env={'DOCKER_API_VERSION': '1.38'})
 
-    if os.environ.get('TRAMPOLINE_V2') == 'true':
+    if os.environ.get('TRAMPOLINE_VERSION'):
         # Use /tmp
         model_path = tempfile.TemporaryDirectory()
     else:
