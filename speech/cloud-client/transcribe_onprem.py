@@ -33,15 +33,10 @@ def transcribe_onprem(local_file_path, api_endpoint):
     # api_endpoint = '0.0.0.0:10000'
     # local_file_path = 'resources/brooklyn_bridge.raw'
 
-    # Set the API endpoint to direct requests to
-    client_options = {"api_endpoint": api_endpoint}
-
     # Create a gRPC channel to your server
     channel = grpc.insecure_channel(target=api_endpoint)
 
-    client = speech_v1p1beta1.SpeechClient(
-        client_options=client_options, channel=channel
-    )
+    client = speech_v1p1beta1.SpeechClient(channel=channel)
 
     # The language of the supplied audio
     language_code = "en-US"
@@ -65,7 +60,7 @@ def transcribe_onprem(local_file_path, api_endpoint):
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
-        print(u"Transcript: {}".format(alternative.transcript))
+        print(f"Transcript: {alternative.transcript}")
 # [END speech_transcribe_onprem]
 
 
