@@ -23,8 +23,7 @@ import snippets
 
 
 def random_name(length):
-    return ''.join(
-        [random.choice(string.ascii_lowercase) for i in range(length)])
+    return "".join([random.choice(string.ascii_lowercase) for i in range(length)])
 
 
 class UptimeFixture:
@@ -36,12 +35,14 @@ class UptimeFixture:
         self.project_name = snippets.project_name()
 
     def __enter__(self):
-	# Create an uptime check config (GET request).
+        # Create an uptime check config (GET request).
         self.config_get = snippets.create_uptime_check_config_get(
-            self.project_name, display_name=random_name(10))
-	# Create an uptime check config (POST request).
+            self.project_name, display_name=random_name(10)
+        )
+        # Create an uptime check config (POST request).
         self.config_post = snippets.create_uptime_check_config_post(
-	    self.project_name, display_name=random_name(10))   
+            self.project_name, display_name=random_name(10)
+        )
         return self
 
     def __exit__(self, type, value, traceback):
@@ -49,7 +50,8 @@ class UptimeFixture:
         snippets.delete_uptime_check_config(self.config_get.name)
         snippets.delete_uptime_check_config(self.config_post.name)
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def uptime():
     with UptimeFixture() as uptime:
         yield uptime
@@ -64,10 +66,11 @@ def test_create_and_delete(capsys):
 def test_update_uptime_config(capsys):
     # create and delete happen in uptime fixture.
     new_display_name = random_name(10)
-    new_uptime_check_path = '/' + random_name(10)
+    new_uptime_check_path = "/" + random_name(10)
     with UptimeFixture() as fixture:
         snippets.update_uptime_check_config(
-            fixture.config_get.name, new_display_name, new_uptime_check_path)
+            fixture.config_get.name, new_display_name, new_uptime_check_path
+        )
         out, _ = capsys.readouterr()
         snippets.get_uptime_check_config(fixture.config_get.name)
         out, _ = capsys.readouterr()
@@ -90,4 +93,4 @@ def test_list_uptime_check_configs(capsys, uptime):
 def test_list_uptime_check_ips(capsys):
     snippets.list_uptime_check_ips()
     out, _ = capsys.readouterr()
-    assert 'Singapore' in out
+    assert "Singapore" in out
