@@ -29,61 +29,64 @@ PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'test_set_{}'.format(uuid.uuid4())
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
 PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'test_product_{}'.format(uuid.uuid4())
 
 
-@pytest.fixture(scope="function", autouse=True)
-def setup_teardown():
+@pytest.fixture(scope="function")
+def test_resources():
     # set up
+    product_set_id = f'test_set_{uuid.uuid4()}'
+    product_id = f'test_product_{uuid.uuid4()}'
     create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
+        PROJECT_ID, LOCATION, product_set_id, PRODUCT_SET_DISPLAY_NAME)
     create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
+        PROJECT_ID, LOCATION, product_id,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
-    yield
+    yield product_set_id, product_id
 
     # tear down
-    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
-    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+    delete_product(PROJECT_ID, LOCATION, product_id)
+    delete_product_set(PROJECT_ID, LOCATION, product_set_id)
 
 
-def test_add_product_to_product_set(capsys):
+def test_add_product_to_product_set(capsys, test_resources):
+    product_set_id, product_id = test_resources
     add_product_to_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
-    list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+        PROJECT_ID, LOCATION, product_id, product_set_id)
+    list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) in out
+    assert 'Product id: {}'.format(product_id) in out
 
 
-def test_remove_product_from_product_set(capsys):
+def test_remove_product_from_product_set(capsys, test_resources):
+    product_set_id, product_id = test_resources
     add_product_to_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
-    list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+        PROJECT_ID, LOCATION, product_id, product_set_id)
+    list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) in out
+    assert 'Product id: {}'.format(product_id) in out
 
     remove_product_from_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
-    list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+        PROJECT_ID, LOCATION, product_id, product_set_id)
+    list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) not in out
+    assert 'Product id: {}'.format(product_id) not in out
 
 
-def test_purge_products_in_product_set(capsys):
+def test_purge_products_in_product_set(capsys, test_resources):
+    product_set_id, product_id = test_resources
     add_product_to_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
+        PROJECT_ID, LOCATION, product_id, product_set_id)
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) in out
+    assert 'Product id: {}'.format(product_id) in out
 
     purge_products_in_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, force=True)
+        PROJECT_ID, LOCATION, product_set_id, force=True)
 
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) not in out
+    assert 'Product id: {}'.format(product_id) not in out
