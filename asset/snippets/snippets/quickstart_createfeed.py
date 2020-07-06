@@ -36,6 +36,7 @@ def create_feed(project_id, feed_id, asset_names, topic):
     response = client.create_feed(parent, feed_id, feed)
     print('feed: {}'.format(response))
     # [END asset_quickstart_create_feed]
+    return response
 
 
 if __name__ == '__main__':
