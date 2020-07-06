@@ -17,9 +17,10 @@ from google.cloud import translate_v3 as translate
 
 
 def create_glossary(
-    project_id="YOUR_PROJECT_ID",
-    input_uri="YOUR_INPUT_URI",
-    glossary_id="YOUR_GLOSSARY_ID",
+        project_id="YOUR_PROJECT_ID",
+        input_uri="YOUR_INPUT_URI",
+        glossary_id="YOUR_GLOSSARY_ID",
+        timeout=180,
 ):
     """
     Create a equivalent term sets glossary. Glossary can be words or
@@ -51,7 +52,7 @@ def create_glossary(
     # to translate the domain-specific terminology.
     operation = client.create_glossary(parent=parent, glossary=glossary)
 
-    result = operation.result(timeout=180)
+    result = operation.result(timeout)
     print("Created: {}".format(result.name))
     print("Input Uri: {}".format(result.input_config.gcs_source.input_uri))
 

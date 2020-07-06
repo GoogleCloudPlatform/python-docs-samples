@@ -18,10 +18,11 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_glossary(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID",
-    glossary_id="YOUR_GLOSSARY_ID",
+        input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+        output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
+        project_id="YOUR_PROJECT_ID",
+        glossary_id="YOUR_GLOSSARY_ID",
+        timeout=180,
 ):
     """Translates a batch of texts on GCS and stores the result in a GCS location.
     Glossary is applied for translation."""
@@ -65,7 +66,7 @@ def batch_translate_text_with_glossary(
     )
 
     print(u"Waiting for operation to complete...")
-    response = operation.result(180)
+    response = operation.result(timeout)
 
     print(u"Total Characters: {}".format(response.total_characters))
     print(u"Translated Characters: {}".format(response.translated_characters))
