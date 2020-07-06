@@ -15,12 +15,14 @@
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
+# [START functions_billing_slack]
 import base64
 import json
 import os
 # [END functions_billing_stop]
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
+# [END functions_billing_slack]
 
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
@@ -42,11 +44,9 @@ PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_limit]
 
 # [START functions_billing_slack]
-
 # See https://api.slack.com/docs/token-types#bot for more info
 BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
-
-CHANNEL_ID = 'C0XXXXXX'
+CHANNEL = 'C0XXXXXX'
 
 slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 
@@ -54,14 +54,26 @@ slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 def notify_slack(data, context):
     pubsub_message = data
 
-    notification_attrs = json.dumps(pubsub_message['attributes'])
-    notification_data = base64.b64decode(data['data']).decode('utf-8')
-    budget_notification_text = f'{notification_attrs}, {notification_data}'
+    notification_attr = ''
+    if 'attributes' in pubsub_message:
+        notification_attr = json.dumps(pubsub_message['attributes'])
 
-    slack_client.api_call(
-      'chat.postMessage',
-      channel=CHANNEL_ID,
-      text=budget_notification_text)
+    notification_data = ''
+    if 'data' in pubsub_message:
+        notification_data = base64.b64decode(data['data']).decode('utf-8')
+
+    budget_notification_text = f'{notification_attr}, {notification_data}'
+
+    try:
+        slack_client.api_call(
+            'chat.postMessage',
+            json={
+                'channel': CHANNEL,
+                'text'   : budget_notification_text
+            }
+        )
+    except Exception:
+        print('Error posting to Slack')
 # [END functions_billing_slack]
 
 
