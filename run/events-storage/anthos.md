@@ -23,6 +23,8 @@ MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
 MY_GCS_TRIGGER=gcs-trigger
 MY_GCS_BUCKET=gcs-bucket-$(gcloud config get-value project)
+MY_CLUSTER_NAME=events-cluster
+MY_CLUSTER_LOCATION=us-central1-c
 ```
 
 ## Quickstart
@@ -30,8 +32,8 @@ MY_GCS_BUCKET=gcs-bucket-$(gcloud config get-value project)
 Set cluster name, location and platform:
 
 ```sh
-gcloud config set run/cluster events-cluster
-gcloud config set run/cluster_location europe-west1-b
+gcloud config set run/cluster ${MY_CLUSTER_NAME}
+gcloud config set run/cluster_location ${MY_CLUSTER_LOCATION}
 gcloud config set run/platform gke
 ```
 

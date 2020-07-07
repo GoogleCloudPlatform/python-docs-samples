@@ -25,6 +25,8 @@ MY_RUN_SERVICE=pubsub-service
 MY_RUN_CONTAINER=pubsub-container
 MY_TOPIC=pubsub-topic
 MY_PUBSUB_TRIGGER=pubsub-trigger
+MY_CLUSTER_NAME=events-cluster
+MY_CLUSTER_LOCATION=us-central1-c
 ```
 
 ## Quickstart
@@ -32,8 +34,8 @@ MY_PUBSUB_TRIGGER=pubsub-trigger
 Set cluster name, location and platform:
 
 ```sh
-gcloud config set run/cluster events-cluster
-gcloud config set run/cluster_location europe-west1-b
+gcloud config set run/cluster ${MY_CLUSTER_NAME}
+gcloud config set run/cluster_location ${MY_CLUSTER_LOCATION}
 gcloud config set run/platform gke
 ```
 
