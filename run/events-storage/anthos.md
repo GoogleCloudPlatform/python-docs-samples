@@ -1,6 +1,7 @@
 # Events for Cloud Run on Anthos – GCS tutorial
 
-This sample shows how to create a service that processes GCS events.
+This sample shows how to create a service that processes GCS events. We assume
+that you have a GKE cluster created with Events for Cloud Run enabled.
 
 ## Setup
 

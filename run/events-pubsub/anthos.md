@@ -1,8 +1,7 @@
 # Events for Cloud Run on Anthos – Pub/Sub tutorial
 
-This sample shows how to create a service that processes Pub/Sub events. It is
-assumed that you already created a GKE cluster with Events for Cloud Run already
-installed.
+This sample shows how to create a service that processes Pub/Sub events. We assume
+that you have a GKE cluster created with Events for Cloud Run enabled.
 
 ## Setup
 
