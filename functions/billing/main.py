@@ -54,6 +54,8 @@ slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 def notify_slack(data, context):
     pubsub_message = data
 
+    # Default to blank strings to make testing the function easier
+    # See https://cloud.google.com/billing/docs/how-to/budgets-programmatic-notifications#notification_format
     notification_attr = ''
     if 'attributes' in pubsub_message:
         notification_attr = json.dumps(pubsub_message['attributes'])
@@ -62,6 +64,8 @@ def notify_slack(data, context):
     if 'data' in pubsub_message:
         notification_data = base64.b64decode(data['data']).decode('utf-8')
 
+    # This is just a quick dump of the budget data (or an empty string)
+    # You can modify and format the message to meet your needs
     budget_notification_text = f'{notification_attr}, {notification_data}'
 
     try:
