@@ -127,7 +127,7 @@ def main():
     upload = True  # Whether to upload data to BigQuery
 
     # Check whether or not results should be uploaded
-    if '--test' in sys.argv:
+    if '--dry-run' in sys.argv:
         upload = False
         print("Not uploading results to BigQuery")
     else:
