@@ -18,7 +18,7 @@ import os
 
 import quickstart_listassets
 
-PROJECT = os.environ['GCLOUD_CLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def test_list_assets(capsys):
