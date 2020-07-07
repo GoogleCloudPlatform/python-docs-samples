@@ -174,7 +174,7 @@ if __name__ == '__main__':
     df.sample(False, 0.001).show(n=100)
 
     # Write results to GCS
-    if '--test' in sys.argv:
+    if '--dry-run' in sys.argv:
         print('Data will not be uploaded to GCS')
     else:
         path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
