@@ -14,38 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import uuid
-
-from google.cloud import pubsub_v1
-from google.cloud import resource_manager
-
-import quickstart_createfeed
-import quickstart_deletefeed
 import quickstart_getfeed
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-ASSET_NAME = 'assets-{}'.format(uuid.uuid4().hex)
-FEED_ID = 'feed-{}'.format(uuid.uuid4().hex)
-TOPIC = 'topic-{}'.format(uuid.uuid4().hex)
 
-
-def test_get_feed(capsys):
-    client = resource_manager.Client()
-    project_number = client.fetch_project(PROJECT).number
-    # First create the feed, which will be gotten later
-    full_topic_name = "projects/{}/topics/{}".format(PROJECT, TOPIC)
-    publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(PROJECT, TOPIC)
-    publisher.create_topic(topic_path)
-    quickstart_createfeed.create_feed(
-        PROJECT, FEED_ID, [ASSET_NAME, ], full_topic_name)
-
-    feed_name = "projects/{}/feeds/{}".format(project_number, FEED_ID)
-    quickstart_getfeed.get_feed(feed_name)
+def test_get_feed(capsys, test_feed):
+    quickstart_getfeed.get_feed(test_feed.name)
     out, _ = capsys.readouterr()
 
     assert "gotten_feed" in out
-    # Clean up and delete the feed
-    quickstart_deletefeed.delete_feed(feed_name)
-    publisher.delete_topic(topic_path)

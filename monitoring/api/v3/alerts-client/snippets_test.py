@@ -19,6 +19,7 @@ import string
 import time
 
 from google.api_core.exceptions import Aborted
+from google.api_core.exceptions import DeadlineExceeded
 from google.api_core.exceptions import NotFound
 from google.api_core.exceptions import ServiceUnavailable
 from google.cloud import monitoring_v3
@@ -38,12 +39,13 @@ def random_name(length):
         [random.choice(string.ascii_lowercase) for i in range(length)])
 
 
-def retry_if_aborted(exception):
-    return isinstance(exception, (Aborted, ServiceUnavailable))
+def retry_on_exceptions(exception):
+    return isinstance(
+        exception, (Aborted, ServiceUnavailable, DeadlineExceeded))
 
 
 def delay_on_aborted(err, *args):
-    if retry_if_aborted(err[1]):
+    if retry_on_exceptions(err[1]):
         # add randomness for avoiding continuous conflict
         time.sleep(5 + (random.randint(0, 9) * 0.1))
         return True
@@ -64,7 +66,8 @@ class PochanFixture:
 
     def __enter__(self):
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=10, retry_on_exception=retry_if_aborted)
+               stop_max_attempt_number=10,
+               retry_on_exception=retry_on_exceptions)
         def setup():
             # Create a policy.
             policy = monitoring_v3.types.alert_pb2.AlertPolicy()
@@ -89,7 +92,8 @@ class PochanFixture:
     def __exit__(self, type, value, traceback):
         # Delete the policy and channel we created.
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=10, retry_on_exception=retry_if_aborted)
+               stop_max_attempt_number=10,
+               retry_on_exception=retry_on_exceptions)
         def teardown():
             try:
                 self.alert_policy_client.delete_alert_policy(

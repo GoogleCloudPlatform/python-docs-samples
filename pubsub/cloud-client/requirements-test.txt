@@ -1,3 +1,0 @@
-backoff==1.10.0
-pytest==5.3.2
-mock==3.0.5
