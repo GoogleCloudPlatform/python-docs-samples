@@ -3,8 +3,22 @@ import json
 import os
 
 from googleapiclient.discovery import build
+from googleapiclient.discovery_cache.base import Cache
 
-datastore = build('datastore', 'v1')
+
+class MemoryCache(Cache):
+    _CACHE = {}
+
+    def get(self, url):
+        return MemoryCache._CACHE.get(url)
+
+    def set(self, url, content):
+        MemoryCache._CACHE[url] = content
+
+
+# The default cache (file_cache) is unavailable when using oauth2client >= 4.0.0 or google-auth,
+# and it will log worrisome messages unless given another interface to use.
+datastore = build('datastore', 'v1', cache=MemoryCache())
 project_id = os.environ.get('GCP_PROJECT')
 
 
