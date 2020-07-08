@@ -34,6 +34,7 @@ from googleapiclient import discovery
 
 # [START functions_billing_slack]
 import slack
+from slack.errors import SlackApiError
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
@@ -54,15 +55,17 @@ slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 def notify_slack(data, context):
     pubsub_message = data
 
-    # Default to blank strings to make testing the function easier
-    # See https://cloud.google.com/billing/docs/how-to/budgets-programmatic-notifications#notification_format
-    notification_attr = ''
-    if 'attributes' in pubsub_message:
+    # For more information, see
+    # https://cloud.google.com/billing/docs/how-to/budgets-programmatic-notifications#notification_format
+    try:
         notification_attr = json.dumps(pubsub_message['attributes'])
+    except KeyError:
+        notification_attr = "No attributes passed in"
 
-    notification_data = ''
-    if 'data' in pubsub_message:
+    try:
         notification_data = base64.b64decode(data['data']).decode('utf-8')
+    except KeyError:
+        notification_data = "No data passed in"
 
     # This is just a quick dump of the budget data (or an empty string)
     # You can modify and format the message to meet your needs
@@ -76,7 +79,7 @@ def notify_slack(data, context):
                 'text'   : budget_notification_text
             }
         )
-    except Exception:
+    except SlackApiError:
         print('Error posting to Slack')
 # [END functions_billing_slack]
 
@@ -120,6 +123,8 @@ def __is_billing_enabled(project_name, projects):
     try:
         res = projects.getBillingInfo(name=project_name).execute()
         return res['billingEnabled']
+    except AttributeError:
+        return False
     except Exception:
         print('Unable to determine if billing is enabled on specified project, assuming billing is enabled')
         return True
