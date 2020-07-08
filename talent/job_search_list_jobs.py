@@ -47,10 +47,3 @@ def list_jobs(project_id, tenant_id, filter_):
 
 
 # [END job_search_list_jobs]
-list_jobs(
-    "python-docs-samples-tests",
-    "b603d325-3fb5-4979-8994-eba4ecf726f4",
-    'companyName="projects/{}/companies/{}"'.format(
-        "python-docs-samples-tests", "4c0b9887-8f69-429b-bc67-a072ef55ec3e"
-    ),
-)
