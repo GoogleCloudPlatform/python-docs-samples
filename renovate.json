@@ -5,4 +5,7 @@
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
   "masterIssue": true
+  "pip_requirements": {
+    "fileMatch": ["requirements-test.txt"]
+  }
 }
