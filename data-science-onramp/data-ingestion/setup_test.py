@@ -25,7 +25,7 @@ JOB_DETAILS = {  # Job configuration
         'main_python_file_uri': JOB_FILE_NAME,
         'args': [
             BUCKET_NAME,
-            "--test",
+            "--dry-run",
         ],
         "jar_file_uris": [
                 "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
