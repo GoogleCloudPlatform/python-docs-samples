@@ -35,7 +35,7 @@ def export_entities(project_id, output_url_prefix):
     client = datastore_admin_client.DatastoreAdminClient()
 
     op = client.export_entities(project_id, output_url_prefix)
-    response = op.result()
+    response = op.result(timeout=200)
 
     print("Entities were exported\n")
     return response
@@ -50,7 +50,7 @@ def import_entities(project_id, input_url):
     client = datastore_admin_client.DatastoreAdminClient()
 
     op = client.import_entities(project_id, input_url)
-    response = op.result()
+    response = op.result(timeout=200)
 
     print("Entities were imported\n")
     return response
