@@ -1,3 +1,12 @@
+"""Setup Dataproc job for Data Science Onramp Sample Application
+This job ingests an external gas prices in NY dataset as well as
+takes a New York Citibike dataset available on BigQuery and
+"dirties" the dataset before uploading it back to BigQuery
+It needs the following arguments
+* the name of the Google Cloud Storage bucket to be used
+* an optional --test flag to upload a subset of the dataset for testing
+"""
+
 import random
 import sys
 import pandas as pd
@@ -37,11 +46,11 @@ EXTERNAL_DATASETS = {
 # START MAKING DATA DIRTY
 def trip_duration(duration):
     '''Converts trip duration to other units'''
-    if duration is None:
+    if not duration:
         return None
-    seconds = str(duration) + " s"
-    minutes = str(float(duration) / 60) + " min"
-    hours = str(float(duration) / 3600) + " h"
+    seconds = f"{str(duration)} s"
+    minutes = f"{str(float(duration) / 60)} min"
+    hours = f"{str(float(duration) / 3600)} h"
     return random.choices([seconds, minutes, hours,
                           str(random.randint(-1000, -1))],
                           weights=[0.3, 0.3, 0.3, 0.1])[0]
@@ -49,14 +58,14 @@ def trip_duration(duration):
 
 def station_name(name):
     '''Replaces '&' with '/' with a 50% chance'''
-    if name is None:
+    if not name:
         return None
     return random.choice([name, name.replace("&", "/")])
 
 
 def user_type(user):
     '''Manipulates the user type string'''
-    if user is None:
+    if not user:
         return None
     return random.choice([user, user.upper(), user.lower(),
                           "sub" if user == "Subscriber" else user,
@@ -65,7 +74,7 @@ def user_type(user):
 
 def gender(s):
     '''Manipulates the gender string'''
-    if s is None:
+    if not s:
         return None
     return random.choice([s.upper(), s.lower(),
                          s[0].upper() if len(s) > 0 else "",
@@ -108,28 +117,16 @@ def write_to_bigquery(df, table_name):
     print(f"Table {table_name} successfully written to BigQuery")
 
 
-def print_df(df, table_name):
-    '''Print 20 rows from dataframe and a random sample'''
-    # first 100 rows for smaller tables
-    df.show()
-
-    # random sample for larger tables
-    # for small tables this will be empty
-    df.sample(True, 0.0001).show(n=500, truncate=False)
-
-    print(f"Table {table_name} printed")
-
-
 def main():
     # Create a SparkSession under the name "setup". Viewable via the Spark UI
     spark = SparkSession.builder.appName("setup").getOrCreate()
 
-    upload = True  # Whether to upload data to BigQuery
+    test = False  # Whether we are running the job as a test 
 
-    # Check whether or not results should be uploaded
-    if '--dry-run' in sys.argv:
-        upload = False
-        print("Not uploading results to BigQuery")
+    # Check whether or not the job is running as a test
+    if '--test' in sys.argv:
+        test = True
+        print("Subset of whole dataset will be uploaded to BigQuery")
     else:
         create_bigquery_dataset()
         print("Results will be uploaded to BigQuery")
@@ -141,10 +138,7 @@ def main():
         df = spark.createDataFrame(pd.read_csv(data["url"]),
                                    schema=data["schema"])
 
-        if upload:
-            write_to_bigquery(df, table_name)
-        else:
-            print_df(df, table_name)
+        write_to_bigquery(df, table_name)
 
     # Check if table exists
     try:
@@ -184,7 +178,6 @@ def main():
 
     # Randomly set about 5% of the values in some columns to null
     for name in null_columns:
-
         df = df.withColumn(name, when(expr("rand() < 0.05"), None).otherwise(df[name]))
 
     # Duplicate about 0.01% of the rows
@@ -193,10 +186,12 @@ def main():
     # Create final dirty dataframe
     df = df.union(dup_df)
 
-    if upload:
+    if not test:
         write_to_bigquery(df, RAW_TABLE_NAME)
     else:
-        print_df(df, RAW_TABLE_NAME)
+        # df.sample(True, 0.0001).show(n=500, truncate=False)
+        # Upload 0.001% of the table (about 600 rows)
+        write_to_bigquery(df.sample(False, 0.00001))
 
 
 if __name__ == '__main__':

@@ -1,3 +1,9 @@
+"""Test file for the setup job in the Data Science Onramp sample application
+Creates a test Dataproc cluster and runs the job with a --test flag.
+The job uploads a subset of the data to BigQuery.
+Then, data is pulled from BigQuery and checks are made to see if the data is dirty.
+"""
+
 import os
 import re
 import uuid
@@ -25,7 +31,7 @@ JOB_DETAILS = {  # Job configuration
         'main_python_file_uri': JOB_FILE_NAME,
         'args': [
             BUCKET_NAME,
-            "--dry-run",
+            "--test",
         ],
         "jar_file_uris": [
                 "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
@@ -104,8 +110,9 @@ def is_in_table(value, out):
     return re.search(f"\\| *{value} *\\|", out)
 
 
-def table_printed(table_name, out):
-    return re.search(f"Table {table_name} printed", out)
+def table_uploaded(table_name, out):
+    return re.search(f"Table {table_name} successfully written to BigQuery", out)
+
 
 def test_setup():
     '''Tests setup.py by submitting it to a dataproc cluster'''
@@ -125,9 +132,9 @@ def test_setup():
     blob = get_blob_from_path(output_location)
     out = blob.download_as_string().decode("utf-8")
 
-    # check that tables were printed
+    # Check if table upload success message was printed
     for table_name in TABLE_NAMES:
-        assert table_printed(table_name, out)
+        assert table_uploaded(table_name, out)
 
     # tripDuration
     assert is_in_table("(\\d+(?:\\.\\d+)?) s", out)
