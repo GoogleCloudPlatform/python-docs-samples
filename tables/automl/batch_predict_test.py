@@ -18,6 +18,8 @@ import os
 
 from google.cloud.automl_v1beta1.gapic import enums
 
+import pytest
+
 import automl_tables_model
 import automl_tables_predict
 import model_test
