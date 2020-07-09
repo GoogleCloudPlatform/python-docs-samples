@@ -85,7 +85,7 @@ def batch_predict(
     project_id,
     compute_region,
     model_display_name,
-    gcs_input_uris,
+    gcs_input_uri,
     gcs_output_uri,
 ):
     """Make a batch of predictions."""
