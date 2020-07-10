@@ -1,4 +1,4 @@
-# Lint as: python3
+#!/usr/bin/env python
 #
 # Copyright 2020 Google Inc. All Rights Reserved.
 #
@@ -112,6 +112,7 @@ def set_policy(crm_service, project_id, policy):
         .execute()
     )
     return policy
+
 
 if __name__ == '__main__':
     quickstart()
