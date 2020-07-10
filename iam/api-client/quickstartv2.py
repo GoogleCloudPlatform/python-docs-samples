@@ -40,9 +40,9 @@ def quickstart():
     """Gets the project's policy and prints all members with the 'Log Writer' role."""
     policy = get_policy(crm_service, project_id)
     binding = next(b for b in policy["bindings"] if b["role"] == role)
-    print("Role: " + binding.role)
+    print("Role: " + binding["role"])
     print("Members: ")
-    for m in binding.members:
+    for m in binding["members"]:
         print("[" + m + "] ")
 
     """Removes the member from the 'Log Writer' role"""
@@ -56,10 +56,10 @@ def initialize_service():
         filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
-    crmService = googleapiclient.discovery.build(
+    crm_service = googleapiclient.discovery.build(
         "cloudresourcemanager", "v1", credentials=credentials
     )
-    return crmService
+    return crm_service
 
 
 def modify_policy_add_role(crm_service, project_id, role, member):
@@ -67,12 +67,12 @@ def modify_policy_add_role(crm_service, project_id, role, member):
 
     policy = get_policy(crm_service, project_id)
 
-    binding = next(b for b in policy["bindings"] if b["role"] == role)
-    if binding == None:
-        binding = {"role": role, "members": [member]}
-        policy["bindings"].append(binding)
-    else:
+    if role in policy["bindings"]:
+        binding = next(b for b in policy["bindings"] if b["role"] == role)
         binding["members"].append(member)
+    else:
+        binding = {"role": role, "members": [member]}
+        policy["bindings"].append(binding)        
 
     set_policy(crm_service, project_id, policy)
 
