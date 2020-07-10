@@ -29,10 +29,11 @@ from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
 from grafeas.grafeas_v1.gapic.enums import NoteKind
 from grafeas.grafeas_v1.gapic.enums import Severity
 from grafeas.grafeas_v1.gapic.enums import Version
+import pytest
 
 import samples
 
-PROJECT_ID = environ['GCLOUD_PROJECT']
+PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 SLEEP_TIME = 1
 TRY_LIMIT = 20
 
@@ -145,6 +146,7 @@ class TestContainerAnalysisSamples:
         # clean up
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
+    @pytest.mark.flaky(max_runs=3, min_passes=1)
     def test_pubsub(self):
         # create topic if needed
         client = SubscriberClient()
@@ -175,7 +177,10 @@ class TestContainerAnalysisSamples:
                 time.sleep(SLEEP_TIME)
                 samples.delete_occurrence(basename(occ.name), PROJECT_ID)
                 time.sleep(SLEEP_TIME)
-            job_done.wait(timeout=60)
+            # We saw occational failure with 60 seconds timeout, so we bumped it
+            # to 180 seconds.
+            # See also: python-docs-samples/issues/2894
+            job_done.wait(timeout=180)
             print('done. msg_count = {}'.format(receiver.msg_count))
             assert message_count <= receiver.msg_count
         finally:
@@ -262,7 +267,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version_start': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
@@ -283,7 +288,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {

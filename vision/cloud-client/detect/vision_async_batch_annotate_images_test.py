@@ -49,6 +49,7 @@ def bucket(storage_client):
         blob.delete()
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_sample_asyn_batch_annotate_images(storage_client, bucket, capsys):
     input_image_uri = os.path.join(GCS_ROOT, "label/wakeupcat.jpg")
 

@@ -19,7 +19,7 @@ import pytest
 
 import jobs
 
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_COLUMN_NAME = "zip_code"
 TEST_TABLE_PROJECT_ID = "bigquery-public-data"
 TEST_DATASET_ID = "san_francisco"

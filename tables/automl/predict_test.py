@@ -18,11 +18,12 @@ import os
 
 from google.cloud.automl_v1beta1.gapic import enums
 
-import automl_tables_predict
 import automl_tables_model
+import automl_tables_predict
 import model_test
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_MODEL = model_test.STATIC_MODEL
 

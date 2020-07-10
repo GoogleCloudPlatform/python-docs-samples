@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
+import base_job_sample
+
 
 def test_base_job_sample(capsys):
-    import base_job_sample
-    import re
 
     base_job_sample.run_sample()
     out, _ = capsys.readouterr()

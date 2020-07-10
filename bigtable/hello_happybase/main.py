@@ -25,6 +25,7 @@ Prerequisites:
 """
 
 import argparse
+
 # [START bigtable_hw_imports_happybase]
 from google.cloud import bigtable
 from google.cloud import happybase

@@ -14,6 +14,12 @@ product:
 
     .. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
 
+required_api_url: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+required_roles:
+- Healthcare Dataset Administrator
+- Healthcare FHIR Store Administrator
+- Healthcare FHIR Resource Editor
+
 setup:
 - auth
 - install_deps

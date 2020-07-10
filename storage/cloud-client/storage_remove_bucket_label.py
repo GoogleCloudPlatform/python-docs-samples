@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 
 # [START storage_remove_bucket_label]
-from google.cloud import storage
 import pprint
+# [END storage_remove_bucket_label]
+import sys
+# [START storage_remove_bucket_label]
+
+from google.cloud import storage
 
 
 def remove_bucket_label(bucket_name):

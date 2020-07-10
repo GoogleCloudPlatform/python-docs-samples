@@ -17,6 +17,7 @@
 # to test that they interact properly together.
 
 import json
+import os
 import subprocess
 from urllib import request
 import uuid
@@ -28,6 +29,7 @@ import pytest
 def services():
     # Unique suffix to create distinct service names
     suffix = uuid.uuid4().hex
+    project = os.environ['GOOGLE_CLOUD_PROJECT']
 
     # Build and Deploy Cloud Run Services
     subprocess.run(
@@ -35,6 +37,8 @@ def services():
             "gcloud",
             "builds",
             "submit",
+            "--project",
+            project,
             "--substitutions",
             f"_SUFFIX={suffix}",
             "--config",
@@ -48,6 +52,8 @@ def services():
         [
             "gcloud",
             "run",
+            "--project",
+            project,
             "--platform=managed",
             "--region=us-central1",
             "services",
@@ -68,12 +74,14 @@ def services():
 
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"editor-{suffix}",
-         "--platform", "managed", "--region", "us-central1", "--quiet"],
+         "--project", project, "--platform", "managed", "--region",
+         "us-central1", "--quiet"],
         check=True
     )
     subprocess.run(
         ["gcloud", "run", "services", "delete", f"renderer-{suffix}",
-         "--platform", "managed", "--region", "us-central1", "--quiet"],
+         "--project", project, "--platform", "managed", "--region",
+         "us-central1", "--quiet"],
         check=True
     )
 

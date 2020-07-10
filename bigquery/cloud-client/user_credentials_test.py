@@ -21,7 +21,7 @@ import pytest
 from user_credentials import main
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture
