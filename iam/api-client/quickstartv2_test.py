@@ -17,16 +17,14 @@
 """Tests for quickstartv2."""
 
 import os
-import pytest
 import uuid
-import quickstartv2
 
 from googleapiclient import errors
+import pytest
 from retrying import retry
 
-import access
+import quickstartv2
 import service_accounts
-import googleapiclient.discovery
 
 # Setting up variables for testing
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]

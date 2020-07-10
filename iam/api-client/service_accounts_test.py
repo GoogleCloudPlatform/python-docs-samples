@@ -22,7 +22,7 @@ import service_accounts
 
 def test_service_accounts(capsys):
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-    name = f'test-{uuid.uuid4().hex[:25]}'
+    name = "python-test-" + str(uuid.uuid4()).split('-')[0]
 
     try:
         acct = service_accounts.create_service_account(
