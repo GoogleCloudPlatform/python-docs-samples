@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START iam_quickstartv2]
 import os
 
 from google.oauth2 import service_account
@@ -72,7 +72,7 @@ def modify_policy_add_role(crm_service, project_id, role, member):
         binding["members"].append(member)
     else:
         binding = {"role": role, "members": [member]}
-        policy["bindings"].append(binding)        
+        policy["bindings"].append(binding)
 
     set_policy(crm_service, project_id, policy)
 
@@ -113,6 +113,6 @@ def set_policy(crm_service, project_id, policy):
     )
     return policy
 
-
 if __name__ == '__main__':
     quickstart()
+# [END iam_quickstartv2]
