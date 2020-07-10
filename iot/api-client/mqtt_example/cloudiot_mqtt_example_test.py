@@ -18,19 +18,20 @@ import time
 
 import pytest
 
-# Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import cloudiot_mqtt_example
-import manager
 from fixtures import test_topic # noqa
 from fixtures import test_registry_id # noqa
 from fixtures import test_device_id # noqa
 from fixtures import device_and_gateways # noqa
+# Add manager for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
+import cloudiot_mqtt_example  # noqa
+import manager  # noqa
+
 
 cloud_region = 'us-central1'
 ca_cert_path = 'resources/roots.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
@@ -183,7 +184,7 @@ def test_gateway_send_data_for_device(
 
     out, _ = capsys.readouterr()
     assert 'Publishing message 5/5' in out
-    assert 'Out of memory' not in out  # Indicates could not connect
+    assert 'Received message' in out
 
 
 def test_gateway_trigger_error_topic(

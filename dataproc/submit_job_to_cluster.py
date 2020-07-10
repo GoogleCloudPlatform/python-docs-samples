@@ -33,11 +33,12 @@ import argparse
 import os
 
 from google.cloud import dataproc_v1
+from google.cloud import storage
 from google.cloud.dataproc_v1.gapic.transports import (
     cluster_controller_grpc_transport)
 from google.cloud.dataproc_v1.gapic.transports import (
     job_controller_grpc_transport)
-from google.cloud import storage
+
 
 DEFAULT_FILENAME = 'pyspark_sort.py'
 waiting_callback = False

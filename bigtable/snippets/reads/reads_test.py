@@ -14,13 +14,14 @@
 import datetime
 import os
 import uuid
-import pytest
 
 from google.cloud import bigtable
+import pytest
 
 import read_snippets
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 

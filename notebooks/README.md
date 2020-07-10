@@ -1,20 +1,52 @@
-# Notebook Tutorials
+# AI Platform Notebooks
 
-This directory contains Jupyter notebook tutorials for Google Cloud Platform.
-The tutorials assume you have performed the following steps:
+[AI Platform Notebooks](https://cloud.google.com/ai-platform-notebooks)
+is a managed service that offers an integrated and secure JupyterLab
+environment for data scientists and machine learning developers to
+experiment, develop, and deploy models into production.
 
-1. Install Jupyter notebooks ([instructions](https://jupyter.org/install))
+This directory contains AI Platform Notebooks code samples and
+tutorials. The tutorials are divided into 2 sections:
+- AI Platform Notebooks [API code samples](samples)
+- AI Platform Notebooks [tutorials](tutorials)
+
+## Notebooks API
+
+In [this](samples) folder you will find Python code samples to interact
+with the
+[AI Platform Notebooks API](https://cloud.google.com/ai-platform/notebooks/docs/reference/rest)
+
+## AI Platform Notebooks tutorials
+
+**Run in AI Platform Notebooks**
+
+1. Create a Notebook
+   [instance](https://cloud.google.com/ai-platform/notebooks/docs#how-to)
+2. Clone this repository via Jupyter console or using the Git clone
+   button
+
+```bash
+git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+```
+
+3. Open the tutorials folder and open the Jupyter notebooks
+
+
+**Run locally**
+
+1. Install Jupyter notebooks
+   ([instructions](https://jupyter.org/install))
 1. Install the dependencies in the [requirements.txt](./requirements.txt) file ([instructions below](#install-the-dependencies))
 1. Registered the `google-cloud-bigquery` magic commands ([instructions below](#register-magics-and-configure-matplotlib))
 1. Set `matplotlib` to render inline ([instructions below](#register-magics-and-configure-matplotlib))
 
-## Install the dependencies
+### Install the dependencies
 
 Install the dependencies with the following command:
 
         pip install --upgrade -r requirements.txt
 
-## Register magics and configure matplotlib
+### Register magics and configure matplotlib
 
 You can either perform these set up steps in a single notebook, or add the
 steps to your IPython configuration file to apply to all notebooks.

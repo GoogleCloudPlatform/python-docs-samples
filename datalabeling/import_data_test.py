@@ -17,14 +17,14 @@
 import os
 
 import backoff
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import ServerError
 import pytest
 
 import import_data
 import testing_lib
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
 
 
@@ -42,7 +42,7 @@ def dataset():
 def test_import_data(capsys, dataset):
 
     @backoff.on_exception(
-        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
     def run_sample():
         import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
 

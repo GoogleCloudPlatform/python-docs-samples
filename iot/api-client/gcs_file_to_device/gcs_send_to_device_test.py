@@ -15,28 +15,29 @@
 import os
 import sys
 import tempfile
+import time
 import uuid
 
 from google.cloud import pubsub
 from google.cloud import storage
-
-# Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager
-
 import mock
 import pytest
 import requests
 
 import gcs_send_to_device as gcs_to_device
 
+# Add manager for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+import manager  # noqa
+
+
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))
 device_id = 'test-device-{}'.format(str(uuid.uuid4()))
-registry_id = 'test-registry-{}'.format(str(uuid.uuid4()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 
 cloud_region = 'us-central1'

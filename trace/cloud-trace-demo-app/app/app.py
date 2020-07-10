@@ -14,19 +14,20 @@
 """
 A sample app demonstrating Stackdriver Trace
 """
+import argparse
+import random
+import time
+
 # [START trace_demo_imports]
 from flask import Flask
+from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
 from opencensus.trace import execution_context
 from opencensus.trace.propagation import google_cloud_format
 from opencensus.trace.samplers import AlwaysOnSampler
-from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
-from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # [END trace_demo_imports]
-
 import requests
-import argparse
-import time
-import random
+
 
 app = Flask(__name__)
 

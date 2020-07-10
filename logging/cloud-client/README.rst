@@ -7,12 +7,12 @@ Stackdriver Logging Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=logging/cloud-client/README.rst
 
 
-This directory contains samples for Stackdriver Logging. `Stackdriver Logging`_ allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
+This directory contains samples for `Cloud Logging`_, which you can use to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 
 
 
 
-.. _Stackdriver Logging: https://cloud.google.com/logging/docs
+.. _Cloud Logging: https://cloud.google.com/logging/docs
 
 Setup
 -------------------------------------------------------------------------------

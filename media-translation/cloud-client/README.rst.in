@@ -18,6 +18,7 @@ samples:
   show_help: true
 - name: Translate from mic
   file: translate_from_mic.py
+  hide_cloudshell_button: true
 
 cloud_client_library: true
 

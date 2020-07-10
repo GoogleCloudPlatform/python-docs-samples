@@ -14,15 +14,15 @@
 
 import os
 import re
-import pytest
 
 import backoff
 from google.api_core.exceptions import NotFound
+import pytest
 
 import snippets
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture(scope="function")

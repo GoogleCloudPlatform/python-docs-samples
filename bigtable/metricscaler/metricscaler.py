@@ -24,7 +24,7 @@ from google.cloud import monitoring_v3
 from google.cloud.bigtable import enums
 from google.cloud.monitoring_v3 import query
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def get_cpu_load():

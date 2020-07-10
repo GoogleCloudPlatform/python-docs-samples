@@ -49,7 +49,7 @@ def test_client_library_query():
     project_id = 'your-project-id'
     # [END bigquery_migration_client_library_query]
     assert len(df) > 0
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     # [START bigquery_migration_client_library_query]
     df = client.query(sql, project=project_id).to_dataframe()
     # [END bigquery_migration_client_library_query]
@@ -74,7 +74,7 @@ def test_pandas_gbq_query():
     project_id = 'your-project-id'
     # [END bigquery_migration_pandas_gbq_query]
     assert len(df) > 0
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     # [START bigquery_migration_pandas_gbq_query]
     df = pandas.read_gbq(sql, project_id=project_id, dialect='standard')
     # [END bigquery_migration_pandas_gbq_query]

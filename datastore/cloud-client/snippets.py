@@ -784,7 +784,8 @@ def property_by_kind_run_query(client):
 
 def eventual_consistent_query(client):
     # [START datastore_eventual_consistent_query]
-    # Read consistency cannot be specified in google-cloud-python.
+    query = client.query(kind='Task')
+    query.fetch(eventual=True)
     # [END datastore_eventual_consistent_query]
     pass
 

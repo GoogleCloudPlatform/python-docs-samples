@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import flask
 import pytest
-import os
 
 import main
 
@@ -50,7 +51,7 @@ def test_parse_multipart_files(app, capsys):
 
 def test_get_signed_url(app, capsys):
     json = {
-        'bucket': os.getenv('GCLOUD_PROJECT'),
+        'bucket': os.getenv('GOOGLE_CLOUD_PROJECT'),
         'filename': 'test.txt',
         'contentType': 'text/plain'
     }

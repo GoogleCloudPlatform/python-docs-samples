@@ -14,9 +14,10 @@
 
 # [START run_pubsub_server_setup]
 import base64
-from flask import Flask, request
 import os
-import sys
+
+from flask import Flask, request
+
 
 app = Flask(__name__)
 # [END run_pubsub_server_setup]
@@ -43,9 +44,6 @@ def index():
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
     print(f'Hello {name}!')
-
-    # Flush the stdout to avoid log buffering.
-    sys.stdout.flush()
 
     return ('', 204)
 # [END run_pubsub_handler]

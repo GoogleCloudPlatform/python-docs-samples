@@ -13,14 +13,15 @@
 # limitations under the License.
 
 import os
-
 import random
 
-import pytest
 from google.cloud import bigtable
+import pytest
+
 from main import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_FORMAT = 'quickstart-hb-test-{}'
 TABLE_ID_RANGE = 10000

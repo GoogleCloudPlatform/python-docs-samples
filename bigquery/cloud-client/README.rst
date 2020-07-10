@@ -14,6 +14,11 @@ This directory contains samples for Google BigQuery. `Google BigQuery`_ is Googl
 
 .. _Google BigQuery: https://cloud.google.com/bigquery/docs
 
+
+To run the sample, you need to have `BigQuery Admin` role.
+
+
+
 Setup
 -------------------------------------------------------------------------------
 
@@ -108,7 +113,7 @@ To run this sample:
 
     $ python user_credentials.py
 
-    usage: user_credentials.py [-h] [--launch-browser] project query
+    usage: user_credentials.py [-h] [--launch-browser] project
 
     Command-line application to run a query using user credentials.
 
@@ -117,7 +122,6 @@ To run this sample:
 
     positional arguments:
       project           Project to use for BigQuery billing.
-      query             BigQuery SQL Query.
 
     optional arguments:
       -h, --help        show this help message and exit

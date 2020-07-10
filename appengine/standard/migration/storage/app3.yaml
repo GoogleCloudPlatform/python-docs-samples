@@ -1,0 +1,5 @@
+runtime: python37
+
+env_variables:
+    CLOUD_STORAGE_BUCKET: "REPLACE THIS WITH YOUR EXISTING BUCKET NAME"
+    BLOB_NAME: "my-demo-blob"

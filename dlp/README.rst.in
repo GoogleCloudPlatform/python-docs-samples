@@ -4,7 +4,7 @@ product:
   name: Google Data Loss Prevention
   short_name: Data Loss Prevention
   url: https://cloud.google.com/dlp/docs/
-  description: > 
+  description: >
     `Google Data Loss Prevention`_ provides programmatic access to a powerful
     detection engine for personally identifiable information and other
     privacy-sensitive data in unstructured data streams.
@@ -12,6 +12,12 @@ product:
 setup:
 - auth
 - install_deps
+
+required_api_url: https://console.cloud.google.com/apis/library/dlp.googleapis.com
+
+required_roles:
+- DLP Administrator
+- DLP API Service Agent
 
 samples:
 - name: Quickstart

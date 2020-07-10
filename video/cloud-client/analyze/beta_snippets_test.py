@@ -14,14 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six.moves.urllib.request import urlopen
 import os
 import uuid
 
 from google.cloud import storage
 import pytest
+from six.moves.urllib.request import urlopen
 
 import beta_snippets
+
 
 POSSIBLE_TEXTS = [
     "Google",
@@ -52,7 +53,7 @@ def video_path(tmpdir_factory):
 @pytest.fixture(scope="function")
 def bucket():
     # Create a temporaty bucket to store annotation output.
-    bucket_name = str(uuid.uuid1())
+    bucket_name = f'tmp-{uuid.uuid4().hex}'
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
@@ -129,6 +130,7 @@ def test_detect_text_gcs(capsys):
     out, _ = capsys.readouterr()
     assert 'Text' in out
 
+
 # Flaky InvalidArgument
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects(capsys):
@@ -155,7 +157,7 @@ def test_track_objects_gcs():
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
-    project_id = os.environ["GCLOUD_PROJECT"]
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
     beta_snippets.streaming_automl_classification(video_path, project_id, model_id)
     out, _ = capsys.readouterr()

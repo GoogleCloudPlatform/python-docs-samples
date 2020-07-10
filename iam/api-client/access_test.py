@@ -13,17 +13,18 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
 
 from googleapiclient import errors
+import pytest
 from retrying import retry
 
 import access
 import service_accounts
 
+
 # Setting up variables for testing
-GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
+GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 # specifying a sample role to be assigned
 GCP_ROLE = "roles/owner"
