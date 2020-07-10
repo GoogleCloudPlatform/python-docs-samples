@@ -1,5 +1,3 @@
-# Lint as: python3
-
 # Copyright 2020 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +19,10 @@ import uuid
 
 from googleapiclient import errors
 import pytest
-from retrying import retry
 
 import quickstartv2
+from retrying import retry
+
 import service_accounts
 
 # Setting up variables for testing
