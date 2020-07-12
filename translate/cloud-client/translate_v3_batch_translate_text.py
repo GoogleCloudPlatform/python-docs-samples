@@ -17,9 +17,10 @@ from google.cloud import translate
 
 
 def batch_translate_text(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID"
+        input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+        output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
+        project_id="YOUR_PROJECT_ID",
+        timeout=180,
 ):
     """Translates a batch of texts on GCS and stores the result in a GCS location."""
 
@@ -46,7 +47,7 @@ def batch_translate_text(
         output_config=output_config)
 
     print(u"Waiting for operation to complete...")
-    response = operation.result(180)
+    response = operation.result(timeout)
 
     print(u"Total Characters: {}".format(response.total_characters))
     print(u"Translated Characters: {}".format(response.translated_characters))
