@@ -21,9 +21,10 @@ from googleapiclient import errors
 import pytest
 from retrying import retry
 
-import quickstartv2
+from google.oauth2 import service_account
+import googleapiclient.discovery
 
-from ... import service_accounts
+import quickstartv2
 
 # Setting up variables for testing
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
@@ -41,14 +42,53 @@ def test_member():
     name = "python-test-" + str(uuid.uuid4()).split('-')[0]
     email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
     member = "serviceAccount:" + email
-    service_accounts.create_service_account(
+    create_service_account(
         GCLOUD_PROJECT, name, "Py Test Account"
     )
 
     yield member
 
     # deleting the service account created above
-    service_accounts.delete_service_account(email)
+    delete_service_account(email)
+
+
+def create_service_account(project_id, name, display_name):
+    """Creates a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    my_service_account = service.projects().serviceAccounts().create(
+        name='projects/' + project_id,
+        body={
+            'accountId': name,
+            'serviceAccount': {
+                'displayName': display_name
+            }
+        }).execute()
+
+    print('Created service account: ' + my_service_account['email'])
+    return my_service_account
+
+
+def delete_service_account(email):
+    """Deletes a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    service.projects().serviceAccounts().delete(
+        name='projects/-/serviceAccounts/' + email).execute()
+
+    print('Deleted service account: ' + email)
 
 
 def test_quickstartv2(test_member, capsys):
