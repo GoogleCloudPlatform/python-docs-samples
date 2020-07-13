@@ -20,9 +20,9 @@ import uuid
 from googleapiclient import errors
 import pytest
 
-from retrying import retry
-
 import quickstartv2
+
+from retrying import retry
 
 from ... import service_accounts
 
