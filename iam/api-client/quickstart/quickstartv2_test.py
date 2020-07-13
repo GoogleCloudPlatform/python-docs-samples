@@ -20,8 +20,9 @@ import uuid
 from googleapiclient import errors
 import pytest
 
-import quickstartv2
 from retrying import retry
+
+import quickstartv2
 
 from ... import service_accounts
 
@@ -82,4 +83,3 @@ def test_quickstartv2(test_member, capsys):
         quickstartv2.modify_policy_remove_member(
             crm_service, project_id, role, test_member)
     test_call()
-    
