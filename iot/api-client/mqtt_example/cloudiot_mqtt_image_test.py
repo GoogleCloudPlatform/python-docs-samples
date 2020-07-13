@@ -14,21 +14,22 @@
 # limitations under the License.
 import os
 import sys
+import tempfile
 
 # Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import cloudiot_mqtt_image
-import manager
-from fixtures import test_topic # noqa
-from fixtures import test_subscription # noqa
-from fixtures import test_registry_id # noqa
-from fixtures import test_device_id # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+import cloudiot_mqtt_image  # noqa
+import manager  # noqa
+from fixtures import test_topic  # noqa
+from fixtures import test_subscription  # noqa
+from fixtures import test_registry_id  # noqa
+from fixtures import test_device_id  # noqa
 
 
 cloud_region = 'us-central1'
 ca_cert_path = 'resources/roots.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 image_path = './resources/owlister_hootie.png'
 
@@ -63,8 +64,9 @@ def test_image_recv(
         cloud_region, test_registry_id, test_device_id, rsa_private_path,
         ca_cert_path, image_path, project_id, service_account_json)
 
-    cloudiot_mqtt_image.receive_image(
-        project_id, test_subscription.name, 'test', 'png', 120)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        cloudiot_mqtt_image.receive_image(
+            project_id, test_subscription.name, tmp_dir + '/test', 'png', 120)
 
     out, _ = capsys.readouterr()
     assert 'Received image' in out

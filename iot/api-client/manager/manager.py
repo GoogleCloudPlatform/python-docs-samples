@@ -618,6 +618,7 @@ def send_command(
     device_path = client.device_path(
         project_id, cloud_region, registry_id, device_id)
 
+    # command = 'Hello IoT Core!'
     data = command.encode('utf-8')
 
     return client.send_command_to_device(device_path, data)

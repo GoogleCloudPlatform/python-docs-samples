@@ -18,8 +18,62 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
-import os
 import json
+import os
+
+
+# [START dlp_inspect_string_basic]
+def inspect_string_basic(
+    project,
+    content_string,
+    info_types=["PHONE_NUMBER"],
+):
+    """Uses the Data Loss Prevention API to analyze strings for protected data.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        content_string: The string to inspect.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library.
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": True,
+    }
+
+    # Construct the `item`.
+    item = {"value": content_string}
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Call the API.
+    response = dlp.inspect_content(parent, inspect_config, item)
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Quote: {}".format(finding.quote))
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_string_basic]
 
 
 # [START dlp_inspect_string]
@@ -459,11 +513,12 @@ def inspect_gcs_file(
     url = "gs://{}/{}".format(bucket, filename)
     storage_config = {"cloud_storage_options": {"file_set": {"url": url}}}
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -623,11 +678,12 @@ def inspect_datastore(
         }
     }
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -790,11 +846,12 @@ def inspect_bigquery(
         }
     }
 
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
+    actions = [{"pub_sub": {"topic": topic}}]
 
     # Construct the inspect_job, which defines the entire inspect content task.
     inspect_job = {
@@ -858,7 +915,7 @@ def inspect_bigquery(
 
 
 if __name__ == "__main__":
-    default_project = os.environ.get("GCLOUD_PROJECT")
+    default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(

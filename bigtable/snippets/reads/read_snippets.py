@@ -13,41 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START bigtable_reads_row]
-# [START bigtable_reads_row_partial]
-# [START bigtable_reads_rows]
-# [START bigtable_reads_row_range]
-# [START bigtable_reads_row_ranges]
-# [START bigtable_reads_prefix]
-# [START bigtable_reads_filter]
+# [START bigtable_reads_print]
 from google.cloud import bigtable
-
-# [END bigtable_reads_row]
-# [END bigtable_reads_row_partial]
-# [END bigtable_reads_rows]
-# [END bigtable_reads_row_range]
-# [END bigtable_reads_row_ranges]
-# [END bigtable_reads_prefix]
-# [END bigtable_reads_filter]
-
-# [START bigtable_reads_row_partial]
-# [START bigtable_reads_filter]
 import google.cloud.bigtable.row_filters as row_filters
-# [END bigtable_reads_row_partial]
-# [END bigtable_reads_filter]
-
-
-# [START bigtable_reads_rows]
-# [START bigtable_reads_row_range]
-# [START bigtable_reads_row_ranges]
-# [START bigtable_reads_prefix]
 from google.cloud.bigtable.row_set import RowSet
 
-
-# [END bigtable_reads_rows]
-# [END bigtable_reads_row_range]
-# [END bigtable_reads_row_ranges]
-# [END bigtable_reads_prefix]
+# Write your code here.
+# [START_EXCLUDE]
 
 
 # [START bigtable_reads_row]
@@ -161,15 +133,9 @@ def read_filter(project_id, instance_id, table_id):
 
 
 # [END bigtable_reads_filter]
+# [END_EXCLUDE]
 
 
-# [START bigtable_reads_row]
-# [START bigtable_reads_row_partial]
-# [START bigtable_reads_rows]
-# [START bigtable_reads_row_range]
-# [START bigtable_reads_row_ranges]
-# [START bigtable_reads_prefix]
-# [START bigtable_reads_filter]
 def print_row(row):
     print("Reading data for {}:".format(row.row_key.decode('utf-8')))
     for cf, cols in sorted(row.cells.items()):
@@ -183,10 +149,4 @@ def print_row(row):
                                             cell.value.decode('utf-8'),
                                             cell.timestamp, labels))
     print("")
-# [END bigtable_reads_row]
-# [END bigtable_reads_row_partial]
-# [END bigtable_reads_rows]
-# [END bigtable_reads_row_range]
-# [END bigtable_reads_row_ranges]
-# [END bigtable_reads_prefix]
-# [END bigtable_reads_filter]
+# [END bigtable_reads_print]

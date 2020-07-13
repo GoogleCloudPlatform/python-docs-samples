@@ -28,6 +28,31 @@ from google.cloud import spanner
 from google.cloud.spanner_v1 import param_types
 
 
+# [START spanner_create_instance]
+def create_instance(instance_id):
+    """Creates an instance."""
+    spanner_client = spanner.Client()
+
+    config_name = "{}/instanceConfigs/regional-us-central1".format(
+        spanner_client.project_name
+    )
+
+    instance = spanner_client.instance(
+        instance_id,
+        configuration_name=config_name,
+        display_name="This is a display name.",
+        node_count=1,
+    )
+
+    operation = instance.create()
+
+    print('Waiting for operation to complete...')
+    operation.result(120)
+
+    print('Created instance {}'.format(instance_id))
+# [END spanner_create_instance]
+
+
 # [START spanner_create_database]
 def create_database(instance_id, database_id):
     """Creates a database and tables for sample data."""
@@ -106,14 +131,23 @@ def delete_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    singers_to_delete = spanner.KeySet(
-        keys=[[1], [2], [3], [4], [5]])
+    # Delete individual rows
     albums_to_delete = spanner.KeySet(
-        keys=[[1, 1], [1, 2], [2, 1], [2, 2], [2, 3]])
+        keys=[[2, 1], [2, 3]])
+
+    # Delete a range of rows where the column key is >=3 and <5
+    singers_range = spanner.KeyRange(start_closed=[3], end_open=[5])
+    singers_to_delete = spanner.KeySet(
+        ranges=[singers_range])
+
+    # Delete remaining Singers rows, which will also delete the remaining
+    # Albums rows because Albums was defined with ON DELETE CASCADE
+    remaining_singers = spanner.KeySet(all_=True)
 
     with database.batch() as batch:
         batch.delete('Albums', albums_to_delete)
         batch.delete('Singers', singers_to_delete)
+        batch.delete('Singers', remaining_singers)
 
     print('Deleted data.')
 # [END spanner_delete_data]
@@ -1446,6 +1480,7 @@ if __name__ == '__main__':  # noqa: C901
         default='example_db')
 
     subparsers = parser.add_subparsers(dest='command')
+    subparsers.add_parser('create_instance', help=create_instance.__doc__)
     subparsers.add_parser('create_database', help=create_database.__doc__)
     subparsers.add_parser('insert_data', help=insert_data.__doc__)
     subparsers.add_parser('delete_data', help=delete_data.__doc__)
@@ -1558,7 +1593,9 @@ if __name__ == '__main__':  # noqa: C901
 
     args = parser.parse_args()
 
-    if args.command == 'create_database':
+    if args.command == 'create_instance':
+        create_instance(args.instance_id)
+    elif args.command == 'create_database':
         create_database(args.instance_id, args.database_id)
     elif args.command == 'insert_data':
         insert_data(args.instance_id, args.database_id)

@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 import backoff
+from google.api_core.exceptions import NotFound
 from google.cloud import logging
 import pytest
 
 import snippets
 
 
-TEST_LOGGER_NAME = 'example_log'
+TEST_LOGGER_NAME = 'example_log_{}'.format(uuid.uuid4().hex)
 
 
 @pytest.fixture
@@ -46,6 +49,8 @@ def test_write():
 
 
 def test_delete(example_log, capsys):
-    snippets.delete_logger(TEST_LOGGER_NAME)
-    out, _ = capsys.readouterr()
-    assert TEST_LOGGER_NAME in out
+    @backoff.on_exception(backoff.expo, NotFound, max_time=120)
+    def eventually_consistent_test():
+        snippets.delete_logger(TEST_LOGGER_NAME)
+        out, _ = capsys.readouterr()
+        assert TEST_LOGGER_NAME in out

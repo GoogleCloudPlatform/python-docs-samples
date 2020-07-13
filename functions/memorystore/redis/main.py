@@ -15,6 +15,7 @@
 # [START functions_memorystore_redis]
 
 import os
+
 import redis
 
 redis_host = os.environ.get('REDISHOST', 'localhost')

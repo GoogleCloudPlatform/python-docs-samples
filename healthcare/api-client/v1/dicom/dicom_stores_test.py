@@ -13,17 +13,19 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import uuid
 
 import backoff
+from google.cloud import pubsub_v1
 from googleapiclient.errors import HttpError
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets
-import dicom_stores
+import datasets  # noqa
+import dicom_stores  # noqa
+
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -150,6 +152,19 @@ def crud_dicom_store_id():
     clean_up()
 
 
+@pytest.fixture(scope='module')
+def test_pubsub_topic():
+    pubsub_client = pubsub_v1.PublisherClient()
+    # Create the Pub/Sub topic
+    topic_path = pubsub_client.topic_path(project_id, pubsub_topic)
+    pubsub_client.create_topic(topic_path)
+
+    yield pubsub_topic
+
+    # Delete the Pub/Sub topic
+    pubsub_client.delete_topic(topic_path)
+
+
 def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
     dicom_stores.create_dicom_store(
         project_id, cloud_region, dataset_id, crud_dicom_store_id
@@ -174,9 +189,10 @@ def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
     assert "Deleted DICOM store" in out
 
 
-def test_patch_dicom_store(test_dataset, test_dicom_store, capsys):
+def test_patch_dicom_store(
+        test_dataset, test_dicom_store, test_pubsub_topic, capsys):
     dicom_stores.patch_dicom_store(
-        project_id, cloud_region, dataset_id, dicom_store_id, pubsub_topic
+        project_id, cloud_region, dataset_id, dicom_store_id, test_pubsub_topic
     )
 
     out, _ = capsys.readouterr()

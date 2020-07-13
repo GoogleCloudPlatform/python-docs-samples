@@ -17,8 +17,8 @@ import json
 import os
 
 from google.auth.transport import requests
-from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
+
 
 _BASE_URL = "https://healthcare.googleapis.com/v1beta1"
 
@@ -72,19 +72,14 @@ def create_patient(
         "resourceType": "Patient",
     }
 
-    try:
-        response = session.post(fhir_store_path, headers=headers, json=body)
-        response.raise_for_status()
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-        resource = response.json()
+    resource = response.json()
 
-        print("Created Patient resource with ID {}".format(resource["id"]))
+    print("Created Patient resource with ID {}".format(resource["id"]))
 
-        return response
-    except HttpError as err:
-        print(err)
-        return ""
-
+    return response
 
 # [END healthcare_create_resource]
 
@@ -101,7 +96,7 @@ def create_encounter(
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient."""
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
@@ -130,19 +125,14 @@ def create_encounter(
         "resourceType": "Encounter",
     }
 
-    try:
-        response = session.post(fhir_store_path, headers=headers, json=body)
-        response.raise_for_status()
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-        resource = response.json()
+    resource = response.json()
 
-        print("Created Encounter resource with ID {}".format(resource["id"]))
+    print("Created Encounter resource with ID {}".format(resource["id"]))
 
-        return response
-    except HttpError as err:
-        print(err)
-        return ""
-
+    return response
 
 # [END healthcare_create_encounter]
 
@@ -163,7 +153,7 @@ def create_observation(
     an Encounter.
     """
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
@@ -185,19 +175,14 @@ def create_observation(
         "context": {"reference": "Encounter/{}".format(encounter_id)},
     }
 
-    try:
-        response = session.post(fhir_store_path, headers=headers, json=body)
-        response.raise_for_status()
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-        resource = response.json()
+    resource = response.json()
 
-        print("Created Observation resource with ID {}".format(resource["id"]))
+    print("Created Observation resource with ID {}".format(resource["id"]))
 
-        return response
-    except HttpError as err:
-        print(err)
-        return ""
-
+    return response
 
 # [END healthcare_create_observation]
 

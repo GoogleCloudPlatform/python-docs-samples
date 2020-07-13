@@ -82,7 +82,7 @@ def create_encounter(
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient."""
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
@@ -139,7 +139,7 @@ def create_observation(
     an Encounter.
     """
     url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region, patient_id
+        base_url, project_id, cloud_region
     )
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
@@ -153,7 +153,7 @@ def create_observation(
 
     body = {
         "resourceType": "Observation",
-        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
+        "code": {"coding": [{"system": "http://loinc.org", "code": "8867-4", "display": "Heart rate"}]},
         "status": "final",
         "subject": {"reference": "Patient/{}".format(patient_id)},
         "effectiveDateTime": "2019-01-01T00:00:00+00:00",
@@ -384,6 +384,10 @@ def update_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
+    # The body shown works with a Patient resource and is not guaranteed
+    # to work with other types of FHIR resources. If necessary,
+    # supply a new body with data that corresponds to the resource you
+    # are updating.
     body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
     response = session.put(resource_path, headers=headers, json=body)
@@ -422,6 +426,10 @@ def patch_resource(
 
     headers = {"Content-Type": "application/json-patch+json"}
 
+    # The body shown works with a Patient resource and is not guaranteed
+    # to work with other types of FHIR resources. If necessary,
+    # supply a new body with data that corresponds to the resource you
+    # are patching.
     body = json.dumps([{"op": "replace", "path": "/active", "value": False}])
 
     response = session.patch(resource_path, headers=headers, data=body)

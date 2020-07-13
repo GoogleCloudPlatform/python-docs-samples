@@ -14,6 +14,7 @@
 
 # [START functions_pubsub_unit_test]
 import base64
+
 import mock
 
 import main

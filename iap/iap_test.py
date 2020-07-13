@@ -14,6 +14,8 @@
 
 """Test script for Identity-Aware Proxy code samples."""
 
+import os
+
 import pytest
 
 import make_iap_request
@@ -36,6 +38,10 @@ IAP_PROJECT_NUMBER = '320431926067'
 
 @pytest.mark.flaky
 def test_main(capsys):
+    # It only passes on Kokoro now. Skipping in other places.
+    # The envvar `TRAMPOLINE_CI` will be set once #3860 is merged.
+    if os.environ.get('TRAMPOLINE_CI', 'kokoro') != 'kokoro':
+        pytest.skip('Only passing on Kokoro.')
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back
     # the JWT in order to expose it to this test.  Thus, this test

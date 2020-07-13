@@ -21,7 +21,7 @@ import pytest
 
 import automl_translation_dataset
 
-project_id = os.environ["GCLOUD_PROJECT"]
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 compute_region = "us-central1"
 
 

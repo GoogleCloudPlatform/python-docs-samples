@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import tempfile
 
 import main
 
@@ -20,16 +21,10 @@ import main
 def test_index():
     main.app.testing = True
     client = main.app.test_client()
-    test_path = os.path.dirname(os.path.realpath(__file__))
-    asset_path = os.path.join(
-        test_path, 'assets/resized_google_logo.jpg')
-    fixtured_path = os.path.join(
-        test_path, 'fixtures/assets/resized_google_logo.jpg')
-    try:
-        os.remove(asset_path)
-    except OSError:
-        pass  # if doesn't exist
-    r = client.get('/')
+    with tempfile.TemporaryDirectory() as test_dir:
+        output_image_path = os.path.join(test_dir, 'resized_google_logo.jpg')
+        r = client.get(
+            '/', query_string={'output_image_path': output_image_path})
 
-    assert os.path.isfile(fixtured_path)
-    assert r.status_code == 200
+        assert os.path.isfile(output_image_path)
+        assert r.status_code == 200

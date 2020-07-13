@@ -18,13 +18,14 @@ import sys
 import time
 import uuid
 
-# Add command receiver for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
 from google.cloud import pubsub
 import pytest
 
-import manager
-import cloudiot_mqtt_example
+# Add command receiver for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
+import cloudiot_mqtt_example  # noqa
+import manager  # noqa
+
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
@@ -34,13 +35,13 @@ rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
 topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 
 # This format is used in the `clean_up_registries()` below.
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)

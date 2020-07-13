@@ -16,18 +16,17 @@ import os
 import uuid
 
 import backoff
-import pytest
-
 from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
-from google.cloud.exceptions import NotFound
 from google.cloud import storage
+from google.cloud.exceptions import NotFound
+import pytest
 
 import translate_v3_batch_translate_text_with_glossary
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
 
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
@@ -58,7 +57,7 @@ def glossary():
 @pytest.fixture(scope="function")
 def bucket():
     """Create a temporary bucket to store annotation output."""
-    bucket_name = str(uuid.uuid1())
+    bucket_name = f'tmp-{uuid.uuid4().hex}'
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
@@ -74,6 +73,7 @@ def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
         "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
         PROJECT_ID,
         glossary,
+        240
     )
 
     out, _ = capsys.readouterr()
