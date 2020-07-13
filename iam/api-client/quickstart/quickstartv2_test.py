@@ -20,11 +20,11 @@ import uuid
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
-import quickstartv2
-
 from googleapiclient import errors
 import pytest
 from retrying import retry
+
+import quickstartv2
 
 # Setting up variables for testing
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
