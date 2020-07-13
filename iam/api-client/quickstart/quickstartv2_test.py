@@ -23,7 +23,7 @@ import pytest
 import quickstartv2
 from retrying import retry
 
-import service_accounts
+from ... import service_accounts
 
 # Setting up variables for testing
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
