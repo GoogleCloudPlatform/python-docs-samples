@@ -8,21 +8,21 @@ import pytest
 
 # Set global variables
 PROJECT = os.environ['GCLOUD_PROJECT']
-REGION = "us-east4"
-CLUSTER_NAME = f'clean-test-{uuid.uuid4()}'
+DATAPROC_CLUSTER = f'clean-test-{uuid.uuid4()}'
 BUCKET_NAME = f'clean-test-code-{uuid.uuid4()}'
+CLUSTER_REGION = "us-east4"
 DESTINATION_BLOB_NAME = "clean.py"
 JOB_FILE_NAME = f'gs://{BUCKET_NAME}/clean.py'
 JOB_DETAILS = {  # Job configuration
     'placement': {
-        'cluster_name': CLUSTER_NAME
+        'cluster_name': DATAPROC_CLUSTER
     },
     'pyspark_job': {
         'main_python_file_uri': JOB_FILE_NAME,
         'args': [
             PROJECT,
             BUCKET_NAME,
-            "--test",
+            "--dry-run",
         ],
         "jar_file_uris": [
                 "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
@@ -31,7 +31,7 @@ JOB_DETAILS = {  # Job configuration
 }
 CLUSTER_DATA = {  # Create cluster configuration
     'project_id': PROJECT,
-    'cluster_name': CLUSTER_NAME,
+    'cluster_name': DATAPROC_CLUSTER,
     'config': {
         'gce_cluster_config': {
             'zone_uri': '',
@@ -47,12 +47,6 @@ CLUSTER_DATA = {  # Create cluster configuration
             'num_instances': 6,
             'machine_type_uri': 'n1-standard-8'
         },
-        "initialization_actions": [
-            {
-                "executable_file": ("gs://dataproc-initialization-actions/"
-                                    "python/pip-install.sh"),
-            }
-        ],
         "software_config": {
             "image_version": "1.5.4-debian10",
             "optional_components": [
@@ -66,9 +60,9 @@ CLUSTER_DATA = {  # Create cluster configuration
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
+        'api_endpoint': f'{CLUSTER_REGION}-dataproc.googleapis.com:443'
     })
-    operation = cluster_client.create_cluster(PROJECT, REGION, CLUSTER_DATA)
+    operation = cluster_client.create_cluster(PROJECT, CLUSTER_REGION, CLUSTER_DATA)
 
     # Wait for cluster to provision
     operation.result()
@@ -76,7 +70,7 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT, CLUSTER_REGION, CLUSTER_NAME)
     operation.result()
 
 @pytest.fixture(autouse=True)
@@ -109,9 +103,9 @@ def test_clean():
 
     # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
+        'api_endpoint': f'{CLUSTER_REGION}-dataproc.googleapis.com:443'
     })
-    response = job_client.submit_job_as_operation(project_id=PROJECT, region=REGION, job=JOB_DETAILS)
+    response = job_client.submit_job_as_operation(project_id=PROJECT, region=CLUSTER_REGION, job=JOB_DETAILS)
 
     # Wait for job to complete
     result = response.result()
@@ -128,6 +122,8 @@ def test_clean():
 
     # station latitude & longitude
     assert not is_in_table("[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
+
+    assert is_in_table("\\d*.\\d*")
 
     # gender
     assert not is_in_table("M", out)
