@@ -4,14 +4,15 @@ takes a New York Citibike dataset available on BigQuery and
 "dirties" the dataset before uploading it back to BigQuery
 It needs the following arguments
 * the name of the Google Cloud Storage bucket to be used
+* the name of the BigQuery dataset to be created
 * an optional --test flag to upload a subset of the dataset for testing
 """
 
 import random
 import sys
-import pandas as pd
 
 from google.cloud import bigquery
+import pandas as pd
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import expr, UserDefinedFunction, when
@@ -19,10 +20,10 @@ from pyspark.sql.types import FloatType, StringType, StructField, StructType
 
 
 BUCKET_NAME = sys.argv[1]
+DATASET_NAME = sys.argv[2]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
-DATASET_NAME = "data_science_onramp"
-RAW_TABLE_NAME = "new_york_citibike_trips"
-EXTERNAL_DATASETS = {
+CITIBIKE_TABLE_NAME = "new_york_citibike_trips"
+EXTERNAL_TABLES = {
     "gas_prices": {
         "url": "https://data.ny.gov/api/views/wuxr-ni2i/rows.csv",
         "schema": StructType([
@@ -111,7 +112,6 @@ def write_to_bigquery(df, table_name):
     # Saving the data to BigQuery
     df.write.format('bigquery') \
         .option('table', f"{dataset_id}.{table_name}") \
-        .option("temporaryGcsBucket", BUCKET_NAME) \
         .save()
 
     print(f"Table {table_name} successfully written to BigQuery")
@@ -121,20 +121,22 @@ def main():
     # Create a SparkSession under the name "setup". Viewable via the Spark UI
     spark = SparkSession.builder.appName("setup").getOrCreate()
 
-    test = False  # Whether we are running the job as a test 
+    spark.conf.set('temporaryGcsBucket', BUCKET_NAME)
+
+    create_bigquery_dataset()
+
+    # Whether we are running the job as a test
+    test = False
 
     # Check whether or not the job is running as a test
     if '--test' in sys.argv:
         test = True
-        print("Subset of whole dataset will be uploaded to BigQuery")
+        print("A subset of the whole dataset will be uploaded to BigQuery")
     else:
-        create_bigquery_dataset()
         print("Results will be uploaded to BigQuery")
 
     # Ingest External Datasets
-
-    for table_name, data in EXTERNAL_DATASETS.items():
-        print(f'Creating dataframe for {table_name}')
+    for table_name, data in EXTERNAL_TABLES.items():
         df = spark.createDataFrame(pd.read_csv(data["url"]),
                                    schema=data["schema"])
 
@@ -143,6 +145,8 @@ def main():
     # Check if table exists
     try:
         df = spark.read.format('bigquery').option('table', TABLE).load()
+        if test:
+            df = df.sample(False, 0.00001)
     except Py4JJavaError:
         print(f"{TABLE} does not exist. ")
         return
@@ -186,12 +190,8 @@ def main():
     # Create final dirty dataframe
     df = df.union(dup_df)
 
-    if not test:
-        write_to_bigquery(df, RAW_TABLE_NAME)
-    else:
-        # df.sample(True, 0.0001).show(n=500, truncate=False)
-        # Upload 0.001% of the table (about 600 rows)
-        write_to_bigquery(df.sample(False, 0.00001))
+    print('Uploading citibike dataset...')
+    write_to_bigquery(df, CITIBIKE_TABLE_NAME)
 
 
 if __name__ == '__main__':
