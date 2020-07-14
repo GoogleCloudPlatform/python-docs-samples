@@ -363,6 +363,9 @@ def test_query_data_with_string(capsys):
 
 
 def test_query_data_with_timestamp_parameter(capsys):
+    # Wait 5 seconds to avoid a time drift issue for the next query:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4197.
+    time.sleep(5)
     snippets.query_data_with_timestamp_parameter(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
