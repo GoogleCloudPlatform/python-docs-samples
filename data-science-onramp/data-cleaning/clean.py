@@ -1,11 +1,13 @@
 import sys
 import re
 import datetime
+import time
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import StringType, IntegerType, FloatType
+from google.cloud import storage
 
 
 PROJECT_ID = sys.argv[1]
@@ -13,11 +15,11 @@ BUCKET_NAME = sys.argv[2]
 TABLE = f'{PROJECT_ID}.new_york_citibike_trips.RAW_DATA'
 
 def trip_duration_udf(duration):
-    '''Convert trip duration to seconds.'''
+    '''Convert trip duration to seconds. Return None if negative.'''
     if not duration:
         return None
     
-    time = re.match('\d*.\d', duration)
+    time = re.match('\d*.\d*', duration)
 
     if not time:
         return None
@@ -59,7 +61,7 @@ def gender_udf(gender):
         return 'Female'
 
 def angle_udf(angle):
-    '''Converts DMS notation to angles.'''
+    '''Converts DMS notation to degrees. Return None if not in DMS or degrees notation.'''
     if not angle:
         return None
     
@@ -67,10 +69,9 @@ def angle_udf(angle):
     if dms:
         return int(dms[1]) + int(dms[2])/60 + int(dms[3])/(60 * 60)
     
-    try:
-        return float(angle)
-    except ValueError:
-        return None
+    degrees = re.match('\d*.\d*', angle)
+    if degrees:
+        return float(degrees[0])
 
 def compute_time(duration, start, end):
     '''Calculates duration, start time, and end time from each other if one value is null.'''
@@ -131,9 +132,8 @@ if __name__ == '__main__':
     # Load data into dataframe if table exists
     try:
         df = spark.read.format('bigquery').option('table', TABLE).load()
-    except Py4JJavaError:
-        print(f'{TABLE} does not exist.')
-        raise 
+    except Py4JJavaError as e:
+        raise Exception(f'Error reading {TABLE}') from e
 
     # Single-parameter udfs
     udfs = {
@@ -177,7 +177,41 @@ if __name__ == '__main__':
     if '--dry-run' in sys.argv:
         print('Data will not be uploaded to GCS')
     else:
-        path = 'gs://' + BUCKET_NAME + '/clean_citibike_data' + '.csv.gz'
-        df.write.options(codec='org.apache.hadoop.io.compress.GzipCodec').csv(path, mode='overwrite')
-        print('Data successfully uploaded to ' + path)
+        # Set GCS temp location
+        path = str(time.time())
+        temp_path = 'gs://' + BUCKET_NAME + '/' + path
+
+        # Write dataframe to temp location to preserve the data in final location
+        # This takes time, so final location should not be overwritten with partial data
+        print('Uploading data to GCS...')
+        (
+            df
+            .write
+            # gzip the output file
+            .options(codec='org.apache.hadoop.io.compress.GzipCodec')
+            # write as csv
+            .csv(temp_path)
+        )
+
+        # Get GCS bucket
+        storage_client = storage.Client()
+        source_bucket = storage_client.get_bucket(BUCKET_NAME)
+
+        # Get all files in temp location 
+        blobs = list(source_bucket.list_blobs(prefix=path))
+
+        # Copy files from temp location to the final location
+        # This is much quicker than the original write to the temp location
+        final_path = 'clean_data/'
+        for blob in blobs:
+            file_match = re.match(path + '/(part-[0-9]*)[0-9a-zA-Z\-]*.csv.gz', blob.name)
+            if file_match:
+                new_blob = final_path + file_match[1] + '.csv.gz'
+                source_bucket.copy_blob(blob, source_bucket, new_blob)
+
+        # Delete the temp location
+        for blob in blobs:
+            blob.delete()
+
+        print('Data successfully uploaded to ' + 'gs://' + BUCKET_NAME + '/' + final_path)
     
