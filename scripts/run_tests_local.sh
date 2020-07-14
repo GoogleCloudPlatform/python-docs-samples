@@ -70,7 +70,4 @@ for session in "${sessions[@]}"
 do
     export RUN_TESTS_SESSION="${session}"
     "${PROJECT_ROOT}/.kokoro/trampoline_v2.sh"
-    # We can re-use the image after the first iteration.
-    export TRAMPOLINE_SKIP_DOWNLOAD_IMAGE="true"
-    export TRAMPOLINE_DOCKERFILE="none"
 done
