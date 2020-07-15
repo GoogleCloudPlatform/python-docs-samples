@@ -17,10 +17,10 @@
 import os
 import uuid
 
-import googleapiclient.discovery
-import pytest
 from google.oauth2 import service_account
 from googleapiclient import errors
+import googleapiclient.discovery
+import pytest
 from retrying import retry
 
 import quickstartv2
