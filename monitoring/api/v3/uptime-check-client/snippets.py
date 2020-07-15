@@ -23,15 +23,15 @@ import tabulate
 
 
 # [START monitoring_uptime_check_create]
-def create_uptime_check_config(project_name, host_name=None,
-                               display_name=None):
+def create_uptime_check_config_get(project_name, host_name=None, display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
-    config.display_name = display_name or 'New uptime check'
-    config.monitored_resource.type = 'uptime_url'
-    config.monitored_resource.labels.update(
-        {'host': host_name or 'example.com'})
-    config.http_check.request_method = monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.GET
-    config.http_check.path = '/'
+    config.display_name = display_name or "New GET uptime check"
+    config.monitored_resource.type = "uptime_url"
+    config.monitored_resource.labels.update({"host": host_name or "example.com"})
+    config.http_check.request_method = (
+        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.GET
+    )
+    config.http_check.path = "/"
     config.http_check.port = 80
     config.timeout.seconds = 10
     config.period.seconds = 300
@@ -40,22 +40,49 @@ def create_uptime_check_config(project_name, host_name=None,
     new_config = client.create_uptime_check_config(project_name, config)
     pprint.pprint(new_config)
     return new_config
+
+
+def create_uptime_check_config_post(project_name, host_name=None, display_name=None):
+    config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
+    config.display_name = display_name or "New POST uptime check"
+    config.monitored_resource.type = "uptime_url"
+    config.monitored_resource.labels.update({"host": host_name or "example.com"})
+    config.http_check.request_method = (
+        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.POST
+    )
+    config.http_check.content_type = (
+        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED
+    )
+    config.http_check.body = "foo=bar".encode("utf-8")
+    config.http_check.path = "/"
+    config.http_check.port = 80
+    config.timeout.seconds = 10
+    config.period.seconds = 300
+
+    client = monitoring_v3.UptimeCheckServiceClient()
+    new_config = client.create_uptime_check_config(project_name, config)
+    pprint.pprint(new_config)
+    return new_config
+
+
 # [END monitoring_uptime_check_create]
 
-
 # [START monitoring_uptime_check_update]
-def update_uptime_check_config(config_name, new_display_name=None,
-                               new_http_check_path=None):
+def update_uptime_check_config(
+    config_name, new_display_name=None, new_http_check_path=None
+):
     client = monitoring_v3.UptimeCheckServiceClient()
     config = client.get_uptime_check_config(config_name)
     field_mask = monitoring_v3.types.FieldMask()
     if new_display_name:
-        field_mask.paths.append('display_name')
+        field_mask.paths.append("display_name")
         config.display_name = new_display_name
     if new_http_check_path:
-        field_mask.paths.append('http_check.path')
+        field_mask.paths.append("http_check.path")
         config.http_check.path = new_http_check_path
     client.update_uptime_check_config(config, field_mask)
+
+
 # [END monitoring_uptime_check_update]
 
 
@@ -66,6 +93,8 @@ def list_uptime_check_configs(project_name):
 
     for config in configs:
         pprint.pprint(config)
+
+
 # [END monitoring_uptime_check_list_configs]
 
 
@@ -73,10 +102,14 @@ def list_uptime_check_configs(project_name):
 def list_uptime_check_ips():
     client = monitoring_v3.UptimeCheckServiceClient()
     ips = client.list_uptime_check_ips()
-    print(tabulate.tabulate(
-        [(ip.region, ip.location, ip.ip_address) for ip in ips],
-        ('region', 'location', 'ip_address')
-    ))
+    print(
+        tabulate.tabulate(
+            [(ip.region, ip.location, ip.ip_address) for ip in ips],
+            ("region", "location", "ip_address"),
+        )
+    )
+
+
 # [END monitoring_uptime_check_list_ips]
 
 
@@ -85,14 +118,20 @@ def get_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     config = client.get_uptime_check_config(config_name)
     pprint.pprint(config)
+
+
 # [END monitoring_uptime_check_get]
 
 
 # [START monitoring_uptime_check_delete]
+# `config_name` is the `name` field of an UptimeCheckConfig.
+# See https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.uptimeCheckConfigs#UptimeCheckConfig.
 def delete_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     client.delete_uptime_check_config(config_name)
-    print('Deleted ', config_name)
+    print("Deleted ", config_name)
+
+
 # [END monitoring_uptime_check_delete]
 
 
@@ -109,106 +148,110 @@ def project_id():
     Returns:
         str -- the project name
     """
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     if not project_id:
         raise MissingProjectIdError(
-            'Set the environment variable ' +
-            'GCLOUD_PROJECT to your Google Cloud Project Id.')
+            "Set the environment variable "
+            + "GCLOUD_PROJECT to your Google Cloud Project Id."
+        )
     return project_id
 
 
 def project_name():
-    return 'projects/' + project_id()
+    return "projects/" + project_id()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description='Demonstrates Uptime Check API operations.')
+        description="Demonstrates Uptime Check API operations."
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
     list_uptime_check_configs_parser = subparsers.add_parser(
-        'list-uptime-check-configs',
-        help=list_uptime_check_configs.__doc__
+        "list-uptime-check-configs", help=list_uptime_check_configs.__doc__
     )
 
     list_uptime_check_ips_parser = subparsers.add_parser(
-        'list-uptime-check-ips',
-        help=list_uptime_check_ips.__doc__
+        "list-uptime-check-ips", help=list_uptime_check_ips.__doc__
     )
 
-    create_uptime_check_config_parser = subparsers.add_parser(
-        'create-uptime-check',
-        help=create_uptime_check_config.__doc__
+    create_uptime_check_config_get_parser = subparsers.add_parser(
+        "create-uptime-check-get", help=create_uptime_check_config_get.__doc__
     )
-    create_uptime_check_config_parser.add_argument(
-        '-d', '--display_name',
-        required=False,
+    create_uptime_check_config_get_parser.add_argument(
+        "-d", "--display_name", required=False,
     )
-    create_uptime_check_config_parser.add_argument(
-        '-o', '--host_name',
-        required=False,
+    create_uptime_check_config_get_parser.add_argument(
+        "-o", "--host_name", required=False,
+    )
+
+    create_uptime_check_config_post_parser = subparsers.add_parser(
+        "create-uptime-check-post", help=create_uptime_check_config_post.__doc__
+    )
+    create_uptime_check_config_post_parser.add_argument(
+        "-d", "--display_name", required=False,
+    )
+    create_uptime_check_config_post_parser.add_argument(
+        "-o", "--host_name", required=False,
     )
 
     get_uptime_check_config_parser = subparsers.add_parser(
-        'get-uptime-check-config',
-        help=get_uptime_check_config.__doc__
+        "get-uptime-check-config", help=get_uptime_check_config.__doc__
     )
     get_uptime_check_config_parser.add_argument(
-        '-m', '--name',
-        required=True,
+        "-m", "--name", required=True,
     )
 
     delete_uptime_check_config_parser = subparsers.add_parser(
-        'delete-uptime-check-config',
-        help=delete_uptime_check_config.__doc__
+        "delete-uptime-check-config", help=delete_uptime_check_config.__doc__
     )
     delete_uptime_check_config_parser.add_argument(
-        '-m', '--name',
-        required=True,
+        "-m", "--name", required=True,
     )
 
     update_uptime_check_config_parser = subparsers.add_parser(
-        'update-uptime-check-config',
-        help=update_uptime_check_config.__doc__
+        "update-uptime-check-config", help=update_uptime_check_config.__doc__
     )
     update_uptime_check_config_parser.add_argument(
-        '-m', '--name',
-        required=True,
+        "-m", "--name", required=True,
     )
     update_uptime_check_config_parser.add_argument(
-        '-d', '--display_name',
-        required=False,
+        "-d", "--display_name", required=False,
     )
     update_uptime_check_config_parser.add_argument(
-        '-p', '--uptime_check_path',
-        required=False,
+        "-p", "--uptime_check_path", required=False,
     )
 
     args = parser.parse_args()
 
-    if args.command == 'list-uptime-check-configs':
+    if args.command == "list-uptime-check-configs":
         list_uptime_check_configs(project_name())
 
-    elif args.command == 'list-uptime-check-ips':
+    elif args.command == "list-uptime-check-ips":
         list_uptime_check_ips()
 
-    elif args.command == 'create-uptime-check':
-        create_uptime_check_config(project_name(), args.host_name,
-                                   args.display_name)
+    elif args.command == "create-uptime-check-get":
+        create_uptime_check_config_get(
+            project_name(), args.host_name, args.display_name
+        )
+    elif args.command == "create-uptime-check-post":
+        create_uptime_check_config_post(
+            project_name(), args.host_name, args.display_name
+        )
 
-    elif args.command == 'get-uptime-check-config':
+    elif args.command == "get-uptime-check-config":
         get_uptime_check_config(args.name)
 
-    elif args.command == 'delete-uptime-check-config':
+    elif args.command == "delete-uptime-check-config":
         delete_uptime_check_config(args.name)
 
-    elif args.command == 'update-uptime-check-config':
+    elif args.command == "update-uptime-check-config":
         if not args.display_name and not args.uptime_check_path:
-            print('Nothing to update.  Pass --display_name or '
-                  '--uptime_check_path.')
+            print("Nothing to update.  Pass --display_name or " "--uptime_check_path.")
         else:
-            update_uptime_check_config(args.name, args.display_name,
-                                       args.uptime_check_path)
+            update_uptime_check_config(
+                args.name, args.display_name, args.uptime_check_path
+            )

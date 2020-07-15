@@ -104,6 +104,9 @@ def __is_billing_enabled(project_name, projects):
     try:
         res = projects.getBillingInfo(name=project_name).execute()
         return res['billingEnabled']
+    except KeyError:
+        # If billingEnabled isn't part of the return, billing is not enabled
+        return False
     except Exception:
         print('Unable to determine if billing is enabled on specified project, assuming billing is enabled')
         return True
