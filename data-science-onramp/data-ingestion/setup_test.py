@@ -21,6 +21,7 @@ REGION = "us-central1"
 CLUSTER_NAME = f'setup-test-{ID}'
 BUCKET_NAME = f'setup-test-{ID}'
 DATASET_NAME = f'setup-test-{ID}'.replace("-", "_")
+CITIBIKE_TABLE = "new_york_citibike_trips"
 DESTINATION_BLOB_NAME = "setup.py"
 JOB_FILE_NAME = f'gs://{BUCKET_NAME}/setup.py'
 TABLE_NAMES = [
@@ -123,6 +124,7 @@ def get_blob_from_path(path):
 
 
 def get_dataproc_job_output(result):
+    """Get the dataproc job logs in plain text"""
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
     return blob.download_as_string().decode("utf-8")
@@ -132,12 +134,50 @@ def get_dataproc_job_output(result):
 #     return re.search(f"\\| *{value} *\\|", out)
 
 
-def table_uploaded(table_name, out):
-    return re.search(f"Table {table_name} successfully written to BigQuery", out)
+def assert_table_success_message(table_name, out):
+    """Check table upload success message was printed in job logs."""
+    assert re.search(f"Table {table_name} successfully written to BigQuery", out), \
+        f"Table {table_name} sucess message not printed in job logs"
+
+
+
+def assert_regexes_in_table(regex_dict, query_result):
+    """Assert that at least one row satisfies each regex.
+    The arguments are
+    - regex_dict: a dictionary where the keys are column
+                    names and values are lists of regexes;
+    - query_result: the bigquery query result of the whole table.
+    """
+
+    # Create dictionary with keys column names and values dictionaries
+    # The dictionaries stored have keys regexes and values booleans
+    # `regex_found_dict[column][regex]` hold the truth value of
+    # whether the there is at least one row of column with name `column`
+    # which satisfies the regular expression `regex`.
+    regex_found_dict = {}
+    for column, regexes in regex_dict.items():
+        regex_found_dict[column] = {}
+        for regex in regexes:
+            regex_found_dict[column][regex] = False
+
+    # Outer loop is over `query_result` since this is
+    # an iterator which can only iterate once
+    for row in query_result:
+        for column_name, regexes in regex_dict.items():
+            for regex in regexes:
+                if row[column_name] and re.match(f"\\A{regex}\\Z", row[column_name]):
+                    regex_found_dict[column_name][regex] = True
+
+    # Assert that all entries in regex_found_dict are true
+    for column_name in regex_found_dict:
+        for regex, found in regex_found_dict[column_name].items():
+            assert found, \
+                    f"No matches to regular expression \"{regex}\" found in column {column_name}"
 
 
 def test_setup():
-    '''Tests setup.py by submitting it to a dataproc cluster'''
+    """Test setup.py by submitting it to a dataproc cluster
+    Check table upload success message as well as data in the table itself"""
 
     # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(client_options={
@@ -151,42 +191,27 @@ def test_setup():
 
     # Get job output
     out = get_dataproc_job_output(result)
+    
+    # Check logs to see if tables were uploaded
+    for table_name in TABLE_NAMES:
+        assert_table_success_message(table_name, out)
 
-    # # tripDuration
-    # assert is_in_table("(\\d+(?:\\.\\d+)?) s", out)
-    # assert is_in_table("(\\d+(?:\\.\\d+)?) min", out)
-    # assert is_in_table("(\\d+(?:\\.\\d+)?) h", out)
+    # Query BigQuery Table
+    client = bigquery.Client()
+    query = f"SELECT * FROM `{PROJECT}.{DATASET_NAME}.{CITIBIKE_TABLE}`"
+    query_job = client.query(query)
 
-    # # station latitude & longitude
-    # assert is_in_table("[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
+    result = query_job.result()
 
-    # # birth_year
-    # assert is_in_table("19[0-9][0-9]", out)
-    # assert is_in_table("20[0-9][0-9]", out)
+    regex_dict = {
+        "tripduration": ["(\\d+(?:\\.\\d+)?) s", "(\\d+(?:\\.\\d+)?) min", "(\\d+(?:\\.\\d+)?) h"],
+        "gender": ['f', 'F', 'm', 'M', 'u', 'U', 'male', 'MALE', 'female', 'FEMALE', 'unknown', 'UNKNOWN'],
+        "start_station_latitude": ["[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\""],
+        "start_station_longitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
+        "end_station_latitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
+        "end_station_longitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
+        "usertype": ["Subscriber", "subscriber", "SUBSCRIBER", "sub", "Customer", "customer", "CUSTOMER", "cust"],
+    }
 
-    # # gender
-    # assert is_in_table("M", out)
-    # assert is_in_table("m", out)
-    # assert is_in_table("male", out)
-    # assert is_in_table("MALE", out)
-    # assert is_in_table("F", out)
-    # assert is_in_table("f", out)
-    # assert is_in_table("female", out)
-    # assert is_in_table("FEMALE", out)
-    # assert is_in_table("U", out)
-    # assert is_in_table("u", out)
-    # assert is_in_table("unknown", out)
-    # assert is_in_table("UNKNOWN", out)
+    assert_regexes_in_table(regex_dict, result)
 
-    # # customer_plan
-    # assert is_in_table("Subscriber", out)
-    # assert is_in_table("subscriber", out)
-    # assert is_in_table("SUBSCRIBER", out)
-    # assert is_in_table("sub", out)
-    # assert is_in_table("Customer", out)
-    # assert is_in_table("customer", out)
-    # assert is_in_table("CUSTOMER", out)
-    # assert is_in_table("cust", out)
-
-    # # Missing data
-    # assert is_in_table("null", out)
