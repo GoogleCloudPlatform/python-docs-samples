@@ -38,7 +38,7 @@ def retry_if_conflict(exception):
 def test_member():
     # section to create service account to test policy updates.
     # we use the first portion of uuid4 because full version is too long.
-    name = "python-test-" + str(uuid.uuid4()).split('-')[0]
+    name = f'test-{uuid.uuid4().hex[:25]}'
     email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
     member = "serviceAccount:" + email
     create_service_account(
