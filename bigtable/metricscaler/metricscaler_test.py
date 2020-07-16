@@ -20,7 +20,7 @@ import uuid
 
 from google.cloud import bigtable
 from google.cloud.bigtable import enums
-from mock import patch, Mock
+from mock import Mock, patch
 
 import pytest
 
@@ -205,5 +205,7 @@ def test_main(scale_bigtable, get_cpu_load, get_storage_utilization, sleep):
                                            BIGTABLE_INSTANCE, True)
     scale_bigtable.reset_mock()
 
+
 if __name__ == '__main__':
     test_get_cpu_load()
+
