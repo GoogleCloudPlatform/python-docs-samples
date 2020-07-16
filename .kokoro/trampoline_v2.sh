@@ -43,14 +43,13 @@
 # TRAMPOLINE_BUILD_FILE: The script to run in the docker container.
 # TRAMPOLINE_WORKSPACE: The workspace path in the docker container.
 #                       Defaults to /workspace.
-# TRAMPOLINE_SKIP_DOWNLOAD_IMAGE: Skip downloading the image when you
-#                                 know you have the image locally.
-#
 # Potentially there are some repo specific envvars in .trampolinerc in
 # the project root.
 
 
 set -euo pipefail
+
+TRAMPOLINE_VERSION="2.0.3"
 
 if command -v tput >/dev/null && [[ -n "${TERM:-}" ]]; then
   readonly IO_COLOR_RED="$(tput setaf 1)"
@@ -63,6 +62,10 @@ else
   readonly IO_COLOR_YELLOW=""
   readonly IO_COLOR_RESET=""
 fi
+
+function function_exists {
+    [ $(LC_ALL=C type -t $1)"" == "function" ]
+}
 
 # Logs a message using the given color. The first argument must be one
 # of the IO_COLOR_* variables defined above, such as
@@ -108,23 +111,22 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-function repo_root() {
-    local dir="$1"
-    while [[ ! -d "${dir}/.git" ]]; do
-	dir="$(dirname "$dir")"
-    done
-    echo "${dir}"
-}
-
-PROGRAM_PATH="$(realpath "$0")"
-PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
-PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
-
 RUNNING_IN_CI="${RUNNING_IN_CI:-false}"
-TRAMPOLINE_VERSION="2.0.0"
 
 # The workspace in the container, defaults to /workspace.
 TRAMPOLINE_WORKSPACE="${TRAMPOLINE_WORKSPACE:-/workspace}"
+
+pass_down_envvars=(
+    # TRAMPOLINE_V2 variables.
+    # Tells scripts whether they are running as part of CI or not.
+    "RUNNING_IN_CI"
+    # Indicates which CI system we're in.
+    "TRAMPOLINE_CI"
+    # Indicates the version of the script.
+    "TRAMPOLINE_VERSION"
+)
+
+log_yellow "Building with Trampoline ${TRAMPOLINE_VERSION}"
 
 # Detect which CI systems we're in. If we're in any of the CI systems
 # we support, `RUNNING_IN_CI` will be true and `TRAMPOLINE_CI` will be
@@ -134,13 +136,96 @@ if [[ -n "${KOKORO_BUILD_ID:-}" ]]; then
     # descriptive env var for indicating it's on CI.
     RUNNING_IN_CI="true"
     TRAMPOLINE_CI="kokoro"
-    # We should be able to use the default service account.
-    log_yellow "Configuring Container Registry access"
-    gcloud auth list
-    gcloud auth configure-docker --quiet
+    if [[ "${TRAMPOLINE_USE_LEGACY_SERVICE_ACCOUNT:-}" == "true" ]]; then
+	if [[ ! -f "${KOKORO_GFILE_DIR}/kokoro-trampoline.service-account.json" ]]; then
+	    log_red "${KOKORO_GFILE_DIR}/kokoro-trampoline.service-account.json does not exist. Did you forget to mount cloud-devrel-kokoro-resources/trampoline? Aborting."
+	    exit 1
+	fi
+	# This service account will be activated later.
+	TRAMPOLINE_SERVICE_ACCOUNT="${KOKORO_GFILE_DIR}/kokoro-trampoline.service-account.json"
+    else
+	if [[ "${TRAMPOLINE_VERBOSE:-}" == "true" ]]; then
+	    gcloud auth list
+	fi
+	log_yellow "Configuring Container Registry access"
+	gcloud auth configure-docker --quiet
+    fi
+    pass_down_envvars+=(
+	# KOKORO dynamic variables.
+	"KOKORO_BUILD_NUMBER"
+	"KOKORO_BUILD_ID"
+	"KOKORO_JOB_NAME"
+	"KOKORO_GIT_COMMIT"
+	"KOKORO_GITHUB_COMMIT"
+	"KOKORO_GITHUB_PULL_REQUEST_NUMBER"
+	"KOKORO_GITHUB_PULL_REQUEST_COMMIT"
+	# For Build Cop Bot
+	"KOKORO_GITHUB_COMMIT_URL"
+	"KOKORO_GITHUB_PULL_REQUEST_URL"
+    )
 elif [[ "${TRAVIS:-}" == "true" ]]; then
     RUNNING_IN_CI="true"
     TRAMPOLINE_CI="travis"
+    pass_down_envvars+=(
+	"TRAVIS_BRANCH"
+	"TRAVIS_BUILD_ID"
+	"TRAVIS_BUILD_NUMBER"
+	"TRAVIS_BUILD_WEB_URL"
+	"TRAVIS_COMMIT"
+	"TRAVIS_COMMIT_MESSAGE"
+	"TRAVIS_COMMIT_RANGE"
+	"TRAVIS_JOB_NAME"
+	"TRAVIS_JOB_NUMBER"
+	"TRAVIS_JOB_WEB_URL"
+	"TRAVIS_PULL_REQUEST"
+	"TRAVIS_PULL_REQUEST_BRANCH"
+	"TRAVIS_PULL_REQUEST_SHA"
+	"TRAVIS_PULL_REQUEST_SLUG"
+	"TRAVIS_REPO_SLUG"
+	"TRAVIS_SECURE_ENV_VARS"
+	"TRAVIS_TAG"
+    )
+elif [[ -n "${GITHUB_RUN_ID:-}" ]]; then
+    RUNNING_IN_CI="true"
+    TRAMPOLINE_CI="github-workflow"
+    pass_down_envvars+=(
+	"GITHUB_WORKFLOW"
+	"GITHUB_RUN_ID"
+	"GITHUB_RUN_NUMBER"
+	"GITHUB_ACTION"
+	"GITHUB_ACTIONS"
+	"GITHUB_ACTOR"
+	"GITHUB_REPOSITORY"
+	"GITHUB_EVENT_NAME"
+	"GITHUB_EVENT_PATH"
+	"GITHUB_SHA"
+	"GITHUB_REF"
+	"GITHUB_HEAD_REF"
+	"GITHUB_BASE_REF"
+    )
+elif [[ "${CIRCLECI:-}" == "true" ]]; then
+    RUNNING_IN_CI="true"
+    TRAMPOLINE_CI="circleci"
+    pass_down_envvars+=(
+	"CIRCLE_BRANCH"
+	"CIRCLE_BUILD_NUM"
+	"CIRCLE_BUILD_URL"
+	"CIRCLE_COMPARE_URL"
+	"CIRCLE_JOB"
+	"CIRCLE_NODE_INDEX"
+	"CIRCLE_NODE_TOTAL"
+	"CIRCLE_PREVIOUS_BUILD_NUM"
+	"CIRCLE_PROJECT_REPONAME"
+	"CIRCLE_PROJECT_USERNAME"
+	"CIRCLE_REPOSITORY_URL"
+	"CIRCLE_SHA1"
+	"CIRCLE_STAGE"
+	"CIRCLE_USERNAME"
+	"CIRCLE_WORKFLOW_ID"
+	"CIRCLE_WORKFLOW_JOB_ID"
+	"CIRCLE_WORKFLOW_UPSTREAM_JOB_IDS"
+	"CIRCLE_WORKFLOW_WORKSPACE_ID"
+    )
 fi
 
 # Configure the service account for pulling the docker image.
@@ -159,6 +244,24 @@ if [[ -n "${TRAMPOLINE_SERVICE_ACCOUNT:-}" ]]; then
     gcloud auth configure-docker --quiet
 fi
 
+function repo_root() {
+    local dir="$1"
+    while [[ ! -d "${dir}/.git" ]]; do
+	dir="$(dirname "$dir")"
+    done
+    echo "${dir}"
+}
+
+# Detect the project root. In CI builds, we assume the script is in
+# the git tree and traverse from there, otherwise, traverse from `pwd`
+# to find `.git` directory.
+if [[ "${RUNNING_IN_CI:-}" == "true" ]]; then
+    PROGRAM_PATH="$(realpath "$0")"
+    PROGRAM_DIR="$(dirname "${PROGRAM_PATH}")"
+    PROJECT_ROOT="$(repo_root "${PROGRAM_DIR}")"
+else
+    PROJECT_ROOT="$(repo_root $(pwd))"
+fi
 
 log_yellow "Changing to the project root: ${PROJECT_ROOT}."
 cd "${PROJECT_ROOT}"
@@ -167,27 +270,6 @@ required_envvars=(
     # The basic trampoline configurations.
     "TRAMPOLINE_IMAGE"
     "TRAMPOLINE_BUILD_FILE"
-)
-
-pass_down_envvars=(
-    # TRAMPOLINE_V2 variables.
-    # Tells scripts whether they are running as part of CI or not.
-    "RUNNING_IN_CI"
-    # Indicates which CI system we're in.
-    "TRAMPOLINE_CI"
-    # Indicates the version of the script.
-    "TRAMPOLINE_VERSION"
-    # KOKORO dynamic variables.
-    "KOKORO_BUILD_NUMBER"
-    "KOKORO_BUILD_ID"
-    "KOKORO_JOB_NAME"
-    "KOKORO_GIT_COMMIT"
-    "KOKORO_GITHUB_COMMIT"
-    "KOKORO_GITHUB_PULL_REQUEST_NUMBER"
-    "KOKORO_GITHUB_PULL_REQUEST_COMMIT"
-    # For Build Cop Bot
-    "KOKORO_GITHUB_COMMIT_URL"
-    "KOKORO_GITHUB_PULL_REQUEST_URL"
 )
 
 if [[ -f "${PROJECT_ROOT}/.trampolinerc" ]]; then
@@ -203,23 +285,30 @@ do
     fi
 done
 
-if [[ "${TRAMPOLINE_SKIP_DOWNLOAD_IMAGE:-false}" == "true" ]]; then
-    log_yellow "Re-using the local Docker image."
-    has_cache="true"
-else
-    log_yellow "Preparing Docker image."
+# ignore error on docker operations and test execution
+set +e
+
+log_yellow "Preparing Docker image."
+# We only download the docker image in CI builds.
+if [[ "${RUNNING_IN_CI:-}" == "true" ]]; then
     # Download the docker image specified by `TRAMPOLINE_IMAGE`
 
-    set +e  # ignore error on docker operations
     # We may want to add --max-concurrent-downloads flag.
 
     log_yellow "Start pulling the Docker image: ${TRAMPOLINE_IMAGE}."
     if docker pull "${TRAMPOLINE_IMAGE}"; then
 	log_green "Finished pulling the Docker image: ${TRAMPOLINE_IMAGE}."
-	has_cache="true"
+	has_image="true"
     else
 	log_red "Failed pulling the Docker image: ${TRAMPOLINE_IMAGE}."
-	has_cache="false"
+	has_image="false"
+    fi
+else
+    # For local run, check if we have the image.
+    if docker images "${TRAMPOLINE_IMAGE}:latest" | grep "${TRAMPOLINE_IMAGE}"; then
+	has_image="true"
+    else
+	has_image="false"
     fi
 fi
 
@@ -245,12 +334,12 @@ if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
 	"--build-arg" "UID=${user_uid}"
 	"--build-arg" "USERNAME=${user_name}"
     )
-    if [[ "${has_cache}" == "true" ]]; then
+    if [[ "${has_image}" == "true" ]]; then
 	docker_build_flags+=("--cache-from" "${TRAMPOLINE_IMAGE}")
     fi
 
     log_yellow "Start building the docker image."
-    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+    if [[ "${TRAMPOLINE_VERBOSE:-false}" == "true" ]]; then
 	echo "docker build" "${docker_build_flags[@]}" "${context_dir}"
     fi
 
@@ -259,6 +348,10 @@ if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
     if [[ "${RUNNING_IN_CI:-}" == "true" ]]; then
 	if docker build "${docker_build_flags[@]}" "${context_dir}" \
 		  > "${tmpdir}/docker_build.log" 2>&1; then
+	    if [[ "${TRAMPOLINE_VERBOSE:-}" == "true" ]]; then
+		cat "${tmpdir}/docker_build.log"
+	    fi
+
 	    log_green "Finished building the docker image."
 	    update_cache="true"
 	else
@@ -277,8 +370,8 @@ if [[ "${TRAMPOLINE_DOCKERFILE:-none}" != "none" ]]; then
 	fi
     fi
 else
-    if [[ "${has_cache}" != "true" ]]; then
-	log_red "failed to download the image ${TRAMPOLINE_IMAGE}, aborting."
+    if [[ "${has_image}" != "true" ]]; then
+	log_red "We do not have ${TRAMPOLINE_IMAGE} locally, aborting."
 	exit 1
     fi
 fi
@@ -345,14 +438,14 @@ done
 if [[ $# -ge 1 ]]; then
     log_yellow "Running the given commands '" "${@:1}" "' in the container."
     readonly commands=("${@:1}")
-    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+    if [[ "${TRAMPOLINE_VERBOSE:-}" == "true" ]]; then
 	echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
     fi
     docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}" "${commands[@]}"
 else
     log_yellow "Running the tests in a Docker container."
     docker_flags+=("--entrypoint=${TRAMPOLINE_BUILD_FILE}")
-    if [[ "${TRAMPOLINE_SHOW_COMMAND:-false}" == "true" ]]; then
+    if [[ "${TRAMPOLINE_VERBOSE:-}" == "true" ]]; then
 	echo docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
     fi
     docker run "${docker_flags[@]}" "${TRAMPOLINE_IMAGE}"
@@ -377,6 +470,11 @@ if [[ "${update_cache}" == "true" ]] && \
     else
 	log_red "Failed uploading the Docker image."
     fi
+    # Call trampoline_after_upload_hook if it's defined.
+    if function_exists trampoline_after_upload_hook; then
+	trampoline_after_upload_hook
+    fi
+
 fi
 
 exit "${test_retval}"
