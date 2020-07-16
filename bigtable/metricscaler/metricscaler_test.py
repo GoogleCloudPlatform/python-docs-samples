@@ -208,4 +208,3 @@ def test_main(scale_bigtable, get_cpu_load, get_storage_utilization, sleep):
 
 if __name__ == '__main__':
     test_get_cpu_load()
-
