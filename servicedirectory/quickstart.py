@@ -23,10 +23,10 @@ def list_namespaces(project_id, location_id):
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
   response = client.list_namespaces(
-      parent='projects/{0}/locations/{1}'.format(project_id, location_id))
+      parent=f'projects/{project_id}/locations/{location_id}')
 
-  print('Listed namespaces in {0}.'.format(location_id))
+  print(f'Listed namespaces in {location_id}.')
   for namespace in response:
-    print('Namespace: {0}'.format(namespace.name))
+    print(f'Namespace: {namespace.name}')
 
   return response

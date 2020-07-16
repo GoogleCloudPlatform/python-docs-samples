@@ -15,14 +15,17 @@
 # limitations under the License.
 
 from os import environ
+import uuid
+
 import snippets
+
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 LOCATION_ID = 'us-east1'
-NAMESPACE_ID = 'test-namespace'
-SERVICE_ID = 'test-service'
-ENDPOINT_ID = 'test-endpoint'
+NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
+SERVICE_ID = f'test-service-{uuid.uuid4().hex}'
+ENDPOINT_ID = f'test-endpoint-{uuid.uuid4().hex}'
 ADDRESS = '1.2.3.4'
 PORT = 443
 
@@ -30,7 +33,7 @@ PORT = 443
 def teardown_module():
   client = servicedirectory_v1beta1.RegistrationServiceClient()
   response = client.list_namespaces(
-      parent='projects/{0}/locations/{1}'.format(PROJECT_ID, LOCATION_ID))
+      parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}')
   for namespace in response.namespaces:
     client.delete_namespace(name=namespace.name)
 

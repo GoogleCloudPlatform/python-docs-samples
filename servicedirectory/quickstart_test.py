@@ -15,14 +15,17 @@
 # limitations under the License.
 
 from os import environ
+import uuid
+
 import pytest
 import quickstart
+
 from google.api_core import exceptions
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 LOCATION_ID = 'us-east1'
-NAMESPACE_ID = 'test-namespace'
+NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
 
 
 @pytest.fixture(scope='module')
@@ -38,21 +41,15 @@ def namespace(client):
 
 @pytest.fixture(scope='module')
 def list_namespace(client, namespace):
-  created = False
-  try:
-    client.get_namespace(name=namespace.name)
-  except exceptions.NotFound as e:
-    client.create_namespace(
-        parent='projects/{0}/locations/{1}'.format(PROJECT_ID, LOCATION_ID),
-        namespace=namespace,
-        namespace_id=NAMESPACE_ID,
-    )
-    created = True
+  client.create_namespace(
+      parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
+      namespace=namespace,
+      namespace_id=NAMESPACE_ID,
+  )
 
   yield quickstart.list_namespaces(PROJECT_ID, LOCATION_ID)
 
-  if created:
-    client.delete_namespace(name=namespace.name)
+  client.delete_namespace(name=namespace.name)
 
 
 def test_list_namespace(namespace, list_namespace):
