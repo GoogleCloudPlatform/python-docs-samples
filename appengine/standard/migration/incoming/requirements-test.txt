@@ -1,2 +1,2 @@
-pytest>=4.6.10
-webtest>=2.0.35
+pytest==4.6.11; python_version < '3.0'
+webtest==2.0.35

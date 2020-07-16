@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import random
-import string
+import uuid
 
 from google.cloud import spanner
 import pytest
@@ -22,20 +21,17 @@ import backup_sample
 
 def unique_instance_id():
     """ Creates a unique id for the database. """
-    return 'test-instance-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return f'test-instance-{uuid.uuid4().hex[:10]}'
 
 
 def unique_database_id():
     """ Creates a unique id for the database. """
-    return 'test-db-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return f'test-db-{uuid.uuid4().hex[:10]}'
 
 
 def unique_backup_id():
     """ Creates a unique id for the backup. """
-    return 'test-backup-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return f'test-backup-{uuid.uuid4().hex[:10]}'
 
 
 INSTANCE_ID = unique_instance_id()
