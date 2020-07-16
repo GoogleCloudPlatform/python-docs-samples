@@ -1,4 +1,4 @@
 Flask==1.1.2
-google-api-python-client==1.9.3
+google-api-python-client==1.10.0
 google-auth==1.19.0
 google-cloud-pubsub==1.7.0

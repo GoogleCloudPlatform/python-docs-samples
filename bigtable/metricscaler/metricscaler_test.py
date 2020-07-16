@@ -20,7 +20,7 @@ import uuid
 
 from google.cloud import bigtable
 from google.cloud.bigtable import enums
-from mock import patch
+from mock import Mock, patch
 
 import pytest
 
@@ -41,12 +41,18 @@ BIGTABLE_DEV_INSTANCE = INSTANCE_ID_FORMAT.format(str(uuid.uuid4())[:10])
 # System tests to verify API calls succeed
 
 
-def test_get_cpu_load():
-    assert float(get_cpu_load()) > 0.0
+@patch('metricscaler.query')
+def test_get_cpu_load(monitoring_v3_query):
+    iter_mock = monitoring_v3_query.Query().select_resources().iter
+    iter_mock.return_value = iter([Mock(points=[Mock(value=Mock(double_value=1.0))])])
+    assert float(get_cpu_load(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE)) > 0.0
 
 
-def test_get_storage_utilization():
-    assert float(get_storage_utilization()) > 0.0
+@patch('metricscaler.query')
+def test_get_storage_utilization(monitoring_v3_query):
+    iter_mock = monitoring_v3_query.Query().select_resources().iter
+    iter_mock.return_value = iter([Mock(points=[Mock(value=Mock(double_value=1.0))])])
+    assert float(get_storage_utilization(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE)) > 0.0
 
 
 @pytest.fixture()
@@ -198,3 +204,7 @@ def test_main(scale_bigtable, get_cpu_load, get_storage_utilization, sleep):
     scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
                                            BIGTABLE_INSTANCE, True)
     scale_bigtable.reset_mock()
+
+
+if __name__ == '__main__':
+    test_get_cpu_load()
