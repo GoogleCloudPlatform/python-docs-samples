@@ -45,7 +45,7 @@ def delete_namespace(project_id, location_id, namespace_id):
 
   client.delete_namespace(name=namespace_name)
 
-  print('Deleted namespace {namespace_name}.')
+  print(f'Deleted namespace {namespace_name}.')
 
 
 def create_service(project_id, location_id, namespace_id, service_id):
