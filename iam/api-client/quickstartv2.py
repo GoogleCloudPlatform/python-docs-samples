@@ -21,31 +21,27 @@ from google.oauth2 import service_account
 import googleapiclient.discovery
 
 
-def quickstart():
+def quickstart(project_id, member):
     """Gets a policy, adds a member, prints their permissions, and removes the member."""
 
-    """TODO: replace with your project ID"""
-    project_id = "your-project-id"
-    """TODO: Replace with the ID of your member in the form 'user:member@example.com."""
-    member = "your-member"
-    """Role to be granted"""
+    # Role to be granted.
     role = "roles/logging.logWriter"
 
-    """Initializes service."""
+    # Initializes service.
     crm_service = initialize_service()
 
-    """Grants your member the 'Log Writer' role for the project."""
+    # Grants your member the 'Log Writer' role for the project.
     modify_policy_add_role(crm_service, project_id, role, member)
 
-    """Gets the project's policy and prints all members with the 'Log Writer' role."""
+    # Gets the project's policy and prints all members with the 'Log Writer' role.
     policy = get_policy(crm_service, project_id)
     binding = next(b for b in policy["bindings"] if b["role"] == role)
-    print("Role: " + binding["role"])
+    print(f'Role: {(binding["role"])}')
     print("Members: ")
     for m in binding["members"]:
-        print("[" + m + "] ")
+        print(f'[{m}]')
 
-    """Removes the member from the 'Log Writer' role"""
+    # Removes the member from the 'Log Writer' role.
     modify_policy_remove_member(crm_service, project_id, role, member)
 
 
@@ -115,5 +111,10 @@ def set_policy(crm_service, project_id, policy):
 
 
 if __name__ == '__main__':
-    quickstart()
+
+    # TODO: replace with your project ID
+    project_id = "test-project-1000092"
+    # TODO: Replace with the ID of your member in the form 'user:member@example.com.
+    member = "user:melaniedejong@google.com"
+    quickstart(project_id, member)
 # [END iam_quickstartv2]

@@ -94,30 +94,7 @@ def test_quickstartv2(test_member, capsys):
     @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
            stop_max_attempt_number=5, retry_on_exception=retry_if_conflict)
     def test_call():
-        """Test follows the structure of quickstartv2 quickstart()"""
-
-        project_id = GCLOUD_PROJECT
-        role = "roles/logging.logWriter"
-
-        """Initializes service."""
-        crm_service = quickstartv2.initialize_service()
-
-        """Grants your member the 'Log Writer' role for the project."""
-        quickstartv2.modify_policy_add_role(
-            crm_service, project_id, role, test_member)
-
-        """Gets the project's policy and prints all members with the 'Log Writer' role."""
-        policy = quickstartv2.get_policy(crm_service, project_id)
-        binding = next(b for b in policy["bindings"] if b["role"] == role)
-        print("Role: " + binding["role"])
-        print("Members: ")
-        for m in binding["members"]:
-            print("[" + m + "] ")
-
+        quickstartv2.quickstart(GCLOUD_PROJECT, test_member)
         out, _ = capsys.readouterr()
         assert test_member in out
-
-        """Removes the member from the 'Log Writer' role"""
-        quickstartv2.modify_policy_remove_member(
-            crm_service, project_id, role, test_member)
     test_call()
