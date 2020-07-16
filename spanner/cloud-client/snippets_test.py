@@ -13,9 +13,8 @@
 # limitations under the License.
 
 import os
-import random
-import string
 import time
+import uuid
 
 from google.cloud import spanner
 import pytest
@@ -25,8 +24,7 @@ import snippets
 
 def unique_database_id():
     """ Creates a unique id for the database. """
-    return 'test-db-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return f'test-db-{uuid.uuid4().hex[:10]}'
 
 
 INSTANCE_ID = os.environ['SPANNER_INSTANCE']
