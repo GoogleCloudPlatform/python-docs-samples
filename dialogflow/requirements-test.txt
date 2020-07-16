@@ -1,2 +1,2 @@
 pytest==5.4.3
-flaky==3.6.1
+flaky==3.7.0
