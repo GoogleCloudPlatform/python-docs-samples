@@ -81,5 +81,5 @@ def create_keras_model(input_dim, learning_rate):
 
     # Compile Keras model
     model.compile(
-        loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+        loss='binary_crossentropy', optimizer=optimizer, metrics=['mse'])
     return model
