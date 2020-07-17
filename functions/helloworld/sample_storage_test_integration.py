@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START functions_storage_integration_test]
-import base64
+import datetime
 import os
 import requests
 import json
@@ -26,8 +26,15 @@ def test_print_name():
     filename = str(uuid.uuid4())
     port = 8089  # Each running framework instance needs a unique port
 
+    example_timestamp = datetime.datetime.now().isoformat()
     storage_message = {
-        'data': {'name': filename}
+        'data': {
+            'name': filename,
+            'bucket': 'my_bucket',
+            'metageneration': '1',
+            'timeCreated': example_timestamp,
+            'updated': example_timestamp
+        }
     }
 
     process = subprocess.Popen(
