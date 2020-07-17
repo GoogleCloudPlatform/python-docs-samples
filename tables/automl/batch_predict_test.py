@@ -33,6 +33,7 @@ GCS_OUTPUT = "gs://{}-automl-tables-test/TABLE_TEST_OUTPUT/".format(PROJECT)
 BQ_INPUT = "bq://{}.automl_test.bank_marketing".format(PROJECT)
 BQ_OUTPUT = "bq://{}".format(PROJECT)
 
+
 @pytest.mark.slow
 def test_batch_predict(capsys):
     ensure_model_online()
@@ -42,6 +43,7 @@ def test_batch_predict(capsys):
     out, _ = capsys.readouterr()
     assert "Batch prediction complete" in out
 
+
 @pytest.mark.slow
 def test_batch_predict_bq(capsys):
     ensure_model_online()
@@ -50,6 +52,7 @@ def test_batch_predict_bq(capsys):
     )
     out, _ = capsys.readouterr()
     assert "Batch prediction complete" in out
+
 
 def ensure_model_online():
     model = model_test.ensure_model_ready()
