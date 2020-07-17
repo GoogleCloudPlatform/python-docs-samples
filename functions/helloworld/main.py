@@ -102,7 +102,7 @@ def hello_pubsub(event, context):
 
 
 # [START functions_helloworld_storage]
-def hello_gcs(data, context):
+def hello_gcs(event, context):
     """Background Cloud Function to be triggered by Cloud Storage.
        This generic function logs relevant data when a file is changed.
 
