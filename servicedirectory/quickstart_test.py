@@ -20,7 +20,6 @@ import uuid
 import pytest
 import quickstart
 
-from google.api_core import exceptions
 from google.cloud import servicedirectory_v1beta1
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
@@ -35,22 +34,20 @@ def client():
 
 @pytest.fixture(scope='module')
 def namespace(client):
-  return servicedirectory_v1beta1.Namespace(
+  namespace = servicedirectory_v1beta1.Namespace(
       name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
 
-
-@pytest.fixture(scope='module')
-def list_namespace(client, namespace):
   client.create_namespace(
       parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
       namespace=namespace,
       namespace_id=NAMESPACE_ID,
   )
 
-  yield quickstart.list_namespaces(PROJECT_ID, LOCATION_ID)
+  yield namespace
 
   client.delete_namespace(name=namespace.name)
 
 
-def test_list_namespace(namespace, list_namespace):
-  assert namespace in list_namespace.namespaces
+def test_list_namespace(namespace):
+  assert namespace in quickstart.list_namespaces(PROJECT_ID,
+                                                 LOCATION_ID).namespaces
