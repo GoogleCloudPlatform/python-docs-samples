@@ -16,6 +16,7 @@
 programmatically scale a Google Cloud Bigtable cluster."""
 
 import argparse
+import logging
 import os
 import time
 
@@ -26,8 +27,12 @@ from google.cloud.monitoring_v3 import query
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
+logger = logging.getLogger('bigtable.metricscaler')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.INFO)
 
-def get_cpu_load():
+
+def get_cpu_load(bigtable_instance, bigtable_cluster):
     """Returns the most recent Cloud Bigtable CPU load measurement.
 
     Returns:
@@ -40,12 +45,13 @@ def get_cpu_load():
                             metric_type='bigtable.googleapis.com/'
                                         'cluster/cpu_load',
                             minutes=5)
+    cpu_query = cpu_query.select_resources(instance=bigtable_instance, cluster=bigtable_cluster)
     cpu = next(cpu_query.iter())
     return cpu.points[0].value.double_value
     # [END bigtable_cpu]
 
 
-def get_storage_utilization():
+def get_storage_utilization(bigtable_instance, bigtable_cluster):
     """Returns the most recent Cloud Bigtable storage utilization measurement.
 
     Returns:
@@ -58,6 +64,7 @@ def get_storage_utilization():
                                     metric_type='bigtable.googleapis.com/'
                                                 'cluster/storage_utilization',
                                     minutes=5)
+    utilization_query = utilization_query.select_resources(instance=bigtable_instance, cluster=bigtable_cluster)
     utilization = next(utilization_query.iter())
     return utilization.points[0].value.double_value
     # [END bigtable_metric_scaler_storage_utilization]
@@ -111,7 +118,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
                 current_node_count + size_change_step, max_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled up from {} to {} nodes.'.format(
+            logger.info('Scaled up from {} to {} nodes.'.format(
                 current_node_count, new_node_count))
     else:
         if current_node_count > min_node_count:
@@ -119,7 +126,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
                 current_node_count - size_change_step, min_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled down from {} to {} nodes.'.format(
+            logger.info('Scaled down from {} to {} nodes.'.format(
                 current_node_count, new_node_count))
     # [END bigtable_scale]
 
@@ -145,10 +152,10 @@ def main(
           long_sleep (int): How long to sleep after the number of nodes is
                             changed
     """
-    cluster_cpu = get_cpu_load()
-    cluster_storage = get_storage_utilization()
-    print('Detected cpu of {}'.format(cluster_cpu))
-    print('Detected storage utilization of {}'.format(cluster_storage))
+    cluster_cpu = get_cpu_load(bigtable_instance, bigtable_cluster)
+    cluster_storage = get_storage_utilization(bigtable_instance, bigtable_cluster)
+    logger.info('Detected cpu of {}'.format(cluster_cpu))
+    logger.info('Detected storage utilization of {}'.format(cluster_storage))
     try:
         if cluster_cpu > high_cpu_threshold or cluster_storage > high_storage_threshold:
             scale_bigtable(bigtable_instance, bigtable_cluster, True)
@@ -158,10 +165,10 @@ def main(
                 scale_bigtable(bigtable_instance, bigtable_cluster, False)
                 time.sleep(long_sleep)
         else:
-            print('CPU within threshold, sleeping.')
+            logger.info('CPU within threshold, sleeping.')
             time.sleep(short_sleep)
     except Exception as e:
-        print("Error during scaling: %s", e)
+        logger.error("Error during scaling: %s", e)
 
 
 if __name__ == '__main__':

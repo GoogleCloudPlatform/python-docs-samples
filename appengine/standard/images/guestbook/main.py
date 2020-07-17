@@ -124,7 +124,7 @@ class Guestbook(webapp2.RequestHandler):
         # [START sign_handler_2]
         greeting.avatar = avatar
         greeting.put()
-        # [END sign_handler_1]
+        # [END sign_handler_2]
 
         self.redirect('/?' + urllib.urlencode(
             {'guestbook_name': guestbook_name}))
