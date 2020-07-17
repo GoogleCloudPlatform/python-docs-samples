@@ -14,10 +14,11 @@
 
 # [START functions_http_integration_test]
 import os
-import requests
-from requests.packages.urllib3.util.retry import Retry
 import subprocess
 import uuid
+
+import requests
+from requests.packages.urllib3.util.retry import Retry
 
 
 def test_args():

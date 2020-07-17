@@ -15,10 +15,10 @@
 # [START functions_pubsub_integration_test]
 import base64
 import os
-import requests
-import json
-from requests.packages.urllib3.util.retry import Retry
 import subprocess
+
+import requests
+from requests.packages.urllib3.util.retry import Retry
 import uuid
 
 
