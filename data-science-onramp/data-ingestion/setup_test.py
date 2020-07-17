@@ -8,9 +8,9 @@ import os
 import re
 import uuid
 
+from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-from google.cloud import bigquery
 import pytest
 
 # Set global variables
@@ -130,49 +130,10 @@ def get_dataproc_job_output(result):
     return blob.download_as_string().decode("utf-8")
 
 
-# def is_in_table(value, out):
-#     return re.search(f"\\| *{value} *\\|", out)
-
-
 def assert_table_success_message(table_name, out):
     """Check table upload success message was printed in job logs."""
     assert re.search(f"Table {table_name} successfully written to BigQuery", out), \
         f"Table {table_name} sucess message not printed in job logs"
-
-
-
-def assert_regexes_in_table(regex_dict, query_result):
-    """Assert that at least one row satisfies each regex.
-    The arguments are
-    - regex_dict: a dictionary where the keys are column
-                    names and values are lists of regexes;
-    - query_result: the bigquery query result of the whole table.
-    """
-
-    # Create dictionary with keys column names and values dictionaries
-    # The dictionaries stored have keys regexes and values booleans
-    # `regex_found_dict[column][regex]` hold the truth value of
-    # whether the there is at least one row of column with name `column`
-    # which satisfies the regular expression `regex`.
-    regex_found_dict = {}
-    for column, regexes in regex_dict.items():
-        regex_found_dict[column] = {}
-        for regex in regexes:
-            regex_found_dict[column][regex] = False
-
-    # Outer loop is over `query_result` since this is
-    # an iterator which can only iterate once
-    for row in query_result:
-        for column_name, regexes in regex_dict.items():
-            for regex in regexes:
-                if row[column_name] and re.match(f"\\A{regex}\\Z", row[column_name]):
-                    regex_found_dict[column_name][regex] = True
-
-    # Assert that all entries in regex_found_dict are true
-    for column_name in regex_found_dict:
-        for regex, found in regex_found_dict[column_name].items():
-            assert found, \
-                    f"No matches to regular expression \"{regex}\" found in column {column_name}"
 
 
 def test_setup():
@@ -191,17 +152,13 @@ def test_setup():
 
     # Get job output
     out = get_dataproc_job_output(result)
-    
+
     # Check logs to see if tables were uploaded
     for table_name in TABLE_NAMES:
         assert_table_success_message(table_name, out)
 
     # Query BigQuery Table
     client = bigquery.Client()
-    query = f"SELECT * FROM `{PROJECT}.{DATASET_NAME}.{CITIBIKE_TABLE}`"
-    query_job = client.query(query)
-
-    result = query_job.result()
 
     regex_dict = {
         "tripduration": ["(\\d+(?:\\.\\d+)?) s", "(\\d+(?:\\.\\d+)?) min", "(\\d+(?:\\.\\d+)?) h"],
@@ -213,5 +170,20 @@ def test_setup():
         "usertype": ["Subscriber", "subscriber", "SUBSCRIBER", "sub", "Customer", "customer", "CUSTOMER", "cust"],
     }
 
-    assert_regexes_in_table(regex_dict, result)
+    for column_name, regexes in regex_dict.items():
+        query = f"SELECT {column_name} FROM `{PROJECT}.{DATASET_NAME}.{CITIBIKE_TABLE}`"
+        query_job = client.query(query)
 
+        result = query_job.result()
+
+        rows = []
+        for row in result:
+            rows.append(row[column_name])
+
+        for regex in regexes:
+            found = False
+            for row in rows:
+                if row and re.match(f"\\A{regex}\\Z", row):
+                    found = True
+            assert found, \
+                f"No matches to regular expression \"{regex}\" found in column {column_name}"
