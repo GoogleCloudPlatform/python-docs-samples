@@ -115,11 +115,11 @@ def hello_gcs(event, context):
 
     print('Event ID: {}'.format(context.event_id))
     print('Event type: {}'.format(context.event_type))
-    print('Bucket: {}'.format(data['bucket']))
-    print('File: {}'.format(data['name']))
-    print('Metageneration: {}'.format(data['metageneration']))
-    print('Created: {}'.format(data['timeCreated']))
-    print('Updated: {}'.format(data['updated']))
+    print('Bucket: {}'.format(event['bucket']))
+    print('File: {}'.format(event['name']))
+    print('Metageneration: {}'.format(event['metageneration']))
+    print('Created: {}'.format(event['timeCreated']))
+    print('Updated: {}'.format(event['updated']))
 # [END functions_helloworld_storage]
 
 
