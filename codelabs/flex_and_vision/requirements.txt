@@ -3,4 +3,4 @@ gunicorn==20.0.4; python_version > '3.0'
 gunicorn==19.10.0; python_version < '3.0'
 google-cloud-vision==1.0.0
 google-cloud-storage==1.29.0
-google-cloud-datastore==1.13.0
+google-cloud-datastore==1.13.1
