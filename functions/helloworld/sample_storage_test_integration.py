@@ -14,13 +14,13 @@
 
 # [START functions_storage_integration_test]
 import datetime
-import os
-import requests
 import json
-from requests.packages.urllib3.util.retry import Retry
+import os
 import subprocess
 import uuid
 
+import requests
+from requests.packages.urllib3.util.retry import Retry
 
 def test_print_name():
     filename = str(uuid.uuid4())
