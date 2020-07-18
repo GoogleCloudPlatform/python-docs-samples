@@ -16,10 +16,10 @@
 import base64
 import os
 import subprocess
+import uuid
 
 import requests
 from requests.packages.urllib3.util.retry import Retry
-import uuid
 
 
 def test_print_name():
