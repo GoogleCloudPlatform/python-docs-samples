@@ -29,6 +29,7 @@ JOB_DETAILS = {  # Job configuration
         ],
     },
 }
+CLUSTER_IMAGE = "1.5.4-debian10"
 CLUSTER_DATA = {  # Create cluster configuration
     'project_id': PROJECT,
     'cluster_name': DATAPROC_CLUSTER,
@@ -48,13 +49,14 @@ CLUSTER_DATA = {  # Create cluster configuration
             'machine_type_uri': 'n1-standard-8'
         },
         "software_config": {
-            "image_version": "1.5.4-debian10",
+            "image_version": CLUSTER_IMAGE,
             "optional_components": [
                 "ANACONDA"
             ],
         }
     }
 }
+
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
@@ -70,8 +72,9 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT, CLUSTER_REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT, CLUSTER_REGION, DATAPROC_CLUSTER)
     operation.result()
+
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_bucket():
@@ -89,14 +92,17 @@ def setup_and_teardown_bucket():
     bucket = storage_client.get_bucket(BUCKET_NAME)
     bucket.delete(force=True)
 
+
 def is_in_table(value, out):
     return re.search(f"\\| *{value} *\\|", out)
+
 
 def get_blob_from_path(path):
     bucket_name = re.search("dataproc.+?/", path).group(0)[0:-1]
     bucket = storage.Client().get_bucket(bucket_name)
     output_location = re.search("google-cloud-dataproc.+", path).group(0)
     return bucket.blob(output_location)
+
 
 def test_clean():
     '''Tests clean.py by submitting it to a dataproc cluster'''

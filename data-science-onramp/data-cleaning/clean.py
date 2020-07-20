@@ -1,25 +1,26 @@
-import sys
-import re
 import datetime
+import re
+import sys
 import time
 
+from google.cloud import storage
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
-from pyspark.sql.types import StringType, IntegerType, FloatType
-from google.cloud import storage
+from pyspark.sql.types import FloatType, IntegerType, StringType
 
 
 PROJECT_ID = sys.argv[1]
 BUCKET_NAME = sys.argv[2]
 TABLE = f'{PROJECT_ID}.new_york_citibike_trips.RAW_DATA'
 
+
 def trip_duration_udf(duration):
     '''Convert trip duration to seconds. Return None if negative.'''
     if not duration:
         return None
-    
-    time = re.match('\d*.\d*', duration)
+
+    time = re.match('[0-9]*.[0-9]*', duration)
 
     if not time:
         return None
@@ -33,45 +34,50 @@ def trip_duration_udf(duration):
         time *= 60
     elif 'h' in duration:
         time *= 60 * 60
-    
+
     return int(time)
+
 
 def station_name_udf(name):
     '''Replaces '/' with '&'.'''
     return name.replace('/', '&') if name else None
 
+
 def user_type_udf(user):
     '''Converts user type to 'Subscriber' or 'Customer'.'''
     if not user:
         return None
-    
+
     if user.lower().startswith('sub'):
         return 'Subscriber'
     elif user.lower().startswith('cust'):
         return 'Customer'
 
+
 def gender_udf(gender):
     '''Converts gender to 'Male' or 'Female'.'''
     if not gender:
         return None
-    
+
     if gender.lower().startswith('m'):
         return 'Male'
     elif gender.lower().startswith('f'):
         return 'Female'
 
+
 def angle_udf(angle):
     '''Converts DMS notation to degrees. Return None if not in DMS or degrees notation.'''
     if not angle:
         return None
-    
-    dms = re.match('(-?\d*).(-?\d*)\'(-?\d*)"', angle)
+
+    dms = re.match('(-?[0-9]*).(-?[0-9]*)\'(-?[0-9]*)"', angle)
     if dms:
         return int(dms[1]) + int(dms[2])/60 + int(dms[3])/(60 * 60)
-    
-    degrees = re.match('\d*.\d*', angle)
+
+    degrees = re.match('[0-9]*.[0-9]*', angle)
     if degrees:
         return float(degrees[0])
+
 
 def compute_time(duration, start, end):
     '''Calculates duration, start time, and end time from each other if one value is null.'''
@@ -111,14 +117,17 @@ def compute_time(duration, start, end):
         end = end.strftime(time_format)
 
     return (duration, start, end)
-        
+
+
 def compute_duration_udf(duration, start, end):
     '''Calculates duration from start and end time if null.'''
     return compute_time(duration, start, end)[0]
 
+
 def compute_start_udf(duration, start, end):
     '''Calculates start time from duration and end time if null.'''
     return compute_time(duration, start, end)[1]
+
 
 def compute_end_udf(duration, start, end):
     '''Calculates end time from duration and start time if null.'''
@@ -170,7 +179,7 @@ if __name__ == '__main__':
     for name, obj in multi_udfs.items():
         df = df.withColumn(name, obj['udf'](*obj['params']))
 
-    # Display sample of 100 rows
+    # Display sample of rows
     df.sample(False, 0.001).show(n=100)
 
     # Write results to GCS
@@ -197,7 +206,7 @@ if __name__ == '__main__':
         storage_client = storage.Client()
         source_bucket = storage_client.get_bucket(BUCKET_NAME)
 
-        # Get all files in temp location 
+        # Get all files in temp location
         blobs = list(source_bucket.list_blobs(prefix=path))
 
         # Copy files from temp location to the final location
@@ -214,4 +223,3 @@ if __name__ == '__main__':
             blob.delete()
 
         print('Data successfully uploaded to ' + 'gs://' + BUCKET_NAME + '/' + final_path)
-    

@@ -9,4 +9,4 @@ export BUCKET_NAME=citibikevd
 gcloud dataproc jobs submit pyspark --cluster ${CLUSTER_NAME} \
     --jars gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar \
     --driver-log-levels root=FATAL \
-    clean.py -- ${PROJECT_ID} ${BUCKET_NAME}
+    clean.py -- ${PROJECT_ID} ${BUCKET_NAME} --dry-run
