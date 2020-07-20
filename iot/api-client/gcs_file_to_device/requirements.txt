@@ -4,6 +4,6 @@ google-auth-httplib2==0.0.4
 google-cloud-iot==1.0.0
 google-cloud-pubsub==1.7.0
 google-cloud-storage==1.29.0
-cryptography==2.9.2
+cryptography==3.0
 paho-mqtt==1.5.0
 pyjwt==1.7.1
