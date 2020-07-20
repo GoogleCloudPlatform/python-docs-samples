@@ -51,7 +51,7 @@ def input_fn(features, labels, shuffle, num_epochs, batch_size):
     return dataset
 
 
-def create_keras_model(input_dim, learning_rate):
+def create_keras_model(input_dim, output_dim, learning_rate):
     """Creates Keras Model for Binary Classification.
 
     The single output node + Sigmoid activation makes this a Logistic
@@ -67,12 +67,12 @@ def create_keras_model(input_dim, learning_rate):
     Dense = tf.keras.layers.Dense
     model = tf.keras.Sequential(
         [
-            Dense(100, activation=tf.nn.relu, kernel_initializer='uniform',
+            Dense(100, activation=tf.nn.relu,
                   input_shape=(input_dim,)),
-            Dense(75, activation=tf.nn.relu),
-            Dense(50, activation=tf.nn.relu),
-            Dense(25, activation=tf.nn.relu),
-            Dense(1, activation=tf.nn.sigmoid)
+            #Dense(75, activation=tf.nn.relu),
+            #Dense(50, activation=tf.nn.relu),
+            #Dense(25, activation=tf.nn.relu),
+            Dense(output_dim)
         ])
 
     # Custom Optimizer:
@@ -81,5 +81,5 @@ def create_keras_model(input_dim, learning_rate):
 
     # Compile Keras model
     model.compile(
-        loss='mae', optimizer=optimizer, metrics=['mae'])
+        loss='mae', optimizer="adam", metrics=['mae'])
     return model

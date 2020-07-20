@@ -77,11 +77,12 @@ def train_and_evaluate(args):
 
     # dimensions
     num_train_examples, input_dim = train_x.shape
-    num_eval_examples = eval_x.shape[0]
+    num_eval_examples = eval_x.shape[1]
 
     # Create the Keras Model
     keras_model = model.create_keras_model(
-        input_dim=input_dim, learning_rate=args.learning_rate)
+        input_dim=input_dim, output_dim=train_y.shape[1],
+        learning_rate=args.learning_rate)
 
     # Pass a numpy array by passing DataFrame.values
     training_dataset = model.input_fn(
