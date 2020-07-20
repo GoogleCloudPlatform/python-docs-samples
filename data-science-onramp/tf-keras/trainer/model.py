@@ -18,6 +18,8 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+from tensorflow.keras import backend as K
+#from sklearn.metrics import r2_score
 
 
 def input_fn(features, labels, shuffle, num_epochs, batch_size):
@@ -69,9 +71,9 @@ def create_keras_model(input_dim, output_dim, learning_rate):
         [
             Dense(100, activation=tf.nn.relu,
                   input_shape=(input_dim,)),
-            #Dense(75, activation=tf.nn.relu),
-            #Dense(50, activation=tf.nn.relu),
-            #Dense(25, activation=tf.nn.relu),
+            Dense(75, activation=tf.nn.relu),
+            Dense(50, activation=tf.nn.relu),
+            Dense(25, activation=tf.nn.relu),
             Dense(output_dim)
         ])
 
@@ -81,5 +83,10 @@ def create_keras_model(input_dim, output_dim, learning_rate):
 
     # Compile Keras model
     model.compile(
-        loss='mae', optimizer="adam", metrics=['mae'])
+        loss='mae', optimizer="adam", metrics=[get_r2_coeff])
     return model
+    
+def get_r2_coeff(y_true, y_pred):
+    SS_res = K.sum(K.square( y_true - y_pred ))
+    SS_tot = K.sum(K.square( y_true - K.mean(y_true) ) )
+    return ( 1 - SS_res/(SS_tot + K.epsilon()) )
