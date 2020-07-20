@@ -185,5 +185,6 @@ def test_setup():
             for row in rows:
                 if row and re.match(f"\\A{regex}\\Z", row):
                     found = True
+                    break
             assert found, \
                 f"No matches to regular expression \"{regex}\" found in column {column_name}"
