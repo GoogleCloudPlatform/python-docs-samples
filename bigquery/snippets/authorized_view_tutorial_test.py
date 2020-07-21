@@ -20,7 +20,7 @@ import pytest
 import authorized_view_tutorial
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def client():
     return bigquery.Client()
 
@@ -35,30 +35,39 @@ def datasets_to_delete(client):
 
 def test_authorized_view_tutorial(client, datasets_to_delete):
     override_values = {
-        "source_dataset_id": "github_source_data_{}".format(str(uuid.uuid4()).replace("-", "_")),
-        "shared_dataset_id": "shared_views_{}".format(str(uuid.uuid4()).replace("-", "_")),
+        "source_dataset_id": "github_source_data_{}".format(
+            str(uuid.uuid4()).replace("-", "_")
+        ),
+        "shared_dataset_id": "shared_views_{}".format(
+            str(uuid.uuid4()).replace("-", "_")
+        ),
     }
     source_dataset_ref = client.dataset(override_values["source_dataset_id"])
     shared_dataset_ref = client.dataset(override_values["shared_dataset_id"])
-    datasets_to_delete.extend([override_values["source_dataset_id"],
-                               override_values["shared_dataset_id"]])
+    datasets_to_delete.extend(
+        [override_values["source_dataset_id"], override_values["shared_dataset_id"]]
+    )
 
     authorized_view_tutorial.run_authorized_view_tutorial(override_values)
 
     source_dataset = client.get_dataset(source_dataset_ref)
     shared_dataset = client.get_dataset(shared_dataset_ref)
-    analyst_email = 'example-analyst-group@google.com'
-    analyst_entries = [entry for entry in shared_dataset.access_entries
-                       if entry.entity_id == analyst_email]
+    analyst_email = "example-analyst-group@google.com"
+    analyst_entries = [
+        entry
+        for entry in shared_dataset.access_entries
+        if entry.entity_id == analyst_email
+    ]
     assert len(analyst_entries) == 1
-    assert analyst_entries[0].role == 'READER'
+    assert analyst_entries[0].role == "READER"
 
-    authorized_view_entries = [entry for entry in source_dataset.access_entries
-                               if entry.entity_type == 'view']
+    authorized_view_entries = [
+        entry for entry in source_dataset.access_entries if entry.entity_type == "view"
+    ]
     expected_view_ref = {
-        'projectId': client.project,
-        'datasetId': override_values["shared_dataset_id"],
-        'tableId': 'github_analyst_view',
+        "projectId": client.project,
+        "datasetId": override_values["shared_dataset_id"],
+        "tableId": "github_analyst_view",
     }
     assert len(authorized_view_entries) == 1
     assert authorized_view_entries[0].entity_id == expected_view_ref

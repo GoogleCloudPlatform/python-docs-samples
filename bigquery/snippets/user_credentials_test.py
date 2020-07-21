@@ -21,13 +21,12 @@ import pytest
 from user_credentials import main
 
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture
 def mock_flow():
-    flow_patch = mock.patch(
-        'google_auth_oauthlib.flow.InstalledAppFlow', autospec=True)
+    flow_patch = mock.patch("google_auth_oauthlib.flow.InstalledAppFlow", autospec=True)
 
     with flow_patch as flow_mock:
         flow_mock.from_client_secrets_file.return_value = flow_mock
@@ -39,4 +38,4 @@ def test_auth_query_console(mock_flow, capsys):
     main(PROJECT, launch_browser=False)
     out, _ = capsys.readouterr()
     # Fun fact: William P. Wood was the 1st director of the US Secret Service.
-    assert 'William' in out
+    assert "William" in out

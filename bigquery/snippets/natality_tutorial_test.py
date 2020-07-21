@@ -20,7 +20,7 @@ import pytest
 import natality_tutorial
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def client():
     return bigquery.Client()
 
@@ -35,12 +35,16 @@ def datasets_to_delete(client):
 
 def test_natality_tutorial(client, datasets_to_delete):
     override_values = {
-        "dataset_id": "natality_regression_{}".format(str(uuid.uuid4()).replace("-", "_")),
+        "dataset_id": "natality_regression_{}".format(
+            str(uuid.uuid4()).replace("-", "_")
+        ),
     }
     datasets_to_delete.append(override_values["dataset_id"])
 
     natality_tutorial.run_natality_tutorial(override_values)
 
-    table_ref = bigquery.Dataset(client.dataset(override_values["dataset_id"])).table("regression_input")
+    table_ref = bigquery.Dataset(client.dataset(override_values["dataset_id"])).table(
+        "regression_input"
+    )
     table = client.get_table(table_ref)
     assert table.num_rows > 0

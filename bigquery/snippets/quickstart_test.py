@@ -22,10 +22,10 @@ import quickstart
 
 # Must match the dataset listed in quickstart.py (there's no easy way to
 # extract this).
-DATASET_ID = 'my_new_dataset'
+DATASET_ID = "my_new_dataset"
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def client():
     return bigquery.Client()
 

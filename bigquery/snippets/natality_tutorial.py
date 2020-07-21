@@ -37,7 +37,7 @@ def run_natality_tutorial(override_values={}):
     client = bigquery.Client()
 
     # Prepare a reference to a new dataset for storing the query results.
-    dataset_id = 'natality_regression'
+    dataset_id = "natality_regression"
     # [END bigquery_query_natality_tutorial]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
@@ -51,7 +51,7 @@ def run_natality_tutorial(override_values={}):
 
     # In the new BigQuery dataset, create a reference to a new table for
     # storing the query results.
-    table_ref = dataset.table('regression_input')
+    table_ref = dataset.table("regression_input")
 
     # Configure the query job.
     job_config = bigquery.QueryJobConfig()
@@ -83,5 +83,5 @@ def run_natality_tutorial(override_values={}):
     # [END bigquery_query_natality_tutorial]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_natality_tutorial()

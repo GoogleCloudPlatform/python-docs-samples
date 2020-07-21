@@ -27,14 +27,10 @@ def main():
     # key_path = "path/to/service_account.json"
 
     credentials = service_account.Credentials.from_service_account_file(
-        key_path,
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        key_path, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
 
-    client = bigquery.Client(
-        credentials=credentials,
-        project=credentials.project_id,
-    )
+    client = bigquery.Client(credentials=credentials, project=credentials.project_id,)
     # [END bigquery_client_json_credentials]
     return client
 

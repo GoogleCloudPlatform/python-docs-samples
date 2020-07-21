@@ -24,7 +24,7 @@ def run_quickstart(override_values={}):
     bigquery_client = bigquery.Client()
 
     # The name for the new dataset
-    dataset_id = 'my_new_dataset'
+    dataset_id = "my_new_dataset"
 
     # [END bigquery_quickstart]
     # To facilitate testing, we replace values with alternatives
@@ -39,9 +39,9 @@ def run_quickstart(override_values={}):
     # Creates the new dataset
     dataset = bigquery_client.create_dataset(dataset)
 
-    print('Dataset {} created.'.format(dataset.dataset_id))
+    print("Dataset {} created.".format(dataset.dataset_id))
     # [END bigquery_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()

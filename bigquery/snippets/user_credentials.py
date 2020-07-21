@@ -36,8 +36,8 @@ def main(project, launch_browser=True):
     # such as over SSH or from a remote Jupyter notebook.
 
     appflow = flow.InstalledAppFlow.from_client_secrets_file(
-        'client_secrets.json',
-        scopes=['https://www.googleapis.com/auth/bigquery'])
+        "client_secrets.json", scopes=["https://www.googleapis.com/auth/bigquery"]
+    )
 
     if launch_browser:
         appflow.run_local_server()
@@ -69,21 +69,21 @@ def main(project, launch_browser=True):
 
     # Print the results.
     for row in query_job.result():  # Wait for the job to complete.
-        print("{}: {}".format(row['name'], row['total']))
+        print("{}: {}".format(row["name"], row["total"]))
     # [END bigquery_auth_user_query]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        '--launch-browser',
-        help='Use a local server flow to authenticate. ',
-        action='store_true')
-    parser.add_argument('project', help='Project to use for BigQuery billing.')
+        "--launch-browser",
+        help="Use a local server flow to authenticate. ",
+        action="store_true",
+    )
+    parser.add_argument("project", help="Project to use for BigQuery billing.")
 
     args = parser.parse_args()
 
-    main(
-        args.project, launch_browser=args.launch_browser)
+    main(args.project, launch_browser=args.launch_browser)
