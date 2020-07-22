@@ -42,6 +42,7 @@ def test_batch_translate_text(capsys, bucket):
         "gs://cloud-samples-data/translation/text.txt",
         "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
         PROJECT_ID,
+        timeout=240
     )
     out, _ = capsys.readouterr()
     assert "Total Characters" in out
