@@ -1,2 +1,4 @@
+functions-framework==2.0.0
 mock==4.0.2
 pytest==5.4.3
+uuid==1.30
