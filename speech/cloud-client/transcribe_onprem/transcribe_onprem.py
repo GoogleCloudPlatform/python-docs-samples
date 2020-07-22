@@ -31,7 +31,7 @@ def transcribe_onprem(local_file_path, api_endpoint):
     import io
 
     # api_endpoint = '0.0.0.0:10000'
-    # local_file_path = 'resources/brooklyn_bridge.raw'
+    # local_file_path = '../resources/two_channel_16k.raw'
 
     # Create a gRPC channel to your server
     channel = grpc.insecure_channel(target=api_endpoint)
@@ -42,7 +42,7 @@ def transcribe_onprem(local_file_path, api_endpoint):
     language_code = "en-US"
 
     # Sample rate in Hertz of the audio data sent
-    sample_rate_hertz = 8000
+    sample_rate_hertz = 16000
 
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats.
