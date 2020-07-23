@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 import pytest
 
@@ -28,7 +28,7 @@ compute_region = "us-central1"
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    dataset_name = f"test_{uuid.uuid4().hex[:27]}"
     automl_translation_dataset.create_dataset(
         project_id, compute_region, dataset_name, "en", "ja"
     )

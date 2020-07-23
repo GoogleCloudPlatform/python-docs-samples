@@ -77,4 +77,4 @@ def test_model_list_get_evaluate(capsys):
         project_id, compute_region, model_id, model_evaluation_id
     )
     out, _ = capsys.readouterr()
-    assert "evaluation_metric" in out
+    assert model_evaluation_id in out
