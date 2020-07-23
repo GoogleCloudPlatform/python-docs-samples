@@ -120,15 +120,19 @@ def update_notification_config(organization_id, notification_config_id, pubsub_t
     )
 
     updated_description = "New updated description"
+    updated_filter = 'state = "INACTIVE"'
 
     # Only description and pubsub_topic can be updated.
-    field_mask = field_mask_pb2.FieldMask(paths=["description", "pubsub_topic"])
+    field_mask = field_mask_pb2.FieldMask(
+        paths=["description", "pubsub_topic", "streaming_config.fitler"]
+    )
 
     updated_notification_config = client.update_notification_config(
         {
             "name": notification_config_name,
             "description": updated_description,
             "pubsub_topic": pubsub_topic,
+            "streaming_config": {"filter": updated_filter},
         },
         update_mask=field_mask,
     )
