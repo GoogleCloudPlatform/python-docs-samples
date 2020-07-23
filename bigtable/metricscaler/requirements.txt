@@ -1,2 +1,2 @@
-google-cloud-bigtable==1.2.1
+google-cloud-bigtable==1.4.0
 google-cloud-monitoring==1.0.0
