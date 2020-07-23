@@ -13,6 +13,9 @@ product:
     Client Libraries.
 
 
+required_api_url: https://console.developers.google.com/apis/api/servicedirectory.googleapis.com/overview
+required_role: Service Directory Admin
+
 setup:
 - auth
 - install_deps

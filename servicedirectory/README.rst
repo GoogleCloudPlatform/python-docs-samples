@@ -14,7 +14,9 @@ This directory contains samples for Google Cloud Service Directory. `Google Clou
 
 .. _Google Cloud Service Directory: https://cloud.google.com/service-directory/docs/
 
+To run the sample, you need to enable the API at: https://console.developers.google.com/apis/api/servicedirectory.googleapis.com/overview
 
+To run the sample, you need to have `Service Directory Admin` role.
 
 
 
