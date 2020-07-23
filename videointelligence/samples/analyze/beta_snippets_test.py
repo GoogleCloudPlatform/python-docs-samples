@@ -17,6 +17,8 @@
 import os
 import uuid
 
+import backoff
+from google.api_core.exceptions import Conflict
 from google.cloud import storage
 import pytest
 from six.moves.urllib.request import urlopen
@@ -59,8 +61,13 @@ def bucket():
 
     yield bucket
 
-    # Teardown.
-    bucket.delete(force=True)
+    # Teardown. We're occasionally seeing 409 conflict errors.
+    # Retrying upon 409s.
+    @backoff.on_exception(backoff.expo, Conflict, max_time=120)
+    def delete_bucket():
+        bucket.delete(force=True)
+
+    delete_bucket()
 
 
 @pytest.mark.slow
