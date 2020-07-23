@@ -21,11 +21,11 @@ REGION = "us-central1"
 CLUSTER_NAME = f'setup-test-{ID}'
 BUCKET_NAME = f'setup-test-{ID}'
 DATASET_NAME = f'setup-test-{ID}'.replace("-", "_")
-CITIBIKE_TABLE = "new_york_citibike_trips"
+CITIBIKE_TABLE = "RAW_DATA"
 DESTINATION_BLOB_NAME = "setup.py"
 JOB_FILE_NAME = f'gs://{BUCKET_NAME}/setup.py'
 TABLE_NAMES = [
-    "new_york_citibike_trips",
+    CITIBIKE_TABLE,
     "gas_prices",
 ]
 JOB_DETAILS = {  # Job configuration

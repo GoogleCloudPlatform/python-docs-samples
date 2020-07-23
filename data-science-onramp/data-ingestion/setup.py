@@ -22,7 +22,7 @@ from pyspark.sql.types import FloatType, StringType, StructField, StructType
 BUCKET_NAME = sys.argv[1]
 DATASET_NAME = sys.argv[2]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
-CITIBIKE_TABLE_NAME = "new_york_citibike_trips"
+CITIBIKE_TABLE_NAME = "RAW_DATA"
 EXTERNAL_TABLES = {
     "gas_prices": {
         "url": "https://data.ny.gov/api/views/wuxr-ni2i/rows.csv",
