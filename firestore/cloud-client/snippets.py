@@ -572,6 +572,16 @@ def order_where_limit():
     print(results)
 
 
+def order_limit_to_last():
+    db = firestore.Client()
+    # [START fs_order_by_name_limit_query]
+    cities_ref = db.collection("cities")
+    query = cities_ref.order_by("name").limit_to_last(2)
+    results = query.get()
+    # [END fs_order_by_name_limit_query]
+    print(results)
+
+
 def order_where_valid():
     db = firestore.Client()
     # [START order_where_valid]
