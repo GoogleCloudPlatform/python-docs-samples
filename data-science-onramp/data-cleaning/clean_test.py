@@ -7,63 +7,45 @@ from google.cloud import storage
 import pytest
 
 # Set global variables
-PROJECT = os.environ['GCLOUD_PROJECT']
-DATAPROC_CLUSTER = f'clean-test-{uuid.uuid4()}'
-BUCKET_NAME = f'clean-test-code-{uuid.uuid4()}'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
+BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
 CLUSTER_REGION = "us-east4"
 DESTINATION_BLOB_NAME = "clean.py"
-JOB_FILE_NAME = f'gs://{BUCKET_NAME}/clean.py'
+JOB_FILE_NAME = f"gs://{BUCKET_NAME}/clean.py"
 JOB_DETAILS = {  # Job configuration
-    'placement': {
-        'cluster_name': DATAPROC_CLUSTER
-    },
-    'pyspark_job': {
-        'main_python_file_uri': JOB_FILE_NAME,
-        'args': [
-            PROJECT,
-            BUCKET_NAME,
-            "--dry-run",
-        ],
-        "jar_file_uris": [
-                "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-        ],
+    "placement": {"cluster_name": DATAPROC_CLUSTER},
+    "pyspark_job": {
+        "main_python_file_uri": JOB_FILE_NAME,
+        "args": [PROJECT, BUCKET_NAME, "--dry-run",],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
 CLUSTER_IMAGE = "1.5.4-debian10"
 CLUSTER_DATA = {  # Create cluster configuration
-    'project_id': PROJECT,
-    'cluster_name': DATAPROC_CLUSTER,
-    'config': {
-        'gce_cluster_config': {
-            'zone_uri': '',
-            "metadata": {
-                "PIP_PACKAGES": "google-cloud-storage"
-            },
+    "project_id": PROJECT,
+    "cluster_name": DATAPROC_CLUSTER,
+    "config": {
+        "gce_cluster_config": {
+            "zone_uri": "",
+            "metadata": {"PIP_PACKAGES": "google-cloud-storage"},
         },
-        'master_config': {
-            'num_instances': 1,
-            'machine_type_uri': 'n1-standard-8'
-        },
-        'worker_config': {
-            'num_instances': 6,
-            'machine_type_uri': 'n1-standard-8'
-        },
+        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
+        "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
-            "optional_components": [
-                "ANACONDA"
-            ],
-        }
-    }
+            "optional_components": ["ANACONDA"],
+        },
+    },
 }
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{CLUSTER_REGION}-dataproc.googleapis.com:443'
-    })
+    cluster_client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+    )
     operation = cluster_client.create_cluster(PROJECT, CLUSTER_REGION, CLUSTER_DATA)
 
     # Wait for cluster to provision
@@ -105,13 +87,15 @@ def get_blob_from_path(path):
 
 
 def test_clean():
-    '''Tests clean.py by submitting it to a dataproc cluster'''
+    """Tests clean.py by submitting it to a Dataproc cluster"""
 
-    # Submit job to dataproc cluster
-    job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': f'{CLUSTER_REGION}-dataproc.googleapis.com:443'
-    })
-    response = job_client.submit_job_as_operation(project_id=PROJECT, region=CLUSTER_REGION, job=JOB_DETAILS)
+    # Submit job to Dataproc cluster
+    job_client = dataproc.JobControllerClient(
+        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+    )
+    response = job_client.submit_job_as_operation(
+        project_id=PROJECT, region=CLUSTER_REGION, job=JOB_DETAILS
+    )
 
     # Wait for job to complete
     result = response.result()
@@ -121,15 +105,15 @@ def test_clean():
     blob = get_blob_from_path(output_location)
     out = blob.download_as_string().decode("utf-8")
 
-    # tripDuration
-    assert not is_in_table("(\\d+(?:\\.\\d+)?) s", out)
-    assert not is_in_table("(\\d+(?:\\.\\d+)?) min", out)
-    assert not is_in_table("(\\d+(?:\\.\\d+)?) h", out)
+    # trip duration
+    assert not is_in_table(r"\d*.\d* s", out)
+    assert not is_in_table(r"\d*.\d* min", out)
+    assert not is_in_table(r"\d*.\d* h", out)
 
     # station latitude & longitude
-    assert not is_in_table("[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\"", out)
+    assert not is_in_table(r"\d+" + "\u00B0" + r"\d+\'\d+\"", out)
 
-    assert is_in_table("\\d*.\\d*")
+    assert is_in_table(r"\d*.\d*", out)
 
     # gender
     assert not is_in_table("M", out)
