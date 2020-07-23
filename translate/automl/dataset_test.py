@@ -24,10 +24,11 @@ import automl_translation_dataset
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 compute_region = "us-central1"
 
+
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     # create dataset
-    dataset_name = f"test_{uuid.uuid4().hex}"
+    dataset_name = f"test_{uuid.uuid4().hex[:27]}"
     automl_translation_dataset.create_dataset(
         project_id, compute_region, dataset_name, "en", "ja"
     )
