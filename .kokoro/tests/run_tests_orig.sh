@@ -75,12 +75,16 @@ if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
     ./scripts/decrypt-secrets.sh
 fi
 
-source ./testing/test-env.sh
+if [[ -f ./testing/test-env.sh ]]; then
+    source ./testing/test-env.sh
+fi
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 
 # For cloud-run session, we activate the service account for gcloud sdk.
-gcloud auth activate-service-account \
-       --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+if [[ -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]]; then
+    gcloud auth activate-service-account \
+	   --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+fi
 
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
