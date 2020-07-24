@@ -21,7 +21,7 @@ import argparse
 import os
 
 from . import model
-from . import util
+from .. import util
 
 import tensorflow as tf
 
