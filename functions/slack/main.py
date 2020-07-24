@@ -32,8 +32,11 @@ kgsearch = googleapiclient.discovery.build(
 # [START functions_verify_webhook]
 # Python 3+ version of https://github.com/slackapi/python-slack-events-api/blob/master/slackeventsapi/server.py
 def verify_signature(request):
+    request.get_data()
+
     verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
-    if not verifier.is_valid_request(request.body, request.headers):
+
+    if not verifier.is_valid_request(request.data, request.headers):
         raise ValueError('Invalid request/credentials.')
 # [END functions_verify_webhook]
 
