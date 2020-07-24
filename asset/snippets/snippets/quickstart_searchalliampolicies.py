@@ -22,6 +22,10 @@ def search_all_iam_policies(scope, query=None, page_size=None):
     # [START asset_quickstart_search_all_iam_policies]
     from google.cloud import asset_v1
 
+    # TODO scope = 'Scope of the search'
+    # TODO query = 'Query statement'
+    # TODO page_size = Size of each result page
+
     client = asset_v1.AssetServiceClient()
     response = client.search_all_iam_policies(
         scope, query=query, page_size=page_size)

@@ -26,6 +26,12 @@ def search_all_resources(scope,
     # [START asset_quickstart_search_all_resources]
     from google.cloud import asset_v1
 
+    # TODO scope = 'Scope of the search'
+    # TODO query = 'Query statement'
+    # TODO asset_types = 'List of asset types to search for'
+    # TODO page_size = Size of each result page
+    # TODO order_by = 'Fields to sort the results'
+
     client = asset_v1.AssetServiceClient()
     response = client.search_all_resources(
         scope,
