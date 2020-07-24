@@ -17,6 +17,7 @@
 from os import environ
 import uuid
 
+from google.api_core import exceptions
 from google.cloud import servicedirectory_v1beta1
 
 import snippets
@@ -32,10 +33,12 @@ PORT = 443
 
 def teardown_module():
     client = servicedirectory_v1beta1.RegistrationServiceClient()
-    response = client.list_namespaces(
-        parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}')
-    for namespace in response.namespaces:
+    namespace_name = client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
+    try:
+        namespace = client.get_namespace(name=namespace_name)
         client.delete_namespace(name=namespace.name)
+    except exceptions.NotFound:
+        pass
 
 
 def test_create_namespace():
