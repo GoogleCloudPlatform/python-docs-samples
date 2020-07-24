@@ -128,7 +128,7 @@ def get_note(note_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    note_name =f"projects/{project_id}/notes/{note_id}"
+    note_name = f"projects/{project_id}/notes/{note_id}"
     response = grafeas_client.get_note(note_name)
     return response
 # [END containeranalysis_get_note]
