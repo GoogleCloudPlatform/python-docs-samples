@@ -37,22 +37,6 @@ def hello_get(request):
 # [END functions_helloworld_get]
 
 
-# [START functions_helloworld_background]
-def hello_background(event, context):
-    """Background Cloud Function.
-    Args:
-         event (dict): The dictionary with data specific to the given event.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         metadata.
-    """
-    if event and 'name' in event:
-        name = event['name']
-    else:
-        name = 'World'
-    return 'Hello {}!'.format(name)
-# [END functions_helloworld_background]
-
-
 # [START functions_helloworld_http]
 def hello_http(request):
     """HTTP Cloud Function.
