@@ -46,13 +46,12 @@ class TestGCFPySlackSample(object):
 
     def test_verify_signature_token_incorrect(self):
         with pytest.raises(ValueError):
-            request = Request(headers = {'X-Slack-Signature': '12345'})
+            request = Request(headers={'X-Slack-Signature': '12345'})
             main.verify_signature(request)
 
     def test_verify_web_hook_valid_request(self):
         request = Request()
         request.body = ''
-
 
         now = str(int(time.time()))
 
