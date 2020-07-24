@@ -235,6 +235,10 @@ def test_order_where_limit():
     snippets.order_where_limit()
 
 
+def test_order_limit_to_last():
+    snippets.order_limit_to_last()
+
+
 def test_order_where_invalid():
     snippets.order_where_invalid()
 
