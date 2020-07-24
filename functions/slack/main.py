@@ -32,7 +32,7 @@ kgsearch = googleapiclient.discovery.build(
 # [START functions_verify_webhook]
 # Python 3+ version of https://github.com/slackapi/python-slack-events-api/blob/master/slackeventsapi/server.py
 def verify_signature(request):
-    request.get_data()
+    request.get_data()  # Decodes received requests into request.data
 
     verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
 
