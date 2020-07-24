@@ -57,7 +57,7 @@ def delete_note(note_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    note_name = grafeas_client.note_path(project_id, note_id)
+    note_name = f"projects/{project_id}/notes/{note_id}"
 
     grafeas_client.delete_note(note_name)
 # [END containeranalysis_delete_note]
@@ -77,7 +77,7 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    formatted_note = grafeas_client.note_path(note_project, note_id)
+    formatted_note = f"projects/{note_project}/notes/{note_id}"
     formatted_project = grafeas_client.project_path(occurrence_project)
 
     occurrence = {
@@ -113,7 +113,7 @@ def delete_occurrence(occurrence_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    parent = f"projects/{project_id}/occurrences/{occurrence_id}"
     grafeas_client.delete_occurrence(parent)
 # [END containeranalysis_delete_occurrence]
 
@@ -128,7 +128,7 @@ def get_note(note_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    note_name = grafeas_client.note_path(project_id, note_id)
+    note_name = f"projects/{project_id}/notes/{note_id}"
     response = grafeas_client.get_note(note_name)
     return response
 # [END containeranalysis_get_note]
@@ -144,7 +144,7 @@ def get_occurrence(occurrence_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    parent = f"projects/{project_id}/occurrences/{occurrence_id}"
     return grafeas_client.get_occurrence(parent)
 # [END containeranalysis_get_occurrence]
 
@@ -181,7 +181,7 @@ def get_occurrences_for_note(note_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    note_name = grafeas_client.note_path(project_id, note_id)
+    note_name = f"projects/{project_id}/notes/{note_id}"
 
     response = grafeas_client.list_note_occurrences(note_name)
     count = 0
