@@ -1,4 +1,4 @@
 Flask==1.1.2
-google-cloud-datastore==1.13.1
+google-cloud-datastore==1.13.2
 google-auth==1.19.2
 requests==2.24.0
