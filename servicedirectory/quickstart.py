@@ -18,15 +18,15 @@ from google.cloud import servicedirectory_v1beta1
 
 
 def list_namespaces(project_id, location_id):
-  """Lists all namespaces in the given location."""
+    """Lists all namespaces in the given location."""
 
-  client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1beta1.RegistrationServiceClient()
 
-  response = client.list_namespaces(
-      parent=f'projects/{project_id}/locations/{location_id}')
+    response = client.list_namespaces(
+        parent=f'projects/{project_id}/locations/{location_id}')
 
-  print(f'Listed namespaces in {location_id}.')
-  for namespace in response:
-    print(f'Namespace: {namespace.name}')
+    print(f'Listed namespaces in {location_id}.')
+    for namespace in response:
+        print(f'Namespace: {namespace.name}')
 
-  return response
+    return response

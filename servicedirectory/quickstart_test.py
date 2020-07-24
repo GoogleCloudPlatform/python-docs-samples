@@ -17,10 +17,11 @@
 from os import environ
 import uuid
 
-import pytest
-import quickstart
-
 from google.cloud import servicedirectory_v1beta1
+
+import pytest
+
+import quickstart
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
 LOCATION_ID = 'us-east1'
@@ -29,25 +30,25 @@ NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
 
 @pytest.fixture(scope='module')
 def client():
-  return servicedirectory_v1beta1.RegistrationServiceClient()
+    return servicedirectory_v1beta1.RegistrationServiceClient()
 
 
 @pytest.fixture(scope='module')
 def namespace(client):
-  namespace = servicedirectory_v1beta1.Namespace(
-      name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
+    namespace = servicedirectory_v1beta1.Namespace(
+        name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
 
-  client.create_namespace(
-      parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
-      namespace=namespace,
-      namespace_id=NAMESPACE_ID,
-  )
+    client.create_namespace(
+        parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
+        namespace=namespace,
+        namespace_id=NAMESPACE_ID,
+    )
 
-  yield namespace
+    yield namespace
 
-  client.delete_namespace(name=namespace.name)
+    client.delete_namespace(name=namespace.name)
 
 
 def test_list_namespace(namespace):
-  assert namespace in quickstart.list_namespaces(PROJECT_ID,
-                                                 LOCATION_ID).namespaces
+    assert namespace in quickstart.list_namespaces(PROJECT_ID,
+                                                   LOCATION_ID).namespaces
