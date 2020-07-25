@@ -88,10 +88,10 @@ class SubmitForm(webapp2.RequestHandler):
         # We set the parent key on each 'Greeting' to ensure each guestbook's
         # greetings are in the same entity group.
         guestbook_name = self.request.get('guestbook_name')
-            greeting = Greeting(parent=ndb.Key("Book",
-                                              guestbook_name or "*notitle*"),
-                                content=self.request.get('content'))
-            greeting.put()
+        greeting = Greeting(parent=ndb.Key("Book",
+                                           guestbook_name or "*notitle*"),
+                            content=self.request.get('content'))
+        greeting.put()
 # [END submit]
         self.redirect('/?' + urllib.urlencode(
             {'guestbook_name': guestbook_name}))

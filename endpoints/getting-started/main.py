@@ -59,7 +59,7 @@ def auth_info():
         user_info = {'id': 'anonymous'}
 
     return jsonify(user_info)
-# [START endpoints_auth_info_backend]
+# [END endpoints_auth_info_backend]
 
 
 @app.route('/auth/info/googlejwt', methods=['GET'])
