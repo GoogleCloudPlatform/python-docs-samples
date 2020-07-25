@@ -22,7 +22,7 @@ This section covers guidelines for Python samples. Note that
 
 ### Folder Location
 
-Samples that primarily show the use of one client library should be placed in the 
+Samples that primarily show the use of one client library should be placed in the
 client library repository. Other samples should be placed in this repository
 `python-docs-samples`.
 
@@ -99,6 +99,20 @@ local variables” warnings.
 
 The use of [Black](https://pypi.org/project/black/) to standardize code
 formatting and simplify diffs is recommended, but optional.
+
+The default noxfile has `blacken` session for convenience. Here are
+some examples.
+
+If you have pyenv configured:
+```sh
+nox -s blacken
+```
+
+If you only have docker:
+```
+cd proj_directory
+../scripts/run_tests_local.sh . blacken
+```
 
 In addition to the syntax guidelines covered in PEP 8, samples should strive
 to follow the Pythonic philosophy outlined in the
@@ -485,7 +499,7 @@ Automated testing for samples is managed by
 including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
-__Note:__ 
+__Note:__
 
 **Library repositories:** If you are working on an existing project, a `noxfile.py` will already exist.
 For new samples, create a new `noxfile.py` and paste the contents of
