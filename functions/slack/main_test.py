@@ -13,6 +13,7 @@
 
 import json
 import os
+import time
 
 import googleapiclient.discovery
 import mock
@@ -20,7 +21,6 @@ import pytest
 from slack.signature import SignatureVerifier
 
 import main
-import time
 
 
 kg_search = googleapiclient.discovery.build(
