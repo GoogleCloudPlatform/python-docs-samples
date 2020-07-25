@@ -68,4 +68,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     signed_jwt = generate_jwt(args.file, args.issuer, args.audiences)
-    print(signed_jwt)
+    print(signed_jwt.decode('utf-8'))

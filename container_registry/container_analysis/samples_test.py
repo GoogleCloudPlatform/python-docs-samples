@@ -209,7 +209,7 @@ class TestContainerAnalysisSamples:
         grafeas_client.\
             create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
-            'note_name': grafeas_client.note_path(PROJECT_ID, note_id),
+            'note_name': f"projects/{PROJECT_ID}/notes/{note_id}",
             'resource_uri': self.image_url,
             'discovery': {
                 'analysis_status': DiscoveryOccurrence.AnalysisStatus
@@ -280,7 +280,7 @@ class TestContainerAnalysisSamples:
         grafeas_client.\
             create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
-            'note_name': client.note_path(PROJECT_ID, note_id),
+            'note_name': f"projects/{PROJECT_ID}/notes/{note_id}",
             'resource_uri': self.image_url,
             'vulnerability': {
                 'effective_severity': Severity.CRITICAL,
