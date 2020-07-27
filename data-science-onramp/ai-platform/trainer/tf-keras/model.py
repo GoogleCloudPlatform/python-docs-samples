@@ -19,8 +19,8 @@ from __future__ import print_function
 
 import tensorflow as tf
 from tensorflow.keras import backend as K
-#from sklearn.metrics import r2_score
-
+from tensorflow.keras import regularizers
+from tensorflow.keras import initializers
 
 def input_fn(features, labels, shuffle, num_epochs, batch_size):
     """Generates an input function to be used for model training.
@@ -69,11 +69,19 @@ def create_keras_model(input_dim, output_dim, learning_rate):
     Dense = tf.keras.layers.Dense
     model = tf.keras.Sequential(
         [
-            Dense(100, activation=tf.nn.relu,
-                  input_shape=(input_dim,)),
-            Dense(75, activation=tf.nn.relu),
-            Dense(50, activation=tf.nn.relu),
-            Dense(25, activation=tf.nn.relu),
+            Dense(11, activation=tf.nn.relu,
+                  input_shape=(input_dim,), kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+            	bias_regularizer=regularizers.l2(1e-4)),
+            Dense(80, activation=tf.nn.relu),
+            Dense(150, activation=tf.nn.relu),
+            Dense(300, activation=tf.nn.relu, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+            	bias_regularizer=regularizers.l2(1e-4)),
+            Dense(500, activation=tf.nn.relu),
+            Dense(800, activation=tf.nn.relu, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+            	bias_regularizer=regularizers.l2(1e-4)),
+            Dense(1000, activation=tf.nn.relu),
+            Dense(1500, activation=tf.nn.relu, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+            	bias_regularizer=regularizers.l2(1e-4)),
             Dense(output_dim)
         ])
 
@@ -83,10 +91,5 @@ def create_keras_model(input_dim, output_dim, learning_rate):
 
     # Compile Keras model
     model.compile(
-        loss='mae', optimizer="adam", metrics=[get_r2_coeff])
+        loss='mae', optimizer='adam', metrics=['mae'])
     return model
-    
-def get_r2_coeff(y_true, y_pred):
-    SS_res = K.sum(K.square( y_true - y_pred ))
-    SS_tot = K.sum(K.square( y_true - K.mean(y_true) ) )
-    return ( 1 - SS_res/(SS_tot + K.epsilon()) )
