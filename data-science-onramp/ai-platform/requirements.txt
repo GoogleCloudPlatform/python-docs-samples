@@ -2,6 +2,6 @@ numpy>=1.14
 pandas>=0.22
 six>=1.11
 tensorflow>=2
-google-cloud-storage==1.23.0
-sklearn==0.22
+google-cloud-storage>=1.23.0
+scikit-learn>=0.22
 cloudml-hypertune
