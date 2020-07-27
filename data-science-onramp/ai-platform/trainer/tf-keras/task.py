@@ -80,7 +80,7 @@ def train_and_evaluate(args):
     # Pass a numpy array by passing DataFrame.values
     training_dataset = model.input_fn(
         features=train_x.values,
-        labels=train_y,
+        labels=train_y.values,
         shuffle=True,
         num_epochs=args.num_epochs,
         batch_size=args.batch_size)
@@ -88,7 +88,7 @@ def train_and_evaluate(args):
     # Pass a numpy array by passing DataFrame.values
     validation_dataset = model.input_fn(
         features=eval_x.values,
-        labels=eval_y,
+        labels=eval_y.values,
         shuffle=False,
         num_epochs=args.num_epochs,
         batch_size=num_eval_examples)
@@ -115,7 +115,7 @@ def train_and_evaluate(args):
 
     # Export model
     export_path = os.path.join(args.job_dir, 'keras_export')
-    tf.keras.experimental.export_saved_model(keras_model, export_path)
+    tf.keras.models.save_model(keras_model, export_path)
     print('Model exported to: {}'.format(export_path))
 
 

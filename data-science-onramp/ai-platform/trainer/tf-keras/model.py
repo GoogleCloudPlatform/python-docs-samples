@@ -18,9 +18,10 @@ import tensorflow as tf
 def input_fn(features, labels, shuffle, num_epochs, batch_size):
     """Generates an input function to be used for model training"""
     if labels is None:
-        inputs = features
+        inputs = features.values
     else:
         inputs = (features, labels)
+        
     dataset = tf.data.Dataset.from_tensor_slices(inputs)
 
     if shuffle:
