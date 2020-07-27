@@ -15,13 +15,14 @@
 
 import tensorflow as tf
 
+
 def input_fn(features, labels, shuffle, num_epochs, batch_size):
     """Generates an input function to be used for model training"""
     if labels is None:
         inputs = features.values
     else:
         inputs = (features, labels)
-        
+
     dataset = tf.data.Dataset.from_tensor_slices(inputs)
 
     if shuffle:
@@ -35,45 +36,45 @@ def input_fn(features, labels, shuffle, num_epochs, batch_size):
 
 def create_keras_model(input_dim, output_dim, learning_rate):
     """Creates Keras Model for regression"""
-    
+
     # Define model layers
     Dense = tf.keras.layers.Dense
-    
+
     # Define regularizers
     k_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
     b_regularizer = tf.keras.regularizers.l2(1e-4)
-    
+
     # Define Keras model
     model = tf.keras.Sequential(
         [
             Dense(11, activation=tf.nn.relu,
-            	input_shape=(input_dim,), 
-                kernel_regularizer=k_regularizer,
-            	bias_regularizer=b_regularizer),
-            	
+                  input_shape=(input_dim,),
+                  kernel_regularizer=k_regularizer,
+                  bias_regularizer=b_regularizer),
+
             Dense(80, activation=tf.nn.relu),
             Dense(150, activation=tf.nn.relu),
-            
+
             Dense(300, activation=tf.nn.relu,
-            	kernel_regularizer=k_regularizer,
-            	bias_regularizer=b_regularizer),
-            	
+                  kernel_regularizer=k_regularizer,
+                  bias_regularizer=b_regularizer),
+
             Dense(500, activation=tf.nn.relu),
-            
+
             Dense(800, activation=tf.nn.relu,
-            	kernel_regularizer=k_regularizer,
-            	bias_regularizer=b_regularizer),
-            	
+                  kernel_regularizer=k_regularizer,
+                  bias_regularizer=b_regularizer),
+
             Dense(1000, activation=tf.nn.relu),
-            
-            Dense(1500, activation=tf.nn.relu, 
-            	kernel_regularizer=k_regularizer,
-            	bias_regularizer=b_regularizer),
-            	
+
+            Dense(1500, activation=tf.nn.relu,
+                  kernel_regularizer=k_regularizer,
+                  bias_regularizer=b_regularizer),
+
             Dense(output_dim)
         ])
 
     # Compile Keras model
     model.compile(loss='mae', optimizer='adam', metrics=['mae'])
-        
+
     return model

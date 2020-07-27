@@ -17,10 +17,10 @@ started and ended at Citibike stations. """
 import argparse
 import os
 
+import tensorflow as tf
+
 from . import model
 from .. import util
-
-import tensorflow as tf
 
 
 def get_args():

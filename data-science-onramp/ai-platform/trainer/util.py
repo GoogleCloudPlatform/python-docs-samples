@@ -1,11 +1,10 @@
 import os
 import tempfile
-import numpy as np
-import pandas as pd
-import tensorflow as tf
 
 from google.cloud import storage
+import pandas as pd
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 
 # Data information
 DATA_DIR = os.path.join(tempfile.gettempdir(), 'final_data')
@@ -32,22 +31,23 @@ def extract_labels(df):
         label_cols.append(df.columns[col])
     return label_cols
 
+
 def load_data():
     '''Loads data from GCS bucket into training and testing dataframes'''
     # Download data from GCS bucket
     tf.io.gfile.makedirs(DATA_DIR)
     training_file_path = f'{DATA_DIR}/training.csv'
-    blob = bucket.blob(TRAINING_BLOB).download_to_filename(training_file_path)
+    bucket.blob(TRAINING_BLOB).download_to_filename(training_file_path)
     print('Downloaded file: ' + training_file_path)
 
     # Load data into dataframes
     df = pd.read_csv(training_file_path, low_memory=False)
     df = df.drop(df.columns[0], axis=1)
-    
+
     # Extract feature and target columns
     x = df.iloc[:, :NUM_FEATURES]
     y = df.iloc[:, NUM_FEATURES:-1]
-  
+
     # Split datasets into training and testing
     train_x, eval_x, train_y, eval_y = train_test_split(x, y, test_size=0.2)
 
