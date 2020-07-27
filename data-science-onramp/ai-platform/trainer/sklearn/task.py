@@ -2,6 +2,9 @@ import argparse
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import PolynomialFeatures
+
+from . import model
+
 import hypertune
 
 from .. import util
@@ -35,16 +38,11 @@ def fit_model(args):
     train_x, train_y, test_x, test_y = util.load_data()
 
     print('Fitting model...')
-    poly = PolynomialFeatures(degree=args.degree)
-    train_x_poly = poly.fit_transform(train_x)
-    test_x_poly = poly.fit_transform(test_x)
-
-    ridgeModel = Ridge(alpha=args.alpha)
-    ridgeModel.fit(train_x_poly, train_y)
-
+    poly_model = model.define_polynomial_model(args.degree, args.alpha)
+    poly_model.fit(train_x, train_y)
 
     print('Evaluating model...')
-    pred_y = ridgeModel.predict(test_x_poly)
+    pred_y = poly_model.predict(test_x)
     mae = mean_absolute_error(test_y, pred_y)
 
 
