@@ -20,7 +20,8 @@
 /cloud-sql/                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/                      @GoogleCloudPlatform/python-samples-owners
 /composer/                      @leahecole @GoogleCloudPlatform/python-samples-owners
-/container_registry/            @DanSanche @GoogleCloudPlatform/python-samples-owners
+/compute/                       @GoogleCloudPlatform/python-samples-owners
+/container_registry/            @donmccasland @GoogleCloudPlatform/python-samples-owners
 /datacatalog/                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
