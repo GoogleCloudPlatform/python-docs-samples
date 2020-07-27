@@ -11,19 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Trains a Keras model to predict income bracket from other Census data."""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+"""Trains a Keras model to predict number of trips
+started and ended at Citibike stations. """
 
 import argparse
 import os
 
+import tensorflow as tf
+
 from . import model
 from .. import util
-
-import tensorflow as tf
 
 
 def get_args():
@@ -65,13 +62,9 @@ def get_args():
 def train_and_evaluate(args):
     """Trains and evaluates the Keras model.
 
-    Uses the Keras model defined in model.py and trains on data loaded and
-    preprocessed in util.py. Saves the trained model in TensorFlow SavedModel
-    format to the path defined in part by the --job-dir argument.
-
-    Args:
-      args: dictionary of arguments - see get_args() for details
-    """
+    Uses the Keras model defined in model.py and trains on data loaded
+    in util.py. Saves the trained model in TensorFlow SavedModel
+    format to the path defined in part by the --job-dir argument. """
 
     train_x, train_y, eval_x, eval_y = util.load_data()
 
@@ -87,7 +80,7 @@ def train_and_evaluate(args):
     # Pass a numpy array by passing DataFrame.values
     training_dataset = model.input_fn(
         features=train_x.values,
-        labels=train_y,
+        labels=train_y.values,
         shuffle=True,
         num_epochs=args.num_epochs,
         batch_size=args.batch_size)
@@ -95,7 +88,7 @@ def train_and_evaluate(args):
     # Pass a numpy array by passing DataFrame.values
     validation_dataset = model.input_fn(
         features=eval_x.values,
-        labels=eval_y,
+        labels=eval_y.values,
         shuffle=False,
         num_epochs=args.num_epochs,
         batch_size=num_eval_examples)
@@ -120,8 +113,9 @@ def train_and_evaluate(args):
         verbose=1,
         callbacks=[lr_decay_cb, tensorboard_cb])
 
+    # Export model
     export_path = os.path.join(args.job_dir, 'keras_export')
-    tf.keras.experimental.export_saved_model(keras_model, export_path)
+    tf.keras.models.save_model(keras_model, export_path)
     print('Model exported to: {}'.format(export_path))
 
 
