@@ -6,5 +6,9 @@ gcloud ai-platform local train \
 	--package-path trainer/ \
 	--module-name trainer.sklearn.task \
 	--job-dir local
+gcloud ai-platform local train \
+	--package-path trainer/ \
+	--module-name trainer.tf-keras.task \
+	--job-dir local
 deactivate
 rm -r env
