@@ -29,6 +29,7 @@ def get_args():
     Returns:
       Dictionary of arguments.
     """
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--job-dir',
@@ -68,7 +69,7 @@ def train_and_evaluate(args):
 
     train_x, train_y, eval_x, eval_y = util.load_data()
 
-    # dimensions
+    # Dimensions
     num_train_examples, input_dim = train_x.shape
     num_eval_examples = eval_x.shape[1]
 
