@@ -1,7 +1,9 @@
 import argparse
+import os
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import PolynomialFeatures
+import joblib
 
 from . import model
 
@@ -50,10 +52,19 @@ def fit_model(args):
     hpt.report_hyperparameter_tuning_metric(
             hyperparameter_metric_tag='mean_absolute_error',
             metric_value=mae,
-            global_step=1000
-            )
+            global_step=1000)
 
     print(f'Done. Model had MAE={mae}')
+
+    model_filename = 'model.joblib'
+    print('Saving model')
+    if 'gs://' in args.job_dir:
+        joblib.dump(poly_model, model_filename)
+        util.copy_file_to_GCS(model_filename, args.job_dir)
+    else:
+        joblib.dump(poly_model, os.path.join(args.job_dir, model_filename))
+    print('Model saved')
+
 
 
 if __name__ == '__main__':

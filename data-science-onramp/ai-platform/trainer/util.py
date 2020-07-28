@@ -52,3 +52,9 @@ def load_data():
     train_x, eval_x, train_y, eval_y = train_test_split(x, y, test_size=0.2)
 
     return train_x, train_y, eval_x, eval_y
+
+def copy_file_to_GCS(filename, destination):
+    '''Copies filename from working directory into GCS bucket'''
+    bucket = storage.Client().bucket(destination)
+    blob = bucket.blob(f'{destination}/{filename}')
+    blob.upload_from_filename(filename)
