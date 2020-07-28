@@ -1,4 +1,4 @@
-google-cloud-bigquery[pandas,bqstorage,pyarrow]==1.25.0
+google-cloud-bigquery[pandas,bqstorage,pyarrow]==1.26.1
 google-auth-oauthlib==0.4.1
 ipython==7.16.1
 matplotlib==3.3.0
