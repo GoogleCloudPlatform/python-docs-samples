@@ -30,7 +30,7 @@ def root():
     if jwt is None:
         return 'Unauthorized request.'
     user_id, user_email, error_str = (
-        validate_jwt.validate_iap_jwt_from_compute_engine(
+        validate_jwt.validate_iap_jwt(
             jwt, CLOUD_PROJECT_ID, BACKEND_SERVICE_ID))
     if error_str:
         return 'Error: {}'.format(error_str)

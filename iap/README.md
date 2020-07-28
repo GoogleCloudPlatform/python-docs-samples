@@ -70,12 +70,6 @@ service account private key can impersonate that account!
 
 ## Using validate_jwt
 
-`validate_jwt` is not compatible with App Engine standard environment;
-use App Engine's Users API instead. (See `app_engine_app` for an example
-of how to do this.)
-
-For all other environments:
-
 1. Install the libraries listed in `requirements.txt`, e.g. by running:
    ```
    virtualenv/bin/pip install -r requirements.txt

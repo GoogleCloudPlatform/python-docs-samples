@@ -50,7 +50,7 @@ def test_main(capsys):
         'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
         IAP_CLIENT_ID)
     iap_jwt = iap_jwt.split(': ').pop()
-    jwt_validation_result = validate_jwt.validate_iap_jwt_from_app_engine(
+    jwt_validation_result = validate_jwt.validate_iap_jwt(
         iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
 
     assert jwt_validation_result[0]
