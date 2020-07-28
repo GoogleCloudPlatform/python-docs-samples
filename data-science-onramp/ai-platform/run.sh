@@ -4,7 +4,7 @@ pip install -U pip
 pip install -r requirements.txt
 gcloud ai-platform local train \
 	--package-path trainer/ \
-	--module-name trainer.sklearn.task \
+	--module-name trainer.sklearn-model.task \
 	--job-dir local
 gcloud ai-platform local train \
 	--package-path trainer/ \
