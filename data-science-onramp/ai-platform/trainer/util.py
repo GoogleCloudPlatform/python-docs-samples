@@ -14,22 +14,9 @@ NUM_FEATURES = 11
 TRAINING_FILE = 'final_data.csv'
 TRAINING_BLOB = f'{DATA_FOLDER}/{TRAINING_FILE}'
 
-# Hyperparameters
-BATCH_SIZE = 128
-NUM_EPOCHS = 20
-LEARNING_RATE = .01
-
 # Get bucket information
 client = storage.Client()
 bucket = client.bucket(BUCKET_NAME)
-
-
-def extract_labels(df):
-    '''Extract the target columns of the dataset'''
-    label_cols = []
-    for col in range(NUM_FEATURES, len(df.columns)):
-        label_cols.append(df.columns[col])
-    return label_cols
 
 
 def load_data():
