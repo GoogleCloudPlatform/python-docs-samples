@@ -4,11 +4,11 @@ pip install -U pip
 pip install -r requirements.txt
 gcloud ai-platform local train \
 	--package-path trainer/ \
-	--module-name trainer.sklearn-model.task \
+	--module-name trainer.sklearn_model.task \
 	--job-dir local
 gcloud ai-platform local train \
 	--package-path trainer/ \
-	--module-name trainer.tf-keras.task \
+	--module-name trainer.tfkeras_model.task \
 	--job-dir local
 deactivate
 rm -r env
