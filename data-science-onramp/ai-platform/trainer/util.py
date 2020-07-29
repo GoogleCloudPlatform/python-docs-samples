@@ -2,6 +2,7 @@ import os
 import tempfile
 
 from google.cloud import storage
+from google.cloud.storage.blob import Blob
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
@@ -42,6 +43,9 @@ def load_data():
 
 def copy_file_to_GCS(filename, destination):
     '''Copies filename from working directory into GCS bucket'''
-    bucket = storage.Client().bucket(destination)
-    blob = bucket.blob(f'{destination}/{filename}')
+    if not destination.endswith('/'):
+        destination = destination + '/'
+    print(destination)
+    blob = Blob.from_string(destination + filename, client=client)
     blob.upload_from_filename(filename)
+    print('hello..?')
