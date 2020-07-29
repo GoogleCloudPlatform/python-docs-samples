@@ -20,8 +20,8 @@ Compute Engine, Google Container Engine, Google App Engine) to provide
 an extra layer of assurance that a request was authorized by IAP.
 """
 # [START iap_validate_jwt]
-from google.oauth2 import id_token
 from google.auth.transport import requests
+from google.oauth2 import id_token
 
 
 def validate_iap_jwt(iap_jwt, cloud_project_number, backend_service_id):
@@ -44,6 +44,9 @@ def validate_iap_jwt(iap_jwt, cloud_project_number, backend_service_id):
         cloud_project_number, backend_service_id)
 
     try:
+        decoded_jwt = id_token.verify_oauth2_token(
+            iap_jwt, requests.Request())
+        print(decoded_jwt)
         decoded_jwt = id_token.verify_oauth2_token(
             iap_jwt, requests.Request(), expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
