@@ -22,6 +22,10 @@ import tensorflow as tf
 from . import model
 from .. import util
 
+DEFAULT_NUM_EPOCHS = 5
+DEFAULT_BATCH_SIZE = 128
+DEFAULT_LEARNING_RATE = .01
+DEFAULT_VERBOSITY = 'INFO'
 
 def get_args():
     """Argument parser.
@@ -40,22 +44,22 @@ def get_args():
     parser.add_argument(
         '--num-epochs',
         type=int,
-        default=20,
+        default=DEFAULT_NUM_EPOCHS,
         help='number of times to go through the data, default=20')
     parser.add_argument(
         '--batch-size',
-        default=128,
+        default=DEFAULT_BATCH_SIZE,
         type=int,
         help='number of records to read during each training step, default=128')
     parser.add_argument(
         '--learning-rate',
-        default=.01,
+        default=DEFAULT_LEARNING_RATE,
         type=float,
         help='learning rate for gradient descent, default=.01')
     parser.add_argument(
         '--verbosity',
         choices=['DEBUG', 'ERROR', 'FATAL', 'INFO', 'WARN'],
-        default='INFO')
+        default=DEFAULT_VERBOSITY)
     args, _ = parser.parse_known_args()
     return args
 

@@ -4,6 +4,7 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import PolynomialFeatures
 import joblib
+import os
 
 from . import model
 
@@ -11,6 +12,8 @@ import hypertune
 
 from .. import util
 
+DEFAULT_DEGREE = 1
+DEFAULT_ALPHA = 0
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -22,12 +25,12 @@ def get_args():
     parser.add_argument(
             '--degree',
             type=int,
-            default=1,
+            default=DEFAULT_DEGREE,
             help='degree of the polynomial regression, default=1 (linear model)')
     parser.add_argument(
             '--alpha',
             type=float,
-            default=0,
+            default=DEFAULT_ALPHA,
             help='Regularization strength, default=0 (Standard Regression)')
 
     args, _ = parser.parse_known_args()
@@ -62,6 +65,8 @@ def fit_model(args):
         joblib.dump(poly_model, model_filename)
         util.copy_file_to_GCS(model_filename, args.job_dir)
     else:
+        if not os.path.isdir(args.job_dir):
+            os.mkdir(args.job_dir)
         joblib.dump(poly_model, os.path.join(args.job_dir, model_filename))
     print('Model saved')
 
