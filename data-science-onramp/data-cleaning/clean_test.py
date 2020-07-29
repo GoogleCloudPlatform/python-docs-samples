@@ -12,7 +12,7 @@ BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
 DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
 CLUSTER_REGION = "us-central1"
 CLUSTER_IMAGE = "1.5.4-debian10"
-CLUSTER_DATA = {  # Cluster configuration
+CLUSTER_DATA = {  # Dataproc cluster configuration
     "project_id": PROJECT,
     "cluster_name": DATAPROC_CLUSTER,
     "config": {
@@ -29,7 +29,7 @@ CLUSTER_DATA = {  # Cluster configuration
     },
 }
 JOB_FILE_NAME = f"gs://{BUCKET_NAME}/clean.py"
-JOB_DETAILS = {  # Job configuration
+JOB_DETAILS = {  # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": JOB_FILE_NAME,
@@ -131,7 +131,7 @@ def test_clean():
     assert is_in_table("Male", out)
     assert is_in_table("Female", out)
 
-    # customer_plan
+    # customer plan
     assert not is_in_table("subscriber", out)
     assert not is_in_table("SUBSCRIBER", out)
     assert not is_in_table("sub", out)
