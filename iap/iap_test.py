@@ -44,17 +44,20 @@ def test_main(capsys):
         pytest.skip('Only passing on Kokoro.')
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back
-    # the JWT in order to expose it to this test.  Thus, this test
+    # the IAP JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
-    iap_jwt = make_iap_request.make_iap_request(
+    resp = make_iap_request.make_iap_request(
         'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
         IAP_CLIENT_ID)
-    assert iap_jwt is None
+    iap_jwt = resp.split(': ').pop()
 
-    iap_jwt = iap_jwt.split(': ').pop()
+    # App Engine JWT audience format below
+    expected_audience = '/projects/{}/apps/{}'.format(
+        IAP_PROJECT_NUMBER, IAP_APP_ID)
+
     jwt_validation_result = validate_jwt.validate_iap_jwt(
-        iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
+        iap_jwt, expected_audience)
 
-    assert jwt_validation_result[2] is None
-    assert jwt_validation_result[0] is not None
-    assert jwt_validation_result[1] is not None
+    assert jwt_validation_result[0]
+    assert jwt_validation_result[1]
+    assert not jwt_validation_result[2]
