@@ -49,6 +49,8 @@ def test_main(capsys):
     iap_jwt = make_iap_request.make_iap_request(
         'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
         IAP_CLIENT_ID)
+    assert iap_jwt is None
+
     iap_jwt = iap_jwt.split(': ').pop()
     jwt_validation_result = validate_jwt.validate_iap_jwt(
         iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
