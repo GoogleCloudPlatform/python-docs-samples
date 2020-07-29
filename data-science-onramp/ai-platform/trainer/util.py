@@ -45,7 +45,5 @@ def copy_file_to_GCS(filename, destination):
     '''Copies filename from working directory into GCS bucket'''
     if not destination.endswith('/'):
         destination = destination + '/'
-    print(destination)
     blob = Blob.from_string(destination + filename, client=client)
     blob.upload_from_filename(filename)
-    print('hello..?')
