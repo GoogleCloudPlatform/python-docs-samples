@@ -24,8 +24,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 
-def validate_iap_jwt(iap_jwt, cloud_project_number,
-                                         backend_service_id):
+def validate_iap_jwt(iap_jwt, cloud_project_number, backend_service_id):
     """Validate an IAP JWT.
 
     Args:
@@ -46,7 +45,7 @@ def validate_iap_jwt(iap_jwt, cloud_project_number,
 
     try:
         decoded_jwt = id_token.verify_oauth2_token(
-            token, requests.Request(), expected_audience)
+            iap_jwt, requests.Request(), expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
     except Exception as e:
         return (None, None, '**ERROR: JWT validation error {}**'.format(e))
