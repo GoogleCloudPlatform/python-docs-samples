@@ -11,19 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START run_events_gcs_server_setup]
+# [START run_events_gcs_handler]
 import os
 
 from flask import Flask, request
 
 
 required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
-
 app = Flask(__name__)
-# [END run_events_gcs_server_setup]
 
 
-# [START run_events_gcs_handler]
 @app.route('/', methods=['POST'])
 def index():
     for field in required_fields:
