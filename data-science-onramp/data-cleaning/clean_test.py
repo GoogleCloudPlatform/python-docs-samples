@@ -6,23 +6,13 @@ from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
 
-# Set global variables
 PROJECT = os.environ["GCLOUD_PROJECT"]
-DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
-BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
-CLUSTER_REGION = "us-east4"
 DESTINATION_BLOB_NAME = "clean.py"
-JOB_FILE_NAME = f"gs://{BUCKET_NAME}/clean.py"
-JOB_DETAILS = {  # Job configuration
-    "placement": {"cluster_name": DATAPROC_CLUSTER},
-    "pyspark_job": {
-        "main_python_file_uri": JOB_FILE_NAME,
-        "args": [PROJECT, BUCKET_NAME, "--dry-run",],
-        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
-    },
-}
+BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
+DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
+CLUSTER_REGION = "us-central1"
 CLUSTER_IMAGE = "1.5.4-debian10"
-CLUSTER_DATA = {  # Create cluster configuration
+CLUSTER_DATA = {  # Cluster configuration
     "project_id": PROJECT,
     "cluster_name": DATAPROC_CLUSTER,
     "config": {
@@ -36,6 +26,15 @@ CLUSTER_DATA = {  # Create cluster configuration
             "image_version": CLUSTER_IMAGE,
             "optional_components": ["ANACONDA"],
         },
+    },
+}
+JOB_FILE_NAME = f"gs://{BUCKET_NAME}/clean.py"
+JOB_DETAILS = {  # Job configuration
+    "placement": {"cluster_name": DATAPROC_CLUSTER},
+    "pyspark_job": {
+        "main_python_file_uri": JOB_FILE_NAME,
+        "args": [PROJECT, BUCKET_NAME, "--dry-run"],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
 
