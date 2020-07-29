@@ -46,9 +46,8 @@ def validate_iap_jwt(iap_jwt, cloud_project_number, backend_service_id):
     try:
         decoded_jwt = id_token.verify_oauth2_token(
             iap_jwt, requests.Request())
-        print(decoded_jwt)
-        decoded_jwt = id_token.verify_oauth2_token(
-            iap_jwt, requests.Request(), expected_audience)
+#        decoded_jwt = id_token.verify_oauth2_token(
+#            iap_jwt, requests.Request(), expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
     except Exception as e:
         return (None, None, '**ERROR: JWT validation error {}**'.format(e))
