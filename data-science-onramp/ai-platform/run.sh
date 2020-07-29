@@ -12,3 +12,4 @@ gcloud ai-platform local train \
 	--job-dir local
 deactivate
 rm -r env
+rm -r local
