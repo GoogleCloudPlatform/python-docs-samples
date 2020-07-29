@@ -53,6 +53,6 @@ def test_main(capsys):
     jwt_validation_result = validate_jwt.validate_iap_jwt(
         iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
 
+    assert jwt_validation_result[2] is None
     assert jwt_validation_result[0] is not None
     assert jwt_validation_result[1] is not None
-    assert jwt_validation_result[2] is None
