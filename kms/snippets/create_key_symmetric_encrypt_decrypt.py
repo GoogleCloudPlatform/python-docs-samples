@@ -38,8 +38,8 @@ def create_key_symmetric_encrypt_decrypt(project_id, location_id, key_ring_id, i
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
 
     # Build the key.
-    purpose = kms.enums.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT
-    algorithm = kms.enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
+    purpose = kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT
+    algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
     key = {
         'purpose': purpose,
         'version_template': {
@@ -48,7 +48,7 @@ def create_key_symmetric_encrypt_decrypt(project_id, location_id, key_ring_id, i
     }
 
     # Call the API.
-    created_key = client.create_crypto_key(key_ring_name, id, key)
+    created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': id, 'crypto_key': key})
     print('Created symmetric key: {}'.format(created_key.name))
     return created_key
 # [END kms_create_key_symmetric_encrypt_decrypt]

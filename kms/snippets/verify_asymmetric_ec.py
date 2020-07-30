@@ -53,7 +53,7 @@ def verify_asymmetric_ec(project_id, location_id, key_ring_id, key_id, version_i
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
     # Get the public key.
-    public_key = client.get_public_key(key_version_name)
+    public_key = client.get_public_key(request={'name': key_version_name})
 
     # Extract and parse the public key as a PEM-encoded RSA key.
     pem = public_key.pem.encode('utf-8')

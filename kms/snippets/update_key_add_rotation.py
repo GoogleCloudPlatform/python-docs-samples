@@ -40,23 +40,21 @@ def update_key_add_rotation(project_id, location_id, key_ring_id, key_id):
     # Build the key name.
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
-    # Build the key. We need to build a full proto instead of a dict due to
-    # https://github.com/googleapis/gapic-generator-python/issues/364.
-    from google.cloud.kms_v1.proto import resources_pb2
-    key = resources_pb2.CryptoKey()
-    key.name = key_name
-
-    # Rotate the key every 30 days.
-    key.rotation_period.seconds = 60*60*24*30
-
-    # Start the first rotation in 24 hours.
-    key.next_rotation_time.seconds = int(time.time()) + 60*60*24
+    key = {
+        'name': key_name,
+        'rotation_period': {
+            'seconds': 60*60*24*30  # Rotate the key every 30 days.
+        },
+        'next_rotation_time': {
+            'seconds': int(time.time()) + 60*60*24  # Start the first rotation in 24 hours.
+        }
+    }
 
     # Build the update mask.
     update_mask = {'paths': ['rotation_period', 'next_rotation_time']}
 
     # Call the API.
-    updated_key = client.update_crypto_key(key, update_mask)
+    updated_key = client.update_crypto_key(request={'crypto_key': key, 'update_mask': update_mask})
     print('Updated key: {}'.format(updated_key.name))
     return updated_key
 # [END kms_update_key_add_rotation_schedule]

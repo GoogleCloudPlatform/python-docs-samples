@@ -34,13 +34,13 @@ def create_key_ring(project_id, location_id, id):
     client = kms.KeyManagementServiceClient()
 
     # Build the parent location name.
-    location_name = client.location_path(project_id, location_id)
+    location_name = f'projects/{project_id}/locations/{location_id}'
 
     # Build the key ring.
     key_ring = {}
 
     # Call the API.
-    created_key_ring = client.create_key_ring(location_name, id, key_ring)
+    created_key_ring = client.create_key_ring(request={'parent': location_name, 'key_ring_id': id, 'key_ring': key_ring})
     print('Created key ring: {}'.format(created_key_ring.name))
     return created_key_ring
 # [END kms_create_key_ring]

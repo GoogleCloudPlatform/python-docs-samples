@@ -42,7 +42,7 @@ def get_key_version_attestation(project_id, location_id, key_ring_id, key_id, ve
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
     # Call the API.
-    version = client.get_crypto_key_version(key_version_name)
+    version = client.get_crypto_key_version(request={'name': key_version_name})
 
     # Only HSM keys have an attestation. For other key types, the attestion
     # will be None.

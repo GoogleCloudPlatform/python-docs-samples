@@ -58,7 +58,7 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
     digest = {'sha256': hash_}
 
     # Call the API
-    sign_response = client.asymmetric_sign(key_version_name, digest)
+    sign_response = client.asymmetric_sign(request={'name': key_version_name, 'digest': digest})
     print('Signature: {}'.format(base64.b64encode(sign_response.signature)))
     return sign_response
 # [END kms_sign_asymmetric]

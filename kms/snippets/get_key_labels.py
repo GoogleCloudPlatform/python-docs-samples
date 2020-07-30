@@ -38,7 +38,7 @@ def get_key_labels(project_id, location_id, key_ring_id, key_id):
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     # Call the API.
-    key = client.get_crypto_key(key_name)
+    key = client.get_crypto_key(request={'name': key_name})
 
     # Example of iterating over labels.
     for k, v in key.labels.items():
