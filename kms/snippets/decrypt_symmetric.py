@@ -39,7 +39,7 @@ def decrypt_symmetric(project_id, location_id, key_ring_id, key_id, ciphertext):
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     # Call the API.
-    decrypt_response = client.decrypt(key_name, ciphertext)
+    decrypt_response = client.decrypt(request={'name': key_name, 'ciphertext': ciphertext})
     print('Plaintext: {}'.format(decrypt_response.plaintext))
     return decrypt_response
 # [END kms_decrypt_symmetric]

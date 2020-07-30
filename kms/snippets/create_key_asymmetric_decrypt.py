@@ -38,8 +38,8 @@ def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, id):
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
 
     # Build the key.
-    purpose = kms.enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
-    algorithm = kms.enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_DECRYPT_OAEP_2048_SHA256
+    purpose = kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
+    algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_DECRYPT_OAEP_2048_SHA256
     key = {
         'purpose': purpose,
         'version_template': {
@@ -48,7 +48,7 @@ def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, id):
     }
 
     # Call the API.
-    created_key = client.create_crypto_key(key_ring_name, id, key)
+    created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': id, 'crypto_key': key})
     print('Created asymmetric decrypt key: {}'.format(created_key.name))
     return created_key
 # [END kms_create_key_asymmetric_decrypt]

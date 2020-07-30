@@ -39,7 +39,7 @@ def get_public_key(project_id, location_id, key_ring_id, key_id, version_id):
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
     # Call the API.
-    public_key = client.get_public_key(key_version_name)
+    public_key = client.get_public_key(request={'name': key_version_name})
     print('Public key: {}'.format(public_key.pem))
     return public_key
 # [END kms_get_public_key]

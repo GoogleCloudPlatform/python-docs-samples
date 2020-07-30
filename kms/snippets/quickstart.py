@@ -25,10 +25,10 @@ def quickstart(project_id, location_id):
     client = kms.KeyManagementServiceClient()
 
     # Build the parent location name.
-    location_name = client.location_path(project_id, location_id)
+    location_name = f'projects/{project_id}/locations/{location_id}'
 
     # Call the API.
-    key_rings = client.list_key_rings(location_name)
+    key_rings = client.list_key_rings(request={'parent': location_name})
 
     # Example of iterating over key rings.
     for key_ring in key_rings:

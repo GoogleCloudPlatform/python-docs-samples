@@ -42,7 +42,7 @@ def iam_remove_member(project_id, location_id, key_ring_id, key_id, member):
     # resource_name = client.key_ring_path(project_id, location_id, key_ring_id);
 
     # Get the current policy.
-    policy = client.get_iam_policy(resource_name)
+    policy = client.get_iam_policy(request={'resource': resource_name})
 
     # Remove the member from the policy.
     for binding in policy.bindings:
@@ -51,7 +51,11 @@ def iam_remove_member(project_id, location_id, key_ring_id, key_id, member):
                 binding.members.remove(member)
 
     # Save the updated IAM policy.
-    updated_policy = client.set_iam_policy(resource_name, policy)
+    request = {
+        'resource': resource_name,
+        'policy': policy
+    }
+    updated_policy = client.set_iam_policy(request=request)
     print('Removed {} from {}'.format(member, resource_name))
     return updated_policy
 # [END kms_iam_remove_member]

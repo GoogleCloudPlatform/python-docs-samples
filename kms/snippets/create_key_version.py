@@ -41,7 +41,7 @@ def create_key_version(project_id, location_id, key_ring_id, key_id):
     version = {}
 
     # Call the API.
-    created_version = client.create_crypto_key_version(key_name, version)
+    created_version = client.create_crypto_key_version(request={'parent': key_name, 'crypto_key_version': version})
     print('Created key version: {}'.format(created_version.name))
     return created_version
 # [END kms_create_key_version]

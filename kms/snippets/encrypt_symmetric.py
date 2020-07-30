@@ -45,7 +45,7 @@ def encrypt_symmetric(project_id, location_id, key_ring_id, key_id, plaintext):
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     # Call the API.
-    encrypt_response = client.encrypt(key_name, plaintext_bytes)
+    encrypt_response = client.encrypt(request={'name': key_name, 'plaintext': plaintext_bytes})
     print('Ciphertext: {}'.format(base64.b64encode(encrypt_response.ciphertext)))
     return encrypt_response
 # [END kms_encrypt_symmetric]

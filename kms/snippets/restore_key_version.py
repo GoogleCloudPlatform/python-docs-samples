@@ -39,7 +39,7 @@ def restore_key_version(project_id, location_id, key_ring_id, key_id, version_id
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
     # Call the API.
-    restored_version = client.restore_crypto_key_version(key_version_name)
+    restored_version = client.restore_crypto_key_version(request={'name': key_version_name})
     print('Restored key version: {}'.format(restored_version.name))
     return restored_version
 # [END kms_restore_key_version]

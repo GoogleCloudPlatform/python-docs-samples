@@ -38,18 +38,16 @@ def enable_key_version(project_id, location_id, key_ring_id, key_id, version_id)
     # Build the key version name.
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
-    # Build the key version. We need to build a full proto instead of a dict due
-    # to https://github.com/googleapis/gapic-generator-python/issues/364.
-    from google.cloud.kms_v1.proto import resources_pb2
-    key_version = resources_pb2.CryptoKeyVersion()
-    key_version.name = key_version_name
-    key_version.state = kms.enums.CryptoKeyVersion.CryptoKeyVersionState.ENABLED
+    key_version = {
+        'name': key_version_name,
+        'state': kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED
+    }
 
     # Build the update mask.
     update_mask = {'paths': ['state']}
 
     # Call the API.
-    enabled_version = client.update_crypto_key_version(key_version, update_mask)
+    enabled_version = client.update_crypto_key_version(request={'crypto_key_version': key_version, 'update_mask': update_mask})
     print('Enabled key version: {}'.format(enabled_version.name))
     return enabled_version
 # [END kms_enable_key_version]
