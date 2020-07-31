@@ -75,6 +75,6 @@ def service():
         check=True
     )
 
-def test_end_to_end(service):
+def test_auth(service):
     blah = auth.make_get_request(service)
     assert blah
