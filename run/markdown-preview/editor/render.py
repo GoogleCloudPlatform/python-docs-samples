@@ -14,11 +14,11 @@
 
 # [START run_secure_request]
 import os
-import sys
 import urllib
 
-import google.oauth2.id_token
 import google.auth.transport.requests
+import google.oauth2.id_token
+
 
 def new_request(data):
     """
