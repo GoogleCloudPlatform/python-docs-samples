@@ -41,6 +41,13 @@ fi
 nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
+# Inject region tag data into the test log
+XUNIT_PATH="$PWD/sponge_log.xml"
+XUNIT_TMP_PATH="$PWD/drift_tmp.xml"
+
+cp $XUNIT_PATH $XUNIT_TMP_PATH
+cat "$XUNIT_TMP_PATH" | python3.8 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_PATH"
+
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
 # to the Build Cop Bot.
 # See:

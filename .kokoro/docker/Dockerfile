@@ -174,4 +174,11 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Setup DRIFT region tag parser
+ENV REGION_TAG_PARSER_DIR /region-tag-parser
+ENV PARSER_PATH /region-tag-parser/wizard-py/cli.py
+
+RUN git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
+RUN chmod +x $PARSER_PATH
+
 CMD ["python3.6"]
