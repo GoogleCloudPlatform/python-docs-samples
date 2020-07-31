@@ -31,18 +31,14 @@ def new_request(data):
     if not url:
         raise Exception("EDITOR_UPSTREAM_RENDER_URL missing")
 
-    unauthenticated = os.environ.get("EDITOR_UPSTREAM_UNAUTHENTICATED", False)
-
     req = urllib.request.Request(url, data=data.encode())
 
     credentials, project = google.auth.default()
+    auth_req = google.auth.transport.requests.Request()
+    target_audience = url
 
-    if not unauthenticated:
-        auth_req = google.auth.transport.requests.Request()
-        target_audience = url
-
-        id_token = google.oauth2.id_token.fetch_id_token(auth_req, target_audience)
-        req.add_header("Authorization", f"Bearer {id_token}")
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, target_audience)
+    req.add_header("Authorization", f"Bearer {id_token}")
 
     response = urllib.request.urlopen(req)
     return response.read()
