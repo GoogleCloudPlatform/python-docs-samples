@@ -32,18 +32,18 @@ def service():
     suffix = uuid.uuid4().hex
     project = os.environ['GOOGLE_CLOUD_PROJECT']
 
-    # Build and Deploy Cloud Run Services
+    # Deploy a hello-world Cloud Run Service
     subprocess.run(
         [
             "gcloud",
-            "builds",
-            "submit",
-            "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            "run",
+            "deploy",
+            f"helloworld-{suffix}",
+            "--image",
+            "gcr.io/gcbdocs/hello",
+            "--platform=managed",
+            "--region=us-central1",
+            "--no-allow-unauthenticated",
             "--quiet",
         ], check=True
     )
