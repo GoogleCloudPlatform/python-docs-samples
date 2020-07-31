@@ -31,6 +31,40 @@ def services():
     suffix = uuid.uuid4().hex[:10]
     project = os.environ["GOOGLE_CLOUD_PROJECT"]
 
+    # Create a VPC network
+    network_name = f"test-network-{suffix}"
+    subprocess.run(
+        [
+            "gcloud",
+            "compute",
+            "networks",
+            "create",
+            network_name,
+            "--project",
+            project,
+        ], check=True
+    )
+
+    # Create a Serverless VPC Access connector
+    connector_name = f"test-connector-{suffix}"
+    subprocess.run(
+        [
+            "gcloud",
+            "compute",
+            "networks",
+            "vpc-access",
+            "connectors",
+            "create",
+            connector_name,
+            "--network",
+            network_name,
+            "--region=us-central1",
+            "--range=192.168.16.0/28",
+            "--project",
+            project,
+        ], check=True
+    )
+
     # Create a Memorystore Redis instance
     instance_name = f"test-instance-{suffix}"
     subprocess.run(
@@ -41,6 +75,8 @@ def services():
             "create",
             instance_name,
             "--region=us-central1",
+            "--network",
+            network_name,
             "--project",
             project,
         ], check=True
@@ -62,25 +98,6 @@ def services():
         stdout=subprocess.PIPE,
         check=True
     ).stdout.strip().decode()
-
-    # Create a Serverless VPC Access connector
-    connector_name = f"test-connector-{suffix}"
-    subprocess.run(
-        [
-            "gcloud",
-            "compute",
-            "networks",
-            "vpc-access",
-            "connectors",
-            "create",
-            connector_name,
-            "--network=default",
-            "--region=us-central1",
-            "--range=192.168.16.0/28",
-            "--project",
-            project,
-        ], check=True
-    )
 
     # Build container image for Cloud Run deployment
     image_name = f"gcr.io/{project}/test-visit-count-{suffix}"
@@ -181,6 +198,22 @@ def services():
         ], check=True
     )
 
+    # Delete Redis instance
+    subprocess.run(
+        [
+            "gcloud",
+            "redis",
+            "instances",
+            "delete",
+            instance_name,
+            "--region=us-central1",
+            "--quiet",
+            "--async",
+            "--project",
+            project,
+        ], check=True
+    )
+
     # Delete Serverless VPC Access connector
     subprocess.run(
         [
@@ -193,23 +226,20 @@ def services():
             connector_name,
             "--region=us-central1",
             "--quiet",
-            "--async",
             "--project",
             project,
         ], check=True
     )
 
-    # Delete Redis instance
+    # Delete VPC network
     subprocess.run(
         [
             "gcloud",
-            "redis",
-            "instances",
+            "compute",
+            "networks",
             "delete",
-            instance_name,
-            "--region=us-central1",
+            network_name,
             "--quiet",
-            "--async",
             "--project",
             project,
         ], check=True
