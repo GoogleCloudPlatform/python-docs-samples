@@ -87,7 +87,7 @@ def delete_service(project_id, location_id, namespace_id, service_id):
 
     print(f'Deleted service {service_name}.')
 # [END servicedirectory_delete_service]
-    
+
 
 # [START servicedirectory_resolve_service]
 def resolve_service(project_id, location_id, namespace_id, service_id):
