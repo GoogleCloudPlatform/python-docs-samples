@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START run_service_to_service_auth]
-import os
 import urllib
 
 import google.auth.transport.requests
@@ -35,6 +34,6 @@ def make_get_request(service_url):
     
     req.add_header("Authorization", f"Bearer {id_token}")
     response = urllib.request.urlopen(req)
-    
+
     return response.read()
 # [END run_service_to_service_auth]

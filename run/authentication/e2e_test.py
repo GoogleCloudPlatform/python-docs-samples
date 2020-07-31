@@ -18,7 +18,6 @@
 
 import auth
 
-import json
 import os
 import subprocess
 from urllib import request
