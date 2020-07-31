@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START servicedirectory_quickstart]
 from google.cloud import servicedirectory_v1beta1
 
 
@@ -30,3 +31,4 @@ def list_namespaces(project_id, location_id):
         print(f'Namespace: {namespace.name}')
 
     return response
+# [END servicedirectory_quickstart]
