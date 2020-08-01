@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample creates a secure two-service application running on Cloud Run.
-# This test builds and deploys the two secure services
-# to test that they interact properly together.
+# This test deploys a secure application running on Cloud Run
+# to test that the authentication sample works properly.
 
 import auth
 
