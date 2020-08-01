@@ -76,5 +76,5 @@ def service():
     )
 
 def test_auth(service):
-    blah = auth.make_get_request(service)
-    assert blah
+    response = auth.make_get_request(service.decode())
+    assert "Hello World!" in response.decode()
