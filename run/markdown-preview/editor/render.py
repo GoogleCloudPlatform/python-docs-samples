@@ -14,8 +14,10 @@
 
 # [START run_secure_request]
 import os
-import sys
 import urllib
+
+import google.auth.transport.requests
+import google.oauth2.id_token
 
 
 def new_request(data):
@@ -29,32 +31,15 @@ def new_request(data):
     if not url:
         raise Exception("EDITOR_UPSTREAM_RENDER_URL missing")
 
-    unauthenticated = os.environ.get("EDITOR_UPSTREAM_UNAUTHENTICATED", False)
-
     req = urllib.request.Request(url, data=data.encode())
 
-    if not unauthenticated:
-        token = get_token(url)
-        req.add_header("Authorization", f"Bearer {token}")
+    credentials, project = google.auth.default()
+    auth_req = google.auth.transport.requests.Request()
+    target_audience = url
 
-    sys.stdout.flush()
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, target_audience)
+    req.add_header("Authorization", f"Bearer {id_token}")
 
     response = urllib.request.urlopen(req)
     return response.read()
-
-
-def get_token(url):
-    """
-    Retrieves the IAM ID Token credential for the url.
-    """
-    token_url = (
-        f"http://metadata.google.internal/computeMetadata/v1/instance/"
-        f"service-accounts/default/identity?audience={url}"
-    )
-    token_req = urllib.request.Request(
-        token_url, headers={"Metadata-Flavor": "Google"}
-    )
-    token_response = urllib.request.urlopen(token_req)
-    token = token_response.read()
-    return token.decode()
 # [END run_secure_request]

@@ -30,6 +30,8 @@ REGION = "us-central1"
 STATIC_MODEL = model_test.STATIC_MODEL
 GCS_INPUT = "gs://{}-automl-tables-test/bank-marketing.csv".format(PROJECT)
 GCS_OUTPUT = "gs://{}-automl-tables-test/TABLE_TEST_OUTPUT/".format(PROJECT)
+BQ_INPUT = "bq://{}.automl_test.bank_marketing".format(PROJECT)
+BQ_OUTPUT = "bq://{}".format(PROJECT)
 
 
 @pytest.mark.slow
@@ -37,6 +39,16 @@ def test_batch_predict(capsys):
     ensure_model_online()
     automl_tables_predict.batch_predict(
         PROJECT, REGION, STATIC_MODEL, GCS_INPUT, GCS_OUTPUT
+    )
+    out, _ = capsys.readouterr()
+    assert "Batch prediction complete" in out
+
+
+@pytest.mark.slow
+def test_batch_predict_bq(capsys):
+    ensure_model_online()
+    automl_tables_predict.batch_predict_bq(
+        PROJECT, REGION, STATIC_MODEL, BQ_INPUT, BQ_OUTPUT
     )
     out, _ = capsys.readouterr()
     assert "Batch prediction complete" in out
