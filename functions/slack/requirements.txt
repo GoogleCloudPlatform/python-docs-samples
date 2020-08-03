@@ -1,3 +1,3 @@
 google-api-python-client==1.10.0
 flask==1.1.2
-slackeventsapi==2.2.0
+slackclient==2.7.3
