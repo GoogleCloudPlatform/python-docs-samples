@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from mock import patch
-import redis
 import uuid
 
 import main
@@ -27,16 +26,16 @@ TEST_VALUES = {
 }
 
 
-@patch('snippets.query_for_data', return_value= 'data')
+@patch('main.query_for_data', return_value='data')
 def test_get_data_not_present(query_fn, testbed):
     data = main.get_data(KEY_PREFIX + 'key')
     query_fn.assert_called_once_with()
     assert data == 'data'
-    assert 'data' == client.get(KEY_PREFIX + 'key')
+    assert 'data' == main.client.get(KEY_PREFIX + 'key')
     main.client.delete(KEY_PREFIX + 'key')
 
 
-@patch('snippets.query_for_data', return_value='data')
+@patch('main.query_for_data', return_value='data')
 def test_get_data_present(query_fn, testbed):
     main.client.set(KEY_PREFIX + 'key', 'data', 9000)
     data = main.get_data()

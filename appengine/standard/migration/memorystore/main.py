@@ -42,14 +42,14 @@ def query_for_data():
 
 
 def get_data(cache_key):
-##  data = memcache.get('key')
+    ##  data = memcache.get('key')
     data = client.get(cache_key)
 
     if data is not None:
         return data.decode()
     else:
         data = query_for_data()
-##      memcache.add('key', data, 60)
+    ##      memcache.add('key', data, 60)
         client.set(cache_key, data, ex=60)
 
     return data
@@ -58,19 +58,19 @@ def get_data(cache_key):
 def add_values(values, expires=3600):
     # Add a value if it doesn't exist in the cache
     # with a cache expiration of 1 hour.
-##  memcache.add(key="weather_USA_98105", value="raining", time=3600)
-##  # Remove one of the values and set by itself first
-##  first_key = values.keys()[0]
-##  first_value = values[first_key]
-##  del values[first_key]
-##  memcache.add(first_key, first_value, ex=expires)
-##
-##  # Set several values, overwriting any existing values for these keys.
-##  memcache.set_multi(
-##      {"USA_98115": "cloudy", "USA_94105": "foggy", "USA_94043": "sunny"},
-##      key_prefix="weather_",
-##      time=3600
-##  )
+    ##  memcache.add(key="weather_USA_98105", value="raining", time=3600)
+    ##  # Remove one of the values and set by itself first
+    ##  first_key = values.keys()[0]
+    ##  first_value = values[first_key]
+    ##  del values[first_key]
+    ##  memcache.add(first_key, first_value, ex=expires)
+    ##
+    ##  # Set several values, overwriting any existing values for these keys.
+    ##  memcache.set_multi(
+    ##      {"USA_98115": "cloudy", "USA_94105": "foggy", "USA_94043": "sunny"},
+    ##      key_prefix="weather_",
+    ##      time=3600
+    ##  )
     # Redis mset is similar to memcache.set_multi, but cannot set expirations
     client.mset(values)
 
@@ -84,13 +84,13 @@ def add_values(values, expires=3600):
 
 def increment_counter(name, expires=60, value=0):
     # Atomically increment an integer value.
-##  memcache.set(key="counter", value=0)
+    ##  memcache.set(key="counter", value=0)
     client.set(name, value, ex=expires)
-##  memcache.incr("counter")
+    ##  memcache.incr("counter")
     client.incr(name)
-##  memcache.incr("counter")
+    ##  memcache.incr("counter")
     client.incr(name)
-##  memcache.incr("counter")
+    ##  memcache.incr("counter")
     client.incr(name)
 
 
@@ -101,6 +101,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
+
 
 @app.route('/showdata', methods=['GET'])
 def showdata():
@@ -113,6 +114,7 @@ def showdata():
         values[key.decode()] = client.get(key).decode()
 
     return render_template('showdata.html', data=data, values=values)
+
 
 @app.route('/showdata', methods=['POST'])
 def savedata():
