@@ -1,0 +1,8 @@
+runtime: python38
+
+env_variables:
+    REDISHOST: '10.32.97.227'
+    REDISPORT: '6379'
+
+vpc_access_connector:
+    name: 'projects/engelke-vpc-sample/locations/us-central1/connectors/redis-access'
