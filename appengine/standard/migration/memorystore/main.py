@@ -43,14 +43,11 @@ def query_for_data():
 
 def get_data(cache_key):
 ##  data = memcache.get('key')
-    print("Getting data for {}".format(cache_key))
     data = client.get(cache_key)
 
     if data is not None:
-        print("Cache hit!")
         return data.decode()
     else:
-        print("Cache miss.")
         data = query_for_data()
 ##      memcache.add('key', data, 60)
         client.set(cache_key, data, ex=60)
@@ -75,22 +72,20 @@ def add_values(values, expires=3600):
 ##      time=3600
 ##  )
     # Redis mset is similar to memcache.set_multi, but cannot set expirations
-    print("Setting values: {}".format(values))
     client.mset(values)
 
     # Rather than set expiration with separate operations for each key, batch
     # them using pipeline
     with client.pipeline() as pipe:
         for name in values:
-            print("Setting expiration for {}".format(name))
-            pipe.pexpire(name, 3600)
+            pipe.pexpire(name, expires * 1000)  # Time in milliseconds
         pipe.execute()
 
 
-def increment_counter(name, expires, value=0):
+def increment_counter(name, expires=60, value=0):
     # Atomically increment an integer value.
 ##  memcache.set(key="counter", value=0)
-    client.set(name, expires, value=value)
+    client.set(name, value, ex=expires)
 ##  memcache.incr("counter")
     client.incr(name)
 ##  memcache.incr("counter")
@@ -124,6 +119,8 @@ def savedata():
     key = request.form['key']
     value = request.form['value']
     add_values({key: value})
+    if key == 'counter':
+        increment_counter('counter', expires=60, value=value)
     return redirect('/')
 
 
