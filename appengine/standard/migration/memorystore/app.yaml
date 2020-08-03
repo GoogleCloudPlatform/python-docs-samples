@@ -1,8 +1,21 @@
-runtime: python38
+runtime: python27
+api_version: 1
+threadsafe: yes
 
+handlers:
+- url: .*
+  script: main.app
+
+libraries:
+- name: setuptools
+  version: 36.6.0
+- name: grpcio
+  version: 1.0.0
+  
 env_variables:
     REDISHOST: '10.32.97.227'
     REDISPORT: '6379'
 
 vpc_access_connector:
     name: 'projects/engelke-vpc-sample/locations/us-central1/connectors/redis-access'
+    
