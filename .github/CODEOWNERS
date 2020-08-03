@@ -22,6 +22,7 @@
 /composer/**/*.py                      @leahecole @GoogleCloudPlatform/python-samples-owners
 /compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
 /container_registry/**/*.py            @donmccasland @GoogleCloudPlatform/python-samples-owners
+/data-science-onramp/                  @coleleah @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datacatalog/**/*.py                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/**/*.py                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/**/*.py                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
