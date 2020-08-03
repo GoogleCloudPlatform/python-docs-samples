@@ -28,6 +28,11 @@ TEST_VALUES = {
 
 @patch('main.query_for_data', return_value='data')
 def test_get_data_not_present(query_fn, testbed):
+    try:
+        main.client.set(KEY_PREFIX + 'counter', '0', 9000)
+    except Exception:
+        pytest.skip('Redis is unavailable')
+
     data = main.get_data(KEY_PREFIX + 'key')
     query_fn.assert_called_once_with()
     assert data == 'data'
@@ -37,7 +42,11 @@ def test_get_data_not_present(query_fn, testbed):
 
 @patch('main.query_for_data', return_value='data')
 def test_get_data_present(query_fn, testbed):
-    main.client.set(KEY_PREFIX + 'key', 'data', 9000)
+    try:
+        main.client.set(KEY_PREFIX + 'key', 'data', 9000)
+    except Exception:
+        pytest.skip('Redis is unavailable')
+
     data = main.get_data()
     query_fn.assert_not_called()
     assert data == 'data'
@@ -45,6 +54,11 @@ def test_get_data_present(query_fn, testbed):
 
 
 def test_add_values(testbed):
+    try:
+        main.client.set(KEY_PREFIX + 'counter', '0', 9000)
+    except Exception:
+        pytest.skip('Redis is unavailable')
+
     main.add_values(TEST_VALUES)
     for key, value in TEST_VALUES.iteritems():
         assert main.client.get(key) == value
