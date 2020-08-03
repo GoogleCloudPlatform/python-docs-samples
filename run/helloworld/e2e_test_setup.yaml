@@ -27,15 +27,11 @@ steps:
   - run
   - deploy
   - helloworld-${_SUFFIX}
-  - --image
-  - gcr.io/$PROJECT_ID/helloworld-${_SUFFIX}
-  - --region
-  - us-central1
-  - --platform
-  - managed
+  - --image=gcr.io/$PROJECT_ID/helloworld-${_SUFFIX}
+  - --region=us-central1
+  - --platform=managed
   - --no-allow-unauthenticated
-  - --set-env-vars
-  - "NAME=Test"
+  - --set-env-vars=NAME=Test
 
 images:
   - 'gcr.io/$PROJECT_ID/helloworld-${_SUFFIX}'

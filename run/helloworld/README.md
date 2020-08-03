@@ -22,10 +22,10 @@ docker run --rm -p 9090:8080 -e PORT=8080 helloworld:python
 ## Test
 
 ```
-nox -s "py36(sample='./run/helloworld')"
+pytest
 ```
 
-_Note: you may need to install `nox` using `pip install nox`._
+_Note: you may need to install `pytest` using `pip install pytest`._
 
 ## Deploy
 

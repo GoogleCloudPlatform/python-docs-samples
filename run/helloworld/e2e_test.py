@@ -36,12 +36,9 @@ def services():
             "gcloud",
             "builds",
             "submit",
-            "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            f"--project={project}",
+            f"--substitutions=_SUFFIX={suffix}",
+            "--config=e2e_test_setup.yaml",
             "--quiet",
         ],
         check=True,
@@ -71,23 +68,23 @@ def services():
 
     yield service, token
 
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "run",
-    #         "services",
-    #         "delete",
-    #         f"helloworld-{suffix}",
-    #         "--project",
-    #         project,
-    #         "--platform",
-    #         "managed",
-    #         "--region",
-    #         "us-central1",
-    #         "--quiet",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
+            "--platform",
+            "managed",
+            "--region",
+            "us-central1",
+            "--quiet",
+        ],
+        check=True,
+    )
 
 
 def test_end_to_end(services):
