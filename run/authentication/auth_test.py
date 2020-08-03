@@ -31,15 +31,12 @@ def service():
     suffix = uuid.uuid4().hex
     project = os.environ['GOOGLE_CLOUD_PROJECT']
 
-    # Deploy a hello-world Cloud Run Service
+    # Deploy hello-world Cloud Run Service from 
+    # https://github.com/GoogleCloudPlatform/cloud-run-hello
     subprocess.run(
         [
-            "gcloud",
-            "run",
-            "deploy",
-            f"helloworld-{suffix}",
-            "--image",
-            "gcr.io/gcbdocs/hello",
+            "gcloud", "run", "deploy", f"helloworld-{suffix}",
+            "--image=gcr.io/cloudrun/hello",
             "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
@@ -50,15 +47,10 @@ def service():
     # Get the URL for the hello-world service
     service_url = subprocess.run(
         [
-            "gcloud",
-            "run",
-            "--project",
-            project,
+            "gcloud", "run", "services", "describe", f"helloworld-{suffix}",
+            "--project", project,
             "--platform=managed",
             "--region=us-central1",
-            "services",
-            "describe",
-            f"helloworld-{suffix}",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
@@ -68,12 +60,16 @@ def service():
     yield service_url
 
     subprocess.run(
-        ["gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-         "--project", project, "--platform", "managed", "--region",
-         "us-central1", "--quiet"],
+        [
+            "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
+             "--project", project, 
+             "--platform=managed",
+             "--region=us-central1", 
+             "--quiet",
+         ],
         check=True
     )
 
 def test_auth(service):
-    response = auth.make_get_request(service.decode())
+    response = auth.make_authorized_get_request(service.decode())
     assert "Hello World!" in response.decode()

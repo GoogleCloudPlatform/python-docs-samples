@@ -19,16 +19,15 @@ import google.auth.transport.requests
 import google.oauth2.id_token
 
 
-def make_get_request(service_url):
+def make_authorized_get_request(service_url):
     """
-    make_get_request makes a GET request to the specified Cloud Run endpoint in
-    service_url (must be a complete URL) by authenticating with the ID token
-    obtained from the google-auth client library.
+    make_authorized_get_request makes a GET request to the specified Cloud Run 
+    endpoint in service_url (must be a complete URL) by authenticating with the 
+    ID token obtained from the google-auth client library.
     """
 
     req = urllib.request.Request(service_url)
 
-    credentials, project = google.auth.default()
     auth_req = google.auth.transport.requests.Request()
     id_token = google.oauth2.id_token.fetch_id_token(auth_req, service_url)
     
