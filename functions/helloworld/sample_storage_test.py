@@ -20,7 +20,7 @@ import main
 
 def test_print(capsys):
     name = 'test'
-    data = {
+    event = {
         'bucket': 'some-bucket',
         'name': name,
         'metageneration': 'some-metageneration',
@@ -33,7 +33,7 @@ def test_print(capsys):
     context.event_type = 'gcs-event'
 
     # Call tested function
-    main.hello_gcs(data, context)
+    main.hello_gcs(event, context)
     out, err = capsys.readouterr()
     assert 'File: {}\n'.format(name) in out
 # [END functions_storage_unit_test]
