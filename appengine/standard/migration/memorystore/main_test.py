@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from mock import patch
+import pytest
 import uuid
 
 import main
