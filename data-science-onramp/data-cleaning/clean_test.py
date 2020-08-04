@@ -2,18 +2,30 @@ import os
 import re
 import uuid
 
+from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
+import pandas as pd
 import pytest
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
-DESTINATION_BLOB_NAME = "clean.py"
+# GCP project
+PROJECT_ID = os.environ["GCP_PROJECT"]
+
+# GCS constants
 BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
+BUCKET_BLOB = "clean.py"
+
+# Big Query constants
+BQ_DATASET = f"{PROJECT_ID}.clean_test_{str(uuid.uuid4()).replace('-', '_')}"
+BQ_TABLE = f"{BQ_DATASET}.dirty_data"
+CSV_FILE = "resources/test_data.csv"
+
+# Dataproc constants
 DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
 CLUSTER_REGION = "us-central1"
 CLUSTER_IMAGE = "1.5.4-debian10"
-CLUSTER_DATA = {  # Dataproc cluster configuration
-    "project_id": PROJECT,
+CLUSTER_CONFIG = {  # Dataproc cluster configuration
+    "project_id": PROJECT_ID,
     "cluster_name": DATAPROC_CLUSTER,
     "config": {
         "gce_cluster_config": {
@@ -28,24 +40,48 @@ CLUSTER_DATA = {  # Dataproc cluster configuration
         },
     },
 }
-JOB_FILE_NAME = f"gs://{BUCKET_NAME}/clean.py"
-JOB_DETAILS = {  # Dataproc job configuration
+DATAPROC_JOB = {    # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
-        "main_python_file_uri": JOB_FILE_NAME,
-        "args": [PROJECT, BUCKET_NAME, "--dry-run"],
+        "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
+        "args": [BQ_TABLE, BUCKET_NAME, "--dry-run"],
         "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
 
 
 @pytest.fixture(autouse=True)
+def setup_and_teardown_table():
+    bq_client = bigquery.Client()
+
+    # Create dataset and load table
+    dataset = bigquery.Dataset(BQ_DATASET)
+    dataset = bq_client.create_dataset(dataset)
+
+    # Load table from dataframe
+    df = pd.read_csv(CSV_FILE)
+    job_config = bigquery.LoadJobConfig(
+        autodetect=True,
+        write_disposition="WRITE_TRUNCATE"
+    )
+    job = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
+
+    # Wait for job to complete
+    job.result()
+
+    yield
+
+    # Delete dataset
+    bq_client.delete_dataset(BQ_DATASET, delete_contents=True)
+
+
+@pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
-    # Create cluster using cluster client
+    # Create Dataproc cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    operation = cluster_client.create_cluster(PROJECT, CLUSTER_REGION, CLUSTER_DATA)
+    operation = cluster_client.create_cluster(PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG)
 
     # Wait for cluster to provision
     operation.result()
@@ -53,18 +89,23 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT, CLUSTER_REGION, DATAPROC_CLUSTER)
+    operation = cluster_client.delete_cluster(
+        PROJECT_ID,
+        CLUSTER_REGION,
+        DATAPROC_CLUSTER,
+        timeout=10*60
+    )
     operation.result()
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_bucket():
-    # Create GCS Bucket
+    # Create GCS bucket
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(BUCKET_NAME)
 
     # Upload file
-    blob = bucket.blob(DESTINATION_BLOB_NAME)
+    blob = bucket.blob(BUCKET_BLOB)
     blob.upload_from_filename("clean.py")
 
     yield
@@ -87,17 +128,16 @@ def get_blob_from_path(path):
 
 def test_clean():
     """Tests clean.py by submitting it to a Dataproc cluster"""
-
     # Submit job to Dataproc cluster
     job_client = dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    response = job_client.submit_job_as_operation(
-        project_id=PROJECT, region=CLUSTER_REGION, job=JOB_DETAILS
+    job = job_client.submit_job_as_operation(
+        project_id=PROJECT_ID, region=CLUSTER_REGION, job=DATAPROC_JOB
     )
 
     # Wait for job to complete
-    result = response.result()
+    result = job.result()
 
     # Get job output
     output_location = result.driver_output_resource_uri + ".000000000"
@@ -105,9 +145,9 @@ def test_clean():
     out = blob.download_as_string().decode("utf-8")
 
     # trip duration
-    assert not is_in_table(r"\d*.\d* s", out)
-    assert not is_in_table(r"\d*.\d* min", out)
-    assert not is_in_table(r"\d*.\d* h", out)
+    assert not is_in_table("s", out)
+    assert not is_in_table("min", out)
+    assert not is_in_table("h", out)
 
     # station latitude & longitude
     assert not is_in_table(r"\d+" + "\u00B0" + r"\d+\'\d+\"", out)

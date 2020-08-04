@@ -9,10 +9,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import FloatType, IntegerType, StringType
 
-
-PROJECT_ID = sys.argv[1]
+TABLE = sys.argv[1]
 BUCKET_NAME = sys.argv[2]
-TABLE = f"{PROJECT_ID}.new_york_citibike_trips.RAW_DATA"
 
 
 def trip_duration_udf(duration):
@@ -180,7 +178,7 @@ if __name__ == "__main__":
         df = df.withColumn(name, obj["udf"](*obj["params"]))
 
     # Display sample of rows
-    df.sample(False, 0.001).show(n=100)
+    df.sample(False, 1.).show(n=100)
 
     # Write results to GCS
     if "--dry-run" in sys.argv:
