@@ -42,17 +42,11 @@ nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
 # Inject region tag data into the test log
-REGION_TAG_PARSER_DIR="$PARENT_DIR/region-tag-parser"
-if [ ! -d "$REGION_TAG_PARSER_DIR" ]; then
-    #pip install pyyaml
-    git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR"
-fi
+XUNIT_PATH="$PWD/sponge_log.xml"
+XUNIT_TMP_PATH="$PWD/drift_tmp.xml"
 
-PARSER_PATH="$REGION_TAG_PARSER_DIR/wizard-py/cli.py"
-XUNIT_PATH="$REGION_TAG_PARSER_DIR/sponge_log.xml"
-
-chmod +x "$PARSER_PATH"
-cat $XUNIT_PATH | python3.8 $PARSER_PATH inject-snippet-mapping "$PWD" > $XUNIT_PATH
+cp $XUNIT_PATH $XUNIT_TMP_PATH
+cat "$XUNIT_TMP_PATH" | python3.8 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_PATH"
 
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
 # to the Build Cop Bot.
