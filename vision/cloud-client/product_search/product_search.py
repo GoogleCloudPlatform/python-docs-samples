@@ -107,7 +107,7 @@ def get_similar_products_uri(
         location: A compute region name.
         product_set_id: Id of the product set.
         product_category: Category of the product.
-        file_path: Local file path of the image to be searched.
+        image_uri: Cloud Storage location of image to be searched.
         filter: Condition to be applied on the labels.
         Example for filter: (color = red OR color = blue) AND style = kids
         It will search on all products with the following labels:
