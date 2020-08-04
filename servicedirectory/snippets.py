@@ -17,6 +17,7 @@
 from google.cloud import servicedirectory_v1beta1
 
 
+# [START servicedirectory_create_namespace]
 def create_namespace(project_id, location_id, namespace_id):
     """Creates a namespace in the given location."""
 
@@ -34,8 +35,10 @@ def create_namespace(project_id, location_id, namespace_id):
     print(f'Created namespace {response.name}.')
 
     return response
+# [END servicedirectory_create_namespace]
 
 
+# [START servicedirectory_delete_namespace]
 def delete_namespace(project_id, location_id, namespace_id):
     """Deletes a namespace in the given location."""
 
@@ -46,8 +49,10 @@ def delete_namespace(project_id, location_id, namespace_id):
     client.delete_namespace(name=namespace_name)
 
     print(f'Deleted namespace {namespace_name}.')
+# [END servicedirectory_delete_namespace]
 
 
+# [START servicedirectory_create_service]
 def create_service(project_id, location_id, namespace_id, service_id):
     """Creates a service in the given namespace."""
 
@@ -66,8 +71,10 @@ def create_service(project_id, location_id, namespace_id, service_id):
     print(f'Created service {response.name}.')
 
     return response
+# [END servicedirectory_create_service]
 
 
+# [START servicedirectory_delete_service]
 def delete_service(project_id, location_id, namespace_id, service_id):
     """Deletes a service in the given namespace."""
 
@@ -79,8 +86,10 @@ def delete_service(project_id, location_id, namespace_id, service_id):
     client.delete_service(name=service_name)
 
     print(f'Deleted service {service_name}.')
+# [END servicedirectory_delete_service]
 
 
+# [START servicedirectory_resolve_service]
 def resolve_service(project_id, location_id, namespace_id, service_id):
     """Resolves a service in the given namespace."""
 
@@ -97,8 +106,10 @@ def resolve_service(project_id, location_id, namespace_id, service_id):
         print(f'{endpoint.name} -- {endpoint.address}:{endpoint.port}')
 
     return response
+# [END servicedirectory_resolve_service]
 
 
+# [START servicedirectory_create_endpoint]
 def create_endpoint(project_id, location_id, namespace_id, service_id,
                     endpoint_id, address, port):
     """Creates a endpoint in the given service."""
@@ -121,8 +132,10 @@ def create_endpoint(project_id, location_id, namespace_id, service_id,
     print(f'Created endpoint {response.name}.')
 
     return response
+# [END servicedirectory_create_endpoint]
 
 
+# [START servicedirectory_delete_endpoint]
 def delete_endpoint(project_id, location_id, namespace_id, service_id,
                     endpoint_id):
     """Deletes a endpoin in the given service."""
@@ -135,3 +148,4 @@ def delete_endpoint(project_id, location_id, namespace_id, service_id,
     client.delete_endpoint(name=endpoint_name)
 
     print(f'Deleted endpoint {endpoint_name}.')
+# [END servicedirectory_delete_endpoint]
