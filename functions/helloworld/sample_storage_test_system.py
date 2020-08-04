@@ -61,7 +61,7 @@ def test_hello_gcs(uploaded_file):
         'functions',
         'logs',
         'read',
-        'hello_gcs',
+        'hello_gcs_generic',
         '--start-time',
         start_time
     ], stdout=subprocess.PIPE)
