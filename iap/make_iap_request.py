@@ -41,7 +41,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
 
     # Obtain an OpenID Connect (OIDC) token from metadata server or using service
     # account.
-    google_open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
+    open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
 
     # Fetch the Identity-Aware Proxy-protected URL, including an
     # Authorization header containing "Bearer " followed by a
@@ -49,7 +49,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     resp = requests.request(
         method, url,
         headers={'Authorization': 'Bearer {}'.format(
-            google_open_id_connect_token)}, **kwargs)
+            open_id_connect_token)}, **kwargs)
     if resp.status_code == 403:
         raise Exception('Service account does not have permission to '
                         'access the IAP-protected application.')
