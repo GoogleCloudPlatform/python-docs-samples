@@ -15,7 +15,7 @@ from google.cloud import bigquery
 import pandas as pd
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import expr, UserDefinedFunction, when
+from pyspark.sql.functions import expr, UserDefinedFunction, when, date_format
 from pyspark.sql.types import FloatType, StringType, StructField, StructType
 
 
@@ -101,7 +101,7 @@ def create_bigquery_dataset():
     dataset_id = f'{client.project}.{DATASET_NAME}'
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
-    dataset = client.create_dataset(dataset)
+    #dataset = client.create_dataset(dataset)
 
 
 def write_to_bigquery(df, table_name):
@@ -140,7 +140,7 @@ def main():
         df = spark.createDataFrame(pd.read_csv(data["url"]),
                                    schema=data["schema"])
 
-        write_to_bigquery(df, table_name)
+        #write_to_bigquery(df, table_name)
 
     # Check if table exists
     try:
@@ -179,6 +179,10 @@ def main():
     # Dirty the columns
     for name, udf in udf_map.items():
         df = df.withColumn(name, UserDefinedFunction(*udf)(name))
+
+    # Format the datetimes correctly
+    for name in ['starttime', 'stoptime']:
+        df = df.withColumn(name, date_format(name, "yyyy-MM-dd'T'HH:mm:ss"))
 
     # Randomly set about 5% of the values in some columns to null
     for name in null_columns:
