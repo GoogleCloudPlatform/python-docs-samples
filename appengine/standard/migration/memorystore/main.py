@@ -29,8 +29,8 @@ import time
 
 from flask import Flask, redirect, render_template, request
 
-redis_host = os.environ.get('REDISHOST', 'localhost')
-redis_port = os.environ.get('REDISPOST', '6379')
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
+redis_port = os.environ.get('REDIS_PORT', '6379')
 client = redis.Redis(host=redis_host, port=redis_port)
 
 

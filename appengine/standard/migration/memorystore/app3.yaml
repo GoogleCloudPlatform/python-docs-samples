@@ -1,7 +1,7 @@
 runtime: python38
 
 env_variables:
-    REDISHOST: '<REDIS_IP>'
+    REDISHOST: '<REDIS_HOST>'
     REDISPORT: '<REDIS_PORT>'
 
 vpc_access_connector:
