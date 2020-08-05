@@ -21,7 +21,6 @@ import argparse
 def create_feed(project_id, feed_id, asset_names, topic):
     # [START asset_quickstart_create_feed]
     from google.cloud import asset_v1
-    from google.cloud.asset_v1.proto import asset_service_pb2
 
     # TODO project_id = 'Your Google Cloud Project ID'
     # TODO feed_id = 'Feed ID you want to create'
@@ -30,23 +29,24 @@ def create_feed(project_id, feed_id, asset_names, topic):
 
     client = asset_v1.AssetServiceClient()
     parent = "projects/{}".format(project_id)
-    feed = asset_service_pb2.Feed()
+    feed = asset_v1.Feed()
     feed.asset_names.extend(asset_names)
     feed.feed_output_config.pubsub_destination.topic = topic
-    response = client.create_feed(parent, feed_id, feed)
-    print('feed: {}'.format(response))
+    response = client.create_feed(
+        request={"parent": parent, "feed_id": feed_id, "feed": feed}
+    )
+    print("feed: {}".format(response))
     # [END asset_quickstart_create_feed]
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='Your Google Cloud project ID')
-    parser.add_argument('feed_id', help='Feed ID you want to create')
-    parser.add_argument('asset_names',
-                        help='List of asset names the feed listen to')
-    parser.add_argument('topic', help='Topic name of the feed')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Your Google Cloud project ID")
+    parser.add_argument("feed_id", help="Feed ID you want to create")
+    parser.add_argument("asset_names", help="List of asset names the feed listen to")
+    parser.add_argument("topic", help="Topic name of the feed")
     args = parser.parse_args()
     create_feed(args.project_id, args.feed_id, args.asset_names, args.topic)

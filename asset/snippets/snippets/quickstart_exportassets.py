@@ -21,31 +21,32 @@ import argparse
 def export_assets(project_id, dump_file_path):
     # [START asset_quickstart_export_assets]
     from google.cloud import asset_v1
-    from google.cloud.asset_v1.proto import asset_service_pb2
 
     # TODO project_id = 'Your Google Cloud Project ID'
     # TODO dump_file_path = 'Your asset dump file path'
 
     client = asset_v1.AssetServiceClient()
-    parent = client.project_path(project_id)
-    output_config = asset_service_pb2.OutputConfig()
+    parent = "projects/{}".format(project_id)
+    output_config = asset_v1.OutputConfig()
     output_config.gcs_destination.uri = dump_file_path
-    response = client.export_assets(parent, output_config)
+    response = client.export_assets(
+        request={"parent": parent, "output_config": output_config}
+    )
     print(response.result())
     # [END asset_quickstart_export_assets]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument('project_id', help='Your Google Cloud project ID')
+    parser.add_argument("project_id", help="Your Google Cloud project ID")
     parser.add_argument(
-        'dump_file_path',
-        help='The file ExportAssets API will dump assets to, '
-        'e.g.: gs://<bucket-name>/asset_dump_file')
+        "dump_file_path",
+        help="The file ExportAssets API will dump assets to, "
+        "e.g.: gs://<bucket-name>/asset_dump_file",
+    )
 
     args = parser.parse_args()
 

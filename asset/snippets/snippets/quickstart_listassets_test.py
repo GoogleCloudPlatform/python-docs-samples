@@ -18,10 +18,12 @@ import os
 
 import quickstart_listassets
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_list_assets(capsys):
-    quickstart_listassets.list_assets(project_id=PROJECT, asset_types=["iam.googleapis.com/Role"], page_size=10)
+    quickstart_listassets.list_assets(
+        project_id=PROJECT, asset_types=["iam.googleapis.com/Role"], page_size=10
+    )
     out, _ = capsys.readouterr()
-    assert 'asset' in out
+    assert "asset" in out

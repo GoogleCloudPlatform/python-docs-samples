@@ -18,7 +18,7 @@ import os
 
 import quickstart_searchalliampolicies
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_search_all_iam_policies(capsys):
