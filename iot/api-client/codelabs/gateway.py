@@ -62,6 +62,7 @@ class GatewayState:
 gateway_state = GatewayState()
 
 
+# [START iot_mqtt_jwt]
 def create_jwt(project_id, private_key_file, algorithm, jwt_expires_minutes):
     """Creates a JWT (https://jwt.io) to establish an MQTT connection.
             Args:
