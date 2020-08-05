@@ -1,4 +1,4 @@
-grpcio==1.30.0
+grpcio==1.31.0
 grpcio-tools==1.30.0
 google-auth==1.20.0
 six==1.15.0
