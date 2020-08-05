@@ -28,7 +28,7 @@ from google.cloud import vision
 
 # [START translate_hybrid_project_id]
 # extract GCP project id
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 # [END translate_hybrid_project_id]
 
 

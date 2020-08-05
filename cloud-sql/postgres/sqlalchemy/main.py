@@ -20,13 +20,6 @@ from flask import Flask, render_template, request, Response
 import sqlalchemy
 
 
-# Remember - storing secrets in plaintext is potentially unsafe. Consider using
-# something like https://cloud.google.com/kms/ to help keep secrets secret.
-db_user = os.environ.get("DB_USER")
-db_pass = os.environ.get("DB_PASS")
-db_name = os.environ.get("DB_NAME")
-cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
-
 app = Flask(__name__)
 
 logger = logging.getLogger()
@@ -71,59 +64,73 @@ def init_connection_engine():
 
 def init_tcp_connection_engine(db_config):
     # [START cloud_sql_postgres_sqlalchemy_create_tcp]
-    db_socket_addr = os.environ.get("DB_HOST").split(":")
+    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
+    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
+    # secrets secret.
+    db_user = os.environ["DB_USER"]
+    db_pass = os.environ["DB_PASS"]
+    db_name = os.environ["DB_NAME"]
+    db_host = os.environ["DB_HOST"]
 
-    # Extract host and port from socket address
-    db_host = db_socket_addr[0]
-    db_port = int(db_socket_addr[1])
+    # Extract host and port from db_host
+    host_args = db_host.split(":")
+    db_hostname, db_port = host_args[0], int(host_args[1])
 
-    return sqlalchemy.create_engine(
+    pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # postgres+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
         sqlalchemy.engine.url.URL(
             drivername="postgres+pg8000",
-            username=db_user,
-            password=db_pass,
-            host=db_host,
-            port=db_port,
-            database=db_name
+            username=db_user,  # e.g. "my-database-user"
+            password=db_pass,  # e.g. "my-database-password"
+            host=db_hostname,  # e.g. "127.0.0.1"
+            port=db_port,  # e.g. 5432
+            database=db_name  # e.g. "my-database-name"
         ),
         # ... Specify additional properties here.
-        # [START_EXCLUDE]
+        # [END cloud_sql_postgres_sqlalchemy_create_tcp]
         **db_config
-        # [END_EXCLUDE]
+        # [START cloud_sql_postgres_sqlalchemy_create_tcp]
     )
     # [END cloud_sql_postgres_sqlalchemy_create_tcp]
+
+    return pool
 
 
 def init_unix_connection_engine(db_config):
     # [START cloud_sql_postgres_sqlalchemy_create_socket]
-    if os.environ.get("DB_SOCKET_PATH"):
-        socket_path = os.environ.get("DB_SOCKET_PATH")
-    else:
-        socket_path = "/cloudsql"
+    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
+    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
+    # secrets secret.
+    db_user = os.environ["DB_USER"]
+    db_pass = os.environ["DB_PASS"]
+    db_name = os.environ["DB_NAME"]
+    db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
+    cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
 
-    return sqlalchemy.create_engine(
+    pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # postgres+pg8000://<db_user>:<db_pass>@/<db_name>
         #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
         sqlalchemy.engine.url.URL(
             drivername="postgres+pg8000",
-            username=db_user,
-            password=db_pass,
-            database=db_name,
+            username=db_user,  # e.g. "my-database-user"
+            password=db_pass,  # e.g. "my-database-password"
+            database=db_name,  # e.g. "my-database-name"
             query={
                 "unix_sock": "{}/{}/.s.PGSQL.5432".format(
-                    socket_path,
-                    cloud_sql_connection_name)
+                    db_socket_dir,  # e.g. "/cloudsql"
+                    cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
             }
         ),
         # ... Specify additional properties here.
-        # [START_EXCLUDE]
+        # [END cloud_sql_postgres_sqlalchemy_create_socket]
         **db_config
-        # [END_EXCLUDE]
+        # [START cloud_sql_postgres_sqlalchemy_create_socket]
     )
     # [END cloud_sql_postgres_sqlalchemy_create_socket]
+
+    return pool
 
 
 # The SQLAlchemy engine will help manage interactions, including automatically

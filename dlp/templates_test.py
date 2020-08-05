@@ -21,7 +21,7 @@ import google.cloud.storage
 import templates
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_TEMPLATE_ID = "test-template" + UNIQUE_STRING
 
 

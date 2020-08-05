@@ -17,6 +17,8 @@
 import os
 import uuid
 
+import backoff
+from google.api_core.exceptions import Conflict
 from google.cloud import storage
 import pytest
 from six.moves.urllib.request import urlopen
@@ -53,14 +55,19 @@ def video_path(tmpdir_factory):
 @pytest.fixture(scope="function")
 def bucket():
     # Create a temporaty bucket to store annotation output.
-    bucket_name = str(uuid.uuid1())
+    bucket_name = f'tmp-{uuid.uuid4().hex}'
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
     yield bucket
 
-    # Teardown.
-    bucket.delete(force=True)
+    # Teardown. We're occasionally seeing 409 conflict errors.
+    # Retrying upon 409s.
+    @backoff.on_exception(backoff.expo, Conflict, max_time=120)
+    def delete_bucket():
+        bucket.delete(force=True)
+
+    delete_bucket()
 
 
 @pytest.mark.slow
@@ -157,7 +164,7 @@ def test_track_objects_gcs():
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
-    project_id = os.environ["GCLOUD_PROJECT"]
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
     beta_snippets.streaming_automl_classification(video_path, project_id, model_id)
     out, _ = capsys.readouterr()

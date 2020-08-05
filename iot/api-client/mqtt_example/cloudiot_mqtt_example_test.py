@@ -31,7 +31,7 @@ import manager  # noqa
 cloud_region = 'us-central1'
 ca_cert_path = 'resources/roots.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
@@ -185,9 +185,6 @@ def test_gateway_send_data_for_device(
     out, _ = capsys.readouterr()
     assert 'Publishing message 5/5' in out
     assert 'Received message' in out
-    # We know we sometimes get 'Out of memory' in the output.
-    # We'd like to know when this occurs with verbose log output.
-    assert 'Out of memory' not in out  # Indicates could not connect
 
 
 def test_gateway_trigger_error_topic(

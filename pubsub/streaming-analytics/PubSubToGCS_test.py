@@ -24,7 +24,7 @@ import mock
 
 import PubSubToGCS
 
-PROJECT = os.environ["GCLOUD_PROJECT"]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 UUID = uuid.uuid1().hex
 

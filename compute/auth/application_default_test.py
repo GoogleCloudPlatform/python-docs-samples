@@ -15,7 +15,7 @@ import os
 
 from application_default import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def test_main():

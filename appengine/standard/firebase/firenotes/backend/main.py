@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+import os
 
 from flask import Flask, jsonify, request
 import flask_cors
@@ -72,7 +73,7 @@ def list_notes():
     # [START gae_python_verify_token]
     id_token = request.headers['Authorization'].split(' ').pop()
     claims = google.oauth2.id_token.verify_firebase_token(
-        id_token, HTTP_REQUEST)
+        id_token, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
     if not claims:
         return 'Unauthorized', 401
     # [END gae_python_verify_token]
@@ -95,7 +96,7 @@ def add_note():
     # Verify Firebase auth.
     id_token = request.headers['Authorization'].split(' ').pop()
     claims = google.oauth2.id_token.verify_firebase_token(
-        id_token, HTTP_REQUEST)
+        id_token, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
     if not claims:
         return 'Unauthorized', 401
 
