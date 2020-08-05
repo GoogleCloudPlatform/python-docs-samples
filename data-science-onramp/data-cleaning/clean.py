@@ -178,7 +178,7 @@ if __name__ == "__main__":
         df = df.withColumn(name, obj["udf"](*obj["params"]))
 
     # Display sample of rows
-    df.sample(False, 1.).show(n=100)
+    df.show(n=20)
 
     # Write results to GCS
     if "--dry-run" in sys.argv:
