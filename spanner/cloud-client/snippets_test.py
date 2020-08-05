@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import random
-import string
 import time
+import uuid
 
 from google.cloud import spanner
 import pytest
@@ -23,20 +21,27 @@ import pytest
 import snippets
 
 
+def unique_instance_id():
+    """ Creates a unique id for the database. """
+    return f'test-instance-{uuid.uuid4().hex[:10]}'
+
+
 def unique_database_id():
     """ Creates a unique id for the database. """
-    return 'test-db-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return f'test-db-{uuid.uuid4().hex[:10]}'
 
 
-INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = unique_instance_id()
 DATABASE_ID = unique_database_id()
 
 
 @pytest.fixture(scope='module')
 def spanner_instance():
+    snippets.create_instance(INSTANCE_ID)
     spanner_client = spanner.Client()
-    return spanner_client.instance(INSTANCE_ID)
+    instance = spanner_client.instance(INSTANCE_ID)
+    yield instance
+    instance.delete()
 
 
 @pytest.fixture(scope='module')
@@ -46,6 +51,11 @@ def database(spanner_instance):
     db = spanner_instance.database(DATABASE_ID)
     yield db
     db.drop()
+
+
+def test_create_instance(spanner_instance):
+    # Reload will only succeed if the instance exists.
+    spanner_instance.reload()
 
 
 def test_create_database(database):
@@ -353,6 +363,9 @@ def test_query_data_with_string(capsys):
 
 
 def test_query_data_with_timestamp_parameter(capsys):
+    # Wait 5 seconds to avoid a time drift issue for the next query:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4197.
+    time.sleep(5)
     snippets.query_data_with_timestamp_parameter(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out

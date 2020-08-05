@@ -17,7 +17,7 @@ import mock
 
 import access_token
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @mock.patch('access_token.requests')

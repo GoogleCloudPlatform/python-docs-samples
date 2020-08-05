@@ -23,8 +23,8 @@ import risk
 
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
-GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
-TABLE_PROJECT = os.environ.get("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
+TABLE_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 TOPIC_ID = "dlp-test" + UNIQUE_STRING
 SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
 UNIQUE_FIELD = "Name"
@@ -36,7 +36,7 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT = 60  # 1 minutes
+TIMEOUT = 120  # 2 minutes
 
 
 # Create new custom topic/subscription
@@ -165,7 +165,7 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_numerical_risk_analysis(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -184,7 +184,7 @@ def test_numerical_risk_analysis(
     assert "Value Range:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_string_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -203,7 +203,7 @@ def test_categorical_risk_analysis_on_string_field(
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_number_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -222,7 +222,7 @@ def test_categorical_risk_analysis_on_number_field(
     assert "Most common value occurs" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -242,7 +242,7 @@ def test_k_anonymity_analysis_single_field(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -262,7 +262,7 @@ def test_k_anonymity_analysis_multiple_fields(
     assert "Class size:" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -284,7 +284,7 @@ def test_l_diversity_analysis_single_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -306,7 +306,7 @@ def test_l_diversity_analysis_multiple_field(
     assert "Sensitive value" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_single_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -328,7 +328,7 @@ def test_k_map_estimate_analysis_single_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
@@ -350,7 +350,7 @@ def test_k_map_estimate_analysis_multiple_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
     topic_id, subscription_id, bigquery_project
 ):

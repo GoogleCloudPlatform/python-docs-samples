@@ -23,16 +23,17 @@ from __future__ import division
 
 import itertools
 
-from google.cloud import mediatranslation
+from google.cloud import mediatranslation as media
 import pyaudio
 from six.moves import queue
 
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+SpeechEventType = media.StreamingTranslateSpeechResponse.SpeechEventType
 
 
-class MicrophoneStream(object):
+class MicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
     def __init__(self, rate, chunk):
@@ -59,7 +60,7 @@ class MicrophoneStream(object):
 
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type=None, value=None, traceback=None):
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
@@ -72,6 +73,9 @@ class MicrophoneStream(object):
         """Continuously collect data from the audio stream, into the buffer."""
         self._buff.put(in_data)
         return None, pyaudio.paContinue
+
+    def exit(self):
+        self.__exit__()
 
     def generator(self):
         while not self.closed:
@@ -102,42 +106,47 @@ def listen_print_loop(responses):
     The responses passed is a generator that will block until a response
     is provided by the server.
     """
+    translation = ''
+    source = ''
     for response in responses:
         # Once the transcription settles, the response contains the
-        # is_final result. The other results will be for subsequent portions of
-        # the audio.
+        # END_OF_SINGLE_UTTERANCE event.
+        if (response.speech_event_type ==
+                SpeechEventType.END_OF_SINGLE_UTTERANCE):
+
+            print(u'\nFinal translation: {0}'.format(translation))
+            print(u'Final recognition result: {0}'.format(source))
+            return 0
+
         result = response.result
         translation = result.text_translation_result.translation
         source = result.recognition_result
-
-        if result.text_translation_result.is_final:
-            print(u'\nFinal translation: {0}'.format(translation))
-            print(u'Final recognition result: {0}'.format(source))
-            break
 
         print(u'\nPartial translation: {0}'.format(translation))
         print(u'Partial recognition result: {0}'.format(source))
 
 
-def main():
-    client = mediatranslation.SpeechTranslationServiceClient()
+def do_translation_loop():
+    print('Begin speaking...')
 
-    speech_config = mediatranslation.TranslateSpeechConfig(
+    client = media.SpeechTranslationServiceClient()
+
+    speech_config = media.TranslateSpeechConfig(
         audio_encoding='linear16',
         source_language_code='en-US',
         target_language_code='es-ES')
 
-    config = mediatranslation.StreamingTranslateSpeechConfig(
-        audio_config=speech_config)
+    config = media.StreamingTranslateSpeechConfig(
+        audio_config=speech_config, single_utterance=True)
 
     # The first request contains the configuration.
     # Note that audio_content is explicitly set to None.
-    first_request = mediatranslation.StreamingTranslateSpeechRequest(
+    first_request = media.StreamingTranslateSpeechRequest(
         streaming_config=config, audio_content=None)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
-        mic_requests = (mediatranslation.StreamingTranslateSpeechRequest(
+        mic_requests = (media.StreamingTranslateSpeechRequest(
             audio_content=content,
             streaming_config=config)
             for content in audio_generator)
@@ -147,10 +156,22 @@ def main():
         responses = client.streaming_translate_speech(requests)
 
         # Print the translation responses as they arrive
-        listen_print_loop(responses)
+        result = listen_print_loop(responses)
+        if result == 0:
+            stream.exit()
+
+
+def main():
+    while True:
+        print()
+        option = input('Press any key to translate or \'q\' to quit: ')
+
+        if option.lower() == 'q':
+            break
+
+        do_translation_loop()
 
 
 if __name__ == '__main__':
-    print('Start speaking ...')
     main()
 # [END media_translation_translate_from_mic]

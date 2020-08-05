@@ -30,7 +30,7 @@ app = Flask(__name__)
 app.config['PUBSUB_VERIFICATION_TOKEN'] = \
     os.environ['PUBSUB_VERIFICATION_TOKEN']
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
-app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
+app.config['GOOGLE_CLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 # Global list to storage messages received by this instance.
@@ -47,7 +47,7 @@ def index():
 
     service = build('pubsub', 'v1')
     topic_path = 'projects/{project_id}/topics/{topic}'.format(
-        project_id=app.config['GCLOUD_PROJECT'],
+        project_id=app.config['GOOGLE_CLOUD_PROJECT'],
         topic=app.config['PUBSUB_TOPIC']
     )
     service.projects().topics().publish(
