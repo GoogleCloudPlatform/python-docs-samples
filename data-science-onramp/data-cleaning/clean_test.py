@@ -64,10 +64,10 @@ def setup_and_teardown_table():
         autodetect=True,
         write_disposition="WRITE_TRUNCATE"
     )
-    job = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
+    operation = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
 
     # Wait for job to complete
-    job.result()
+    operation.result()
 
     yield
 
@@ -93,7 +93,7 @@ def setup_and_teardown_cluster():
         PROJECT_ID,
         CLUSTER_REGION,
         DATAPROC_CLUSTER,
-        timeout=10*60
+        timeout=300
     )
     operation.result()
 
@@ -132,12 +132,12 @@ def test_clean():
     job_client = dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    job = job_client.submit_job_as_operation(
+    operation = job_client.submit_job_as_operation(
         project_id=PROJECT_ID, region=CLUSTER_REGION, job=DATAPROC_JOB
     )
 
     # Wait for job to complete
-    result = job.result()
+    result = operation.result()
 
     # Get job output
     output_location = result.driver_output_resource_uri + ".000000000"
