@@ -104,7 +104,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
         language_codes_set=language_codes_set,
         input_config=input_config)
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     # Create glossary resource
     # Handle exception for case in which a glossary
@@ -150,15 +150,18 @@ def translate_text(text, source_language_code, target_language_code,
     glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary)
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     result = client.translate_text(
-        parent=parent,
-        contents=[text],
-        mime_type='text/plain',  # mime types: text/plain, text/html
-        source_language_code=source_language_code,
-        target_language_code=target_language_code,
-        glossary_config=glossary_config)
+        request={
+            "parent": parent,
+            "contents": [text],
+            "mime_type": "text/plain",  # mime types: text/plain, text/html
+            "source_language_code": source_language_code,
+            "target_language_code": target_language_code,
+            "glossary_config": glossary_config
+        }
+    )
 
     # Extract translated text from API response
     return result.glossary_translations[0].translated_text
@@ -240,7 +243,7 @@ def main():
     # uri of .csv file uploaded to Cloud Storage
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
 
-    create_glossary(glossary_langs, PROJECT_ID,  glossary_name, glossary_uri)
+    create_glossary(glossary_langs, PROJECT_ID, glossary_name, glossary_uri)
 
     # photo -> detected text
     text_to_translate = pic_to_text(infile)

@@ -26,19 +26,21 @@ def translate_text_with_model(
 
     client = translate.TranslationServiceClient()
 
-    parent = client.location_path(project_id, "us-central1")
-    model_path = "projects/{}/locations/{}/models/{}".format(
-        project_id, "us-central1", model_id
-    )
+    location = "us-central1"
+    parent = f"projects/{project_id}/locations/{location}"
+    model_path = f"{parent}/models/{model_id}"
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
-        contents=[text],
-        target_language_code="ja",
-        model=model_path,
-        source_language_code="en",
-        parent=parent,
-        mime_type="text/plain",  # mime types: text/plain, text/html
+        request={
+            "contents": [text],
+            "target_language_code": "ja",
+            "model": model_path,
+            "source_language_code": "en",
+            "parent": parent,
+            "mime_type": "text/plain",  # mime types: text/plain, text/html
+        }
+
     )
     # Display the translation for each input text provided
     for translation in response.translations:

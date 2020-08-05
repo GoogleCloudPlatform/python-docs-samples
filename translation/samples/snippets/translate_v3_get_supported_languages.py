@@ -21,7 +21,7 @@ def get_supported_languages(project_id="YOUR_PROJECT_ID"):
 
     client = translate.TranslationServiceClient()
 
-    parent = client.location_path(project_id, "global")
+    parent = f"projects/{project_id}"
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.get_supported_languages(parent=parent)

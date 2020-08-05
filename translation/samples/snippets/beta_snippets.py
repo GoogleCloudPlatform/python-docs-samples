@@ -25,14 +25,17 @@ def translate_text(project_id, text):
     # text = 'Text you wish to translate'
     location = 'global'
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     response = client.translate_text(
-        parent=parent,
-        contents=[text],
-        mime_type='text/plain',  # mime types: text/plain, text/html
-        source_language_code='en-US',
-        target_language_code='sr-Latn')
+        request={
+            "parent": parent,
+            "contents": [text],
+            "mime_type": "text/plain",  # mime types: text/plain, text/html
+            "source_language_code": "en-US",
+            "target_language_code": "sr-Latn"
+        }
+    )
 
     for translation in response.translations:
         print(u'Translated Text: {}'.format(translation))
@@ -49,7 +52,7 @@ def batch_translate_text(project_id, input_uri, output_uri):
     # output_uri = 'gs://YOUR_BUCKET_ID/path_to_store_results/'
     location = 'us-central1'
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     gcs_source = translate.types.GcsSource(input_uri=input_uri)
 
@@ -64,11 +67,14 @@ def batch_translate_text(project_id, input_uri, output_uri):
         gcs_destination=gcs_destination)
 
     operation = client.batch_translate_text(
-        parent=parent,
-        source_language_code='en-US',
-        target_language_codes=['sr-Latn'],
-        input_configs=[input_config],
-        output_config=output_config)
+        request={
+            "parent": parent,
+            "source_language_code": "en-US",
+            "target_language_codes": ["sr-Latn"],
+            "input_configs": [input_config],
+            "output_config": output_config
+        }
+    )
 
     result = operation.result(timeout=240)
 
@@ -86,12 +92,15 @@ def detect_language(project_id, text):
     # text = 'Text you wish to translate'
     location = 'global'
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     response = client.detect_language(
-        parent=parent,
-        content=text,
-        mime_type='text/plain')  # mime types: text/plain, text/html
+        request={
+            "parent": parent,
+            "content": text,
+            "mime_type": "text/plain"  # mime types: text/plain, text/html
+        }
+    )
 
     for language in response.languages:
         print(u'Language Code: {} (Confidence: {})'.format(
@@ -108,9 +117,9 @@ def list_languages(project_id):
     # project_id = YOUR_PROJECT_ID
     location = 'global'
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
-    response = client.get_supported_languages(parent)
+    response = client.get_supported_languages(parent=parent)
 
     print('Supported Languages:')
     for language in response.languages:
@@ -127,7 +136,7 @@ def list_languages_with_target(project_id, display_language_code):
     # display_language_code = 'is'
     location = 'global'
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     response = client.get_supported_languages(
         parent=parent,
@@ -168,7 +177,7 @@ def create_glossary(project_id, glossary_id):
         language_codes_set=language_codes_set,
         input_config=input_config)
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     operation = client.create_glossary(parent=parent, glossary=glossary)
 
@@ -186,9 +195,9 @@ def list_glossaries(project_id):
     # project_id = 'YOUR_PROJECT_ID'
     location = 'us-central1'  # The location of the glossary
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
-    for glossary in client.list_glossaries(parent):
+    for glossary in client.list_glossaries(parent=parent):
         print(u'Name: {}'.format(glossary.name))
         print(u'Entry count: {}'.format(glossary.entry_count))
         print(u'Input uri: {}'.format(
@@ -206,12 +215,12 @@ def get_glossary(project_id, glossary_id):
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'GLOSSARY_ID'
 
-    parent = client.glossary_path(
+    name = client.glossary_path(
         project_id,
         'us-central1',  # The location of the glossary
         glossary_id)
 
-    response = client.get_glossary(parent)
+    response = client.get_glossary(name=name)
     print(u'Name: {}'.format(response.name))
     print(u'Language Pair:')
     print(u'\tSource Language Code: {}'.format(
@@ -231,12 +240,12 @@ def delete_glossary(project_id, glossary_id):
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'GLOSSARY_ID'
 
-    parent = client.glossary_path(
+    name = client.glossary_path(
         project_id,
         'us-central1',  # The location of the glossary
         glossary_id)
 
-    operation = client.delete_glossary(parent)
+    operation = client.delete_glossary(name=name)
     result = operation.result(timeout=90)
     print(u'Deleted: {}'.format(result.name))
     # [END translate_delete_glossary_beta]
@@ -260,15 +269,18 @@ def translate_text_with_glossary(project_id, glossary_id, text):
     glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary)
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     result = client.translate_text(
-        parent=parent,
-        contents=[text],
-        mime_type='text/plain',  # mime types: text/plain, text/html
-        source_language_code='en',
-        target_language_code='es',
-        glossary_config=glossary_config)
+        request={
+            "parent": parent,
+            "contents": [text],
+            "mime_type": "text/plain",
+            "source_language_code": "en",
+            "target_language_code": "es",
+            "glossary_config": glossary_config
+        }
+    )
 
     for translation in result.glossary_translations:
         print(translation)
@@ -355,4 +367,4 @@ if __name__ == '__main__':
         delete_glossary(args.project_id, args.glossary_id)
     elif args.command == 'translate-with-glossary':
         translate_text_with_glossary(
-                args.project_id, args.glossary_id, args.text)
+            args.project_id, args.glossary_id, args.text)

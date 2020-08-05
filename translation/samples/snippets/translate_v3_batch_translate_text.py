@@ -36,15 +36,18 @@ def batch_translate_text(
     }
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     # Supported language codes: https://cloud.google.com/translate/docs/language
     operation = client.batch_translate_text(
-        parent=parent,
-        source_language_code="en",
-        target_language_codes=["ja"],  # Up to 10 language codes here.
-        input_configs=[input_configs_element],
-        output_config=output_config)
+        request={
+            "parent": parent,
+            "source_language_code": "en",
+            "target_language_codes": ["ja"],  # Up to 10 language codes here.
+            "input_configs": [input_configs_element],
+            "output_config": output_config
+        }
+    )
 
     print(u"Waiting for operation to complete...")
     response = operation.result(timeout)
