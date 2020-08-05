@@ -145,9 +145,9 @@ def test_clean():
     out = blob.download_as_string().decode("utf-8")
 
     # trip duration
-    assert not is_in_table("s", out)
-    assert not is_in_table("min", out)
-    assert not is_in_table("h", out)
+    assert not is_in_table(r"\d*.\d* s", out)
+    assert not is_in_table(r"\d*.\d* min", out)
+    assert not is_in_table(r"\d*.\d* h", out)
 
     # station latitude & longitude
     assert not is_in_table(r"\d+" + "\u00B0" + r"\d+\'\d+\"", out)
