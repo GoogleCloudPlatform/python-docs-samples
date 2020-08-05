@@ -14,7 +14,7 @@
 
 # [START translate_v3_translate_text_with_glossary]
 
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def translate_text_with_glossary(
@@ -24,24 +24,28 @@ def translate_text_with_glossary(
 ):
     """Translates a given text using a glossary."""
 
-    client = translate_v3.TranslationServiceClient()
-    parent = client.location_path(project_id, "us-central1")
+    client = translate.TranslationServiceClient()
+    location = "us-central1"
+    parent = f"projects/{project_id}/locations/{location}"
 
     glossary = client.glossary_path(
         project_id, "us-central1", glossary_id  # The location of the glossary
     )
 
-    glossary_config = translate_v3.types.TranslateTextGlossaryConfig(
+    glossary_config = translate.TranslateTextGlossaryConfig(
         glossary=glossary)
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
-        contents=[text],
-        target_language_code="ja",
-        source_language_code="en",
-        parent=parent,
-        glossary_config=glossary_config,
+        request={
+            "contents": [text],
+            "target_language_code": "ja",
+            "source_language_code": "en",
+            "parent": parent,
+            "glossary_config": glossary_config
+        }
     )
+
     print("Translated text: \n")
     for translation in response.glossary_translations:
         print(u"\t {}".format(translation.translated_text))

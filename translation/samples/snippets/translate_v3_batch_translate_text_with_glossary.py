@@ -42,7 +42,7 @@ def batch_translate_text_with_glossary(
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     # glossary is a custom dictionary Translation API uses
     # to translate the domain-specific terminology.
@@ -50,19 +50,21 @@ def batch_translate_text_with_glossary(
         project_id, "us-central1", glossary_id  # The location of the glossary
     )
 
-    glossary_config = translate.types.TranslateTextGlossaryConfig(
+    glossary_config = translate.TranslateTextGlossaryConfig(
         glossary=glossary_path
     )
 
     glossaries = {"ja": glossary_config}  # target lang as key
 
     operation = client.batch_translate_text(
-        parent=parent,
-        source_language_code="en",
-        target_language_codes=["ja"],  # Up to 10 language codes here.
-        input_configs=[input_configs_element],
-        glossaries=glossaries,
-        output_config=output_config,
+        request={
+            "parent": parent,
+            "source_language_code": "en",
+            "target_language_codes": ["ja"],  # Up to 10 language codes here.
+            "input_configs": [input_configs_element],
+            "glossaries": glossaries,
+            "output_config": output_config
+        }
     )
 
     print(u"Waiting for operation to complete...")

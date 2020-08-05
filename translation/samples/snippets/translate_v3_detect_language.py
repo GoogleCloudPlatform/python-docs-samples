@@ -21,7 +21,9 @@ def detect_language(project_id="YOUR_PROJECT_ID"):
 
     client = translate.TranslationServiceClient()
 
-    parent = client.location_path(project_id, "global")
+    location = "global"
+
+    parent = f"projects/{project_id}/locations/{location}"
 
     # Detail on supported types can be found here:
     # https://cloud.google.com/translate/docs/supported-formats

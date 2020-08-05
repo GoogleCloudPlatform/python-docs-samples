@@ -24,9 +24,9 @@ def delete_glossary(
     """Delete a specific glossary based on the glossary ID."""
     client = translate.TranslationServiceClient()
 
-    parent = client.glossary_path(project_id, "us-central1", glossary_id)
+    name = client.glossary_path(project_id, "us-central1", glossary_id)
 
-    operation = client.delete_glossary(parent)
+    operation = client.delete_glossary(name=name)
     result = operation.result(timeout)
     print("Deleted: {}".format(result.name))
 

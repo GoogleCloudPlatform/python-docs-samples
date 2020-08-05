@@ -47,7 +47,7 @@ def create_glossary(
         name=name, language_codes_set=language_codes_set, input_config=input_config
     )
 
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
     # glossary is a custom dictionary Translation API uses
     # to translate the domain-specific terminology.
     operation = client.create_glossary(parent=parent, glossary=glossary)

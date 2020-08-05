@@ -21,10 +21,12 @@ def list_glossaries(project_id="YOUR_PROJECT_ID"):
 
     client = translate.TranslationServiceClient()
 
-    parent = client.location_path(project_id, "us-central1")
+    location = "us-central1"
+
+    parent = f"projects/{project_id}/locations/{location}"
 
     # Iterate over all results
-    for glossary in client.list_glossaries(parent):
+    for glossary in client.list_glossaries(parent=parent):
         print("Name: {}".format(glossary.name))
         print("Entry count: {}".format(glossary.entry_count))
         print("Input uri: {}".format(glossary.input_config.gcs_source.input_uri))

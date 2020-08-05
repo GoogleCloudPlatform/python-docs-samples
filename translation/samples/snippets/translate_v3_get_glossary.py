@@ -23,7 +23,7 @@ def get_glossary(project_id="YOUR_PROJECT_ID", glossary_id="YOUR_GLOSSARY_ID"):
 
     name = client.glossary_path(project_id, "us-central1", glossary_id)
 
-    response = client.get_glossary(name)
+    response = client.get_glossary(name=name)
     print(u"Glossary name: {}".format(response.name))
     print(u"Entry count: {}".format(response.entry_count))
     print(u"Input URI: {}".format(response.input_config.gcs_source.input_uri))
