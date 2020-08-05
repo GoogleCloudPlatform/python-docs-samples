@@ -27,12 +27,12 @@ import quickstart_createfeed
 import quickstart_deletefeed
 
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture(scope="module")
 def test_topic():
-    topic_id = f'topic-{uuid.uuid4().hex}'
+    topic_id = f"topic-{uuid.uuid4().hex}"
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, topic_id)
     topic = publisher.create_topic(topic_path)
@@ -44,7 +44,7 @@ def test_topic():
 
 @pytest.fixture(scope="module")
 def another_topic():
-    topic_id = f'topic-{uuid.uuid4().hex}'
+    topic_id = f"topic-{uuid.uuid4().hex}"
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, topic_id)
     topic = publisher.create_topic(topic_path)
@@ -56,13 +56,14 @@ def another_topic():
 
 @pytest.fixture(scope="module")
 def test_feed(test_topic):
-    feed_id = f'feed-{uuid.uuid4().hex}'
-    asset_name = f'assets-{uuid.uuid4().hex}'
+    feed_id = f"feed-{uuid.uuid4().hex}"
+    asset_name = f"assets-{uuid.uuid4().hex}"
 
     @backoff.on_exception(backoff.expo, InternalServerError, max_time=60)
     def create_feed():
         return quickstart_createfeed.create_feed(
-            PROJECT, feed_id, [asset_name, ], test_topic.name)
+            PROJECT, feed_id, [asset_name], test_topic.name
+        )
 
     feed = create_feed()
 

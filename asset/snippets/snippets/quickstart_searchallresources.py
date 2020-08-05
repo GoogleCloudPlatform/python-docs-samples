@@ -18,11 +18,9 @@
 import argparse
 
 
-def search_all_resources(scope,
-                         query=None,
-                         asset_types=None,
-                         page_size=None,
-                         order_by=None):
+def search_all_resources(
+    scope, query=None, asset_types=None, page_size=None, order_by=None
+):
     # [START asset_quickstart_search_all_resources]
     from google.cloud import asset_v1
 
@@ -34,35 +32,38 @@ def search_all_resources(scope,
 
     client = asset_v1.AssetServiceClient()
     response = client.search_all_resources(
-        scope,
-        query=query,
-        asset_types=asset_types,
-        page_size=page_size,
-        order_by=order_by)
-    for page in response.pages:
-        for resource in page:
-            print(resource)
+        request={
+            "scope": scope,
+            "query": query,
+            "asset_types": asset_types,
+            "page_size": page_size,
+            "order_by": order_by,
+        }
+    )
+    for resource in response:
+        print(resource)
         break
     # [END asset_quickstart_search_all_resources]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'scope',
-        help='The search is limited to the resources within the scope.')
-    parser.add_argument('--query', help='The query statement.')
+        "scope", help="The search is limited to the resources within the scope."
+    )
+    parser.add_argument("--query", help="The query statement.")
     parser.add_argument(
-        '--asset_types', nargs='+', help='A list of asset types to search for.')
+        "--asset_types", nargs="+", help="A list of asset types to search for."
+    )
     parser.add_argument(
-        '--page_size',
-        type=int,
-        help='The page size for search result pagination.')
+        "--page_size", type=int, help="The page size for search result pagination."
+    )
     parser.add_argument(
-        '--order_by',
-        help='Fields specifying the sorting order of the results.')
+        "--order_by", help="Fields specifying the sorting order of the results."
+    )
     args = parser.parse_args()
-    search_all_resources(args.scope, args.query, args.asset_types,
-                         args.page_size, args.order_by)
+    search_all_resources(
+        args.scope, args.query, args.asset_types, args.page_size, args.order_by
+    )

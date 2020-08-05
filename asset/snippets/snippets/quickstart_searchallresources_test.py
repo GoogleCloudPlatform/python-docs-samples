@@ -24,16 +24,16 @@ import pytest
 
 import quickstart_searchallresources
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-DATASET = 'dataset_{}'.format(uuid.uuid4().hex)
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+DATASET = "dataset_{}".format(uuid.uuid4().hex)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def bigquery_client():
     yield bigquery.Client()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def asset_dataset(bigquery_client):
     dataset = bigquery_client.create_dataset(DATASET)
 
@@ -42,7 +42,7 @@ def asset_dataset(bigquery_client):
     try:
         bigquery_client.delete_dataset(dataset)
     except NotFound as e:
-        print('Failed to delete dataset {}'.format(DATASET))
+        print("Failed to delete dataset {}".format(DATASET))
         raise e
 
 
@@ -52,9 +52,7 @@ def test_search_all_resources(asset_dataset, capsys):
 
     # Dataset creation takes some time to propagate, so the dataset is not
     # immediately searchable. Need some time before the snippet will pass.
-    @backoff.on_exception(
-        backoff.expo, (AssertionError), max_time=120
-    )
+    @backoff.on_exception(backoff.expo, (AssertionError), max_time=120)
     def eventually_consistent_test():
         quickstart_searchallresources.search_all_resources(scope, query=query)
         out, _ = capsys.readouterr()

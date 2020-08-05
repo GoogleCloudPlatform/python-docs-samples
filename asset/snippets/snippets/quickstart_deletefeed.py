@@ -25,15 +25,15 @@ def delete_feed(feed_name):
     # TODO feed_name = 'Feed name you want to delete'
 
     client = asset_v1.AssetServiceClient()
-    client.delete_feed(feed_name)
-    print('deleted_feed')
+    client.delete_feed(request={"name": feed_name})
+    print("deleted_feed")
     # [END asset_quickstart_delete_feed]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('feed_name', help='Feed name you want to delete')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("feed_name", help="Feed name you want to delete")
     args = parser.parse_args()
     delete_feed(args.feed_name)

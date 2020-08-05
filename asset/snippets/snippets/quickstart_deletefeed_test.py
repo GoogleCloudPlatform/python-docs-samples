@@ -19,7 +19,7 @@ import os
 import quickstart_deletefeed
 
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_delete_feed(capsys, test_feed):

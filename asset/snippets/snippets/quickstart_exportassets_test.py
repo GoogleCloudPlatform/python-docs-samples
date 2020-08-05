@@ -22,16 +22,16 @@ import pytest
 
 import quickstart_exportassets
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-BUCKET = 'assets-{}'.format(uuid.uuid4().hex)
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+BUCKET = "assets-{}".format(uuid.uuid4().hex)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def storage_client():
     yield storage.Client()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def asset_bucket(storage_client):
     bucket = storage_client.create_bucket(BUCKET)
 
@@ -40,12 +40,12 @@ def asset_bucket(storage_client):
     try:
         bucket.delete(force=True)
     except Exception as e:
-        print('Failed to delete bucket{}'.format(BUCKET))
+        print("Failed to delete bucket{}".format(BUCKET))
         raise e
 
 
 def test_export_assets(asset_bucket, capsys):
-    dump_file_path = 'gs://{}/assets-dump.txt'.format(asset_bucket)
+    dump_file_path = "gs://{}/assets-dump.txt".format(asset_bucket)
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
 

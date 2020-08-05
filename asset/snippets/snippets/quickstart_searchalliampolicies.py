@@ -28,25 +28,24 @@ def search_all_iam_policies(scope, query=None, page_size=None):
 
     client = asset_v1.AssetServiceClient()
     response = client.search_all_iam_policies(
-        scope, query=query, page_size=page_size)
-    for page in response.pages:
-        for policy in page:
-            print(policy)
+        request={"scope": scope, "query": query, "page_size": page_size}
+    )
+    for policy in response:
+        print(policy)
         break
     # [END asset_quickstart_search_all_iam_policies]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'scope',
-        help='The search is limited to the resources within the scope.')
-    parser.add_argument('--query', help='The query statement.')
+        "scope", help="The search is limited to the resources within the scope."
+    )
+    parser.add_argument("--query", help="The query statement.")
     parser.add_argument(
-        '--page_size',
-        type=int,
-        help='The page size for search result pagination.')
+        "--page_size", type=int, help="The page size for search result pagination."
+    )
     args = parser.parse_args()
     search_all_iam_policies(args.scope, args.query, args.page_size)

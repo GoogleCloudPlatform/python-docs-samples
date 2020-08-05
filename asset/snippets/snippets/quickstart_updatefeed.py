@@ -21,29 +21,28 @@ import argparse
 def update_feed(feed_name, topic):
     # [START asset_quickstart_update_feed]
     from google.cloud import asset_v1
-    from google.cloud.asset_v1.proto import asset_service_pb2
     from google.protobuf import field_mask_pb2
 
     # TODO feed_name = 'Feed Name you want to update'
     # TODO topic = "Topic name you want to update with"
 
     client = asset_v1.AssetServiceClient()
-    feed = asset_service_pb2.Feed()
+    feed = asset_v1.Feed()
     feed.name = feed_name
     feed.feed_output_config.pubsub_destination.topic = topic
     update_mask = field_mask_pb2.FieldMask()
     # In this example, we update topic of the feed
     update_mask.paths.append("feed_output_config.pubsub_destination.topic")
-    response = client.update_feed(feed, update_mask)
-    print('updated_feed: {}'.format(response))
+    response = client.update_feed(request={"feed": feed, "update_mask": update_mask})
+    print("updated_feed: {}".format(response))
     # [END asset_quickstart_update_feed]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('feed_name', help='Feed Name you want to update')
-    parser.add_argument('topic', help='Topic name you want to update with')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("feed_name", help="Feed Name you want to update")
+    parser.add_argument("topic", help="Topic name you want to update with")
     args = parser.parse_args()
     update_feed(args.feed_name, args.topic)

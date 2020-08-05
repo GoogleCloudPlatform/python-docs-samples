@@ -25,15 +25,15 @@ def get_feed(feed_name):
     # TODO feed_name = 'Feed Name you want to get'
 
     client = asset_v1.AssetServiceClient()
-    response = client.get_feed(feed_name)
-    print('gotten_feed: {}'.format(response))
+    response = client.get_feed(request={"name": feed_name})
+    print("gotten_feed: {}".format(response))
     # [START asset_quickstart_get_feed]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('feed_name', help='Feed Name you want to get')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("feed_name", help="Feed Name you want to get")
     args = parser.parse_args()
     get_feed(args.feed_name)
