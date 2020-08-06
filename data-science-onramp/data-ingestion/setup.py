@@ -101,7 +101,7 @@ def create_bigquery_dataset():
     dataset_id = f'{client.project}.{DATASET_NAME}'
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
-    #dataset = client.create_dataset(dataset)
+    dataset = client.create_dataset(dataset)
 
 
 def write_to_bigquery(df, table_name):
@@ -140,7 +140,7 @@ def main():
         df = spark.createDataFrame(pd.read_csv(data["url"]),
                                    schema=data["schema"])
 
-        #write_to_bigquery(df, table_name)
+        write_to_bigquery(df, table_name)
 
     # Check if table exists
     try:
