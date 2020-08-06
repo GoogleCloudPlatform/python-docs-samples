@@ -31,29 +31,50 @@
 [instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
 Download a JSON key to use to authenticate your connection. 
 
-1. Use the information noted in the previous steps:
+## Running locally
+To run this application locally, download and install the `cloud_sql_proxy` by
+following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). 
+
+### Linux / MacOS
+Use these terminal commands to initialize environment variables:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
 export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my_db'
+export DB_HOST='127.0.0.1:1433'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep secrets safe.
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
 
-## Running locally
-
-To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). 
-
-Then, use the following command to start the proxy in the
-background using TCP:
+Then, use the following command to start the proxy in the background using TCP:
 ```bash
-./cloud_sql_proxy -instances=${CLOUD_SQL_CONNECTION_NAME}=tcp:1433 sqlserver -u ${DB_USER} --host 127.0.0.1
+./cloud_sql_proxy -instances=${CLOUD_SQL_CONNECTION_NAME}=tcp:1433 sqlserver -u ${DB_USER} --host 127.0.0.1 &
 ```
 
-Next, setup install the requirements into a virtual enviroment:
+### Windows / PowerShell
+Use these PowerShell commands to initialize environment variables:
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="<CREDENTIALS_JSON_FILE>"
+$env:CLOUD_SQL_CONNECTION_NAME="<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+$env:DB_USER="my-db-user"
+$env:DB_PASS="my-db-pass"
+$env:DB_NAME="my_db"
+$env:DB_HOST="127.0.0.1:1433"
+```
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Then use this command to launch the proxy in a separate PowerShell session:
+```powershell
+Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:1433 -credential_file=<CREDENTIALS_JSON_FILE>"
+```
+
+### Testing the application
+Next, setup a virtual environment and install the application's requirements:
 ```bash
 virtualenv --python python3 env
 source env/bin/activate

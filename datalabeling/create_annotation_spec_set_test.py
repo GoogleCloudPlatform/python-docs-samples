@@ -24,7 +24,7 @@ import create_annotation_spec_set
 import testing_lib
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 
 
 @pytest.fixture(scope='module')

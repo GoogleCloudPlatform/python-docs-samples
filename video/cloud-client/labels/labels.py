@@ -40,7 +40,7 @@ def analyze_labels(path):
     # [START video_label_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
-    operation = video_client.annotate_video(path, features=features)
+    operation = video_client.annotate_video(input_uri=path, features=features)
     # [END video_label_tutorial_construct_request]
     print('\nProcessing video for label annotations:')
 

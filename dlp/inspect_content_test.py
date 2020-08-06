@@ -29,7 +29,7 @@ import inspect_content
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
@@ -40,7 +40,7 @@ DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
-TIMEOUT = 300  # 5 minutes
+TIMEOUT = 900  # 15 minutes
 
 
 @pytest.fixture(scope="module")
@@ -159,6 +159,16 @@ def bigquery_project():
     yield GCLOUD_PROJECT
 
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+
+
+def test_inspect_string_basic(capsys):
+    test_string = "String with a phone number: 234-555-6789"
+
+    inspect_content.inspect_string_basic(GCLOUD_PROJECT, test_string)
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Quote: 234-555-6789" in out
 
 
 def test_inspect_string(capsys):

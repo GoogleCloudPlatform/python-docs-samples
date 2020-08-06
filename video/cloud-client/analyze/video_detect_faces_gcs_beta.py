@@ -65,8 +65,7 @@ def detect_faces(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
             print("\tright : {}".format(box.right))
             print("\tbottom: {}".format(box.bottom))
 
-            # Attributes include glasses, headwear, facial hair, smiling,
-            # direction of gaze, etc.
+            # Attributes include glasses, headwear, smiling, direction of gaze
             print("Attributes:")
             for attribute in timestamped_object.attributes:
                 print(
