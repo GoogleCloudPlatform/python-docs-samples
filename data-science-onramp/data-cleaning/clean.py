@@ -9,9 +9,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import FloatType, IntegerType, StringType
 
-TABLE = sys.argv[1]
-BUCKET_NAME = sys.argv[2]
-
 
 def trip_duration_udf(duration):
     """Convert trip duration to seconds. Return None if negative."""
@@ -133,6 +130,9 @@ def compute_end_udf(duration, start, end):
 
 
 if __name__ == "__main__":
+    TABLE = sys.argv[1]
+    BUCKET_NAME = sys.argv[2]
+
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
 

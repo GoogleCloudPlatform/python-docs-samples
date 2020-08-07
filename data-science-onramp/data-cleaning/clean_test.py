@@ -64,7 +64,9 @@ def setup_and_teardown_table():
         autodetect=True,
         write_disposition="WRITE_TRUNCATE"
     )
-    operation = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
+    operation = bq_client.load_table_from_dataframe(
+        df, BQ_TABLE, job_config=job_config
+    )
 
     # Wait for job to complete
     operation.result()
@@ -81,7 +83,9 @@ def setup_and_teardown_cluster():
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    operation = cluster_client.create_cluster(PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG)
+    operation = cluster_client.create_cluster(
+        PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG
+    )
 
     # Wait for cluster to provision
     operation.result()
@@ -133,7 +137,7 @@ def test_clean():
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
     operation = job_client.submit_job_as_operation(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, job=DATAPROC_JOB
+        PROJECT_ID, CLUSTER_REGION, DATAPROC_JOB
     )
 
     # Wait for job to complete
