@@ -1,0 +1,5 @@
+numpy==1.18.5
+pandas==1.1.0
+torch==1.6.0
+torchvision==0.7.0
+cloudml-hypertune==0.1.0.dev6
