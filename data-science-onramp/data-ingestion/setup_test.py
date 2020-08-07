@@ -16,7 +16,7 @@ import pytest
 # Set global variables
 ID = uuid.uuid4()
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 REGION = "us-central1"
 CLUSTER_NAME = f'setup-test-{ID}'
 BUCKET_NAME = f'setup-test-{ID}'
