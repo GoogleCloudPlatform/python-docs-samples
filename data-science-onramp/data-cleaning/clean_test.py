@@ -18,7 +18,7 @@ BUCKET_BLOB = "clean.py"
 # Big Query constants
 BQ_DATASET = f"{PROJECT_ID}.clean_test_{str(uuid.uuid4()).replace('-', '_')}"
 BQ_TABLE = f"{BQ_DATASET}.dirty_data"
-CSV_FILE = "resources/test_data.csv"
+CSV_FILE = "resources/raw_data.csv"
 
 # Dataproc constants
 DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
