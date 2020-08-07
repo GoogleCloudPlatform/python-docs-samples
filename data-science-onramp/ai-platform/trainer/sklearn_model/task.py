@@ -1,15 +1,11 @@
 import argparse
 import os
-from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import PolynomialFeatures
+
 import joblib
-import os
+import hypertune
+from sklearn.metrics import mean_absolute_error
 
 from . import model
-
-import hypertune
-
 from .. import util
 
 DEFAULT_DEGREE = 1
