@@ -17,6 +17,7 @@ import pytest
 
 import distributed_counters
 
+pytestmark = pytest.mark.asyncio
 
 shards_list = []
 doc_ref = None
@@ -24,7 +25,7 @@ doc_ref = None
 
 @pytest.fixture
 def fs_client():
-    yield firestore.Client()
+    yield firestore.AsyncClient()
 
     # clean up
     for shard in shards_list:
@@ -34,28 +35,28 @@ def fs_client():
         doc_ref.delete()
 
 
-def test_distributed_counters(fs_client):
+async def test_distributed_counters(fs_client):
     col = fs_client.collection("dc_samples")
     doc_ref = col.document("distributed_counter")
     counter = distributed_counters.Counter(2)
-    counter.init_counter(doc_ref)
+    await counter.init_counter(doc_ref)
 
     shards = doc_ref.collection("shards").list_documents()
-    shards_list = [shard for shard in shards]
+    shards_list = [shard async for shard in shards]
     assert len(shards_list) == 2
 
-    counter.increment_counter(doc_ref)
-    counter.increment_counter(doc_ref)
-    assert counter.get_count(doc_ref) == 2
+    await counter.increment_counter(doc_ref)
+    await counter.increment_counter(doc_ref)
+    assert await counter.get_count(doc_ref) == 2
 
 
-def test_distributed_counters_cleanup(fs_client):
+async def test_distributed_counters_cleanup(fs_client):
     col = fs_client.collection("dc_samples")
     doc_ref = col.document("distributed_counter")
 
     shards = doc_ref.collection("shards").list_documents()
-    shards_list = [shard for shard in shards]
+    shards_list = [shard async for shard in shards]
     for shard in shards_list:
-        shard.delete()
+        await shard.delete()
 
-    doc_ref.delete()
+    await doc_ref.delete()
