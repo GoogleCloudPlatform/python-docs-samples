@@ -1,0 +1,1 @@
+These samples have been moved to https://github.com/googleapis/python-automl/tree/master/samples/
