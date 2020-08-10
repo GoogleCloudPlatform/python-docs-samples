@@ -14,6 +14,7 @@
 
 from mock import patch
 import pytest
+import redis
 import uuid
 
 import main
@@ -31,7 +32,7 @@ TEST_VALUES = {
 def test_get_data_not_present(query_fn, testbed):
     try:
         main.client.set(KEY_PREFIX + 'counter', '0', 9000)
-    except Exception:
+    except redis.RedisError:
         pytest.skip('Redis is unavailable')
 
     data = main.get_data(KEY_PREFIX + 'key')

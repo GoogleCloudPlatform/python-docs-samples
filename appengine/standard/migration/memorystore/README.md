@@ -11,6 +11,11 @@ with the [Memorystore for Redis offering](https://cloud.google.com/memorystore).
 This newer library can be used on App Engine with either Python 2.7
 or Python 3.
 
+Code taken from the [Memcache sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard/memcache/snippets/snippets.py)
+is included in this new sample, with each line commented out with two # marks.
+This allows the older solution's approach to be contrasted with the
+Memorystore for Redis approach.
+
 Prior to deploying this sample, a
 [serverless VPC connector](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access)
 must be created and then a
