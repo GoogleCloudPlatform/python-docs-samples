@@ -1,1 +1,1 @@
-These samples have been moved to https://github.com/googleapis/python-containeranalysis/tree/samples/
+These samples have been moved to https://github.com/googleapis/python-containeranalysis/tree/master/samples
