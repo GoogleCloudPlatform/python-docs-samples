@@ -13,15 +13,27 @@
 # limitations under the License.
 
 # [START functions_storage_unit_test]
+import mock
+
 import main
 
 
 def test_print(capsys):
     name = 'test'
-    data = {'objectId': name}
+    event = {
+        'bucket': 'some-bucket',
+        'name': name,
+        'metageneration': 'some-metageneration',
+        'timeCreated': '0',
+        'updated': '0'
+    }
+
+    context = mock.MagicMock()
+    context.event_id = 'some-id'
+    context.event_type = 'gcs-event'
 
     # Call tested function
-    main.hello_gcs(data, None)
+    main.hello_gcs(event, context)
     out, err = capsys.readouterr()
-    assert out == 'File: {}.\n'.format(name)
+    assert 'File: {}\n'.format(name) in out
 # [END functions_storage_unit_test]
