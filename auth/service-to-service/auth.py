@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Demonstrates how to send authenticated service-to-service requests, eg 
+for Cloud Run or Cloud Functions"""
+
 # [START run_service_to_service_auth]
 import urllib
 
