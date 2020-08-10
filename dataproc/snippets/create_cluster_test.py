@@ -21,20 +21,26 @@ import pytest
 import create_cluster
 
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
-REGION = 'us-central1'
-CLUSTER_NAME = 'py-cc-test-{}'.format(str(uuid.uuid4()))
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
+CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
 
 
 @pytest.fixture(autouse=True)
 def teardown():
     yield
 
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
-    })
+    cluster_client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+    )
     # Client library function
-    operation = cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(
+        request={
+            "project_id": PROJECT_ID,
+            "region": REGION,
+            "cluster_name": CLUSTER_NAME,
+        }
+    )
     # Wait for cluster to delete
     operation.result()
 

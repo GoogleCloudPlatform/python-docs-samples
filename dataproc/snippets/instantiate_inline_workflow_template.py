@@ -36,71 +36,61 @@ def instantiate_inline_workflow_template(project_id, region):
 
     # Create a client with the endpoint set to the desired region.
     workflow_template_client = dataproc.WorkflowTemplateServiceClient(
-        client_options={
-            'api_endpoint': f'{region}-dataproc.googleapis.com:443'
-        }
+        client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
 
-    parent = workflow_template_client.region_path(project_id, region)
+    parent = "projects/{}/regions/{}".format(project_id, region)
 
     template = {
-        'jobs': [
+        "jobs": [
             {
-                'hadoop_job': {
-                    'main_jar_file_uri': 'file:///usr/lib/hadoop-mapreduce/'
-                    'hadoop-mapreduce-examples.jar',
-                    'args': [
-                        'teragen',
-                        '1000',
-                        'hdfs:///gen/'
-                    ]
+                "hadoop_job": {
+                    "main_jar_file_uri": "file:///usr/lib/hadoop-mapreduce/"
+                    "hadoop-mapreduce-examples.jar",
+                    "args": ["teragen", "1000", "hdfs:///gen/"],
                 },
-                'step_id': 'teragen'
+                "step_id": "teragen",
             },
             {
-                'hadoop_job': {
-                    'main_jar_file_uri': 'file:///usr/lib/hadoop-mapreduce/'
-                    'hadoop-mapreduce-examples.jar',
-                    'args': [
-                        'terasort',
-                        'hdfs:///gen/',
-                        'hdfs:///sort/'
-                    ]
+                "hadoop_job": {
+                    "main_jar_file_uri": "file:///usr/lib/hadoop-mapreduce/"
+                    "hadoop-mapreduce-examples.jar",
+                    "args": ["terasort", "hdfs:///gen/", "hdfs:///sort/"],
                 },
-                'step_id': 'terasort',
-                'prerequisite_step_ids': [
-                    'teragen'
-                ]
-            }],
-        'placement': {
-            'managed_cluster': {
-                'cluster_name': 'my-managed-cluster',
-                'config': {
-                    'gce_cluster_config': {
+                "step_id": "terasort",
+                "prerequisite_step_ids": ["teragen"],
+            },
+        ],
+        "placement": {
+            "managed_cluster": {
+                "cluster_name": "my-managed-cluster",
+                "config": {
+                    "gce_cluster_config": {
                         # Leave 'zone_uri' empty for 'Auto Zone Placement'
                         # 'zone_uri': ''
-                        'zone_uri': 'us-central1-a'
+                        "zone_uri": "us-central1-a"
                     }
-                }
+                },
             }
-        }
+        },
     }
 
     # Submit the request to instantiate the workflow from an inline template.
     operation = workflow_template_client.instantiate_inline_workflow_template(
-        parent, template
+        request={"parent": parent, "template": template}
     )
     operation.result()
 
     # Output a success message.
-    print('Workflow ran successfully.')
+    print("Workflow ran successfully.")
     # [END dataproc_instantiate_inline_workflow_template]
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        sys.exit('python instantiate_inline_workflow_template.py '
-                 + 'project_id region')
+        sys.exit(
+            "python instantiate_inline_workflow_template.py " + "project_id region"
+        )
 
     project_id = sys.argv[1]
     region = sys.argv[2]

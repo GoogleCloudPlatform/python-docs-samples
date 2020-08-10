@@ -22,12 +22,12 @@ import pytest
 import quickstart
 
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
-REGION = 'us-central1'
-CLUSTER_NAME = 'py-qs-test-{}'.format(str(uuid.uuid4()))
-STAGING_BUCKET = 'py-dataproc-qs-bucket-{}'.format(str(uuid.uuid4()))
-JOB_FILE_NAME = 'sum.py'
-JOB_FILE_PATH = 'gs://{}/{}'.format(STAGING_BUCKET, JOB_FILE_NAME)
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
+CLUSTER_NAME = "py-qs-test-{}".format(str(uuid.uuid4()))
+STAGING_BUCKET = "py-dataproc-qs-bucket-{}".format(str(uuid.uuid4()))
+JOB_FILE_NAME = "sum.py"
+JOB_FILE_PATH = "gs://{}/{}".format(STAGING_BUCKET, JOB_FILE_NAME)
 SORT_CODE = (
     "import pyspark\n"
     "sc = pyspark.SparkContext()\n"
@@ -45,17 +45,25 @@ def setup_teardown():
 
     yield
 
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
-    })
+    cluster_client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
+    )
 
     # The quickstart sample deletes the cluster, but if the test fails
     # before cluster deletion occurs, it can be manually deleted here.
-    clusters = cluster_client.list_clusters(PROJECT_ID, REGION)
+    clusters = cluster_client.list_clusters(
+        request={"project_id": PROJECT_ID, "region": REGION}
+    )
 
     for cluster in clusters:
         if cluster.cluster_name == CLUSTER_NAME:
-            cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+            cluster_client.delete_cluster(
+                request={
+                    "project_id": PROJECT_ID,
+                    "region": REGION,
+                    "cluster_name": CLUSTER_NAME,
+                }
+            )
 
     blob.delete()
     bucket.delete()
@@ -65,7 +73,7 @@ def test_quickstart(capsys):
     quickstart.quickstart(PROJECT_ID, REGION, CLUSTER_NAME, JOB_FILE_PATH)
     out, _ = capsys.readouterr()
 
-    assert 'Cluster created successfully' in out
-    assert 'Submitted job' in out
-    assert 'finished with state DONE:' in out
-    assert 'successfully deleted' in out
+    assert "Cluster created successfully" in out
+    assert "Submitted job" in out
+    assert "finished with state DONE:" in out
+    assert "successfully deleted" in out

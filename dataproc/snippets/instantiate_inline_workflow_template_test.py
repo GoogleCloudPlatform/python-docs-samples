@@ -17,8 +17,8 @@ import os
 import instantiate_inline_workflow_template
 
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
-REGION = 'us-central1'
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
 
 
 def test_workflows(capsys):
