@@ -26,8 +26,8 @@ the name of the VPC connector should be entered in either app.yaml
 To deploy and run this sample in App Engine standard for Python 2.7:
 
     pip install -t lib -r requirements.txt
-    gcloud app deploy
+    gcloud app deploy app.yaml index.yaml
 
 To deploy and run this sample in App Engine standard for Python 3.7:
 
-    gcloud app deploy app3.yaml
+    gcloud app deploy app3.yaml index.yaml
