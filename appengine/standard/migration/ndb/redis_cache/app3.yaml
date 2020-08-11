@@ -1,0 +1,7 @@
+runtime: python38
+
+env_variables:
+  REDIS_CACHE_URL: 'redis://<REDIS_HOST>:<REDIS_PORT>'
+
+vpc_access_connector:
+  name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
