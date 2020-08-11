@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START fs_counter_classes]
+# [START fs_counter_classes_async]
 import random
 
 from google.cloud import firestore
@@ -41,9 +41,10 @@ class Counter(object):
 
     def __init__(self, num_shards):
         self._num_shards = num_shards
-# [END fs_counter_classes]
 
-    # [START fs_create_counter]
+    # [END fs_counter_classes_async]
+
+    # [START fs_create_counter_async]
     async def init_counter(self, doc_ref):
         """
         Create a given number of shards as
@@ -55,18 +56,20 @@ class Counter(object):
         for num in range(self._num_shards):
             shard = Shard()
             await col_ref.document(str(num)).set(shard.to_dict())
-    # [END fs_create_counter]
 
-    # [START fs_increment_counter]
+    # [END fs_create_counter_async]
+
+    # [START fs_increment_counter_async]
     async def increment_counter(self, doc_ref):
         """Increment a randomly picked shard."""
         doc_id = random.randint(0, self._num_shards - 1)
 
         shard_ref = doc_ref.collection("shards").document(str(doc_id))
         return await shard_ref.update({"count": firestore.Increment(1)})
-    # [END fs_increment_counter]
 
-    # [START fs_get_count]
+    # [END fs_increment_counter_async]
+
+    # [START fs_get_count_async]
     async def get_count(self, doc_ref):
         """Return a total count across all shards."""
         total = 0
@@ -74,4 +77,5 @@ class Counter(object):
         async for shard in shards:
             total += (await shard.get()).to_dict().get("count", 0)
         return total
-    # [END fs_get_count]
+
+    # [END fs_get_count_async]
