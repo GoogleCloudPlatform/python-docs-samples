@@ -56,6 +56,36 @@ def numerical_risk_analysis(
     # potentially long-running operations.
     import google.cloud.pubsub
 
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
+
+    # Location info of the BigQuery table.
+    source_table = {
+        "project_id": table_project_id,
+        "dataset_id": dataset_id,
+        "table_id": table_id,
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Configure risk analysis job
+    # Give the name of the numeric column to compute risk metrics for
+    risk_job = {
+        "privacy_metric": {
+            "numerical_stats_config": {"field": {"name": column_name}}
+        },
+        "source_table": source_table,
+        "actions": actions,
+    }
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
     def callback(message):
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
@@ -81,40 +111,11 @@ def numerical_risk_analysis(
             # This is not the message we're looking for.
             message.drop()
 
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
-
-    # Location info of the BigQuery table.
-    source_table = {
-        "project_id": table_project_id,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
-    }
-
-    # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
-
-    # Configure risk analysis job
-    # Give the name of the numeric column to compute risk metrics for
-    risk_job = {
-        "privacy_metric": {
-            "numerical_stats_config": {"field": {"name": column_name}}
-        },
-        "source_table": source_table,
-        "actions": actions,
-    }
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
-
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -166,6 +167,36 @@ def categorical_risk_analysis(
     # potentially long-running operations.
     import google.cloud.pubsub
 
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
+
+    # Location info of the BigQuery table.
+    source_table = {
+        "project_id": table_project_id,
+        "dataset_id": dataset_id,
+        "table_id": table_id,
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Configure risk analysis job
+    # Give the name of the numeric column to compute risk metrics for
+    risk_job = {
+        "privacy_metric": {
+            "categorical_stats_config": {"field": {"name": column_name}}
+        },
+        "source_table": source_table,
+        "actions": actions,
+    }
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
     def callback(message):
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
@@ -201,40 +232,11 @@ def categorical_risk_analysis(
             # This is not the message we're looking for.
             message.drop()
 
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
-
-    # Location info of the BigQuery table.
-    source_table = {
-        "project_id": table_project_id,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
-    }
-
-    # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
-
-    # Configure risk analysis job
-    # Give the name of the numeric column to compute risk metrics for
-    risk_job = {
-        "privacy_metric": {
-            "categorical_stats_config": {"field": {"name": column_name}}
-        },
-        "source_table": source_table,
-        "actions": actions,
-    }
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
-
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -290,6 +292,40 @@ def k_anonymity_analysis(
     def get_values(obj):
         return int(obj.integer_value)
 
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
+
+    # Location info of the BigQuery table.
+    source_table = {
+        "project_id": table_project_id,
+        "dataset_id": dataset_id,
+        "table_id": table_id,
+    }
+
+    # Convert quasi id list to Protobuf type
+    def map_fields(field):
+        return {"name": field}
+
+    quasi_ids = map(map_fields, quasi_ids)
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Configure risk analysis job
+    # Give the name of the numeric column to compute risk metrics for
+    risk_job = {
+        "privacy_metric": {"k_anonymity_config": {"quasi_ids": quasi_ids}},
+        "source_table": source_table,
+        "actions": actions,
+    }
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
     def callback(message):
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
@@ -326,44 +362,11 @@ def k_anonymity_analysis(
             # This is not the message we're looking for.
             message.drop()
 
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
-
-    # Location info of the BigQuery table.
-    source_table = {
-        "project_id": table_project_id,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
-    }
-
-    # Convert quasi id list to Protobuf type
-    def map_fields(field):
-        return {"name": field}
-
-    quasi_ids = map(map_fields, quasi_ids)
-
-    # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
-
-    # Configure risk analysis job
-    # Give the name of the numeric column to compute risk metrics for
-    risk_job = {
-        "privacy_metric": {"k_anonymity_config": {"quasi_ids": quasi_ids}},
-        "source_table": source_table,
-        "actions": actions,
-    }
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
-
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -421,6 +424,45 @@ def l_diversity_analysis(
     def get_values(obj):
         return int(obj.integer_value)
 
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
+
+    # Location info of the BigQuery table.
+    source_table = {
+        "project_id": table_project_id,
+        "dataset_id": dataset_id,
+        "table_id": table_id,
+    }
+
+    # Convert quasi id list to Protobuf type
+    def map_fields(field):
+        return {"name": field}
+
+    quasi_ids = map(map_fields, quasi_ids)
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Configure risk analysis job
+    # Give the name of the numeric column to compute risk metrics for
+    risk_job = {
+        "privacy_metric": {
+            "l_diversity_config": {
+                "quasi_ids": quasi_ids,
+                "sensitive_attribute": {"name": sensitive_attribute},
+            }
+        },
+        "source_table": source_table,
+        "actions": actions,
+    }
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
     def callback(message):
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
@@ -464,49 +506,11 @@ def l_diversity_analysis(
             # This is not the message we're looking for.
             message.drop()
 
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
-
-    # Location info of the BigQuery table.
-    source_table = {
-        "project_id": table_project_id,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
-    }
-
-    # Convert quasi id list to Protobuf type
-    def map_fields(field):
-        return {"name": field}
-
-    quasi_ids = map(map_fields, quasi_ids)
-
-    # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
-
-    # Configure risk analysis job
-    # Give the name of the numeric column to compute risk metrics for
-    risk_job = {
-        "privacy_metric": {
-            "l_diversity_config": {
-                "quasi_ids": quasi_ids,
-                "sensitive_attribute": {"name": sensitive_attribute},
-            }
-        },
-        "source_table": source_table,
-        "actions": actions,
-    }
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
-
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -571,6 +575,52 @@ def k_map_estimate_analysis(
     def get_values(obj):
         return int(obj.integer_value)
 
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into full resource ids.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    parent = dlp.location_path(project, 'global')
+
+    # Location info of the BigQuery table.
+    source_table = {
+        "project_id": table_project_id,
+        "dataset_id": dataset_id,
+        "table_id": table_id,
+    }
+
+    # Check that numbers of quasi-ids and info types are equal
+    if len(quasi_ids) != len(info_types):
+        raise ValueError(
+            """Number of infoTypes and number of quasi-identifiers
+                            must be equal!"""
+        )
+
+    # Convert quasi id list to Protobuf type
+    def map_fields(quasi_id, info_type):
+        return {"field": {"name": quasi_id}, "info_type": {"name": info_type}}
+
+    quasi_ids = map(map_fields, quasi_ids, info_types)
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Configure risk analysis job
+    # Give the name of the numeric column to compute risk metrics for
+    risk_job = {
+        "privacy_metric": {
+            "k_map_estimation_config": {
+                "quasi_ids": quasi_ids,
+                "region_code": region_code,
+            }
+        },
+        "source_table": source_table,
+        "actions": actions,
+    }
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
     def callback(message):
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
@@ -606,56 +656,11 @@ def k_map_estimate_analysis(
             # This is not the message we're looking for.
             message.drop()
 
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
-
-    # Location info of the BigQuery table.
-    source_table = {
-        "project_id": table_project_id,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
-    }
-
-    # Check that numbers of quasi-ids and info types are equal
-    if len(quasi_ids) != len(info_types):
-        raise ValueError(
-            """Number of infoTypes and number of quasi-identifiers
-                            must be equal!"""
-        )
-
-    # Convert quasi id list to Protobuf type
-    def map_fields(quasi_id, info_type):
-        return {"field": {"name": quasi_id}, "info_type": {"name": info_type}}
-
-    quasi_ids = map(map_fields, quasi_ids, info_types)
-
-    # Tell the API where to send a notification when the job is complete.
-    actions = [{"pub_sub": {"topic": "{}/topics/{}".format(parent, topic_id)}}]
-
-    # Configure risk analysis job
-    # Give the name of the numeric column to compute risk metrics for
-    risk_job = {
-        "privacy_metric": {
-            "k_map_estimation_config": {
-                "quasi_ids": quasi_ids,
-                "region_code": region_code,
-            }
-        },
-        "source_table": source_table,
-        "actions": actions,
-    }
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
-
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)

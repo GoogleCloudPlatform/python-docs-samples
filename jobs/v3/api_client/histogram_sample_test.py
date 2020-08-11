@@ -11,13 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
+
+import backoff
+import pytest
+
+import histogram_sample
 
 
-def test_histogram_sample(capsys):
-    import histogram_sample
-    import re
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = histogram_sample.set_up()
+    yield company_name
+    histogram_sample.tear_down(company_name, job_name)
 
-    histogram_sample.run_sample()
-    out, _ = capsys.readouterr()
-    assert re.search('COMPANY_ID', out)
-    assert re.search('someFieldName1', out)
+
+def test_histogram_sample(company_name, capsys):
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
+        histogram_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        assert re.search('COMPANY_ID', out)
+        assert re.search('someFieldName1', out)
+
+    eventually_consistent_test()

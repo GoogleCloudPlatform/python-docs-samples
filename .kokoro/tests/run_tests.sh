@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,37 +19,99 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
-# `--only-changed` will only run tests on projects container changes from the master branch.
-if [[ $* == *--only-diff* ]]; then
-    ONLY_DIFF="true"
-else
-    ONLY_DIFF="false"
+DIFF_FROM=""
+
+# `--only-diff-master` will only run tests on project changes on the
+# last common commit from the master branch.
+if [[ $* == *--only-diff-master* ]]; then
+    set +e
+    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="origin/master..."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
 fi
 
-cd github/python-docs-samples
+# `--only-diff-head` will only run tests on project changes from the
+# previous commit.
+if [[ $* == *--only-diff-head* ]]; then
+    set +e
+    git diff --quiet "HEAD~.." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="HEAD~.."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
+fi
+
+# Because Kokoro runs presubmit builds simalteneously, we often see
+# quota related errors. I think we can avoid this by changing the
+# order of tests to execute (e.g. reverse order for py-3.8
+# build). Currently there's no easy way to do that with btlr, so we
+# temporarily wait few minutes to avoid quota issue for some
+# presubmit builds.
+if [[ "${KOKORO_JOB_NAME}" == *presubmit ]] \
+       && [[ -z "${DIFF_FROM:-}" ]]; then
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.7" ]]; then
+	echo -n "Detected py-3.7 presubmit full build,"
+	echo "Wait 5 minutes to avoid quota issues."
+	sleep 5m
+    fi
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.8" ]]; then
+	echo -n "Detected py-3.8 presubmit full build,"
+	echo "Wait 10 minutes to avoid quota issues."
+	sleep 10m
+    fi
+fi
+
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+    PROJECT_ROOT="github/python-docs-samples"
+fi
+
+cd "${PROJECT_ROOT}"
+
+# add user's pip binary path to PATH
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # install nox for testing
-pip install -q nox
+pip install --user -q nox
 
-# Unencrypt and extract secrets
-SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
-./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
+# On kokoro, we should be able to use the default service account. We
+# need to somehow bootstrap the secrets on other CI systems.
+if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then
+    # This script will create 3 files:
+    # - testing/test-env.sh
+    # - testing/service-account.json
+    # - testing/client-secrets.json
+    ./scripts/decrypt-secrets.sh
+fi
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
+
+# For cloud-run session, we activate the service account for gcloud sdk.
+gcloud auth activate-service-account \
+       --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
-source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
-cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
 
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
-# Required for "run/image-processing" && "functions/imagemagick"
-apt-get -qq update  && apt-get -qq install libmagickwand-dev > /dev/null
 
 # Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
-./cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> cloud_sql_proxy.log &
+wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
+     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
+${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+       ${HOME}/cloud_sql_proxy.log &
+${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+       ${HOME}/cloud_sql_proxy-postgres.log &
 echo -e "\nCloud SQL proxy started."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
@@ -59,70 +120,43 @@ set +e
 # Use RTN to return a non-zero value if the test fails.
 RTN=0
 ROOT=$(pwd)
-# Find all requirements.txt in the repository (may break on whitespace).
-for file in **/requirements.txt; do
-    cd "$ROOT"
-    # Navigate to the project folder.
-    file=$(dirname "$file")
-    cd "$file"
 
-    # If $DIFF_ONLY is true, skip projects without changes.
-    if [[ "$ONLY_DIFF" = "true" ]]; then
-        git diff --quiet origin/master.. .
-        CHANGED=$?
-        if [[ "$CHANGED" -eq 0 ]]; then
-          # echo -e "\n Skipping $file: no changes in folder.\n"
-          continue
-        fi
-    fi
+test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
-    # Skip unsupported Python versions for Cloud Functions
-    # (Some GCF samples' dependencies don't support them)
-    if [[ "$file" == "functions/"* ]]; then
-      PYTHON_VERSION="$(python --version 2>&1)"
-      if [[ "$PYTHON_VERSION" == "Python 2."* || "$PYTHON_VERSION" == "Python 3.5"* ]]; then
-        # echo -e "\n Skipping $file: Python $PYTHON_VERSION is not supported by Cloud Functions.\n"
-        continue
-      fi
-    fi
+btlr_args=(
+    "run"
+    "**/requirements.txt"
+)
 
-    echo "------------------------------------------------------------"
-    echo "- testing $file"
-    echo "------------------------------------------------------------"
+if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
+    btlr_args+=(
+	"--max-concurrency"
+	"${NUM_TEST_WORKERS}"
+    )
+fi
 
-    # If no local noxfile exists, copy the one from root
-    if [[ ! -f "noxfile.py" ]]; then
-      PARENT_DIR=$(cd ../ && pwd)
-      while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
-      do
-        PARENT_DIR=$(dirname "$PARENT_DIR")
-      done
-      cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
-      echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
-    fi
+if [[ -n "${DIFF_FROM:-}"  ]]; then
+    btlr_args+=(
+	"--git-diff"
+	"${DIFF_FROM} ."
+    )
+fi
 
-    # Use nox to execute the tests for the project.
-    nox -s "$RUN_TESTS_SESSION"
-    EXIT=$?
+btlr_args+=(
+    "--"
+    "${test_prog}"
+)
 
-    # If this is a continuous build, send the test log to the Build Cop Bot.
-    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
-      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-      $KOKORO_GFILE_DIR/linux_amd64/buildcop
-    fi
+echo "testing/btlr" "${btlr_args[@]}"
 
-    if [[ $EXIT -ne 0 ]]; then
-      RTN=1
-      echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
-    else
-      echo -e "\n Testing completed.\n"
-    fi
+testing/btlr "${btlr_args[@]}"
 
-done
+RTN=$?
 cd "$ROOT"
 
-# Workaround for Kokoro permissions issue: delete secrets
-rm testing/{test-env.sh,client-secrets.json,service-account.json}
+# Remove secrets if we used decrypt-secrets.sh.
+if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
+    rm testing/{test-env.sh,client-secrets.json,service-account.json}
+fi
 
 exit "$RTN"

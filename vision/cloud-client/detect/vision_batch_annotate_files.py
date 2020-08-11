@@ -14,9 +14,10 @@
 
 # [START vision_batch_annotate_files]
 
+import io
+
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
-import io
 
 
 def sample_batch_annotate_files(file_path="path/to/your/document.pdf"):

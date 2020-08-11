@@ -11,23 +11,37 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
+
+import backoff
+import pytest
+
+import location_search_sample
 
 
-def test_location_search_sample(capsys):
-    import location_search_sample
-    import re
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name, job_name2 = location_search_sample.set_up()
+    yield company_name
+    location_search_sample.tear_down(company_name, job_name, job_name2)
 
-    location_search_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = ('.*locationFilters.*\n'
-                '.*locationFilters.*\n'
-                '.*locationFilters.*\n'
-                '.*locationFilters.*\n'
-                '.*locationFilters.*\n')
-    assert re.search(expected, out, re.DOTALL)
-    expected = ('.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n')
-    assert re.search(expected, out, re.DOTALL)
+
+def test_location_search_sample(company_name, capsys):
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
+        location_search_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        expected = ('.*locationFilters.*\n'
+                    '.*locationFilters.*\n'
+                    '.*locationFilters.*\n'
+                    '.*locationFilters.*\n'
+                    '.*locationFilters.*\n')
+        assert re.search(expected, out, re.DOTALL)
+        expected = ('.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n')
+        assert re.search(expected, out, re.DOTALL)
+
+    eventually_consistent_test()

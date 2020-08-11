@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
-
 """This application demonstrates how to construct a Signed URL for objects in
    Google Cloud Storage.
 
@@ -21,6 +19,7 @@ For more information, see the README.md under /storage and the documentation
 at https://cloud.google.com/storage/docs/access-control/signing-urls-manually.
 """
 
+import argparse
 # [START storage_signed_url_all]
 import binascii
 import collections
@@ -28,12 +27,11 @@ import datetime
 import hashlib
 import sys
 
+# pip install google-auth
+from google.oauth2 import service_account
 # pip install six
 import six
 from six.moves.urllib.parse import quote
-
-# pip install google-auth
-from google.oauth2 import service_account
 
 
 def generate_signed_url(service_account_file, bucket_name, object_name,

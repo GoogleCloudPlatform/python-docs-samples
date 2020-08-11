@@ -1,0 +1,28 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Service Directory
+  short_name: Service Directory
+  url: https://cloud.google.com/service-directory/docs/
+  description: >
+    `Google Cloud Service Directory`_ is a platform
+    for discovering, publishing, and connecting services. It offers customers a
+    single place to register and discover their services in a consistent and
+    reliable way, regardless of their environment. These sample Java applications
+    demonstrate how to access the Service Directory API using the Google Java API
+    Client Libraries.
+
+
+required_api_url: https://console.developers.google.com/apis/api/servicedirectory.googleapis.com/overview
+required_role: Service Directory Admin
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Snippets
+  file: snippets.py
+
+
+folder: servicedirectory

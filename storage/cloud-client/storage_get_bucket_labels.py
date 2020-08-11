@@ -14,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 
 # [START storage_get_bucket_labels]
-from google.cloud import storage
 import pprint
+# [END storage_get_bucket_labels]
+import sys
+# [START storage_get_bucket_labels]
+
+from google.cloud import storage
 
 
 def get_bucket_labels(bucket_name):

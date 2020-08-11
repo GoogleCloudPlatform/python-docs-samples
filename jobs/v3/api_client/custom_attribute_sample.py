@@ -133,7 +133,7 @@ def custom_attribute_filter_multi_attributes(client_service):
 # [END custom_attribute_filter_multi_attributes]
 
 
-def run_sample():
+def set_up():
     import base_company_sample
     import base_job_sample
 
@@ -145,16 +145,24 @@ def run_sample():
     job_to_be_created = generate_job_with_custom_attributes(company_name)
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
+    return company_name, job_name
 
-    # Wait several seconds for post processing
-    time.sleep(10)
-    custom_attribute_filter_string_value(client_service)
-    custom_attribute_filter_long_value(client_service)
-    custom_attribute_filter_multi_attributes(client_service)
 
+def tear_down(company_name, job_name):
+    import base_company_sample
+    import base_job_sample
     base_job_sample.delete_job(client_service, job_name)
     base_company_sample.delete_company(client_service, company_name)
 
 
+def run_sample():
+    custom_attribute_filter_string_value(client_service)
+    custom_attribute_filter_long_value(client_service)
+    custom_attribute_filter_multi_attributes(client_service)
+
+
 if __name__ == '__main__':
-    run_sample()
+    company_name, job_name = set_up()
+    # Wait several seconds for post processing
+    time.sleep(10)
+    run_sample(company_name, job_name)

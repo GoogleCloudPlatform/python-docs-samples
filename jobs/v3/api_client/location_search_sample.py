@@ -139,7 +139,13 @@ def broadening_location_search(client_service, company_name, location):
 # [END broadening_location_search]
 
 
-def run_sample():
+location = 'Mountain View, CA'
+distance = 0.5
+keyword = 'Software Engineer'
+location2 = 'Synnyvale, CA'
+
+
+def set_up():
     import base_company_sample
     import base_job_sample
 
@@ -147,11 +153,6 @@ def run_sample():
     company_created = base_company_sample.create_company(
         client_service, company_to_be_created)
     company_name = company_created.get('name')
-
-    location = 'Mountain View, CA'
-    distance = 0.5
-    keyword = 'Software Engineer'
-    location2 = 'Synnyvale, CA'
 
     job_to_be_created = base_job_sample.generate_job_with_required_fields(
         company_name)
@@ -164,9 +165,19 @@ def run_sample():
     job_to_be_created2.update({'addresses': [location2], 'title': keyword})
     job_name2 = base_job_sample.create_job(client_service,
                                            job_to_be_created2).get('name')
+    return company_name, job_name, job_name2
 
-    # Wait several seconds for post processing
-    time.sleep(10)
+
+def tear_down(company_name, job_name, job_name2):
+    import base_company_sample
+    import base_job_sample
+
+    base_job_sample.delete_job(client_service, job_name)
+    base_job_sample.delete_job(client_service, job_name2)
+    base_company_sample.delete_company(client_service, company_name)
+
+
+def run_sample(company_name):
     basic_location_search(client_service, company_name, location, distance)
     city_location_search(client_service, company_name, location)
     broadening_location_search(client_service, company_name, location)
@@ -175,10 +186,10 @@ def run_sample():
     multi_locations_search(client_service, company_name, location, distance,
                            location2)
 
-    base_job_sample.delete_job(client_service, job_name)
-    base_job_sample.delete_job(client_service, job_name2)
-    base_company_sample.delete_company(client_service, company_name)
-
 
 if __name__ == '__main__':
-    run_sample()
+    company_name, job_name, job_name2 = set_up()
+    # Wait several seconds for post processing
+    time.sleep(10)
+    run_sample(company_name)
+    tear_down(company_name, job_name, job_name2)

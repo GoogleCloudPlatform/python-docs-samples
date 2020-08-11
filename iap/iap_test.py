@@ -14,7 +14,9 @@
 
 """Test script for Identity-Aware Proxy code samples."""
 
-from gcp_devrel.testing.flaky import flaky
+import os
+
+import pytest
 
 import make_iap_request
 import validate_jwt
@@ -34,18 +36,27 @@ IAP_APP_ID = 'gcp-devrel-iap-reflect'
 IAP_PROJECT_NUMBER = '320431926067'
 
 
-@flaky
+@pytest.mark.flaky
 def test_main(capsys):
+    # It only passes on Kokoro now. Skipping in other places.
+    # The envvar `TRAMPOLINE_CI` will be set once #3860 is merged.
+    if os.environ.get('TRAMPOLINE_CI', 'kokoro') != 'kokoro':
+        pytest.skip('Only passing on Kokoro.')
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back
-    # the JWT in order to expose it to this test.  Thus, this test
+    # the IAP JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
-    iap_jwt = make_iap_request.make_iap_request(
+    resp = make_iap_request.make_iap_request(
         'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
         IAP_CLIENT_ID)
-    iap_jwt = iap_jwt.split(': ').pop()
-    jwt_validation_result = validate_jwt.validate_iap_jwt_from_app_engine(
-        iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
+    iap_jwt = resp.split(': ').pop()
+
+    # App Engine JWT audience format below
+    expected_audience = '/projects/{}/apps/{}'.format(
+        IAP_PROJECT_NUMBER, IAP_APP_ID)
+
+    jwt_validation_result = validate_jwt.validate_iap_jwt(
+        iap_jwt, expected_audience)
 
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]

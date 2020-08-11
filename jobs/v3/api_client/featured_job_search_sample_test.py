@@ -11,13 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
+
+import backoff
+import pytest
+
+import featured_job_search_sample
 
 
-def test_featured_job_search_sample(capsys):
-    import featured_job_search_sample
-    import re
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = featured_job_search_sample.set_up()
+    yield company_name
+    featured_job_search_sample.tear_down(company_name, job_name)
 
-    featured_job_search_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*')
-    assert re.search(expected, out)
+
+def test_featured_job_search_sample(company_name, capsys):
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
+        featured_job_search_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        expected = ('.*matchingJobs.*')
+        assert re.search(expected, out)
+
+    eventually_consistent_test()

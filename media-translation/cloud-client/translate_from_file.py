@@ -34,7 +34,7 @@ def translate_from_file(file_path='path/to/your/file'):
         target_language_code='fr-FR')
 
     streaming_config = mediatranslation.StreamingTranslateSpeechConfig(
-        audio_config=audio_config)
+        audio_config=audio_config, single_utterance=True)
 
     def request_generator(config, audio_file_path):
 

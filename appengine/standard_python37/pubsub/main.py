@@ -14,11 +14,11 @@
 
 # [START app]
 import base64
-from flask import current_app, Flask, render_template, request
 import json
 import logging
 import os
 
+from flask import current_app, Flask, render_template, request
 from google.auth.transport import requests
 from google.cloud import pubsub_v1
 from google.oauth2 import id_token
@@ -32,12 +32,13 @@ app = Flask(__name__)
 app.config['PUBSUB_VERIFICATION_TOKEN'] = \
     os.environ['PUBSUB_VERIFICATION_TOKEN']
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
-app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
+app.config['GOOGLE_CLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 
 # Global list to store messages, tokens, etc. received by this instance.
 MESSAGES = []
 TOKENS = []
 CLAIMS = []
+
 
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
@@ -51,7 +52,7 @@ def index():
     # Consider initializing the publisher client outside this function
     # for better latency performance.
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(app.config['GCLOUD_PROJECT'],
+    topic_path = publisher.topic_path(app.config['GOOGLE_CLOUD_PROJECT'],
                                       app.config['PUBSUB_TOPIC'])
     future = publisher.publish(topic_path, data)
     future.result()

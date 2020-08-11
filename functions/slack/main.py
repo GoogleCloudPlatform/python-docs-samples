@@ -12,41 +12,28 @@
 # limitations under the License.
 
 # [START functions_slack_setup]
-import hashlib
-import hmac
-import json
 import os
 
-import apiclient
 from flask import jsonify
-
-with open('config.json', 'r') as f:
-    data = f.read()
-config = json.loads(data)
+import googleapiclient.discovery
+from slack.signature import SignatureVerifier
 
 
-kgsearch = apiclient.discovery.build(
+kgsearch = googleapiclient.discovery.build(
     'kgsearch',
     'v1',
-    developerKey=os.environ.get('API_KEY') or config.get('KG_API_KEY'),
+    developerKey=os.environ['KG_API_KEY'],
     cache_discovery=False)
 # [END functions_slack_setup]
 
 
 # [START functions_verify_webhook]
-# Python 3+ version of https://github.com/slackapi/python-slack-events-api/blob/master/slackeventsapi/server.py
 def verify_signature(request):
-    timestamp = request.headers.get('X-Slack-Request-Timestamp', '')
-    signature = request.headers.get('X-Slack-Signature', '')
+    request.get_data()  # Decodes received requests into request.data
 
-    req = str.encode('v0:{}:'.format(timestamp)) + request.get_data()
-    request_digest = hmac.new(
-        str.encode(config['SLACK_SECRET']),
-        req, hashlib.sha256
-    ).hexdigest()
-    request_hash = 'v0={}'.format(request_digest)
+    verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
 
-    if not hmac.compare_digest(request_hash, signature):
+    if not verifier.is_valid_request(request.data, request.headers):
         raise ValueError('Invalid request/credentials.')
 # [END functions_verify_webhook]
 

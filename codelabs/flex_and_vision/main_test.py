@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 import pytest
 import requests
 import six
@@ -37,11 +39,12 @@ def test_index(app):
 
 def test_upload_photo(app):
     test_photo_data = requests.get(TEST_PHOTO_URL).content
+    test_photo_filename = 'flex_and_vision_{}.jpg'.format(uuid.uuid4().hex)
 
     r = app.post(
         '/upload_photo',
         data={
-            'file': (six.BytesIO(test_photo_data), 'flex_and_vision.jpg')
+            'file': (six.BytesIO(test_photo_data), test_photo_filename)
         }
     )
 

@@ -235,6 +235,10 @@ def test_order_where_limit():
     snippets.order_where_limit()
 
 
+def test_order_limit_to_last():
+    snippets.order_limit_to_last()
+
+
 def test_order_where_invalid():
     snippets.order_where_invalid()
 
@@ -267,12 +271,14 @@ def test_cursor_multiple_conditions():
     snippets.cursor_multiple_conditions()
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_listen_document(capsys):
     snippets.listen_document()
     out, _ = capsys.readouterr()
     assert 'Received document snapshot: SF' in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_listen_multiple(capsys):
     snippets.listen_multiple()
     out, _ = capsys.readouterr()
@@ -280,6 +286,7 @@ def test_listen_multiple(capsys):
     assert 'SF' in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_listen_for_changes(capsys):
     snippets.listen_for_changes()
     out, _ = capsys.readouterr()
@@ -313,3 +320,7 @@ def test_collection_group_query(db):
                      u'National Air and Space Museum',
                      u'National Museum of Nature and Science',
                      u'Beijing Ancient Observatory'}
+
+
+def test_list_document_subcollections():
+    snippets.list_document_subcollections()

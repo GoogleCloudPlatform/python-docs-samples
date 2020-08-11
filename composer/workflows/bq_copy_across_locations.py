@@ -174,7 +174,8 @@ with models.DAG(
             source_objects=['{}-*.avro'.format(table_source)],
             destination_project_dataset_table=table_dest,
             source_format='AVRO',
-            write_disposition='WRITE_TRUNCATE'
+            write_disposition='WRITE_TRUNCATE',
+            autodetect=True
         )
 
         start >> BQ_to_GCS >> GCS_to_GCS >> GCS_to_BQ >> end

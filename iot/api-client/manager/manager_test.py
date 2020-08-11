@@ -18,14 +18,14 @@ import sys
 import time
 import uuid
 
-# Add command receiver for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
-from flaky import flaky
 from google.cloud import pubsub
 import pytest
 
-import manager
-import cloudiot_mqtt_example
+# Add command receiver for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
+import cloudiot_mqtt_example  # noqa
+import manager  # noqa
+
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
@@ -33,13 +33,15 @@ ca_cert_path = '../mqtt_example/resources/roots.pem'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
+
+# This format is used in the `clean_up_registries()` below.
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -202,6 +204,7 @@ def test_add_delete_unauth_device(test_topic, capsys):
     assert 'UNAUTH' in out
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_add_config_unauth_device(test_topic, capsys):
     device_id = device_id_template.format('UNAUTH')
     manager.open_registry(
@@ -363,7 +366,7 @@ def test_add_patch_delete_es256(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
-@flaky(max_runs=5, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_send_command(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(

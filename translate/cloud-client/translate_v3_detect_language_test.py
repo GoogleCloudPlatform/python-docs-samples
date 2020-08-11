@@ -13,12 +13,14 @@
 # limitations under the License.
 
 import os
+
 import translate_v3_detect_language
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_detect_language(capsys):
-    translate_v3_detect_language.sample_detect_language(PROJECT_ID)
+    translate_v3_detect_language.detect_language(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "en" in out

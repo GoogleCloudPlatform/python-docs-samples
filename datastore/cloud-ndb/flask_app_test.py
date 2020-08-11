@@ -14,9 +14,10 @@
 
 import uuid
 
-import pytest
 
+import backoff
 from google.cloud import ndb
+import pytest
 
 import flask_app
 
@@ -39,9 +40,13 @@ def test_index(test_book):
     flask_app.app.testing = True
     client = flask_app.app.test_client()
 
-    r = client.get('/')
-    assert r.status_code == 200
-    assert test_book.title in r.data.decode('utf-8')
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
+        r = client.get('/')
+        assert r.status_code == 200
+        assert test_book.title in r.data.decode('utf-8')
+
+    eventually_consistent_test()
 
 
 def test_ndb_wsgi_middleware():

@@ -13,13 +13,13 @@
 
 import os
 
-from gcp_devrel.testing.flaky import flaky
+import pytest
 
 from wiki import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
-@flaky
+@pytest.mark.flaky
 def test_main():
     main(PROJECT)

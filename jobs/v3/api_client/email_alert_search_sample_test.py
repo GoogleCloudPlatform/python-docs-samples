@@ -11,13 +11,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
+
+import backoff
+import pytest
+
+import email_alert_search_sample
 
 
-def test_email_alert_search_sample(capsys):
-    import email_alert_search_sample
-    import re
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = email_alert_search_sample.set_up()
+    yield company_name
+    email_alert_search_sample.tear_down(company_name, job_name)
 
-    email_alert_search_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*')
-    assert re.search(expected, out)
+
+def retry_delay():
+    # Always wait 60 seconds
+    yield 60
+
+
+def test_email_alert_search_sample(company_name, capsys):
+
+    @backoff.on_exception(retry_delay, AssertionError, max_time=300)
+    def eventually_consistent_test():
+        email_alert_search_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        expected = ('.*matchingJobs.*')
+        assert re.search(expected, out)
+
+    eventually_consistent_test()

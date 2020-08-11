@@ -14,6 +14,8 @@
 
 import os
 
+import backoff
+from google.api_core.exceptions import InternalServerError
 import pytest
 
 import list_operation_status
@@ -23,6 +25,11 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 @pytest.mark.slow
 def test_list_operation_status(capsys):
-    list_operation_status.list_operation_status(PROJECT_ID)
+    # We saw 500 InternalServerError. Now we just retry few times.
+    @backoff.on_exception(backoff.expo, InternalServerError, max_time=120)
+    def run_sample():
+        list_operation_status.list_operation_status(PROJECT_ID)
+
+    run_sample()
     out, _ = capsys.readouterr()
     assert "Operation details" in out

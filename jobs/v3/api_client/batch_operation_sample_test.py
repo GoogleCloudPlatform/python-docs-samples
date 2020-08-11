@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
+
+import batch_operation_sample
 
 
 def test_batch_operation_sample(capsys):
-    import batch_operation_sample
-    import re
 
     batch_operation_sample.run_sample()
     out, _ = capsys.readouterr()

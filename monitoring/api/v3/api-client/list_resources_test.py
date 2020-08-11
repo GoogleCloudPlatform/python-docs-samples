@@ -23,13 +23,12 @@ for this test, but it could be changed to a different project.
 import os
 import re
 
-from gcp_devrel.testing.flaky import flaky
 import googleapiclient.discovery
 import pytest
 
 import list_resources
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 
@@ -38,7 +37,7 @@ def client():
     return googleapiclient.discovery.build('monitoring', 'v3')
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_monitored_resources(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_monitored_resource_descriptors(
@@ -49,18 +48,18 @@ def test_list_monitored_resources(client, capsys):
     assert regex.search(stdout) is not None
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_metrics(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_metric_descriptors(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        u'Delta CPU', re.I)
+        u'Delta', re.I)
     assert regex.search(stdout) is not None
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_timeseries(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_timeseries(

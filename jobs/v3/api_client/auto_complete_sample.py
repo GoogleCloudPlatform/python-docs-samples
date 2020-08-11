@@ -50,10 +50,9 @@ def auto_complete_default(client_service, query, company_name):
 # [END auto_complete_default]
 
 
-def run_sample():
+def set_up():
     import base_company_sample
     import base_job_sample
-
     company_to_be_created = base_company_sample.generate_company()
     company_created = base_company_sample.create_company(
         client_service, company_to_be_created)
@@ -64,16 +63,25 @@ def run_sample():
     job_to_be_created.update({'title': 'Software engineer'})
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
+    return company_name, job_name
 
-    # Wait several seconds for post processing
-    time.sleep(10)
-    auto_complete_default(client_service, 'goo', company_name)
-    auto_complete_default(client_service, 'sof', company_name)
-    job_title_auto_complete(client_service, 'sof', company_name)
 
+def tear_down(company_name, job_name):
+    import base_company_sample
+    import base_job_sample
     base_job_sample.delete_job(client_service, job_name)
     base_company_sample.delete_company(client_service, company_name)
 
 
+def run_sample(company_name):
+    auto_complete_default(client_service, 'goo', company_name)
+    auto_complete_default(client_service, 'sof', company_name)
+    job_title_auto_complete(client_service, 'sof', company_name)
+
+
 if __name__ == '__main__':
-    run_sample()
+    company_name, job_name = set_up()
+    # Wait several seconds for post processing
+    time.sleep(10)
+    run_sample(company_name)
+    tear_down(company_name, job_name)

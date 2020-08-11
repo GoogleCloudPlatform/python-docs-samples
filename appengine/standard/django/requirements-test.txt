@@ -1,2 +1,2 @@
-pytest==4.6.9
-gcp-devrel-py-tools==0.0.15
+pytest==4.6.11; python_version < '3.0'
+pytest-django==3.9.0

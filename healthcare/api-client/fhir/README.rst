@@ -17,6 +17,16 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 .. _Cloud Healthcare API: https://cloud.google.com/healthcare/docs
 
+To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+
+
+To run the sample, you need to have the following roles:
+* `Healthcare Dataset Administrator`
+* `Healthcare FHIR Store Administrator`
+* `Healthcare FHIR Resource Editor`
+
+
+
 Setup
 -------------------------------------------------------------------------------
 
@@ -85,17 +95,18 @@ To run this sample:
                           [--fhir_store_id FHIR_STORE_ID]
                           [--pubsub_topic PUBSUB_TOPIC] [--gcs_uri GCS_URI]
                           [--member MEMBER] [--role ROLE]
-                          {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-store,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
+                          {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-resources,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
                           ...
 
     positional arguments:
-      {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-store,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
+      {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-resources,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
         create-fhir-store   Creates a new FHIR store within the parent dataset.
         delete-fhir-store   Deletes the specified FHIR store.
         get-fhir-store      Gets the specified FHIR store.
         list-fhir-stores    Lists the FHIR stores in the given dataset.
         patch-fhir-store    Updates the FHIR store.
-        import-fhir-store   Import resources into the FHIR store by copying them
+        import-fhir-resources
+                            Import resources into the FHIR store by copying them
                             from the specified source.
         export-fhir-store-gcs
                             Export resources to a Google Cloud Storage bucket by
@@ -160,24 +171,30 @@ To run this sample:
                              [--dataset_id DATASET_ID]
                              [--fhir_store_id FHIR_STORE_ID]
                              [--resource_type RESOURCE_TYPE]
-                             [--resource_id RESOURCE_ID] [--bundle BUNDLE]
+                             [--resource_id RESOURCE_ID] [--patient_id PATIENT_ID]
+                             [--encounter_id ENCOUNTER_ID] [--bundle BUNDLE]
                              [--uri_prefix URI_PREFIX] [--version_id VERSION_ID]
-                             {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+                             {create-patient,create-encounter,create-observation,delete-resource,conditional-delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
                              ...
 
     positional arguments:
-      {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
-        create-resource     Creates a new resource in a FHIR store.
-        delete-resource     Creates a new resource in a FHIR store.
+      {create-patient,create-encounter,create-observation,delete-resource,conditional-delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+        create-patient      Creates a new Patient resource in a FHIR store.
+        create-encounter    Creates a new Encounter resource in a FHIR store based
+                            on a Patient.
+        create-observation  Creates a new Observation resource in a FHIR store
+                            based on an Encounter.
+        delete-resource     Deletes a FHIR resource. Regardless of whether the
+                            operation succeeds or fails, the server returns a 200
+                            OK HTTP status code. To check that the resource was
+                            successfully deleted, search for or get the resource
+                            and see if it exists.
         conditional-delete-resource
-                            Deletes an existing resource specified by search
-                            criteria.
+                            Deletes FHIR resources that match a search query.
         get-resource        Gets a FHIR resource.
         list-resource-history
                             Gets the history of a resource.
-        export-resources    Exports resources in a FHIR store.
-        export-resources    Exports resources in a FHIR store.
-        execute_bundle      Executes the operations in the given bundle.
+        execute-bundle      Executes the operations in the given bundle.
         get-resource-history
                             Gets a version resource.
         delete-resource-purge
@@ -185,11 +202,15 @@ To run this sample:
                             version).
         update-resource     Updates an existing resource.
         conditional-update-resource
-                            Updates an existing resource specified by search
-                            criteria.
+                            If a resource is found based on the search criteria
+                            specified in the query parameters, updates the entire
+                            contents of that resource.
         patch-resource      Updates part of an existing resource..
         conditional-patch-resource
-                            Updates part of an existing resource..
+                            If a resource is found based on the search criteria
+                            specified in the query parameters, updates part of
+                            that resource by applying the operations specified in
+                            a JSON Patch document.
         search-resources-get
                             Searches resources in the given FHIR store using the
                             searchResources GET method.
@@ -216,7 +237,13 @@ To run this sample:
       --resource_type RESOURCE_TYPE
                             The type of resource. First letter must be capitalized
       --resource_id RESOURCE_ID
-                            Name of a FHIR resource
+                            Identifier for a FHIR resource
+      --patient_id PATIENT_ID
+                            Identifier for a Patient resource. Can be used as a
+                            reference for an Encounter/Observation
+      --encounter_id ENCOUNTER_ID
+                            Identifier for an Encounter resource. Can be used as a
+                            reference for an Observation
       --bundle BUNDLE       Name of file containing bundle of operations to
                             execute
       --uri_prefix URI_PREFIX

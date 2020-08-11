@@ -23,7 +23,7 @@ except ImportError:
     pass
 
 # Adjust logging level to INFO
-import logging
+import logging  # noqa: I100
 logging.basicConfig(level=logging.INFO)
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app

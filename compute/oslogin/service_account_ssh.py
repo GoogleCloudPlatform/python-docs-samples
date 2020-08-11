@@ -21,13 +21,15 @@ on the same internal VPC network.
 """
 
 # [START imports_and_variables]
-import time
-import subprocess
-import uuid
-import logging
-import requests
 import argparse
+import logging
+import subprocess
+import time
+import uuid
+
 import googleapiclient.discovery
+import requests
+
 
 # Global variables
 SERVICE_ACCOUNT_METADATA_URL = (
@@ -151,7 +153,7 @@ if __name__ == '__main__':
         help='Your Google Cloud project ID.')
     parser.add_argument(
         '--zone',
-        help='The zone where the target instance is locted.')
+        help='The zone where the target instance is located.')
     parser.add_argument(
         '--instance',
         help='The target instance for the ssh command.')

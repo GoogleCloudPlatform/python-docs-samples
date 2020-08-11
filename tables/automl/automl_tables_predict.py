@@ -81,11 +81,54 @@ def predict(
     # [END automl_tables_predict]
 
 
+def batch_predict_bq(
+    project_id,
+    compute_region,
+    model_display_name,
+    bq_input_uri,
+    bq_output_uri,
+):
+    """Make a batch of predictions."""
+    # [START automl_tables_batch_predict_bq]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
+    # bq_input_uri = 'bq://my-project.my-dataset.my-table'
+    # bq_output_uri = 'bq://my-project'
+
+    from google.cloud import automl_v1beta1 as automl
+
+    client = automl.TablesClient(project=project_id, region=compute_region)
+
+    # Query model
+    response = client.batch_predict(bigquery_input_uri=bq_input_uri,
+                                    bigquery_output_uri=bq_output_uri,
+                                    model_display_name=model_display_name)
+    print("Making batch prediction... ")
+    # `response` is a async operation descriptor,
+    # you can register a callback for the operation to complete via `add_done_callback`:
+    # def callback(operation_future):
+    #   result = operation_future.result()
+    # response.add_done_callback(callback)
+    #
+    # or block the thread polling for the operation's results:
+    response.result()
+    # AutoML puts predictions in a newly generated dataset with a name by a mask "prediction_" + model_id + "_" + timestamp
+    # here's how to get the dataset name:
+    dataset_name = response.metadata.batch_predict_details.output_info.bigquery_output_dataset
+
+    print("Batch prediction complete.\nResults are in '{}' dataset.\n{}".format(
+        dataset_name, response.metadata))
+
+    # [END automl_tables_batch_predict_bq]
+
+
 def batch_predict(
     project_id,
     compute_region,
     model_display_name,
-    gcs_input_uris,
+    gcs_input_uri,
     gcs_output_uri,
 ):
     """Make a batch of predictions."""
@@ -94,19 +137,29 @@ def batch_predict(
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
     # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
-    # gcs_input_uris = ['gs://path/to/file.csv]
-    # gcs_output_uri = 'gs://path'
+    # gcs_input_uri = 'gs://YOUR_BUCKET_ID/path_to_your_input_csv'
+    # gcs_output_uri = 'gs://YOUR_BUCKET_ID/path_to_save_results/'
 
     from google.cloud import automl_v1beta1 as automl
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     # Query model
-    response = client.batch_predict(gcs_input_uris=gcs_input_uris,
-                                    gcs_output_uri_prefix=gcs_output_uri,
-                                    model_display_name=model_display_name)
+    response = client.batch_predict(
+        gcs_input_uris=gcs_input_uri,
+        gcs_output_uri_prefix=gcs_output_uri,
+        model_display_name=model_display_name,
+    )
     print("Making batch prediction... ")
+    # `response` is a async operation descriptor,
+    # you can register a callback for the operation to complete via `add_done_callback`:
+    # def callback(operation_future):
+    #   result = operation_future.result()
+    # response.add_done_callback(callback)
+    #
+    # or block the thread polling for the operation's results:
     response.result()
+
     print("Batch prediction complete.\n{}".format(response.metadata))
 
     # [END automl_tables_batch_predict]

@@ -15,6 +15,23 @@ This directory contains samples for {{product.name}}. {{product.description}}
 
 .. _{{product.name}}: {{product.url}}
 
+{% if required_api_url %}
+To run the sample, you need to enable the API at: {{required_api_url}}
+{% endif %}
+
+{% if required_role %}
+To run the sample, you need to have `{{required_role}}` role.
+{% endif %}
+
+{% if required_roles %}
+To run the sample, you need to have the following roles:
+{% for role in required_roles %}
+* `{{role}}`
+{% endfor %}
+{% endif %}
+
+{{other_required_steps}}
+
 {% if setup %}
 Setup
 -------------------------------------------------------------------------------
@@ -34,8 +51,10 @@ Samples
 {{sample.name}}
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+{% if not sample.hide_cloudshell_button %}
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/{{sample.file}},{{folder}}/README.rst
+{% endif %}
 
 
 {{sample.description}}

@@ -62,6 +62,7 @@ class GatewayState:
 gateway_state = GatewayState()
 
 
+# [START iot_mqtt_jwt]
 def create_jwt(project_id, private_key_file, algorithm, jwt_expires_minutes):
     """Creates a JWT (https://jwt.io) to establish an MQTT connection.
             Args:
@@ -143,7 +144,7 @@ def on_publish(unused_client, userdata, mid):
 
 
 def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
-    print('on_subscribe: mid {}, qos {granted_qos}'.format(mid))
+    print('on_subscribe: mid {}, qos {}'.format(mid, granted_qos))
     try:
         client_addr, response = gateway_state.pending_subscribes[mid]
         udpSerSock.sendto(response.encode(), client_addr)

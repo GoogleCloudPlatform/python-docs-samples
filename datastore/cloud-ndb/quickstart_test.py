@@ -14,6 +14,7 @@
 
 import uuid
 
+import backoff
 import pytest
 
 import quickstart
@@ -34,6 +35,10 @@ def test_book():
 
 
 def test_quickstart(capsys, test_book):
-    quickstart.list_books()
-    out, _ = capsys.readouterr()
-    assert test_book.title in out
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
+    def eventually_consistent_test():
+        quickstart.list_books()
+        out, _ = capsys.readouterr()
+        assert test_book.title in out
+
+    eventually_consistent_test()

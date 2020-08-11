@@ -1,5 +1,4 @@
-grpcio==1.27.2
-grpcio-tools==1.27.2
-google-auth==1.11.2
-six==1.14.0
-googleapis-common-protos==1.51.0
+grpcio==1.31.0
+grpcio-tools==1.31.0
+google-auth==1.20.1
+six==1.15.0

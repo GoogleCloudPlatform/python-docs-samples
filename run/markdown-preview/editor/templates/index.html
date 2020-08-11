@@ -1,0 +1,106 @@
+<!--
+Copyright 2020 Google LLC
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Markdown Editor</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body class="mdc-typography">
+
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <span class="mdc-top-app-bar__title">Markdown Editor</span>
+          </section>
+          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+            <a href="#code" title="View the code"><i class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-hidden="true">code</i></a>
+            <a href="#tutorial" title="Read the tutorial"><i class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-hidden="true">assignment</i></a>
+          </section>
+        </div>
+    </header>
+
+    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-top-app-bar--fixed-adjust" aria-label="Markdown Rendering Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+    </div>
+
+    <main class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
+            <h2>Markdown Text</h2>
+            <section class="mdc-card mdc-card--outlined">
+                <div class="text-field-container">
+                <div class="mdc-text-field mdc-text-field--fullwidth md-text-field--no-label mdc-text-field--textarea mdc-ripple-upgraded">
+                    <textarea id="editor" class="mdc-text-field__input" style="height: 36rem;">{{ default }}</textarea>
+                    </div></div>
+
+                    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+                        <button class="editor-button mdc-button mdc-card__action mdc-card__action--button mdc-ripple-surface">
+                            <span class="mdc-button__label">Preview Rendered Markdown</span>
+                            <i class="material-icons" aria-hidden="true">arrow_forward</i>
+                        </button>
+                    </div>
+                </section></div>
+
+                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
+                <h2>Rendered HTML</h2>
+                <section class="mdc-card mdc-card--outlined">
+                    <div id="preview" style="height: 40rem; padding-left: 10px; padding-right: 10px">Tap "<strong>Preview Rendered Markdown</strong>" below the text entry to see rendered content.</div>
+                </section></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const preview = document.getElementById('preview');
+        const lp = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+        async function render(data = {}) {
+            const response = await fetch('/render', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const text = await response.text();
+            if (!response.ok) {
+                console.log('error: Render Text: Received status code: ' + response.status);
+            }
+
+            return text;
+        }
+
+        function listener() {
+            lp.open();
+            render({data: document.getElementById('editor').value})
+                .then((result) => preview.innerHTML = result)
+                .catch((err) => {
+                    console.log('Render Text: ' + err.message);
+                    preview.innerHTML = '<h3><i aria-hidden="true" class="material-icons">error</i>Render Error</h3>\n<p>' + err.message + '</p>';
+                })
+                .finally(() => lp.close())
+        }
+
+        document.querySelector('.editor-button').addEventListener('click', listener);
+        window.addEventListener('load', listener);
+    </script>
+</body>
+</html>

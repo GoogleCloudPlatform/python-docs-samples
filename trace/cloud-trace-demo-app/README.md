@@ -42,7 +42,7 @@ If you are using the provided image, skip to the next section.
     `./setup.sh`
 12. Send request to the last service:
 
-    `curl $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
+    `curl -w "\n" $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
 13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     ![Screenshot](./example.png)

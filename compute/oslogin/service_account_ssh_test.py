@@ -11,14 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import time
-import random
 import base64
 import json
-import googleapiclient.discovery
+import os
+import random
+import time
+
 from google.oauth2 import service_account
+import googleapiclient.discovery
+from retrying import retry
+
 from service_account_ssh import main
+
 
 '''
 The service account that runs this test must have the following roles:
@@ -36,7 +40,7 @@ def test_main(capsys):
 
     # Initialize variables.
     cmd = 'uname -a'
-    project = os.environ['GCLOUD_PROJECT']
+    project = os.environ['GOOGLE_CLOUD_PROJECT']
     test_id = 'oslogin-test-{id}'.format(id=str(random.randint(0, 1000000)))
     zone = 'us-east1-d'
     image_family = 'projects/debian-cloud/global/images/family/debian-9'
@@ -79,15 +83,17 @@ def test_main(capsys):
         'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
-    # Give OS Login some time to catch up.
-    time.sleep(120)
-
-    # Test SSH to the instance.
-    try:
+    @retry(wait_exponential_multiplier=1000, wait_exponential_max=300000,
+           stop_max_attempt_number=10)
+    def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
         assert_value = 'Linux {test_id}'.format(test_id=test_id)
         assert assert_value in out
+
+    # Test SSH to the instance.
+    try:
+        ssh_login()
     except Exception:
         raise Exception('SSH to the test instance failed.')
 
