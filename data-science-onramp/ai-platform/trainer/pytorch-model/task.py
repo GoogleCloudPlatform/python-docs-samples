@@ -21,7 +21,7 @@ def get_args():
     parser.add_argument(
         '--batch-size',
         type=int,
-        default=64,
+        default=16,
         help='input batch size for training (default: 64)')
     parser.add_argument(
         '--test-batch-size',
@@ -61,7 +61,7 @@ def get_args():
     parser.add_argument(
         '--log-interval',
         type=int,
-        default=10,
+        default=5,
         help='how many batches to wait before logging training status')
     parser.add_argument(
         '--model-dir',
@@ -74,36 +74,37 @@ def get_args():
 
 def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
+    print(f'Train Epoch {epoch}:')
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
-        print(output.shape, target.shape)
         loss = F.l1_loss(output, target)
         loss.backward()
         optimizer.step()
 
         if batch_idx % args.log_interval == 0:
-            completion = round(100. * batch_idx * len(data) / len(train_loader.dataset), 2)
-            print(f'Train epoch {epoch}: {completion}%\tLoss: {loss.item()}')
+            batch_idx += 1
+            print(f'\tBatch {batch_idx}/{len(train_loader)}\tLoss: {loss.item()}')
 
 
 def test(args, model, device, test_loader, epoch):
     model.eval()
-    test_loss = 0
+    loss = 0
     with torch.no_grad():
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss += F.l1_loss(output, target).item()   # sum up batch loss
-
-    print(f'\nTest set average loss: {test_loss/len(test_loader.dataset)}\n')
+            loss += F.l1_loss(output, target).item()   # sum up batch loss
+            
+    loss /= len(test_loader)
+    print(f'\nTest set average loss: {loss}\n')
 
     # Use hypertune to report metrics for hyperparameter tuning
     hpt = hypertune.HyperTune()
     hpt.report_hyperparameter_tuning_metric(
-        hyperparameter_metric_tag='my_loss',
-        metric_value=test_loss,
+        hyperparameter_metric_tag='test_loss',
+        metric_value=loss,
         global_step=epoch
     )
 
@@ -116,7 +117,7 @@ def main():
     torch.manual_seed(args.seed)
 
     # Download data
-    dataset = CitibikeDataset('dataset/citibike.csv', download=True)
+    dataset = CitibikeDataset('dataset/citibike.csv', download=False)
     
     # Create random indices for training and testing splits
     indices = list(range(len(dataset)))
