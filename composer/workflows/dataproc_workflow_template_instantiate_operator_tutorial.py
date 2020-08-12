@@ -32,7 +32,7 @@ project_id = models.Variable.get("project_id")
 default_args = {
     # Tell airflow to start one day ago, so that it runs as soon as you upload it
     "start_date": days_ago(1),
-    'project_id': project_id
+    "project_id": project_id,
 }
 
 # Define a DAG (directed acyclic graph) of tasks.
@@ -48,10 +48,10 @@ with models.DAG(
 
     start_template_job = dataproc_operator.DataprocWorkflowTemplateInstantiateOperator(
         # The task id of your job
-        task_id='dataproc_dag',
+        task_id="dataproc_dag",
         # The template id of your workflow
-        template_id='sparkpi-fail',
+        template_id="sparkpi-fail",
         project_id=project_id,
         # The region for the template
-        region="us-central1"
+        region="us-central1",
     )
