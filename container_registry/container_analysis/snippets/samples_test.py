@@ -25,10 +25,10 @@ from google.api_core.exceptions import NotFound
 from google.cloud.devtools import containeranalysis_v1
 from google.cloud.pubsub import PublisherClient, SubscriberClient
 
-from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
-from grafeas.grafeas_v1.gapic.enums import NoteKind
-from grafeas.grafeas_v1.gapic.enums import Severity
-from grafeas.grafeas_v1.gapic.enums import Version
+from grafeas.grafeas_v1 import DiscoveryOccurrence
+from grafeas.grafeas_v1 import NoteKind
+from grafeas.grafeas_v1 import Severity
+from grafeas.grafeas_v1 import Version
 import pytest
 
 import samples
@@ -207,7 +207,7 @@ class TestContainerAnalysisSamples:
             }
         }
         grafeas_client.\
-            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+            create_note(parent=f"projects/{PROJECT_ID}", note_id=note_id, note=note)
         occurrence = {
             'note_name': f"projects/{PROJECT_ID}/notes/{note_id}",
             'resource_uri': self.image_url,
@@ -217,8 +217,8 @@ class TestContainerAnalysisSamples:
             }
         }
         created = grafeas_client.\
-            create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                              occurrence)
+            create_occurrence(parent=f"projects/{PROJECT_ID}",
+                              occurrence=occurrence)
 
         # poll again
         disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
@@ -278,7 +278,7 @@ class TestContainerAnalysisSamples:
             }
         }
         grafeas_client.\
-            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+            create_note(parent=f"projects/{PROJECT_ID}", note_id=note_id, note=note)
         occurrence = {
             'note_name': f"projects/{PROJECT_ID}/notes/{note_id}",
             'resource_uri': self.image_url,
@@ -299,8 +299,8 @@ class TestContainerAnalysisSamples:
             }
         }
         created = grafeas_client.\
-            create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                              occurrence)
+            create_occurrence(parent=f"projects/{PROJECT_ID}",
+                              occurrence=occurrence)
         # query again
         tries = 0
         count = 0
