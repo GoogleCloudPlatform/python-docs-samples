@@ -9,19 +9,20 @@ import pandas as pd
 import pytest
 
 # GCP project
-PROJECT_ID = os.environ["GCP_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+TEST_ID = uuid.uuid4()
 
-# GCS constants
-BUCKET_NAME = f"clean-test-code-{uuid.uuid4()}"
+# Google Cloud Storage constants
+BUCKET_NAME = f"clean-test-code-{TEST_ID}"
 BUCKET_BLOB = "clean.py"
 
 # Big Query constants
-BQ_DATASET = f"{PROJECT_ID}.clean_test_{str(uuid.uuid4()).replace('-', '_')}"
+BQ_DATASET = f"{PROJECT_ID}.clean_test_{str(TEST_ID).replace('-', '_')}"
 BQ_TABLE = f"{BQ_DATASET}.dirty_data"
 CSV_FILE = "resources/raw_data.csv"
 
 # Dataproc constants
-DATAPROC_CLUSTER = f"clean-test-{uuid.uuid4()}"
+DATAPROC_CLUSTER = f"clean-test-{TEST_ID}"
 CLUSTER_REGION = "us-central1"
 CLUSTER_IMAGE = "1.5.4-debian10"
 CLUSTER_CONFIG = {  # Dataproc cluster configuration
