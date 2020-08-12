@@ -24,9 +24,11 @@ Before you attempt this tutorial, you will need:
 + An [active Cloud billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account#create_a_new_billing_account), where you are a billing admin, or you have been granted the correct level of permissions to complete the steps in this tutorial.
 
 ## Understand best practices
+
 We recommend that you configure a separate, single Google Cloud project to contain all of your billing administration needs, including your Cloud Billing-related Pub/Sub topics. Your billing administration Google Cloud project can also be used for things like Cloud Billing Budget API access, Cloud Billing Account API access, Cloud Billing exported data, and so on.
 
 ## Select a test project 
+
 For this tutorial, select or create a test project. The function will be acting on this project, not the billing administration project.  
 
 **Caution:** Using the cap billing example will remove Cloud Billing from your project, shutting down all resources. This may result in resources being irretrievably deleted, with no option to recover services. You can re-enable Cloud Billing, but there is no guarantee of service recovery and manual configuration is required.
@@ -66,9 +68,11 @@ export FUNCTION_NAME=stop_billing
 **Next: Learn how to set up programmatic budget notifications**
 
 ## Set up programmatic notifications
+
 To set up **programmatic budget notifications**, you must create a Pub/Sub topic, create a Cloud Billing budget, and connect the Cloud Billing budget to the Pub/Sub topic. 
 
 ### Create a Pub/Sub topic
+
 Create a Pub/Sub topic so that Cloud Billing can publish budget alerts to the topic. 
 ```sh
 gcloud pubsub topics create ${TOPIC_NAME}
