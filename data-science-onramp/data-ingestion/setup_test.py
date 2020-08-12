@@ -134,7 +134,7 @@ def test_setup():
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
     response = job_client.submit_job_as_operation(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, job=JOB_DETAILS
+        project_id=PROJECT_ID, region=CLUSTER_REGION, job=DATAPROC_JOB
     )
 
     # Wait for job to complete
