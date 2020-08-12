@@ -18,23 +18,23 @@ import os
 
 import backoff
 from google.api_core.exceptions import ServerError
+from google.cloud import datalabeling
 import pytest
 
 import label_video
 import testing_lib
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/videos/video_dataset.csv'
-INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
-                       '/instruction/test.pdf')
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+INPUT_GCS_URI = "gs://cloud-samples-data/datalabeling/videos/video_dataset.csv"
+INSTRUCTION_GCS_URI = "gs://cloud-samples-data/datalabeling" "/instruction/test.pdf"
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def dataset():
     # create a temporary dataset
     dataset = testing_lib.create_dataset(PROJECT_ID)
 
-    testing_lib.import_data(dataset.name, 'VIDEO', INPUT_GCS_URI)
+    testing_lib.import_data(dataset.name, datalabeling.DataType.VIDEO, INPUT_GCS_URI)
 
     yield dataset
 
@@ -42,7 +42,7 @@ def dataset():
     testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def annotation_spec_set():
     # create a temporary annotation_spec_set
     response = testing_lib.create_annotation_spec_set(PROJECT_ID)
@@ -52,11 +52,12 @@ def annotation_spec_set():
     testing_lib.delete_annotation_spec_set(response.name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def instruction():
     # create a temporary instruction
     instruction = testing_lib.create_instruction(
-        PROJECT_ID, 'VIDEO', INSTRUCTION_GCS_URI)
+        PROJECT_ID, datalabeling.DataType.VIDEO, INSTRUCTION_GCS_URI
+    )
 
     yield instruction
 
@@ -64,7 +65,7 @@ def instruction():
     testing_lib.delete_instruction(instruction.name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cleaner():
     resource_names = []
 
@@ -76,21 +77,22 @@ def cleaner():
 
 # Passing in dataset as the last argument in test_label_image since it needs
 # to be deleted before the annotation_spec_set can be deleted.
-def test_label_video(
-        capsys, annotation_spec_set, instruction, dataset, cleaner):
-
+@pytest.mark.skip(reason="currently unavailable")
+def test_label_video(capsys, annotation_spec_set, instruction, dataset, cleaner):
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         # Start labeling.
         return label_video.label_video(
-            dataset.name, instruction.name, annotation_spec_set.name)
+            dataset.name, instruction.name, annotation_spec_set.name
+        )
 
     response = run_sample()
     cleaner.append(response.operation.name)
 
     out, _ = capsys.readouterr()
-    assert 'Label_video operation name: ' in out
+    assert "Label_video operation name: " in out
 
     # Cancels the labeling operation.
     response.cancel()

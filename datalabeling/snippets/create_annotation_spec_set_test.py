@@ -24,10 +24,10 @@ import create_annotation_spec_set
 import testing_lib
 
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cleaner():
     resource_names = []
 
@@ -38,9 +38,9 @@ def cleaner():
 
 
 def test_create_annotation_spec_set(cleaner, capsys):
-
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         return create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
 
@@ -50,4 +50,4 @@ def test_create_annotation_spec_set(cleaner, capsys):
     cleaner.append(response.name)
 
     out, _ = capsys.readouterr()
-    assert 'The annotation_spec_set resource name:' in out
+    assert "The annotation_spec_set resource name:" in out

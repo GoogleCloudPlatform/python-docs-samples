@@ -24,34 +24,38 @@ from google.api_core.client_options import ClientOptions
 def create_dataset(project_id):
     """Creates a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
     # [END datalabeling_create_dataset_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    if "DATALABELING_ENDPOINT" in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv("DATALABELING_ENDPOINT"))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_create_dataset_beta]
 
-    formatted_project_name = client.project_path(project_id)
+    formatted_project_name = f"projects/{project_id}"
 
-    dataset = datalabeling.types.Dataset(
-        display_name='YOUR_DATASET_SET_DISPLAY_NAME',
-        description='YOUR_DESCRIPTION'
+    dataset = datalabeling.Dataset(
+        display_name="YOUR_DATASET_SET_DISPLAY_NAME", description="YOUR_DESCRIPTION"
     )
 
-    response = client.create_dataset(formatted_project_name, dataset)
+    response = client.create_dataset(
+        request={"parent": formatted_project_name, "dataset": dataset}
+    )
 
     # The format of resource name:
     # project_id/{project_id}/datasets/{dataset_id}
-    print('The dataset resource name: {}'.format(response.name))
-    print('Display name: {}'.format(response.display_name))
-    print('Description: {}'.format(response.description))
-    print('Create time:')
-    print('\tseconds: {}'.format(response.create_time.seconds))
-    print('\tnanos: {}\n'.format(response.create_time.nanos))
+    print("The dataset resource name: {}".format(response.name))
+    print("Display name: {}".format(response.display_name))
+    print("Description: {}".format(response.description))
+    print("Create time:")
+    print("\tseconds: {}".format(response.create_time.timestamp_pb().seconds))
+    print("\tnanos: {}\n".format(response.create_time.timestamp_pb().nanos))
 
     return response
+
+
 # [END datalabeling_create_dataset_beta]
 
 
@@ -59,27 +63,30 @@ def create_dataset(project_id):
 def list_datasets(project_id):
     """Lists datasets for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
     # [END datalabeling_list_datasets_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    if "DATALABELING_ENDPOINT" in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv("DATALABELING_ENDPOINT"))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_list_datasets_beta]
 
-    formatted_project_name = client.project_path(project_id)
+    formatted_project_name = f"projects/{project_id}"
 
-    response = client.list_datasets(formatted_project_name)
+    response = client.list_datasets(request={"parent": formatted_project_name})
     for element in response:
         # The format of resource name:
         # project_id/{project_id}/datasets/{dataset_id}
-        print('The dataset resource name: {}\n'.format(element.name))
-        print('Display name: {}'.format(element.display_name))
-        print('Description: {}'.format(element.description))
-        print('Create time:')
-        print('\tseconds: {}'.format(element.create_time.seconds))
-        print('\tnanos: {}'.format(element.create_time.nanos))
+        print("The dataset resource name: {}\n".format(element.name))
+        print("Display name: {}".format(element.display_name))
+        print("Description: {}".format(element.description))
+        print("Create time:")
+        print("\tseconds: {}".format(element.create_time.timestamp_pb().seconds))
+        print("\tnanos: {}".format(element.create_time.timestamp_pb().nanos))
+
+
 # [END datalabeling_list_datasets_beta]
 
 
@@ -87,23 +94,26 @@ def list_datasets(project_id):
 def get_dataset(dataset_resource_name):
     """Gets a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
     # [END datalabeling_get_dataset_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    if "DATALABELING_ENDPOINT" in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv("DATALABELING_ENDPOINT"))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_get_dataset_beta]
 
-    response = client.get_dataset(dataset_resource_name)
+    response = client.get_dataset(request={"name": dataset_resource_name})
 
-    print('The dataset resource name: {}\n'.format(response.name))
-    print('Display name: {}'.format(response.display_name))
-    print('Description: {}'.format(response.description))
-    print('Create time:')
-    print('\tseconds: {}'.format(response.create_time.seconds))
-    print('\tnanos: {}'.format(response.create_time.nanos))
+    print("The dataset resource name: {}\n".format(response.name))
+    print("Display name: {}".format(response.display_name))
+    print("Description: {}".format(response.description))
+    print("Create time:")
+    print("\tseconds: {}".format(response.create_time.timestamp_pb().seconds))
+    print("\tnanos: {}".format(response.create_time.timestamp_pb().nanos))
+
+
 # [END datalabeling_get_dataset_beta]
 
 
@@ -111,67 +121,66 @@ def get_dataset(dataset_resource_name):
 def delete_dataset(dataset_resource_name):
     """Deletes a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
     # [END datalabeling_delete_dataset_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    if "DATALABELING_ENDPOINT" in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv("DATALABELING_ENDPOINT"))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_delete_dataset_beta]
 
-    response = client.delete_dataset(dataset_resource_name)
+    response = client.delete_dataset(request={"name": dataset_resource_name})
 
-    print('Dataset deleted. {}\n'.format(response))
+    print("Dataset deleted. {}\n".format(response))
+
+
 # [END datalabeling_delete_dataset_beta]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
-    create_parser = subparsers.add_parser(
-        'create', help='Create a new dataset.')
+    create_parser = subparsers.add_parser("create", help="Create a new dataset.")
     create_parser.add_argument(
-        '--project-id',
-        help='Project ID. Required.',
-        required=True
+        "--project-id", help="Project ID. Required.", required=True
     )
 
-    list_parser = subparsers.add_parser('list', help='List all datasets.')
+    list_parser = subparsers.add_parser("list", help="List all datasets.")
     list_parser.add_argument(
-        '--project-id',
-        help='Project ID. Required.',
-        required=True
+        "--project-id", help="Project ID. Required.", required=True
     )
 
     get_parser = subparsers.add_parser(
-        'get', help='Get a dataset by the dataset resource name.')
+        "get", help="Get a dataset by the dataset resource name."
+    )
     get_parser.add_argument(
-        '--dataset-resource-name',
-        help='The dataset resource name. Used in the get or delete operation.',
-        required=True
+        "--dataset-resource-name",
+        help="The dataset resource name. Used in the get or delete operation.",
+        required=True,
     )
 
     delete_parser = subparsers.add_parser(
-        'delete', help='Delete a dataset by the dataset resource name.')
+        "delete", help="Delete a dataset by the dataset resource name."
+    )
     delete_parser.add_argument(
-        '--dataset-resource-name',
-        help='The dataset resource name. Used in the get or delete operation.',
-        required=True
+        "--dataset-resource-name",
+        help="The dataset resource name. Used in the get or delete operation.",
+        required=True,
     )
 
     args = parser.parse_args()
 
-    if args.command == 'create':
+    if args.command == "create":
         create_dataset(args.project_id)
-    elif args.command == 'list':
+    elif args.command == "list":
         list_datasets(args.project_id)
-    elif args.command == 'get':
+    elif args.command == "get":
         get_dataset(args.dataset_resource_name)
-    elif args.command == 'delete':
+    elif args.command == "delete":
         delete_dataset(args.dataset_resource_name)

@@ -28,7 +28,7 @@ import testing_lib
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def dataset():
     # create a temporary dataset
     dataset = testing_lib.create_dataset(PROJECT_ID)
@@ -39,7 +39,7 @@ def dataset():
     testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cleaner():
     # First delete old datasets.
     try:
@@ -58,9 +58,9 @@ def cleaner():
 
 
 def test_create_dataset(cleaner, capsys):
-
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         return manage_dataset.create_dataset(PROJECT_ID)
 
@@ -73,9 +73,9 @@ def test_create_dataset(cleaner, capsys):
 
 @pytest.mark.skip("Constantly failing")
 def test_list_dataset(capsys, dataset):
-
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         manage_dataset.list_datasets(PROJECT_ID)
 
@@ -86,7 +86,8 @@ def test_list_dataset(capsys, dataset):
 
 def test_get_dataset(capsys, dataset):
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         manage_dataset.get_dataset(dataset.name)
 
@@ -97,7 +98,8 @@ def test_get_dataset(capsys, dataset):
 
 def test_delete_dataset(capsys, dataset):
     @backoff.on_exception(
-        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE)
+        backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
+    )
     def run_sample():
         manage_dataset.delete_dataset(dataset.name)
 

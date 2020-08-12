@@ -27,77 +27,70 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
     Google Cloud Storage.
     """
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
     # [END datalabeling_create_instruction_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    if "DATALABELING_ENDPOINT" in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv("DATALABELING_ENDPOINT"))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_create_instruction_beta]
 
-    project_path = client.project_path(project_id)
+    project_path = f"projects/{project_id}"
 
-    pdf_instruction = datalabeling.types.PdfInstruction(
-        gcs_file_uri=instruction_gcs_uri)
+    pdf_instruction = datalabeling.PdfInstruction(gcs_file_uri=instruction_gcs_uri)
 
-    instruction = datalabeling.types.Instruction(
-        display_name='YOUR_INSTRUCTION_DISPLAY_NAME',
-        description='YOUR_DESCRIPTION',
+    instruction = datalabeling.Instruction(
+        display_name="YOUR_INSTRUCTION_DISPLAY_NAME",
+        description="YOUR_DESCRIPTION",
         data_type=data_type,
-        pdf_instruction=pdf_instruction
+        pdf_instruction=pdf_instruction,
     )
 
-    operation = client.create_instruction(project_path, instruction)
+    operation = client.create_instruction(
+        request={"parent": project_path, "instruction": instruction}
+    )
 
     result = operation.result()
 
     # The format of the resource name:
     # project_id/{project_id}/instruction/{instruction_id}
-    print('The instruction resource name: {}'.format(result.name))
-    print('Display name: {}'.format(result.display_name))
-    print('Description: {}'.format(result.description))
-    print('Create time:')
-    print('\tseconds: {}'.format(result.create_time.seconds))
-    print('\tnanos: {}'.format(result.create_time.nanos))
-    print('Data type: {}'.format(
-        datalabeling.enums.DataType(result.data_type).name))
-    print('Pdf instruction:')
-    print('\tGcs file uri: {}\n'.format(
-        result.pdf_instruction.gcs_file_uri))
+    print("The instruction resource name: {}".format(result.name))
+    print("Display name: {}".format(result.display_name))
+    print("Description: {}".format(result.description))
+    print("Create time:")
+    print("\tseconds: {}".format(result.create_time.timestamp_pb().seconds))
+    print("\tnanos: {}".format(result.create_time.timestamp_pb().nanos))
+    print("Data type: {}".format(datalabeling.DataType(result.data_type).name))
+    print("Pdf instruction:")
+    print("\tGcs file uri: {}\n".format(result.pdf_instruction.gcs_file_uri))
 
     return result
+
+
 # [END datalabeling_create_instruction_beta]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument("--project-id", help="Project ID. Required.", required=True)
+
+    parser.add_argument(
+        "--data-type",
+        help="Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.",
+        required=True,
     )
 
     parser.add_argument(
-        '--project-id',
-        help='Project ID. Required.',
-        required=True
-    )
-
-    parser.add_argument(
-        '--data-type',
-        help='Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.',
-        required=True
-    )
-
-    parser.add_argument(
-        '--instruction-gcs-uri',
-        help='The URI of Google Cloud Storage of the instruction. Required.',
-        required=True
+        "--instruction-gcs-uri",
+        help="The URI of Google Cloud Storage of the instruction. Required.",
+        required=True,
     )
 
     args = parser.parse_args()
 
-    create_instruction(
-        args.project_id,
-        args.data_type,
-        args.instruction_gcs_uri
-    )
+    create_instruction(args.project_id, args.data_type, args.instruction_gcs_uri)
