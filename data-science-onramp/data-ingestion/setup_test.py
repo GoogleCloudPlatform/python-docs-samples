@@ -44,7 +44,7 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         },
     },
 }
-DATAPROC_JOB = {    # Dataproc job configuration
+DATAPROC_JOB = {  # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
@@ -60,7 +60,9 @@ def setup_and_teardown_cluster():
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    operation = cluster_client.create_cluster(PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG)
+    operation = cluster_client.create_cluster(
+        PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG
+    )
 
     # Wait for cluster to provision
     operation.result()
@@ -68,7 +70,9 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT_ID, CLUSTER_REGION, DATAPROC_CLUSTER)
+    operation = cluster_client.delete_cluster(
+        PROJECT_ID, CLUSTER_REGION, DATAPROC_CLUSTER
+    )
     operation.result()
 
 
@@ -185,7 +189,9 @@ def test_setup():
     }
 
     for column_name, regexes in regex_dict.items():
-        query = f"SELECT {column_name} FROM `{PROJECT_ID}.{BQ_DATASET}.{BQ_CITIBIKE_TABLE}`"
+        query = (
+            f"SELECT {column_name} FROM `{PROJECT_ID}.{BQ_DATASET}.{BQ_CITIBIKE_TABLE}`"
+        )
         query_job = client.query(query)
 
         result = query_job.result()
