@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataproc_workflow_instantiate_operator_tutorial]
+
 """Example Airflow DAG that kicks off a Cloud Dataproc Template that runs a
 Spark Pi Job.
 
@@ -55,3 +57,5 @@ with models.DAG(
         # The region for the template
         region="us-central1",
     )
+
+# [END composer_dataproc_workflow_instantiate_operator_tutorial]
