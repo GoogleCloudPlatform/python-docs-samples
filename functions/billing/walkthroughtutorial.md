@@ -119,7 +119,6 @@ gcloud functions deploy ${FUNCTION_NAME} \
 ## Configure service account permissions
 
 During the creation, updating, or deletion of a function, the Cloud Functions service uses the Google Cloud Functions service agent service account. You must grant the service account the proper permissions so that it can disable billing, such as the Billing Admin role. 
-
 ```sh
 gcloud projects add-iam-policy-binding \
 ${GOOGLE_CLOUD_PROJECT} \
@@ -131,7 +130,6 @@ ${GOOGLE_CLOUD_PROJECT} \
 ## Verify that Cloud Billing is disabled
 
 To disable Cloud Billing on your project, publish a sample message in Pub/Sub with the test message below. If successful, the project will no longer be visible under the billing account and resources in the project will be disabled. 
-
 ```sh
 gcloud pubsub topics publish ${TOPIC_NAME} --message='{"costAmount": 100.01,"budgetAmount": 100.00}'
 ```
