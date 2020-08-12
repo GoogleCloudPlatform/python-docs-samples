@@ -15,7 +15,7 @@
 # [START composer_dataflow_dag]
 
 
-"""Example Airflow DAG that creates a Cloud Dataflow workflow which takes a 
+"""Example Airflow DAG that creates a Cloud Dataflow workflow which takes a
 text file and adds the rows to a BigQuery table.
 
 This DAG relies on four Airflow variables
