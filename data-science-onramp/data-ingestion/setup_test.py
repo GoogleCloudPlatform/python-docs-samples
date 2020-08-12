@@ -1,5 +1,4 @@
-"""Test file for the setup job in the Data Science Onramp sample application
-Creates a test Dataproc cluster and runs the job with a --test flag.
+"""Test file for the setup job in the Data Science Onramp sample application Creates a test Dataproc cluster and runs the job with a --test flag.
 The job uploads a subset of the data to BigQuery.
 Then, data is pulled from BigQuery and checks are made to see if the data is dirty.
 """
@@ -13,40 +12,44 @@ from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
 
-# Set global variables
-ID = uuid.uuid4()
+# GCP Project
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+TEST_ID = uuid.uuid4()
 
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
-CLUSTER_NAME = f"setup-test-{ID}"
-BUCKET_NAME = f"setup-test-{ID}"
-DATASET_NAME = f"setup-test-{ID}".replace("-", "_")
-CITIBIKE_TABLE = "RAW_DATA"
-DESTINATION_BLOB_NAME = "setup.py"
-JOB_FILE_NAME = f"gs://{BUCKET_NAME}/setup.py"
-TABLE_NAMES = [
-    CITIBIKE_TABLE,
+# Google Cloud Storage constants
+BUCKET_NAME = f"setup-test-{TEST_ID}"
+BUCKET_BLOB = "setup.py"
+
+BQ_DATASET = f"setup-test-{TEST_ID}".replace("-", "_")
+BQ_CITIBIKE_TABLE = "RAW_DATA"
+BQ_TABLES = [
+    BQ_CITIBIKE_TABLE,
     "gas_prices",
 ]
-JOB_DETAILS = {  # Job configuration
-    "placement": {"cluster_name": CLUSTER_NAME},
-    "pyspark_job": {
-        "main_python_file_uri": JOB_FILE_NAME,
-        "args": [BUCKET_NAME, DATASET_NAME, "--test",],
-        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
-    },
-}
-CLUSTER_DATA = {  # Create cluster configuration
-    "project_id": PROJECT,
-    "cluster_name": CLUSTER_NAME,
+
+# Dataproc constants
+DATAPROC_CLUSTER = f"setup-test-{TEST_ID}"
+CLUSTER_REGION = "us-central1"
+CLUSTER_IMAGE = "1.5.4-debian10"
+CLUSTER_CONFIG = {  # Dataproc cluster configuration
+    "project_id": PROJECT_ID,
+    "cluster_name": DATAPROC_CLUSTER,
     "config": {
         "gce_cluster_config": {"zone_uri": "",},
         "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
         "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
-            "image_version": "1.5.4-debian10",
+            "image_version": CLUSTER_IMAGE,
             "optional_components": ["ANACONDA"],
         },
+    },
+}
+DATAPROC_JOB = {    # Dataproc job configuration
+    "placement": {"cluster_name": DATAPROC_CLUSTER},
+    "pyspark_job": {
+        "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
+        "args": [BUCKET_NAME, BQ_DATASET, "--test",],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
 
@@ -55,9 +58,9 @@ CLUSTER_DATA = {  # Create cluster configuration
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
-    operation = cluster_client.create_cluster(PROJECT, REGION, CLUSTER_DATA)
+    operation = cluster_client.create_cluster(PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG)
 
     # Wait for cluster to provision
     operation.result()
@@ -65,7 +68,7 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT_ID, CLUSTER_REGION, DATAPROC_CLUSTER)
     operation.result()
 
 
@@ -76,7 +79,7 @@ def setup_and_teardown_bucket():
     bucket = storage_client.create_bucket(BUCKET_NAME)
 
     # Upload file
-    blob = bucket.blob(DESTINATION_BLOB_NAME)
+    blob = bucket.blob(BUCKET_BLOB)
     blob.upload_from_filename("setup.py")
 
     yield
@@ -89,12 +92,12 @@ def setup_and_teardown_bucket():
 @pytest.fixture(autouse=True)
 def setup_and_teardown_bq_dataset():
     # Dataset is created by the client
-    bq_client = bigquery.Client(project=PROJECT)
+    bq_client = bigquery.Client(project=PROJECT_ID)
 
     yield
 
     # Delete Dataset
-    bq_client.delete_dataset(DATASET_NAME, delete_contents=True)
+    bq_client.delete_dataset(BQ_DATASET, delete_contents=True)
 
 
 def get_blob_from_path(path):
@@ -124,10 +127,10 @@ def test_setup():
 
     # Submit job to dataproc cluster
     job_client = dataproc.JobControllerClient(
-        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
     response = job_client.submit_job_as_operation(
-        project_id=PROJECT, region=REGION, job=JOB_DETAILS
+        project_id=PROJECT_ID, region=CLUSTER_REGION, job=JOB_DETAILS
     )
 
     # Wait for job to complete
@@ -137,7 +140,7 @@ def test_setup():
     out = get_dataproc_job_output(result)
 
     # Check logs to see if tables were uploaded
-    for table_name in TABLE_NAMES:
+    for table_name in BQ_TABLES:
         assert_table_success_message(table_name, out)
 
     # Query BigQuery Table
@@ -182,7 +185,7 @@ def test_setup():
     }
 
     for column_name, regexes in regex_dict.items():
-        query = f"SELECT {column_name} FROM `{PROJECT}.{DATASET_NAME}.{CITIBIKE_TABLE}`"
+        query = f"SELECT {column_name} FROM `{PROJECT_ID}.{BQ_DATASET}.{BQ_CITIBIKE_TABLE}`"
         query_job = client.query(query)
 
         result = query_job.result()
