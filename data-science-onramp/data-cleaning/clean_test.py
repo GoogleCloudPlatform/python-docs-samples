@@ -85,7 +85,7 @@ def setup_and_teardown_cluster():
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
     operation = cluster_client.create_cluster(
-        PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG
+        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
     )
 
     # Wait for cluster to provision
@@ -95,9 +95,9 @@ def setup_and_teardown_cluster():
 
     # Delete cluster
     operation = cluster_client.delete_cluster(
-        PROJECT_ID,
-        CLUSTER_REGION,
-        DATAPROC_CLUSTER,
+        project_id=PROJECT_ID,
+        region=CLUSTER_REGION,
+        cluster_name=DATAPROC_CLUSTER,
         timeout=300
     )
     operation.result()
@@ -138,7 +138,7 @@ def test_clean():
         client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
     operation = job_client.submit_job_as_operation(
-        PROJECT_ID, CLUSTER_REGION, DATAPROC_JOB
+        project_id=PROJECT_ID, region=CLUSTER_REGION, job=DATAPROC_JOB
     )
 
     # Wait for job to complete
