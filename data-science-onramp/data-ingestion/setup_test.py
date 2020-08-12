@@ -16,65 +16,47 @@ import pytest
 # Set global variables
 ID = uuid.uuid4()
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-CLUSTER_NAME = f'setup-test-{ID}'
-BUCKET_NAME = f'setup-test-{ID}'
-DATASET_NAME = f'setup-test-{ID}'.replace("-", "_")
+CLUSTER_NAME = f"setup-test-{ID}"
+BUCKET_NAME = f"setup-test-{ID}"
+DATASET_NAME = f"setup-test-{ID}".replace("-", "_")
 CITIBIKE_TABLE = "RAW_DATA"
 DESTINATION_BLOB_NAME = "setup.py"
-JOB_FILE_NAME = f'gs://{BUCKET_NAME}/setup.py'
+JOB_FILE_NAME = f"gs://{BUCKET_NAME}/setup.py"
 TABLE_NAMES = [
     CITIBIKE_TABLE,
     "gas_prices",
 ]
 JOB_DETAILS = {  # Job configuration
-    'placement': {
-        'cluster_name': CLUSTER_NAME
-    },
-    'pyspark_job': {
-        'main_python_file_uri': JOB_FILE_NAME,
-        'args': [
-            BUCKET_NAME,
-            DATASET_NAME,
-            "--test",
-        ],
-        "jar_file_uris": [
-                "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-        ],
+    "placement": {"cluster_name": CLUSTER_NAME},
+    "pyspark_job": {
+        "main_python_file_uri": JOB_FILE_NAME,
+        "args": [BUCKET_NAME, DATASET_NAME, "--test",],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
 CLUSTER_DATA = {  # Create cluster configuration
-    'project_id': PROJECT,
-    'cluster_name': CLUSTER_NAME,
-    'config': {
-        'gce_cluster_config': {
-            'zone_uri': '',
-        },
-        'master_config': {
-            'num_instances': 1,
-            'machine_type_uri': 'n1-standard-8'
-        },
-        'worker_config': {
-            'num_instances': 6,
-            'machine_type_uri': 'n1-standard-8'
-        },
+    "project_id": PROJECT,
+    "cluster_name": CLUSTER_NAME,
+    "config": {
+        "gce_cluster_config": {"zone_uri": "",},
+        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
+        "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
             "image_version": "1.5.4-debian10",
-            "optional_components": [
-                "ANACONDA"
-            ],
-        }
-    }
+            "optional_components": ["ANACONDA"],
+        },
+    },
 }
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
-    cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
-    })
+    cluster_client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+    )
     operation = cluster_client.create_cluster(PROJECT, REGION, CLUSTER_DATA)
 
     # Wait for cluster to provision
@@ -83,8 +65,7 @@ def setup_and_teardown_cluster():
     yield
 
     # Delete cluster
-    operation = cluster_client.delete_cluster(PROJECT, REGION,
-                                              CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT, REGION, CLUSTER_NAME)
     operation.result()
 
 
@@ -132,8 +113,9 @@ def get_dataproc_job_output(result):
 
 def assert_table_success_message(table_name, out):
     """Check table upload success message was printed in job logs."""
-    assert re.search(f"Table {table_name} successfully written to BigQuery", out), \
-        f"Table {table_name} sucess message not printed in job logs"
+    assert re.search(
+        f"Table {table_name} successfully written to BigQuery", out
+    ), f"Table {table_name} sucess message not printed in job logs"
 
 
 def test_setup():
@@ -141,11 +123,12 @@ def test_setup():
     Check table upload success message as well as data in the table itself"""
 
     # Submit job to dataproc cluster
-    job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': f'{REGION}-dataproc.googleapis.com:443'
-    })
-    response = job_client.submit_job_as_operation(project_id=PROJECT, region=REGION,
-                                                  job=JOB_DETAILS)
+    job_client = dataproc.JobControllerClient(
+        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+    )
+    response = job_client.submit_job_as_operation(
+        project_id=PROJECT, region=REGION, job=JOB_DETAILS
+    )
 
     # Wait for job to complete
     result = response.result()
@@ -160,14 +143,42 @@ def test_setup():
     # Query BigQuery Table
     client = bigquery.Client()
 
+    dms_regex = "-?[0-9]+\u00B0-?[0-9]+'-?[0-9]+\""
+
     regex_dict = {
-        "tripduration": ["(\\d+(?:\\.\\d+)?) s", "(\\d+(?:\\.\\d+)?) min", "(\\d+(?:\\.\\d+)?) h"],
-        "gender": ['f', 'F', 'm', 'M', 'u', 'U', 'male', 'MALE', 'female', 'FEMALE', 'unknown', 'UNKNOWN'],
-        "start_station_latitude": ["[0-9]+" + u"\u00B0" + "[0-9]+\'[0-9]+\""],
-        "start_station_longitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
-        "end_station_latitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
-        "end_station_longitude": ["-?[0-9]+" + u"\u00B0" + "-?[0-9]+\'-?[0-9]+\""],
-        "usertype": ["Subscriber", "subscriber", "SUBSCRIBER", "sub", "Customer", "customer", "CUSTOMER", "cust"],
+        "tripduration": [
+            "(\\d+(?:\\.\\d+)?) s",
+            "(\\d+(?:\\.\\d+)?) min",
+            "(\\d+(?:\\.\\d+)?) h",
+        ],
+        "gender": [
+            "f",
+            "F",
+            "m",
+            "M",
+            "u",
+            "U",
+            "male",
+            "MALE",
+            "female",
+            "FEMALE",
+            "unknown",
+            "UNKNOWN",
+        ],
+        "start_station_latitude": [dms_regex],
+        "start_station_longitude": [dms_regex],
+        "end_station_latitude": [dms_regex],
+        "end_station_longitude": [dms_regex],
+        "usertype": [
+            "Subscriber",
+            "subscriber",
+            "SUBSCRIBER",
+            "sub",
+            "Customer",
+            "customer",
+            "CUSTOMER",
+            "cust",
+        ],
     }
 
     for column_name, regexes in regex_dict.items():
@@ -186,5 +197,6 @@ def test_setup():
                 if row and re.match(f"\\A{regex}\\Z", row):
                     found = True
                     break
-            assert found, \
-                f"No matches to regular expression \"{regex}\" found in column {column_name}"
+            assert (
+                found
+            ), f'No matches to regular expression "{regex}" found in column {column_name}'
