@@ -1,5 +1,6 @@
-import pkg_resources
 from google.appengine.ext import vendor
+import pkg_resources
+
 
 # Set path to your libraries folder.
 path = 'lib'
