@@ -20,7 +20,7 @@ import mock
 import quickstart
 
 
-GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def test_quickstart(capsys):

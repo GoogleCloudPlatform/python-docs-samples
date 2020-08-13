@@ -18,5 +18,5 @@ import snippets
 
 
 def test_list_clusters_and_nodepools():
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     snippets.list_clusters_and_nodepools(project_id, 'us-central1-f')

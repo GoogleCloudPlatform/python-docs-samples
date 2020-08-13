@@ -134,6 +134,15 @@ else:
     }
 # [END db_setup]
 
+# Use a in-memory sqlite3 database when testing in CI systems
+if os.getenv('TRAMPOLINE_CI', None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        }
+    }
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 

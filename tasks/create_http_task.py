@@ -15,7 +15,6 @@
 from __future__ import print_function
 
 import argparse
-import datetime
 
 
 def create_http_task(project,
@@ -30,6 +29,8 @@ def create_http_task(project,
 
     from google.cloud import tasks_v2
     from google.protobuf import timestamp_pb2
+    import datetime
+    import json
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
@@ -39,7 +40,7 @@ def create_http_task(project,
     # queue = 'my-queue'
     # location = 'us-central1'
     # url = 'https://example.com/task_handler'
-    # payload = 'hello'
+    # payload = 'hello' or {'param': 'value'} for application/json
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
@@ -52,6 +53,12 @@ def create_http_task(project,
             }
     }
     if payload is not None:
+        if isinstance(payload, dict):
+            # Convert dict to JSON string
+            payload = json.dumps(payload)
+            # specify http content-type to application/json
+            task['http_request']['headers'] = {'Content-type': 'application/json'}
+
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
 
@@ -77,8 +84,8 @@ def create_http_task(project,
     response = client.create_task(parent, task)
 
     print('Created task {}'.format(response.name))
+    # [END cloud_tasks_create_http_task]
     return response
-# [END cloud_tasks_create_http_task]
 
 
 if __name__ == '__main__':
