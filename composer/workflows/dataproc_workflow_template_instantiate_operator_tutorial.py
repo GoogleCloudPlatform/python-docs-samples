@@ -52,7 +52,7 @@ with models.DAG(
         # The task id of your job
         task_id="dataproc_dag",
         # The template id of your workflow
-        template_id="sparkpi-fail",
+        template_id="sparkpi",
         project_id=project_id,
         # The region for the template
         region="us-central1",
