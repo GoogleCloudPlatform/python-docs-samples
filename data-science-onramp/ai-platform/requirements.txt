@@ -1,7 +1,9 @@
-numpy>=1.14
-pandas>=0.22
-six>=1.11
-tensorflow>=2
-google-cloud-storage>=1.23.0
-scikit-learn>=0.22
+# Version list reflects AI platform runtime 2.1
+# More information here https://cloud.google.com/ai-platform/training/docs/runtime-version-list
+numpy==1.18.0
+pandas==0.25.3
+six==1.13.0
+tensorflow==2.1.0
+google-cloud-storage==1.23.0
+scikit-learn==0.22.1
 cloudml-hypertune
