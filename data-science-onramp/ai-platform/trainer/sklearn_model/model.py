@@ -4,6 +4,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 def define_polynomial_model(degree, alpha):
+    """Returns a scikit learn pipeline for the given hyperparameters"""
     return Pipeline(
         [
             ("polynomial features", PolynomialFeatures(degree=degree)),

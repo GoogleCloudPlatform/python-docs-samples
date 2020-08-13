@@ -13,6 +13,7 @@ DEFAULT_ALPHA = 0
 
 
 def get_args():
+    """Parse the command line arguments"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--job-dir",
@@ -38,19 +39,24 @@ def get_args():
 
 
 def fit_model(args):
+    """Fit and save model given model configuration"""
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
 
+    # Load the data
     print("Loading data from GCS...")
     train_x, train_y, test_x, test_y = util.load_data()
 
+    # Fit the sklearn model
     print("Fitting model...")
     poly_model = model.define_polynomial_model(args.degree, args.alpha)
     poly_model.fit(train_x, train_y)
 
+    # Evaluate the model
     print("Evaluating model...")
     pred_y = poly_model.predict(test_x)
     mae = mean_absolute_error(test_y, pred_y)
 
+    # Report hyperparameter tuning metric
     hpt = hypertune.HyperTune()
     hpt.report_hyperparameter_tuning_metric(
         hyperparameter_metric_tag="mean_absolute_error",
@@ -60,6 +66,7 @@ def fit_model(args):
 
     print(f"Done. Model had MAE={mae}")
 
+    # Save model to either GCS or directory
     model_filename = "model.joblib"
     print("Saving model")
     if "gs://" in args.job_dir:
