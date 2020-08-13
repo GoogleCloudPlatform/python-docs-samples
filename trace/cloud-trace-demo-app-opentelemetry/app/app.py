@@ -19,24 +19,19 @@ import random
 import time
 
 # [START trace_demo_imports]
-from flask import Flask
+import flask
 import requests
 from opentelemetry import trace, propagators
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor, ConsoleSpanExporter
 # [END trace_demo_imports]
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
-trace.set_tracer_provider(TracerProvider())
-cloud_trace_exporter = CloudTraceSpanExporter()
-trace.get_tracer_provider().add_span_processor(
-    SimpleExportSpanProcessor(cloud_trace_exporter)
-)
-tracer = trace.get_tracer(__name__)
 
-propagator = propagators.get_global_httptextformat
+
+propagator = propagators.get_global_httptextformat()
 
 
 @app.route('/')
@@ -47,7 +42,7 @@ def template_test():
     output_string = app.config['keyword']
     # If there is no endpoint, return the output string.
     url = app.config['endpoint']
-    if not url:
+    if url == '':
         return output_string, 200
     # Endpoint is the next service to send string to.
     data = {'body': output_string}
@@ -58,7 +53,7 @@ def template_test():
     )
     # [START trace_context_header]
 
-    context = tracer.get_current_span()
+    context = propagator.extract(get_header_from_flask_request, flask.request)
     propagator.inject(set_header_into_requests_request, request_to_downstream, context=context)
     session = requests.Session()
     response = session.send(request_to_downstream.prepare())
@@ -71,7 +66,7 @@ def set_header_into_requests_request(request: requests.Request, key: str, value:
 
 
 def get_header_from_flask_request(request, key):
-    return request.header.get_all(key)
+    return request.headers.get_all(key)
 
 
 if __name__ == '__main__':
@@ -82,5 +77,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     app.config['keyword'] = args.keyword
     app.config['endpoint'] = args.endpoint
+
+    trace.set_tracer_provider(TracerProvider())
+    # cloud_trace_exporter = CloudTraceSpanExporter()
+    trace.get_tracer_provider().add_span_processor(
+        SimpleExportSpanProcessor(ConsoleSpanExporter())
+    )
+    tracer = trace.get_tracer(__name__)
 
     app.run(debug=True, host='0.0.0.0', port=8080)
