@@ -37,7 +37,9 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
-            "optional_components": ["ANACONDA"],
+            # Change 5 to "ANACONDA" when this issue is resolved:
+            # https://github.com/googleapis/python-dataproc/issues/80
+            "optional_components": [5],
         },
     },
 }
