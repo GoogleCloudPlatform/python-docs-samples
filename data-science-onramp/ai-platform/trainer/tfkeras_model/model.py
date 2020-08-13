@@ -44,34 +44,40 @@ def create_keras_model(input_dim, output_dim, learning_rate):
     # Define Keras model
     model = tf.keras.Sequential(
         [
-            Dense(11, activation=tf.nn.relu,
-                  input_shape=(input_dim,),
-                  kernel_regularizer=k_regularizer,
-                  bias_regularizer=b_regularizer),
-
+            Dense(
+                11,
+                activation=tf.nn.relu,
+                input_shape=(input_dim,),
+                kernel_regularizer=k_regularizer,
+                bias_regularizer=b_regularizer,
+            ),
             Dense(80, activation=tf.nn.relu),
             Dense(150, activation=tf.nn.relu),
-
-            Dense(300, activation=tf.nn.relu,
-                  kernel_regularizer=k_regularizer,
-                  bias_regularizer=b_regularizer),
-
+            Dense(
+                300,
+                activation=tf.nn.relu,
+                kernel_regularizer=k_regularizer,
+                bias_regularizer=b_regularizer,
+            ),
             Dense(500, activation=tf.nn.relu),
-
-            Dense(800, activation=tf.nn.relu,
-                  kernel_regularizer=k_regularizer,
-                  bias_regularizer=b_regularizer),
-
+            Dense(
+                800,
+                activation=tf.nn.relu,
+                kernel_regularizer=k_regularizer,
+                bias_regularizer=b_regularizer,
+            ),
             Dense(1000, activation=tf.nn.relu),
-
-            Dense(1500, activation=tf.nn.relu,
-                  kernel_regularizer=k_regularizer,
-                  bias_regularizer=b_regularizer),
-
-            Dense(output_dim)
-        ])
+            Dense(
+                1500,
+                activation=tf.nn.relu,
+                kernel_regularizer=k_regularizer,
+                bias_regularizer=b_regularizer,
+            ),
+            Dense(output_dim),
+        ]
+    )
 
     # Compile Keras model
-    model.compile(loss='mae', optimizer='adam', metrics=['mae'])
+    model.compile(loss="mae", optimizer="adam", metrics=["mae"])
 
     return model
