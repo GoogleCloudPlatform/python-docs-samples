@@ -40,8 +40,9 @@ def test_service_accounts(capsys):
         try:
             service_accounts.delete_service_account(unique_id)
         except HttpError as e:
-            # When the service account doesn't exist, the service returns 403.
-            if '403' in str(e):
-                print("Ignoring 403 error upon cleanup.")
+            # We've recently seen 404 error too.
+            # It used to return 403, so we keep it too.
+            if '403' in str(e) or '404' in str(e):
+                print("Ignoring 404/403 error upon cleanup.")
             else:
                 raise
