@@ -40,7 +40,7 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
-            "optional_components": ["ANACONDA"],
+            "optional_components": [5],
         },
     },
 }
@@ -58,7 +58,7 @@ DATAPROC_JOB = {  # Dataproc job configuration
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(
-        #client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
 
     operation = cluster_client.create_cluster(
@@ -72,7 +72,7 @@ def setup_and_teardown_cluster():
 
     # Delete cluster
     operation = cluster_client.delete_cluster(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, name=DATAPROC_CLUSTER
+        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
     )
     operation.result()
 
