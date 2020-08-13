@@ -18,9 +18,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import date_format, expr, UserDefinedFunction, when
 from pyspark.sql.types import FloatType, StringType, StructField, StructType
 
-
-BUCKET_NAME = sys.argv[1]
-DATASET_NAME = sys.argv[2]
 TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
 CITIBIKE_TABLE_NAME = "RAW_DATA"
 EXTERNAL_TABLES = {
@@ -96,7 +93,7 @@ def gender(s):
 
 def convert_angle(angle):
     """Converts long and lat to DMS notation"""
-    if angle is None:
+    if not angle:
         return None
     degrees = int(angle)
     minutes = int((angle - degrees) * 60)
@@ -105,19 +102,19 @@ def convert_angle(angle):
     return random.choices([str(angle), new_angle], weights=[0.55, 0.45])[0]
 
 
-def create_bigquery_dataset():
+def create_bigquery_dataset(dataset_name):
     # Create BigQuery Dataset
     client = bigquery.Client()
-    dataset_id = f"{client.project}.{DATASET_NAME}"
+    dataset_id = f"{client.project}.{dataset_name}"
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
     dataset = client.create_dataset(dataset)
 
 
-def write_to_bigquery(df, table_name):
+def write_to_bigquery(df, table_name, dataset_name):
     """Write a dataframe to BigQuery"""
     client = bigquery.Client()
-    dataset_id = f"{client.project}.{DATASET_NAME}"
+    dataset_id = f"{client.project}.{dataset_name}"
 
     # Saving the data to BigQuery
     df.write.format("bigquery").option("table", f"{dataset_id}.{table_name}").save()
@@ -126,12 +123,16 @@ def write_to_bigquery(df, table_name):
 
 
 def main():
-    # Create a SparkSession under the name "setup". Viewable via the Spark UI
+    # Get command line arguments
+    BUCKET_NAME = sys.argv[1]
+    DATASET_NAME = sys.argv[2]
+
+    # Create a SparkSession under the name "setup"
     spark = SparkSession.builder.appName("setup").getOrCreate()
 
     spark.conf.set("temporaryGcsBucket", BUCKET_NAME)
 
-    create_bigquery_dataset()
+    create_bigquery_dataset(DATASET_NAME)
 
     # Whether we are running the job as a test
     test = False
@@ -147,7 +148,7 @@ def main():
     for table_name, data in EXTERNAL_TABLES.items():
         df = spark.createDataFrame(pd.read_csv(data["url"]), schema=data["schema"])
 
-        write_to_bigquery(df, table_name)
+        write_to_bigquery(df, table_name, DATASET_NAME)
 
     # Check if table exists
     try:
@@ -203,7 +204,7 @@ def main():
     df = df.union(dup_df)
 
     print("Uploading citibike dataset...")
-    write_to_bigquery(df, CITIBIKE_TABLE_NAME)
+    write_to_bigquery(df, CITIBIKE_TABLE_NAME, DATASET_NAME)
 
 
 if __name__ == "__main__":

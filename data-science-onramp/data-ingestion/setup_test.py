@@ -35,7 +35,7 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
     "project_id": PROJECT_ID,
     "cluster_name": DATAPROC_CLUSTER,
     "config": {
-        "gce_cluster_config": {"zone_uri": "",},
+        "gce_cluster_config": {"zone_uri": ""},
         "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
         "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
         "software_config": {
@@ -48,7 +48,7 @@ DATAPROC_JOB = {  # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
-        "args": [BUCKET_NAME, BQ_DATASET, "--test",],
+        "args": [BUCKET_NAME, BQ_DATASET, "--test"],
         "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
@@ -58,10 +58,11 @@ DATAPROC_JOB = {  # Dataproc job configuration
 def setup_and_teardown_cluster():
     # Create cluster using cluster client
     cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+        #client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
     )
+
     operation = cluster_client.create_cluster(
-        PROJECT_ID, CLUSTER_REGION, CLUSTER_CONFIG
+        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
     )
 
     # Wait for cluster to provision
@@ -71,7 +72,7 @@ def setup_and_teardown_cluster():
 
     # Delete cluster
     operation = cluster_client.delete_cluster(
-        PROJECT_ID, CLUSTER_REGION, DATAPROC_CLUSTER
+        project_id=PROJECT_ID, region=CLUSTER_REGION, name=DATAPROC_CLUSTER
     )
     operation.result()
 
