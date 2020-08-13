@@ -38,9 +38,10 @@ def batch_predict(
     output_config = automl.types.BatchPredictOutputConfig(
         gcs_destination=gcs_destination
     )
+    params = {}
 
     response = prediction_client.batch_predict(
-        model_full_id, input_config, output_config
+        model_full_id, input_config, output_config, params=params
     )
 
     print("Waiting for operation to complete...")
