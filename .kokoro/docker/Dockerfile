@@ -15,7 +15,7 @@
 # Sometimes renovate tries to update it to 16.10. I don't think it's
 # worthwhile because 16.04 is an LTS release. Maybe we should think
 # about upgrading to 18.04 (the next LTS) instead.
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -34,7 +34,9 @@ RUN apt-get update \
     build-essential \
     ca-certificates \
     curl \
+    dirmngr \
     git \
+    gpg-agent \
     graphviz \
     libbz2-dev \
     libdb5.3-dev \
@@ -51,6 +53,7 @@ RUN apt-get update \
     software-properties-common \
     ssh \
     sudo \
+    systemd \
     tcl \
     tcl-dev \
     tk \
@@ -91,38 +94,33 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+COPY fetch_gpg_keys.sh /tmp
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.17 3.6.9 3.7.5 3.8.0; do \
-  set -ex \
-    && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-    && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      # 2.7.17 (Benjamin Peterson)
-      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.4.10, 3.5.9 (Larry Hastings)
-      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.6.9, 3.7.5 (Ned Deily)
-      0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.0 (Łukasz Langa)
-      E3FF2839C048B25C084DEBE9B26995E310250568 \
-    && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
-    && rm -r "$GNUPGHOME" python-${PYTHON_VERSION}.tar.xz.asc \
-    && mkdir -p /usr/src/python-${PYTHON_VERSION} \
-    && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-    && rm python-${PYTHON_VERSION}.tar.xz \
-    && cd /usr/src/python-${PYTHON_VERSION} \
-    && ./configure \
-        --enable-shared \
-      # This works only on Python 2.7 and throws a warning on every other
-      # version, but seems otherwise harmless.
-        --enable-unicode=ucs4 \
-        --with-system-ffi \
-        --without-ensurepip \
-    && make -j$(nproc) \
-    && make install \
-    && ldconfig \
+    && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
+    && /tmp/fetch_gpg_keys.sh \
+    && for PYTHON_VERSION in 2.7.18 3.6.10 3.7.7 3.8.3; do \
+        wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+        && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+        && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
+        && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
+        && mkdir -p /usr/src/python-${PYTHON_VERSION} \
+        && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
+        && rm python-${PYTHON_VERSION}.tar.xz \
+        && cd /usr/src/python-${PYTHON_VERSION} \
+        && ./configure \
+            --enable-shared \
+            # This works only on Python 2.7 and throws a warning on every other
+            # version, but seems otherwise harmless.
+            --enable-unicode=ucs4 \
+            --with-system-ffi \
+            --without-ensurepip \
+        && make -j$(nproc) \
+        && make install \
+        && ldconfig \
   ; done \
+  && rm -rf "${GNUPGHOME}" \
   && rm -rf /usr/src/python* \
   && rm -rf ~/.cache/
 
@@ -150,7 +148,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 293.0.0
+ENV CLOUD_SDK_VERSION 304.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz

@@ -17,7 +17,7 @@ import os
 import set_endpoint
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 def test_set_endpoint(capsys):

@@ -39,7 +39,36 @@ fi
 # `--only-diff-head` will only run tests on project changes from the
 # previous commit.
 if [[ $* == *--only-diff-head* ]]; then
-    DIFF_FROM="HEAD~.."
+    set +e
+    git diff --quiet "HEAD~.." .kokoro/tests .kokoro/docker \
+	.kokoro/trampoline_v2.sh
+    CHANGED=$?
+    set -e
+    if [[ "${CHANGED}" -eq 0 ]]; then
+	DIFF_FROM="HEAD~.."
+    else
+	echo "Changes to test driver files detected. Running full tests."
+    fi
+fi
+
+# Because Kokoro runs presubmit builds simalteneously, we often see
+# quota related errors. I think we can avoid this by changing the
+# order of tests to execute (e.g. reverse order for py-3.8
+# build). Currently there's no easy way to do that with btlr, so we
+# temporarily wait few minutes to avoid quota issue for some
+# presubmit builds.
+if [[ "${KOKORO_JOB_NAME}" == *presubmit ]] \
+       && [[ -z "${DIFF_FROM:-}" ]]; then
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.7" ]]; then
+	echo -n "Detected py-3.7 presubmit full build,"
+	echo "Wait 5 minutes to avoid quota issues."
+	sleep 5m
+    fi
+    if [[ "${RUN_TESTS_SESSION}" == "py-3.8" ]]; then
+	echo -n "Detected py-3.8 presubmit full build,"
+	echo "Wait 10 minutes to avoid quota issues."
+	sleep 10m
+    fi
 fi
 
 if [[ -z "${PROJECT_ROOT:-}" ]]; then
@@ -54,11 +83,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # install nox for testing
 pip install --user -q nox
 
-# Use secrets acessor service account to get secrets.
-if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
-    gcloud auth activate-service-account \
-	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
-	   --project="cloud-devrel-kokoro-resources"
+# On kokoro, we should be able to use the default service account. We
+# need to somehow bootstrap the secrets on other CI systems.
+if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then
     # This script will create 3 files:
     # - testing/test-env.sh
     # - testing/service-account.json
@@ -94,97 +121,37 @@ set +e
 RTN=0
 ROOT=$(pwd)
 
-# Find all requirements.txt in the repository (may break on whitespace).
-for file in **/requirements.txt; do
-    cd "$ROOT"
-    # Navigate to the project folder.
-    file=$(dirname "$file")
-    cd "$file"
+test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
-    # First we look up the environment variable `RUN_TESTS_DIRS`. If
-    # the value is set, we'll iterate through the colon separated
-    # directory list. If the target directory is not under any
-    # directory in the list, we skip this directory.
-    # This environment variables are primarily for
-    # `scripts/run_tests_local.sh`.
-    #
-    # The value must be a colon separated list of relative paths from
-    # the project root.
-    #
-    # Example:
-    #   cdn:appengine/flexible
-    #     run tests for `cdn` and `appengine/flexible` directories.
-    #   logging/cloud-client
-    #     only run tests for `logging/cloud-client` directory.
-    #
-    if [[ -n "${RUN_TESTS_DIRS:-}" ]]; then
-	match=0
-	for d in $(echo "${RUN_TESTS_DIRS}" | tr ":" "\n"); do
-	    # If the current dir starts with one of the
-	    # RUN_TESTS_DIRS, we should run the tests.
-	    if [[ "${file}" = "${d}"* ]]; then
-		match=1
-		break
-	    fi
-	done
-	if [[ $match -eq 0 ]]; then
-	    continue
-	fi
-    fi
-    # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ -n "${DIFF_FROM:-}" ]]; then
-        git diff --quiet "$DIFF_FROM" .
-        CHANGED=$?
-        if [[ "$CHANGED" -eq 0 ]]; then
-          # echo -e "\n Skipping $file: no changes in folder.\n"
-          continue
-        fi
-    fi
+btlr_args=(
+    "run"
+    "**/requirements.txt"
+)
 
-    echo "------------------------------------------------------------"
-    echo "- testing $file"
-    echo "------------------------------------------------------------"
+if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
+    btlr_args+=(
+	"--max-concurrency"
+	"${NUM_TEST_WORKERS}"
+    )
+fi
 
-    # If no local noxfile exists, copy the one from root
-    if [[ ! -f "noxfile.py" ]]; then
-        PARENT_DIR=$(cd ../ && pwd)
-        while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
-        do
-            PARENT_DIR=$(dirname "$PARENT_DIR")
-        done
-        cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
-        echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
-        cleanup_noxfile=1
-    else
-        cleanup_noxfile=0
-    fi
+if [[ -n "${DIFF_FROM:-}"  ]]; then
+    btlr_args+=(
+	"--git-diff"
+	"${DIFF_FROM} ."
+    )
+fi
 
-    # Use nox to execute the tests for the project.
-    nox -s "$RUN_TESTS_SESSION"
-    EXIT=$?
+btlr_args+=(
+    "--"
+    "${test_prog}"
+)
 
-    # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
-    # to the Build Cop Bot.
-    # See:
-    # https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "true" ]]; then
-      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-      $KOKORO_GFILE_DIR/linux_amd64/buildcop
-    fi
+echo "testing/btlr" "${btlr_args[@]}"
 
-    if [[ $EXIT -ne 0 ]]; then
-      RTN=1
-      echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
-    else
-      echo -e "\n Testing completed.\n"
-    fi
+testing/btlr "${btlr_args[@]}"
 
-    # Remove noxfile.py if we copied.
-    if [[ $cleanup_noxfile -eq 1 ]]; then
-        rm noxfile.py
-    fi
-
-done
+RTN=$?
 cd "$ROOT"
 
 # Remove secrets if we used decrypt-secrets.sh.

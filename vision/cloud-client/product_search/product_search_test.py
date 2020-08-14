@@ -19,7 +19,7 @@ import pytest
 from product_search import get_similar_products_file, get_similar_products_uri
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_SET_ID = 'indexed_product_set_id_for_testing'

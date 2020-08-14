@@ -17,7 +17,7 @@ import os
 import parse_with_model_beta
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 AUTOML_NL_MODEL_ID = 'TCN3472481026502981088'
 

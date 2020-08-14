@@ -22,7 +22,7 @@ from reference_image_management import (
     create_reference_image, delete_reference_image, list_reference_images)
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'

@@ -37,13 +37,13 @@ log_path = 'config_log.csv'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
 
-if ('GCLOUD_PROJECT' not in os.environ or
+if ('GOOGLE_CLOUD_PROJECT' not in os.environ or
         'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ):
     print(
       'You must set GCLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS')
     quit()
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)

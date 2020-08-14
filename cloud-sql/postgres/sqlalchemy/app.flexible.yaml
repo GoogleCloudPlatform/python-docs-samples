@@ -29,7 +29,8 @@ beta_settings:
   cloud_sql_instances: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>=tcp:<PORT>
 
 # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-# something like https://cloud.google.com/kms/ to help keep secrets secret.
+# something like https://cloud.google.com/secret-manager/docs/overview to help keep
+# secrets secret.
 env_variables:
   CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
   DB_USER: my-db-user

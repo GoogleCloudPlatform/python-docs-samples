@@ -235,6 +235,10 @@ def test_order_where_limit():
     snippets.order_where_limit()
 
 
+def test_order_limit_to_last():
+    snippets.order_limit_to_last()
+
+
 def test_order_where_invalid():
     snippets.order_where_invalid()
 
@@ -316,3 +320,7 @@ def test_collection_group_query(db):
                      u'National Air and Space Museum',
                      u'National Museum of Nature and Science',
                      u'Beijing Ancient Observatory'}
+
+
+def test_list_document_subcollections():
+    snippets.list_document_subcollections()

@@ -32,7 +32,7 @@ app = Flask(__name__)
 app.config['PUBSUB_VERIFICATION_TOKEN'] = \
     os.environ['PUBSUB_VERIFICATION_TOKEN']
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
-app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
+app.config['GOOGLE_CLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 
 # Global list to store messages, tokens, etc. received by this instance.
 MESSAGES = []
@@ -52,7 +52,7 @@ def index():
     # Consider initializing the publisher client outside this function
     # for better latency performance.
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(app.config['GCLOUD_PROJECT'],
+    topic_path = publisher.topic_path(app.config['GOOGLE_CLOUD_PROJECT'],
                                       app.config['PUBSUB_TOPIC'])
     future = publisher.publish(topic_path, data)
     future.result()
@@ -85,12 +85,6 @@ def receive_messages_handler():
         # case they would all share the same token for a limited time window.
         claim = id_token.verify_oauth2_token(token, requests.Request(),
                                              audience='example.com')
-        # Must also verify the `iss` claim.
-        if claim['iss'] not in [
-            'accounts.google.com',
-            'https://accounts.google.com'
-        ]:
-            raise ValueError('Wrong issuer.')
         CLAIMS.append(claim)
     except Exception as e:
         return 'Invalid token: {}\n'.format(e), 400
