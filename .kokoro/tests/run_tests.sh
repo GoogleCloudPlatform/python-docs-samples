@@ -83,6 +83,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # install nox for testing
 pip install --user -q nox
 
+# install PyYaml (used by the DRIFT region tag parsing system)
+pip install --user -q pyyaml
+
 # On kokoro, we should be able to use the default service account. We
 # need to somehow bootstrap the secrets on other CI systems.
 if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then

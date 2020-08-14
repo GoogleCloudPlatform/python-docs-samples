@@ -178,7 +178,6 @@ RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 ENV REGION_TAG_PARSER_DIR /region-tag-parser
 ENV PARSER_PATH /region-tag-parser/wizard-py/cli.py
 
-RUN python3 -m pip install --user --no-cache-dir pyyaml
 RUN git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
 RUN chmod +x $PARSER_PATH
 
