@@ -36,7 +36,7 @@ For this tutorial, select or create a test project. The function will be acting 
 <walkthrough-project-setup></walkthrough-project-setup> 
 
 ```sh
-export GCP_PROJECT={{project_id}}
+export GOOGLE_CLOUD_PROJECT={{project_id}}
 ```
 
 ## Select a billing administration project
