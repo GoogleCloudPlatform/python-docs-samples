@@ -146,7 +146,7 @@ def enable_service_account(email):
     service.projects().serviceAccounts().enable(
         name='projects/-/serviceAccounts/' + email).execute()
 
-    print("Disabled service account :" + email)
+    print("Enabled service account :" + email)
 # [END iam_enable_service_account]
 
 
