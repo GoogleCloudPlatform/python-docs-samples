@@ -15,12 +15,14 @@
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
+# [START functions_billing_slack]
 import base64
 import json
 import os
 # [END functions_billing_stop]
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
+# [END functions_billing_slack]
 
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
@@ -32,6 +34,7 @@ from googleapiclient import discovery
 
 # [START functions_billing_slack]
 import slack
+from slack.errors import SlackApiError
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
@@ -42,11 +45,9 @@ PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_limit]
 
 # [START functions_billing_slack]
-
 # See https://api.slack.com/docs/token-types#bot for more info
 BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
-
-CHANNEL_ID = 'C0XXXXXX'
+CHANNEL = 'C0XXXXXX'
 
 slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 
@@ -54,14 +55,32 @@ slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 def notify_slack(data, context):
     pubsub_message = data
 
-    notification_attrs = json.dumps(pubsub_message['attributes'])
-    notification_data = base64.b64decode(data['data']).decode('utf-8')
-    budget_notification_text = f'{notification_attrs}, {notification_data}'
+    # For more information, see
+    # https://cloud.google.com/billing/docs/how-to/budgets-programmatic-notifications#notification_format
+    try:
+        notification_attr = json.dumps(pubsub_message['attributes'])
+    except KeyError:
+        notification_attr = "No attributes passed in"
 
-    slack_client.api_call(
-      'chat.postMessage',
-      channel=CHANNEL_ID,
-      text=budget_notification_text)
+    try:
+        notification_data = base64.b64decode(data['data']).decode('utf-8')
+    except KeyError:
+        notification_data = "No data passed in"
+
+    # This is just a quick dump of the budget data (or an empty string)
+    # You can modify and format the message to meet your needs
+    budget_notification_text = f'{notification_attr}, {notification_data}'
+
+    try:
+        slack_client.api_call(
+            'chat.postMessage',
+            json={
+                'channel': CHANNEL,
+                'text'   : budget_notification_text
+            }
+        )
+    except SlackApiError:
+        print('Error posting to Slack')
 # [END functions_billing_slack]
 
 
@@ -75,6 +94,10 @@ def stop_billing(data, context):
         print(f'No action necessary. (Current cost: {cost_amount})')
         return
 
+    if PROJECT_ID is None:
+        print('No project specified with environment variable')
+        return
+
     billing = discovery.build(
         'cloudbilling',
         'v1',
@@ -83,8 +106,10 @@ def stop_billing(data, context):
 
     projects = billing.projects()
 
-    if __is_billing_enabled(PROJECT_NAME, projects):
-        print(__disable_billing_for_project(PROJECT_NAME, projects))
+    billing_enabled = __is_billing_enabled(PROJECT_NAME, projects)
+
+    if billing_enabled:
+        __disable_billing_for_project(PROJECT_NAME, projects)
     else:
         print('Billing already disabled')
 
@@ -95,19 +120,28 @@ def __is_billing_enabled(project_name, projects):
     @param {string} project_name Name of project to check if billing is enabled
     @return {bool} Whether project has billing enabled or not
     """
-    res = projects.getBillingInfo(name=project_name).execute()
-    return res['billingEnabled']
+    try:
+        res = projects.getBillingInfo(name=project_name).execute()
+        return res['billingEnabled']
+    except KeyError:
+        # If billingEnabled isn't part of the return, billing is not enabled
+        return False
+    except Exception:
+        print('Unable to determine if billing is enabled on specified project, assuming billing is enabled')
+        return True
 
 
 def __disable_billing_for_project(project_name, projects):
     """
     Disable billing for a project by removing its billing account
     @param {string} project_name Name of project disable billing on
-    @return {string} Text containing response from disabling billing
     """
     body = {'billingAccountName': ''}  # Disable billing
-    res = projects.updateBillingInfo(name=project_name, body=body).execute()
-    print(f'Billing disabled: {json.dumps(res)}')
+    try:
+        res = projects.updateBillingInfo(name=project_name, body=body).execute()
+        print(f'Billing disabled: {json.dumps(res)}')
+    except Exception:
+        print('Failed to disable billing, possibly check permissions')
 # [END functions_billing_stop]
 
 

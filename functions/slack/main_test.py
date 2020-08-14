@@ -13,10 +13,12 @@
 
 import json
 import os
+import time
 
 import googleapiclient.discovery
 import mock
 import pytest
+from slack.signature import SignatureVerifier
 
 import main
 
@@ -28,8 +30,9 @@ example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
 class Request(object):
-    def __init__(self, data=b''):
+    def __init__(self, data='', headers={}):
         self.data = data
+        self.headers = headers
 
     def get_data(self):
         return self.data
@@ -39,27 +42,36 @@ class TestGCFPySlackSample(object):
     def test_verify_signature_request_form_empty(self):
         with pytest.raises(ValueError):
             request = Request()
-            request.headers = {}
             main.verify_signature(request)
 
     def test_verify_signature_token_incorrect(self):
         with pytest.raises(ValueError):
-            request = Request()
-            request.headers = {'X-Slack-Signature': '12345'}
+            request = Request(headers={'X-Slack-Signature': '12345'})
             main.verify_signature(request)
 
     def test_verify_web_hook_valid_request(self):
         request = Request()
+        request.body = ''
+
+        now = str(int(time.time()))
+
+        verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
+        test_signature = verifier.generate_signature(
+            timestamp=now,
+            body=''
+        )
+
         request.headers = {
-            'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']
+            'X-Slack-Request-Timestamp': now,
+            'X-Slack-Signature': test_signature
         }
         main.verify_signature(request)
 
     def test_format_slack_message(self):
         message = main.format_slack_message('lion', example_response)
 
-        assert 'lion' in message['text'].lower()
-        assert 'lion' in message['attachments'][0]['title'].lower()
+        # Just make sure there's a result.
+        assert 'title' in message['attachments'][0]
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_make_search_request(self):
@@ -68,9 +80,8 @@ class TestGCFPySlackSample(object):
             search = entities.search.return_value
             search.execute.return_value = example_response
             message = main.make_search_request('lion')
-
-        assert 'lion' in message['text'].lower()
-        assert 'lion' in message['attachments'][0]['title'].lower()
+        # Just make sure there's a result.
+        assert 'title' in message['attachments'][0]
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_kg_search(self):
@@ -78,13 +89,24 @@ class TestGCFPySlackSample(object):
             entities = main.kgsearch.entities.return_value
             search = entities.search.return_value
             search.execute.return_value = example_response
+
             request = Request()
-            request.method = 'POST'
-            request.headers = {
-                'X-Slack-Signature': os.environ['SLACK_TEST_SIGNATURE']
-            }
             request.form = {
                 'text': 'lion'
+            }
+            request.data = json.dumps(request.form)
+
+            now = str(int(time.time()))
+            verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
+            test_signature = verifier.generate_signature(
+                timestamp=now,
+                body=request.data
+            )
+
+            request.method = 'POST'
+            request.headers = {
+                'X-Slack-Request-Timestamp': now,
+                'X-Slack-Signature': test_signature
             }
 
             with mock.patch('main.jsonify', side_effect=json.dumps):

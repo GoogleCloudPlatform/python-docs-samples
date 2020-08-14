@@ -32,10 +32,13 @@ fi
 PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
 
 gcloud secrets versions access latest --secret="python-docs-samples-test-env" \
+       --project="${PROJECT_ID}" \
        > testing/test-env.sh
 gcloud secrets versions access latest \
        --secret="python-docs-samples-service-account" \
+       --project="${PROJECT_ID}" \
        > testing/service-account.json
 gcloud secrets versions access latest \
        --secret="python-docs-samples-client-secrets" \
+       --project="${PROJECT_ID}" \
        > testing/client-secrets.json

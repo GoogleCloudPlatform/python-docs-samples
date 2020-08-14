@@ -40,9 +40,8 @@ def change_file_storage_class(bucket_name, blob_name):
         )
     )
     return blob
+# [END storage_change_file_storage_class]
 
-
-# [START storage_change_file_storage_class]
 
 if __name__ == "__main__":
     change_file_storage_class(bucket_name=sys.argv[1], blob_name=sys.argv[2])
