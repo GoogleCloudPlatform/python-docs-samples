@@ -40,7 +40,7 @@ export GCP_PROJECT={{project_id}}
 ```
 
 ## Select a billing administration project
- 
+
 For this tutorial, create a new billing administration project.
 
 <walkthrough-project-setup></walkthrough-project-setup> 

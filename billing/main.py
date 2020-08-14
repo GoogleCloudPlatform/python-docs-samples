@@ -61,4 +61,3 @@ def __disable_billing_for_project(project_name, projects):
         print(f'Billing disabled: {json.dumps(res)}')
     except Exception:
         print('Failed to disable billing, possibly check permissions')
-        
