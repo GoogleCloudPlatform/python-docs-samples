@@ -1,9 +1,0 @@
-# [START gae_python37_cloudsql_config]
-runtime: python37
-
-env_variables:
-  CLOUD_SQL_USERNAME: YOUR-USERNAME
-  CLOUD_SQL_PASSWORD: YOUR-PASSWORD
-  CLOUD_SQL_DATABASE_NAME: YOUR-DATABASE
-  CLOUD_SQL_CONNECTION_NAME: YOUR-CONNECTION-NAME
-# [END gae_python37_cloudsql_config]
