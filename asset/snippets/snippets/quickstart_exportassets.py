@@ -36,6 +36,32 @@ def export_assets(project_id, dump_file_path):
     # [END asset_quickstart_export_assets]
 
 
+def export_assets_bigquery(project_id, dataset, table):
+    # [START asset_quickstart_export_assets_bigquery]
+    from google.cloud import asset_v1
+
+    # TODO project_id = 'Your Google Cloud Project ID'
+    # TODO dataset = 'Your BigQuery dataset path'
+    # TODO table = 'Your BigQuery table name'
+
+    client = asset_v1.AssetServiceClient()
+    parent = "projects/{}".format(project_id)
+    content_type = asset_v1.ContentType.RESOURCE
+    output_config = asset_v1.OutputConfig()
+    output_config.bigquery_destination.dataset = dataset
+    output_config.bigquery_destination.table = table
+    output_config.bigquery_destination.force = True
+    response = client.export_assets(
+        request={
+            "parent": parent,
+            "content_type": content_type,
+            "output_config": output_config
+            }
+    )
+    print(response.result())
+    # [END asset_quickstart_export_assets_bigquery]
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
