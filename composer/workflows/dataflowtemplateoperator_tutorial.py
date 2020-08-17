@@ -15,10 +15,10 @@
 # [START composer_dataflow_dag]
 
 
-"""Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
-wordcount example, and deletes the cluster.
+"""Example Airflow DAG that creates a Cloud Dataflow workflow which takes a
+text file and adds the rows to a BigQuery table.
 
-This DAG relies on three Airflow variables
+This DAG relies on four Airflow variables
 https://airflow.apache.org/concepts.html#variables
 * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
