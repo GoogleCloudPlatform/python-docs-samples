@@ -25,8 +25,8 @@ import google.oauth2.id_token
 
 def make_authorized_get_request(service_url):
     """
-    make_authorized_get_request makes a GET request to the specified Cloud Run 
-    endpoint in service_url (must be a complete URL) by authenticating with the 
+    make_authorized_get_request makes a GET request to the specified HTTP endpoint
+    in service_url (must be a complete URL) by authenticating with the 
     ID token obtained from the google-auth client library.
     """
 
