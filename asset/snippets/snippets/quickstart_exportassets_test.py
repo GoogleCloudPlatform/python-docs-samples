@@ -17,6 +17,7 @@
 import os
 import uuid
 
+from google.cloud import bigquery
 from google.cloud import storage
 import pytest
 
@@ -24,11 +25,17 @@ import quickstart_exportassets
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET = "assets-{}".format(uuid.uuid4().hex)
+DATASET = "assets_{}".format(int(uuid.uuid4()))
 
 
 @pytest.fixture(scope="module")
 def storage_client():
     yield storage.Client()
+
+
+@pytest.fixture(scope="module")
+def bigquery_client():
+    yield bigquery.Client()
 
 
 @pytest.fixture(scope="module")
@@ -44,9 +51,27 @@ def asset_bucket(storage_client):
         raise e
 
 
-def test_export_assets(asset_bucket, capsys):
+@pytest.fixture(scope='module')
+def dataset(bigquery_client):
+    dataset_id = "{}.{}".format(PROJECT, DATASET)
+    dataset = bigquery.Dataset(dataset_id)
+    dataset.location = "US"
+    dataset = bigquery_client.create_dataset(dataset)
+
+    yield DATASET
+
+    bigquery_client.delete_dataset(
+            dataset_id, delete_contents=True, not_found_ok=False)
+
+
+def test_export_assets(asset_bucket, dataset, capsys):
     dump_file_path = "gs://{}/assets-dump.txt".format(asset_bucket)
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
-
     assert dump_file_path in out
+
+    dataset_id = "projects/{}/datasets/{}".format(PROJECT, dataset)
+    quickstart_exportassets.export_assets_bigquery(
+        PROJECT, dataset_id, "assettable")
+    out, _ = capsys.readouterr()
+    assert dataset_id in out
