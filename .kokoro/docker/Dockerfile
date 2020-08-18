@@ -174,14 +174,4 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Setup DRIFT region tag parser
-ENV REGION_TAG_PARSER_DIR /region-tag-parser
-ENV PARSER_PATH ${REGION_TAG_PARSER_DIR}/wizard-py/cli.py
-
-RUN git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
-
-# Add commit hash so Docker rebuild images whenever region tag parser changes
-RUN cd ${REGION_TAG_PARSER_DIR} && git checkout 3a1a1c51ff92264d36489d8e9ceb1a9f2f760f6b
-RUN chmod +x $PARSER_PATH
-
 CMD ["python3.6"]

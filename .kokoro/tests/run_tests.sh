@@ -157,6 +157,17 @@ testing/btlr "${btlr_args[@]}"
 RTN=$?
 cd "$ROOT"
 
+# Setup DRIFT region tag parser
+# (only run on *some* builds)
+if [ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+    export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
+    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+    if [[ ! -f $PARSER_PATH ]]; then
+        git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
+        chmod +x $PARSER_PATH
+    fi
+fi
+
 # Remove secrets if we used decrypt-secrets.sh.
 if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
     rm testing/{test-env.sh,client-secrets.json,service-account.json}
