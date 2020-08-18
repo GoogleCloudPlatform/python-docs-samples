@@ -34,11 +34,11 @@ def batch_translate_text_with_model(
 
     input_configs_element = {
         "gcs_source": gcs_source,
-        "mime_type": "text/plain"  # Can be "text/plain" or "text/html".
+        "mime_type": "text/plain",  # Can be "text/plain" or "text/html".
     }
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     model_path = "projects/{}/locations/{}/models/{}".format(
         project_id, location, model_id  # The location of AutoML model.
@@ -48,20 +48,22 @@ def batch_translate_text_with_model(
     models = {"ja": model_path}  # takes a target lang as key.
 
     operation = client.batch_translate_text(
-        parent=parent,
-        source_language_code="en",
-        target_language_codes=["ja"],  # Up to 10 language codes here.
-        input_configs=[input_configs_element],
-        output_config=output_config,
-        models=models,
+        request={
+            "parent": parent,
+            "source_language_code": "en",
+            "target_language_codes": ["ja"],  # Up to 10 language codes here.
+            "input_configs": [input_configs_element],
+            "output_config": output_config,
+            "models": models,
+        }
     )
 
-    print(u"Waiting for operation to complete...")
+    print("Waiting for operation to complete...")
     response = operation.result()
 
     # Display the translation for each input text provided.
-    print(u"Total Characters: {}".format(response.total_characters))
-    print(u"Translated Characters: {}".format(response.translated_characters))
+    print("Total Characters: {}".format(response.total_characters))
+    print("Translated Characters: {}".format(response.translated_characters))
 
 
 # [END translate_v3_batch_translate_text_with_model]

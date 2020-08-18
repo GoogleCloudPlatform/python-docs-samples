@@ -27,6 +27,7 @@
 # [START translate_v3_batch_translate_text_with_glossary_and_model]
 from google.cloud import translate
 
+
 def sample_batch_translate_text_with_glossary_and_model(
     input_uri,
     output_uri,
@@ -35,7 +36,7 @@ def sample_batch_translate_text_with_glossary_and_model(
     target_language,
     source_language,
     model_id,
-    glossary_id
+    glossary_id,
 ):
     """
     Batch translate text with Glossary and Translation model
@@ -61,35 +62,37 @@ def sample_batch_translate_text_with_glossary_and_model(
     input_configs = [input_configs_element]
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
-    parent = f"projects/{project_id}/locations/location"
-    model_path = 'projects/{}/locations/{}/models/{}'.format(project_id, 'us-central1', model_id)
+    parent = f"projects/{project_id}/locations/{location}"
+    model_path = "projects/{}/locations/{}/models/{}".format(
+        project_id, "us-central1", model_id
+    )
     models = {target_language: model_path}
 
     glossary_path = client.glossary_path(
-        project_id,
-        'us-central1',  # The location of the glossary
-        glossary_id)
-        
-    glossary_config = translate.types.TranslateTextGlossaryConfig(
-        glossary=glossary_path)
-    glossaries = {"ja": glossary_config} #target lang as key
-
-    operation = client.batch_translate_text(
-        parent=parent,
-        source_language_code=source_language,
-        target_language_codes=target_language_codes,
-        input_configs=input_configs,
-        output_config=output_config,
-        models=models,
-        glossaries=glossaries
+        project_id, "us-central1", glossary_id  # The location of the glossary
     )
 
-    print(u"Waiting for operation to complete...")
+    glossary_config = translate.TranslateTextGlossaryConfig(glossary=glossary_path)
+    glossaries = {"ja": glossary_config}  # target lang as key
+
+    operation = client.batch_translate_text(
+        request={
+            "parent": parent,
+            "source_language_code": "en",
+            "target_language_codes": target_language_codes,
+            "input_configs": input_configs,
+            "output_config": output_config,
+            "models": models,
+            "glossaries": glossaries,
+        }
+    )
+
+    print("Waiting for operation to complete...")
     response = operation.result()
 
     # Display the translation for each input text provided
-    print(u"Total Characters: {}".format(response.total_characters))
-    print(u"Translated Characters: {}".format(response.translated_characters))
+    print("Total Characters: {}".format(response.total_characters))
+    print("Translated Characters: {}".format(response.translated_characters))
 
 
 # [END translate_v3_batch_translate_text_with_glossary_and_model]
@@ -109,15 +112,9 @@ def main():
     parser.add_argument("--location", type=str, default="us-central1")
     parser.add_argument("--target_language", type=str, default="en")
     parser.add_argument("--source_language", type=str, default="de")
+    parser.add_argument("--model_id", type=str, default="{your-model-id}")
     parser.add_argument(
-        "--model_id",
-        type=str,
-        default="{your-model-id}"
-    )
-    parser.add_argument(
-        "--glossary_id",
-        type=str,
-        default="[YOUR_GLOSSARY_ID]",
+        "--glossary_id", type=str, default="[YOUR_GLOSSARY_ID]",
     )
     args = parser.parse_args()
 
@@ -129,7 +126,7 @@ def main():
         args.target_language,
         args.source_language,
         args.model_id,
-        args.glossary_id
+        args.glossary_id,
     )
 
 

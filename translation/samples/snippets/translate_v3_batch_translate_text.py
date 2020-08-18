@@ -17,10 +17,10 @@ from google.cloud import translate
 
 
 def batch_translate_text(
-        input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-        output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-        project_id="YOUR_PROJECT_ID",
-        timeout=180,
+    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
+    project_id="YOUR_PROJECT_ID",
+    timeout=180,
 ):
     """Translates a batch of texts on GCS and stores the result in a GCS location."""
 
@@ -32,7 +32,7 @@ def batch_translate_text(
 
     input_configs_element = {
         "gcs_source": gcs_source,
-        "mime_type": "text/plain"  # Can be "text/plain" or "text/html".
+        "mime_type": "text/plain",  # Can be "text/plain" or "text/html".
     }
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
@@ -45,15 +45,15 @@ def batch_translate_text(
             "source_language_code": "en",
             "target_language_codes": ["ja"],  # Up to 10 language codes here.
             "input_configs": [input_configs_element],
-            "output_config": output_config
+            "output_config": output_config,
         }
     )
 
-    print(u"Waiting for operation to complete...")
+    print("Waiting for operation to complete...")
     response = operation.result(timeout)
 
-    print(u"Total Characters: {}".format(response.total_characters))
-    print(u"Translated Characters: {}".format(response.translated_characters))
+    print("Total Characters: {}".format(response.total_characters))
+    print("Translated Characters: {}".format(response.translated_characters))
 
 
 # [END translate_v3_batch_translate_text]

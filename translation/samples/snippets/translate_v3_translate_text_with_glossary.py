@@ -32,8 +32,7 @@ def translate_text_with_glossary(
         project_id, "us-central1", glossary_id  # The location of the glossary
     )
 
-    glossary_config = translate.TranslateTextGlossaryConfig(
-        glossary=glossary)
+    glossary_config = translate.TranslateTextGlossaryConfig(glossary=glossary)
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
@@ -42,13 +41,13 @@ def translate_text_with_glossary(
             "target_language_code": "ja",
             "source_language_code": "en",
             "parent": parent,
-            "glossary_config": glossary_config
+            "glossary_config": glossary_config,
         }
     )
 
     print("Translated text: \n")
     for translation in response.glossary_translations:
-        print(u"\t {}".format(translation.translated_text))
+        print("\t {}".format(translation.translated_text))
 
 
 # [END translate_v3_translate_text_with_glossary]

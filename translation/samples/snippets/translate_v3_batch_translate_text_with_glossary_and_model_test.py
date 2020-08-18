@@ -13,25 +13,26 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
+
+from google.cloud import storage
+import pytest
+
 import translate_v3_batch_translate_text_with_glossary_and_model
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
-from google.cloud import storage
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
-GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
-MODEL_ID = 'TRL3128559826197068699'
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
+MODEL_ID = "TRL3128559826197068699"
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
-    glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
-    translate_v3_create_glossary.sample_create_glossary(
-        PROJECT_ID,
-        GLOSSARY_INPUT_URI,
-        glossary_id
+    glossary_id = "must-start-with-letters-" + str(uuid.uuid1())
+    translate_v3_create_glossary.create_glossary(
+        project_id=PROJECT_ID, input_uri=GLOSSARY_INPUT_URI, glossary_id=glossary_id
     )
 
     yield glossary_id
@@ -40,8 +41,9 @@ def glossary():
         translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
-        
-@pytest.fixture(scope='function')
+
+
+@pytest.fixture(scope="function")
 def bucket():
     """Create a temporary bucket to store annotation output."""
     bucket_name = "mike-test-delete-" + str(uuid.uuid1())
@@ -52,21 +54,22 @@ def bucket():
 
     bucket.delete(force=True)
 
+
 def test_batch_translate_text_with_glossary_and_model(capsys, bucket, glossary):
     translate_v3_batch_translate_text_with_glossary_and_model.sample_batch_translate_text_with_glossary_and_model(
-        'gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt',
-        'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name),
+        "gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt",
+        "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
         PROJECT_ID,
-        'us-central1',
-        'ja',
-        'en',
+        "us-central1",
+        "ja",
+        "en",
         MODEL_ID,
-        glossary
-        )
-    
+        glossary,
+    )
+
     out, _ = capsys.readouterr()
-    assert 'Total Characters: 25' in out
-    #TODO: find a way to make sure it translates correctly
+    assert "Total Characters: 25" in out
+    # TODO: find a way to make sure it translates correctly
     # SHOULD NOT BE - Google NMT model -> それはしません。欺ception"
     # literal: "それはそうだ"  # custom model
     # literal: "欺く"  # glossary
