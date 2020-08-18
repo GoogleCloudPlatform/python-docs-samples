@@ -16,6 +16,8 @@ import os
 import shutil
 import tempfile
 
+import google.cloud.dlp_v2
+
 import pytest
 
 import deid
@@ -79,10 +81,7 @@ def test_deidentify_with_mask_masking_character_specified(capsys):
 
 def test_deidentify_with_mask_masking_number_specified(capsys):
     deid.deidentify_with_mask(
-        GCLOUD_PROJECT,
-        HARMFUL_STRING,
-        ["US_SOCIAL_SECURITY_NUMBER"],
-        number_to_mask=7,
+        GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"], number_to_mask=7,
     )
 
     out, _ = capsys.readouterr()
@@ -99,8 +98,10 @@ def test_deidentify_with_redact(capsys):
 
 def test_deidentify_with_replace(capsys):
     deid.deidentify_with_replace(
-        GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"],
-        replacement_str="REPLACEMENT_STR"
+        GCLOUD_PROJECT,
+        HARMFUL_STRING,
+        ["US_SOCIAL_SECURITY_NUMBER"],
+        replacement_str="REPLACEMENT_STR",
     )
 
     out, _ = capsys.readouterr()
@@ -112,7 +113,7 @@ def test_deidentify_with_fpe(capsys):
         GCLOUD_PROJECT,
         HARMFUL_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
     )
@@ -127,7 +128,7 @@ def test_deidentify_with_fpe_uses_surrogate_info_types(capsys):
         GCLOUD_PROJECT,
         HARMFUL_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
         surrogate_type=SURROGATE_TYPE,
@@ -143,7 +144,7 @@ def test_deidentify_with_fpe_ignores_insensitive_data(capsys):
         GCLOUD_PROJECT,
         HARMLESS_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
     )
@@ -198,7 +199,7 @@ def test_reidentify_with_fpe(capsys):
         surrogate_type=SURROGATE_TYPE,
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
     )
 
     out, _ = capsys.readouterr()
@@ -215,7 +216,7 @@ def test_deidentify_free_text_with_fpe_using_surrogate(capsys):
         info_type="PHONE_NUMBER",
         surrogate_type="PHONE_TOKEN",
         unwrapped_key=UNWRAPPED_KEY,
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
     )
 
     out, _ = capsys.readouterr()
@@ -233,7 +234,7 @@ def test_reidentify_free_text_with_fpe_using_surrogate(capsys):
         labeled_fpe_string,
         surrogate_type="PHONE_TOKEN",
         unwrapped_key=UNWRAPPED_KEY,
-        alphabet="NUMERIC",
+        alphabet=google.cloud.dlp_v2.CharsToIgnore.CommonCharsToIgnore.NUMERIC,
     )
 
     out, _ = capsys.readouterr()
@@ -246,9 +247,7 @@ def test_reidentify_free_text_with_fpe_using_surrogate(capsys):
 def test_deidentify_with_replace_infotype(capsys):
     url_to_redact = "https://cloud.google.com"
     deid.deidentify_with_replace_infotype(
-        GCLOUD_PROJECT,
-        "My favorite site is " + url_to_redact,
-        ["URL"],
+        GCLOUD_PROJECT, "My favorite site is " + url_to_redact, ["URL"],
     )
 
     out, _ = capsys.readouterr()

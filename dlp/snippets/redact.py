@@ -30,12 +30,7 @@ import os
 
 
 def redact_image(
-    project,
-    filename,
-    output_filename,
-    info_types,
-    min_likelihood=None,
-    mime_type=None,
+    project, filename, output_filename, info_types, min_likelihood=None, mime_type=None,
 ):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
@@ -99,14 +94,16 @@ def redact_image(
         byte_item = {"type": content_type_index, "data": f.read()}
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
     response = dlp.redact_image(
-        parent,
-        inspect_config=inspect_config,
-        image_redaction_configs=image_redaction_configs,
-        byte_item=byte_item,
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "image_redaction_configs": image_redaction_configs,
+            "byte_item": byte_item,
+        }
     )
 
     # Write out the results.
@@ -125,9 +122,7 @@ def redact_image(
 
 
 def redact_image_all_text(
-    project,
-    filename,
-    output_filename,
+    project, filename, output_filename,
 ):
     """Uses the Data Loss Prevention API to redact all text in an image.
 
@@ -147,30 +142,33 @@ def redact_image_all_text(
 
     # Construct the image_redaction_configs, indicating to DLP that all text in
     # the input image should be redacted.
-    image_redaction_configs = [{
-        "redact_all_text": True,
-    }]
+    image_redaction_configs = [{"redact_all_text": True}]
 
     # Construct the byte_item, containing the file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type": "IMAGE", "data": f.read()}
+        byte_item = {"type": google.cloud.dlp_v2.FileType.IMAGE, "data": f.read()}
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
     response = dlp.redact_image(
-        parent,
-        image_redaction_configs=image_redaction_configs,
-        byte_item=byte_item,
+        request={
+            "parent": parent,
+            "image_redaction_configs": image_redaction_configs,
+            "byte_item": byte_item,
+        }
     )
 
     # Write out the results.
     with open(output_filename, mode="wb") as f:
         f.write(response.redacted_image)
 
-    print("Wrote {byte_count} to {filename}".format(
-        byte_count=len(response.redacted_image), filename=output_filename))
+    print(
+        "Wrote {byte_count} to {filename}".format(
+            byte_count=len(response.redacted_image), filename=output_filename
+        )
+    )
 
 
 # [END dlp_redact_image_all_text]
@@ -184,16 +182,15 @@ if __name__ == "__main__":
         help="The Google Cloud project id to use as a parent resource.",
         default=default_project,
     )
+    common_args_parser.add_argument("filename", help="The path to the file to inspect.")
     common_args_parser.add_argument(
-        "filename", help="The path to the file to inspect.")
-    common_args_parser.add_argument(
-        "output_filename",
-        help="The path to which the redacted image will be written.",
+        "output_filename", help="The path to which the redacted image will be written.",
     )
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
-        dest="content", help="Select which content should be redacted.")
+        dest="content", help="Select which content should be redacted."
+    )
     subparsers.required = True
 
     info_types_parser = subparsers.add_parser(
@@ -249,7 +246,5 @@ if __name__ == "__main__":
         )
     elif args.content == "all_text":
         redact_image_all_text(
-            args.project,
-            args.filename,
-            args.output_filename,
+            args.project, args.filename, args.output_filename,
         )

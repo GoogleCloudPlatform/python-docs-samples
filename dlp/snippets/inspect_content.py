@@ -24,9 +24,7 @@ import os
 
 # [START dlp_inspect_string_basic]
 def inspect_string_basic(
-    project,
-    content_string,
-    info_types=["PHONE_NUMBER"],
+    project, content_string, info_types=["PHONE_NUMBER"],
 ):
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
@@ -58,10 +56,12 @@ def inspect_string_basic(
     item = {"value": content_string}
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp.inspect_content(
+        request={"parent": parent, "inspect_config": inspect_config, "item": item}
+    )
 
     # Print out the results.
     if response.result.findings:
@@ -149,10 +149,12 @@ def inspect_string(
     item = {"value": content_string}
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp.inspect_content(
+        request={"parent": parent, "inspect_config": inspect_config, "item": item}
+    )
 
     # Print out the results.
     if response.result.findings:
@@ -274,19 +276,19 @@ def inspect_table(
     headers = [{"name": val} for val in data["header"]]
     rows = []
     for row in data["rows"]:
-        rows.append(
-            {"values": [{"string_value": cell_val} for cell_val in row]}
-        )
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {}
     table["headers"] = headers
     table["rows"] = rows
     item = {"table": table}
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp.inspect_content(
+        request={"parent": parent, "inspect_config": inspect_config, "item": item}
+    )
 
     # Print out the results.
     if response.result.findings:
@@ -402,10 +404,12 @@ def inspect_file(
         item = {"byte_item": {"type": content_type_index, "data": f.read()}}
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp.inspect_content(
+        request={"parent": parent, "inspect_config": inspect_config, "item": item}
+    )
 
     # Print out the results.
     if response.result.findings:
@@ -515,7 +519,7 @@ def inspect_gcs_file(
 
     # Convert the project id into full resource ids.
     topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
-    parent = dlp.location_path(project, 'global')
+    parent = f"projects/{project}/locations/global"
 
     # Tell the API where to send a notification when the job is complete.
     actions = [{"pub_sub": {"topic": topic}}]
@@ -527,7 +531,9 @@ def inspect_gcs_file(
         "actions": actions,
     }
 
-    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    operation = dlp.create_dlp_job(
+        request={"parent": parent, "inspect_job": inspect_job}
+    )
     print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
@@ -546,7 +552,7 @@ def inspect_gcs_file(
                 message.ack()
 
                 # Now that the job is done, fetch the results and print them.
-                job = dlp.get_dlp_job(operation.name)
+                job = dlp.get_dlp_job(request={"name": operation.name})
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(
@@ -680,7 +686,7 @@ def inspect_datastore(
 
     # Convert the project id into full resource ids.
     topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
-    parent = dlp.location_path(project, 'global')
+    parent = f"projects/{project}/locations/global"
 
     # Tell the API where to send a notification when the job is complete.
     actions = [{"pub_sub": {"topic": topic}}]
@@ -692,7 +698,9 @@ def inspect_datastore(
         "actions": actions,
     }
 
-    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    operation = dlp.create_dlp_job(
+        request={"parent": parent, "inspect_job": inspect_job}
+    )
     print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
@@ -711,7 +719,7 @@ def inspect_datastore(
                 message.ack()
 
                 # Now that the job is done, fetch the results and print them.
-                job = dlp.get_dlp_job(operation.name)
+                job = dlp.get_dlp_job(request={"name": operation.name})
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(
@@ -848,7 +856,7 @@ def inspect_bigquery(
 
     # Convert the project id into full resource ids.
     topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
-    parent = dlp.location_path(project, 'global')
+    parent = f"projects/{project}/locations/global"
 
     # Tell the API where to send a notification when the job is complete.
     actions = [{"pub_sub": {"topic": topic}}]
@@ -860,7 +868,9 @@ def inspect_bigquery(
         "actions": actions,
     }
 
-    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+    operation = dlp.create_dlp_job(
+        request={"parent": parent, "inspect_job": inspect_job}
+    )
     print("Inspection operation started: {}".format(operation.name))
 
     # Create a Pub/Sub client and find the subscription. The subscription is
@@ -879,7 +889,7 @@ def inspect_bigquery(
                 message.ack()
 
                 # Now that the job is done, fetch the results and print them.
-                job = dlp.get_dlp_job(operation.name)
+                job = dlp.get_dlp_job(request={"name": operation.name})
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(
@@ -1040,9 +1050,7 @@ if __name__ == "__main__":
     )
 
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
-    parser_file.add_argument(
-        "filename", help="The path to the file to inspect."
-    )
+    parser_file.add_argument("filename", help="The path to the file to inspect.")
     parser_file.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
@@ -1189,8 +1197,7 @@ if __name__ == "__main__":
         help="The Google Cloud project id of the target Datastore.",
     )
     parser_datastore.add_argument(
-        "kind",
-        help='The kind of the Datastore entity to inspect, e.g. "Person".',
+        "kind", help='The kind of the Datastore entity to inspect, e.g. "Person".',
     )
     parser_datastore.add_argument(
         "topic_id",
@@ -1266,8 +1273,7 @@ if __name__ == "__main__":
         "bigquery", help="Inspect files on Google BigQuery."
     )
     parser_bigquery.add_argument(
-        "bigquery_project",
-        help="The Google Cloud project id of the target table.",
+        "bigquery_project", help="The Google Cloud project id of the target table.",
     )
     parser_bigquery.add_argument(
         "dataset_id", help="The ID of the target BigQuery dataset."

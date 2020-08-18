@@ -41,7 +41,7 @@ def quickstart(project_id):
     info_types = [{"name": "FIRST_NAME"}, {"name": "LAST_NAME"}]
 
     # The minimum likelihood to constitute a match. Optional.
-    min_likelihood = "LIKELIHOOD_UNSPECIFIED"
+    min_likelihood = google.cloud.dlp_v2.Likelihood.LIKELIHOOD_UNSPECIFIED
 
     # The maximum number of findings to report (0 = server maximum). Optional.
     max_findings = 0
@@ -59,10 +59,12 @@ def quickstart(project_id):
     }
 
     # Convert the project id into a full resource id.
-    parent = dlp_client.project_path(project_id)
+    parent = f"projects/{project_id}"
 
     # Call the API.
-    response = dlp_client.inspect_content(parent, inspect_config, item)
+    response = dlp_client.inspect_content(
+        request={"parent": parent, "inspect_config": inspect_config, "item": item}
+    )
 
     # Print out the results.
     if response.result.findings:
@@ -73,13 +75,7 @@ def quickstart(project_id):
                 pass
             print("Info type: {}".format(finding.info_type.name))
             # Convert likelihood value to string respresentation.
-            likelihood = (
-                google.cloud.dlp.types.Finding.DESCRIPTOR.fields_by_name[
-                    "likelihood"
-                ]
-                .enum_type.values_by_number[finding.likelihood]
-                .name
-            )
+            likelihood = finding.likelihood.name
             print("Likelihood: {}".format(likelihood))
     else:
         print("No findings.")
@@ -88,9 +84,7 @@ def quickstart(project_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "project_id", help="Enter your GCP project id.", type=str
-    )
+    parser.add_argument("project_id", help="Enter your GCP project id.", type=str)
     args = parser.parse_args()
     if len(sys.argv) == 1:
         parser.print_usage()

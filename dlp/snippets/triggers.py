@@ -18,7 +18,6 @@ from __future__ import print_function
 
 import argparse
 import os
-import time
 
 
 # [START dlp_create_trigger]
@@ -92,9 +91,7 @@ def create_trigger(
 
     # Construct the schedule definition:
     schedule = {
-        "recurrence_period_duration": {
-            "seconds": scan_period_days * 60 * 60 * 24
-        }
+        "recurrence_period_duration": {"seconds": scan_period_days * 60 * 60 * 24}
     }
 
     # Construct the trigger definition.
@@ -103,15 +100,15 @@ def create_trigger(
         "display_name": display_name,
         "description": description,
         "triggers": [{"schedule": schedule}],
-        "status": "HEALTHY",
+        "status": google.cloud.dlp_v2.JobTrigger.Status.HEALTHY,
     }
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
     response = dlp.create_job_trigger(
-        parent, job_trigger=job_trigger, trigger_id=trigger_id
+        request={"parent": parent, "job_trigger": job_trigger, "trigger_id": trigger_id}
     )
 
     print("Successfully created trigger {}".format(response.name))
@@ -136,20 +133,15 @@ def list_triggers(project):
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Call the API.
-    response = dlp.list_job_triggers(parent)
-
-    # Define a helper function to convert the API's "seconds since the epoch"
-    # time format into a human-readable string.
-    def human_readable_time(timestamp):
-        return str(time.localtime(timestamp.seconds))
+    response = dlp.list_job_triggers(request={"parent": parent})
 
     for trigger in response:
         print("Trigger {}:".format(trigger.name))
-        print("  Created: {}".format(human_readable_time(trigger.create_time)))
-        print("  Updated: {}".format(human_readable_time(trigger.update_time)))
+        print("  Created: {}".format(trigger.create_time))
+        print("  Updated: {}".format(trigger.update_time))
         if trigger.display_name:
             print("  Display Name: {}".format(trigger.display_name))
         if trigger.description:
@@ -178,13 +170,13 @@ def delete_trigger(project, trigger_id):
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Combine the trigger id with the parent id.
     trigger_resource = "{}/jobTriggers/{}".format(parent, trigger_id)
 
     # Call the API.
-    dlp.delete_job_trigger(trigger_resource)
+    dlp.delete_job_trigger(request={"name": trigger_resource})
 
     print("Trigger {} successfully deleted.".format(trigger_resource))
 
@@ -212,8 +204,7 @@ if __name__ == "__main__":
     )
     parser_create.add_argument(
         "--trigger_id",
-        help="The id of the trigger. If omitted, an id will be randomly "
-        "generated",
+        help="The id of the trigger. If omitted, an id will be randomly " "generated",
     )
     parser_create.add_argument(
         "--display_name", help="The optional display name of the trigger."
@@ -254,9 +245,7 @@ if __name__ == "__main__":
         help="The maximum number of findings to report; 0 = no maximum.",
     )
     parser_create.add_argument(
-        "--auto_populate_timespan",
-        type=bool,
-        help="Limit scan to new content only.",
+        "--auto_populate_timespan", type=bool, help="Limit scan to new content only.",
     )
 
     parser_list = subparsers.add_parser("list", help="List all triggers.")
@@ -267,9 +256,7 @@ if __name__ == "__main__":
     )
 
     parser_delete = subparsers.add_parser("delete", help="Delete a trigger.")
-    parser_delete.add_argument(
-        "trigger_id", help="The id of the trigger to delete."
-    )
+    parser_delete.add_argument("trigger_id", help="The id of the trigger to delete.")
     parser_delete.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",

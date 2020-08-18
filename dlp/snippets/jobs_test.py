@@ -33,7 +33,7 @@ def test_job_name():
 
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    parent = dlp.project_path(GCLOUD_PROJECT)
+    parent = f"projects/{GCLOUD_PROJECT}"
 
     # Construct job request
     risk_job = {
@@ -47,15 +47,17 @@ def test_job_name():
         },
     }
 
-    response = dlp.create_dlp_job(parent, risk_job=risk_job, job_id=test_job_id)
+    response = dlp.create_dlp_job(
+        request={"parent": parent, "risk_job": risk_job, "job_id": test_job_id}
+    )
     full_path = response.name
     # API expects only job name, not full project path
-    job_name = full_path[full_path.rfind("/") + 1:]
+    job_name = full_path[full_path.rfind("/") + 1 :]
     yield job_name
 
     # clean up job if not deleted
     try:
-        dlp.delete_dlp_job(full_path)
+        dlp.delete_dlp_job(request={"name": full_path})
     except google.api_core.exceptions.NotFound:
         print("Issue during teardown, missing job")
 

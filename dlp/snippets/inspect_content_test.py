@@ -96,8 +96,7 @@ def subscription_id(topic_id):
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
-    subscription_path = subscriber.subscription_path(
-        GCLOUD_PROJECT, SUBSCRIPTION_ID)
+    subscription_path = subscriber.subscription_path(GCLOUD_PROJECT, SUBSCRIPTION_ID)
     try:
         subscriber.create_subscription(subscription_path, topic_path)
     except google.api_core.exceptions.AlreadyExists:
@@ -304,10 +303,9 @@ def test_inspect_image_file(capsys):
 def cancel_operation(out):
     if "Inspection operation started" in out:
         # Cancel the operation
-        operation_id = out.split(
-            "Inspection operation started: ")[1].split("\n")[0]
+        operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
         client = google.cloud.dlp_v2.DlpServiceClient()
-        client.cancel_dlp_job(operation_id)
+        client.cancel_dlp_job(request={"name": operation_id})
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
@@ -320,7 +318,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
             topic_id,
             subscription_id,
             ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=TIMEOUT
+            timeout=TIMEOUT,
         )
 
         out, _ = capsys.readouterr()
@@ -331,7 +329,8 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_file_with_custom_info_types(
-        bucket, topic_id, subscription_id, capsys):
+    bucket, topic_id, subscription_id, capsys
+):
     try:
         dictionaries = ["gary@somedomain.com"]
         regexes = ["\\(\\d{3}\\) \\d{3}-\\d{4}"]
@@ -345,7 +344,8 @@ def test_inspect_gcs_file_with_custom_info_types(
             [],
             custom_dictionaries=dictionaries,
             custom_regexes=regexes,
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
 
@@ -355,8 +355,7 @@ def test_inspect_gcs_file_with_custom_info_types(
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_file_no_results(
-        bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
     try:
         inspect_content.inspect_gcs_file(
             GCLOUD_PROJECT,
@@ -365,7 +364,8 @@ def test_inspect_gcs_file_no_results(
             topic_id,
             subscription_id,
             ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
 
@@ -384,7 +384,8 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
             topic_id,
             subscription_id,
             ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
@@ -402,7 +403,8 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
             topic_id,
             subscription_id,
             ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
 
@@ -412,8 +414,7 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_datastore(
-        datastore_project, topic_id, subscription_id, capsys):
+def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys):
     try:
         inspect_content.inspect_datastore(
             GCLOUD_PROJECT,
@@ -422,7 +423,8 @@ def test_inspect_datastore(
             topic_id,
             subscription_id,
             ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
@@ -432,7 +434,8 @@ def test_inspect_datastore(
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore_no_results(
-        datastore_project, topic_id, subscription_id, capsys):
+    datastore_project, topic_id, subscription_id, capsys
+):
     try:
         inspect_content.inspect_datastore(
             GCLOUD_PROJECT,
@@ -441,7 +444,8 @@ def test_inspect_datastore_no_results(
             topic_id,
             subscription_id,
             ["PHONE_NUMBER"],
-            timeout=TIMEOUT)
+            timeout=TIMEOUT,
+        )
 
         out, _ = capsys.readouterr()
         assert "No findings" in out
@@ -459,7 +463,8 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
             topic_id,
             subscription_id,
             ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=1)
+            timeout=1,
+        )
 
         out, _ = capsys.readouterr()
         assert "Inspection operation started" in out

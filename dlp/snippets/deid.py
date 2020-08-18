@@ -43,12 +43,10 @@ def deidentify_with_mask(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
@@ -71,10 +69,12 @@ def deidentify_with_mask(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print out the results.
@@ -85,9 +85,7 @@ def deidentify_with_mask(
 
 # [START dlp_deidentify_redact]
 def deidentify_with_redact(
-    project,
-    input_str,
-    info_types,
+    project, input_str, info_types,
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by redacting matched input values.
@@ -104,23 +102,15 @@ def deidentify_with_redact(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
         "info_type_transformations": {
-            "transformations": [
-                {
-                    "primitive_transformation": {
-                        "redact_config": {}
-                    }
-                }
-            ]
+            "transformations": [{"primitive_transformation": {"redact_config": {}}}]
         }
     }
 
@@ -129,10 +119,12 @@ def deidentify_with_redact(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print out the results.
@@ -143,10 +135,7 @@ def deidentify_with_redact(
 
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
-    project,
-    input_str,
-    info_types,
-    replacement_str="REPLACEMENT_STR",
+    project, input_str, info_types, replacement_str="REPLACEMENT_STR",
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing matched input values with a value you specify.
@@ -165,12 +154,10 @@ def deidentify_with_replace(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
@@ -179,9 +166,7 @@ def deidentify_with_replace(
                 {
                     "primitive_transformation": {
                         "replace_config": {
-                            "new_value": {
-                                "string_value": replacement_str,
-                            }
+                            "new_value": {"string_value": replacement_str}
                         }
                     }
                 }
@@ -194,14 +179,17 @@ def deidentify_with_replace(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print out the results.
     print(response.item.value)
+
 
 # [END dlp_deidentify_replace]
 
@@ -245,7 +233,7 @@ def deidentify_with_fpe(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -256,24 +244,17 @@ def deidentify_with_fpe(
     # Construct FPE configuration dictionary
     crypto_replace_ffx_fpe_config = {
         "crypto_key": {
-            "kms_wrapped": {
-                "wrapped_key": wrapped_key,
-                "crypto_key_name": key_name,
-            }
+            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name}
         },
         "common_alphabet": alphabet,
     }
 
     # Add surrogate type
     if surrogate_type:
-        crypto_replace_ffx_fpe_config["surrogate_info_type"] = {
-            "name": surrogate_type
-        }
+        crypto_replace_ffx_fpe_config["surrogate_info_type"] = {"name": surrogate_type}
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
@@ -293,10 +274,12 @@ def deidentify_with_fpe(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print results
@@ -341,7 +324,7 @@ def reidentify_with_fpe(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -382,10 +365,12 @@ def reidentify_with_fpe(
 
     # Call the API
     response = dlp.reidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        reidentify_config=reidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "reidentify_config": reidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print results
@@ -428,7 +413,7 @@ def deidentify_free_text_with_fpe_using_surrogate(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # The unwrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -441,26 +426,22 @@ def deidentify_free_text_with_fpe_using_surrogate(
         "info_types": [{"name": info_type}],
         "primitive_transformation": {
             "crypto_replace_ffx_fpe_config": {
-                "crypto_key": {
-                    "unwrapped": {"key": unwrapped_key}
-                },
+                "crypto_key": {"unwrapped": {"key": unwrapped_key}},
                 "common_alphabet": alphabet,
                 "surrogate_info_type": {"name": surrogate_type},
             }
-        }
+        },
     }
 
     deidentify_config = {
-        "info_type_transformations": {
-            "transformations": [transformation]
-        }
+        "info_type_transformations": {"transformations": [transformation]}
     }
 
     # Construct the inspect config, trying to finding all PII with likelihood
     # higher than UNLIKELY
     inspect_config = {
         "info_types": [{"name": info_type}],
-        "min_likelihood": "UNLIKELY"
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
     }
 
     # Convert string to item
@@ -468,10 +449,12 @@ def deidentify_free_text_with_fpe_using_surrogate(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print results
@@ -511,7 +494,7 @@ def reidentify_free_text_with_fpe_using_surrogate(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # The unwrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -523,9 +506,7 @@ def reidentify_free_text_with_fpe_using_surrogate(
     transformation = {
         "primitive_transformation": {
             "crypto_replace_ffx_fpe_config": {
-                "crypto_key": {
-                    "unwrapped": {"key": unwrapped_key}
-                },
+                "crypto_key": {"unwrapped": {"key": unwrapped_key}},
                 "common_alphabet": alphabet,
                 "surrogate_info_type": {"name": surrogate_type},
             }
@@ -533,9 +514,7 @@ def reidentify_free_text_with_fpe_using_surrogate(
     }
 
     reidentify_config = {
-        "info_type_transformations": {
-            "transformations": [transformation]
-        }
+        "info_type_transformations": {"transformations": [transformation]}
     }
 
     inspect_config = {
@@ -549,10 +528,12 @@ def reidentify_free_text_with_fpe_using_surrogate(
 
     # Call the API
     response = dlp.reidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        reidentify_config=reidentify_config,
-        item=item,
+        request={
+            "parent": parent,
+            "reidentify_config": reidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
     )
 
     # Print results
@@ -608,7 +589,7 @@ def deidentify_with_date_shift(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Convert date field list to Protobuf type
     def map_fields(field):
@@ -637,11 +618,7 @@ def deidentify_with_date_shift(
         try:
             date = datetime.strptime(value, "%m/%d/%Y")
             return {
-                "date_value": {
-                    "year": date.year,
-                    "month": date.month,
-                    "day": date.day,
-                }
+                "date_value": {"year": date.year, "month": date.month, "day": date.day}
             }
         except ValueError:
             return {"string_value": value}
@@ -709,7 +686,11 @@ def deidentify_with_date_shift(
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, deidentify_config=deidentify_config, item=table_item
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": table_item,
+        }
     )
 
     # Write results to CSV file
@@ -745,32 +726,28 @@ def deidentify_with_replace_infotype(project, item, info_types):
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = f"projects/{project}"
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
         "info_type_transformations": {
             "transformations": [
-                {
-                    "primitive_transformation": {
-                        "replace_with_info_type_config": {}
-                    }
-                }
+                {"primitive_transformation": {"replace_with_info_type_config": {}}}
             ]
         }
     }
 
     # Call the API
     response = dlp.deidentify_content(
-        parent,
-        inspect_config=inspect_config,
-        deidentify_config=deidentify_config,
-        item={"value": item},
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": {"value": item},
+        }
     )
 
     # Print out the results.
@@ -789,8 +766,7 @@ if __name__ == "__main__":
 
     mask_parser = subparsers.add_parser(
         "deid_mask",
-        help="Deidentify sensitive data in a string by masking it with a "
-        "character.",
+        help="Deidentify sensitive data in a string by masking it with a " "character.",
     )
     mask_parser.add_argument(
         "--info_types",
@@ -802,8 +778,7 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     mask_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     mask_parser.add_argument("item", help="The string to deidentify.")
     mask_parser.add_argument(
@@ -836,12 +811,12 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     replace_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     replace_parser.add_argument("item", help="The string to deidentify.")
-    replace_parser.add_argument("replacement_str", help="The string to "
-                                "replace all matched values with.")
+    replace_parser.add_argument(
+        "replacement_str", help="The string to " "replace all matched values with."
+    )
 
     fpe_parser = subparsers.add_parser(
         "deid_fpe",
@@ -858,13 +833,11 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     fpe_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     fpe_parser.add_argument(
         "item",
-        help="The string to deidentify. "
-        "Example: string = 'My SSN is 372819127'",
+        help="The string to deidentify. " "Example: string = 'My SSN is 372819127'",
     )
     fpe_parser.add_argument(
         "key_name",
@@ -902,13 +875,11 @@ if __name__ == "__main__":
         "Encryption (FPE).",
     )
     reid_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     reid_parser.add_argument(
         "item",
-        help="The string to deidentify. "
-        "Example: string = 'My SSN is 372819127'",
+        help="The string to deidentify. " "Example: string = 'My SSN is 372819127'",
     )
     reid_parser.add_argument(
         "surrogate_type",
@@ -944,8 +915,7 @@ if __name__ == "__main__":
         help="Deidentify dates in a CSV file by pseudorandomly shifting them.",
     )
     date_shift_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     date_shift_parser.add_argument(
         "input_csv_file",
@@ -996,7 +966,7 @@ if __name__ == "__main__":
     replace_with_infotype_parser = subparsers.add_parser(
         "replace_with_infotype",
         help="Deidentify sensitive data in a string by replacing it with the "
-        "info type of the data."
+        "info type of the data.",
     )
     replace_with_infotype_parser.add_argument(
         "--info_types",
@@ -1008,8 +978,7 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     replace_with_infotype_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     replace_with_infotype_parser.add_argument(
         "item",
@@ -1067,7 +1036,5 @@ if __name__ == "__main__":
         )
     elif args.content == "replace_with_infotype":
         deidentify_with_replace_infotype(
-            args.project,
-            item=args.item,
-            info_types=args.info_types,
+            args.project, item=args.item, info_types=args.info_types,
         )
