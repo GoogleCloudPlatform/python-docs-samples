@@ -93,6 +93,14 @@ test their code.
     $ pyenv install 3.8.1
     ```
 
+    > ℹ️ *Note*: If you are getting errors installing a python version,
+    > try setting up the `SDKROOT` environment variable.
+    >
+    > ```console
+    > # You can add this to your .bashrc file.
+    > export SDKROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    > ```
+
 1.  After you have installed a python version through pyenv,
     verify that you are now using the pyenv Python shim.
 
