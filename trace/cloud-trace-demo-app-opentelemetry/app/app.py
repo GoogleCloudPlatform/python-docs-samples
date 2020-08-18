@@ -46,7 +46,6 @@ def template_test():
             with tracer.start_as_current_span("span3"):
                 print("Hello world from Cloud Trace Exporter!")
 
-    # [END trace_context_header]
     return 'Hello World'
 
 
