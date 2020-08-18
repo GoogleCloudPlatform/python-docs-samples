@@ -57,7 +57,9 @@ def test_main(capsys):
 
     jwt_validation_result = validate_jwt.validate_iap_jwt(
         iap_jwt, expected_audience)
+    out, _ = capsys.readouterr()
 
+    assert 'JWT valdiation error' not in out
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]
     assert not jwt_validation_result[2]
