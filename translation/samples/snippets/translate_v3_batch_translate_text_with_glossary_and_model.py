@@ -61,7 +61,7 @@ def sample_batch_translate_text_with_glossary_and_model(
     input_configs = [input_configs_element]
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
-    parent = client.location_path(project_id, location)
+    parent = f"projects/{project_id}/locations/location"
     model_path = 'projects/{}/locations/{}/models/{}'.format(project_id, 'us-central1', model_id)
     models = {target_language: model_path}
 
