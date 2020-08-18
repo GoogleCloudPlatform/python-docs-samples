@@ -21,7 +21,6 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_translate_text(capsys):
-    translate_v3_translate_text.translate_text(
-        "Hello World!", PROJECT_ID)
+    translate_v3_translate_text.translate_text("Hello World!", PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "Bonjour le monde" in out

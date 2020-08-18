@@ -37,9 +37,9 @@ def detect_language(project_id="YOUR_PROJECT_ID"):
     # The most probable language is first.
     for language in response.languages:
         # The language detected
-        print(u"Language code: {}".format(language.language_code))
+        print("Language code: {}".format(language.language_code))
         # Confidence of detection result for this language
-        print(u"Confidence: {}".format(language.confidence))
+        print("Confidence: {}".format(language.confidence))
 
 
 # [END translate_v3_detect_language]

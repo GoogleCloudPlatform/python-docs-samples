@@ -46,9 +46,9 @@ def test_create_glossary(capsys):
         )
         def delete_glossary():
             try:
-                translate_v3_delete_glossary.delete_glossary(
-                    PROJECT_ID, glossary_id)
+                translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
             except NotFound as e:
                 # Ignoring this case.
                 print("Got NotFound, detail: {}".format(str(e)))
+
         delete_glossary()

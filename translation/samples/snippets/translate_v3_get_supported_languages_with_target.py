@@ -27,12 +27,12 @@ def get_supported_languages_with_target(project_id="YOUR_PROJECT_ID"):
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.get_supported_languages(
-        display_language_code="is",  # target language code
-        parent=parent
+        display_language_code="is", parent=parent  # target language code
     )
     # List language codes of supported languages
     for language in response.languages:
-        print(u"Language Code: {}".format(language.language_code))
-        print(u"Display Name: {}".format(language.display_name))
+        print("Language Code: {}".format(language.language_code))
+        print("Display Name: {}".format(language.display_name))
+
 
 # [END translate_v3_get_supported_languages_for_target]

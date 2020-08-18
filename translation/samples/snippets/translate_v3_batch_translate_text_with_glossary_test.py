@@ -46,18 +46,18 @@ def glossary():
     )
     def delete_glossary():
         try:
-            translate_v3_delete_glossary.delete_glossary(
-                PROJECT_ID, glossary_id)
+            translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
         except NotFound as e:
             # Ignoring this case.
             print("Got NotFound, detail: {}".format(str(e)))
+
     delete_glossary()
 
 
 @pytest.fixture(scope="function")
 def bucket():
     """Create a temporary bucket to store annotation output."""
-    bucket_name = f'tmp-{uuid.uuid4().hex}'
+    bucket_name = f"tmp-{uuid.uuid4().hex}"
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
@@ -73,7 +73,7 @@ def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
         "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
         PROJECT_ID,
         glossary,
-        240
+        240,
     )
 
     out, _ = capsys.readouterr()

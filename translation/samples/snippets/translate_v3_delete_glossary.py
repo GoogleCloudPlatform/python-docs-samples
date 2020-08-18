@@ -17,9 +17,7 @@ from google.cloud import translate_v3 as translate
 
 
 def delete_glossary(
-        project_id="YOUR_PROJECT_ID",
-        glossary_id="YOUR_GLOSSARY_ID",
-        timeout=180,
+    project_id="YOUR_PROJECT_ID", glossary_id="YOUR_GLOSSARY_ID", timeout=180,
 ):
     """Delete a specific glossary based on the glossary ID."""
     client = translate.TranslationServiceClient()

@@ -20,4 +20,4 @@ import quickstart
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert u'Translation' in out
+    assert u"Translation" in out

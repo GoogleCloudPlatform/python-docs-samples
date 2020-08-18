@@ -40,11 +40,10 @@ def translate_text_with_model(
             "parent": parent,
             "mime_type": "text/plain",  # mime types: text/plain, text/html
         }
-
     )
     # Display the translation for each input text provided
     for translation in response.translations:
-        print(u"Translated text: {}".format(translation.translated_text))
+        print("Translated text: {}".format(translation.translated_text))
 
 
 # [END translate_v3_translate_text_with_model]

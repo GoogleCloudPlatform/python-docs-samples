@@ -17,10 +17,10 @@ from google.cloud import translate_v3 as translate
 
 
 def create_glossary(
-        project_id="YOUR_PROJECT_ID",
-        input_uri="YOUR_INPUT_URI",
-        glossary_id="YOUR_GLOSSARY_ID",
-        timeout=180,
+    project_id="YOUR_PROJECT_ID",
+    input_uri="YOUR_INPUT_URI",
+    glossary_id="YOUR_GLOSSARY_ID",
+    timeout=180,
 ):
     """
     Create a equivalent term sets glossary. Glossary can be words or
