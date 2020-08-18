@@ -14,22 +14,24 @@
 """
 A sample app demonstrating CloudTraceSpanExporter
 """
-import argparse
 import random
 import time
 
 # [START trace_demo_imports]
 import flask
-import requests
 from opentelemetry import trace, propagators
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 # [END trace_demo_imports]
 
 app = flask.Flask(__name__)
+trace.set_tracer_provider(TracerProvider())
 
-
+trace.get_tracer_provider().add_span_processor(
+    SimpleExportSpanProcessor(CloudTraceSpanExporter())
+)
+tracer = trace.get_tracer(__name__)
 
 propagator = propagators.get_global_httptextformat()
 
@@ -38,51 +40,16 @@ propagator = propagators.get_global_httptextformat()
 def template_test():
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
-    # Keyword that gets passed in will be concatenated to the final output string.
-    output_string = app.config['keyword']
-    # If there is no endpoint, return the output string.
-    url = app.config['endpoint']
-    if url == '':
-        return output_string, 200
-    # Endpoint is the next service to send string to.
-    data = {'body': output_string}
 
-    request_to_downstream = requests.Request(
-        url,
-        params=data
-    )
-    # [START trace_context_header]
+    with tracer.start_as_current_span("span1"):
+        with tracer.start_as_current_span("span2"):
+            with tracer.start_as_current_span("span3"):
+                print("Hello world from Cloud Trace Exporter!")
 
-    context = propagator.extract(get_header_from_flask_request, flask.request)
-    propagator.inject(set_header_into_requests_request, request_to_downstream, context=context)
-    session = requests.Session()
-    response = session.send(request_to_downstream.prepare())
     # [END trace_context_header]
-    return response.text + app.config['keyword']
-
-
-def set_header_into_requests_request(request: requests.Request, key: str, value: str):
-    request.headers[key] = value
-
-
-def get_header_from_flask_request(request, key):
-    return request.headers.get_all(key)
+    return 'Hello World'
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--keyword', default='', help='name of the service.')
-    parser.add_argument('--endpoint', default='',
-                        help='endpoint to dispatch appended string, simply respond if not set')
-    args = parser.parse_args()
-    app.config['keyword'] = args.keyword
-    app.config['endpoint'] = args.endpoint
-
-    trace.set_tracer_provider(TracerProvider())
-    # cloud_trace_exporter = CloudTraceSpanExporter()
-    trace.get_tracer_provider().add_span_processor(
-        SimpleExportSpanProcessor(ConsoleSpanExporter())
-    )
-    tracer = trace.get_tracer(__name__)
 
     app.run(debug=True, host='0.0.0.0', port=8080)

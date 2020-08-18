@@ -1,4 +1,3 @@
-
 Flask==1.1.2
 opentelemetry-api==0.9b0
 opentelemetry-auto-instrumentation==0.8b0

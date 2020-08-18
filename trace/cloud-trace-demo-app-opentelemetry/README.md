@@ -14,26 +14,6 @@ If you are using Cloud Shell, skip to the next section.
 2. Install kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
 3. Install docker <https://docs.docker.com/install/>
 
-#### Google Container Registry Image Setup
-If you are using the provided image, skip to the next section.
-
-4. Get default project id and set environment variable:
-
-    `PROJECT_ID=$(gcloud config get-value project)`
-5. Build Image:
-
-    `docker build -t gcr.io/${PROJECT-ID}/cloud-trace-demo .`
-6. Upload Image to Container Registry:
-
-    `gcloud docker -- push gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
-    
-7. Change the image variables of the following files to:
-    
-    `gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
-    
-    * [YAML](./app/demo-service-a.yaml)
-    * [template B](./app/demo-service-b.yaml.template)
-    * [template C](./app/demo-service-c.yaml.template)
     
 #### Create a GKE cluster
 
@@ -49,12 +29,14 @@ If you are using the provided image, skip to the next section.
 
 #### Send Requests to See Generated Traces
 
-11. Run setup.sh to apply the YAML files, which deploys all three services to GKE:
+11. Build and tag the docker image for demo app:
 
-    `./setup.sh`
-12. Send request to Service C:
+    `docker build -t gcr.io/${PROJECT_ID}/demo:v1 .`
+12. Create a Kubernetes Deployment for your `demo` Docker image.
 
-    `curl -w "\n" $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
+    `kubectl create deployment demo --image=gcr.io/${PROJECT_ID}/demo:v1`
+12. Send request to the service by using `curl` coupled with the service uri:
+
 12. Visit [Trace List](https://console.cloud.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     

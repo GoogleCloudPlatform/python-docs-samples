@@ -34,32 +34,12 @@ def test_send_response():
     assert service_keyword in resp.data.decode('utf-8')
 
 
-@httpretty.activate
-def test_request_url_with_trace_context():
-    pdb.set_trace()
-    service1_keyword = 'World'
-    service2_url = 'http://example.com'
-    service2_keyword = 'Hello'
-    app.app.testing = True
-    app.app.config['keyword'] = service1_keyword
-    app.app.config['endpoint'] = service2_url
+def test_traces():
 
-    def request_callback(request, uri, response_headers):
-        # Assert that the request is sent with a trace context
-        assert request.headers.get('X-Cloud-Trace-Context')
-        return [200, response_headers, service2_keyword]
-
-    httpretty.register_uri(httpretty.GET, service2_url, body=request_callback)
     exporter = mock.Mock()
     app.SimpleExportSpanProcessor(exporter)
 
     client = app.app.test_client()
     resp = client.get('/')
     assert resp.status_code == 200
-    # Assert that the response is a concatenation of responses from both services
-    assert service2_keyword + service1_keyword in resp.data.decode('utf-8')
 
-
-if __name__ == '__main__':
-    test_send_response()
-    test_request_url_with_trace_context()

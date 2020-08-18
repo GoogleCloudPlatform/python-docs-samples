@@ -55,3 +55,5 @@ def test_request_url_with_trace_context():
     assert resp.status_code == 200
     # Assert that the response is a concatenation of responses from both services
     assert service2_keyword + service1_keyword in resp.data.decode('utf-8')
+if __name__ == '__main__':
+    test_request_url_with_trace_context()
