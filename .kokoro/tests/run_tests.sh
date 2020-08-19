@@ -154,18 +154,21 @@ testing/btlr "${btlr_args[@]}"
 RTN=$?
 cd "$ROOT"
 
-# Setup DRIFT region tag parser
+# Setup DRIFT region tag injector
 # (only run on *some* builds)
-if [ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+    echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
     pip install --user -q pyyaml
 
     export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
     export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
     if [[ ! -f $PARSER_PATH ]]; then
+        echo "--- Fetching injection script from HEAD (via GitHub) ---"
         git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
         chmod +x $PARSER_PATH
     fi
+    echo "=== Region tag injector setup complete ==="
 fi
 
 # Remove secrets if we used decrypt-secrets.sh.

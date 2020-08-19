@@ -43,14 +43,17 @@ EXIT=$?
 
 # Inject region tag data into the test log
 if [ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+    echo "=== Injecting region tags into XUnit output ==="
     XUNIT_PATH="$PWD/sponge_log.xml"
     XUNIT_TMP_PATH="tmp/drift_tmp.xml"
-    if [ -f "$XUNIT_PATH" ]; then
-        cp $XUNIT_PATH $XUNIT_TMP_PATH
-        cat "$XUNIT_TMP_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_PATH"
+    if [[ -f "$XUNIT_PATH" ]]; then
+        echo "Processing XUnit output file: $XUNIT_PATH"
+        cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_TMP_PATH"
+        mv $XUNIT_TMP_PATH $XUNIT_PATH
     else
         echo "No XUnit output file found!"
     fi
+    echo "=== Region tag injection complete! ==="
 fi
 
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
