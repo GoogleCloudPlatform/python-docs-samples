@@ -15,14 +15,12 @@
 # This test deploys a secure application running on Cloud Run
 # to test that the authentication sample works properly.
 
-import auth
-
 import os
+import pytest
 import subprocess
-from urllib import request
 import uuid
 
-import pytest
+import auth
 
 
 @pytest.fixture()
@@ -31,7 +29,7 @@ def service():
     suffix = uuid.uuid4().hex
     project = os.environ['GOOGLE_CLOUD_PROJECT']
 
-    # Deploy hello-world Cloud Run Service from 
+    # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
     subprocess.run(
         [
@@ -62,13 +60,14 @@ def service():
     subprocess.run(
         [
             "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-             "--project", project, 
-             "--platform=managed",
-             "--region=us-central1", 
-             "--quiet",
+            "--project", project, 
+            "--platform=managed",
+            "--region=us-central1", 
+            "--quiet",
          ],
         check=True
     )
+
 
 def test_auth(service):
     response = auth.make_authorized_get_request(service.decode())
