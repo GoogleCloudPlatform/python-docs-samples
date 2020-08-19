@@ -16,9 +16,10 @@
 # to test that the authentication sample works properly.
 
 import os
-import pytest
 import subprocess
 import uuid
+
+import pytest
 
 import auth
 
@@ -61,9 +62,9 @@ def service():
     subprocess.run(
         [
             "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-            "--project", project, 
+            "--project", project,
             "--platform=managed",
-            "--region=us-central1", 
+            "--region=us-central1",
             "--quiet",
          ],
         check=True
