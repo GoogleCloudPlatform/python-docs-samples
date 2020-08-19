@@ -64,7 +64,7 @@ def index():
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
-    resp = f'Hello, {name}! ID: {event['id']}'
+    resp = f"Hello, {name}! ID: {event['id']}"
     print(resp)
     return (resp, 200)
 # [END run_events_pubsub_handler]

@@ -22,9 +22,14 @@ import pytest
 import main
 
 
-required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
+required_fields = ['ce-id', 'ce-source', 'ce-type', 'ce-specversion']
 
-header_data = {field: str(uuid4()) for field in required_fields}
+header_data = {
+    "ce-id": str(uuid4),
+    "ce-type": "com.pytest.sample.event",
+    "ce-source": "<my-test-source>",
+    "ce-specversion": "1.0"
+}
 
 
 @pytest.fixture
@@ -53,7 +58,8 @@ def test_minimally_valid_message(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    ce_id = header_data['Ce-Id']
+    ce_id = header_data['ce-id']
+    print(out)
     assert f'Hello, World! ID: {ce_id}' in out
 
 
@@ -65,7 +71,7 @@ def test_populated_message(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    ce_id = header_data['Ce-Id']
+    ce_id = header_data['ce-id']
     assert f'Hello, {name}! ID: {ce_id}' in out
 
 
@@ -78,4 +84,4 @@ def test_missing_required_fields(client, capsys):
         assert r.status_code == 400
 
         out, _ = capsys.readouterr()
-        assert f'Bad Request: missing required header {field}' in out
+        assert 'MissingRequiredFields' in out or 'InvalidStructuredJSON' in out
