@@ -34,6 +34,7 @@ def service():
     subprocess.run(
         [
             "gcloud", "run", "deploy", f"helloworld-{suffix}",
+            "--project", project,
             "--image=gcr.io/cloudrun/hello",
             "--platform=managed",
             "--region=us-central1",
