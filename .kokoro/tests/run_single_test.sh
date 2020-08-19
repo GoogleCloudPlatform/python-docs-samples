@@ -42,7 +42,7 @@ nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
 # Inject region tag data into the test log
-if [ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Injecting region tags into XUnit output ==="
     XUNIT_PATH="$PWD/sponge_log.xml"
     XUNIT_TMP_PATH="tmp/drift_tmp.xml"
