@@ -40,7 +40,7 @@ def create_fileset_entry_quickstart(client, project_id, entry_group_id, entry_id
 
     # Create an Entry Group.
     # Construct a full Entry Group object to send to the API.
-    entry_group_obj = datacatalog_v1beta1.types.EntryGroup()
+    entry_group_obj = datacatalog_v1beta1.EntryGroup()
     entry_group_obj.display_name = "My Fileset Entry Group"
     entry_group_obj.description = "This Entry Group consists of ...."
 
@@ -48,26 +48,23 @@ def create_fileset_entry_quickstart(client, project_id, entry_group_id, entry_id
     # Raises google.api_core.exceptions.AlreadyExists if the Entry Group
     # already exists within the project.
     entry_group = client.create_entry_group(
-        parent=datacatalog_v1beta1.DataCatalogClient.location_path(
+        request = {'parent': datacatalog_v1beta1.DataCatalogClient.location_path(
             project_id, location_id
-        ),
-        entry_group_id=entry_group_id,
-        entry_group=entry_group_obj,
-    )
+        ), 'entry_group_id': entry_group_id, 'entry_group': entry_group_obj})
     print("Created entry group {}".format(entry_group.name))
 
     # Create a Fileset Entry.
     # Construct a full Entry object to send to the API.
-    entry = datacatalog_v1beta1.types.Entry()
+    entry = datacatalog_v1beta1.Entry()
     entry.display_name = "My Fileset"
     entry.description = "This Fileset consists of ..."
     entry.gcs_fileset_spec.file_patterns.append("gs://cloud-samples-data/*")
-    entry.type = datacatalog_v1beta1.enums.EntryType.FILESET
+    entry.type = datacatalog_v1beta1.EntryType.FILESET
 
     # Create the Schema, for example when you have a csv file.
     columns = []
     columns.append(
-        datacatalog_v1beta1.types.ColumnSchema(
+        datacatalog_v1beta1.ColumnSchema(
             column="first_name",
             description="First name",
             mode="REQUIRED",
@@ -76,7 +73,7 @@ def create_fileset_entry_quickstart(client, project_id, entry_group_id, entry_id
     )
 
     columns.append(
-        datacatalog_v1beta1.types.ColumnSchema(
+        datacatalog_v1beta1.ColumnSchema(
             column="last_name", description="Last name", mode="REQUIRED", type="STRING"
         )
     )
@@ -84,19 +81,19 @@ def create_fileset_entry_quickstart(client, project_id, entry_group_id, entry_id
     # Create sub columns for the addresses parent column
     subcolumns = []
     subcolumns.append(
-        datacatalog_v1beta1.types.ColumnSchema(
+        datacatalog_v1beta1.ColumnSchema(
             column="city", description="City", mode="NULLABLE", type="STRING"
         )
     )
 
     subcolumns.append(
-        datacatalog_v1beta1.types.ColumnSchema(
+        datacatalog_v1beta1.ColumnSchema(
             column="state", description="State", mode="NULLABLE", type="STRING"
         )
     )
 
     columns.append(
-        datacatalog_v1beta1.types.ColumnSchema(
+        datacatalog_v1beta1.ColumnSchema(
             column="addresses",
             description="Addresses",
             mode="REPEATED",
@@ -110,6 +107,6 @@ def create_fileset_entry_quickstart(client, project_id, entry_group_id, entry_id
     # Send the entry to the API for creation.
     # Raises google.api_core.exceptions.AlreadyExists if the Entry already
     # exists within the project.
-    entry = client.create_entry(entry_group.name, entry_id, entry)
+    entry = client.create_entry(request = {'parent': entry_group.name, 'entry_id': entry_id, 'entry': entry})
     print("Created entry {}".format(entry.name))
     # [END datacatalog_create_fileset_quickstart_tag]

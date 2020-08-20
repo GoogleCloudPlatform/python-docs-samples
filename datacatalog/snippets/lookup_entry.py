@@ -34,7 +34,7 @@ def lookup_bigquery_dataset(project_id, dataset_id):
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}'\
         .format(project_id, dataset_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    return datacatalog.lookup_entry(request={'linked_resource': resource_name})
     # [END datacatalog_lookup_dataset]
 
 
@@ -48,7 +48,7 @@ def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
 
     sql_resource = 'bigquery.dataset.`{}`.`{}`'.format(project_id, dataset_id)
 
-    return datacatalog.lookup_entry(sql_resource=sql_resource)
+    return datacatalog.lookup_entry(request={'sql_resource': sql_resource})
 
 
 def lookup_bigquery_table(project_id, dataset_id, table_id):
@@ -61,7 +61,7 @@ def lookup_bigquery_table(project_id, dataset_id, table_id):
                     '/tables/{}'\
         .format(project_id, dataset_id, table_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    return datacatalog.lookup_entry(request={'linked_resource': resource_name})
 
 
 def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
@@ -75,7 +75,7 @@ def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
     sql_resource = 'bigquery.table.`{}`.`{}`.`{}`'.format(
         project_id, dataset_id, table_id)
 
-    return datacatalog.lookup_entry(sql_resource=sql_resource)
+    return datacatalog.lookup_entry(request={'sql_resource': sql_resource})
 
 
 def lookup_pubsub_topic(project_id, topic_id):
@@ -87,7 +87,7 @@ def lookup_pubsub_topic(project_id, topic_id):
     resource_name = '//pubsub.googleapis.com/projects/{}/topics/{}'\
         .format(project_id, topic_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    return datacatalog.lookup_entry(request={'linked_resource': resource_name})
 
 
 def lookup_pubsub_topic_sql_resource(project_id, topic_id):
@@ -100,7 +100,7 @@ def lookup_pubsub_topic_sql_resource(project_id, topic_id):
 
     sql_resource = 'pubsub.topic.`{}`.`{}`'.format(project_id, topic_id)
 
-    return datacatalog.lookup_entry(sql_resource=sql_resource)
+    return datacatalog.lookup_entry(request={'sql_resource': sql_resource})
 
 
 if __name__ == '__main__':

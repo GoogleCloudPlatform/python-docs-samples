@@ -18,7 +18,7 @@ from ..v1beta1 import create_entry_group
 
 def test_create_entry_group(capsys, client, project_id, random_entry_group_id):
 
-    create_entry_group.create_entry_group(client, project_id, random_entry_group_id)
+    create_entry_group.create_entry_group(request = {'parent': client, 'entry_group_id': project_id, 'entry_group': random_entry_group_id})
     out, err = capsys.readouterr()
     assert (
         "Created entry group"

@@ -26,7 +26,6 @@
 
 # [START datacatalog_lookup_entry_sql_resource]
 from google.cloud import datacatalog_v1beta1
-from google.cloud.datacatalog_v1beta1 import enums
 
 
 def sample_lookup_entry(sql_name):
@@ -44,10 +43,10 @@ def sample_lookup_entry(sql_name):
     client = datacatalog_v1beta1.DataCatalogClient()
 
     # sql_name = '[SQL Resource Name]'
-    response = client.lookup_entry(sql_resource=sql_name)
+    response = client.lookup_entry(request = {'sql_resource': sql_name})
     entry = response
     print(u"Entry name: {}".format(entry.name))
-    print(u"Entry type: {}".format(enums.EntryType(entry.type).name))
+    print(u"Entry type: {}".format(datacatalog_v1beta1.EntryType(entry.type).name))
     print(u"Linked resource: {}".format(entry.linked_resource))
 
 

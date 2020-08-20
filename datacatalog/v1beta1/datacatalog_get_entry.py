@@ -26,8 +26,6 @@
 
 # [START datacatalog_get_entry]
 from google.cloud import datacatalog_v1beta1
-from google.cloud.datacatalog_v1beta1 import enums
-
 
 def sample_get_entry(project_id, location_id, entry_group_id, entry_id):
     """
@@ -48,10 +46,10 @@ def sample_get_entry(project_id, location_id, entry_group_id, entry_id):
     # entry_id = '[Entry ID]'
     name = client.entry_path(project_id, location_id, entry_group_id, entry_id)
 
-    response = client.get_entry(name)
+    response = client.get_entry(request = {'name': name})
     entry = response
     print(u"Entry name: {}".format(entry.name))
-    print(u"Entry type: {}".format(enums.EntryType(entry.type).name))
+    print(u"Entry type: {}".format(datacatalog_v1beta1.EntryType(entry.type).name))
     print(u"Linked resource: {}".format(entry.linked_resource))
 
 

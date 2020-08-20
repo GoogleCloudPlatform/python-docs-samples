@@ -40,7 +40,7 @@ def create_entry_group(client, project_id, entry_group_id):
     )
 
     # Construct a full EntryGroup object to send to the API.
-    entry_group = datacatalog_v1beta1.types.EntryGroup()
+    entry_group = datacatalog_v1beta1.EntryGroup()
     entry_group.display_name = "My Entry Group"
     entry_group.description = "This Entry Group consists of ..."
 
@@ -48,7 +48,6 @@ def create_entry_group(client, project_id, entry_group_id):
     # Raises google.api_core.exceptions.AlreadyExists if the Entry Group
     # already exists within the project.
     entry_group = client.create_entry_group(
-        parent, entry_group_id, entry_group
-    )  # Make an API request.
+        request = {'parent': parent, 'entry_group_id': entry_group_id, 'entry_group': entry_group})  # Make an API request.
     print("Created entry group {}".format(entry_group.name))
     # [END datacatalog_create_entry_group_tag]
