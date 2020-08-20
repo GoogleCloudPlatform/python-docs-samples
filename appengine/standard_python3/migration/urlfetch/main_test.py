@@ -13,15 +13,12 @@
 # limitations under the License.
 
 import main
-import pytest
-import sys
 
 
-@pytest.mark.skipif(sys.version_info < (3, 0), reason="no urlfetch adapter in test env")
 def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
     r = client.get('/')
     assert r.status_code == 200
-    assert 'Google is built by a large team ' in r.data.decode('utf-8')
+    assert 'Make a request' in r.data.decode('utf-8')
