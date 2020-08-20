@@ -10,11 +10,6 @@ from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import FloatType, IntegerType, StringType
 
 
-PROJECT_ID = sys.argv[1]
-BUCKET_NAME = sys.argv[2]
-TABLE = f"{PROJECT_ID}.new_york_citibike_trips.RAW_DATA"
-
-
 def trip_duration_udf(duration):
     """Convert trip duration to seconds. Return None if negative."""
     if not duration:
@@ -135,6 +130,9 @@ def compute_end_udf(duration, start, end):
 
 
 if __name__ == "__main__":
+    TABLE = sys.argv[1]
+    BUCKET_NAME = sys.argv[2]
+
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
 
@@ -180,7 +178,7 @@ if __name__ == "__main__":
         df = df.withColumn(name, obj["udf"](*obj["params"]))
 
     # Display sample of rows
-    df.sample(False, 0.001).show(n=100)
+    df.show(n=20)
 
     # Write results to GCS
     if "--dry-run" in sys.argv:
