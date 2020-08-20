@@ -13,8 +13,10 @@
 # limitations under the License.
 
 import main
+import sys
 
 
+@pytest.mark.skipif(sys.version_info < (3, 0), reason="no urlfetch adapter in test env")
 def test_index():
     main.app.testing = True
     client = main.app.test_client()
