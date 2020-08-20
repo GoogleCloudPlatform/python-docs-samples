@@ -6,6 +6,7 @@ assign_issues_by:
 - labels:
   - 'api: automl'
   to:
+  - sirtorry
   - telpirion
 - labels:
   - 'api: bigquery'
