@@ -162,7 +162,12 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
 
     export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
     export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+    export PIP_PATH=/tmp/pyyaml
+
     if [[ ! -f $PARSER_PATH ]]; then
+        echo "--- Installing PyYaml ---"
+        pip install pyyaml -q -t $PIP_PATH
+
         echo "--- Fetching injection script from HEAD (via GitHub) ---"
         git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
         chmod +x $PARSER_PATH

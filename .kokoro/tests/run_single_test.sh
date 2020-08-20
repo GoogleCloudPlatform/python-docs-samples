@@ -53,8 +53,6 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
 
     if [[ -f "$XUNIT_PATH" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
-        pip install pyyaml -q -t $PIP_PATH
-
         echo "Processing XUnit output file: $XUNIT_PATH"
         cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_TMP_PATH"
         if [[ $? -eq 0 ]]; then
