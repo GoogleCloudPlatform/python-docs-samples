@@ -13,6 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Only run Python 2.7 if the PR in question has a `kokoro-lite` label
+if [[ ! -z "$KOKORO_GITHUB_PULL_REQUEST_NUMBER" ]]; then
+    set +e
+    curl -s "https://api.github.com/repos/GoogleCloudPlatform/python-docs-samples/pulls/$KOKORO_GITHUB_PULL_REQUEST_NUMBER" \
+     | grep "kokoro:lite" > /dev/null
+    if [[ $? -eq 0 ]] && [[ "${RUN_TESTS_SESSION}" != "py-2.7" ]]; then
+        # Skip this build
+        echo "This build is being skipped!"
+        echo "  GitHub PRs with the 'kokoro:lite'"
+        echo "  label are ONLY tested in Python 2.7"
+
+        exit 1
+    fi
+    set -e
+fi
+
 # `-e` enables the script to automatically fail when a command fails
 # `-o pipefail` sets the exit code to the rightmost comment to exit with a non-zero
 set -eo pipefail
@@ -48,20 +64,6 @@ if [[ $* == *--only-diff-head* ]]; then
 	DIFF_FROM="HEAD~.."
     else
 	echo "Changes to test driver files detected. Running full tests."
-    fi
-fi
-
-# Only run Python 2.7 if the PR in question has a `kokoro-lite` label
-if [[ ! -z $KOKORO_GITHUB_PULL_REQUEST_NUMBER ]]; then
-    curl -s "https://api.github.com/repos/GoogleCloudPlatform/python-docs-samples/pulls/$KOKORO_GITHUB_PULL_REQUEST_NUMBER" \
-     | grep "kokoro:lite" > /dev/null
-    if [[ $? -eq 0 ]] && [[ "${RUN_TESTS_SESSION}" != "py-2.7" ]]; then
-        # Skip this build
-        echo "This build is being skipped!"
-        echo "  GitHub PRs with the 'kokoro:lite'"
-        echo "  label are ONLY tested in Python 2.7"
-
-        exit 1
     fi
 fi
 

@@ -418,6 +418,9 @@ docker_flags=(
     "--env" "KOKORO_GFILE_DIR=/secrets/gfile"
     "--volume" "${KOKORO_KEYSTORE_DIR:-/dev/shm}:/secrets/keystore"
     "--env" "KOKORO_KEYSTORE_DIR=/secrets/keystore"
+
+    # Pass down the GitHub pull request number
+    "--env" "KOKORO_GITHUB_PULL_REQUEST_NUMBER=${KOKORO_GITHUB_PULL_REQUEST_NUMBER}"
 )
 
 # Add an option for nicer output if the build gets a tty.
