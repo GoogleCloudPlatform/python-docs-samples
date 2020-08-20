@@ -7,6 +7,7 @@ import os
 import re
 import uuid
 
+from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -102,7 +103,10 @@ def setup_and_teardown_bq_dataset():
     yield
 
     # Delete Dataset
-    bq_client.delete_dataset(BQ_DATASET, delete_contents=True)
+    try:
+        bq_client.delete_dataset(BQ_DATASET, delete_contents=True)
+    except NotFound as e:
+        print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
 def get_blob_from_path(path):
