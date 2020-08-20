@@ -13,10 +13,12 @@
 # limitations under the License.
 
 # [START run_events_pubsub_server_setup]
-from cloudevents.http import from_http
-import cloudevents.exceptions as cloud_exceptions
 import base64
+
 import os
+
+import cloudevents.exceptions as cloud_exceptions
+from cloudevents.http import from_http
 
 from flask import Flask, request
 
@@ -36,15 +38,15 @@ def index():
 
     except cloud_exceptions.MissingRequiredFields as e:
         print(f"cloudevents.exceptions.MissingRequiredFields: {e}")
-        return f"Failed to find all required cloudevent fields. ", 400
+        return "Failed to find all required cloudevent fields. ", 400
 
     except cloud_exceptions.InvalidStructuredJSON as e:
         print(f"cloudevents.exceptions.InvalidStructuredJSON: {e}")
-        return f"Could not deserialize the payload as JSON. ", 400
+        return "Could not deserialize the payload as JSON. ", 400
 
     except cloud_exceptions.InvalidRequiredFields as e:
         print(f"cloudevents.exceptions.InvalidRequiredFields: {e}")
-        return f"Request contained invalid required cloudevent fields. ", 400
+        return "Request contained invalid required cloudevent fields. ", 400
 
     envelope = event.data
 
