@@ -55,7 +55,7 @@ fi
 if [[ ! -z $KOKORO_GITHUB_PULL_REQUEST_NUMBER ]]; then
     curl -s "https://api.github.com/repos/GoogleCloudPlatform/python-docs-samples/pulls/$KOKORO_GITHUB_PULL_REQUEST_NUMBER" \
      | grep "kokoro:lite" > /dev/null
-    if [[ $? -eq 0 ]]; then # && [[ "${RUN_TESTS_SESSION}" != "py-2.7" ]]; then
+    if [[ $? -eq 0 ]] && [[ "${RUN_TESTS_SESSION}" != "py-2.7" ]]; then
         # Skip this build
         echo "This build is being skipped!"
         echo "  GitHub PRs with the 'kokoro:lite'"
