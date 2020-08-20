@@ -51,6 +51,20 @@ if [[ $* == *--only-diff-head* ]]; then
     fi
 fi
 
+# Only run Python 2.7 if the PR in question has a `kokoro-lite` label
+if [[ ! -z $KOKORO_GITHUB_PULL_REQUEST_NUMBER ]]; then
+    curl -s "https://api.github.com/repos/GoogleCloudPlatform/python-docs-samples/pulls/$KOKORO_GITHUB_PULL_REQUEST_NUMBER" \
+     | grep "kokoro:lite" > /dev/null
+    if [[ $? -eq 0 ]]; then # && [[ "${RUN_TESTS_SESSION}" != "py-2.7" ]]; then
+        # Skip this build
+        echo "This build is being skipped!"
+        echo "  GitHub PRs with the 'kokoro:lite'"
+        echo "  label are ONLY tested in Python 2.7"
+
+        exit 1
+    fi
+fi
+
 # Because Kokoro runs presubmit builds simalteneously, we often see
 # quota related errors. I think we can avoid this by changing the
 # order of tests to execute (e.g. reverse order for py-3.8
