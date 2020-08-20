@@ -1,3 +1,1 @@
 pytest==6.0.1
-cloudevents==1.2.0
-Flask==1.1.2
