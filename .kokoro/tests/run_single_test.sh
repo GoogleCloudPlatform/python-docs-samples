@@ -43,13 +43,25 @@ EXIT=$?
 
 # Inject region tag data into the test log
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
-    echo "=== Injecting region tags into XUnit output ==="
+    export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
+    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+    export PIP_PATH=/tmp/pyyaml
+    export PYTHONPATH="$PYTHONPATH:$PIP_PATH"
+
     XUNIT_PATH="$PWD/sponge_log.xml"
-    XUNIT_TMP_PATH="tmp/drift_tmp.xml"
+    XUNIT_TMP_PATH="/tmp/drift_tmp.xml"
+
     if [[ -f "$XUNIT_PATH" ]]; then
+        echo "=== Injecting region tags into XUnit output ==="
+        pip install pyyaml -q -t $PIP_PATH
+
         echo "Processing XUnit output file: $XUNIT_PATH"
         cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_TMP_PATH"
-        mv $XUNIT_TMP_PATH $XUNIT_PATH
+        if [[ $? -eq 0 ]]; then
+            mv $XUNIT_TMP_PATH $XUNIT_PATH
+        else
+            echo "Region tag injection FAILED; XUnit file not modified."
+        fi
     else
         echo "No XUnit output file found!"
     fi

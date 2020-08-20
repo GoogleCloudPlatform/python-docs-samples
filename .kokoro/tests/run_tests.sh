@@ -159,7 +159,6 @@ cd "$ROOT"
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
-    pip install --user -q pyyaml
 
     export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
     export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
