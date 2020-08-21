@@ -27,7 +27,7 @@ RUN echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-# Install source files
+# Copy source files
 COPY *.py ./
 
 # Set model trainer as entrypoint
