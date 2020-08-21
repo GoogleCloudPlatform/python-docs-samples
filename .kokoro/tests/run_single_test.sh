@@ -48,13 +48,15 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export PIP_PATH=/tmp/pyyaml
     export PYTHONPATH="$PYTHONPATH:$PIP_PATH"
 
+    UUID=$(pwd | md5)
+    echo "UUID: " $UUID
     XUNIT_PATH="$PWD/sponge_log.xml"
-    XUNIT_TMP_PATH="$HOME/drift_tmp.xml"
+    XUNIT_TMP_PATH="${HOME}/drift_tmp_${UUID}.xml"
 
     if [[ -f "$XUNIT_PATH" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
-        echo "Processing XUnit output file: $XUNIT_PATH"
-        cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping "$PWD" > "$XUNIT_TMP_PATH"
+        echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
+        cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
         if [[ $? -eq 0 ]]; then
             mv $XUNIT_TMP_PATH $XUNIT_PATH
         else
