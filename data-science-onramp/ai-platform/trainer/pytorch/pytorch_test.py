@@ -2,7 +2,6 @@ import json
 import pytest
 
 from predictor import Predictor
-import task
 from util import CitibikeDataset
 
 
@@ -27,4 +26,3 @@ def test_predictor():
 
     # Verify output shape
     assert len(outputs[0]) == 1807
-    
