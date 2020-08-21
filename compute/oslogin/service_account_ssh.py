@@ -153,7 +153,7 @@ if __name__ == '__main__':
         help='Your Google Cloud project ID.')
     parser.add_argument(
         '--zone',
-        help='The zone where the target instance is locted.')
+        help='The zone where the target instance is located.')
     parser.add_argument(
         '--instance',
         help='The target instance for the ssh command.')

@@ -1,2 +1,2 @@
-pytest==5.4.3
+pytest==6.0.1
 pytest-django==3.9.0
