@@ -1,9 +1,7 @@
-import numpy as np
 import os
-import pandas as pd
-import torch
 
-import model
+import numpy as np
+import torch
 
 MODEL_FILE_NAME = "torch.model"
 

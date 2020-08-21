@@ -7,6 +7,7 @@ from torch.utils.data import Dataset
 
 DATA_BLOB = 'feature_engineering/final_data.csv'
 
+
 class CitibikeDataset(Dataset):
 
     def __init__(self, bucket_name, csv_path=None, download=True):
@@ -34,7 +35,7 @@ class CitibikeDataset(Dataset):
         self.df = pd.read_csv(csv_path, index_col=0)
 
     def __getitem__(self, idx):
-        # Get data and target from dataframe 
+        # Get data and target from dataframe
         NUM_FEATURES = 11
         x = self.df.iloc[idx, :NUM_FEATURES].to_numpy()
         y = self.df.iloc[idx, NUM_FEATURES:].to_numpy()
