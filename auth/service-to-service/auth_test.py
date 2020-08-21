@@ -30,9 +30,8 @@ import auth
 def service():
     # Unique suffix to create distinct service names
     suffix = uuid.uuid4().hex
-    project = os.environ['GOOGLE_CLOUD_PROJECT']
 
-    credentials, _ = google.auth.default()
+    credentials, project = google.auth.default()
 
     # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
@@ -64,16 +63,16 @@ def service():
 
     yield service_url
 
-    # subprocess.run(
-    #     [
-    #         "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-    #         "--project", project,
-    #         "--platform=managed",
-    #         "--region=us-central1",
-    #         "--quiet",
-    #      ],
-    #     check=True
-    # )
+    subprocess.run(
+        [
+            "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
+            "--project", project,
+            "--platform=managed",
+            "--region=us-central1",
+            "--quiet",
+         ],
+        check=True
+    )
 
 
 def test_auth(service):
