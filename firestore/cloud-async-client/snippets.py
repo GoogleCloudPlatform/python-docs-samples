@@ -95,7 +95,7 @@ class City(object):
 
     @staticmethod
     def from_dict(source):
-        # [START_EXCLUDE_async]
+        # [START_EXCLUDE]
         city = City(source["name"], source["state"], source["country"])
 
         if "capital" in source:
@@ -108,10 +108,10 @@ class City(object):
             city.regions = source["regions"]
 
         return city
-        # [END_EXCLUDE_async]
+        # [END_EXCLUDE]
 
     def to_dict(self):
-        # [START_EXCLUDE_async]
+        # [START_EXCLUDE]
         dest = {"name": self.name, "state": self.state, "country": self.country}
 
         if self.capital:
@@ -124,7 +124,7 @@ class City(object):
             dest["regions"] = self.regions
 
         return dest
-        # [END_EXCLUDE_async]
+        # [END_EXCLUDE]
 
     def __repr__(self):
         return f"City(\
