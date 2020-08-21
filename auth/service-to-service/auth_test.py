@@ -19,6 +19,8 @@ import os
 import subprocess
 import uuid
 
+import google.auth.transport.requests
+import google.oauth2.id_token
 import pytest
 
 import auth
@@ -30,6 +32,8 @@ def service():
     suffix = uuid.uuid4().hex
     project = os.environ['GOOGLE_CLOUD_PROJECT']
 
+    credentials, project = google.auth.default()
+
     # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
     subprocess.run(
@@ -40,6 +44,7 @@ def service():
             "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
+            f"--service-account={credentials.service_account_email}",
             "--quiet",
         ], check=True
     )
