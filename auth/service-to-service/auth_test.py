@@ -64,16 +64,16 @@ def service():
 
     yield service_url
 
-    subprocess.run(
-        [
-            "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-            "--project", project,
-            "--platform=managed",
-            "--region=us-central1",
-            "--quiet",
-         ],
-        check=True
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
+    #         "--project", project,
+    #         "--platform=managed",
+    #         "--region=us-central1",
+    #         "--quiet",
+    #      ],
+    #     check=True
+    # )
 
 
 def test_auth(service):
