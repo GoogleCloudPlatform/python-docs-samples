@@ -43,7 +43,7 @@ def index():
         return "Request contained invalid required cloudevent fields. ", 400
 
     if 'subject' not in event:
-        errmsg = 'Bad Request: expected header Ce-Subject'
+        errmsg = 'Bad Request: expected header ce-subject'
         print(errmsg)
         return errmsg, 400
 

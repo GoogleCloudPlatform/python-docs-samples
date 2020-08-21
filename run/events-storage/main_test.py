@@ -50,7 +50,7 @@ def test_missing_subject(client, capsys):
     assert r.status_code == 400
 
     out, _ = capsys.readouterr()
-    assert 'Bad Request: expected header Ce-Subject' in out
+    assert 'Bad Request: expected header ce-subject' in out
 
 
 def test_missing_required_fields(client, capsys):
