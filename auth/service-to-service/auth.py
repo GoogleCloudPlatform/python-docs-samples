@@ -34,10 +34,6 @@ def make_authorized_get_request(service_url):
 
     req = urllib.request.Request(service_url)
 
-    credentials, project = google.auth.default()
-    print(credentials.service_account_email)
-    print(credentials.scopes)
-
     auth_req = google.auth.transport.requests.Request()
     id_token = google.oauth2.id_token.fetch_id_token(auth_req, service_url)
 
