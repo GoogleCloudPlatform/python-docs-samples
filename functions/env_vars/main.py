@@ -17,6 +17,7 @@
 import os
 
 
+
 def env_vars(request):
     return os.environ.get('FOO', 'Specified environment variable is not set.')
 # [END functions_env_vars]
