@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2015 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
 import pytest
-import sys
 
 
-@pytest.mark.skipif(sys.version_info < (3, 0), reason="no urlfetch adapter in test env")
-def test_index():
+@pytest.fixture
+def app():
+    import main
     main.app.testing = True
-    client = main.app.test_client()
+    return main.app.test_client()
 
-    r = client.get('/')
-    assert r.status_code == 200
-    assert 'Google is built by a large team ' in r.data.decode('utf-8')
+
+@pytest.mark.skip
+def test_app(app):
+    response = app.get('/')
+    assert response.status_code == 200
