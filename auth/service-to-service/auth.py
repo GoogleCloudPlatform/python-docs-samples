@@ -34,9 +34,9 @@ def make_authorized_get_request(service_url):
 
     req = urllib.request.Request(service_url)
 
+    credentials, project = google.auth.default()
     auth_req = google.auth.transport.requests.Request()
     id_token = google.oauth2.id_token.fetch_id_token(auth_req, service_url)
-    print(id_token)
 
     req.add_header("Authorization", f"Bearer {id_token}")
     response = urllib.request.urlopen(req)
