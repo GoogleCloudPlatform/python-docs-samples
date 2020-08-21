@@ -5,12 +5,11 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-BUCKET_NAME = 'citibikevd'
-DATA_BLOB = f'feature_engineering/final_data.csv'
+DATA_BLOB = 'feature_engineering/final_data.csv'
 
 class CitibikeDataset(Dataset):
 
-    def __init__(self, csv_path=None, download=True):
+    def __init__(self, bucket_name, csv_path=None, download=True):
         """Represents the Citibike dataset."""
         # Define temp path if no specified csv path
         if csv_path is None:
@@ -27,7 +26,7 @@ class CitibikeDataset(Dataset):
         # Download data from GCS bucket
         if download:
             client = storage.Client()
-            bucket = client.bucket(BUCKET_NAME)
+            bucket = client.bucket(bucket_name)
             bucket.blob(DATA_BLOB).download_to_filename(csv_path)
             print('Downloaded Citibike data to ' + csv_path)
 

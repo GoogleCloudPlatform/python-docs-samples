@@ -19,6 +19,11 @@ def get_args():
     """Argument parser. Returns a dictionary of arguments."""
     parser = argparse.ArgumentParser(description='PyTorch model')
     parser.add_argument(
+        'bucket-name',
+        type=str,
+        nargs=1,
+        help='GCS bucket in which the feature engineered data is stored')
+    parser.add_argument(
         '--batch-size',
         type=int,
         default=32,
@@ -69,7 +74,7 @@ def get_args():
         help='The directory to store the model')
 
     args = parser.parse_args()
-    return args
+    return vars(args)
 
 
 def train(args, model, device, train_loader, optimizer, epoch):
@@ -83,7 +88,7 @@ def train(args, model, device, train_loader, optimizer, epoch):
         loss.backward()
         optimizer.step()
 
-        if batch_idx % args.log_interval == 0:
+        if batch_idx % args['log_interval'] == 0:
             batch_idx += 1
             print(f'\tBatch {batch_idx}/{len(train_loader)}\tLoss: {loss.item()}')
 
@@ -112,19 +117,20 @@ def test(args, model, device, test_loader, epoch):
 def main():
     # Training settings
     args = get_args()
-    use_cuda = not args.no_cuda and torch.cuda.is_available()
+    BUCKET_NAME = args['bucket-name'][0]
+    use_cuda = not args['no_cuda'] and torch.cuda.is_available()
     device = torch.device('cuda' if use_cuda else 'cpu')
-    torch.manual_seed(args.seed)
+    torch.manual_seed(args['seed'])
 
     # Download data
-    dataset = CitibikeDataset()
+    dataset = CitibikeDataset(BUCKET_NAME)
 
     # Create random indices for training and testing splits
     indices = list(range(len(dataset)))
-    np.random.seed(args.seed)
+    np.random.seed(args['seed'])
     np.random.shuffle(indices)
 
-    split = int(args.test_split * len(dataset))
+    split = int(args['test_split'] * len(dataset))
     train_indices = indices[split:]
     test_indices = indices[:split]
 
@@ -134,12 +140,12 @@ def main():
 
     train_loader = torch.utils.data.DataLoader(
         dataset,
-        batch_size=args.batch_size,
+        batch_size=args['batch_size'],
         sampler=train_sampler
     )
     test_loader = torch.utils.data.DataLoader(
         dataset,
-        batch_size=args.test_batch_size,
+        batch_size=args['test_batch_size'],
         sampler=test_sampler
     )
 
@@ -148,19 +154,19 @@ def main():
     model = Net(input_dim, output_dim).to(device)
     optimizer = optim.SGD(
         model.parameters(),
-        lr=args.lr,
-        momentum=args.momentum
+        lr=args['lr'],
+        momentum=args['momentum']
     )
 
     # Train model
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(1, args['epochs'] + 1):
         train(args, model, device, train_loader, optimizer, epoch)
         test(args, model, device, test_loader, epoch)
 
     # Save model to GCS
-    if args.model_dir:
+    if args['model_dir']:
         tmp_model_file = os.path.join('/tmp', MODEL_FILE_NAME)
-        gcs_model_file = os.path.join(args.model_dir, MODEL_FILE_NAME)
+        gcs_model_file = os.path.join('gs://', BUCKET_NAME, args['model_dir'], MODEL_FILE_NAME)
         torch.save(model, tmp_model_file)
         subprocess.check_call(['gsutil', 'cp', tmp_model_file, gcs_model_file])
         print(f"Saved model to {gcs_model_file}")
