@@ -32,7 +32,7 @@ def service():
     suffix = uuid.uuid4().hex
     project = os.environ['GOOGLE_CLOUD_PROJECT']
 
-    credentials, project = google.auth.default()
+    credentials, _ = google.auth.default()
 
     # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
