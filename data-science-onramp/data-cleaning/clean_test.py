@@ -39,8 +39,8 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         # We use a less robust machine type for testing purposes
         # "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
         # "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
-         "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-4"},
-         "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
+        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-4"},
+        "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
             # Change optional component to "ANACONDA" when this issue is resolved:
