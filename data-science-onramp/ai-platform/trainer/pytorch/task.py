@@ -161,7 +161,7 @@ def main():
     if args.model_dir:
         tmp_model_file = os.path.join('/tmp', MODEL_FILE_NAME)
         gcs_model_file = os.path.join(args.model_dir, MODEL_FILE_NAME)
-        torch.save(model.state_dict(), tmp_model_file)
+        torch.save(model, tmp_model_file)
         subprocess.check_call(['gsutil', 'cp', tmp_model_file, gcs_model_file])
         print(f"Saved model to {gcs_model_file}")
 
