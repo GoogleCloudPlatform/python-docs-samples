@@ -37,8 +37,12 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
     "cluster_name": DATAPROC_CLUSTER,
     "config": {
         "gce_cluster_config": {"zone_uri": ""},
-        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
-        "worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
+        # We recommend these configs when running the full code
+        # We use a less robust machine type for the tests
+        #"master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-8"},
+        #"worker_config": {"num_instances": 6, "machine_type_uri": "n1-standard-8"},
+        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-4"},
+        "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
             "optional_components": [5],
