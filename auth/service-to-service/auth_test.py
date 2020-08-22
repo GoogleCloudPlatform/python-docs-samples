@@ -61,6 +61,11 @@ def service():
         check=True
     ).stdout.strip()
 
+    subprocess.run(
+        ["gcloud", "run", "services", "add-iam-policy-binding", f"helloworld-{suffix}", 
+        "--member=serviceAccount:ci-bootstrap@cloud-python-ci-resources.iam.gserviceaccount.com",
+        "--role=run.invoker"])
+
     yield service_url
 
     subprocess.run(
