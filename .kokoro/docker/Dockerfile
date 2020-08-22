@@ -59,6 +59,7 @@ RUN apt-get update \
     tk \
     tk-dev \
     uuid-dev \
+    uuid-runtime \
     wget \
     zlib1g-dev \
   && apt-get clean autoclean \
