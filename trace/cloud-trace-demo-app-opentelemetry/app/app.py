@@ -23,6 +23,7 @@ from opentelemetry import trace, propagators
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
+
 # [END trace_demo_imports]
 
 app = flask.Flask(__name__)
@@ -36,7 +37,7 @@ tracer = trace.get_tracer(__name__)
 propagator = propagators.get_global_httptextformat()
 
 
-@app.route('/')
+@app.route("/")
 def template_test():
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
@@ -46,9 +47,9 @@ def template_test():
             with tracer.start_as_current_span("span3"):
                 print("Hello world from Cloud Trace Exporter!")
 
-    return 'Hello World'
+    return "Hello World"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8080)

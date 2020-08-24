@@ -2,8 +2,6 @@
 
 Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/). This includes necessary tools.
 
-We provide a public image for the services in this demo app. You could also build
-your own following steps 4 - 6.
 
 [![Open Cloud Trace Demo APP in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=trace/cloud-trace-demo-app/README.md&amp;cloudshell_tutorial=trace/cloud-trace-demo-app/README.md)
 
@@ -23,24 +21,53 @@ If you are using Cloud Shell, skip to the next section.
 9. Enable the GKE API & billing:
 
     `gcloud services enable container.googleapis.com`
-10. Create a GKE cluster named "demo":
+10. Create a GKE cluster named "cloud-trace-demo", replace you GCP zone with
+your gcp-zone closest in proximity to you:
 
-    `gcloud container clusters create demo`
+     ```
+     gcloud container clusters create cloud-trace-demo\`
+     --num-nodes 1 \
+     --enable-basic-auth \
+     --issue-client-certificate \
+     --zone your-gcp-zone
+     ```
+12. Verify that you have access to the cluster:
+    
+    `kubectl get nodes`
 
-#### Send Requests to See Generated Traces
+#### Deploy The Cloud Trace Demo App
 
-11. Build and tag the docker image for demo app:
+13. Build and tag the docker image for demo app:
 
-    `docker build -t gcr.io/${PROJECT_ID}/demo:v1 .`
-12. Create a Kubernetes Deployment for your `demo` Docker image.
+    `docker build -t gcr.io/${PROJECT_ID}/cloud-trace-demo:v1 .`
+14. Deploy resource to the cluster.
 
-    `kubectl create deployment demo --image=gcr.io/${PROJECT_ID}/demo:v1`
-12. Send request to the service by using `curl` coupled with the service uri:
+    `kubectl apply -f deployment.yaml`
+15. Track the status of the deployment:
 
+    `kubectl get deployments`
+    
+    Deployment is complete, when all of the available deployments are ready. 
+16. Run the following command to see the pods the deployment created:
+    
+    `kubectl get pods`  
+
+#### Deploy The Cloud Trace Demo Service
+
+17. Create the cloud trace demo service
+    
+    `kubectl apply -f service.yaml`
+18. Get the services IP address by running the following command:
+    
+    `kubectl get services`
+19. Send curl request to the EXTERNAL_IP, replcae EXTERNAL_IP with the external ip found
+in the above command:
+    
+    `curl EXTERNAL_IP`
 12. Visit [Trace List](https://console.cloud.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     
     ![Screenshot](example-trace.png)
 13. Clean up GKE cluster/pods/services:
 
-    `gcloud container clusters delete demo`
+    `gcloud container clusters delete cloud-trace-demo`

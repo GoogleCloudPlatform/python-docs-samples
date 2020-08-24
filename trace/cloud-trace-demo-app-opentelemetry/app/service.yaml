@@ -4,11 +4,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello
+  name: trace-demo
 spec:
   type: LoadBalancer
   selector:
-    app: hello
+    app: trace-demo
   ports:
   - port: 80
     targetPort: 8080
