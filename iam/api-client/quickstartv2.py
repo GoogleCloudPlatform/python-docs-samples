@@ -68,7 +68,7 @@ def modify_policy_add_role(crm_service, project_id, role, member):
         if b["role"] == role:
             binding = b
             break
-    if binding != None:
+    if binding is not None:
         binding["members"].append(member)
     else:
         binding = {"role": role, "members": [member]}
