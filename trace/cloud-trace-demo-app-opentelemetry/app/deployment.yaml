@@ -2,21 +2,21 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cloud-trace-demo
+  name: helloworld-gke
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cloud-trace
+      app: hello
   template:
     metadata:
       labels:
-        app: cloud-trace
+        app: hello
     spec:
       containers:
-      - name: cloud-trace
+      - name: hello-app
         # Replace $GCLOUD_PROJECT with your project ID
-        image: gcr.io/$GCLOUD_PROJECT/cloud-trace-demo:latest
+        image: gcr.io/aravins-current-state/helloworld-gke:latest
         # This app listens on port 8080 for web traffic by default.
         ports:
         - containerPort: 8080
