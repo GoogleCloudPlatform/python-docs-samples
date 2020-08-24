@@ -40,7 +40,12 @@ def topic_path():
         pass
     topic = publisher_client.create_topic(topic_path)
     yield topic.name
-    publisher_client.delete_topic(topic_path)
+    # Due to the pinned library dependencies in apache-beam, client
+    # library throws an error upon deletion.
+    # We use gcloud for a workaround. See also:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
+    sp.check_call(
+        ['gcloud', 'pubsub', '--project', PROJECT, 'topics', 'delete', TOPIC])
 
 
 @pytest.fixture
@@ -53,7 +58,14 @@ def subscription_path(topic_path):
         pass
     subscription = subscriber.create_subscription(subscription_path, topic_path)
     yield subscription.name
-    subscriber.delete_subscription(subscription_path)
+
+    # Due to the pinned library dependencies in apache-beam, client
+    # library throws an error upon deletion.
+    # We use gcloud for a workaround. See also:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
+    sp.check_call(
+        ['gcloud', 'pubsub', '--project', PROJECT, 'subscriptions', 'delete',
+         SUBSCRIPTION])
 
 
 @pytest.fixture

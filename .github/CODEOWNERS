@@ -12,6 +12,7 @@
 /appengine/**/*.py                     @engelke @GoogleCloudPlatform/python-samples-owners
 /auth/**/*.py                            @busunkim96 @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigquery_storage/**/*.py              @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigtable/**/*.py                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
