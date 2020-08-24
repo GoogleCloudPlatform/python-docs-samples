@@ -27,14 +27,15 @@ from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
 # [END trace_demo_imports]
 
 app = flask.Flask(__name__)
-trace.set_tracer_provider(TracerProvider())
 
-trace.get_tracer_provider().add_span_processor(
-    SimpleExportSpanProcessor(CloudTraceSpanExporter())
-)
+
+def configure_exporter(exporter):
+    trace.set_tracer_provider(TracerProvider())
+
+    trace.get_tracer_provider().add_span_processor(SimpleExportSpanProcessor(exporter))
+
+
 tracer = trace.get_tracer(__name__)
-
-propagator = propagators.get_global_httptextformat()
 
 
 @app.route("/")
@@ -51,5 +52,5 @@ def template_test():
 
 
 if __name__ == "__main__":
-
     app.run(debug=True, host="0.0.0.0", port=8080)
+    configure_exporter(CloudTraceSpanExporter())

@@ -15,30 +15,15 @@
 A sample app demonstrating Stackdriver Trace
 """
 
-import httpretty
+
 import mock
 
 import app
-import pdb
-
-
-def test_send_response():
-    pdb.set_trace()
-    service_keyword = "Hello"
-    app.app.testing = True
-    app.app.config["keyword"] = service_keyword
-    app.app.config["endpoint"] = ""
-    client = app.app.test_client()
-    resp = client.get("/")
-    assert resp.status_code == 200
-    assert service_keyword in resp.data.decode("utf-8")
 
 
 def test_traces():
-
     exporter = mock.Mock()
-    app.SimpleExportSpanProcessor(exporter)
-
+    app.configure_exporter(exporter)
     client = app.app.test_client()
     resp = client.get("/")
     assert resp.status_code == 200
