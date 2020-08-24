@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
-
 import main
 
 
-@mock.patch("fluent.event")
-def test_error_sends(event_mock):
-    main.simulate_error()
-    event_mock.Event.assert_called_once_with(mock.ANY, mock.ANY)
+def test_index():
+    main.app.testing = True
+    client = main.app.test_client()
+
+    r = client.get('/')
+    assert r.status_code == 200
+    assert 'Make a request' in r.data.decode('utf-8')
