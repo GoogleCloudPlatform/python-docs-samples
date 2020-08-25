@@ -42,6 +42,7 @@ nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
 # Inject region tag data into the test log
+set +e  # Don't fail the entire test if this step fails
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
     export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
@@ -56,7 +57,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
         echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
 
         cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
-        if [[ $? -eq 0 ]]; then
+        if [[ $? -eq 0 ]] && [[ -s "$XUNIT_PATH" ]]; then
             mv $XUNIT_TMP_PATH $XUNIT_PATH
         else
             echo "Region tag injection FAILED; XUnit file not modified."
@@ -66,6 +67,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     fi
     echo "=== Region tag injection complete! ==="
 fi
+set -e
 
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
 # to the Build Cop Bot.
