@@ -49,7 +49,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export PYTHONPATH="$PYTHONPATH:$PIP_PATH"
 
     export XUNIT_PATH="$PWD/sponge_log.xml"
-    export XUNIT_TMP_PATH="${HOME}/drift_tmp_$(uuidgen).xml"
+    export XUNIT_TMP_PATH="$(mktemp)"
 
     if [[ -f "$XUNIT_PATH" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
