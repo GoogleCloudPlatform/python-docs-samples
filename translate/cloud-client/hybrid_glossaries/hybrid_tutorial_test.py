@@ -36,18 +36,6 @@ def test_vision_standard_format():
     assert len(text) > 0
 
 
-def test_vision_non_standard_format():
-
-    # Generate text
-    text = pic_to_text('resources/non_standard_format.png')
-
-    # Read expected text
-    with open('resources/non_standard_format.txt') as f:
-        expected_text = f.read()
-
-    assert text == expected_text
-
-
 # TRANSLATE TESTS
 
 
