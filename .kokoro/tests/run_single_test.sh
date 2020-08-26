@@ -41,13 +41,13 @@ fi
 nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
+echo "PWD: ${PWD}"
+
 # Inject region tag data into the test log
 set +e  # Don't fail the entire test if this step fails
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
     export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
-    export PIP_PATH=/tmp/pyyaml
-    export PYTHONPATH="$PYTHONPATH:$PIP_PATH"
 
     export XUNIT_PATH="$PWD/sponge_log.xml"
     export XUNIT_TMP_PATH="$(mktemp)"
@@ -56,7 +56,11 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
         echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
 
-        cat "$XUNIT_PATH" | python3.7 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
+	# We use `python3` because it will work even if we remove old
+	# python versions from the docker image.
+	echo "Calling python3 ${PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${PWD}"
+        cat "$XUNIT_PATH" | \
+	    python3 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
         if [[ $? -eq 0 ]] && [[ -s "$XUNIT_PATH" ]]; then
             mv $XUNIT_TMP_PATH $XUNIT_PATH
         else
