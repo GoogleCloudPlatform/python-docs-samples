@@ -19,7 +19,8 @@ import time
 
 # [START trace_demo_imports]
 import flask
-from opentelemetry import trace, propagators
+
+from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor

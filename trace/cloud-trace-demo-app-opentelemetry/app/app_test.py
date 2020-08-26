@@ -14,11 +14,9 @@
 """
 A sample app demonstrating Stackdriver Trace
 """
-
+import app
 
 import mock
-
-import app
 
 
 def test_traces():
