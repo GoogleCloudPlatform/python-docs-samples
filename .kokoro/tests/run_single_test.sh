@@ -46,8 +46,6 @@ echo "PWD: ${PWD}"
 # Inject region tag data into the test log
 set +e  # Don't fail the entire test if this step fails
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
-    export REGION_TAG_PARSER_DIR="/tmp/region-tag-parser"
-    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
 
     export XUNIT_PATH="$PWD/sponge_log.xml"
     export XUNIT_TMP_PATH="$(mktemp)"
