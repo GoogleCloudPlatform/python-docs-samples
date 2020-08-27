@@ -3,7 +3,7 @@
 
 ## Python Samples for Google Cloud Key Management Service
 
-This directory contains samples for Google Cloud Key Management Service, which may be used as a refererence for how to use Google Cloud Key Management Service. 
+This directory contains samples for Google Cloud Key Management Service, which may be used as a refererence for how to use this product. 
 The Google Cloud KMS API is a service that allows you to keep encryption keys centrally in the cloud, for direct use by cloud services. More info about Cloud KMS can be found at https://cloud.google.com/kms/docs/
 Samples, quickstarts, and other documentation are available at <a href="https://cloud.google.com/kms">cloud.google.com</a>.
 
@@ -37,15 +37,14 @@ More information about the Cloud KMS quickstart is available at https://cloud.go
 
 These samples use the [Google Cloud Client Library for Python][client_library_python].
 You can read the documentation for more details on API usage and use GitHub
-to [browse the source][source] and [report issues][issues].
+to <a href="https://github.com/googleapis/python-kms">browse the source</a> and [report issues][issues].
 
 ### Contributing
-For [contributing guidelines][contrib_guide], the [Python style guide][py_style], and more information on prerequisite steps to contribute, view the source code at <a href="https://github.com/googleapis/python-kms">googleapis/python-kms</a>.
+View the [contributing guidelines][contrib_guide], the [Python style guide][py_style] for more information.
 
 [authentication]: https://cloud.google.com/docs/authentication/getting-started
 [enable_billing]:https://cloud.google.com/apis/docs/getting-started#enabling_billing
 [client_library_python]: https://googlecloudplatform.github.io/google-cloud-python/
-[source]: https://github.com/GoogleCloudPlatform/google-cloud-python
 [issues]: https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 [contrib_guide]: https://github.com/googleapis/google-cloud-python/blob/master/CONTRIBUTING.rst
 [py_style]: http://google.github.io/styleguide/pyguide.html
