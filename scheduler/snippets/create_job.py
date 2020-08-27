@@ -27,7 +27,7 @@ def create_scheduler_job(project_id, location_id, service_id):
     # service_id = 'my-service'
 
     # Construct the fully qualified location path.
-    parent = client.location_path(project_id, location_id)
+    parent = f"projects/{project_id}/locations/{location_id}"
 
     # Construct the request body.
     job = {
@@ -36,7 +36,7 @@ def create_scheduler_job(project_id, location_id, service_id):
                 'service': service_id
             },
             'relative_uri': '/log_payload',
-            'http_method': 'POST',
+            'http_method': 1,
             'body': 'Hello World'.encode()
         },
         'schedule': '* * * * *',
@@ -44,7 +44,12 @@ def create_scheduler_job(project_id, location_id, service_id):
     }
 
     # Use the client to send the job creation request.
-    response = client.create_job(parent, job)
+    response = client.create_job(
+        request={
+            "parent": parent,
+            "job": job
+        }
+    )
 
     print('Created job: {}'.format(response.name))
     # [END cloud_scheduler_create_job]
@@ -66,11 +71,11 @@ def delete_scheduler_job(project_id, location_id, job_id):
     # job_id = 'JOB_ID'
 
     # Construct the fully qualified job path.
-    job = client.job_path(project_id, location_id, job_id)
+    job = f"projects/{project_id}/locations/{location_id}/jobs/{job_id}"
 
     # Use the client to send the job deletion request.
     try:
-        client.delete_job(job)
+        client.delete_job(name=job)
         print("Job deleted.")
     except GoogleAPICallError as e:
         print("Error: %s" % e)
