@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START iam_quickstartv2]
+# [START iam_quickstart_v2]
 import os
 
 from google.oauth2 import service_account
@@ -63,8 +63,12 @@ def modify_policy_add_role(crm_service, project_id, role, member):
 
     policy = get_policy(crm_service, project_id)
 
-    if role in policy["bindings"]:
-        binding = next(b for b in policy["bindings"] if b["role"] == role)
+    binding = None
+    for b in policy["bindings"]:
+        if b["role"] == role:
+            binding = b
+            break
+    if binding is not None:
         binding["members"].append(member)
     else:
         binding = {"role": role, "members": [member]}
@@ -117,4 +121,4 @@ if __name__ == '__main__':
     # TODO: Replace with the ID of your member in the form 'user:member@example.com.
     member = "your_member"
     quickstart(project_id, member)
-# [END iam_quickstartv2]
+# [END iam_quickstart_v2]
