@@ -1,6 +1,7 @@
 # Events for Cloud Run – Pub/Sub tutorial
 
-This sample shows how to create a service that processes Pub/Sub events.
+This sample shows how to create a service that processes Pub/Sub events using 
+[the CloudEvents SDK](https://github.com/cloudevents/sdk-python).
 
 ## Setup
 
