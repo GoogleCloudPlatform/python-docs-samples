@@ -1,4 +1,4 @@
 pytest==6.0.0
 pandas==1.1.0
 google-cloud-bigquery==1.26.1
-pyarrow==1.0.0
+pyarrow==1.0.1
