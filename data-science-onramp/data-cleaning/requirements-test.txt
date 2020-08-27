@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 pytest==6.0.1
 pandas==1.1.2
 google-cloud-bigquery==1.26.1
+=======
+pytest==6.0.0
+pandas==1.1.1
+google-cloud-bigquery==1.27.2
+>>>>>>> 46e38fee (chore(deps): update dependency google-cloud-bigquery to v1.27.2)
 pyarrow==1.0.1
