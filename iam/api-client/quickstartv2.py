@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START iam_quickstartv2]
+# [START iam_quickstart_v2]
 import os
 
 from google.oauth2 import service_account
@@ -121,4 +121,4 @@ if __name__ == '__main__':
     # TODO: Replace with the ID of your member in the form 'user:member@example.com.
     member = "your_member"
     quickstart(project_id, member)
-# [END iam_quickstartv2]
+# [END iam_quickstart_v2]
