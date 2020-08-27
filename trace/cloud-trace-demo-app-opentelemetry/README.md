@@ -21,8 +21,9 @@ If you are using Cloud Shell, skip to the next section.
 5. Enable the GKE API & billing:
 
     `gcloud services enable container.googleapis.com`
-6. Create a GKE cluster named "cloud-trace-demo", replace you 
-[GCP Zone](https://cloud.google.com/compute/docs/regions-zones) with your gcp-zone closest in proximity to you:
+6. Create a GKE cluster named "cloud-trace-demo", replacing `your-gcp-zone`  below
+with the 
+[GCP Zone](https://cloud.google.com/compute/docs/regions-zones) closest in proximity to you:
 
      ```
      gcloud container clusters create cloud-trace-demo\`
