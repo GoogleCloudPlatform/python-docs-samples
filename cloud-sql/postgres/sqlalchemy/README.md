@@ -164,7 +164,7 @@ Take note of the URL output at the end of the deployment process.
 3. Configure the service for use with Cloud Run
 
 ```sh
-gcloud beta run services update run-mysql \
+gcloud beta run services update run-sql \
     --add-cloudsql-instances [INSTANCE_CONNECTION_NAME] \
     --set-env-vars CLOUD_SQL_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME],\
       DB_USER=[MY_DB_USER],DB_PASS=[MY_DB_PASS],DB_NAME=[MY_DB]
