@@ -20,9 +20,12 @@ import pytest
 import main
 
 
-required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
-
-header_data = {field: str(uuid4()) for field in required_fields}
+binary_headers = {
+    "ce-id": str(uuid4),
+    "ce-type": "com.pytest.sample.event",
+    "ce-source": "<my-test-source>",
+    "ce-specversion": "1.0"
+}
 
 
 @pytest.fixture
@@ -32,7 +35,7 @@ def client():
 
 
 def test_endpoint(client, capsys):
-    test_headers = copy.copy(header_data)
+    test_headers = copy.copy(binary_headers)
     test_headers['Ce-Subject'] = 'test-subject'
 
     r = client.post('/', headers=test_headers)
@@ -43,20 +46,20 @@ def test_endpoint(client, capsys):
 
 
 def test_missing_subject(client, capsys):
-    r = client.post('/', headers=header_data)
+    r = client.post('/', headers=binary_headers)
     assert r.status_code == 400
 
     out, _ = capsys.readouterr()
-    assert 'Bad Request: expected header Ce-Subject' in out
+    assert 'Bad Request: expected header ce-subject' in out
 
 
 def test_missing_required_fields(client, capsys):
-    for field in required_fields:
-        test_headers = copy.copy(header_data)
+    for field in binary_headers:
+        test_headers = copy.copy(binary_headers)
         test_headers.pop(field)
 
         r = client.post('/', headers=test_headers)
         assert r.status_code == 400
 
         out, _ = capsys.readouterr()
-        assert f'Bad Request: missing required header {field}' in out
+        assert 'MissingRequiredFields' in out
