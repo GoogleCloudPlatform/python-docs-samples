@@ -58,6 +58,7 @@ assign_issues_by:
   - 'api: functions'
   to:
   - ace-n
+  - grant
 - labels:
   - 'api: healthcare'
   to:
