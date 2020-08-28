@@ -762,7 +762,7 @@ def query_struct_field(instance_id, database_id):
 
     for row in results:
         print(u'SingerId: {}'.format(*row))
-# [START spanner_field_access_on_struct_parameters]
+# [END spanner_field_access_on_struct_parameters]
 
 
 # [START spanner_field_access_on_nested_struct_parameters]
