@@ -28,7 +28,6 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-VPC_NETWORK_NAME = "memorystore-redis"
 VPC_CONNECTOR_NAME = "test-connector"
 MEMORYSTORE_REDIS_NAME = "static-test-instance"
 
