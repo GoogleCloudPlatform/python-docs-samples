@@ -1,6 +1,6 @@
 # Events for Cloud Run – GCS tutorial
 
-This sample shows how to create a service that processes GCS events.
+This sample shows how to create a service that processes GCS using [the CloudEvents SDK](https://github.com/cloudevents/sdk-python).
 
 ## Setup
 
@@ -57,13 +57,13 @@ gcloud alpha events triggers create $MY_GCS_TRIGGER \
 
 ## Test
 
-Test your Cloud Run service by publishing a message to the topic: 
+Test your Cloud Run service by publishing a message to the topic:
 
 ```sh
 gsutil defstorageclass set STANDARD gs://$MY_GCS_BUCKET
 ```
 
-Observe the Cloud Run service printing upon receiving an event in 
+Observe the Cloud Run service printing upon receiving an event in
 Cloud Logging:
 
 ```sh
