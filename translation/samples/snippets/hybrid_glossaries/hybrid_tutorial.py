@@ -56,6 +56,7 @@ def pic_to_text(infile):
     # For less dense text, use text_detection
     response = client.document_text_detection(image=image)
     text = response.full_text_annotation.text
+    print("Detected text: {}".format(text))
 
     return text
     # [END translate_hybrid_vision]

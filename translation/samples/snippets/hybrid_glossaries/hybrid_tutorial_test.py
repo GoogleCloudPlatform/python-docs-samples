@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import re
 import sys
 import uuid
 
@@ -29,11 +28,13 @@ PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 # VISION TESTS
 
 
-def test_vision_standard_format():
+def test_vision_standard_format(capsys):
     # Generate text using Vision API
-    text = pic_to_text('resources/standard_format.jpeg')
+    pic_to_text('resources/standard_format.jpeg')
+    out, err = capsys.readouterr()
 
-    assert re.match(r"This\s?is\s?a\s?test!\s?", text)
+    assert 'Detected text:' in out
+    assert 'test!' in out
 
 
 def test_vision_non_standard_format():
