@@ -69,7 +69,3 @@ def test_batch_translate_text_with_glossary_and_model(capsys, bucket, glossary):
 
     out, _ = capsys.readouterr()
     assert "Total Characters: 25" in out
-    # TODO: find a way to make sure it translates correctly
-    # SHOULD NOT BE - Google NMT model -> それはしません。欺ception"
-    # literal: "それはそうだ"  # custom model
-    # literal: "欺く"  # glossary
