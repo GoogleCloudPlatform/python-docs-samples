@@ -36,6 +36,8 @@ assign_issues_by:
   - 'api: containeranalysis'
   to:
   - donmccasland
+  - dinagraves
+  - kelsk
 - labels:
   - 'api: datalabeling'
   - 'api: iot'
@@ -82,7 +84,7 @@ assign_issues_by:
 - labels:
   - 'api: cloudprofiler'
   to:
-  - jqll
+  - kalyanac
 - labels:
   - 'api: pubsub'
   to:
