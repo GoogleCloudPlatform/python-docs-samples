@@ -79,6 +79,7 @@ def sample_recognize(storage_uri, phrase):
 
 
 # [END speech_adaptation_beta]
+    return response
 
 
 def main():
