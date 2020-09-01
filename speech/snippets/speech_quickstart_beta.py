@@ -14,52 +14,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "speech_contexts_classes_beta")
+# DO NOT EDIT! This is a generated sample ("Request",  "speech_quickstart_beta")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-speech
 
 # sample-metadata
-#   title: Using Context Classes (Cloud Storage)
-#   description: Transcribe a short audio file with static context classes.
-#   usage: python3 samples/v1p1beta1/speech_contexts_classes_beta.py [--storage_uri "gs://cloud-samples-data/speech/time.mp3"] [--phrase "$TIME"]
+#   title: Quickstart Beta
+#   description: Performs synchronous speech recognition on an audio file
+#   usage: python3 samples/v1p1beta1/speech_quickstart_beta.py [--storage_uri "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"]
 
-# [START speech_contexts_classes_beta]
+# [START speech_quickstart_beta]
 from google.cloud import speech_v1p1beta1
 from google.cloud.speech_v1p1beta1 import enums
 
 
-def sample_recognize(storage_uri, phrase):
+def sample_recognize(storage_uri):
     """
-    Transcribe a short audio file with static context classes.
+    Performs synchronous speech recognition on an audio file
 
     Args:
       storage_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
-      phrase Phrase "hints" help recognize the specified phrases from your audio.
-      In this sample we are using a static class phrase ($TIME).
-      Classes represent groups of words that represent common concepts
-      that occur in natural language.
     """
 
     client = speech_v1p1beta1.SpeechClient()
 
-    # storage_uri = 'gs://cloud-samples-data/speech/time.mp3'
-    # phrase = '$TIME'
-    phrases = [phrase]
-    speech_contexts_element = {"phrases": phrases}
-    speech_contexts = [speech_contexts_element]
+    # storage_uri = 'gs://cloud-samples-data/speech/brooklyn_bridge.mp3'
 
     # The language of the supplied audio
     language_code = "en-US"
 
     # Sample rate in Hertz of the audio data sent
-    sample_rate_hertz = 24000
+    sample_rate_hertz = 44100
 
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats.
     encoding = enums.RecognitionConfig.AudioEncoding.MP3
     config = {
-        "speech_contexts": speech_contexts,
         "language_code": language_code,
         "sample_rate_hertz": sample_rate_hertz,
         "encoding": encoding,
@@ -72,8 +63,8 @@ def sample_recognize(storage_uri, phrase):
         alternative = result.alternatives[0]
         print(u"Transcript: {}".format(alternative.transcript))
 
-
-# [END speech_contexts_classes_beta]
+# [END speech_quickstart_beta]
+    return response
 
 
 def main():
@@ -81,12 +72,13 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--storage_uri", type=str, default="gs://cloud-samples-data/speech/time.mp3"
+        "--storage_uri",
+        type=str,
+        default="gs://cloud-samples-data/speech/brooklyn_bridge.mp3",
     )
-    parser.add_argument("--phrase", type=str, default="$TIME")
     args = parser.parse_args()
 
-    sample_recognize(args.storage_uri, args.phrase)
+    sample_recognize(args.storage_uri)
 
 
 if __name__ == "__main__":
