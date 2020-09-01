@@ -1,2 +1,2 @@
 pytest==4.6.11; python_version < '3.0'
-responses==0.11.0
+responses==0.12.0
