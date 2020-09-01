@@ -17,21 +17,17 @@
 
 import os
 import subprocess
+from urllib import request
 import uuid
 
-import google.auth.transport.requests
-import google.oauth2.id_token
 import pytest
-
-import auth
 
 
 @pytest.fixture()
-def service():
+def services():
     # Unique suffix to create distinct service names
     suffix = uuid.uuid4().hex
-
-    credentials, project = google.auth.default()
+    project = os.environ['GOOGLE_CLOUD_PROJECT']
 
     # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
@@ -43,7 +39,6 @@ def service():
             "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
-            f"--service-account={credentials.service_account_email}",
             "--quiet",
         ], check=True
     )
@@ -61,12 +56,30 @@ def service():
         check=True
     ).stdout.strip()
 
+    # Deploy function for service-to-service authentication
     subprocess.run(
-        ["gcloud", "run", "services", "add-iam-policy-binding", f"helloworld-{suffix}", 
-        "--member=serviceAccount:ci-bootstrap@cloud-python-ci-resources.iam.gserviceaccount.com",
-        "--role=run.invoker"])
+        [
+            "gcloud", "functions", "deploy", f"helloworld-{suffix}",
+            "--project", project,
+            "--runtime=python38",
+            "--region=us-central1",
+            "--trigger-http",
+            "--no-allow-unauthenticated",
+            "--entry-point=get_authorized",
+            f"--set-env-vars=URL={service_url.decode()}"
+        ],
+        check=True
+        )
 
-    yield service_url
+    function_url = (
+        f"https://us-central1-{project}.cloudfunctions.net/helloworld-{suffix}")
+
+    token = subprocess.run(
+        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE,
+        check=True
+    ).stdout.strip()
+
+    yield function_url, token
 
     subprocess.run(
         [
@@ -79,7 +92,23 @@ def service():
         check=True
     )
 
+    subprocess.run(
+        [
+            "gcloud", "functions", "delete", f"helloworld-{suffix}",
+            "--project", project,
+            "--region=us-central1",
+            "--quiet",
+         ],
+        check=True
+    )
 
-def test_auth(service):
-    response = auth.make_authorized_get_request(service.decode())
-    assert "Hello World" in response.decode()
+
+def test_auth(services):
+    url = services[0]
+    token = services[1].decode()
+
+    req = request.Request(url, headers={"Authorization": f"Bearer {token}",})
+
+    response = request.urlopen(req)
+    assert response.status == 200
+    assert "Hello World" in response.read().decode()
