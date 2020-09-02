@@ -48,6 +48,7 @@ def blob_metadata(bucket_name, blob_name):
     print("Content-encoding: {}".format(blob.content_encoding))
     print("Content-language: {}".format(blob.content_language))
     print("Metadata: {}".format(blob.metadata))
+    print("Custom Time: {}".format(blob.custom_time))
     print("Temporary hold: ", "enabled" if blob.temporary_hold else "disabled")
     print(
         "Event based hold: ",
