@@ -31,10 +31,7 @@ def clients():
     )
 
     # Make clients.
-    bqclient = bigquery.Client(
-        credentials=credentials,
-        project=your_project_id,
-    )
+    bqclient = bigquery.Client(credentials=credentials, project=your_project_id,)
     bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
         credentials=credentials
     )
@@ -130,9 +127,7 @@ def test_session_to_dataframe(capsys, clients):
         # We use a LIQUID strategy in this example because we only read from a
         # single stream. Consider BALANCED if you're consuming multiple streams
         # concurrently and want more consistent stream sizes.
-        sharding_strategy=(
-            bigquery_storage_v1beta1.enums.ShardingStrategy.LIQUID
-        ),
+        sharding_strategy=(bigquery_storage_v1beta1.enums.ShardingStrategy.LIQUID),
     )
 
     # This example reads from only a single stream. Read from multiple streams
