@@ -22,15 +22,19 @@ def list_queues(project, location):
     client = tasks_v2.CloudTasksClient()
 
     # Construct the fully qualified location path.
-    parent = client.location_path(project, location)
+    parent = f"projects/{project}/locations/{location}"
 
     # Use the client to obtain the queues.
-    response = client.list_queues(parent)
+    response = client.list_queues(request={"parent": parent})
 
     # Print the results.
+    num_results = 0
     for queue in response:
+        num_results = num_results + 1
         print(queue.name)
 
-    if response.num_results == 0:
-        print('No queues found!')
+    if num_results == 0:
+        print("No queues found!")
+
+
 # [END cloud_tasks_list_queues]

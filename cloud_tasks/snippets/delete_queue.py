@@ -25,6 +25,8 @@ def delete_queue(project, queue_name, location):
     queue = client.queue_path(project, location, queue_name)
 
     # Use the client to delete the queue.
-    client.delete_queue(queue)
-    print('Deleted queue')
+    client.delete_queue(request={"name": queue})
+    print("Deleted queue")
+
+
 # [END cloud_tasks_delete_queue]
