@@ -1,0 +1,2 @@
+# requirements file for python packages installed in the composer environment, for more info, see https://cloud.google.com/composer/docs/how-to/using/installing-python-dependencies
+apache-airflow-backport-providers-google==2020.6.24
