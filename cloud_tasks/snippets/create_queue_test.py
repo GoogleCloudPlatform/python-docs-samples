@@ -20,9 +20,9 @@ import pytest
 
 import create_queue
 
-TEST_PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
-TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = f'my-queue-{uuid.uuid4().hex}'
+TEST_PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
+TEST_QUEUE_NAME = f"my-queue-{uuid.uuid4().hex}"
 
 
 @pytest.fixture()
@@ -32,9 +32,9 @@ def test_queue():
 
     yield q
 
-    client.delete_queue(q.name)
+    client.delete_queue(request={"name": q.name})
 
 
 def test_create_queue(capsys, test_queue):
     out, _ = capsys.readouterr()
-    assert 'Created queue' in out
+    assert "Created queue" in out
