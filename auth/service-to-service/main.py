@@ -15,9 +15,9 @@
 # This file holds a function for testing service-to-service authentication
 
 import os
-import urllib
 
 import auth
+
 
 def get_authorized(request):
     # Makes an authenticated request to URL set in environment variables

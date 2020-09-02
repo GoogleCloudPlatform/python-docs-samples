@@ -107,7 +107,7 @@ def test_auth(services):
     url = services[0]
     token = services[1].decode()
 
-    req = request.Request(url, headers={"Authorization": f"Bearer {token}",})
+    req = request.Request(url, headers={"Authorization": f"Bearer {token}"})
 
     response = request.urlopen(req)
     assert response.status == 200
