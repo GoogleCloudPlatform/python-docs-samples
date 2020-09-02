@@ -22,7 +22,7 @@
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
 /composer/**/*.py                      @leahecole @GoogleCloudPlatform/python-samples-owners
 /compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
-/container_registry/**/*.py            @donmccasland @GoogleCloudPlatform/python-samples-owners
+/container_registry/**/*.py            @donmccasland @dinagraves @kelsk @GoogleCloudPlatform/python-samples-owners
 /data-science-onramp/                  @coleleah @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datacatalog/**/*.py                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/**/*.py                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
@@ -35,7 +35,7 @@
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
 /error_reporting/**/*.py               @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
-/functions/**/*.py                     @ace-n @GoogleCloudPlatform/python-samples-owners
+/functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @melaniedejong @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
@@ -50,7 +50,7 @@
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /notebooks/**/*.py                     @alixhami @sirtorry @GoogleCloudPlatform/python-samples-owners
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
-/profiler/**/*.py                      @jqll @GoogleCloudPlatform/python-samples-owners
+/profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
 /run/**/*.py                           @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
