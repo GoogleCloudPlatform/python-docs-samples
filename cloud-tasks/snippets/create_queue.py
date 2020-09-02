@@ -22,14 +22,16 @@ def create_queue(project, queue_name, location):
     client = tasks_v2.CloudTasksClient()
 
     # Construct the fully qualified location path.
-    parent = client.location_path(project, location)
+    parent = f"projects/{project}/locations/{location}"
 
     # Construct the create queue request.
-    queue = {'name': client.queue_path(project, location, queue_name)}
+    queue = {"name": client.queue_path(project, location, queue_name)}
 
     # Use the client to create the queue.
-    response = client.create_queue(parent, queue)
+    response = client.create_queue(request={"parent": parent, "queue": queue})
 
-    print('Created queue {}'.format(response.name))
+    print("Created queue {}".format(response.name))
     return response
+
+
 # [END cloud_tasks_create_queue]
