@@ -71,7 +71,6 @@ def test_create_dataset(cleaner, capsys):
     assert "The dataset resource name:" in out
 
 
-@pytest.mark.skip("Constantly failing")
 def test_list_dataset(capsys, dataset):
     @backoff.on_exception(
         backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
