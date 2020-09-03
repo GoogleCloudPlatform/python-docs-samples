@@ -16,6 +16,7 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
+import datetime
 import os
 import subprocess
 import time
@@ -117,7 +118,11 @@ def test_end_to_end(services):
     time.sleep(10)  # Slight delay writing to stackdriver
     client = logging_v2.LoggingServiceV2Client()
     resource_names = [f"projects/{project}"]
+    # We add timestamp for making the query faster.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    filter_date = now - datetime.timedelta(minutes=1)
     filters = (
+        f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_revision "
         "AND severity=NOTICE "
         f"AND resource.labels.service_name={service_name} "
