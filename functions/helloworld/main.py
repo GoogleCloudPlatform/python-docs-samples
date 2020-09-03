@@ -27,11 +27,11 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     return 'Hello World!'
 # [END functions_helloworld_get]

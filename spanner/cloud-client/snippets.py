@@ -762,7 +762,7 @@ def query_struct_field(instance_id, database_id):
 
     for row in results:
         print(u'SingerId: {}'.format(*row))
-# [START spanner_field_access_on_struct_parameters]
+# [END spanner_field_access_on_struct_parameters]
 
 
 # [START spanner_field_access_on_nested_struct_parameters]
@@ -1407,6 +1407,13 @@ def query_data_with_timestamp_parameter(instance_id, database_id):
     database = instance.database(database_id)
 
     example_timestamp = datetime.datetime.utcnow().isoformat() + "Z"
+    # [END spanner_query_with_timestamp_parameter]
+    # Avoid time drift on the local machine.
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4197.
+    example_timestamp = (
+        datetime.datetime.utcnow() + datetime.timedelta(days=1)
+    ).isoformat() + "Z"
+    # [START spanner_query_with_timestamp_parameter]
     param = {
         'last_update_time': example_timestamp
     }

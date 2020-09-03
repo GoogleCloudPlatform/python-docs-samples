@@ -1,4 +1,4 @@
-google-cloud-monitoring==1.0.0
+google-cloud-monitoring==1.1.0
 google-cloud-trace==0.24.0
 opencensus==0.7.10
 Flask==1.1.2
