@@ -70,7 +70,7 @@ service Bookstore {
     //   curl -d '{"author":"foo","title":"bar"}' http://DOMAIN_NAME/v1/shelves/1/books
     option (google.api.http) = {
       post: "/v1/shelves/{shelf}/books"
-      body: "book"
+      body: "*"
     };
   }
   // Returns a specific book.
