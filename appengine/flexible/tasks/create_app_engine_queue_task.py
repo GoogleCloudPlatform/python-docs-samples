@@ -23,7 +23,6 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
-    from google.protobuf import timestamp_pb2
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
