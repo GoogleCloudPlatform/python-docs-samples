@@ -450,7 +450,7 @@ def test_resource():
 
 ### Use filters with list methods
 
-When writing a test for a `list` method, consider filtering the possible results
+When writing a test for a `list` method, consider filtering the possible results.
 Listing all resources in the test project may take a considerable amount of time.
 The exact way to do this depends on the API.
 
