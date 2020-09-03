@@ -25,7 +25,7 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
     # queue_blue_name = 'queue-blue'
     # queue_red_name = 'queue-red'
 
-    parent = client.location_path(project, location)
+    parent = f"projects/{project}/locations/{location}"
 
     queue_blue = {
         'name': client.queue_path(project, location, queue_blue_name),
@@ -248,7 +248,7 @@ def retry_task(project, location, fooqueue, barqueue, bazqueue):
     # barqueue = 'barqueue'
     # bazqueue = 'bazqueue'
 
-    parent = client.location_path(project, location)
+    parent = f"projects/{project}/locations/{location}"
 
     max_retry = duration_pb2.Duration()
     max_retry.seconds = 2*60*60*24
