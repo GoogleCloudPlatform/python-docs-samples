@@ -53,17 +53,13 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-
-        # Create Timestamp protobuf.
-        timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
+        timestamp = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
 
     # Use the client to build and send the task.
-    response = client.create_task(parent, task)
+    response = client.create_task(parent=parent, task=task)
 
     print('Created task {}'.format(response.name))
     return response
