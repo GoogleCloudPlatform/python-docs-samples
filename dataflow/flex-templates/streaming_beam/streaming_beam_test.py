@@ -127,7 +127,7 @@ def test_dataflow_flex_templates_pubsub_to_bigquery(dataset, topic_path,
 
 # TODO:Testcase using Teststream currently does not work as intended.
 # The first write to BigQuery fails. Have filed a bug. The test case
-# to be changed once the bug gets fixed.
+# to be changed once the bug gets fixed.  b/152446921
 '''
 @mock.patch("apache_beam.Pipeline", TestPipeline)
 @mock.patch(
