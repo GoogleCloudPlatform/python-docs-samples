@@ -50,7 +50,7 @@ with models.DAG(
 
     start_template_job = dataproc_operator.DataprocWorkflowTemplateInstantiateOperator(
         # The task id of your job
-        task_id="dataproc_dag",
+        task_id="dataproc_workflow_dag",
         # The template id of your workflow
         template_id="sparkpi",
         project_id=project_id,
