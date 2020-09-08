@@ -16,6 +16,10 @@ assign_issues_by:
   - sirtorry
   - telpirion
 - labels:
+  - 'api: dataflow'
+  to:
+  - davidcavazos
+- labels:
   - 'api: bigquery'
   - 'api: datacatalog'
   to:
