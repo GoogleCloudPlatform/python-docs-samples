@@ -5,17 +5,116 @@ assign_issues_by:
   - engelke
 - labels:
   - 'api: automl'
+  - 'api: dialogflow'
+  - 'api: language'
+  - 'api: speech'
+  - 'api: texttospeech'
+  - 'api: translate'
+  - 'api: video'
+  - 'api: vision'
   to:
   - sirtorry
   - telpirion
 - labels:
   - 'api: bigquery'
+  - 'api: datacatalog'
   to:
   - shollyman
 - labels:
   - 'api: bigtable'
   to:
   - billyjacobson
+- labels:
+  - 'api: billingbudgets'
+  to:
+  - GoogleCloudPlatform/billing-samples-maintainers
+- labels:
+  - 'api: cloudsql'
+  to:
+  - GoogleCloudPlatform/cloud-sql-dpes
+- labels:
+  - 'api: containeranalysis'
+  to:
+  - donmccasland
+  - dinagraves
+  - kelsk
+- labels:
+  - 'api: datalabeling'
+  - 'api: iot'
+  to:
+  - sgreenberg
+- labels:
+  - 'api: dataproc'
+  to:
+  - bradmiro
+- labels:
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/firestore-dpe
+- labels:
+  - 'api: dns'
+  to:
+  - michaelawyu
+- labels:
+  - 'api: functions'
+  to:
+  - ace-n
+  - grant
+- labels:
+  - 'api: healthcare'
+  to:
+  - noerog
+- labels:
+  - 'api: iam'
+  to:
+  - melaniedejong
+- labels:
+  - 'api: logging'
+  to:
+  - simonz130
+- labels:
+  - 'api: ml'
+  to:
+  - alecglassford
+- labels:
+  - 'api: notebooks'
+  to:
+  - sirtorry
+- labels:
+  - 'api: cloudprofiler'
+  to:
+  - kalyanac
+- labels:
+  - 'api: pubsub'
+  to:
+  - anguillanneuf
+- labels:
+  - 'api: run'
+  to:
+  - averikitsch
+  - grant
+- labels:
+  - 'api: cloudscheduler'
+  - 'api: cloudtasks'
+  - 'api: tasks'
+  to:
+  - averikitsch
+- labels:
+  - 'api: spanner'
+  to:
+  - larkee
+- labels:
+  - 'api: storage'
+  to:
+  - GoogleCloudPlatform/storage-dpe
+- labels:
+  - 'api: cloudtrace'
+  - 'api: trace'
+  to:
+  - dukeng
+  - ziweizhao
+
 
 assign_issues:
   - busunkim96
