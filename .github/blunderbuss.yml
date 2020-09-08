@@ -10,7 +10,7 @@ assign_issues_by:
   - 'api: speech'
   - 'api: texttospeech'
   - 'api: translate'
-  - 'api: video'
+  - 'api: videointelligence'
   - 'api: vision'
   to:
   - sirtorry
