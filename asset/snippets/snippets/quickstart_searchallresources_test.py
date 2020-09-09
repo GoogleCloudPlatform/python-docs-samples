@@ -46,6 +46,7 @@ def asset_dataset(bigquery_client):
         raise e
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_search_all_resources(asset_dataset, capsys):
     scope = "projects/{}".format(PROJECT)
     query = "name:{}".format(DATASET)
