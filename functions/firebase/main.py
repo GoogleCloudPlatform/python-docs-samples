@@ -106,7 +106,7 @@ def make_upper_case(data, context):
         })
     else:
         # Value is already upper-case
-        # Don't perform a(nother) write to avoid infinite loops
+        # Don't perform a second write (which can trigger an infinite loop)
         print('Value is already upper-case.')
 # [END functions_firebase_reactive]
 
