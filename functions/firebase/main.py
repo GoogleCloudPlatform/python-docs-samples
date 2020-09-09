@@ -98,11 +98,16 @@ def make_upper_case(data, context):
 
     cur_value = data["value"]["fields"]["original"]["stringValue"]
     new_value = cur_value.upper()
-    print(f'Replacing value: {cur_value} --> {new_value}')
 
-    affected_doc.set({
-        u'original': new_value
-    })
+    if cur_value != new_value:
+        print(f'Replacing value: {cur_value} --> {new_value}')
+        affected_doc.set({
+            u'original': new_value
+        })
+    else:
+        # Value is already upper-case
+        # Don't perform a(nother) write to avoid infinite loops
+        print('Value is already upper-case.')
 # [END functions_firebase_reactive]
 
 
