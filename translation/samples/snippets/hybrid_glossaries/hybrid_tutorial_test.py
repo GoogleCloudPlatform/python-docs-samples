@@ -28,25 +28,11 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 # VISION TESTS
 
 
-def test_vision_standard_format(capsys):
+def test_vision_standard_format():
     # Generate text using Vision API
-    pic_to_text('resources/standard_format.jpeg')
-    out, err = capsys.readouterr()
+    text = pic_to_text('resources/standard_format.jpeg')
 
-    assert 'Detected text:' in out
-    assert 'test!' in out
-
-
-def test_vision_non_standard_format():
-
-    # Generate text
-    text = pic_to_text("resources/non_standard_format.png")
-
-    # Read expected text
-    with open("resources/non_standard_format.txt") as f:
-        expected_text = f.read()
-
-    assert text == expected_text
+    assert len(text) > 0
 
 
 # TRANSLATE TESTS
