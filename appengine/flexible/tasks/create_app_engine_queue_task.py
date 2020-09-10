@@ -39,7 +39,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # Construct the request body.
     task = {
             'app_engine_http_request': {  # Specify the type of request.
-                'http_method': 'POST',
+                'http_method': tasks_v2.HttpMethod.POST,
                 'relative_uri': '/example_task_handler'
             }
     }
