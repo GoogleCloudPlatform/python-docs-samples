@@ -90,7 +90,7 @@ def create_task(project, location, queue):
 
     task = {
         'app_engine_http_request': {
-            'http_method': 'POST',
+            'http_method': tasks.HttpMethod.POST,
             'relative_uri': '/update_counter',
             'app_engine_routing': {
                 'service': 'worker'
