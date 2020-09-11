@@ -1,0 +1,25 @@
+# This file configures the hello-world app which serves public web traffic.
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cloud-trace-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trace-demo
+  template:
+    metadata:
+      labels:
+        app: trace-demo
+    spec:
+      containers:
+      - name: trace-demo-app
+        # Replace $GCLOUD_PROJECT with your project ID
+        image: gcr.io/$GCLOUD_PROJECT/cloud-trace-demo:latest
+        # This app listens on port 8080 for web traffic by default.
+        ports:
+        - containerPort: 8080
+        env:
+          - name: PORT
+            value: "8080"

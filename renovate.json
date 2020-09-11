@@ -6,7 +6,7 @@
   "rebaseWhen": "never",
   "masterIssue": true,
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt"]
+    "fileMatch": ["requirements-test.txt", "requirements-composer.txt"]
   },
   "packageRules": [
     {

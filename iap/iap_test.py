@@ -15,6 +15,7 @@
 """Test script for Identity-Aware Proxy code samples."""
 
 import os
+import time
 
 import pytest
 
@@ -55,9 +56,15 @@ def test_main(capsys):
     expected_audience = '/projects/{}/apps/{}'.format(
         IAP_PROJECT_NUMBER, IAP_APP_ID)
 
+    # We see occational test failures when the system clock in our
+    # test VMs is incorrect. Sleeping 30 seconds to avoid the failure.
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4467
+
+    time.sleep(30)
+
     jwt_validation_result = validate_jwt.validate_iap_jwt(
         iap_jwt, expected_audience)
 
+    assert not jwt_validation_result[2]
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]
-    assert not jwt_validation_result[2]

@@ -21,7 +21,7 @@ https://cloud.google.com/iam/docs/creating-managing-service-accounts.
 
 import argparse
 # [START iam_create_service_account]
-# [START iam_list_service_account]
+# [START iam_list_service_accounts]
 # [START iam_rename_service_account]
 # [START iam_disable_service_account]
 # [START iam_enable_service_account]
@@ -146,7 +146,7 @@ def enable_service_account(email):
     service.projects().serviceAccounts().enable(
         name='projects/-/serviceAccounts/' + email).execute()
 
-    print("Disabled service account :" + email)
+    print("Enabled service account :" + email)
 # [END iam_enable_service_account]
 
 

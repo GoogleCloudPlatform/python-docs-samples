@@ -103,4 +103,4 @@ with models.DAG(
     create_dataproc_cluster >> run_dataproc_hadoop >> delete_dataproc_cluster
     # [END composer_hadoop_steps]
 
-# [END composer_hadoop]
+# [END composer_hadoop_tutorial]

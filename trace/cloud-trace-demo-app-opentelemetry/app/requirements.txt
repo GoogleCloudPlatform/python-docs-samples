@@ -1,0 +1,15 @@
+Flask==1.1.2
+opentelemetry-api==0.9b0
+opentelemetry-auto-instrumentation==0.8b0
+opentelemetry-exporter-cloud-trace==0.9b0
+opentelemetry-ext-flask==0.8b0
+opentelemetry-ext-grpc==0.9b0
+opentelemetry-ext-jaeger==0.8b0
+opentelemetry-ext-requests==0.8b0
+opentelemetry-ext-wsgi==0.8b0
+opentelemetry-sdk==0.9b0
+grpcio==1.32.0
+httpretty==1.0.2
+google-cloud-monitoring==1.1.0
+google-cloud-trace==0.24.0
+

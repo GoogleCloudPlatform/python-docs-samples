@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_hello_dockerfile]
+# [START run_helloworld_dockerfile]
 
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
@@ -35,4 +35,4 @@ RUN pip install Flask gunicorn
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 
-# [END run_hello_dockerfile]
+# [END run_helloworld_dockerfile]
