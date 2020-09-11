@@ -27,30 +27,14 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     return 'Hello World!'
 # [END functions_helloworld_get]
-
-
-# [START functions_helloworld_background]
-def hello_background(event, context):
-    """Background Cloud Function.
-    Args:
-         event (dict): The dictionary with data specific to the given event.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         metadata.
-    """
-    if event and 'name' in event:
-        name = event['name']
-    else:
-        name = 'World'
-    return 'Hello {}!'.format(name)
-# [END functions_helloworld_background]
 
 
 # [START functions_helloworld_http]
@@ -58,11 +42,11 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     request_json = request.get_json(silent=True)
     request_args = request.args
@@ -104,12 +88,25 @@ def hello_pubsub(event, context):
 # [START functions_helloworld_storage]
 def hello_gcs(event, context):
     """Background Cloud Function to be triggered by Cloud Storage.
+       This generic function logs relevant data when a file is changed.
+
     Args:
-         event (dict): The dictionary with data specific to this type of event.
-         context (google.cloud.functions.Context): The Cloud Functions
-         event metadata.
+        event (dict):  The dictionary with data specific to this type of event.
+                       The `data` field contains a description of the event in
+                       the Cloud Storage `object` format described here:
+                       https://cloud.google.com/storage/docs/json_api/v1/objects#resource
+        context (google.cloud.functions.Context): Metadata of triggering event.
+    Returns:
+        None; the output is written to Stackdriver Logging
     """
-    print("File: {}.".format(event['objectId']))
+
+    print('Event ID: {}'.format(context.event_id))
+    print('Event type: {}'.format(context.event_type))
+    print('Bucket: {}'.format(event['bucket']))
+    print('File: {}'.format(event['name']))
+    print('Metageneration: {}'.format(event['metageneration']))
+    print('Created: {}'.format(event['timeCreated']))
+    print('Updated: {}'.format(event['updated']))
 # [END functions_helloworld_storage]
 
 
@@ -119,11 +116,11 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
@@ -149,11 +146,11 @@ def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
-         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     from flask import abort
 

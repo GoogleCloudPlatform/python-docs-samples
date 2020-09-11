@@ -34,7 +34,7 @@ def disable_versioning(bucket_name):
     return bucket
 
 
-# [END storage_enable_versioning]
+# [END storage_disable_versioning]
 
 if __name__ == "__main__":
     disable_versioning(bucket_name=sys.argv[1])

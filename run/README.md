@@ -109,7 +109,7 @@ for more information.
 [run_docs]: https://cloud.google.com/run/docs/
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
-[helloworld]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-python
+[helloworld]: helloworld/
 [pubsub]: pubsub/
 [mysql]: ../cloud-sql/mysql/sqlalchemy
 [postgres]: ../cloud-sql/postgres/sqlalchemy

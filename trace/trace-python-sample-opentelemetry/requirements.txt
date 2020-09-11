@@ -1,5 +1,5 @@
 Flask==1.1.2
-google-cloud-trace==0.23.0
+google-cloud-trace==0.24.0
 opentelemetry-api==0.9b0
 opentelemetry-auto-instrumentation==0.8b0
 opentelemetry-exporter-cloud-trace==0.9b0

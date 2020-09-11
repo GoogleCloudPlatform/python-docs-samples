@@ -11,35 +11,44 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START run_events_gcs_server_setup]
+# [START run_events_gcs_handler]
 import os
+
+import cloudevents.exceptions as cloud_exceptions
+from cloudevents.http import from_http
 
 from flask import Flask, request
 
 
 required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
-
 app = Flask(__name__)
-# [END run_events_gcs_server_setup]
 
 
-# [START run_events_gcs_handler]
 @app.route('/', methods=['POST'])
 def index():
-    for field in required_fields:
-        if field not in request.headers:
-            errmsg = f'Bad Request: missing required header {field}'
-            print(errmsg)
-            return errmsg, 400
+    # Create CloudEvent from HTTP headers and body
+    try:
+        event = from_http(request.headers, request.get_data())
 
-    if 'Ce-Subject' not in request.headers:
-        errmsg = 'Bad Request: expected header Ce-Subject'
+    except cloud_exceptions.MissingRequiredFields as e:
+        print(f"cloudevents.exceptions.MissingRequiredFields: {e}")
+        return "Failed to find all required cloudevent fields. ", 400
+
+    except cloud_exceptions.InvalidStructuredJSON as e:
+        print(f"cloudevents.exceptions.InvalidStructuredJSON: {e}")
+        return "Could not deserialize the payload as JSON. ", 400
+
+    except cloud_exceptions.InvalidRequiredFields as e:
+        print(f"cloudevents.exceptions.InvalidRequiredFields: {e}")
+        return "Request contained invalid required cloudevent fields. ", 400
+
+    if 'subject' not in event:
+        errmsg = 'Bad Request: expected header ce-subject'
         print(errmsg)
         return errmsg, 400
 
-    ce_subject = request.headers.get('Ce-Subject')
-    print(f'GCS CloudEvent type: {ce_subject}')
-    return (f'GCS CloudEvent type: {ce_subject}', 200)
+    print(f"GCS CloudEvent type: {event['subject']}")
+    return (f"GCS CloudEvent type: {event['subject']}", 200)
 # [END run_events_gcs_handler]
 
 
