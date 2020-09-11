@@ -13,6 +13,8 @@
 # limitations under the License.
 import uuid
 
+from google.api_core.exceptions import DeadlineExceeded
+from test_utils.retry import RetryErrors
 from google.cloud import spanner
 import pytest
 
@@ -67,6 +69,7 @@ def test_create_backup(capsys, database):
     assert BACKUP_ID in out
 
 
+@RetryErrors(exception=DeadlineExceeded)
 def test_restore_database(capsys):
     backup_sample.restore_database(INSTANCE_ID, RESTORE_DB_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
