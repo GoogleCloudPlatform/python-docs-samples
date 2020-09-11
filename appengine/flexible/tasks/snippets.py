@@ -90,7 +90,7 @@ def create_task(project, location, queue):
 
     task = {
         'app_engine_http_request': {
-            'http_method': 'POST',
+            'http_method': tasks.HttpMethod.POST,
             'relative_uri': '/update_counter',
             'app_engine_routing': {
                 'service': 'worker'
@@ -120,7 +120,7 @@ def create_tasks_with_data(project, location, queue):
 
     task1 = {
         'app_engine_http_request': {
-            'http_method': 'POST',
+            'http_method': tasks.HttpMethod.POST,
             'relative_uri': '/update_counter?key=blue',
             'app_engine_routing': {
                 'service': 'worker'
@@ -130,7 +130,7 @@ def create_tasks_with_data(project, location, queue):
 
     task2 = {
         'app_engine_http_request': {
-            'http_method': 'POST',
+            'http_method': tasks.HttpMethod.POST,
             'relative_uri': '/update_counter',
             'app_engine_routing': {
                 'service': 'worker'
@@ -165,7 +165,7 @@ def create_task_with_name(project, location, queue, task_name):
     task = {
         'name': client.task_path(project, location, queue, task_name),
         'app_engine_http_request': {
-            'http_method': 'GET',
+            'http_method': tasks.HttpMethod.GET,
             'relative_uri': '/url/path'
         }
     }
