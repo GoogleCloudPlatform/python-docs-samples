@@ -21,7 +21,7 @@ https://cloud.google.com/iam/docs/creating-managing-service-accounts.
 
 import argparse
 # [START iam_create_service_account]
-# [START iam_list_service_account]
+# [START iam_list_service_accounts]
 # [START iam_rename_service_account]
 # [START iam_disable_service_account]
 # [START iam_enable_service_account]

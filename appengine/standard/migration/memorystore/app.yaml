@@ -1,0 +1,20 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: .*
+  script: main.app
+
+libraries:
+- name: setuptools
+  version: 36.6.0
+- name: grpcio
+  version: 1.0.0
+  
+env_variables:
+    REDISHOST: '<REDIS_HOST>'
+    REDISPORT: '<REDIS_PORT>'
+
+vpc_access_connector:
+    name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
