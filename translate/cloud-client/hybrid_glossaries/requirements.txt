@@ -1,3 +1,0 @@
-google-cloud-translate==2.0.2
-google-cloud-vision==1.0.0
-google-cloud-texttospeech==2.2.0

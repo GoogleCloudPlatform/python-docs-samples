@@ -1,0 +1,20 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: .*
+  script: main.app
+
+libraries:
+- name: setuptools
+  version: 36.6.0
+- name: grpcio
+  version: 1.0.0
+- name: ssl
+  version: latest
+
+env_variables:
+  PUBSUB_TOPIC: '<YOUR_TOPIC>'
+  PUBSUB_VERIFICATION_TOKEN: '<YOUR_VERIFICATION_TOKEN>'
+  GOOGLE_CLOUD_PROJECT: '<YOUR_PROJECT_ID>'

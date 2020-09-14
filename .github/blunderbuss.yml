@@ -10,11 +10,15 @@ assign_issues_by:
   - 'api: speech'
   - 'api: texttospeech'
   - 'api: translate'
-  - 'api: video'
+  - 'api: videointelligence'
   - 'api: vision'
   to:
   - sirtorry
   - telpirion
+- labels:
+  - 'api: dataflow'
+  to:
+  - davidcavazos
 - labels:
   - 'api: bigquery'
   - 'api: datacatalog'
@@ -119,7 +123,6 @@ assign_issues_by:
 assign_issues:
   - busunkim96
   - leahecole
-  - crwilcox
   - tmatsuo
   - engelke
   - kurtisvg
@@ -128,7 +131,6 @@ assign_issues:
 assign_prs:
   - busunkim96
   - leahecole
-  - crwilcox
   - tmatsuo
   - engelke
   - kurtisvg
