@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <title>Stored Data</title>
+</head>
+
+<body>
+    <h1>Stored Data</h1>
+
+    <p>
+        The value of "data" is {{ data }}.
+    </p>
+
+    <p>
+        <ul>
+            {% for key, value in values.items() %}
+            <li>The value of "{{ key }}" is "{{ value }}".</li>
+            {% endfor %}
+        </ul>
+    </p>
+
+    <form action="/showdata" method="post">
+    <div>
+        Add another entry name <input type="text" name="key" id="key" />
+        with value <input type="text" name="value" id="value" />. Note, any
+        value named "counter" will be incremented three times after storing.
+    </div>
+    <div>
+        <input type="submit" value="Store New Entry" />
+    </div>
+    </form>
+</body>
+</html >
