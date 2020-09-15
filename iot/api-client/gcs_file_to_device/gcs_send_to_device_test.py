@@ -27,9 +27,7 @@ import requests
 import gcs_send_to_device as gcs_to_device
 
 # Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager  # noqa
-
+from .. import manager
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']

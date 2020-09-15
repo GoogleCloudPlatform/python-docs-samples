@@ -17,9 +17,8 @@ import sys
 import tempfile
 
 # Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_image  # noqa
-import manager  # noqa
+from .. import manager
 from fixtures import test_topic  # noqa
 from fixtures import test_subscription  # noqa
 from fixtures import test_registry_id  # noqa

@@ -22,8 +22,7 @@ import pytest
 import cloudiot_http_example
 
 # Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager  # noqa
+from .. import manager
 
 
 cloud_region = 'us-central1'

@@ -25,8 +25,7 @@ from googleapiclient.errors import HttpError
 import pytest
 
 # Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
-import manager  # noqa
+from .. import manager
 
 
 cloud_region = 'us-central1'

@@ -23,9 +23,8 @@ from fixtures import test_registry_id # noqa
 from fixtures import test_device_id # noqa
 from fixtures import device_and_gateways # noqa
 # Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
+from .. import manager
 import cloudiot_mqtt_example  # noqa
-import manager  # noqa
 
 
 cloud_region = 'us-central1'
