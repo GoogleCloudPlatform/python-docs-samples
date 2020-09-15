@@ -69,7 +69,7 @@ def test_create_backup(capsys, database):
     assert BACKUP_ID in out
 
 
-@RetryErrors(exception=DeadlineExceeded)
+@RetryErrors(exception=DeadlineExceeded, max_tries=2)
 def test_restore_database(capsys):
     backup_sample.restore_database(INSTANCE_ID, RESTORE_DB_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
