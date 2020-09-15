@@ -15,8 +15,8 @@ import uuid
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import spanner
-from test_utils.retry import RetryErrors
 import pytest
+from test_utils.retry import RetryErrors
 
 import backup_sample
 
