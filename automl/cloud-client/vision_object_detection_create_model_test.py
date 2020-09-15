@@ -20,18 +20,18 @@ import pytest
 import vision_object_detection_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-DATASET_ID = os.environ["OBJECT_DETECTION_DATASET_ID"]
+DATASET_ID = "VON0000000000000000"
 
 
 @pytest.mark.slow
 def test_vision_object_detection_create_model(capsys):
-    vision_object_detection_create_model.create_model(
-        PROJECT_ID, DATASET_ID, "object_test_create_model"
-    )
-    out, _ = capsys.readouterr()
-    assert "Training started" in out
-
-    # Cancel the operation
-    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
-    client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(operation_id)
+    # Create a model from a nonexistent dataset, but other elements of the
+    # request were valid.
+    try:
+        vision_object_detection_create_model.create_model(
+            PROJECT_ID, DATASET_ID, "vison_object_detect_test_create_model"
+        )
+        out, _ = capsys.readouterr()
+        assert "Dataset does not exist." in out
+    except Exception as e:
+        assert "Dataset does not exist." in e.message
