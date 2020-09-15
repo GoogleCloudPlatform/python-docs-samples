@@ -33,29 +33,29 @@ def access_secret_version(project_id, secret_id, version_id):
     client = secretmanager.SecretManagerServiceClient()
 
     # Build the resource name of the secret version.
-    name = client.secret_version_path(project_id, secret_id, version_id)
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     # Access the secret version.
-    response = client.access_secret_version(name)
+    response = client.access_secret_version(request={"name": name})
 
     # Print the secret payload.
     #
     # WARNING: Do not print the secret in a production environment - this
     # snippet is showing how to access the secret material.
-    payload = response.payload.data.decode('UTF-8')
-    print('Plaintext: {}'.format(payload))
-# [END secretmanager_access_secret_version]
+    payload = response.payload.data.decode("UTF-8")
+    print("Plaintext: {}".format(payload))
+    # [END secretmanager_access_secret_version]
 
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('secret_id', help='id of the secret to access')
-    parser.add_argument('version_id', help='version to access')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret to access")
+    parser.add_argument("version_id", help="version to access")
     args = parser.parse_args()
 
     access_secret_version(args.project_id, args.secret_id, args.version_id)

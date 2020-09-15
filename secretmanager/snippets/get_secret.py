@@ -36,30 +36,29 @@ def get_secret(project_id, secret_id):
     name = client.secret_path(project_id, secret_id)
 
     # Get the secret.
-    response = client.get_secret(name)
+    response = client.get_secret(request={"name": name})
 
     # Get the replication policy.
-    if response.replication.automatic:
-        replication = 'AUTOMATIC'
-    elif response.replication.user_managed:
-        replication = 'MANAGED'
+    if "automatic" in response.replication:
+        replication = "AUTOMATIC"
+    elif "user_managed" in response.replication:
+        replication = "MANAGED"
     else:
-        raise 'Unknown replication {}'.format(response.replication)
+        raise "Unknown replication {}".format(response.replication)
 
     # Print data about the secret.
-    print('Got secret {} with replication policy {}'.format(
-        response.name, replication))
-# [END secretmanager_get_secret]
+    print("Got secret {} with replication policy {}".format(response.name, replication))
+    # [END secretmanager_get_secret]
 
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('secret_id', help='id of the secret to get')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret to get")
     args = parser.parse_args()
 
     get_secret(args.project_id, args.secret_id)

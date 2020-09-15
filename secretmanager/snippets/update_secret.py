@@ -32,23 +32,25 @@ def update_secret(project_id, secret_id):
     name = client.secret_path(project_id, secret_id)
 
     # Update the secret.
-    secret = {'name': name, 'labels': {'secretmanager': 'rocks'}}
-    update_mask = {'paths': ['labels']}
-    response = client.update_secret(secret, update_mask)
+    secret = {"name": name, "labels": {"secretmanager": "rocks"}}
+    update_mask = {"paths": ["labels"]}
+    response = client.update_secret(
+        request={"secret": secret, "update_mask": update_mask}
+    )
 
     # Print the new secret name.
-    print('Updated secret: {}'.format(response.name))
+    print("Updated secret: {}".format(response.name))
     # [END secretmanager_update_secret]
 
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('--secret-id', required=True)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("--secret-id", required=True)
     args = parser.parse_args()
 
     update_secret(args.project_id, args.secret_id)

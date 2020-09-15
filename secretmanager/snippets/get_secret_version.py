@@ -34,26 +34,26 @@ def get_secret_version(project_id, secret_id, version_id):
     client = secretmanager.SecretManagerServiceClient()
 
     # Build the resource name of the secret version.
-    name = client.secret_version_path(project_id, secret_id, version_id)
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     # Get the secret version.
-    response = client.get_secret_version(name)
+    response = client.get_secret_version(request={"name": name})
 
     # Print information about the secret version.
-    state = response.State.Name(response.state)
-    print('Got secret version {} with state {}'.format(response.name, state))
-# [END secretmanager_get_secret_version]
+    state = response.state.name
+    print("Got secret version {} with state {}".format(response.name, state))
+    # [END secretmanager_get_secret_version]
 
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('secret_id', help='id of the secret from which to act')
-    parser.add_argument('version_id', help='id of the version to get')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret from which to act")
+    parser.add_argument("version_id", help="id of the version to get")
     args = parser.parse_args()
 
     get_secret_version(args.project_id, args.secret_id, args.version_id)

@@ -34,28 +34,30 @@ def create_secret(project_id, secret_id):
     client = secretmanager.SecretManagerServiceClient()
 
     # Build the resource name of the parent project.
-    parent = client.project_path(project_id)
+    parent = f"projects/{project_id}"
 
     # Create the secret.
-    response = client.create_secret(parent, secret_id, {
-        'replication': {
-            'automatic': {},
-        },
-    })
+    response = client.create_secret(
+        request={
+            "parent": parent,
+            "secret_id": secret_id,
+            "secret": {"replication": {"automatic": {}}},
+        }
+    )
 
     # Print the new secret name.
-    print('Created secret: {}'.format(response.name))
-# [END secretmanager_create_secret]
+    print("Created secret: {}".format(response.name))
+    # [END secretmanager_create_secret]
 
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('secret_id', help='id of the secret to create')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret to create")
     args = parser.parse_args()
 
     create_secret(args.project_id, args.secret_id)

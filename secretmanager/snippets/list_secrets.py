@@ -32,19 +32,21 @@ def list_secrets(project_id):
     client = secretmanager.SecretManagerServiceClient()
 
     # Build the resource name of the parent project.
-    parent = client.project_path(project_id)
+    parent = f"projects/{project_id}"
 
     # List all secrets.
-    for secret in client.list_secrets(parent):
-        print('Found secret: {}'.format(secret.name))
+    for secret in client.list_secrets(request={"parent": parent}):
+        print("Found secret: {}".format(secret.name))
+
+
 # [END secretmanager_list_secrets]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
     args = parser.parse_args()
 
     list_secrets(args.project_id)

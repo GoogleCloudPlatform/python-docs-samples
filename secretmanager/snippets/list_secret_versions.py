@@ -36,17 +36,19 @@ def list_secret_versions(project_id, secret_id):
     parent = client.secret_path(project_id, secret_id)
 
     # List all secret versions.
-    for version in client.list_secret_versions(parent):
-        print('Found secret version: {}'.format(version.name))
+    for version in client.list_secret_versions(request={"parent": parent}):
+        print("Found secret version: {}".format(version.name))
+
+
 # [END secretmanager_list_secret_versions]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='id of the GCP project')
-    parser.add_argument('secret_id', help='id of the secret in which to list')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
     list_secret_versions(args.project_id, args.secret_id)
