@@ -16,19 +16,22 @@
 def table_insert_rows(table_id):
 
     # [START bigquery_table_insert_rows]
-
     from google.cloud import bigquery
 
     # Construct a BigQuery client object.
     client = bigquery.Client()
 
-    # TODO(developer): Set table_id to the ID of the model to fetch.
+    # TODO(developer): Set table_id to the ID of table to append to.
     # table_id = "your-project.your_dataset.your_table"
 
-    table = client.get_table(table_id)  # Make an API request.
-    rows_to_insert = [(u"Phred Phlyntstone", 32), (u"Wylma Phlyntstone", 29)]
+    rows_to_insert = [
+        {u"full_name": u"Phred Phlyntstone", u"age": 32},
+        {u"full_name": u"Wylma Phlyntstone", u"age": 29},
+    ]
 
-    errors = client.insert_rows(table, rows_to_insert)  # Make an API request.
+    errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
     if errors == []:
         print("New rows have been added.")
+    else:
+        print("Encountered errors while inserting rows: {}".format(errors))
     # [END bigquery_table_insert_rows]
