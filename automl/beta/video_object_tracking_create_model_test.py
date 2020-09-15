@@ -25,7 +25,6 @@ DATASET_ID = "VOT000000000000000"
 OPERATION_ID = None
 
 
-
 def test_video_classification_create_model(capsys):
     model_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
     try:
@@ -36,7 +35,4 @@ def test_video_classification_create_model(capsys):
         out, _ = capsys.readouterr()
         assert "Dataset does not exist" in out
     except Exception as e:
-        assert (
-            "Dataset does not exist"
-            in e.message
-        )
+        assert "Dataset does not exist" in e.message

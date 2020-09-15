@@ -26,9 +26,7 @@ def predict(project_id, model_id, file_path):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = prediction_client.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = prediction_client.model_path(project_id, "us-central1", model_id)
 
     # Read the file.
     with open(file_path, "rb") as content_file:
@@ -46,11 +44,7 @@ def predict(project_id, model_id, file_path):
     print("Prediction results:")
     for result in response.payload:
         print("Predicted class name: {}".format(result.display_name))
-        print(
-            "Predicted class score: {}".format(
-                result.image_object_detection.score
-            )
-        )
+        print("Predicted class score: {}".format(result.image_object_detection.score))
         bounding_box = result.image_object_detection.bounding_box
         print("Normalized Vertices:")
         for vertex in bounding_box.normalized_vertices:

@@ -42,9 +42,7 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
     print("Create Time:")
     print("\tseconds: {}".format(response.create_time.seconds))
     print("\tnanos: {}".format(response.create_time.nanos / 1e9))
-    print(
-        "Evaluation example count: {}".format(response.evaluated_example_count)
-    )
+    print("Evaluation example count: {}".format(response.evaluated_example_count))
     # [END automl_language_sentiment_analysis_get_model_evaluation]
     # [END automl_language_text_classification_get_model_evaluation]
     # [END automl_translate_get_model_evaluation]

@@ -27,9 +27,7 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = prediction_client.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = prediction_client.model_path(project_id, "us-central1", model_id)
 
     gcs_source = automl.types.GcsSource(input_uris=[input_uri])
 

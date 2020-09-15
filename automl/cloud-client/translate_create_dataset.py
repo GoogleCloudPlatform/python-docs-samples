@@ -32,8 +32,7 @@ def create_dataset(project_id, display_name):
         source_language_code="en", target_language_code="ja"
     )
     dataset = automl.types.Dataset(
-        display_name=display_name,
-        translation_dataset_metadata=dataset_metadata,
+        display_name=display_name, translation_dataset_metadata=dataset_metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.

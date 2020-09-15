@@ -28,8 +28,7 @@ def create_dataset(project_id, display_name):
     project_location = client.location_path(project_id, "us-central1")
     metadata = automl.types.ImageObjectDetectionDatasetMetadata()
     dataset = automl.types.Dataset(
-        display_name=display_name,
-        image_object_detection_dataset_metadata=metadata,
+        display_name=display_name, image_object_detection_dataset_metadata=metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.

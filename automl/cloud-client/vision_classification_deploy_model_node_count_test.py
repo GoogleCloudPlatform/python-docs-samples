@@ -28,9 +28,7 @@ def test_classification_deploy_model_with_node_count(capsys):
     # nonexistent model and confirm that the model was not found, but other
     # elements of the request were valid.
     try:
-        vision_classification_deploy_model_node_count.deploy_model(
-            PROJECT_ID, MODEL_ID
-        )
+        vision_classification_deploy_model_node_count.deploy_model(PROJECT_ID, MODEL_ID)
         out, _ = capsys.readouterr()
         assert "The model does not exist" in out
     except Exception as e:

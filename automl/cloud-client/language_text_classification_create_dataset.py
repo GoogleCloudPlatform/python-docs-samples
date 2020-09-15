@@ -34,8 +34,7 @@ def create_dataset(project_id, display_name):
         classification_type=automl.enums.ClassificationType.MULTICLASS
     )
     dataset = automl.types.Dataset(
-        display_name=display_name,
-        text_classification_dataset_metadata=metadata,
+        display_name=display_name, text_classification_dataset_metadata=metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.
