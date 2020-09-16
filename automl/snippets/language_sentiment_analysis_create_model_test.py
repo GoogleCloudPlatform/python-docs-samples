@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
 import language_sentiment_analysis_create_model
@@ -25,13 +24,11 @@ DATASET_ID = os.environ["SENTIMENT_ANALYSIS_DATASET_ID"]
 
 @pytest.mark.slow
 def test_sentiment_analysis_create_model(capsys):
-    language_sentiment_analysis_create_model.create_model(
+    operation = language_sentiment_analysis_create_model.create_model(
         PROJECT_ID, DATASET_ID, "sentiment_test_create_model"
     )
     out, _ = capsys.readouterr()
     assert "Training started" in out
 
     # Cancel the operation
-    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
-    client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(operation_id)
+    operation.cancel()

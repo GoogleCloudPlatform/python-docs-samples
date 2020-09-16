@@ -29,10 +29,10 @@ def setup():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
 
-    model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
+    model = client.get_model(name=model_full_id)
+    if model.deployment_state == automl.Model.DeploymentState.UNDEPLOYED:
         # Deploy model if it is not deployed
-        response = client.deploy_model(model_full_id)
+        response = client.deploy_model(name=model_full_id)
         response.result()
 
 

@@ -25,19 +25,19 @@ def create_dataset(project_id, display_name):
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
+    project_location = f"projects/{project_id}/locations/us-central1"
     # For a list of supported languages, see:
     # https://cloud.google.com/translate/automl/docs/languages
-    dataset_metadata = automl.types.TranslationDatasetMetadata(
+    dataset_metadata = automl.TranslationDatasetMetadata(
         source_language_code="en", target_language_code="ja"
     )
-    dataset = automl.types.Dataset(
+    dataset = automl.Dataset(
         display_name=display_name,
         translation_dataset_metadata=dataset_metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(project_location, dataset)
+    response = client.create_dataset(parent=project_location, dataset=dataset)
 
     created_dataset = response.result()
 

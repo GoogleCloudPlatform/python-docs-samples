@@ -22,19 +22,18 @@ def list_datasets(project_id="YOUR_PROJECT_ID"):
     """List datasets."""
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
+    project_location = f"projects/{project_id}/locations/us-central1"
 
     # List all the datasets available in the region.
-    response = client.list_datasets(project_location, "")
+    request = automl.ListDatasetsRequest(parent=project_location, filter="")
+    response = client.list_datasets(request=request)
 
     print("List of datasets:")
     for dataset in response:
         print("Dataset name: {}".format(dataset.name))
         print("Dataset id: {}".format(dataset.name.split("/")[-1]))
         print("Dataset display name: {}".format(dataset.display_name))
-        print("Dataset create time:")
-        print("\tseconds: {}".format(dataset.create_time.seconds))
-        print("\tnanos: {}".format(dataset.create_time.nanos))
+        print("Dataset create time: {}".format(dataset.create_time))
         # [END automl_video_object_tracking_list_datasets_beta]
 
         print(

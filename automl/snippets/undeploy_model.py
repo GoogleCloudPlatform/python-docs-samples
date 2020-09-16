@@ -25,7 +25,7 @@ def undeploy_model(project_id, model_id):
     client = automl.AutoMlClient()
     # Get the full path of the model.
     model_full_id = client.model_path(project_id, "us-central1", model_id)
-    response = client.undeploy_model(model_full_id)
+    response = client.undeploy_model(name=model_full_id)
 
     print("Model undeployment finished. {}".format(response.result()))
     # [END automl_undeploy_model]

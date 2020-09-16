@@ -27,13 +27,13 @@ BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 @pytest.fixture(scope="function")
 def dataset_id():
     client = automl.AutoMlClient()
-    project_location = client.location_path(PROJECT_ID, "us-central1")
+    project_location = f"projects/{PROJECT_ID}/locations/us-central1"
     display_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
-    metadata = automl.types.TextExtractionDatasetMetadata()
-    dataset = automl.types.Dataset(
+    metadata = automl.TextExtractionDatasetMetadata()
+    dataset = automl.Dataset(
         display_name=display_name, text_extraction_dataset_metadata=metadata
     )
-    response = client.create_dataset(project_location, dataset)
+    response = client.create_dataset(parent=project_location, dataset=dataset)
     dataset_id = response.name.split("/")[-1]
 
     yield dataset_id

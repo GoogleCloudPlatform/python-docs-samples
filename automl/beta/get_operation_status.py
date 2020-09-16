@@ -24,7 +24,7 @@ def get_operation_status(
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
-    response = client.transport._operations_client.get_operation(
+    response = client._transport.operations_client.get_operation(
         operation_full_id
     )
 

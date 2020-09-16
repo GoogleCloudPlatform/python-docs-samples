@@ -31,13 +31,13 @@ def test_model_create_status_delete(capsys):
     # create model
     client = automl.AutoMlClient()
     model_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    project_location = client.location_path(project_id, compute_region)
+    project_location = f"projects/{project_id}/locations/{compute_region}"
     my_model = {
         "display_name": model_name,
         "dataset_id": "3876092572857648864",
         "translation_model_metadata": {"base_model": ""},
     }
-    response = client.create_model(project_location, my_model)
+    response = client.create_model(parent=project_location, model=my_model)
     operation_name = response.operation.name
     assert operation_name
 

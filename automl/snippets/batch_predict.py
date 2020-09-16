@@ -27,26 +27,24 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = prediction_client.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = f"projects/{project_id}/locations/us-central1/models/{model_id}"
 
-    gcs_source = automl.types.GcsSource(input_uris=[input_uri])
+    gcs_source = automl.GcsSource(input_uris=[input_uri])
 
-    input_config = automl.types.BatchPredictInputConfig(gcs_source=gcs_source)
-    gcs_destination = automl.types.GcsDestination(output_uri_prefix=output_uri)
-    output_config = automl.types.BatchPredictOutputConfig(
+    input_config = automl.BatchPredictInputConfig(gcs_source=gcs_source)
+    gcs_destination = automl.GcsDestination(output_uri_prefix=output_uri)
+    output_config = automl.BatchPredictOutputConfig(
         gcs_destination=gcs_destination
     )
 
     response = prediction_client.batch_predict(
-        model_full_id, input_config, output_config
+        name=model_full_id,
+        input_config=input_config,
+        output_config=output_config
     )
 
     print("Waiting for operation to complete...")
     print(
-        "Batch Prediction results saved to Cloud Storage bucket. {}".format(
-            response.result()
-        )
+        f"Batch Prediction results saved to Cloud Storage bucket. {response.result()}"
     )
     # [END automl_batch_predict]

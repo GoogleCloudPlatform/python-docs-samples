@@ -30,10 +30,10 @@ def import_dataset(
     )
     # Get the multiple Google Cloud Storage URIs
     input_uris = path.split(",")
-    gcs_source = automl.types.GcsSource(input_uris=input_uris)
-    input_config = automl.types.InputConfig(gcs_source=gcs_source)
+    gcs_source = automl.GcsSource(input_uris=input_uris)
+    input_config = automl.InputConfig(gcs_source=gcs_source)
     # Import data from the input URI
-    response = client.import_data(dataset_full_id, input_config)
+    response = client.import_data(name=dataset_full_id, input_config=input_config)
 
     print("Processing import...")
     print("Data imported. {}".format(response.result()))

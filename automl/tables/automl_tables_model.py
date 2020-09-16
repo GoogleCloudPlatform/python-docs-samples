@@ -79,7 +79,7 @@ def get_operation_status(operation_full_id):
     client = automl.TablesClient()
 
     # Get the latest state of a long-running operation.
-    op = client.auto_ml_client.transport._operations_client.get_operation(
+    op = client.auto_ml_client._transport.operations_client.get_operation(
         operation_full_id
     )
 
@@ -88,27 +88,26 @@ def get_operation_status(operation_full_id):
     # [END automl_tables_get_operation_status]
 
 
-def list_models(project_id, compute_region, filter_=None):
+def list_models(project_id, compute_region, filter=None):
     """List all models."""
     result = []
     # [START automl_tables_list_models]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
-    # filter_ = 'DATASET_DISPLAY_NAME_HERE'
+    # filter = 'DATASET_DISPLAY_NAME_HERE'
 
     from google.cloud import automl_v1beta1 as automl
-    from google.cloud.automl_v1beta1 import enums
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     # List all the models available in the region by applying filter.
-    response = client.list_models(filter_=filter_)
+    response = client.list_models(filter=filter)
 
     print("List of models:")
     for model in response:
         # Retrieve deployment state.
-        if model.deployment_state == enums.Model.DeploymentState.DEPLOYED:
+        if model.deployment_state == automl.Model.DeploymentState.DEPLOYED:
             deployment_state = "deployed"
         else:
             deployment_state = "undeployed"
@@ -133,9 +132,7 @@ def list_models(project_id, compute_region, filter_=None):
                 metadata.train_cost_milli_node_hours
             )
         )
-        print("Model create time:")
-        print("\tseconds: {}".format(model.create_time.seconds))
-        print("\tnanos: {}".format(model.create_time.nanos))
+        print("Model create time: {}".format(model.create_time))
         print("Model deployment state: {}".format(deployment_state))
         print("\n")
 
@@ -154,7 +151,6 @@ def get_model(project_id, compute_region, model_display_name):
     # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
 
     from google.cloud import automl_v1beta1 as automl
-    from google.cloud.automl_v1beta1 import enums
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
@@ -162,7 +158,7 @@ def get_model(project_id, compute_region, model_display_name):
     model = client.get_model(model_display_name=model_display_name)
 
     # Retrieve deployment state.
-    if model.deployment_state == enums.Model.DeploymentState.DEPLOYED:
+    if model.deployment_state == automl.Model.DeploymentState.DEPLOYED:
         deployment_state = "deployed"
     else:
         deployment_state = "undeployed"
@@ -185,9 +181,7 @@ def get_model(project_id, compute_region, model_display_name):
     print("Features of top importance:")
     for feat in feat_list[:feat_to_show]:
         print(feat)
-    print("Model create time:")
-    print("\tseconds: {}".format(model.create_time.seconds))
-    print("\tnanos: {}".format(model.create_time.nanos))
+    print("Model create time: {}".format(model.create_time))
     print("Model deployment state: {}".format(deployment_state))
 
     # [END automl_tables_get_model]
@@ -196,7 +190,7 @@ def get_model(project_id, compute_region, model_display_name):
 
 
 def list_model_evaluations(
-    project_id, compute_region, model_display_name, filter_=None
+    project_id, compute_region, model_display_name, filter=None
 ):
 
     """List model evaluations."""
@@ -206,7 +200,7 @@ def list_model_evaluations(
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
     # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
-    # filter_ = 'filter expression here'
+    # filter = 'filter expression here'
 
     from google.cloud import automl_v1beta1 as automl
 
@@ -214,7 +208,7 @@ def list_model_evaluations(
 
     # List all the model evaluations in the model by applying filter.
     response = client.list_model_evaluations(
-        model_display_name=model_display_name, filter_=filter_
+        model_display_name=model_display_name, filter=filter
     )
 
     print("List of model evaluations:")
@@ -226,9 +220,7 @@ def list_model_evaluations(
                 evaluation.evaluated_example_count
             )
         )
-        print("Model evaluation time:")
-        print("\tseconds: {}".format(evaluation.create_time.seconds))
-        print("\tnanos: {}".format(evaluation.create_time.nanos))
+        print("Model evaluation time: {}".format(evaluation.create_time))
         print("\n")
         # [END automl_tables_list_model_evaluations]
         result.append(evaluation)
@@ -252,9 +244,10 @@ def get_model_evaluation(
     client = automl.TablesClient()
 
     # Get the full path of the model evaluation.
-    model_evaluation_full_id = client.auto_ml_client.model_evaluation_path(
-        project_id, compute_region, model_id, model_evaluation_id
+    model_path = client.auto_ml_client.model_path(
+        project_id, compute_region, model_id
     )
+    model_evaluation_full_id = f"{model_path}/modelEvaluations/{model_evaluation_id}"
 
     # Get complete detail of the model evaluation.
     response = client.get_model_evaluation(
@@ -267,7 +260,7 @@ def get_model_evaluation(
 
 
 def display_evaluation(
-    project_id, compute_region, model_display_name, filter_=None
+    project_id, compute_region, model_display_name, filter=None
 ):
     """Display evaluation."""
     # [START automl_tables_display_evaluation]
@@ -275,7 +268,7 @@ def display_evaluation(
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
     # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
-    # filter_ = 'filter expression here'
+    # filter = 'filter expression here'
 
     from google.cloud import automl_v1beta1 as automl
 
@@ -283,7 +276,7 @@ def display_evaluation(
 
     # List all the model evaluations in the model by applying filter.
     response = client.list_model_evaluations(
-        model_display_name=model_display_name, filter_=filter_
+        model_display_name=model_display_name, filter=filter
     )
 
     # Iterate through the results.

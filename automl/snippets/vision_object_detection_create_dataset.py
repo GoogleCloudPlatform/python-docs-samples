@@ -25,15 +25,15 @@ def create_dataset(project_id, display_name):
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
-    metadata = automl.types.ImageObjectDetectionDatasetMetadata()
-    dataset = automl.types.Dataset(
+    project_location = f"projects/{project_id}/locations/us-central1"
+    metadata = automl.ImageObjectDetectionDatasetMetadata()
+    dataset = automl.Dataset(
         display_name=display_name,
         image_object_detection_dataset_metadata=metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(project_location, dataset)
+    response = client.create_dataset(parent=project_location, dataset=dataset)
 
     created_dataset = response.result()
 

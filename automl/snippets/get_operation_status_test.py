@@ -25,8 +25,9 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 @pytest.fixture(scope="function")
 def operation_id():
     client = automl.AutoMlClient()
-    project_location = client.location_path(PROJECT_ID, "us-central1")
-    generator = client.transport._operations_client.list_operations(
+    project_location = f"projects/{PROJECT_ID}/locations/us-central1"
+
+    generator = client._transport.operations_client.list_operations(
         project_location, filter_=""
     ).pages
     page = next(generator)

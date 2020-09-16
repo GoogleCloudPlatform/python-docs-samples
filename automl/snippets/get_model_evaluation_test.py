@@ -28,7 +28,7 @@ def model_evaluation_id():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
     evaluation = None
-    for e in client.list_model_evaluations(model_full_id, ""):
+    for e in client.list_model_evaluations(parent=model_full_id, filter=""):
         evaluation = e
         break
     model_evaluation_id = evaluation.name.split(

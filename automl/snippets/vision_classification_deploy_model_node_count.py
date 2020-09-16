@@ -28,12 +28,15 @@ def deploy_model(project_id, model_id):
 
     # node count determines the number of nodes to deploy the model on.
     # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodeldeploymentmetadata
-    metadata = automl.types.ImageClassificationModelDeploymentMetadata(
+    metadata = automl.ImageClassificationModelDeploymentMetadata(
         node_count=2
     )
-    response = client.deploy_model(
-        model_full_id, image_classification_model_deployment_metadata=metadata
+
+    request = automl.DeployModelRequest(
+        name=model_full_id,
+        image_classification_model_deployment_metadata=metadata
     )
+    response = client.deploy_model(request=request)
 
     print("Model deployment finished. {}".format(response.result()))
     # [END automl_vision_classification_deploy_model_node_count]

@@ -58,7 +58,7 @@ def predict(
     print("Prediction results:")
     for result in response.payload:
         print(
-            "Predicted class name: {}".format(result.tables.value.string_value)
+            "Predicted class name: {}".format(result.tables.value)
         )
         print("Predicted class score: {}".format(result.tables.score))
 

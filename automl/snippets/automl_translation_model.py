@@ -49,7 +49,7 @@ def create_model(project_id, compute_region, dataset_id, model_name):
     }
 
     # Create a model with the model metadata in the region.
-    response = client.create_model(project_location, my_model)
+    response = client.create_model(parent=project_location, model=my_model)
 
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
@@ -66,20 +66,20 @@ def list_models(project_id, compute_region, filter_):
     # filter_ = 'DATASET_ID_HERE'
 
     from google.cloud import automl_v1beta1 as automl
-    from google.cloud.automl_v1beta1 import enums
 
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, compute_region)
+    project_location = f"projects/{project_id}/locations/{compute_region}"
 
     # List all the models available in the region by applying filter.
-    response = client.list_models(project_location, filter_)
+    request = automl.ListModelsRequest(parent=project_location, filter=filter_)
+    response = client.list_models(request=request)
 
     print("List of models:")
     for model in response:
         # Display the model information.
-        if model.deployment_state == enums.Model.DeploymentState.DEPLOYED:
+        if model.deployment_state == automl.Model.DeploymentState.DEPLOYED:
             deployment_state = "deployed"
         else:
             deployment_state = "undeployed"
@@ -87,9 +87,7 @@ def list_models(project_id, compute_region, filter_):
         print("Model name: {}".format(model.name))
         print("Model id: {}".format(model.name.split("/")[-1]))
         print("Model display name: {}".format(model.display_name))
-        print("Model create time:")
-        print("\tseconds: {}".format(model.create_time.seconds))
-        print("\tnanos: {}".format(model.create_time.nanos))
+        print("Model create time: {}".format(model.create_time))
         print("Model deployment state: {}".format(deployment_state))
 
     # [END automl_translate_list_models]
@@ -104,7 +102,6 @@ def get_model(project_id, compute_region, model_id):
     # model_id = 'MODEL_ID_HERE'
 
     from google.cloud import automl_v1beta1 as automl
-    from google.cloud.automl_v1beta1 import enums
 
     client = automl.AutoMlClient()
 
@@ -112,10 +109,10 @@ def get_model(project_id, compute_region, model_id):
     model_full_id = client.model_path(project_id, compute_region, model_id)
 
     # Get complete detail of the model.
-    model = client.get_model(model_full_id)
+    model = client.get_model(name=model_full_id)
 
     # Retrieve deployment state.
-    if model.deployment_state == enums.Model.DeploymentState.DEPLOYED:
+    if model.deployment_state == automl.Model.DeploymentState.DEPLOYED:
         deployment_state = "deployed"
     else:
         deployment_state = "undeployed"
@@ -124,9 +121,7 @@ def get_model(project_id, compute_region, model_id):
     print("Model name: {}".format(model.name))
     print("Model id: {}".format(model.name.split("/")[-1]))
     print("Model display name: {}".format(model.display_name))
-    print("Model create time:")
-    print("\tseconds: {}".format(model.create_time.seconds))
-    print("\tnanos: {}".format(model.create_time.nanos))
+    print("Model create time: {}".format(model.create_time))
     print("Model deployment state: {}".format(deployment_state))
 
     # [END automl_translate_get_model]
@@ -149,7 +144,11 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
     model_full_id = client.model_path(project_id, compute_region, model_id)
 
     print("List of model evaluations:")
-    for element in client.list_model_evaluations(model_full_id, filter_):
+    request = automl.ListModelEvaluationsRequest(
+        parent=model_full_id,
+        filter=filter_
+    )
+    for element in client.list_model_evaluations(request=request):
         print(element)
 
     # [END automl_translate_list_model_evaluations]
@@ -171,12 +170,11 @@ def get_model_evaluation(
     client = automl.AutoMlClient()
 
     # Get the full path of the model evaluation.
-    model_evaluation_full_id = client.model_evaluation_path(
-        project_id, compute_region, model_id, model_evaluation_id
-    )
+    model_path = client.model_path(project_id, compute_region, model_id)
+    model_evaluation_full_id = f"{model_path}/modelEvaluations/{model_evaluation_id}"
 
     # Get complete detail of the model evaluation.
-    response = client.get_model_evaluation(model_evaluation_full_id)
+    response = client.get_model_evaluation(name=model_evaluation_full_id)
 
     print(response)
 
@@ -199,7 +197,7 @@ def delete_model(project_id, compute_region, model_id):
     model_full_id = client.model_path(project_id, compute_region, model_id)
 
     # Delete a model.
-    response = client.delete_model(model_full_id)
+    response = client.delete_model(name=model_full_id)
 
     # synchronous check of operation status.
     print("Model deleted. {}".format(response.result()))
@@ -219,7 +217,7 @@ def get_operation_status(operation_full_id):
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
-    response = client.transport._operations_client.get_operation(
+    response = client._transport.operations_client.get_operation(
         operation_full_id
     )
 

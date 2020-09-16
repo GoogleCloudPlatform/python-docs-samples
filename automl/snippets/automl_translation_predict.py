@@ -56,7 +56,13 @@ def predict(project_id, compute_region, model_id, file_path):
     # params is additional domain-specific parameters.
     params = {}
 
-    response = prediction_client.predict(model_full_id, payload, params)
+    request = automl.PredictRequest(
+        name=model_full_id,
+        payload=payload,
+        params=params
+    )
+
+    response = prediction_client.predict(request=request)
     translated_content = response.payload[0].translation.translated_content
 
     print(u"Translated content: {}".format(translated_content.content))
