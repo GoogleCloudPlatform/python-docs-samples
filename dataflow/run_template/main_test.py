@@ -34,7 +34,7 @@ from werkzeug.urls import url_encode
 import main
 
 
-RETRY_MAX_TIME = 5 * 60 # 5 minutes in seconds
+RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
