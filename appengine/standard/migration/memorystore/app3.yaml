@@ -1,0 +1,8 @@
+runtime: python38
+
+env_variables:
+    REDISHOST: '<REDIS_HOST>'
+    REDISPORT: '<REDIS_PORT>'
+
+vpc_access_connector:
+    name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
