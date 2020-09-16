@@ -32,4 +32,4 @@ def test_translate_create_model(capsys):
     # Cancel the operation
     operation_id = out.split("Training operation name: ")[1].split("\n")[0]
     client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(operation_id)
+    client._transport.operations_client.cancel_operation(operation_id)

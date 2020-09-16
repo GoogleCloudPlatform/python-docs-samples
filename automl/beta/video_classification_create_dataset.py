@@ -25,15 +25,15 @@ def create_dataset(
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
-    metadata = automl.types.VideoClassificationDatasetMetadata()
-    dataset = automl.types.Dataset(
+    project_location = f"projects/{project_id}/locations/us-central1"
+    metadata = automl.VideoClassificationDatasetMetadata()
+    dataset = automl.Dataset(
         display_name=display_name,
         video_classification_dataset_metadata=metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.
-    created_dataset = client.create_dataset(project_location, dataset)
+    created_dataset = client.create_dataset(parent=project_location, dataset=dataset)
 
     # Display the dataset information
     print("Dataset name: {}".format(created_dataset.name))

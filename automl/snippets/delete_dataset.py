@@ -27,7 +27,7 @@ def delete_dataset(project_id, dataset_id):
     dataset_full_id = client.dataset_path(
         project_id, "us-central1", dataset_id
     )
-    response = client.delete_dataset(dataset_full_id)
+    response = client.delete_dataset(name=dataset_full_id)
 
     print("Dataset deleted. {}".format(response.result()))
     # [END automl_delete_dataset]

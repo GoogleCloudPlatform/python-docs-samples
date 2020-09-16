@@ -31,7 +31,7 @@ def teardown():
 
     # Cancel the training operation
     client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(OPERATION_ID)
+    client._transport.operations_client.cancel_operation(OPERATION_ID)
 
 
 def test_video_classification_create_model(capsys):
@@ -39,6 +39,7 @@ def test_video_classification_create_model(capsys):
     video_classification_create_model.create_model(
         PROJECT_ID, DATASET_ID, model_name
     )
+
     out, _ = capsys.readouterr()
     assert "Training started" in out
 

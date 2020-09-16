@@ -33,7 +33,7 @@ def teardown():
     dataset_full_id = client.dataset_path(
         PROJECT_ID, "us-central1", DATASET_ID
     )
-    response = client.delete_dataset(dataset_full_id)
+    response = client.delete_dataset(name=dataset_full_id)
     response.result()
 
 

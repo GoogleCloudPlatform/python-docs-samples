@@ -25,7 +25,7 @@ def deploy_model(project_id, model_id):
     client = automl.AutoMlClient()
     # Get the full path of the model.
     model_full_id = client.model_path(project_id, "us-central1", model_id)
-    response = client.deploy_model(model_full_id)
+    response = client.deploy_model(name=model_full_id)
 
-    print("Model deployment finished. {}".format(response.result()))
+    print(f"Model deployment finished. {response.result()}")
     # [END automl_deploy_model]

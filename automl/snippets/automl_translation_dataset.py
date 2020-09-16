@@ -40,7 +40,7 @@ def create_dataset(project_id, compute_region, dataset_name, source, target):
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, compute_region)
+    project_location = f"projects/{project_id}/locations/{compute_region}"
 
     # Specify the source and target language.
     dataset_metadata = {
@@ -54,7 +54,7 @@ def create_dataset(project_id, compute_region, dataset_name, source, target):
     }
 
     # Create a dataset with the dataset metadata in the region.
-    dataset = client.create_dataset(project_location, my_dataset)
+    dataset = client.create_dataset(parent=project_location, dataset=my_dataset)
 
     # Display the dataset information
     print("Dataset name: {}".format(dataset.name))
@@ -71,9 +71,7 @@ def create_dataset(project_id, compute_region, dataset_name, source, target):
             dataset.translation_dataset_metadata.target_language_code
         )
     )
-    print("Dataset create time:")
-    print("\tseconds: {}".format(dataset.create_time.seconds))
-    print("\tnanos: {}".format(dataset.create_time.nanos))
+    print("Dataset create time: {}".format(dataset.create_time))
 
     # [END automl_translate_create_dataset]
 
@@ -91,10 +89,11 @@ def list_datasets(project_id, compute_region, filter_):
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, compute_region)
+    project_location = f"projects/{project_id}/locations/{compute_region}"
 
     # List all the datasets available in the region by applying filter.
-    response = client.list_datasets(project_location, filter_)
+    request = automl.ListDatasetsRequest(parent=project_location, filter=filter_)
+    response = client.list_datasets(request=request)
 
     print("List of datasets:")
     for dataset in response:
@@ -113,9 +112,7 @@ def list_datasets(project_id, compute_region, filter_):
                 dataset.translation_dataset_metadata.target_language_code
             )
         )
-        print("Dataset create time:")
-        print("\tseconds: {}".format(dataset.create_time.seconds))
-        print("\tnanos: {}".format(dataset.create_time.nanos))
+        print("Dataset create time: {}".format(dataset.create_time))
 
     # [END automl_translate_list_datasets]
 
@@ -138,7 +135,7 @@ def get_dataset(project_id, compute_region, dataset_id):
     )
 
     # Get complete detail of the dataset.
-    dataset = client.get_dataset(dataset_full_id)
+    dataset = client.get_dataset(name=dataset_full_id)
 
     # Display the dataset information
     print("Dataset name: {}".format(dataset.name))
@@ -155,9 +152,7 @@ def get_dataset(project_id, compute_region, dataset_id):
             dataset.translation_dataset_metadata.target_language_code
         )
     )
-    print("Dataset create time:")
-    print("\tseconds: {}".format(dataset.create_time.seconds))
-    print("\tnanos: {}".format(dataset.create_time.nanos))
+    print("Dataset create time: {}".format(dataset.create_time))
 
     # [END automl_translate_get_dataset]
 
@@ -185,7 +180,7 @@ def import_data(project_id, compute_region, dataset_id, path):
     input_config = {"gcs_source": {"input_uris": input_uris}}
 
     # Import data from the input URI
-    response = client.import_data(dataset_full_id, input_config)
+    response = client.import_data(name=dataset_full_id, input_config=input_config)
 
     print("Processing import...")
     # synchronous check of operation status
@@ -212,7 +207,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     )
 
     # Delete a dataset.
-    response = client.delete_dataset(dataset_full_id)
+    response = client.delete_dataset(name=dataset_full_id)
 
     # synchronous check of operation status
     print("Dataset deleted. {}".format(response.result()))

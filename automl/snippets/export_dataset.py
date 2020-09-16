@@ -30,9 +30,9 @@ def export_dataset(project_id, dataset_id, gcs_uri):
         project_id, "us-central1", dataset_id
     )
 
-    gcs_destination = automl.types.GcsDestination(output_uri_prefix=gcs_uri)
-    output_config = automl.types.OutputConfig(gcs_destination=gcs_destination)
+    gcs_destination = automl.GcsDestination(output_uri_prefix=gcs_uri)
+    output_config = automl.OutputConfig(gcs_destination=gcs_destination)
 
-    response = client.export_data(dataset_full_id, output_config)
-    print("Dataset exported. {}".format(response.result()))
+    response = client.export_data(name=dataset_full_id, output_config=output_config)
+    print(f"Dataset exported. {response.result()}")
     # [END automl_export_dataset]

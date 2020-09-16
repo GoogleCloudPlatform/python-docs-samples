@@ -37,5 +37,5 @@ def test_text_classification_create_dataset(capsys):
     dataset_full_id = client.dataset_path(
         PROJECT_ID, "us-central1", dataset_id
     )
-    response = client.delete_dataset(dataset_full_id)
+    response = client.delete_dataset(name=dataset_full_id)
     response.result()

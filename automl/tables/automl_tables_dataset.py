@@ -47,30 +47,28 @@ def create_dataset(project_id, compute_region, dataset_display_name):
     print("Dataset metadata:")
     print("\t{}".format(dataset.tables_dataset_metadata))
     print("Dataset example count: {}".format(dataset.example_count))
-    print("Dataset create time:")
-    print("\tseconds: {}".format(dataset.create_time.seconds))
-    print("\tnanos: {}".format(dataset.create_time.nanos))
+    print("Dataset create time: {}".format(dataset.create_time))
 
     # [END automl_tables_create_dataset]
 
     return dataset
 
 
-def list_datasets(project_id, compute_region, filter_=None):
+def list_datasets(project_id, compute_region, filter=None):
     """List all datasets."""
     result = []
     # [START automl_tables_list_datasets]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
-    # filter_ = 'filter expression here'
+    # filter = 'filter expression here'
 
     from google.cloud import automl_v1beta1 as automl
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     # List all the datasets available in the region by applying filter.
-    response = client.list_datasets(filter_=filter_)
+    response = client.list_datasets(filter=filter)
 
     print("List of datasets:")
     for dataset in response:
@@ -105,9 +103,7 @@ def list_datasets(project_id, compute_region, filter_=None):
             )
         )
         print("Dataset example count: {}".format(dataset.example_count))
-        print("Dataset create time:")
-        print("\tseconds: {}".format(dataset.create_time.seconds))
-        print("\tnanos: {}".format(dataset.create_time.nanos))
+        print("Dataset create time: {}".format(dataset.create_time))
         print("\n")
 
         # [END automl_tables_list_datasets]
@@ -137,9 +133,7 @@ def get_dataset(project_id, compute_region, dataset_display_name):
     print("Dataset metadata:")
     print("\t{}".format(dataset.tables_dataset_metadata))
     print("Dataset example count: {}".format(dataset.example_count))
-    print("Dataset create time:")
-    print("\tseconds: {}".format(dataset.create_time.seconds))
-    print("\tnanos: {}".format(dataset.create_time.nanos))
+    print("Dataset create time: {}".format(dataset.create_time))
 
     return dataset
 

@@ -25,22 +25,22 @@ def create_dataset(project_id, display_name):
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
+    project_location = f"projects/{project_id}/locations/us-central1"
     # Specify the classification type
     # Types:
     # MultiLabel: Multiple labels are allowed for one example.
     # MultiClass: At most one label is allowed per example.
     # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#classificationtype
-    metadata = automl.types.ImageClassificationDatasetMetadata(
-        classification_type=automl.enums.ClassificationType.MULTILABEL
+    metadata = automl.ImageClassificationDatasetMetadata(
+        classification_type=automl.ClassificationType.MULTILABEL
     )
-    dataset = automl.types.Dataset(
+    dataset = automl.Dataset(
         display_name=display_name,
         image_classification_dataset_metadata=metadata,
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(project_location, dataset)
+    response = client.create_dataset(parent=project_location, dataset=dataset)
 
     created_dataset = response.result()
 

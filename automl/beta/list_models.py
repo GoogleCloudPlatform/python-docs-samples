@@ -23,15 +23,16 @@ def list_models(project_id):
 
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, "us-central1")
-    response = client.list_models(project_location, "")
+    project_location = f"projects/{project_id}/locations/us-central1"
+    request = automl.ListModelsRequest(parent=project_location, filter="")
+    response = client.list_models(request=request)
 
     print("List of models:")
     for model in response:
         # Display the model information.
         if (
             model.deployment_state
-            == automl.enums.Model.DeploymentState.DEPLOYED
+            == automl.Model.DeploymentState.DEPLOYED
         ):
             deployment_state = "deployed"
         else:
@@ -40,8 +41,6 @@ def list_models(project_id):
         print("Model name: {}".format(model.name))
         print("Model id: {}".format(model.name.split("/")[-1]))
         print("Model display name: {}".format(model.display_name))
-        print("Model create time:")
-        print("\tseconds: {}".format(model.create_time.seconds))
-        print("\tnanos: {}".format(model.create_time.nanos))
+        print("Model create time: {}".format(model.create_time))
         print("Model deployment state: {}".format(deployment_state))
     # [END automl_list_models_beta]

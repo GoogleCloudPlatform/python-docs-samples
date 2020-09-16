@@ -16,7 +16,7 @@
 
 import os
 
-from google.cloud.automl_v1beta1.gapic import enums
+from google.cloud.automl_v1beta1 import Model
 
 import automl_tables_model
 import automl_tables_predict
@@ -58,7 +58,7 @@ def test_predict(capsys):
 
 def ensure_model_online():
     model = model_test.ensure_model_ready()
-    if model.deployment_state != enums.Model.DeploymentState.DEPLOYED:
+    if model.deployment_state != Model.DeploymentState.DEPLOYED:
         automl_tables_model.deploy_model(PROJECT, REGION, model.display_name)
 
     return automl_tables_model.get_model(PROJECT, REGION, model.display_name)

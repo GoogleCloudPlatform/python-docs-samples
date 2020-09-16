@@ -31,7 +31,7 @@ def sample_cancel_operation(project, operation_id):
 
     client = automl_v1beta1.AutoMlClient()
 
-    operations_client = client.transport._operations_client
+    operations_client = client._transport.operations_client
 
     # project = '[Google Cloud Project ID]'
     # operation_id = '[Operation ID]'
