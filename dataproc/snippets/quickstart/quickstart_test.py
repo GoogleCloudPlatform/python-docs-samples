@@ -74,6 +74,5 @@ def test_quickstart(capsys):
     out, _ = capsys.readouterr()
 
     assert "Cluster created successfully" in out
-    assert "Submitted job" in out
-    assert "finished with state DONE:" in out
+    assert "Job finished successfully" in out
     assert "successfully deleted" in out

@@ -27,7 +27,7 @@ Usage:
 """
 
 import argparse
-import time
+import re
 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -68,64 +68,23 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         "pyspark_job": {"main_python_file_uri": job_file_path},
     }
 
-    job_response = job_client.submit_job(
+    operation = job_client.submit_job_as_operation(
         request={"project_id": project_id, "region": region, "job": job}
     )
-    job_id = job_response.reference.job_id
+    response = operation.result()
 
-    print('Submitted job "{}".'.format(job_id))
+    # Dataproc job output gets saved to the Google Cloud Storage bucket
+    # allocated to the job. Use a regex to obtain the bucket and blob info.
+    matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
 
-    # Termimal states for a job.
-    terminal_states = {
-        dataproc.JobStatus.State.ERROR,
-        dataproc.JobStatus.State.CANCELLED,
-        dataproc.JobStatus.State.DONE,
-    }
-
-    # Create a timeout such that the job gets cancelled if not in a
-    # terminal state after a fixed period of time.
-    timeout_seconds = 600
-    time_start = time.time()
-
-    # Wait for the job to complete.
-    while job_response.status.state not in terminal_states:
-        if time.time() > time_start + timeout_seconds:
-            job_client.cancel_job(
-                request={"project_id": project_id, "region": region, "job_id": job_id}
-            )
-            print(
-                "Job {} timed out after threshold of {} seconds.".format(
-                    job_id, timeout_seconds
-                )
-            )
-
-        # Poll for job termination once a second.
-        time.sleep(1)
-        job_response = job_client.get_job(
-            request={"project_id": project_id, "region": region, "job_id": job_id}
-        )
-
-    # Cloud Dataproc job output gets saved to a GCS bucket allocated to it.
-    cluster_info = cluster_client.get_cluster(
-        request={
-            "project_id": project_id,
-            "region": region,
-            "cluster_name": cluster_name,
-        }
+    output = (
+        storage.Client()
+        .get_bucket(matches.group(1))
+        .blob(f"{matches.group(2)}.000000000")
+        .download_as_string()
     )
 
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
-    output_blob = "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
-        cluster_info.cluster_uuid, job_id
-    )
-    output = bucket.blob(output_blob).download_as_string()
-
-    print(
-        "Job {} finished with state {}:\n{}".format(
-            job_id, job_response.status.state.name, output
-        )
-    )
+    print(f"Job finished successfully: {output}")
 
     # Delete the cluster once the job has terminated.
     operation = cluster_client.delete_cluster(
