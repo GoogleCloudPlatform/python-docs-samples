@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
 import vision_object_detection_create_model

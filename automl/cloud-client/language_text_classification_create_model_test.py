@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
 import language_text_classification_create_model

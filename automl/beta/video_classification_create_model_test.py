@@ -16,7 +16,6 @@ import os
 import uuid
 
 from google.cloud import automl_v1beta1 as automl
-import pytest
 
 import video_classification_create_model
 

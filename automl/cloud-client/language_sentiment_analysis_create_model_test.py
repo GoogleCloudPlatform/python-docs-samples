@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
 import language_sentiment_analysis_create_model

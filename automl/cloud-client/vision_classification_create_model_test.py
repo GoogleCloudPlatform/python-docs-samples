@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
 import vision_classification_create_model

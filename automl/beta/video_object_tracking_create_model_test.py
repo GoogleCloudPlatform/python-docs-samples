@@ -15,8 +15,6 @@
 import os
 import uuid
 
-from google.cloud import automl_v1beta1 as automl
-import pytest
 
 import video_object_tracking_create_model
 

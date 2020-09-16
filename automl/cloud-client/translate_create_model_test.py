@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud import automl
 
 import translate_create_model
 
