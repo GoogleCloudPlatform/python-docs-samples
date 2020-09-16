@@ -23,7 +23,6 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
-    from google.protobuf import timestamp_pb2
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
@@ -40,7 +39,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # Construct the request body.
     task = {
             'app_engine_http_request': {  # Specify the type of request.
-                'http_method': 'POST',
+                'http_method': tasks_v2.HttpMethod.POST,
                 'relative_uri': '/example_task_handler'
             }
     }
@@ -53,17 +52,13 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-
-        # Create Timestamp protobuf.
-        timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
+        timestamp = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
 
     # Use the client to build and send the task.
-    response = client.create_task(parent, task)
+    response = client.create_task(parent=parent, task=task)
 
     print('Created task {}'.format(response.name))
     return response
