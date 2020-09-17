@@ -17,6 +17,7 @@ import re
 
 import backoff
 from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import InternalServerError
 import pytest
 
 import snippets
@@ -42,7 +43,12 @@ def custom_metric_descriptor(capsys):
 
 @pytest.fixture(scope="module")
 def write_time_series():
-    snippets.write_time_series(PROJECT_ID)
+
+    @backoff.on_exception(backoff.expo, InternalServerError, max_time=120)
+    def write():
+        snippets.write_time_series(PROJECT_ID)
+
+    write()
     yield
 
 
