@@ -20,8 +20,10 @@ import os
 import sys
 import time
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_example  # noqa
-from .. import manager
+import manager  # noqa
+
 
 logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.CRITICAL)
 
