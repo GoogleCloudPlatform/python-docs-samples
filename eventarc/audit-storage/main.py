@@ -47,8 +47,8 @@ def index():
         print(errmsg)
         return errmsg, 400
 
-    print(f"GCS CloudEvent type: {event['subject']}")
-    return (f"GCS CloudEvent type: {event['subject']}", 200)
+    print(f"Detected change in GCS bucket: {event['subject']}")
+    return (f"Detected change in GCS bucket: {event['subject']}", 200)
 # [END run_events_gcs_handler]
 
 
