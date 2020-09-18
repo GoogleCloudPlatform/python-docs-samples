@@ -34,6 +34,7 @@
 /dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
 /error_reporting/**/*.py               @GoogleCloudPlatform/python-samples-owners
+/eventarc/**/*.py                      @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
 /functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
