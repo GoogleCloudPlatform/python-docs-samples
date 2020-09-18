@@ -82,7 +82,7 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 
     Learn more about [testing your container image locally.][testing]
 
-## Deploying
+## Deploying a Cloud Run service
 
 1. Set an environment variable with your GCP Project ID
 ```
@@ -99,14 +99,16 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 ```
 
+Choose a particular sample for information about triggering the service with an event.
+
 See [Building containers][run_build] and [Deploying container images][run_deploy]
 for more information.
 
 [run_docs]: https://cloud.google.com/run/docs/
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
-[events_pubsub]: events-pubsub/
-[anthos_events_pubsub]: events-pubsub/anthos.md
-[events_storage]: events-storage/
-[anthos_events_storage]: events-storage/anthos.md
+[events_pubsub]: pubsub/README.md
+[anthos_events_pubsub]: pubsub/anthos.md
+[events_storage]: audit-storage/README.md
+[anthos_events_storage]: audit-storage/anthos.md
 [testing]: https://cloud.google.com/run/docs/testing/local#running_locally_using_docker_with_access_to_services

@@ -1,4 +1,4 @@
-# Events for Cloud Run – GCS tutorial
+# Cloud Eventarc – GCS tutorial
 
 This sample shows how to create a service that processes GCS using [the CloudEvents SDK](https://github.com/cloudevents/sdk-python).
 
@@ -9,7 +9,7 @@ Configure environment variables:
 ```sh
 MY_RUN_SERVICE=gcs-service
 MY_RUN_CONTAINER=gcs-container
-MY_GCS_BUCKET=gcs-bucket
+MY_GCS_BUCKET=gcs-bucket # Must be globally unique.
 ```
 
 ## Quickstart
@@ -20,7 +20,8 @@ Deploy your Cloud Run service:
 gcloud builds submit \
   --tag gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER
 gcloud run deploy $MY_RUN_SERVICE \
-  --image gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER
+  --image gcr.io/$(gcloud config get-value project)/$MY_RUN_CONTAINER \
+  --platform managed
 ```
 
 Create a _single region_ Cloud Storage bucket:
@@ -56,7 +57,8 @@ Observe the Cloud Run service printing upon receiving an event in Cloud Logging:
 gcloud logging read "resource.type=cloud_run_revision AND \
   resource.labels.service_name=$MY_RUN_SERVICE" \
   --project $(gcloud config get-value project) \
-  --limit 30 --format 'value(textPayload)'
+  --limit 30 \
+  --format 'value(textPayload)'
 ```
 
 One of the logs you'll see shows the Run service confirming the event was received:
