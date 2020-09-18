@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_pubsub_publish]
 # [START functions_pubsub_setup]
 import base64
 import json
@@ -26,7 +27,6 @@ PROJECT_ID = os.getenv('GCP_PROJECT')
 # [END functions_pubsub_setup]
 
 
-# [START functions_pubsub_publish]
 # Publishes a message to a Cloud Pub/Sub topic.
 def publish(request):
     request_json = request.get_json(silent=True)
