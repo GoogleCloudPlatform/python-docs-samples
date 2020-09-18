@@ -1469,7 +1469,7 @@ def query_data_with_numeric_parameter(instance_id, database_id):
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
             'SELECT VenueId, Revenue FROM Venues '
-            'WHERE Revneue < @revenue',
+            'WHERE Revenue < @revenue',
             params=param, param_types=param_type)
 
         for row in results:
