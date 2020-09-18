@@ -698,7 +698,7 @@ def update_data_with_numeric(instance_id, database_id):
 
     with database.batch() as batch:
         batch.update(
-            table='Veneues',
+            table='Venues',
             columns=('VenueId', 'Revenue'),
             values=[
                 (4, decimal.Decimal("35000")),
