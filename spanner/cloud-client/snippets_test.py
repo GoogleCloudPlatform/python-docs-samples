@@ -378,8 +378,6 @@ def test_query_data_with_numeric_parameter(capsys):
     snippets.query_data_with_numeric_parameter(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 4, Revenue: 35000' in out
-    assert 'VenueId: 19, Revenue: 104500' in out
-    assert 'VenueId: 42, Revenue: 9999999999999999999999999999.99' in out
 
 
 def test_query_data_with_timestamp_parameter(capsys):
