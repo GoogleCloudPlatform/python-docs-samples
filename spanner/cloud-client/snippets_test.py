@@ -178,18 +178,6 @@ def test_update_data_with_timestamp(capsys):
     assert 'Updated data' in out
 
 
-def test_add_numeric_column(capsys):
-    snippets.add_numeric_column(INSTANCE_ID, DATABASE_ID)
-    out, _ = capsys.readouterr()
-    assert 'Altered table "Venue" on database ' in out
-
-
-def test_update_data_with_numeric(capsys):
-    snippets.update_data_with_numeric(INSTANCE_ID, DATABASE_ID)
-    out, _ = capsys.readouterr()
-    assert 'Updated data' in out
-
-
 def test_query_data_with_timestamp(capsys):
     snippets.query_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
@@ -372,6 +360,18 @@ def test_query_data_with_string(capsys):
     snippets.query_data_with_string(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 42, VenueName: Venue 42' in out
+
+
+def test_add_numeric_column(capsys):
+    snippets.add_numeric_column(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Altered table "Venue" on database ' in out
+
+
+def test_update_data_with_numeric(capsys):
+    snippets.update_data_with_numeric(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Updated data' in out
 
 
 def test_query_data_with_numeric_parameter(capsys):
