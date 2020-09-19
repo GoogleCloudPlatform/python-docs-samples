@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START functions_pubsub_publish]
-# [START functions_pubsub_setup]
 import base64
 import json
 import os
@@ -24,7 +23,6 @@ from google.cloud import pubsub_v1
 # Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
 PROJECT_ID = os.getenv('GCP_PROJECT')
-# [END functions_pubsub_setup]
 
 
 # Publishes a message to a Cloud Pub/Sub topic.
