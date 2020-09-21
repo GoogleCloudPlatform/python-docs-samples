@@ -34,6 +34,8 @@ from werkzeug.urls import url_encode
 import main
 
 
+RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
+
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
@@ -83,7 +85,7 @@ def get_job_id_from_name(job_name):
 
 
 # We retry the cancel operation a few times until the job is in a state where it can be cancelled
-@backoff.on_exception(backoff.expo, HttpError, max_time=240)
+@backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
 def dataflow_jobs_cancel(job_name):
     # to cancel a dataflow job, we need its ID, not its name
     job_id = get_job_id_from_name(job_name)
