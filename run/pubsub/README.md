@@ -39,5 +39,5 @@ export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
 
 # Deploy to Cloud Run
-gcloud beta run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
+gcloud run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
 ```
