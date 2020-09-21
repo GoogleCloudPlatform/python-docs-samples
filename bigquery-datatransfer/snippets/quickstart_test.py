@@ -14,7 +14,6 @@
 
 import os
 
-import mock
 import pytest
 
 import quickstart
@@ -24,18 +23,13 @@ PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture
-def mock_project_path():
+def mock_project_id():
     """Mock out project and replace with project from environment."""
-    project_patch = mock.patch(
-        'google.cloud.bigquery_datatransfer.DataTransferServiceClient.'
-        'project_path')
 
-    with project_patch as project_mock:
-        project_mock.return_value = 'projects/{}'.format(PROJECT)
-        yield project_mock
+    return PROJECT
 
 
-def test_quickstart(capsys, mock_project_path):
-    quickstart.run_quickstart()
+def test_quickstart(capsys, mock_project_id):
+    quickstart.run_quickstart(mock_project_id)
     out, _ = capsys.readouterr()
     assert 'Supported Data Sources:' in out
