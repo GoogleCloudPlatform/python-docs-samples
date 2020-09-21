@@ -40,5 +40,5 @@ export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/graphviz
 
 # Deploy to Cloud Run
-gcloud beta run deploy graphviz --image gcr.io/${GOOGLE_CLOUD_PROJECT}/graphviz
+gcloud run deploy graphviz --image gcr.io/${GOOGLE_CLOUD_PROJECT}/graphviz
 ```
