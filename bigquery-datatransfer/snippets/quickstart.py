@@ -15,21 +15,22 @@
 # limitations under the License.
 
 
-def run_quickstart():
+def run_quickstart(project="my-project"):
     # [START bigquerydatatransfer_quickstart]
-    from google.cloud import bigquery_datatransfer
+    from google.cloud.bigquery import datatransfer
 
-    client = bigquery_datatransfer.DataTransferServiceClient()
+    client = datatransfer.DataTransferServiceClient()
 
-    project = 'my-project'  # TODO: Update to your project ID.
+    # TODO: Update to your project ID.
+    # project = "my-project"
 
     # Get the full path to your project.
-    parent = client.project_path(project)
+    parent = f"projects/{project}"
 
     print('Supported Data Sources:')
 
     # Iterate over all possible data sources.
-    for data_source in client.list_data_sources(parent):
+    for data_source in client.list_data_sources(parent=parent):
         print('{}:'.format(data_source.display_name))
         print('\tID: {}'.format(data_source.data_source_id))
         print('\tFull path: {}'.format(data_source.name))
