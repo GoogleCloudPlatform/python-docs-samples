@@ -117,8 +117,8 @@ def set_policy(crm_service, project_id, policy):
 if __name__ == '__main__':
 
     # TODO: replace with your project ID
-    project_id = "your_project_id"
-    # TODO: Replace with the ID of your member in the form 'user:member@example.com.
-    member = "your_member"
+    project_id = "your-project-id"
+    # TODO: Replace with the ID of your member in the form 'user:member@example.com'.
+    member = "your-member"
     quickstart(project_id, member)
 # [END iam_quickstart]
