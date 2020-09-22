@@ -1,2 +1,2 @@
 pytest==4.6.11; python_version < '3.0'
-mock==4.0.2; python_version < '3.0'
+mock==4.0.2; python_version > '3.0'
