@@ -14,7 +14,11 @@
 
 import logging
 
+import pytest
+
 from .. import download_public_data
+
+pytest.importorskip("google.cloud.bigquery_storage_v1")
 
 
 def test_download_public_data(caplog, capsys):

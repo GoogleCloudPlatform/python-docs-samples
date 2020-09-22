@@ -11,12 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import IPython
-from IPython.terminal import interactiveshell
-from IPython.testing import tools
-import matplotlib
 import pytest
 
+IPython = pytest.importorskip("IPython")
+interactiveshell = pytest.importorskip("IPython.terminal.interactiveshell")
+tools = pytest.importorskip("IPython.testing.tools")
+matplotlib = pytest.importorskip("matplotlib")
 
 # Ignore semicolon lint warning because semicolons are used in notebooks
 # flake8: noqa E703

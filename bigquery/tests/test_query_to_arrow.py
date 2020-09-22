@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pyarrow
+import pytest
 
 from .. import query_to_arrow
+
+pyarrow = pytest.importorskip("pyarrow")
 
 
 def test_query_to_arrow(capsys,):
