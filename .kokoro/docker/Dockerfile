@@ -15,7 +15,7 @@
 # Sometimes renovate tries to update it to 16.10. I don't think it's
 # worthwhile because 16.04 is an LTS release. Maybe we should think
 # about upgrading to 18.04 (the next LTS) instead.
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 
 ENV DEBIAN_FRONTEND noninteractive
 
