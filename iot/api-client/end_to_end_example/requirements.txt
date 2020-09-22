@@ -4,4 +4,4 @@ google-auth-httplib2==0.0.4
 google-auth==1.21.2
 google-cloud-pubsub==1.7.0
 pyjwt==1.7.1
-paho-mqtt==1.5.0
+paho-mqtt==1.5.1
