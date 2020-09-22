@@ -1,2 +1,2 @@
 google-cloud-storage==1.31.0
-Flask==1.1.1
+Flask==1.1.2

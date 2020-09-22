@@ -119,6 +119,41 @@ def test_make_upper_case(firestore_mock, capsys):
     firestore_mock.set.assert_called_with({'original': 'FOOBAR'})
 
 
+@patch('main.client')
+def test_make_upper_case_ignores_already_uppercased(firestore_mock, capsys):
+
+    firestore_mock.collection = MagicMock(return_value=firestore_mock)
+    firestore_mock.document = MagicMock(return_value=firestore_mock)
+    firestore_mock.set = MagicMock(return_value=firestore_mock)
+
+    user_id = str(uuid.uuid4())
+    date_string = datetime.now().isoformat()
+    email_string = '%s@%s.com' % (uuid.uuid4(), uuid.uuid4())
+
+    data = {
+        'uid': user_id,
+        'metadata': {'createdAt': date_string},
+        'email': email_string,
+        'value': {
+            'fields': {
+                'original': {
+                    'stringValue': 'FOOBAR'
+                }
+            }
+        }
+    }
+
+    context = UserDict()
+    context.resource = '/documents/some_collection/path/some/path'
+
+    main.make_upper_case(data, context)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Value is already upper-case.' in out
+    firestore_mock.set.assert_not_called()
+
+
 def test_analytics(capsys):
     timestamp = int(datetime.utcnow().timestamp())
 

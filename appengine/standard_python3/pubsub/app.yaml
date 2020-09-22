@@ -2,8 +2,8 @@ runtime: python38
 
 #[START env]
 env_variables:
-    PUBSUB_TOPIC: your-topic
-    # This token is used to verify that requests originate from your
-    # application. It can be any sufficiently random string.
-    PUBSUB_VERIFICATION_TOKEN: 1234abc
+  PUBSUB_TOPIC: '<YOUR_TOPIC>'
+  # This token is used to verify that requests originate from your
+  # application. It can be any sufficiently random string.
+  PUBSUB_VERIFICATION_TOKEN: '<YOUR_VERIFICATION_TOKEN>'
 #[END env]

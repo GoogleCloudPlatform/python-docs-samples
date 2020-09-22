@@ -100,7 +100,7 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 
 1. Deploy to Cloud Run
 ```
-gcloud beta run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 ```
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
