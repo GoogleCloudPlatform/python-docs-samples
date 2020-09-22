@@ -120,6 +120,7 @@ if __name__ == '__main__':
     project_id = "your-project-id"
     # TODO: Replace with the ID of your member in the form
     # 'user|group|serviceAccount:email' or 'domain:domain'
+    # https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/add-iam-policy-binding#--member
     member = "your-member"
     quickstart(project_id, member)
 # [END iam_quickstart_v2]
