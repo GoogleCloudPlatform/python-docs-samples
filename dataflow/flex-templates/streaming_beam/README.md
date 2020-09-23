@@ -155,7 +155,7 @@ and is used to run a new Dataflow job.
 export TEMPLATE_PATH="gs://$BUCKET/samples/dataflow/templates/streaming-beam.json"
 
 # Build the Flex Template.
-gcloud beta dataflow flex-template build $TEMPLATE_PATH \
+gcloud dataflow flex-template build $TEMPLATE_PATH \
   --image "$TEMPLATE_IMAGE" \
   --sdk-language "PYTHON" \
   --metadata-file "metadata.json"
@@ -173,9 +173,11 @@ required by the pipeline.
 
 ```sh
 # Run the Flex Template.
-gcloud beta dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
-  --template-file-gcs-location "$TEMPLATE_PATH" \
-  --parameters "input_subscription=$SUBSCRIPTION,output_table=$PROJECT:$DATASET.$TABLE"
+gcloud dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
+    --template-file-gcs-location "$TEMPLATE_PATH" \
+    --parameters input_subscription="$SUBSCRIPTION" \
+    --parameters output_table="$PROJECT:$DATASET.$TABLE" \
+    --region "$REGION"
 ```
 
 Check the results in BigQuery by running the following query:

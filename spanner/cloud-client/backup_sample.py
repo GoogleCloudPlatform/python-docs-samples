@@ -68,7 +68,7 @@ def restore_database(instance_id, new_database_id, backup_id):
     operation = new_database.restore(backup)
 
     # Wait for restore operation to complete.
-    operation.result(1200)
+    operation.result(1600)
 
     # Newly created database has restore information.
     new_database.reload()
