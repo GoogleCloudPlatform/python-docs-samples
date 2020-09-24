@@ -63,7 +63,7 @@ def create_job(
         "language_code": "en-US",
     }
 
-    response = client.create_job(parent, job)
+    response = client.create_job(parent=parent, job=job)
     print("Created job: {}".format(response.name))
     return response.name
 
