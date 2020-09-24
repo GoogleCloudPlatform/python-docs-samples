@@ -18,30 +18,32 @@ def transcribe_context_classes(storage_uri):
     favor specific classes of words in the results."""
     # [START speech_context_classes]
     from google.cloud import speech
+
     client = speech.SpeechClient()
 
     # storage_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.wav'
-    audio = speech.types.RecognitionAudio(uri=storage_uri)
+    audio = speech.RecognitionAudio(uri=storage_uri)
 
     # SpeechContext: to configure your speech_context see:
     # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#speechcontext
     # Full list of supported phrases (class tokens) here:
     # https://cloud.google.com/speech-to-text/docs/class-tokens
-    speech_context = speech.types.SpeechContext(phrases=['$TIME'])
+    speech_context = speech.SpeechContext(phrases=["$TIME"])
 
     # RecognitionConfig: to configure your encoding and sample_rate_hertz, see:
     # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#recognitionconfig
-    config = speech.types.RecognitionConfig(
-        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=8000,
-        language_code='en-US',
-        speech_contexts=[speech_context])
+        language_code="en-US",
+        speech_contexts=[speech_context],
+    )
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print("-" * 20)
+        print("First alternative of result {}".format(i))
+        print("Transcript: {}".format(alternative.transcript))
     # [END speech_context_classes]

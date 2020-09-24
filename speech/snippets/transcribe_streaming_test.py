@@ -16,12 +16,11 @@ import re
 
 import transcribe_streaming
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_streaming(capsys):
-    transcribe_streaming.transcribe_streaming(
-        os.path.join(RESOURCES, 'audio.raw'))
+    transcribe_streaming.transcribe_streaming(os.path.join(RESOURCES, "audio.raw"))
     out, err = capsys.readouterr()
 
-    assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
+    assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)

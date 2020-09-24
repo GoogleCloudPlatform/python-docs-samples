@@ -15,12 +15,13 @@ import os
 
 import transcribe_auto_punctuation
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_file_with_auto_punctuation(capsys):
     transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        'resources/commercial_mono.wav')
+        "resources/commercial_mono.wav"
+    )
     out, _ = capsys.readouterr()
 
-    assert 'First alternative of result ' in out
+    assert "First alternative of result " in out

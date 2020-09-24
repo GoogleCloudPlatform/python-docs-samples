@@ -26,7 +26,6 @@ def transcribe_onprem(local_file_path, api_endpoint):
       api_endpoint: Endpoint to call for speech recognition, e.g. 0.0.0.0:10000
     """
     from google.cloud import speech_v1p1beta1
-    from google.cloud.speech_v1p1beta1 import enums
     import grpc
     import io
 
@@ -35,8 +34,11 @@ def transcribe_onprem(local_file_path, api_endpoint):
 
     # Create a gRPC channel to your server
     channel = grpc.insecure_channel(target=api_endpoint)
+    transport = speech_v1p1beta1.services.speech.transports.SpeechGrpcTransport(
+        channel=channel
+    )
 
-    client = speech_v1p1beta1.SpeechClient(channel=channel)
+    client = speech_v1p1beta1.SpeechClient(transport=transport)
 
     # The language of the supplied audio
     language_code = "en-US"
@@ -46,7 +48,7 @@ def transcribe_onprem(local_file_path, api_endpoint):
 
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats.
-    encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
+    encoding = speech_v1p1beta1.RecognitionConfig.AudioEncoding.LINEAR16
     config = {
         "encoding": encoding,
         "language_code": language_code,
@@ -56,18 +58,19 @@ def transcribe_onprem(local_file_path, api_endpoint):
         content = f.read()
     audio = {"content": content}
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
         print(f"Transcript: {alternative.transcript}")
+
+
 # [END speech_transcribe_onprem]
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
         "--file_path",
@@ -81,6 +84,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    transcribe_onprem(
-        local_file_path=args.file_path, api_endpoint=args.api_endpoint
-    )
+    transcribe_onprem(local_file_path=args.file_path, api_endpoint=args.api_endpoint)

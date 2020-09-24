@@ -16,20 +16,22 @@ import re
 
 import transcribe_model_selection
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_model_selection_file(capsys):
     transcribe_model_selection.transcribe_model_selection(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'), 'video')
+        os.path.join(RESOURCES, "Google_Gnome.wav"), "video"
+    )
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(r"the weather outside is sunny", out, re.DOTALL | re.I)
 
 
 def test_transcribe_model_selection_gcs(capsys):
     transcribe_model_selection.transcribe_model_selection_gcs(
-        'gs://cloud-samples-tests/speech/Google_Gnome.wav', 'video')
+        "gs://cloud-samples-tests/speech/Google_Gnome.wav", "video"
+    )
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(r"the weather outside is sunny", out, re.DOTALL | re.I)

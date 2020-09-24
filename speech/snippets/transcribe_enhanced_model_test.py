@@ -15,12 +15,13 @@ import os
 
 import transcribe_enhanced_model
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_file_with_enhanced_model(capsys):
     transcribe_enhanced_model.transcribe_file_with_enhanced_model(
-        'resources/commercial_mono.wav')
+        "resources/commercial_mono.wav"
+    )
     out, _ = capsys.readouterr()
 
-    assert 'Chrome' in out
+    assert "Chrome" in out
