@@ -32,26 +32,30 @@ def transcribe_model_selection(speech_file, model):
     """Transcribe the given audio file synchronously with
     the selected model."""
     from google.cloud import speech
+
     client = speech.SpeechClient()
 
-    with open(speech_file, 'rb') as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
-    audio = speech.types.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=content)
 
-    config = speech.types.RecognitionConfig(
-        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US',
-        model=model)
+        language_code="en-US",
+        model=model,
+    )
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print(u'Transcript: {}'.format(alternative.transcript))
+        print("-" * 20)
+        print("First alternative of result {}".format(i))
+        print(u"Transcript: {}".format(alternative.transcript))
+
+
 # [END speech_transcribe_model_selection]
 
 
@@ -60,43 +64,50 @@ def transcribe_model_selection_gcs(gcs_uri, model):
     """Transcribe the given audio file asynchronously with
     the selected model."""
     from google.cloud import speech
+
     client = speech.SpeechClient()
 
-    audio = speech.types.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=gcs_uri)
 
-    config = speech.types.RecognitionConfig(
-        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US',
-        model=model)
+        language_code="en-US",
+        model=model,
+    )
 
-    operation = client.long_running_recognize(config, audio)
+    operation = client.long_running_recognize(
+        request={"config": config, "audio": audio}
+    )
 
-    print('Waiting for operation to complete...')
+    print("Waiting for operation to complete...")
     response = operation.result(timeout=90)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print(u'Transcript: {}'.format(alternative.transcript))
+        print("-" * 20)
+        print("First alternative of result {}".format(i))
+        print(u"Transcript: {}".format(alternative.transcript))
+
+
 # [END speech_transcribe_model_selection_gcs]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
     parser.add_argument(
-        'path', help='File or GCS path for audio file to be recognized')
-    parser.add_argument(
-        '--model', help='The speech recognition model to use',
-        choices=['command_and_search', 'phone_call', 'video', 'default'],
-        default='default')
+        "--model",
+        help="The speech recognition model to use",
+        choices=["command_and_search", "phone_call", "video", "default"],
+        default="default",
+    )
 
     args = parser.parse_args()
 
-    if args.path.startswith('gs://'):
+    if args.path.startswith("gs://"):
         transcribe_model_selection_gcs(args.path, args.model)
     else:
         transcribe_model_selection(args.path, args.model)

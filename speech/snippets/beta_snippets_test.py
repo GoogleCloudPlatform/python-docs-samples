@@ -20,30 +20,31 @@ from beta_snippets import (
     transcribe_file_with_metadata,
     transcribe_file_with_multichannel,
     transcribe_file_with_multilanguage,
-    transcribe_file_with_word_level_confidence)
+    transcribe_file_with_word_level_confidence,
+)
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_file_with_enhanced_model(capsys):
     transcribe_file_with_enhanced_model()
     out, _ = capsys.readouterr()
 
-    assert 'Chrome' in out
+    assert "Chrome" in out
 
 
 def test_transcribe_file_with_metadata(capsys):
     transcribe_file_with_metadata()
     out, _ = capsys.readouterr()
 
-    assert 'Chrome' in out
+    assert "Chrome" in out
 
 
 def test_transcribe_file_with_auto_punctuation(capsys):
     transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
 
-    assert 'First alternative of result ' in out
+    assert "First alternative of result " in out
 
 
 def test_transcribe_diarization(capsys):
@@ -58,18 +59,18 @@ def test_transcribe_multichannel_file(capsys):
     transcribe_file_with_multichannel()
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert "OK Google stream stranger things from Netflix to my TV" in out
 
 
 def test_transcribe_multilanguage_file(capsys):
     transcribe_file_with_multilanguage()
     out, err = capsys.readouterr()
 
-    assert 'how are you doing estoy bien e tu' in out
+    assert "how are you doing estoy bien e tu" in out
 
 
 def test_transcribe_word_level_confidence(capsys):
     transcribe_file_with_word_level_confidence()
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert "OK Google stream stranger things from Netflix to my TV" in out

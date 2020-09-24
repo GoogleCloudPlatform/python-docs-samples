@@ -30,34 +30,33 @@ def transcribe_file_with_word_time_offsets(speech_file):
     """Transcribe the given audio file synchronously and output the word time
     offsets."""
     from google.cloud import speech
-    from google.cloud.speech import enums
-    from google.cloud.speech import types
+
     client = speech.SpeechClient()
 
-    with io.open(speech_file, 'rb') as audio_file:
+    with io.open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
-    audio = types.RecognitionAudio(content=content)
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    audio = speech.RecognitionAudio(content=content)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US',
-        enable_word_time_offsets=True)
+        language_code="en-US",
+        enable_word_time_offsets=True,
+    )
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
 
     for result in response.results:
         alternative = result.alternatives[0]
-        print(u'Transcript: {}'.format(alternative.transcript))
+        print("Transcript: {}".format(alternative.transcript))
 
         for word_info in alternative.words:
             word = word_info.word
             start_time = word_info.start_time
             end_time = word_info.end_time
-            print('Word: {}, start_time: {}, end_time: {}'.format(
-                word,
-                start_time.seconds + start_time.nanos * 1e-9,
-                end_time.seconds + end_time.nanos * 1e-9))
+            print(
+                f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
+            )
 
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
@@ -65,46 +64,48 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
     """Transcribe the given audio file asynchronously and output the word time
     offsets."""
     from google.cloud import speech
-    from google.cloud.speech import enums
-    from google.cloud.speech import types
+
     client = speech.SpeechClient()
 
-    audio = types.RecognitionAudio(uri=gcs_uri)
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+    audio = speech.RecognitionAudio(uri=gcs_uri)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=16000,
-        language_code='en-US',
-        enable_word_time_offsets=True)
+        language_code="en-US",
+        enable_word_time_offsets=True,
+    )
 
-    operation = client.long_running_recognize(config, audio)
+    operation = client.long_running_recognize(
+        request={"config": config, "audio": audio}
+    )
 
-    print('Waiting for operation to complete...')
+    print("Waiting for operation to complete...")
     result = operation.result(timeout=90)
 
     for result in result.results:
         alternative = result.alternatives[0]
-        print(u'Transcript: {}'.format(alternative.transcript))
-        print('Confidence: {}'.format(alternative.confidence))
+        print("Transcript: {}".format(alternative.transcript))
+        print("Confidence: {}".format(alternative.confidence))
 
         for word_info in alternative.words:
             word = word_info.word
             start_time = word_info.start_time
             end_time = word_info.end_time
-            print('Word: {}, start_time: {}, end_time: {}'.format(
-                word,
-                start_time.seconds + start_time.nanos * 1e-9,
-                end_time.seconds + end_time.nanos * 1e-9))
+            print(
+                f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
+            )
+
+
 # [END speech_transcribe_async_word_time_offsets_gcs]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        'path', help='File or GCS path for audio file to be recognized')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
     args = parser.parse_args()
-    if args.path.startswith('gs://'):
+    if args.path.startswith("gs://"):
         transcribe_gcs_with_word_time_offsets(args.path)
     else:
         transcribe_file_with_word_time_offsets(args.path)

@@ -30,28 +30,30 @@ def transcribe_file_with_multichannel(speech_file):
       multi channel."""
     # [START speech_transcribe_multichannel]
     from google.cloud import speech
+
     client = speech.SpeechClient()
 
-    with open(speech_file, 'rb') as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
-    audio = speech.types.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=content)
 
-    config = speech.types.RecognitionConfig(
-        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=44100,
-        language_code='en-US',
+        language_code="en-US",
         audio_channel_count=2,
-        enable_separate_recognition_per_channel=True)
+        enable_separate_recognition_per_channel=True,
+    )
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print(u'Transcript: {}'.format(alternative.transcript))
-        print(u'Channel Tag: {}'.format(result.channel_tag))
+        print("-" * 20)
+        print("First alternative of result {}".format(i))
+        print(u"Transcript: {}".format(alternative.transcript))
+        print(u"Channel Tag: {}".format(result.channel_tag))
     # [END speech_transcribe_multichannel]
 
 
@@ -60,36 +62,37 @@ def transcribe_gcs_with_multichannel(gcs_uri):
       multi channel."""
     # [START speech_transcribe_multichannel_gcs]
     from google.cloud import speech
+
     client = speech.SpeechClient()
 
-    audio = speech.types.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=gcs_uri)
 
-    config = speech.types.RecognitionConfig(
-        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=44100,
-        language_code='en-US',
+        language_code="en-US",
         audio_channel_count=2,
-        enable_separate_recognition_per_channel=True)
+        enable_separate_recognition_per_channel=True,
+    )
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print(u'Transcript: {}'.format(alternative.transcript))
-        print(u'Channel Tag: {}'.format(result.channel_tag))
+        print("-" * 20)
+        print("First alternative of result {}".format(i))
+        print(u"Transcript: {}".format(alternative.transcript))
+        print(u"Channel Tag: {}".format(result.channel_tag))
     # [END speech_transcribe_multichannel_gcs]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        'path', help='File or GCS path for audio file to be recognized')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
     args = parser.parse_args()
-    if args.path.startswith('gs://'):
+    if args.path.startswith("gs://"):
         transcribe_gcs_with_multichannel(args.path)
     else:
         transcribe_file_with_multichannel(args.path)
