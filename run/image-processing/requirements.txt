@@ -3,5 +3,5 @@ pytest==5.3.0; python_version > "3.0"
 pytest==4.6.6; python_version < "3.0"
 gunicorn==20.0.4
 google-cloud-vision==1.0.0
-google-cloud-storage==1.31.1
+google-cloud-storage==1.31.2
 Wand==0.6.3
