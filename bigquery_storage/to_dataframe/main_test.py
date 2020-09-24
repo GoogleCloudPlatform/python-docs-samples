@@ -21,7 +21,7 @@ def clients():
     # [START bigquerystorage_pandas_tutorial_create_client]
     import google.auth
     from google.cloud import bigquery
-    from google.cloud import bigquery_storage_v1beta1
+    from google.cloud.bigquery import storage
 
     # Explicitly create a credentials object. This allows you to use the same
     # credentials for both the BigQuery and BigQuery Storage clients, avoiding
@@ -32,9 +32,7 @@ def clients():
 
     # Make clients.
     bqclient = bigquery.Client(credentials=credentials, project=your_project_id,)
-    bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
-        credentials=credentials
-    )
+    bqstorageclient = storage.BigQueryReadClient(credentials=credentials)
     # [END bigquerystorage_pandas_tutorial_create_client]
     # [END bigquerystorage_pandas_tutorial_all]
     return bqclient, bqstorageclient
@@ -98,48 +96,46 @@ def test_query_to_dataframe(capsys, clients):
 
 
 def test_session_to_dataframe(capsys, clients):
-    from google.cloud import bigquery_storage_v1beta1
+    from google.cloud.bigquery.storage import types
 
     bqclient, bqstorageclient = clients
     your_project_id = bqclient.project
 
     # [START bigquerystorage_pandas_tutorial_all]
     # [START bigquerystorage_pandas_tutorial_read_session]
-    table = bigquery_storage_v1beta1.types.TableReference()
-    table.project_id = "bigquery-public-data"
-    table.dataset_id = "new_york_trees"
-    table.table_id = "tree_species"
+    project_id = "bigquery-public-data"
+    dataset_id = "new_york_trees"
+    table_id = "tree_species"
+    table = f"projects/{project_id}/datasets/{dataset_id}/tables/{table_id}"
 
     # Select columns to read with read options. If no read options are
     # specified, the whole table is read.
-    read_options = bigquery_storage_v1beta1.types.TableReadOptions()
-    read_options.selected_fields.append("species_common_name")
-    read_options.selected_fields.append("fall_color")
+    read_options = types.ReadSession.TableReadOptions(
+        selected_fields=["species_common_name", "fall_color"]
+    )
 
     parent = "projects/{}".format(your_project_id)
-    session = bqstorageclient.create_read_session(
-        table,
-        parent,
-        read_options=read_options,
+
+    requested_session = types.ReadSession(
+        table=table,
         # This API can also deliver data serialized in Apache Avro format.
         # This example leverages Apache Arrow.
-        format_=bigquery_storage_v1beta1.enums.DataFormat.ARROW,
-        # We use a LIQUID strategy in this example because we only read from a
-        # single stream. Consider BALANCED if you're consuming multiple streams
-        # concurrently and want more consistent stream sizes.
-        sharding_strategy=(bigquery_storage_v1beta1.enums.ShardingStrategy.LIQUID),
+        data_format=types.DataFormat.ARROW,
+        read_options=read_options,
+    )
+    read_session = bqstorageclient.create_read_session(
+        parent=parent, read_session=requested_session
     )
 
     # This example reads from only a single stream. Read from multiple streams
     # to fetch data faster. Note that the session may not contain any streams
     # if there are no rows to read.
-    stream = session.streams[0]
-    position = bigquery_storage_v1beta1.types.StreamPosition(stream=stream)
-    reader = bqstorageclient.read_rows(position)
+    stream = read_session.streams[0]
+    reader = bqstorageclient.read_rows(stream.name)
 
-    # Parse all Avro blocks and create a dataframe. This call requires a
+    # Parse all Arrow blocks and create a dataframe. This call requires a
     # session, because the session contains the schema for the row blocks.
-    dataframe = reader.to_dataframe(session)
+    dataframe = reader.to_dataframe(read_session)
     print(dataframe.head())
     # [END bigquerystorage_pandas_tutorial_read_session]
     # [END bigquerystorage_pandas_tutorial_all]

@@ -17,7 +17,8 @@ import argparse
 
 def main(project_id="your-project-id", snapshot_millis=0):
     # [START bigquerystorage_quickstart]
-    from google.cloud import bigquery_storage_v1
+    from google.cloud.bigquery.storage import BigQueryReadClient
+    from google.cloud.bigquery.storage import types
 
     # TODO(developer): Set the project_id variable.
     # project_id = 'your-project-id'
@@ -25,38 +26,35 @@ def main(project_id="your-project-id", snapshot_millis=0):
     # The read session is created in this project. This project can be
     # different from that which contains the table.
 
-    client = bigquery_storage_v1.BigQueryReadClient()
+    client = BigQueryReadClient()
 
     # This example reads baby name data from the public datasets.
     table = "projects/{}/datasets/{}/tables/{}".format(
         "bigquery-public-data", "usa_names", "usa_1910_current"
     )
 
-    requested_session = bigquery_storage_v1.types.ReadSession()
+    requested_session = types.ReadSession()
     requested_session.table = table
     # This API can also deliver data serialized in Apache Arrow format.
     # This example leverages Apache Avro.
-    requested_session.data_format = bigquery_storage_v1.enums.DataFormat.AVRO
+    requested_session.data_format = types.DataFormat.AVRO
 
     # We limit the output columns to a subset of those allowed in the table,
     # and set a simple filter to only report names from the state of
     # Washington (WA).
-    requested_session.read_options.selected_fields.append("name")
-    requested_session.read_options.selected_fields.append("number")
-    requested_session.read_options.selected_fields.append("state")
+    requested_session.read_options.selected_fields = ["name", "number", "state"]
     requested_session.read_options.row_restriction = 'state = "WA"'
 
     # Set a snapshot time if it's been specified.
-    modifiers = None
     if snapshot_millis > 0:
-        requested_session.table_modifiers.snapshot_time.FromMilliseconds(
-            snapshot_millis
-        )
+        snapshot_time = types.Timestamp()
+        snapshot_time.FromMilliseconds(snapshot_millis)
+        requested_session.table_modifiers.snapshot_time = snapshot_time
 
     parent = "projects/{}".format(project_id)
     session = client.create_read_session(
-        parent,
-        requested_session,
+        parent=parent,
+        read_session=requested_session,
         # We'll use only a single stream for reading data from the table. However,
         # if you wanted to fan out multiple readers you could do so by having a
         # reader process each individual stream.
