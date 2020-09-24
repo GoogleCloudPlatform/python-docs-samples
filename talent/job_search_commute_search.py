@@ -30,7 +30,7 @@ def search_jobs(project_id, tenant_id):
         project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
         tenant_id = tenant_id.decode("utf-8")
-    parent = f"projects/{project_id}/tenants/{tenant_id}/"
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     domain = "www.example.com"
     session_id = "Hashed session identifier"
     user_id = "Hashed user identifier"
