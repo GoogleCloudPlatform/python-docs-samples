@@ -16,7 +16,8 @@ import transcribe_context_classes
 
 def test_transcribe_context_classes(capsys):
     transcribe_context_classes.transcribe_context_classes(
-        'gs://cloud-samples-data/speech/commercial_mono.wav')
+        "gs://cloud-samples-data/speech/commercial_mono.wav"
+    )
     out, _ = capsys.readouterr()
 
-    assert 'First alternative of result ' in out
+    assert "First alternative of result " in out

@@ -26,7 +26,6 @@
 
 # [START speech_adaptation_beta]
 from google.cloud import speech_v1p1beta1
-from google.cloud.speech_v1p1beta1 import enums
 
 
 def sample_recognize(storage_uri, phrase):
@@ -62,7 +61,7 @@ def sample_recognize(storage_uri, phrase):
 
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats.
-    encoding = enums.RecognitionConfig.AudioEncoding.MP3
+    encoding = speech_v1p1beta1.RecognitionConfig.AudioEncoding.MP3
     config = {
         "speech_contexts": speech_contexts,
         "sample_rate_hertz": sample_rate_hertz,
@@ -71,14 +70,13 @@ def sample_recognize(storage_uri, phrase):
     }
     audio = {"uri": storage_uri}
 
-    response = client.recognize(config, audio)
+    response = client.recognize(request={"config": config, "audio": audio})
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
         print(u"Transcript: {}".format(alternative.transcript))
 
-
-# [END speech_adaptation_beta]
+    # [END speech_adaptation_beta]
     return response
 
 
