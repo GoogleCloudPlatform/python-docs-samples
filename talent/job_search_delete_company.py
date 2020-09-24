@@ -35,7 +35,7 @@ def delete_company(project_id, tenant_id, company_id):
         company_id = company_id.decode("utf-8")
     name = client.company_path(project_id, tenant_id, company_id)
 
-    client.delete_company(name)
+    client.delete_company(name=name)
     print("Deleted company")
 
 

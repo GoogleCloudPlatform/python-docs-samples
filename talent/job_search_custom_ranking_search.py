@@ -15,7 +15,6 @@
 # [START job_search_custom_ranking_search]
 
 from google.cloud import talent
-from google.cloud.talent import enums
 import six
 
 
@@ -31,12 +30,16 @@ def search_jobs(project_id, tenant_id):
         project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
         tenant_id = tenant_id.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     domain = "www.example.com"
     session_id = "Hashed session identifier"
     user_id = "Hashed user identifier"
-    request_metadata = {"domain": domain, "session_id": session_id, "user_id": user_id}
-    importance_level = enums.SearchJobsRequest.CustomRankingInfo.ImportanceLevel.EXTREME
+    request_metadata = talent.RequestMetadata(
+        domain=domain,
+        session_id=session_id,
+        user_id=user_id
+    )
+    importance_level = talent.SearchJobsRequest.CustomRankingInfo.ImportanceLevel.EXTREME
     ranking_expression = "(someFieldLong + 25) * 0.25"
     custom_ranking_info = {
         "importance_level": importance_level,
@@ -46,18 +49,19 @@ def search_jobs(project_id, tenant_id):
 
     # Iterate over all results
     results = []
-    for response_item in client.search_jobs(
-        parent,
-        request_metadata,
+    request = talent.SearchJobsRequest(
+        parent=parent,
+        request_metadata=request_metadata,
         custom_ranking_info=custom_ranking_info,
-        order_by=order_by,
-    ):
-        print("Job summary: {}".format(response_item.job_summary))
-        print("Job title snippet: {}".format(response_item.job_title_snippet))
+        order_by=order_by
+    )
+    for response_item in client.search_jobs(request=request):
+        print(f"Job summary: {response_item.job_summary}")
+        print(f"Job title snippet: {response_item.job_title_snippet}")
         job = response_item.job
         results.append(job.name)
-        print("Job name: {}".format(job.name))
-        print("Job title: {}".format(job.title))
+        print(f"Job name: {job.name}")
+        print(f"Job title: {job.title}")
     return results
 
 

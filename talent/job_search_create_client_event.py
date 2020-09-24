@@ -46,7 +46,7 @@ def create_client_event(project_id, tenant_id, request_id, event_id):
         request_id = request_id.decode("utf-8")
     if isinstance(event_id, six.binary_type):
         event_id = event_id.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
 
     # The timestamp of the event as seconds of UTC time since Unix epoch
     # For more information on how to create google.protobuf.Timestamps
@@ -70,7 +70,7 @@ def create_client_event(project_id, tenant_id, request_id, event_id):
         "job_event": job_event,
     }
 
-    response = client.create_client_event(parent, client_event)
+    response = client.create_client_event(parent=parent, client_event=client_event)
     print(response)
 
 

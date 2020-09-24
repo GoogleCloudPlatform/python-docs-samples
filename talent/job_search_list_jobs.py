@@ -33,16 +33,16 @@ def list_jobs(project_id, tenant_id, filter_):
         tenant_id = tenant_id.decode("utf-8")
     if isinstance(filter_, six.binary_type):
         filter_ = filter_.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
 
     # Iterate over all results
     results = []
-    for job in client.list_jobs(parent, filter_):
+    for job in client.list_jobs(parent=parent, filter=filter_):
         results.append(job.name)
-        print("Job name: {}".format(job.name))
-        print("Job requisition ID: {}".format(job.requisition_id))
-        print("Job title: {}".format(job.title))
-        print("Job description: {}".format(job.description))
+        print("Job name: {job.name}")
+        print("Job requisition ID: {job.requisition_id}")
+        print("Job title: {job.title}")
+        print("Job description: {job.description}")
     return results
 
 

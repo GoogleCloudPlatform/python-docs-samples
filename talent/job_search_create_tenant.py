@@ -30,13 +30,13 @@ def create_tenant(project_id, external_id):
         project_id = project_id.decode("utf-8")
     if isinstance(external_id, six.binary_type):
         external_id = external_id.decode("utf-8")
-    parent = client.project_path(project_id)
-    tenant = {"external_id": external_id}
+    parent = f"projects/{project_id}"
+    tenant = talent.Tenant(external_id=external_id)
 
-    response = client.create_tenant(parent, tenant)
+    response = client.create_tenant(parent=parent, tenant=tenant)
     print("Created Tenant")
-    print("Name: {}".format(response.name))
-    print("External ID: {}".format(response.external_id))
+    print(f"Name: {response.name}")
+    print(f"External ID: {response.external_id}")
     return response.name
 
 

@@ -15,7 +15,6 @@
 # [START job_search_autocomplete_job_title]
 
 from google.cloud import talent_v4beta1
-from google.cloud.talent import enums
 import six
 
 
@@ -35,21 +34,20 @@ def complete_query(project_id, tenant_id, query):
     if isinstance(query, six.binary_type):
         query = query.decode("utf-8")
 
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
 
-    response = client.complete_query(
-        parent,
-        query,
+    request = talent_v4beta1.CompleteQueryRequest(
+        parent=parent,
+        query=query,
         page_size=5,  # limit for number of results
         language_codes=["en-US"],  # language code
     )
+    response = client.complete_query(request=request)
     for result in response.completion_results:
-        print("Suggested title: {}".format(result.suggestion))
+        print(f"Suggested title: {result.suggestion}")
         # Suggestion type is JOB_TITLE or COMPANY_TITLE
         print(
-            "Suggestion type: {}".format(
-                enums.CompleteQueryRequest.CompletionType(result.type).name
-            )
+            f"Suggestion type: {talent_v4beta1.CompleteQueryRequest.CompletionType(result.type).name}"
         )
 
 

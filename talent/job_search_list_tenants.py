@@ -27,12 +27,12 @@ def list_tenants(project_id):
 
     if isinstance(project_id, six.binary_type):
         project_id = project_id.decode("utf-8")
-    parent = client.project_path(project_id)
+    parent = "projects/{project_id}"
 
     # Iterate over all results
-    for response_item in client.list_tenants(parent):
-        print("Tenant Name: {}".format(response_item.name))
-        print("External ID: {}".format(response_item.external_id))
+    for response_item in client.list_tenants(parent=parent):
+        print(f"Tenant Name: {response_item.name}")
+        print(f"External ID: {response_item.external_id}")
 
 
 # [END job_search_list_tenants]
