@@ -35,9 +35,9 @@ def get_company(project_id, tenant_id, company_id):
         company_id = company_id.decode("utf-8")
     name = client.company_path(project_id, tenant_id, company_id)
 
-    response = client.get_company(name)
-    print("Company name: {}".format(response.name))
-    print("Display name: {}".format(response.display_name))
+    response = client.get_company(name=name)
+    print(f"Company name: {response.name}")
+    print(f"Display name: {response.display_name}")
 
 
 # [END job_search_get_company]

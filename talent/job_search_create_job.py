@@ -46,7 +46,7 @@ def create_job(
         requisition_id = requisition_id.decode("utf-8")
     if isinstance(job_application_url, six.binary_type):
         job_application_url = job_application_url.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     uris = [job_application_url]
     application_info = {"uris": uris}
     addresses = [

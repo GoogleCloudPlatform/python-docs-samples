@@ -30,15 +30,15 @@ def list_companies(project_id, tenant_id):
         project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
         tenant_id = tenant_id.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
 
     # Iterate over all results
     results = []
-    for company in client.list_companies(parent):
+    for company in client.list_companies(parent=parent):
         results.append(company.name)
-        print("Company Name: {}".format(company.name))
-        print("Display Name: {}".format(company.display_name))
-        print("External ID: {}".format(company.external_id))
+        print(f"Company Name: {company.name}")
+        print(f"Display Name: {company.display_name}")
+        print(f"External ID: {company.external_id}")
     return results
 
 

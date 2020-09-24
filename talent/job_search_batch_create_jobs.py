@@ -95,7 +95,7 @@ def batch_create_jobs(
         address_two = address_two.decode("utf-8")
     if isinstance(language_code_two, six.binary_type):
         language_code_two = language_code_two.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     uris = [job_application_url_one]
     application_info = {"uris": uris}
     addresses = [address_one]
@@ -122,7 +122,7 @@ def batch_create_jobs(
     }
     jobs = [jobs_element, jobs_element_2]
 
-    operation = client.batch_create_jobs(parent, jobs)
+    operation = client.batch_create_jobs(parent=parent, jobs=jobs)
 
     print("Waiting for operation to complete...")
     response = operation.result(90)

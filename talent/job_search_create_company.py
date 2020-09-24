@@ -36,10 +36,10 @@ def create_company(project_id, tenant_id, display_name, external_id):
         display_name = display_name.decode("utf-8")
     if isinstance(external_id, six.binary_type):
         external_id = external_id.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     company = {"display_name": display_name, "external_id": external_id}
 
-    response = client.create_company(parent, company)
+    response = client.create_company(parent=parent, company=company)
     print("Created Company")
     print("Name: {}".format(response.name))
     print("Display Name: {}".format(response.display_name))

@@ -39,24 +39,24 @@ def create_job(project_id, tenant_id, company_id, requisition_id):
     # Custom attribute can be string or numeric value,
     # and can be filtered in search queries.
     # https://cloud.google.com/talent-solution/job-search/docs/custom-attributes
-    custom_attribute = talent.types.CustomAttribute()
+    custom_attribute = talent.CustomAttribute()
     custom_attribute.filterable = True
     custom_attribute.string_values.append("Intern")
     custom_attribute.string_values.append("Apprenticeship")
 
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
 
-    job = {
-        "company": company_id,
-        "title": "Software Engineer",
-        "requisition_id": requisition_id,
-        "description": "This is a description of this job",
-        "language_code": "en-US",
-        "custom_attributes": {"FOR_STUDENTS": custom_attribute},
-    }
+    job = talent.Job(
+        company=company_id,
+        title="Software Engineer",
+        requisition_id=requisition_id,
+        description="This is a description of this job",
+        language_code="en-us",
+        custom_attributes={"FOR_STUDENTS": custom_attribute}
+    )
 
-    response = client.create_job(parent, job)
-    print("Created job: {}".format(response.name))
+    response = client.create_job(parent=parent, job=job)
+    print(f"Created job: {response.name}")
     return response.name
 
 

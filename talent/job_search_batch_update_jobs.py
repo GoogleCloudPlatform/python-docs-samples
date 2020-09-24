@@ -103,36 +103,38 @@ def batch_update_jobs(
         address_two = address_two.decode("utf-8")
     if isinstance(language_code_two, six.binary_type):
         language_code_two = language_code_two.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     uris = [job_application_url_one]
     application_info = {"uris": uris}
     addresses = [address_one]
-    jobs_element = {
-        "name": job_name_one,
-        "company": company_name_one,
-        "requisition_id": requisition_id_one,
-        "title": title_one,
-        "description": description_one,
-        "application_info": application_info,
-        "addresses": addresses,
-        "language_code": language_code_one,
-    }
+    jobs_element = talent.Job(
+        name=job_name_one,
+        company=company_name_one,
+        requisition_id=requisition_id_one,
+        title=title_one,
+        description=description_one,
+        application_info=application_info,
+        addresses=addresses,
+        language_code=language_code_one
+    )
+
     uris_2 = [job_application_url_two]
     application_info_2 = {"uris": uris_2}
     addresses_2 = [address_two]
-    jobs_element_2 = {
-        "name": job_name_two,
-        "company": company_name_two,
-        "requisition_id": requisition_id_two,
-        "title": title_two,
-        "description": description_two,
-        "application_info": application_info_2,
-        "addresses": addresses_2,
-        "language_code": language_code_two,
-    }
+    jobs_element_2 = talent.Job(
+        name=job_name_two,
+        company=company_name_two,
+        requisition_id=requisition_id_two,
+        title=title_two,
+        description=description_two,
+        application_info=application_info_2,
+        addresses=addresses_2,
+        language_code=language_code_two
+    )
+
     jobs = [jobs_element, jobs_element_2]
 
-    operation = client.batch_update_jobs(parent, jobs)
+    operation = client.batch_update_jobs(parent=parent, jobs=jobs)
 
     print("Waiting for operation to complete...")
     response = operation.result(90)

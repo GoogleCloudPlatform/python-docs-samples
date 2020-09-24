@@ -33,8 +33,8 @@ def get_tenant(project_id, tenant_id):
     name = client.tenant_path(project_id, tenant_id)
 
     response = client.get_tenant(name)
-    print("Name: {}".format(response.name))
-    print("External ID: {}".format(response.external_id))
+    print(f"Name: {response.name}")
+    print(f"External ID: {response.external_id}")
 
 
 # [END job_search_get_tenant]

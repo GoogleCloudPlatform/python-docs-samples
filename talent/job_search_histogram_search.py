@@ -40,7 +40,7 @@ def search_jobs(project_id, tenant_id, query):
         tenant_id = tenant_id.decode("utf-8")
     if isinstance(query, six.binary_type):
         query = query.decode("utf-8")
-    parent = client.tenant_path(project_id, tenant_id)
+    parent = f"projects/{project_id}/tenants/{tenant_id}"
     domain = "www.example.com"
     session_id = "Hashed session identifier"
     user_id = "Hashed user identifier"
@@ -50,15 +50,18 @@ def search_jobs(project_id, tenant_id, query):
 
     # Iterate over all results
     results = []
-    for response_item in client.search_jobs(
-        parent, request_metadata, histogram_queries=histogram_queries
-    ):
-        print("Job summary: {}".format(response_item.job_summary))
-        print("Job title snippet: {}".format(response_item.job_title_snippet))
+    request = talent.SearchJobsRequest(
+        parent=parent,
+        request_metadata=request_metadata,
+        histogram_queries=histogram_queries,
+    )
+    for response_item in client.search_jobs(request=request):
+        print("Job summary: {response_item.job_summary}")
+        print("Job title snippet: {response_item.job_title_snippet}")
         job = response_item.job
         results.append(job)
-        print("Job name: {}".format(job.name))
-        print("Job title: {}".format(job.title))
+        print("Job name: {job.name}")
+        print("Job title: {job.title}")
     return results
 
 

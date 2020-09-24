@@ -35,7 +35,7 @@ def delete_job(project_id, tenant_id, job_id):
         job_id = job_id.decode("utf-8")
     name = client.job_path(project_id, tenant_id, job_id)
 
-    client.delete_job(name)
+    client.delete_job(name=name)
     print("Deleted job.")
 
 
