@@ -27,7 +27,7 @@ def list_tenants(project_id):
 
     if isinstance(project_id, six.binary_type):
         project_id = project_id.decode("utf-8")
-    parent = "projects/{project_id}"
+    parent = f"projects/{project_id}"
 
     # Iterate over all results
     for response_item in client.list_tenants(parent=parent):

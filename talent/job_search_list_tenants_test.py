@@ -27,13 +27,13 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 def test_tenant():
     client = talent.TenantServiceClient()
     external_id = f'test_tenant_{uuid.uuid4().hex}'
-    parent = client.project_path(PROJECT_ID)
+    parent = f"projects/{PROJECT_ID}"
     tenant = {"external_id": external_id}
-    resp = client.create_tenant(parent, tenant)
+    resp = client.create_tenant(parent=parent, tenant=tenant)
 
     yield resp
 
-    client.delete_tenant(resp.name)
+    client.delete_tenant(name=resp.name)
 
 
 def test_list_tenants(capsys, test_tenant):
