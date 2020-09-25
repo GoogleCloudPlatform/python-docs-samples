@@ -1,20 +1,20 @@
-# Google Cloud Run Python Samples
+# Google Cloud Eventarc Python Samples
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=blog/README.md
 
-This directory contains samples for [Google Cloud Run](https://cloud.run). [Cloud Run][run_docs] runs stateless [containers](https://cloud.google.com/containers/) on a fully managed environment or in your own GKE cluster.
+This directory contains samples for Google Cloud Eventarc.
 
 ## Samples
 
 |           Sample                |        Description       |     Deploy    |
 | ------------------------------- | ------------------------ | ------------- |
-|[Hello World][helloworld]&nbsp;&#10149; | Quickstart | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_helloworld] |
-|[Cloud Pub/Sub][pubsub] | Handling Pub/Sub push messages | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_pubsub] |
-|[Cloud SQL (MySQL)][mysql]        | Use MySQL with Cloud Run    |      -        |
-|[Cloud SQL (Postgres)][postgres]  | Use Postgres with Cloud Run |      -        |
+|[Events – Pub/Sub][events_pubsub]  | Event-driven service with Events for Cloud Run for Pub/Sub    |      -        |
+|[Anthos Events – Pub/Sub][anthos_events_pubsub]  | Event-driven service with Events for Cloud Run on Anthos for Pub/Sub  |      -        |
+|[Events – GCS][events_storage]  | Event-driven service with Events for Cloud Run for GCS    |      -        |
+|[Anthos Events – GCS][anthos_events_storage]  | Event-driven service with Events for Cloud Run on Anthos for GCS  |      -        |
 
 For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Samples repository](https://github.com/GoogleCloudPlatform/cloud-run-samples).
 
@@ -82,22 +82,24 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 
     Learn more about [testing your container image locally.][testing]
 
-## Deploying
+## Deploying a Cloud Run service
 
 1. Set an environment variable with your GCP Project ID
-```
-export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
-```
+    ```
+    export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+    ```
 
 1. Submit a build using Google Cloud Build
-```
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
-```
+    ```
+    gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+    ```
 
 1. Deploy to Cloud Run
-```
-gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
-```
+    ```
+    gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+    ```
+
+Choose a particular sample for information about triggering the service with an event.
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
 for more information.
@@ -105,10 +107,8 @@ for more information.
 [run_docs]: https://cloud.google.com/run/docs/
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
-[helloworld]: helloworld/
-[pubsub]: pubsub/
-[mysql]: ../cloud-sql/mysql/sqlalchemy
-[postgres]: ../cloud-sql/postgres/sqlalchemy
-[run_button_helloworld]: https://deploy.cloud.run/?git_repo=https://github.com/knative/docs&dir=docs/serving/samples/hello-world/helloworld-python
-[run_button_pubsub]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/pubsub
+[events_pubsub]: pubsub/README.md
+[anthos_events_pubsub]: pubsub/anthos.md
+[events_storage]: audit-storage/README.md
+[anthos_events_storage]: audit-storage/anthos.md
 [testing]: https://cloud.google.com/run/docs/testing/local#running_locally_using_docker_with_access_to_services
