@@ -14,22 +14,18 @@
 
 import os
 
-from google.cloud import automl
-
 import translate_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-DATASET_ID = os.environ["TRANSLATION_DATASET_ID"]
+DATASET_ID = "TRL00000000000000000"
 
 
 def test_translate_create_model(capsys):
-    translate_create_model.create_model(
-        PROJECT_ID, DATASET_ID, "translate_test_create_model"
-    )
-    out, _ = capsys.readouterr()
-    assert "Training started" in out
-
-    # Cancel the operation
-    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
-    client = automl.AutoMlClient()
-    client._transport.operations_client.cancel_operation(operation_id)
+    try:
+        translate_create_model.create_model(
+            PROJECT_ID, DATASET_ID, "translate_test_create_model"
+        )
+        out, _ = capsys.readouterr()
+        assert "Dataset does not exist." in out
+    except Exception as e:
+        assert "Dataset does not exist." in e.message
