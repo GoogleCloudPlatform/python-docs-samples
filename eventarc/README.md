@@ -85,19 +85,19 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 ## Deploying a Cloud Run service
 
 1. Set an environment variable with your GCP Project ID
-```
-export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
-```
+    ```
+    export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+    ```
 
 1. Submit a build using Google Cloud Build
-```
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
-```
+    ```
+    gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+    ```
 
 1. Deploy to Cloud Run
-```
-gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
-```
+    ```
+    gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+    ```
 
 Choose a particular sample for information about triggering the service with an event.
 
