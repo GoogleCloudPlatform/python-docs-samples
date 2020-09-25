@@ -23,6 +23,7 @@ For more information, see the README.rst under /spanner.
 import argparse
 import base64
 import datetime
+import decimal
 
 from google.cloud import spanner
 from google.cloud.spanner_v1 import param_types
@@ -656,6 +657,57 @@ def query_data_with_timestamp(instance_id, database_id):
     for row in results:
         print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
 # [END spanner_query_data_with_timestamp_column]
+
+
+# [START spanner_add_numeric_column]
+def add_numeric_column(instance_id, database_id):
+    """ Adds a new NUMERIC column to the Venues table in the example database.
+    """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+
+    database = instance.database(database_id)
+
+    operation = database.update_ddl([
+        'ALTER TABLE Venues ADD COLUMN Revenue NUMERIC'])
+
+    print('Waiting for operation to complete...')
+    operation.result(120)
+
+    print('Altered table "Venue" on database {} on instance {}.'.format(
+        database_id, instance_id))
+# [END spanner_add_numeric_column]
+
+
+# [START spanner_update_data_with_numeric_column]
+def update_data_with_numeric(instance_id, database_id):
+    """Updates Venues tables in the database with the NUMERIC
+    column.
+
+    This updates the `Revenue` column which must be created before
+    running this sample. You can add the column by running the
+    `add_numeric_column` sample or by running this DDL statement
+     against your database:
+
+        ALTER TABLE Venues ADD COLUMN Revenue NUMERIC
+    """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+
+    database = instance.database(database_id)
+
+    with database.batch() as batch:
+        batch.update(
+            table='Venues',
+            columns=('VenueId', 'Revenue'),
+            values=[
+                (4, decimal.Decimal("35000")),
+                (19, decimal.Decimal("104500")),
+                (42, decimal.Decimal("99999999999999999999999999999.99"))
+            ])
+
+    print('Updated data.')
+# [END spanner_update_data_with_numeric_column]
 
 
 # [START spanner_write_data_for_struct_queries]
@@ -1395,6 +1447,34 @@ def query_data_with_string(instance_id, database_id):
         for row in results:
             print(u"VenueId: {}, VenueName: {}".format(*row))
     # [END spanner_query_with_string_parameter]
+
+
+def query_data_with_numeric_parameter(instance_id, database_id):
+    """Queries sample data using SQL with a NUMERIC parameter. """
+    # [START spanner_query_with_numeric_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    example_numeric = decimal.Decimal("100000")
+    param = {
+        'revenue': example_numeric,
+    }
+    param_type = {
+        'revenue': param_types.NUMERIC
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, Revenue FROM Venues '
+            'WHERE Revenue < @revenue',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, Revenue: {}".format(*row))
+    # [END spanner_query_with_numeric_parameter]
 
 
 def query_data_with_timestamp_parameter(instance_id, database_id):

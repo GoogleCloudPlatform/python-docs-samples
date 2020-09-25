@@ -1,4 +1,4 @@
-Flask==1.1.1
+Flask==1.1.2
 requests==2.24.0
 requests-futures==1.0.0
 requests-toolbelt==0.9.1
