@@ -46,7 +46,8 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
 
     # Include all fields returned in the HTML form as they're required
     for key, value in policy["fields"].items():
-        if type(value) == bytes: value = value.decode("utf-8")
+        if type(value) == bytes:
+            value = value.decode("utf-8")
         form += "  <input name='{}' value='{}' type='hidden'/>\n".format(key, value)
 
     form += "  <input type='file' name='file'/><br />\n"
