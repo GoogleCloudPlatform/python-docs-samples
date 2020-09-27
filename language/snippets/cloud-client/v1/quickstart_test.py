@@ -19,4 +19,4 @@ import quickstart
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'Sentiment' in out
+    assert "Sentiment" in out

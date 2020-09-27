@@ -19,7 +19,7 @@ def set_endpoint():
     # Imports the Google Cloud client library
     from google.cloud import language
 
-    client_options = {'api_endpoint': 'eu-language.googleapis.com:443'}
+    client_options = {"api_endpoint": "eu-language.googleapis.com:443"}
 
     # Instantiates a client
     client = language.LanguageServiceClient(client_options=client_options)
@@ -27,14 +27,14 @@ def set_endpoint():
 
     # The text to analyze
     document = language.types.Document(
-        content='Hello, world!',
-        type=language.enums.Document.Type.PLAIN_TEXT)
+        content="Hello, world!", type=language.enums.Document.Type.PLAIN_TEXT
+    )
 
     # Detects the sentiment of the text
     sentiment = client.analyze_sentiment(document=document).document_sentiment
 
-    print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
+    print("Sentiment: {}, {}".format(sentiment.score, sentiment.magnitude))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     set_endpoint()

@@ -35,15 +35,15 @@ def sample_analyze_sentiment(content):
     # content = 'Your text to analyze, e.g. Hello, world!'
 
     if isinstance(content, six.binary_type):
-        content = content.decode('utf-8')
+        content = content.decode("utf-8")
 
     type_ = enums.Document.Type.PLAIN_TEXT
-    document = {'type': type_, 'content': content}
+    document = {"type": type_, "content": content}
 
     response = client.analyze_sentiment(document)
     sentiment = response.document_sentiment
-    print('Score: {}'.format(sentiment.score))
-    print('Magnitude: {}'.format(sentiment.magnitude))
+    print("Score: {}".format(sentiment.score))
+    print("Magnitude: {}".format(sentiment.magnitude))
 
 
 # [END language_sentiment_text]
@@ -54,5 +54,5 @@ def main():
     sample_analyze_sentiment(*sys.argv[1:])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

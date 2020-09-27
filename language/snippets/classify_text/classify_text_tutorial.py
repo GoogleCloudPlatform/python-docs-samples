@@ -29,6 +29,7 @@ import os
 from google.cloud import language
 import numpy
 import six
+
 # [END language_classify_text_tutorial_imports]
 
 
@@ -39,8 +40,8 @@ def classify(text, verbose=True):
     language_client = language.LanguageServiceClient()
 
     document = language.types.Document(
-        content=text,
-        type=language.enums.Document.Type.PLAIN_TEXT)
+        content=text, type=language.enums.Document.Type.PLAIN_TEXT
+    )
     response = language_client.classify_text(document)
     categories = response.categories
 
@@ -55,11 +56,13 @@ def classify(text, verbose=True):
     if verbose:
         print(text)
         for category in categories:
-            print(u'=' * 20)
-            print(u'{:<16}: {}'.format('category', category.name))
-            print(u'{:<16}: {}'.format('confidence', category.confidence))
+            print(u"=" * 20)
+            print(u"{:<16}: {}".format("category", category.name))
+            print(u"{:<16}: {}".format("confidence", category.confidence))
 
     return result
+
+
 # [END language_classify_text_tutorial_classify]
 
 
@@ -77,19 +80,21 @@ def index(path, index_file):
             continue
 
         try:
-            with io.open(file_path, 'r') as f:
+            with io.open(file_path, "r") as f:
                 text = f.read()
                 categories = classify(text, verbose=False)
 
                 result[filename] = categories
         except Exception:
-            print('Failed to process {}'.format(file_path))
+            print("Failed to process {}".format(file_path))
 
-    with io.open(index_file, 'w', encoding='utf-8') as f:
+    with io.open(index_file, "w", encoding="utf-8") as f:
         f.write(json.dumps(result, ensure_ascii=False))
 
-    print('Texts indexed in file: {}'.format(index_file))
+    print("Texts indexed in file: {}".format(index_file))
     return result
+
+
 # [END language_classify_text_tutorial_index]
 
 
@@ -114,7 +119,7 @@ def split_labels(categories):
     """
     _categories = {}
     for name, confidence in six.iteritems(categories):
-        labels = [label for label in name.split('/') if label]
+        labels = [label for label in name.split("/") if label]
         for label in labels:
             _categories[label] = confidence
 
@@ -147,7 +152,7 @@ def query(index_file, text, n_top=3):
     the query text.
     """
 
-    with io.open(index_file, 'r') as f:
+    with io.open(index_file, "r") as f:
         index = json.load(f)
 
     # Get the categories of the query text.
@@ -155,22 +160,23 @@ def query(index_file, text, n_top=3):
 
     similarities = []
     for filename, categories in six.iteritems(index):
-        similarities.append(
-            (filename, similarity(query_categories, categories)))
+        similarities.append((filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
-    print('=' * 20)
-    print('Query: {}\n'.format(text))
+    print("=" * 20)
+    print("Query: {}\n".format(text))
     for category, confidence in six.iteritems(query_categories):
-        print('\tCategory: {}, confidence: {}'.format(category, confidence))
-    print('\nMost similar {} indexed texts:'.format(n_top))
+        print("\tCategory: {}, confidence: {}".format(category, confidence))
+    print("\nMost similar {} indexed texts:".format(n_top))
     for filename, sim in similarities[:n_top]:
-        print('\tFilename: {}'.format(filename))
-        print('\tSimilarity: {}'.format(sim))
-        print('\n')
+        print("\tFilename: {}".format(filename))
+        print("\tSimilarity: {}".format(sim))
+        print("\n")
 
     return similarities
+
+
 # [END language_classify_text_tutorial_query]
 
 
@@ -183,7 +189,7 @@ def query_category(index_file, category_string, n_top=3):
     https://cloud.google.com/natural-language/docs/categories
     """
 
-    with io.open(index_file, 'r') as f:
+    with io.open(index_file, "r") as f:
         index = json.load(f)
 
     # Make the category_string into a dictionary so that it is
@@ -192,61 +198,59 @@ def query_category(index_file, category_string, n_top=3):
 
     similarities = []
     for filename, categories in six.iteritems(index):
-        similarities.append(
-            (filename, similarity(query_categories, categories)))
+        similarities.append((filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
-    print('=' * 20)
-    print('Query: {}\n'.format(category_string))
-    print('\nMost similar {} indexed texts:'.format(n_top))
+    print("=" * 20)
+    print("Query: {}\n".format(category_string))
+    print("\nMost similar {} indexed texts:".format(n_top))
     for filename, sim in similarities[:n_top]:
-        print('\tFilename: {}'.format(filename))
-        print('\tSimilarity: {}'.format(sim))
-        print('\n')
+        print("\tFilename: {}".format(filename))
+        print("\tSimilarity: {}".format(sim))
+        print("\n")
 
     return similarities
+
+
 # [END language_classify_text_tutorial_query_category]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
-    classify_parser = subparsers.add_parser(
-        'classify', help=classify.__doc__)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    classify_parser = subparsers.add_parser("classify", help=classify.__doc__)
     classify_parser.add_argument(
-        'text', help='The text to be classified. '
-        'The text needs to have at least 20 tokens.')
-    index_parser = subparsers.add_parser(
-        'index', help=index.__doc__)
+        "text",
+        help="The text to be classified. " "The text needs to have at least 20 tokens.",
+    )
+    index_parser = subparsers.add_parser("index", help=index.__doc__)
     index_parser.add_argument(
-        'path', help='The directory that contains '
-        'text files to be indexed.')
+        "path", help="The directory that contains " "text files to be indexed."
+    )
     index_parser.add_argument(
-        '--index_file', help='Filename for the output JSON.',
-        default='index.json')
-    query_parser = subparsers.add_parser(
-        'query', help=query.__doc__)
-    query_parser.add_argument(
-        'index_file', help='Path to the index JSON file.')
-    query_parser.add_argument(
-        'text', help='Query text.')
+        "--index_file", help="Filename for the output JSON.", default="index.json"
+    )
+    query_parser = subparsers.add_parser("query", help=query.__doc__)
+    query_parser.add_argument("index_file", help="Path to the index JSON file.")
+    query_parser.add_argument("text", help="Query text.")
     query_category_parser = subparsers.add_parser(
-        'query-category', help=query_category.__doc__)
+        "query-category", help=query_category.__doc__
+    )
     query_category_parser.add_argument(
-        'index_file', help='Path to the index JSON file.')
-    query_category_parser.add_argument(
-        'category', help='Query category.')
+        "index_file", help="Path to the index JSON file."
+    )
+    query_category_parser.add_argument("category", help="Query category.")
 
     args = parser.parse_args()
 
-    if args.command == 'classify':
+    if args.command == "classify":
         classify(args.text)
-    if args.command == 'index':
+    if args.command == "index":
         index(args.path, args.index_file)
-    if args.command == 'query':
+    if args.command == "query":
         query(args.index_file, args.text)
-    if args.command == 'query-category':
+    if args.command == "query-category":
         query_category(args.index_file, args.category)

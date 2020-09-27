@@ -22,6 +22,7 @@ def run_quickstart():
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
+
     # [END language_python_migration_imports]
 
     # Instantiates a client
@@ -30,18 +31,16 @@ def run_quickstart():
     # [END language_python_migration_client]
 
     # The text to analyze
-    text = u'Hello, world!'
-    document = types.Document(
-        content=text,
-        type=enums.Document.Type.PLAIN_TEXT)
+    text = u"Hello, world!"
+    document = types.Document(content=text, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects the sentiment of the text
     sentiment = client.analyze_sentiment(document=document).document_sentiment
 
-    print('Text: {}'.format(text))
-    print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
+    print("Text: {}".format(text))
+    print("Sentiment: {}, {}".format(sentiment.score, sentiment.magnitude))
     # [END language_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()
