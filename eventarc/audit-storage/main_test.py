@@ -42,7 +42,7 @@ def test_endpoint(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"GCS CloudEvent type: {test_headers['Ce-Subject']}" in out
+    assert f"Detected change in GCS bucket: {test_headers['Ce-Subject']}" in out
 
 
 def test_missing_subject(client, capsys):

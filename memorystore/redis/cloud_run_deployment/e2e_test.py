@@ -24,64 +24,16 @@ import uuid
 
 import pytest
 
+# Unique suffix to create distinct service names
 
-@pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex[:10]
-    project = os.environ["GOOGLE_CLOUD_PROJECT"]
+SUFFIX = uuid.uuid4().hex[:10]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+VPC_CONNECTOR_NAME = "test-connector"
+MEMORYSTORE_REDIS_NAME = "static-test-instance"
 
-    # Create a VPC network
-    network_name = f"test-network-{suffix}"
-    subprocess.run(
-        [
-            "gcloud",
-            "compute",
-            "networks",
-            "create",
-            network_name,
-            "--project",
-            project,
-        ], check=True
-    )
 
-    # Create a Serverless VPC Access connector
-    connector_name = f"test-connector-{suffix}"
-    subprocess.run(
-        [
-            "gcloud",
-            "compute",
-            "networks",
-            "vpc-access",
-            "connectors",
-            "create",
-            connector_name,
-            "--network",
-            network_name,
-            "--region=us-central1",
-            "--range=192.168.16.0/28",
-            "--project",
-            project,
-        ], check=True
-    )
-
-    # Create a Memorystore Redis instance
-    instance_name = f"test-instance-{suffix}"
-    subprocess.run(
-        [
-            "gcloud",
-            "redis",
-            "instances",
-            "create",
-            instance_name,
-            "--region=us-central1",
-            "--network",
-            network_name,
-            "--project",
-            project,
-        ], check=True
-    )
-
+@pytest.fixture
+def redis_host():
     # Get the Redis instance's IP
     redis_host = subprocess.run(
         [
@@ -89,18 +41,24 @@ def services():
             "redis",
             "instances",
             "describe",
-            instance_name,
+            MEMORYSTORE_REDIS_NAME,
             "--region=us-central1",
             "--format=value(host)",
             "--project",
-            project,
+            PROJECT,
         ],
         stdout=subprocess.PIPE,
         check=True
     ).stdout.strip().decode()
+    yield redis_host
 
+    # no deletion needs to happen, this is a "get" of a static instance
+
+
+@pytest.fixture
+def container_image():
     # Build container image for Cloud Run deployment
-    image_name = f"gcr.io/{project}/test-visit-count-{suffix}"
+    image_name = f"gcr.io/{PROJECT}/test-visit-count-{SUFFIX}"
     subprocess.run(
         [
             "cp",
@@ -116,13 +74,32 @@ def services():
             "--tag",
             image_name,
             "--project",
-            project,
+            PROJECT,
         ], check=True
     )
+    yield image_name
+
     subprocess.run(["rm", "Dockerfile"], check=True)
 
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            image_name,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ], check=True
+    )
+
+
+@pytest.fixture
+def deployed_service(container_image, redis_host):
     # Deploy image to Cloud Run
-    service_name = f"test-visit-count-{suffix}"
+    service_name = f"test-visit-count-{SUFFIX}"
     subprocess.run(
         [
             "gcloud",
@@ -130,43 +107,19 @@ def services():
             "deploy",
             service_name,
             "--image",
-            image_name,
+            container_image,
             "--platform=managed",
             "--no-allow-unauthenticated",
             "--region=us-central1",
             "--vpc-connector",
-            connector_name,
+            VPC_CONNECTOR_NAME,
             "--set-env-vars",
             f"REDISHOST={redis_host},REDISPORT=6379",
             "--project",
-            project,
+            PROJECT,
         ], check=True
     )
-
-    # Get Cloud Run service URL and auth token
-    service_url = subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "describe",
-            service_name,
-            "--platform=managed",
-            "--region=us-central1",
-            "--format=value(status.url)",
-            "--project",
-            project,
-        ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
-    auth_token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
-
-    yield service_url, auth_token
+    yield service_name
 
     # Delete Cloud Run service
     subprocess.run(
@@ -180,74 +133,43 @@ def services():
             "--region=us-central1",
             "--quiet",
             "--project",
-            project,
+            PROJECT,
         ], check=True
     )
 
-    # Delete container image
-    subprocess.run(
-        [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            image_name,
-            "--quiet",
-            "--project",
-            project,
-        ], check=True
-    )
 
-    # Delete Redis instance
-    subprocess.run(
+@pytest.fixture
+def service_url_auth_token(deployed_service):
+    # Get Cloud Run service URL and auth token
+    service_url = subprocess.run(
         [
             "gcloud",
-            "redis",
-            "instances",
-            "delete",
-            instance_name,
+            "run",
+            "services",
+            "describe",
+            deployed_service,
+            "--platform=managed",
             "--region=us-central1",
-            "--quiet",
-            "--async",
+            "--format=value(status.url)",
             "--project",
-            project,
-        ], check=True
-    )
+            PROJECT,
+        ],
+        stdout=subprocess.PIPE,
+        check=True
+    ).stdout.strip().decode()
+    auth_token = subprocess.run(
+        ["gcloud", "auth", "print-identity-token"],
+        stdout=subprocess.PIPE,
+        check=True
+    ).stdout.strip().decode()
 
-    # Delete Serverless VPC Access connector
-    subprocess.run(
-        [
-            "gcloud",
-            "compute",
-            "networks",
-            "vpc-access",
-            "connectors",
-            "delete",
-            connector_name,
-            "--region=us-central1",
-            "--quiet",
-            "--project",
-            project,
-        ], check=True
-    )
+    yield service_url, auth_token
 
-    # Delete VPC network
-    subprocess.run(
-        [
-            "gcloud",
-            "compute",
-            "networks",
-            "delete",
-            network_name,
-            "--quiet",
-            "--project",
-            project,
-        ], check=True
-    )
+    # no deletion needed
 
 
-def test_end_to_end(services):
-    service_url, auth_token = services
+def test_end_to_end(service_url_auth_token):
+    service_url, auth_token = service_url_auth_token
 
     req = request.Request(
         service_url,
