@@ -59,7 +59,7 @@ def search_jobs(project_id, tenant_id):
         request_metadata=request_metadata,
         job_query=job_query,
     )
-    for response_item in client.search_jobs(request=request):
+    for response_item in client.search_jobs(request=request).matching_jobs:
         print(f"Job summary: {response_item.job_summary}")
         print(f"Job title snippet: {response_item.job_title_snippet}")
         job = response_item.job

@@ -47,7 +47,7 @@ def complete_query(project_id, tenant_id, query):
         print(f"Suggested title: {result.suggestion}")
         # Suggestion type is JOB_TITLE or COMPANY_TITLE
         print(
-            f"Suggestion type: {talent_v4beta1.CompleteQueryRequest.CompletionType(result.type).name}"
+            f"Suggestion type: {talent_v4beta1.CompleteQueryRequest.CompletionType(result.type_).name}"
         )
 
 
