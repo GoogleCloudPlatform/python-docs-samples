@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_events_pubsub_server_setup]
+# [START eventarc_pubsub_server]
 import base64
 
 import os
@@ -26,10 +26,10 @@ from flask import Flask, request
 required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
 
 app = Flask(__name__)
-# [END run_events_pubsub_server_setup]
+# [END eventarc_pubsub_server]
 
 
-# [START run_events_pubsub_handler]
+# [START eventarc_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
     # Create CloudEvent from HTTP headers and body
@@ -69,10 +69,10 @@ def index():
     resp = f"Hello, {name}! ID: {event['id']}"
     print(resp)
     return (resp, 200)
-# [END run_events_pubsub_handler]
+# [END eventarc_pubsub_handler]
 
 
-# [START run_events_pubsub_server]
+# [START eventarc_pubsub_server]
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-# [END run_events_pubsub_server]
+# [END eventarc_pubsub_server]
