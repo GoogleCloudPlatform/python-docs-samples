@@ -55,7 +55,7 @@ def search_jobs(project_id, tenant_id, query):
         request_metadata=request_metadata,
         histogram_queries=histogram_queries,
     )
-    for response_item in client.search_jobs(request=request):
+    for response_item in client.search_jobs(request=request).matching_jobs:
         print("Job summary: {response_item.job_summary}")
         print("Job title snippet: {response_item.job_title_snippet}")
         job = response_item.job
