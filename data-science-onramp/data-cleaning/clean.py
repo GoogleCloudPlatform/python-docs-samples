@@ -33,13 +33,13 @@ def trip_duration_udf(duration):
     return int(time)
 # [END datascienceonramp_tripdurationudf]
 
-# [ START datascienceonramp_stationnameudf ]
+# [START datascienceonramp_stationnameudf]
 def station_name_udf(name):
     """Replaces '/' with '&'."""
     return name.replace("/", "&") if name else None
-# [ END datascienceonramp_stationnameudf ]
+# [END datascienceonramp_stationnameudf]
 
-# [ START datascienceonramp_usertypeudf ]
+# [START datascienceonramp_usertypeudf]
 def user_type_udf(user):
     """Converts user type to 'Subscriber' or 'Customer'."""
     if not user:
@@ -49,7 +49,7 @@ def user_type_udf(user):
         return "Subscriber"
     elif user.lower().startswith("cust"):
         return "Customer"
-# [ END datascienceonramp_usertypeudf ] 
+# [END datascienceonramp_usertypeudf] 
 
 def gender_udf(gender):
     """Converts gender to 'Male' or 'Female'."""
@@ -61,7 +61,7 @@ def gender_udf(gender):
     elif gender.lower().startswith("f"):
         return "Female"
 
-# [ START datascienceonramp_stationlocationudf ]
+# [START datascienceonramp_stationlocationudf]
 def angle_udf(angle):
     """Converts DMS notation to degrees. Return None if not in DMS or degrees notation."""
     if not angle:
@@ -74,9 +74,9 @@ def angle_udf(angle):
     degrees = re.match(r"\d*.\d*", angle)
     if degrees:
         return float(degrees[0])
-# [ END datascienceonramp_stationlocationudf ]
+# [END datascienceonramp_stationlocationudf]
 
-# [ START datascienceonramp_timeconvertudf ]
+# [START datascienceonramp_timeconvertudf]
 def compute_time(duration, start, end):
     """Calculates duration, start time, and end time from each other if one value is null."""
     time_format = "%Y-%m-%dT%H:%M:%S"
@@ -97,8 +97,8 @@ def compute_time(duration, start, end):
     if duration:
         # Convert to timedelta
         duration = datetime.timedelta(seconds=duration)
-# [ END datascienceonramp_timeconvertudf ]
-# [ START datascienceonramp_timemissingvalueudf ]
+# [END datascienceonramp_timeconvertudf]
+# [START datascienceonramp_timemissingvalueudf]
     # Calculate missing value
     if start and end and not duration:
         duration = end - start
@@ -106,7 +106,8 @@ def compute_time(duration, start, end):
         start = end - duration
     elif duration and start and not end:
         end = start + duration
-# [ START datascienceonramp_timereturnudf ]
+# [END datascienceonramp_timemissingvalueudf]
+# [START datascienceonramp_timereturnudf]
     # Transform to primitive types
     if duration:
         duration = int(duration.total_seconds())
@@ -116,9 +117,9 @@ def compute_time(duration, start, end):
         end = end.strftime(time_format)
 
     return (duration, start, end)
-# [ END datascienceonramp_timereturnudf ]
+# [END datascienceonramp_timereturnudf]
 
-# [ START datascienceonramp_timehelperudf ]
+# [START datascienceonramp_timehelperudf]
 def compute_duration_udf(duration, start, end):
     """Calculates duration from start and end time if null."""
     return compute_time(duration, start, end)[0]
@@ -132,9 +133,9 @@ def compute_start_udf(duration, start, end):
 def compute_end_udf(duration, start, end):
     """Calculates end time from duration and start time if null."""
     return compute_time(duration, start, end)[2]
-# [ END datascienceonramp_timehelperudf ]
+# [END datascienceonramp_timehelperudf]
 
-# [ START datascienceonramp_sparksession ]
+# [START datascienceonramp_sparksession]
 if __name__ == "__main__":
     TABLE = sys.argv[1]
     BUCKET_NAME = sys.argv[2]
@@ -147,8 +148,8 @@ if __name__ == "__main__":
         df = spark.read.format("bigquery").option("table", TABLE).load()
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
-# [ END datascienceonramp_sparksession ]
-# [ START datascienceonramp_sparksingleudfs ]
+# [END datascienceonramp_sparksession]
+# [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "start_station_name": UserDefinedFunction(station_name_udf, StringType()),
@@ -164,8 +165,8 @@ if __name__ == "__main__":
 
     for name, udf in udfs.items():
         df = df.withColumn(name, udf(name))
-# [ END datascienceonramp_sparksingleudfs]
-# [ START datascienceonramp_sparkmultiudfs ]
+# [END datascienceonramp_sparksingleudfs]
+# [START datascienceonramp_sparkmultiudfs]
     # Multi-parameter udfs
     multi_udfs = {
         "tripduration": {
@@ -184,12 +185,12 @@ if __name__ == "__main__":
 
     for name, obj in multi_udfs.items():
         df = df.withColumn(name, obj["udf"](*obj["params"]))
-# [ END datascienceonramp_sparkmultiudfs ]
-# [ START datascienceonramp_displaysamplerows ]
+# [END datascienceonramp_sparkmultiudfs]
+# [START datascienceonramp_displaysamplerows]
     # Display sample of rows
     df.show(n=20)
-# [ END datascienceonramp_displaysamplerows ]
-# [ START datascienceonramp_writetogcs ] 
+# [END datascienceonramp_displaysamplerows]
+# [START datascienceonramp_writetogcs] 
     # Write results to GCS
     if "--dry-run" in sys.argv:
         print("Data will not be uploaded to GCS")
@@ -232,4 +233,4 @@ if __name__ == "__main__":
         print(
             "Data successfully uploaded to " + "gs://" + BUCKET_NAME + "/" + final_path
         )
-# [ END datascienceonramp_writetogcs ]
+# [END datascienceonramp_writetogcs]
