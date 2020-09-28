@@ -29,15 +29,15 @@ def quickstart_new_instance():
     return db
 
 
-def quickstart_add_data_one():
+def quickstart_add_data_one(collection_id, document_id, data):
     db = firestore.Client()
     # [START quickstart_add_data_one]
-    doc_ref = db.collection(u'users').document(u'alovelace')
-    doc_ref.set({
-        u'first': u'Ada',
-        u'last': u'Lovelace',
-        u'born': 1815
-    })
+    # collection_id = "users"
+    # document_id = "alovelace"
+    # data = {"first": "Ada", "last": "Lovelace", "born": 1815}
+
+    doc_ref = db.collection(collection_id).document(document_id)
+    doc_ref.set(data)
     # [END quickstart_add_data_one]
 
 

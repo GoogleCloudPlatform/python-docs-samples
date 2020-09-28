@@ -44,7 +44,8 @@ def db():
 
 
 def test_quickstart_new_instance():
-    snippets.quickstart_new_instance()
+    client = snippets.quickstart_new_instance()
+    assert isinstance(client, firestore.Client)
 
 
 def test_quickstart_add_data_two():
@@ -55,8 +56,15 @@ def test_quickstart_get_collection():
     snippets.quickstart_get_collection()
 
 
-def test_quickstart_add_data_one():
-    snippets.quickstart_add_data_one()
+def test_quickstart_add_data_one(db):
+    collection_id = "users"
+    document_id = "alovelace"
+    data = {"first": "Ada", "last": "Lovelace", "born": 1815}
+
+    snippets.quickstart_add_data_one(collection_id, document_id, data)
+
+    doc_ref = db.collection(collection_id).document(document_id)
+    assert doc_ref.get().to_dict() == data
 
 
 def test_add_from_dict():
