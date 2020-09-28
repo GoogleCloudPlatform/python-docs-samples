@@ -9,7 +9,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import FloatType, IntegerType, StringType
 
-# [ START datascienceonramp_tripdurationudf]
+# [START datascienceonramp_tripdurationudf]
 def trip_duration_udf(duration):
     """Convert trip duration to seconds. Return None if negative."""
     if not duration:
@@ -31,7 +31,7 @@ def trip_duration_udf(duration):
         time *= 60 * 60
 
     return int(time)
-# [ END datascienceonramp_tripdurationudf ]
+# [END datascienceonramp_tripdurationudf]
 
 # [ START datascienceonramp_stationnameudf ]
 def station_name_udf(name):
