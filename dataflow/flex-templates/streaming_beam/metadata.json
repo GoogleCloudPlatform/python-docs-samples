@@ -7,16 +7,16 @@
       "label": "Input PubSub subscription.",
       "helpText": "Name of the input PubSub subscription to consume from.",
       "regexes": [
-        "[/:-_.a-zA-Z0-9]+"
+        "[a-zA-Z][-_.~+%a-zA-Z0-9]{2,}"
       ]
     },
     {
       "name": "output_table",
       "label": "BigQuery output table name.",
       "helpText": "Name of the BigQuery output table name.",
-      "is_optional": true,
+      "isOptional": true,
       "regexes": [
-        "[/:-_.a-zA-Z0-9]+"
+        "[^:]+:[^.]+[.].+"
       ]
     }
   ]

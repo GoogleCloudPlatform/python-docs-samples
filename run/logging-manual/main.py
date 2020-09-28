@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, request
 import json
 import os
-import sys
+
+from flask import Flask, request
+
 
 app = Flask(__name__)
 
@@ -49,9 +50,6 @@ def index():
 
     print(json.dumps(entry))
     # [END run_manual_logging]
-
-    # Flush the stdout to avoid log buffering.
-    sys.stdout.flush()
 
     return 'Hello Logger!'
 

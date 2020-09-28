@@ -22,7 +22,15 @@ This section covers guidelines for Python samples. Note that
 
 ### Folder Location
 
-Each sample should be in a folder under the top-level folder of
+Samples that primarily show the use of one client library should be placed in the
+client library repository. Other samples should be placed in this repository
+`python-docs-samples`.
+
+**Library repositories:** Each sample should be in the top-level samples folder `samples`
+in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/master/samples)
+for an example.
+
+**python-docs-samples:** Each sample should be in a folder under the top-level folder of
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 that corresponds to the Google Cloud service or API used by the sample.
 For example, a sample demonstrating how to work with BigTable should be
@@ -91,6 +99,20 @@ local variables” warnings.
 
 The use of [Black](https://pypi.org/project/black/) to standardize code
 formatting and simplify diffs is recommended, but optional.
+
+The default noxfile has `blacken` session for convenience. Here are
+some examples.
+
+If you have pyenv configured:
+```sh
+nox -s blacken
+```
+
+If you only have docker:
+```
+cd proj_directory
+../scripts/run_tests_local.sh . blacken
+```
 
 In addition to the syntax guidelines covered in PEP 8, samples should strive
 to follow the Pythonic philosophy outlined in the
@@ -167,9 +189,7 @@ def download_encrypted_blob(
     blob.download_to_filename(
         destination_file_name, encryption_key=encryption_key)
 
-    print('Blob {} downloaded to {}.'.format(
-        source_blob_name,
-        destination_file_name))
+    print(f'Blob {source_blob_name} downloaded to {destination_file_name}.'
 ```
 
 Note the verbose parameter names and the extended description that helps the
@@ -197,7 +217,7 @@ and increased cognitive load.
 Argument types should be documented using Python type annotations as
 introduced in [PEP 484](https://www.python.org/dev/peps/pep-0484/). For example:
 
-```
+```py
 def hello_world(name: string):
     print(f"Hello {name}!")
 ```
@@ -327,19 +347,19 @@ assure uniqueness. Use the Python ```uuid``` package from the standard
 library to generate UUIDs for resource names. For example:
 
 ```python
-glossary_id = 'test-glossary-{}'.format(uuid.uuid4())
+glossary_id = f'test-glossary-{uuid.uuid4()}'
 ```
 
 or:
 
 ```python
 # If full uuid4 is too long, use its hex representation.
-encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex)
+encrypted_disk_name = f'test-disk-{uuid.uuid4().hex}'
 ```
 
 ```python
 # If the hex representation is also too long, slice it.
-encrypted_disk_name = 'test-disk-{}'.format(uuid.uuid4().hex[:5]
+encrypted_disk_name = f'test-disk-{uuid.uuid4().hex[:5]}'
 ```
 
 All temporary resources should be explicitly deleted when testing is
@@ -428,18 +448,130 @@ def test_resource():
     ...
 ```
 
-### Running tests
+### Use filters with list methods
 
-Automated testing for samples in `python-docs-samples` is managed by
+When writing a test for a `list` method, consider filtering the possible results.
+Listing all resources in the test project may take a considerable amount of time.
+The exact way to do this depends on the API.
+
+Some `list` methods take a `filter`/`filter_` parameter:
+
+```python
+from datetime import datetime
+
+from google.cloud import logging_v2
+
+client = logging_v2.LoggingServiceV2Client()
+resource_names = [f"projects/{project}"]
+   # We add timestamp for making the query faster.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    filter_date = now - datetime.timedelta(minutes=1)
+    filters = (
+        f"timestamp>=\"{filter_date.isoformat('T')}\" "
+        "resource.type=cloud_run_revision "
+        "AND severity=NOTICE "
+)
+
+entries = client.list_log_entries(resource_names, filter_=filters)
+
+```
+
+Others allow you to limit the result set with additional arguments
+to the request:
+
+```python
+from google.cloud import asset_v1p5beta1
+
+# TODO project_id = 'Your Google Cloud Project ID'
+# TODO asset_types = 'Your asset type list, e.g.,
+# ["storage.googleapis.com/Bucket","bigquery.googleapis.com/Table"]'
+# TODO page_size = 'Num of assets in one page, which must be between 1 and
+# 1000 (both inclusively)'
+
+project_resource = "projects/{}".format(project_id)
+content_type = asset_v1p5beta1.ContentType.RESOURCE
+client = asset_v1p5beta1.AssetServiceClient()
+
+# Call ListAssets v1p5beta1 to list assets.
+response = client.list_assets(
+    request={
+        "parent": project_resource,
+        "read_time": None,
+        "asset_types": asset_types,
+        "content_type": content_type,
+        "page_size": page_size,
+    }
+)
+```
+
+### Test Environment Setup
+
+Because all tests are system tests that use live resources, running tests
+requires a Google Cloud project with billing enabled, as covered under
+[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+
+Once you have your project created and configured, you'll need to set
+environment variables to identify the project and resources to be used
+by tests. See
+[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
+for a list of all environment variables used by all tests. Not every
+test needs all of these variables. All required environment variables
+should be listed in the README and `testing/test-env.tmpl.sh`. If you
+find one is missing, please add instructions for setting it as part of
+your PR.
+
+We suggest that you copy this file as follows:
+
+```sh
+$ cp testing/test-env.tmpl.sh testing/test-env.sh
+$ editor testing/test-env.sh  # change the value of `GCLOUD_PROJECT`.
+```
+
+You can easily `source` this file for exporting the environment variables.
+
+#### Development environment setup
+
+This repository supports two ways to run tests locally.
+
+1. nox
+
+    This is the recommended way. Setup takes little more efforts than
+    the second one, but the test execution will be faster.
+
+2. Docker
+
+    This is another way of running the tests. Setup is easier because
+    you only need to instal Docker. The test execution will be bit
+    slower than the first one.
+
+#### nox setup
+
+Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
+
+### Running tests with nox
+
+Automated testing for samples is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
 including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
-__Note:__ As a temporary workaround, each project currently uses first
+__Note:__
+
+**Library repositories:** If you are working on an existing project, a `noxfile.py` will already exist.
+For new samples, create a new `noxfile.py` and paste the contents of
+[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py)
+
+**python-docs-samples:** As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
 order to simulate this locally, you need to copy + rename the parent
-`noxfile-template.py` as `noxfile.py` in the folder of the project you want to
-run tests.
+`noxfile-template.py` as `noxfile.py` in the folder of the project (containing the `requirements.txt` for the file).
+
+```console
+cd python-docs-samples
+cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
+cd PATH/TO/YOUR/PROJECT/
+```
+
 
 To use nox, install it globally with `pip`:
 
@@ -467,17 +599,32 @@ To run a specific test from a specific following:
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
 
-### Test Environment Setup
+### Running tests with Docker
 
-Because all tests are system tests that use live resources, running tests
-requires a Google Cloud project with billing enabled, as covered under
-[Creating and Managing Projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+__Note__: This is currently only available for samples in `python-docs-samples`.
 
-Once you have your project created and configured, you'll need to set environment
-variables to identify the project and resources to be used by tests. See
-[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every test
-needs all of these variables.
+If you have [Docker](https://www.docker.com) installed and runnable by
+the local user, you can use `scripts/run_tests_local.sh` helper script
+to run the tests. For example, let's say you want to modify the code
+in `cdn` directory, then you can do:
+
+```sh
+$ cd cdn
+$ ../scripts/run_tests_local.sh .
+# This will run the default sessions; lint, py-3.6, and py-3.7
+$ ../scripts/run_tests_local.sh . lint
+# Running only lint
+```
+
+If your test needs a service account, you have to create a service
+account and download the JSON key to `testing/service-account.json`.
+
+On MacOS systems, you also need to install `coreutils` to use
+`scripts/run_tests_local.sh`. Here is how to install it with `brew`:
+
+```sh
+$ brew install coreutils
+```
 
 ### Google Cloud Storage Resources
 

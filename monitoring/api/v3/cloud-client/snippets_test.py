@@ -14,15 +14,16 @@
 
 import os
 import re
-import pytest
 
 import backoff
+from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
+import pytest
 
 import snippets
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.fixture(scope="function")
@@ -42,7 +43,12 @@ def custom_metric_descriptor(capsys):
 
 @pytest.fixture(scope="module")
 def write_time_series():
-    snippets.write_time_series(PROJECT_ID)
+
+    @backoff.on_exception(backoff.expo, InternalServerError, max_time=120)
+    def write():
+        snippets.write_time_series(PROJECT_ID)
+
+    write()
     yield
 
 

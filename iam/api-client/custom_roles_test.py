@@ -13,13 +13,15 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
 
-import custom_roles
 import googleapiclient.errors
+import pytest
 
-GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
+import custom_roles
+
+
+GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 CUSTOM_ROLE_NAME = "pythonTestCustomRole"
 CUSTOM_ROLE_TITLE = "Python Test Custom Role"

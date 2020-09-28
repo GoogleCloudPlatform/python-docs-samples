@@ -1,6 +1,0 @@
-grpcio==1.28.1
-google-auth==1.14.1
-google-auth-httplib2==0.0.3
-google-cloud==0.34.0
-google-cloud-storage==1.28.0
-google-cloud-dataproc==0.7.0

@@ -1,0 +1,69 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Environment variables for python-docs-samples:
+# RUN_TESTS_SESSION: The nox session to run.
+# RUN_TESTS_DIR: A colon separated directory list relative to the
+# project root.
+
+required_envvars+=(
+    # The nox session to run.
+    "RUN_TESTS_SESSION"
+)
+
+pass_down_envvars+=(
+    "BUILD_SPECIFIC_GCLOUD_PROJECT"
+    "REPORT_TO_BUILD_COP_BOT"
+    "INJECT_REGION_TAGS"
+    # Target directories.
+    "RUN_TESTS_DIRS"
+    # The nox session to run.
+    "RUN_TESTS_SESSION"
+)
+
+# Prevent unintentional override on the default image.
+
+if [[ "${TRAMPOLINE_IMAGE_UPLOAD:-false}" == "true" ]] && \
+   [[ -z "${TRAMPOLINE_IMAGE:-}" ]]; then
+   echo "Please set TRAMPOLINE_IMAGE if you want to upload the Docker image."
+   exit 1
+fi
+
+# Set default values. You can override them with env vars.
+if [[ -z "${TRAMPOLINE_IMAGE:-}" ]]; then
+    # Set default image.
+    TRAMPOLINE_IMAGE="gcr.io/cloud-devrel-kokoro-resources/python-samples-testing-docker"
+fi
+
+if [[ -z "${TRAMPOLINE_DOCKERFILE:-}" ]]; then
+    TRAMPOLINE_DOCKERFILE=".kokoro/docker/Dockerfile"
+fi
+
+if [[ -z "${RUN_TESTS_SESSION:-}" ]]; then
+    RUN_TESTS_SESSION="py-3.7"
+fi
+
+if [[ -z "${TRAMPOLINE_BUILD_FILE:-}" ]]; then
+   TRAMPOLINE_BUILD_FILE=".kokoro/tests/run_tests_diff_head.sh"
+fi
+
+if [[ -z "${TRAMPOLINE_IMAGE_UPLOAD:-}" ]]; then
+    TRAMPOLINE_IMAGE_UPLOAD="false"
+fi
+
+if [[ -z "${TRAMPOLINE_SHOW_COMMAND:-}" ]]; then
+    # We are sure there's no secrets in the command line in docker
+    # bulid and docker run commands.
+    TRAMPOLINE_SHOW_COMMAND="true"
+fi

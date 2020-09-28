@@ -1,3 +1,0 @@
-google-cloud-translate==2.0.1
-google-cloud-storage==1.28.0
-google-cloud-automl==0.10.0

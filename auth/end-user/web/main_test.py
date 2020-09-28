@@ -17,7 +17,7 @@ import pytest
 import main
 
 # Note: samples that do end-user auth are difficult to test in an automated
-# way. These tests are basic sanity checks.
+# way. These tests are basic confidence checks.
 
 
 @pytest.fixture

@@ -96,7 +96,7 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 
 1. Deploy to Cloud Run
 ```
-gcloud beta run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+gcloud run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 ```
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
@@ -105,7 +105,7 @@ for more information.
 [run_docs]: https://cloud.google.com/run/docs/
 [run_build]: https://cloud.google.com/run/docs/building/containers
 [run_deploy]: https://cloud.google.com/run/docs/deploying
-[helloworld]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-python
+[helloworld]: helloworld/
 [pubsub]: pubsub/
 [mysql]: ../cloud-sql/mysql/sqlalchemy
 [postgres]: ../cloud-sql/postgres/sqlalchemy

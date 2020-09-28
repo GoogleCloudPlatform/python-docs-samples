@@ -14,16 +14,16 @@
 import os
 import sys
 import time
+import uuid
 
 from google.cloud import pubsub
-
-# Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager
-
 import pytest
 
 import cloudiot_http_example
+
+# Add manager for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+import manager  # noqa
 
 
 cloud_region = 'us-central1'
@@ -33,11 +33,11 @@ rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
 topic_id = 'test-device-events-{}'.format(int(time.time()))
 
-project_id = os.environ['GCLOUD_PROJECT']
+project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 
 _BASE_URL = 'https://cloudiotdevice.googleapis.com/v1'
 

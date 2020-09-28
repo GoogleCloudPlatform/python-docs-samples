@@ -4,5 +4,14 @@
   ],
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
-  "masterIssue": true
+  "masterIssue": true,
+  "pip_requirements": {
+    "fileMatch": ["requirements-test.txt", "requirements-composer.txt"]
+  },
+  "packageRules": [
+    {
+      "packagePatterns": ["pytest"],
+      "updateTypes": ["minor", "major"]
+    }
+  ]
 }

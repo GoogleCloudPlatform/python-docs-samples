@@ -19,7 +19,7 @@ import pytest
 
 import tasks
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 @pytest.yield_fixture

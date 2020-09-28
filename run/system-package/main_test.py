@@ -14,10 +14,9 @@
 
 # NOTE:
 # To pass these tests locally, run `brew install graphviz`
-
+import pytest
 
 import main
-import pytest
 
 
 @pytest.fixture
