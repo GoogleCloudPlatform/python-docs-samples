@@ -1,0 +1,1 @@
+google-cloud-monitoring==1.1.0
