@@ -17,9 +17,9 @@
 
 def run_quickstart(project="my-project"):
     # [START bigquerydatatransfer_quickstart]
-    from google.cloud.bigquery import datatransfer
+    from google.cloud import bigquery_datatransfer
 
-    client = datatransfer.DataTransferServiceClient()
+    client = bigquery_datatransfer.DataTransferServiceClient()
 
     # TODO: Update to your project ID.
     # project = "my-project"
