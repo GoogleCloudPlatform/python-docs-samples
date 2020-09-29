@@ -27,7 +27,6 @@ import argparse
 import io
 
 from google.cloud import vision
-from google.cloud.vision import types
 # [END vision_web_detection_tutorial_imports]
 
 
@@ -37,14 +36,14 @@ def annotate(path):
     client = vision.ImageAnnotatorClient()
 
     if path.startswith('http') or path.startswith('gs:'):
-        image = types.Image()
+        image = vision.Image()
         image.source.image_uri = path
 
     else:
         with io.open(path, 'rb') as image_file:
             content = image_file.read()
 
-        image = types.Image(content=content)
+        image = vision.Image(content=content)
 
     web_detection = client.web_detection(image=image).web_detection
     # [END vision_web_detection_tutorial_annotate]

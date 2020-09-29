@@ -53,7 +53,7 @@ def create_reference_image(
         project=project_id, location=location, product=product_id)
 
     # Create a reference image.
-    reference_image = vision.types.ReferenceImage(uri=gcs_uri)
+    reference_image = vision.ReferenceImage(uri=gcs_uri)
 
     # The response is the reference image with `name` populated.
     image = client.create_reference_image(

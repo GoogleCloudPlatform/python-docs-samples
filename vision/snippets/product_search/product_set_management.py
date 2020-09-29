@@ -48,11 +48,10 @@ def create_product_set(
     client = vision.ProductSearchClient()
 
     # A resource that represents Google Cloud Platform location.
-    location_path = client.location_path(
-        project=project_id, location=location)
+    location_path = f"projects/{project_id}/locations/{location}"
 
     # Create a product set with the product set specification in the region.
-    product_set = vision.types.ProductSet(
+    product_set = vision.ProductSet(
             display_name=product_set_display_name)
 
     # The response is the product set with `name` populated.
@@ -76,8 +75,7 @@ def list_product_sets(project_id, location):
     client = vision.ProductSearchClient()
 
     # A resource that represents Google Cloud Platform location.
-    location_path = client.location_path(
-        project=project_id, location=location)
+    location_path = f"projects/{project_id}/locations/{location}"
 
     # List all the product sets available in the region.
     product_sets = client.list_product_sets(parent=location_path)
@@ -87,9 +85,8 @@ def list_product_sets(project_id, location):
         print('Product set name: {}'.format(product_set.name))
         print('Product set id: {}'.format(product_set.name.split('/')[-1]))
         print('Product set display name: {}'.format(product_set.display_name))
-        print('Product set index time:')
-        print('  seconds: {}'.format(product_set.index_time.seconds))
-        print('  nanos: {}\n'.format(product_set.index_time.nanos))
+        print('Product set index time: ')
+        print(product_set.index_time)
 # [END vision_product_search_list_product_sets]
 
 
@@ -115,9 +112,8 @@ def get_product_set(project_id, location, product_set_id):
     print('Product set name: {}'.format(product_set.name))
     print('Product set id: {}'.format(product_set.name.split('/')[-1]))
     print('Product set display name: {}'.format(product_set.display_name))
-    print('Product set index time:')
-    print('  seconds: {}'.format(product_set.index_time.seconds))
-    print('  nanos: {}'.format(product_set.index_time.nanos))
+    print('Product set index time: ')
+    print(product_set.index_time)
 # [END vision_product_search_get_product_set]
 
 

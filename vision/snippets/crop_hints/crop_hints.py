@@ -26,7 +26,6 @@ import argparse
 import io
 
 from google.cloud import vision
-from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END vision_crop_hints_tutorial_imports]
 
@@ -39,10 +38,10 @@ def get_crop_hint(path):
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = types.Image(content=content)
+    image = vision.Image(content=content)
 
-    crop_hints_params = types.CropHintsParams(aspect_ratios=[1.77])
-    image_context = types.ImageContext(crop_hints_params=crop_hints_params)
+    crop_hints_params = vision.CropHintsParams(aspect_ratios=[1.77])
+    image_context = vision.ImageContext(crop_hints_params=crop_hints_params)
 
     response = client.crop_hints(image=image, image_context=image_context)
     hints = response.crop_hints_annotation.crop_hints

@@ -131,21 +131,21 @@ def purge_products_in_product_set(
     """
     client = vision.ProductSearchClient()
 
-    parent = client.location_path(
-        project=project_id, location=location)
+    parent = f"projects/{project_id}/locations/{location}"
 
-    product_set_purge_config = vision.types.ProductSetPurgeConfig(
+    product_set_purge_config = vision.ProductSetPurgeConfig(
         product_set_id=product_set_id)
 
     # The purge operation is async.
-    operation = client.purge_products(
-        parent=parent,
-        product_set_purge_config=product_set_purge_config,
+    operation = client.purge_products(request={
+        "parent": parent,
+        "product_set_purge_config": product_set_purge_config,
         # The operation is irreversible and removes multiple products.
         # The user is required to pass in force=True to actually perform the
         # purge.
         # If force is not set to True, the service raises an exception.
-        force=force)
+        "force": force
+    })
 
     operation.result(timeout=300)
 
