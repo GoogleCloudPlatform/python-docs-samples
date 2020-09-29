@@ -137,7 +137,7 @@ if __name__ == "__main__":
     # Load data into dataframe if table exists and drop unused column
     try:
         df = spark.read.format("bigquery").option("table", TABLE).load()
-        df.drop("gender").collect()
+        df.drop("gender")
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 # [END datascienceonramp_sparksession]
