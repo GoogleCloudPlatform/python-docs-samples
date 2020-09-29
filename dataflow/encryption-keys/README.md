@@ -1,6 +1,6 @@
 # Using customer-managed encryption keys
 
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/encryption-keys/README.md)
 
 This sample demonstrate how to use
 [cryptographic encryption keys](https://cloud.google.com/kms/)
