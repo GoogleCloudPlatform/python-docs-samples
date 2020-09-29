@@ -21,7 +21,7 @@ def clients():
     # [START bigquerystorage_pandas_tutorial_create_client]
     import google.auth
     from google.cloud import bigquery
-    from google.cloud.bigquery import storage
+    from google.cloud import bigquery_storage
 
     # Explicitly create a credentials object. This allows you to use the same
     # credentials for both the BigQuery and BigQuery Storage clients, avoiding
@@ -32,7 +32,7 @@ def clients():
 
     # Make clients.
     bqclient = bigquery.Client(credentials=credentials, project=your_project_id,)
-    bqstorageclient = storage.BigQueryReadClient(credentials=credentials)
+    bqstorageclient = bigquery_storage.BigQueryReadClient(credentials=credentials)
     # [END bigquerystorage_pandas_tutorial_create_client]
     # [END bigquerystorage_pandas_tutorial_all]
     return bqclient, bqstorageclient
@@ -96,7 +96,7 @@ def test_query_to_dataframe(capsys, clients):
 
 
 def test_session_to_dataframe(capsys, clients):
-    from google.cloud.bigquery.storage import types
+    from google.cloud.bigquery_storage import types
 
     bqclient, bqstorageclient = clients
     your_project_id = bqclient.project

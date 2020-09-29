@@ -17,8 +17,8 @@ import argparse
 
 def main(project_id="your-project-id", snapshot_millis=0):
     # [START bigquerystorage_quickstart]
-    from google.cloud.bigquery.storage import BigQueryReadClient
-    from google.cloud.bigquery.storage import types
+    from google.cloud.bigquery_storage import BigQueryReadClient
+    from google.cloud.bigquery_storage import types
 
     # TODO(developer): Set the project_id variable.
     # project_id = 'your-project-id'
