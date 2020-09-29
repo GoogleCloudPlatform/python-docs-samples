@@ -49,7 +49,7 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         },
     },
 }
-DATAPROC_JOB = {    # Dataproc job configuration
+DATAPROC_JOB = {  # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
@@ -70,12 +70,9 @@ def setup_and_teardown_table():
     # Load table from dataframe
     df = pd.read_csv(CSV_FILE)
     job_config = bigquery.LoadJobConfig(
-        autodetect=True,
-        write_disposition="WRITE_TRUNCATE"
+        autodetect=True, write_disposition="WRITE_TRUNCATE"
     )
-    operation = bq_client.load_table_from_dataframe(
-        df, BQ_TABLE, job_config=job_config
-    )
+    operation = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
 
     # Wait for job to complete
     operation.result()
@@ -109,7 +106,7 @@ def setup_and_teardown_cluster():
         project_id=PROJECT_ID,
         region=CLUSTER_REGION,
         cluster_name=DATAPROC_CLUSTER,
-        timeout=300
+        timeout=300,
     )
     operation.result()
 
@@ -169,23 +166,6 @@ def test_clean():
     assert not is_in_table(r"\d+" + "\u00B0" + r"\d+\'\d+\"", out)
 
     assert is_in_table(r"\d*.\d*", out)
-
-    # gender
-    assert not is_in_table("M", out)
-    assert not is_in_table("m", out)
-    assert not is_in_table("male", out)
-    assert not is_in_table("MALE", out)
-    assert not is_in_table("F", out)
-    assert not is_in_table("f", out)
-    assert not is_in_table("female", out)
-    assert not is_in_table("FEMALE", out)
-    assert not is_in_table("U", out)
-    assert not is_in_table("u", out)
-    assert not is_in_table("unknown", out)
-    assert not is_in_table("UNKNOWN", out)
-
-    assert is_in_table("Male", out)
-    assert is_in_table("Female", out)
 
     # customer plan
     assert not is_in_table("subscriber", out)

@@ -51,15 +51,6 @@ def user_type_udf(user):
         return "Customer"
 # [END datascienceonramp_usertypeudf] 
 
-def gender_udf(gender):
-    """Converts gender to 'Male' or 'Female'."""
-    if not gender:
-        return None
-
-    if gender.lower().startswith("m"):
-        return "Male"
-    elif gender.lower().startswith("f"):
-        return "Female"
 
 # [START datascienceonramp_stationlocationudf]
 def angle_udf(angle):
@@ -143,9 +134,10 @@ if __name__ == "__main__":
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
 
-    # Load data into dataframe if table exists
+    # Load data into dataframe if table exists and drop unused column
     try:
         df = spark.read.format("bigquery").option("table", TABLE).load()
+        df.drop("gender").collect()
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 # [END datascienceonramp_sparksession]
@@ -156,7 +148,6 @@ if __name__ == "__main__":
         "end_station_name": UserDefinedFunction(station_name_udf, StringType()),
         "tripduration": UserDefinedFunction(trip_duration_udf, IntegerType()),
         "usertype": UserDefinedFunction(user_type_udf, StringType()),
-        "gender": UserDefinedFunction(gender_udf, StringType()),
         "start_station_latitude": UserDefinedFunction(angle_udf, FloatType()),
         "start_station_longitude": UserDefinedFunction(angle_udf, FloatType()),
         "end_station_latitude": UserDefinedFunction(angle_udf, FloatType()),
