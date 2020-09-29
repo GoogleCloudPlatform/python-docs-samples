@@ -48,7 +48,7 @@ def localize_objects(path):
 
     with open(path, 'rb') as image_file:
         content = image_file.read()
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     objects = client.object_localization(
         image=image).localized_object_annotations
@@ -72,7 +72,7 @@ def localize_objects_uri(uri):
     from google.cloud import vision_v1p3beta1 as vision
     client = vision.ImageAnnotatorClient()
 
-    image = vision.types.Image()
+    image = vision.Image()
     image.source.image_uri = uri
 
     objects = client.object_localization(
@@ -100,12 +100,12 @@ def detect_handwritten_ocr(path):
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     # Language hint codes for handwritten OCR:
     # en-t-i0-handwrit, mul-Latn-t-i0-handwrit
     # Note: Use only one language hint code per request for handwritten OCR.
-    image_context = vision.types.ImageContext(
+    image_context = vision.ImageContext(
         language_hints=['en-t-i0-handwrit'])
 
     response = client.document_text_detection(image=image,
@@ -149,13 +149,13 @@ def detect_handwritten_ocr_uri(uri):
     """
     from google.cloud import vision_v1p3beta1 as vision
     client = vision.ImageAnnotatorClient()
-    image = vision.types.Image()
+    image = vision.Image()
     image.source.image_uri = uri
 
     # Language hint codes for handwritten OCR:
     # en-t-i0-handwrit, mul-Latn-t-i0-handwrit
     # Note: Use only one language hint code per request for handwritten OCR.
-    image_context = vision.types.ImageContext(
+    image_context = vision.ImageContext(
         language_hints=['en-t-i0-handwrit'])
 
     response = client.document_text_detection(image=image,
@@ -207,16 +207,16 @@ def detect_batch_annotate_files(path):
 
     # Other supported mime_types: image/tiff' or 'image/gif'
     mime_type = 'application/pdf'
-    input_config = vision.types.InputConfig(
+    input_config = vision.InputConfig(
         content=content, mime_type=mime_type)
 
-    feature = vision.types.Feature(
-        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    feature = vision.Feature(
+        type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
     # Annotate the first two pages and the last one (max 5 pages)
     # First page starts at 1, and not 0. Last page is -1.
     pages = [1, 2, -1]
 
-    request = vision.types.AnnotateFileRequest(
+    request = vision.AnnotateFileRequest(
         input_config=input_config,
         features=[feature],
         pages=pages)
@@ -255,16 +255,16 @@ def detect_batch_annotate_files_uri(gcs_uri):
 
     # Other supported mime_types: image/tiff' or 'image/gif'
     mime_type = 'application/pdf'
-    input_config = vision.types.InputConfig(
-        gcs_source=vision.types.GcsSource(uri=gcs_uri), mime_type=mime_type)
+    input_config = vision.InputConfig(
+        gcs_source=vision.GcsSource(uri=gcs_uri), mime_type=mime_type)
 
-    feature = vision.types.Feature(
-        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    feature = vision.Feature(
+        type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
     # Annotate the first two pages and the last one (max 5 pages)
     # First page starts at 1, and not 0. Last page is -1.
     pages = [1, 2, -1]
 
-    request = vision.types.AnnotateFileRequest(
+    request = vision.AnnotateFileRequest(
         input_config=input_config,
         features=[feature],
         pages=pages)
@@ -299,24 +299,24 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     import re
 
     from google.cloud import storage
-    from google.protobuf import json_format
+
     from google.cloud import vision_v1p4beta1 as vision
     client = vision.ImageAnnotatorClient()
 
     # Construct the request for the image(s) to be annotated:
-    image_source = vision.types.ImageSource(image_uri=input_image_uri)
-    image = vision.types.Image(source=image_source)
+    image_source = vision.ImageSource(image_uri=input_image_uri)
+    image = vision.Image(source=image_source)
     features = [
-        vision.types.Feature(type=vision.enums.Feature.Type.LABEL_DETECTION),
-        vision.types.Feature(type=vision.enums.Feature.Type.TEXT_DETECTION),
-        vision.types.Feature(type=vision.enums.Feature.Type.IMAGE_PROPERTIES),
+        vision.Feature(type_=vision.Feature.Type.LABEL_DETECTION),
+        vision.Feature(type_=vision.Feature.Type.TEXT_DETECTION),
+        vision.Feature(type_=vision.Feature.Type.IMAGE_PROPERTIES),
     ]
     requests = [
-        vision.types.AnnotateImageRequest(image=image, features=features),
+        vision.AnnotateImageRequest(image=image, features=features),
     ]
 
-    gcs_destination = vision.types.GcsDestination(uri=output_uri)
-    output_config = vision.types.OutputConfig(
+    gcs_destination = vision.GcsDestination(uri=output_uri)
+    output_config = vision.OutputConfig(
         gcs_destination=gcs_destination, batch_size=2)
 
     operation = client.async_batch_annotate_images(
@@ -347,8 +347,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     output = blob_list[0]
 
     json_string = output.download_as_string()
-    response = json_format.Parse(json_string,
-                                 vision.types.BatchAnnotateImagesResponse())
+    response = vision.BatchAnnotateImagesResponse.from_json(json_string)
 
     # Prints the actual response for the first annotate image request.
     print(u'The annotation response for the first request: {}'.format(

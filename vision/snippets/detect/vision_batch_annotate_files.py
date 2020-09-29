@@ -17,7 +17,6 @@
 import io
 
 from google.cloud import vision_v1
-from google.cloud.vision_v1 import enums
 
 
 def sample_batch_annotate_files(file_path="path/to/your/document.pdf"):
@@ -29,14 +28,14 @@ def sample_batch_annotate_files(file_path="path/to/your/document.pdf"):
     with io.open(file_path, "rb") as f:
         content = f.read()
     input_config = {"mime_type": mime_type, "content": content}
-    features = [{"type": enums.Feature.Type.DOCUMENT_TEXT_DETECTION}]
+    features = [{"type_": vision_v1.Feature.Type.DOCUMENT_TEXT_DETECTION}]
 
     # The service can process up to 5 pages per document file. Here we specify
     # the first, second, and last page of the document to be processed.
     pages = [1, 2, -1]
     requests = [{"input_config": input_config, "features": features, "pages": pages}]
 
-    response = client.batch_annotate_files(requests)
+    response = client.batch_annotate_files(requests=requests)
     for image_response in response.responses[0].responses:
         print(u"Full text: {}".format(image_response.full_text_annotation.text))
         for page in image_response.full_text_annotation.pages:

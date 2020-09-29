@@ -20,7 +20,6 @@ import argparse
 
 # [START vision_face_detection_tutorial_imports]
 from google.cloud import vision
-from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END vision_face_detection_tutorial_imports]
 
@@ -40,7 +39,7 @@ def detect_face(face_file, max_results=4):
     # [END vision_face_detection_tutorial_client]
 
     content = face_file.read()
-    image = types.Image(content=content)
+    image = vision.Image(content=content)
 
     return client.face_detection(
         image=image, max_results=max_results).face_annotations

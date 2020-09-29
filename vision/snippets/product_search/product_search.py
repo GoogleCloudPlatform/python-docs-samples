@@ -58,17 +58,17 @@ def get_similar_products_file(
         content = image_file.read()
 
     # Create annotate image request along with product search feature.
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     # product search specific parameters
     product_set_path = product_search_client.product_set_path(
         project=project_id, location=location,
         product_set=product_set_id)
-    product_search_params = vision.types.ProductSearchParams(
+    product_search_params = vision.ProductSearchParams(
         product_set=product_set_path,
         product_categories=[product_category],
         filter=filter)
-    image_context = vision.types.ImageContext(
+    image_context = vision.ImageContext(
         product_search_params=product_search_params)
 
     # Search products similar to the image.
@@ -76,9 +76,8 @@ def get_similar_products_file(
         image, image_context=image_context)
 
     index_time = response.product_search_results.index_time
-    print('Product set index time:')
-    print('  seconds: {}'.format(index_time.seconds))
-    print('  nanos: {}\n'.format(index_time.nanos))
+    print('Product set index time: ')
+    print(index_time)
 
     results = response.product_search_results.results
 
@@ -119,18 +118,18 @@ def get_similar_products_uri(
     image_annotator_client = vision.ImageAnnotatorClient()
 
     # Create annotate image request along with product search feature.
-    image_source = vision.types.ImageSource(image_uri=image_uri)
-    image = vision.types.Image(source=image_source)
+    image_source = vision.ImageSource(image_uri=image_uri)
+    image = vision.Image(source=image_source)
 
     # product search specific parameters
     product_set_path = product_search_client.product_set_path(
         project=project_id, location=location,
         product_set=product_set_id)
-    product_search_params = vision.types.ProductSearchParams(
+    product_search_params = vision.ProductSearchParams(
         product_set=product_set_path,
         product_categories=[product_category],
         filter=filter)
-    image_context = vision.types.ImageContext(
+    image_context = vision.ImageContext(
         product_search_params=product_search_params)
 
     # Search products similar to the image.
@@ -138,9 +137,8 @@ def get_similar_products_uri(
         image, image_context=image_context)
 
     index_time = response.product_search_results.index_time
-    print('Product set index time:')
-    print('  seconds: {}'.format(index_time.seconds))
-    print('  nanos: {}\n'.format(index_time.nanos))
+    print('Product set index time: ')
+    print(index_time)
 
     results = response.product_search_results.results
 

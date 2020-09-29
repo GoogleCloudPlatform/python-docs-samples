@@ -26,7 +26,6 @@ from enum import Enum
 import io
 
 from google.cloud import vision
-from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END vision_document_text_tutorial_imports]
 
@@ -62,7 +61,7 @@ def get_document_bounds(image_file, feature):
     with io.open(image_file, 'rb') as image_file:
         content = image_file.read()
 
-    image = types.Image(content=content)
+    image = vision.Image(content=content)
 
     response = client.document_text_detection(image=image)
     document = response.full_text_annotation

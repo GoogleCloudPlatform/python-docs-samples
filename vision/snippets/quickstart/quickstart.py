@@ -23,7 +23,6 @@ def run_quickstart():
     # Imports the Google Cloud client library
     # [START vision_python_migration_import]
     from google.cloud import vision
-    from google.cloud.vision import types
     # [END vision_python_migration_import]
 
     # Instantiates a client
@@ -38,7 +37,7 @@ def run_quickstart():
     with io.open(file_name, 'rb') as image_file:
         content = image_file.read()
 
-    image = types.Image(content=content)
+    image = vision.Image(content=content)
 
     # Performs label detection on the image file
     response = client.label_detection(image=image)

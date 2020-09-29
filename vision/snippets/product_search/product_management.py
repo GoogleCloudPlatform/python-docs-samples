@@ -30,6 +30,7 @@ import argparse
 # [START vision_product_search_update_product_labels]
 # [START vision_product_search_purge_orphan_products]
 from google.cloud import vision
+from google.protobuf import field_mask_pb2 as field_mask
 
 # [END vision_product_search_create_product]
 # [END vision_product_search_delete_product]
@@ -54,11 +55,11 @@ def create_product(
     client = vision.ProductSearchClient()
 
     # A resource that represents Google Cloud Platform location.
-    location_path = client.location_path(project=project_id, location=location)
+    location_path = f"projects/{project_id}/locations/{location}"
 
     # Create a product with the product specification in the region.
     # Set product display name and product category.
-    product = vision.types.Product(
+    product = vision.Product(
         display_name=product_display_name,
         product_category=product_category)
 
@@ -83,7 +84,7 @@ def list_products(project_id, location):
     client = vision.ProductSearchClient()
 
     # A resource that represents Google Cloud Platform location.
-    location_path = client.location_path(project=project_id, location=location)
+    location_path = f"projects/{project_id}/locations/{location}"
 
     # List all the products available in the region.
     products = client.list_products(parent=location_path)
@@ -145,13 +146,13 @@ def update_product_labels(
 
     # Set product name, product label and product display name.
     # Multiple labels are also supported.
-    key_value = vision.types.Product.KeyValue(key=key, value=value)
-    product = vision.types.Product(
+    key_value = vision.Product.KeyValue(key=key, value=value)
+    product = vision.Product(
         name=product_path,
         product_labels=[key_value])
 
     # Updating only the product_labels field here.
-    update_mask = vision.types.FieldMask(paths=['product_labels'])
+    update_mask = field_mask.FieldMask(paths=['product_labels'])
 
     # This overwrites the product_labels.
     updated_product = client.update_product(
@@ -192,18 +193,18 @@ def purge_orphan_products(project_id, location, force):
     """
     client = vision.ProductSearchClient()
 
-    parent = client.location_path(
-        project=project_id, location=location)
+    parent = f"projects/{project_id}/locations/{location}"
 
     # The purge operation is async.
-    operation = client.purge_products(
-        parent=parent,
-        delete_orphan_products=True,
+    operation = client.purge_products(request={
+        "parent": parent,
+        "delete_orphan_products": True,
         # The operation is irreversible and removes multiple products.
         # The user is required to pass in force=True to actually perform the
         # purge.
         # If force is not set to True, the service raises an exception.
-        force=force)
+        "force": force
+    })
 
     operation.result(timeout=300)
 

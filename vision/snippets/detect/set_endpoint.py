@@ -22,9 +22,9 @@ def set_endpoint():
 
     client = vision.ImageAnnotatorClient(client_options=client_options)
     # [END vision_set_endpoint]
-    image_source = vision.types.ImageSource(
+    image_source = vision.ImageSource(
         image_uri='gs://cloud-samples-data/vision/text/screen.jpg')
-    image = vision.types.Image(source=image_source)
+    image = vision.Image(source=image_source)
 
     response = client.text_detection(image=image)
 

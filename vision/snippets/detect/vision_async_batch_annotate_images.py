@@ -15,7 +15,6 @@
 # [START vision_async_batch_annotate_images]
 
 from google.cloud import vision_v1
-from google.cloud.vision_v1 import enums
 
 
 def sample_async_batch_annotate_images(
@@ -28,8 +27,8 @@ def sample_async_batch_annotate_images(
     source = {"image_uri": input_image_uri}
     image = {"source": source}
     features = [
-        {"type": enums.Feature.Type.LABEL_DETECTION},
-        {"type": enums.Feature.Type.IMAGE_PROPERTIES},
+        {"type_": vision_v1.Feature.Type.LABEL_DETECTION},
+        {"type_": vision_v1.Feature.Type.IMAGE_PROPERTIES},
     ]
 
     # Each requests element corresponds to a single image.  To annotate more
@@ -43,7 +42,7 @@ def sample_async_batch_annotate_images(
     output_config = {"gcs_destination": gcs_destination,
                      "batch_size": batch_size}
 
-    operation = client.async_batch_annotate_images(requests, output_config)
+    operation = client.async_batch_annotate_images(requests=requests, output_config=output_config)
 
     print("Waiting for operation to complete...")
     response = operation.result(90)
