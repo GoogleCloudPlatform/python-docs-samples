@@ -128,18 +128,21 @@ def compute_end_udf(duration, start, end):
 
 # [START datascienceonramp_sparksession]
 if __name__ == "__main__":
-    TABLE = sys.argv[1]
-    BUCKET_NAME = sys.argv[2]
+    BUCKET_NAME = sys.argv[1]
+    TABLE = sys.argv[2]
 
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
 
-    # Load data into dataframe if table exists and drop unused column
+    # Load data into temporary dataframe if table exists, drop unused column and load into new dataframe
+    # (using a temporary dataframe is an alternative to calling df.drop(column_name).collect() and is used
+    # to avoid OOM issues)
     try:
-        df = spark.read.format("bigquery").option("table", TABLE).load()
-        df.drop("gender")
+        temp_df = spark.read.format("bigquery").option("table", TABLE).load()
+        df = temp_df.drop("gender")
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
+
 # [END datascienceonramp_sparksession]
 # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
