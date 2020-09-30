@@ -34,7 +34,7 @@ def create_routine(routine_id):
             bigquery.RoutineArgument(
                 name="x",
                 data_type=bigquery_v2.types.StandardSqlDataType(
-                    type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.INT64
+                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.INT64
                 ),
             )
         ],

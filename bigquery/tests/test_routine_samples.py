@@ -39,21 +39,21 @@ def test_create_routine_ddl(capsys, random_routine_id, client):
         bigquery.RoutineArgument(
             name="arr",
             data_type=bigquery_v2.types.StandardSqlDataType(
-                type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.ARRAY,
+                type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.ARRAY,
                 array_element_type=bigquery_v2.types.StandardSqlDataType(
-                    type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.STRUCT,
+                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.STRUCT,
                     struct_type=bigquery_v2.types.StandardSqlStructType(
                         fields=[
                             bigquery_v2.types.StandardSqlField(
                                 name="name",
                                 type=bigquery_v2.types.StandardSqlDataType(
-                                    type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.STRING
+                                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.STRING
                                 ),
                             ),
                             bigquery_v2.types.StandardSqlField(
                                 name="val",
                                 type=bigquery_v2.types.StandardSqlDataType(
-                                    type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.INT64
+                                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.INT64
                                 ),
                             ),
                         ]
