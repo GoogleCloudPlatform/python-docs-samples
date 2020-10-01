@@ -1,4 +1,4 @@
-# Cloud Eventarc – GCS tutorial
+# Cloud Eventarc - Cloud Storage via Audit Logs tutorial
 
 This sample shows how to create a service that processes GCS using [the CloudEvents SDK](https://github.com/cloudevents/sdk-python).
 
