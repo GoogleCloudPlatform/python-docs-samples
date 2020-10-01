@@ -26,48 +26,51 @@ translate_client = translate.Client()
 publisher = pubsub_v1.PublisherClient()
 storage_client = storage.Client()
 
-project_id = os.environ['GCP_PROJECT']
+project_id = os.environ["GCP_PROJECT"]
 # [END functions_ocr_setup]
 
 
 # [START functions_ocr_detect]
 def detect_text(bucket, filename):
-    print('Looking for text in image {}'.format(filename))
+    print("Looking for text in image {}".format(filename))
 
     futures = []
 
-    text_detection_response = vision_client.text_detection({
-        'source': {'image_uri': 'gs://{}/{}'.format(bucket, filename)}
-    })
+    image = vision.Image(
+        source=vision.ImageSource(gcs_image_uri=f"gs://{bucket}/{filename}")
+    )
+    text_detection_response = vision_client.text_detection(source=image)
     annotations = text_detection_response.text_annotations
     if len(annotations) > 0:
         text = annotations[0].description
     else:
-        text = ''
-    print('Extracted text {} from image ({} chars).'.format(text, len(text)))
+        text = ""
+    print("Extracted text {} from image ({} chars).".format(text, len(text)))
 
     detect_language_response = translate_client.detect_language(text)
-    src_lang = detect_language_response['language']
-    print('Detected language {} for text {}.'.format(src_lang, text))
+    src_lang = detect_language_response["language"]
+    print("Detected language {} for text {}.".format(src_lang, text))
 
     # Submit a message to the bus for each target language
-    to_langs = os.environ['TO_LANG'].split(',')
+    to_langs = os.environ["TO_LANG"].split(",")
     for target_lang in to_langs:
-        topic_name = os.environ['TRANSLATE_TOPIC']
-        if src_lang == target_lang or src_lang == 'und':
-            topic_name = os.environ['RESULT_TOPIC']
+        topic_name = os.environ["TRANSLATE_TOPIC"]
+        if src_lang == target_lang or src_lang == "und":
+            topic_name = os.environ["RESULT_TOPIC"]
         message = {
-            'text': text,
-            'filename': filename,
-            'lang': target_lang,
-            'src_lang': src_lang
+            "text": text,
+            "filename": filename,
+            "lang": target_lang,
+            "src_lang": src_lang,
         }
-        message_data = json.dumps(message).encode('utf-8')
+        message_data = json.dumps(message).encode("utf-8")
         topic_path = publisher.topic_path(project_id, topic_name)
         future = publisher.publish(topic_path, data=message_data)
         futures.append(future)
     for future in futures:
         future.result()
+
+
 # [END functions_ocr_detect]
 
 
@@ -75,9 +78,15 @@ def detect_text(bucket, filename):
 def validate_message(message, param):
     var = message.get(param)
     if not var:
-        raise ValueError('{} is not provided. Make sure you have \
-                          property {} in the request'.format(param, param))
+        raise ValueError(
+            "{} is not provided. Make sure you have \
+                          property {} in the request".format(
+                param, param
+            )
+        )
     return var
+
+
 # [END message_validatation_helper]
 
 
@@ -91,68 +100,73 @@ def process_image(file, context):
     Returns:
         None; the output is written to stdout and Stackdriver Logging
     """
-    bucket = validate_message(file, 'bucket')
-    name = validate_message(file, 'name')
+    bucket = validate_message(file, "bucket")
+    name = validate_message(file, "name")
 
     detect_text(bucket, name)
 
-    print('File {} processed.'.format(file['name']))
+    print("File {} processed.".format(file["name"]))
+
+
 # [END functions_ocr_process]
 
 
 # [START functions_ocr_translate]
 def translate_text(event, context):
-    if event.get('data'):
-        message_data = base64.b64decode(event['data']).decode('utf-8')
+    if event.get("data"):
+        message_data = base64.b64decode(event["data"]).decode("utf-8")
         message = json.loads(message_data)
     else:
-        raise ValueError('Data sector is missing in the Pub/Sub message.')
+        raise ValueError("Data sector is missing in the Pub/Sub message.")
 
-    text = validate_message(message, 'text')
-    filename = validate_message(message, 'filename')
-    target_lang = validate_message(message, 'lang')
-    src_lang = validate_message(message, 'src_lang')
+    text = validate_message(message, "text")
+    filename = validate_message(message, "filename")
+    target_lang = validate_message(message, "lang")
+    src_lang = validate_message(message, "src_lang")
 
-    print('Translating text into {}.'.format(target_lang))
-    translated_text = translate_client.translate(text,
-                                                 target_language=target_lang,
-                                                 source_language=src_lang)
-    topic_name = os.environ['RESULT_TOPIC']
+    print("Translating text into {}.".format(target_lang))
+    translated_text = translate_client.translate(
+        text, target_language=target_lang, source_language=src_lang
+    )
+    topic_name = os.environ["RESULT_TOPIC"]
     message = {
-        'text': translated_text['translatedText'],
-        'filename': filename,
-        'lang': target_lang,
+        "text": translated_text["translatedText"],
+        "filename": filename,
+        "lang": target_lang,
     }
-    message_data = json.dumps(message).encode('utf-8')
+    message_data = json.dumps(message).encode("utf-8")
     topic_path = publisher.topic_path(project_id, topic_name)
     future = publisher.publish(topic_path, data=message_data)
     future.result()
+
+
 # [END functions_ocr_translate]
 
 
 # [START functions_ocr_save]
 def save_result(event, context):
-    if event.get('data'):
-        message_data = base64.b64decode(event['data']).decode('utf-8')
+    if event.get("data"):
+        message_data = base64.b64decode(event["data"]).decode("utf-8")
         message = json.loads(message_data)
     else:
-        raise ValueError('Data sector is missing in the Pub/Sub message.')
+        raise ValueError("Data sector is missing in the Pub/Sub message.")
 
-    text = validate_message(message, 'text')
-    filename = validate_message(message, 'filename')
-    lang = validate_message(message, 'lang')
+    text = validate_message(message, "text")
+    filename = validate_message(message, "filename")
+    lang = validate_message(message, "lang")
 
-    print('Received request to save file {}.'.format(filename))
+    print("Received request to save file {}.".format(filename))
 
-    bucket_name = os.environ['RESULT_BUCKET']
-    result_filename = '{}_{}.txt'.format(filename, lang)
+    bucket_name = os.environ["RESULT_BUCKET"]
+    result_filename = "{}_{}.txt".format(filename, lang)
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)
 
-    print('Saving result to {} in bucket {}.'.format(result_filename,
-                                                     bucket_name))
+    print("Saving result to {} in bucket {}.".format(result_filename, bucket_name))
 
     blob.upload_from_string(text)
 
-    print('File saved.')
+    print("File saved.")
+
+
 # [END functions_ocr_save]
