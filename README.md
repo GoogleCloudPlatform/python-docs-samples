@@ -1,3 +1,4 @@
+ THIS IS AN AMAZING PROJECT
 ## Google Cloud Platform Python Samples
 
 [![Open in Cloud Shell][shell_img]][shell_link]
