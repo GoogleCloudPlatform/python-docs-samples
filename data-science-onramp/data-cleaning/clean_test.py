@@ -167,7 +167,7 @@ def test_clean():
 
     assert is_in_table(r"\d*.\d*", out)
 
-    #gender
+    # gender
     assert not is_in_table("M", out)
     assert not is_in_table("F", out)
 

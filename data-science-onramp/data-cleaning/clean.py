@@ -9,6 +9,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
 from pyspark.sql.types import FloatType, IntegerType, StringType
 
+
 # [START datascienceonramp_tripdurationudf]
 def trip_duration_udf(duration):
     """Convert trip duration to seconds. Return None if negative."""
@@ -31,12 +32,16 @@ def trip_duration_udf(duration):
         time *= 60 * 60
 
     return int(time)
+
+
 # [END datascienceonramp_tripdurationudf]
 
 # [START datascienceonramp_stationnameudf]
 def station_name_udf(name):
     """Replaces '/' with '&'."""
     return name.replace("/", "&") if name else None
+
+
 # [END datascienceonramp_stationnameudf]
 
 # [START datascienceonramp_usertypeudf]
@@ -49,7 +54,9 @@ def user_type_udf(user):
         return "Subscriber"
     elif user.lower().startswith("cust"):
         return "Customer"
-# [END datascienceonramp_usertypeudf] 
+
+
+# [END datascienceonramp_usertypeudf]
 
 
 # [START datascienceonramp_stationlocationudf]
@@ -65,6 +72,8 @@ def angle_udf(angle):
     degrees = re.match(r"\d*.\d*", angle)
     if degrees:
         return float(degrees[0])
+
+
 # [END datascienceonramp_stationlocationudf]
 
 # [START datascienceonramp_timeconvertudf]
@@ -88,8 +97,8 @@ def compute_time(duration, start, end):
     if duration:
         # Convert to timedelta
         duration = datetime.timedelta(seconds=duration)
-# [END datascienceonramp_timeconvertudf]
-# [START datascienceonramp_timemissingvalueudf]
+    # [END datascienceonramp_timeconvertudf]
+    # [START datascienceonramp_timemissingvalueudf]
     # Calculate missing value
     if start and end and not duration:
         duration = end - start
@@ -97,8 +106,8 @@ def compute_time(duration, start, end):
         start = end - duration
     elif duration and start and not end:
         end = start + duration
-# [END datascienceonramp_timemissingvalueudf]
-# [START datascienceonramp_timereturnudf]
+    # [END datascienceonramp_timemissingvalueudf]
+    # [START datascienceonramp_timereturnudf]
     # Transform to primitive types
     if duration:
         duration = int(duration.total_seconds())
@@ -108,6 +117,8 @@ def compute_time(duration, start, end):
         end = end.strftime(time_format)
 
     return (duration, start, end)
+
+
 # [END datascienceonramp_timereturnudf]
 
 # [START datascienceonramp_timehelperudf]
@@ -124,6 +135,8 @@ def compute_start_udf(duration, start, end):
 def compute_end_udf(duration, start, end):
     """Calculates end time from duration and start time if null."""
     return compute_time(duration, start, end)[2]
+
+
 # [END datascienceonramp_timehelperudf]
 
 # [START datascienceonramp_sparksession]
@@ -143,8 +156,8 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 
-# [END datascienceonramp_sparksession]
-# [START datascienceonramp_sparksingleudfs]
+    # [END datascienceonramp_sparksession]
+    # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "start_station_name": UserDefinedFunction(station_name_udf, StringType()),
@@ -159,8 +172,8 @@ if __name__ == "__main__":
 
     for name, udf in udfs.items():
         df = df.withColumn(name, udf(name))
-# [END datascienceonramp_sparksingleudfs]
-# [START datascienceonramp_sparkmultiudfs]
+    # [END datascienceonramp_sparksingleudfs]
+    # [START datascienceonramp_sparkmultiudfs]
     # Multi-parameter udfs
     multi_udfs = {
         "tripduration": {
@@ -179,12 +192,12 @@ if __name__ == "__main__":
 
     for name, obj in multi_udfs.items():
         df = df.withColumn(name, obj["udf"](*obj["params"]))
-# [END datascienceonramp_sparkmultiudfs]
-# [START datascienceonramp_displaysamplerows]
+    # [END datascienceonramp_sparkmultiudfs]
+    # [START datascienceonramp_displaysamplerows]
     # Display sample of rows
     df.show(n=20)
-# [END datascienceonramp_displaysamplerows]
-# [START datascienceonramp_writetogcs] 
+    # [END datascienceonramp_displaysamplerows]
+    # [START datascienceonramp_writetogcs]
     # Write results to GCS
     if "--dry-run" in sys.argv:
         print("Data will not be uploaded to GCS")
