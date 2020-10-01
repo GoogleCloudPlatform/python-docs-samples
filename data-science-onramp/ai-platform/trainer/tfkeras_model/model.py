@@ -13,9 +13,12 @@
 # limitations under the License.
 """Defines a Keras model and input function for training."""
 
+# [START ai_platform_tf_keras_model]
+# [START ai_platform_tfkeras_model_tf_import]
 import tensorflow as tf
+# [END ai_platform_tfkeras_model_tf_import]
 
-
+# [START ai_platform_tfkeras_model_input_fn]
 def input_fn(features, labels, shuffle, num_epochs, batch_size):
     """Generates an input function to be used for model training"""
 
@@ -29,18 +32,20 @@ def input_fn(features, labels, shuffle, num_epochs, batch_size):
     dataset = dataset.repeat(num_epochs)
     dataset = dataset.batch(batch_size)
     return dataset
+# [END ai_platform_tfkeras_model_input_fn]
 
-
+# [START ai_platform_tfkeras_model_create_keras_model]
+# [START ai_platform_tfkeras_model_create_keras_model_init]
 def create_keras_model(input_dim, output_dim, learning_rate):
     """Creates Keras Model for regression"""
-
-    # Define model layers
-    Dense = tf.keras.layers.Dense
 
     # Define regularizers
     k_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
     b_regularizer = tf.keras.regularizers.l2(1e-4)
-
+# [END ai_platform_tfkeras_model_create_keras_model_init]
+# [START ai_platform_tfkeras_model_create_keras_model_define]
+    # Define model layers
+    Dense = tf.keras.layers.Dense
     # Define Keras model
     model = tf.keras.Sequential(
         [
@@ -81,3 +86,6 @@ def create_keras_model(input_dim, output_dim, learning_rate):
     model.compile(loss="mae", optimizer="adam", metrics=["mae"])
 
     return model
+# [END ai_platform_tfkeras_model_create_keras_model_define]
+# [END ai_platform_tfkeras_model_create_keras_model]
+# [END ai_platform_tf_keras_model]

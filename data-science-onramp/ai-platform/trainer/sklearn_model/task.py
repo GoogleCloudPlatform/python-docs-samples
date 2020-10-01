@@ -1,20 +1,42 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START ai_platform_sklearn_task]
+# [START ai_platform_sklearn_task_imports]
 import argparse
 import os
+import re
 
-import hypertune
+#import hypertune
 import joblib
+import pandas as pd
 from sklearn.metrics import mean_absolute_error
+from google.cloud import storage
 
-from . import model
-from .. import util
+from trainer.sklearn_model import model
+from trainer.utils import load_data
+# [END ai_platform_sklearn_task_imports]
 
-DEFAULT_DEGREE = 1
-DEFAULT_ALPHA = 0
-
-
+# [START ai_platform_sklearn_task_args]
 def get_args():
-    """Parse the command line arguments"""
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--input-path",
+        type=str,
+        required=True,
+        help="path to input data"
+    )
     parser.add_argument(
         "--job-dir",
         type=str,
@@ -24,61 +46,64 @@ def get_args():
     parser.add_argument(
         "--degree",
         type=int,
-        default=DEFAULT_DEGREE,
         help="degree of the polynomial regression, default=1 (linear model)",
     )
     parser.add_argument(
         "--alpha",
         type=float,
-        default=DEFAULT_ALPHA,
         help="Regularization strength, default=0 (Standard Regression)",
     )
+    return parser.parse_args()
+# [END ai_platform_sklearn_task_args]
 
-    args, _ = parser.parse_known_args()
-    return args
-
-
-def fit_model(args):
-    """Fit and save model given model configuration"""
+# [START ai_platform_sklearn_task_fit_export]
+def fit_model(input_path, job_dir, degree=1, alpha=0):
+    """Train, evaluate and save model given model configuration"""
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
 
-    # Load the data
-    print("Loading data from GCS...")
-    train_x, train_y, test_x, test_y = util.load_data()
+    # Split datasets into training and testing
+    train_x, eval_x, train_y, eval_y = load_data(input_path)
+
+    # Create sklearn pipeline for a polynomial model defined in model.py"""
+    polynomial_model = model.polynomial_model(degree, alpha)
 
     # Fit the sklearn model
     print("Fitting model...")
-    poly_model = model.define_polynomial_model(args.degree, args.alpha)
-    poly_model.fit(train_x, train_y)
+    polynomial_model.fit(train_x, train_y)
 
     # Evaluate the model
     print("Evaluating model...")
-    pred_y = poly_model.predict(test_x)
-    mae = mean_absolute_error(test_y, pred_y)
-
-    # Report hyperparameter tuning metric
-    hpt = hypertune.HyperTune()
-    hpt.report_hyperparameter_tuning_metric(
-        hyperparameter_metric_tag="mean_absolute_error",
-        metric_value=mae,
-        global_step=1000,
-    )
+    pred_y = polynomial_model.predict(eval_x)
+    mae = mean_absolute_error(eval_y, pred_y)
 
     print(f"Done. Model had MAE={mae}")
 
-    # Save model to either GCS or directory
-    model_filename = "model.joblib"
+    # Save model to GCS
     print("Saving model")
-    if "gs://" in args.job_dir:
-        joblib.dump(poly_model, model_filename)
-        util.copy_file_to_GCS(model_filename, args.job_dir)
-    else:
-        if not os.path.isdir(args.job_dir):
-            os.mkdir(args.job_dir)
-        joblib.dump(poly_model, os.path.join(args.job_dir, model_filename))
-    print("Model saved")
+    matches = re.match("gs://(.*?)/(.*)", job_dir)
+    bucket = matches.group(1)
+    blob = matches.group(2)
 
+    model_dump = "model.joblib"
+    joblib.dump(polynomial_model, model_dump)
+
+    blob_name = os.path.join(blob, model_dump)
+    client = storage.Client()
+    client.bucket(bucket).blob(blob_name).upload_from_filename(model_dump)
+    print("Model saved")
+# [END ai_platform_sklearn_task_fit_export]
 
 if __name__ == "__main__":
     args = get_args()
-    fit_model(args)
+    
+    input_path = args.input_path
+    job_dir = args.job_dir
+    
+    kwargs = {}
+    if args.degree:
+        kwargs["degree"] = args.degree
+    if args.alpha:
+        kwargs["alpha"] = args.alpha
+
+    fit_model(input_path, job_dir, **kwargs)
+# [END ai_platform_sklearn_task]
