@@ -157,7 +157,6 @@ if __name__ == "__main__":
 
 # [START datascienceonramp_removecolumn]
     # remove unused column
-    # not using .collect() notation to avoid OOM
     df = df.drop("gender")
 # [END datascienceonramp_removecolumn]
 
