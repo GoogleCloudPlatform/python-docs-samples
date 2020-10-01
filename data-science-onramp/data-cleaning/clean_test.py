@@ -105,8 +105,7 @@ def setup_and_teardown_cluster():
     operation = cluster_client.delete_cluster(
         project_id=PROJECT_ID,
         region=CLUSTER_REGION,
-        cluster_name=DATAPROC_CLUSTER,
-        timeout=300,
+        cluster_name=DATAPROC_CLUSTER
     )
     operation.result()
 
