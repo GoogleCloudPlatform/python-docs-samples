@@ -147,17 +147,21 @@ if __name__ == "__main__":
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
 
-    # Load data into temporary dataframe if table exists, drop unused column and load into new dataframe
-    # (using a temporary dataframe is an alternative to calling df.drop(column_name).collect() and is used
-    # to avoid OOM issues)
+    # Load data into dataframe if table exists
     try:
-        temp_df = spark.read.format("bigquery").option("table", TABLE).load()
-        df = temp_df.drop("gender")
+        df = spark.read.format("bigquery").option("table", TABLE).load()
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 
-    # [END datascienceonramp_sparksession]
-    # [START datascienceonramp_sparksingleudfs]
+# [END datascienceonramp_sparksession]
+
+# [START datascienceonramp_removecolumn]
+    # remove unused column
+    # not using .collect() notation to avoid OOM
+    df = df.drop("gender")
+# [END datascienceonramp_removecolumn]
+
+# [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "start_station_name": UserDefinedFunction(station_name_udf, StringType()),

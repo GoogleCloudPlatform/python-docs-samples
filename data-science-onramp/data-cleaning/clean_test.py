@@ -53,7 +53,7 @@ DATAPROC_JOB = {  # Dataproc job configuration
     "placement": {"cluster_name": DATAPROC_CLUSTER},
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
-        "args": [BQ_TABLE, BUCKET_NAME, "--dry-run"],
+        "args": [BUCKET_NAME, BQ_TABLE, "--dry-run"],
         "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
     },
 }
