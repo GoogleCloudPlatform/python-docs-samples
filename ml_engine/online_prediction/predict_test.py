@@ -20,11 +20,11 @@ import pytest
 import predict
 
 MODEL = 'census'
-JSON_VERSION = 'v1json'
+JSON_VERSION = 'v2json'
 EXAMPLES_VERSION = 'v1example'
 PROJECT = 'python-docs-samples-tests'
 EXPECTED_OUTPUT = {
-    u'confidence': 0.7760371565818787,
+    u'confidence': 0.7760370969772339,
     u'predictions': u' <=50K'
 }
 
