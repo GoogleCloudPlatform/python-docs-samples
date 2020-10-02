@@ -196,12 +196,12 @@ def main():
     # Disable
     rename_parser = subparsers.add_parser(
         'disable', help=disable_service_account.__doc__)
-    list_parser.addargument('email')
+    list_parser.add_argument('email')
 
     # Enable
     rename_parser = subparsers.add_parser(
         'enable', help=enable_service_account.__doc__)
-    list_parser.addargument('email')
+    list_parser.add_argument('email')
 
     # Delete
     delete_parser = subparsers.add_parser(
