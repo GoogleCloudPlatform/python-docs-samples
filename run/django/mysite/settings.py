@@ -27,8 +27,8 @@ if not os.path.isfile(".env"):
         client = sm.SecretManagerServiceClient()
 
         SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
-        path = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
-        payload = client.access_secret_version(path).payload.data.decode("UTF-8")
+        name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+        payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
         with open(env_file, "w") as f:
             f.write(payload)
