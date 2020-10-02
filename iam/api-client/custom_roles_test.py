@@ -71,7 +71,7 @@ def test_query_testable_permissions(capsys):
         "//cloudresourcemanager.googleapis.com/projects/" + GCLOUD_PROJECT
     )
     out, _ = capsys.readouterr()
-    assert "apigee" in out
+    assert "apigateway" in out
 
 
 def test_get_role(capsys):
