@@ -21,7 +21,6 @@ import predict
 
 MODEL = 'census'
 JSON_VERSION = 'v2json'
-EXAMPLES_VERSION = 'v1example'
 PROJECT = 'python-docs-samples-tests'
 EXPECTED_OUTPUT = {
     u'confidence': 0.7760370969772339,
@@ -37,10 +36,6 @@ with open('resources/census_test_data.json') as f:
     JSON = json.load(f)
 
 
-with open('resources/census_example_bytes.pb', 'rb') as f:
-    BYTESTRING = f.read()
-
-
 @pytest.mark.flaky
 def test_predict_json():
     result = predict.predict_json(
@@ -53,18 +48,3 @@ def test_predict_json_error():
     with pytest.raises(RuntimeError):
         predict.predict_json(
             PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
-
-
-@pytest.mark.flaky
-def test_census_example_to_bytes():
-    import tensorflow as tf
-    b = predict.census_to_example_bytes(JSON)
-    assert tf.train.Example.FromString(b) == tf.train.Example.FromString(
-        BYTESTRING)
-
-
-@pytest.mark.flaky(max_runs=6)
-def test_predict_examples():
-    result = predict.predict_examples(
-        PROJECT, MODEL, [BYTESTRING, BYTESTRING], version=EXAMPLES_VERSION)
-    assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
