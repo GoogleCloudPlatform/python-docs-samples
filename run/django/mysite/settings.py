@@ -19,7 +19,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 if not os.path.isfile(".env"):
     import google.auth
-    from google.cloud import secretmanager_v1beta1 as sm
+    from google.cloud import secretmanager_v1 as sm
 
     _, project = google.auth.default()
 
@@ -27,7 +27,7 @@ if not os.path.isfile(".env"):
         client = sm.SecretManagerServiceClient()
 
         SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
-        path = client.secret_version_path(project, SETTINGS_NAME, "latest")
+        path = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
         payload = client.access_secret_version(path).payload.data.decode("UTF-8")
 
         with open(env_file, "w") as f:
