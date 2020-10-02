@@ -15,12 +15,10 @@
 
 """Examples of using AI Platform's online prediction service."""
 import argparse
-import base64
 import json
 
 # [START import_libraries]
 import googleapiclient.discovery
-import six
 # [END import_libraries]
 
 
