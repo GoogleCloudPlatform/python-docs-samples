@@ -40,7 +40,7 @@ rsa_private_path = 'resources/rsa_private.pem'
 if ('GOOGLE_CLOUD_PROJECT' not in os.environ or
         'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ):
     print(
-      'You must set GCLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS')
+      'You must set GOOGLE_CLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS')
     quit()
 
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
