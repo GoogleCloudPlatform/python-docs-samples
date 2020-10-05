@@ -34,8 +34,8 @@ def publish(request):
 
     if not topic_name or not message:
         return ('Missing "topic" and/or "subscription" parameter.', 500)
-
-    print(f'Publishing message to topic {topic_name}')
+    
+    print(f'Function is invoked. Next, publish message to topic {topic_name}')
 
     # References an existing topic
     topic_path = publisher.topic_path(PROJECT_ID, topic_name)
