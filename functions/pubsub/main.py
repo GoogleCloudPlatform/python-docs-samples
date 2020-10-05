@@ -34,7 +34,7 @@ def publish(request):
 
     if not topic_name or not message:
         return ('Missing "topic" and/or "subscription" parameter.', 500)
-    
+
     print(f'Function is invoked. Next, publish message to topic {topic_name}')
 
     # References an existing topic
