@@ -1,6 +1,6 @@
 # Getting started with Google Cloud Dataflow
 
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/README.md)
 
 [Apache Beam](https://beam.apache.org/)
 is an open source, unified model for defining both batch and streaming data-parallel processing pipelines.
