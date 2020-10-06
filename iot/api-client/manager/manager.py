@@ -96,7 +96,7 @@ def create_rs256_device(
 
     client = iot_v1.DeviceManagerClient()
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     with io.open(certificate_file) as f:
         certificate = f.read()
@@ -104,10 +104,11 @@ def create_rs256_device(
     # Note: You can have multiple credentials associated with a device.
     device_template = {
         "id": device_id,
-        "credentials": [{"public_key": {"format": "RSA_X509_PEM", "key": certificate}}],
+        "credentials": [{"public_key": {"format": iot_v1.PublicKeyFormat.RSA_X509_PEM, "key": certificate}}],
     }
+    req = iot_v1.CreateDeviceRequest({"parent": parent, "device": device_template})
 
-    return client.create_device(parent, device_template)
+    return client.create_device(req)
 
 
 def create_es256_device(
@@ -123,7 +124,7 @@ def create_es256_device(
 
     client = iot_v1.DeviceManagerClient()
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     with io.open(public_key_file) as f:
         public_key = f.read()
@@ -131,10 +132,11 @@ def create_es256_device(
     # Note: You can have multiple credentials associated with a device.
     device_template = {
         "id": device_id,
-        "credentials": [{"public_key": {"format": "ES256_PEM", "key": public_key}}],
+        "credentials": [{"public_key": {"format": iot_v1.PublicKeyFormat.ES256_X509_PEM, "key": public_key}}],
     }
 
-    return client.create_device(parent, device_template)
+    req = iot_v1.CreateDeviceRequest({"parent": parent, "device": device_template})
+    return client.create_device(req)
 
 
 def create_device(
@@ -147,7 +149,7 @@ def create_device(
 
     exists = False
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     devices = list(client.list_devices(parent=parent))
 
@@ -159,8 +161,8 @@ def create_device(
     device_template = {
         "id": device_id,
         "gateway_config": {
-            "gateway_type": "NON_GATEWAY",
-            "gateway_auth_method": "ASSOCIATION_ONLY",
+            "gateway_type": iot_v1.GatewayType.NON_GATEWAY,
+            "gateway_auth_method": iot_v1.GatewayAuthMethod.ASSOCIATION_ONLY,
         },
     }
 
@@ -177,13 +179,13 @@ def create_unauth_device(
     """Create a new device without authentication."""
     client = iot_v1.DeviceManagerClient()
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     device_template = {
         "id": device_id,
     }
-
-    return client.create_device(parent, device_template)
+    req = iot_v1.CreateDeviceRequest({"parent": parent, "device": device_template})
+    return client.create_device(req)
 
 
 def delete_device(
@@ -506,7 +508,7 @@ def create_gateway(
     exists = False
     client = iot_v1.DeviceManagerClient()
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
     devices = list(client.list_devices(parent=parent))
 
     for device in devices:
@@ -533,8 +535,8 @@ def create_gateway(
             {"public_key": {"format": certificate_format, "key": certificate}}
         ],
         "gateway_config": {
-            "gateway_type": "GATEWAY",
-            "gateway_auth_method": "ASSOCIATION_ONLY",
+            "gateway_type": iot_v1.GatewayType.GATEWAY,
+            "gateway_auth_method": iot_v1.GatewayAuthMethod.ASSOCIATION_ONLY,
         },
     }
 
@@ -555,7 +557,7 @@ def bind_device_to_gateway(
         service_account_json, project_id, cloud_region, registry_id, device_id
     )
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     res = client.bind_device_to_gateway(parent, gateway_id, device_id)
 
@@ -568,7 +570,7 @@ def unbind_device_from_gateway(
     """Unbinds a device to a gateway."""
     client = iot_v1.DeviceManagerClient()
 
-    parent = client.registry_path(project_id, cloud_region, registry_id)
+    parent = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
 
     res = client.unbind_device_from_gateway(parent, gateway_id, device_id)
 
