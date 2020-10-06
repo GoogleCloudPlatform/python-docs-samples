@@ -70,10 +70,6 @@ assign_issues_by:
   to:
   - noerog
 - labels:
-  - 'api: iam'
-  to:
-  - melaniedejong
-- labels:
   - 'api: logging'
   to:
   - simonz130
