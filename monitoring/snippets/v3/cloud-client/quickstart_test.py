@@ -15,32 +15,18 @@
 import os
 
 import backoff
-import mock
-import pytest
 
 import quickstart
 
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-@pytest.fixture
-def mock_project_path():
-    """Mock out project and replace with project from environment."""
-    project_patch = mock.patch(
-        'google.cloud.monitoring_v3.MetricServiceClient.'
-        'project_path')
-
-    with project_patch as project_mock:
-        project_mock.return_value = 'projects/{}'.format(PROJECT)
-        yield project_mock
-
-
-def test_quickstart(capsys, mock_project_path):
+def test_quickstart(capsys):
     @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
     def eventually_consistent_test():
-        quickstart.run_quickstart()
+        quickstart.run_quickstart(PROJECT)
         out, _ = capsys.readouterr()
-        assert 'wrote' in out
+        assert "wrote" in out
 
     eventually_consistent_test()
