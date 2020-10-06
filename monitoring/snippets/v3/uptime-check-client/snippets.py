@@ -19,48 +19,51 @@ import os
 import pprint
 
 from google.cloud import monitoring_v3
+from google.protobuf import field_mask_pb2
 import tabulate
 
 
 # [START monitoring_uptime_check_create]
 def create_uptime_check_config_get(project_name, host_name=None, display_name=None):
-    config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
+    config = monitoring_v3.UptimeCheckConfig()
     config.display_name = display_name or "New GET uptime check"
-    config.monitored_resource.type = "uptime_url"
-    config.monitored_resource.labels.update({"host": host_name or "example.com"})
-    config.http_check.request_method = (
-        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.GET
-    )
-    config.http_check.path = "/"
-    config.http_check.port = 80
-    config.timeout.seconds = 10
-    config.period.seconds = 300
+    config.monitored_resource = {
+        "type": "uptime_url",
+        "labels": {"host": host_name or "example.com"}
+    }
+    config.http_check = {
+        "request_method": monitoring_v3.UptimeCheckConfig.HttpCheck.RequestMethod.GET,
+        "path": "/",
+        "port": 80
+    }
+    config.timeout = {"seconds": 10}
+    config.period = {"seconds": 300}
 
     client = monitoring_v3.UptimeCheckServiceClient()
-    new_config = client.create_uptime_check_config(project_name, config)
+    new_config = client.create_uptime_check_config(request={"parent": project_name, "uptime_check_config": config})
     pprint.pprint(new_config)
     return new_config
 
 
 def create_uptime_check_config_post(project_name, host_name=None, display_name=None):
-    config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
+    config = monitoring_v3.UptimeCheckConfig()
     config.display_name = display_name or "New POST uptime check"
-    config.monitored_resource.type = "uptime_url"
-    config.monitored_resource.labels.update({"host": host_name or "example.com"})
-    config.http_check.request_method = (
-        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.RequestMethod.POST
-    )
-    config.http_check.content_type = (
-        monitoring_v3.enums.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED
-    )
-    config.http_check.body = "foo=bar".encode("utf-8")
-    config.http_check.path = "/"
-    config.http_check.port = 80
-    config.timeout.seconds = 10
-    config.period.seconds = 300
+    config.monitored_resource = {
+        "type": "uptime_url",
+        "labels": {"host": host_name or "example.com"}
+    }
+    config.http_check = {
+        "request_method": monitoring_v3.UptimeCheckConfig.HttpCheck.RequestMethod.POST,
+        "content_type": monitoring_v3.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED,
+        "body": "foo=bar".encode("utf-8"),
+        "path": "/",
+        "port": 80
+    }
+    config.timeout = {"seconds": 10}
+    config.period = {"seconds": 300}
 
     client = monitoring_v3.UptimeCheckServiceClient()
-    new_config = client.create_uptime_check_config(project_name, config)
+    new_config = client.create_uptime_check_config(request={"parent": project_name, "uptime_check_config": config})
     pprint.pprint(new_config)
     return new_config
 
@@ -72,15 +75,15 @@ def update_uptime_check_config(
     config_name, new_display_name=None, new_http_check_path=None
 ):
     client = monitoring_v3.UptimeCheckServiceClient()
-    config = client.get_uptime_check_config(config_name)
-    field_mask = monitoring_v3.types.FieldMask()
+    config = client.get_uptime_check_config(request={"name": config_name})
+    field_mask = field_mask_pb2.FieldMask()
     if new_display_name:
         field_mask.paths.append("display_name")
         config.display_name = new_display_name
     if new_http_check_path:
         field_mask.paths.append("http_check.path")
         config.http_check.path = new_http_check_path
-    client.update_uptime_check_config(config, field_mask)
+    client.update_uptime_check_config(request={"uptime_check_config": config, "update_mask": field_mask})
 
 
 # [END monitoring_uptime_check_update]
@@ -89,7 +92,7 @@ def update_uptime_check_config(
 # [START monitoring_uptime_check_list_configs]
 def list_uptime_check_configs(project_name):
     client = monitoring_v3.UptimeCheckServiceClient()
-    configs = client.list_uptime_check_configs(project_name)
+    configs = client.list_uptime_check_configs(request={"parent": project_name})
 
     for config in configs:
         pprint.pprint(config)
@@ -101,7 +104,7 @@ def list_uptime_check_configs(project_name):
 # [START monitoring_uptime_check_list_ips]
 def list_uptime_check_ips():
     client = monitoring_v3.UptimeCheckServiceClient()
-    ips = client.list_uptime_check_ips()
+    ips = client.list_uptime_check_ips(request={})
     print(
         tabulate.tabulate(
             [(ip.region, ip.location, ip.ip_address) for ip in ips],
@@ -116,7 +119,7 @@ def list_uptime_check_ips():
 # [START monitoring_uptime_check_get]
 def get_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
-    config = client.get_uptime_check_config(config_name)
+    config = client.get_uptime_check_config(request={"name": config_name})
     pprint.pprint(config)
 
 
@@ -128,7 +131,7 @@ def get_uptime_check_config(config_name):
 # See https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.uptimeCheckConfigs#UptimeCheckConfig.
 def delete_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
-    client.delete_uptime_check_config(config_name)
+    client.delete_uptime_check_config(request={"name": config_name})
     print("Deleted ", config_name)
 
 

@@ -23,7 +23,6 @@ from google.api_core.exceptions import DeadlineExceeded
 from google.api_core.exceptions import NotFound
 from google.api_core.exceptions import ServiceUnavailable
 from google.cloud import monitoring_v3
-import google.protobuf.json_format
 import pytest
 from retrying import retry
 
@@ -35,13 +34,11 @@ random.seed()
 
 
 def random_name(length):
-    return ''.join(
-        [random.choice(string.ascii_lowercase) for i in range(length)])
+    return "".join([random.choice(string.ascii_lowercase) for i in range(length)])
 
 
 def retry_on_exceptions(exception):
-    return isinstance(
-        exception, (Aborted, ServiceUnavailable, DeadlineExceeded))
+    return isinstance(exception, (Aborted, ServiceUnavailable, DeadlineExceeded))
 
 
 def delay_on_aborted(err, *args):
@@ -54,7 +51,7 @@ def delay_on_aborted(err, *args):
 
 class PochanFixture:
     """A test fixture that creates an alert POlicy and a notification CHANnel,
-       hence the name, pochan.
+    hence the name, pochan.
     """
 
     def __init__(self):
@@ -62,55 +59,64 @@ class PochanFixture:
         self.project_name = snippets.project_name()
         self.alert_policy_client = monitoring_v3.AlertPolicyServiceClient()
         self.notification_channel_client = (
-            monitoring_v3.NotificationChannelServiceClient())
+            monitoring_v3.NotificationChannelServiceClient()
+        )
 
     def __enter__(self):
-        @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=10,
-               retry_on_exception=retry_on_exceptions)
+        @retry(
+            wait_exponential_multiplier=1000,
+            wait_exponential_max=10000,
+            stop_max_attempt_number=10,
+            retry_on_exception=retry_on_exceptions,
+        )
         def setup():
             # Create a policy.
-            policy = monitoring_v3.types.alert_pb2.AlertPolicy()
-            json = open('test_alert_policy.json').read()
-            google.protobuf.json_format.Parse(json, policy)
-            policy.display_name = 'snippets-test-' + random_name(10)
+            json = open("test_alert_policy.json").read()
+            policy = monitoring_v3.AlertPolicy.from_json(json)
+            policy.display_name = "snippets-test-" + random_name(10)
             self.alert_policy = self.alert_policy_client.create_alert_policy(
-                self.project_name, policy)
+                name=self.project_name, alert_policy=policy
+            )
             # Create a notification channel.
-            notification_channel = (
-                monitoring_v3.types.notification_pb2.NotificationChannel())
-            json = open('test_notification_channel.json').read()
-            google.protobuf.json_format.Parse(json, notification_channel)
-            notification_channel.display_name = (
-                'snippets-test-' + random_name(10))
+            json = open("test_notification_channel.json").read()
+            notification_channel = monitoring_v3.NotificationChannel.from_json(json)
+            notification_channel.display_name = "snippets-test-" + random_name(10)
             self.notification_channel = (
                 self.notification_channel_client.create_notification_channel(
-                    self.project_name, notification_channel))
+                    name=self.project_name, notification_channel=notification_channel
+                )
+            )
+
         setup()
         return self
 
     def __exit__(self, type, value, traceback):
         # Delete the policy and channel we created.
-        @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=10,
-               retry_on_exception=retry_on_exceptions)
+        @retry(
+            wait_exponential_multiplier=1000,
+            wait_exponential_max=10000,
+            stop_max_attempt_number=10,
+            retry_on_exception=retry_on_exceptions,
+        )
         def teardown():
             try:
                 self.alert_policy_client.delete_alert_policy(
-                    self.alert_policy.name)
+                    name=self.alert_policy.name
+                )
             except NotFound:
                 print("Ignored NotFound when deleting a policy.")
             try:
                 if self.notification_channel.name:
-                    self.notification_channel_client\
-                        .delete_notification_channel(
-                            self.notification_channel.name)
+                    self.notification_channel_client.delete_notification_channel(
+                        self.notification_channel.name
+                    )
             except NotFound:
                 print("Ignored NotFound when deleting a channel.")
+
         teardown()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def pochan():
     with PochanFixture() as pochan:
         yield pochan
@@ -132,20 +138,24 @@ def test_enable_alert_policies(capsys, pochan):
     time.sleep(2)
     snippets.enable_alert_policies(pochan.project_name, True)
     out, _ = capsys.readouterr()
-    assert "Enabled {0}".format(pochan.project_name) in out \
+    assert (
+        "Enabled {0}".format(pochan.project_name) in out
         or "{} is already enabled".format(pochan.alert_policy.name) in out
+    )
 
     time.sleep(2)
     snippets.enable_alert_policies(pochan.project_name, False)
     out, _ = capsys.readouterr()
-    assert "Disabled {}".format(pochan.project_name) in out \
+    assert (
+        "Disabled {}".format(pochan.project_name) in out
         or "{} is already disabled".format(pochan.alert_policy.name) in out
+    )
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_replace_channels(capsys, pochan):
-    alert_policy_id = pochan.alert_policy.name.split('/')[-1]
-    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    alert_policy_id = pochan.alert_policy.name.split("/")[-1]
+    notification_channel_id = pochan.notification_channel.name.split("/")[-1]
 
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
@@ -154,7 +164,8 @@ def test_replace_channels(capsys, pochan):
     # See also #3310
     time.sleep(2)
     snippets.replace_notification_channels(
-        pochan.project_name, alert_policy_id, [notification_channel_id])
+        pochan.project_name, alert_policy_id, [notification_channel_id]
+    )
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
@@ -167,20 +178,21 @@ def test_backup_and_restore(capsys, pochan):
     # Having multiple projects will void this `sleep()` call.
     # See also #3310
     time.sleep(2)
-    snippets.backup(pochan.project_name, 'backup.json')
+    snippets.backup(pochan.project_name, "backup.json")
     out, _ = capsys.readouterr()
 
     time.sleep(2)
-    snippets.restore(pochan.project_name, 'backup.json')
+    snippets.restore(pochan.project_name, "backup.json")
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
-    assert "Updating channel {0}".format(
-        pochan.notification_channel.display_name) in out
+    assert (
+        "Updating channel {0}".format(pochan.notification_channel.display_name) in out
+    )
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_delete_channels(capsys, pochan):
-    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    notification_channel_id = pochan.notification_channel.name.split("/")[-1]
 
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
@@ -189,7 +201,8 @@ def test_delete_channels(capsys, pochan):
     # See also #3310
     time.sleep(2)
     snippets.delete_notification_channels(
-        pochan.project_name, [notification_channel_id], force=True)
+        pochan.project_name, [notification_channel_id], force=True
+    )
     out, _ = capsys.readouterr()
     assert "{0} deleted".format(notification_channel_id) in out
-    pochan.notification_channel.name = ''   # So teardown is not tried
+    pochan.notification_channel.name = ""  # So teardown is not tried
