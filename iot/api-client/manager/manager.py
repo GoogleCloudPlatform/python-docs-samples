@@ -195,9 +195,10 @@ def delete_device(
     print("Delete device")
     client = iot_v1.DeviceManagerClient()
 
-    device_path = client.device_path(project_id, cloud_region, registry_id, device_id)
-
-    return client.delete_device(device_path)
+    device_path = "projects/{}/locations/{}/registries/{}/devices/{}".format(project_id,
+     cloud_region, registry_id, device_id)
+    req = iot_v1.DeleteDeviceRequest({"name": device_path})
+    return client.delete_device(req)
 
 
 def delete_registry(service_account_json, project_id, cloud_region, registry_id):
