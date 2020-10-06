@@ -678,7 +678,6 @@ def create_gateway(
     else:
         certificate_format = iot_v1.PublicKeyFormat.RSA_X509_PEM
 
-    # TODO: Auth type
     device_template = {
         "id": gateway_id,
         "credentials": [
