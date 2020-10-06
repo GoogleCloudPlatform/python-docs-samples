@@ -285,9 +285,10 @@ def list_registries(service_account_json, project_id, cloud_region):
     """List all registries in the project."""
     print("Listing Registries")
     client = iot_v1.DeviceManagerClient()
-    parent = client.location_path(project_id, cloud_region)
+    parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+    req = iot_v1.ListDeviceRegistriesRequest({"parent": parent})
 
-    registries = list(client.list_device_registries(parent))
+    registries = list(client.list_device_registries(req))
     for registry in registries:
         print("id: {}\n\tname: {}".format(registry.id, registry.name))
 
@@ -300,18 +301,18 @@ def create_registry(
     """ Creates a registry and returns the result. Returns an empty result if
     the registry already exists."""
     client = iot_v1.DeviceManagerClient()
-    parent = client.location_path(project_id, cloud_region)
-
-    if not pubsub_topic.startswith("projects/"):
-        pubsub_topic = "projects/{}/topics/{}".format(project_id, pubsub_topic)
+    parent = "projects/{}/locations/{}".format(project_id, cloud_region)
 
     body = {
         "event_notification_configs": [{"pubsub_topic_name": pubsub_topic}],
         "id": registry_id,
     }
+    req = iot_v1.CreateDeviceRegistryRequest({ "parent": parent, "device_registry": body})
+    if not pubsub_topic.startswith("projects/"):
+        pubsub_topic = "projects/{}/topics/{}".format(project_id, pubsub_topic)
 
     try:
-        response = client.create_device_registry(parent, body)
+        response = client.create_device_registry(req)
         print("Created registry")
         return response
     except HttpError:
