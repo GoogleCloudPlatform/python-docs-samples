@@ -35,7 +35,7 @@ gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))
+topic_id = 'test-device-events-topic-{}'.format(str(uuid.uuid4()))
 device_id = 'test-device-{}'.format(str(uuid.uuid4()))
 registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
