@@ -1,1 +1,3 @@
+-r requirements.txt
+
 pytest==6.0.1
