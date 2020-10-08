@@ -35,11 +35,13 @@ def source_name(organization_id):
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
     source = client.create_source(
-        org_name,
-        {
-            "display_name": "Unit test source",
-            "description": "A new custom source that does X",
-        },
+        request={
+            "parent": org_name,
+            "source": {
+                "display_name": "Unit test source",
+                "description": "A new custom source that does X",
+            },
+        }
     )
     return source.name
 
