@@ -101,7 +101,8 @@ def dicomweb_search_instance(
     session = get_session(service_account_json)
 
     headers = {
-        'Content-Type': 'application/dicom+json; charset=utf-8'
+        'Content-Type': 'application/dicom+json; charset=utf-8',
+        'Accept': 'application/dicom+json'
     }
 
     response = session.get(dicomweb_path, headers=headers)
@@ -174,8 +175,11 @@ def dicomweb_search_studies(
     params = {'PatientName': 'Sally Zhang'}
 
     session = get_session(service_account_json)
+    headers = {
+        'Accept': 'application/dicom+json'
+    }
 
-    response = session.get(dicomweb_path, params=params)
+    response = session.get(dicomweb_path, params=params, headers=headers)
 
     response.raise_for_status()
 
