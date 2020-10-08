@@ -26,19 +26,19 @@ client = bigquery.Client()
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
 dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
+full_dataset_id = "{}.{}".format(client.project, dataset_id)
 # [END bqml_data_scientist_tutorial_import_and_client]
 
 
 @pytest.fixture
 def delete_dataset():
     yield
-    client.delete_dataset(
-        client.dataset(dataset_id), delete_contents=True)
+    client.delete_dataset(full_dataset_id, delete_contents=True)
 
 
 def test_data_scientist_tutorial(delete_dataset):
     # [START bqml_data_scientist_tutorial_create_dataset]
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
+    dataset = bigquery.Dataset(full_dataset_id)
     dataset.location = 'US'
     client.create_dataset(dataset)
     # [END bqml_data_scientist_tutorial_create_dataset]
