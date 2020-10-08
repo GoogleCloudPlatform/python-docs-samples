@@ -22,10 +22,7 @@ def receive_notifications(project_id, subscription_name):
     import concurrent
 
     from google.cloud import pubsub_v1
-    from google.cloud.securitycenter_v1.proto.notification_message_pb2 import (
-        NotificationMessage,
-    )
-    from google.protobuf import json_format
+    from google.cloud.securitycenter_v1 import NotificationMessage
 
     # TODO: project_id = "your-project-id"
     # TODO: subscription_name = "your-subscription-name"
@@ -33,8 +30,7 @@ def receive_notifications(project_id, subscription_name):
     def callback(message):
         print("Received message")
 
-        notification_msg = NotificationMessage()
-        json_format.Parse(message.data, notification_msg)
+        notification_msg = NotificationMessage.from_json(message.data)
 
         print(
             "Notification config name: {}".format(

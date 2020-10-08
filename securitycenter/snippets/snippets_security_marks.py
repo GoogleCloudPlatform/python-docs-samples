@@ -37,10 +37,10 @@ def add_to_asset(asset_name):
     marks = {"key_a": "value_a", "key_b": "value_b"}
 
     updated_marks = client.update_security_marks(
-        {"name": marks_name, "marks": marks},
-        # If this field was left empty, all marks would be cleared before adding
-        # the new values.
-        update_mask=field_mask,
+        request={
+            "security_marks": {"name": marks_name, "marks": marks},
+            "update_mask": field_mask,
+        }
     )
     print(updated_marks)
     # [END add_marks_to_asset]
@@ -67,13 +67,14 @@ def clear_from_asset(asset_name):
     field_mask = field_mask_pb2.FieldMask(paths=["marks.key_a", "marks.key_b"])
 
     updated_marks = client.update_security_marks(
-        {
-            "name": marks_name
-            # Note, no marks specified, so the specified values in
-            # the fields masks will be deleted.
-        },
-        # If this field was left empty, all marks would be cleared.
-        update_mask=field_mask,
+        request={
+            "security_marks": {
+                "name": marks_name
+                # Note, no marks specified, so the specified values in
+                # the fields masks will be deleted.
+            },
+            "update_mask": field_mask,
+        }
     )
     print(updated_marks)
     # [END clear_marks_asset]
@@ -99,7 +100,10 @@ def delete_and_update_marks(asset_name):
     marks = {"key_a": "new_value_for_a"}
 
     updated_marks = client.update_security_marks(
-        {"name": marks_name, "marks": marks}, update_mask=field_mask
+        request={
+            "security_marks": {"name": marks_name, "marks": marks},
+            "update_mask": field_mask,
+        }
     )
     print(updated_marks)
     # [END delete_and_update_marks]
@@ -128,7 +132,10 @@ def add_to_finding(finding_name):
     marks = {"finding_key_a": "value_a", "finding_key_b": "value_b"}
 
     updated_marks = client.update_security_marks(
-        {"name": finding_marks_name, "marks": marks}, update_mask=field_mask
+        request={
+            "security_marks": {"name": finding_marks_name, "marks": marks},
+            "update_mask": field_mask,
+        }
     )
     # [END add_marks_to_finding]
     return updated_marks, marks
@@ -149,10 +156,14 @@ def list_assets_with_query_marks(organization_id, asset_name):
 
     marks_filter = 'security_marks.marks.key_a = "value_a"'
     # Call the API and print results.
-    asset_iterator = client.list_assets(org_name, filter_=marks_filter)
+    asset_iterator = client.list_assets(
+        request={"parent": org_name, "filter": marks_filter}
+    )
 
     # Call the API and print results.
-    asset_iterator = client.list_assets(org_name, filter_=marks_filter)
+    asset_iterator = client.list_assets(
+        request={"parent": org_name, "filter": marks_filter}
+    )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_assets_with_security_marks]
@@ -178,7 +189,9 @@ def list_findings_with_query_marks(source_name, finding_name):
     marks_filter = 'NOT security_marks.marks.finding_key_a="value_a"'
 
     # Call the API and print results.
-    finding_iterator = client.list_findings(source_name, filter_=marks_filter)
+    finding_iterator = client.list_findings(
+        request={"parent": source_name, "filter": marks_filter}
+    )
     for i, finding_result in enumerate(finding_iterator):
         print(i, finding_result)
     # [END demo_list_findings_with_security_marks]
