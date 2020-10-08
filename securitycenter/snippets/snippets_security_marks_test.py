@@ -37,13 +37,18 @@ def asset_name(organization_id):
     # organization_id is the numeric ID of the organization.
     # organization_id=1234567777
     org_name = "organizations/{org_id}".format(org_id=organization_id)
-    assets = list(client.list_assets(org_name))
+    assets = list(client.list_assets(request={"parent": org_name}))
     # Select a random asset to avoid collision between integration tests.
     asset = (random.sample(assets, 1)[0]).asset.name
 
     # Set fresh marks.
     update = client.update_security_marks(
-        {"name": "{}/securityMarks".format(asset), "marks": {"other": "other_val"}}
+        request={
+            "security_marks": {
+                "name": "{}/securityMarks".format(asset),
+                "marks": {"other": "other_val"},
+            }
+        }
     )
     assert update.marks == {"other": "other_val"}
     return asset
@@ -57,11 +62,13 @@ def source_name(organization_id):
     client = securitycenter.SecurityCenterClient()
     org_name = "organizations/{org_id}".format(org_id=organization_id)
     source = client.create_source(
-        org_name,
-        {
-            "display_name": "Security marks Unit test source",
-            "description": "A new custom source that does X",
-        },
+        request={
+            "parent": org_name,
+            "source": {
+                "display_name": "Security marks Unit test source",
+                "description": "A new custom source that does X",
+            },
+        }
     )
     return source.name
 
@@ -70,7 +77,7 @@ def source_name(organization_id):
 def finding_name(source_name):
     """Creates a new finding and returns it name."""
     from google.cloud import securitycenter
-    from google.cloud.securitycenter_v1.proto.finding_pb2 import Finding
+    from google.cloud.securitycenter_v1 import Finding
     from google.protobuf.timestamp_pb2 import Timestamp
 
     client = securitycenter.SecurityCenterClient()
@@ -79,24 +86,28 @@ def finding_name(source_name):
     now_proto.GetCurrentTime()
 
     finding = client.create_finding(
-        source_name,
-        "scfinding",
-        {
-            "state": Finding.ACTIVE,
-            "category": "C1",
-            "event_time": now_proto,
-            "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
-        },
+        request={
+            "parent": source_name,
+            "finding_id": "scfinding",
+            "finding": {
+                "state": Finding.State.ACTIVE,
+                "category": "C1",
+                "event_time": now_proto,
+                "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
+            },
+        }
     )
     client.create_finding(
-        source_name,
-        "untouched",
-        {
-            "state": Finding.ACTIVE,
-            "category": "MEDIUM_RISK_ONE",
-            "event_time": now_proto,
-            "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
-        },
+        request={
+            "parent": source_name,
+            "finding_id": "untouched",
+            "finding": {
+                "state": Finding.State.ACTIVE,
+                "category": "MEDIUM_RISK_ONE",
+                "event_time": now_proto,
+                "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
+            },
+        }
     )
 
     return finding.name

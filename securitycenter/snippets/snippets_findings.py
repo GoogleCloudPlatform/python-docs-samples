@@ -28,11 +28,13 @@ def create_source(organization_id):
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
     created = client.create_source(
-        org_name,
-        {
-            "display_name": "Customized Display Name",
-            "description": "A new custom source that does X",
-        },
+        request={
+            "parent": org_name,
+            "source": {
+                "display_name": "Customized Display Name",
+                "description": "A new custom source that does X",
+            },
+        }
     )
     print("Created Source: {}".format(created.name))
     # [END create_source]
@@ -51,7 +53,7 @@ def get_source(source_name):
     # source_name = "organizations/{organization_id}/sources/{source_id}"
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
-    source = client.get_source(source_name)
+    source = client.get_source(request={"name": source_name})
 
     print("Source: {}".format(source))
     # [END get_source]
@@ -76,8 +78,10 @@ def update_source(source_name):
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
     updated = client.update_source(
-        {"name": source_name, "display_name": "Updated Display Name"},
-        update_mask=field_mask,
+        request={
+            "source": {"name": source_name, "display_name": "Updated Display Name"},
+            "update_mask": field_mask,
+        }
     )
     print("Updated Source: {}".format(updated))
     # [END update_source]
@@ -100,7 +104,7 @@ def add_user_to_source(source_name):
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
     # Get the old policy so we can do an incremental update.
-    old_policy = client.get_iam_policy(source_name)
+    old_policy = client.get_iam_policy(request={"resource": source_name})
     print("Old Policy: {}".format(old_policy))
 
     # Setup a new IAM binding.
@@ -112,7 +116,10 @@ def add_user_to_source(source_name):
 
     # Setting the e-tag avoids over-write existing policy
     updated = client.set_iam_policy(
-        source_name, {"etag": old_policy.etag, "bindings": [binding]}
+        request={
+            "resource": source_name,
+            "policy": {"etag": old_policy.etag, "bindings": [binding]},
+        }
     )
 
     print("Updated Policy: {}".format(updated))
@@ -134,7 +141,7 @@ def list_source(organization_id):
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
     # Call the API and print out each existing source.
-    for i, source in enumerate(client.list_sources(org_name)):
+    for i, source in enumerate(client.list_sources(request={"parent": org_name})):
         print(i, source)
     # [END list_sources]
     return i
@@ -144,15 +151,14 @@ def create_finding(source_name):
     """Creates a new finding."""
     # [START create_finding]
     from google.cloud import securitycenter
-    from google.cloud.securitycenter_v1.proto.finding_pb2 import Finding
-    from google.protobuf.timestamp_pb2 import Timestamp
+    from google.cloud.securitycenter_v1 import CreateFindingRequest, Finding
+    import datetime
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
     # Use the current time as the finding "event time".
-    now_proto = Timestamp()
-    now_proto.GetCurrentTime()
+    event_time = datetime.datetime.now()
 
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -169,16 +175,21 @@ def create_finding(source_name):
     # if there are matches.
     resource_name = "//cloudresourcemanager.googleapis.com/organizations/11232"
 
+    finding = Finding(
+        state=Finding.State.ACTIVE,
+        resource_name=resource_name,
+        category="MEDIUM_RISK_ONE",
+        event_time=event_time,
+    )
+
+    request = CreateFindingRequest(
+        parent=source_name,
+        finding_id=finding_id,
+        finding=finding,
+    )
     # Call The API.
     created_finding = client.create_finding(
-        source_name,
-        finding_id,
-        {
-            "state": Finding.ACTIVE,
-            "resource_name": resource_name,
-            "category": "MEDIUM_RISK_ONE",
-            "event_time": now_proto,
-        },
+        request=request
     )
     print(created_finding)
     # [END create_finding]
@@ -188,9 +199,10 @@ def create_finding(source_name):
 def create_finding_with_source_properties(source_name):
     """Demonstrate creating a new finding with source properties. """
     # [START create_finding_with_properties]
+    import datetime
+
     from google.cloud import securitycenter
-    from google.cloud.securitycenter_v1.proto.finding_pb2 import Finding
-    from google.protobuf.timestamp_pb2 import Timestamp
+    from google.cloud.securitycenter_v1 import Finding
     from google.protobuf.struct_pb2 import Value
 
     # Create a new client.
@@ -218,19 +230,22 @@ def create_finding_with_source_properties(source_name):
     num_value.number_value = 1234
 
     # Use the current time as the finding "event time".
-    now_proto = Timestamp()
-    now_proto.GetCurrentTime()
+    event_time = datetime.datetime.now()
+
+    finding = Finding(
+        state=Finding.State.ACTIVE,
+        resource_name=resource_name,
+        category="MEDIUM_RISK_ONE",
+        source_properties={"s_value": "string_example", "n_value": 1234},
+        event_time=event_time,
+    )
 
     created_finding = client.create_finding(
-        source_name,
-        finding_id,
-        {
-            "state": Finding.ACTIVE,
-            "resource_name": resource_name,
-            "category": "MEDIUM_RISK_ONE",
-            "source_properties": {"s_value": str_value, "n_value": num_value},
-            "event_time": now_proto,
-        },
+        request={
+            "parent": source_name,
+            "finding_id": finding_id,
+            "finding": finding
+        }
     )
     print(created_finding)
     # [END create_finding_with_properties]
@@ -238,10 +253,11 @@ def create_finding_with_source_properties(source_name):
 
 def update_finding(source_name):
     # [START update_finding]
+    import datetime
+
     from google.cloud import securitycenter
-    from google.protobuf.struct_pb2 import Value
+    from google.cloud.securitycenter_v1 import Finding
     from google.protobuf import field_mask_pb2
-    from google.protobuf.timestamp_pb2 import Timestamp
 
     client = securitycenter.SecurityCenterClient()
     # Only update the specific source property and event_time.  event_time
@@ -249,13 +265,10 @@ def update_finding(source_name):
     field_mask = field_mask_pb2.FieldMask(
         paths=["source_properties.s_value", "event_time"]
     )
-    value = Value()
-    value.string_value = "new_string"
 
     # Set the update time to Now.  This must be some time greater then the
     # event_time on the original finding.
-    now_proto = Timestamp()
-    now_proto.GetCurrentTime()
+    event_time = datetime.datetime.now()
 
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -264,18 +277,21 @@ def update_finding(source_name):
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
     finding_name = "{}/findings/samplefindingid2".format(source_name)
+    finding = Finding(
+        name=finding_name,
+        source_properties={"s_value": "new_string"},
+        event_time=event_time,
+    )
     updated_finding = client.update_finding(
-        {
-            "name": finding_name,
-            "source_properties": {"s_value": value},
-            "event_time": now_proto,
-        },
-        update_mask=field_mask,
+        request={
+            "finding": finding,
+            "update_mask": field_mask,
+        }
     )
 
     print(
         "New Source properties: {}, Event Time {}".format(
-            updated_finding.source_properties, updated_finding.event_time.ToDatetime()
+            updated_finding.source_properties, updated_finding.event_time
         )
     )
     # [END update_finding]
@@ -284,10 +300,10 @@ def update_finding(source_name):
 def update_finding_state(source_name):
     """Demonstrate updating only a finding state."""
     # [START update_finding_state]
-    from google.cloud import securitycenter
-    from google.cloud.securitycenter_v1.proto.finding_pb2 import Finding
-    from google.protobuf.timestamp_pb2 import Timestamp
+    import datetime
 
+    from google.cloud import securitycenter
+    from google.cloud.securitycenter_v1 import Finding
     # Create a client.
     client = securitycenter.SecurityCenterClient()
     # source_name is the resource path for a source that has been
@@ -298,14 +314,15 @@ def update_finding_state(source_name):
     # source_name = "organizations/111122222444/sources/1234"
     finding_name = "{}/findings/samplefindingid2".format(source_name)
 
-    now_proto = Timestamp()
-    now_proto.GetCurrentTime()
-
     # Call the API to change the finding state to inactive as of now.
     new_finding = client.set_finding_state(
-        finding_name, Finding.INACTIVE, start_time=now_proto
+        request={
+            "name": finding_name,
+            "state": Finding.State.INACTIVE,
+            "start_time": datetime.datetime.now(),
+        }
     )
-    print("New state: {}".format(Finding.State.Name(new_finding.state)))
+    print(f"New state: {new_finding.state}")
     # [END update_finding_state]
 
 
@@ -326,7 +343,10 @@ def trouble_shoot(source_name):
 
     # Check for permssions to call create_finding or update_finding.
     permission_response = client.test_iam_permissions(
-        source_name, ["securitycenter.findings.update"]
+        request={
+            "resource": source_name,
+            "permissions": ["securitycenter.findings.update"],
+        }
     )
 
     print(
@@ -339,7 +359,10 @@ def trouble_shoot(source_name):
     # [START test_iam_permissions]
     # Check for permissions necessary to call set_finding_state.
     permission_response = client.test_iam_permissions(
-        source_name, ["securitycenter.findings.setState"]
+        request={
+            "resource": source_name,
+            "permissions": ["securitycenter.findings.setState"],
+        }
     )
     print(
         "Permision to update state? {}".format(len(permission_response.permissions) > 0)
@@ -362,7 +385,7 @@ def list_all_findings(organization_id):
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
     all_sources = "{org_name}/sources/-".format(org_name=org_name)
-    finding_result_iterator = client.list_findings(all_sources)
+    finding_result_iterator = client.list_findings(request={"parent": all_sources})
     for i, finding_result in enumerate(finding_result_iterator):
         print(
             "{}: name: {} resource: {}".format(
@@ -389,7 +412,7 @@ def list_filtered_findings(source_name):
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
     finding_result_iterator = client.list_findings(
-        source_name, filter_='category="MEDIUM_RISK_ONE"'
+        request={"parent": source_name, "filter": 'category="MEDIUM_RISK_ONE"'}
     )
     # Iterate an print all finding names and the resource they are
     # in reference to.
@@ -406,7 +429,6 @@ def list_filtered_findings(source_name):
 def list_findings_at_time(source_name):
     # [START list_findings_at_a_time]
     from google.cloud import securitycenter
-    from google.protobuf.timestamp_pb2 import Timestamp
     from datetime import timedelta, datetime
 
     # Create a new client.
@@ -420,14 +442,14 @@ def list_findings_at_time(source_name):
     # source_name = "organizations/111122222444/sources/1234"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
-    five_days_ago = Timestamp()
-    five_days_ago.FromDatetime(datetime.now() - timedelta(days=5))
+    five_days_ago = str(datetime.now() - timedelta(days=5))
     # [END list_findings_at_a_time]
     i = -1
-    five_days_ago.FromDatetime(datetime(2019, 3, 5, 0, 0, 0))
     # [START list_findings_at_a_time]
 
-    finding_result_iterator = client.list_findings(source_name, read_time=five_days_ago)
+    finding_result_iterator = client.list_findings(
+        request={"parent": source_name, "filter": five_days_ago}
+    )
     for i, finding_result in enumerate(finding_result_iterator):
         print(
             "{}: name: {} resource: {}".format(
@@ -452,7 +474,7 @@ def get_iam_policy(source_name):
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
     # Get the old policy so we can do an incremental update.
-    policy = client.get_iam_policy(source_name)
+    policy = client.get_iam_policy(request={"resource": source_name})
     print("Policy: {}".format(policy))
     # [END get_source_iam]
 
@@ -472,7 +494,9 @@ def group_all_findings(organization_id):
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
     all_sources = "{org_name}/sources/-".format(org_name=org_name)
-    group_result_iterator = client.group_findings(all_sources, group_by="category")
+    group_result_iterator = client.group_findings(
+        request={"parent": all_sources, "group_by": "category"}
+    )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
     # [END group_all_findings]
@@ -496,7 +520,11 @@ def group_filtered_findings(source_name):
     # source_name = "organizations/111122222444/sources/1234"
 
     group_result_iterator = client.group_findings(
-        source_name, group_by="category", filter_='state="ACTIVE"'
+        request={
+            "parent": source_name,
+            "group_by": "category",
+            "filter": 'state="ACTIVE"',
+        }
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
@@ -511,7 +539,6 @@ def group_findings_at_time(source_name):
     # [START group_findings_at_time]
     from datetime import datetime, timedelta
     from google.cloud import securitycenter
-    from google.protobuf.timestamp_pb2 import Timestamp
 
     # Create a client.
     client = securitycenter.SecurityCenterClient()
@@ -525,11 +552,13 @@ def group_findings_at_time(source_name):
 
     # Group findings as of yesterday.
     read_time = datetime.utcnow() - timedelta(days=1)
-    timestamp_proto = Timestamp()
-    timestamp_proto.FromDatetime(read_time)
 
     group_result_iterator = client.group_findings(
-        source_name, group_by="category", read_time=timestamp_proto
+        request={
+            "parent": source_name,
+            "group_by": "category",
+            "read_time": read_time,
+        }
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
@@ -545,7 +574,6 @@ def group_findings_and_changes(source_name):
     from datetime import timedelta
 
     from google.cloud import securitycenter
-    from google.protobuf.duration_pb2 import Duration
 
     # Create a client.
     client = securitycenter.SecurityCenterClient()
@@ -559,12 +587,13 @@ def group_findings_and_changes(source_name):
 
     # List assets and their state change the last 30 days
     compare_delta = timedelta(days=30)
-    # Convert the timedelta to a Duration
-    duration_proto = Duration()
-    duration_proto.FromTimedelta(compare_delta)
 
     group_result_iterator = client.group_findings(
-        source_name, group_by="state_change", compare_duration=duration_proto
+        request={
+            "parent": source_name,
+            "group_by": "state_change",
+            "compare_duration": compare_delta,
+        }
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)

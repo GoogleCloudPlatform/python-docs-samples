@@ -31,13 +31,15 @@ def create_notification_config(organization_id, notification_config_id, pubsub_t
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
     created_notification_config = client.create_notification_config(
-        org_name,
-        notification_config_id,
-        {
-            "description": "Notification for active findings",
-            "pubsub_topic": pubsub_topic,
-            "streaming_config": {"filter": 'state = "ACTIVE"'},
-        },
+        request={
+            "parent": org_name,
+            "config_id": notification_config_id,
+            "notification_config": {
+                "description": "Notification for active findings",
+                "pubsub_topic": pubsub_topic,
+                "streaming_config": {"filter": 'state = "ACTIVE"'},
+            },
+        }
     )
 
     print(created_notification_config)
@@ -59,7 +61,7 @@ def delete_notification_config(organization_id, notification_config_id):
         org_id=organization_id, config_id=notification_config_id
     )
 
-    client.delete_notification_config(notification_config_name)
+    client.delete_notification_config(request={"name": notification_config_name})
     print("Deleted notification config: {}".format(notification_config_name))
     # [END scc_delete_notification_config]
     return True
@@ -79,7 +81,9 @@ def get_notification_config(organization_id, notification_config_id):
         org_id=organization_id, config_id=notification_config_id
     )
 
-    notification_config = client.get_notification_config(notification_config_name)
+    notification_config = client.get_notification_config(
+        request={"name": notification_config_name}
+    )
     print("Got notification config: {}".format(notification_config))
     # [END scc_get_notification_config]
     return notification_config
@@ -95,7 +99,9 @@ def list_notification_configs(organization_id):
     # TODO: organization_id = "your-org-id"
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
-    notification_configs_iterator = client.list_notification_configs(org_name)
+    notification_configs_iterator = client.list_notification_configs(
+        request={"parent": org_name}
+    )
     for i, config in enumerate(notification_configs_iterator):
         print("{}: notification_config: {}".format(i, config))
     # [END scc_list_notification_configs]
@@ -128,13 +134,15 @@ def update_notification_config(organization_id, notification_config_id, pubsub_t
     )
 
     updated_notification_config = client.update_notification_config(
-        {
-            "name": notification_config_name,
-            "description": updated_description,
-            "pubsub_topic": pubsub_topic,
-            "streaming_config": {"filter": updated_filter},
-        },
-        update_mask=field_mask,
+        request={
+            "notification_config": {
+                "name": notification_config_name,
+                "description": updated_description,
+                "pubsub_topic": pubsub_topic,
+                "streaming_config": {"filter": updated_filter},
+            },
+            "update_mask": field_mask,
+        }
     )
 
     print(updated_notification_config)

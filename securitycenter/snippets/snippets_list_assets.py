@@ -29,7 +29,7 @@ def list_all_assets(organization_id):
     org_name = "organizations/{org_id}".format(org_id=organization_id)
 
     # Call the API and print results.
-    asset_iterator = client.list_assets(org_name)
+    asset_iterator = client.list_assets(request={"parent": org_name})
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_all_assets]
@@ -53,7 +53,9 @@ def list_assets_with_filters(organization_id):
         + '"google.cloud.resourcemanager.Project"'
     )
     # Call the API and print results.
-    asset_iterator = client.list_assets(org_name, filter_=project_filter)
+    asset_iterator = client.list_assets(
+        request={"parent": org_name, "filter": project_filter}
+    )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_assets_with_filter]
@@ -65,8 +67,6 @@ def list_assets_with_filters_and_read_time(organization_id):
     i = 0
     # [START demo_list_assets_with_filter_and_time]
     from datetime import datetime, timedelta
-
-    from google.protobuf.timestamp_pb2 import Timestamp
 
     from google.cloud import securitycenter
 
@@ -83,12 +83,14 @@ def list_assets_with_filters_and_read_time(organization_id):
 
     # Lists assets as of yesterday.
     read_time = datetime.utcnow() - timedelta(days=1)
-    timestamp_proto = Timestamp()
-    timestamp_proto.FromDatetime(read_time)
 
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        org_name, filter_=project_filter, read_time=timestamp_proto
+        request={
+            "parent": org_name,
+            "filter": project_filter,
+            "read_time": read_time,
+        }
     )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
@@ -102,7 +104,6 @@ def list_point_in_time_changes(organization_id):
     # [START demo_list_assets_changes]
     from datetime import timedelta
 
-    from google.protobuf.duration_pb2 import Duration
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -117,12 +118,14 @@ def list_point_in_time_changes(organization_id):
 
     # List assets and their state change the last 30 days
     compare_delta = timedelta(days=30)
-    # Convert the timedelta to a Duration
-    duration_proto = Duration()
-    duration_proto.FromTimedelta(compare_delta)
+
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        org_name, filter_=project_filter, compare_duration=duration_proto
+        request={
+            "parent": org_name,
+            "filter": project_filter,
+            "compare_duration": compare_delta,
+        }
     )
     for i, asset in enumerate(asset_iterator):
         print(i, asset)
@@ -145,7 +148,9 @@ def group_assets(organization_id):
 
     group_by_type = "security_center_properties.resource_type"
 
-    result_iterator = client.group_assets(org_name, group_by=group_by_type)
+    result_iterator = client.group_assets(
+        request={"parent": org_name, "group_by": group_by_type}
+    )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
     # [END group_all_assets]
@@ -170,7 +175,7 @@ def group_filtered_assets(organization_id):
         + '"google.cloud.resourcemanager.Project"'
     )
     result_iterator = client.group_assets(
-        org_name, group_by=group_by_type, filter_=only_projects
+        request={"parent": org_name, "group_by": group_by_type, "filter": only_projects}
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
@@ -186,18 +191,20 @@ def group_assets_by_changes(organization_id):
     from datetime import timedelta
 
     from google.cloud import securitycenter
-    from google.protobuf.duration_pb2 import Duration
 
     client = securitycenter.SecurityCenterClient()
 
-    duration_proto = Duration()
-    duration_proto.FromTimedelta(timedelta(days=5))
+    duration = timedelta(days=5)
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
     org_name = "organizations/{org_id}".format(org_id=organization_id)
     result_iterator = client.group_assets(
-        org_name, group_by="state_change", compare_duration=duration_proto
+        request={
+            "parent": org_name,
+            "group_by": "state_change",
+            "compare_duration": duration,
+        }
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)

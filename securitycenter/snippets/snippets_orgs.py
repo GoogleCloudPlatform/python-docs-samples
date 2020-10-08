@@ -27,7 +27,7 @@ def get_settings(organization_id):
 
     org_settings_name = client.organization_settings_path(organization_id)
 
-    org_settings = client.get_organization_settings(org_settings_name)
+    org_settings = client.get_organization_settings(request={"name": org_settings_name})
     print(org_settings)
     # [END get_org_settings]
 
@@ -50,8 +50,13 @@ def update_asset_discovery_org_settings(organization_id):
     field_mask = field_mask_pb2.FieldMask(paths=["enable_asset_discovery"])
     # Call the service.
     updated = client.update_organization_settings(
-        {"name": org_settings_name, "enable_asset_discovery": True},
-        update_mask=field_mask,
+        request={
+            "organization_settings": {
+                "name": org_settings_name,
+                "enable_asset_discovery": True,
+            },
+            "update_mask": field_mask,
+        }
     )
     print("Asset Discovery Enabled? {}".format(updated.enable_asset_discovery))
     # [END update_org_settings]
