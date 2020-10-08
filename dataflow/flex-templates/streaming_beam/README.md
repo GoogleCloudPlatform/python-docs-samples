@@ -1,6 +1,6 @@
 # Dataflow flex templates - Streaming Beam
 
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
 
 📝 Docs: [Using Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates)
 
@@ -155,7 +155,7 @@ and is used to run a new Dataflow job.
 export TEMPLATE_PATH="gs://$BUCKET/samples/dataflow/templates/streaming-beam.json"
 
 # Build the Flex Template.
-gcloud beta dataflow flex-template build $TEMPLATE_PATH \
+gcloud dataflow flex-template build $TEMPLATE_PATH \
   --image "$TEMPLATE_IMAGE" \
   --sdk-language "PYTHON" \
   --metadata-file "metadata.json"
@@ -173,9 +173,11 @@ required by the pipeline.
 
 ```sh
 # Run the Flex Template.
-gcloud beta dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
-  --template-file-gcs-location "$TEMPLATE_PATH" \
-  --parameters "input_subscription=$SUBSCRIPTION,output_table=$PROJECT:$DATASET.$TABLE"
+gcloud dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
+    --template-file-gcs-location "$TEMPLATE_PATH" \
+    --parameters input_subscription="$SUBSCRIPTION" \
+    --parameters output_table="$PROJECT:$DATASET.$TABLE" \
+    --region "$REGION"
 ```
 
 Check the results in BigQuery by running the following query:

@@ -121,10 +121,32 @@ set +e
 RTN=0
 ROOT=$(pwd)
 
+# Setup DRIFT region tag injector
+# (only run on *some* builds)
+if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+    echo "=== Setting up DRIFT region tag injector ==="
+    # install PyYaml (used by the DRIFT region tag parsing system)
+    echo "--- Installing PyYaml ---"
+    python3 -m pip install --user pyyaml
+
+    # Use ${HOME} because trampoline will automatically clean up this
+    # directory.
+    export REGION_TAG_PARSER_DIR="${HOME}/region-tag-parser"
+    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+
+    if [[ ! -f $PARSER_PATH ]]; then
+        echo "--- Fetching injection script from HEAD (via GitHub) ---"
+        git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
+        chmod +x $PARSER_PATH
+    fi
+    echo "=== Region tag injector setup complete ==="
+fi
+
 test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
 btlr_args=(
     "run"
+    "--max-cmd-duration=30m"
     "**/requirements.txt"
 )
 

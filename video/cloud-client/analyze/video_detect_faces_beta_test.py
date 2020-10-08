@@ -30,4 +30,3 @@ def test_detect_faces(capsys):
     out, _ = capsys.readouterr()
 
     assert "Face detected:" in out
-    assert "Attributes:" in out

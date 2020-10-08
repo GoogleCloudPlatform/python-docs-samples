@@ -1,0 +1,2 @@
+google-cloud-storage==1.31.2
+google-cloud-dataproc==2.0.2

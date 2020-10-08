@@ -1,0 +1,5 @@
+# Job for keeping the test Python packages in the Test Cloud Composer Environment up to date
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['composer', 'environments', 'update', 'composer-test', '--update-pypi-packages-from-file', 'composer/workflows/requirements-composer.txt', '--location', 'us-central1']
+timeout: 3600s #set timeout to 1h. It's unusual for installing Python packages in a composer environment to take 1h to update. 

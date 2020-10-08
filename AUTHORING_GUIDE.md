@@ -448,6 +448,62 @@ def test_resource():
     ...
 ```
 
+### Use filters with list methods
+
+When writing a test for a `list` method, consider filtering the possible results.
+Listing all resources in the test project may take a considerable amount of time.
+The exact way to do this depends on the API.
+
+Some `list` methods take a `filter`/`filter_` parameter:
+
+```python
+from datetime import datetime
+
+from google.cloud import logging_v2
+
+client = logging_v2.LoggingServiceV2Client()
+resource_names = [f"projects/{project}"]
+   # We add timestamp for making the query faster.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    filter_date = now - datetime.timedelta(minutes=1)
+    filters = (
+        f"timestamp>=\"{filter_date.isoformat('T')}\" "
+        "resource.type=cloud_run_revision "
+        "AND severity=NOTICE "
+)
+
+entries = client.list_log_entries(resource_names, filter_=filters)
+
+```
+
+Others allow you to limit the result set with additional arguments
+to the request:
+
+```python
+from google.cloud import asset_v1p5beta1
+
+# TODO project_id = 'Your Google Cloud Project ID'
+# TODO asset_types = 'Your asset type list, e.g.,
+# ["storage.googleapis.com/Bucket","bigquery.googleapis.com/Table"]'
+# TODO page_size = 'Num of assets in one page, which must be between 1 and
+# 1000 (both inclusively)'
+
+project_resource = "projects/{}".format(project_id)
+content_type = asset_v1p5beta1.ContentType.RESOURCE
+client = asset_v1p5beta1.AssetServiceClient()
+
+# Call ListAssets v1p5beta1 to list assets.
+response = client.list_assets(
+    request={
+        "parent": project_resource,
+        "read_time": None,
+        "asset_types": asset_types,
+        "content_type": content_type,
+        "page_size": page_size,
+    }
+)
+```
+
 ### Test Environment Setup
 
 Because all tests are system tests that use live resources, running tests
