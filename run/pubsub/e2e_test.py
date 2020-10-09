@@ -31,40 +31,12 @@ CLOUD_RUN_SERVICE = f"pubsub-test-{SUFFIX}"
 
 
 @pytest.fixture()
-def service_account():
-    service_account = f"{CLOUD_RUN_SERVICE}-invoker"
-
-    subprocess.run(
-        ["gcloud", "iam", "service-accounts", "create", service_account,
-         "--project", PROJECT, "--quiet"],
-        check=True
-    )
-
-    yield service_account
-
-    subprocess.run(
-        ["gcloud", "iam", "service-accounts", "delete",
-         f"{service_account}@{PROJECT}.iam.gserviceaccount.com",
-         "--project", PROJECT, "--quiet"],
-        check=True
-    )
-
-
-@pytest.fixture()
-def cloud_run_service(service_account):
+def cloud_run_service():
     # Build and Deploy Cloud Run Services
     subprocess.run(
         ["gcloud", "builds", "submit", "--project", PROJECT,
          f"--substitutions=_SERVICE={CLOUD_RUN_SERVICE}",
          "--config=e2e_test_setup.yaml", "--quiet"],
-        check=True
-    )
-
-    # Bind the service-account for pub/sub invoking
-    subprocess.run(
-        ["gcloud", "run", "services", "add-iam-policy-binding", CLOUD_RUN_SERVICE,
-         f"--member=serviceAccount:{service_account}@{PROJECT}.iam.gserviceaccount.com",
-         "--role=roles/run.invoker", "--quiet"],
         check=True
     )
 
@@ -109,7 +81,7 @@ def service_url(cloud_run_service):
 
 
 @pytest.fixture()
-def pubsub_topic(service_url, service_account):
+def pubsub_topic(service_url):
     # Create pub/sub topic
     topic = f"e2e_{SUFFIX}"
     subprocess.run(
@@ -121,8 +93,6 @@ def pubsub_topic(service_url, service_account):
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url,
-         "--push-auth-service-account",
-         f"{service_account}@{PROJECT}.iam.gserviceaccount.com",
          "--quiet"], check=True
     )
 
