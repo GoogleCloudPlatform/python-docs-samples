@@ -90,10 +90,14 @@ def pubsub_topic(service_url):
     )
 
     # Create pubsub push subscription to Cloud Run Service
+    # Attach service account with Cloud Run Invoker role
+    # See tutorial for details on setting up service-account: 
+    # https://cloud.google.com/run/docs/tutorials/pubsub
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url, "--project",
-         PROJECT, "--quiet"], check=True
+         PROJECT, "--service-account", f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com", 
+         "--quiet"], check=True
     )
 
     yield topic
@@ -103,6 +107,8 @@ def pubsub_topic(service_url):
     #     ["gcloud", "pubsub", "topics", "delete", topic,
     #      "--project", PROJECT, "--quiet"], check=True
     # )
+
+    # Delete subscription
 
 
 def test_end_to_end(pubsub_topic):
