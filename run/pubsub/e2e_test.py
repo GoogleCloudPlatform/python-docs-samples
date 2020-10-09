@@ -93,7 +93,7 @@ def pubsub_topic(service_url):
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url,
-         "--quiet"], check=True
+         "--quiet"], capture_output=True, check=True
     )
 
     yield topic
