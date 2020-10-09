@@ -114,7 +114,7 @@ def test_end_to_end(pubsub_topic):
     # Post the message "Runner" to the topic
     subprocess.run(
         ["gcloud", "pubsub", "topics", "publish", f"{pubsub_topic}",
-         "--message", "Runner", "--quiet"], check=True
+         "--project", PROJECT, "--message", "Runner", "--quiet"], check=True
     )
 
     # Check the logs for "Hello Runner"
