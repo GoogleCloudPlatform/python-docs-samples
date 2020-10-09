@@ -90,12 +90,13 @@ def pubsub_topic(service_url):
     )
 
     # Create pubsub push subscription to Cloud Run Service
-    subprocess.run(
+    output = subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url, "--topic-project",
-         PROJECT, "--quiet"], capture_output=True, check=True
+         PROJECT, "--quiet"], capture_output=True#, check=True
     )
 
+    print(output)
     yield topic
 
     # Delete topic
