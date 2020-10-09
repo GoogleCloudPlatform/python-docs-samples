@@ -89,11 +89,6 @@ def pubsub_topic(service_url):
          "--project", PROJECT, "--quiet"], check=True
     )
 
-    # Who am I???
-    subprocess.run(
-        ["gcloud", "auth", "list"]
-    )
-
     # Create pubsub push subscription to Cloud Run Service
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
