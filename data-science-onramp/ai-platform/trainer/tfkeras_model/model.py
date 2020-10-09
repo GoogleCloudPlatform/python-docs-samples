@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import tensorflow as tf
 # [END ai_platform_tfkeras_model_tf_import]
 
 # [START ai_platform_tfkeras_model_input_fn]
-def input_fn(features, labels, shuffle, num_epochs, batch_size):
+def input_fn(features, labels, num_epochs, batch_size, shuffle):
     """Generates an input function to be used for model training"""
 
     inputs = (features, labels)

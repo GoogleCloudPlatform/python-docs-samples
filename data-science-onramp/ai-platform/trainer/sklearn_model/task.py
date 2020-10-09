@@ -18,9 +18,7 @@ import argparse
 import os
 import re
 
-#import hypertune
 import joblib
-import pandas as pd
 from sklearn.metrics import mean_absolute_error
 from google.cloud import storage
 
@@ -56,7 +54,7 @@ def get_args():
     return parser.parse_args()
 # [END ai_platform_sklearn_task_args]
 
-# [START ai_platform_sklearn_task_fit_export]
+# [START ai_platform_sklearn_task_fit]
 def fit_model(input_path, job_dir, degree=1, alpha=0):
     """Train, evaluate and save model given model configuration"""
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
@@ -77,7 +75,9 @@ def fit_model(input_path, job_dir, degree=1, alpha=0):
     mae = mean_absolute_error(eval_y, pred_y)
 
     print(f"Done. Model had MAE={mae}")
+# [END ai_platform_sklearn_task_fit]
 
+# [START ai_platform_sklearn_task_export]
     # Save model to GCS
     print("Saving model")
     matches = re.match("gs://(.*?)/(.*)", job_dir)
@@ -91,7 +91,7 @@ def fit_model(input_path, job_dir, degree=1, alpha=0):
     client = storage.Client()
     client.bucket(bucket).blob(blob_name).upload_from_filename(model_dump)
     print("Model saved")
-# [END ai_platform_sklearn_task_fit_export]
+# [END ai_platform_sklearn_task_export]
 
 if __name__ == "__main__":
     args = get_args()
