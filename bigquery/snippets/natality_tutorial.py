@@ -38,13 +38,15 @@ def run_natality_tutorial(override_values={}):
 
     # Prepare a reference to a new dataset for storing the query results.
     dataset_id = "natality_regression"
+    dataset_id_full = "{}.{}".format(client.project, dataset_id)
     # [END bigquery_query_natality_tutorial]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     dataset_id = override_values.get("dataset_id", dataset_id)
+    dataset_id_full = "{}.{}".format(client.project, dataset_id)
     # [START bigquery_query_natality_tutorial]
 
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
+    dataset = bigquery.Dataset(dataset_id_full)
 
     # Create the new BigQuery dataset.
     dataset = client.create_dataset(dataset)

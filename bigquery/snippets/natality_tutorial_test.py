@@ -43,8 +43,8 @@ def test_natality_tutorial(client, datasets_to_delete):
 
     natality_tutorial.run_natality_tutorial(override_values)
 
-    table_ref = bigquery.Dataset(client.dataset(override_values["dataset_id"])).table(
-        "regression_input"
+    table_ref = "{}.{}.{}".format(
+        client.project, override_values["dataset_id"], "regression_input"
     )
     table = client.get_table(table_ref)
     assert table.num_rows > 0

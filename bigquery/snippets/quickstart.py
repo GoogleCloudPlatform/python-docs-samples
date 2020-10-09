@@ -33,8 +33,8 @@ def run_quickstart(override_values={}):
     # [START bigquery_quickstart]
 
     # Prepares a reference to the new dataset
-    dataset_ref = bigquery_client.dataset(dataset_id)
-    dataset = bigquery.Dataset(dataset_ref)
+    dataset_id_full = "{}.{}".format(bigquery_client.project, dataset_id)
+    dataset = bigquery.Dataset(dataset_id_full)
 
     # Creates the new dataset
     dataset = bigquery_client.create_dataset(dataset)

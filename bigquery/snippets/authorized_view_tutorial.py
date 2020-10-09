@@ -27,16 +27,18 @@ def run_authorized_view_tutorial(override_values={}):
 
     client = bigquery.Client()
     source_dataset_id = "github_source_data"
+    source_dataset_id_full = "{}.{}".format(client.project, source_dataset_id)
 
     # [END bigquery_authorized_view_tutorial]
     # [END bigquery_avt_create_source_dataset]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     source_dataset_id = override_values.get("source_dataset_id", source_dataset_id)
+    source_dataset_id_full = "{}.{}".format(client.project, source_dataset_id)
     # [START bigquery_authorized_view_tutorial]
     # [START bigquery_avt_create_source_dataset]
 
-    source_dataset = bigquery.Dataset(client.dataset(source_dataset_id))
+    source_dataset = bigquery.Dataset(source_dataset_id_full)
     # Specify the geographic location where the dataset should reside.
     source_dataset.location = "US"
     source_dataset = client.create_dataset(source_dataset)  # API request
@@ -66,16 +68,18 @@ def run_authorized_view_tutorial(override_values={}):
     # Create a separate dataset to store your view
     # [START bigquery_avt_create_shared_dataset]
     shared_dataset_id = "shared_views"
+    shared_dataset_id_full = "{}.{}".format(client.project, shared_dataset_id)
 
     # [END bigquery_authorized_view_tutorial]
     # [END bigquery_avt_create_shared_dataset]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     shared_dataset_id = override_values.get("shared_dataset_id", shared_dataset_id)
+    shared_dataset_id_full = "{}.{}".format(client.project, shared_dataset_id)
     # [START bigquery_authorized_view_tutorial]
     # [START bigquery_avt_create_shared_dataset]
 
-    shared_dataset = bigquery.Dataset(client.dataset(shared_dataset_id))
+    shared_dataset = bigquery.Dataset(shared_dataset_id_full)
     shared_dataset.location = "US"
     shared_dataset = client.create_dataset(shared_dataset)  # API request
     # [END bigquery_avt_create_shared_dataset]

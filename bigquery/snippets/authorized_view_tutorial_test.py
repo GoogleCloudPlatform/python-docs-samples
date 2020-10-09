@@ -30,7 +30,7 @@ def datasets_to_delete(client):
     doomed = []
     yield doomed
     for item in doomed:
-        client.delete_dataset(item, delete_contents=True)
+        client.delete_dataset(item, delete_contents=True, not_found_ok=True)
 
 
 def test_authorized_view_tutorial(client, datasets_to_delete):
@@ -42,8 +42,12 @@ def test_authorized_view_tutorial(client, datasets_to_delete):
             str(uuid.uuid4()).replace("-", "_")
         ),
     }
-    source_dataset_ref = client.dataset(override_values["source_dataset_id"])
-    shared_dataset_ref = client.dataset(override_values["shared_dataset_id"])
+    source_dataset_ref = "{}.{}".format(
+        client.project, override_values["source_dataset_id"]
+    )
+    shared_dataset_ref = "{}.{}".format(
+        client.project, override_values["shared_dataset_id"]
+    )
     datasets_to_delete.extend(
         [override_values["source_dataset_id"], override_values["shared_dataset_id"]]
     )
