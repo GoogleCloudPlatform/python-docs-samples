@@ -32,7 +32,7 @@ import manager  # noqa
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
 rsa_cert_path = 'resources/rsa_cert.pem'
-topic_id = 'test-device-events-{}'.format(uuid.uuid4())
+topic_id = 'test-device-events-topic-{}'.format(uuid.uuid4())
 subscription_name = 'test-device-images-{}'.format(uuid.uuid4())
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
