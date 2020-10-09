@@ -92,8 +92,8 @@ def pubsub_topic(service_url):
     # Create pubsub push subscription to Cloud Run Service
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
-         "--topic", topic, "--push-endpoint", service_url,
-         "--quiet"], capture_output=True, check=True
+         "--topic", topic, "--push-endpoint", service_url, "--topic-project",
+         PROJECT, "--quiet"], capture_output=True, check=True
     )
 
     yield topic
