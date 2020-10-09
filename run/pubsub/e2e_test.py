@@ -77,7 +77,7 @@ def service_url(cloud_run_service):
         check=True
     ).stdout.strip()
 
-    yield service_url
+    yield service_url.decode()
 
 
 @pytest.fixture()
