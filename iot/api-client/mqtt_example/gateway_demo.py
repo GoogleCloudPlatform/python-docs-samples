@@ -30,7 +30,7 @@ logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.CRITICAL)
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
 gateway_id_template = 'test-gateway-{}'
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-topic-{}'.format(int(time.time()))
 
 ca_cert_path = 'resources/roots.pem'
 log_path = 'config_log.csv'
