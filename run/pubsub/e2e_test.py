@@ -43,8 +43,8 @@ def service_account():
     yield service_account
 
     subprocess.run(
-        ["gcloud", "iam", "service-accounts", "delete", 
-        f"{service_account}@{PROJECT}.iam.gserviceaccount.com",
+        ["gcloud", "iam", "service-accounts", "delete",
+         f"{service_account}@{PROJECT}.iam.gserviceaccount.com",
          "--project", PROJECT, "--quiet"],
         check=True
     )
@@ -79,15 +79,15 @@ def cloud_run_service(service_account):
     )
 
     subprocess.run(
-        ["gcloud", "container", "images", "delete", 
-        f"gcr.io/{PROJECT}/{CLOUD_RUN_SERVICE}", "--quiet"],
+        ["gcloud", "container", "images", "delete",
+         f"gcr.io/{PROJECT}/{CLOUD_RUN_SERVICE}", "--quiet"],
         check=True
     )
 
 
 @pytest.fixture
 def service_url(cloud_run_service):
-     # Get the URL for the cloud run service
+    # Get the URL for the cloud run service
     service_url = subprocess.run(
         [
             "gcloud",
@@ -114,23 +114,23 @@ def pubsub_topic(service_url, service_account):
     topic = f"e2e_{SUFFIX}"
     subprocess.run(
         ["gcloud", "pubsub", "topics", "create", topic,
-        "--project", PROJECT, "--quiet"], check=True
+         "--project", PROJECT, "--quiet"], check=True
     )
 
     # Create pubsub push subscription to Cloud Run Service
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url,
-         "--push-auth-service-account", 
-         f"{service_account}@{PROJECT}.iam.gserviceaccount.com", "--quiet",
-        ], check=True
+         "--push-auth-service-account",
+         f"{service_account}@{PROJECT}.iam.gserviceaccount.com",
+         "--quiet"], check=True
     )
 
     yield topic
 
     # Delete topic
     subprocess.run(
-        ["gcloud", "pubsub", "topics", "delete", topic, 
+        ["gcloud", "pubsub", "topics", "delete", topic,
          "--project", PROJECT, "--quiet"], check=True
     )
 
@@ -139,7 +139,7 @@ def test_end_to_end(pubsub_topic):
     # Post the message "Runner" to the topic
     subprocess.run(
         ["gcloud", "pubsub", "topics", "publish", f"{pubsub_topic}",
-        "--message", "Runner", "--quiet"], check=True
+         "--message", "Runner", "--quiet"], check=True
     )
 
     # Check the logs for "Hello Runner"
