@@ -96,7 +96,8 @@ def pubsub_topic(service_url):
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url, "--project",
-         PROJECT, "--service-account", f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com", 
+         PROJECT, "--push-auth-service-account",
+         f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com",
          "--quiet"], check=True
     )
 
