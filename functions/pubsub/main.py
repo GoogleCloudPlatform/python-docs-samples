@@ -22,7 +22,7 @@ from google.cloud import pubsub_v1
 
 # Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
-PROJECT_ID = os.getenv('GCP_PROJECT')
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 
 
 # Publishes a message to a Cloud Pub/Sub topic.
@@ -33,7 +33,7 @@ def publish(request):
     message = request_json.get("message")
 
     if not topic_name or not message:
-        return ('Missing "topic" and/or "subscription" parameter.', 500)
+        return ('Missing "topic" and/or "message" parameter.', 400)
 
     print(f'Publishing message to topic {topic_name}')
 
