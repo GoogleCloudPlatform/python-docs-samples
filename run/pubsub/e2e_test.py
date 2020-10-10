@@ -91,7 +91,7 @@ def pubsub_topic(service_url):
 
     # Create pubsub push subscription to Cloud Run Service
     # Attach service account with Cloud Run Invoker role
-    # See tutorial for details on setting up service-account: 
+    # See tutorial for details on setting up service-account:
     # https://cloud.google.com/run/docs/tutorials/pubsub
     subprocess.run(
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
