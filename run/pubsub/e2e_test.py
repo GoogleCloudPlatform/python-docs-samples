@@ -104,12 +104,16 @@ def pubsub_topic(service_url):
     yield topic
 
     # Delete topic
-    # subprocess.run(
-    #     ["gcloud", "pubsub", "topics", "delete", topic,
-    #      "--project", PROJECT, "--quiet"], check=True
-    # )
+    subprocess.run(
+        ["gcloud", "pubsub", "topics", "delete", topic,
+         "--project", PROJECT, "--quiet"], check=True
+    )
 
     # Delete subscription
+    subprocess.run(
+        ["gcloud", "pubsub", "subscriptions", "delete", f"{topic}_sub",
+         "--project", PROJECT, "--quiet"], check=True
+    )
 
 
 def test_end_to_end(pubsub_topic):
