@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+# Copyright 2020 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 #   https://kubernetes.io/docs/user-guide/deployments/
 
 # [START kubernetes_deployment]
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: polls
@@ -31,6 +31,9 @@ metadata:
     app: polls
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: polls
   template:
     metadata:
       labels:
@@ -84,7 +87,7 @@ spec:
           hostPath:
             path: /etc/ssl/certs
         - name: cloudsql
-          emptyDir:
+          emptyDir: {}
       # [END volumes]        
 # [END kubernetes_deployment]
 
