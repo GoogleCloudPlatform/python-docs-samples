@@ -25,7 +25,7 @@
 #   usage: python3 samples/v1p1beta1/speech_adaptation_beta.py [--storage_uri "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"] [--phrase "Brooklyn Bridge"]
 
 # [START speech_adaptation_beta]
-from google.cloud import speech_v1p1beta1
+from google.cloud import speech_v1p1beta1 as speech
 
 
 def sample_recognize(storage_uri, phrase):
@@ -37,7 +37,7 @@ def sample_recognize(storage_uri, phrase):
       phrase Phrase "hints" help recognize the specified phrases from your audio.
     """
 
-    client = speech_v1p1beta1.SpeechClient()
+    client = speech.SpeechClient()
 
     # storage_uri = 'gs://cloud-samples-data/speech/brooklyn_bridge.mp3'
     # phrase = 'Brooklyn Bridge'
@@ -60,8 +60,9 @@ def sample_recognize(storage_uri, phrase):
     language_code = "en-US"
 
     # Encoding of audio data sent. This sample sets this explicitly.
-    # This field is optional for FLAC and WAV audio formats.
-    encoding = speech_v1p1beta1.RecognitionConfig.AudioEncoding.MP3
+    # This field is optional for FLAC and WAV audio formats
+    encoding = speech.RecognitionConfig.AudioEncoding.MP3
+
     config = {
         "speech_contexts": speech_contexts,
         "sample_rate_hertz": sample_rate_hertz,
@@ -70,7 +71,8 @@ def sample_recognize(storage_uri, phrase):
     }
     audio = {"uri": storage_uri}
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
+
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]

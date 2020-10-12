@@ -47,7 +47,7 @@ def transcribe_model_selection(speech_file, model):
         model=model,
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
@@ -76,9 +76,7 @@ def transcribe_model_selection_gcs(gcs_uri, model):
         model=model,
     )
 
-    operation = client.long_running_recognize(
-        request={"config": config, "audio": audio}
-    )
+    operation = client.long_running_recognize(config=config, audio=audio)
 
     print("Waiting for operation to complete...")
     response = operation.result(timeout=90)

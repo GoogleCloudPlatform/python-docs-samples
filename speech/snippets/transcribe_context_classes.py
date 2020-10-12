@@ -28,7 +28,7 @@ def transcribe_context_classes(storage_uri):
     # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#speechcontext
     # Full list of supported phrases (class tokens) here:
     # https://cloud.google.com/speech-to-text/docs/class-tokens
-    speech_context = speech.SpeechContext(phrases=["$TIME"])
+    speech_context = speech.SpeechContext(phrases=['$TIME'])
 
     # RecognitionConfig: to configure your encoding and sample_rate_hertz, see:
     # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#recognitionconfig
@@ -39,7 +39,7 @@ def transcribe_context_classes(storage_uri):
         speech_contexts=[speech_context],
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]

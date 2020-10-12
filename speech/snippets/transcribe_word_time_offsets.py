@@ -44,7 +44,7 @@ def transcribe_file_with_word_time_offsets(speech_file):
         enable_word_time_offsets=True,
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for result in response.results:
         alternative = result.alternatives[0]
@@ -54,6 +54,7 @@ def transcribe_file_with_word_time_offsets(speech_file):
             word = word_info.word
             start_time = word_info.start_time
             end_time = word_info.end_time
+
             print(
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
@@ -75,9 +76,7 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
         enable_word_time_offsets=True,
     )
 
-    operation = client.long_running_recognize(
-        request={"config": config, "audio": audio}
-    )
+    operation = client.long_running_recognize(config=config, audio=audio)
 
     print("Waiting for operation to complete...")
     result = operation.result(timeout=90)
@@ -91,10 +90,10 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
             word = word_info.word
             start_time = word_info.start_time
             end_time = word_info.end_time
+
             print(
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
-
 
 # [END speech_transcribe_async_word_time_offsets_gcs]
 
