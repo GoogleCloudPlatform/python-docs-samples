@@ -143,10 +143,10 @@ def test_end_to_end(pubsub_topic):
         iterator = client.list_log_entries(resource_names, filter_=filters)
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
-                # When message found, exit loop
                 found = True
-                break
-
+        # When message found, exit loop
+        if found = True:
+            break
         time.sleep(5) # Slight delay before retry
 
     assert found
