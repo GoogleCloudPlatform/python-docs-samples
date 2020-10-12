@@ -144,6 +144,7 @@ def test_end_to_end(pubsub_topic):
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
                 found = True
+                break
         # When message found, exit loop
         if found = True:
             break
