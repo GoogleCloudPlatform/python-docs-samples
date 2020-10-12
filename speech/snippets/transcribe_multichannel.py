@@ -46,7 +46,7 @@ def transcribe_file_with_multichannel(speech_file):
         enable_separate_recognition_per_channel=True,
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
@@ -75,7 +75,7 @@ def transcribe_gcs_with_multichannel(gcs_uri):
         enable_separate_recognition_per_channel=True,
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]

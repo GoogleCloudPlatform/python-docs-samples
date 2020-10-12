@@ -46,7 +46,7 @@ def run_quickstart():
     )
 
     # Detects speech in the audio file
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for result in response.results:
         print("Transcript: {}".format(result.alternatives[0].transcript))

@@ -25,7 +25,7 @@
 #   usage: python3 samples/v1p1beta1/speech_quickstart_beta.py [--storage_uri "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"]
 
 # [START speech_quickstart_beta]
-from google.cloud import speech_v1p1beta1
+from google.cloud import speech_v1p1beta1 as speech
 
 
 def sample_recognize(storage_uri):
@@ -36,7 +36,7 @@ def sample_recognize(storage_uri):
       storage_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
     """
 
-    client = speech_v1p1beta1.SpeechClient()
+    client = speech.SpeechClient()
 
     # storage_uri = 'gs://cloud-samples-data/speech/brooklyn_bridge.mp3'
 
@@ -48,7 +48,7 @@ def sample_recognize(storage_uri):
 
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats.
-    encoding = speech_v1p1beta1.RecognitionConfig.AudioEncoding.MP3
+    encoding = speech.RecognitionConfig.AudioEncoding.MP3
     config = {
         "language_code": language_code,
         "sample_rate_hertz": sample_rate_hertz,
@@ -56,7 +56,8 @@ def sample_recognize(storage_uri):
     }
     audio = {"uri": storage_uri}
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
+
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]

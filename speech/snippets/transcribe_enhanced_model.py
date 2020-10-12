@@ -49,7 +49,7 @@ def transcribe_file_with_enhanced_model(path):
         model="phone_call",
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
