@@ -45,7 +45,7 @@ def transcribe_file_with_auto_punctuation(path):
         enable_automatic_punctuation=True,
     )
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]

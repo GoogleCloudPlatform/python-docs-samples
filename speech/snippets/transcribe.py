@@ -47,7 +47,8 @@ def transcribe_file(speech_file):
     # [END speech_python_migration_config]
 
     # [START speech_python_migration_sync_response]
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
+
     # [END speech_python_migration_sync_request]
     # Each result is for a consecutive portion of the audio. Iterate through
     # them to get the transcripts for the entire audio file.
@@ -76,7 +77,8 @@ def transcribe_gcs(gcs_uri):
     )
     # [END speech_python_migration_config_gcs]
 
-    response = client.recognize(request={"config": config, "audio": audio})
+    response = client.recognize(config=config, audio=audio)
+
     # Each result is for a consecutive portion of the audio. Iterate through
     # them to get the transcripts for the entire audio file.
     for result in response.results:
