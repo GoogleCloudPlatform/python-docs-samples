@@ -146,7 +146,7 @@ def test_end_to_end(pubsub_topic):
                 found = True
                 break
         # When message found, exit loop
-        if found == True:
+        if found is True:
             break
         time.sleep(5)  # Slight delay before retry
 
