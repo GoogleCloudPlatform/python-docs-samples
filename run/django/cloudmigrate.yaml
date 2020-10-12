@@ -23,7 +23,7 @@ steps:
 substitutions: 
   _INSTANCE_NAME: django-instance
   _REGION: us-central1
-  _SERVICE_NAME: polls
+  _SERVICE_NAME: polls-service
 
 images: 
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}
