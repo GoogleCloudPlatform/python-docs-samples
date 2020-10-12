@@ -2,23 +2,28 @@ steps:
 
 # Build the image
 - name: "gcr.io/cloud-builders/docker"
-  args: ["build", "-t", "gcr.io/${PROJECT_ID}/polls", "."]
+  args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
 
 # Push the image to the Container Registry
 - name: "gcr.io/cloud-builders/docker"
-  args: ["push", "gcr.io/${PROJECT_ID}/polls"]
+  args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
 # Apply the Django database migration against the Cloud SQL database
 - name: "gcr.io/google-appengine/exec-wrapper"
-  args: ["-i", "gcr.io/$PROJECT_ID/polls",
-         "-s", "${PROJECT_ID}:us-central1:django-instance",
+  args: ["-i", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+         "-s", "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
          "--", "python", "manage.py", "migrate"]
 
 # Apply the static migrations against the Cloud Storage bucket
 - name: "gcr.io/google-appengine/exec-wrapper"
-  args: ["-i", "gcr.io/$PROJECT_ID/polls",
-         "-s", "${PROJECT_ID}:us-central1:django-instance",
+  args: ["-i", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+         "-s", "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
          "--", "python", "manage.py", "collectstatic", "--no-input"]
 
-# This Cloud Build configuration could be extended to include the gcloud run deploy
-# step, see https://cloud.google.com/run/docs/continuous-deployment-with-cloud-build
+substitutions: 
+  _INSTANCE_NAME: django-instance
+  _REGION: us-central1
+  _SERVICE_NAME: polls
+
+images: 
+  - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}
