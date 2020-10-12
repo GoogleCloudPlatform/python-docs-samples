@@ -1,0 +1,38 @@
+# This file is used to generate README.rst
+
+product:
+  name: Cloud Healthcare API
+  short_name: Healthcare API
+  url: https://cloud.google.com/healthcare/docs
+  description: >
+    `Cloud Healthcare API`_ implements healthcare-native protocols and formats
+    to accelerate ingestion, storage, analysis, and integration of healthcare
+    data with cloud-based applications.
+
+    - See the `migration guide`_ for information about migrating to Python client library v0.25.1.
+
+
+    .. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
+
+required_api_url: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
+required_roles:
+- Healthcare Dataset Administrator
+- Healthcare FHIR Store Administrator
+- Healthcare FHIR Resource Editor
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: FHIR stores
+  file: fhir_stores.py
+  show_help: True
+
+- name: FHIR resources
+  file: fhir_resources.py
+  show_help: True
+
+cloud_client_library: true
+
+folder: healthcare/api-client/fhir
