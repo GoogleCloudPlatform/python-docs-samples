@@ -15,9 +15,9 @@ import copy
 
 from uuid import uuid4
 
-import pytest
-
 import main
+
+import pytest
 
 
 binary_headers = {

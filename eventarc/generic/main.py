@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START eventarc_generic_server]
-import base64
 import os
 
 from flask import Flask, request
@@ -27,12 +26,12 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     print('Event received!')
-    
+
     print('HEADERS:')
     headers = dict(request.headers)
-    headers.pop('Authorization', None) # do not log authorization header if exists
+    headers.pop('Authorization', None)  # do not log authorization header if exists
     print(headers)
-    
+
     print('BODY:')
     body = dict(request.json)
     print(body)

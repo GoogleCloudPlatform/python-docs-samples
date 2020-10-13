@@ -11,13 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import base64
-import copy
 from uuid import uuid4
 
-import pytest
-
 import main
+
+import pytest
 
 
 binary_headers = {
@@ -30,10 +28,13 @@ binary_headers = {
 
 @pytest.fixture
 def client():
+
     main.app.testing = True
     return main.app.test_client()
 
+
 def test_relay(client, capsys):
+
     r = client.post('/', json={'message': {'data': 'Hello'}}, headers=binary_headers)
     assert r.status_code == 200
 

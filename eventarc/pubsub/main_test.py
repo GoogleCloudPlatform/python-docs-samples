@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import base64
-import copy
+
 from uuid import uuid4
 
-import pytest
-
 import main
+
+import pytest
 
 
 binary_headers = {
