@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import base64
 import copy
-
 from uuid import uuid4
 
 import pytest
@@ -33,13 +33,14 @@ def client():
     main.app.testing = True
     return main.app.test_client()
 
-
-def test_endpoint(client, capsys):
-    test_headers = copy.copy(binary_headers)
-    test_headers['Ce-Subject'] = 'test-subject'
-
-    r = client.post('/', headers=test_headers)
+def test_relay(client, capsys):
+    r = client.post('/', json={'message': {'data': 'Hello'}}, headers=binary_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"Detected change in GCS bucket: {test_headers['Ce-Subject']}" in out
+    ce_id = binary_headers['ce-id']
+
+    # Ensure the output prints HTTP headers and body
+    assert 'Event received!' in out
+    assert ce_id in out
+    assert "{'message': {'data': 'Hello'}}" in out
