@@ -51,7 +51,7 @@ def pic_to_text(infile):
     with io.open(infile, "rb") as image_file:
         content = image_file.read()
 
-    image = vision.types.Image(content=content)
+    image = vision.Image(content=content)
 
     # For dense text, use document_text_detection
     # For less dense text, use text_detection
@@ -88,16 +88,16 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     name = client.glossary_path(project_id, location, glossary_name)
 
     # Set language codes
-    language_codes_set = translate.types.Glossary.LanguageCodesSet(
+    language_codes_set = translate.Glossary.LanguageCodesSet(
         language_codes=languages
     )
 
-    gcs_source = translate.types.GcsSource(input_uri=glossary_uri)
+    gcs_source = translate.GcsSource(input_uri=glossary_uri)
 
-    input_config = translate.types.GlossaryInputConfig(gcs_source=gcs_source)
+    input_config = translate.GlossaryInputConfig(gcs_source=gcs_source)
 
     # Set glossary resource information
-    glossary = translate.types.Glossary(
+    glossary = translate.Glossary(
         name=name, language_codes_set=language_codes_set, input_config=input_config
     )
 
@@ -145,7 +145,7 @@ def translate_text(
 
     glossary = client.glossary_path(project_id, location, glossary_name)
 
-    glossary_config = translate.types.TranslateTextGlossaryConfig(glossary=glossary)
+    glossary_config = translate.TranslateTextGlossaryConfig(glossary=glossary)
 
     parent = f"projects/{project_id}/locations/{location}"
 
