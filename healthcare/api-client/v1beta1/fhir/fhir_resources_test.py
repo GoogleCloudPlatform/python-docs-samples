@@ -13,16 +13,12 @@
 # limitations under the License.
 
 import os
-import sys
 import uuid
 
 import backoff
 import pytest
 from requests.exceptions import HTTPError
 
-# Add datasets for bootstrapping datasets for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets  # noqa
 import fhir_stores  # noqa
 import fhir_resources  # noqa
 
@@ -32,7 +28,6 @@ base_url = "https://healthcare.googleapis.com/v1beta1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
@@ -45,14 +40,16 @@ def fatal_code(e):
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    dataset = datasets.create_dataset(
+    dataset = fhir_stores.create_dataset(
         service_account_json, project_id, cloud_region, dataset_id
     )
 
     yield dataset
 
     # Clean up
-    datasets.delete_dataset(service_account_json, project_id, cloud_region, dataset_id)
+    fhir_stores.delete_dataset(
+        service_account_json, project_id, cloud_region, dataset_id
+    )
 
 
 @pytest.fixture(scope="module")
@@ -116,27 +113,10 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     assert "Created Patient" in out
 
 
-def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.get_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Got Patient resource" in out
-
-
-@pytest.mark.skip(reason='flaky test sometimes returns 403 errors, need to investigate')
-def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient, capsys):
+@pytest.mark.skip(reason="flaky test sometimes returns 403 errors, need to investigate")
+def test_conditional_patch_resource(
+    test_dataset, test_fhir_store, test_patient, capsys
+):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
@@ -188,8 +168,8 @@ def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient,
         cloud_region,
         dataset_id,
         fhir_store_id,
-        'Observation',
-        observation_resource_id
+        "Observation",
+        observation_resource_id,
     )
 
     out, _ = capsys.readouterr()
@@ -199,8 +179,10 @@ def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient,
     assert "Conditionally patched" in out
 
 
-@pytest.mark.skip(reason='flaky test sometimes returns 412 errors, need to investigate')
-def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient, capsys):
+@pytest.mark.skip(reason="flaky test sometimes returns 412 errors, need to investigate")
+def test_conditional_update_resource(
+    test_dataset, test_fhir_store, test_patient, capsys
+):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
@@ -254,8 +236,8 @@ def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient
         cloud_region,
         dataset_id,
         fhir_store_id,
-        'Observation',
-        observation_resource_id
+        "Observation",
+        observation_resource_id,
     )
 
     out, _ = capsys.readouterr()
@@ -263,14 +245,14 @@ def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient
     assert "Conditionally updated" in out
 
 
-def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient, capsys):
+def test_conditional_delete_resource(
+    test_dataset, test_fhir_store, test_patient, capsys
+):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
 
-    @backoff.on_exception(
-        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
-    )
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
     def create_encounter():
         encounter_response = fhir_resources.create_encounter(
             service_account_json,
@@ -286,9 +268,7 @@ def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient
 
     encounter_resource_id = create_encounter()
 
-    @backoff.on_exception(
-        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
-    )
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
     def create_observation():
         fhir_resources.create_observation(
             service_account_json,
@@ -303,9 +283,7 @@ def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient
 
     create_observation()
 
-    @backoff.on_exception(
-        backoff.expo, HTTPError, max_time=60, giveup=fatal_code
-    )
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
     def conditional_delete_resource():
         fhir_resources.conditional_delete_resource(
             service_account_json,
@@ -325,168 +303,6 @@ def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient
     assert "Conditionally deleted" in out
 
 
-def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.update_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Updated Patient resource" in out
-
-
-def test_patch_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.patch_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Patched Patient resource" in out
-
-
-def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
-    # We have to update the resource so that different versions of it are
-    # created, then we test to see if we can get/delete those versions.
-    fhir_resources.update_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
-    )
-
-    history = fhir_resources.list_resource_history(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
-    )
-
-    fhir_resources.get_resource_history(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
-        history["entry"][-1]["resource"]["meta"]["versionId"],
-    )
-
-    fhir_resources.delete_resource_purge(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    # list_resource_history test
-    assert "History for Patient resource" in out
-    # get_resource_history test
-    assert "Got history for Patient resource" in out
-    # delete_resource_purge test
-    assert "Deleted versions of Patient resource" in out
-
-
-def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.search_resources_get(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert "Using GET request" in out
-
-
-def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.search_resources_post(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert "Using POST request" in out
-
-
-def test_get_patient_everything(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.get_patient_everything(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # get_patient_everything test
-    assert "id" in out
-
-
-def test_get_metadata(test_dataset, test_fhir_store, capsys):
-    fhir_resources.get_metadata(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # get_metadata test
-    assert "fhirVersion" in out
-
-
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.delete_resource(
         service_account_json,
@@ -496,7 +312,7 @@ def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
         dataset_id,
         fhir_store_id,
         resource_type,
-        test_patient
+        test_patient,
     )
 
     out, _ = capsys.readouterr()
@@ -504,20 +320,3 @@ def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     print(out)
 
     assert "Deleted Patient resource" in out
-
-
-def test_execute_bundle(test_dataset, test_fhir_store, capsys):
-    fhir_resources.execute_bundle(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        bundle,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # execute_bundle test
-    assert "Executed bundle" in out
