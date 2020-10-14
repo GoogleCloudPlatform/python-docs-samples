@@ -13,9 +13,9 @@
 # limitations under the License.
 from uuid import uuid4
 
-import main
-
 import pytest
+
+import main
 
 
 binary_headers = {
