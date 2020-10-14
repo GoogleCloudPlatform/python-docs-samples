@@ -25,6 +25,8 @@ app = Flask(__name__)
 # [START eventarc_gcs_handler]
 @app.route('/', methods=['POST'])
 def index():
+    # Gets the GCS bucket name from the CloudEvent header
+    # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
     bucket = request.headers.get('ce-subject')
 
     print(f"Detected change in GCS bucket: {bucket}")

@@ -39,9 +39,13 @@ def test_relay(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    ce_id = binary_headers['ce-id']
 
-    # Ensure the output prints HTTP headers and body
+    # Assert print
     assert 'Event received!' in out
-    assert ce_id in out
+
+    # Ensure output relays HTTP headers
+    assert '"Ce-Specversion":"1.0"' in r.data.decode('utf-8')
+
+    # Ensure output relays HTTP body
+    assert binary_headers['ce-id'] in out
     assert "{'message': {'data': 'Hello'}}" in out

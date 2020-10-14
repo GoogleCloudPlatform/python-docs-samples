@@ -49,6 +49,12 @@ You may want to refer to the [`Python Development Environment Setup Guide`][setu
     pip install -r requirements.txt
     ```
 
+1. Start the application
+
+    ```sh
+    python main.py
+    ```
+
 ## How to run a sample in a container
 
 1. [Install docker locally](https://docs.docker.com/install/)
