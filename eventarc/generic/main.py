@@ -12,29 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_gcs_server]
+# [START eventarc_generic_server]
 import os
 
 from flask import Flask, request
 
 
 app = Flask(__name__)
-# [END eventarc_gcs_server]
+# [END eventarc_generic_server]
 
 
-# [START eventarc_gcs_handler]
+# [START eventarc_generic_handler]
 @app.route('/', methods=['POST'])
 def index():
-    # Gets the GCS bucket name from the CloudEvent header
-    # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
-    bucket = request.headers.get('ce-subject')
+    print('Event received!')
 
-    print(f"Detected change in GCS bucket: {bucket}")
-    return (f"Detected change in GCS bucket: {bucket}", 200)
-# [END eventarc_gcs_handler]
+    print('HEADERS:')
+    headers = dict(request.headers)
+    headers.pop('Authorization', None)  # do not log authorization header if exists
+    print(headers)
+
+    print('BODY:')
+    body = dict(request.json)
+    print(body)
+
+    resp = {
+        "headers": headers,
+        "body": body
+    }
+    return (resp, 200)
+# [END eventarc_generic_handler]
 
 
-# [START eventarc_gcs_server]
+# [START eventarc_generic_server]
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-# [END eventarc_gcs_server]
+# [END eventarc_generic_server]
