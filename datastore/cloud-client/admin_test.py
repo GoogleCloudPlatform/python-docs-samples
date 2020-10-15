@@ -28,21 +28,35 @@ class TestDatastoreAdminSnippets:
         assert admin.client_create()
 
     def test_get_index(self):
-        indexes = admin.list_indexes(PROJECT)
+        indexes = admin.list_indexes(request={"project_id": PROJECT})
         if not indexes:
             pytest.skip(
                 "Skipping datastore test. At least "
                 "one index should present in database."
             )
 
-        assert admin.get_index(PROJECT, indexes[0].index_id)
+        assert admin.get_index(request = {
+            "project_id": PROJECT,
+            "index_id": indexes[0].index_id
+            }
+        )
 
     def test_list_index(self):
-        assert admin.list_indexes(PROJECT)
+        assert admin.list_indexes(request={"project_id": PROJECT})
 
     @backoff.on_exception(backoff.expo, AssertionError, max_tries=3, max_time=540000)
     def test_export_import_entities(self):
-        response = admin.export_entities(PROJECT, "gs://" + BUCKET)
+        response = admin.export_entities(
+            request = {
+                "project_id": PROJECT,
+                "output_url_prefix": "gs://" + BUCKET
+            }
+        )
         assert response
 
-        assert admin.import_entities(PROJECT, response.output_url)
+        assert admin.import_entities(
+            request = {
+                "project_id": PROJECT,
+                "input_url": response.output_url
+            }
+        )
