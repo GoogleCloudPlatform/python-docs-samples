@@ -14,7 +14,6 @@
 
 # This tests the Pub/Sub image processing sample
 
-import datetime
 import os
 import subprocess
 import time
@@ -157,6 +156,6 @@ def test_end_to_end(storage_buckets):
         if len(output_blobs) > 0:
             break
 
-        time.sleep(5) 
+        time.sleep(5)
 
     assert len(output_blobs) > 0
