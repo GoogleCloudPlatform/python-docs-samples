@@ -100,7 +100,7 @@ def pubsub_topic(service_url):
         ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
          "--topic", topic, "--push-endpoint", service_url, "--project",
          PROJECT, "--push-auth-service-account",
-         f"cloud-run-pubsub-invoker@{PROJECT}.iam.gserviceaccount.com", "--quiet"], check=True #TODO CHANGE
+         f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com", "--quiet"], check=True
     )
 
     yield topic
@@ -125,20 +125,19 @@ def storage_buckets(pubsub_topic):
     storage_client.create_bucket(INPUT_BUCKET)
     storage_client.create_bucket(OUTPUT_BUCKET)
 
-    # Get input and output buckets 
+    # Get input and output buckets
     input_bucket = storage_client.get_bucket(INPUT_BUCKET)
     output_bucket = storage_client.get_bucket(OUTPUT_BUCKET)
 
-    #Create pub/sub notification on input_bucket
-    notification.BucketNotification(input_bucket, 
-        topic_name=pubsub_topic,topic_project=PROJECT, payload_format="JSON_API_V1").create()
+    # Create pub/sub notification on input_bucket
+    notification.BucketNotification(input_bucket, topic_name=pubsub_topic,
+                                    topic_project=PROJECT, payload_format="JSON_API_V1").create()
 
     yield input_bucket, output_bucket
 
     # Delete GCS buckets
     input_bucket.delete(force=True)
     output_bucket.delete(force=True)
-
 
 
 def test_end_to_end(storage_buckets):
@@ -150,7 +149,7 @@ def test_end_to_end(storage_buckets):
     blob.upload_from_filename("test-images/zombie.jpg", content_type="image/jpeg")
 
     # Wait for image processing to complete
-    time.sleep(30) 
+    time.sleep(30)
 
     for x in range(10):
         # Check for blurred image in output bucket
