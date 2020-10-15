@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import copy
-
 from uuid import uuid4
 
 import pytest
@@ -30,16 +28,24 @@ binary_headers = {
 
 @pytest.fixture
 def client():
+
     main.app.testing = True
     return main.app.test_client()
 
 
-def test_endpoint(client, capsys):
-    test_headers = copy.copy(binary_headers)
-    test_headers['Ce-Subject'] = 'test-subject'
+def test_relay(client, capsys):
 
-    r = client.post('/', headers=test_headers)
+    r = client.post('/', json={'message': {'data': 'Hello'}}, headers=binary_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"Detected change in GCS bucket: {test_headers['Ce-Subject']}" in out
+
+    # Assert print
+    assert 'Event received!' in out
+
+    # Ensure output relays HTTP headers
+    assert '"Ce-Specversion":"1.0"' in r.data.decode('utf-8')
+
+    # Ensure output relays HTTP body
+    assert binary_headers['ce-id'] in out
+    assert "{'message': {'data': 'Hello'}}" in out
