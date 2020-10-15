@@ -32,7 +32,7 @@ def export_entities(project_id, output_url_prefix):
     """
     # project_id = "project-id"
     # output_url_prefix = "gs://bucket-name"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     op = client.export_entities(project_id, output_url_prefix)
     response = op.result(timeout=200)
@@ -47,7 +47,7 @@ def import_entities(project_id, input_url):
     """Imports entities into Datastore."""
     # project_id := "project-id"
     # input_url := "gs://bucket-name/overall-export-metadata-file"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     op = client.import_entities(project_id, input_url)
     response = op.result(timeout=200)
@@ -62,7 +62,7 @@ def get_index(project_id, index_id):
     """Gets an index."""
     # project_id := "my-project-id"
     # index_id := "my-index"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
     index = client.get_index(project_id, index_id)
 
     print("Got index: %v\n", index.index_id)
@@ -74,7 +74,7 @@ def get_index(project_id, index_id):
 def list_indexes(project_id):
     """Lists the indexes."""
     # project_id := "my-project-id"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     indexes = []
     for index in client.list_indexes(project_id):
