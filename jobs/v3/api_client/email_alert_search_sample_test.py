@@ -31,9 +31,10 @@ def retry_delay():
     yield 10
 
 
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_email_alert_search_sample(company_name, capsys):
 
-    @backoff.on_exception(retry_delay, AssertionError, max_time=420)
+    @backoff.on_exception(retry_delay, AssertionError, max_time=600)
     def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
