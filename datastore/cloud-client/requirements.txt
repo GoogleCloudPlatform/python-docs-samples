@@ -1,1 +1,2 @@
-google-cloud-datastore==1.15.3
+# google-cloud-datastore==1.15.3
+git+git://github.com/crwilcox/python-datastore@new-generator
