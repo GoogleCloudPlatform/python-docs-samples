@@ -12,12 +12,12 @@
 # limitations under the License.
 
 # [START datastore_admin_client_create]
-from google.cloud.datastore_admin_v1.gapic import datastore_admin_client
+from google.cloud.datastore_admin_v1 import DatastoreAdminClient
 
 
 def client_create():
     """Creates a new Datastore admin client."""
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     print("Admin client created\n")
     return client
