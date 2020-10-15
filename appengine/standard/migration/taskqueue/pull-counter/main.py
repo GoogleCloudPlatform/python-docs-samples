@@ -90,6 +90,7 @@ def start_handling_tasks():
             )
 
         time.sleep(1)
+#[END all]
 
 
 if __name__ == '__main__':
