@@ -34,7 +34,7 @@ def subscription():
     subscription_name = 'projects/{}/subscriptions/{}'.format(project, TEST_NAME)
 
     publisher = main.publisher
-    topic = publisher.create_topic(name=topic_name)
+    publisher.create_topic(name=topic_name)
 
     subscriber = main.subscriber
     subscription = subscriber.create_subscription(
@@ -76,7 +76,7 @@ def test_get_home_page(subscription, entity_kind):
     r = client.get('/')
     assert r.status_code == 200
     assert 'Counters' in r.data.decode('utf-8')
-    assert '<li>' not in r.data.decode('utf-8') # List is empty
+    assert '<li>' not in r.data.decode('utf-8')     # List is empty
 
     # Restore main globals
     main.topic = save_topic
@@ -86,6 +86,8 @@ def test_get_home_page(subscription, entity_kind):
 
 # Dummy loop terminator for task processing
 duration = 4
+
+
 def dummy_terminator():
     global duration
     duration -= 1
