@@ -104,7 +104,7 @@ def start_handling_tasks():
         time.sleep(1)
 
     return 'Done'   # Never reached except under test
-#[END all]
+# [END all]
 
 
 if __name__ == '__main__':
