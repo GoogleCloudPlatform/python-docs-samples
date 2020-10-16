@@ -87,7 +87,8 @@ def start_handling_tasks():
     """Indefinitely fetch tasks and update the datastore."""
     while processing_tasks():
         response = subscriber.pull(
-            request={'subscription': subscription, 'max_messages': 5}
+            request={'subscription': subscription, 'max_messages': 5},
+            timeout=60.0
         )
         for msg in response.received_messages:
             key = msg.message.attributes.get('key', None)
@@ -101,6 +102,8 @@ def start_handling_tasks():
             )
 
         time.sleep(1)
+
+    return 'Done'   # Never reached except under test
 #[END all]
 
 
