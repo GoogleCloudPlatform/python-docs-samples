@@ -21,6 +21,8 @@ def client_create():
 
     print("Admin client created\n")
     return client
+
+
 # [END datastore_admin_client_create]
 
 
@@ -35,12 +37,14 @@ def export_entities(project_id, output_url_prefix):
     client = DatastoreAdminClient()
 
     op = client.export_entities(
-        request = {"project_id": project_id, "output_url_prefix": output_url_prefix}
+        request={"project_id": project_id, "output_url_prefix": output_url_prefix}
     )
     response = op.result(timeout=200)
 
     print("Entities were exported\n")
     return response
+
+
 # [END datastore_admin_entities_export]
 
 
@@ -52,12 +56,14 @@ def import_entities(project_id, input_url):
     client = DatastoreAdminClient()
 
     op = client.import_entities(
-        request = {"project_id": project_id, "input_url": input_url}
+        request={"project_id": project_id, "input_url": input_url}
     )
     response = op.result(timeout=200)
 
     print("Entities were imported\n")
     return response
+
+
 # [END datastore_admin_entities_import]
 
 
@@ -67,10 +73,12 @@ def get_index(project_id, index_id):
     # project_id := "my-project-id"
     # index_id := "my-index"
     client = DatastoreAdminClient()
-    index = client.get_index(request = {"project_id": project_id, "index_id": index_id})
+    index = client.get_index(request={"project_id": project_id, "index_id": index_id})
 
     print("Got index: %v\n", index.index_id)
     return index
+
+
 # [END datastore_admin_index_get]
 
 
@@ -81,10 +89,12 @@ def list_indexes(project_id):
     client = DatastoreAdminClient()
 
     indexes = []
-    for index in client.list_indexes(request = {"project_id": project_id}):
+    for index in client.list_indexes(request={"project_id": project_id}):
         indexes.append(index)
         print("Got index: %v\n", index.index_id)
 
     print("Got list of indexes\n")
     return indexes
+
+
 # [END datastore_admin_index_list]
