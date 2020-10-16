@@ -26,8 +26,6 @@
 
 # [START language_classify_text]
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
-
 
 def sample_classify_text(text_content):
     """
@@ -42,7 +40,7 @@ def sample_classify_text(text_content):
     # text_content = 'That actor on TV makes movies in Hollywood and also stars in a variety of popular new TV shows.'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -50,7 +48,7 @@ def sample_classify_text(text_content):
     language = "en"
     document = {"content": text_content, "type": type_, "language": language}
 
-    response = client.classify_text(document)
+    response = client.classify_text(request = {'document': document})
     # Loop through classified categories returned from the API
     for category in response.categories:
         # Get the name of the category representing the document.

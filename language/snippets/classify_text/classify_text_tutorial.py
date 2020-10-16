@@ -26,7 +26,7 @@ import io
 import json
 import os
 
-from google.cloud import language
+from google.cloud import language_v1
 import numpy
 import six
 
@@ -37,12 +37,12 @@ import six
 def classify(text, verbose=True):
     """Classify the input text into categories. """
 
-    language_client = language.LanguageServiceClient()
+    language_client = language_v1.LanguageServiceClient()
 
-    document = language.types.Document(
-        content=text, type=language.enums.Document.Type.PLAIN_TEXT
+    document = language_v1.Document(
+        content=text, type_=language_v1.Document.Type.PLAIN_TEXT
     )
-    response = language_client.classify_text(document)
+    response = language_client.classify_text(request={'document': document})
     categories = response.categories
 
     result = {}

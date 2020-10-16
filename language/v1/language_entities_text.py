@@ -26,8 +26,6 @@
 
 # [START language_entities_text]
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
-
 
 def sample_analyze_entities(text_content):
     """
@@ -42,7 +40,7 @@ def sample_analyze_entities(text_content):
     # text_content = 'California is a state.'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -51,16 +49,16 @@ def sample_analyze_entities(text_content):
     document = {"content": text_content, "type": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
-    encoding_type = enums.EncodingType.UTF8
+    encoding_type = language_v1.EncodingType.UTF8
 
-    response = client.analyze_entities(document, encoding_type=encoding_type)
+    response = client.analyze_entities(request = {'document': document, 'encoding_type': encoding_type})
 
     # Loop through entitites returned from the API
     for entity in response.entities:
         print(u"Representative name for the entity: {}".format(entity.name))
 
         # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
-        print(u"Entity type: {}".format(enums.Entity.Type(entity.type).name))
+        print(u"Entity type: {}".format(language_v1.Entity.Type(entity.type).name))
 
         # Get the salience score associated with the entity in the [0, 1.0] range
         print(u"Salience score: {}".format(entity.salience))
@@ -79,7 +77,7 @@ def sample_analyze_entities(text_content):
 
             # Get the mention type, e.g. PROPER for proper noun
             print(
-                u"Mention type: {}".format(enums.EntityMention.Type(mention.type).name)
+                u"Mention type: {}".format(language_v1.EntityMention.Type(mention.type).name)
             )
 
     # Get the language of the text, which will be the same as

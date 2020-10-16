@@ -17,9 +17,7 @@
 # [START language_sentiment_tutorial_imports]
 import argparse
 
-from google.cloud import language
-from google.cloud.language import enums
-from google.cloud.language import types
+from google.cloud import language_v1
 
 # [END language_sentiment_tutorial_imports]
 
@@ -47,14 +45,14 @@ def print_result(annotations):
 # [START language_sentiment_tutorial_analyze_sentiment]
 def analyze(movie_review_filename):
     """Run a sentiment analysis request on text within a passed filename."""
-    client = language.LanguageServiceClient()
+    client = language_v1.LanguageServiceClient()
 
     with open(movie_review_filename, "r") as review_file:
         # Instantiates a plain text document.
         content = review_file.read()
 
-    document = types.Document(content=content, type=enums.Document.Type.PLAIN_TEXT)
-    annotations = client.analyze_sentiment(document=document)
+    document = language_v1.Document(content=content, type_=language_v1.Document.Type.PLAIN_TEXT)
+    annotations = client.analyze_sentiment(request={'document': document})
 
     # Print the results
     print_result(annotations)

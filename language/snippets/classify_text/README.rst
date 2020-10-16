@@ -18,6 +18,10 @@ This tutorial demostrates how to use the `classify_text` method to classify cont
 
 .. _Google Cloud Natural Language API: https://cloud.google.com/natural-language/docs/
 
+
+
+
+
 Setup
 -------------------------------------------------------------------------------
 

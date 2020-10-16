@@ -26,8 +26,6 @@
 
 # [START language_syntax_text]
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
-
 
 def sample_analyze_syntax(text_content):
     """
@@ -42,7 +40,7 @@ def sample_analyze_syntax(text_content):
     # text_content = 'This is a short sentence.'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -51,9 +49,9 @@ def sample_analyze_syntax(text_content):
     document = {"content": text_content, "type": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
-    encoding_type = enums.EncodingType.UTF8
+    encoding_type = language_v1.EncodingType.UTF8
 
-    response = client.analyze_syntax(document, encoding_type=encoding_type)
+    response = client.analyze_syntax(request = {'document': document, 'encoding_type': encoding_type})
     # Loop through tokens returned from the API
     for token in response.tokens:
         # Get the text content of this token. Usually a word or punctuation.
@@ -69,13 +67,13 @@ def sample_analyze_syntax(text_content):
         # Get the tag, e.g. NOUN, ADJ for Adjective, et al.
         print(
             u"Part of Speech tag: {}".format(
-                enums.PartOfSpeech.Tag(part_of_speech.tag).name
+                language_v1.PartOfSpeech.Tag(part_of_speech.tag).name
             )
         )
         # Get the voice, e.g. ACTIVE or PASSIVE
-        print(u"Voice: {}".format(enums.PartOfSpeech.Voice(part_of_speech.voice).name))
+        print(u"Voice: {}".format(language_v1.PartOfSpeech.Voice(part_of_speech.voice).name))
         # Get the tense, e.g. PAST, FUTURE, PRESENT, et al.
-        print(u"Tense: {}".format(enums.PartOfSpeech.Tense(part_of_speech.tense).name))
+        print(u"Tense: {}".format(language_v1.PartOfSpeech.Tense(part_of_speech.tense).name))
         # See API reference for additional Part of Speech information available
         # Get the lemma of the token. Wikipedia lemma description
         # https://en.wikipedia.org/wiki/Lemma_(morphology)
@@ -86,7 +84,7 @@ def sample_analyze_syntax(text_content):
         dependency_edge = token.dependency_edge
         print(u"Head token index: {}".format(dependency_edge.head_token_index))
         print(
-            u"Label: {}".format(enums.DependencyEdge.Label(dependency_edge.label).name)
+            u"Label: {}".format(language_v1.DependencyEdge.Label(dependency_edge.label).name)
         )
 
     # Get the language of the text, which will be the same as

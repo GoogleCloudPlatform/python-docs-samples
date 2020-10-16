@@ -37,8 +37,7 @@ def test_analyze_sentiment(capsys):
     assert sentiment["magnitude"] < 1
 
     result = analyze.analyze_sentiment(
-        "cheerio, mate - I greatly admire the pallor of your visage, and your "
-        "angle of repose leaves little room for improvement."
+        "cheerio, mate - I greatly admire the pallor of your visage, and your angle of repose leaves little room for improvement."
     )
 
     sentiment = result["documentSentiment"]

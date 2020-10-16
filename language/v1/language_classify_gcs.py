@@ -26,8 +26,6 @@
 
 # [START language_classify_gcs]
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
-
 
 def sample_classify_text(gcs_content_uri):
     """
@@ -44,7 +42,7 @@ def sample_classify_text(gcs_content_uri):
     # gcs_content_uri = 'gs://cloud-samples-data/language/classify-entertainment.txt'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -52,7 +50,7 @@ def sample_classify_text(gcs_content_uri):
     language = "en"
     document = {"gcs_content_uri": gcs_content_uri, "type": type_, "language": language}
 
-    response = client.classify_text(document)
+    response = client.classify_text(request = {'document': document})
     # Loop through classified categories returned from the API
     for category in response.categories:
         # Get the name of the category representing the document.

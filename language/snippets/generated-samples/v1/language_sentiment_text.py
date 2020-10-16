@@ -24,7 +24,6 @@ import sys
 # [START language_sentiment_text]
 
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
 import six
 
 
@@ -37,10 +36,10 @@ def sample_analyze_sentiment(content):
     if isinstance(content, six.binary_type):
         content = content.decode("utf-8")
 
-    type_ = enums.Document.Type.PLAIN_TEXT
-    document = {"type": type_, "content": content}
+    type_ = language_v1.Document.Type.PLAIN_TEXT
+    document = {"type_": type_, "content": content}
 
-    response = client.analyze_sentiment(document)
+    response = client.analyze_sentiment(request={'document': document})
     sentiment = response.document_sentiment
     print("Score: {}".format(sentiment.score))
     print("Magnitude: {}".format(sentiment.magnitude))

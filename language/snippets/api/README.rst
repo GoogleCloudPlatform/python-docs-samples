@@ -14,6 +14,10 @@ This directory contains samples for Google Cloud Natural Language API. The `Goog
 
 .. _Google Cloud Natural Language API: https://cloud.google.com/natural-language/docs/
 
+
+
+
+
 Setup
 -------------------------------------------------------------------------------
 

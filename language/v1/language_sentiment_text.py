@@ -26,8 +26,6 @@
 
 # [START language_sentiment_text]
 from google.cloud import language_v1
-from google.cloud.language_v1 import enums
-
 
 def sample_analyze_sentiment(text_content):
     """
@@ -42,7 +40,7 @@ def sample_analyze_sentiment(text_content):
     # text_content = 'I am so happy and joyful.'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = enums.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -51,9 +49,9 @@ def sample_analyze_sentiment(text_content):
     document = {"content": text_content, "type": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
-    encoding_type = enums.EncodingType.UTF8
+    encoding_type = language_v1.EncodingType.UTF8
 
-    response = client.analyze_sentiment(document, encoding_type=encoding_type)
+    response = client.analyze_sentiment(request = {'document': document, 'encoding_type': encoding_type})
     # Get overall sentiment of the input document
     print(u"Document sentiment score: {}".format(response.document_sentiment.score))
     print(
