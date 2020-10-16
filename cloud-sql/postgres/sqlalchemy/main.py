@@ -136,6 +136,7 @@ def init_unix_connection_engine(db_config):
 # The SQLAlchemy engine will help manage interactions, including automatically
 # managing a pool of connections to your database
 db = init_connection_engine()
+db.dialect.description_encoding = None
 
 
 @app.before_first_request
