@@ -15,7 +15,9 @@
 import os
 import uuid
 
+import backoff
 import google.api_core.exceptions
+from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.bigquery
 import google.cloud.datastore
 import google.cloud.dlp_v2
@@ -122,7 +124,11 @@ def datastore_project():
 
     yield GCLOUD_PROJECT
 
-    datastore_client.delete(key)
+    @backoff.on_exception(backoff.expo, ServiceUnavailable, max_time=120)
+    def cleanup():
+        datastore_client.delete(key)
+
+    cleanup()
 
 
 @pytest.fixture(scope="module")
@@ -157,7 +163,11 @@ def bigquery_project():
 
     yield GCLOUD_PROJECT
 
-    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+    @backoff.on_exception(backoff.expo, ServiceUnavailable, max_time=120)
+    def cleanup():
+        bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+
+    cleanup()
 
 
 def test_inspect_string_basic(capsys):
