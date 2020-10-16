@@ -30,6 +30,9 @@ Before you can run or deploy the sample, you will need to do the following:
 1. Enable the Cloud Pub/Sub API in the
 [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
+1. Set Firestore to Datastore mode in the
+[Google Developers Console](https://console.cloud.google.com/datastore/welcome).
+
 1. Create a topic and subscription.
 
         $ gcloud pubsub topics create [YOUR_TOPIC_NAME]

@@ -37,13 +37,15 @@ project = os.environ['GOOGLE_CLOUD_PROJECT']
 topic = 'projects/{}/topics/{}'.format(project, topic_name)
 subscription = 'projects/{}/subscriptions/{}'.format(project, sub_name)
 
+entity_kind = os.environ.get('ENTITY_KIND', 'Task')
+
 
 def increment_counter(id):
     with datastore_client.transaction():
-        key = datastore_client.key('Task', id)
+        key = datastore_client.key(entity_kind, id)
         task = datastore_client.get(key)
         if not task:
-            task_key = datastore_client.key('Task', id)
+            task_key = datastore_client.key(entity_kind, id)
             task = datastore.Entity(key=task_key)
             task['count'] = 0
 
@@ -53,7 +55,7 @@ def increment_counter(id):
 
 @app.route('/', methods=['GET'])
 def home_page():
-    query = datastore_client.query(kind='Task')
+    query = datastore_client.query(kind=entity_kind)
     counters = [
         {
             'name': entity.key.name,
@@ -71,10 +73,19 @@ def enqueue():
     return redirect('/')
 
 
+def processing_tasks():
+    """Task processing normally runs continually when triggered by a GET
+       request to /_ah/start. In order to make this more testable, we
+       process tasks until this method returns False, which can only happen
+       if this method is overridden by the tests.
+    """
+    return True
+
+
 @app.route('/_ah/start')
 def start_handling_tasks():
     """Indefinitely fetch tasks and update the datastore."""
-    while True:
+    while processing_tasks():
         response = subscriber.pull(
             request={'subscription': subscription, 'max_messages': 5}
         )
