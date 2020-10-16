@@ -96,8 +96,8 @@ def start_handling_tasks():
             if key is not None:
                 increment_counter(key)
             subscriber.acknowledge(
-                subscription = subscription,
-                ack_ids = [msg.ack_id]
+                subscription=subscription,
+                ack_ids=[msg.ack_id]
             )
 
         time.sleep(1)
