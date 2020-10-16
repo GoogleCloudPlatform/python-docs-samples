@@ -199,6 +199,11 @@ def _get_repo_root():
             break
         if Path(p / ".git").exists():
             return str(p)
+        # .git is not available in repos cloned via Cloud Build
+        # setup.py is always in the library's root, so use that instead
+        # https://github.com/googleapis/synthtool/issues/792
+        if Path(p / "setup.py").exists():
+            return str(p)
         p = p.parent
     raise Exception("Unable to detect repository root.")
 
