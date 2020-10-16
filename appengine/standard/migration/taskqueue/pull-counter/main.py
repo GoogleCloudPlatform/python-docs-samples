@@ -87,7 +87,8 @@ def start_handling_tasks():
     """Indefinitely fetch tasks and update the datastore."""
     while processing_tasks():
         response = subscriber.pull(
-            request={'subscription': subscription, 'max_messages': 5},
+            subscription=subscription,
+            max_messages=5,
             timeout=60.0
         )
         for msg in response.received_messages:
@@ -95,10 +96,8 @@ def start_handling_tasks():
             if key is not None:
                 increment_counter(key)
             subscriber.acknowledge(
-                request={
-                    'subscription': subscription,
-                    'ack_ids': [msg.ack_id]
-                }
+                subscription = subscription,
+                ack_ids = [msg.ack_id]
             )
 
         time.sleep(1)
