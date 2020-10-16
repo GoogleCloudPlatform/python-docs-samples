@@ -1,2 +1,2 @@
 google-cloud-kms==2.0.0
-cryptography==3.1
+cryptography==3.1.1
