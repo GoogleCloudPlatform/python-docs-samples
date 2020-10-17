@@ -30,7 +30,7 @@ jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
         os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))))
 
-README_TMPL = jinja_env.get_template('README.tmpl.rst')
+README_TMPL = jinja_env.get_template('README.tmpl.md')
 
 
 def get_help(file):
@@ -40,7 +40,7 @@ def get_help(file):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('source')
-    parser.add_argument('--destination', default='README.rst')
+    parser.add_argument('--destination', default='README.md')
 
     args = parser.parse_args()
 
