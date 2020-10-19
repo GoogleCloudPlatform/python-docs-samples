@@ -24,16 +24,19 @@ def createsuperuser(apps, schema_editor):
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
     client = secretmanager_v1.SecretManagerServiceClient()
-    
+
     # Get project value for identifying current context
     _, project = google.auth.default()
 
     # Retrieve the previously stored admin passowrd
     name = f"projects/{project}/secrets/superuser_password/versions/latest"
-    admin_password = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+    admin_password = client.access_secret_version(name=name).payload.data.decode(
+        "UTF-8"
+    )
 
     # Create a new user using acquired password
     from django.contrib.auth.models import User
+
     User.objects.create_superuser("admin", password=admin_password)
 
 
@@ -41,9 +44,6 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
-    operations = [
-        migrations.RunPython(createsuperuser)
-    ]
+    operations = [migrations.RunPython(createsuperuser)]
