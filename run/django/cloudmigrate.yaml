@@ -26,4 +26,4 @@ substitutions:
   _SERVICE_NAME: polls-service
 
 images: 
-  - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}
+  - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"

@@ -15,3 +15,6 @@
 
 # Python pycache:
 __pycache__/
+
+venv/
+.env
