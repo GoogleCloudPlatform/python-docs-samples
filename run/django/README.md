@@ -1,4 +1,4 @@
-# Getting started with Django on Google Cloud Platform on Cloud Run (fully managed)
+# Getting started with Django on Cloud Run
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
@@ -8,18 +8,8 @@
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
 app on Google Cloud Run (fully managed). 
 
-The Django application used in this tutorial is the [Writing your first Django app](https://docs.djangoproject.com/en/3.0/#first-steps), after completing [Part 1](https://docs.djangoproject.com/en/3.0/intro/tutorial01/) and [Part 2](https://docs.djangoproject.com/en/3.0/intro/tutorial02/)).
+The Django application used in this tutorial is the [Writing your first Django app](https://docs.djangoproject.com/en/3.0/#first-steps), after completing [Part 1](https://docs.djangoproject.com/en/3.0/intro/tutorial01/) and [Part 2](https://docs.djangoproject.com/en/3.0/intro/tutorial02/).
 
 
 # Tutorial
 See our [Running Django on Cloud Run (fully managed)](https://cloud.google.com/python/django/run) tutorial for instructions for setting up and deploying this sample application.
-
-
-## Contributing changes
-
-* See [CONTRIBUTING.md](CONTRIBUTING.md)
-
-
-## Licensing
-
-* See [LICENSE](LICENSE)
