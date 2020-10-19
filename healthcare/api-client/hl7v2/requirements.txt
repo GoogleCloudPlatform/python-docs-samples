@@ -1,4 +1,0 @@
-google-api-python-client==1.12.2
-google-auth-httplib2==0.0.4
-google-auth==1.21.3
-google-cloud==0.34.0

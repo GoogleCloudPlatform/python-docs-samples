@@ -31,7 +31,7 @@ device_id_template = 'test-device-{}'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-topic-{}'.format(int(time.time()))
 
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
