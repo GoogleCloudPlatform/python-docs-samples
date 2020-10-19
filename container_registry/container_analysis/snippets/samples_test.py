@@ -152,7 +152,7 @@ class TestContainerAnalysisSamples:
         client = SubscriberClient()
         try:
             topic_id = 'container-analysis-occurrences-v1'
-            topic_name = client.topic_path(PROJECT_ID, topic_id)
+            topic_name = {"name": f"projects/{PROJECT_ID}/topics/{topic_id}"}
             publisher = PublisherClient()
             publisher.create_topic(topic_name)
         except AlreadyExists:
@@ -185,7 +185,7 @@ class TestContainerAnalysisSamples:
             assert message_count <= receiver.msg_count
         finally:
             # clean up
-            client.delete_subscription(subscription_name)
+            client.delete_subscription({"subscription": subscription_name})
 
     def test_poll_discovery_occurrence(self):
         # try with no discovery occurrence

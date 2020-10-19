@@ -265,11 +265,11 @@ def create_occurrence_subscription(subscription_id, project_id):
 
     topic_id = 'container-analysis-occurrences-v1'
     client = SubscriberClient()
-    topic_name = client.topic_path(project_id, topic_id)
+    topic_name = f"projects/{project_id}/topics/{topic_id}"
     subscription_name = client.subscription_path(project_id, subscription_id)
     success = True
     try:
-        client.create_subscription(subscription_name, topic_name)
+        client.create_subscription({"name": subscription_name, "topic": topic_name})
     except AlreadyExists:
         # if subscription already exists, do nothing
         pass
