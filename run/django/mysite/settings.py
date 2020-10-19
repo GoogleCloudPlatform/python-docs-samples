@@ -25,20 +25,21 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 
-# [START secretconfig]
+# [START run_secretconfig]
 import environ
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_file = os.path.join(BASE_DIR, ".env")
 
+# If no .env has been provided, pull it from Secret Manager, storing it locally
 if not os.path.isfile(".env"):
     import google.auth
-    from google.cloud import secretmanager_v1 as sm
+    from google.cloud import secretmanager_v1
 
     _, project = google.auth.default()
 
     if project:
-        client = sm.SecretManagerServiceClient()
+        client = secretmanager_v1.SecretManagerServiceClient()
 
         SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
         name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
@@ -49,7 +50,7 @@ if not os.path.isfile(".env"):
 
 env = environ.Env()
 env.read_env(env_file)
-# [END secretconfig]
+# [END run_secretconfig]
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -100,10 +101,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 
-# [START dbconfig]
+# [START run_dbconfig]
 # Use django-environ to define the connection string
 DATABASES = {"default": env.db()}
-# [END dbconfig]
+# [END run_dbconfig]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -131,11 +132,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-# [START staticconfig]
+# [START run_staticconfig]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
-# [END staticconfig]
+# [END run_staticconfig]
