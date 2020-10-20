@@ -13,31 +13,47 @@
 # limitations under the License.
 
 steps:
+  # Build the image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
 
-# Build the image
-- name: "gcr.io/cloud-builders/docker"
-  args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
+  # Push the image to the Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
-# Push the image to the Container Registry
-- name: "gcr.io/cloud-builders/docker"
-  args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
+  # Apply the Django database migration against the Cloud SQL database
+  - name: "gcr.io/google-appengine/exec-wrapper"
+    args:
+      [
+        "-i",
+        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+        "-s",
+        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "--",
+        "python",
+        "manage.py",
+        "migrate",
+      ]
 
-# Apply the Django database migration against the Cloud SQL database
-- name: "gcr.io/google-appengine/exec-wrapper"
-  args: ["-i", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
-         "-s", "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
-         "--", "python", "manage.py", "migrate"]
+  # Apply the static migrations against the Cloud Storage bucket
+  - name: "gcr.io/google-appengine/exec-wrapper"
+    args:
+      [
+        "-i",
+        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+        "-s",
+        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "--",
+        "python",
+        "manage.py",
+        "collectstatic",
+        "--no-input",
+      ]
 
-# Apply the static migrations against the Cloud Storage bucket
-- name: "gcr.io/google-appengine/exec-wrapper"
-  args: ["-i", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
-         "-s", "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
-         "--", "python", "manage.py", "collectstatic", "--no-input"]
-
-substitutions: 
+substitutions:
   _INSTANCE_NAME: django-instance
   _REGION: us-central1
   _SERVICE_NAME: polls-service
 
-images: 
+images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
