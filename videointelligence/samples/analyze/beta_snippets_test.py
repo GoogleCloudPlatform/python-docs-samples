@@ -112,6 +112,7 @@ def test_detect_explicit_content_streaming(capsys, video_path):
 
 
 @pytest.mark.slow
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     output_uri = "gs://{}".format(bucket.name)
     beta_snippets.annotation_to_storage_streaming(video_path, output_uri)
