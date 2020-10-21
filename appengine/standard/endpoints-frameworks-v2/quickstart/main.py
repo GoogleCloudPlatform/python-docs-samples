@@ -15,15 +15,15 @@
 """This is a sample Hello World API implemented using Google Cloud
 Endpoints."""
 
-# [START endpoints_imports]
+# [START endpoints_greeting_api_imports]
 import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
-# [END endpoints_imports]
+# [END endpoints_greeting_api_imports]
 
 
-# [START endpoints_messages]
+# [START endpoints_greeting_api_messages]
 class Greeting(messages.Message):
     """Greeting that stores a message."""
     message = messages.StringField(1)
@@ -38,7 +38,7 @@ STORED_GREETINGS = GreetingCollection(items=[
     Greeting(message='hello world!'),
     Greeting(message='goodbye world!'),
 ])
-# [END endpoints_messages]
+# [END endpoints_greeting_api_messages]
 
 
 # [START endpoints_greeting_api]
@@ -85,7 +85,7 @@ class GreetingApi(remote.Service):
                 'Greeting {} not found'.format(request.id))
     # [END endpoints_greeting_api]
 
-    # [START endpoints_multiply]
+    # [START endpoints_greeting_api_multiply]
     # This ResourceContainer is similar to the one used for get_greeting, but
     # this one also contains a request body in the form of a Greeting message.
     MULTIPLY_RESOURCE = endpoints.ResourceContainer(
@@ -105,10 +105,10 @@ class GreetingApi(remote.Service):
         name='greetings.multiply')
     def multiply_greeting(self, request):
         return Greeting(message=request.message * request.times)
-    # [END endpoints_multiply]
+    # [END endpoints_greeting_api_multiply]
 
 
-# [START endpoints_auth_config]
+# [START endpoints_greeting_api_auth_config]
 WEB_CLIENT_ID = 'replace this with your web client application ID'
 ANDROID_CLIENT_ID = 'replace this with your Android client ID'
 IOS_CLIENT_ID = 'replace this with your iOS client ID'
@@ -116,7 +116,7 @@ ANDROID_AUDIENCE = WEB_CLIENT_ID
 ALLOWED_CLIENT_IDS = [
     WEB_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID,
     endpoints.API_EXPLORER_CLIENT_ID]
-# [END endpoints_auth_config]
+# [END endpoints_greeting_api_auth_config]
 
 
 # [START endpoints_authed_greeting_api]
@@ -144,6 +144,6 @@ class AuthedGreetingApi(remote.Service):
 # [END endpoints_authed_greeting_api]
 
 
-# [START endpoints_api_server]
+# [START endpoints_greeting_api_api_server]
 api = endpoints.api_server([GreetingApi, AuthedGreetingApi])
-# [END endpoints_api_server]
+# [END endpoints_greeting_api_api_server]

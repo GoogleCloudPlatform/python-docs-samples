@@ -15,15 +15,15 @@
 """This is a sample Hello World API implemented using Google Cloud
 Endpoints."""
 
-# [START endpoints_imports]
+# [START endpoints_echo_api_imports]
 import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
-# [END endpoints_imports]
+# [END endpoints_echo_api_imports]
 
 
-# [START endpoints_messages]
+# [START endpoints_echo_api_messages]
 class EchoRequest(messages.Message):
     message = messages.StringField(1)
 
@@ -36,7 +36,7 @@ class EchoResponse(messages.Message):
 ECHO_RESOURCE = endpoints.ResourceContainer(
     EchoRequest,
     n=messages.IntegerField(2, default=1))
-# [END endpoints_messages]
+# [END endpoints_echo_api_messages]
 
 
 # [START endpoints_echo_api_class]
