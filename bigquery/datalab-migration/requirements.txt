@@ -1,4 +1,4 @@
-grpcio==1.32.0
+grpcio==1.33.1
 google-cloud-bigquery[pandas,pyarrow]==2.2.0
 google-cloud-bigquery-storage==2.0.0
 datalab==1.2.0
