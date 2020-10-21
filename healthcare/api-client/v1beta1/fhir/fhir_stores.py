@@ -20,7 +20,7 @@ from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
 
-# [START healthcare_get_client]
+# [START healthcare_v1beta1_get_client]
 def get_client(service_account_json):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
@@ -44,10 +44,10 @@ def get_client(service_account_json):
     )
 
 
-# [END healthcare_get_client]
+# [END healthcare_v1beta1_get_client]
 
 
-# [START healthcare_create_dataset]
+# [START healthcare_v1beta1_create_dataset]
 def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
     """Creates a dataset."""
     client = get_client(service_account_json)
@@ -71,10 +71,10 @@ def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
         return ""
 
 
-# [END healthcare_create_dataset]
+# [END healthcare_v1beta1_create_dataset]
 
 
-# [START healthcare_delete_dataset]
+# [START healthcare_v1beta1_delete_dataset]
 def delete_dataset(service_account_json, project_id, cloud_region, dataset_id):
     """Deletes a dataset."""
     client = get_client(service_account_json)
@@ -93,10 +93,10 @@ def delete_dataset(service_account_json, project_id, cloud_region, dataset_id):
         return ""
 
 
-# [END healthcare_delete_dataset]
+# [END healthcare_v1beta1_delete_dataset]
 
 
-# [START healthcare_create_fhir_store]
+# [START healthcare_v1beta1_create_fhir_store]
 def create_fhir_store(
     service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
 ):
@@ -121,10 +121,10 @@ def create_fhir_store(
     return response
 
 
-# [END healthcare_create_fhir_store]
+# [END healthcare_v1beta1_create_fhir_store]
 
 
-# [START healthcare_delete_fhir_store]
+# [START healthcare_v1beta1_delete_fhir_store]
 def delete_fhir_store(
     service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
 ):
@@ -148,7 +148,7 @@ def delete_fhir_store(
     return response
 
 
-# [END healthcare_delete_fhir_store]
+# [END healthcare_v1beta1_delete_fhir_store]
 
 
 def parse_command_line_args():

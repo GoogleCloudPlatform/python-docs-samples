@@ -23,7 +23,7 @@ from google.oauth2 import service_account
 _BASE_URL = "https://healthcare.googleapis.com/v1beta1"
 
 
-# [START healthcare_get_session]
+# [START healthcare_v1beta1_get_session]
 def get_session(service_account_json):
     """
     Returns an authorized Requests Session class using the service account
@@ -46,10 +46,10 @@ def get_session(service_account_json):
     return session
 
 
-# [END healthcare_get_session]
+# [END healthcare_v1beta1_get_session]
 
 
-# [START healthcare_create_resource]
+# [START healthcare_v1beta1_create_resource]
 def create_patient(
     service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
@@ -82,10 +82,10 @@ def create_patient(
     return response
 
 
-# [END healthcare_create_resource]
+# [END healthcare_v1beta1_create_resource]
 
 
-# [START healthcare_create_encounter]
+# [START healthcare_v1beta1_create_encounter]
 def create_encounter(
     service_account_json,
     base_url,
@@ -134,10 +134,10 @@ def create_encounter(
     return response
 
 
-# [END healthcare_create_encounter]
+# [END healthcare_v1beta1_create_encounter]
 
 
-# [START healthcare_create_observation]
+# [START healthcare_v1beta1_create_observation]
 def create_observation(
     service_account_json,
     base_url,
@@ -183,10 +183,10 @@ def create_observation(
     return response
 
 
-# [END healthcare_create_observation]
+# [END healthcare_v1beta1_create_observation]
 
 
-# [START healthcare_delete_resource]
+# [START healthcare_v1beta1_delete_resource]
 def delete_resource(
     service_account_json,
     base_url,
@@ -218,7 +218,7 @@ def delete_resource(
     return response
 
 
-# [END healthcare_delete_resource]
+# [END healthcare_v1beta1_delete_resource]
 
 
 # [START healthcare_conditional_update_resource]
