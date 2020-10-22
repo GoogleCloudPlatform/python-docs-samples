@@ -11,7 +11,7 @@ Samples showing how to create and run an
 ## Before you begin
 
 Follow the
-[Getting started with Google Cloud Dataflow](../README.md)
+[Getting started with Google Cloud Dataflow](../../README.md)
 page, and make sure you have a Google Cloud project with billing enabled
 and a *service account JSON key* set up in your `GOOGLE_APPLICATION_CREDENTIALS`
 environment variable.
@@ -172,10 +172,12 @@ template file and passing the template
 required by the pipeline.
 
 ```sh
+export REGION="us-central1"
+
 # Run the Flex Template.
 gcloud dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
     --template-file-gcs-location "$TEMPLATE_PATH" \
-    --parameters input_subscription="$SUBSCRIPTION" \
+    --parameters input_subscription="projects/$PROJECT/subscriptions/$SUBSCRIPTION" \
     --parameters output_table="$PROJECT:$DATASET.$TABLE" \
     --region "$REGION"
 ```
