@@ -28,6 +28,7 @@ import googleapiclient.discovery
 # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
 service = googleapiclient.discovery.build('ml', 'v1')
 
+
 def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
 
