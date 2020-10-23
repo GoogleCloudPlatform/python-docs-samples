@@ -17,7 +17,7 @@ branchProtectionRules:
 - pattern: master
   # Can admins overwrite branch protection.
   # Defaults to `true`
-  isAdminEnforced: true
+  isAdminEnforced: false
   # Number of approving reviews required to update matching branches.
   # Defaults to `1`
   requiredApprovingReviewCount: 2
