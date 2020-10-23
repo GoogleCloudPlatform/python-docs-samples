@@ -7,7 +7,7 @@
       "label": "Input PubSub subscription.",
       "helpText": "Name of the input PubSub subscription to consume from.",
       "regexes": [
-        "[a-zA-Z][-_.~+%a-zA-Z0-9]{2,}"
+        "projects/[^/]+/subscriptions/[a-zA-Z][-_.~+%a-zA-Z0-9]{2,}"
       ]
     },
     {
