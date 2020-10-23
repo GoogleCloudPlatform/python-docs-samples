@@ -36,6 +36,7 @@ RUN apt-get update \
     curl \
     dirmngr \
     git \
+    gcc \
     gpg-agent \
     graphviz \
     libbz2-dev \
@@ -44,11 +45,13 @@ RUN apt-get update \
     libffi-dev \
     liblzma-dev \
     libmagickwand-dev \
+    libpython3-dev \
     libreadline-dev \
     libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
     portaudio19-dev \
+    pkg-config \
     redis-server \
     software-properties-common \
     ssh \
@@ -65,9 +68,6 @@ RUN apt-get update \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
-  
-# Install Python C bindings (needed for recordclass package, among others)
-RUN apt-get install -y gcc pkg-config python-dev libpython3-dev
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
