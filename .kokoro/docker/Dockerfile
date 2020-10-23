@@ -67,7 +67,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
   
 # Install Python C bindings (needed for recordclass package, among others)
-RUN apt-get install -y gcc libtool pkg-config python-dev python3-dev libpython3-dev
+RUN apt-get install -y gcc pkg-config python-dev libpython3-dev
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
