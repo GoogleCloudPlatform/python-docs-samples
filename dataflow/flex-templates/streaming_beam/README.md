@@ -224,7 +224,8 @@ The following sections describe how to delete or turn off these resources.
     gcloud dataflow jobs list \
         --filter 'NAME:streaming-beam AND STATE=Running' \
         --format 'value(JOB_ID)' \
-      | xargs gcloud dataflow jobs cancel
+        --region "$REGION" \
+      | xargs gcloud dataflow jobs cancel --region "$REGION"
     ```
 
 1. Delete the template spec file from Cloud Storage.
