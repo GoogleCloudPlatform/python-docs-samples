@@ -104,6 +104,7 @@ def test_track_objects_streaming(capsys, video_path):
 
 
 @pytest.mark.slow
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_explicit_content_streaming(capsys, video_path):
     beta_snippets.detect_explicit_content_streaming(video_path)
 
