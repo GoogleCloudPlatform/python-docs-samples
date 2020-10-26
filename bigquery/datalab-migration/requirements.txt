@@ -4,4 +4,4 @@ google-cloud-bigquery-storage==2.0.0
 datalab==1.2.0
 ipython==7.18.1; python_version > '3.6'
 ipython==7.16.1; python_version < '3.7'
-pyarrow==1.0.1
+pyarrow==2.0.0
