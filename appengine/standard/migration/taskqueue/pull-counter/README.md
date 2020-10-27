@@ -30,8 +30,14 @@ Before you can run or deploy the sample, you will need to do the following:
 1. Enable the Cloud Pub/Sub API in the
 [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-1. Set Firestore to Datastore mode in the
-[Google Developers Console](https://console.cloud.google.com/datastore/welcome).
+1. Check that Firestore is in Datastore mode in the
+[Google Developers Console](https://console.cloud.google.com/datastore/welcome),
+and select Datastore mode if it is not.
+
+1. Select the project and account that will be used for locally run
+[Google Cloud SDK](https://cloud.google.com/sdk) commands:
+
+    $ gcloud init
 
 1. Create a topic and subscription.
 
@@ -45,7 +51,8 @@ Before you can run or deploy the sample, you will need to do the following:
 ## Running locally
 
 When running locally, you can use the [Google Cloud SDK](https://cloud.google.com/sdk)
-to provide authentication to use Google Cloud APIs:
+to provide authentication to use Google Cloud APIs. Initialize the SDK for
+local commands if not already done.
 
     $ gcloud init
 
@@ -55,22 +62,29 @@ Install dependencies, preferably with a virtualenv:
     $ source env/bin/activate
     $ pip install -r requirements.txt
 
-Then set environment variables before starting your application:
+Set environment variables before starting your application:
 
     $ export GOOGLE_CLOUD_PROJECT=[YOUR_PROJECT_NAME]
     $ export TOPIC=[YOUR_TOPIC_NAME]
     $ export SUBSCRIPTION=[YOUR_SUBSCRIPTION_NAME]
+
+Run the application locally:
+
     $ python main.py
 
 ## Running on App Engine
 
-In the current directory, deploy using `gcloud`. For Python 2.7 you must first
+In the current directory, edit the environment variables in `app.yaml` or
+`app3.yaml`, depending on whether you are going to use Python 2.7 or
+Python 3, and then deploy using `gcloud`.
+
+For Python 2.7 you must first
 install the required libraries in the `lib` folder:
 
     $ pip -t lib -r requirements.txt
     $ gcloud app deploy app.yaml
 
-For Python 3, you can simply run the deploy command:
+For Python 3, you only need to run the deploy command:
 
     $ gcloud app deploy app3.yaml
 
