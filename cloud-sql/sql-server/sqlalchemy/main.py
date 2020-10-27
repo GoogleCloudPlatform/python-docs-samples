@@ -96,7 +96,7 @@ def init_tcp_connection_engine():
         echo=True  # debug
         # [END_EXCLUDE]
     )
-    # [END cloud_sql_sqlserver_sqlalchemy_create_tcp]    
+    # [END cloud_sql_sqlserver_sqlalchemy_create_tcp]
     # [END cloud_sql_server_sqlalchemy_create_tcp]
 
     return pool
