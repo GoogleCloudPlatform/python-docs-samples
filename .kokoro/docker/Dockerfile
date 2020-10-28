@@ -36,6 +36,7 @@ RUN apt-get update \
     curl \
     dirmngr \
     git \
+    gcc \
     gpg-agent \
     graphviz \
     libbz2-dev \
@@ -44,11 +45,13 @@ RUN apt-get update \
     libffi-dev \
     liblzma-dev \
     libmagickwand-dev \
+    libpython3-dev \
     libreadline-dev \
     libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
     portaudio19-dev \
+    pkg-config \
     redis-server \
     software-properties-common \
     ssh \
