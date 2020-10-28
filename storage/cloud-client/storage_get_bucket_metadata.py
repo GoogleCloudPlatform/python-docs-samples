@@ -15,9 +15,6 @@
 # limitations under the License.
 
 
-# [START storage_get_bucket_metadata]
-import pprint
-# [END storage_get_bucket_metadata]
 import sys
 # [START storage_get_bucket_metadata]
 
