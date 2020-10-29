@@ -1,5 +1,5 @@
 flask==1.1.2
 requests==2.24.0
 requests_toolbelt==0.9.1
-google-auth==1.22.1
+google-auth==1.23.0
 functools32==3.2.3.post2; python_version < "3"
