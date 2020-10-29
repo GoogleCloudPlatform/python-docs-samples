@@ -73,7 +73,7 @@ def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
         "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
         PROJECT_ID,
         glossary,
-        240,
+        320,
     )
 
     out, _ = capsys.readouterr()

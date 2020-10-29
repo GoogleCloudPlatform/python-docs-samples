@@ -77,7 +77,7 @@ def batch_translate_text(project_id, input_uri, output_uri):
         }
     )
 
-    result = operation.result(timeout=240)
+    result = operation.result(timeout=320)
 
     print("Total Characters: {}".format(result.total_characters))
     print("Translated Characters: {}".format(result.translated_characters))
