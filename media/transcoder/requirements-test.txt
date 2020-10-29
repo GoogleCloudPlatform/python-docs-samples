@@ -1,0 +1,4 @@
+pytest==6.1.1
+google-cloud-storage==1.31.2
+google-cloud-resource-manager==0.30.2
+retrying==1.3.3
