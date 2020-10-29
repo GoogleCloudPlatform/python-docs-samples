@@ -8,7 +8,7 @@ opentelemetry-ext-jaeger==0.8b0
 opentelemetry-ext-requests==0.8b0
 opentelemetry-ext-wsgi==0.8b0
 opentelemetry-sdk==0.9b0
-grpcio==1.33.1
+grpcio==1.33.2
 httpretty==1.0.2
 google-cloud-monitoring==2.0.0
 google-cloud-trace==0.24.0
