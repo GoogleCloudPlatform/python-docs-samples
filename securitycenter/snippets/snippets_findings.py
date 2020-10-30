@@ -562,7 +562,7 @@ def group_findings_at_time(source_name):
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
-    # [END group_filtered_findings_at_time]
+    # [END group_findings_at_time]
     return i
 
 
@@ -570,7 +570,7 @@ def group_findings_and_changes(source_name):
     """Demonstrates grouping all findings across an organization and
     associated changes."""
     i = 0
-    # [START group_filtered_findings_with_changes]
+    # [START group_findings_with_changes]
     from datetime import timedelta
 
     from google.cloud import securitycenter
