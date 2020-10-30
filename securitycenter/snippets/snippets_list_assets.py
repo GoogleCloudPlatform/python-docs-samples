@@ -160,7 +160,7 @@ def group_assets(organization_id):
 def group_filtered_assets(organization_id):
     """Demonstrates grouping assets by type with a filter. """
     i = 0
-    # [START group_all_assets]
+    # [START group_all_assets_with_filter]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -179,13 +179,13 @@ def group_filtered_assets(organization_id):
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
-    # [END group_all_assets]
+    # [END group_all_assets_with_filter]
     # only one asset type is a project
     return i
 
 
 def group_assets_by_changes(organization_id):
-    """Demonstrates grouping assets by there changes over a period of time."""
+    """Demonstrates grouping assets by their changes over a period of time."""
     i = 0
     # [START group_all_assets_by_change]
     from datetime import timedelta
