@@ -1,2 +1,2 @@
 requests_toolbelt==0.9.1
-google-auth==1.22.1
+google-auth==1.23.0
