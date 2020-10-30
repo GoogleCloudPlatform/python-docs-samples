@@ -31,7 +31,6 @@ logger = logging.getLogger()
 
 
 def init_tcp_connection_engine():
-    # [START cloud_sql_server_sqlalchemy_create_tcp]
     # [START cloud_sql_sqlserver_sqlalchemy_create_tcp]
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
@@ -61,7 +60,6 @@ def init_tcp_connection_engine():
         ),
         # ... Specify additional properties here.
         # [START_EXCLUDE]
-        # [START cloud_sql_server_sqlalchemy_limit]
         # [START cloud_sql_sqlserver_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
         pool_size=5,
@@ -70,34 +68,26 @@ def init_tcp_connection_engine():
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
         # [END cloud_sql_sqlserver_sqlalchemy_limit]
-        # [END cloud_sql_server_sqlalchemy_limit]
-        # [START cloud_sql_server_sqlalchemy_backoff]
         # [START cloud_sql_sqlserver_sqlalchemy_backoff]
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
         # [END cloud_sql_sqlserver_sqlalchemy_backoff]
-        # [END cloud_sql_server_sqlalchemy_backoff]
-        # [START cloud_sql_server_sqlalchemy_timeout]
         # [START cloud_sql_sqlserver_sqlalchemy_timeout]
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
         pool_timeout=30,  # 30 seconds
         # [END cloud_sql_sqlserver_sqlalchemy_timeout]
-        # [END cloud_sql_server_sqlalchemy_timeout]
-        # [START cloud_sql_server_sqlalchemy_lifetime]
         # [START cloud_sql_sqlserver_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
         # reestablished
         pool_recycle=1800,  # 30 minutes
         # [END cloud_sql_sqlserver_sqlalchemy_lifetime]
-        # [END cloud_sql_server_sqlalchemy_lifetime]
         echo=True  # debug
         # [END_EXCLUDE]
     )
     # [END cloud_sql_sqlserver_sqlalchemy_create_tcp]
-    # [END cloud_sql_server_sqlalchemy_create_tcp]
 
     return pool
 
@@ -157,7 +147,6 @@ def save_vote():
         logger.warning(team)
         return Response(response="Invalid team specified.", status=400)
 
-    # [START cloud_sql_server_sqlalchemy_connection]
     # [START cloud_sql_sqlserver_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
@@ -181,7 +170,6 @@ def save_vote():
         )
         # [END_EXCLUDE]
     # [END cloud_sql_sqlserver_sqlalchemy_connection]
-    # [END cloud_sql_server_sqlalchemy_connection]
 
     return Response(
         status=200,
