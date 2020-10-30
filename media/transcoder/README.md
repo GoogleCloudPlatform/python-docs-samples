@@ -1,6 +1,6 @@
-# Cloud Transcoder API Python Samples
+# Transcoder API Python Samples
 
-This directory contains samples for the Cloud Transcoder API. Use this API to transcode videos into a variety of formats. The Transcoder API benefits broadcasters, production companies, businesses, and individuals looking to transform their video content for use across a variety of user devices. For more information, see the [Transcoder API documentation](https://cloud.google.com/transcoder/).
+This directory contains samples for the Transcoder API. Use this API to transcode videos into a variety of formats. The Transcoder API benefits broadcasters, production companies, businesses, and individuals looking to transform their video content for use across a variety of user devices. For more information, see the [Transcoder API documentation](https://cloud.google.com/transcoder/).
 
 ## Setup
 

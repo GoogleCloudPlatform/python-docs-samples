@@ -38,7 +38,7 @@ def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
         output_uri: Uri of the video output folder in the Cloud Storage bucket.
-        preset: The preset value."""
+        preset: The preset template."""
 
     client = TranscoderServiceClient()
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--preset",
-        help="The preset value.",
+        help="The preset template.",
         default="preset/web-hd",
     )
     args = parser.parse_args()
