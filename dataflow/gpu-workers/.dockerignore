@@ -1,0 +1,3 @@
+# Ignore files for docker.
+env/
+outputs/

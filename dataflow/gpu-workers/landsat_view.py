@@ -19,25 +19,31 @@ DEFAULT_MAX_BAND_VALUE = 12000.0
 DEFAULT_GAMMA = 0.5
 
 DEFAULT_SCENES = [
-    'LC08_L1TP_115078_20200608_20200625_01_T1',  # Western Australia
-    'LC08_L1TP_203045_20200108_20200114_01_T1',  # Eye of the Sahara
-    'LC08_L1TP_001067_20200727_20200807_01_T1',  # Amazon
-    'LC08_L1TP_169034_20200720_20200807_01_T1',  # Lake Urmia, Iran
-    'LC08_L1TP_110036_20191009_20191018_01_T1',  # Japan
-    'LC08_L1TP_170059_20200101_20200113_01_T1',  # Mount Elgon, Uganda
-    'LC08_L1TP_045031_20200715_20200722_01_T1',  # Mount Shasta, California
-    'LC08_L1TP_137045_20200211_20200225_01_T1',  # Ganges river delta
-    'LC08_L1TP_037035_20191212_20191212_01_T1',  # Grand canyon
+    'LC08_L1TP_001067_20200727_20200807_01_T1',  # Brazil-Bolivia boundary
+    'LC08_L1TP_019024_20190621_20190704_01_T1',  # Nottaway river delta, Quebec
     'LC08_L1TP_019046_20191214_20191226_01_T1',  # Yucatan peninsula
-    'LC08_L1TP_019024_20190621_20190704_01_T1',  # Nottaway river, Quebec
-    'LC08_L1TP_135040_20190314_20190325_01_T1',  # Arunachal Pradesh
-    'LC08_L1TP_119038_20191109_20191115_01_T1',  # Lake Tai, China
-    'LC08_L1TP_073087_20200516_20200527_01_T1',  # New Zealand
-    'LC08_L1TP_163042_20200608_20200625_01_T1',  # Bahrain
-    'LC08_L1TP_176039_20200603_20200608_01_T1',  # Cairo, Egypt
-    'LC08_L1TP_195028_20200116_20200127_01_T1',  # Swiss Alps
-    'LC08_L1TP_161028_20200525_20200608_01_T1',  # Barsakelmes Reserve, Kazakhstan
+    'LC08_L1TP_037035_20191212_20191212_01_T1',  # Grand canyon, Arizona
+    'LC08_L1TP_045031_20200715_20200722_01_T1',  # Mount Shasta, California
+    'LC08_L1TP_064011_20200618_20200625_01_T1',  # Mackenzie river delta, Canada
+    'LC08_L1TP_073087_20200516_20200527_01_T1',  # Mt. Taranaki, New Zealand
+    'LC08_L1TP_083074_20180805_20180814_01_T1',  # Nouvelle-Calédonie
+    'LC08_L1TP_098063_20200703_20200708_01_T1',  # Manam volcano, Papua New Guinea
+    'LC08_L1TP_109078_20200411_20200422_01_T1',  # Lake Carnegie, West Australia
+    'LC08_L1TP_110036_20191009_20191018_01_T1',  # Osaka 大阪市, Japan
+    'LC08_L1TP_115078_20200608_20200625_01_T1',  # Sediment deposits, West Australia
+    'LC08_L1TP_119038_20191109_20191115_01_T1',  # Lake Tai 太湖, China
+    'LC08_L1TP_135040_20190314_20190325_01_T1',  # Arunachal Pradesh, India
+    'LC08_L1TP_137045_20200211_20200225_01_T1',  # Ganges river delta, India
+    'LC08_L1TP_166075_20180608_20180615_01_T1',  # Bazaruto island, Mozambique
+    'LC08_L1TP_169034_20200720_20200807_01_T1',  # Lake Urmia دریاچه ارومیه, Iran
+    'LC08_L1TP_170059_20200101_20200113_01_T1',  # Mount Elgon, Uganda
+    'LC08_L1TP_175079_20200511_20200526_01_T1',  # Sand dunes, South Africa
     'LC08_L1TP_178069_20200804_20200821_01_T1',  # Angola
+    'LC08_L1TP_178078_20200804_20200821_01_T1',  # Sand dunes, Namibia
+    'LC08_L1TP_191020_20200815_20200822_01_T1',  # Phytoplankton at Gotland, Sweden
+    'LC08_L1TP_195028_20200116_20200127_01_T1',  # Swiss Alps
+    'LC08_L1TP_203045_20200108_20200114_01_T1',  # Eye of the Sahara, Mauritania
+    'LC08_L1TP_231094_20190906_20190917_01_T1',  # Patagonia, South America
 ]
 
 SCENE_RE = re.compile(
@@ -164,29 +170,43 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--scene',
-        # required=True,
+        dest='scenes',
+        action='append',
         default=DEFAULT_SCENES,
+        help='One or more Landsat scene IDs to process, for example '
+        'LC08_L1TP_109078_20200411_20200422_01_T1. '
+        'They must be in the format: '
+        'https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes'
     )
     parser.add_argument(
         '--output-path-prefix',
         required=True,
-        # default='gs://dcavazos-lyra/samples/dataflow/landsat_images/',
+        help='Path prefix for output image files. '
+        'This can be a Google Cloud Storage path.'
     )
     parser.add_argument(
         '--bands',
+        nargs=3,
         default=DEFAULT_RGB_BANDS,
+        help='List of three band names to be mapped to RGB'
     )
     parser.add_argument(
         '--min',
+        type=float,
         default=DEFAULT_MIN_BAND_VALUE,
+        help='Minimum value of the band value range.'
     )
     parser.add_argument(
         '--max',
-        default=DEFAULT_MAX_BAND_VALUE
+        type=float,
+        default=DEFAULT_MAX_BAND_VALUE,
+        help='Maximum value of the band value range.'
     )
     parser.add_argument(
         '--gamma',
+        type=float,
         default=DEFAULT_GAMMA,
+        help='Gamma correction factor.'
     )
     args, beam_args = parser.parse_known_args()
 
@@ -196,4 +216,4 @@ if __name__ == '__main__':
         'max': args.max,
         'gamma': args.gamma,
     }
-    run(args.scene, args.output_path_prefix, vis_params, beam_args)
+    run(args.scenes, args.output_path_prefix, vis_params, beam_args)

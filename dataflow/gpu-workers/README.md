@@ -40,10 +40,10 @@ Additionally, for this sample you need the following:
    cd python-docs-samples/dataflow/gpu-workers
    ```
 
-1. Create a virtual environment and activate it.
+1. Create a Python 3.7 virtual environment and activate it.
 
     ```sh
-    python -m venv env
+    python3.7 -m venv env
     source env/bin/activate
     ```
 
@@ -63,6 +63,9 @@ Download cuDNN.
 Download cuDNN from the [Nvidia website](https://developer.nvidia.com/cudnn) into the sample directory.
 
 > Must be **exactly** version 10.1 for Linux x86: `cudnn-10.1-linux-x64-v8.0.4.30.tgz`
+>
+> For more information about the supported CUDA versions, see the
+> [TensorFlow GPU support](https://www.tensorflow.org/install/gpu) page.
 
 Building the Docker image.
 
@@ -82,26 +85,37 @@ export IMAGE="gcr.io/$PROJECT/samples/dataflow/python-gpu:latest"
 gcloud builds submit -t $IMAGE . --timeout 30m
 ```
 
-> ℹ️ Docker can use a lot of disk. If you are getting storage errors try running:
->
-> ```sh
-> docker system prune --volumes
-> # If you are in a Mac, this file uses a lot of space and is safe to delete.
-> rm ~/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw
-> ```
-
 Running in Dataflow with GPUs.
 
-Current limitations:
+Notes and current limitations:
 
 * The user must download Nvidia cuDNN manually, they need to create an account
 * _Before_ building the image requires uploading the cuDNN file ~700MB which can take a while in slow connections
 * Building the image in Cloud Build takes around 20 minutes, so we need to explicitly set a timeout of 30m (defaults to 10m)
+* The final image is 18.65 GB, takes several minutes for workers to load (beam base image is 3 GB)
+* Autoscaling does not detect GPU load, so it decresases the number of workers to 1
 * Must use a machine type with 1 core due to the way Tensorflow uses the GPU memory
 * Won't run in an n1-standard-1 because it needs more memory, so we use a custom machine type with 1 core and 13 GB (13 * 1024 MB) of memory `custom-1-13312-ext`.
 * Only specific GPUs are available in specific certain zones, `us-central1-a` has `nvidia-tesla-v100` (we need to provide a list of zones with available GPUs, plus pricing)
+* Base image comes with Tensorflow 2.2 preinstalled, but latest is 2.3, should we update manually?
+* Tensorflow only works with CUDA 10.1, even though the latest version is 11.1
+
+Possible fixes:
+
+* Custom containers, so we can base from an Nvidia image with cuda preinstalled
+    * Requires compiling boot.go (ideally as a script) from within the image and setting the entry point
+* Support autoscaling, workaround is disabling autoscaling
+* Tensorflow side: support multiple cores with GPU
+* Tensorflow side: support CUDA 11.1
 
 ```sh
+# Run WITH GPUs
+export IMAGE="gcr.io/$PROJECT/samples/dataflow/python-gpu:latest"
+export REGION="us-central1"
+export WORKER_ZONE="$REGION-a"
+export GPU_TYPE="nvidia-tesla-v100"
+export MACHINE_TYPE="custom-1-13312-ext"
+
 # Run WITH GPUs
 export PROJECT="google.com:deft-testing-integration"
 export BUCKET="dcavazos-dataflow-testing"
@@ -112,8 +126,13 @@ export WORKER_ZONE="$REGION-a"
 export GPU_TYPE="nvidia-tesla-v100"
 export MACHINE_TYPE="custom-1-13312-ext"
 
-# Run in Dataflow without GPUs.
-python3.7 landsat_view.py \
+# Run locally
+python landsat_view.py \
+    --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
+    --experiments "use_runner_v2"
+
+# Run in Dataflow *** NO GPUS, CPU only ***
+python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
     --project "$PROJECT" \
@@ -122,10 +141,12 @@ python3.7 landsat_view.py \
     --worker_zone "$WORKER_ZONE" \
     --machine_type "$MACHINE_TYPE" \
     --dataflow_endpoint "https://dataflow-valentyn-staging.sandbox.googleapis.com/" \
+    --autoscaling_algorithm NONE \
+    --num_workers 5 \
     --experiments "use_runner_v2"
 
-# Run in Valentyn's sandbox.
-python3.7 landsat_view.py \
+# Run with GPUs in Valentyn's sandbox.
+python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
     --project "$PROJECT" \
@@ -135,10 +156,12 @@ python3.7 landsat_view.py \
     --machine_type "$MACHINE_TYPE" \
     --dataflow_endpoint "https://dataflow-valentyn-staging.sandbox.googleapis.com/" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
+    --autoscaling_algorithm NONE \
+    --num_workers 5 \
     --experiments "use_runner_v2"
 
 # Run in daily sandbox.
-python3.7 landsat_view.py \
+python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
     --project "$PROJECT" \
@@ -146,9 +169,10 @@ python3.7 landsat_view.py \
     --worker_harness_container_image "$IMAGE" \
     --worker_zone "$WORKER_ZONE" \
     --machine_type "$MACHINE_TYPE" \
-    --dataflow_endpoint "https://dataflow-daily.sandbox.googleapis.com" \
+    --dataflow_endpoint "https://dataflow-daily.sandbox.googleapis.com/" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
     --experiments "use_runner_v2"
+
 ```
 
 View results.
