@@ -70,9 +70,15 @@ def home_page():
 def enqueue():
     key = request.form.get('key', None)
     if key is not None:
+        # Method definition moved between library versions
+        try:
+            method = tasks.HttpMethod.POST
+        except:
+            method = tasks.enums.HttpMethod.POST
+
         task = {
             'app_engine_http_request': {
-                'http_method': tasks.enums.HttpMethod.POST,
+                'http_method': method,
                 'relative_uri': '/push-task',
                 'body': key.encode()
             }
