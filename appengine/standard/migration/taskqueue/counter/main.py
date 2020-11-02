@@ -18,6 +18,7 @@
    runtimes.
 """
 
+import logging
 import os
 import time
 
@@ -83,6 +84,15 @@ def enqueue():
 
 @app.route('/push-task', methods=['POST'])
 def handle_task():
+    # App Engine runtime will add X-AppEngine-QueueName headers to Cloud Tasks
+    # requests, and strip such headers from any other source.
+    queue_header = request.headers.get('X-AppEngine-QueueName')
+    if queue_header != queue_name:
+        logging.error('Missing or wrong queue name: {}'.format(queue_header))
+        # Return a 200 status response, so sender doesn't keep retrying, but
+        # include the fact that it was rejected in the response for debugging.
+        return 'REJECTED'
+
     key = request.get_data(as_text=True)
     if key is not None:
         increment_counter(key)
