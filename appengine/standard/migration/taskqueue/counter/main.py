@@ -71,7 +71,7 @@ def enqueue():
     if key is not None:
         task = {
             'app_engine_http_request': {
-                'http_method': tasks.HttpMethod.POST,
+                'http_method': tasks.enums.HttpMethod.POST,
                 'relative_uri': '/push-task',
                 'body': key.encode()
             }
