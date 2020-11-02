@@ -100,7 +100,7 @@ def load_band(scene, band_path):
 
 
 def preprocess_pixels(scene, values, min_value=0.0, max_value=1.0, gamma=1.0):
-    values = tf.cast(values, dtype=tf.float32)
+    values = np.array(values, np.float32)
     logging.info('{}: preprocess_pixels({}, min={}, max={}, gamma={})'
                  .format(scene, values.shape, min_value, max_value, gamma))
 
