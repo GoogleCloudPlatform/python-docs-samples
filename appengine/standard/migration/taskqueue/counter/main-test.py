@@ -82,7 +82,7 @@ def test_get_home_page(queue, entity_kind):
     main.entity_kind = save_entity_kind
 
 
-def test_tasks(queue):
+def test_enqueuetasks(queue):
     # Set main globals to test values
     save_queue = main.queue
     main.queue = queue.name
@@ -125,3 +125,53 @@ def test_tasks(queue):
 
     # Restore main globals
     main.queue = save_queue
+
+
+def test_processtasks(entity_kind):
+    # Set main globals to test values
+    save_entity_kind = main.entity_kind
+    main.entity_kind = entity_kind
+
+    main.app.testing = True
+    client = main.app.test_client()
+
+    # Push tasks as if from Cloud Tasks
+    for key in TEST_TASKS:
+        for i in range(TEST_TASKS[key]):
+            r = client.post(
+                '/push-task',
+                data=key,
+                content_type='text/plain',
+                headers=[('X-AppEngine-QueueName', main.queue_name)]
+            )
+
+        assert r.status_code == 200
+        assert r.data == b'OK'
+
+    # Push tasks with bad X-AppEngine-QueueName header
+    r = client.post(
+            '/push-task',
+            data=key,
+            content_type='text/plain',
+            headers=[('X-AppEngine-QueueName', 'WRONG-NAME')]
+        )    
+    assert r.status_code == 200
+    assert r.data == b'REJECTED'
+
+    r = client.post(
+            '/push-task',
+            data=key,
+            content_type='text/plain'
+        )    
+    assert r.status_code == 200
+    assert r.data == b'REJECTED'
+
+    # See that all the tasks were correctly processed
+    r = client.get('/')
+    assert r.status_code == 200
+    assert 'Counters' in r.data.decode('utf-8')
+    for key in TEST_TASKS:
+        assert '{}: {}'.format(key, TEST_TASKS[key]) in r.data.decode('utf-8')
+
+    # Restore main globals
+    main.entity_kind = save_entity_kind
