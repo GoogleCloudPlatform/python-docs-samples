@@ -136,6 +136,6 @@ def test_end_to_end(services):
             # If there are any results, exit loop
             break
 
-        time.sleep(3 * x) # Variable backoff
+        time.sleep(3 * x)  # Variable backoff
 
     assert iterator.num_results
