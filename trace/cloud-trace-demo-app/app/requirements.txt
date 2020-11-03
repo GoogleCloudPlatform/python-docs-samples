@@ -5,5 +5,5 @@ Flask==1.1.2
 opencensus-ext-stackdriver==0.7.4
 opencensus-ext-flask==0.7.3
 opencensus-context==0.1.2
-grpcio==1.33.1
+grpcio==1.33.2
 httpretty==1.0.2
