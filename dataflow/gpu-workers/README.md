@@ -82,31 +82,16 @@ export IMAGE="gcr.io/$PROJECT/samples/dataflow/python-gpu:latest"
 #   gcloud auth configure-docker
 #   docker image build -t $IMAGE .
 #   docker push $IMAGE
-gcloud builds submit -t $IMAGE . --timeout 30m
+gcloud builds submit -t $IMAGE .
 ```
 
 Running in Dataflow with GPUs.
 
 Notes and current limitations:
 
-* The user must download Nvidia cuDNN manually, they need to create an account
-* _Before_ building the image requires uploading the cuDNN file ~700MB which can take a while in slow connections
-* Building the image in Cloud Build takes around 20 minutes, so we need to explicitly set a timeout of 30m (defaults to 10m)
-* The final image is 18.65 GB, takes several minutes for workers to load (beam base image is 3 GB)
-* Autoscaling does not detect GPU load, so it decresases the number of workers to 1
 * Must use a machine type with 1 core due to the way Tensorflow uses the GPU memory
 * Won't run in an n1-standard-1 because it needs more memory, so we use a custom machine type with 1 core and 13 GB (13 * 1024 MB) of memory `custom-1-13312-ext`.
 * Only specific GPUs are available in specific certain zones, `us-central1-a` has `nvidia-tesla-v100` (we need to provide a list of zones with available GPUs, plus pricing)
-* Base image comes with Tensorflow 2.2 preinstalled, but latest is 2.3, should we update manually?
-* Tensorflow only works with CUDA 10.1, even though the latest version is 11.1
-
-Possible fixes:
-
-* Custom containers, so we can base from an Nvidia image with cuda preinstalled
-    * Requires compiling boot.go (ideally as a script) from within the image and setting the entry point
-* Support autoscaling, workaround is disabling autoscaling
-* Tensorflow side: support multiple cores with GPU
-* Tensorflow side: support CUDA 11.1
 
 ```sh
 # Run WITH GPUs

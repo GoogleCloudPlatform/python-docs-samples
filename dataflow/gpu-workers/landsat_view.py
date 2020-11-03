@@ -164,8 +164,6 @@ if __name__ == '__main__':
     import argparse
 
     logging.basicConfig(level=logging.INFO)
-    logging.getLogger(
-        'apache_beam.runners.dataflow.internal.apiclient').setLevel(logging.DEBUG)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(

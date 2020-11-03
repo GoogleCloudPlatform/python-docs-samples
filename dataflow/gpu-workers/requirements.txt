@@ -1,5 +1,4 @@
 Pillow
+apache-beam[gcp]
 rasterio
-
-# apache-beam[gcp] -- already installed when running in Dataflow.
-# tensorflow -- installed in the Dockerfile with conda for GPU support.
+tensorflow
