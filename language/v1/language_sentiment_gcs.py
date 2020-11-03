@@ -47,7 +47,7 @@ def sample_analyze_sentiment(gcs_content_uri):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"gcs_content_uri": gcs_content_uri, "type": type_, "language": language}
+    document = {"gcs_content_uri": gcs_content_uri, "type_": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = language_v1.EncodingType.UTF8

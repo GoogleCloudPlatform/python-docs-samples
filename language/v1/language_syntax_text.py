@@ -46,7 +46,7 @@ def sample_analyze_syntax(text_content):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"content": text_content, "type": type_, "language": language}
+    document = {"content": text_content, "type_": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = language_v1.EncodingType.UTF8

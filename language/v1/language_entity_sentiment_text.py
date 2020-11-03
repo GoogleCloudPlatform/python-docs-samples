@@ -46,7 +46,7 @@ def sample_analyze_entity_sentiment(text_content):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"content": text_content, "type": type_, "language": language}
+    document = {"content": text_content, "type_": type_, "language": language}
 
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = language_v1.EncodingType.UTF8
@@ -56,7 +56,7 @@ def sample_analyze_entity_sentiment(text_content):
     for entity in response.entities:
         print(u"Representative name for the entity: {}".format(entity.name))
         # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
-        print(u"Entity type: {}".format(language_v1.Entity.Type(entity.type).name))
+        print(u"Entity type: {}".format(language_v1.Entity.Type(entity.type_).name))
         # Get the salience score associated with the entity in the [0, 1.0] range
         print(u"Salience score: {}".format(entity.salience))
         # Get the aggregate sentiment expressed for this entity in the provided document.
@@ -76,7 +76,7 @@ def sample_analyze_entity_sentiment(text_content):
             print(u"Mention text: {}".format(mention.text.content))
             # Get the mention type, e.g. PROPER for proper noun
             print(
-                u"Mention type: {}".format(language_v1.EntityMention.Type(mention.type).name)
+                u"Mention type: {}".format(language_v1.EntityMention.Type(mention.type_).name)
             )
 
     # Get the language of the text, which will be the same as

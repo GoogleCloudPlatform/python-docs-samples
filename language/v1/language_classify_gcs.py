@@ -48,7 +48,7 @@ def sample_classify_text(gcs_content_uri):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"gcs_content_uri": gcs_content_uri, "type": type_, "language": language}
+    document = {"gcs_content_uri": gcs_content_uri, "type_": type_, "language": language}
 
     response = client.classify_text(request = {'document': document})
     # Loop through classified categories returned from the API

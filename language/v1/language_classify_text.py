@@ -46,7 +46,7 @@ def sample_classify_text(text_content):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"content": text_content, "type": type_, "language": language}
+    document = {"content": text_content, "type_": type_, "language": language}
 
     response = client.classify_text(request = {'document': document})
     # Loop through classified categories returned from the API
