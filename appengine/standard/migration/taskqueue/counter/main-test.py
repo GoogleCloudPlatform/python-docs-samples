@@ -154,7 +154,7 @@ def test_processtasks(entity_kind):
             data=key,
             content_type='text/plain',
             headers=[('X-AppEngine-QueueName', 'WRONG-NAME')]
-        )    
+        )
     assert r.status_code == 200
     assert r.data == b'REJECTED'
 
@@ -162,7 +162,7 @@ def test_processtasks(entity_kind):
             '/push-task',
             data=key,
             content_type='text/plain'
-        )    
+        )
     assert r.status_code == 200
     assert r.data == b'REJECTED'
 

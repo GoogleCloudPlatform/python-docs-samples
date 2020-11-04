@@ -20,7 +20,6 @@
 
 import logging
 import os
-import time
 
 from flask import Flask, redirect, render_template, request
 from google.cloud import datastore
@@ -73,7 +72,7 @@ def enqueue():
         # Method definition moved between library versions
         try:
             method = tasks.HttpMethod.POST
-        except:
+        except AttributeError:
             method = tasks.enums.HttpMethod.POST
 
         task = {
