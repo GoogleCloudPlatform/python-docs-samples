@@ -20,7 +20,8 @@ import uuid
 os.environ['LOCATION'] = 'us-central1'
 os.environ['QUEUE'] = str(uuid.uuid4())
 
-import main
+# Cannot import main until some environment variables have been set up
+import main     # noqa: E402
 
 
 TEST_NAME = 'taskqueue-migration-' + os.environ['QUEUE']
