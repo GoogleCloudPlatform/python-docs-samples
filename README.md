@@ -2,7 +2,6 @@
 
 Python samples for [Google Cloud Platform products][cloud].
 
-
 [![Build Status][py-2.7-shield]][py-2.7-link] [![Build Status][py-3.6-shield]][py-3.6-link] [![Build Status][py-3.7-shield]][py-3.7-link] [![Build Status][py-3.8-shield]][py-3.8-link]
 
 ## Setup
@@ -55,7 +54,7 @@ Python samples for [Google Cloud Platform products][cloud].
 
 ## Contributing
 
-Contributions welcome! See the [Contributing Guide][CONTRIBUTING.md].
+Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
 
 [slack_badge]: https://img.shields.io/badge/slack-Google%20Cloud%20Platform-E01563.svg	
 [slack_link]: https://googlecloud-community.slack.com/
