@@ -1,5 +1,5 @@
 google-cloud-bigquery==2.2.0
-google-cloud-bigquery-storage==2.0.1
+google-cloud-bigquery-storage==2.1.0
 pandas==1.1.4
 pandas-gbq==0.14.0
 pyarrow==2.0.0
