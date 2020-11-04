@@ -63,7 +63,6 @@ def heavy_computation():
     return reduce(lambda x, t: t * x, numbers)
 
 
-# [START functions_tips_global_scope]
 # [START run_tips_global_scope]
 # Global (instance-wide) scope
 # This computation runs at instance cold-start
@@ -85,7 +84,6 @@ def scope_demo(request):
     return 'Per instance: {}, per function: {}'.format(
         instance_var, function_var)
 # [END run_tips_global_scope]
-# [END functions_tips_global_scope]
 
 
 # [START functions_tips_lazy_globals]

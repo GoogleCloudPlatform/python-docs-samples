@@ -1,0 +1,4 @@
+Flask==1.1.2
+google-cloud-datastore==1.15.3
+google-cloud-pubsub==2.1.0 ; python_version >= "3.0"
+google-cloud-pubsub==1.7.0 ; python_version < "3.0"
