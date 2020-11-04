@@ -218,7 +218,7 @@ Argument types should be documented using Python type annotations as
 introduced in [PEP 484](https://www.python.org/dev/peps/pep-0484/). For example:
 
 ```py
-def hello_world(name: string) -> None:
+def hello_world(name: str) -> None:
     print(f"Hello {name}!")
 ```
 
