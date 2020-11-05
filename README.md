@@ -36,7 +36,7 @@ Python samples for [Google Cloud Platform products][cloud].
 1. Create a virtualenv. Samples are compatible with Python 3.6+.
 
     ```
-    virtualenv env
+    python3 -m venv env
     source env/bin/activate
     ```
 
