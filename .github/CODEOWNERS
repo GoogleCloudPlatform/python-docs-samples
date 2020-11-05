@@ -33,7 +33,7 @@
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
-/error_reporting/**/*.py               @GoogleCloudPlatform/python-samples-owners
+/error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
 /eventarc/**/*.py                      @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
 /functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
@@ -45,7 +45,7 @@
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
 /language/**/*.py                      @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/logging/**/*.py                       @simonz130 @GoogleCloudPlatform/python-samples-owners
+/logging/**/*.py                       @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners

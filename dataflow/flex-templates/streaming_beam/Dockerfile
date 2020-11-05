@@ -18,6 +18,11 @@ ARG WORKDIR=/dataflow/template
 RUN mkdir -p ${WORKDIR}
 WORKDIR ${WORKDIR}
 
+# Due to a change in the Beam base image in version 2.24, we need to install
+# libffi-dev manually as a dependency. For more information:
+#   https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4891
+RUN apt-get update && apt-get install -y libffi-dev && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 COPY streaming_beam.py .
 

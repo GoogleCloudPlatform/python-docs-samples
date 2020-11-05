@@ -1,0 +1,18 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: main.app
+
+libraries:
+- name: flask
+  version: 2.6
+- name: grpcio
+  version: 1.0.0
+
+env_variables:
+  TOPIC: "YOUR_TOPIC_NAME"
+  SUBSCRIPTION: "YOUR_SUBSCRIPTION_NAME"
+  GOOGLE_CLOUD_PROJECT: "YOUR_PROJECT_ID"
