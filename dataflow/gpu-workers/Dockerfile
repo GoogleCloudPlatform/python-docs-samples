@@ -1,5 +1,5 @@
 # Available nvidia/cuda images: https://hub.docker.com/r/nvidia/cuda/tags
-FROM nvidia/cuda:10.1-runtime-ubi7
+FROM nvcr.io/nvidia/cuda:10.1-runtime-ubi7
 
 WORKDIR /root
 
