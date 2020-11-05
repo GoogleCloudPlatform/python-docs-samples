@@ -234,7 +234,7 @@ async def get_simple_query():
 
     async for doc in docs:
         print(f"{doc.id} => {doc.to_dict()}")
-    # [START firestore_data_query_async]
+    # [END firestore_data_query_async]
 
 
 async def array_contains_filter():
