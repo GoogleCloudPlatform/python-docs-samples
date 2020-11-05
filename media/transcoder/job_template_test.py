@@ -14,8 +14,6 @@
 
 import os
 
-from google.cloud import resource_manager
-
 import create_job_template
 import delete_job_template
 import get_job_template
@@ -23,18 +21,14 @@ import list_job_templates
 
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 template_id = "my-python-test-template"
 
 
 def test_template_operations(capsys):
 
-    # Enable the following APIs on the test project:
+    # Enable the following API on the test project:
     # *   Transcoder API
-    # *   Cloud Resource Manager API (needed for project number translation)
-
-    client = resource_manager.Client()
-    project = client.fetch_project(project_id)
-    project_number = project.number
 
     job_template_name = (
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"

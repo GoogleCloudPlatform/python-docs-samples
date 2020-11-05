@@ -48,23 +48,6 @@ def get_job(project_id, location, job_id):
 # [END transcoder_get_job]
 
 
-def get_job_state(project_id, location, job_id):
-    """Gets a job's state.
-
-    Args:
-        project_id: The GCP project ID.
-        location: The location this job is in.
-        job_id: The job ID."""
-
-    client = TranscoderServiceClient()
-
-    name = f"projects/{project_id}/locations/{location}/jobs/{job_id}"
-    response = client.get_job(name=name)
-
-    print(f"Job state: {str(response.state)}")
-    return response
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)

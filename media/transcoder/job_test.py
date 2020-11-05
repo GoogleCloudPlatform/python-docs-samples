@@ -15,7 +15,6 @@
 import os
 import time
 
-from google.cloud import resource_manager
 from google.cloud import storage
 from googleapiclient.errors import HttpError
 from retrying import retry
@@ -32,6 +31,7 @@ import list_jobs
 
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 template_id = "my-python-test-template"
 
 bucket_name = "python-samples-transcoder-test"
@@ -48,19 +48,14 @@ test_file = os.path.join(test_data, test_video_file_name)
 
 def test_job_operations(capsys):
 
-    # Enable the following APIs on the test project:
+    # Enable the following API on the test project:
     # *   Transcoder API
-    # *   Cloud Resource Manager API (needed for project number translation)
 
-    _clean_bucket
+    _clean_bucket()
 
-    client = resource_manager.Client()
-    project = client.fetch_project(project_id)
-    project_number = project.number
-
-    _create_job_from_preset(capsys, project_number)
-    _create_job_from_template(capsys, project_number)
-    _create_job_from_ad_hoc(capsys, project_number)
+    _create_job_from_preset(capsys)
+    _create_job_from_template(capsys)
+    _create_job_from_ad_hoc(capsys)
 
 
 def _clean_bucket():
@@ -79,7 +74,7 @@ def _clean_bucket():
     blob.upload_from_filename(test_file)
 
 
-def _create_job_from_preset(capsys, project_number):
+def _create_job_from_preset(capsys):
     create_job_from_preset.create_job_from_preset(
         project_id, location, input_uri, output_uri_for_preset, preset
     )
@@ -109,7 +104,7 @@ def _create_job_from_preset(capsys, project_number):
     assert "Deleted job" in out
 
 
-def _create_job_from_template(capsys, project_number):
+def _create_job_from_template(capsys):
 
     job_template_name = (
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"
@@ -152,7 +147,7 @@ def _create_job_from_template(capsys, project_number):
     assert "Deleted job template" in out
 
 
-def _create_job_from_ad_hoc(capsys, project_number):
+def _create_job_from_ad_hoc(capsys):
     create_job_from_ad_hoc.create_job_from_ad_hoc(
         project_id, location, input_uri, output_uri_for_adhoc
     )

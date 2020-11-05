@@ -31,3 +31,10 @@ For more information on authentication, refer to the
 This sample uses the [Google Cloud Client Library for Python](https://googlecloudplatform.github.io/google-cloud-python/).
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source](https://github.com/GoogleCloudPlatform/google-cloud-python) and [report issues](https://github.com/GoogleCloudPlatform/google-cloud-python/issues).
+
+## Testing
+
+Make sure to enable the Transcoder API on the test project. Set the following environment variables:
+
+*   `GOOGLE_CLOUD_PROJECT`
+*   `GOOGLE_CLOUD_PROJECT_NUMBER`
