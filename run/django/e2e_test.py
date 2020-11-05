@@ -27,15 +27,15 @@ from google.cloud import secretmanager_v1 as sm
 SUFFIX = uuid.uuid4().hex[:10]
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-DATABASE_VERISON = "POSTGRES_12"
 REGION = "us-central1"
-DATABASE_TIER = "db-f1-micro"
+
+CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
 
 CLOUDSQL_INSTANCE = f"instance-{SUFFIX}"
-STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
-DATABASE_NAME = f"polls-{SUFFIX}"
-DATABASE_USERNAME = f"django-{SUFFIX}"
-DATABASE_PASSWORD = uuid.uuid4().hex[:26]
+POSTGRES_INSTANCE = "test-instance-pg"
+POSTGRES_DATABASE = f"polls-{SUFFIX}"
+POSTGRES_USER = f"django-{SUFFIX}"
+POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
 
 ADMIN_NAME = "admin"
 ADMIN_PASSWORD = uuid.uuid4().hex[:26]
@@ -70,25 +70,7 @@ def project_number():
 
 @pytest.fixture
 def postgres_host(project_number):
-    # Create database instance
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "instances",
-            "create",
-            CLOUDSQL_INSTANCE,
-            "--database-version",
-            DATABASE_VERISON,
-            "--tier",
-            DATABASE_TIER,
-            "--region",
-            REGION,
-            "--project",
-            PROJECT,
-        ],
-        check=True,
-    )
+    # Presume instance already exists
 
     # Create database
     subprocess.run(
@@ -97,9 +79,9 @@ def postgres_host(project_number):
             "sql",
             "databases",
             "create",
-            DATABASE_NAME,
+            POSTGRES_DATABASE,
             "--instance",
-            CLOUDSQL_INSTANCE,
+            POSTGRES_INSTANCE,
             "--project",
             PROJECT,
         ],
@@ -113,11 +95,11 @@ def postgres_host(project_number):
             "sql",
             "users",
             "create",
-            DATABASE_USERNAME,
+            POSTGRES_USERNAME,
             "--password",
-            DATABASE_PASSWORD,
+            POSTGRES_PASSWORD,
             "--instance",
-            CLOUDSQL_INSTANCE,
+            POSTGRES_INSTANCE,
             "--project",
             PROJECT,
         ],
@@ -147,9 +129,9 @@ def postgres_host(project_number):
             "sql",
             "databases",
             "delete",
-            DATABASE_NAME,
+            POSTGRES_DATABASE,
             "--instance",
-            CLOUDSQL_INSTANCE,
+            POSTGRES_INSTANCE,
             "--quiet",
         ],
         check=True,
@@ -161,16 +143,11 @@ def postgres_host(project_number):
             "sql",
             "users",
             "delete",
-            DATABASE_USERNAME,
+            POSTGRES_USERNAME,
             "--instance",
-            CLOUDSQL_INSTANCE,
+            POSTGRES_INSTANCE,
             "--quiet",
         ],
-        check=True,
-    )
-
-    subprocess.run(
-        ["gcloud", "sql", "instances" "delete", CLOUDSQL_INSTANCE, "--quiet"],
         check=True,
     )
 
@@ -178,13 +155,13 @@ def postgres_host(project_number):
 @pytest.fixture
 def media_bucket():
     # Create storage bucket
-    subprocess.run(["gsutil", "mb", "-l", REGION, f"gs://{STORAGE_BUCKET}"], check=True)
+    subprocess.run(["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
 
-    yield STORAGE_BUCKET
+    yield CLOUD_STORAGE_BUCKET
 
     # Delete storage bucket contents, delete bucket
-    subprocess.run(["gsutil", "-m", "rm", "-r", f"gs://{STORAGE_BUCKET}"], check=True)
-    subprocess.run(["gsutil", "rb", f"gs://{STORAGE_BUCKET}"], check=True)
+    subprocess.run(["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
+    subprocess.run(["gsutil", "rb", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
 
 
 @pytest.fixture
@@ -223,8 +200,8 @@ def secrets(project_number):
     client = sm.SecretManagerServiceClient()
     secret_key = uuid.uuid4().hex[:56]
     settings = f"""
-DATABASE_URL=postgres://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@//cloudsql/{PROJECT}:{REGION}:{CLOUDSQL_INSTANCE}/{DATABASE_NAME}
-GS_BUCKET_NAME={STORAGE_BUCKET}
+DATABASE_URL=postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@//cloudsql/{PROJECT}:{REGION}:{POSTGRES_INSTANCE}/{POSTGRES_DATABASE}
+GS_BUCKET_NAME={CLOUD_STORAGE_BUCKET}
 SECRET_KEY={secret_key}
     """
 
