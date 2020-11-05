@@ -20,12 +20,16 @@ import uuid
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding, utils
+from cryptography.hazmat.primitives.asymmetric import ec, padding, utils
 from google.cloud import kms
 import pytest
 
+from check_state_import_job import check_state_import_job
+from check_state_imported_key import check_state_imported_key
+from create_import_job import create_import_job
 from create_key_asymmetric_decrypt import create_key_asymmetric_decrypt
 from create_key_asymmetric_sign import create_key_asymmetric_sign
+from create_key_for_import import create_key_for_import
 from create_key_hsm import create_key_hsm
 from create_key_labels import create_key_labels
 from create_key_ring import create_key_ring
@@ -45,6 +49,7 @@ from get_public_key import get_public_key
 from iam_add_member import iam_add_member
 from iam_get_policy import iam_get_policy
 from iam_remove_member import iam_remove_member
+from import_manually_wrapped_key import import_manually_wrapped_key
 from quickstart import quickstart
 from restore_key_version import restore_key_version
 from sign_asymmetric import sign_asymmetric
@@ -70,6 +75,16 @@ def project_id():
 @pytest.fixture(scope="module")
 def location_id():
     return "us-east1"
+
+
+@pytest.fixture(scope="module")
+def import_job_id():
+    return "my-import-job"
+
+
+@pytest.fixture(scope="module")
+def import_tests_key_id():
+    return "my-import-job-ec-key"
 
 
 @pytest.fixture(scope="module")
@@ -176,6 +191,24 @@ def wait_for_ready(client, key_version_name):
     pytest.fail('{} not ready'.format(key_version_name))
 
 
+def test_create_import_job(project_id, location_id, key_ring_id, import_job_id, capsys):
+    create_import_job(project_id, location_id, key_ring_id, import_job_id)
+    out, _ = capsys.readouterr()
+    assert "Created import job" in out
+
+
+def test_check_state_import_job(project_id, location_id, key_ring_id, import_job_id, capsys):
+    check_state_import_job(project_id, location_id, key_ring_id, import_job_id)
+    out, _ = capsys.readouterr()
+    assert "Current state" in out
+
+
+def test_check_state_imported_key(project_id, location_id, key_ring_id, import_job_id, capsys):
+    check_state_imported_key(project_id, location_id, key_ring_id, import_job_id)
+    out, _ = capsys.readouterr()
+    assert "Current state" in out
+
+
 def test_create_key_asymmetric_decrypt(project_id, location_id, key_ring_id):
     key_id = '{}'.format(uuid.uuid4())
     key = create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, key_id)
@@ -188,6 +221,12 @@ def test_create_key_asymmetric_sign(project_id, location_id, key_ring_id):
     key = create_key_asymmetric_sign(project_id, location_id, key_ring_id, key_id)
     assert key.purpose == kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN
     assert key.version_template.algorithm == kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_2048_SHA256
+
+
+def test_create_key_for_import(project_id, location_id, key_ring_id, import_tests_key_id, capsys):
+    create_key_for_import(project_id, location_id, key_ring_id, import_tests_key_id)
+    out, _ = capsys.readouterr()
+    assert "Generated key" in out
 
 
 def test_create_key_hsm(project_id, location_id, key_ring_id):
@@ -345,6 +384,17 @@ def test_iam_remove_member(client, project_id, location_id, key_ring_id, asymmet
     policy = iam_remove_member(project_id, location_id, key_ring_id, asymmetric_sign_rsa_key_id, 'group:test@google.com')
     assert not any('group:test@google.com' in b.members for b in policy.bindings)
     assert any('group:tester@google.com' in b.members for b in policy.bindings)
+
+
+def test_import_manually_wrapped_key(project_id, location_id, key_ring_id, import_job_id, import_tests_key_id, capsys):
+    key = ec.generate_private_key(ec.SECP256R1, default_backend())
+    formatted_key = key.private_bytes(
+        serialization.Encoding.DER,
+        serialization.PrivateFormat.PKCS8,
+        serialization.NoEncryption())
+    import_manually_wrapped_key(project_id, location_id, key_ring_id, import_tests_key_id, import_job_id, formatted_key)
+    out, _ = capsys.readouterr()
+    assert "Imported" in out
 
 
 def test_sign_asymmetric(client, project_id, location_id, key_ring_id, asymmetric_sign_rsa_key_id):
