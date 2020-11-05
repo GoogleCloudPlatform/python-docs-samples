@@ -8,7 +8,7 @@ WORKDIR /root
 # Download and compile the bootloader for the Dataflow workers.
 #   ℹ️ This is _required_ for the Dataflow runner.
 ENV PATH=$PATH:/usr/local/go/bin
-ENV BOOT /opt/apache/beam/boot
+ENV BOOT=/opt/apache/beam/boot
 
 RUN curl -o golang.tar.gz -L https://golang.org/dl/go1.15.3.linux-amd64.tar.gz \
     && curl -o boot.go -L https://raw.githubusercontent.com/apache/beam/master/sdks/python/container/boot.go \
@@ -25,9 +25,9 @@ ENTRYPOINT [$BOOT]
 # The nvidia/cuda image comes with Python 2, but we want Python 3.
 #   ℹ️ This is _not necessary_ if your base image already comes with the
 #      Python version you want, like `python:3.7-slim`.
-ENV PYENV_ROOT /pyenv
-ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
-ENV CFLAGS -O2
+ENV PYENV_ROOT=/pyenv
+ENV PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+ENV CFLAGS=-O2
 
 # You can specify a different version when building the image:
 #   gcloud builds submit -t $IMAGE --build-arg python_version=3.8.6 .
