@@ -23,6 +23,12 @@ import googleapiclient.discovery
 
 
 # [START predict_json]
+# Create the AI Platform service object.
+# To authenticate set the environment variable
+# GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
+service = googleapiclient.discovery.build('ml', 'v1')
+
+
 def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
 
@@ -38,10 +44,6 @@ def predict_json(project, model, instances, version=None):
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    # Create the AI Platform service object.
-    # To authenticate set the environment variable
-    # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    service = googleapiclient.discovery.build('ml', 'v1')
     name = 'projects/{}/models/{}'.format(project, model)
 
     if version is not None:
