@@ -33,7 +33,7 @@ Python samples for [Google Cloud Platform products][cloud].
     cd logging/cloud-client/
     ```
 
-1. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
+1. Create a virtualenv. Samples are compatible with Python 3.6+.
 
     ```
     virtualenv env
