@@ -26,6 +26,7 @@ COPY requirements.txt ./
 # Install production dependencies.
 RUN pip install -r requirements.txt
 
+# [START cloudrun_imageproc_dockerfile_imagemagick]
 # [START run_imageproc_dockerfile_imagemagick]
 # Install Imagemagick into the container image.
 # For more on system packages review the system packages tutorial.
@@ -35,13 +36,14 @@ RUN set -ex; \
   apt-get -y install imagemagick; \
   rm -rf /var/lib/apt/lists/*
 # [END run_imageproc_dockerfile_imagemagick]
+# [END cloudrun_imageproc_dockerfile_imagemagick]
 
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# Run the web service on container startup. 
+# Run the web service on container startup.
 # Use gunicorn webserver with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
