@@ -192,7 +192,7 @@ def add_example_data():
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
     # [END firestore_data_get_dataset]
-    # [END add_example_data
+    # [END add_example_data]
 
 
 def add_custom_class_with_id():
@@ -270,7 +270,7 @@ def get_custom_class():
 def get_simple_query():
     db = firestore.Client()
     # [START get_simple_query]
-    # [START add_data_types]
+    # [START firestore_data_query]
     # Note: Use of CollectionRef stream() is prefered to get()
     docs = db.collection(u'cities').where(u'capital', u'==', True).stream()
 

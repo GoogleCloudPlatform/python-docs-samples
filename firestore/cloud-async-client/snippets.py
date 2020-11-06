@@ -382,13 +382,13 @@ async def update_multiple():
 
 async def update_create_if_missing():
     db = firestore.AsyncClient()
-    # [START update_create_if_missing_async
+    # [START update_create_if_missing_async]
     # [START firestore_data_set_doc_upsert_async]
     city_ref = db.collection("cities").document("BJ")
 
     await city_ref.set({"capital": True}, merge=True)
     # [END firestore_data_set_doc_upsert_async]
-    # [END firestore_data_set_doc_upsert_async]
+    # [END update_create_if_missing_async]
 
 
 async def update_nested():
@@ -680,7 +680,7 @@ async def snapshot_cursors():
         db.collection("cities").order_by("population").start_at(snapshot)
     )
     # [END firestore_query_cursor_start_at_document_async]
-    # [END firestore_query_cursor_start_at_document_async]
+    # [END fs_start_at_snapshot_query_cursor_async]
     results = start_at_snapshot.limit(10).stream()
     async for doc in results:
         print(f"{doc.id}")
