@@ -38,6 +38,9 @@ import nox
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
     "ignored_versions": ["2.7"],
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    "enforce_type_hints": False,
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
@@ -130,7 +133,10 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session):
-    session.install("flake8", "flake8-import-order")
+    if not TEST_CONFIG["enforce_type_hints"]:
+        session.install("flake8", "flake8-import-order")
+    else:
+        session.install("flake8", "flake8-import-order", "flake8-annotations")
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
