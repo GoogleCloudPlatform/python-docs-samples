@@ -97,7 +97,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 

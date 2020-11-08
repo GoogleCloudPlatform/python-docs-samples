@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.test import TestCase
-
+from django.test import Client, TestCase
+client = Client()
 
 class PollViewTests(TestCase):
     def test_index_view(self):
-        response = self.client.get("/")
+        response = client.get("/")
         assert response.status_code == 200
         assert "Hello, world" in str(response.content)
