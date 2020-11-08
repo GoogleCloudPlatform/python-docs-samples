@@ -119,7 +119,7 @@ def postgres_host(project_number):
             "--role",
             "roles/cloudsql.client",
         ],
-        check=True,
+        check=True, capture_output=True
     )
 
     yield CLOUDSQL_INSTANCE
