@@ -97,7 +97,6 @@ TODO:
 export PROJECT="google.com:deft-testing-integration"
 export BUCKET="dcavazos-dataflow-testing"
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/creds/deft-testing-integration.json"
-export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/tensorflow-gpu:latest"
 export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/dataflow-gpu:latest"
 -->
 

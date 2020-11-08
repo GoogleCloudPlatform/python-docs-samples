@@ -56,4 +56,7 @@ COPY requirements.txt .
 
 RUN pip config set global.cache-dir false \
     && pip install -U pip \
-    && pip install -r requirements.txt
+    && pip install -r requirements.txt \
+    # Tensorflow expects SSL certificates at /etc/ssl/certs/ca-certificates.crt
+    #   https://github.com/tensorflow/tensorflow/issues/40065
+    && ln -s /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
