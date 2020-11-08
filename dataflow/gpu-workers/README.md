@@ -59,14 +59,6 @@ Additionally, for this sample you need the following:
 
 * [landsat_images.py](landsat_images.py)
 
-Download cuDNN.
-Download cuDNN from the [Nvidia website](https://developer.nvidia.com/cudnn) into the sample directory.
-
-> Must be **exactly** version 10.1 for Linux x86: `cudnn-10.1-linux-x64-v8.0.4.30.tgz`
->
-> For more information about the supported CUDA versions, see the
-> [TensorFlow GPU support](https://www.tensorflow.org/install/gpu) page.
-
 Building the Docker image.
 
 Cloud Build allows you to
@@ -76,47 +68,46 @@ and saves it into
 where the image is accessible to other Google Cloud products.
 
 ```sh
-export IMAGE="gcr.io/$PROJECT/samples/dataflow/python-gpu:latest"
+export IMAGE="gcr.io/$PROJECT/samples/dataflow/tensorflow-gpu:latest"
 
 # Build the image into Container Registry, this is roughly equivalent to:
 #   gcloud auth configure-docker
 #   docker image build -t $IMAGE .
 #   docker push $IMAGE
-gcloud builds submit -t $IMAGE .
+gcloud builds submit -t $IMAGE . --timeout 20m
 ```
 
 Running in Dataflow with GPUs.
 
+<!--
 Notes and current limitations:
 
 * Must use a machine type with 1 core due to the way Tensorflow uses the GPU memory
 * Won't run in an n1-standard-1 because it needs more memory, so we use a custom machine type with 1 core and 13 GB (13 * 1024 MB) of memory `custom-1-13312-ext`.
 * Only specific GPUs are available in specific certain zones, `us-central1-a` has `nvidia-tesla-v100` (we need to provide a list of zones with available GPUs, plus pricing)
+-->
 
-```sh
-# Run WITH GPUs
-export IMAGE="gcr.io/$PROJECT/samples/dataflow/python-gpu:latest"
-export REGION="us-central1"
-export WORKER_ZONE="$REGION-a"
-export GPU_TYPE="nvidia-tesla-v100"
-export MACHINE_TYPE="custom-1-13312-ext"
+<!--
+TODO:
+- Explain how to use a custom machine type.
+- Have a link to the available GPU types by zone/region.
+-->
 
-# Run WITH GPUs
+<!--
 export PROJECT="google.com:deft-testing-integration"
 export BUCKET="dcavazos-dataflow-testing"
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/creds/deft-testing-integration.json"
-export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/python-gpu:latest"
+export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/tensorflow-gpu:latest"
+export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/dataflow-gpu:latest"
+-->
+
+```sh
 export REGION="us-central1"
 export WORKER_ZONE="$REGION-a"
 export GPU_TYPE="nvidia-tesla-v100"
 export MACHINE_TYPE="custom-1-13312-ext"
 
-# Run locally
-python landsat_view.py \
-    --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
-    --experiments "use_runner_v2"
-
-# Run in Dataflow *** NO GPUS, CPU only ***
+# Run with CPUs -- NO GPUs --
 python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
@@ -130,7 +121,7 @@ python landsat_view.py \
     --num_workers 5 \
     --experiments "use_runner_v2"
 
-# Run with GPUs in Valentyn's sandbox.
+# Run with GPUs
 python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
@@ -143,27 +134,13 @@ python landsat_view.py \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
     --autoscaling_algorithm NONE \
     --num_workers 5 \
-    --experiments "use_runner_v2"
-
-# Run in daily sandbox.
-python landsat_view.py \
-    --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
-    --runner "DataflowRunner" \
-    --project "$PROJECT" \
-    --region "$REGION" \
-    --worker_harness_container_image "$IMAGE" \
-    --worker_zone "$WORKER_ZONE" \
-    --machine_type "$MACHINE_TYPE" \
-    --dataflow_endpoint "https://dataflow-daily.sandbox.googleapis.com/" \
-    --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
     --experiments "use_runner_v2"
 
 ```
 
-View results.
+View the results.
 
 ```sh
-export BUCKET="dcavazos-dataflow-testing"
 
 gsutil ls -lh gs://$BUCKET/samples/dataflow/landsat/
 
