@@ -19,9 +19,9 @@ import os
 import subprocess
 import uuid
 
+from google.cloud import secretmanager_v1 as sm
 import pytest
 import requests
-from google.cloud import secretmanager_v1 as sm
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
@@ -95,7 +95,7 @@ def postgres_host(project_number):
             "sql",
             "users",
             "create",
-            POSTGRES_USERNAME,
+            POSTGRES_USER,
             "--password",
             POSTGRES_PASSWORD,
             "--instance",
@@ -106,7 +106,8 @@ def postgres_host(project_number):
         check=True,
     )
 
-    # Allow access to database from Cloud Build
+    # TODO: Make static fixture
+    # Allow access to Cloud SQL from Cloud Build
     subprocess.run(
         [
             "gcloud",
@@ -143,10 +144,26 @@ def postgres_host(project_number):
             "sql",
             "users",
             "delete",
-            POSTGRES_USERNAME,
+            POSTGRES_USER,
             "--instance",
             POSTGRES_INSTANCE,
             "--quiet",
+        ],
+        check=True,
+    )
+
+    # TODO: remove when binding is static
+    # Remove policy binding
+    subprocess.run(
+        [
+            "gcloud",
+            "projects",
+            "remove-iam-policy-binding",
+            PROJECT,
+            "--member",
+            f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
+            "--role",
+            "roles/cloudsql.client",
         ],
         check=True,
     )
@@ -155,12 +172,17 @@ def postgres_host(project_number):
 @pytest.fixture
 def media_bucket():
     # Create storage bucket
-    subprocess.run(["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
+    subprocess.run(
+        ["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}"],
+        check=True,
+    )
 
     yield CLOUD_STORAGE_BUCKET
 
     # Delete storage bucket contents, delete bucket
-    subprocess.run(["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
+    subprocess.run(
+        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True
+    )
     subprocess.run(["gsutil", "rb", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
 
 

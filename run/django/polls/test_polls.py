@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.test import Client, TestCase  # noqa: 401
+from django.test import TestCase
 
 
 class PollViewTests(TestCase):
