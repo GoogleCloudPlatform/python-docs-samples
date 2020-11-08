@@ -108,6 +108,7 @@ def postgres_host(project_number):
 
     # TODO: Make static fixture
     # Allow access to Cloud SQL from Cloud Build
+    """
     subprocess.run(
         [
             "gcloud",
@@ -121,6 +122,7 @@ def postgres_host(project_number):
         ],
         check=True, capture_output=True
     )
+    """
 
     yield CLOUDSQL_INSTANCE
 
@@ -154,6 +156,7 @@ def postgres_host(project_number):
 
     # TODO: remove when binding is static
     # Remove policy binding
+    """
     subprocess.run(
         [
             "gcloud",
@@ -167,6 +170,7 @@ def postgres_host(project_number):
         ],
         check=True,
     )
+    """
 
 
 @pytest.fixture
