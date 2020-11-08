@@ -74,7 +74,7 @@ export IMAGE="gcr.io/$PROJECT/samples/dataflow/tensorflow-gpu:latest"
 #   gcloud auth configure-docker
 #   docker image build -t $IMAGE .
 #   docker push $IMAGE
-gcloud builds submit -t $IMAGE . --timeout 20m
+gcloud builds submit -t $IMAGE .
 ```
 
 Running in Dataflow with GPUs.
