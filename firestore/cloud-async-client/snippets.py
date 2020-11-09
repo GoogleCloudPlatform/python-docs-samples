@@ -180,20 +180,22 @@ async def add_example_data():
 
 async def add_custom_class_with_id():
     db = firestore.AsyncClient()
+    # [START add_custom_class_with_id_async]
     # [START firestore_data_set_from_custom_type_async]
     city = City(name="Los Angeles", state="CA", country="USA")
     await db.collection("cities").document("LA").set(city.to_dict())
     # [END firestore_data_set_from_custom_type_async]
+    # [END add_custom_class_with_id_async]
 
 
 async def add_data_with_id():
     db = firestore.AsyncClient()
     data = {}
-    # [START add_custom_class_with_id_async]
+    # [START add_data_with_id_async]
     # [START firestore_data_set_id_specified_async]
     await db.collection("cities").document("new-city-id").set(data)
     # [END firestore_data_set_id_specified_async]
-    # [END add_custom_class_with_id_async]
+    # [END add_data_with_id_async]
 
 
 async def add_custom_class_generated_id():
