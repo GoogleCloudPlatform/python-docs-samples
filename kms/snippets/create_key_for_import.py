@@ -15,7 +15,9 @@
 # [START kms_create_key_for_import]
 def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
     """
-    Generate Cloud KMS-compatible key material locally and sets up an empty CryptoKey within a KeyRing for import.
+
+    Sets up an empty CryptoKey within a KeyRing for import.
+
 
     Args:
         project_id (string): Google Cloud project ID (e.g. 'my-project').
@@ -24,23 +26,8 @@ def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
         crypto_key_id (string): ID of the key to import (e.g. 'my-asymmetric-signing-key').
     """
 
-    # Import Python standard cryptographic libraries.
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.primitives.asymmetric import ec
-
     # Import the client library.
     from google.cloud import kms
-
-    # Generate some key material in Python and format it in PKCS #8 DER as
-    # required by Google Cloud KMS.
-    key = ec.generate_private_key(ec.SECP256R1, default_backend())
-    formatted_key = key.private_bytes(
-        serialization.Encoding.DER,
-        serialization.PrivateFormat.PKCS8,
-        serialization.NoEncryption())
-
-    print('Generated key bytes: {}'.format(formatted_key))
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

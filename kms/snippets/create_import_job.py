@@ -35,7 +35,10 @@ def create_import_job(project_id, location_id, key_ring_id, import_job_id):
 
     # Set paramaters for the import job, allowed values for ImportMethod and ProtectionLevel found here:
     # https://googleapis.dev/python/cloudkms/latest/_modules/google/cloud/kms_v1/types/resources.html
-    import_job_params = {"import_method": kms.ImportJob.ImportMethod.RSA_OAEP_3072_SHA1_AES_256, "protection_level": kms.ProtectionLevel.HSM}
+
+    import_method = kms.ImportJob.ImportMethod.RSA_OAEP_3072_SHA1_AES_256
+    protection_level = kms.ProtectionLevel.HSM
+    import_job_params = {"import_method": import_method, "protection_level": protection_level}
 
     # Call the client to create a new import job.
     import_job = client.create_import_job({"parent": key_ring_name, "import_job_id": import_job_id, "import_job": import_job_params})
