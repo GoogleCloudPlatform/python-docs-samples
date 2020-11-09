@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_pubsub_server_setup]
 # [START run_pubsub_server_setup]
 import base64
 import os
@@ -22,10 +21,8 @@ from flask import Flask, request
 
 app = Flask(__name__)
 # [END run_pubsub_server_setup]
-# [END cloudrun_pubsub_server_setup]
 
 
-# [START cloudrun_pubsub_handler]
 # [START run_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
@@ -50,7 +47,6 @@ def index():
 
     return ('', 204)
 # [END run_pubsub_handler]
-# [END cloudrun_pubsub_handler]
 
 
 if __name__ == '__main__':

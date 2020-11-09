@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_imageproc_controller]
 # [START run_imageproc_controller]
 import base64
 import json
@@ -70,7 +69,6 @@ def index():
 
     return ('', 500)
     # [END run_imageproc_controller]
-    # [END cloudrun_imageproc_controller]
 
 
 if __name__ == '__main__':

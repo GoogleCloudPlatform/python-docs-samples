@@ -14,6 +14,7 @@ __pycache__
 managed_vms/django_tutorial/static/*
 **/migrations/*
 lib
+testing/test-env-local.sh
 testing/resources/test-env.sh
 testing/resources/service-account.json
 testing/resources/client-secrets.json
@@ -27,3 +28,4 @@ credentials.dat
 .DS_store
 env/
 .idea
+.env*

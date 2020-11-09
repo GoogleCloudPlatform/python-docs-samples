@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_helloworld_service]
 # [START run_helloworld_service]
 import os
 
@@ -30,4 +29,3 @@ def hello_world():
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 # [END run_helloworld_service]
-# [END cloudrun_helloworld_service]
