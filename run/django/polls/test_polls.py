@@ -15,6 +15,7 @@
 from django.test import Client, TestCase
 client = Client()
 
+
 class PollViewTests(TestCase):
     def test_index_view(self):
         response = client.get("/")

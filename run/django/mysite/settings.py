@@ -24,6 +24,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
+import sys
 
 # [START run_secretconfig]
 import environ
@@ -33,20 +34,23 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 # If no .env has been provided, pull it from Secret Manager, storing it locally
 if not os.path.isfile(".env"):
-    import google.auth
-    from google.cloud import secretmanager_v1
+    if 'test' in sys.argv or 'test_coverage' in sys.argv or 'nox' in sys.argv:
+        payload = "SECRET_KEY=a\nDATABASE_URL=sqlite:////sqlite.db\nGS_BUCKET_NAME=none"
+    else:
+        import google.auth
+        from google.cloud import secretmanager_v1
 
-    _, project = google.auth.default()
+        _, project = google.auth.default()
 
-    if project:
-        client = secretmanager_v1.SecretManagerServiceClient()
+        if project:
+            client = secretmanager_v1.SecretManagerServiceClient()
 
-        SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
-        name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
-        payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+            SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
+            name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+            payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
-        with open(env_file, "w") as f:
-            f.write(payload)
+    with open(env_file, "w") as f:
+        f.write(payload)
 
 env = environ.Env()
 env.read_env(env_file)

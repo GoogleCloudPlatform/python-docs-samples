@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 from django.db import migrations
 
 import google.auth
@@ -23,16 +25,19 @@ def createsuperuser(apps, schema_editor):
     Dynamically create an admin user as part of a migration
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
-    client = secretmanager_v1.SecretManagerServiceClient()
+    if 'test' in sys.argv or 'test_coverage' in sys.argv or 'nox' in sys.argv:
+        admin_password = "test"
+    else:
+        client = secretmanager_v1.SecretManagerServiceClient()
 
-    # Get project value for identifying current context
-    _, project = google.auth.default()
+        # Get project value for identifying current context
+        _, project = google.auth.default()
 
-    # Retrieve the previously stored admin password
-    name = f"projects/{project}/secrets/superuser_password/versions/latest"
-    admin_password = client.access_secret_version(name=name).payload.data.decode(
-        "UTF-8"
-    )
+        # Retrieve the previously stored admin password
+        name = f"projects/{project}/secrets/superuser_password/versions/latest"
+        admin_password = client.access_secret_version(name=name).payload.data.decode(
+            "UTF-8"
+        )
 
     # Create a new user using acquired password
     from django.contrib.auth.models import User
