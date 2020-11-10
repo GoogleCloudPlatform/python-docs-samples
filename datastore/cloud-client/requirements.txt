@@ -1,1 +1,1 @@
-google-cloud-datastore==2.0.0-dev1
+google-cloud-datastore==2.0.0
