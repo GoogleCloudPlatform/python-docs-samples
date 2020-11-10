@@ -62,6 +62,7 @@ def heavy_computation():
     numbers = list(range(1, 10))
     return reduce(lambda x, t: t * x, numbers)
 
+
 # [START cloudrun_tips_global_scope]
 # [START run_tips_global_scope]
 # Global (instance-wide) scope
@@ -85,6 +86,7 @@ def scope_demo(request):
         instance_var, function_var)
 # [END run_tips_global_scope]
 # [END cloudrun_tips_global_scope]
+
 
 # [START functions_tips_lazy_globals]
 # [START cloudrun_tips_global_lazy]
