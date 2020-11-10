@@ -23,6 +23,9 @@
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     'ignored_versions': ["2.7"],
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    'enforce_type_hints': False,
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a

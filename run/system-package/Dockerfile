@@ -19,11 +19,13 @@ FROM python:3.9
 # Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED True
 
+# [START cloudrun_system_package_ubuntu]
 # [START run_system_package_ubuntu]
 RUN apt-get update -y && apt-get install -y \
   graphviz \
   && apt-get clean
 # [END run_system_package_ubuntu]
+# [END cloudrun_system_package_ubuntu]
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
@@ -37,7 +39,7 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# Run the web service on container startup. 
+# Run the web service on container startup.
 # Use gunicorn webserver with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
