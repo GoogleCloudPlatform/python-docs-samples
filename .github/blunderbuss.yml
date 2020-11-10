@@ -71,8 +71,9 @@ assign_issues_by:
   - noerog
 - labels:
   - 'api: logging'
+  - 'api: clouderrorreporting'
   to:
-  - simonz130
+  - Daniel-Sanche
 - labels:
   - 'api: ml'
   to:
