@@ -54,7 +54,7 @@ def mark_done(client, task_id):
         task = client.get(key)
 
         if not task:
-            raise ValueError("Task {} does not exist.".format(task_id))
+            raise ValueError(f"Task {task_id} does not exist.")
 
         task["done"] = True
 
@@ -90,9 +90,9 @@ def format_tasks(tasks):
         if task["done"]:
             status = "done"
         else:
-            status = "created {}".format(task["created"])
+            status = f"created {task['created']}"
 
-        lines.append("{}: {} ({})".format(task.key.id, task["description"], status))
+        lines.append(f"{task.key.id}: {task['description']} ({status})")
 
     return "\n".join(lines)
 
@@ -100,13 +100,13 @@ def format_tasks(tasks):
 def new_command(client, args):
     """Adds a task with description <description>."""
     task_key = add_task(client, args.description)
-    print("Task {} added.".format(task_key.id))
+    print(f"Task {task_key.id} added.")
 
 
 def done_command(client, args):
     """Marks a task as done."""
     mark_done(client, args.task_id)
-    print("Task {} marked done.".format(args.task_id))
+    print(f"Task {args.task_id} marked done.")
 
 
 def list_command(client, args):
@@ -117,7 +117,7 @@ def list_command(client, args):
 def delete_command(client, args):
     """Deletes a task."""
     delete_task(client, args.task_id)
-    print("Task {} deleted.".format(args.task_id))
+    print(f"Task {args.task_id} deleted.")
 
 
 if __name__ == "__main__":

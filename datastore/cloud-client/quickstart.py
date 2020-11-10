@@ -37,7 +37,7 @@ def run_quickstart():
     # Saves the entity
     datastore_client.put(task)
 
-    print("Saved {}: {}".format(task.key.name, task["description"]))
+    print(f"Saved {task.key.name}: {task['description']}")
     # [END datastore_quickstart]
 
 
