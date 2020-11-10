@@ -30,7 +30,7 @@ def test_dag_has_cycle():
         unit_testing.assert_has_valid_dag(module)
 
 
-# [START composer_dag_unit_testing]
+# [START composer_dag_unit_testing_test]
 def test_dag_with_variables():
     from airflow import models
 
@@ -43,4 +43,4 @@ def test_dag_with_variables():
     # The assert_has_valid_dag verifies that the module contains an Airflow DAG
     # and that the DAG contains no cycles.
     unit_testing.assert_has_valid_dag(module)
-# [END composer_dag_unit_testing]
+# [END composer_dag_unit_testing_test]
