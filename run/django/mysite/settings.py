@@ -34,7 +34,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 # If no .env has been provided, pull it from Secret Manager, storing it locally
 if not os.path.isfile(".env"):
-    if 'test' in sys.argv or 'test_coverage' in sys.argv or 'nox' in sys.argv:
+    if "test" in sys.argv or "test_coverage" in sys.argv or "nox" in sys.argv:
         payload = "SECRET_KEY=a\nDATABASE_URL=sqlite:////sqlite.db\nGS_BUCKET_NAME=none"
     else:
         import google.auth
@@ -47,7 +47,9 @@ if not os.path.isfile(".env"):
 
             SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
             name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
-            payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+            payload = client.access_secret_version(name=name).payload.data.decode(
+                "UTF-8"
+            )
 
     with open(env_file, "w") as f:
         f.write(payload)
@@ -113,18 +115,10 @@ DATABASES = {"default": env.db()}
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 

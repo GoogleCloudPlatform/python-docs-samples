@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 
 from django.db import migrations
-
 import google.auth
 from google.cloud import secretmanager_v1
 
@@ -25,7 +25,7 @@ def createsuperuser(apps, schema_editor):
     Dynamically create an admin user as part of a migration
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
-    if 'test' in sys.argv or 'test_coverage' in sys.argv or 'nox' in sys.argv:
+    if "test" in sys.argv or "test_coverage" in sys.argv or "nox" in sys.argv:
         admin_password = "test"
     else:
         client = secretmanager_v1.SecretManagerServiceClient()
