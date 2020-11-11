@@ -148,13 +148,10 @@ def media_bucket():
 
     yield CLOUD_STORAGE_BUCKET
 
-    # Delete storage bucket contents, delete bucket
+    # Recursively delete assets and bucket (does not take a -p flag, apparently)
     subprocess.run(
-        ["gsutil", "-m", "rm", "-r", "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"],
+        ["gsutil", "-m", "rm", "-r",  f"gs://{CLOUD_STORAGE_BUCKET}"],
         check=True,
-    )
-    subprocess.run(
-        ["gsutil", "rb", "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"], check=True
     )
 
 
@@ -357,7 +354,7 @@ def service_url_auth_token(deployed_service):
     )
     auth_token = (
         subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
+            ["gcloud", "auth", "print-identity-token", "--project", PROJECT],
             stdout=subprocess.PIPE,
             check=True,
         )
