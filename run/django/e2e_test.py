@@ -27,10 +27,12 @@ import requests
 SUFFIX = uuid.uuid4().hex[:10]
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
 POSTGRES_INSTANCE = os.environ["POSTGRES_INSTANCE"]
+
+# Most commands in this test require the short instance form
 if ":" in POSTGRES_INSTANCE:
     POSTGRES_INSTANCE = POSTGRES_INSTANCE.split(":")[-1]
-REGION = "us-central1"
 
 CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
 
@@ -171,7 +173,6 @@ def secrets(project_number):
         client.add_secret_version(
             request={"parent": secret.name, "payload": {"data": value.encode("UTF-8")}}
         )
-        print(f"DEBUG: {name}\n{value}")
 
     def allow_access(name, member):
         subprocess.run(
