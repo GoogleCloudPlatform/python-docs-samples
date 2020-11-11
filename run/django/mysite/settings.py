@@ -26,7 +26,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import sys
 
-# [START run_secretconfig]
+# [START cloudrun_secretconfig]
 import environ
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,7 +104,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 
-# [START run_dbconfig]
+# [START cloudrun_dbconfig]
 # Use django-environ to define the connection string
 DATABASES = {"default": env.db()}
 # [END run_dbconfig]
@@ -141,7 +141,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# [START run_staticconfig]
+# [START cloudrun_staticconfig]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 
