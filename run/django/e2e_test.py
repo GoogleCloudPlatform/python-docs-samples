@@ -56,7 +56,7 @@ def project_number():
                 "projects",
                 "list",
                 "--filter",
-                PROJECT,
+                f"name={PROJECT}",
                 "--format",
                 "value(projectNumber)",
             ],
@@ -66,7 +66,7 @@ def project_number():
         .stdout.strip()
         .decode()
     )
-
+    print("DEBUG:", projectnum)
     yield projectnum
 
 
