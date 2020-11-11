@@ -27,12 +27,12 @@ import requests
 SUFFIX = uuid.uuid4().hex[:10]
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+POSTGRES_INSTANCE = os.environ["POSTGRES_INSTANCE"]
 REGION = "us-central1"
 
 CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
 
 CLOUDSQL_INSTANCE = f"instance-{SUFFIX}"
-POSTGRES_INSTANCE = "test-instance-pg"
 POSTGRES_DATABASE = f"polls-{SUFFIX}"
 POSTGRES_USER = f"django-{SUFFIX}"
 POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
