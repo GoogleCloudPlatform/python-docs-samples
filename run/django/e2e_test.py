@@ -142,7 +142,7 @@ def postgres_host(project_number):
 def media_bucket():
     # Create storage bucket
     subprocess.run(
-        ["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT],
+        ["gsutil", "mb", "-l", REGION, "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"],
         check=True,
     )
 
@@ -150,11 +150,11 @@ def media_bucket():
 
     # Delete storage bucket contents, delete bucket
     subprocess.run(
-        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT],
+        ["gsutil", "-m", "rm", "-r", "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"],
         check=True,
     )
     subprocess.run(
-        ["gsutil", "rb", f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT], check=True
+        ["gsutil", "rb", "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"], check=True
     )
 
 
