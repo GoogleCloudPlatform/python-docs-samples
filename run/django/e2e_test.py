@@ -32,7 +32,6 @@ REGION = "us-central1"
 
 CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
 
-CLOUDSQL_INSTANCE = f"instance-{SUFFIX}"
 POSTGRES_DATABASE = f"polls-{SUFFIX}"
 POSTGRES_USER = f"django-{SUFFIX}"
 POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
@@ -104,7 +103,7 @@ def postgres_host(project_number):
         ],
         check=True,
     )
-    yield CLOUDSQL_INSTANCE
+    yield POSTGRES_INSTANCE
 
     subprocess.run(
         [
@@ -277,7 +276,7 @@ def deployed_service(container_image):
             "--region",
             REGION,
             "--add-cloudsql-instances",
-            f"{PROJECT}:{REGION}:{CLOUDSQL_INSTANCE}",
+            f"{PROJECT}:{REGION}:{POSTGRES_INSTANCE}",
             "--project",
             PROJECT,
         ],
