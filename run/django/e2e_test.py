@@ -398,6 +398,7 @@ def test_end_to_end(service_url_auth_token):
     body = response.text
 
     # Check Django admin landing page
+    print(body)
     assert response.status_code == 200
     assert "Site administration" in body
     assert "Polls" in body
