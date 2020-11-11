@@ -187,6 +187,8 @@ def secrets(project_number):
                 member,
                 "--role",
                 "roles/secretmanager.secretAccessor",
+                "--project",
+                PROJECT,
             ],
             check=True,
         )
@@ -221,10 +223,28 @@ PASSWORD_NAME={SECRET_PASSWORD_NAME}
 
     # delete secrets
     subprocess.run(
-        ["gcloud", "secrets", "delete", SECRET_PASSWORD_NAME, "--quiet"], check=True
+        [
+            "gcloud",
+            "secrets",
+            "delete",
+            SECRET_PASSWORD_NAME,
+            "--project",
+            PROJECT,
+            "--quiet",
+        ],
+        check=True,
     )
     subprocess.run(
-        ["gcloud", "secrets", "delete", SECRET_SETTINGS_NAME, "--quiet"], check=True
+        [
+            "gcloud",
+            "secrets",
+            "delete",
+            SECRET_SETTINGS_NAME,
+            "--project",
+            PROJECT,
+            "--quiet",
+        ],
+        check=True,
     )
 
 
