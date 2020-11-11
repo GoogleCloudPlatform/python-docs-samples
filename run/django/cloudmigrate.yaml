@@ -30,7 +30,7 @@ steps:
         "-s",
         "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
         "-e",
-        "SETTINGS_NAME=${_SETTINGS_NAME}",
+        "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
         "--",
         "python",
         "manage.py",
