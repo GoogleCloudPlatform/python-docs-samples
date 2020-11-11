@@ -21,7 +21,7 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
-  - id:  "apply migrations"
+  - id: "apply migrations"
     name: "gcr.io/google-appengine/exec-wrapper"
     args:
       [
@@ -29,6 +29,8 @@ steps:
         "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
         "-s",
         "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "-e",
+        "SETTINGS_NAME=${_SETTINGS_NAME}",
         "--",
         "python",
         "manage.py",
@@ -43,6 +45,8 @@ steps:
         "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
         "-s",
         "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "-e",
+        "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
         "--",
         "python",
         "manage.py",
@@ -54,6 +58,7 @@ substitutions:
   _INSTANCE_NAME: django-instance
   _REGION: us-central1
   _SERVICE_NAME: polls-service
+  _SECRET_SETTINGS_NAME: django-settings
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"

@@ -196,7 +196,6 @@ def secrets(project_number):
 DATABASE_URL=postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@//cloudsql/{PROJECT}:{REGION}:{POSTGRES_INSTANCE}/{POSTGRES_DATABASE}
 GS_BUCKET_NAME={CLOUD_STORAGE_BUCKET}
 SECRET_KEY={secret_key}
-SETTINGS_NAME={SECRET_SETTINGS_NAME}
 PASSWORD_NAME={SECRET_PASSWORD_NAME}
     """
 
@@ -259,7 +258,12 @@ def container_image(postgres_host, media_bucket, secrets):
             "--config",
             cloudbuild_config,
             "--substitutions",
-            f"_INSTANCE_NAME={postgres_host},_REGION={REGION},_SERVICE_NAME={service_name}",
+            (
+                f"_INSTANCE_NAME={postgres_host},"
+                f"_REGION={REGION},"
+                f"_SERVICE_NAME={service_name},"
+                f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME}"
+            ),
             "--project",
             PROJECT,
         ],
