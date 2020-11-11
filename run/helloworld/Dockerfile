@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_helloworld_dockerfile]
 # [START run_helloworld_dockerfile]
 
 # Use the official lightweight Python image.
@@ -36,3 +37,4 @@ RUN pip install Flask gunicorn
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 
 # [END run_helloworld_dockerfile]
+# [END cloudrun_helloworld_dockerfile]
