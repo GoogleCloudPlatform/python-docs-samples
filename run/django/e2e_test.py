@@ -40,9 +40,8 @@ POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
 ADMIN_NAME = "admin"
 ADMIN_PASSWORD = uuid.uuid4().hex[:26]
 
-# These are hardcoded elsewhere in the code
-SECRET_SETTINGS_NAME = "django_settings"
-SECRET_ADMINPASS_NAME = "superuser_password"
+SECRET_SETTINGS_NAME = f"django_settings-{SUFFIX}"
+SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
 @pytest.fixture
@@ -229,6 +228,8 @@ def secrets(project_number):
 DATABASE_URL=postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@//cloudsql/{PROJECT}:{REGION}:{POSTGRES_INSTANCE}/{POSTGRES_DATABASE}
 GS_BUCKET_NAME={CLOUD_STORAGE_BUCKET}
 SECRET_KEY={secret_key}
+SETTINGS_NAME={SECRET_SETTINGS_NAME}
+PASSWORD_NAME={SECRET_PASSWORD_NAME}
     """
 
     create_secret(SECRET_SETTINGS_NAME, settings)
@@ -241,9 +242,9 @@ SECRET_KEY={secret_key}
         f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
     )
 
-    create_secret(SECRET_ADMINPASS_NAME, ADMIN_PASSWORD)
+    create_secret(SECRET_PASSWORD_NAME, ADMIN_PASSWORD)
     allow_access(
-        SECRET_ADMINPASS_NAME,
+        SECRET_PASSWORD_NAME,
         f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
     )
 
@@ -251,7 +252,7 @@ SECRET_KEY={secret_key}
 
     # delete secrets
     subprocess.run(
-        ["gcloud", "secrets", "delete", SECRET_ADMINPASS_NAME, "--quiet"], check=True
+        ["gcloud", "secrets", "delete", SECRET_PASSWORD_NAME, "--quiet"], check=True
     )
     subprocess.run(
         ["gcloud", "secrets", "delete", SECRET_SETTINGS_NAME, "--quiet"], check=True

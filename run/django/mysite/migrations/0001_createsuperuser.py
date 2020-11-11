@@ -34,7 +34,8 @@ def createsuperuser(apps, schema_editor):
         _, project = google.auth.default()
 
         # Retrieve the previously stored admin password
-        name = f"projects/{project}/secrets/superuser_password/versions/latest"
+        PASSWORD_NAME = os.environ.get("PASSWORD_NAME", "superuser_password")
+        name = f"projects/{project}/secrets/{PASSWORD_NAME}/versions/latest"
         admin_password = client.access_secret_version(name=name).payload.data.decode(
             "UTF-8"
         )
