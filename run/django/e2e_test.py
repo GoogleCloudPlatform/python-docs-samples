@@ -70,8 +70,6 @@ def project_number():
 
 @pytest.fixture
 def postgres_host(project_number):
-    # Presume instance already exists
-
     # Create database
     subprocess.run(
         [
@@ -144,7 +142,7 @@ def postgres_host(project_number):
 def media_bucket():
     # Create storage bucket
     subprocess.run(
-        ["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}"],
+        ["gsutil", "mb", "-l", REGION, f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT],
         check=True,
     )
 
@@ -152,9 +150,12 @@ def media_bucket():
 
     # Delete storage bucket contents, delete bucket
     subprocess.run(
-        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True
+        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT],
+        check=True,
     )
-    subprocess.run(["gsutil", "rb", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True)
+    subprocess.run(
+        ["gsutil", "rb", f"gs://{CLOUD_STORAGE_BUCKET}", "-p", PROJECT], check=True
+    )
 
 
 @pytest.fixture
