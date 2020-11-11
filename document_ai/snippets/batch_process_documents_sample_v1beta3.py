@@ -110,7 +110,7 @@ def get_text(doc_element: dict, document: dict):
     for segment in doc_element.text_anchor.text_segments:
         start_index = (
             int(segment.start_index)
-            if "start_index" in doc_element.text_anchor.__dict__
+            if segment in doc_element.text_anchor.text_segments
             else 0
         )
         end_index = int(segment.end_index)
