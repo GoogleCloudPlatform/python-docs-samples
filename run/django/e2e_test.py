@@ -104,25 +104,6 @@ def postgres_host(project_number):
         ],
         check=True,
     )
-
-    # TODO: Make static fixture
-    # Allow access to Cloud SQL from Cloud Build
-    """
-    subprocess.run(
-        [
-            "gcloud",
-            "projects",
-            "add-iam-policy-binding",
-            PROJECT,
-            "--member",
-            f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
-            "--role",
-            "roles/cloudsql.client",
-        ],
-        check=True, capture_output=True
-    )
-    """
-
     yield CLOUDSQL_INSTANCE
 
     subprocess.run(
@@ -152,24 +133,6 @@ def postgres_host(project_number):
         ],
         check=True,
     )
-
-    # TODO: remove when binding is static
-    # Remove policy binding
-    """
-    subprocess.run(
-        [
-            "gcloud",
-            "projects",
-            "remove-iam-policy-binding",
-            PROJECT,
-            "--member",
-            f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
-            "--role",
-            "roles/cloudsql.client",
-        ],
-        check=True,
-    )
-    """
 
 
 @pytest.fixture
