@@ -13,16 +13,16 @@
 # limitations under the License.
 
 steps:
-  # Build the image
-  - name: "gcr.io/cloud-builders/docker"
+  - id: "build image"
+    name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
 
-  # Push the image to the Container Registry
-  - name: "gcr.io/cloud-builders/docker"
+  - id: "push image"
+    name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
-  # Apply the Django database migration against the Cloud SQL database
-  - name: "gcr.io/google-appengine/exec-wrapper"
+  - id:  "apply migrations"
+    name: "gcr.io/google-appengine/exec-wrapper"
     args:
       [
         "-i",
@@ -35,8 +35,8 @@ steps:
         "migrate",
       ]
 
-  # Apply the static migrations against the Cloud Storage bucket
-  - name: "gcr.io/google-appengine/exec-wrapper"
+  - id: "collect static"
+    name: "gcr.io/google-appengine/exec-wrapper"
     args:
       [
         "-i",
