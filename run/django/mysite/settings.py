@@ -54,7 +54,7 @@ if not os.path.isfile(".env"):
 
 env = environ.Env()
 env.read_env(env_file)
-# [END run_secretconfig]
+# [END cloudrun_secretconfig]
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -107,7 +107,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # [START cloudrun_dbconfig]
 # Use django-environ to define the connection string
 DATABASES = {"default": env.db()}
-# [END run_dbconfig]
+# [END cloudrun_dbconfig]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -148,4 +148,4 @@ GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
-# [END run_staticconfig]
+# [END cloudrun_staticconfig]
