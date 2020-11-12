@@ -53,7 +53,7 @@ def test_search_all_resources(asset_dataset, capsys):
 
     # Dataset creation takes some time to propagate, so the dataset is not
     # immediately searchable. Need some time before the snippet will pass.
-    @backoff.on_exception(backoff.expo, (AssertionError), max_time=120)
+    @backoff.on_exception(backoff.expo, (AssertionError), max_time=240)
     def eventually_consistent_test():
         quickstart_searchallresources.search_all_resources(scope, query=query)
         out, _ = capsys.readouterr()
