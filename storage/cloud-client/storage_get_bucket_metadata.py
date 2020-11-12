@@ -39,6 +39,7 @@ def bucket_metadata(bucket_name):
     )
     print("Default KMS Key Name: {}".format(bucket.default_kms_key_name))
     print("Metageneration: {}".format(bucket.metageneration))
+    print("Public Access Prevention: {}".format(bucket.iam_configuration.public_access_prevention))
     print(
         "Retention Effective Time: {}".format(
             bucket.retention_policy_effective_time
