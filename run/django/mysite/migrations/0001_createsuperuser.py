@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import sys
 
 from django.db import migrations
 import google.auth
@@ -25,7 +24,7 @@ def createsuperuser(apps, schema_editor):
     Dynamically create an admin user as part of a migration
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
-    if os.getenv('TRAMPOLINE_CI', None):
+    if os.getenv("TRAMPOLINE_CI", None):
         admin_password = "test"
     else:
         client = secretmanager_v1.SecretManagerServiceClient()
@@ -39,7 +38,7 @@ def createsuperuser(apps, schema_editor):
         admin_password = client.access_secret_version(name=name).payload.data.decode(
             "UTF-8"
         )
-    
+
     # Create a new user using acquired password
     from django.contrib.auth.models import User
 
