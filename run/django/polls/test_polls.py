@@ -13,11 +13,10 @@
 # limitations under the License.
 
 from django.test import Client, TestCase
-client = Client()
 
 
 class PollViewTests(TestCase):
     def test_index_view(self):
-        response = client.get("/")
+        response = self.client.get('/')
         assert response.status_code == 200
-        assert "Hello, world" in str(response.content)
+        assert 'Hello, world' in str(response.content)

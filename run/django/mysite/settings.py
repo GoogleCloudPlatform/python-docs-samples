@@ -26,7 +26,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import sys
 
-# [START cloudrun_secretconfig]
+
 import environ
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,9 +34,10 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 # If no .env has been provided, pull it from Secret Manager, storing it locally
 if not os.path.isfile(".env"):
-    if "test" in sys.argv or "test_coverage" in sys.argv or "nox" in sys.argv:
-        payload = "SECRET_KEY=a\nDATABASE_URL=sqlite:////sqlite.db\nGS_BUCKET_NAME=none"
+    if os.getenv('TRAMPOLINE_CI', None):
+        payload = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     else:
+        # [START cloudrun_secretconfig]
         import google.auth
         from google.cloud import secretmanager_v1
 
