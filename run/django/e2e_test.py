@@ -306,7 +306,7 @@ def deployed_service(container_image):
             "--add-cloudsql-instances",
             f"{PROJECT}:{REGION}:{POSTGRES_INSTANCE}",
             "--set-env-vars",
-            f"_SETTINGS_NAME={SECRET_SETTINGS_NAME}",
+            f"SETTINGS_NAME={SECRET_SETTINGS_NAME}",
             "--project",
             PROJECT,
         ],
