@@ -149,3 +149,4 @@ STATIC_URL = '/static/'
 # [END staticurl]
 
 STATIC_ROOT = 'static/'
+
