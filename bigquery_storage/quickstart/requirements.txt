@@ -1,2 +1,2 @@
 fastavro
-google-cloud-bigquery-storage==1.0.0
+google-cloud-bigquery-storage==2.0.1

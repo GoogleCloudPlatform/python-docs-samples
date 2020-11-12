@@ -79,7 +79,7 @@ def main(project_id="your-project-id", snapshot_millis=0):
         names.add(row["name"])
         states.add(row["state"])
 
-    print("Got {} unique names in states: {}".format(len(names), states))
+    print("Got {} unique names in states: {}".format(len(names), ", ".join(states)))
     # [END bigquerystorage_quickstart]
 
 

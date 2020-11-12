@@ -35,10 +35,10 @@ def project_id():
 def test_quickstart_wo_snapshot(capsys, project_id):
     quickstart.main(project_id)
     out, _ = capsys.readouterr()
-    assert "WA" in out
+    assert "unique names in states: WA" in out
 
 
 def test_quickstart_with_snapshot(capsys, project_id):
     quickstart.main(project_id, now_millis() - 5000)
     out, _ = capsys.readouterr()
-    assert "WA" in out
+    assert "unique names in states: WA" in out
