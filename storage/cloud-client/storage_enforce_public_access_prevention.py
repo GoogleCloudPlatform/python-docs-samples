@@ -20,6 +20,7 @@ import sys
 from google.cloud import storage
 from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_ENFORCED
 
+
 def enforce_public_access_prevention(bucket_name):
     """Enforce public access prevention for a bucket"""
     # bucket_name = "my-bucket"

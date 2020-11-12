@@ -19,9 +19,9 @@ import uuid
 from google.cloud import storage
 import pytest
 
-import storage_unspecify_public_access_prevention
 import storage_enforce_public_access_prevention
 import storage_get_public_access_prevention
+import storage_unspecify_public_access_prevention
 
 
 @pytest.fixture()
