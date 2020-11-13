@@ -218,9 +218,16 @@ Argument types should be documented using Python type annotations as
 introduced in [PEP 484](https://www.python.org/dev/peps/pep-0484/). For example:
 
 ```py
-def hello_world(name: string):
+def hello_world(name: str) -> None:
     print(f"Hello {name}!")
 ```
+
+```py
+def adder(a: int, b: int) -> int:
+    return a+b
+```
+
+Type hinting is enforced using [`flake8-annotations`](https://pypi.org/project/flake8-annotations/), which is enabled by setting the `enforce_type_hints` variable to `True` in the appropriate `noxfile_config.py`. Type hinting is expected in all new samples, and will gradually be added to all compatible existing samples. 
 
 If there is an `Args` section within the function's docstring, consider
 documenting the argument types there as well. For example:

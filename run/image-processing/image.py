@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START cloudrun_imageproc_handler_setup]
 # [START run_imageproc_handler_setup]
 import os
 import tempfile
@@ -23,8 +23,10 @@ from wand.image import Image
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
 # [END run_imageproc_handler_setup]
+# [END cloudrun_imageproc_handler_setup]
 
 
+# [START cloudrun_imageproc_handler_analyze]
 # [START run_imageproc_handler_analyze]
 # Blurs uploaded images that are flagged as Adult or Violence.
 def blur_offensive_images(data):
@@ -56,8 +58,10 @@ def blur_offensive_images(data):
 
 
 # [END run_imageproc_handler_analyze]
+# [END cloudrun_imageproc_handler_analyze]
 
 
+# [START cloudrun_imageproc_handler_blur]
 # [START run_imageproc_handler_blur]
 # Blurs the given file using ImageMagick.
 def __blur_image(current_blob):
@@ -89,3 +93,4 @@ def __blur_image(current_blob):
 
 
 # [END run_imageproc_handler_blur]
+# [END cloudrun_imageproc_handler_blur]
