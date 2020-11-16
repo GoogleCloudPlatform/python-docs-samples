@@ -45,7 +45,7 @@
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
 /language/**/*.py                      @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/logging/**/*.py                       @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
+/media/**/*.py                         @irataxy @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
