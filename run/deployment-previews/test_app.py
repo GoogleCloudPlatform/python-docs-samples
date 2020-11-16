@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from click.testing import CliRunner
-from mock import MagicMock, PropertyMock, patch
+from mock import MagicMock, patch, PropertyMock
+
 from check_status import cli
-import pytest
 
 MOCK_SERVICE_NAME = "myservice"
 MOCK_GH_TOKEN = "aaaaa"
@@ -41,7 +41,7 @@ def test_set_no_project():
 
 
 def service_data(name, tags):
-    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100,}]
+    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100, }]
     for t in tags:
         tag = f"pr-{t}"
         traffic.append(

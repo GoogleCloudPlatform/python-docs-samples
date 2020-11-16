@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import re
-import sys
 import subprocess
+import sys
 
 import click
 import github
