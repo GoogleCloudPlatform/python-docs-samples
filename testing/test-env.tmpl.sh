@@ -66,6 +66,9 @@ export VISION_CLASSIFICATION_MODEL_ID=
 export OBJECT_DETECTION_DATASET_ID=
 export OBJECT_DETECTION_MODEL_ID=
 
+# Transcoder API
+export GOOGLE_CLOUD_PROJECT_NUMBER=
+
 # For git operations in the test driver(testing/run_tests.sh).
 # These are optional, but for avoiding flakes in Kokoro builds.
 export GITHUB_ACCESS_TOKEN=
