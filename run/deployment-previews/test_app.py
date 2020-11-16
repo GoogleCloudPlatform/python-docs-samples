@@ -27,12 +27,7 @@ def test_set_no_project():
 
 
 def service_data(name, tags):
-    traffic = [
-        {
-            "revisionName": f"{name}-00001-aaa",
-            "percent": 100,
-        }
-    ]
+    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100,}]
     for t in tags:
         tag = f"pr-{t}"
         traffic.append(
