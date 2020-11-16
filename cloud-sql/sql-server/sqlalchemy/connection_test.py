@@ -36,7 +36,7 @@ env_map = {
 }
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def tcp_db_connection():
     with mapped_env_variables(env_map):
         yield from _common_setup()
