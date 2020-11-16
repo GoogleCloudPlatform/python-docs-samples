@@ -1,4 +1,4 @@
 Flask==1.1.2
-requests==2.24.0
+requests==2.25.0
 sleekxmpp==1.3.3
 six==1.15.0
