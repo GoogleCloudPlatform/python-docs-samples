@@ -209,7 +209,7 @@ def cleanup(dry_run, project_id, region, service, repo_name, ghtoken_secretname)
 @add_options(_github_options)
 @click.option("--pull-request", required=True, help="GitHub Pull Request ID", type=int)
 @click.option("--commit-sha", required=True, help="GitHub commit (SHORT_SHA)")
-# [START cloudrun_deployment-preview_setstatus]
+# [START cloudrun_deployment_preview_setstatus]
 def set(
     dry_run,
     project_id,
@@ -262,7 +262,7 @@ def set(
         )
 
 
-# [END cloudrun_deployment-preview_setstatus]
+# [END cloudrun_deployment_preview_setstatus]
 
 if __name__ == "__main__":
     cli()
