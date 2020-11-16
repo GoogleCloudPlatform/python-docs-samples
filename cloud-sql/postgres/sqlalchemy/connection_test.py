@@ -23,34 +23,34 @@ def test_unix_connection(unix_db_connection):
     assert unix_db_connection is not None
 
 
-@pytest.mark.usefixtures('tcp_db_connection')
+@pytest.mark.usefixtures("tcp_db_connection")
 def test_get(tcp_db_connection):
     main.create_tables()
     context = main.get_index_context()
     assert isinstance(context, dict)
-    assert len(context.get('recent_votes')) >= 0
-    assert context.get('tab_count') >= 0
-    assert context.get('space_count') >= 0
+    assert len(context.get("recent_votes")) >= 0
+    assert context.get("tab_count") >= 0
+    assert context.get("space_count") >= 0
 
 
 env_map = {
-    'POSTGRES_USER': 'DB_USER',
-    'POSTGRES_PASSWORD': 'DB_PASS',
-    'POSTGRES_DATABASE': 'DB_NAME',
-    'POSTGRES_INSTANCE': 'CLOUD_SQL_CONNECTION_NAME',
+    "POSTGRES_USER": "DB_USER",
+    "POSTGRES_PASSWORD": "DB_PASS",
+    "POSTGRES_DATABASE": "DB_NAME",
+    "POSTGRES_INSTANCE": "CLOUD_SQL_CONNECTION_NAME",
 }
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def tcp_db_connection():
     tcp_env_map = {key: value for key, value in env_map.items()}
-    tcp_env_map['POSTGRES_HOST'] = 'DB_HOST'
+    tcp_env_map["POSTGRES_HOST"] = "DB_HOST"
 
     with mapped_env_variables(tcp_env_map):
         yield from _common_setup()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def unix_db_connection():
     with mapped_env_variables(env_map):
         yield from _common_setup()
@@ -61,8 +61,8 @@ def _common_setup():
         pool = main.init_connection_engine()
     except pg8000.exceptions.InterfaceError as e:
         logger.warning(
-            'Could not connect to the production database. '
-            'If running tests locally, is the cloud_sql_proxy currently running?'
+            "Could not connect to the production database. "
+            "If running tests locally, is the cloud_sql_proxy currently running?"
         )
         raise e
 
@@ -70,7 +70,7 @@ def _common_setup():
 
     with pool.connect() as conn:
         conn.execute(
-            f"CREATE TABLE IF NOT EXISTS \"{table_name}\""
+            f'CREATE TABLE IF NOT EXISTS "{table_name}"'
             "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
             "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
         )
@@ -78,7 +78,7 @@ def _common_setup():
     yield pool
 
     with pool.connect() as conn:
-        conn.execute(f"DROP TABLE IF EXISTS \"{table_name}\"")
+        conn.execute(f'DROP TABLE IF EXISTS "{table_name}"')
 
 
 @contextmanager
