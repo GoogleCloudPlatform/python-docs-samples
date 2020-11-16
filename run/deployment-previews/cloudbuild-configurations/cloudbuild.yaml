@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_deployment-preview_cloudbuild]
+# [START cloudrun_deployment-preview_cloudbuild]
 steps:
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
@@ -59,4 +59,4 @@ steps:
 substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
-# [END run_deployment-preview_cloudbuild]
+# [END cloudrun_deployment-preview_cloudbuild]

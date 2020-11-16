@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START run_deployment-preview_cleanup]
+# [START cloudrun_deployment-preview_cleanup]
 
 steps:
   - id: "build image"
@@ -75,4 +75,4 @@ substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
   _GITHUB_OWNER: $(push.repository.owner.name)
-# [END run_deployment-preview_cleanup]
+# [END cloudrun_deployment-preview_cleanup]
