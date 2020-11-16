@@ -35,40 +35,35 @@ def init_connection_engine():
         # [START cloud_sql_server_sqlalchemy_limit]
         # [START cloud_sql_sqlserver_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
-        'pool_size': 5,
+        "pool_size": 5,
         # Temporarily exceeds the set pool_size if no connections are available.
-        'max_overflow': 2,
+        "max_overflow": 2,
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
         # [END cloud_sql_sqlserver_sqlalchemy_limit]
         # [END cloud_sql_server_sqlalchemy_limit]
-
         # [START cloud_sql_server_sqlalchemy_backoff]
         # [START cloud_sql_sqlserver_sqlalchemy_backoff]
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
         # [END cloud_sql_sqlserver_sqlalchemy_backoff]
         # [END cloud_sql_server_sqlalchemy_backoff]
-
         # [START cloud_sql_server_sqlalchemy_timeout]
         # [START cloud_sql_sqlserver_sqlalchemy_timeout]
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
-        'pool_timeout': 30,  # 30 seconds
+        "pool_timeout": 30,  # 30 seconds
         # [END cloud_sql_sqlserver_sqlalchemy_timeout]
         # [END cloud_sql_server_sqlalchemy_timeout]
-
         # [START cloud_sql_server_sqlalchemy_lifetime]
         # [START cloud_sql_sqlserver_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
         # reestablished
-        'pool_recycle': 1800,  # 30 minutes
+        "pool_recycle": 1800,  # 30 minutes
         # [END cloud_sql_sqlserver_sqlalchemy_lifetime]
         # [END cloud_sql_server_sqlalchemy_lifetime]
-
-        'echo': False  # debug
     }
 
     return init_tcp_connection_engine(db_config)
@@ -90,8 +85,8 @@ def init_tcp_connection_engine(db_config):
     db_hostname, db_port = host_args[0], int(host_args[1])
 
     # SQL Server drivers don't account for this
-    if db_hostname == 'localhost':
-        db_hostname = '127.0.0.1'
+    if db_hostname == "localhost":
+        db_hostname = "127.0.0.1"
 
     # The SQLAlchemy engine will help manage interactions, including automatically
     # managing a pool of connections to your database
@@ -150,8 +145,7 @@ def get_index_context():
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT TOP(5) candidate, time_cast FROM votes "
-            "ORDER BY time_cast DESC"
+            "SELECT TOP(5) candidate, time_cast FROM votes " "ORDER BY time_cast DESC"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
@@ -167,9 +161,9 @@ def get_index_context():
         space_result = conn.execute(stmt, candidate="SPACES").fetchone()
         space_count = space_result[0]
     return {
-        'recent_votes': votes,
-        'space_count': space_count,
-        'tab_count': tab_count,
+        "recent_votes": votes,
+        "space_count": space_count,
+        "tab_count": tab_count,
     }
 
 
@@ -187,8 +181,7 @@ def save_vote():
     # [START cloud_sql_sqlserver_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)"
-        " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
     )
     try:
         # Using a with statement ensures that the connection is always released
@@ -211,8 +204,7 @@ def save_vote():
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(
-                    team, time_cast),
+        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
     )
 
 
