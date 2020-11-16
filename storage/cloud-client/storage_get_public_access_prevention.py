@@ -18,29 +18,20 @@ import sys
 
 # [START storage_get_public_access_prevention]
 from google.cloud import storage
-from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
 
 
 def get_public_access_prevention(bucket_name):
-    """Get public access prevention bucket"""
+    """Gets the public access prevention setting for a bucket."""
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
     iam_configuration = bucket.iam_configuration
 
-    if iam_configuration.public_access_prevention is PUBLIC_ACCESS_PREVENTION_UNSPECIFIED:
-        print(
-            "Public access prevention is unspecified for {}.".format(
-                bucket.name
-            )
-        )
-    else:
-        print(
-            "Public access prevention is enforced for {}.".format(
-                bucket.name
-            )
-        )
+    print(
+        "Public access prevention is {} for {}."
+        .format(iam_configuration.public_access_prevention, bucket.name)
+    )
 
 
 # [END storage_get_public_access_prevention]
