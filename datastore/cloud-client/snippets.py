@@ -21,9 +21,9 @@ import google.cloud.exceptions
 
 
 def incomplete_key(client):
-    # [START datastore_incomplete_key]
+    # [START incomplete_key]
     key = client.key("Task")
-    # [END datastore_incomplete_key]
+    # [END incomplete_key]
 
     return key
 
