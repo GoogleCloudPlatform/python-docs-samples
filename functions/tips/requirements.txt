@@ -1,5 +1,5 @@
 google-cloud-error-reporting==1.0.0
 google-cloud-pubsub==1.7.0
 python-dateutil==2.8.1
-requests==2.24.0
+requests==2.25.0
 xmltodict==0.12.0
