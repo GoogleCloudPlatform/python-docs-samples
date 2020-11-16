@@ -2,3 +2,4 @@ These configuations aren't used by this repo itself, but are configurations requ
 
  * cloudbuild.yaml - for main branch pushes
  * cloudbuild-preview.yaml - for GitHub Pull Requests
+ * cloudbuild-cleanup.yaml - for main branch pushes, including cleanup of old tags
