@@ -22,7 +22,7 @@ from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
 
 
 def unspecify_public_access_prevention(bucket_name):
-    """Unspecify public access prevention for a bucket."""
+    """Sets the public access prevention status to unspecified, so that the bucket inherits its setting from its parent project."""
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
