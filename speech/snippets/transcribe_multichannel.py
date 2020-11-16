@@ -27,7 +27,7 @@ import argparse
 
 def transcribe_file_with_multichannel(speech_file):
     """Transcribe the given audio file synchronously with
-      multi channel."""
+    multi channel."""
     # [START speech_transcribe_multichannel]
     from google.cloud import speech
 
@@ -59,7 +59,7 @@ def transcribe_file_with_multichannel(speech_file):
 
 def transcribe_gcs_with_multichannel(gcs_uri):
     """Transcribe the given audio file on GCS with
-      multi channel."""
+    multi channel."""
     # [START speech_transcribe_multichannel_gcs]
     from google.cloud import speech
 

@@ -95,6 +95,7 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
 
+
 # [END speech_transcribe_async_word_time_offsets_gcs]
 
 

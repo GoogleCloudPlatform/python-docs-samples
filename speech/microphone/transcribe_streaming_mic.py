@@ -43,6 +43,7 @@ CHUNK = int(RATE / 10)  # 100ms
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
+
     def __init__(self, rate, chunk):
         self._rate = rate
         self._chunk = chunk
@@ -57,8 +58,10 @@ class MicrophoneStream(object):
             format=pyaudio.paInt16,
             # The API currently only supports 1-channel (mono) audio
             # https://goo.gl/z757pE
-            channels=1, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk,
+            channels=1,
+            rate=self._rate,
+            input=True,
+            frames_per_buffer=self._chunk,
             # Run the audio stream asynchronously to fill the buffer object.
             # This is necessary so that the input device's buffer doesn't
             # overflow while the calling thread makes network requests, etc.
@@ -103,7 +106,7 @@ class MicrophoneStream(object):
                 except queue.Empty:
                     break
 
-            yield b''.join(data)
+            yield b"".join(data)
 
 
 def listen_print_loop(responses):
@@ -141,10 +144,10 @@ def listen_print_loop(responses):
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
+        overwrite_chars = " " * (num_chars_printed - len(transcript))
 
         if not result.is_final:
-            sys.stdout.write(transcript + overwrite_chars + '\r')
+            sys.stdout.write(transcript + overwrite_chars + "\r")
             sys.stdout.flush()
 
             num_chars_printed = len(transcript)
@@ -154,8 +157,8 @@ def listen_print_loop(responses):
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
-            if re.search(r'\b(exit|quit)\b', transcript, re.I):
-                print('Exiting..')
+            if re.search(r"\b(exit|quit)\b", transcript, re.I):
+                print("Exiting..")
                 break
 
             num_chars_printed = 0
@@ -164,21 +167,25 @@ def listen_print_loop(responses):
 def main():
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
-    language_code = 'en-US'  # a BCP-47 language tag
+    language_code = "en-US"  # a BCP-47 language tag
 
     client = speech.SpeechClient()
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
-        language_code=language_code)
+        language_code=language_code,
+    )
+
     streaming_config = speech.StreamingRecognitionConfig(
-        config=config,
-        interim_results=True)
+        config=config, interim_results=True
+    )
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
-        requests = (speech.StreamingRecognizeRequest(audio_content=content)
-                    for content in audio_generator)
+        requests = (
+            speech.StreamingRecognizeRequest(audio_content=content)
+            for content in audio_generator
+        )
 
         responses = client.streaming_recognize(streaming_config, requests)
 
@@ -186,6 +193,6 @@ def main():
         listen_print_loop(responses)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 # [END speech_transcribe_streaming_mic]
