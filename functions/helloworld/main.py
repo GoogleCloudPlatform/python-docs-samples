@@ -141,7 +141,7 @@ def hello_content(request):
 # [END functions_http_content]
 
 
-# [START functions_http_methods]
+# [START functions_http_method]
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
@@ -160,7 +160,7 @@ def hello_method(request):
         return abort(403)
     else:
         return abort(405)
-# [END functions_http_methods]
+# [END functions_http_method]
 
 
 def hello_error_1(request):
