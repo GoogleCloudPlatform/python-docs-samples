@@ -1,5 +1,5 @@
 flask==1.1.2
 mock==4.0.2
 pytest==6.1.2
-requests==2.24.0
+requests==2.25.0
 responses==0.12.1
