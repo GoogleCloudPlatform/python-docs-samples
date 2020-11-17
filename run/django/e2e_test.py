@@ -152,7 +152,8 @@ def media_bucket():
 
     # Recursively delete assets and bucket (does not take a -p flag, apparently)
     subprocess.run(
-        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"], check=True,
+        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"],
+        check=True,
     )
 
 
