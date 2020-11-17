@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 from google.cloud import storage
 from googleapiclient.errors import HttpError
@@ -32,9 +33,9 @@ import list_jobs
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-template_id = "my-python-test-template"
+template_id = f'my-python-test-template-{uuid.uuid4()}'
 
-bucket_name = "python-samples-transcoder-test"
+bucket_name = f'python-samples-transcoder-{uuid.uuid4()}'
 test_video_file_name = "ChromeCast.mp4"
 input_uri = "gs://" + bucket_name + "/" + test_video_file_name
 output_uri_for_preset = "gs://" + bucket_name + "/test-output-preset/"
@@ -51,14 +52,17 @@ def test_job_operations(capsys):
     # Enable the following API on the test project:
     # *   Transcoder API
 
-    _clean_bucket()
+    _delete_bucket()
+    _create_bucket()
 
     _create_job_from_preset(capsys)
     _create_job_from_template(capsys)
     _create_job_from_ad_hoc(capsys)
 
+    _delete_bucket()
 
-def _clean_bucket():
+
+def _delete_bucket():
     storage_client = storage.Client()
     buckets = storage_client.list_buckets()
 
@@ -68,6 +72,10 @@ def _clean_bucket():
             for blob in blobs:
                 blob.delete()
             bucket.delete()
+
+
+def _create_bucket():
+    storage_client = storage.Client()
 
     bucket = storage_client.create_bucket(bucket_name)
     blob = bucket.blob(test_video_file_name)
