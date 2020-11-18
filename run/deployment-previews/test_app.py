@@ -14,9 +14,10 @@
 
 from typing import Any, List, NoReturn
 
-from check_status import cli
 from click.testing import CliRunner
 from mock import MagicMock, patch, PropertyMock
+
+from check_status import cli
 
 
 MOCK_SERVICE_NAME = "myservice"
