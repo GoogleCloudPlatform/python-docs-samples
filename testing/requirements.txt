@@ -11,7 +11,7 @@ pyyaml==3.13
 responses==0.10.5
 WebTest==2.0.32
 webapp2==2.5.2
-google-api-python-client==1.7.8
+google-api-python-client==1.12.8
 google-cloud-core==0.29.1
 gcp-devrel-py-tools==0.0.15
 flask==1.0.2
