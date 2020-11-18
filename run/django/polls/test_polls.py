@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from django.test import TestCase
 
 
 class PollViewTests(TestCase):
-    def test_index_view(self):
+    def test_index_view(self: PollViewTests) -> None:
         response = self.client.get('/')
         assert response.status_code == 200
         assert 'Hello, world' in str(response.content)

@@ -17,6 +17,7 @@
 
 import os
 import subprocess
+from typing import Iterator, List, Tuple
 import uuid
 
 from google.cloud import secretmanager_v1 as sm
@@ -48,7 +49,7 @@ SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
 @pytest.fixture
-def project_number():
+def project_number() -> Iterator[str]:
     projectnum = (
         subprocess.run(
             [
@@ -66,12 +67,11 @@ def project_number():
         .stdout.strip()
         .decode()
     )
-    print("DEBUG:", projectnum)
     yield projectnum
 
 
 @pytest.fixture
-def postgres_host(project_number):
+def postgres_host() -> Iterator[str]:
     # Create database
     subprocess.run(
         [
@@ -141,7 +141,7 @@ def postgres_host(project_number):
 
 
 @pytest.fixture
-def media_bucket():
+def media_bucket() -> Iterator[str]:
     # Create storage bucket
     subprocess.run(
         ["gsutil", "mb", "-l", REGION, "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"],
@@ -158,10 +158,10 @@ def media_bucket():
 
 
 @pytest.fixture
-def secrets(project_number):
+def secrets(project_number: str) -> Iterator[str]:
     # Create a number of secrets and allow Google Cloud services access to them
 
-    def create_secret(name, value):
+    def create_secret(name: str, value: str) -> None:
         secret = client.create_secret(
             request={
                 "parent": f"projects/{PROJECT}",
@@ -174,7 +174,7 @@ def secrets(project_number):
             request={"parent": secret.name, "payload": {"data": value.encode("UTF-8")}}
         )
 
-    def allow_access(name, member):
+    def allow_access(name: str, member: str) -> None:
         subprocess.run(
             [
                 "gcloud",
@@ -246,7 +246,7 @@ PASSWORD_NAME={SECRET_PASSWORD_NAME}
 
 
 @pytest.fixture
-def container_image(postgres_host, media_bucket, secrets):
+def container_image(postgres_host: str, media_bucket: str, secrets: str) -> Iterator[str]:
     # Build container image for Cloud Run deployment
     image_name = f"gcr.io/{PROJECT}/polls-{SUFFIX}"
     service_name = f"polls-{SUFFIX}"
@@ -289,7 +289,7 @@ def container_image(postgres_host, media_bucket, secrets):
 
 
 @pytest.fixture
-def deployed_service(container_image):
+def deployed_service(container_image: str) -> Iterator[str]:
     # Deploy image to Cloud Run
     service_name = f"polls-{SUFFIX}"
     subprocess.run(
@@ -334,7 +334,7 @@ def deployed_service(container_image):
 
 
 @pytest.fixture
-def service_url_auth_token(deployed_service):
+def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     # Get Cloud Run service URL and auth token
     service_url = (
         subprocess.run(
@@ -374,7 +374,7 @@ def service_url_auth_token(deployed_service):
     # no deletion needed
 
 
-def test_end_to_end(service_url_auth_token):
+def test_end_to_end(service_url_auth_token: List[str]) -> None:
     service_url, auth_token = service_url_auth_token
     headers = {"Authorization": f"Bearer {auth_token}"}
     login_slug = "/admin/login/?next=/admin/"
@@ -401,7 +401,6 @@ def test_end_to_end(service_url_auth_token):
     body = response.text
 
     # Check Django admin landing page
-    print(body)
     assert response.status_code == 200
     assert "Site administration" in body
     assert "Polls" in body
