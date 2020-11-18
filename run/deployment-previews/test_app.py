@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Any, List, NoReturn
+
+from check_status import cli
 from click.testing import CliRunner
 from mock import MagicMock, patch, PropertyMock
 
-from check_status import cli
 
 MOCK_SERVICE_NAME = "myservice"
 MOCK_GH_TOKEN = "aaaaa"
@@ -28,19 +30,19 @@ MOCK_PROJECT_ID = "foocorp"
 runner = CliRunner()
 
 
-def test_help():
+def test_help() -> NoReturn:
     response = runner.invoke(cli, ["--help"])
     assert response.exit_code == 0
     assert "Usage" in response.output
 
 
-def test_set_no_project():
+def test_set_no_project() -> NoReturn:
     response = runner.invoke(cli, ["set"])
     assert response.exit_code == 2
     assert "Missing option '--project-id'" in response.output
 
 
-def service_data(name, tags):
+def service_data(name: str, tags: List[str]) -> dict:
     traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100, }]
     for t in tags:
         tag = f"pr-{t}"
@@ -55,7 +57,7 @@ def service_data(name, tags):
 
 
 @patch("check_status.discovery")
-def test_set_wrongtag(discovery_mock):
+def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)
@@ -96,7 +98,7 @@ def test_set_wrongtag(discovery_mock):
 @patch("check_status.discovery")
 @patch("check_status.secretmanager")
 @patch("check_status.github")
-def test_set_check_calls(github_mock, sm_mock, discovery_mock):
+def test_set_check_calls(github_mock: Any, sm_mock: Any, discovery_mock: Any) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)

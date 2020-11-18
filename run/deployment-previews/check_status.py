@@ -17,6 +17,7 @@
 import re
 import subprocess
 import sys
+from typing import Callable, List
 
 import click
 import github
@@ -29,11 +30,11 @@ from googleapiclient.errors import HttpError
 TAG_PREFIX = "pr-"
 
 
-def make_tag(pr):
+def make_tag(pr: str) -> str:
     return f"{TAG_PREFIX}{pr}"
 
 
-def get_pr(tag):
+def get_pr(tag: str) -> int:
     return int(tag.replace(TAG_PREFIX, ""))
 
 
@@ -66,8 +67,8 @@ _github_options = [
 ]
 
 
-def add_options(options):
-    def _add_options(func):
+def add_options(options: List[dict]) -> Callable:
+    def _add_options(func: Callable) -> Callable:
         for option in reversed(options):
             func = option(func)
         return func
@@ -75,13 +76,13 @@ def add_options(options):
     return _add_options
 
 
-def error(msg, context=None):
+def error(msg: str, context: str = None) -> None:
     click.secho(f"Error {context}: ", fg="red", bold=True, nl=False)
     click.echo(msg)
     sys.exit(1)
 
 
-def get_service(project_id, region, service_name):
+def get_service(project_id: str, region: str, service_name: str) -> dict:
     """Get the Cloud Run service object"""
     api = discovery.build("run", "v1")
     fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
@@ -92,7 +93,7 @@ def get_service(project_id, region, service_name):
     return service
 
 
-def get_revision_url(service_obj, tag):
+def get_revision_url(service_obj: dict, tag: str) -> str:
     """Get the revision URL for the tag specified on the service"""
     for revision in service_obj["status"]["traffic"]:
         if revision.get("tag", None) == tag:
@@ -104,7 +105,7 @@ def get_revision_url(service_obj, tag):
     )
 
 
-def get_revision_tags(service):
+def get_revision_tags(service: dict) -> List[str]:
     """
     Get all tags associated to a service
     """
@@ -116,7 +117,7 @@ def get_revision_tags(service):
     return revs
 
 
-def github_token(project_id, ghtoken_secretname):
+def github_token(project_id: str, ghtoken_secretname: str) -> str:
     """Retrieve GitHub developer token from Secret Manager"""
     client = secretmanager.SecretManagerServiceClient()
     name = f"projects/{project_id}/secrets/{ghtoken_secretname}/versions/latest"
@@ -130,7 +131,7 @@ def github_token(project_id, ghtoken_secretname):
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """
     Tool for setting GitHub Status Checks to Cloud Run Revision URLs
     """
@@ -141,7 +142,7 @@ def cli():
 @add_options(_default_options)
 @add_options(_cloudrun_options)
 @add_options(_github_options)
-def cleanup(dry_run, project_id, region, service, repo_name, ghtoken_secretname):
+def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name: str, ghtoken_secretname: str) -> None:
     """
     Cleanup any revision URLs against closed pull requests
     """
@@ -211,15 +212,15 @@ def cleanup(dry_run, project_id, region, service, repo_name, ghtoken_secretname)
 @click.option("--commit-sha", required=True, help="GitHub commit (SHORT_SHA)")
 # [START cloudrun_deployment_preview_setstatus]
 def set(
-    dry_run,
-    project_id,
-    region,
-    service,
-    repo_name,
-    ghtoken_secretname,
-    commit_sha,
-    pull_request,
-):
+    dry_run: str,
+    project_id: str,
+    region: str,
+    service: str,
+    repo_name: str,
+    ghtoken_secretname: str,
+    commit_sha: str,
+    pull_request: str,
+) -> None:
     """
     Set a status on a GitHub commit to a specific revision URL
     """
