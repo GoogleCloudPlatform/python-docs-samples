@@ -37,22 +37,28 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7"],
+    'ignored_versions': ["2.7"],
+
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    'enforce_type_hints': False,
+
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
-    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+    'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    'envs': {},
 }
 
 
 try:
     # Ensure we can import noxfile_config in the project's directory.
-    sys.path.append(".")
+    sys.path.append('.')
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
     print("No user noxfile_config found: detail: {}".format(e))
@@ -67,12 +73,12 @@ def get_pytest_env_vars():
     ret = {}
 
     # Override the GCLOUD_PROJECT and the alias.
-    env_key = TEST_CONFIG["gcloud_project_env"]
+    env_key = TEST_CONFIG['gcloud_project_env']
     # This should error out if not set.
-    ret["GOOGLE_CLOUD_PROJECT"] = os.environ[env_key]
+    ret['GOOGLE_CLOUD_PROJECT'] = os.environ[env_key]
 
     # Apply user supplied envs.
-    ret.update(TEST_CONFIG["envs"])
+    ret.update(TEST_CONFIG['envs'])
     return ret
 
 
@@ -81,7 +87,7 @@ def get_pytest_env_vars():
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
+IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
@@ -130,16 +136,29 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session):
-    session.install("flake8", "flake8-import-order")
+    if not TEST_CONFIG['enforce_type_hints']:
+        session.install("flake8", "flake8-import-order")
+    else:
+        session.install("flake8", "flake8-import-order", "flake8-annotations")
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
         ",".join(local_names),
-        ".",
+        "."
     ]
     session.run("flake8", *args)
+#
+# Black
+#
 
+
+@nox.session
+def blacken(session):
+    session.install("black")
+    python_files = [path for path in os.listdir(".") if path.endswith(".py")]
+
+    session.run("black", *python_files)
 
 #
 # Sample Tests
@@ -180,9 +199,9 @@ def py(session):
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        session.skip(
-            "SKIPPED: {} tests are disabled for this sample.".format(session.python)
-        )
+        session.skip("SKIPPED: {} tests are disabled for this sample.".format(
+            session.python
+        ))
 
 
 #
@@ -198,6 +217,11 @@ def _get_repo_root():
         if p is None:
             break
         if Path(p / ".git").exists():
+            return str(p)
+        # .git is not available in repos cloned via Cloud Build
+        # setup.py is always in the library's root, so use that instead
+        # https://github.com/googleapis/synthtool/issues/792
+        if Path(p / "setup.py").exists():
             return str(p)
         p = p.parent
     raise Exception("Unable to detect repository root.")
