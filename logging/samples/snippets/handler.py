@@ -36,14 +36,14 @@ def use_logging_handler():
     import logging
 
     # The data to log
-    text = 'Hello, world!'
+    text = "Hello, world!"
 
     # Emits the data using the standard logging module
     logging.warning(text)
     # [END logging_handler_usage]
 
-    print('Logged: {}'.format(text))
+    print("Logged: {}".format(text))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     use_logging_handler()

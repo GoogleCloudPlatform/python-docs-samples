@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """This application demonstrates how to perform basic operations on logs and
-log entries with Stackdriver Logging.
+log entries with Cloud Logging.
 
 For more information, see the README.md under /logging and the
 documentation at https://cloud.google.com/logging/docs.
@@ -35,19 +35,23 @@ def write_entry(logger_name):
     logger = logging_client.logger(logger_name)
 
     # Make a simple text log
-    logger.log_text('Hello, world!')
+    logger.log_text("Hello, world!")
 
     # Simple text log with severity.
-    logger.log_text('Goodbye, world!', severity='ERROR')
+    logger.log_text("Goodbye, world!", severity="ERROR")
 
     # Struct log. The struct can be any JSON-serializable dictionary.
-    logger.log_struct({
-        'name': 'King Arthur',
-        'quest': 'Find the Holy Grail',
-        'favorite_color': 'Blue'
-    })
+    logger.log_struct(
+        {
+            "name": "King Arthur",
+            "quest": "Find the Holy Grail",
+            "favorite_color": "Blue",
+        }
+    )
 
-    print('Wrote logs to {}.'.format(logger.name))
+    print("Wrote logs to {}.".format(logger.name))
+
+
 # [END logging_write_log_entry]
 
 
@@ -57,12 +61,13 @@ def list_entries(logger_name):
     logging_client = logging.Client()
     logger = logging_client.logger(logger_name)
 
-    print('Listing entries for logger {}:'.format(logger.name))
+    print("Listing entries for logger {}:".format(logger.name))
 
     for entry in logger.list_entries():
         timestamp = entry.timestamp.isoformat()
-        print('* {}: {}'.format
-              (timestamp, entry.payload))
+        print("* {}: {}".format(timestamp, entry.payload))
+
+
 # [END logging_list_log_entries]
 
 
@@ -77,27 +82,27 @@ def delete_logger(logger_name):
 
     logger.delete()
 
-    print('Deleted all logging entries for {}'.format(logger.name))
+    print("Deleted all logging entries for {}".format(logger.name))
+
+
 # [END logging_delete_log]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument(
-        'logger_name', help='Logger name', default='example_log')
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('list', help=list_entries.__doc__)
-    subparsers.add_parser('write', help=write_entry.__doc__)
-    subparsers.add_parser('delete', help=delete_logger.__doc__)
+    parser.add_argument("logger_name", help="Logger name", default="example_log")
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("list", help=list_entries.__doc__)
+    subparsers.add_parser("write", help=write_entry.__doc__)
+    subparsers.add_parser("delete", help=delete_logger.__doc__)
 
     args = parser.parse_args()
 
-    if args.command == 'list':
+    if args.command == "list":
         list_entries(args.logger_name)
-    elif args.command == 'write':
+    elif args.command == "write":
         write_entry(args.logger_name)
-    elif args.command == 'delete':
+    elif args.command == "delete":
         delete_logger(args.logger_name)

@@ -27,10 +27,12 @@ def list_sinks():
     sinks = list(logging_client.list_sinks())
 
     if not sinks:
-        print('No sinks.')
+        print("No sinks.")
 
     for sink in sinks:
-        print('{}: {} -> {}'.format(sink.name, sink.filter_, sink.destination))
+        print("{}: {} -> {}".format(sink.name, sink.filter_, sink.destination))
+
+
 # [END logging_list_sinks]
 
 
@@ -50,20 +52,18 @@ def create_sink(sink_name, destination_bucket, filter_):
     # or a BigQuery dataset. In this case, it is a Cloud Storage Bucket.
     # See https://cloud.google.com/logging/docs/api/tasks/exporting-logs for
     # information on the destination format.
-    destination = 'storage.googleapis.com/{bucket}'.format(
-        bucket=destination_bucket)
+    destination = "storage.googleapis.com/{bucket}".format(bucket=destination_bucket)
 
-    sink = logging_client.sink(
-        sink_name,
-        filter_,
-        destination)
+    sink = logging_client.sink(sink_name, filter_=filter_, destination=destination)
 
     if sink.exists():
-        print('Sink {} already exists.'.format(sink.name))
+        print("Sink {} already exists.".format(sink.name))
         return
 
     sink.create()
-    print('Created sink {}'.format(sink.name))
+    print("Created sink {}".format(sink.name))
+
+
 # [END logging_create_sink]
 
 
@@ -83,8 +83,10 @@ def update_sink(sink_name, filter_):
     sink.reload()
 
     sink.filter_ = filter_
-    print('Updated sink {}'.format(sink.name))
+    print("Updated sink {}".format(sink.name))
     sink.update()
+
+
 # [END logging_update_sink]
 
 
@@ -96,50 +98,41 @@ def delete_sink(sink_name):
 
     sink.delete()
 
-    print('Deleted sink {}'.format(sink.name))
+    print("Deleted sink {}".format(sink.name))
+
+
 # [END logging_delete_sink]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('list', help=list_sinks.__doc__)
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("list", help=list_sinks.__doc__)
 
-    create_parser = subparsers.add_parser('create', help=list_sinks.__doc__)
+    create_parser = subparsers.add_parser("create", help=list_sinks.__doc__)
+    create_parser.add_argument("sink_name", help="Name of the log export sink.")
     create_parser.add_argument(
-        'sink_name',
-        help='Name of the log export sink.')
-    create_parser.add_argument(
-        'destination_bucket',
-        help='Cloud Storage bucket where logs will be exported.')
-    create_parser.add_argument(
-        'filter',
-        help='The filter used to match logs.')
+        "destination_bucket", help="Cloud Storage bucket where logs will be exported."
+    )
+    create_parser.add_argument("filter", help="The filter used to match logs.")
 
-    update_parser = subparsers.add_parser('update', help=update_sink.__doc__)
-    update_parser.add_argument(
-        'sink_name',
-        help='Name of the log export sink.')
-    update_parser.add_argument(
-        'filter',
-        help='The filter used to match logs.')
+    update_parser = subparsers.add_parser("update", help=update_sink.__doc__)
+    update_parser.add_argument("sink_name", help="Name of the log export sink.")
+    update_parser.add_argument("filter", help="The filter used to match logs.")
 
-    delete_parser = subparsers.add_parser('delete', help=delete_sink.__doc__)
-    delete_parser.add_argument(
-        'sink_name',
-        help='Name of the log export sink.')
+    delete_parser = subparsers.add_parser("delete", help=delete_sink.__doc__)
+    delete_parser.add_argument("sink_name", help="Name of the log export sink.")
 
     args = parser.parse_args()
 
-    if args.command == 'list':
+    if args.command == "list":
         list_sinks()
-    elif args.command == 'create':
+    elif args.command == "create":
         create_sink(args.sink_name, args.destination_bucket, args.filter)
-    elif args.command == 'update':
+    elif args.command == "update":
         update_sink(args.sink_name, args.filter)
-    elif args.command == 'delete':
+    elif args.command == "delete":
         delete_sink(args.sink_name)
