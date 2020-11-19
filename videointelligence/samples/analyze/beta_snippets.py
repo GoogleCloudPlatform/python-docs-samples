@@ -52,17 +52,19 @@ def speech_transcription(input_uri):
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
 
-    features = [videointelligence.enums.Feature.SPEECH_TRANSCRIPTION]
+    features = [videointelligence.Feature.SPEECH_TRANSCRIPTION]
 
-    config = videointelligence.types.SpeechTranscriptionConfig(
+    config = videointelligence.SpeechTranscriptionConfig(
         language_code="en-US", enable_automatic_punctuation=True
     )
-    video_context = videointelligence.types.VideoContext(
-        speech_transcription_config=config
-    )
+    video_context = videointelligence.VideoContext(speech_transcription_config=config)
 
     operation = video_client.annotate_video(
-        input_uri=input_uri, features=features, video_context=video_context
+        request={
+            "features": features,
+            "input_uri": input_uri,
+            "video_context": video_context,
+        }
     )
 
     print("\nProcessing video for speech transcription.")
@@ -91,8 +93,8 @@ def speech_transcription(input_uri):
                 end_time = word_info.end_time
                 print(
                     "\t{}s - {}s: {}".format(
-                        start_time.seconds + start_time.nanos * 1e-9,
-                        end_time.seconds + end_time.nanos * 1e-9,
+                        start_time.seconds + start_time.microseconds * 1e-6,
+                        end_time.seconds + end_time.microseconds * 1e-6,
                         word,
                     )
                 )
@@ -105,9 +107,11 @@ def video_detect_text_gcs(input_uri):
     from google.cloud import videointelligence_v1p2beta1 as videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.TEXT_DETECTION]
+    features = [videointelligence.Feature.TEXT_DETECTION]
 
-    operation = video_client.annotate_video(input_uri=input_uri, features=features)
+    operation = video_client.annotate_video(
+        request={"features": features, "input_uri": input_uri}
+    )
 
     print("\nProcessing video for text detection.")
     result = operation.result(timeout=300)
@@ -125,8 +129,8 @@ def video_detect_text_gcs(input_uri):
     end_time = text_segment.segment.end_time_offset
     print(
         "start_time: {}, end_time: {}".format(
-            start_time.seconds + start_time.nanos * 1e-9,
-            end_time.seconds + end_time.nanos * 1e-9,
+            start_time.seconds + start_time.microseconds * 1e-6,
+            end_time.seconds + end_time.microseconds * 1e-6,
         )
     )
 
@@ -137,7 +141,7 @@ def video_detect_text_gcs(input_uri):
     time_offset = frame.time_offset
     print(
         "Time offset for the first frame: {}".format(
-            time_offset.seconds + time_offset.nanos * 1e-9
+            time_offset.seconds + time_offset.microseconds * 1e-6
         )
     )
     print("Rotated Bounding Box Vertices:")
@@ -153,16 +157,18 @@ def video_detect_text(path):
     from google.cloud import videointelligence_v1p2beta1 as videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.TEXT_DETECTION]
-    video_context = videointelligence.types.VideoContext()
+    features = [videointelligence.Feature.TEXT_DETECTION]
+    video_context = videointelligence.VideoContext()
 
     with io.open(path, "rb") as file:
         input_content = file.read()
 
     operation = video_client.annotate_video(
-        input_content=input_content,  # the bytes of the video file
-        features=features,
-        video_context=video_context,
+        request={
+            "features": features,
+            "input_content": input_content,
+            "video_context": video_context,
+        }
     )
 
     print("\nProcessing video for text detection.")
@@ -181,8 +187,8 @@ def video_detect_text(path):
     end_time = text_segment.segment.end_time_offset
     print(
         "start_time: {}, end_time: {}".format(
-            start_time.seconds + start_time.nanos * 1e-9,
-            end_time.seconds + end_time.nanos * 1e-9,
+            start_time.seconds + start_time.microseconds * 1e-6,
+            end_time.seconds + end_time.microseconds * 1e-6,
         )
     )
 
@@ -193,7 +199,7 @@ def video_detect_text(path):
     time_offset = frame.time_offset
     print(
         "Time offset for the first frame: {}".format(
-            time_offset.seconds + time_offset.nanos * 1e-9
+            time_offset.seconds + time_offset.microseconds * 1e-6
         )
     )
     print("Rotated Bounding Box Vertices:")
@@ -211,9 +217,13 @@ def track_objects_gcs(gcs_uri):
     # It is recommended to use location_id as 'us-east1' for the best latency
     # due to different types of processors used in this region and others.
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.OBJECT_TRACKING]
+    features = [videointelligence.Feature.OBJECT_TRACKING]
     operation = video_client.annotate_video(
-        input_uri=gcs_uri, features=features, location_id="us-east1"
+        request={
+            "features": features,
+            "input_uri": gcs_uri,
+            "location_id": "us-east1",
+        }
     )
     print("\nProcessing video for object annotations.")
 
@@ -233,9 +243,9 @@ def track_objects_gcs(gcs_uri):
     print(
         "Segment: {}s to {}s".format(
             object_annotation.segment.start_time_offset.seconds
-            + object_annotation.segment.start_time_offset.nanos / 1e9,
+            + object_annotation.segment.start_time_offset.microseconds / 1e6,
             object_annotation.segment.end_time_offset.seconds
-            + object_annotation.segment.end_time_offset.nanos / 1e9,
+            + object_annotation.segment.end_time_offset.microseconds / 1e6,
         )
     )
 
@@ -246,7 +256,7 @@ def track_objects_gcs(gcs_uri):
     box = frame.normalized_bounding_box
     print(
         "Time offset of the first frame: {}s".format(
-            frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+            frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         )
     )
     print("Bounding box position:")
@@ -265,7 +275,7 @@ def track_objects(path):
     from google.cloud import videointelligence_v1p2beta1 as videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.OBJECT_TRACKING]
+    features = [videointelligence.Feature.OBJECT_TRACKING]
 
     with io.open(path, "rb") as file:
         input_content = file.read()
@@ -273,7 +283,11 @@ def track_objects(path):
     # It is recommended to use location_id as 'us-east1' for the best latency
     # due to different types of processors used in this region and others.
     operation = video_client.annotate_video(
-        input_content=input_content, features=features, location_id="us-east1"
+        request={
+            "features": features,
+            "input_content": input_content,
+            "location_id": "us-east1",
+        }
     )
     print("\nProcessing video for object annotations.")
 
@@ -293,9 +307,9 @@ def track_objects(path):
     print(
         "Segment: {}s to {}s".format(
             object_annotation.segment.start_time_offset.seconds
-            + object_annotation.segment.start_time_offset.nanos / 1e9,
+            + object_annotation.segment.start_time_offset.microseconds / 1e6,
             object_annotation.segment.end_time_offset.seconds
-            + object_annotation.segment.end_time_offset.nanos / 1e9,
+            + object_annotation.segment.end_time_offset.microseconds / 1e6,
         )
     )
 
@@ -306,7 +320,7 @@ def track_objects(path):
     box = frame.normalized_bounding_box
     print(
         "Time offset of the first frame: {}s".format(
-            frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+            frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         )
     )
     print("Bounding box position:")
@@ -328,12 +342,12 @@ def detect_labels_streaming(path):
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
     # Set streaming config.
-    config = videointelligence.types.StreamingVideoConfig(
-        feature=(videointelligence.enums.StreamingFeature.STREAMING_LABEL_DETECTION)
+    config = videointelligence.StreamingVideoConfig(
+        feature=(videointelligence.StreamingFeature.STREAMING_LABEL_DETECTION)
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=config
     )
 
@@ -352,9 +366,7 @@ def detect_labels_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 
@@ -380,7 +392,9 @@ def detect_labels_streaming(path):
         for annotation in label_annotations:
             # Each annotation has one frame, which has a timeoffset.
             frame = annotation.frames[0]
-            time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+            time_offset = (
+                frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
+            )
 
             description = annotation.entity.description
             confidence = annotation.frames[0].confidence
@@ -400,14 +414,12 @@ def detect_shot_change_streaming(path):
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
     # Set streaming config.
-    config = videointelligence.types.StreamingVideoConfig(
-        feature=(
-            videointelligence.enums.StreamingFeature.STREAMING_SHOT_CHANGE_DETECTION
-        )
+    config = videointelligence.StreamingVideoConfig(
+        feature=(videointelligence.StreamingFeature.STREAMING_SHOT_CHANGE_DETECTION)
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=config
     )
 
@@ -426,9 +438,7 @@ def detect_shot_change_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 
@@ -448,11 +458,11 @@ def detect_shot_change_streaming(path):
         for annotation in response.annotation_results.shot_annotations:
             start = (
                 annotation.start_time_offset.seconds
-                + annotation.start_time_offset.nanos / 1e9
+                + annotation.start_time_offset.microseconds / 1e6
             )
             end = (
                 annotation.end_time_offset.seconds
-                + annotation.end_time_offset.nanos / 1e9
+                + annotation.end_time_offset.microseconds / 1e6
             )
 
             print("Shot: {}s to {}s".format(start, end))
@@ -468,12 +478,12 @@ def track_objects_streaming(path):
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
     # Set streaming config.
-    config = videointelligence.types.StreamingVideoConfig(
-        feature=(videointelligence.enums.StreamingFeature.STREAMING_OBJECT_TRACKING)
+    config = videointelligence.StreamingVideoConfig(
+        feature=(videointelligence.StreamingFeature.STREAMING_OBJECT_TRACKING)
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=config
     )
 
@@ -492,9 +502,7 @@ def track_objects_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 
@@ -520,7 +528,9 @@ def track_objects_streaming(path):
         for annotation in object_annotations:
             # Each annotation has one frame, which has a timeoffset.
             frame = annotation.frames[0]
-            time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+            time_offset = (
+                frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
+            )
 
             description = annotation.entity.description
             confidence = annotation.confidence
@@ -557,14 +567,14 @@ def detect_explicit_content_streaming(path):
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
     # Set streaming config.
-    config = videointelligence.types.StreamingVideoConfig(
+    config = videointelligence.StreamingVideoConfig(
         feature=(
-            videointelligence.enums.StreamingFeature.STREAMING_EXPLICIT_CONTENT_DETECTION
+            videointelligence.StreamingFeature.STREAMING_EXPLICIT_CONTENT_DETECTION
         )
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=config
     )
 
@@ -583,9 +593,7 @@ def detect_explicit_content_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 
@@ -603,8 +611,10 @@ def detect_explicit_content_streaming(path):
             break
 
         for frame in response.annotation_results.explicit_annotation.frames:
-            time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-            pornography_likelihood = videointelligence.enums.Likelihood(
+            time_offset = (
+                frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
+            )
+            pornography_likelihood = videointelligence.Likelihood(
                 frame.pornography_likelihood
             )
 
@@ -624,19 +634,19 @@ def annotation_to_storage_streaming(path, output_uri):
 
     # Set streaming config specifying the output_uri.
     # The output_uri is the prefix of the actual output files.
-    storage_config = videointelligence.types.StreamingStorageConfig(
+    storage_config = videointelligence.StreamingStorageConfig(
         enable_storage_annotation_result=True,
         annotation_result_storage_directory=output_uri,
     )
     # Here we use label detection as an example.
     # All features support output to GCS.
-    config = videointelligence.types.StreamingVideoConfig(
-        feature=(videointelligence.enums.StreamingFeature.STREAMING_LABEL_DETECTION),
+    config = videointelligence.StreamingVideoConfig(
+        feature=(videointelligence.StreamingFeature.STREAMING_LABEL_DETECTION),
         storage_config=storage_config,
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=config
     )
 
@@ -655,9 +665,7 @@ def annotation_to_storage_streaming(path, output_uri):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 
@@ -682,7 +690,6 @@ def streaming_automl_classification(path, project_id, model_id):
     import io
 
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
-    from google.cloud.videointelligence_v1p3beta1 import enums
 
     # path = 'path_to_file'
     # project_id = 'gcp_project_id'
@@ -695,17 +702,17 @@ def streaming_automl_classification(path, project_id, model_id):
     )
 
     # Here we use classification as an example.
-    automl_config = videointelligence.types.StreamingAutomlClassificationConfig(
+    automl_config = videointelligence.StreamingAutomlClassificationConfig(
         model_name=model_path
     )
 
-    video_config = videointelligence.types.StreamingVideoConfig(
-        feature=enums.StreamingFeature.STREAMING_AUTOML_CLASSIFICATION,
+    video_config = videointelligence.StreamingVideoConfig(
+        feature=videointelligence.StreamingFeature.STREAMING_AUTOML_CLASSIFICATION,
         automl_classification_config=automl_config,
     )
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
         video_config=video_config
     )
 
@@ -727,9 +734,7 @@ def streaming_automl_classification(path, project_id, model_id):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(
-                input_content=chunk
-            )
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
 
     requests = stream_generator()
 

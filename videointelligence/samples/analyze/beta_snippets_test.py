@@ -15,13 +15,13 @@
 # limitations under the License.
 
 import os
+from urllib.request import urlopen
 import uuid
 
 import backoff
 from google.api_core.exceptions import Conflict
 from google.cloud import storage
 import pytest
-from six.moves.urllib.request import urlopen
 
 import beta_snippets
 
@@ -55,7 +55,7 @@ def video_path(tmpdir_factory):
 @pytest.fixture(scope="function")
 def bucket():
     # Create a temporaty bucket to store annotation output.
-    bucket_name = f'tmp-{uuid.uuid4().hex}'
+    bucket_name = f"tmp-{uuid.uuid4().hex}"
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
@@ -128,7 +128,7 @@ def test_detect_text(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     beta_snippets.video_detect_text(in_file)
     out, _ = capsys.readouterr()
-    assert 'Text' in out
+    assert "Text" in out
 
 
 # Flaky timeout
@@ -137,7 +137,7 @@ def test_detect_text_gcs(capsys):
     in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
     beta_snippets.video_detect_text_gcs(in_file)
     out, _ = capsys.readouterr()
-    assert 'Text' in out
+    assert "Text" in out
 
 
 # Flaky InvalidArgument
