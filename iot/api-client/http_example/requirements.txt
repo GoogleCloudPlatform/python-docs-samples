@@ -5,4 +5,4 @@ google-auth==1.23.0
 google-cloud-iot==2.0.1
 google-cloud-pubsub==1.7.0
 pyjwt==1.7.1
-requests==2.24.0
+requests==2.25.0
