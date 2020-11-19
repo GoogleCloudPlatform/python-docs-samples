@@ -31,9 +31,11 @@ def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
 
     # Start the asynchronous request
     operation = client.annotate_video(
-        input_uri=gcs_uri,
-        features=[videointelligence.enums.Feature.PERSON_DETECTION],
-        video_context=context,
+        request={
+            "features": [videointelligence.Feature.PERSON_DETECTION],
+            "input_uri": gcs_uri,
+            "video_context": context,
+        }
     )
 
     print("\nProcessing video for person detection annotations.")
@@ -50,9 +52,9 @@ def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
             print(
                 "Segment: {}s to {}s".format(
                     track.segment.start_time_offset.seconds
-                    + track.segment.start_time_offset.nanos / 1e9,
+                    + track.segment.start_time_offset.microseconds / 1e6,
                     track.segment.end_time_offset.seconds
-                    + track.segment.end_time_offset.nanos / 1e9,
+                    + track.segment.end_time_offset.microseconds / 1e6,
                 )
             )
 

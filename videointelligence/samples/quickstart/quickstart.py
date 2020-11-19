@@ -28,9 +28,12 @@ def run_quickstart():
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    features = [videointelligence.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video(
-        "gs://cloud-samples-data/video/cat.mp4", features=features
+        request={
+            "features": features,
+            "input_uri": "gs://cloud-samples-data/video/cat.mp4",
+        }
     )
     print("\nProcessing video for label annotations:")
 
@@ -49,11 +52,11 @@ def run_quickstart():
         for i, segment in enumerate(segment_label.segments):
             start_time = (
                 segment.segment.start_time_offset.seconds
-                + segment.segment.start_time_offset.nanos / 1e9
+                + segment.segment.start_time_offset.microseconds / 1e6
             )
             end_time = (
                 segment.segment.end_time_offset.seconds
-                + segment.segment.end_time_offset.nanos / 1e9
+                + segment.segment.end_time_offset.microseconds / 1e6
             )
             positions = "{}s to {}s".format(start_time, end_time)
             confidence = segment.confidence

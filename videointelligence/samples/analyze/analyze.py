@@ -35,16 +35,17 @@ import argparse
 import io
 
 from google.cloud import videointelligence
-from google.cloud.videointelligence import enums
 
 
 def analyze_explicit_content(path):
     # [START video_analyze_explicit_content]
     """ Detects explicit content from the GCS path to a video. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.EXPLICIT_CONTENT_DETECTION]
+    features = [videointelligence.Feature.EXPLICIT_CONTENT_DETECTION]
 
-    operation = video_client.annotate_video(input_uri=path, features=features)
+    operation = video_client.annotate_video(
+        request={"features": features, "input_uri": path}
+    )
     print("\nProcessing video for explicit content annotations:")
 
     result = operation.result(timeout=90)
@@ -52,8 +53,8 @@ def analyze_explicit_content(path):
 
     # Retrieve first result because a single video was processed
     for frame in result.annotation_results[0].explicit_annotation.frames:
-        likelihood = enums.Likelihood(frame.pornography_likelihood)
-        frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        likelihood = videointelligence.Likelihood(frame.pornography_likelihood)
+        frame_time = frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         print("Time: {}s".format(frame_time))
         print("\tpornography: {}".format(likelihood.name))
     # [END video_analyze_explicit_content]
@@ -63,14 +64,14 @@ def analyze_labels(path):
     # [START video_analyze_labels_gcs]
     """ Detects labels given a GCS path. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    features = [videointelligence.Feature.LABEL_DETECTION]
 
-    mode = videointelligence.enums.LabelDetectionMode.SHOT_AND_FRAME_MODE
-    config = videointelligence.types.LabelDetectionConfig(label_detection_mode=mode)
-    context = videointelligence.types.VideoContext(label_detection_config=config)
+    mode = videointelligence.LabelDetectionMode.SHOT_AND_FRAME_MODE
+    config = videointelligence.LabelDetectionConfig(label_detection_mode=mode)
+    context = videointelligence.VideoContext(label_detection_config=config)
 
     operation = video_client.annotate_video(
-        input_uri=path, features=features, video_context=context
+        request={"features": features, "input_uri": path, "video_context": context}
     )
     print("\nProcessing video for label annotations:")
 
@@ -89,11 +90,11 @@ def analyze_labels(path):
         for i, segment in enumerate(segment_label.segments):
             start_time = (
                 segment.segment.start_time_offset.seconds
-                + segment.segment.start_time_offset.nanos / 1e9
+                + segment.segment.start_time_offset.microseconds / 1e6
             )
             end_time = (
                 segment.segment.end_time_offset.seconds
-                + segment.segment.end_time_offset.nanos / 1e9
+                + segment.segment.end_time_offset.microseconds / 1e6
             )
             positions = "{}s to {}s".format(start_time, end_time)
             confidence = segment.confidence
@@ -113,11 +114,11 @@ def analyze_labels(path):
         for i, shot in enumerate(shot_label.segments):
             start_time = (
                 shot.segment.start_time_offset.seconds
-                + shot.segment.start_time_offset.nanos / 1e9
+                + shot.segment.start_time_offset.microseconds / 1e6
             )
             end_time = (
                 shot.segment.end_time_offset.seconds
-                + shot.segment.end_time_offset.nanos / 1e9
+                + shot.segment.end_time_offset.microseconds / 1e6
             )
             positions = "{}s to {}s".format(start_time, end_time)
             confidence = shot.confidence
@@ -137,7 +138,7 @@ def analyze_labels(path):
         # Each frame_label_annotation has many frames,
         # here we print information only about the first frame.
         frame = frame_label.frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        time_offset = frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         print("\tFirst frame time offset: {}s".format(time_offset))
         print("\tFirst frame confidence: {}".format(frame.confidence))
         print("\n")
@@ -148,13 +149,13 @@ def analyze_labels_file(path):
     # [START video_analyze_labels]
     """Detect labels given a file path."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    features = [videointelligence.Feature.LABEL_DETECTION]
 
     with io.open(path, "rb") as movie:
         input_content = movie.read()
 
     operation = video_client.annotate_video(
-        features=features, input_content=input_content
+        request={"features": features, "input_content": input_content}
     )
     print("\nProcessing video for label annotations:")
 
@@ -173,11 +174,11 @@ def analyze_labels_file(path):
         for i, segment in enumerate(segment_label.segments):
             start_time = (
                 segment.segment.start_time_offset.seconds
-                + segment.segment.start_time_offset.nanos / 1e9
+                + segment.segment.start_time_offset.microseconds / 1e6
             )
             end_time = (
                 segment.segment.end_time_offset.seconds
-                + segment.segment.end_time_offset.nanos / 1e9
+                + segment.segment.end_time_offset.microseconds / 1e6
             )
             positions = "{}s to {}s".format(start_time, end_time)
             confidence = segment.confidence
@@ -197,11 +198,11 @@ def analyze_labels_file(path):
         for i, shot in enumerate(shot_label.segments):
             start_time = (
                 shot.segment.start_time_offset.seconds
-                + shot.segment.start_time_offset.nanos / 1e9
+                + shot.segment.start_time_offset.microseconds / 1e6
             )
             end_time = (
                 shot.segment.end_time_offset.seconds
-                + shot.segment.end_time_offset.nanos / 1e9
+                + shot.segment.end_time_offset.microseconds / 1e6
             )
             positions = "{}s to {}s".format(start_time, end_time)
             confidence = shot.confidence
@@ -221,7 +222,7 @@ def analyze_labels_file(path):
         # Each frame_label_annotation has many frames,
         # here we print information only about the first frame.
         frame = frame_label.frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        time_offset = frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         print("\tFirst frame time offset: {}s".format(time_offset))
         print("\tFirst frame confidence: {}".format(frame.confidence))
         print("\n")
@@ -232,8 +233,10 @@ def analyze_shots(path):
     # [START video_analyze_shots]
     """ Detects camera shot changes. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
-    operation = video_client.annotate_video(input_uri=path, features=features)
+    features = [videointelligence.Feature.SHOT_CHANGE_DETECTION]
+    operation = video_client.annotate_video(
+        request={"features": features, "input_uri": path}
+    )
     print("\nProcessing video for shot change annotations:")
 
     result = operation.result(timeout=90)
@@ -241,8 +244,12 @@ def analyze_shots(path):
 
     # first result is retrieved because a single video was processed
     for i, shot in enumerate(result.annotation_results[0].shot_annotations):
-        start_time = shot.start_time_offset.seconds + shot.start_time_offset.nanos / 1e9
-        end_time = shot.end_time_offset.seconds + shot.end_time_offset.nanos / 1e9
+        start_time = (
+            shot.start_time_offset.seconds + shot.start_time_offset.microseconds / 1e6
+        )
+        end_time = (
+            shot.end_time_offset.seconds + shot.end_time_offset.microseconds / 1e6
+        )
         print("\tShot {}: {} to {}".format(i, start_time, end_time))
     # [END video_analyze_shots]
 
@@ -253,17 +260,19 @@ def speech_transcription(path):
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.SPEECH_TRANSCRIPTION]
+    features = [videointelligence.Feature.SPEECH_TRANSCRIPTION]
 
-    config = videointelligence.types.SpeechTranscriptionConfig(
+    config = videointelligence.SpeechTranscriptionConfig(
         language_code="en-US", enable_automatic_punctuation=True
     )
-    video_context = videointelligence.types.VideoContext(
-        speech_transcription_config=config
-    )
+    video_context = videointelligence.VideoContext(speech_transcription_config=config)
 
     operation = video_client.annotate_video(
-        input_uri=path, features=features, video_context=video_context
+        request={
+            "features": features,
+            "input_uri": path,
+            "video_context": video_context,
+        }
     )
 
     print("\nProcessing video for speech transcription.")
@@ -292,8 +301,8 @@ def speech_transcription(path):
                 end_time = word_info.end_time
                 print(
                     "\t{}s - {}s: {}".format(
-                        start_time.seconds + start_time.nanos * 1e-9,
-                        end_time.seconds + end_time.nanos * 1e-9,
+                        start_time.seconds + start_time.microseconds * 1e-6,
+                        end_time.seconds + end_time.microseconds * 1e-6,
                         word,
                     )
                 )
@@ -306,9 +315,11 @@ def video_detect_text_gcs(input_uri):
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.TEXT_DETECTION]
+    features = [videointelligence.Feature.TEXT_DETECTION]
 
-    operation = video_client.annotate_video(input_uri=input_uri, features=features)
+    operation = video_client.annotate_video(
+        request={"features": features, "input_uri": input_uri}
+    )
 
     print("\nProcessing video for text detection.")
     result = operation.result(timeout=600)
@@ -325,8 +336,8 @@ def video_detect_text_gcs(input_uri):
         end_time = text_segment.segment.end_time_offset
         print(
             "start_time: {}, end_time: {}".format(
-                start_time.seconds + start_time.nanos * 1e-9,
-                end_time.seconds + end_time.nanos * 1e-9,
+                start_time.seconds + start_time.microseconds * 1e-6,
+                end_time.seconds + end_time.microseconds * 1e-6,
             )
         )
 
@@ -337,7 +348,7 @@ def video_detect_text_gcs(input_uri):
         time_offset = frame.time_offset
         print(
             "Time offset for the first frame: {}".format(
-                time_offset.seconds + time_offset.nanos * 1e-9
+                time_offset.seconds + time_offset.microseconds * 1e-6
             )
         )
         print("Rotated Bounding Box Vertices:")
@@ -352,16 +363,18 @@ def video_detect_text(path):
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.TEXT_DETECTION]
-    video_context = videointelligence.types.VideoContext()
+    features = [videointelligence.Feature.TEXT_DETECTION]
+    video_context = videointelligence.VideoContext()
 
     with io.open(path, "rb") as file:
         input_content = file.read()
 
     operation = video_client.annotate_video(
-        input_content=input_content,  # the bytes of the video file
-        features=features,
-        video_context=video_context,
+        request={
+            "features": features,
+            "input_content": input_content,
+            "video_context": video_context,
+        }
     )
 
     print("\nProcessing video for text detection.")
@@ -379,8 +392,8 @@ def video_detect_text(path):
         end_time = text_segment.segment.end_time_offset
         print(
             "start_time: {}, end_time: {}".format(
-                start_time.seconds + start_time.nanos * 1e-9,
-                end_time.seconds + end_time.nanos * 1e-9,
+                start_time.seconds + start_time.microseconds * 1e-6,
+                end_time.seconds + end_time.microseconds * 1e-6,
             )
         )
 
@@ -391,7 +404,7 @@ def video_detect_text(path):
         time_offset = frame.time_offset
         print(
             "Time offset for the first frame: {}".format(
-                time_offset.seconds + time_offset.nanos * 1e-9
+                time_offset.seconds + time_offset.microseconds * 1e-6
             )
         )
         print("Rotated Bounding Box Vertices:")
@@ -406,8 +419,10 @@ def track_objects_gcs(gcs_uri):
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.OBJECT_TRACKING]
-    operation = video_client.annotate_video(input_uri=gcs_uri, features=features)
+    features = [videointelligence.Feature.OBJECT_TRACKING]
+    operation = video_client.annotate_video(
+        request={"features": features, "input_uri": gcs_uri}
+    )
     print("\nProcessing video for object annotations.")
 
     result = operation.result(timeout=300)
@@ -424,9 +439,9 @@ def track_objects_gcs(gcs_uri):
         print(
             "Segment: {}s to {}s".format(
                 object_annotation.segment.start_time_offset.seconds
-                + object_annotation.segment.start_time_offset.nanos / 1e9,
+                + object_annotation.segment.start_time_offset.microseconds / 1e6,
                 object_annotation.segment.end_time_offset.seconds
-                + object_annotation.segment.end_time_offset.nanos / 1e9,
+                + object_annotation.segment.end_time_offset.microseconds / 1e6,
             )
         )
 
@@ -437,7 +452,7 @@ def track_objects_gcs(gcs_uri):
         box = frame.normalized_bounding_box
         print(
             "Time offset of the first frame: {}s".format(
-                frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+                frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
             )
         )
         print("Bounding box position:")
@@ -455,13 +470,13 @@ def track_objects(path):
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.enums.Feature.OBJECT_TRACKING]
+    features = [videointelligence.Feature.OBJECT_TRACKING]
 
     with io.open(path, "rb") as file:
         input_content = file.read()
 
     operation = video_client.annotate_video(
-        input_content=input_content, features=features
+        request={"features": features, "input_content": input_content}
     )
     print("\nProcessing video for object annotations.")
 
@@ -480,9 +495,9 @@ def track_objects(path):
     print(
         "Segment: {}s to {}s".format(
             object_annotation.segment.start_time_offset.seconds
-            + object_annotation.segment.start_time_offset.nanos / 1e9,
+            + object_annotation.segment.start_time_offset.microseconds / 1e6,
             object_annotation.segment.end_time_offset.seconds
-            + object_annotation.segment.end_time_offset.nanos / 1e9,
+            + object_annotation.segment.end_time_offset.microseconds / 1e6,
         )
     )
 
@@ -493,7 +508,7 @@ def track_objects(path):
     box = frame.normalized_bounding_box
     print(
         "Time offset of the first frame: {}s".format(
-            frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+            frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
         )
     )
     print("Bounding box position:")

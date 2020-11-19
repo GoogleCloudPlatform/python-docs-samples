@@ -26,9 +26,11 @@ def detect_logo(local_file_path="path/to/your/video.mp4"):
 
     with io.open(local_file_path, "rb") as f:
         input_content = f.read()
-    features = [videointelligence.enums.Feature.LOGO_RECOGNITION]
+    features = [videointelligence.Feature.LOGO_RECOGNITION]
 
-    operation = client.annotate_video(input_content=input_content, features=features)
+    operation = client.annotate_video(
+        request={"features": features, "input_content": input_content}
+    )
 
     print(u"Waiting for operation to complete...")
     response = operation.result()
@@ -53,13 +55,13 @@ def detect_logo(local_file_path="path/to/your/video.mp4"):
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
                     track.segment.start_time_offset.seconds,
-                    track.segment.start_time_offset.nanos,
+                    track.segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
                 u"\tEnd Time Offset : {}.{}".format(
                     track.segment.end_time_offset.seconds,
-                    track.segment.end_time_offset.nanos,
+                    track.segment.end_time_offset.microseconds * 1000,
                 )
             )
             print(u"\tConfidence : {}".format(track.confidence))
@@ -91,12 +93,14 @@ def detect_logo(local_file_path="path/to/your/video.mp4"):
         for segment in logo_recognition_annotation.segments:
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
-                    segment.start_time_offset.seconds, segment.start_time_offset.nanos,
+                    segment.start_time_offset.seconds,
+                    segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
                 u"\tEnd Time Offset : {}.{}".format(
-                    segment.end_time_offset.seconds, segment.end_time_offset.nanos,
+                    segment.end_time_offset.seconds,
+                    segment.end_time_offset.microseconds * 1000,
                 )
             )
 

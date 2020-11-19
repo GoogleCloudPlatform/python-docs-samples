@@ -22,16 +22,18 @@ def detect_faces(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
     client = videointelligence.VideoIntelligenceServiceClient()
 
     # Configure the request
-    config = videointelligence.types.FaceDetectionConfig(
+    config = videointelligence.FaceDetectionConfig(
         include_bounding_boxes=True, include_attributes=True
     )
-    context = videointelligence.types.VideoContext(face_detection_config=config)
+    context = videointelligence.VideoContext(face_detection_config=config)
 
     # Start the asynchronous request
     operation = client.annotate_video(
-        input_uri=gcs_uri,
-        features=[videointelligence.enums.Feature.FACE_DETECTION],
-        video_context=context,
+        request={
+            "features": [videointelligence.Feature.FACE_DETECTION],
+            "input_uri": gcs_uri,
+            "video_context": context,
+        }
     )
 
     print("\nProcessing video for face detection annotations.")
@@ -48,9 +50,9 @@ def detect_faces(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
             print(
                 "Segment: {}s to {}s".format(
                     track.segment.start_time_offset.seconds
-                    + track.segment.start_time_offset.nanos / 1e9,
+                    + track.segment.start_time_offset.microseconds / 1e6,
                     track.segment.end_time_offset.seconds
-                    + track.segment.end_time_offset.nanos / 1e9,
+                    + track.segment.end_time_offset.microseconds / 1e6,
                 )
             )
 

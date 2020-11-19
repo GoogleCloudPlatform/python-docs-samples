@@ -74,7 +74,7 @@ def test_speech_transcription(capsys):
 def test_detect_text_gcs(capsys):
     analyze.video_detect_text_gcs("gs://cloud-samples-data/video/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
-    assert 'Text' in out
+    assert "Text" in out
 
 
 # Flaky timeout
@@ -82,7 +82,7 @@ def test_detect_text_gcs(capsys):
 def test_detect_text(capsys):
     analyze.video_detect_text("resources/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
-    assert 'Text' in out
+    assert "Text" in out
 
 
 # Flaky timeout

@@ -21,9 +21,11 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
 
     client = videointelligence.VideoIntelligenceServiceClient()
 
-    features = [videointelligence.enums.Feature.LOGO_RECOGNITION]
+    features = [videointelligence.Feature.LOGO_RECOGNITION]
 
-    operation = client.annotate_video(input_uri=input_uri, features=features)
+    operation = client.annotate_video(
+        request={"features": features, "input_uri": input_uri}
+    )
 
     print(u"Waiting for operation to complete...")
     response = operation.result()
@@ -49,13 +51,13 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
                     track.segment.start_time_offset.seconds,
-                    track.segment.start_time_offset.nanos,
+                    track.segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
                 u"\tEnd Time Offset : {}.{}".format(
                     track.segment.end_time_offset.seconds,
-                    track.segment.end_time_offset.nanos,
+                    track.segment.end_time_offset.microseconds * 1000,
                 )
             )
             print(u"\tConfidence : {}".format(track.confidence))
@@ -86,12 +88,14 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
         for segment in logo_recognition_annotation.segments:
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
-                    segment.start_time_offset.seconds, segment.start_time_offset.nanos,
+                    segment.start_time_offset.seconds,
+                    segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
                 u"\tEnd Time Offset : {}.{}".format(
-                    segment.end_time_offset.seconds, segment.end_time_offset.nanos,
+                    segment.end_time_offset.seconds,
+                    segment.end_time_offset.microseconds * 1000,
                 )
             )
 
