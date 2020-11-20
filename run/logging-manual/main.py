@@ -33,8 +33,7 @@ def index():
     # Build structured log messages as an object.
     global_log_fields = {}
 
-    # Add log correlation to nest all log messages
-    # beneath request log in Log Viewer.
+    # Add log correlation to nest all log messages.
     trace_header = request.headers.get('X-Cloud-Trace-Context')
 
     if trace_header and PROJECT:
