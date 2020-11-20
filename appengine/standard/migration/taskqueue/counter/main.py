@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
+# [START cloudtasks_pushcounter]
 """A simple counter with a Pub/Sub push subscription, replacing a
    TaskQueue push queue, which is not available in Python 3 App Engine
    runtimes.
@@ -103,7 +103,7 @@ def handle_task():
         increment_counter(key)
 
     return 'OK'
-# [END all]
+# [END cloudtasks_pushcounter]
 
 
 if __name__ == '__main__':
