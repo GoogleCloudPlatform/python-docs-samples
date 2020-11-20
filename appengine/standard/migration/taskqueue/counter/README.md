@@ -52,7 +52,8 @@ Install dependencies, preferably with a virtualenv:
     $ source env/bin/activate
     $ pip install -r requirements.txt
 
-Then set environment variables before starting your application:
+Then set environment variables before starting your application. The
+LOCATION is the region (such as us-east1) containing the queue.
 
     $ export GOOGLE_CLOUD_PROJECT=[YOUR_PROJECT_NAME]
     $ export LOCATION=[YOUR_PROJECT_LOCATION]
