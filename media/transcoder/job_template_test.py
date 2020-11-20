@@ -23,7 +23,7 @@ import list_job_templates
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-template_id = f'my-python-test-template-{uuid.uuid4()}'
+template_id = f"my-python-test-template-{uuid.uuid4()}"
 
 
 def test_template_operations(capsys):
