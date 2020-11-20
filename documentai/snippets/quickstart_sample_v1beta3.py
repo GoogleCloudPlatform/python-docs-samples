@@ -18,10 +18,10 @@ from google.cloud import documentai_v1beta3 as documentai
 # [START documentai_quickstart]
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id= 'YOUR_PROJECT_ID';
-# location = 'YOUR_PROJECT_LOCATION'; # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID'; #  Create processor in Cloud Console
-# file_path = '/path/to/local/pdf';
+# project_id= 'YOUR_PROJECT_ID'
+# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# processor_id = 'YOUR_PROCESSOR_ID' #  Create processor in Cloud Console
+# file_path = '/path/to/local/pdf'
 
 
 def quickstart(project_id: str, location: str, processor_id: str, file_path: str):
