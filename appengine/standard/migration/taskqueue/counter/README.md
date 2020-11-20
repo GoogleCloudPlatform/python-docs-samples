@@ -71,7 +71,7 @@ Python 3, and then deploy using `gcloud`.
 For Python 2.7 you must first
 install the required libraries in the `lib` folder:
 
-    $ pip -t lib -r requirements.txt
+    $ pip install -t lib -r requirements.txt
     $ gcloud app deploy app.yaml
 
 For Python 3, you only need to run the deploy command:
