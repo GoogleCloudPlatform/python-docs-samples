@@ -1,5 +1,5 @@
 # [START gae_python38_cloudsql_config]
-runtime: python38
+runtime: python39
 
 env_variables:
   CLOUD_SQL_USERNAME: YOUR-USERNAME
