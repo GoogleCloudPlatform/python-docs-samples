@@ -1,4 +1,5 @@
 # [START gae_python38_cloudsql_config]
+# [START gae_python3_cloudsql_config]
 runtime: python39
 
 env_variables:
@@ -6,4 +7,5 @@ env_variables:
   CLOUD_SQL_PASSWORD: YOUR-PASSWORD
   CLOUD_SQL_DATABASE_NAME: YOUR-DATABASE
   CLOUD_SQL_CONNECTION_NAME: YOUR-CONNECTION-NAME
+# [END gae_python3_cloudsql_config]
 # [END gae_python38_cloudsql_config]

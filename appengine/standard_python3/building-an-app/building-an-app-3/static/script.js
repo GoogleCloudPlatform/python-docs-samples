@@ -16,6 +16,7 @@
 'use strict';
 
 // [START gae_python38_auth_javascript]
+// [START gae_python3_auth_javascript]
 window.addEventListener('load', function () {
   document.getElementById('sign-out').onclick = function () {
     firebase.auth().signOut();
@@ -70,4 +71,5 @@ window.addEventListener('load', function () {
     alert('Unable to log in: ' + error)
   });
 });
+// [END gae_python3_auth_javascript]
 // [END gae_python38_auth_javascript]
