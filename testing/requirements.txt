@@ -7,7 +7,7 @@ mysql-python==1.2.5; python_version < "3.0"
 PyCrypto==2.6.1
 pytest-cov==2.6.1
 pytest==4.2.0
-pyyaml==3.13
+pyyaml==4.2b1
 responses==0.10.5
 WebTest==2.0.32
 webapp2==2.5.2
