@@ -9,7 +9,7 @@ pytest-cov==2.6.1
 pytest==4.2.0
 pyyaml==4.2b1
 responses==0.10.5
-WebTest==2.0.32
+WebTest==2.0.35
 webapp2==2.5.2
 google-api-python-client==1.12.8
 google-cloud-core==0.29.1
