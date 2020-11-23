@@ -69,7 +69,7 @@ except ImportError as e:
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
 
-def get_pytest_env_vars() -> Dict[str]:
+def get_pytest_env_vars() -> Dict[str, str]:
     """Returns a dict for pytest invocation."""
     ret = {}
 
