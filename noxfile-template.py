@@ -137,7 +137,7 @@ FLAKE8_COMMON_ARGS = [
 
 
 @nox.session
-def lint(session: nox.Session) -> None:
+def lint(session: nox.sessions.Session) -> None:
     if not TEST_CONFIG['enforce_type_hints']:
         session.install("flake8", "flake8-import-order")
     else:
@@ -157,7 +157,7 @@ def lint(session: nox.Session) -> None:
 #
 
 @nox.session
-def blacken(session: nox.Session) -> None:
+def blacken(session: nox.sessions.Session) -> None:
     session.install("black")
     python_files = [path for path in os.listdir(".") if path.endswith(".py")]
 
@@ -172,7 +172,7 @@ def blacken(session: nox.Session) -> None:
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
-def _session_tests(session: nox.Session, post_install: Callable = None) -> None:
+def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         session.install("-r", "requirements.txt")
@@ -198,7 +198,7 @@ def _session_tests(session: nox.Session, post_install: Callable = None) -> None:
 
 
 @nox.session(python=ALL_VERSIONS)
-def py(session: nox.Session) -> None:
+def py(session: nox.sessions.Session) -> None:
     """Runs py.test for a sample using the specified version of Python."""
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
@@ -232,7 +232,7 @@ GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 
 @nox.session
 @nox.parametrize("path", GENERATED_READMES)
-def readmegen(session: nox.Session, path: str) -> None:
+def readmegen(session: nox.sessions.Session, path: str) -> None:
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
     dir_ = os.path.dirname(path)
