@@ -5,3 +5,5 @@ google-auth==1.6.2
 google-cloud-pubsub==0.39.1
 pyjwt==1.7.1
 requests==2.21.0
+
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
