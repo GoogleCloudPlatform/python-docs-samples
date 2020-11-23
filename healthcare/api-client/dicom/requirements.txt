@@ -3,3 +3,5 @@ google-auth-httplib2==0.0.3
 google-auth==1.6.2
 google-cloud==0.34.0
 requests==2.21.0
+
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
