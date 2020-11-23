@@ -1,1 +1,1 @@
-google-cloud-happybase==0.32.1
+google-cloud-happybase==0.33.0
