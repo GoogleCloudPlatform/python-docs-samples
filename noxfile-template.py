@@ -15,8 +15,8 @@
 from __future__ import print_function
 
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Callable, Dict, List, Optional
 
 import nox
