@@ -5,3 +5,4 @@ ipython<=5.5; python_version == "2.7"
 google-cloud-monitoring<=0.28.1
 
 notebook>=6.1.5 # not directly required, pinned by Snyk to avoid a vulnerability
+pillow>=7.1.0 # not directly required, pinned by Snyk to avoid a vulnerability
