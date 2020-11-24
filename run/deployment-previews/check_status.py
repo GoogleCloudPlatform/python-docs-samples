@@ -27,6 +27,7 @@ from google.cloud import secretmanager
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
+# cloud run tags much be lowercase
 TAG_PREFIX = "pr-"
 
 
@@ -126,6 +127,7 @@ def github_token(project_id: str, ghtoken_secretname: str) -> str:
     except NotFound as e:
         error(e, context=f"finding secret {ghtoken_secretname}")
 
+    # The secret was encoded for you as part of the secret creation, so decode it now.
     github_token = response.payload.data.decode("UTF-8")
     return github_token
 

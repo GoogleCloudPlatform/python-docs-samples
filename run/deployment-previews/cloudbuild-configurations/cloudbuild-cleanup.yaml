@@ -23,6 +23,7 @@ steps:
     args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
   - id: "deploy prod service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: "gcloud"
     args:
       [
@@ -57,7 +58,7 @@ steps:
 
   # Cleanup tags against closed pull requests
   - id: "clean up old tag"
-    name: "gcr.io/${PROJECT_ID}/deployment-previews"
+    name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
     args:
       [
         "cleanup",

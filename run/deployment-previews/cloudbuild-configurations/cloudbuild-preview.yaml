@@ -32,7 +32,7 @@ steps:
         "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
       ]
 
-  - id: "deploy revision"
+  - id: "deploy revision with tag"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: "gcloud"
     args:
@@ -53,7 +53,7 @@ steps:
       ]
 
   - id: "link revision on pull request"
-    name: "gcr.io/${PROJECT_ID}/deployment-previews"
+    name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
     args:
       [
         "set",
