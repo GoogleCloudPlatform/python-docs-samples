@@ -11,3 +11,4 @@ werkzeug>=0.15.3 # not directly required, pinned by Snyk to avoid a vulnerabilit
 apache-airflow>=1.10.11 # not directly required, pinned by Snyk to avoid a vulnerability
 apache-airflow>=1.10.11 # not directly required, pinned by Snyk to avoid a vulnerability
 apache-airflow>=1.10.11 # not directly required, pinned by Snyk to avoid a vulnerability
+apache-airflow>=1.10.11 # not directly required, pinned by Snyk to avoid a vulnerability
