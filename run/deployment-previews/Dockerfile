@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM gcr.io/google.com/cloudsdktool/cloud-sdk:slim
 
-# FIX(b/171669848) 
-# FROM python:3.8-slim
+# Use the Cloud SDK docker container, which includes Python 3.7
+# https://github.com/GoogleCloudPlatform/cloud-sdk-docker
+FROM gcr.io/google.com/cloudsdktool/cloud-sdk:slim
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME

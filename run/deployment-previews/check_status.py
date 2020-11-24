@@ -179,7 +179,7 @@ def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name:
 
     if tags_to_delete:
         tags = ",".join(tags_to_delete)
-        # FIX(b/171669848): use discovery API
+
         # Fork out to the gcloud CLI to programatically delete tags from closed PRs
         click.echo(f"Forking out to gcloud to remove tags: {tags}")
         subprocess.run(
