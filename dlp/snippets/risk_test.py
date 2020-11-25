@@ -294,7 +294,7 @@ def test_k_map_estimate_analysis_single_field(
     assert "Values" in out
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
     topic_id, subscription_id, bigquery_project, capsys
 ):
