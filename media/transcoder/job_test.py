@@ -14,9 +14,11 @@
 
 import os
 import time
+import uuid
 
 from google.cloud import storage
 from googleapiclient.errors import HttpError
+import pytest
 from retrying import retry
 
 import create_job_from_ad_hoc
@@ -32,9 +34,9 @@ import list_jobs
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-template_id = "my-python-test-template"
+template_id = f"my-python-test-template-{uuid.uuid4()}"
 
-bucket_name = "python-samples-transcoder-test"
+bucket_name = f"python-samples-transcoder-{uuid.uuid4()}"
 test_video_file_name = "ChromeCast.mp4"
 input_uri = "gs://" + bucket_name + "/" + test_video_file_name
 output_uri_for_preset = "gs://" + bucket_name + "/test-output-preset/"
@@ -46,35 +48,17 @@ test_data = os.path.join(os.path.dirname(__file__), "..", "testdata")
 test_file = os.path.join(test_data, test_video_file_name)
 
 
-def test_job_operations(capsys):
-
-    # Enable the following API on the test project:
-    # *   Transcoder API
-
-    _clean_bucket()
-
-    _create_job_from_preset(capsys)
-    _create_job_from_template(capsys)
-    _create_job_from_ad_hoc(capsys)
-
-
-def _clean_bucket():
+@pytest.fixture(scope="module")
+def test_bucket():
     storage_client = storage.Client()
-    buckets = storage_client.list_buckets()
-
-    for bucket in buckets:
-        if bucket.name == bucket_name:
-            blobs = bucket.list_blobs()
-            for blob in blobs:
-                blob.delete()
-            bucket.delete()
-
     bucket = storage_client.create_bucket(bucket_name)
     blob = bucket.blob(test_video_file_name)
     blob.upload_from_filename(test_file)
+    yield bucket
+    bucket.delete(force=True)
 
 
-def _create_job_from_preset(capsys):
+def test_create_job_from_preset(capsys, test_bucket):
     create_job_from_preset.create_job_from_preset(
         project_id, location, input_uri, output_uri_for_preset, preset
     )
@@ -104,7 +88,7 @@ def _create_job_from_preset(capsys):
     assert "Deleted job" in out
 
 
-def _create_job_from_template(capsys):
+def test_create_job_from_template(capsys, test_bucket):
 
     job_template_name = (
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"
@@ -147,7 +131,7 @@ def _create_job_from_template(capsys):
     assert "Deleted job template" in out
 
 
-def _create_job_from_ad_hoc(capsys):
+def test_create_job_from_ad_hoc(capsys, test_bucket):
     create_job_from_ad_hoc.create_job_from_ad_hoc(
         project_id, location, input_uri, output_uri_for_adhoc
     )
