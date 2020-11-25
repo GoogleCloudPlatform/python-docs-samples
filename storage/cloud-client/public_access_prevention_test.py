@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import storage_enforce_public_access_prevention
 import storage_get_public_access_prevention
-import storage_unspecify_public_access_prevention
+import storage_set_public_access_prevention_enforced
+import storage_set_public_access_prevention_unspecified
 
 
 def test_get_public_access_prevention(bucket, capsys):
@@ -29,9 +29,9 @@ def test_get_public_access_prevention(bucket, capsys):
     )
 
 
-def test_enforce_public_access_prevention(bucket, capsys):
-    short_name = storage_enforce_public_access_prevention
-    short_name.enforce_public_access_prevention(
+def test_set_public_access_prevention_enforced(bucket, capsys):
+    short_name = storage_set_public_access_prevention_enforced
+    short_name.set_public_access_prevention_enforced(
         bucket.name
     )
     out, _ = capsys.readouterr()
@@ -41,9 +41,9 @@ def test_enforce_public_access_prevention(bucket, capsys):
     )
 
 
-def test_unspecify_public_access_prevention(bucket, capsys):
-    short_name = storage_unspecify_public_access_prevention
-    short_name.unspecify_public_access_prevention(
+def test_set_public_access_prevention_unspecified(bucket, capsys):
+    short_name = storage_set_public_access_prevention_unspecified
+    short_name.set_public_access_prevention_unspecified(
         bucket.name
     )
     out, _ = capsys.readouterr()

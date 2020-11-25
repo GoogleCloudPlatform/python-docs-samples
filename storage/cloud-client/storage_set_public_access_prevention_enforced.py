@@ -16,27 +16,27 @@
 
 import sys
 
-# [START storage_unspecify_public_access_prevention]
+# [START storage_set_public_access_prevention_enforced]
 from google.cloud import storage
-from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
+from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_ENFORCED
 
 
-def unspecify_public_access_prevention(bucket_name):
-    """Sets the public access prevention status to unspecified, so that the bucket inherits its setting from its parent project."""
+def set_public_access_prevention_enforced(bucket_name):
+    """Enforce public access prevention for a bucket."""
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    bucket.iam_configuration.public_access_prevention = PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
+    bucket.iam_configuration.public_access_prevention = PUBLIC_ACCESS_PREVENTION_ENFORCED
     bucket.patch()
 
     print(
-        "Public access prevention is 'unspecified' for {}.".format(bucket.name)
+        "Public access prevention is set to enforced for {}.".format(bucket.name)
     )
 
 
-# [END storage_unspecify_public_access_prevention]
+# [END storage_set_public_access_prevention_enforced]
 
 if __name__ == "__main__":
-    unspecify_public_access_prevention(bucket_name=sys.argv[1])
+    set_public_access_prevention_enforced(bucket_name=sys.argv[1])
