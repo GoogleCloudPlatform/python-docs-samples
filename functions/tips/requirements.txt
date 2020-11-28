@@ -3,3 +3,5 @@ google-cloud-pubsub==0.39.1
 python-dateutil==2.8.1
 requests==2.21.0
 xmltodict==0.11.0
+
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
