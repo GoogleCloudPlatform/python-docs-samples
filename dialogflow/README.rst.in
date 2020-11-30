@@ -24,9 +24,6 @@ samples:
 - name: Detect Intent Knowledge Base
   file: detect_intent_knowledge.py
   show_help: True
-- name: Detect Intent with Model Selection
-  file: detect_intent_with_model_selection.py
-  show_help: True
 - name: Detect Intent with Sentiment Analysis
   file: detect_intent_with_sentiment_analysis.py
   show_help: True
@@ -35,15 +32,6 @@ samples:
   show_help: True
 - name: Intent Management
   file: intent_management.py
-  show_help: True
-- name: Entity Type Management
-  file: entity_type_management.py
-  show_help: True
-- name: Entity Management
-  file: entity_management.py
-  show_help: True
-- name: Session Entity Type Management
-  file: session_entity_type_management.py
   show_help: True
 - name: Knowledge Base Management
   file: knowledge_base_management.py
