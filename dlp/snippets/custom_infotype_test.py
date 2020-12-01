@@ -19,14 +19,76 @@ import custom_infotype
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
+def test_inspect_string_with_exclusion_dict(capsys):
+    custom_infotype.inspect_string_with_exclusion_dict(
+        GCLOUD_PROJECT, "gary@example.com, example@example.com", ["example@example.com"]
+    )
+
+    out, _ = capsys.readouterr()
+    assert "example@example.com" not in out
+    assert "gary@example.com" in out
+
+
+def test_inspect_string_with_exclusion_regex(capsys):
+    custom_infotype.inspect_string_with_exclusion_regex(
+        GCLOUD_PROJECT, "alice@example.com, ironman@avengers.net", ".+@example.com"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "alice" not in out
+    assert "ironman" in out
+
+
+def test_inspect_string_with_exclusion_dict_substring(capsys):
+    custom_infotype.inspect_string_with_exclusion_dict_substring(
+        GCLOUD_PROJECT, "bob@example.com TEST@example.com TEST.com", ["TEST"]
+    )
+
+    out, _ = capsys.readouterr()
+    assert "TEST@example.com" not in out
+    assert "TEST.com" not in out
+    assert "bob@example.com" in out
+
+
+def test_inspect_string_custom_excluding_substring(capsys):
+    custom_infotype.inspect_string_custom_excluding_substring(
+        GCLOUD_PROJECT, "Danger, Jimmy | Wayne, Bruce", ["Jimmy"]
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Wayne, Bruce" in out
+    assert "Danger, Jimmy" not in out
+
+
+def test_inspect_string_custom_omit_overlap(capsys):
+    custom_infotype.inspect_string_custom_omit_overlap(
+        GCLOUD_PROJECT, "Larry Page and John Doe"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Larry Page" not in out
+    assert "John Doe" in out
+
+
 def test_omit_name_if_also_email(capsys):
-    info_types = custom_infotype.omit_name_if_also_email(
+    custom_infotype.omit_name_if_also_email(
         GCLOUD_PROJECT, "alice@example.com"
     )
 
     # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
-    assert len(info_types) == 1
-    assert info_types[0] == "EMAIL_ADDRESS"
+    out, _ = capsys.readouterr()
+    assert "Info type: EMAIL_ADDRESS" in out
+    assert "Info type: PERSON_NAME" not in out
+
+
+def test_inspect_string_without_overlap(capsys):
+    custom_infotype.inspect_string_without_overlap(
+        GCLOUD_PROJECT, "example.com is a domain, james@example.org is an email."
+    )
+
+    out, _ = capsys.readouterr()
+    assert "example.com" in out
+    assert "example.org" not in out
 
 
 def test_inspect_with_person_name_w_custom_hotword(capsys):
@@ -37,6 +99,42 @@ def test_inspect_with_person_name_w_custom_hotword(capsys):
     out, _ = capsys.readouterr()
     assert "Info type: PERSON_NAME" in out
     assert "Likelihood: 5" in out
+
+
+def test_inspect_string_multiple_rules_patient(capsys):
+    custom_infotype.inspect_string_multiple_rules(
+        GCLOUD_PROJECT, "patient name: Jane Doe"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Likelihood: 4" in out
+
+
+def test_inspect_string_multiple_rules_doctor(capsys):
+    custom_infotype.inspect_string_multiple_rules(
+        GCLOUD_PROJECT, "doctor: Jane Doe"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "No findings" in out
+
+
+def test_inspect_string_multiple_rules_quasimodo(capsys):
+    custom_infotype.inspect_string_multiple_rules(
+        GCLOUD_PROJECT, "patient name: quasimodo"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "No findings" in out
+
+
+def test_inspect_string_multiple_rules_redacted(capsys):
+    custom_infotype.inspect_string_multiple_rules(
+        GCLOUD_PROJECT, "name of patient: REDACTED"
+    )
+
+    out, _ = capsys.readouterr()
+    assert "No findings" in out
 
 
 def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
