@@ -1,4 +1,4 @@
-cryptography==2.5
+cryptography==3.2
 flaky==3.5.3
 gcp-devrel-py-tools==0.0.15
 google-api-python-client==1.12.8
