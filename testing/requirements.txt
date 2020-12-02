@@ -12,7 +12,7 @@ responses==0.10.5
 WebTest==2.0.35
 webapp2==2.5.2
 google-api-python-client==1.12.8
-google-cloud-core==0.29.1
+google-cloud-core==1.4.4
 gcp-devrel-py-tools==0.0.15
 flask==1.0.2
 websocket-client==0.57.0
