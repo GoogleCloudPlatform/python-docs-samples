@@ -78,9 +78,12 @@ def batch_process_documents(
 
     for i, blob in enumerate(blob_list):
         # Download the contents of this blob as a bytes object.
+        if ".json" not in blob.name:
+            return
+        # Only parses JSON files
         blob_as_bytes = blob.download_as_bytes()
-        document = documentai.types.Document.from_json(blob_as_bytes)
 
+        document = documentai.types.Document.from_json(blob_as_bytes)
         print(f"Fetched file {i + 1}")
 
         # For a full list of Document object attributes, please reference this page: https://googleapis.dev/python/documentai/latest/_modules/google/cloud/documentai_v1beta3/types/document.html#Document
