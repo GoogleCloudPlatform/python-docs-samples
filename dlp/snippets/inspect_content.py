@@ -401,7 +401,7 @@ def inspect_file(
 
     # Construct the item, containing the file's byte data.
     with open(filename, mode="rb") as f:
-        item = {"byte_item": {"type": content_type_index, "data": f.read()}}
+        item = {"byte_item": {"type_": content_type_index, "data": f.read()}}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"

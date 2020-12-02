@@ -75,7 +75,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Call the API to get a list of jobs.
     response = dlp.list_dlp_jobs(
-        request={"parent": parent, "filter": filter_string, "type": job_type}
+        request={"parent": parent, "filter": filter_string, "type_": job_type}
     )
 
     # Iterate over results.

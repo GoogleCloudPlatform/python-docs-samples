@@ -5,7 +5,7 @@ Google Data Loss Prevention Python Samples
 ===============================================================================
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/README.rst
 
 
 This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams.
@@ -37,12 +37,11 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
-#. Clone python-dlp and change directory to the sample directory you want to use.
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
 
     .. code-block:: bash
 
-        $ git clone https://github.com/googleapis/python-dlp.git
-        $ cd samples/snippets
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
@@ -78,7 +77,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/quickstart.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py,dlp/README.rst
 
 
 
@@ -96,7 +95,7 @@ Inspect Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/inspect_content.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py,dlp/README.rst
 
 
 
@@ -134,7 +133,7 @@ Redact Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/redact.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py,dlp/README.rst
 
 
 
@@ -170,7 +169,7 @@ Metadata
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/metadata.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py,dlp/README.rst
 
 
 
@@ -203,7 +202,7 @@ Jobs
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/jobs.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/jobs.py,dlp/README.rst
 
 
 
@@ -236,7 +235,7 @@ Templates
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/templates.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/templates.py,dlp/README.rst
 
 
 
@@ -269,7 +268,7 @@ Triggers
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/triggers.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/triggers.py,dlp/README.rst
 
 
 
@@ -302,7 +301,7 @@ Risk Analysis
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/risk.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/risk.py,dlp/README.rst
 
 
 
@@ -341,7 +340,7 @@ DeID
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-dlp&page=editor&open_in_editor=samples/snippets/deid.py,samples/snippets/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/deid.py,dlp/README.rst
 
 
 
