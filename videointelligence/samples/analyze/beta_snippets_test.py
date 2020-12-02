@@ -149,7 +149,9 @@ def test_track_objects(capsys):
     assert "Entity id" in out
 
 
+# Flaky exceeding designed timeout
 @pytest.mark.slow
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects_gcs():
     in_file = "gs://cloud-samples-data/video/cat.mp4"
     object_annotations = beta_snippets.track_objects_gcs(in_file)
