@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START video_detect_person_gcs_beta]
-from google.cloud import videointelligence_v1p3beta1 as videointelligence
+# [START video_detect_person_gcs]
+from google.cloud import videointelligence_v1 as videointelligence
 
 
 def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
@@ -93,4 +93,4 @@ def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
                 )
 
 
-# [END video_detect_person_gcs_beta]
+# [END video_detect_person_gcs]
