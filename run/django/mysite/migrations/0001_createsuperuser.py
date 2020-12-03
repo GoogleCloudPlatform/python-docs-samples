@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_django_superuser]
 import os
 
 from django.db import migrations
@@ -54,3 +55,4 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [migrations.RunPython(createsuperuser)]
+# [END cloudrun_django_superuser]

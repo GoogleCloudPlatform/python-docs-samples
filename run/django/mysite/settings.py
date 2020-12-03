@@ -35,7 +35,7 @@ if not os.path.isfile(".env"):
     if os.getenv('TRAMPOLINE_CI', None):
         payload = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     else:
-        # [START cloudrun_secretconfig]
+        # [START cloudrun_django_secretconfig]
         import google.auth
         from google.cloud import secretmanager_v1
 
@@ -55,7 +55,7 @@ if not os.path.isfile(".env"):
 
 env = environ.Env()
 env.read_env(env_file)
-# [END cloudrun_secretconfig]
+# [END cloudrun_django_secretconfig]
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -105,10 +105,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 
-# [START cloudrun_dbconfig]
+# [START cloudrun_django_dbconfig]
 # Use django-environ to define the connection string
 DATABASES = {"default": env.db()}
-# [END cloudrun_dbconfig]
+# [END cloudrun_django_dbconfig]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -135,11 +135,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-# [START cloudrun_staticconfig]
+# [START cloudrun_django_staticconfig]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
-# [END cloudrun_staticconfig]
+# [END cloudrun_django_staticconfig]

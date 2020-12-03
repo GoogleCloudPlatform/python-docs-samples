@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_django_cloudmigrate]
 steps:
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
@@ -62,3 +63,4 @@ substitutions:
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
+# [END cloudrun_django_cloudmigrate]
