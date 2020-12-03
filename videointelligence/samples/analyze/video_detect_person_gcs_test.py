@@ -16,16 +16,16 @@ import os
 
 import pytest
 
-import video_detect_person_beta
+import video_detect_person_gcs
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_person(capsys):
-    local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
+    input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
 
-    video_detect_person_beta.detect_person(local_file_path=local_file_path)
+    video_detect_person_gcs.detect_person(gcs_uri=input_uri)
 
     out, _ = capsys.readouterr()
 

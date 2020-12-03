@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START video_detect_person_beta]
+# [START video_detect_person]
 import io
 
-from google.cloud import videointelligence_v1p3beta1 as videointelligence
+from google.cloud import videointelligence_v1 as videointelligence
 
 
 def detect_person(local_file_path="path/to/your/video-file.mp4"):
@@ -98,4 +98,4 @@ def detect_person(local_file_path="path/to/your/video-file.mp4"):
                 )
 
 
-# [END video_detect_person_beta]
+# [END video_detect_person]
