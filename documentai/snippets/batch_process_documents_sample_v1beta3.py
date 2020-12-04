@@ -23,7 +23,7 @@ from google.cloud import storage
 # project_id= 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
-# input_uri = "YOUR_INPUT_URI"
+# gcs_input_uri = "YOUR_INPUT_URI"
 # gcs_output_uri = "YOUR_OUTPUT_BUCKET_URI"
 # gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX"
 
