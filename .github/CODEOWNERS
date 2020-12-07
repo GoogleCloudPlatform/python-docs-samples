@@ -20,7 +20,7 @@
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
 /cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
-/composer/**/*.py                      @leahecole @GoogleCloudPlatform/python-samples-owners
+/composer/**/*.py                      @leahecole @rafalbiegacz @GoogleCloudPlatform/python-samples-owners
 /compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
 /container_registry/**/*.py            @donmccasland @dinagraves @kelsk @GoogleCloudPlatform/python-samples-owners
 /data-science-onramp/                  @coleleah @bradmiro @GoogleCloudPlatform/python-samples-owners
