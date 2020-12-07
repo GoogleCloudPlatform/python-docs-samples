@@ -1,0 +1,179 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from typing import Any, List, NoReturn
+
+from click.testing import CliRunner
+from mock import MagicMock, patch, PropertyMock
+
+from check_status import cli
+
+
+MOCK_SERVICE_NAME = "myservice"
+MOCK_GH_TOKEN = "aaaaa"
+MOCK_REPO_NAME = "foocorp/bar"
+MOCK_PR_NUMBER = 1
+MOCK_COMMIT_SHA = "f000bee"
+MOCK_PROJECT_ID = "foocorp"
+
+
+runner = CliRunner()
+
+
+def test_help() -> NoReturn:
+    response = runner.invoke(cli, ["--help"])
+    assert response.exit_code == 0
+    assert "Usage" in response.output
+
+
+def test_set_no_project() -> NoReturn:
+    response = runner.invoke(cli, ["set"])
+    assert response.exit_code == 2
+    assert "Missing option '--project-id'" in response.output
+
+
+def service_data(name: str, tags: List[str]) -> dict:
+    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100, }]
+    for t in tags:
+        tag = f"pr-{t}"
+        traffic.append(
+            {
+                "tag": tag,
+                "revisionName": f"{name}-00002-bbb",
+                "url": f"https://{tag}---{name}-yyyyyy-uc-a.run.app",
+            }
+        )
+    return {"metadata": {"name": name}, "status": {"traffic": traffic}}
+
+
+@patch("check_status.discovery")
+def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
+    service_mock = MagicMock()
+    service_mock.projects = MagicMock(return_value=service_mock)
+    service_mock.locations = MagicMock(return_value=service_mock)
+    service_mock.services = MagicMock(return_value=service_mock)
+    service_mock.get = MagicMock(return_value=service_mock)
+    service_mock.execute = MagicMock(
+        return_value=service_data(MOCK_SERVICE_NAME, [MOCK_PR_NUMBER])
+    )
+    discovery_mock.build = MagicMock(return_value=service_mock)
+
+    invalid_pr = MOCK_PR_NUMBER + 1  # intentionally wrong
+
+    response = runner.invoke(
+        cli,
+        [
+            "set",
+            "--project-id",
+            "foo",
+            "--region",
+            "us-central1",
+            "--service",
+            MOCK_SERVICE_NAME,
+            "--repo-name",
+            MOCK_REPO_NAME,
+            "--commit-sha",
+            MOCK_COMMIT_SHA,
+            "--pull-request",
+            invalid_pr,
+            "--dry-run",
+        ],
+    )
+    print(response.output)
+    assert response.exit_code == 1
+    assert "Error finding revision" in response.output
+    assert f"pr-{invalid_pr}" in response.output
+
+
+@patch("check_status.discovery")
+@patch("check_status.secretmanager")
+@patch("check_status.github")
+def test_set_check_calls(github_mock: Any, sm_mock: Any, discovery_mock: Any) -> NoReturn:
+    service_mock = MagicMock()
+    service_mock.projects = MagicMock(return_value=service_mock)
+    service_mock.locations = MagicMock(return_value=service_mock)
+    service_mock.services = MagicMock(return_value=service_mock)
+    service_mock.get = MagicMock(return_value=service_mock)
+    service_mock.execute = MagicMock(
+        return_value=service_data(MOCK_SERVICE_NAME, [MOCK_PR_NUMBER])
+    )
+    discovery_mock.build = MagicMock(return_value=service_mock)
+
+    sm_mock = MagicMock()
+    sm_mock.SecretManagerServiceClient = MagicMock(return_value=sm_mock)
+    sm_mock.access_secret_version = MagicMock(return_value=sm_mock)
+    sm_mock.payload = PropertyMock(return_value="TEST")
+    sm_mock.decode = PropertyMock(return_value=b"foobar")
+
+    gh_mock = MagicMock()
+    gh_mock.get_repo = MagicMock(return_value=gh_mock)
+    gh_mock.repo_name = MOCK_REPO_NAME
+    gh_mock.get_commit = MagicMock(return_value=gh_mock)
+    gh_mock.sha = MOCK_COMMIT_SHA
+    gh_mock.create_status = MagicMock(return_value=True)
+    github_mock.Github = MagicMock(return_value=gh_mock)
+
+    # Test Status Dry-Run
+    response = runner.invoke(
+        cli,
+        [
+            "set",
+            "--project-id",
+            MOCK_PROJECT_ID,
+            "--region",
+            "us-central1",
+            "--service",
+            MOCK_SERVICE_NAME,
+            "--repo-name",
+            MOCK_REPO_NAME,
+            "--commit-sha",
+            MOCK_COMMIT_SHA,
+            "--pull-request",
+            MOCK_PR_NUMBER,
+            "--dry-run",
+        ],
+    )
+    assert response.exit_code == 0
+    assert "Dry-run" in response.output
+
+    assert MOCK_SERVICE_NAME in response.output
+    assert MOCK_REPO_NAME in response.output
+    assert MOCK_COMMIT_SHA in response.output
+
+    # Test Status real-run
+    response = runner.invoke(
+        cli,
+        [
+            "set",
+            "--project-id",
+            MOCK_PROJECT_ID,
+            "--region",
+            "us-central1",
+            "--service",
+            MOCK_SERVICE_NAME,
+            "--repo-name",
+            MOCK_REPO_NAME,
+            "--commit-sha",
+            MOCK_COMMIT_SHA,
+            "--pull-request",
+            MOCK_PR_NUMBER,
+        ],
+    )
+
+    assert response.exit_code == 0
+    assert "Success" in response.output
+
+    assert MOCK_SERVICE_NAME in response.output
+    assert MOCK_REPO_NAME in response.output
+    assert MOCK_COMMIT_SHA in response.output
