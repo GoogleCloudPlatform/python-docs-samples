@@ -14,10 +14,8 @@
 
 import os
 import os.path
-import sys
 
 from airflow import models
-import pytest
 
 from . import unit_testing
 

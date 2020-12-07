@@ -42,9 +42,8 @@ import logging
 from airflow import models
 from airflow.contrib.operators import bigquery_to_gcs
 from airflow.contrib.operators import gcs_to_bq
-from airflow.operators import dummy_operator
 from airflow.contrib.operators import gcs_to_gcs
-
+from airflow.operators import dummy_operator
 
 
 # --------------------------------------------------------------------------------
