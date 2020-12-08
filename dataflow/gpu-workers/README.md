@@ -87,6 +87,12 @@ Notes and current limitations:
 * Only specific GPUs are available in specific certain zones, `us-central1-a` has `nvidia-tesla-v100` (we need to provide a list of zones with available GPUs, plus pricing)
 -->
 
+> ℹ️ The image uses CUDA version 10.1 with cuDNN version 7 since those are the
+> versions compatible with the Tensorflow version we are using.
+>
+> For a list of all the compatible versions, see the
+> [Tensorflow tested build configurations](https://www.tensorflow.org/install/source#gpu) page.
+
 <!--
 TODO:
 - Explain how to use a custom machine type.
@@ -98,6 +104,8 @@ export PROJECT="google.com:deft-testing-integration"
 export BUCKET="dcavazos-dataflow-testing"
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/creds/deft-testing-integration.json"
 export IMAGE="gcr.io/google.com/deft-testing-integration/dcavazos/dataflow-gpu:latest"
+
+time gcloud --project $PROJECT builds submit -t $IMAGE .
 -->
 
 ```sh
@@ -115,9 +123,7 @@ python landsat_view.py \
     --worker_harness_container_image "$IMAGE" \
     --worker_zone "$WORKER_ZONE" \
     --machine_type "$MACHINE_TYPE" \
-    --dataflow_endpoint "https://dataflow-valentyn-staging.sandbox.googleapis.com/" \
-    --autoscaling_algorithm NONE \
-    --num_workers 5 \
+    --dataflow_endpoint "https://dataflow-daily.sandbox.googleapis.com/" \
     --experiments "use_runner_v2"
 
 # Run with GPUs
@@ -129,10 +135,8 @@ python landsat_view.py \
     --worker_harness_container_image "$IMAGE" \
     --worker_zone "$WORKER_ZONE" \
     --machine_type "$MACHINE_TYPE" \
-    --dataflow_endpoint "https://dataflow-valentyn-staging.sandbox.googleapis.com/" \
+    --dataflow_endpoint "https://dataflow-daily.sandbox.googleapis.com/" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
-    --autoscaling_algorithm NONE \
-    --num_workers 5 \
     --experiments "use_runner_v2"
 
 ```
@@ -140,7 +144,6 @@ python landsat_view.py \
 View the results.
 
 ```sh
-
 gsutil ls -lh gs://$BUCKET/samples/dataflow/landsat/
 
 gsutil -m cp "gs://$BUCKET/samples/dataflow/landsat/*" outputs/

@@ -1,8 +1,6 @@
-import base64
 import logging
 import os
 import re
-from io import BytesIO
 
 import numpy as np
 import rasterio as rio
