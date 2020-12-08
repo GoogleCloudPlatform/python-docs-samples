@@ -1,4 +1,4 @@
 Flask==1.0.2
 gunicorn==20.0.4
-google-cloud-tasks==1.1.0
+google-cloud-tasks==2.1.0
 googleapis-common-protos==1.52.0
