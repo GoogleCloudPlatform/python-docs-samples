@@ -684,7 +684,7 @@ For setting up a local test environment, see [Test Environment Setup](#test-envi
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
 If you are unable to access the link, reach out to your assigned pull
-request reviewer or someone in @GoogleCloudPlatform/python-samples-owners
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
 for assistance.
 
 1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)
