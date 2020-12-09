@@ -24,78 +24,233 @@ import uuid
 
 import pytest
 
+#Steps:
+
+# Cloud build  steps
+    # build renderer image - done
+    # push to container reg - done via builds
+    # deploy renderer to cloud run
+    # get renderer URL and save to workspace
+    # build editor image
+    # push container image
+    # deploy editor with renderer URL
+# get URL for editor and token
+# delete renderer image
+# delete editor image
+# delete relevant deployments
+
+SUFFIX = uuid.uuid4().hex
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+EDITOR_IMAGE_NAME = f"gcr.io/{PROJECT}/editor-{SUFFIX}"
+RENDERER_IMAGE_NAME = f"gcr.io/{PROJECT}/renderer-{SUFFIX}"
 
 @pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
-    project = os.environ['GOOGLE_CLOUD_PROJECT']
-
-    # Build and Deploy Cloud Run Services
+def renderer_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "renderer/.",
+            "--tag",
+            RENDERER_IMAGE_NAME,
             "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            PROJECT,
             "--quiet",
         ], check=True
     )
+    yield RENDERER_IMAGE_NAME
 
-    # Get the URL for the editor and the token
-    editor = subprocess.run(
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            RENDERER_IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ], check=True
+    )
+
+@pytest.fixture()
+def editor_image():
+    # Build container image for Cloud Run deployment
+    subprocess.run(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            "editor/.",
+            "--tag",
+            EDITOR_IMAGE_NAME,
+            "--project",
+            PROJECT,
+            "--quiet",
+        ], check=True
+    )
+    yield EDITOR_IMAGE_NAME
+
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            EDITOR_IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ], check=True
+    )
+
+@pytest.fixture
+def renderer_deployed_service(renderer_image):
+    # Deploy image to Cloud Run
+    renderer_service_name = f"renderer-{SUFFIX}"
+    subprocess.run(
         [
             "gcloud",
             "run",
-            "--project",
-            project,
+            "deploy",
+            renderer_service_name,
+            "--image",
+            renderer_image,
+            "--region=us-central1",
+            "--platform=managed",
+            "--no-allow-unauthenticated",
+
+        ], check=True
+    )
+
+    yield renderer_service_name
+
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            renderer_service_name,
             "--platform=managed",
             "--region=us-central1",
+            "--quiet",
+            "--project",
+            PROJECT,
+        ], check=True
+    )
+
+
+@pytest.fixture
+def renderer_service_url_auth_token(renderer_deployed_service):
+    # Get Cloud Run service URL and auth token
+    renderer_service_url = subprocess.run(
+        [
+            "gcloud",
+            "run",
             "services",
             "describe",
-            f"editor-{suffix}",
+            renderer_deployed_service,
+            "--platform=managed",
+            "--region=us-central1",
             "--format=value(status.url)",
+            "--project",
+            PROJECT,
         ],
         stdout=subprocess.PIPE,
         check=True
-    ).stdout.strip()
-
-    token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE,
+    ).stdout.strip().decode()
+    renderer_auth_token = subprocess.run(
+        ["gcloud", "auth", "print-identity-token"],
+        stdout=subprocess.PIPE,
         check=True
-    ).stdout.strip()
+    ).stdout.strip().decode()
 
-    yield editor, token
+    yield renderer_service_url, renderer_auth_token
+
+@pytest.fixture
+def editor_deployed_service(editor_image, renderer_service_url_auth_token):
+    # Deploy editor image with renderer URL environment var
+    editor_service_name = f"editor-{SUFFIX}"
+    renderer_service_url, renderer_auth_token = renderer_service_url_auth_token
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            editor_service_name,
+            "--image",
+            editor_image,
+            "--region=us-central1",
+            "--platform=managed",
+            "--set-env-vars",
+            f"EDITOR_UPSTREAM_RENDER_URL={renderer_service_url}",
+            "--no-allow-unauthenticated",
+
+        ], check=True
+    )
+
+    yield editor_service_name
 
     subprocess.run(
-        ["gcloud", "run", "services", "delete", f"editor-{suffix}",
-         "--project", project, "--platform", "managed", "--region",
-         "us-central1", "--quiet"],
-        check=True
-    )
-    subprocess.run(
-        ["gcloud", "run", "services", "delete", f"renderer-{suffix}",
-         "--project", project, "--platform", "managed", "--region",
-         "us-central1", "--quiet"],
-        check=True
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            editor_service_name,
+            "--platform=managed",
+            "--region=us-central1",
+            "--quiet",
+            "--project",
+            PROJECT,
+        ], check=True
     )
 
+@pytest.fixture
+def editor_service_url_auth_token(editor_deployed_service):
+    # Get Cloud Run service URL and auth token
+    editor_service_url = subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "describe",
+            editor_deployed_service,
+            "--platform=managed",
+            "--region=us-central1",
+            "--format=value(status.url)",
+            "--project",
+            PROJECT,
+        ],
+        stdout=subprocess.PIPE,
+        check=True
+    ).stdout.strip().decode()
+    editor_auth_token = subprocess.run(
+        ["gcloud", "auth", "print-identity-token"],
+        stdout=subprocess.PIPE,
+        check=True
+    ).stdout.strip().decode()
 
-def test_end_to_end(services):
-    editor = services[0].decode() + "/render"
-    token = services[1].decode()
+    yield editor_service_url, editor_auth_token
+
+
+def test_end_to_end(editor_service_url_auth_token):
+    editor_service_url, editor_auth_token = editor_service_url_auth_token
+    editor = editor_service_url + "/render"
+    print("EDITOR", editor)
+    # token = services[1].decode()
     data = json.dumps({"data": "**strong text**"})
 
     req = request.Request(
         editor,
         data=data.encode(),
         headers={
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {editor_auth_token}",
             "Content-Type": "application/json",
         },
     )

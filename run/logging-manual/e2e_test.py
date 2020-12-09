@@ -81,7 +81,7 @@ def deployed_service(container_image):
             f"GOOGLE_CLOUD_PROJECT={PROJECT}"
             "--no-allow-unauthenticated"
 
-        ]
+        ], check=True
     )
 
     yield service_name
