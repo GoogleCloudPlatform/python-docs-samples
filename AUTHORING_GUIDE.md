@@ -280,7 +280,7 @@ example, see
 
 The use of region tags is beyond the scope of this document, but if you’re
 using region tags they should start after the source code header
-(license/copyright information), imports, and global configuration such as
+(license/copyright information), but before imports and global configuration such as
 initializing constants.
 
 ### Exception Handling
