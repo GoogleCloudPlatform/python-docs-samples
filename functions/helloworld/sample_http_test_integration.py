@@ -37,7 +37,7 @@ def test_args():
 
     # Send HTTP request simulating Pub/Sub message
     # (GCF translates Pub/Sub messages to HTTP requests internally)
-    BASE_URL = os.getenv('BASE_URL', f'http://localhost:{port}')
+    BASE_URL = f'http://localhost:{port}'
 
     retry_policy = Retry(total=6, backoff_factor=1)
     retry_adapter = requests.adapters.HTTPAdapter(
