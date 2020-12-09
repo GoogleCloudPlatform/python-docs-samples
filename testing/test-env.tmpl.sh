@@ -18,10 +18,18 @@ export MYSQL_INSTANCE=
 export MYSQL_USER=
 export MYSQL_PASSWORD=
 export MYSQL_DATABASE=
+export MYSQL_HOST=localhost:3306
 export POSTGRES_INSTANCE=
 export POSTGRES_USER=
 export POSTGRES_PASSWORD=
 export POSTGRES_DATABASE=
+export POSTGRES_HOST=localhost:5432
+export SQLSERVER_INSTANCE=
+export SQLSERVER_USER=
+export SQLSERVER_PASSWORD=
+export SQLSERVER_DATABASE=
+export SQLSERVER_HOST=127.0.0.1:1433
+export DB_SOCKET_DIR=
 
 export KG_API_KEY=
 export SLACK_TEST_SIGNATURE=
@@ -65,6 +73,9 @@ export VISION_CLASSIFICATION_MODEL_ID=
 
 export OBJECT_DETECTION_DATASET_ID=
 export OBJECT_DETECTION_MODEL_ID=
+
+# Transcoder API
+export GOOGLE_CLOUD_PROJECT_NUMBER=
 
 # For git operations in the test driver(testing/run_tests.sh).
 # These are optional, but for avoiding flakes in Kokoro builds.

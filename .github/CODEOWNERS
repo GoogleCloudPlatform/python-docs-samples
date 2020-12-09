@@ -20,7 +20,7 @@
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
 /cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
-/composer/**/*.py                      @leahecole @GoogleCloudPlatform/python-samples-owners
+/composer/**/*.py                      @leahecole @rafalbiegacz @GoogleCloudPlatform/python-samples-owners
 /compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
 /container_registry/**/*.py            @donmccasland @dinagraves @kelsk @GoogleCloudPlatform/python-samples-owners
 /data-science-onramp/                  @coleleah @bradmiro @GoogleCloudPlatform/python-samples-owners
@@ -45,7 +45,7 @@
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
 /language/**/*.py                      @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/logging/**/*.py                       @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
+/media/**/*.py                         @irataxy @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
@@ -54,6 +54,7 @@
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
 /run/**/*.py                           @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
+/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/python-samples-owners
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
@@ -61,7 +62,6 @@
 /tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/third_party/apache-airflow/**/*.py    @leahecole @GoogleCloudPlatform/python-samples-owners
 /trace/**/*.py                         @dukeng @ziweizhao @GoogleCloudPlatform/python-samples-owners
 /translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
