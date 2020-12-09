@@ -1,0 +1,3 @@
+geojson==2.5.0
+google-cloud-bigquery==2.6.0
+Shapely==1.7.1
