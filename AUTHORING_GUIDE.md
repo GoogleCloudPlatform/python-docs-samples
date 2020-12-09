@@ -554,6 +554,18 @@ This repository supports two ways to run tests locally.
 
 Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
 
+#### `noxfile_config.py`
+
+The [`noxfile_config.py`](noxfile_config.py) allows for customization
+of some options:
+
+* Ignore specific Python versions.
+* Enforce type hints.
+* Specify a different Google Cloud Project.
+* Add additional environment variables. Also see [](#environment-variables).
+
+Options are documented inside the [noxfile_config.py](noxfile_config.py).
+
 ### Running tests with nox
 
 Automated testing for samples is managed by
@@ -667,7 +679,7 @@ TEST_CONFIG_OVERRIDE = {
 
 #### Secrets
 
-For setting up a local test environment, see [Test Environment Setup](#test-environment-setup).
+For setting up a local test environment, see [](#test-environment-setup).
 
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
