@@ -16,7 +16,7 @@
 def insert_wkt(override_values={}):
     # [START bigquery_insert_geography_wkt]
     from google.cloud import bigquery
-    import shapely
+    import shapely.geometry
     import shapely.wkt
 
     bigquery_client = bigquery.Client()
@@ -32,7 +32,9 @@ def insert_wkt(override_values={}):
 
     # Use the Shapely library to generate WKT of a line from LAX to
     # JFK airports. Alternatively, you may define WKT data directly.
-    my_geography = shapely.LineString([(-118.4085, 33.9416), (-73.7781, 40.6413)])
+    my_geography = shapely.geometry.LineString(
+        [(-118.4085, 33.9416), (-73.7781, 40.6413)]
+    )
     rows = [
         # Convert data into a WKT string.
         {"geo": shapely.wkt.dumps(my_geography)},

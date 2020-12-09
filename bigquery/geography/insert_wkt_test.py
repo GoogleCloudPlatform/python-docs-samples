@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import insert_geojson
+from . import insert_wkt
 
 
-def test_insert_geojson(table_id):
-    errors = insert_geojson.insert_geojson(override_values={"table_id": table_id})
+def test_insert_wkt(table_id):
+    errors = insert_wkt.insert_wkt(override_values={"table_id": table_id})
     assert not errors
