@@ -47,7 +47,6 @@ def container_image():
             "--quiet",
         ], check=True
     )
-    print('submit build')
     yield IMAGE_NAME
 
     # Delete container image
@@ -63,7 +62,6 @@ def container_image():
             PROJECT,
         ], check=True
     )
-    print('deleted image')
 
 @pytest.fixture
 def deployed_service(container_image):
@@ -85,7 +83,6 @@ def deployed_service(container_image):
 
         ]
     )
-    print('cloudrun')
 
     yield service_name
 
@@ -103,7 +100,6 @@ def deployed_service(container_image):
             PROJECT,
         ], check=True
     )
-    print('deletedrun')
 
 
 @pytest.fixture
