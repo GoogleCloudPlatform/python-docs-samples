@@ -23,8 +23,6 @@ https://cloud.google.com/translate/docs.
 
 import argparse
 
-import six
-
 
 def detect_language(text):
     # [START translate_detect_language]
@@ -84,6 +82,7 @@ def translate_text_with_model(target, text, model="nmt"):
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
+    import six
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()
@@ -108,6 +107,7 @@ def translate_text(target, text):
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
+    import six
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()
