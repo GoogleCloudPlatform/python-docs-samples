@@ -691,7 +691,7 @@ for assistance.
    in your pull request.
 2. Run [`scripts/decrypt-secrets.sh`](scripts/decrypt-secrets.sh)
    to fetch the secrets. A new file `testing/test-env.sh` will appear.
-3. Add the new environment variable to [`testing/test-env.sh`].
+3. Add the new environment variable to `testing/test-env.sh`.
 4. Run [`scripts/encrypt-secrets.sh`](scripts/encrypt-secrets.sh)
    to upload the secrets to secret manager.
 
