@@ -54,6 +54,9 @@ export PUBSUB_VERIFICATION_TOKEN=1234abc
 export GCLOUD_SECRETS_SERVICE_ACCOUNT=
 
 # Automl
+# A centralized project is used to remove duplicate work across all 7 languages 
+# and reduce the management of these resources.
+# https://docs.google.com/document/d/1-E7zTNqBm9ex7XIOhzMHCupwKWieyMKgAVwrRK5JTVY
 export AUTOML_PROJECT_ID=
 
 export ENTITY_EXTRACTION_DATASET_ID=
