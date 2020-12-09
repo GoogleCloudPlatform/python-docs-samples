@@ -521,11 +521,10 @@ Once you have your project created and configured, you'll need to set
 environment variables to identify the project and resources to be used
 by tests. See
 [testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every
+for a list of all environment variables that must be set manually. Not every
 test needs all of these variables. All required environment variables
-should be listed in the README and `testing/test-env.tmpl.sh`. If you
-find one is missing, please add instructions for setting it as part of
-your PR.
+are listed in `testing/test-env.tmpl.sh`. If you need to add a new secret,
+follow instructions in [Secrets](#secrets).
 
 We suggest that you copy this file as follows:
 
@@ -554,6 +553,18 @@ This repository supports two ways to run tests locally.
 #### nox setup
 
 Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
+
+#### `noxfile_config.py`
+
+The [`noxfile_config.py`](noxfile_config.py) allows for customization
+of some options:
+
+* Ignore specific Python versions.
+* Enforce type hints.
+* Specify a different Google Cloud Project.
+* Add additional environment variables. Also see [Environment Variables](#environment-variables).
+
+Options are documented inside the [noxfile_config.py](noxfile_config.py).
 
 ### Running tests with nox
 
@@ -632,6 +643,59 @@ On MacOS systems, you also need to install `coreutils` to use
 ```sh
 $ brew install coreutils
 ```
+
+### Environment Variables and Secrets
+
+This section explains how to set environment variables that are needed
+by tests.
+
+
+#### Environment Variables
+
+If a `noxfile_config.py` does not exist, copy [`noxfile_config.py`](noxfile_config.py)
+into the directory.
+
+Add the new environment variables to the `envs` dictionary.
+
+```py
+TEST_CONFIG_OVERRIDE = {
+    # You can opt out from the test for specific Python versions.
+    "ignored_versions": ["2.7"],
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    "enforce_type_hints": True,
+    # An envvar key for determining the project id to use. Change it
+    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
+    # build specific Cloud project. You can also use your own string
+    # to use your own Cloud project.
+    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+    # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+    # A dictionary you want to inject into your test. Don't put any
+    # secrets here. These values will override predefined values.
+    "envs": {"DJANGO_SETTINGS_MODULE": "mysite.settings"},
+}
+```
+
+
+#### Secrets
+
+For setting up a local test environment, see [Test Environment Setup](#test-environment-setup).
+
+Secrets (e.g., project names, API keys, passwords) are kept in
+Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
+If you are unable to access the link, reach out to your assigned pull
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
+for assistance.
+
+1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)
+   in your pull request.
+2. Run [`scripts/decrypt-secrets.sh`](scripts/decrypt-secrets.sh)
+   to fetch the secrets. A new file `testing/test-env.sh` will appear.
+3. Add the new environment variable to `testing/test-env.sh`.
+4. Run [`scripts/encrypt-secrets.sh`](scripts/encrypt-secrets.sh)
+   to upload the secrets to secret manager.
+
+
 
 ### Google Cloud Storage Resources
 
