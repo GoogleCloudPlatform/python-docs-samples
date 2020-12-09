@@ -45,17 +45,7 @@ def container_image():
         ], check=True
     )
     
-    # Push container image to container registry
-    subprocess.run(
-        [
-            "gcloud",
-            "container",
-            "push",
-            IMAGE_NAME,
-            "--project",
-            PROJECT,
-        ]
-    )
+
     yield IMAGE_NAME
 
     # Delete container image
