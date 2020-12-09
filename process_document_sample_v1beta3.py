@@ -13,8 +13,6 @@
 # limitations under the License.
 #
 
-from google.cloud import documentai_v1beta3 as documentai
-
 # [START documentai_process_document]
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -27,6 +25,8 @@ from google.cloud import documentai_v1beta3 as documentai
 def process_document_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ):
+    from google.cloud import documentai_v1beta3 as documentai
+
     # Instantiates a client
     client = documentai.DocumentProcessorServiceClient()
 
