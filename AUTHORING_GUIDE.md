@@ -562,7 +562,7 @@ of some options:
 * Ignore specific Python versions.
 * Enforce type hints.
 * Specify a different Google Cloud Project.
-* Add additional environment variables. Also see [](#environment-variables).
+* Add additional environment variables. Also see [Environment Variables](#environment-variables).
 
 Options are documented inside the [noxfile_config.py](noxfile_config.py).
 
@@ -679,7 +679,7 @@ TEST_CONFIG_OVERRIDE = {
 
 #### Secrets
 
-For setting up a local test environment, see [](#test-environment-setup).
+For setting up a local test environment, see [Test Environment Setup](#test-environment-setup).
 
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
@@ -691,7 +691,7 @@ for assistance.
    in your pull request.
 2. Run [`scripts/decrypt-secrets.sh`](scripts/decrypt-secrets.sh)
    to fetch the secrets. A new file `testing/test-env.sh` will appear.
-3. Add the new environment variable to [`testing/test-env.sh].
+3. Add the new environment variable to [`testing/test-env.sh`].
 4. Run [`scripts/encrypt-secrets.sh`](scripts/encrypt-secrets.sh)
    to upload the secrets to secret manager.
 
