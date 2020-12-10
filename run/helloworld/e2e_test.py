@@ -24,7 +24,7 @@ import uuid
 import pytest
 
 # Unique suffix to create distinct service names
-SUFFIX = uuid.uuid4().hex
+SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 IMAGE_NAME = f"gcr.io/{PROJECT}/helloworld-{SUFFIX}"
 
@@ -79,7 +79,7 @@ def deployed_service(container_image):
             "--platform=managed",
             "--no-allow-unauthenticated",
             "--set-env-vars=NAME=Test",
-        ]
+        ], check=True
     )
 
     yield service_name

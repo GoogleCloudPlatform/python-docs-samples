@@ -25,7 +25,7 @@ import uuid
 import pytest
 
 
-SUFFIX = uuid.uuid4().hex
+SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 EDITOR_IMAGE_NAME = f"gcr.io/{PROJECT}/editor-{SUFFIX}"
 RENDERER_IMAGE_NAME = f"gcr.io/{PROJECT}/renderer-{SUFFIX}"

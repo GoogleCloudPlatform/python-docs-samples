@@ -27,7 +27,7 @@ from google.cloud import logging_v2
 
 import pytest
 # Unique suffix to create distinct service names
-SUFFIX = uuid.uuid4().hex
+SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 IMAGE_NAME = f"gcr.io/{PROJECT}/logging-{SUFFIX}"
 
