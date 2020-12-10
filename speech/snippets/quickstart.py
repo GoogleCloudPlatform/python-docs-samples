@@ -17,8 +17,6 @@
 
 def run_quickstart():
     # [START speech_quickstart]
-    import io
-    import os
 
     # Imports the Google Cloud client library
     # [START speech_python_migration_imports]
@@ -32,12 +30,9 @@ def run_quickstart():
     # [END speech_python_migration_client]
 
     # The name of the audio file to transcribe
-    file_name = os.path.join(os.path.dirname(__file__), "resources", "audio.raw")
+    gcs_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
 
-    # Loads the audio into memory
-    with io.open(file_name, "rb") as audio_file:
-        content = audio_file.read()
-        audio = speech.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(uri=gcs_uri)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
