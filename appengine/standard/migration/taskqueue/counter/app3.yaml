@@ -1,0 +1,7 @@
+runtime: python38
+
+env_variables:
+    QUEUE: "YOUR_QUEUE_NAME"
+    LOCATION: "YOUR_PROJECT_LOCATION"
+    GOOGLE_CLOUD_PROJECT: "YOUR_PROJECT_ID"
+    

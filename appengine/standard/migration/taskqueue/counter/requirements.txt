@@ -1,0 +1,4 @@
+Flask==1.1.2
+google-cloud-datastore==1.15.3
+google-cloud-tasks==2.0.0 ; python_version >= "3.0"
+google-cloud-tasks==1.5.0 ; python_version < "3.0"

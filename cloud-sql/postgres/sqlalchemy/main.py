@@ -80,20 +80,17 @@ def init_tcp_connection_engine(db_config):
         # Equivalent URL:
         # postgres+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
         sqlalchemy.engine.url.URL(
-            drivername="postgres+pg8000",
+            drivername="postgresql+pg8000",
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
             host=db_hostname,  # e.g. "127.0.0.1"
             port=db_port,  # e.g. 5432
             database=db_name  # e.g. "my-database-name"
         ),
-        # ... Specify additional properties here.
-        # [END cloud_sql_postgres_sqlalchemy_create_tcp]
         **db_config
-        # [START cloud_sql_postgres_sqlalchemy_create_tcp]
     )
     # [END cloud_sql_postgres_sqlalchemy_create_tcp]
-
+    pool.dialect.description_encoding = None
     return pool
 
 
@@ -109,11 +106,12 @@ def init_unix_connection_engine(db_config):
     cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
 
     pool = sqlalchemy.create_engine(
+
         # Equivalent URL:
         # postgres+pg8000://<db_user>:<db_pass>@/<db_name>
         #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
         sqlalchemy.engine.url.URL(
-            drivername="postgres+pg8000",
+            drivername="postgresql+pg8000",
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
@@ -123,23 +121,24 @@ def init_unix_connection_engine(db_config):
                     cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
             }
         ),
-        # ... Specify additional properties here.
-        # [END cloud_sql_postgres_sqlalchemy_create_socket]
         **db_config
-        # [START cloud_sql_postgres_sqlalchemy_create_socket]
     )
     # [END cloud_sql_postgres_sqlalchemy_create_socket]
-
+    pool.dialect.description_encoding = None
     return pool
 
 
-# The SQLAlchemy engine will help manage interactions, including automatically
-# managing a pool of connections to your database
-db = init_connection_engine()
+# This global variable is declared with a value of `None`, instead of calling
+# `init_connection_engine()` immediately, to simplify testing. In general, it
+# is safe to initialize your database connection pool when your script starts
+# -- there is no need to wait for the first request.
+db = None
 
 
 @app.before_first_request
 def create_tables():
+    global db
+    db = init_connection_engine()
     # Create tables (if they don't already exist)
     with db.connect() as conn:
         conn.execute(
@@ -151,7 +150,13 @@ def create_tables():
 
 @app.route('/', methods=['GET'])
 def index():
+    context = get_index_context()
+    return render_template('index.html', **context)
+
+
+def get_index_context():
     votes = []
+
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
@@ -174,12 +179,11 @@ def index():
         space_result = conn.execute(stmt, candidate="SPACES").fetchone()
         space_count = space_result[0]
 
-    return render_template(
-        'index.html',
-        recent_votes=votes,
-        tab_count=tab_count,
-        space_count=space_count
-    )
+    return {
+        'space_count': space_count,
+        'recent_votes': votes,
+        'tab_count': tab_count,
+    }
 
 
 @app.route('/', methods=['POST'])
