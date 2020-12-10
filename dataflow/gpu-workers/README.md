@@ -97,7 +97,6 @@ python landsat_view.py \
     --worker_zone "$WORKER_ZONE" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
     --experiments "use_runner_v2"
-
 ```
 
 > ℹ️ The image uses CUDA version 10.1 with cuDNN version 7 since those are the
