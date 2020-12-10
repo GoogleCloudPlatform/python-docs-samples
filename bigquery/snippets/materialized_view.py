@@ -25,7 +25,7 @@ def create_materialized_view(override_values={}):
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     view_id = override_values.get("view_id", view_id)
-    base_table_id = override_values.get("base_table_id", view_id)
+    base_table_id = override_values.get("base_table_id", base_table_id)
     # [START bigquery_create_materialized_view]
     view = bigquery.Table(view_id)
     view.mview_query = f"""

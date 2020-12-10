@@ -23,23 +23,13 @@ import materialized_view
 
 
 def temp_suffix():
-    return str(uuid.uuid4()).replace("-", "_")
-
-
-@pytest.fixture(scope="module")
-def bigquery_client():
-    bigquery_client = bigquery.Client()
-    return bigquery_client
+    now = datetime.datetime.now()
+    return f"{now.strftime('%Y%m%d%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
 
 @pytest.fixture(autouse=True)
 def bigquery_client_patch(monkeypatch, bigquery_client):
     monkeypatch.setattr(bigquery, "Client", lambda: bigquery_client)
-
-
-@pytest.fixture(scope="module")
-def project_id(bigquery_client):
-    return bigquery_client.project
 
 
 @pytest.fixture(scope="module")
