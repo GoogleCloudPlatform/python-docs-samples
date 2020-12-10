@@ -12,24 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-import pytest
-
 from . import quickstart
 
 
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-
-
-@pytest.fixture
-def mock_project_id():
-    """Mock out project and replace with project from environment."""
-
-    return PROJECT
-
-
-def test_quickstart(capsys, mock_project_id):
-    quickstart.run_quickstart(mock_project_id)
+def test_quickstart(capsys, project_id):
+    quickstart.run_quickstart(override_values={"project_id": project_id})
     out, _ = capsys.readouterr()
     assert "Supported Data Sources:" in out
