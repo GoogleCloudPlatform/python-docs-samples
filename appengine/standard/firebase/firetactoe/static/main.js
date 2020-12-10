@@ -45,7 +45,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
     $('.cell').each(function(i) {
       var square = $(this);
       var value = state.board[i];
-      square.html(' ' === value ? '' : value);
+      square.html(value === ' ' ? '' : value);
 
       if (state.winner && state.winningBoard) {
         if (state.winningBoard[i] === value) {
