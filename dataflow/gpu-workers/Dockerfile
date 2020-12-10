@@ -41,15 +41,15 @@ RUN pip install -U pip \
 # The final image only contains the final builds.
 FROM ${base_image}
 
-# Tensorflow needs this to find some cuda libraries.
-RUN echo "/usr/local/cuda/compat" >> /etc/ld.so.conf.d/cuda-compat.conf \
-    && ldconfig
-
 # Copy the worker boot file from the beam image.
 # Make sure to copy the Python installation into the same directory where it was
 # built in the previous stage, since it expects it to live there.
 COPY --from=apache/beam_python3.7_sdk /opt/apache/beam/boot /opt/apache/beam/boot
 COPY --from=builder /opt/python /opt/python
+
+# Tensorflow needs this to find some cuda libraries.
+RUN echo "/usr/local/cuda/compat" >> /etc/ld.so.conf.d/cuda-compat.conf \
+    && ldconfig
 
 # Add the Python installation to the $PATH environment variable.
 ENV PATH=/opt/python/bin:${PATH}
