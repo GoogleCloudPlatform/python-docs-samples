@@ -15,10 +15,6 @@
 import datetime
 import uuid
 
-import google.api_core.exceptions
-import google.auth
-from google.cloud import bigquery
-from google.cloud import bigquery_datatransfer
 import pytest
 
 from . import copy_dataset
@@ -27,40 +23,6 @@ from . import copy_dataset
 def temp_suffix():
     now = datetime.datetime.now()
     return f"{now.strftime('%Y%m%d%H%M%S')}_{uuid.uuid4().hex[:8]}"
-
-
-@pytest.fixture(scope="session")
-def default_credentials():
-    return google.auth.default(["https://www.googleapis.com/auth/cloud-platform"])
-
-
-@pytest.fixture(scope="session")
-def project_id(default_credentials):
-    _, project_id = default_credentials
-    return project_id
-
-
-@pytest.fixture(scope="session")
-def bigquery_client(default_credentials):
-    credentials, project_id = default_credentials
-    return bigquery.Client(credentials=credentials, project=project_id)
-
-
-@pytest.fixture(scope="session")
-def transfer_client(default_credentials):
-    credentials, _ = default_credentials
-    return bigquery_datatransfer.DataTransferServiceClient(credentials=credentials)
-
-
-@pytest.fixture
-def to_delete_configs(transfer_client):
-    to_delete = []
-    yield to_delete
-    for config_name in to_delete:
-        try:
-            transfer_client.delete_transfer_config(name=config_name)
-        except google.api_core.exceptions.GoogleAPICallError:
-            pass
 
 
 @pytest.fixture(scope="module")
