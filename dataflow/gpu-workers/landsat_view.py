@@ -126,7 +126,7 @@ def preprocess_pixels(scene, values, min_value=0.0, max_value=1.0, gamma=1.0):
 
 def save_to_gcs(scene, image, output_path_prefix, format='JPEG'):
     filename = os.path.join(output_path_prefix, scene + '.' + format.lower())
-    with beam.io.gcp.gcsio.GcsIO().open(filename, 'w') as f:
+    with tf.io.gfile.GFile(filename, 'w') as f:
         image.save(f, format)
 
 
@@ -165,20 +165,19 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--scene',
-        dest='scenes',
-        action='append',
-        default=DEFAULT_SCENES,
-        help='One or more Landsat scene IDs to process, for example '
-        'LC08_L1TP_109078_20200411_20200422_01_T1. '
-        'They must be in the format: '
-        'https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes'
-    )
-    parser.add_argument(
         '--output-path-prefix',
         required=True,
         help='Path prefix for output image files. '
         'This can be a Google Cloud Storage path.'
+    )
+    parser.add_argument(
+        '--scene',
+        dest='scenes',
+        action='append',
+        help='One or more Landsat scene IDs to process, for example '
+        'LC08_L1TP_109078_20200411_20200422_01_T1. '
+        'They must be in the format: '
+        'https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes'
     )
     parser.add_argument(
         '--bands',
@@ -206,10 +205,11 @@ if __name__ == '__main__':
     )
     args, beam_args = parser.parse_known_args()
 
+    scenes = args.scenes or DEFAULT_SCENES
     vis_params = {
         'bands': args.bands,
         'min': args.min,
         'max': args.max,
         'gamma': args.gamma,
     }
-    run(args.scenes, args.output_path_prefix, vis_params, beam_args)
+    run(scenes, args.output_path_prefix, vis_params, beam_args)
