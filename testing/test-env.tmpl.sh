@@ -75,6 +75,8 @@ export VISION_CLASSIFICATION_DATASET_ID=
 export VISION_CLASSIFICATION_MODEL_ID=
 
 export OBJECT_DETECTION_DATASET_ID=
+# AutoML model takes 8-24 hours to create, having predefined 
+# and centralized models remove duplicate work across all languages.
 export OBJECT_DETECTION_MODEL_ID=
 
 # Transcoder API
