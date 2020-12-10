@@ -2,19 +2,19 @@
 #   https://ngc.nvidia.com/catalog/containers/nvidia:cuda/tags
 ARG base_image=nvcr.io/nvidia/cuda:10.1-cudnn7-runtime
 
+
+#===------------------------------------------------------------------------===#
 # We use a multi stage build to reduce the image size.
-# The first stage builds the Dataflow entry point and installs Python 3.
+# The first stage builds and installs Python 3 and the requirements.
 # Then, we create a clean image without all the temporary files.
 #   https://docs.docker.com/develop/develop-images/multistage-build/
 FROM ${base_image} as builder
 
 WORKDIR /root
 
-
 # Install any packages needed, there is no need to clear the cache since the
 # whole stage is discarded except for the files we explicitly copy.
 RUN apt-get update && apt-get install -y wget
-
 
 # The nvidia/cuda image doesn't have Python, so we install it with conda.
 #   ℹ️ This is not required if your base image already comes with the
@@ -27,7 +27,6 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
     && sh conda.sh -b -p /opt/conda \
     && conda update -y conda \
     && conda create -y --prefix /opt/python python=${PYTHON_VERSION}
-
 
 # Installing the requirements here makes the workers start faster since they
 # don't need to install the requirements at runtime.
@@ -48,6 +47,9 @@ FROM ${base_image}
 COPY --from=apache/beam_python3.7_sdk /opt/apache/beam/boot /opt/apache/beam/boot
 COPY --from=builder /opt/python /opt/python
 
+# Add the Python installation to the $PATH environment variable.
+ENV PATH=/opt/python/bin:${PATH}
+
 # Tensorflow needs this to find some cuda libraries.
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat
 
@@ -55,5 +57,4 @@ ENV LD_LIBRARY_PATH=/usr/local/cuda/compat
 ENV pip=/opt/python/bin/pip
 
 # Set the entrypoint to the worker boot file.
-ENV PATH=/opt/python/bin:${PATH}
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
