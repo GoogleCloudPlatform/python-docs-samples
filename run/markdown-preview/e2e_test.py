@@ -24,20 +24,6 @@ import uuid
 
 import pytest
 
-#Steps:
-
-# Cloud build  steps
-    # build renderer image - done
-    # push to container reg - done via builds
-    # deploy renderer to cloud run
-    # get renderer URL and save to workspace
-    # build editor image
-    # push container image
-    # deploy editor with renderer URL
-# get URL for editor and token
-# delete renderer image
-# delete editor image
-# delete relevant deployments
 
 SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
