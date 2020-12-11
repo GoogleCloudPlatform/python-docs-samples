@@ -1,4 +1,4 @@
-google-auth==1.6.2
+google-auth==1.24.0
 requests==2.21.0
 six==1.12.0
 
