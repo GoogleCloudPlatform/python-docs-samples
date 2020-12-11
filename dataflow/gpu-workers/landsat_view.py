@@ -61,7 +61,9 @@ SCENE_RE = re.compile(
 )
 
 
-def get_valid_band_paths(scene: str, bands: List[str]) -> List[str]:
+def get_valid_band_paths(
+    scene: str, bands: List[str]
+) -> List[Tuple[str, Tuple[str, str]]]:
     """Gets the Cloud Storage paths for each band in a Landsat scene."""
     try:
         return [get_band_path(scene, band) for band in bands]
