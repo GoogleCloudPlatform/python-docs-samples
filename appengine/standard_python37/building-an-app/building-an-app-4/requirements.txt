@@ -1,6 +1,6 @@
 Flask==1.0.2
 google-cloud-datastore==2.1.0
-google-auth==1.6.2
+google-auth==1.24.0
 requests==2.21.0
 
 urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
