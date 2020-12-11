@@ -1,2 +1,2 @@
-apache-beam[gcp]==2.25.0
+apache-beam[gcp]==2.26.0
 httplib2>=0.18.0 # not directly required, pinned by Snyk to avoid a vulnerability
