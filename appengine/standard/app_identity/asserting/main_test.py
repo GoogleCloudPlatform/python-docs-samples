@@ -28,5 +28,7 @@ def test_app(testbed):
         fetch_mock.return_value = result_mock
 
         response = app.get('/')
-        assert response.status_int == 200
-        assert fetch_mock.called
+        if response.status_int != 200:
+            raise AssertionError
+        if not fetch_mock.called:
+            raise AssertionError

@@ -30,7 +30,8 @@ def test_create_queue():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_2)
     result = snippets.create_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1, QUEUE_NAME_2)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order2
@@ -39,7 +40,8 @@ def test_update_queue():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.update_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order3
@@ -48,7 +50,8 @@ def test_create_task():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.create_task(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order4
@@ -57,7 +60,8 @@ def test_create_task_with_data():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.create_tasks_with_data(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order5
@@ -66,14 +70,16 @@ def test_create_task_with_name():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.create_task_with_name(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1, 'foo')
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order6
 def test_delete_task():
     result = snippets.delete_task(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert result is None
+    if result is not None:
+        raise AssertionError
 
 
 @pytest.mark.order7
@@ -82,7 +88,8 @@ def test_purge_queue():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.purge_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order8
@@ -91,18 +98,21 @@ def test_pause_queue():
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     result = snippets.pause_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
 
 @pytest.mark.order9
 def test_delete_queue():
     result = snippets.delete_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    assert result is None
+    if result is not None:
+        raise AssertionError
 
     result = snippets.delete_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_2)
-    assert result is None
+    if result is not None:
+        raise AssertionError
 
 
 @pytest.mark.order10
@@ -117,7 +127,8 @@ def test_retry_task():
     result = snippets.retry_task(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME[0], QUEUE_NAME[1],
         QUEUE_NAME[2])
-    assert name in result.name
+    if name not in result.name:
+        raise AssertionError
 
     for i in range(QUEUE_SIZE):
         snippets.delete_queue(

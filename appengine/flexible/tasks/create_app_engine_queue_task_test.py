@@ -24,4 +24,5 @@ TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-appengine-queue')
 def test_create_task():
     result = create_app_engine_queue_task.create_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
-    assert TEST_QUEUE_NAME in result.name
+    if TEST_QUEUE_NAME not in result.name:
+        raise AssertionError

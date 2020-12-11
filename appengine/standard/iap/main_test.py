@@ -20,16 +20,20 @@ def test_index(testbed, login):
     app = webtest.TestApp(main.app)
 
     response = app.get('/')
-    assert 'Login' in response.body
+    if 'Login' not in response.body:
+        raise AssertionError
 
     login()
     response = app.get('/')
-    assert 'Logout' in response.body
-    assert 'user@example.com' in response.body
+    if 'Logout' not in response.body:
+        raise AssertionError
+    if 'user@example.com' not in response.body:
+        raise AssertionError
 
 
 def test_status(testbed):
     app = webtest.TestApp(main.app)
 
     response = app.get('/status')
-    assert 'Success' in response.body
+    if 'Success' not in response.body:
+        raise AssertionError

@@ -24,8 +24,10 @@ def app():
 
 def test_form(app):
     r = app.get('/form')
-    assert r.status_code == 200
-    assert 'Submit a form' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Submit a form' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 def test_submitted_form(app):
@@ -34,5 +36,7 @@ def test_submitted_form(app):
         'email': 'inigo@example.com',
         'site_url': 'http://example.com',
         'comments': ''})
-    assert r.status_code == 200
-    assert 'Inigo Montoya' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Inigo Montoya' not in r.data.decode('utf-8'):
+        raise AssertionError

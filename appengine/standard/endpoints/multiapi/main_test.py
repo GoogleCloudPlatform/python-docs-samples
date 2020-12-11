@@ -18,10 +18,12 @@ import main
 def test_shelves(testbed):
     api = main.Shelves()
     response = api.list(main.Request())
-    assert response
+    if not response:
+        raise AssertionError
 
 
 def test_books(testbed):
     api = main.Books()
     response = api.get_bookmark(main.Request())
-    assert response
+    if not response:
+        raise AssertionError

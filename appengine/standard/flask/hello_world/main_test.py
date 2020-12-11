@@ -24,4 +24,5 @@ def app():
 
 def test_index(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError

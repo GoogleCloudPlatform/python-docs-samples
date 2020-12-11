@@ -34,7 +34,8 @@ def test_get(app):
     response = app.get('/')
 
     # Let's check if the response is correct.
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
 
 def test_post(app):
@@ -45,7 +46,8 @@ def test_post(app):
         mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
         # Correct response is a redirect
-        assert response.status_int == 302
+        if response.status_int != 302:
+            raise AssertionError
 
 
 def test_img(app):
@@ -60,7 +62,8 @@ def test_img(app):
 
     response = app.get('/img?img_id=%s' % greeting.key.urlsafe())
 
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
 
 def test_img_missing(app):
@@ -75,4 +78,5 @@ def test_post_and_get(app):
         app.post('/sign', {'content': 'asdf'})
         response = app.get('/')
 
-        assert response.status_int == 200
+        if response.status_int != 200:
+            raise AssertionError

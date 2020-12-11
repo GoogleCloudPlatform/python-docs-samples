@@ -24,7 +24,8 @@ def test_echo():
     api = main.EchoApi()
     request = main.EchoApi.echo.remote.request_type(message='Hello world!')
     response = api.echo(request)
-    assert 'Hello world!' == response.message
+    if 'Hello world!' != response.message:
+        raise AssertionError
 
 
 def test_get_user_email():
@@ -38,4 +39,5 @@ def test_get_user_email():
         user_mock.return_value = mock.Mock()
         user_mock.return_value.email.return_value = 'user@example.com'
         response = api.get_user_email(message_types.VoidMessage())
-        assert 'user@example.com' == response.message
+        if 'user@example.com' != response.message:
+            raise AssertionError

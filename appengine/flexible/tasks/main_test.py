@@ -24,22 +24,27 @@ def app():
 
 def test_index(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_log_payload(capsys, app):
     payload = 'test_payload'
 
     r = app.post('/example_task_handler', data=payload)
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     out, _ = capsys.readouterr()
-    assert payload in out
+    if payload not in out:
+        raise AssertionError
 
 
 def test_empty_payload(capsys, app):
     r = app.post('/example_task_handler')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     out, _ = capsys.readouterr()
-    assert 'empty payload' in out
+    if 'empty payload' not in out:
+        raise AssertionError

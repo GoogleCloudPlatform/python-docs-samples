@@ -33,9 +33,13 @@ def test_index():
     client = main.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '1' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '1' not in r.data.decode('utf-8'):
+        raise AssertionError
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '2' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '2' not in r.data.decode('utf-8'):
+        raise AssertionError

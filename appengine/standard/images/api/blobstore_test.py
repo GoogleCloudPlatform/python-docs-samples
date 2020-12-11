@@ -33,7 +33,8 @@ def test_img(app):
 
             response = app.get('/img?blob_key=123')
 
-            assert response.status_int == 200
+            if response.status_int != 200:
+                raise AssertionError
 
 
 def test_img_missing(app):
@@ -54,7 +55,8 @@ def test_url_redirect(app):
 
             response = app.get('/redirect?blob_key=123')
 
-            assert response.status_int == 302
+            if response.status_int != 302:
+                raise AssertionError
 
 
 def test_url_redirect_missing(app):

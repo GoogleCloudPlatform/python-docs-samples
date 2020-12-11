@@ -31,7 +31,8 @@ def app(monkeypatch):
 
 def test_receive_call(app):
     r = app.post('/call/receive')
-    assert 'Hello from Twilio!' in r.data.decode('utf-8')
+    if 'Hello from Twilio!' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 @responses.activate
@@ -64,14 +65,18 @@ def test_send_sms(app, monkeypatch):
                   json=sample_response, status=200)
 
     r = app.get('/sms/send')
-    assert r.status_code == 400
+    if r.status_code != 400:
+        raise AssertionError
 
     r = app.get('/sms/send?to=5558675309')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_receive_sms(app):
     r = app.post('/sms/receive', data={
         'From': '5558675309', 'Body': 'Jenny, I got your number.'})
-    assert r.status_code == 200
-    assert 'Jenny, I got your number' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Jenny, I got your number' not in r.data.decode('utf-8'):
+        raise AssertionError

@@ -37,7 +37,8 @@ def test_img(app):
 
         response = app.get('/img?id=%s' % photo.key.id())
 
-        assert response.status_int == 200
+        if response.status_int != 200:
+            raise AssertionError
 
 
 def test_img_missing(app):

@@ -38,10 +38,15 @@ def test_tracking(app):
 
     r = app.get('/')
 
-    assert r.status_code == 200
-    assert 'Event tracked' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Event tracked' not in r.data.decode('utf-8'):
+        raise AssertionError
 
-    assert len(responses.calls) == 1
+    if len(responses.calls) != 1:
+        raise AssertionError
     request_body = responses.calls[0].request.body
-    assert 'tid=1234' in request_body
-    assert 'ea=test+action' in request_body
+    if 'tid=1234' not in request_body:
+        raise AssertionError
+    if 'ea=test+action' not in request_body:
+        raise AssertionError

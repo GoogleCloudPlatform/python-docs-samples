@@ -53,7 +53,8 @@ def server():
 
 def test_http(server):
     result = requests.get('http://{}/'.format(server))
-    assert 'Python Websockets Chat' in result.text
+    if 'Python Websockets Chat' not in result.text:
+        raise AssertionError
 
 
 def test_websocket(server):
@@ -67,5 +68,7 @@ def test_websocket(server):
     message = 'Hello, World'
     ws_one.send(message)
 
-    assert ws_one.recv() == message
-    assert ws_two.recv() == message
+    if ws_one.recv() != message:
+        raise AssertionError
+    if ws_two.recv() != message:
+        raise AssertionError

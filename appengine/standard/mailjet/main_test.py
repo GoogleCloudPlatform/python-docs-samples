@@ -32,7 +32,8 @@ def app(monkeypatch):
 
 def test_index(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 @responses.activate
@@ -45,9 +46,13 @@ def test_send_email(app):
 
     r = app.post('/send/email', data={'to': 'user@example.com'})
 
-    assert r.status_code == 200
-    assert 'test' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'test' not in r.data.decode('utf-8'):
+        raise AssertionError
 
-    assert len(responses.calls) == 1
+    if len(responses.calls) != 1:
+        raise AssertionError
     request_body = responses.calls[0].request.body
-    assert 'user@example.com' in request_body
+    if 'user@example.com' not in request_body:
+        raise AssertionError

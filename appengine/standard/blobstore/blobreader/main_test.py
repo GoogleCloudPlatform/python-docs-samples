@@ -22,4 +22,5 @@ def test_blobreader(testbed, login):
 
     response = app.get('/blobreader')
 
-    assert 'abcde\nabc\nabcde\n' in response
+    if 'abcde\nabc\nabcde\n' not in response:
+        raise AssertionError

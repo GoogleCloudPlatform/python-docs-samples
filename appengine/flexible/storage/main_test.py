@@ -27,7 +27,8 @@ def client():
 
 def test_index(client):
     r = client.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_upload(client):
@@ -41,10 +42,12 @@ def test_upload(client):
         }
     )
 
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     # The app should return the public cloud storage URL for the uploaded
     # file. Download and verify it.
     cloud_storage_url = r.data.decode('utf-8')
     r = requests.get(cloud_storage_url)
-    assert r.text.encode('utf-8') == file_content
+    if r.text.encode('utf-8') != file_content:
+        raise AssertionError

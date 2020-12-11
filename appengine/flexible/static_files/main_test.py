@@ -20,7 +20,9 @@ def test_index():
     client = main.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     r = client.get('/static/main.css')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError

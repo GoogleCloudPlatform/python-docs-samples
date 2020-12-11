@@ -57,18 +57,22 @@ def test_list_notes_with_mock_token(testbed, app, mock_token, test_data):
     mock_token.return_value = {'sub': '123'}
 
     r = app.get('/notes', headers={'Authorization': 'Bearer 123'})
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     data = json.loads(r.data)
-    assert len(data) == 2
-    assert data[0]['message'] == '2'
+    if len(data) != 2:
+        raise AssertionError
+    if data[0]['message'] != '2':
+        raise AssertionError
 
 
 def test_list_notes_with_bad_mock_token(testbed, app, mock_token):
     mock_token.return_value = None
 
     r = app.get('/notes', headers={'Authorization': 'Bearer 123'})
-    assert r.status_code == 401
+    if r.status_code != 401:
+        raise AssertionError
 
 
 def test_add_note_with_mock_token(testbed, app, mock_token):
@@ -80,17 +84,21 @@ def test_add_note_with_mock_token(testbed, app, mock_token):
         content_type='application/json',
         headers={'Authorization': 'Bearer 123'})
 
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     from main import Note
 
     results = Note.query().fetch()
-    assert len(results) == 1
-    assert results[0].message == 'Hello, world!'
+    if len(results) != 1:
+        raise AssertionError
+    if results[0].message != 'Hello, world!':
+        raise AssertionError
 
 
 def test_add_note_with_bad_mock_token(testbed, app, mock_token):
     mock_token.return_value = None
 
     r = app.post('/notes', headers={'Authorization': 'Bearer 123'})
-    assert r.status_code == 401
+    if r.status_code != 401:
+        raise AssertionError

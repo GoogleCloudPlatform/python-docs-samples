@@ -32,7 +32,8 @@ def app(monkeypatch):
 
 def test_index(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 @responses.activate
@@ -59,8 +60,10 @@ def test_send_simple(app):
     response = app.post('/send/email', data={
         'recipient': 'user@example.com',
         'submit': 'Send simple email'})
-    assert response.status_code == 200
-    assert len(responses.calls) == 1
+    if response.status_code != 200:
+        raise AssertionError
+    if len(responses.calls) != 1:
+        raise AssertionError
 
 
 @responses.activate
@@ -76,5 +79,7 @@ def test_send_complex(app, monkeypatch):
     response = app.post('/send/email', data={
         'recipient': 'user@example.com',
         'submit': 'Send complex email'})
-    assert response.status_code == 200
-    assert len(responses.calls) == 1
+    if response.status_code != 200:
+        raise AssertionError
+    if len(responses.calls) != 1:
+        raise AssertionError

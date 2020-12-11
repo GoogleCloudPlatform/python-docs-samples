@@ -63,16 +63,21 @@ def test_index_new_game(app, monkeypatch):
 
     response = app.get('/')
 
-    assert 'g=' in response.body
+    if 'g=' not in response.body:
+        raise AssertionError
     # Look for the unique game token
-    assert re.search(
-        r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body)
+    if not re.search(
+        r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body):
+        raise AssertionError
 
-    assert firetactoe.Game.query().count() == 1
+    if firetactoe.Game.query().count() != 1:
+        raise AssertionError
 
-    assert mock_http.request_url.startswith(
-        'http://firebase.com/test-db-url/channels/')
-    assert mock_http.request_method == 'PATCH'
+    if not mock_http.request_url.startswith(
+        'http://firebase.com/test-db-url/channels/'):
+        raise AssertionError
+    if mock_http.request_method != 'PATCH':
+        raise AssertionError
 
 
 def test_index_existing_game(app, monkeypatch):
@@ -83,19 +88,26 @@ def test_index_existing_game(app, monkeypatch):
 
     response = app.get('/?g=razem')
 
-    assert 'g=' in response.body
+    if 'g=' not in response.body:
+        raise AssertionError
     # Look for the unique game token
-    assert re.search(
-        r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body)
+    if not re.search(
+        r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body):
+        raise AssertionError
 
-    assert firetactoe.Game.query().count() == 1
+    if firetactoe.Game.query().count() != 1:
+        raise AssertionError
     game = ndb.Key('Game', 'razem').get()
-    assert game is not None
-    assert game.userO.user_id() == '38'
+    if game is None:
+        raise AssertionError
+    if game.userO.user_id() != '38':
+        raise AssertionError
 
-    assert mock_http.request_url.startswith(
-        'http://firebase.com/test-db-url/channels/')
-    assert mock_http.request_method == 'PATCH'
+    if not mock_http.request_url.startswith(
+        'http://firebase.com/test-db-url/channels/'):
+        raise AssertionError
+    if mock_http.request_method != 'PATCH':
+        raise AssertionError
 
 
 def test_index_nonexisting_game(app, monkeypatch):
@@ -105,7 +117,8 @@ def test_index_nonexisting_game(app, monkeypatch):
 
     app.get('/?g=razemfrazem', status=404)
 
-    assert mock_http.request_url is None
+    if mock_http.request_url is not None:
+        raise AssertionError
 
 
 def test_opened(app, monkeypatch):
@@ -115,9 +128,11 @@ def test_opened(app, monkeypatch):
 
     app.post('/opened?g=razem', status=200)
 
-    assert mock_http.request_url.startswith(
-        'http://firebase.com/test-db-url/channels/')
-    assert mock_http.request_method == 'PATCH'
+    if not mock_http.request_url.startswith(
+        'http://firebase.com/test-db-url/channels/'):
+        raise AssertionError
+    if mock_http.request_method != 'PATCH':
+        raise AssertionError
 
 
 def test_bad_move(app, monkeypatch):
@@ -129,7 +144,8 @@ def test_bad_move(app, monkeypatch):
 
     app.post('/move?g=razem', {'i': 10}, status=400)
 
-    assert mock_http.request_url is None
+    if mock_http.request_url is not None:
+        raise AssertionError
 
 
 def test_move(app, monkeypatch):
@@ -142,11 +158,14 @@ def test_move(app, monkeypatch):
     app.post('/move?g=razem', {'i': 0}, status=200)
 
     game = ndb.Key('Game', 'razem').get()
-    assert game.board == 'X' + (8 * ' ')
+    if game.board != 'X' + (8 * ' '):
+        raise AssertionError
 
-    assert mock_http.request_url.startswith(
-        'http://firebase.com/test-db-url/channels/')
-    assert mock_http.request_method == 'PATCH'
+    if not mock_http.request_url.startswith(
+        'http://firebase.com/test-db-url/channels/'):
+        raise AssertionError
+    if mock_http.request_method != 'PATCH':
+        raise AssertionError
 
 
 def test_delete(app, monkeypatch):
@@ -156,6 +175,8 @@ def test_delete(app, monkeypatch):
 
     app.post('/delete?g=razem', status=200)
 
-    assert mock_http.request_url.startswith(
-        'http://firebase.com/test-db-url/channels/')
-    assert mock_http.request_method == 'DELETE'
+    if not mock_http.request_url.startswith(
+        'http://firebase.com/test-db-url/channels/'):
+        raise AssertionError
+    if mock_http.request_method != 'DELETE':
+        raise AssertionError

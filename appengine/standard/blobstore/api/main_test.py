@@ -23,4 +23,5 @@ def test_app(testbed, login):
     login()
     response = app.get('/')
 
-    assert '/_ah/upload' in response
+    if '/_ah/upload' not in response:
+        raise AssertionError
