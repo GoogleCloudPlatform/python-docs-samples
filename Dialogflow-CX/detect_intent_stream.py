@@ -25,6 +25,7 @@ Examples:
 import argparse
 import uuid
 
+from google.cloud.dialogflowcx_v3beta1.services.agents import AgentsClient
 from google.cloud.dialogflowcx_v3beta1.services.sessions import SessionsClient
 from google.cloud.dialogflowcx_v3beta1.types import audio_config
 from google.cloud.dialogflowcx_v3beta1.types import session
@@ -34,6 +35,7 @@ from google.cloud.dialogflowcx_v3beta1.types import session
 def run_sample():
     # TODO(developer): Replace these values when running the function
     project_id = "YOUR-PROJECT-ID"
+    # For more information about regionalization see https://cloud.google.com/dialogflow/cx/docs/how/region
     location_id = "YOUR-LOCATION-ID"
     # For more info on agents see https://cloud.google.com/dialogflow/cx/docs/concept/agent
     agent_id = "YOUR-AGENT-ID"
@@ -52,9 +54,16 @@ def detect_intent_stream(agent, session_id, audio_file_path, language_code):
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    session_client = SessionsClient()
     session_path = f"{agent}/sessions/{session_id}"
     print(f"Session path: {session_path}\n")
+    client_options = None
+    agent_components = AgentsClient.parse_agent_path(agent)
+    location_id = agent_components["location"]
+    if location_id != "global":
+        api_endpoint = f"{location_id}-dialogflow.googleapis.com:443"
+        print(f"API Endpoint: {api_endpoint}\n")
+        client_options = {"api_endpoint": api_endpoint}
+    session_client = SessionsClient(client_options=client_options)
 
     input_audio_config = audio_config.InputAudioConfig(
         audio_encoding=audio_config.AudioEncoding.AUDIO_ENCODING_LINEAR_16,

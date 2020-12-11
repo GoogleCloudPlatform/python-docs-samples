@@ -26,10 +26,21 @@ AGENT_ID = os.getenv("AGENT_ID")
 AGENT = f"projects/{PROJECT_ID}/locations/global/agents/{AGENT_ID}"
 SESSION_ID = uuid.uuid4()
 TEXTS = ["hello", "book a flight"]
+AGENT_ID_US_CENTRAL1 = os.getenv("AGENT_ID_US_CENTRAL1")
+AGENT_US_CENTRAL1 = (
+    f"projects/{PROJECT_ID}/locations/us-central1/agents/{AGENT_ID_US_CENTRAL1}"
+)
 
 
 def test_detect_intent_texts(capsys):
     detect_intent_texts(AGENT, SESSION_ID, TEXTS, "en-US")
+    out, _ = capsys.readouterr()
+
+    assert "Response text: I can help you find a ticket" in out
+
+
+def test_detect_intent_texts_regional(capsys):
+    detect_intent_texts(AGENT_US_CENTRAL1, SESSION_ID, TEXTS, "en-US")
     out, _ = capsys.readouterr()
 
     assert "Response text: I can help you find a ticket" in out
