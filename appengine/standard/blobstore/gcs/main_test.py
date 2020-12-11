@@ -22,7 +22,8 @@ def test_create_and_read(testbed, login):
 
     response = app.get('/blobstore/read')
 
-    assert 'abcde' in response
+    if 'abcde' not in response:
+        raise AssertionError
 
 
 def test_create_and_serve(testbed, login):
@@ -31,4 +32,5 @@ def test_create_and_serve(testbed, login):
     response = app.get('/blobstore/serve')
     served_file_header = response.headers['X-AppEngine-BlobKey']
 
-    assert 'encoded_gs_file' in served_file_header
+    if 'encoded_gs_file' not in served_file_header:
+        raise AssertionError

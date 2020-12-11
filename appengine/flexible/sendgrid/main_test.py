@@ -29,7 +29,8 @@ def app(monkeypatch):
 
 def test_get(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 @mock.patch('python_http_client.client.Client._make_request')
@@ -44,6 +45,8 @@ def test_post(make_request_mock, app):
         'to': 'user@example.com'
     })
 
-    assert make_request_mock.called
+    if not make_request_mock.called:
+        raise AssertionError
     request = make_request_mock.call_args[0][1]
-    assert 'user@example.com' in request.data.decode('utf-8')
+    if 'user@example.com' not in request.data.decode('utf-8'):
+        raise AssertionError

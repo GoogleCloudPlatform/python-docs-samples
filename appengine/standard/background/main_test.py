@@ -33,25 +33,33 @@ def app(testbed):
 def test_background(thread, app):
     app.get('/dog')
     response = app.get('/')
-    assert response.status_int == 200
-    assert response.body == 'Dog'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Dog':
+        raise AssertionError
     app.get('/cat')
     # no stub for system so manually set
     main.val = 'Cat'
     response = app.get('/')
-    assert response.status_int == 200
-    assert response.body == 'Cat'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Cat':
+        raise AssertionError
 
 
 @patch("main.background_thread")
 def test_background_auto_start(thread, app):
     app.get('/dog')
     response = app.get('/')
-    assert response.status_int == 200
-    assert response.body == 'Dog'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Dog':
+        raise AssertionError
     app.get('/cat?auto=True')
     # no stub for system so manually set
     main.val = 'Cat'
     response = app.get('/')
-    assert response.status_int == 200
-    assert response.body == 'Cat'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Cat':
+        raise AssertionError

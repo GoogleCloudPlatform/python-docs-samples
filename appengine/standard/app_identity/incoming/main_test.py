@@ -25,4 +25,5 @@ def test_app(testbed):
     response = app.get('/', headers={
         'X-Appengine-Inbound-Appid': 'other-app-id'
     })
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError

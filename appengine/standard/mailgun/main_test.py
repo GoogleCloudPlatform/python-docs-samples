@@ -33,7 +33,8 @@ def app():
 
 def test_get(app):
     response = app.get('/')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
 
 def test_post(app):
@@ -46,7 +47,8 @@ def test_post(app):
             'recipient': 'jonwayne@google.com',
             'submit': 'Send simple email'})
 
-        assert response.status_int == 200
+        if response.status_int != 200:
+            raise AssertionError
 
     http = HttpMockSequenceWithCredentials([
         ({'status': '200'}, '')])
@@ -56,7 +58,8 @@ def test_post(app):
             'recipient': 'jonwayne@google.com',
             'submit': 'Send complex email'})
 
-        assert response.status_int == 200
+        if response.status_int != 200:
+            raise AssertionError
 
     http = HttpMockSequenceWithCredentials([
         ({'status': '500'}, 'Test error')])

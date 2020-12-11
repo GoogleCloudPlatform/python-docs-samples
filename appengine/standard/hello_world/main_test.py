@@ -22,5 +22,7 @@ def test_get():
 
     response = app.get('/')
 
-    assert response.status_int == 200
-    assert response.body == 'Hello, World!'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Hello, World!':
+        raise AssertionError

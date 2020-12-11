@@ -21,14 +21,16 @@ import main
 def test_list_greetings(testbed):
     api = main.GreetingApi()
     response = api.list_greetings(message_types.VoidMessage())
-    assert len(response.items) == 2
+    if len(response.items) != 2:
+        raise AssertionError
 
 
 def test_get_greeting(testbed):
     api = main.GreetingApi()
     request = main.GreetingApi.get_greeting.remote.request_type(id=1)
     response = api.get_greeting(request)
-    assert response.message == 'goodbye world!'
+    if response.message != 'goodbye world!':
+        raise AssertionError
 
 
 def test_multiply_greeting(testbed):
@@ -37,7 +39,8 @@ def test_multiply_greeting(testbed):
         times=4,
         message='help I\'m trapped in a test case.')
     response = api.multiply_greeting(request)
-    assert response.message == 'help I\'m trapped in a test case.' * 4
+    if response.message != 'help I\'m trapped in a test case.' * 4:
+        raise AssertionError
 
 
 def test_authed_greet(testbed):
@@ -46,9 +49,11 @@ def test_authed_greet(testbed):
     with mock.patch('main.endpoints.get_current_user') as user_mock:
         user_mock.return_value = None
         response = api.greet(message_types.VoidMessage())
-        assert response.message == 'Hello, Anonymous'
+        if response.message != 'Hello, Anonymous':
+            raise AssertionError
 
         user_mock.return_value = mock.Mock()
         user_mock.return_value.email.return_value = 'user@example.com'
         response = api.greet(message_types.VoidMessage())
-        assert response.message == 'Hello, user@example.com'
+        if response.message != 'Hello, user@example.com':
+            raise AssertionError

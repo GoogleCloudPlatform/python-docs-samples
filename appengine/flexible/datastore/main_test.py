@@ -20,5 +20,7 @@ def test_index():
     client = main.app.test_client()
 
     r = client.get('/', environ_base={'REMOTE_ADDR': '127.0.0.1'})
-    assert r.status_code == 200
-    assert '127.0' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '127.0' not in r.data.decode('utf-8'):
+        raise AssertionError

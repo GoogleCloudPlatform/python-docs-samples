@@ -34,7 +34,9 @@ def test_app(main):
     app = webtest.TestApp(main.app)
     response = app.get('/')
 
-    assert response.status_int == 200
-    assert re.search(
+    if response.status_int != 200:
+        raise AssertionError
+    if not re.search(
         re.compile(r'.*version.*', re.DOTALL),
-        response.body)
+        response.body):
+        raise AssertionError

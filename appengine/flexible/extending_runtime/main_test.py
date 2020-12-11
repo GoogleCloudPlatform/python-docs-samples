@@ -27,5 +27,7 @@ def test_index():
     client = main.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert len(r.data)
+    if r.status_code != 200:
+        raise AssertionError
+    if not len(r.data):
+        raise AssertionError

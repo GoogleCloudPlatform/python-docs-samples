@@ -23,5 +23,7 @@ def test_send_mail(testbed):
     app = webtest.TestApp(attachment.app)
     response = app.post('/attachment', upload_files=[
         ('file', 'hello.txt', 'Good day!')])
-    assert response.status_int == 200
-    assert 'Sent hello.txt to Albert.' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Sent hello.txt to Albert.' not in response.body:
+        raise AssertionError

@@ -20,5 +20,7 @@ import main
 def test_app(testbed):
     app = webtest.TestApp(main.app)
     response = app.get('/')
-    assert response.status_int == 200
-    assert 'Logging example' in response.text
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Logging example' not in response.text:
+        raise AssertionError

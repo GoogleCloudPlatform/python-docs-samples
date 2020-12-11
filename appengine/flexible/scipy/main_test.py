@@ -31,5 +31,7 @@ def test_index():
         pass  # if doesn't exist
     r = client.get('/')
 
-    assert os.path.isfile(fixtured_path)
-    assert r.status_code == 200
+    if not os.path.isfile(fixtured_path):
+        raise AssertionError
+    if r.status_code != 200:
+        raise AssertionError
