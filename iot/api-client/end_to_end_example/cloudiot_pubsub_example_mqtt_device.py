@@ -109,11 +109,13 @@ class Device(object):
         print('Disconnected:', error_str(rc))
         self.connected = False
 
-    def on_publish(self, unused_client, unused_userdata, unused_mid):
+    @staticmethod
+    def on_publish(unused_client, unused_userdata, unused_mid):
         """Callback when the device receives a PUBACK from the MQTT bridge."""
         print('Published message acked.')
 
-    def on_subscribe(self, unused_client, unused_userdata, unused_mid,
+    @staticmethod
+    def on_subscribe(unused_client, unused_userdata, unused_mid,
                      granted_qos):
         """Callback when the device receives a SUBACK from the MQTT bridge."""
         print('Subscribed: ', granted_qos)

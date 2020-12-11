@@ -53,7 +53,8 @@ class GreetingApi(remote.Service):
         path='greetings',
         http_method='GET',
         name='greetings.list')
-    def list_greetings(self, unused_request):
+    @staticmethod
+    def list_greetings(unused_request):
         return STORED_GREETINGS
 
     # ResourceContainers are used to encapsuate a request body and url
@@ -76,7 +77,8 @@ class GreetingApi(remote.Service):
         path='greetings/{id}',
         http_method='GET',
         name='greetings.get')
-    def get_greeting(self, request):
+    @staticmethod
+    def get_greeting(request):
         try:
             # request.id is used to access the URL parameter.
             return STORED_GREETINGS.items[request.id]
@@ -103,7 +105,8 @@ class GreetingApi(remote.Service):
         path='greetings/multiply/{times}',
         http_method='POST',
         name='greetings.multiply')
-    def multiply_greeting(self, request):
+    @staticmethod
+    def multiply_greeting(request):
         return Greeting(message=request.message * request.times)
     # [END multiply]
 
@@ -137,7 +140,8 @@ class AuthedGreetingApi(remote.Service):
         path='greet',
         http_method='POST',
         name='greet')
-    def greet(self, request):
+    @staticmethod
+    def greet(request):
         user = endpoints.get_current_user()
         user_name = user.email() if user else 'Anonymous'
         return Greeting(message='Hello, {}'.format(user_name))

@@ -34,25 +34,30 @@ class Request(object):
 
 
 class TestGCFPySlackSample(object):
-    def test_verify_web_hook_request_form_empty(self):
+    @staticmethod
+    def test_verify_web_hook_request_form_empty():
         with pytest.raises(ValueError):
             main.verify_web_hook({})
 
-    def test_verify_web_hook_token_incorrect(self):
+    @staticmethod
+    def test_verify_web_hook_token_incorrect():
         with pytest.raises(ValueError):
             main.verify_web_hook({'token': 123})
 
-    def test_verify_web_hook_valid_request(self):
+    @staticmethod
+    def test_verify_web_hook_valid_request():
         main.verify_web_hook({'token': config['SLACK_TOKEN']})
 
-    def test_format_slack_message(self):
+    @staticmethod
+    def test_format_slack_message():
         message = main.format_slack_message('lion', example_response)
 
         assert 'lion' in message['text'].lower()
         assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
-    def test_make_search_request(self):
+    @staticmethod
+    def test_make_search_request():
         with mock.patch.object(main, 'kgsearch'):
             entities = main.kgsearch.entities.return_value
             search = entities.search.return_value
@@ -63,7 +68,8 @@ class TestGCFPySlackSample(object):
         assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
-    def test_kg_search(self):
+    @staticmethod
+    def test_kg_search():
         with mock.patch.object(main, 'kgsearch'):
             entities = main.kgsearch.entities.return_value
             search = entities.search.return_value

@@ -24,7 +24,8 @@ class TestGCFPyOCRSample():
     @mock.patch.object(main, 'publisher')
     @mock.patch.object(main, 'translate_client')
     @mock.patch.object(main, 'vision_client')
-    def test_detect_text(self, mock_vision_client, mock_translate_client,
+    @staticmethod
+    def test_detect_text(mock_vision_client, mock_translate_client,
                          mock_publisher):
         mock_annotation = mock.MagicMock()
         mock_annotation.description = 'sample text'
@@ -41,7 +42,8 @@ class TestGCFPyOCRSample():
         main.detect_text('sample-bucket', 'sample-file')
 
     @mock.patch.object(main, 'detect_text')
-    def test_process_image(self, m):
+    @staticmethod
+    def test_process_image(m):
         m.return_value = None
         event = {
             'bucket': 'sample-bucket',
@@ -52,7 +54,8 @@ class TestGCFPyOCRSample():
 
     @mock.patch.object(main, 'publisher')
     @mock.patch.object(main, 'translate_client')
-    def test_translate_text(self, mock_translate_client, mock_publisher):
+    @staticmethod
+    def test_translate_text(mock_translate_client, mock_publisher):
         mock_translate_client.translate.return_value = {'translatedText': ''}
 
         mock_future = concurrent.futures.Future()
@@ -72,7 +75,8 @@ class TestGCFPyOCRSample():
         main.translate_text(event, context)
 
     @mock.patch.object(main, 'storage_client')
-    def test_save_result(self, m):
+    @staticmethod
+    def test_save_result(m):
         bucket = m.bucket.return_value
         file = bucket.file.return_value
         file.save.return_value = None

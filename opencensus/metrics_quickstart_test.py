@@ -29,13 +29,15 @@ class TestMetricsQuickstart(unittest.TestCase):
     in order for the demo to run. See the opencensus and
     opencensus-ext-stackdriver source for actual library tests.
     """
-    def test_measure_creation(self):
+    @staticmethod
+    def test_measure_creation():
         measure.MeasureFloat(
             "task_latency",
             "The task latency in milliseconds",
             "ms")
 
-    def test_view_creation(self):
+    @staticmethod
+    def test_view_creation():
         test_view = view.View(
             "task_latency_distribution",
             "The distribution of the task latencies",

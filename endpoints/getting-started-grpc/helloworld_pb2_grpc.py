@@ -30,14 +30,16 @@ class GreeterServicer(object):
   """The greeting service definition.
   """
 
-  def SayHello(self, request, context):
+  @staticmethod
+  def SayHello(request, context):
     """Sends a greeting
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def SayHelloAgain(self, request, context):
+  @staticmethod
+  def SayHelloAgain(request, context):
     """Sends another greeting
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)

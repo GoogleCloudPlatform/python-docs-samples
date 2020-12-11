@@ -18,14 +18,17 @@ from google.appengine.ext import ndb
 
 
 class LongIntegerProperty(ndb.StringProperty):
-    def _validate(self, value):
+    @staticmethod
+    def _validate(value):
         if not isinstance(value, (int, long)):
             raise TypeError('expected an integer, got %s' % repr(value))
 
-    def _to_base_type(self, value):
+    @staticmethod
+    def _to_base_type(value):
         return str(value)  # Doesn't matter if it's an int or a long
 
-    def _from_base_type(self, value):
+    @staticmethod
+    def _from_base_type(value):
         return long(value)  # Always return a long
 
 
@@ -79,13 +82,16 @@ class FuzzyDateProperty(ndb.StructuredProperty):
     def __init__(self, **kwds):
         super(FuzzyDateProperty, self).__init__(FuzzyDateModel, **kwds)
 
-    def _validate(self, value):
+    @staticmethod
+    def _validate(value):
         assert isinstance(value, FuzzyDate)
 
-    def _to_base_type(self, value):
+    @staticmethod
+    def _to_base_type(value):
         return FuzzyDateModel(first=value.first, last=value.last)
 
-    def _from_base_type(self, value):
+    @staticmethod
+    def _from_base_type(value):
         return FuzzyDate(value.first, value.last)
 
 

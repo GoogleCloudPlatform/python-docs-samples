@@ -37,7 +37,8 @@ storage = googleapiclient.discovery.build('storage', 'v1')
 
 
 class MainPage(webapp2.RequestHandler):
-    def upload_object(self, bucket, file_object):
+    @staticmethod
+    def upload_object(bucket, file_object):
         body = {
             'name': 'storage-api-client-sample-file.txt',
         }
@@ -48,7 +49,8 @@ class MainPage(webapp2.RequestHandler):
         resp = req.execute()
         return resp
 
-    def delete_object(self, bucket, filename):
+    @staticmethod
+    def delete_object(bucket, filename):
         req = storage.objects().delete(bucket=bucket, object=filename)
         resp = req.execute()
         return resp

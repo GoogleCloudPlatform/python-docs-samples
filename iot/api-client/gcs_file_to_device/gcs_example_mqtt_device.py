@@ -96,11 +96,13 @@ class Device(object):
         print('Disconnected:', error_str(rc))
         self.connected_event.clear()
 
-    def on_publish(self, unused_client, unused_userdata, unused_mid):
+    @staticmethod
+    def on_publish(unused_client, unused_userdata, unused_mid):
         """Callback when the device receives a PUBACK from the MQTT bridge."""
         print('Published message acked.')
 
-    def on_subscribe(self, unused_client, unused_userdata, unused_mid,
+    @staticmethod
+    def on_subscribe(unused_client, unused_userdata, unused_mid,
                      granted_qos):
         """Callback when the device receives a SUBACK from the MQTT bridge."""
         if granted_qos[0] == 128:
@@ -109,7 +111,8 @@ class Device(object):
             print('Subscribed: ', granted_qos)
 
     # [START on_message]
-    def on_message(self, unused_client, unused_userdata, message):
+    @staticmethod
+    def on_message(unused_client, unused_userdata, message):
         """Callback when the device receives a message on a subscription."""
         payload = str(message.payload)
         print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(

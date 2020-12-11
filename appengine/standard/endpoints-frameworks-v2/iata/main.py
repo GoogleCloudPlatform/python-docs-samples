@@ -55,7 +55,8 @@ class IataApi(remote.Service):
         path='airport/{iata}',
         http_method='GET',
         name='get_airport')
-    def get_airport(self, request):
+    @staticmethod
+    def get_airport(request):
         if request.iata not in AIRPORTS:
             raise endpoints.NotFoundException()
         return Airport(iata=request.iata, name=AIRPORTS[request.iata])
@@ -66,7 +67,8 @@ class IataApi(remote.Service):
         path='airports',
         http_method='GET',
         name='list_airports')
-    def list_airports(self, request):
+    @staticmethod
+    def list_airports(request):
         codes = AIRPORTS.keys()
         codes.sort()
         return AirportList(airports=[
@@ -80,7 +82,8 @@ class IataApi(remote.Service):
         http_method='DELETE',
         name='delete_airport',
         api_key_required=True)
-    def delete_airport(self, request):
+    @staticmethod
+    def delete_airport(request):
         if request.iata not in AIRPORTS:
             raise endpoints.NotFoundException()
         del AIRPORTS[request.iata]
@@ -93,7 +96,8 @@ class IataApi(remote.Service):
         http_method='POST',
         name='create_airport',
         api_key_required=True)
-    def create_airport(self, request):
+    @staticmethod
+    def create_airport(request):
         if request.iata in AIRPORTS:
             raise endpoints.BadRequestException()
         AIRPORTS[request.iata] = request.name
@@ -106,7 +110,8 @@ class IataApi(remote.Service):
         http_method='POST',
         name='update_airport',
         api_key_required=True)
-    def update_airport(self, request):
+    @staticmethod
+    def update_airport(request):
         if request.iata not in AIRPORTS:
             raise endpoints.BadRequestException()
         AIRPORTS[request.iata] = request.name

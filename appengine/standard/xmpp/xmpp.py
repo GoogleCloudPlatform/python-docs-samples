@@ -70,7 +70,8 @@ class ErrorHandler(webapp2.RequestHandler):
 
 
 class SendChatHandler(webapp2.RequestHandler):
-    def post(self):
+    @staticmethod
+    def post():
         # [START send-chat-to-user]
         user_address = 'example@gmail.com'
         msg = ('Someone has sent you a gift on Example.com. '
