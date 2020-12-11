@@ -33,8 +33,10 @@ def test_get_guestbook_sync(app, testbed, login):
 
     response = app.get('/guestbook')
 
-    assert response.status_int == 200
-    assert 'Content 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Content 1' not in response.body:
+        raise AssertionError
 
 
 def test_get_guestbook_async(app, testbed, login):
@@ -46,8 +48,10 @@ def test_get_guestbook_async(app, testbed, login):
 
     response = app.get('/guestbook?async=1')
 
-    assert response.status_int == 200
-    assert 'Content 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Content 1' not in response.body:
+        raise AssertionError
 
 
 def test_get_messages_sync(app, testbed):
@@ -57,9 +61,12 @@ def test_get_messages_sync(app, testbed):
 
     response = app.get('/messages')
 
-    assert response.status_int == 200
-    assert 'Nick 1 wrote:' in response.body
-    assert '<p>Text 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Nick 1 wrote:' not in response.body:
+        raise AssertionError
+    if '<p>Text 1' not in response.body:
+        raise AssertionError
 
 
 def test_get_messages_async(app, testbed):
@@ -69,6 +76,9 @@ def test_get_messages_async(app, testbed):
 
     response = app.get('/messages?async=1')
 
-    assert response.status_int == 200
-    assert 'Nick 1 wrote:' in response.body
-    assert '\nText 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Nick 1 wrote:' not in response.body:
+        raise AssertionError
+    if '\nText 1' not in response.body:
+        raise AssertionError

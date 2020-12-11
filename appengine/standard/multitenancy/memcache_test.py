@@ -21,15 +21,23 @@ def test_memcache(testbed):
     app = webtest.TestApp(memcache.app)
 
     response = app.get('/memcache')
-    assert response.status_int == 200
-    assert 'Global: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 1' not in response.body:
+        raise AssertionError
 
     response = app.get('/memcache/a')
-    assert response.status_int == 200
-    assert 'Global: 2' in response.body
-    assert 'a: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 2' not in response.body:
+        raise AssertionError
+    if 'a: 1' not in response.body:
+        raise AssertionError
 
     response = app.get('/memcache/b')
-    assert response.status_int == 200
-    assert 'Global: 3' in response.body
-    assert 'b: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 3' not in response.body:
+        raise AssertionError
+    if 'b: 1' not in response.body:
+        raise AssertionError

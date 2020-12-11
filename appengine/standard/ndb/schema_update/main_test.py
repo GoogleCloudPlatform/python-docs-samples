@@ -28,18 +28,25 @@ def app(testbed):
 
 def test_app(app):
     response = app.get('/')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
 
 def test_add_entities(app):
     response = app.post('/add_entities')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
     response = app.get('/')
-    assert response.status_int == 200
-    assert 'Author: Bob' in response.body
-    assert 'Name: Sunrise' in response.body
-    assert 'Author: Alice' in response.body
-    assert 'Name: Sunset' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Author: Bob' not in response.body:
+        raise AssertionError
+    if 'Name: Sunrise' not in response.body:
+        raise AssertionError
+    if 'Author: Alice' not in response.body:
+        raise AssertionError
+    if 'Name: Sunset' not in response.body:
+        raise AssertionError
 
 
 def test_update_schema(app, testbed):
@@ -48,15 +55,19 @@ def test_update_schema(app, testbed):
     test_model.put()
 
     response = app.post('/update_schema')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
     # Run the queued task.
     tasks = testbed.taskqueue_stub.get_filtered_tasks()
-    assert len(tasks) == 1
+    if len(tasks) != 1:
+        raise AssertionError
     deferred.run(tasks[0].payload)
 
     # Check the updated items
     reload(models_v2)
     updated_model = test_model.key.get()
-    assert updated_model.num_votes == 1
-    assert updated_model.avg_rating == 5.0
+    if updated_model.num_votes != 1:
+        raise AssertionError
+    if updated_model.avg_rating != 5.0:
+        raise AssertionError

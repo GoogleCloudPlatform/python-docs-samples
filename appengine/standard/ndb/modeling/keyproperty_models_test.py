@@ -24,7 +24,8 @@ def test_models(testbed):
     contact = models.Contact(name=name)
     contact.put()
     contact = contact.key.get()
-    assert contact.name == name
+    if contact.name != name:
+        raise AssertionError
 
 
 # This test fails because of the eventual consistency nature of
@@ -41,5 +42,6 @@ def test_fails(self):
         phone_type='home',
         number='(650) 555 - 2200').put()
     numbers = contact.phone_numbers.fetch()
-    assert 1 == len(numbers)
+    if 1 != len(numbers):
+        raise AssertionError
 # [END failing_test]

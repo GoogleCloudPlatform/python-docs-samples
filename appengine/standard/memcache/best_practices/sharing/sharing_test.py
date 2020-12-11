@@ -20,4 +20,5 @@ import sharing
 def test_get(testbed):
     app = webtest.TestApp(sharing.app)
     response = app.get('/')
-    assert 'Previously incremented by ' in response.body
+    if 'Previously incremented by ' not in response.body:
+        raise AssertionError

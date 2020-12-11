@@ -29,10 +29,13 @@ def test_get_module_info(modules_mock, app):
     modules_mock.get_current_module_name.return_value = "default"
     modules_mock.get_current_instance_id.return_value = 1
     response = app.get('/')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
     results = response.body.split('&')
-    assert results[0].split('=')[1] == 'default'
-    assert results[1].split('=')[1] == '1'
+    if results[0].split('=')[1] != 'default':
+        raise AssertionError
+    if results[1].split('=')[1] != '1':
+        raise AssertionError
 
 
 @mock.patch("main.modules")
@@ -42,5 +45,7 @@ def test_get_backend(url_open_mock, modules_mock, app):
     url_open_mock.return_value = url_read_mock
     response = app.get('/access_backend')
 
-    assert response.status_int == 200
-    assert response.body == 'Got response hello world'
+    if response.status_int != 200:
+        raise AssertionError
+    if response.body != 'Got response hello world':
+        raise AssertionError

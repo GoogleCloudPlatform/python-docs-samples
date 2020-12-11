@@ -22,17 +22,20 @@ import snippets
 
 def test_create_entity_using_keyword_arguments(testbed):
     result = snippets.create_entity_using_keyword_arguments()
-    assert isinstance(result, snippets.Account)
+    if not isinstance(result, snippets.Account):
+        raise AssertionError
 
 
 def test_create_entity_using_attributes(testbed):
     result = snippets.create_entity_using_attributes()
-    assert isinstance(result, snippets.Account)
+    if not isinstance(result, snippets.Account):
+        raise AssertionError
 
 
 def test_create_entity_using_populate(testbed):
     result = snippets.create_entity_using_populate()
-    assert isinstance(result, snippets.Account)
+    if not isinstance(result, snippets.Account):
+        raise AssertionError
 
 
 def test_demonstrate_model_constructor_type_checking(testbed):
@@ -49,28 +52,32 @@ def test_demonstrate_entity_attribute_type_checking(testbed):
 def test_save_entity(testbed):
     result = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
-    assert isinstance(result, snippets.ndb.Key)
+    if not isinstance(result, snippets.ndb.Key):
+        raise AssertionError
 
 
 def test_get_entity(testbed):
     sandy_key = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_entity(sandy_key)
-    assert isinstance(result, snippets.Account)
+    if not isinstance(result, snippets.Account):
+        raise AssertionError
 
 
 def test_get_key_kind_and_id(testbed):
     sandy_key = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
     kind_string, ident = snippets.get_key_kind_and_id(sandy_key)
-    assert kind_string == 'Account'
+    if kind_string != 'Account':
+        raise AssertionError
 
 
 def test_get_url_safe_key(testbed):
     sandy_key = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_url_safe_key(sandy_key)
-    assert isinstance(result, str)
+    if not isinstance(result, str):
+        raise AssertionError
 
 
 def test_get_entity_from_url_safe_key(testbed):
@@ -78,8 +85,10 @@ def test_get_entity_from_url_safe_key(testbed):
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_entity_from_url_safe_key(
         snippets.get_url_safe_key(sandy_key))
-    assert isinstance(result, snippets.Account)
-    assert result.username == 'Sandy'
+    if not isinstance(result, snippets.Account):
+        raise AssertionError
+    if result.username != 'Sandy':
+        raise AssertionError
 
 
 def test_get_key_and_numeric_id_from_url_safe_key(testbed):
@@ -88,8 +97,10 @@ def test_get_key_and_numeric_id_from_url_safe_key(testbed):
     urlsafe = snippets.get_url_safe_key(sandy_key)
     key, ident, kind_string = (
         snippets.get_key_and_numeric_id_from_url_safe_key(urlsafe))
-    assert isinstance(key, ndb.Key)
-    assert isinstance(kind_string, str)
+    if not isinstance(key, ndb.Key):
+        raise AssertionError
+    if not isinstance(kind_string, str):
+        raise AssertionError
 
 
 def test_update_entity_from_key(testbed):
@@ -99,30 +110,35 @@ def test_update_entity_from_key(testbed):
     key, ident, kind_string = (
         snippets.get_key_and_numeric_id_from_url_safe_key(urlsafe))
     snippets.update_entity_from_key(key)
-    assert key.get().email == 'sandy@example.co.uk'
+    if key.get().email != 'sandy@example.co.uk':
+        raise AssertionError
 
 
 def test_delete_entity(testbed):
     sandy = snippets.create_entity_using_keyword_arguments()
     snippets.save_entity(sandy)
     snippets.delete_entity(sandy)
-    assert sandy.key.get() is None
+    if sandy.key.get() is not None:
+        raise AssertionError
 
 
 def test_create_entity_with_named_key(testbed):
     result = snippets.create_entity_with_named_key()
-    assert 'sandy@example.com' == result
+    if 'sandy@example.com' != result:
+        raise AssertionError
 
 
 def test_set_key_directly(testbed):
     account = snippets.Account()
     snippets.set_key_directly(account)
-    assert account.key.id() == 'sandy@example.com'
+    if account.key.id() != 'sandy@example.com':
+        raise AssertionError
 
 
 def test_create_entity_with_generated_id(testbed):
     result = snippets.create_entity_with_generated_id()
-    assert result.key.id() is not None
+    if result.key.id() is None:
+        raise AssertionError
 
 
 def test_demonstrate_entities_with_parent_hierarchy(testbed):
@@ -135,18 +151,21 @@ def test_equivalent_ways_to_define_key_with_parent(testbed):
 
 def test_create_root_key(testbed):
     result = snippets.create_root_key()
-    assert result.id() == 'sandy@example.com'
+    if result.id() != 'sandy@example.com':
+        raise AssertionError
 
 
 def test_create_entity_with_parent_keys(testbed):
     result = snippets.create_entity_with_parent_keys()
-    assert result.message_text == 'Hello'
+    if result.message_text != 'Hello':
+        raise AssertionError
 
 
 def test_get_parent_key_of_entity(testbed):
     initial_revision = snippets.create_entity_with_parent_keys()
     result = snippets.get_parent_key_of_entity(initial_revision)
-    assert result.kind() == 'Message'
+    if result.kind() != 'Message':
+        raise AssertionError
 
 
 def test_operate_on_multiple_keys_at_once(testbed):
@@ -156,27 +175,34 @@ def test_operate_on_multiple_keys_at_once(testbed):
 
 def test_create_entity_using_expando_model(testbed):
     result = snippets.create_entity_using_expando_model()
-    assert result.foo == 1
+    if result.foo != 1:
+        raise AssertionError
 
 
 def test_get_properties_defined_on_expando(testbed):
     result = snippets.get_properties_defined_on_expando(
         snippets.create_entity_using_expando_model())
-    assert result['foo'] is not None
-    assert result['bar'] is not None
-    assert result['tags'] is not None
+    if result['foo'] is None:
+        raise AssertionError
+    if result['bar'] is None:
+        raise AssertionError
+    if result['tags'] is None:
+        raise AssertionError
 
 
 def test_create_entity_using_expando_model_with_defined_properties(testbed):
     result = snippets.create_expando_model_entity_with_defined_properties()
-    assert result.name == 'Sandy'
+    if result.name != 'Sandy':
+        raise AssertionError
 
 
 def test_create_expando_model_entity_that_isnt_indexed_by_default(testbed):
     result = (
         snippets.create_expando_model_entity_that_isnt_indexed_by_default())
-    assert result['foo']
-    assert result['bar']
+    if not result['foo']:
+        raise AssertionError
+    if not result['bar']:
+        raise AssertionError
 
 
 def test_demonstrate_wrong_way_to_query_expando(testbed):
@@ -191,36 +217,43 @@ def test_demonstrate_right_way_to_query_expando(testbed):
 def test_demonstrate_model_put_and_delete_hooks(testbed):
     iterator = snippets.demonstrate_model_put_and_delete_hooks()
     iterator.next()
-    assert snippets.notification == 'Gee wiz I have a new friend!'
+    if snippets.notification != 'Gee wiz I have a new friend!':
+        raise AssertionError
     iterator.next()
-    assert snippets.notification == (
-        'I have found occasion to rethink our friendship.')
+    if snippets.notification != (
+        'I have found occasion to rethink our friendship.'):
+        raise AssertionError
 
 
 def test_reserve_model_ids(testbed):
     first, last = snippets.reserve_model_ids()
-    assert last - first >= 99
+    if last - first < 99:
+        raise AssertionError
 
 
 def test_reserve_model_ids_with_a_parent(testbed):
     first, last = snippets.reserve_model_ids_with_a_parent(
         snippets.Friend().key)
-    assert last - first >= 99
+    if last - first < 99:
+        raise AssertionError
 
 
 def test_construct_keys_from_range_of_reserved_ids(testbed):
     result = snippets.construct_keys_from_range_of_reserved_ids(
         *snippets.reserve_model_ids())
-    assert len(result) == 100
+    if len(result) != 100:
+        raise AssertionError
 
 
 def test_reserve_model_ids_up_to(testbed):
     first, last = snippets.reserve_model_ids_up_to(5)
-    assert last - first >= 4
+    if last - first < 4:
+        raise AssertionError
 
 
 def test_model_with_user(testbed):
     user = users.User(email='user@example.com', _user_id='123')
     item = snippets.ModelWithUser(user_id=user.user_id())
     item.put()
-    assert snippets.ModelWithUser.get_by_user(user) == item
+    if snippets.ModelWithUser.get_by_user(user) != item:
+        raise AssertionError

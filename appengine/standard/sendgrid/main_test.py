@@ -26,7 +26,8 @@ def app():
 
 def test_get(app):
     response = app.get('/')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
 
 @mock.patch('python_http_client.client.Client._make_request')
@@ -41,6 +42,8 @@ def test_post(make_request_mock, app):
         'recipient': 'user@example.com'
     })
 
-    assert make_request_mock.called
+    if not make_request_mock.called:
+        raise AssertionError
     request = make_request_mock.call_args[0][1]
-    assert 'user@example.com' in request.data
+    if 'user@example.com' not in request.data:
+        raise AssertionError

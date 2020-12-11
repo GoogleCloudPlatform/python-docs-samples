@@ -20,4 +20,5 @@ import main
 def test_app(testbed):
     app = webtest.TestApp(main.app)
     response = app.get('/')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError

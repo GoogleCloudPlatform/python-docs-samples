@@ -21,15 +21,23 @@ def test_datastore(testbed):
     app = webtest.TestApp(datastore.app)
 
     response = app.get('/datastore')
-    assert response.status_int == 200
-    assert 'Global: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 1' not in response.body:
+        raise AssertionError
 
     response = app.get('/datastore/a')
-    assert response.status_int == 200
-    assert 'Global: 2' in response.body
-    assert 'a: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 2' not in response.body:
+        raise AssertionError
+    if 'a: 1' not in response.body:
+        raise AssertionError
 
     response = app.get('/datastore/b')
-    assert response.status_int == 200
-    assert 'Global: 3' in response.body
-    assert 'b: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 3' not in response.body:
+        raise AssertionError
+    if 'b: 1' not in response.body:
+        raise AssertionError

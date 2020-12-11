@@ -32,52 +32,74 @@ def test_employee(testbed):
 
 def test_article(testbed):
     article = snippets.create_article()
-    assert article.title == 'Python versus Ruby'
-    assert article.stars == 3
-    assert sorted(article.tags) == sorted(['python', 'ruby'])
+    if article.title != 'Python versus Ruby':
+        raise AssertionError
+    if article.stars != 3:
+        raise AssertionError
+    if sorted(article.tags) != sorted(['python', 'ruby']):
+        raise AssertionError
 
 
 def test_create_contact(testbed):
     guido = snippets.create_contact()
-    assert guido.name == 'Guido'
+    if guido.name != 'Guido':
+        raise AssertionError
     addresses = guido.addresses
-    assert addresses[0].type == 'home'
-    assert addresses[1].type == 'work'
-    assert addresses[0].street is None
-    assert addresses[1].street == 'Spear St'
-    assert addresses[0].city == 'Amsterdam'
-    assert addresses[1].city == 'SF'
+    if addresses[0].type != 'home':
+        raise AssertionError
+    if addresses[1].type != 'work':
+        raise AssertionError
+    if addresses[0].street is not None:
+        raise AssertionError
+    if addresses[1].street != 'Spear St':
+        raise AssertionError
+    if addresses[0].city != 'Amsterdam':
+        raise AssertionError
+    if addresses[1].city != 'SF':
+        raise AssertionError
 
 
 def test_contact_with_local_structured_property(testbed):
     guido = snippets.create_contact_with_local_structured_property()
-    assert guido.name == 'Guido'
+    if guido.name != 'Guido':
+        raise AssertionError
     addresses = guido.addresses
-    assert addresses[0].type == 'home'
-    assert addresses[1].type == 'work'
+    if addresses[0].type != 'home':
+        raise AssertionError
+    if addresses[1].type != 'work':
+        raise AssertionError
 
 
 def test_create_some_entity(testbed):
     entity = snippets.create_some_entity()
-    assert entity.name == 'Nick'
-    assert entity.name_lower == 'nick'
+    if entity.name != 'Nick':
+        raise AssertionError
+    if entity.name_lower != 'nick':
+        raise AssertionError
 
 
 def test_computed_property(testbed):
     entity = snippets.create_some_entity()
     entity.name = 'Nick'
-    assert entity.name_lower == 'nick'
+    if entity.name_lower != 'nick':
+        raise AssertionError
     entity.name = 'Nickie'
-    assert entity.name_lower == 'nickie'
+    if entity.name_lower != 'nickie':
+        raise AssertionError
 
 
 def test_create_note_store(testbed):
     note_stores, _ = snippets.create_note_store()
-    assert len(note_stores) == 1
-    assert note_stores[0].name == 'excellent'
-    assert note_stores[0].name == 'excellent'
-    assert note_stores[0].note.text == 'Excellent note'
-    assert note_stores[0].note.when == 50
+    if len(note_stores) != 1:
+        raise AssertionError
+    if note_stores[0].name != 'excellent':
+        raise AssertionError
+    if note_stores[0].name != 'excellent':
+        raise AssertionError
+    if note_stores[0].note.text != 'Excellent note':
+        raise AssertionError
+    if note_stores[0].note.when != 50:
+        raise AssertionError
 
 
 def test_notebook(testbed):
@@ -103,4 +125,5 @@ def test_notebook(testbed):
 def test_part(testbed, capsys):
     snippets.print_part()
     stdout, _ = capsys.readouterr()
-    assert stdout.strip() == 'RED'
+    if stdout.strip() != 'RED':
+        raise AssertionError

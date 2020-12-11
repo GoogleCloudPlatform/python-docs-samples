@@ -22,42 +22,54 @@ import snippets
 
 
 def test_create_entity(testbed):
-    assert my_models.MyModel.query().count() == 0
+    if my_models.MyModel.query().count() != 0:
+        raise AssertionError
     snippets.create_entity()
     entities = my_models.MyModel.query().fetch()
-    assert len(entities) == 1
-    assert entities[0].name == 'booh'
+    if len(entities) != 1:
+        raise AssertionError
+    if entities[0].name != 'booh':
+        raise AssertionError
 
 
 def test_read_and_update_entity(testbed):
     key = snippets.create_entity()
     entities = my_models.MyModel.query().fetch()
-    assert len(entities) == 1
-    assert entities[0].abc == 0
+    if len(entities) != 1:
+        raise AssertionError
+    if entities[0].abc != 0:
+        raise AssertionError
     len_xyz = len(entities[0].xyz)
 
     snippets.read_and_update_entity(key)
     entities = my_models.MyModel.query().fetch()
-    assert len(entities) == 1
-    assert entities[0].abc == 1
-    assert len(entities[0].xyz) == len_xyz + 1
+    if len(entities) != 1:
+        raise AssertionError
+    if entities[0].abc != 1:
+        raise AssertionError
+    if len(entities[0].xyz) != len_xyz + 1:
+        raise AssertionError
 
 
 def test_query_entity(testbed):
     results = snippets.query_entity()
-    assert len(results) == 0
+    if len(results) != 0:
+        raise AssertionError
 
     snippets.create_entity()
     results = snippets.query_entity()
-    assert len(results) == 1
+    if len(results) != 1:
+        raise AssertionError
 
 
 def test_create_columbus(testbed):
     entities = snippets.create_and_query_columbus()
-    assert len(entities) == 1
-    assert entities[0].name == 'Christopher Columbus'
-    assert (entities[0].birth.first < entities[0].birth.last <
-            entities[0].death.first)
+    if len(entities) != 1:
+        raise AssertionError
+    if entities[0].name != 'Christopher Columbus':
+        raise AssertionError
+    if (entities[0].birth.first >= entities[0].birth.last):
+        raise AssertionError
 
 
 def test_long_integer_property(testbed):
@@ -79,9 +91,11 @@ def test_bounded_long_integer_property(testbed):
 
     # This should work
     working_instance = TestBoundedLongIntegerProperty(num=0b111)
-    assert working_instance.num == 0b111
+    if working_instance.num != 0b111:
+        raise AssertionError
     working_instance.num = 0b10
-    assert working_instance.num == 2
+    if working_instance.num != 2:
+        raise AssertionError
 
 
 def test_maybe_fuzzy_date_property(testbed):
@@ -94,5 +108,7 @@ def test_maybe_fuzzy_date_property(testbed):
             datetime.date(1984, 2, 27), datetime.date(1984, 2, 29)),
         second_date=datetime.date(2015, 6, 27))
 
-    assert isinstance(two_types_of_dates.first_date, my_models.FuzzyDate)
-    assert isinstance(two_types_of_dates.second_date, my_models.FuzzyDate)
+    if not isinstance(two_types_of_dates.first_date, my_models.FuzzyDate):
+        raise AssertionError
+    if not isinstance(two_types_of_dates.second_date, my_models.FuzzyDate):
+        raise AssertionError

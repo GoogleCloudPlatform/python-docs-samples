@@ -29,22 +29,30 @@ def test_phone_numbers(testbed):
     scott.put()
 
     # make sure there are 2 numbers, you can expect the order is preserved.
-    assert len(scott.phone_numbers) == 2
-    assert scott.phone_numbers[0].phone_type == 'home'
-    assert scott.phone_numbers[0].number == '(650) 555 - 2200'
-    assert scott.phone_numbers[1].phone_type == 'mobile'
-    assert scott.phone_numbers[1].number == '(650) 555 - 2201'
+    if len(scott.phone_numbers) != 2:
+        raise AssertionError
+    if scott.phone_numbers[0].phone_type != 'home':
+        raise AssertionError
+    if scott.phone_numbers[0].number != '(650) 555 - 2200':
+        raise AssertionError
+    if scott.phone_numbers[1].phone_type != 'mobile':
+        raise AssertionError
+    if scott.phone_numbers[1].number != '(650) 555 - 2201':
+        raise AssertionError
 
     # filer scott's phone numbers by type
     home_numbers = [phone_number for phone_number in scott.phone_numbers
                     if phone_number.phone_type == 'home']
-    assert len(home_numbers) == 1
-    assert home_numbers[0].number == '(650) 555 - 2200'
+    if len(home_numbers) != 1:
+        raise AssertionError
+    if home_numbers[0].number != '(650) 555 - 2200':
+        raise AssertionError
 
     # delete scott's mobile phone
     mobile_numbers = [phone_number for phone_number in scott.phone_numbers
                       if phone_number.phone_type == 'mobile']
-    assert len(mobile_numbers) == 1
+    if len(mobile_numbers) != 1:
+        raise AssertionError
     lost_phone = mobile_numbers[0]
     scott.phone_numbers.remove(lost_phone)
 
@@ -53,6 +61,9 @@ def test_phone_numbers(testbed):
 
     # make sure there's no mobile phone of scott
     scott = scott.key.get()
-    assert len(scott.phone_numbers) == 1
-    assert scott.phone_numbers[0].phone_type == 'home'
-    assert scott.phone_numbers[0].number == '(650) 555 - 2200'
+    if len(scott.phone_numbers) != 1:
+        raise AssertionError
+    if scott.phone_numbers[0].phone_type != 'home':
+        raise AssertionError
+    if scott.phone_numbers[0].number != '(650) 555 - 2200':
+        raise AssertionError

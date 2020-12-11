@@ -21,21 +21,29 @@ def test_taskqueue(testbed, run_tasks):
     app = webtest.TestApp(taskqueue.app)
 
     response = app.get('/taskqueue')
-    assert response.status_int == 200
-    assert 'Global: 0' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 0' not in response.body:
+        raise AssertionError
 
     run_tasks(app)
 
     response = app.get('/taskqueue')
-    assert response.status_int == 200
-    assert 'Global: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Global: 1' not in response.body:
+        raise AssertionError
 
     response = app.get('/taskqueue/a')
-    assert response.status_int == 200
-    assert 'a: 0' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'a: 0' not in response.body:
+        raise AssertionError
 
     run_tasks(app)
 
     response = app.get('/taskqueue/a')
-    assert response.status_int == 200
-    assert 'a: 1' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'a: 1' not in response.body:
+        raise AssertionError
