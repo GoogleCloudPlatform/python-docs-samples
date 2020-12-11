@@ -96,7 +96,8 @@ class MainPage(webapp2.RequestHandler):
     # [END check_memcache]
 
     # [START query_datastore]
-    def render_greetings(self, guestbook_name):
+    @staticmethod
+    def render_greetings(guestbook_name):
         """
         render_greetings()
         Queries the database for greetings, iterate through the

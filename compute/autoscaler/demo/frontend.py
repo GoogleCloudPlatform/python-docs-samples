@@ -39,13 +39,16 @@ REQUEST_TIMEOUT_SEC = 5.0
 
 
 class CpuBurner(object):
-    def get_walltime(self):
+    @staticmethod
+    def get_walltime():
         return time.time()
 
-    def get_user_cputime(self):
+    @staticmethod
+    def get_user_cputime():
         return os.times()[0]
 
-    def busy_wait(self):
+    @staticmethod
+    def busy_wait():
         for _ in range(100000):
             pass
 

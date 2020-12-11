@@ -65,56 +65,64 @@ class BookstoreServicer(object):
   The API manages shelves and books resources. Shelves contain books.
   """
 
-  def ListShelves(self, request, context):
+  @staticmethod
+  def ListShelves(request, context):
     """Returns a list of all shelves in the bookstore.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def CreateShelf(self, request, context):
+  @staticmethod
+  def CreateShelf(request, context):
     """Creates a new shelf in the bookstore.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetShelf(self, request, context):
+  @staticmethod
+  def GetShelf(request, context):
     """Returns a specific bookstore shelf.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def DeleteShelf(self, request, context):
+  @staticmethod
+  def DeleteShelf(request, context):
     """Deletes a shelf, including all books that are stored on the shelf.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ListBooks(self, request, context):
+  @staticmethod
+  def ListBooks(request, context):
     """Returns a list of books on a shelf.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def CreateBook(self, request, context):
+  @staticmethod
+  def CreateBook(request, context):
     """Creates a new book.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetBook(self, request, context):
+  @staticmethod
+  def GetBook(request, context):
     """Returns a specific book.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def DeleteBook(self, request, context):
+  @staticmethod
+  def DeleteBook(request, context):
     """Deletes a book from a shelf.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)

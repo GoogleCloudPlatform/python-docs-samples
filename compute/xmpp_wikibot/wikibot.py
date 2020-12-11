@@ -81,7 +81,8 @@ class WikiBot(sleekxmpp.ClientXMPP):
         self.send_presence()
         self.get_roster()
 
-    def message(self, msg):
+    @staticmethod
+    def message(msg):
         """Process incoming message stanzas.
 
         Be aware that this also includes MUC messages and error messages. It is

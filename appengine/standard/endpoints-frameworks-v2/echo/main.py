@@ -52,7 +52,8 @@ class EchoApi(remote.Service):
         path='echo',
         http_method='POST',
         name='echo')
-    def echo(self, request):
+    @staticmethod
+    def echo(request):
         output_message = ' '.join([request.message] * request.n)
         return EchoResponse(message=output_message)
     # [END echo_api_method]
@@ -65,7 +66,8 @@ class EchoApi(remote.Service):
         path='echo/{n}',
         http_method='POST',
         name='echo_path_parameter')
-    def echo_path_parameter(self, request):
+    @staticmethod
+    def echo_path_parameter(request):
         output_message = ' '.join([request.message] * request.n)
         return EchoResponse(message=output_message)
 
@@ -78,7 +80,8 @@ class EchoApi(remote.Service):
         http_method='GET',
         name='echo_api_key',
         api_key_required=True)
-    def echo_api_key(self, request):
+    @staticmethod
+    def echo_api_key(request):
         key, key_type = request.get_unrecognized_field_info('key')
         return EchoResponse(message=key)
 
@@ -94,7 +97,8 @@ class EchoApi(remote.Service):
         # OAuth2 audiences allowed in incoming tokens.
         audiences=['your-oauth-client-id.com'],
         allowed_client_ids=['your-oauth-client-id.com'])
-    def get_user_email(self, request):
+    @staticmethod
+    def get_user_email(request):
         user = endpoints.get_current_user()
         # If there's no user defined, the request was unauthenticated, so we
         # raise 401 Unauthorized.

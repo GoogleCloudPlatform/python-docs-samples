@@ -243,7 +243,8 @@ def _notify(message):
 class Friend(ndb.Model):
     name = ndb.StringProperty()
 
-    def _pre_put_hook(self):
+    @staticmethod
+    def _pre_put_hook():
         _notify('Gee wiz I have a new friend!')
 
     @classmethod

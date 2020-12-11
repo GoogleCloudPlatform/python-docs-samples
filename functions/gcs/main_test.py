@@ -17,7 +17,8 @@ import main
 
 
 class TestGCFPyGCSSample(object):
-    def test_hello_gcs_generic(self, capsys):
+    @staticmethod
+    def test_hello_gcs_generic(capsys):
         event = {
             'bucket': 'some-bucket',
             'name': 'some-filename',

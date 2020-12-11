@@ -58,7 +58,8 @@ def update_counter(key, tasks):
 
 
 class CounterWorker(webapp2.RequestHandler):
-    def get(self):
+    @staticmethod
+    def get():
         """Indefinitely fetch tasks and update the datastore."""
         queue = taskqueue.Queue('pullq')
         while True:

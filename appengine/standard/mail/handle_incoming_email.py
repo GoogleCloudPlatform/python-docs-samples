@@ -20,7 +20,8 @@ import webapp2
 
 
 class LogSenderHandler(InboundMailHandler):
-    def receive(self, mail_message):
+    @staticmethod
+    def receive(mail_message):
         logging.info("Received a message from: " + mail_message.sender)
 # [END log_sender_handler]
 # [START bodies]
