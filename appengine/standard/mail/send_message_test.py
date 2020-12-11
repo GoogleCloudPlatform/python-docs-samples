@@ -22,5 +22,7 @@ def test_send_message(testbed):
     testbed.init_app_identity_stub()
     app = webtest.TestApp(send_message.app)
     response = app.get('/send_message')
-    assert response.status_int == 200
-    assert 'Sent an email message to Albert.' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Sent an email message to Albert.' not in response.body:
+        raise AssertionError

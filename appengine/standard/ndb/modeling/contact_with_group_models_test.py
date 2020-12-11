@@ -39,8 +39,10 @@ def test_models(testbed):
 
     # Now Mary is your friend
     mary = mary_key.get()
-    assert friends.key in mary.groups
+    if friends.key not in mary.groups:
+        raise AssertionError
 
     # How about 'members' property?
     friend_list = friends.members.fetch()
-    assert len(friend_list) == 1
+    if len(friend_list) != 1:
+        raise AssertionError

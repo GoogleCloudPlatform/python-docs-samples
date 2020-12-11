@@ -28,8 +28,10 @@ def test_main():
     client = main_mysql.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '0' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '0' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 def test_main_pooling():
@@ -44,8 +46,10 @@ def test_main_pooling():
     client = main_mysql_pooling.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '0' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '0' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 def test_main_postgressql():
@@ -58,8 +62,10 @@ def test_main_postgressql():
     client = main_postgres.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '0' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '0' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 def test_main_postgressql_pooling():
@@ -74,5 +80,7 @@ def test_main_postgressql_pooling():
     client = main_postgres_pooling.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert '0' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if '0' not in r.data.decode('utf-8'):
+        raise AssertionError

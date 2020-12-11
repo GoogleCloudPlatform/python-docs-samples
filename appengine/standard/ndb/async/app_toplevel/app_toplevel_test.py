@@ -31,6 +31,8 @@ def test_main(app, testbed, login):
 
     response = app.get('/')
 
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
     account = app_toplevel.Account.get_by_id('123')
-    assert account.view_counter == 5
+    if account.view_counter != 5:
+        raise AssertionError

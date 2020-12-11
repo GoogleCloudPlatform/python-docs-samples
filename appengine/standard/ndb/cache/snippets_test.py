@@ -22,7 +22,8 @@ def test_set_in_process_cache_policy(testbed):
         return 1 == 1
 
     snippets.set_in_process_cache_policy(policy)
-    assert policy == ndb.get_context().get_cache_policy()
+    if policy != ndb.get_context().get_cache_policy():
+        raise AssertionError
 
 
 def test_set_memcache_policy(testbed):
@@ -30,14 +31,17 @@ def test_set_memcache_policy(testbed):
         return 1 == 2
 
     snippets.set_memcache_policy(policy)
-    assert policy == ndb.get_context().get_memcache_policy()
+    if policy != ndb.get_context().get_memcache_policy():
+        raise AssertionError
 
 
 def test_bypass_in_process_cache_for_account_entities(testbed):
     context = ndb.get_context()
-    assert context.get_cache_policy() == context.default_cache_policy
+    if context.get_cache_policy() != context.default_cache_policy:
+        raise AssertionError
     snippets.bypass_in_process_cache_for_account_entities()
-    assert context.get_cache_policy() != context.default_cache_policy
+    if context.get_cache_policy() == context.default_cache_policy:
+        raise AssertionError
 
 
 def test_set_datastore_policy(testbed):
@@ -45,7 +49,8 @@ def test_set_datastore_policy(testbed):
         return key is None
 
     snippets.set_datastore_policy(policy)
-    assert ndb.get_context().get_datastore_policy() == policy
+    if ndb.get_context().get_datastore_policy() != policy:
+        raise AssertionError
 
 
 def test_set_memcache_timeout_policy(testbed):
@@ -53,7 +58,8 @@ def test_set_memcache_timeout_policy(testbed):
         return 1
 
     snippets.set_memcache_timeout_policy(policy)
-    assert ndb.get_context().get_memcache_timeout_policy() == policy
+    if ndb.get_context().get_memcache_timeout_policy() != policy:
+        raise AssertionError
 
 
 def test_clear_cache(testbed):

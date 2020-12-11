@@ -27,8 +27,10 @@ def test_query_account_equality(testbed):
     query = snippets.query_account_equality()
     accounts = query.fetch()
 
-    assert len(accounts) == 1
-    assert accounts[0].userid == 42
+    if len(accounts) != 1:
+        raise AssertionError
+    if accounts[0].userid != 42:
+        raise AssertionError
 
 
 def test_query_account_inequality(testbed):
@@ -39,8 +41,10 @@ def test_query_account_inequality(testbed):
     query = snippets.query_account_inequality()
     accounts = query.fetch()
 
-    assert len(accounts) == 2
-    assert all(a.userid > 40 for a in accounts)
+    if len(accounts) != 2:
+        raise AssertionError
+    if not all(a.userid > 40 for a in accounts):
+        raise AssertionError
 
 
 def test_query_account_multiple_filters(testbed):
@@ -53,8 +57,10 @@ def test_query_account_multiple_filters(testbed):
     query = snippets.query_account_multiple_filters()
     accounts = query.fetch()
 
-    assert len(accounts) == 2
-    assert all(40 <= a.userid < 50 for a in accounts)
+    if len(accounts) != 2:
+        raise AssertionError
+    if not all(40 <= a.userid < 50 for a in accounts):
+        raise AssertionError
 
 
 def test_query_account_in_steps(testbed):
@@ -67,8 +73,10 @@ def test_query_account_in_steps(testbed):
     _, _, query = snippets.query_account_in_steps()
     accounts = query.fetch()
 
-    assert len(accounts) == 2
-    assert all(40 <= a.userid < 50 for a in accounts)
+    if len(accounts) != 2:
+        raise AssertionError
+    if not all(40 <= a.userid < 50 for a in accounts):
+        raise AssertionError
 
 
 def test_query_article_inequality(testbed):
@@ -78,7 +86,8 @@ def test_query_article_inequality(testbed):
     query = snippets.query_article_inequality()
     articles = query.fetch()
 
-    assert len(articles) == 1
+    if len(articles) != 1:
+        raise AssertionError
 
 
 def test_query_article_inequality_explicit(testbed):
@@ -88,7 +97,8 @@ def test_query_article_inequality_explicit(testbed):
     query = snippets.query_article_inequality_explicit()
     articles = query.fetch()
 
-    assert len(articles) == 1
+    if len(articles) != 1:
+        raise AssertionError
 
 
 def test_articles_with_tags_example(testbed):
@@ -104,7 +114,8 @@ def test_query_article_in(testbed):
     query = snippets.query_article_in()
     articles = query.fetch()
 
-    assert len(articles) == 3
+    if len(articles) != 3:
+        raise AssertionError
 
 
 def test_query_article_in_equivalent(testbed):
@@ -116,7 +127,8 @@ def test_query_article_in_equivalent(testbed):
     query = snippets.query_article_in_equivalent()
     articles = query.fetch()
 
-    assert len(articles) == 3
+    if len(articles) != 3:
+        raise AssertionError
 
 
 def test_query_article_nested(testbed):
@@ -130,7 +142,8 @@ def test_query_article_nested(testbed):
 
     query = snippets.query_article_nested()
     articles = query.fetch()
-    assert len(articles) == 4
+    if len(articles) != 4:
+        raise AssertionError
 
 
 def test_query_greeting_order(testbed):
@@ -142,9 +155,12 @@ def test_query_greeting_order(testbed):
     query = snippets.query_greeting_order()
     greetings = query.fetch()
 
-    assert (greetings[0].content < greetings[1].content < greetings[3].content)
-    assert greetings[1].content == greetings[2].content
-    assert greetings[1].date > greetings[2].date
+    if (greetings[0].content >= greetings[1].content):
+        raise AssertionError
+    if greetings[1].content != greetings[2].content:
+        raise AssertionError
+    if greetings[1].date <= greetings[2].date:
+        raise AssertionError
 
 
 def test_query_greeting_multiple_orders(testbed):
@@ -156,9 +172,12 @@ def test_query_greeting_multiple_orders(testbed):
     query = snippets.query_greeting_multiple_orders()
     greetings = query.fetch()
 
-    assert (greetings[0].content < greetings[1].content < greetings[3].content)
-    assert greetings[1].content == greetings[2].content
-    assert greetings[1].date > greetings[2].date
+    if (greetings[0].content >= greetings[1].content):
+        raise AssertionError
+    if greetings[1].content != greetings[2].content:
+        raise AssertionError
+    if greetings[1].date <= greetings[2].date:
+        raise AssertionError
 
 
 def test_query_purchase_with_customer_key(testbed):
@@ -170,8 +189,10 @@ def test_query_purchase_with_customer_key(testbed):
     Purchase(price=234, customer=snoop_key).put()
 
     purchases = do_query(charles)
-    assert len(purchases) == 1
-    assert purchases[0].price == 123
+    if len(purchases) != 1:
+        raise AssertionError
+    if purchases[0].price != 123:
+        raise AssertionError
 
 
 def test_query_purchase_with_ancestor_key(testbed):
@@ -191,15 +212,18 @@ def test_query_purchase_with_ancestor_key(testbed):
     snoop_purchase.put()
 
     purchases = do_query(snoop)
-    assert len(purchases) == 1
-    assert purchases[0].price == 234
+    if len(purchases) != 1:
+        raise AssertionError
+    if purchases[0].price != 234:
+        raise AssertionError
 
 
 def test_print_query(testbed, capsys):
     snippets.print_query()
     stdout, _ = capsys.readouterr()
 
-    assert '' in stdout
+    if '' not in stdout:
+        raise AssertionError
 
 
 def test_query_contact_with_city(testbed):
@@ -218,7 +242,8 @@ def test_query_contact_with_city(testbed):
     query = snippets.query_contact_with_city()
     contacts = query.fetch()
 
-    assert len(contacts) == 2
+    if len(contacts) != 2:
+        raise AssertionError
 
 
 def test_query_contact_sub_entities_beware(testbed):
@@ -237,10 +262,12 @@ def test_query_contact_sub_entities_beware(testbed):
     query = snippets.query_contact_sub_entities_beware()
     contacts = query.fetch()
 
-    assert len(contacts) == 2
+    if len(contacts) != 2:
+        raise AssertionError
     for contact in contacts:
-        assert ('Spear St' in [a.street for a in contact.addresses] or
-                'Amsterdam' in [a.city for a in contact.addresses])
+        if not ('Spear St' in [a.street for a in contact.addresses] or
+                'Amsterdam' in [a.city for a in contact.addresses]):
+            raise AssertionError
 
 
 def test_query_contact_multiple_values_in_single_sub_entity(testbed):
@@ -259,9 +286,11 @@ def test_query_contact_multiple_values_in_single_sub_entity(testbed):
     query = snippets.query_contact_multiple_values_in_single_sub_entity()
     contacts = query.fetch()
 
-    assert len(contacts) == 1
-    assert any(a.city == 'San Francisco' and a.street == 'Spear St'
-               for a in contacts[0].addresses)
+    if len(contacts) != 1:
+        raise AssertionError
+    if not any(a.city == 'San Francisco' and a.street == 'Spear St'
+               for a in contacts[0].addresses):
+        raise AssertionError
 
 
 def test_query_properties_named_by_string_on_expando(testbed):
@@ -270,7 +299,8 @@ def test_query_properties_named_by_string_on_expando(testbed):
 
     query = snippets.query_properties_named_by_string_on_expando()
     employees = query.fetch()
-    assert len(employees) == 1
+    if len(employees) != 1:
+        raise AssertionError
 
 
 def test_query_properties_named_by_string_for_defined_properties(testbed):
@@ -281,7 +311,8 @@ def test_query_properties_named_by_string_for_defined_properties(testbed):
         'title', 'from')
     articles = query.fetch()
 
-    assert len(articles) == 1
+    if len(articles) != 1:
+        raise AssertionError
 
 
 def test_query_properties_named_by_string_using_getattr(testbed):
@@ -292,7 +323,8 @@ def test_query_properties_named_by_string_using_getattr(testbed):
         'title', 'from')
     articles = query.fetch()
 
-    assert len(articles) == 1
+    if len(articles) != 1:
+        raise AssertionError
 
 
 def test_order_query_results_by_property(testbed):
@@ -303,8 +335,10 @@ def test_order_query_results_by_property(testbed):
     expando_query, property_query = snippets.order_query_results_by_property(
         'title')
 
-    assert expando_query.fetch()[0].location == 1
-    assert property_query.fetch()[0].title == '1'
+    if expando_query.fetch()[0].location != 1:
+        raise AssertionError
+    if property_query.fetch()[0].title != '1':
+        raise AssertionError
 
 
 def test_print_query_keys(testbed, capsys):
@@ -314,7 +348,8 @@ def test_print_query_keys(testbed, capsys):
     snippets.print_query_keys(Article.query())
 
     stdout, _ = capsys.readouterr()
-    assert "Key('Article'" in stdout
+    if "Key('Article'" not in stdout:
+        raise AssertionError
 
 
 def test_reverse_queries(testbed):
@@ -324,14 +359,18 @@ def test_reverse_queries(testbed):
     (bars, cursor, more), (r_bars, r_cursor, r_more) = (
         snippets.reverse_queries())
 
-    assert len(bars) == 10
-    assert len(r_bars) == 10
+    if len(bars) != 10:
+        raise AssertionError
+    if len(r_bars) != 10:
+        raise AssertionError
 
     for prev_bar, bar in zip(bars, bars[1:]):
-        assert prev_bar.key < bar.key
+        if prev_bar.key >= bar.key:
+            raise AssertionError
 
     for prev_bar, bar in zip(r_bars, r_bars[1:]):
-        assert prev_bar.key > bar.key
+        if prev_bar.key <= bar.key:
+            raise AssertionError
 
 
 def test_fetch_message_accounts_inefficient(testbed):
@@ -342,13 +381,16 @@ def test_fetch_message_accounts_inefficient(testbed):
     message_account_pairs = snippets.fetch_message_accounts_inefficient(
         Message.query().order(Message.userid))
 
-    assert len(message_account_pairs) == 5
+    if len(message_account_pairs) != 5:
+        raise AssertionError
 
     print(repr(message_account_pairs))
     for i in range(1, 6):
         message, account = message_account_pairs[i - 1]
-        assert message.content == 'Message %s' % i
-        assert account.username == 'Account %s' % i
+        if message.content != 'Message %s' % i:
+            raise AssertionError
+        if account.username != 'Account %s' % i:
+            raise AssertionError
 
 
 def test_fetch_message_accounts_efficient(testbed):
@@ -359,12 +401,15 @@ def test_fetch_message_accounts_efficient(testbed):
     message_account_pairs = snippets.fetch_message_accounts_efficient(
         Message.query().order(Message.userid))
 
-    assert len(message_account_pairs) == 5
+    if len(message_account_pairs) != 5:
+        raise AssertionError
 
     for i in range(1, 6):
         message, account = message_account_pairs[i - 1]
-        assert message.content == 'Message %s' % i
-        assert account.username == 'Account %s' % i
+        if message.content != 'Message %s' % i:
+            raise AssertionError
+        if account.username != 'Account %s' % i:
+            raise AssertionError
 
 
 def test_fetch_good_articles_using_gql_with_explicit_bind(testbed):
@@ -374,8 +419,10 @@ def test_fetch_good_articles_using_gql_with_explicit_bind(testbed):
     query, query2 = snippets.fetch_good_articles_using_gql_with_explicit_bind()
     articles = query2.fetch()
 
-    assert len(articles) == 2
-    assert all(a.stars > 3 for a in articles)
+    if len(articles) != 2:
+        raise AssertionError
+    if not all(a.stars > 3 for a in articles):
+        raise AssertionError
 
 
 def test_fetch_good_articles_using_gql_with_inlined_bind(testbed):
@@ -385,5 +432,7 @@ def test_fetch_good_articles_using_gql_with_inlined_bind(testbed):
     query = snippets.fetch_good_articles_using_gql_with_inlined_bind()
     articles = query.fetch()
 
-    assert len(articles) == 2
-    assert all(a.stars > 3 for a in articles)
+    if len(articles) != 2:
+        raise AssertionError
+    if not all(a.stars > 3 for a in articles):
+        raise AssertionError

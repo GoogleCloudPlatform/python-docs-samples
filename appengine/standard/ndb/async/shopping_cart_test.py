@@ -47,8 +47,10 @@ def test_get_cart_plus_offers(items):
 
     cart, offers = shopping_cart.get_cart_plus_offers(account)
 
-    assert len(cart) == 12
-    assert len(offers) == 6
+    if len(cart) != 12:
+        raise AssertionError
+    if len(offers) != 6:
+        raise AssertionError
 
 
 def test_get_cart_plus_offers_async(items):
@@ -56,8 +58,10 @@ def test_get_cart_plus_offers_async(items):
 
     cart, offers = shopping_cart.get_cart_plus_offers_async(account)
 
-    assert len(cart) == 12
-    assert len(offers) == 6
+    if len(cart) != 12:
+        raise AssertionError
+    if len(offers) != 6:
+        raise AssertionError
 
 
 def test_get_cart_tasklet(items):
@@ -66,7 +70,8 @@ def test_get_cart_tasklet(items):
     future = shopping_cart.get_cart_tasklet(account)
     cart = future.get_result()
 
-    assert len(cart) == 12
+    if len(cart) != 12:
+        raise AssertionError
 
 
 def test_get_offers_tasklet(items):
@@ -75,7 +80,8 @@ def test_get_offers_tasklet(items):
     future = shopping_cart.get_offers_tasklet(account)
     offers = future.get_result()
 
-    assert len(offers) == 6
+    if len(offers) != 6:
+        raise AssertionError
 
 
 def test_get_cart_plus_offers_tasklet(items):
@@ -85,8 +91,10 @@ def test_get_cart_plus_offers_tasklet(items):
         account)
     cart, offers = future.get_result()
 
-    assert len(cart) == 12
-    assert len(offers) == 6
+    if len(cart) != 12:
+        raise AssertionError
+    if len(offers) != 6:
+        raise AssertionError
 
 
 def test_iterate_over_query_results_in_tasklet(items):
@@ -95,7 +103,8 @@ def test_iterate_over_query_results_in_tasklet(items):
     future = shopping_cart.iterate_over_query_results_in_tasklet(
         shopping_cart.InventoryItem, lambda item: '3' in item.name)
 
-    assert '3' in future.get_result().name
+    if '3' not in future.get_result().name:
+        raise AssertionError
 
 
 def test_do_not_iterate_over_tasklet_like_this(items):
@@ -104,7 +113,8 @@ def test_do_not_iterate_over_tasklet_like_this(items):
     future = shopping_cart.blocking_iteration_over_query_results(
         shopping_cart.InventoryItem, lambda item: '3' in item.name)
 
-    assert '3' in future.get_result().name
+    if '3' not in future.get_result().name:
+        raise AssertionError
 
 
 def test_get_google(testbed):
@@ -112,7 +122,8 @@ def test_get_google(testbed):
 
     get_google = shopping_cart.define_get_google()
     future = get_google()
-    assert 'Google' in future.get_result()
+    if 'Google' not in future.get_result():
+        raise AssertionError
 
 
 class Counter(ndb.Model):
@@ -123,22 +134,28 @@ def test_update_counter_async(testbed):
     counter_key = Counter(value=1).put()
     update_counter = shopping_cart.define_update_counter_async()
     future = update_counter(counter_key)
-    assert counter_key.get().value == 1
-    assert future.get_result() == 2
-    assert counter_key.get().value == 2
+    if counter_key.get().value != 1:
+        raise AssertionError
+    if future.get_result() != 2:
+        raise AssertionError
+    if counter_key.get().value != 2:
+        raise AssertionError
 
 
 def test_update_counter_tasklet(testbed):
     counter_key = Counter(value=1).put()
     update_counter = shopping_cart.define_update_counter_tasklet()
     future = update_counter(counter_key)
-    assert counter_key.get().value == 1
+    if counter_key.get().value != 1:
+        raise AssertionError
     future.get_result()
-    assert counter_key.get().value == 2
+    if counter_key.get().value != 2:
+        raise AssertionError
 
 
 def test_get_first_ready(testbed):
     testbed.init_urlfetch_stub()
 
     content = shopping_cart.get_first_ready()
-    assert 'html' in content.lower()
+    if 'html' not in content.lower():
+        raise AssertionError

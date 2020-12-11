@@ -22,5 +22,7 @@ def test_main():
     client = main.app.test_client()
 
     r = client.get('/')
-    assert r.status_code == 200
-    assert 'Query Result: 1' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Query Result: 1' not in r.data.decode('utf-8'):
+        raise AssertionError

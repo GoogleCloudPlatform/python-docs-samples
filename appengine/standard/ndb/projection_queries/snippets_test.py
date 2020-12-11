@@ -21,9 +21,12 @@ def test_print_author_tags(testbed, capsys):
     snippets.print_author_tags()
 
     stdout, _ = capsys.readouterr()
-    assert 'Two' in stdout
-    assert 'three' in stdout
-    assert 'one' not in stdout
+    if 'Two' not in stdout:
+        raise AssertionError
+    if 'three' not in stdout:
+        raise AssertionError
+    if 'one' in stdout:
+        raise AssertionError
 
 
 def test_fetch_sub_properties(testbed):

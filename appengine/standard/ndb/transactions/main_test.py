@@ -25,8 +25,10 @@ def app(testbed):
 
 def test_index(app):
     rv = app.get('/')
-    assert 'Permanent note page' in rv.data
-    assert rv.status == '200 OK'
+    if 'Permanent note page' not in rv.data:
+        raise AssertionError
+    if rv.status != '200 OK':
+        raise AssertionError
 
 
 def test_post(app):
@@ -34,7 +36,8 @@ def test_post(app):
         note_title='Title',
         note_text='Text'
     ), follow_redirects=True)
-    assert rv.status == '200 OK'
+    if rv.status != '200 OK':
+        raise AssertionError
 
 
 def test_there(app):
@@ -46,5 +49,7 @@ def test_there(app):
         note_title='Title',
         note_text='There'
     ), follow_redirects=True)
-    assert 'Already there' in rv.data
-    assert rv.status == '200 OK'
+    if 'Already there' not in rv.data:
+        raise AssertionError
+    if rv.status != '200 OK':
+        raise AssertionError

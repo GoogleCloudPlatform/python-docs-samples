@@ -23,17 +23,22 @@ def test_user_signup(testbed):
     testbed.init_datastore_v3_stub()
     app = webtest.TestApp(user_signup.app)
     response = app.post('/user/signup', 'email_address=alice@example.com')
-    assert response.status_int == 200
-    assert 'An email has been sent to alice@example.com.' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'An email has been sent to alice@example.com.' not in response.body:
+        raise AssertionError
 
     records = user_signup.UserConfirmationRecord.query().fetch(1)
     response = app.get('/user/confirm?code={}'.format(records[0].key.id()))
-    assert response.status_int == 200
-    assert 'Confirmed alice@example.com.' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Confirmed alice@example.com.' not in response.body:
+        raise AssertionError
 
 
 def test_bad_code(testbed):
     testbed.init_datastore_v3_stub()
     app = webtest.TestApp(user_signup.app)
     response = app.get('/user/confirm?code=garbage', status=404)
-    assert response.status_int == 404
+    if response.status_int != 404:
+        raise AssertionError

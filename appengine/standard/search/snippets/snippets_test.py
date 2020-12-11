@@ -50,17 +50,20 @@ def test_search_terms(index):
 
 
 def test_create_document():
-    assert snippets.create_document()
+    if not snippets.create_document():
+        raise AssertionError
 
 
 def test_add_document_to_index(index, document):
     snippets.add_document_to_index(document)
-    assert index.get(document.doc_id)
+    if not index.get(document.doc_id):
+        raise AssertionError
 
 
 def test_add_document_and_get_doc_id(index, document):
     ids = snippets.add_document_and_get_doc_id([document])
-    assert ids == [document.doc_id]
+    if ids != [document.doc_id]:
+        raise AssertionError
 
 
 def test_get_document_by_id(index):
@@ -70,8 +73,10 @@ def test_get_document_by_id(index):
 
     doc, docs = snippets.get_document_by_id()
 
-    assert doc.doc_id == 'AZ125'
-    assert [x.doc_id for x in docs] == ['AZ125', 'AZ126']
+    if doc.doc_id != 'AZ125':
+        raise AssertionError
+    if [x.doc_id for x in docs] != ['AZ125', 'AZ126']:
+        raise AssertionError
 
 
 def test_query_index(index):
@@ -81,7 +86,8 @@ def test_query_index(index):
 def test_delete_all_in_index(index, document):
     index.put(document)
     snippets.delete_all_in_index(index)
-    assert not index.get(document.doc_id)
+    if index.get(document.doc_id):
+        raise AssertionError
 
 
 def test_async_query(index):
@@ -97,9 +103,12 @@ def test_query_results(index, document):
     total_matches, list_of_docs, number_of_docs_returned = (
         snippets.query_results(index, 'meep'))
 
-    assert total_matches == 1
-    assert list_of_docs
-    assert number_of_docs_returned == 1
+    if total_matches != 1:
+        raise AssertionError
+    if not list_of_docs:
+        raise AssertionError
+    if number_of_docs_returned != 1:
+        raise AssertionError
 
 
 def test_query_offset(index, document):

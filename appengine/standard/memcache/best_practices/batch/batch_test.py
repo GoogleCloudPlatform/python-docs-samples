@@ -25,4 +25,5 @@ def app(testbed):
 
 def test_get(app):
     response = app.get('/')
-    assert 'Bill Holiday' in response.body
+    if 'Bill Holiday' not in response.body:
+        raise AssertionError

@@ -29,8 +29,10 @@ def flask_client():
 
 def test_main(flask_client):
     r = flask_client.get("/")
-    assert r.status_code == 302
-    assert "/results" in r.headers.get("location", "")
+    if r.status_code != 302:
+        raise AssertionError
+    if "/results" not in r.headers.get("location", ""):
+        raise AssertionError
 
 
 def test_results(flask_client, monkeypatch):
@@ -50,10 +52,14 @@ def test_results(flask_client, monkeypatch):
     )
     response_body = r.data.decode("utf-8")
 
-    assert r.status_code == 200
-    assert "Query Result" in response_body  # verifies header
-    assert "example2.com" in response_body
-    assert "42" in response_body
+    if r.status_code != 200:
+        raise AssertionError
+    if "Query Result" not in response_body:
+        raise AssertionError
+    if "example2.com" not in response_body:
+        raise AssertionError
+    if "42" not in response_body:
+        raise AssertionError
 
 
 def test_results_timeout(flask_client, monkeypatch):
@@ -69,5 +75,7 @@ def test_results_timeout(flask_client, monkeypatch):
 
     r = flask_client.get("/results", follow_redirects=True)
 
-    assert r.status_code == 200
-    assert "Query Timeout" in r.data.decode("utf-8")
+    if r.status_code != 200:
+        raise AssertionError
+    if "Query Timeout" not in r.data.decode("utf-8"):
+        raise AssertionError

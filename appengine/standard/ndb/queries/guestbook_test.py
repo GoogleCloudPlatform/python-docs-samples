@@ -39,9 +39,12 @@ def test_main(app):
 
     response = app.get('/?guestbook_name=brane3')
 
-    assert response.status_int == 200
-    assert 'Hello world' in response.body
-    assert 'Flat sheet' not in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'Hello world' not in response.body:
+        raise AssertionError
+    if 'Flat sheet' in response.body:
+        raise AssertionError
 
 
 def test_list(app):
@@ -50,18 +53,27 @@ def test_list(app):
         guestbook.Greeting(content='Greeting {}'.format(i)).put()
 
     response = app.get('/list')
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
-    assert 'Greeting 0' in response.body
-    assert 'Greeting 9' in response.body
-    assert 'Greeting 10' not in response.body
+    if 'Greeting 0' not in response.body:
+        raise AssertionError
+    if 'Greeting 9' not in response.body:
+        raise AssertionError
+    if 'Greeting 10' in response.body:
+        raise AssertionError
 
     next_page = re.search(r'href="([^"]+)"', response.body).group(1)
-    assert next_page is not None
+    if next_page is None:
+        raise AssertionError
 
     response = app.get(next_page)
-    assert response.status_int == 200
+    if response.status_int != 200:
+        raise AssertionError
 
-    assert 'Greeting 0' not in response.body
-    assert 'Greeting 10' in response.body
-    assert 'More' not in response.body
+    if 'Greeting 0' in response.body:
+        raise AssertionError
+    if 'Greeting 10' not in response.body:
+        raise AssertionError
+    if 'More' in response.body:
+        raise AssertionError

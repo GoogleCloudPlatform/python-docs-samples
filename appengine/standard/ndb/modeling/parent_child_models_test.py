@@ -32,7 +32,8 @@ def contact_key(testbed):
 
 def test_basic(contact_key):
     contact = contact_key.get()
-    assert contact.name == NAME
+    if contact.name != NAME:
+        raise AssertionError
 
 
 # [START succeeding_test]
@@ -42,7 +43,8 @@ def test_success(contact_key):
                        phone_type='home',
                        number='(650) 555 - 2200').put()
     numbers = contact.phone_numbers.fetch()
-    assert 1 == len(numbers)
+    if 1 != len(numbers):
+        raise AssertionError
 # [START succeeding_test]
 
 
@@ -58,17 +60,21 @@ def test_phone_numbers(contact_key):
     for phone in contact.phone_numbers:
         # it doesn't ensure any order
         if phone.phone_type == 'home':
-            assert '(650) 555 - 2200' == phone.number
+            if '(650) 555 - 2200' != phone.number:
+                raise AssertionError
         elif phone.phone_type == 'mobile':
-            assert phone.number == '(650) 555 - 2201'
+            if phone.number != '(650) 555 - 2201':
+                raise AssertionError
 
     # filer the phone numbers by type. Note that this is an
     # ancestor query.
     query = contact.phone_numbers.filter(
         models.PhoneNumber.phone_type == 'home')
     entities = query.fetch()
-    assert 1 == len(entities)
-    assert entities[0].number == '(650) 555 - 2200'
+    if 1 != len(entities):
+        raise AssertionError
+    if entities[0].number != '(650) 555 - 2200':
+        raise AssertionError
 
     # delete the mobile phones
     query = contact.phone_numbers.filter(
@@ -79,4 +85,5 @@ def test_phone_numbers(contact_key):
     query = contact.phone_numbers.filter(
         models.PhoneNumber.phone_type == 'mobile')
     entities = query.fetch()
-    assert 0 == len(entities)
+    if 0 != len(entities):
+        raise AssertionError

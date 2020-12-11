@@ -41,4 +41,5 @@ def test_relationship(testbed):
                           title='president').put()
 
     # get the list of companies that Mary belongs to
-    assert len(mary.companies) == 2
+    if len(mary.companies) != 2:
+        raise AssertionError

@@ -77,12 +77,14 @@ def _verify_mocked_oauth2_token(token, request, audience):
 
 def test_index(client):
     r = client.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_post_index(client):
     r = client.post('/', data={'payload': 'Test payload'})
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_push_endpoint(monkeypatch, client, fake_token):
@@ -105,19 +107,24 @@ def test_push_endpoint(monkeypatch, client, fake_token):
             Authorization="Bearer " + fake_token.decode('utf-8')
         )
     )
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
     # Make sure the message is visible on the home page.
     r = client.get('/')
-    assert r.status_code == 200
-    assert 'Test message' in r.data.decode('utf-8')
+    if r.status_code != 200:
+        raise AssertionError
+    if 'Test message' not in r.data.decode('utf-8'):
+        raise AssertionError
 
 
 def test_push_endpoint_errors(client):
     # no token
     r = client.post('/_ah/push-handlers/receive_messages')
-    assert r.status_code == 400
+    if r.status_code != 400:
+        raise AssertionError
 
     # invalid token
     r = client.post('/_ah/push-handlers/receive_messages?token=bad')
-    assert r.status_code == 400
+    if r.status_code != 400:
+        raise AssertionError

@@ -22,4 +22,5 @@ def test_models(testbed):
     contact = models.Contact(name=name)
     contact.put()
     contact = contact.key.get()
-    assert contact.name == name
+    if contact.name != name:
+        raise AssertionError

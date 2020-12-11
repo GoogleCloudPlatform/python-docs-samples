@@ -20,7 +20,8 @@ import my_models
 def create_entity():
     # Create an entity and write it to the Datastore.
     entity = my_models.MyModel(name='booh', xyz=[10**100, 6**666])
-    assert entity.abc == 0
+    if entity.abc != 0:
+        raise AssertionError
     key = entity.put()
     return key
 

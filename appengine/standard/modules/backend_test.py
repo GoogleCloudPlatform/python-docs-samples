@@ -25,5 +25,7 @@ def app():
 
 def test_get_module_info(app):
     result = app.get('/')
-    assert result.status_code == 200
-    assert 'hello world' in result.body
+    if result.status_code != 200:
+        raise AssertionError
+    if 'hello world' not in result.body:
+        raise AssertionError
