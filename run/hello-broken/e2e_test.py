@@ -78,8 +78,7 @@ def deployed_service(container_image):
             "--region=us-central1",
             "--platform=managed",
             "--no-allow-unauthenticated"
-
-        ]
+        ], check=True
     )
 
     yield service_name
