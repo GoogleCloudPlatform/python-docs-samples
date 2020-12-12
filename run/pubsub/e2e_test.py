@@ -20,19 +20,20 @@ import subprocess
 import time
 import uuid
 
+from google.api_core.exceptions import NotFound
 from google.cloud import logging_v2
 from google.cloud import pubsub_v1
-from google.api_core.exceptions import NotFound
 
 
 import pytest
 
 
 SUFFIX = uuid.uuid4().hex[0:6]
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 CLOUD_RUN_SERVICE = f"pubsub-test-{SUFFIX}"
 TOPIC = f"pubsub-test_{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/pubsub-test-{SUFFIX}"
+
 
 @pytest.fixture
 def container_image():
@@ -47,7 +48,8 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ], check=True
+        ],
+        check=True,
     )
     yield IMAGE_NAME
 
@@ -62,8 +64,10 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ],
+        check=True,
     )
+
 
 @pytest.fixture
 def deployed_service(container_image):
@@ -81,13 +85,13 @@ def deployed_service(container_image):
             "--project",
             PROJECT,
             "--platform=managed",
-            "--no-allow-unauthenticated"
-
-        ], check=True
+            "--no-allow-unauthenticated",
+        ],
+        check=True,
     )
 
     yield CLOUD_RUN_SERVICE
-  
+
     subprocess.run(
         [
             "gcloud",
@@ -100,9 +104,9 @@ def deployed_service(container_image):
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ],
+        check=True,
     )
-
 
 
 @pytest.fixture
@@ -122,7 +126,7 @@ def service_url(deployed_service):
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
-        check=True
+        check=True,
     ).stdout.strip()
 
     yield service_url.decode()
@@ -132,12 +136,13 @@ def service_url(deployed_service):
 def pubsub_topic():
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, TOPIC)
-    topic = publisher.create_topic(request={"name": topic_path})
+    publisher.create_topic(request={"name": topic_path})
     yield TOPIC
     try:
         publisher.delete_topic(request={"topic": topic_path})
     except NotFound:
-        print("Topic not found, it was either never created or was already deleted.") 
+        print("Topic not found, it was either never created or was already deleted.")
+
 
 @pytest.fixture(autouse=True)
 def pubsub_subscription(pubsub_topic, service_url):
@@ -150,11 +155,16 @@ def pubsub_subscription(pubsub_topic, service_url):
     subscription_id = f"{pubsub_topic}_sub"
     topic_path = publisher.topic_path(PROJECT, pubsub_topic)
     subscription_path = subscriber.subscription_path(PROJECT, subscription_id)
-    push_config = pubsub_v1.types.PushConfig(push_endpoint=service_url, oidc_token=pubsub_v1.types.PushConfig.OidcToken(service_account_email=f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com"))
+    push_config = pubsub_v1.types.PushConfig(
+        push_endpoint=service_url,
+        oidc_token=pubsub_v1.types.PushConfig.OidcToken(
+            service_account_email=f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com"
+        ),
+    )
 
-    #wrapping in 'with' block automatically calls close on gRPC channel
+    # wrapping in 'with' block automatically calls close on gRPC channel
     with subscriber:
-        subscription = subscriber.create_subscription(
+        subscriber.create_subscription(
             request={
                 "name": subscription_path,
                 "topic": topic_path,
@@ -164,15 +174,14 @@ def pubsub_subscription(pubsub_topic, service_url):
     yield
     subscriber = pubsub_v1.SubscriberClient()
 
-   # delete subscription 
+    # delete subscription
     with subscriber:
         try:
-            subscriber.delete_subscription(request={
-                "subscription": subscription_path
-            })
+            subscriber.delete_subscription(request={"subscription": subscription_path})
         except NotFound:
-            print("Unable to delete - subscription either never created or already deleted.")
-
+            print(
+                "Unable to delete - subscription either never created or already deleted."
+            )
 
 
 def test_end_to_end(pubsub_topic):

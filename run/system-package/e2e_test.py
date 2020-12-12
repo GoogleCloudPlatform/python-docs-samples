@@ -46,7 +46,8 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ], check=True
+        ],
+        check=True,
     )
     yield IMAGE_NAME
 
@@ -61,8 +62,10 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ],
+        check=True,
     )
+
 
 @pytest.fixture
 def deployed_service(container_image):
@@ -80,9 +83,9 @@ def deployed_service(container_image):
             PROJECT,
             "--region=us-central1",
             "--platform=managed",
-            "--no-allow-unauthenticated"
-
-        ], check=True
+            "--no-allow-unauthenticated",
+        ],
+        check=True,
     )
 
     yield service_name
@@ -99,34 +102,43 @@ def deployed_service(container_image):
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ],
+        check=True,
     )
 
 
 @pytest.fixture
 def service_url_auth_token(deployed_service):
     # Get Cloud Run service URL and auth token
-    service_url = subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "describe",
-            deployed_service,
-            "--platform=managed",
-            "--region=us-central1",
-            "--format=value(status.url)",
-            "--project",
-            PROJECT,
-        ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
-    auth_token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
     yield service_url, auth_token
 
@@ -134,9 +146,7 @@ def service_url_auth_token(deployed_service):
 def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
 
-    data = (
-        "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20"))
-    print(service_url)
+    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20")
     print(f"{service_url}{data}")
 
     req = request.Request(

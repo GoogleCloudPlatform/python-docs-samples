@@ -27,18 +27,18 @@ def client():
 
 
 def test_no_trace_in_headers(client, capsys):
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
     print(out)
-    assert 'trace' not in out
+    assert "trace" not in out
 
 
 def test_with_cloud_headers(client, capsys):
-    r = client.get('/', headers={'X-Cloud-Trace-Context': 'foo/bar'})
+    r = client.get("/", headers={"X-Cloud-Trace-Context": "foo/bar"})
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
     print(out)
-    assert 'trace' in out
+    assert "trace" in out
