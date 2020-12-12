@@ -76,6 +76,8 @@ def deployed_service(container_image):
             service_name,
             "--image",
             container_image,
+            "--project",
+            PROJECT,
             "--region=us-central1",
             "--platform=managed",
             "--no-allow-unauthenticated"

@@ -80,6 +80,8 @@ def deployed_service(container_image, output_bucket):
             "--image",
             container_image,
             "--region=us-central1",
+            "--project",
+            PROJECT,
             "--platform=managed",
             "--set-env-vars",
             f"BLURRED_BUCKET_NAME={output_bucket.name}",
