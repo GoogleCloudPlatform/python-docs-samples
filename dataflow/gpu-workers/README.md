@@ -84,16 +84,15 @@ To run with GPUs, we need to configure:
 
 ```sh
 export REGION="us-central1"
-export WORKER_ZONE="$REGION-a"
+export WORKER_ZONE="us-central1-a"
 export GPU_TYPE="nvidia-tesla-v100"
-export MACHINE_TYPE="custom-1-13312-ext"
 
 python landsat_view.py \
     --output-path-prefix "gs://$BUCKET/samples/dataflow/landsat/" \
     --runner "DataflowRunner" \
     --project "$PROJECT" \
     --region "$REGION" \
-    --machine_type "$MACHINE_TYPE" \
+    --machine_type "custom-1-13312-ext" \
     --worker_harness_container_image "$IMAGE" \
     --worker_zone "$WORKER_ZONE" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
