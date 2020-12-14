@@ -35,8 +35,10 @@ def test_url_fetch(urlfetch_mock, app):
     urlfetch_mock.create_rpc = mock.Mock(
         return_value=mock.Mock(get_result=get_result_mock))
     response = app.get('/')
-    assert response.status_int == 200
-    assert 'I\'m Feeling Lucky' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'I\'m Feeling Lucky' not in response.body:
+        raise AssertionError
 
 
 @mock.patch('rpc.urlfetch')
@@ -47,7 +49,8 @@ def test_url_fetch_rpc_error(urlfetch_mock, app):
     urlfetch_mock.create_rpc = mock.Mock(
         return_value=mock.Mock(get_result=get_result_mock))
     response = app.get('/', status=500)
-    assert 'Error fetching URL' in response.body
+    if 'Error fetching URL' not in response.body:
+        raise AssertionError
 
 
 @mock.patch('rpc.urlfetch')
@@ -59,7 +62,8 @@ def test_url_fetch_http_error(urlfetch_mock, app):
     urlfetch_mock.create_rpc = mock.Mock(
         return_value=mock.Mock(get_result=get_result_mock))
     response = app.get('/', status=404)
-    assert '404' in response.body
+    if '404' not in response.body:
+        raise AssertionError
 
 
 @mock.patch('rpc.urlfetch')

@@ -24,14 +24,16 @@ class TestHello(unittest.TestCase):
         req = unittest.mock.Mock()
 
         # Call tested function
-        assert main.hello_world(req) == "Hello World!"
+        if main.hello_world(req) != "Hello World!":
+            raise AssertionError
 
     @staticmethod
     def test_hello_name_no_name():
         req = unittest.mock.Mock(args={})
 
         # Call tested function
-        assert main.hello_name(req) == "Hello World!"
+        if main.hello_name(req) != "Hello World!":
+            raise AssertionError
 
     @staticmethod
     def test_hello_name_with_name():
@@ -39,4 +41,5 @@ class TestHello(unittest.TestCase):
         req = unittest.mock.Mock(args={"name": name})
 
         # Call tested function
-        assert main.hello_name(req) == "Hello {}!".format(name)
+        if main.hello_name(req) != "Hello {}!".format(name):
+            raise AssertionError

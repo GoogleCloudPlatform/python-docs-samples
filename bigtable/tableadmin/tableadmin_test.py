@@ -33,22 +33,38 @@ def test_run_table_operations(capsys):
     run_table_operations(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
 
-    assert 'Creating the ' + table_name + ' table.' in out
-    assert 'Listing tables in current project.' in out
-    assert 'Creating column family cf1 with with MaxAge GC Rule' in out
-    assert 'Created column family cf1 with MaxAge GC Rule.' in out
-    assert 'Created column family cf2 with Max Versions GC Rule.' in out
-    assert 'Created column family cf3 with Union GC rule' in out
-    assert 'Created column family cf4 with Intersection GC rule.' in out
-    assert 'Created column family cf5 with a Nested GC rule.' in out
-    assert 'Printing Column Family and GC Rule for all column families.' in out
-    assert 'Updating column family cf1 GC rule...' in out
-    assert 'Updated column family cf1 GC rule' in out
-    assert 'Print column family cf1 GC rule after update...' in out
-    assert 'Column Family: cf1' in out
-    assert 'max_num_versions: 1' in out
-    assert 'Delete a column family cf2...' in out
-    assert 'Column family cf2 deleted successfully.' in out
+    if 'Creating the ' + table_name + ' table.' not in out:
+        raise AssertionError
+    if 'Listing tables in current project.' not in out:
+        raise AssertionError
+    if 'Creating column family cf1 with with MaxAge GC Rule' not in out:
+        raise AssertionError
+    if 'Created column family cf1 with MaxAge GC Rule.' not in out:
+        raise AssertionError
+    if 'Created column family cf2 with Max Versions GC Rule.' not in out:
+        raise AssertionError
+    if 'Created column family cf3 with Union GC rule' not in out:
+        raise AssertionError
+    if 'Created column family cf4 with Intersection GC rule.' not in out:
+        raise AssertionError
+    if 'Created column family cf5 with a Nested GC rule.' not in out:
+        raise AssertionError
+    if 'Printing Column Family and GC Rule for all column families.' not in out:
+        raise AssertionError
+    if 'Updating column family cf1 GC rule...' not in out:
+        raise AssertionError
+    if 'Updated column family cf1 GC rule' not in out:
+        raise AssertionError
+    if 'Print column family cf1 GC rule after update...' not in out:
+        raise AssertionError
+    if 'Column Family: cf1' not in out:
+        raise AssertionError
+    if 'max_num_versions: 1' not in out:
+        raise AssertionError
+    if 'Delete a column family cf2...' not in out:
+        raise AssertionError
+    if 'Column family cf2 deleted successfully.' not in out:
+        raise AssertionError
 
 
 def test_delete_table(capsys):
@@ -59,6 +75,9 @@ def test_delete_table(capsys):
     delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
 
-    assert 'Table ' + table_name + ' exists.' in out
-    assert 'Deleting ' + table_name + ' table.' in out
-    assert 'Deleted ' + table_name + ' table.' in out
+    if 'Table ' + table_name + ' exists.' not in out:
+        raise AssertionError
+    if 'Deleting ' + table_name + ' table.' not in out:
+        raise AssertionError
+    if 'Deleted ' + table_name + ' table.' not in out:
+        raise AssertionError

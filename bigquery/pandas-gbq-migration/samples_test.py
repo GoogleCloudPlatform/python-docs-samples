@@ -48,12 +48,14 @@ def test_client_library_query():
     # Run a Standard SQL query with the project set explicitly
     project_id = 'your-project-id'
     # [END bigquery_migration_client_library_query]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
     project_id = os.environ['GCLOUD_PROJECT']
     # [START bigquery_migration_client_library_query]
     df = client.query(sql, project=project_id).to_dataframe()
     # [END bigquery_migration_client_library_query]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_pandas_gbq_query():
@@ -73,12 +75,14 @@ def test_pandas_gbq_query():
     # Run a Standard SQL query with the project set explicitly
     project_id = 'your-project-id'
     # [END bigquery_migration_pandas_gbq_query]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
     project_id = os.environ['GCLOUD_PROJECT']
     # [START bigquery_migration_pandas_gbq_query]
     df = pandas.read_gbq(sql, project_id=project_id, dialect='standard')
     # [END bigquery_migration_pandas_gbq_query]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_client_library_legacy_query():
@@ -96,7 +100,8 @@ def test_client_library_legacy_query():
 
     df = client.query(sql, job_config=query_config).to_dataframe()
     # [END bigquery_migration_client_library_query_legacy]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_pandas_gbq_legacy_query():
@@ -112,7 +117,8 @@ def test_pandas_gbq_legacy_query():
 
     df = pandas.read_gbq(sql, dialect='legacy')
     # [END bigquery_migration_pandas_gbq_query_legacy]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_client_library_query_with_parameters():
@@ -135,7 +141,8 @@ def test_client_library_query_with_parameters():
 
     df = client.query(sql, job_config=query_config).to_dataframe()
     # [END bigquery_migration_client_library_query_parameters]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_pandas_gbq_query_with_parameters():
@@ -168,7 +175,8 @@ def test_pandas_gbq_query_with_parameters():
 
     df = pandas.read_gbq(sql, configuration=query_config)
     # [END bigquery_migration_pandas_gbq_query_parameters]
-    assert len(df) > 0
+    if len(df) <= 0:
+        raise AssertionError
 
 
 def test_client_library_upload_from_dataframe(temp_dataset):
@@ -194,7 +202,8 @@ def test_client_library_upload_from_dataframe(temp_dataset):
     # [END bigquery_migration_client_library_upload_from_dataframe]
     client = bigquery.Client()
     table = client.get_table(table_ref)
-    assert table.num_rows == 3
+    if table.num_rows != 3:
+        raise AssertionError
 
 
 def test_pandas_gbq_upload_from_dataframe(temp_dataset):
@@ -221,4 +230,5 @@ def test_pandas_gbq_upload_from_dataframe(temp_dataset):
     # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
     client = bigquery.Client()
     table = client.get_table(temp_dataset.table(table_id))
-    assert table.num_rows == 3
+    if table.num_rows != 3:
+        raise AssertionError

@@ -45,7 +45,10 @@ def test_wait_for_maintenance(requests_mock):
     except StopIteration:
         pass
 
-    assert callback_mock.call_count == 2
-    assert callback_mock.call_args_list[0][0] == (
-        'MIGRATE_ON_HOST_MAINTENANCE',)
-    assert callback_mock.call_args_list[1][0] == (None,)
+    if callback_mock.call_count != 2:
+        raise AssertionError
+    if callback_mock.call_args_list[0][0] != (
+        'MIGRATE_ON_HOST_MAINTENANCE',):
+        raise AssertionError
+    if callback_mock.call_args_list[1][0] != (None,):
+        raise AssertionError

@@ -28,11 +28,15 @@ def client():
 
 def test_index_wo_credentials(client):
     r = client.get('/')
-    assert r.status_code == 302
-    assert r.headers['location'].endswith('/authorize')
+    if r.status_code != 302:
+        raise AssertionError
+    if not r.headers['location'].endswith('/authorize'):
+        raise AssertionError
 
 
 def test_authorize(client):
     r = client.get('/authorize')
-    assert r.status_code == 302
-    assert r.headers['location'].startswith('https://accounts.google.com')
+    if r.status_code != 302:
+        raise AssertionError
+    if not r.headers['location'].startswith('https://accounts.google.com'):
+        raise AssertionError

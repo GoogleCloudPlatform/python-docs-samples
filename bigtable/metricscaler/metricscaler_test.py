@@ -32,7 +32,8 @@ SIZE_CHANGE_STEP = 3
 
 
 def test_get_cpu_load():
-    assert float(get_cpu_load()) > 0.0
+    if float(get_cpu_load()) <= 0.0:
+        raise AssertionError
 
 
 def test_scale_bigtable():
@@ -51,7 +52,8 @@ def test_scale_bigtable():
         cluster.reload()
         new_node_count = cluster.serve_nodes
         try:
-            assert (new_node_count == (original_node_count + SIZE_CHANGE_STEP))
+            if (new_node_count != (original_node_count + SIZE_CHANGE_STEP)):
+                raise AssertionError
         except AssertionError:
             if n == 9:
                 raise
@@ -63,7 +65,8 @@ def test_scale_bigtable():
         cluster.reload()
         final_node_count = cluster.serve_nodes
         try:
-            assert final_node_count == original_node_count
+            if final_node_count != original_node_count:
+                raise AssertionError
         except AssertionError:
             if n == 9:
                 raise

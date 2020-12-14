@@ -37,7 +37,8 @@ def test_create_feed(capsys):
     quickstart_createfeed.create_feed(
         PROJECT, FEED_ID, [ASSET_NAME, ], full_topic_name)
     out, _ = capsys.readouterr()
-    assert "feed" in out
+    if "feed" not in out:
+        raise AssertionError
 
     # Clean up, delete the feed
     feed_name = "projects/{}/feeds/{}".format(project_number, FEED_ID)

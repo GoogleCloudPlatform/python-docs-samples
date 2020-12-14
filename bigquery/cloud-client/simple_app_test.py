@@ -18,4 +18,5 @@ import simple_app
 def test_query_stackoverflow(capsys):
     simple_app.query_stackoverflow()
     out, _ = capsys.readouterr()
-    assert 'views' in out
+    if 'views' not in out:
+        raise AssertionError

@@ -49,4 +49,5 @@ def test_export_assets(asset_bucket, capsys):
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
 
-    assert dump_file_path in out
+    if dump_file_path not in out:
+        raise AssertionError

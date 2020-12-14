@@ -53,7 +53,8 @@ class TestContainerAnalysisSamples:
 
     def test_create_note(self):
         new_note = samples.get_note(self.note_id, PROJECT_ID)
-        assert new_note.name == self.note_obj.name
+        if new_note.name != self.note_obj.name:
+            raise AssertionError
 
     def test_delete_note(self):
         samples.delete_note(self.note_id, PROJECT_ID)
@@ -63,7 +64,8 @@ class TestContainerAnalysisSamples:
             pass
         else:
             # didn't raise exception we expected
-            assert (False)
+            if not (False):
+                raise AssertionError
 
     def test_create_occurrence(self):
         created = samples.create_occurrence(self.image_url,
@@ -71,7 +73,8 @@ class TestContainerAnalysisSamples:
                                             PROJECT_ID,
                                             PROJECT_ID)
         retrieved = samples.get_occurrence(basename(created.name), PROJECT_ID)
-        assert created.name == retrieved.name
+        if created.name != retrieved.name:
+            raise AssertionError
         # clean up
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
 
@@ -87,7 +90,8 @@ class TestContainerAnalysisSamples:
             pass
         else:
             # didn't raise exception we expected
-            assert False
+            if not False:
+                raise AssertionError
 
     def test_occurrences_for_image(self):
         orig_count = samples.get_occurrences_for_image(self.image_url,
@@ -103,8 +107,10 @@ class TestContainerAnalysisSamples:
             new_count = samples.get_occurrences_for_image(self.image_url,
                                                           PROJECT_ID)
             sleep(SLEEP_TIME)
-        assert new_count == 1
-        assert orig_count == 0
+        if new_count != 1:
+            raise AssertionError
+        if orig_count != 0:
+            raise AssertionError
         # clean up
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
@@ -122,8 +128,10 @@ class TestContainerAnalysisSamples:
             new_count = samples.get_occurrences_for_note(self.note_id,
                                                          PROJECT_ID)
             sleep(SLEEP_TIME)
-        assert new_count == 1
-        assert orig_count == 0
+        if new_count != 1:
+            raise AssertionError
+        if orig_count != 0:
+            raise AssertionError
         # clean up
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
@@ -162,7 +170,8 @@ class TestContainerAnalysisSamples:
                 sleep(SLEEP_TIME)
             print('done. msg_count = {}'.format(receiver.msg_count))
             success = receiver.msg_count == total_created
-        assert receiver.msg_count == total_created
+        if receiver.msg_count != total_created:
+            raise AssertionError
         # clean up
         client.delete_subscription(subscription_name)
 
@@ -174,7 +183,8 @@ class TestContainerAnalysisSamples:
             pass
         else:
             # we expect timeout error
-            assert False
+            if not False:
+                raise AssertionError
 
         # create discovery occurrence
         note_id = 'discovery-note-{}'.format(int(time()))
@@ -202,8 +212,10 @@ class TestContainerAnalysisSamples:
         # poll again
         disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
         status = disc.discovery.analysis_status
-        assert disc is not None
-        assert status == DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
+        if disc is None:
+            raise AssertionError
+        if status != DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS:
+            raise AssertionError
 
         # clean up
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
@@ -212,7 +224,8 @@ class TestContainerAnalysisSamples:
     def test_find_vulnerabilities_for_image(self):
         occ_list = samples.find_vulnerabilities_for_image(self.image_url,
                                                           PROJECT_ID)
-        assert len(occ_list) == 0
+        if len(occ_list) != 0:
+            raise AssertionError
 
         created = samples.create_occurrence(self.image_url,
                                             self.note_id,
@@ -226,14 +239,16 @@ class TestContainerAnalysisSamples:
                                                               PROJECT_ID)
             count = len(occ_list)
             sleep(SLEEP_TIME)
-        assert len(occ_list) == 1
+        if len(occ_list) != 1:
+            raise AssertionError
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
 
     def test_find_high_severity_vulnerabilities(self):
         occ_list = samples.find_high_severity_vulnerabilities_for_image(
                 self.image_url,
                 PROJECT_ID)
-        assert len(occ_list) == 0
+        if len(occ_list) != 0:
+            raise AssertionError
 
         # create new high severity vulnerability
         note_id = 'discovery-note-{}'.format(int(time()))
@@ -288,7 +303,8 @@ class TestContainerAnalysisSamples:
                                                               PROJECT_ID)
             count = len(occ_list)
             sleep(SLEEP_TIME)
-        assert len(occ_list) == 1
+        if len(occ_list) != 1:
+            raise AssertionError
         # clean up
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
         samples.delete_note(note_id, PROJECT_ID)

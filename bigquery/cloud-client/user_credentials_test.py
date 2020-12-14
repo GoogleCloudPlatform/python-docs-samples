@@ -39,4 +39,5 @@ def test_auth_query_console(mock_flow, capsys):
     main(PROJECT, launch_browser=False)
     out, _ = capsys.readouterr()
     # Fun fact: William P. Wood was the 1st director of the US Secret Service.
-    assert 'William' in out
+    if 'William' not in out:
+        raise AssertionError

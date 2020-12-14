@@ -42,6 +42,7 @@ def test_update_feed(capsys):
     quickstart_updatefeed.update_feed(feed_name, new_full_topic_name)
     out, _ = capsys.readouterr()
 
-    assert "updated_feed" in out
+    if "updated_feed" not in out:
+        raise AssertionError
     # Clean up and delete the feed
     quickstart_deletefeed.delete_feed(feed_name)

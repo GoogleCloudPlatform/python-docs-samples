@@ -21,24 +21,30 @@ def test_index(testbed, login):
     app = webtest.TestApp(main.app)
 
     response = app.get('/')
-    assert 'Login' in response.body
+    if 'Login' not in response.body:
+        raise AssertionError
 
     login()
     response = app.get('/')
-    assert 'Logout' in response.body
-    assert 'user@example.com' in response.body
+    if 'Logout' not in response.body:
+        raise AssertionError
+    if 'user@example.com' not in response.body:
+        raise AssertionError
 
 
 def test_admin(testbed, login):
     app = webtest.TestApp(main.app)
 
     response = app.get('/admin')
-    assert 'You are not logged in' in response.body
+    if 'You are not logged in' not in response.body:
+        raise AssertionError
 
     login()
     response = app.get('/admin')
-    assert 'You are not an administrator' in response.body
+    if 'You are not an administrator' not in response.body:
+        raise AssertionError
 
     login(is_admin=True)
     response = app.get('/admin')
-    assert 'You are an administrator' in response.body
+    if 'You are an administrator' not in response.body:
+        raise AssertionError

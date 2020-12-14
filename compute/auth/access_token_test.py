@@ -36,4 +36,5 @@ def test_main(requests_mock):
 
     access_token.main(PROJECT)
 
-    assert requests_mock.get.call_count == 2
+    if requests_mock.get.call_count != 2:
+        raise AssertionError

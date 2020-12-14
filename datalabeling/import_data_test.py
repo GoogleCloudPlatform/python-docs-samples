@@ -39,4 +39,5 @@ def dataset():
 def test_import_data(capsys, dataset):
     import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
     out, _ = capsys.readouterr()
-    assert 'Dataset resource name: ' in out
+    if 'Dataset resource name: ' not in out:
+        raise AssertionError

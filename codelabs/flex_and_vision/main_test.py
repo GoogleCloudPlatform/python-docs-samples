@@ -32,7 +32,8 @@ def app():
 
 def test_index(app):
     r = app.get('/')
-    assert r.status_code == 200
+    if r.status_code != 200:
+        raise AssertionError
 
 
 def test_upload_photo(app):
@@ -45,4 +46,5 @@ def test_upload_photo(app):
         }
     )
 
-    assert r.status_code == 302
+    if r.status_code != 302:
+        raise AssertionError

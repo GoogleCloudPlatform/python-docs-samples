@@ -25,4 +25,5 @@ def test_main(capsys):
     main(PROJECT, BIGTABLE_CLUSTER, TABLE_NAME)
 
     out, _ = capsys.readouterr()
-    assert '"cf1:c1": "test-value"' in out
+    if '"cf1:c1": "test-value"' not in out:
+        raise AssertionError

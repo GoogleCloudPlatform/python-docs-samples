@@ -51,4 +51,5 @@ def dataset_exists(dataset, client):
 def test_quickstart(capsys, temporary_dataset):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert DATASET_ID in out
+    if DATASET_ID not in out:
+        raise AssertionError

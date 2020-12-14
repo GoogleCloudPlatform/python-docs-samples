@@ -82,7 +82,8 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'total_births' in ip.user_ns  # verify that variable exists
+    if 'total_births' not in ip.user_ns:
+        raise AssertionError
     total_births = ip.user_ns['total_births']
     # [START bigquery_jupyter_plot_births_by_year]
     total_births.plot(kind='bar', x='year', y='birth_count');
@@ -104,7 +105,8 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'births_by_weekday' in ip.user_ns  # verify that variable exists
+    if 'births_by_weekday' not in ip.user_ns:
+        raise AssertionError
     births_by_weekday = ip.user_ns['births_by_weekday']
     # [START bigquery_jupyter_plot_births_by_weekday]
     births_by_weekday.plot(x='wday');

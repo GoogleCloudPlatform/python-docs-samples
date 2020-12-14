@@ -58,19 +58,23 @@ def test_writes(capsys, table_id):
     write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully wrote row' in out
+    if 'Successfully wrote row' not in out:
+        raise AssertionError
 
     write_increment(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully updated row' in out
+    if 'Successfully updated row' not in out:
+        raise AssertionError
 
     write_conditional(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully updated row\'s os_name' in out
+    if 'Successfully updated row\'s os_name' not in out:
+        raise AssertionError
 
     write_batch(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully wrote 2 rows' in out
+    if 'Successfully wrote 2 rows' not in out:
+        raise AssertionError

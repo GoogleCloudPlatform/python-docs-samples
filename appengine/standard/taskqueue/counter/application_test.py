@@ -23,10 +23,12 @@ def test_all(testbed, run_tasks):
     test_worker = webtest.TestApp(worker.app)
 
     response = test_app.get('/')
-    assert '0' in response.body
+    if '0' not in response.body:
+        raise AssertionError
 
     test_app.post('/enqueue', {'amount': 5})
     run_tasks(test_worker)
 
     response = test_app.get('/')
-    assert '5' in response.body
+    if '5' not in response.body:
+        raise AssertionError

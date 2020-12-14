@@ -27,5 +27,7 @@ def test_get(testbed):
 
     response = app.get('/')
 
-    assert response.status_int == 200
-    assert 'The demo ran successfully!' in response.body
+    if response.status_int != 200:
+        raise AssertionError
+    if 'The demo ran successfully!' not in response.body:
+        raise AssertionError

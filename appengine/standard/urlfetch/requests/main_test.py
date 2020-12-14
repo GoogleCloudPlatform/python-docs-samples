@@ -20,5 +20,7 @@ def test_index(testbed):
 
     app = main.app.test_client()
     response = app.get('/')
-    assert response.status_code == 200
-    assert 'Google' in response.data.decode('utf-8')
+    if response.status_code != 200:
+        raise AssertionError
+    if 'Google' not in response.data.decode('utf-8'):
+        raise AssertionError

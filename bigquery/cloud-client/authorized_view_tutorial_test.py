@@ -48,8 +48,10 @@ def test_authorized_view_tutorial(client, to_delete):
     analyst_email = 'example-analyst-group@google.com'
     analyst_entries = [entry for entry in shared_dataset.access_entries
                        if entry.entity_id == analyst_email]
-    assert len(analyst_entries) == 1
-    assert analyst_entries[0].role == 'READER'
+    if len(analyst_entries) != 1:
+        raise AssertionError
+    if analyst_entries[0].role != 'READER':
+        raise AssertionError
 
     authorized_view_entries = [entry for entry in source_dataset.access_entries
                                if entry.entity_type == 'view']
@@ -58,5 +60,7 @@ def test_authorized_view_tutorial(client, to_delete):
         'datasetId': 'shared_views',
         'tableId': 'github_analyst_view',
     }
-    assert len(authorized_view_entries) == 1
-    assert authorized_view_entries[0].entity_id == expected_view_ref
+    if len(authorized_view_entries) != 1:
+        raise AssertionError
+    if authorized_view_entries[0].entity_id != expected_view_ref:
+        raise AssertionError
