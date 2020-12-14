@@ -37,12 +37,12 @@ def detect_intent_audio(project_id, session_id, audio_file_path,
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    import dialogflow_v2 as dialogflow
+    from google.cloud import dialogflow
 
     session_client = dialogflow.SessionsClient()
 
     # Note: hard coding audio_encoding and sample_rate_hertz for simplicity.
-    audio_encoding = dialogflow.enums.AudioEncoding.AUDIO_ENCODING_LINEAR_16
+    audio_encoding = dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16
     sample_rate_hertz = 16000
 
     session = session_client.session_path(project_id, session_id)
@@ -51,14 +51,17 @@ def detect_intent_audio(project_id, session_id, audio_file_path,
     with open(audio_file_path, 'rb') as audio_file:
         input_audio = audio_file.read()
 
-    audio_config = dialogflow.types.InputAudioConfig(
+    audio_config = dialogflow.InputAudioConfig(
         audio_encoding=audio_encoding, language_code=language_code,
         sample_rate_hertz=sample_rate_hertz)
-    query_input = dialogflow.types.QueryInput(audio_config=audio_config)
+    query_input = dialogflow.QueryInput(audio_config=audio_config)
 
-    response = session_client.detect_intent(
-        session=session, query_input=query_input,
-        input_audio=input_audio)
+    request = dialogflow.DetectIntentRequest(
+        session=session,
+        query_input=query_input,
+        input_audio=input_audio,
+    )
+    response = session_client.detect_intent(request=request)
 
     print('=' * 20)
     print('Query text: {}'.format(response.query_result.query_text))

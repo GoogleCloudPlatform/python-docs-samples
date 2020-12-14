@@ -35,29 +35,28 @@ def detect_intent_with_sentiment_analysis(project_id, session_id, texts,
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    import dialogflow_v2 as dialogflow
+    from google.cloud import dialogflow
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
     print('Session path: {}\n'.format(session_path))
 
     for text in texts:
-        text_input = dialogflow.types.TextInput(
+        text_input = dialogflow.TextInput(
             text=text, language_code=language_code)
 
-        query_input = dialogflow.types.QueryInput(text=text_input)
+        query_input = dialogflow.QueryInput(text=text_input)
 
         # Enable sentiment analysis
-        sentiment_config = dialogflow.types.SentimentAnalysisRequestConfig(
+        sentiment_config = dialogflow.SentimentAnalysisRequestConfig(
             analyze_query_text_sentiment=True)
 
         # Set the query parameters with sentiment analysis
-        query_params = dialogflow.types.QueryParameters(
+        query_params = dialogflow.QueryParameters(
             sentiment_analysis_request_config=sentiment_config)
 
         response = session_client.detect_intent(
-            session=session_path, query_input=query_input,
-            query_params=query_params)
+            request={'session': session_path, 'query_input': query_input, 'query_params': query_params})
 
         print('=' * 20)
         print('Query text: {}'.format(response.query_result.query_text))

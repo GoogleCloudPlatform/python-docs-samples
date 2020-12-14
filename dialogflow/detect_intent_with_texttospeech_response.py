@@ -34,26 +34,29 @@ def detect_intent_with_texttospeech_response(project_id, session_id, texts,
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    import dialogflow_v2 as dialogflow
+    from google.cloud import dialogflow
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
     print('Session path: {}\n'.format(session_path))
 
     for text in texts:
-        text_input = dialogflow.types.TextInput(
+        text_input = dialogflow.TextInput(
             text=text, language_code=language_code)
 
-        query_input = dialogflow.types.QueryInput(text=text_input)
+        query_input = dialogflow.QueryInput(text=text_input)
 
         # Set the query parameters with sentiment analysis
-        output_audio_config = dialogflow.types.OutputAudioConfig(
-            audio_encoding=dialogflow.enums.OutputAudioEncoding
+        output_audio_config = dialogflow.OutputAudioConfig(
+            audio_encoding=dialogflow.OutputAudioEncoding
             .OUTPUT_AUDIO_ENCODING_LINEAR_16)
 
-        response = session_client.detect_intent(
-            session=session_path, query_input=query_input,
-            output_audio_config=output_audio_config)
+        request = dialogflow.DetectIntentRequest(
+            session=session_path,
+            query_input=query_input,
+            output_audio_config=output_audio_config
+        )
+        response = session_client.detect_intent(request=request)
 
         print('=' * 20)
         print('Query text: {}'.format(response.query_result.query_text))

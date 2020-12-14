@@ -40,28 +40,30 @@ def detect_intent_knowledge(project_id, session_id, language_code,
     knowledge_base_id: The Knowledge base's id to query against.
     texts: A list of text queries to send.
     """
-    import dialogflow_v2beta1 as dialogflow
+    from google.cloud import dialogflow_v2beta1 as dialogflow
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
     print('Session path: {}\n'.format(session_path))
 
     for text in texts:
-        text_input = dialogflow.types.TextInput(
+        text_input = dialogflow.TextInput(
             text=text, language_code=language_code)
 
-        query_input = dialogflow.types.QueryInput(text=text_input)
+        query_input = dialogflow.QueryInput(text=text_input)
 
-        knowledge_base_path = dialogflow.knowledge_bases_client \
-            .KnowledgeBasesClient \
+        knowledge_base_path = dialogflow.KnowledgeBasesClient \
             .knowledge_base_path(project_id, knowledge_base_id)
 
-        query_params = dialogflow.types.QueryParameters(
+        query_params = dialogflow.QueryParameters(
             knowledge_base_names=[knowledge_base_path])
 
-        response = session_client.detect_intent(
-            session=session_path, query_input=query_input,
-            query_params=query_params)
+        request = dialogflow.DetectIntentRequest(
+            session=session_path,
+            query_input=query_input,
+            query_params=query_params
+        )
+        response = session_client.detect_intent(request=request)
 
         print('=' * 20)
         print('Query text: {}'.format(response.query_result.query_text))

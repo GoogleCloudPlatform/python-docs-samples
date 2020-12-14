@@ -17,7 +17,7 @@ from __future__ import absolute_import
 import os
 import uuid
 
-import dialogflow_v2beta1 as dialogflow
+from google.cloud import dialogflow_v2beta1
 import pytest
 
 import knowledge_base_management
@@ -32,11 +32,11 @@ def teardown():
     yield
 
     # Delete the created knowledge base
-    client = dialogflow.KnowledgeBasesClient()
+    client = dialogflow_v2beta1.KnowledgeBasesClient()
     assert pytest.KNOWLEDGE_BASE_ID is not None
     knowledge_base_path = client.knowledge_base_path(
         PROJECT_ID, pytest.KNOWLEDGE_BASE_ID)
-    client.delete_knowledge_base(knowledge_base_path)
+    client.delete_knowledge_base(name=knowledge_base_path)
 
 
 def test_create_knowledge_base(capsys):
