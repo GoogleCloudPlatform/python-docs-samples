@@ -108,7 +108,7 @@ python landsat_view.py \
     --runner "DataflowRunner" \
     --project "$PROJECT" \
     --region "$REGION" \
-    --machine_type "custom-1-13312-ext" \
+    --worker_machine_type "custom-1-13312-ext" \
     --worker_harness_container_image "$IMAGE" \
     --worker_zone "$WORKER_ZONE" \
     --experiments "worker_accelerator=type=$GPU_TYPE,count=1,install-nvidia-driver" \
