@@ -48,6 +48,7 @@ Additionally, for this sample you need the following:
 1. Install the sample requirements.
 
     ```sh
+    pip install -U pip
     pip install -r requirements.txt
     ```
 
