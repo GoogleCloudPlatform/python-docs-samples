@@ -36,10 +36,26 @@ Additionally, for this sample you need the following:
    cd python-docs-samples/dataflow/gpu-workers
    ```
 
-1. Create a Python 3.7 virtual environment and activate it.
+1. Create a Python 3.6 virtual environment and activate it.
+
+    > ℹ️ This sample requires Python 3.6.
+    > The Python version you use must match the Python version used in the Dockerfile.
+    >
+    > <details>
+    > <summary><i>Click here for instructions on how to install Python 3.6</i></summary>
+    >
+    > You can install Python 3.6 or any other version with
+    > [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+    >
+    > ```sh
+    > conda create --name py36 python=3.6
+    > conda activate py36
+    > ```
+    >
+    > </details>
 
     ```sh
-    python3.7 -m venv env
+    python3.6 -m venv env
     source env/bin/activate
     ```
 
