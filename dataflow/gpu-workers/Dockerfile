@@ -13,8 +13,6 @@ RUN egrep -v '^tensorflow([=<>]|$)' requirements.txt > /tmp/requirements.txt \
     && pip install -r /tmp/requirements.txt
 
 # Copy the worker boot file from the beam image.
-# Make sure to copy the Python installation into the same directory where it was
-# built in the previous stage, since it expects it to live there.
 COPY --from=apache/beam_python3.6_sdk /opt/apache/beam/boot /opt/apache/beam/boot
 
 # Set the entrypoint to the worker boot file.
