@@ -22,7 +22,6 @@ def app():
     return main.app.test_client()
 
 
-@pytest.mark.skip
 def test_app(app):
     response = app.get('/')
     assert response.status_code == 200
