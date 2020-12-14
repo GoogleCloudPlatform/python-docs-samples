@@ -27,7 +27,6 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
 
     Returns:
         AsymmetricSignResponse: Signature.
-
     """
 
     # Import the client library.
@@ -57,8 +56,39 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
     # example, EC_SIGN_P384_SHA384 requires SHA-384.
     digest = {'sha256': hash_}
 
+    # Optional, but recommended: compute digest's CRC32C.
+    # See crc32c() function defined below.
+    digest_crc32c = crc32c(hash_)
+
     # Call the API
-    sign_response = client.asymmetric_sign(request={'name': key_version_name, 'digest': digest})
+    sign_response = client.asymmetric_sign(
+        request={'name': key_version_name, 'digest': digest, 'digest_crc32c': digest_crc32c})
+
+    # Optional, but recommended: perform integrity verification on sign_response.
+    # For more details on ensuring E2E in-transit integrity to and from Cloud KMS visit:
+    # https://cloud.google.com/kms/docs/data-integrity-guidelines
+    if not sign_response.verified_digest_crc32c:
+        raise Exception('The request sent to the server was corrupted in-transit.')
+    if not sign_response.name == key_version_name:
+        raise Exception('The request sent to the server was corrupted in-transit.')
+    if not sign_response.signature_crc32c == crc32c(sign_response.signature):
+        raise Exception('The response received from the server was corrupted in-transit.')
+    # End integrity verification
+
     print('Signature: {}'.format(base64.b64encode(sign_response.signature)))
     return sign_response
+
+
+def crc32c(data):
+    """
+    Calculates the CRC32C checksum of the provided data.
+    Args:
+        data: the bytes over which the checksum should be calculated.
+    Returns:
+        An int representing the CRC32C checksum of the provided bytes.
+    """
+    import crcmod
+    import six
+    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun('crc-32c')
+    return crc32c_fun(six.ensure_binary(data))
 # [END kms_sign_asymmetric]

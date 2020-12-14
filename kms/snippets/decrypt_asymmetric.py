@@ -39,8 +39,37 @@ def decrypt_asymmetric(project_id, location_id, key_ring_id, key_id, version_id,
     # Build the key version name.
     key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
 
+    # Optional, but recommended: compute ciphertext's CRC32C.
+    # See crc32c() function defined below.
+    ciphertext_crc32c = crc32c(ciphertext)
+
     # Call the API.
-    decrypt_response = client.asymmetric_decrypt(request={'name': key_version_name, 'ciphertext': ciphertext})
+    decrypt_response = client.asymmetric_decrypt(
+        request={'name': key_version_name, 'ciphertext': ciphertext, 'ciphertext_crc32c': ciphertext_crc32c})
+
+    # Optional, but recommended: perform integrity verification on decrypt_response.
+    # For more details on ensuring E2E in-transit integrity to and from Cloud KMS visit:
+    # https://cloud.google.com/kms/docs/data-integrity-guidelines
+    if not decrypt_response.verified_ciphertext_crc32c:
+        raise Exception('The request sent to the server was corrupted in-transit.')
+    if not decrypt_response.plaintext_crc32c == crc32c(decrypt_response.plaintext):
+        raise Exception('The response received from the server was corrupted in-transit.')
+    # End integrity verification
+
     print('Plaintext: {}'.format(decrypt_response.plaintext))
     return decrypt_response
+
+
+def crc32c(data):
+    """
+    Calculates the CRC32C checksum of the provided data.
+    Args:
+        data: the bytes over which the checksum should be calculated.
+    Returns:
+        An int representing the CRC32C checksum of the provided bytes.
+    """
+    import crcmod
+    import six
+    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun('crc-32c')
+    return crc32c_fun(six.ensure_binary(data))
 # [END kms_decrypt_asymmetric]
