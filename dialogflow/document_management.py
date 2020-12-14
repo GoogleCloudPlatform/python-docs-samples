@@ -46,19 +46,20 @@ def create_document(project_id, knowledge_base_id, display_name, mime_type,
             EXTRACTIVE_QA.
         content_uri: Uri of the document, e.g. gs://path/mydoc.csv,
             http://mypage.com/faq.html."""
-    import dialogflow_v2beta1 as dialogflow
+    from google.cloud import dialogflow_v2beta1 as dialogflow
     client = dialogflow.DocumentsClient()
-    knowledge_base_path = client.knowledge_base_path(project_id,
-                                                     knowledge_base_id)
+    knowledge_base_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
+        project_id, knowledge_base_id)
 
-    document = dialogflow.types.Document(
+    document = dialogflow.Document(
         display_name=display_name, mime_type=mime_type,
         content_uri=content_uri)
 
     document.knowledge_types.append(
-        dialogflow.types.Document.KnowledgeType.Value(knowledge_type))
+        getattr(dialogflow.Document.KnowledgeType, knowledge_type)
+    )
 
-    response = client.create_document(knowledge_base_path, document)
+    response = client.create_document(parent=knowledge_base_path, document=document)
     print('Waiting for results...')
     document = response.result(timeout=120)
     print('Created Document:')
