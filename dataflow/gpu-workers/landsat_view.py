@@ -3,7 +3,6 @@
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -61,9 +60,7 @@ SCENE_RE = re.compile(
 )
 
 
-def get_valid_band_paths(
-    scene: str, bands: List[str]
-) -> List[Tuple[str, Tuple[str, str]]]:
+def get_valid_band_paths(scene, bands):
     """Gets the Cloud Storage paths for each band in a Landsat scene."""
     try:
         return [get_band_path(scene, band) for band in bands]
@@ -74,7 +71,7 @@ def get_valid_band_paths(
         return []
 
 
-def get_band_path(scene: str, band: str) -> Tuple[str, Tuple[str, str]]:
+def get_band_path(scene, band):
     """Gets the Cloud Storage path for a single band in a Landsat scene."""
     # Extract the metadata from the scene ID using a regular expression.
     m = SCENE_RE.match(scene)
@@ -96,9 +93,7 @@ def get_band_path(scene: str, band: str) -> Tuple[str, Tuple[str, str]]:
     raise ValueError("invalid scene ID: {}".format(scene))
 
 
-def load_band(
-    scene: str, band_path: Tuple[str, str]
-) -> Tuple[str, Tuple[str, np.array]]:
+def load_band(scene, band_path):
     """Loads a band's data as a numpy array."""
     band, path = band_path
 
@@ -108,13 +103,7 @@ def load_band(
         return scene, (band, data.read(1))
 
 
-def preprocess_pixels(
-    scene: str,
-    values: np.array,
-    min_value: float = 0.0,
-    max_value: float = 1.0,
-    gamma: float = 1.0,
-) -> Tuple[str, tf.Tensor]:
+def preprocess_pixels(scene, values, min_value=0.0, max_value=1.0, gamma=1.0):
     """Prepares the band data into a pixel-ready format for an RGB image."""
     values = np.array(values, np.float32)
     logging.info(
@@ -145,21 +134,14 @@ def preprocess_pixels(
     return scene, tf.cast(pixels * 255.0, dtype=tf.uint8)
 
 
-def save_to_gcs(
-    scene: str, image: Image.Image, output_path_prefix: str, format: str = "JPEG"
-) -> None:
+def save_to_gcs(scene, image, output_path_prefix, format="JPEG"):
     """Saves a PIL.Image as a JPEG file in the desired path."""
     filename = os.path.join(output_path_prefix, scene + "." + format.lower())
     with tf.io.gfile.GFile(filename, "w") as f:
         image.save(f, format)
 
 
-def run(
-    scenes: List[str],
-    output_path_prefix: str,
-    vis_params: Dict[str, Any],
-    beam_args: Optional[List[str]] = None,
-) -> None:
+def run(scenes, output_path_prefix, vis_params, beam_args=None):
     """Load multiple Landsat scenes and render them as JPEG files."""
     bands = vis_params["bands"]
     min_value = vis_params["min"]
