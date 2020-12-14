@@ -20,3 +20,5 @@ corresponding folder.
 ## Licensing
 
 * See [LICENSE](LICENSE)
+
+[![Build Status](https://travis-ci.org/dlminvestments/python-docs-samples.svg?branch=master)](https://travis-ci.org/dlminvestments/python-docs-samples)
