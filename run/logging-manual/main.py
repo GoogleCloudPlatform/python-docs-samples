@@ -21,9 +21,9 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
-    PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+    PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     # [START cloudrun_manual_logging]
     # [START run_manual_logging]
@@ -34,30 +34,33 @@ def index():
     global_log_fields = {}
 
     # Add log correlation to nest all log messages.
-    trace_header = request.headers.get('X-Cloud-Trace-Context')
+    trace_header = request.headers.get("X-Cloud-Trace-Context")
 
     if trace_header and PROJECT:
-        trace = trace_header.split('/')
-        global_log_fields['logging.googleapis.com/trace'] = (
-            f"projects/{PROJECT}/traces/{trace[0]}")
+        trace = trace_header.split("/")
+        global_log_fields[
+            "logging.googleapis.com/trace"
+        ] = f"projects/{PROJECT}/traces/{trace[0]}"
 
     # Complete a structured log entry.
-    entry = dict(severity='NOTICE',
-                 message='This is the default display field.',
-                 # Log viewer accesses 'component' as jsonPayload.component'.
-                 component='arbitrary-property',
-                 **global_log_fields)
+    entry = dict(
+        severity="NOTICE",
+        message="This is the default display field.",
+        # Log viewer accesses 'component' as jsonPayload.component'.
+        component="arbitrary-property",
+        **global_log_fields,
+    )
 
     print(json.dumps(entry))
     # [END run_manual_logging]
     # [END cloudrun_manual_logging]
 
-    return 'Hello Logger!'
+    return "Hello Logger!"
 
 
-if __name__ == '__main__':
-    PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host='127.0.0.1', port=PORT, debug=True)
+    app.run(host="127.0.0.1", port=PORT, debug=True)
