@@ -1,4 +1,4 @@
-# Copyright 2017 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import quickstart
 
+def test_create_scheduled_query(transfer_config_name):
+    from . import scheduled_query
 
-def test_quickstart(capsys, transfer_client, project_id):
-    # Use the transfer_client fixture so we know quota is attributed to the
-    # correct project.
-    assert transfer_client is not None
-
-    quickstart.run_quickstart(override_values={"project_id": project_id})
-    out, _ = capsys.readouterr()
-    assert "Supported Data Sources:" in out
+    # transfer_config_name fixture in conftest.py calls the scheduled query
+    # sample. To conserve limited BQ-DTS quota we only make basic checks.
+    assert hasattr(scheduled_query, "create_scheduled_query")
+    assert len(transfer_config_name) != 0

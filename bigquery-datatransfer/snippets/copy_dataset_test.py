@@ -42,8 +42,17 @@ def source_dataset_id(bigquery_client, project_id):
 
 
 def test_copy_dataset(
-    capsys, project_id, destination_dataset_id, source_dataset_id, to_delete_configs
+    capsys,
+    transfer_client,
+    project_id,
+    destination_dataset_id,
+    source_dataset_id,
+    to_delete_configs,
 ):
+    # Use the transfer_client fixture so we know quota is attributed to the
+    # correct project.
+    assert transfer_client is not None
+
     transfer_config = copy_dataset.copy_dataset(
         {
             "destination_project_id": project_id,
