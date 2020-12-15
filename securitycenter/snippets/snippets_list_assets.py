@@ -20,6 +20,7 @@
 def list_all_assets(organization_id):
     """Demonstrate listing and printing all assets."""
     i = 0
+    # [START securitycenter_demo_list_all_assets]
     # [START demo_list_all_assets]
     from google.cloud import securitycenter
 
@@ -33,12 +34,14 @@ def list_all_assets(organization_id):
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_all_assets]
+    # [END securitycenter_demo_list_all_assets]
     return i
 
 
 def list_assets_with_filters(organization_id):
     """Demonstrate listing assets with a filter."""
     i = 0
+    # [START securitycenter_demo_list_assets_with_filter]
     # [START demo_list_assets_with_filter]
     from google.cloud import securitycenter
 
@@ -59,12 +62,14 @@ def list_assets_with_filters(organization_id):
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_assets_with_filter]
+    # [END securitycenter_demo_list_assets_with_filter]
     return i
 
 
 def list_assets_with_filters_and_read_time(organization_id):
     """Demonstrate listing assets with a filter."""
     i = 0
+    # [START securitycenter_demo_list_assets_with_filter_and_time]
     # [START demo_list_assets_with_filter_and_time]
     from datetime import datetime, timedelta
 
@@ -95,12 +100,14 @@ def list_assets_with_filters_and_read_time(organization_id):
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_assets_with_filter_and_time]
+    # [END securitycenter_demo_list_assets_with_filter_and_time]
     return i
 
 
 def list_point_in_time_changes(organization_id):
     """Demonstrate listing assets along with their state changes."""
     i = 0
+    # [START securitycenter_demo_list_assets_changes]
     # [START demo_list_assets_changes]
     from datetime import timedelta
 
@@ -131,13 +138,14 @@ def list_point_in_time_changes(organization_id):
         print(i, asset)
 
     # [END demo_list_assets_changes]
+    # [END securitycenter_demo_list_assets_changes]
     return i
 
 
 def group_assets(organization_id):
     """Demonstrates grouping all assets by type. """
     i = 0
-    # [START group_all_assets]
+    # [START securitycenter_group_all_assets]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -153,14 +161,14 @@ def group_assets(organization_id):
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
-    # [END group_all_assets]
+    # [END securitycenter_group_all_assets]
     return i
 
 
 def group_filtered_assets(organization_id):
     """Demonstrates grouping assets by type with a filter. """
     i = 0
-    # [START group_all_assets_with_filter]
+    # [START securitycenter_group_all_assets_with_filter]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -179,7 +187,7 @@ def group_filtered_assets(organization_id):
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
-    # [END group_all_assets_with_filter]
+    # [END securitycenter_group_all_assets_with_filter]
     # only one asset type is a project
     return i
 
@@ -187,7 +195,7 @@ def group_filtered_assets(organization_id):
 def group_assets_by_changes(organization_id):
     """Demonstrates grouping assets by their changes over a period of time."""
     i = 0
-    # [START group_all_assets_by_change]
+    # [START securitycenter_group_all_assets_by_change]
     from datetime import timedelta
 
     from google.cloud import securitycenter
@@ -208,5 +216,5 @@ def group_assets_by_changes(organization_id):
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
-    # [END group_all_assets_by_change]
+    # [END securitycenter_group_all_assets_by_change]
     return i

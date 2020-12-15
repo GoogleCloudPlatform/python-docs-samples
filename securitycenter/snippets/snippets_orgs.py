@@ -18,6 +18,7 @@
 
 def get_settings(organization_id):
     """Example showing how to retreive current organization settings."""
+    # [START securitycenter_get_org_settings]
     # [START get_org_settings]
     from google.cloud import securitycenter
 
@@ -30,11 +31,13 @@ def get_settings(organization_id):
     org_settings = client.get_organization_settings(request={"name": org_settings_name})
     print(org_settings)
     # [END get_org_settings]
+    # [END securitycenter_get_org_settings]
 
 
 def update_asset_discovery_org_settings(organization_id):
     """Example showing how to update the asset discovery configuration
     for an organization."""
+    # [START securitycenter_update_org_settings]
     # [START update_org_settings]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -60,4 +63,5 @@ def update_asset_discovery_org_settings(organization_id):
     )
     print("Asset Discovery Enabled? {}".format(updated.enable_asset_discovery))
     # [END update_org_settings]
+    # [END securitycenter_update_org_settings]
     return updated
