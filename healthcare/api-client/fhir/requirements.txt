@@ -2,7 +2,7 @@ google-api-python-client==1.12.8
 google-auth-httplib2==0.0.3
 google-auth==1.24.0
 google-cloud==0.34.0
-google-cloud-storage==1.14.0
+google-cloud-storage==1.35.0
 requests==2.21.0
 
 urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
