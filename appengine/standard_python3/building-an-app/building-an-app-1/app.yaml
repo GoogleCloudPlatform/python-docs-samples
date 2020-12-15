@@ -1,4 +1,4 @@
-runtime: python38
+runtime: python39
 
 handlers:
   # This configures Google App Engine to serve the files in the app's static
