@@ -27,53 +27,69 @@ from google.cloud import logging_v2
 
 import pytest
 
+# Unique suffix to create distinct service names
+SUFFIX = uuid.uuid4().hex[:10]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+IMAGE_NAME = f"gcr.io/{PROJECT}/logging-{SUFFIX}"
 
-@pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
-    project = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-    # Build and Deploy Cloud Run Services
+@pytest.fixture
+def container_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "--tag",
+            IMAGE_NAME,
             "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            PROJECT,
             "--quiet",
         ],
         check=True,
     )
+    yield IMAGE_NAME
 
-    # Get the URL for the service and the token
-    service = subprocess.run(
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture
+def deployed_service(container_image):
+    # Deploy image to Cloud Run
+    service_name = f"logging-{SUFFIX}"
+    subprocess.run(
         [
             "gcloud",
             "run",
+            "deploy",
+            service_name,
+            "--image",
+            container_image,
             "--project",
-            project,
-            "--platform=managed",
+            PROJECT,
             "--region=us-central1",
-            "services",
-            "describe",
-            f"logging-{suffix}",
-            "--format=value(status.url)",
+            "--platform=managed",
+            "--set-env-vars",
+            f"GOOGLE_CLOUD_PROJECT={PROJECT}" "--no-allow-unauthenticated",
         ],
-        stdout=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
+    )
 
-    id_token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
-
-    yield service, id_token, project, f"logging-{suffix}"
+    yield service_name
 
     subprocess.run(
         [
@@ -81,30 +97,61 @@ def services():
             "run",
             "services",
             "delete",
-            f"logging-{suffix}",
-            "--project",
-            project,
-            "--platform",
-            "managed",
-            "--region",
-            "us-central1",
+            service_name,
+            "--platform=managed",
+            "--region=us-central1",
             "--quiet",
+            "--project",
+            PROJECT,
         ],
         check=True,
     )
 
 
-def test_end_to_end(services):
-    service = services[0].decode()
-    id_token = services[1].decode()
-    project = services[2]
-    service_name = services[3]
+@pytest.fixture
+def service_url_auth_token(deployed_service):
+    # Get Cloud Run service URL and auth token
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+
+    yield service_url, auth_token
+
+
+def test_end_to_end(service_url_auth_token, deployed_service):
+    service_url, auth_token = service_url_auth_token
 
     # Test that the service is responding
     req = request.Request(
-        service,
+        service_url,
         headers={
-            "Authorization": f"Bearer {id_token}",
+            "Authorization": f"Bearer {auth_token}",
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
@@ -117,7 +164,7 @@ def test_end_to_end(services):
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
     client = logging_v2.LoggingServiceV2Client()
-    resource_names = [f"projects/{project}"]
+    resource_names = [f"projects/{PROJECT}"]
     # We add timestamp for making the query faster.
     now = datetime.datetime.now(datetime.timezone.utc)
     filter_date = now - datetime.timedelta(minutes=1)
@@ -125,7 +172,7 @@ def test_end_to_end(services):
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_revision "
         "AND severity=NOTICE "
-        f"AND resource.labels.service_name={service_name} "
+        f"AND resource.labels.service_name={deployed_service} "
         "AND jsonPayload.component=arbitrary-property"
     )
 
