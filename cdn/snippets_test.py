@@ -41,12 +41,15 @@ def test_sign_url(capsys):
     out, _ = capsys.readouterr()
 
     results = out.splitlines()
-    assert results[0] == (
+    if results[0] != (
         'http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&'
-        'Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc=')
-    assert results[1] == (
+        'Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc='):
+        raise AssertionError
+    if results[1] != (
         'http://www.example.com/?Expires=1549751401&KeyName=my-key&'
-        'Signature=OqDUFfHpN5Vxga6r80bhsgxKves=')
-    assert results[2] == (
+        'Signature=OqDUFfHpN5Vxga6r80bhsgxKves='):
+        raise AssertionError
+    if results[2] != (
         'http://www.example.com/some/path?some=query&another=param&Expires='
-        '1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o=')
+        '1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o='):
+        raise AssertionError

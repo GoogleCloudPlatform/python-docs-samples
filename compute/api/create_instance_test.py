@@ -38,4 +38,5 @@ def test_main(capsys):
          r'.*Deleting instance.*done..$'),
         re.DOTALL)
 
-    assert re.search(expected_output, out)
+    if not re.search(expected_output, out):
+        raise AssertionError

@@ -31,8 +31,10 @@ def test_app(testbed):
 
     tq_stub = testbed.get_stub(gaetestbed.TASKQUEUE_SERVICE_NAME)
     tasks = tq_stub.get_filtered_tasks()
-    assert len(tasks) == 1
-    assert tasks[0].name == 'task1'
+    if len(tasks) != 1:
+        raise AssertionError
+    if tasks[0].name != 'task1':
+        raise AssertionError
 
     with mock.patch('main.update_counter') as mock_update:
         # Force update to fail, otherwise the loop will go forever.
@@ -40,4 +42,5 @@ def test_app(testbed):
 
         app.get('/_ah/start', status=500)
 
-        assert mock_update.called
+        if not mock_update.called:
+            raise AssertionError

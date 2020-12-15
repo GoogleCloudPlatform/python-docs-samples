@@ -72,7 +72,8 @@ def test_jupyter_small_query(ipython):
 
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
-    assert "stackoverflow" in ip.user_ns  # verify that variable exists
+    if "stackoverflow" not in ip.user_ns:
+        raise AssertionError
 
 
 @pytest.mark.skipif(
@@ -108,7 +109,8 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert "nodejs_deps" in ip.user_ns  # verify that variable exists
+    if "nodejs_deps" not in ip.user_ns:
+        raise AssertionError
     nodejs_deps = ip.user_ns["nodejs_deps"]
 
     # [START bigquerystorage_jupyter_tutorial_results]
@@ -145,4 +147,5 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert "java_deps" in ip.user_ns  # verify that variable exists
+    if "java_deps" not in ip.user_ns:
+        raise AssertionError

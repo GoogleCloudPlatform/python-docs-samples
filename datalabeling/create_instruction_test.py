@@ -33,7 +33,8 @@ def test_create_instruction(capsys):
         INSTRUCTION_GCS_URI
     )
     out, _ = capsys.readouterr()
-    assert 'The instruction resource name: ' in out
+    if 'The instruction resource name: ' not in out:
+        raise AssertionError
 
     # Delete the created instruction.
     instruction_name = result.name

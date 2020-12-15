@@ -79,9 +79,11 @@ def test_datalab_query_magic(ipython_interactive):
     ip.run_cell(_strip_region_tags(sample))
 
     results = ip.user_ns["_"]  # Last returned object in notebook session
-    assert isinstance(results, bq.QueryResultsTable)
+    if not isinstance(results, bq.QueryResultsTable):
+        raise AssertionError
     df = results.to_dataframe()
-    assert len(df) == 100
+    if len(df) != 100:
+        raise AssertionError
 
 
 def test_client_library_query_magic(ipython_interactive):
@@ -102,8 +104,10 @@ def test_client_library_query_magic(ipython_interactive):
     ip.run_cell(_strip_region_tags(sample))
 
     df = ip.user_ns["_"]  # Last returned object in notebook session
-    assert isinstance(df, pandas.DataFrame)
-    assert len(df) == 100
+    if not isinstance(df, pandas.DataFrame):
+        raise AssertionError
+    if len(df) != 100:
+        raise AssertionError
 
 
 def test_datalab_query_magic_results_variable(ipython_interactive):
@@ -129,9 +133,11 @@ def test_datalab_query_magic_results_variable(ipython_interactive):
     ip.run_cell(_strip_region_tags(sample))
 
     variable_name = "my_variable"
-    assert variable_name in ip.user_ns  # verify that variable exists
+    if variable_name not in ip.user_ns:
+        raise AssertionError
     my_variable = ip.user_ns[variable_name]
-    assert len(my_variable) == 100
+    if len(my_variable) != 100:
+        raise AssertionError
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
@@ -149,9 +155,11 @@ def test_client_library_query_magic_results_variable(ipython_interactive):
     ip.run_cell(_strip_region_tags(sample))
 
     variable_name = "my_variable"
-    assert variable_name in ip.user_ns  # verify that variable exists
+    if variable_name not in ip.user_ns:
+        raise AssertionError
     my_variable = ip.user_ns[variable_name]
-    assert len(my_variable) == 100
+    if len(my_variable) != 100:
+        raise AssertionError
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
@@ -195,8 +203,10 @@ def test_datalab_magic_parameterized_query(ipython_interactive):
     """
     ip.run_cell(_strip_region_tags(sample))
     df = ip.user_ns["_"]  # Retrieves last returned object in notebook session
-    assert isinstance(df, pandas.DataFrame)
-    assert len(df) == 10
+    if not isinstance(df, pandas.DataFrame):
+        raise AssertionError
+    if len(df) != 10:
+        raise AssertionError
 
 
 def test_client_library_magic_parameterized_query(ipython_interactive):
@@ -225,8 +235,10 @@ def test_client_library_magic_parameterized_query(ipython_interactive):
     ip.run_cell(_strip_region_tags(sample))
 
     df = ip.user_ns["_"]  # Retrieves last returned object in notebook session
-    assert isinstance(df, pandas.DataFrame)
-    assert len(df) == 10
+    if not isinstance(df, pandas.DataFrame):
+        raise AssertionError
+    if len(df) != 10:
+        raise AssertionError
 
 
 def test_datalab_list_tables_magic(ipython_interactive):
@@ -241,7 +253,8 @@ def test_datalab_list_tables_magic(ipython_interactive):
 
     # Retrieves last returned object in notebook session
     html_element = ip.user_ns["_"]
-    assert "shakespeare" in html_element.data
+    if "shakespeare" not in html_element.data:
+        raise AssertionError
 
 
 def test_datalab_query():
@@ -256,7 +269,8 @@ def test_datalab_query():
     df = bq.Query(sql).execute().result().to_dataframe()
     # [END bigquery_migration_datalab_query]
 
-    assert len(df) == 100
+    if len(df) != 100:
+        raise AssertionError
 
 
 def test_client_library_query():
@@ -272,7 +286,8 @@ def test_client_library_query():
     df = client.query(sql).to_dataframe()
     # [END bigquery_migration_client_library_query]
 
-    assert len(df) == 100
+    if len(df) != 100:
+        raise AssertionError
 
 
 def test_datalab_load_table_from_gcs_csv(to_delete):
@@ -303,7 +318,8 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
     )  # Waits for the job to complete
     # [END bigquery_migration_datalab_load_table_from_gcs_csv]
 
-    assert table.length == 50
+    if table.length != 50:
+        raise AssertionError
 
 
 def test_client_library_load_table_from_gcs_csv(to_delete):
@@ -340,7 +356,8 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     # [END bigquery_migration_client_library_load_table_from_gcs_csv]
 
     table = client.get_table(dataset.table('us_states'))
-    assert table.num_rows == 50
+    if table.num_rows != 50:
+        raise AssertionError
 
 
 def test_datalab_load_table_from_dataframe(to_delete):
@@ -411,4 +428,5 @@ def test_client_library_load_table_from_dataframe(to_delete):
     # [END bigquery_migration_client_library_load_table_from_dataframe]
 
     table = client.get_table(table_ref)
-    assert table.num_rows == 4
+    if table.num_rows != 4:
+        raise AssertionError

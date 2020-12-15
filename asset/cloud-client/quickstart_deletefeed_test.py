@@ -39,4 +39,5 @@ def test_delete_feed(capsys):
     quickstart_deletefeed.delete_feed(feed_name)
 
     out, _ = capsys.readouterr()
-    assert "deleted_feed" in out
+    if "deleted_feed" not in out:
+        raise AssertionError

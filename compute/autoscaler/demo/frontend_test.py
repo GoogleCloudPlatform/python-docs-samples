@@ -60,7 +60,8 @@ def cpuburner(faketime):
 def test_ok_response(faketime, cpuburner):
     faketime.cpu_time_step = 0.25
     (code, _) = cpuburner.handle_http_request()
-    assert code == 200
+    if code != 200:
+        raise AssertionError
 
 
 # In this test scenario CPU time advances at 15% of the wall time speed.
@@ -69,4 +70,5 @@ def test_ok_response(faketime, cpuburner):
 def test_timeout(faketime, cpuburner):
     faketime.cpu_time_step = 0.15
     (code, _) = cpuburner.handle_http_request()
-    assert code == 500
+    if code != 500:
+        raise AssertionError

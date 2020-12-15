@@ -67,7 +67,8 @@ def test_table_to_dataframe(capsys, clients):
     # [END bigquerystorage_pandas_tutorial_all]
 
     out, _ = capsys.readouterr()
-    assert "country_name" in out
+    if "country_name" not in out:
+        raise AssertionError
 
 
 def test_query_to_dataframe(capsys, clients):
@@ -97,7 +98,8 @@ def test_query_to_dataframe(capsys, clients):
     # [END bigquerystorage_pandas_tutorial_all]
 
     out, _ = capsys.readouterr()
-    assert "stackoverflow" in out
+    if "stackoverflow" not in out:
+        raise AssertionError
 
 
 def test_session_to_dataframe(capsys, clients):
@@ -150,4 +152,5 @@ def test_session_to_dataframe(capsys, clients):
     # [END bigquerystorage_pandas_tutorial_all]
 
     out, _ = capsys.readouterr()
-    assert "species_common_name" in out
+    if "species_common_name" not in out:
+        raise AssertionError

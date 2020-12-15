@@ -87,7 +87,8 @@ def test_main(capsys):
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
         assert_value = 'Linux {test_id}'.format(test_id=test_id)
-        assert assert_value in out
+        if assert_value not in out:
+            raise AssertionError
     except Exception:
         raise Exception('SSH to the test instance failed.')
 

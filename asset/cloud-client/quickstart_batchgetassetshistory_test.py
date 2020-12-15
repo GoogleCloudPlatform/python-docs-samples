@@ -55,4 +55,5 @@ def test_batch_get_assets_history(asset_bucket, capsys):
     out, _ = capsys.readouterr()
 
     if not out:
-        assert bucket_asset_name in out
+        if bucket_asset_name not in out:
+            raise AssertionError

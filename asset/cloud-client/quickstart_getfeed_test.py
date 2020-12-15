@@ -40,6 +40,7 @@ def test_get_feed(capsys):
     quickstart_getfeed.get_feed(feed_name)
     out, _ = capsys.readouterr()
 
-    assert "gotten_feed" in out
+    if "gotten_feed" not in out:
+        raise AssertionError
     # Clean up and delete the feed
     quickstart_deletefeed.delete_feed(feed_name)

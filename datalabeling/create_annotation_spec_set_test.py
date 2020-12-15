@@ -28,7 +28,8 @@ def test_create_annotation_spec_set(capsys):
     response = create_annotation_spec_set.create_annotation_spec_set(
         PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert 'The annotation_spec_set resource name:' in out
+    if 'The annotation_spec_set resource name:' not in out:
+        raise AssertionError
 
     # Delete the created annotation spec set.
     annotation_spec_set_name = response.name

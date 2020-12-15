@@ -38,4 +38,5 @@ def mock_project_path():
 def test_quickstart(capsys, mock_project_path):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'Supported Data Sources:' in out
+    if 'Supported Data Sources:' not in out:
+        raise AssertionError

@@ -25,29 +25,35 @@ PUBSUB_TOPIC = 'taxirides-realtime'
 
 
 def test_lookup_bigquery_dataset():
-    assert lookup_entry.lookup_bigquery_dataset(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
+    if not lookup_entry.lookup_bigquery_dataset(
+        BIGQUERY_PROJECT, BIGQUERY_DATASET):
+        raise AssertionError
 
 
 def test_lookup_bigquery_dataset_sql_resource():
-    assert lookup_entry.lookup_bigquery_dataset_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
+    if not lookup_entry.lookup_bigquery_dataset_sql_resource(
+        BIGQUERY_PROJECT, BIGQUERY_DATASET):
+        raise AssertionError
 
 
 def test_lookup_bigquery_table():
-    assert lookup_entry.lookup_bigquery_table(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+    if not lookup_entry.lookup_bigquery_table(
+        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE):
+        raise AssertionError
 
 
 def test_lookup_bigquery_table_sql_resource():
-    assert lookup_entry.lookup_bigquery_table_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+    if not lookup_entry.lookup_bigquery_table_sql_resource(
+        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE):
+        raise AssertionError
 
 
 def test_lookup_pubsub_topic():
-    assert lookup_entry.lookup_pubsub_topic(PUBSUB_PROJECT, PUBSUB_TOPIC)
+    if not lookup_entry.lookup_pubsub_topic(PUBSUB_PROJECT, PUBSUB_TOPIC):
+        raise AssertionError
 
 
 def test_lookup_pubsub_topic_sql_resource():
-    assert lookup_entry.lookup_pubsub_topic_sql_resource(
-        PUBSUB_PROJECT, PUBSUB_TOPIC)
+    if not lookup_entry.lookup_pubsub_topic_sql_resource(
+        PUBSUB_PROJECT, PUBSUB_TOPIC):
+        raise AssertionError

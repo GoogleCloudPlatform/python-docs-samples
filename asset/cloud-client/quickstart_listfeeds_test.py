@@ -25,4 +25,5 @@ def test_list_feeds(capsys):
     parent_resource = "projects/{}".format(PROJECT)
     quickstart_listfeeds.list_feeds(parent_resource)
     out, _ = capsys.readouterr()
-    assert "feeds" in out
+    if "feeds" not in out:
+        raise AssertionError

@@ -56,7 +56,8 @@ def test_run_template_url(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
-        assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
+        if sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) != 0:
+            raise AssertionError
 
 
 def test_run_template_data(app):
@@ -72,7 +73,8 @@ def test_run_template_data(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
-        assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
+        if sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) != 0:
+            raise AssertionError
 
 
 def test_run_template_json(app):
@@ -88,4 +90,5 @@ def test_run_template_json(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
-        assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
+        if sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) != 0:
+            raise AssertionError

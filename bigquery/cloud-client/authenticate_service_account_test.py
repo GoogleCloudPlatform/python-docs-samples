@@ -30,4 +30,5 @@ def test_main(monkeypatch):
         mock_credentials,
     )
     client = authenticate_service_account.main()
-    assert client is not None
+    if client is None:
+        raise AssertionError
