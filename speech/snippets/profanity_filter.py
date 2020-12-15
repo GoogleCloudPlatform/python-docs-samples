@@ -18,17 +18,15 @@ Example usage:
     python transcribe.py gs://cloud-samples-tests/speech/brooklyn.flac
 """
 
-import argparse
-
 
 # [START speech_recognize_with_profanity_filter_gcs]
-def sync_recognize_with_profanity_filter_gcs(storage_uri):
+def sync_recognize_with_profanity_filter_gcs(gcs_uri):
 
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    audio = {"uri": storage_uri}
+    audio = {"uri": gcs_uri}
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
@@ -46,10 +44,6 @@ def sync_recognize_with_profanity_filter_gcs(storage_uri):
 
 # [END speech_recognize_with_profanity_filter_gcs]
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("path", help="GCS path for audio file to be recognized")
-    args = parser.parse_args()
-    sync_recognize_with_profanity_filter_gcs(args.path)
+sync_recognize_with_profanity_filter_gcs(
+    "gs://cloud-samples-tests/speech/brooklyn.flac"
+)
