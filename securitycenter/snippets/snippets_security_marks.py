@@ -18,6 +18,7 @@
 
 def add_to_asset(asset_name):
     """Add new security marks to an asset."""
+    # [START securitycenter_add_marks_to_asset]
     # [START add_marks_to_asset]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -44,6 +45,7 @@ def add_to_asset(asset_name):
     )
     print(updated_marks)
     # [END add_marks_to_asset]
+    # [END securitycenter_add_marks_to_asset]
     return updated_marks, marks
 
 
@@ -51,6 +53,7 @@ def clear_from_asset(asset_name):
     """Removes security marks from an asset."""
     # Make sure they are there first
     add_to_asset(asset_name)
+    # [START securitycenter_clear_marks_asset]
     # [START clear_marks_asset]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -78,6 +81,7 @@ def clear_from_asset(asset_name):
     )
     print(updated_marks)
     # [END clear_marks_asset]
+    # [END securitycenter_clear_marks_asset]
     return updated_marks
 
 
@@ -85,6 +89,7 @@ def delete_and_update_marks(asset_name):
     """Updates and deletes security marks from an asset in the same call."""
     # Make sure they are there first
     add_to_asset(asset_name)
+    # [START securitycenter_delete_and_update_marks]
     # [START delete_and_update_marks]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -107,11 +112,13 @@ def delete_and_update_marks(asset_name):
     )
     print(updated_marks)
     # [END delete_and_update_marks]
+    # [END securitycenter_delete_and_update_marks]
     return updated_marks
 
 
 def add_to_finding(finding_name):
     """Adds security marks to a finding. """
+    # [START securitycenter_add_marks_to_finding]
     # [START add_marks_to_finding]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -138,6 +145,7 @@ def add_to_finding(finding_name):
         }
     )
     # [END add_marks_to_finding]
+    # [END securitycenter_add_marks_to_finding]
     return updated_marks, marks
 
 
@@ -145,6 +153,7 @@ def list_assets_with_query_marks(organization_id, asset_name):
     """Lists assets with a filter on security marks. """
     add_to_asset(asset_name)
     i = -1
+    # [START securitycenter_demo_list_assets_with_security_marks]
     # [START demo_list_assets_with_security_marks]
     from google.cloud import securitycenter
 
@@ -167,6 +176,7 @@ def list_assets_with_query_marks(organization_id, asset_name):
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END demo_list_assets_with_security_marks]
+    # [END securitycenter_demo_list_assets_with_security_marks]
     return i
 
 
@@ -175,6 +185,7 @@ def list_findings_with_query_marks(source_name, finding_name):
     # ensure marks are set on finding.
     add_to_finding(finding_name)
     i = -1
+    # [START securitycenter_demo_list_findings_with_security_marks]
     # [START demo_list_findings_with_security_marks]
     from google.cloud import securitycenter
 
@@ -195,6 +206,7 @@ def list_findings_with_query_marks(source_name, finding_name):
     for i, finding_result in enumerate(finding_iterator):
         print(i, finding_result)
     # [END demo_list_findings_with_security_marks]
+    # [END securitycenter_demo_list_findings_with_security_marks]
     # one finding should have been updated with keys, and one should be
     # untouched.
     return i

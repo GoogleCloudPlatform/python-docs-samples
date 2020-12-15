@@ -18,6 +18,7 @@
 
 def create_notification_config(organization_id, notification_config_id, pubsub_topic):
 
+    # [START securitycenter_create_notification_config]
     # [START scc_create_notification_config]
     from google.cloud import securitycenter as securitycenter
 
@@ -44,11 +45,13 @@ def create_notification_config(organization_id, notification_config_id, pubsub_t
 
     print(created_notification_config)
     # [END scc_create_notification_config]
+    # [END securitycenter_create_notification_config]
     return created_notification_config
 
 
 def delete_notification_config(organization_id, notification_config_id):
 
+    # [START securitycenter_delete_notification_config]
     # [START scc_delete_notification_config]
     from google.cloud import securitycenter as securitycenter
 
@@ -64,11 +67,13 @@ def delete_notification_config(organization_id, notification_config_id):
     client.delete_notification_config(request={"name": notification_config_name})
     print("Deleted notification config: {}".format(notification_config_name))
     # [END scc_delete_notification_config]
+    # [END securitycenter_delete_notification_config]
     return True
 
 
 def get_notification_config(organization_id, notification_config_id):
 
+    # [START securitycenter_get_notification_config]
     # [START scc_get_notification_config]
     from google.cloud import securitycenter as securitycenter
 
@@ -86,11 +91,13 @@ def get_notification_config(organization_id, notification_config_id):
     )
     print("Got notification config: {}".format(notification_config))
     # [END scc_get_notification_config]
+    # [END securitycenter_get_notification_config]
     return notification_config
 
 
 def list_notification_configs(organization_id):
 
+    # [START securitycenter_list_notification_configs]
     # [START scc_list_notification_configs]
     from google.cloud import securitycenter as securitycenter
 
@@ -105,10 +112,12 @@ def list_notification_configs(organization_id):
     for i, config in enumerate(notification_configs_iterator):
         print("{}: notification_config: {}".format(i, config))
     # [END scc_list_notification_configs]
+    # [END securitycenter_list_notification_configs]]
     return notification_configs_iterator
 
 
 def update_notification_config(organization_id, notification_config_id, pubsub_topic):
+    # [START securitycenter_update_notification_config]
     # [START scc_update_notification_config]
     from google.cloud import securitycenter as securitycenter
     from google.protobuf import field_mask_pb2
@@ -147,4 +156,5 @@ def update_notification_config(organization_id, notification_config_id, pubsub_t
 
     print(updated_notification_config)
     # [END scc_update_notification_config]
+    # [END securitycenter_update_notification_config]
     return updated_notification_config
