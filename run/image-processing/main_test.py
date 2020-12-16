@@ -31,38 +31,38 @@ def client():
 
 
 def test_empty_payload(client):
-    r = client.post('/', json='')
+    r = client.post("/", json="")
     assert r.status_code == 400
 
 
 def test_invalid_payload(client):
-    r = client.post('/', json={'nomessage': 'invalid'})
+    r = client.post("/", json={"nomessage": "invalid"})
     assert r.status_code == 400
 
 
 def test_invalid_mimetype(client):
-    r = client.post('/', json="{ message: true }")
+    r = client.post("/", json="{ message: true }")
     assert r.status_code == 400
 
 
-@mock.patch('image.blur_offensive_images', mock.MagicMock(return_value=204))
+@mock.patch("image.blur_offensive_images", mock.MagicMock(return_value=204))
 def test_minimally_valid_message(client):
-    data_json = json.dumps({'name': True, 'bucket': True})
+    data_json = json.dumps({"name": True, "bucket": True})
     data = base64.b64encode(data_json.encode()).decode()
 
-    r = client.post('/', json={'message': {'data': data}})
+    r = client.post("/", json={"message": {"data": data}})
     assert r.status_code == 204
 
 
 def test_call_to_blur_image(client, capsys):
     filename = str(uuid.uuid4())
-    blur_bucket = 'blurred-bucket-' + str(uuid.uuid4())
+    blur_bucket = "blurred-bucket-" + str(uuid.uuid4())
 
-    data_json = json.dumps({'name': filename, 'bucket': blur_bucket})
+    data_json = json.dumps({"name": filename, "bucket": blur_bucket})
     data = base64.b64encode(data_json.encode()).decode()
 
-    r = client.post('/', json={'message': {'data': data}})
+    r = client.post("/", json={"message": {"data": data}})
     assert r.status_code == 204
 
     out, _ = capsys.readouterr()
-    assert f'The image {filename} was detected as OK' in out
+    assert f"The image {filename} was detected as OK" in out
