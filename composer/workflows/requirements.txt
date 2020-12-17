@@ -1,4 +1,4 @@
-apache-airflow[gcp]==1.10.12
+apache-airflow[gcp]==2.0.0
 cattrs==1.0.0 #this has to be explicitly pinned to 1.0.0 until airflow 1.10.13 when a fix should be pushed
 kubernetes==12.0.1
 scipy==1.4.1; python_version > '3.0'
