@@ -9,8 +9,8 @@ COPY requirements.txt .
 
 # Don't install `tensorflow` since the base image already comes with it.
 RUN egrep -v '^tensorflow([=<>]|$)' requirements.txt > /tmp/requirements.txt \
-    && pip install -U pip \
-    && pip install -r /tmp/requirements.txt
+    && pip install --no-cache-dir -U pip \
+    && pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Copy the worker boot file from the beam image.
 COPY --from=apache/beam_python3.6_sdk /opt/apache/beam/boot /opt/apache/beam/boot
