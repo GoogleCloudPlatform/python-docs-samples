@@ -84,7 +84,8 @@ def get_band_path(scene, band):
         path = "{}/{}_{}.TIF".format(scene_dir, scene, band)
         if not tf.io.gfile.exists(path):
             raise ValueError(
-                'failed to load band "{}", GCS path not found: {}'.format(band, path)
+                'failed to load band "{}", GCS path not found: {}'.format(
+                    band, path)
             )
 
         logging.info("{}: get_band_path({}): {}".format(scene, band, path))
@@ -175,8 +176,6 @@ def run(scenes, output_path_prefix, vis_params, beam_args=None):
 
 if __name__ == "__main__":
     import argparse
-
-    logging.basicConfig(level=logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
