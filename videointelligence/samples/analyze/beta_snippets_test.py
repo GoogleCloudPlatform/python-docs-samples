@@ -73,7 +73,7 @@ def bucket():
 @pytest.mark.slow
 def test_speech_transcription(capsys):
     beta_snippets.speech_transcription(
-        "gs://python-docs-samples-tests/video/googlework_short.mp4"
+        "gs://python-docs-samples-tests/video/googlework_short.mp4", timeout=240
     )
     out, _ = capsys.readouterr()
     assert "cultural" in out

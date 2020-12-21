@@ -45,7 +45,7 @@ import argparse
 import io
 
 
-def speech_transcription(input_uri):
+def speech_transcription(input_uri, timeout=180):
     # [START video_speech_transcription_gcs_beta]
     """Transcribe speech from a video stored on GCS."""
     from google.cloud import videointelligence_v1p1beta1 as videointelligence
@@ -69,7 +69,7 @@ def speech_transcription(input_uri):
 
     print("\nProcessing video for speech transcription.")
 
-    result = operation.result(timeout=180)
+    result = operation.result(timeout)
 
     # There is only one annotation_result since only
     # one video is processed.
