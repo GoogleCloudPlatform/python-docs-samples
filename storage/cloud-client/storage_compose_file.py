@@ -22,15 +22,24 @@ from google.cloud import storage
 
 def compose_file(bucket_name, sources, destination_blob_name):
     """Concatenate source blobs into destination blob."""
-    # bucket_name = "your-bucket-name"
-    # sources = [blob_1, blob_2]
-    # destination_blob_name = "destination-object-name"
+
+    bucket_name = "your-bucket-name"
+    destination_blob_name = "destination-object-name"
+    blob1_name = "source-blob-1"
+    blob2_name = "source-blob-2"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
+
+    blob1 = bucket.blob(blob1_name)
+    blob2_name = bucket.blob(blob2_name)
+    sources = [blob_1, blob_2]
+
     destination = bucket.blob(destination_blob_name)
     destination.content_type = "text/plain"
     destination.compose(sources)
+
+
 
     print(
         "Composed new object {} in the bucket {}".format(
