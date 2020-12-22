@@ -23,6 +23,7 @@ import automl_translation_dataset
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 compute_region = "us-central1"
+dataset_id = "TRL3876092572857648864"
 
 
 @pytest.mark.slow
@@ -61,7 +62,6 @@ def test_dataset_list_get(capsys):
     assert "Dataset id: " in list_dataset_output[2]
 
     # get dataset
-    dataset_id = list_dataset_output[2].split()[2]
     automl_translation_dataset.get_dataset(
         project_id, compute_region, dataset_id
     )
