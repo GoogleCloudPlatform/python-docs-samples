@@ -37,6 +37,8 @@ def create_http_task(
     # location = 'us-central1'
     # url = 'https://example.com/task_handler'
     # payload = 'hello' or {'param': 'value'} for application/json
+    # in_seconds = 180
+    # task_name = 'my-unique-task'
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
