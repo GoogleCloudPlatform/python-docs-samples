@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START gae_python38_app]
+# [START gae_python3_app]
 from flask import Flask
 
 
@@ -32,4 +33,5 @@ if __name__ == '__main__':
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
+# [END gae_python3_app]
 # [END gae_python38_app]

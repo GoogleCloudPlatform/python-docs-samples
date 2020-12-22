@@ -1,4 +1,4 @@
 functions-framework==2.0.0	
 mock==4.0.3	
-pytest==6.1.2	
+pytest==6.2.1	
 uuid==1.30

@@ -29,7 +29,6 @@
 /datalabeling/**/*.py                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
 /dataproc/**/*.py                      @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datastore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
-/dialogflow/**/*.py                    @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
