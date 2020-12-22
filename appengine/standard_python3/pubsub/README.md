@@ -15,7 +15,10 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Enable the Cloud Pub/Sub API in the [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-1. Allow Cloud Pub/Sub to create authentication tokens in your project.
+1. Allow Cloud Pub/Sub to create authentication tokens in your project. Note
+that this command uses both your-project-id (the name you gave the project) and
+your-project-number (the numeric identifier automatically assigned to your
+project) in separate places.
 
         $ gcloud projects add-iam-policy-binding [your-project-id] \
             --member=serviceAccount:service-[your-project-number]@gcp-sa-pubsub.iam.gserviceaccount.com \
@@ -88,7 +91,7 @@ install the required libraries in the `lib` folder:
 
 For Python 3, you can simply run the deploy command:
 
-    $ gcloud app deploy app27.yaml
+    $ gcloud app deploy app.yaml
 
 You can now access the application using the `gcloud app browse` command. You
 can use the form to submit messages, but it's non-deterministic which instance
