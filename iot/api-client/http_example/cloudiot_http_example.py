@@ -55,7 +55,7 @@ def create_jwt(project_id, private_key_file, algorithm):
     print('Creating JWT using {} from private key file {}'.format(
             algorithm, private_key_file))
 
-    return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
+    return jwt.encode(token, private_key, algorithm=algorithm)
 # [END iot_http_jwt]
 
 
