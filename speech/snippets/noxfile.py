@@ -17,6 +17,7 @@ from __future__ import print_function
 import os
 from pathlib import Path
 import sys
+from typing import Callable, Dict, List, Optional
 
 import nox
 
@@ -38,6 +39,10 @@ import nox
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
     'ignored_versions': ["2.7"],
+
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    'enforce_type_hints': False,
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
@@ -64,7 +69,7 @@ except ImportError as e:
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
 
-def get_pytest_env_vars():
+def get_pytest_env_vars() -> Dict[str, str]:
     """Returns a dict for pytest invocation."""
     ret = {}
 
@@ -93,7 +98,7 @@ INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE",
 #
 
 
-def _determine_local_import_names(start_dir):
+def _determine_local_import_names(start_dir: str) -> List[str]:
     """Determines all import names that should be considered "local".
 
     This is used when running the linter to insure that import order is
@@ -131,8 +136,11 @@ FLAKE8_COMMON_ARGS = [
 
 
 @nox.session
-def lint(session):
-    session.install("flake8", "flake8-import-order")
+def lint(session: nox.sessions.Session) -> None:
+    if not TEST_CONFIG['enforce_type_hints']:
+        session.install("flake8", "flake8-import-order")
+    else:
+        session.install("flake8", "flake8-import-order", "flake8-annotations")
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
@@ -141,7 +149,17 @@ def lint(session):
         "."
     ]
     session.run("flake8", *args)
+#
+# Black
+#
 
+
+@nox.session
+def blacken(session: nox.sessions.Session) -> None:
+    session.install("black")
+    python_files = [path for path in os.listdir(".") if path.endswith(".py")]
+
+    session.run("black", *python_files)
 
 #
 # Sample Tests
@@ -151,7 +169,7 @@ def lint(session):
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
-def _session_tests(session, post_install=None):
+def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         session.install("-r", "requirements.txt")
@@ -177,7 +195,7 @@ def _session_tests(session, post_install=None):
 
 
 @nox.session(python=ALL_VERSIONS)
-def py(session):
+def py(session: nox.sessions.Session) -> None:
     """Runs py.test for a sample using the specified version of Python."""
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
@@ -192,7 +210,7 @@ def py(session):
 #
 
 
-def _get_repo_root():
+def _get_repo_root() -> Optional[str]:
     """ Returns the root folder of the project. """
     # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
@@ -200,6 +218,11 @@ def _get_repo_root():
         if p is None:
             break
         if Path(p / ".git").exists():
+            return str(p)
+        # .git is not available in repos cloned via Cloud Build
+        # setup.py is always in the library's root, so use that instead
+        # https://github.com/googleapis/synthtool/issues/792
+        if Path(p / "setup.py").exists():
             return str(p)
         p = p.parent
     raise Exception("Unable to detect repository root.")
@@ -210,7 +233,7 @@ GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 
 @nox.session
 @nox.parametrize("path", GENERATED_READMES)
-def readmegen(session, path):
+def readmegen(session: nox.sessions.Session, path: str) -> None:
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
     dir_ = os.path.dirname(path)
