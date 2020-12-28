@@ -84,13 +84,13 @@ def topic_id():
     publisher = google.cloud.pubsub.PublisherClient()
     topic_path = publisher.topic_path(GCLOUD_PROJECT, TOPIC_ID)
     try:
-        publisher.create_topic(topic_path)
+        publisher.create_topic(request={"name": topic_path})
     except google.api_core.exceptions.AlreadyExists:
         pass
 
     yield TOPIC_ID
 
-    publisher.delete_topic(topic_path)
+    publisher.delete_topic(request={"topic": topic_path})
 
 
 @pytest.fixture(scope="module")
@@ -100,13 +100,15 @@ def subscription_id(topic_id):
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
     subscription_path = subscriber.subscription_path(GCLOUD_PROJECT, SUBSCRIPTION_ID)
     try:
-        subscriber.create_subscription(subscription_path, topic_path)
+        subscriber.create_subscription(
+            request={"name": subscription_path, "topic": topic_path}
+        )
     except google.api_core.exceptions.AlreadyExists:
         pass
 
     yield SUBSCRIPTION_ID
 
-    subscriber.delete_subscription(subscription_path)
+    subscriber.delete_subscription(request={"subscription": subscription_path})
 
 
 @pytest.fixture(scope="module")
