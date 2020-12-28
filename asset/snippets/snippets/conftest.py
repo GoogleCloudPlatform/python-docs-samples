@@ -35,11 +35,11 @@ def test_topic():
     topic_id = f"topic-{uuid.uuid4().hex}"
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, topic_id)
-    topic = publisher.create_topic(topic_path)
+    topic = publisher.create_topic(request={"name": topic_path})
 
     yield topic
 
-    publisher.delete_topic(topic_path)
+    publisher.delete_topic(request={"topic": topic_path})
 
 
 @pytest.fixture(scope="module")
@@ -47,11 +47,11 @@ def another_topic():
     topic_id = f"topic-{uuid.uuid4().hex}"
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, topic_id)
-    topic = publisher.create_topic(topic_path)
+    topic = publisher.create_topic(request={"name": topic_path})
 
     yield topic
 
-    publisher.delete_topic(topic_path)
+    publisher.delete_topic(request={"topic": topic_path})
 
 
 @pytest.fixture(scope="module")
