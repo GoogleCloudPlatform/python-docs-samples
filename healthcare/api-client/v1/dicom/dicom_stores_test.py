@@ -157,12 +157,12 @@ def test_pubsub_topic():
     pubsub_client = pubsub_v1.PublisherClient()
     # Create the Pub/Sub topic
     topic_path = pubsub_client.topic_path(project_id, pubsub_topic)
-    pubsub_client.create_topic(topic_path)
+    pubsub_client.create_topic(request = {'name': topic_path})
 
     yield pubsub_topic
 
     # Delete the Pub/Sub topic
-    pubsub_client.delete_topic(topic_path)
+    pubsub_client.delete_topic(request = {'topic': topic_path})
 
 
 def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
