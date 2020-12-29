@@ -60,7 +60,7 @@ def test_event(test_topic, test_registry_id, test_device_id, capsys):  # noqa
     )
 
     client.loop_start()
-    client.publish(request={"topic": mqtt_topic, "messages": "just test"})
+    client.publish(mqtt_topic, "just test", qos=1)
     time.sleep(2)
     client.loop_stop()
 
@@ -91,7 +91,7 @@ def test_state(test_topic, test_registry_id, test_device_id, capsys):  # noqa
         "mqtt.googleapis.com",
         443,
     )
-    client.publish(request={"topic": mqtt_topic, "messages": "state test"})
+    client.publish(mqtt_topic, "state test", qos=1)
     client.loop_start()
 
     time.sleep(3)

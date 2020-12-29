@@ -194,7 +194,7 @@ def detach_device(client, device_id):
     # [START iot_detach_device]
     detach_topic = "/devices/{}/detach".format(device_id)
     print("Detaching: {}".format(detach_topic))
-    client.publish(request={"topic": detach_topic, "messages": "{}"})
+    client.publish(detach_topic, "{}", qos=1)
     # [END iot_detach_device]
 
 
@@ -203,7 +203,7 @@ def attach_device(client, device_id, auth):
     # [START iot_attach_device]
     attach_topic = "/devices/{}/attach".format(device_id)
     attach_payload = '{{"authorization" : "{}"}}'.format(auth)
-    client.publish(request={"topic": attach_topic, "messages": attach_payload})
+    client.publish(attach_topic, attach_payload, qos=1)
     # [END iot_attach_device]
 
 
@@ -348,7 +348,7 @@ def send_data_from_bound_device(
     # Publish state to gateway topic
     gateway_state = "Starting gateway at: {}".format(time.time())
     print(gateway_state)
-    client.publish(request={"topic": gateway_topic, "messages": gateway_state})
+    client.publish(gateway_topic, gateway_state)
 
     # Publish num_messages messages to the MQTT bridge
     for i in range(1, num_messages + 1):
@@ -372,12 +372,7 @@ def send_data_from_bound_device(
                 i, num_messages, payload, device_topic
             )
         )
-        client.publish(
-            request={
-                "topic": device_topic,
-                "messages": "{} : {}".format(device_id, payload),
-            }
-        )
+        client.publish(device_topic, "{} : {}".format(device_id, payload))
 
         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
@@ -562,7 +557,7 @@ def mqtt_device_demo(args):
         # Publish "payload" to the MQTT topic. qos=1 means at least once
         # delivery. Cloud IoT Core also supports qos=0 for at most once
         # delivery.
-        client.publish(request={"topic": mqtt_topic, "messages": payload})
+        client.publish(mqtt_topic, payload, qos=1)
 
         # Send events every second. State should not be updated as often
         for i in range(0, 60):

@@ -60,7 +60,7 @@ def transmit_image(
     )
 
     client.loop_start()
-    client.publish(request={"topic": mqtt_topic, "messages": image_data})
+    client.publish(mqtt_topic, image_data)
     time.sleep(2)
     client.loop_stop()
 
