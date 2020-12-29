@@ -42,7 +42,7 @@ def test_parse_json_message():
         b"}"
     )
     message = Message(
-        mock.Mock(data=data, attributes=attributes, publish_time=0), MESSAGE_ID, delivery_attempt=0, request_queue=mock.Mock()
+        mock.Mock(data=data, attributes=attributes, publish_time=0.0), MESSAGE_ID, delivery_attempt=0, request_queue=mock.Mock()
     )
     assert summarize(message) == (
         "\tEvent type: OBJECT_FINALIZE\n"
