@@ -44,7 +44,7 @@ def test_parse_json_message():
     message = Message(
         mock.Mock(data=data, attributes=attributes), MESSAGE_ID, delivery_attempt=0, request_queue=mock.Mock()
     )
-    assert summarize(message.return_value) == (
+    assert summarize(message) == (
         "\tEvent type: OBJECT_FINALIZE\n"
         "\tBucket ID: mybucket\n"
         "\tObject ID: myobject\n"
