@@ -1,14 +1,65 @@
 #!/usr/bin/env python
 
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""This Apache Beam pipeline processes Landsat 8 satellite images and renders
+them as JPEG files.
+
+A Landsat 8 image consists of 11 bands. Each band contains the data for a
+specific range of the electromagnetic spectrum.
+
+A JPEG image consists of three channels: Red, Green, and Blue. For Landsat 8
+images, these correspond to Band 4 (red), Band 3 (green), and Band 2 (blue).
+
+These bands contain the raw pixel data directly from the satellite sensors. The
+values in each band can go from 0 to unbounded positive values. For a JPEG image
+we need to clamp them into integers between 0 and 255 for each channel.
+
+For this, we supply visualization parameters, commonly called `vis_params`.
+These visualization parameters include:
+
+- The bands for the RGB cannels, typically [B4, B3, B2] for Landsat 8.
+- The minimum value in each band, typically 0 for Landsat 8.
+- The maximum value in each band, this varies depending on the light exposure.
+- A gamma value for gamma correction.
+
+The Landsat data is read from the Landsat public dataset in Cloud Storage.
+For more information on the Landsat dataset:
+    https://cloud.google.com/storage/docs/public-datasets/landsat
+
+The overall workflow of the pipeline is the following:
+
+- The user supplies one or more Landsat scene IDs.
+- Get the Cloud Storage paths of all the RGB bands.
+- Load the pixel values for each band from Cloud Storage.
+- Preprocess pixels: clamp values and apply gamma correction.
+- Create a JPEG image and save it to Cloud Storage.
+"""
+
+import argparse
 import logging
 import os
 import re
+from typing import Any, Dict, List, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.typehints.typehints import Optional
 import numpy as np
 from PIL import Image
-import rasterio as rio
+import rasterio
 import tensorflow as tf
 
 DEFAULT_RGB_BANDS = ["B4", "B3", "B2"]
@@ -60,10 +111,20 @@ SCENE_RE = re.compile(
 )
 
 
-def get_valid_band_paths(scene, bands):
-    """Gets the Cloud Storage paths for each band in a Landsat scene."""
+def get_valid_band_paths(
+    scene: str, band_names: List[str]
+) -> List[Tuple[str, Tuple[str, str]]]:
+    """Gets the Cloud Storage paths for each band in a Landsat scene.
+
+    Args:
+        scene: Landsat 8 scene ID.
+        band_names: List of the [Red, Green, Blue] band names.
+
+    Returns:
+        A list of (scene, (band_name, band_path)) pairs.
+    """
     try:
-        return [get_band_path(scene, band) for band in bands]
+        return [get_band_path(scene, band_name) for band_name in band_names]
     except Exception as e:
         # If it fails, don't crash the entire pipeline.
         # Instead, log the error and skip this scene.
@@ -71,8 +132,19 @@ def get_valid_band_paths(scene, bands):
         return []
 
 
-def get_band_path(scene, band):
-    """Gets the Cloud Storage path for a single band in a Landsat scene."""
+def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
+    """Gets the Cloud Storage path for a single band in a Landsat scene.
+
+    Args:
+        scene: Landsat 8 scene ID.
+        band_name: A valid Landsat 8 band name.
+
+    Returns:
+        A (scene, (band_name, band_path)) pair.
+
+    Raises:
+        ValueError: If the scene or band does not exist.
+    """
     # Extract the metadata from the scene ID using a regular expression.
     m = SCENE_RE.match(scene)
     if m:
@@ -81,31 +153,68 @@ def get_band_path(scene, band):
             g["sensor"], g["collection"], g["wrs_path"], g["wrs_row"], scene
         )
 
-        path = "{}/{}_{}.TIF".format(scene_dir, scene, band)
-        if not tf.io.gfile.exists(path):
+        band_path = "{}/{}_{}.TIF".format(scene_dir, scene, band_name)
+        if not tf.io.gfile.exists(band_path):
             raise ValueError(
                 'failed to load band "{}", GCS path not found: {}'.format(
-                    band, path)
+                    band_name, band_path
+                )
             )
 
-        logging.info("{}: get_band_path({}): {}".format(scene, band, path))
-        return scene, (band, path)
+        logging.info("{}: get_band_path({}): {}".format(
+            scene, band_name, band_path))
+        return scene, (band_name, band_path)
 
     raise ValueError("invalid scene ID: {}".format(scene))
 
 
-def load_band(scene, band_path):
-    """Loads a band's data as a numpy array."""
-    band, path = band_path
+def load_band_values(
+    scene: str, band_name_and_path: Tuple[str, str]
+) -> Tuple[str, Tuple[str, np.ndarray]]:
+    """Loads a band's data as a numpy array.
 
-    # Use rasterio to read the GeoTIFF values from Cloud Storage.
-    with tf.io.gfile.GFile(path, "rb") as f, rio.open(f) as data:
-        logging.info("{}: load_band({})".format(scene, band))
-        return scene, (band, data.read(1))
+    The band values are stored in a three-dimensional array with the shape:
+        (band, width, height).
+
+    Args:
+        scene: Landsat 8 scene ID.
+        band_path: A (band_name, band_path) pair.
+
+    Returns:
+        A (scene, (band_name, band_values)) pair.
+    """
+    band_name, band_path = band_name_and_path
+
+    # Use rasterio to read the GeoTIFF values from the band files.
+    with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
+        logging.info("{}: load_band_values({})".format(scene, band_name))
+        return scene, (band_name, data.read(1))
 
 
-def preprocess_pixels(scene, values, min_value=0.0, max_value=1.0, gamma=1.0):
-    """Prepares the band data into a pixel-ready format for an RGB image."""
+def preprocess_pixels(
+    scene: str,
+    values: np.ndarray,
+    min_value: float = 0.0,
+    max_value: float = 1.0,
+    gamma: float = 1.0,
+) -> Tuple[str, tf.Tensor]:
+    """Prepares the band data into a pixel-ready format for an RGB image.
+
+    The input band values come in the shape (band, width, height) with
+    unbounded positive numbers depending on the sensor's exposure.
+    The values are reshaped into (width, height, band), the values are clamped
+    to integers between 0 and 255, and a gamma correction value is applied.
+
+    Args:
+        scene: Landsat 8 scene ID.
+        values: Band values in the shape (band, width, height).
+        min_value: Minimum band value.
+        max_value: Maximum band value.
+        gamma: Gamma correction value.
+
+    Returns:
+        A (scene, pixels) pair. The pixels are Image-ready values.
+    """
     values = np.array(values, np.float32)
     logging.info(
         "{}: preprocess_pixels({}, min={}, max={}, gamma={})".format(
@@ -135,15 +244,36 @@ def preprocess_pixels(scene, values, min_value=0.0, max_value=1.0, gamma=1.0):
     return scene, tf.cast(pixels * 255.0, dtype=tf.uint8)
 
 
-def save_to_gcs(scene, image, output_path_prefix, format="JPEG"):
-    """Saves a PIL.Image as a JPEG file in the desired path."""
+def save_to_gcs(
+    scene: str, image: Image.Image, output_path_prefix: str, format: str = "JPEG"
+) -> None:
+    """Saves a PIL.Image as a JPEG file in the desired path.
+
+    Args:
+        scene: Landsat 8 scene ID.
+        image: A PIL.Image object.
+        output_path_prefix: Path prefix to save the output files.
+        format: Image format to save files.
+    """
     filename = os.path.join(output_path_prefix, scene + "." + format.lower())
     with tf.io.gfile.GFile(filename, "w") as f:
         image.save(f, format)
 
 
-def run(scenes, output_path_prefix, vis_params, beam_args=None):
-    """Load multiple Landsat scenes and render them as JPEG files."""
+def run(
+    scenes: List[str],
+    output_path_prefix: str,
+    vis_params: Dict[str, Any],
+    beam_args: Optional[List[str]] = None,
+) -> None:
+    """Load multiple Landsat scenes and render them as JPEG files.
+
+    Args:
+        scenes: List of Landsat 8 scene IDs.
+        output_path_prefix: Path prefix to save the output files.
+        vis_params: Visualization parameters including {bands, min, max, gamma}.
+        beam_args: Optional list of arguments for Beam pipeline options.
+    """
     bands = vis_params["bands"]
     min_value = vis_params["min"]
     max_value = vis_params["max"]
@@ -155,13 +285,16 @@ def run(scenes, output_path_prefix, vis_params, beam_args=None):
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
             | "Get band paths" >> beam.FlatMap(get_valid_band_paths, bands)
-            | "Load bands" >> beam.MapTuple(load_band)
-            | "Group bands per scene" >> beam.GroupByKey()
-            | "Combine bands to dict"
-            >> beam.MapTuple(lambda scene, bands: (scene, dict(bands)))
-            | "Create RGB pixels"
-            >> beam.MapTuple(lambda scene, bands: (scene, [bands[b] for b in bands]))
-            | "Preprocess pixels"
+            | "Load band values" >> beam.MapTuple(load_band_values)
+            | "Group band values per scene" >> beam.GroupByKey()
+            | "Combine band values to dictionary"
+            >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
+            | "Create RGB pixels values from dictionary"
+            >> beam.MapTuple(
+                lambda scene, bands_dict: (
+                    scene, [bands_dict[b] for b in bands])
+            )
+            | "Preprocess pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
             | "Convert to image"
             >> beam.MapTuple(
@@ -175,7 +308,7 @@ def run(scenes, output_path_prefix, vis_params, beam_args=None):
 
 
 if __name__ == "__main__":
-    import argparse
+    logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
