@@ -161,8 +161,7 @@ def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
                 )
             )
 
-        logging.info("{}: get_band_path({}): {}".format(
-            scene, band_name, band_path))
+        logging.info("{}: get_band_path({}): {}".format(scene, band_name, band_path))
         return scene, (band_name, band_path)
 
     raise ValueError("invalid scene ID: {}".format(scene))
@@ -291,8 +290,7 @@ def run(
             >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
             | "Create RGB pixels values from dictionary"
             >> beam.MapTuple(
-                lambda scene, bands_dict: (
-                    scene, [bands_dict[b] for b in bands])
+                lambda scene, bands_dict: (scene, [bands_dict[b] for b in bands])
             )
             | "Preprocess pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
