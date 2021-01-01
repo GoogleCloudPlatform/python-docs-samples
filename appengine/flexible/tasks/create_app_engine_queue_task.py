@@ -50,7 +50,6 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
             payload = json.dumps(payload)
             # specify http content-type to application/json
             task["http_request"]["headers"] = {"Content-type": "application/json"}
-            
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
 
