@@ -41,7 +41,7 @@ For more information on the Landsat dataset:
 
 The overall workflow of the pipeline is the following:
 
-- The user supplies one or more Landsat scene IDs.
+- Parse one or more Landsat scene IDs from user-provided flags..
 - Get the Cloud Storage paths of all the RGB bands.
 - Load the pixel values for each band from Cloud Storage.
 - Preprocess pixels: clamp values and apply gamma correction.
@@ -118,7 +118,7 @@ def get_valid_band_paths(
 
     Args:
         scene: Landsat 8 scene ID.
-        band_names: List of the [Red, Green, Blue] band names.
+        band_names: List of the band names corresponding to [Red, Green, Blue] channels..
 
     Returns:
         A list of (scene, (band_name, band_path)) pairs.
