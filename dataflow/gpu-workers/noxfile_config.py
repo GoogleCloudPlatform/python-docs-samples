@@ -22,7 +22,9 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7", "3.7", "3.8"],  # Use only 3.6
+    # NOTE: Use only Python 3.6 since the Dataflow job needs to be launched
+    # with the same Python version as the Dockerfile.
+    'ignored_versions': ["2.7", "3.7", "3.8"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
