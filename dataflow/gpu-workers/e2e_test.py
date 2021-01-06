@@ -94,7 +94,7 @@ def test_tensorflow_version() -> None:
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow with GPU workers enabled.
-    gpu_type = 'nvidia-tesla-t4'
+    gpu_type = "nvidia-tesla-t4"
     subprocess.run(
         [
             "python",
