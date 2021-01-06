@@ -48,15 +48,15 @@ def create_iot_topic(project, topic_name):
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project, topic_name)
 
-    topic = pubsub_client.create_topic(topic_path)
-    policy = pubsub_client.get_iam_policy(topic_path)
+    topic = pubsub_client.create_topic(request={"name": topic_path})
+    policy = pubsub_client.get_iam_policy(request={"resource": topic_path})
 
     policy.bindings.add(
         role="roles/pubsub.publisher",
         members=["serviceAccount:cloud-iot@system.gserviceaccount.com"],
     )
 
-    pubsub_client.set_iam_policy(topic_path, policy)
+    pubsub_client.set_iam_policy(request={"resource": topic_path, "policy": policy})
 
     return topic
 
@@ -209,7 +209,9 @@ def delete_registry(service_account_json, project_id, cloud_region, registry_id)
     print("Delete registry")
 
     client = iot_v1.DeviceManagerClient()
-    registry_path = "projects/{}/locations/{}/registries/{}".format(project_id, cloud_region, registry_id)
+    registry_path = "projects/{}/locations/{}/registries/{}".format(
+        project_id, cloud_region, registry_id
+    )
 
     try:
         client.delete_device_registry(request={"name": registry_path})
