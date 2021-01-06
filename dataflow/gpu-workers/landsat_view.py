@@ -111,6 +111,27 @@ SCENE_RE = re.compile(
 )
 
 
+def check_gpus(element: Any):
+    """Makes sure TensorFlow detects GPUs, otherwise raise a RuntimeError.
+
+    Args:
+        element: An element
+
+    Returns:
+        The same element it received as is.
+
+    Raises:
+        RuntimeError: If no GPUs were found by TensorFlow.
+    """
+    # Make sure we have a GPU available.
+    gpu_devices = tf.config.list_physical_devices("GPU")
+    logging.info("GPU devices: {}".format(gpu_devices))
+    if len(gpu_devices) == 0:
+        logging.warning("No GPUs found, defaulting to CPU")
+        raise RuntimeError("No GPUs found")
+    return element
+
+
 def get_valid_band_paths(
     scene: str, band_names: List[str]
 ) -> List[Tuple[str, Tuple[str, str]]]:
@@ -161,7 +182,8 @@ def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
                 )
             )
 
-        logging.info("{}: get_band_path({}): {}".format(scene, band_name, band_path))
+        logging.info("{}: get_band_path({}): {}".format(
+            scene, band_name, band_path))
         return scene, (band_name, band_path)
 
     raise ValueError("invalid scene ID: {}".format(scene))
@@ -221,12 +243,6 @@ def preprocess_pixels(
         )
     )
 
-    # Make sure we have a GPU available.
-    gpu_devices = tf.config.list_physical_devices("GPU")
-    logging.info("GPU devices: {}".format(gpu_devices))
-    if len(gpu_devices) == 0:
-        logging.warning("No GPUs found, defaulting to CPU")
-
     # Reshape (band, width, height) into (width, height, band).
     pixels = tf.transpose(values, (1, 2, 0))
 
@@ -283,6 +299,7 @@ def run(
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
+            | "Check GPUs, or fail early" >> beam.Map(check_gpus)
             | "Get band paths" >> beam.FlatMap(get_valid_band_paths, bands)
             | "Load band values" >> beam.MapTuple(load_band_values)
             | "Group band values per scene" >> beam.GroupByKey()
@@ -290,7 +307,8 @@ def run(
             >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
             | "Create RGB pixels values from dictionary"
             >> beam.MapTuple(
-                lambda scene, bands_dict: (scene, [bands_dict[b] for b in bands])
+                lambda scene, bands_dict: (
+                    scene, [bands_dict[b] for b in bands])
             )
             | "Preprocess pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
