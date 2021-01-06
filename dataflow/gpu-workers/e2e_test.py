@@ -111,10 +111,9 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
         check=True,
     )
 
+    # Check that the output file was created and is not empty.
     client = storage.Client()
-    output_size = (
-        client.get_bucket(bucket_name)
-        .get_blob("outputs/LC08_L1TP_115078_20200608_20200625_01_T1.jpeg")
-        .size
+    output = client.get_bucket(bucket_name).get_blob(
+        "outputs/LC08_L1TP_115078_20200608_20200625_01_T1.jpeg"
     )
-    assert output_size > 0
+    assert output.size > 0
