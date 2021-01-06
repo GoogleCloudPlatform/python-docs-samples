@@ -62,7 +62,7 @@ from PIL import Image
 import rasterio
 import tensorflow as tf
 
-DEFAULT_RGB_BANDS = ["B4", "B3", "B2"]
+DEFAULT_RGB_BAND_NAMES = ["B4", "B3", "B2"]
 DEFAULT_MIN_BAND_VALUE = 0.0
 DEFAULT_MAX_BAND_VALUE = 12000.0
 DEFAULT_GAMMA = 0.5
@@ -183,8 +183,7 @@ def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
                 )
             )
 
-        logging.info("{}: get_band_path({}): {}".format(
-            scene, band_name, band_path))
+        logging.info("{}: get_band_path({}): {}".format(scene, band_name, band_path))
         return scene, (band_name, band_path)
 
     raise ValueError("invalid scene ID: {}".format(scene))
@@ -288,10 +287,10 @@ def run(
     Args:
         scenes: List of Landsat 8 scene IDs.
         output_path_prefix: Path prefix to save the output files.
-        vis_params: Visualization parameters including {bands, min, max, gamma}.
+        vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
         beam_args: Optional list of arguments for Beam pipeline options.
     """
-    bands = vis_params["bands"]
+    rgb_band_names = vis_params["rgb_band_names"]
     min_value = vis_params["min"]
     max_value = vis_params["max"]
     gamma = vis_params["gamma"]
@@ -302,19 +301,21 @@ def run(
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
             | "Check GPUs, or fail early" >> beam.Map(check_gpus, gpu_required)
-            | "Get band paths" >> beam.FlatMap(get_valid_band_paths, bands)
-            | "Load band values" >> beam.MapTuple(load_band_values)
-            | "Group band values per scene" >> beam.GroupByKey()
-            | "Combine band values to dictionary"
+            | "Get RGB band paths" >> beam.FlatMap(get_valid_band_paths, rgb_band_names)
+            | "Load RGB band values" >> beam.MapTuple(load_band_values)
+            | "Group RGB band values per scene" >> beam.GroupByKey()
+            | "Index RGB band values in a dictionary"
             >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
-            | "Create RGB pixels values from dictionary"
+            | "Extract RGB pixels values"
             >> beam.MapTuple(
                 lambda scene, bands_dict: (
-                    scene, [bands_dict[b] for b in bands])
+                    scene,
+                    [bands_dict[b] for b in rgb_band_names],
+                )
             )
-            | "Preprocess pixel values"
+            | "Preprocess RGB pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
-            | "Convert to image"
+            | "Convert RGB pixel values to image"
             >> beam.MapTuple(
                 lambda scene, rgb_pixels: (
                     scene,
@@ -345,10 +346,10 @@ if __name__ == "__main__":
         "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes",
     )
     parser.add_argument(
-        "--bands",
+        "--rgb-band-names",
         nargs=3,
-        default=DEFAULT_RGB_BANDS,
-        help="List of three band names to be mapped to RGB",
+        default=DEFAULT_RGB_BAND_NAMES,
+        help="List of three band names to be mapped to the RGB channels.",
     )
     parser.add_argument(
         "--min",
@@ -374,7 +375,7 @@ if __name__ == "__main__":
 
     scenes = args.scenes or DEFAULT_SCENES
     vis_params = {
-        "bands": args.bands,
+        "rgb_band_names": args.rgb_band_names,
         "min": args.min,
         "max": args.max,
         "gamma": args.gamma,
