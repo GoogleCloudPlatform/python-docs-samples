@@ -93,7 +93,7 @@ def test_tensorflow_version() -> None:
 
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
-    # Run the Beam pipeline in Dataflow with GPU workers enabled.
+    # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
     subprocess.run(
         [
@@ -101,6 +101,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             "landsat_view.py",
             "--scene=LC08_L1TP_115078_20200608_20200625_01_T1",
             f"--output-path-prefix=gs://{bucket_name}/outputs/",
+            "--gpu-required",
             "--runner=DataflowRunner",
             f"--project={PROJECT}",
             "--region=us-central1",

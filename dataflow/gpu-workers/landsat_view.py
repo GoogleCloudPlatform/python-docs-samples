@@ -111,7 +111,7 @@ SCENE_RE = re.compile(
 )
 
 
-def check_gpus(element: Any):
+def check_gpus(element: Any, gpu_required: bool):
     """Makes sure TensorFlow detects GPUs, otherwise raise a RuntimeError.
 
     Args:
@@ -128,7 +128,8 @@ def check_gpus(element: Any):
     logging.info("GPU devices: {}".format(gpu_devices))
     if len(gpu_devices) == 0:
         logging.warning("No GPUs found, defaulting to CPU")
-        raise RuntimeError("No GPUs found")
+        if gpu_required:
+            raise RuntimeError("No GPUs found")
     return element
 
 
@@ -182,8 +183,7 @@ def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
                 )
             )
 
-        logging.info("{}: get_band_path({}): {}".format(
-            scene, band_name, band_path))
+        logging.info("{}: get_band_path({}): {}".format(scene, band_name, band_path))
         return scene, (band_name, band_path)
 
     raise ValueError("invalid scene ID: {}".format(scene))
@@ -279,6 +279,7 @@ def run(
     scenes: List[str],
     output_path_prefix: str,
     vis_params: Dict[str, Any],
+    gpu_required: bool,
     beam_args: Optional[List[str]] = None,
 ) -> None:
     """Load multiple Landsat scenes and render them as JPEG files.
@@ -299,7 +300,7 @@ def run(
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
-            | "Check GPUs, or fail early" >> beam.Map(check_gpus)
+            | "Check GPUs, or fail early" >> beam.Map(check_gpus, gpu_required)
             | "Get band paths" >> beam.FlatMap(get_valid_band_paths, bands)
             | "Load band values" >> beam.MapTuple(load_band_values)
             | "Group band values per scene" >> beam.GroupByKey()
@@ -307,8 +308,7 @@ def run(
             >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
             | "Create RGB pixels values from dictionary"
             >> beam.MapTuple(
-                lambda scene, bands_dict: (
-                    scene, [bands_dict[b] for b in bands])
+                lambda scene, bands_dict: (scene, [bands_dict[b] for b in bands])
             )
             | "Preprocess pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
@@ -363,6 +363,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
     )
+    parser.add_argument(
+        "--gpu-required",
+        action="store_true",
+        help="If set, raise an error if no GPUs are detected.",
+    )
     args, beam_args = parser.parse_known_args()
 
     scenes = args.scenes or DEFAULT_SCENES
@@ -372,4 +377,4 @@ if __name__ == "__main__":
         "max": args.max,
         "gamma": args.gamma,
     }
-    run(scenes, args.output_path_prefix, vis_params, beam_args)
+    run(scenes, args.output_path_prefix, vis_params, args.gpu_required, beam_args)
