@@ -102,8 +102,8 @@ def test_python_version(image_name: str, configure_docker: None) -> None:
         ],
         stdout=subprocess.PIPE,
         check=True,
-    )
-    assert python_version == "TODO"
+    ).decode('utf-8').strip()
+    assert python_version == "Python 3.6.9"
 
 
 def test_apache_beam_version(image_name: str, configure_docker: None) -> None:
@@ -124,8 +124,8 @@ def test_apache_beam_version(image_name: str, configure_docker: None) -> None:
         ],
         stdout=subprocess.PIPE,
         check=True,
-    )
-    assert apache_beam_version == "TODO"
+    ).decode('utf-8').strip()
+    assert apache_beam_version == "apache-beam==2.26.0"
 
 
 def test_tensorflow_version(image_name: str, configure_docker: None) -> None:
@@ -146,15 +146,15 @@ def test_tensorflow_version(image_name: str, configure_docker: None) -> None:
         ],
         stdout=subprocess.PIPE,
         check=True,
-    )
-    assert tensorflow_version == "TODO"
+    ).decode('utf-8').strip()
+    assert tensorflow_version == "tensorflow-gpu==2.4.0"
 
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
-    region = "us-east1"
-    worker_zone = "us-east1-a"
+    region = "us-central1"
+    worker_zone = "us-central1-a"
     subprocess.run(
         [
             "python",
