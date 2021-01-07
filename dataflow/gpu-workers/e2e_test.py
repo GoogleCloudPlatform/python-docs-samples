@@ -72,7 +72,18 @@ def image_name() -> str:
     # )
 
 
-def test_python_version(image_name: str) -> None:
+@pytest.fixture
+def configure_docker() -> None:
+    subprocess.run(
+        [
+            "gcloud",
+            "auth",
+            "configure-docker",
+        ]
+    )
+
+
+def test_python_version(image_name: str, configure_docker: None) -> None:
     # Make sure the local and Docker Python versions are the same.
     # If this test fails, the following needs updating:
     # - noxfile_config.py: The Python 'ignored_versions' should only allow the Dockerfile Python version.
@@ -95,7 +106,7 @@ def test_python_version(image_name: str) -> None:
     assert python_version == "TODO"
 
 
-def test_apache_beam_version() -> None:
+def test_apache_beam_version(image_name: str, configure_docker: None) -> None:
     # Make sure the installed Apache Beam version matches the Apache Beam image
     # we use to copy the worker boot file.
     # If this test fails, the following needs updating:
@@ -117,7 +128,7 @@ def test_apache_beam_version() -> None:
     assert apache_beam_version == "TODO"
 
 
-def test_tensorflow_version() -> None:
+def test_tensorflow_version(image_name: str, configure_docker: None) -> None:
     # Make sure the installed Tensorflow version matches the Tensorflow version
     # in the Dockerfile.
     # If this test fails, the following needs updating:
@@ -141,27 +152,27 @@ def test_tensorflow_version() -> None:
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
-    # gpu_type = "nvidia-tesla-t4"
-    # region = "us-central1"
-    # worker_zone = "us-east1-a"
-    # subprocess.run(
-    #     [
-    #         "python",
-    #         "landsat_view.py",
-    #         "--scene=LC08_L1TP_115078_20200608_20200625_01_T1",
-    #         f"--output-path-prefix=gs://{bucket_name}/outputs/",
-    #         "--gpu-required",
-    #         "--runner=DataflowRunner",
-    #         f"--project={PROJECT}",
-    #         f"--region={region}",
-    #         "--worker_machine_type=custom-1-13312-ext",
-    #         f"--worker_harness_container_image={image_name}",
-    #         f"--worker_zone={worker_zone}",
-    #         f"--experiments=worker_accelerator=type={gpu_type},count=1,install-nvidia-driver",
-    #         "--experiments=use_runner_v2",
-    #     ],
-    #     check=True,
-    # )
+    gpu_type = "nvidia-tesla-t4"
+    region = "us-east1"
+    worker_zone = "us-east1-a"
+    subprocess.run(
+        [
+            "python",
+            "landsat_view.py",
+            "--scene=LC08_L1TP_115078_20200608_20200625_01_T1",
+            f"--output-path-prefix=gs://{bucket_name}/outputs/",
+            "--gpu-required",
+            "--runner=DataflowRunner",
+            f"--project={PROJECT}",
+            f"--region={region}",
+            "--worker_machine_type=custom-1-13312-ext",
+            f"--worker_harness_container_image={image_name}",
+            f"--worker_zone={worker_zone}",
+            f"--experiments=worker_accelerator=type={gpu_type},count=1,install-nvidia-driver",
+            "--experiments=use_runner_v2",
+        ],
+        check=True,
+    )
 
     # Check that the output file was created and is not empty.
     client = storage.Client()
