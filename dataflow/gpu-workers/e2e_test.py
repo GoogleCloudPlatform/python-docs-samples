@@ -31,7 +31,7 @@ BUCKET_NAME = "dataflow-gpu-test"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test:latest"
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def bucket_name() -> str:
     # client = storage.Client()
     # bucket = client.create_bucket(BUCKET_NAME)
@@ -41,7 +41,7 @@ def bucket_name() -> str:
     # bucket.delete()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def image_name() -> str:
     # subprocess.run(
     #     [
@@ -72,7 +72,7 @@ def image_name() -> str:
     # )
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def configure_docker() -> None:
     subprocess.run(
         [
