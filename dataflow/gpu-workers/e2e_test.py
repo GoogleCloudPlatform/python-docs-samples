@@ -89,20 +89,24 @@ def test_python_version(image_name: str, configure_docker: None) -> None:
     # - noxfile_config.py: The Python 'ignored_versions' should only allow the Dockerfile Python version.
     # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
     # - Docs tutorial: https://cloud.google.com/dataflow/docs/samples/satellite-images-gpus
-    python_version = subprocess.run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            "-i",
-            "--entrypoint=bash",
-            image_name,
-            "-c",
-            "python --version",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).decode('utf-8').strip()
+    python_version = (
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "-i",
+                "--entrypoint=bash",
+                image_name,
+                "-c",
+                "python --version",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .decode("utf-8")
+        .strip()
+    )
     assert python_version == "Python 3.6.9"
 
 
@@ -111,20 +115,24 @@ def test_apache_beam_version(image_name: str, configure_docker: None) -> None:
     # we use to copy the worker boot file.
     # If this test fails, the following needs updating:
     # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
-    apache_beam_version = subprocess.run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            "-i",
-            "--entrypoint=bash",
-            image_name,
-            "-c",
-            "pip freeze | egrep '^apache-beam=='",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).decode('utf-8').strip()
+    apache_beam_version = (
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "-i",
+                "--entrypoint=bash",
+                image_name,
+                "-c",
+                "pip freeze | egrep '^apache-beam=='",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .decode("utf-8")
+        .strip()
+    )
     assert apache_beam_version == "apache-beam==2.26.0"
 
 
@@ -133,20 +141,24 @@ def test_tensorflow_version(image_name: str, configure_docker: None) -> None:
     # in the Dockerfile.
     # If this test fails, the following needs updating:
     # - Dockerfile: The `FROM tensorflow/tensorflow` version.
-    tensorflow_version = subprocess.run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            "-i",
-            "--entrypoint=bash",
-            image_name,
-            "-c",
-            "pip freeze | egrep '^tensorflow(-gpu)?=='",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).decode('utf-8').strip()
+    tensorflow_version = (
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "-i",
+                "--entrypoint=bash",
+                image_name,
+                "-c",
+                "pip freeze | egrep '^tensorflow(-gpu)?=='",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .decode("utf-8")
+        .strip()
+    )
     assert tensorflow_version == "tensorflow-gpu==2.4.0"
 
 

@@ -327,7 +327,7 @@ def run(
         (
             pipeline
             | beam.Create([None])
-            | "Check GPUs, or fail early" >> beam.Map(check_gpus, gpu_required)
+            | "Check GPU availability" >> beam.Map(check_gpus, gpu_required)
         )
 
 
