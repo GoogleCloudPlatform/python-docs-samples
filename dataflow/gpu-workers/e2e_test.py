@@ -26,50 +26,46 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
 
-# TODO: REMOVE THIS, DELETE RESOURCES, AND UNCOMMENT CREATION/DELETION
-BUCKET_NAME = "dataflow-gpu-test"
-IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test:latest"
-
 
 @pytest.fixture(scope="session")
 def bucket_name() -> str:
-    # client = storage.Client()
-    # bucket = client.create_bucket(BUCKET_NAME)
+    client = storage.Client()
+    bucket = client.create_bucket(BUCKET_NAME)
 
     yield BUCKET_NAME
 
-    # bucket.delete()
+    bucket.delete()
 
 
 @pytest.fixture(scope="session")
 def image_name() -> str:
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "builds",
-    #         "submit",
-    #         f"--project={PROJECT}",
-    #         f"--tag={IMAGE_NAME}",
-    #         "--timeout=30m",
-    #         "--quiet",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            f"--project={PROJECT}",
+            f"--tag={IMAGE_NAME}",
+            "--timeout=30m",
+            "--quiet",
+        ],
+        check=True,
+    )
 
     yield IMAGE_NAME
 
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "container",
-    #         "images",
-    #         "delete",
-    #         IMAGE_NAME,
-    #         f"--project={PROJECT}",
-    #         "--quiet",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            f"--project={PROJECT}",
+            "--quiet",
+        ],
+        check=True,
+    )
 
 
 @pytest.fixture(scope="session")
@@ -188,7 +184,9 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
 
     # Check that the output file was created and is not empty.
     client = storage.Client()
-    output = client.get_bucket(bucket_name).get_blob(
+    output_file = client.get_bucket(bucket_name).get_blob(
         "outputs/LC08_L1TP_115078_20200608_20200625_01_T1.jpeg"
     )
-    assert output.size > 0
+    assert output_file.size > 0
+
+    output_file.delete()
