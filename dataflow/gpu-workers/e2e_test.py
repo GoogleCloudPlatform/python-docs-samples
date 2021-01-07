@@ -24,11 +24,11 @@ import pytest
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
-IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}"
+IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
 
 # TODO: REMOVE THIS, DELETE RESOURCES, AND UNCOMMENT CREATION/DELETION
 BUCKET_NAME = "dataflow-gpu-test"
-IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test"
+IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test:latest"
 
 
 @pytest.fixture
