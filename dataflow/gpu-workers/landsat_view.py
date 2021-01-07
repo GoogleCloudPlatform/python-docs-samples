@@ -200,9 +200,8 @@ def load_band_values(
     Args:
         scene: Landsat 8 scene ID.
         band_path: A (band_name, band_path) pair.
-
     Returns:
-        A (scene, (band_name, band_values)) pair.
+        A (scene, (band_name, band_values)) pair, where band_values is a 2D numpy array of width*height.
     """
     band_name, band_path = band_name_and_path
 
@@ -300,7 +299,6 @@ def run(
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
-            | "Check GPUs, or fail early" >> beam.Map(check_gpus, gpu_required)
             | "Get RGB band paths" >> beam.FlatMap(get_valid_band_paths, rgb_band_names)
             | "Load RGB band values" >> beam.MapTuple(load_band_values)
             | "Group RGB band values per scene" >> beam.GroupByKey()
@@ -323,6 +321,13 @@ def run(
                 )
             )
             | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
+        )
+
+        # Optionally, do some validations independently.
+        (
+            pipeline
+            | beam.Create([None])
+            | "Check GPUs, or fail early" >> beam.Map(check_gpus, gpu_required)
         )
 
 
