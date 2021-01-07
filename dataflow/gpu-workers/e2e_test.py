@@ -26,15 +26,15 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}"
 
-# TODO: REMOVE THIS AND DELETE RESOURCES
-BUCKET_NAME = f"dataflow-gpu-test"
+# TODO: REMOVE THIS, DELETE RESOURCES, AND UNCOMMENT CREATION/DELETION
+BUCKET_NAME = "dataflow-gpu-test"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test"
 
 
 @pytest.fixture
 def bucket_name() -> str:
-    client = storage.Client()
-    bucket = client.create_bucket(BUCKET_NAME)
+    # client = storage.Client()
+    # bucket = client.create_bucket(BUCKET_NAME)
 
     yield BUCKET_NAME
 
@@ -43,18 +43,18 @@ def bucket_name() -> str:
 
 @pytest.fixture
 def image_name() -> str:
-    subprocess.run(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            f"--project={PROJECT}",
-            f"--tag={IMAGE_NAME}",
-            "--timeout=30m",
-            "--quiet",
-        ],
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "builds",
+    #         "submit",
+    #         f"--project={PROJECT}",
+    #         f"--tag={IMAGE_NAME}",
+    #         "--timeout=30m",
+    #         "--quiet",
+    #     ],
+    #     check=True,
+    # )
 
     yield IMAGE_NAME
 
@@ -78,17 +78,20 @@ def test_python_version(image_name: str) -> None:
     # - noxfile_config.py: The Python 'ignored_versions' should only allow the Dockerfile Python version.
     # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
     # - Docs tutorial: https://cloud.google.com/dataflow/docs/samples/satellite-images-gpus
-    subprocess.run([
-        # docker run --rm -it --entrypoint=/bin/bash $IMAGE -c "python --version"
-        'docker',
-        'run',
-        '--rm',
-        '-it',
-        '--entrypoint=/bin/bash',
-        image_name,
-        '-c'
-        'python --version'
-    ])
+    python_version = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-it",
+            "--entrypoint=bash",
+            image_name,
+            "-c" "python --version",
+        ],
+        stdout=subprocess.PIPE,
+        check=True,
+    )
+    assert python_version == "TODO"
 
 
 def test_apache_beam_version() -> None:
@@ -96,7 +99,20 @@ def test_apache_beam_version() -> None:
     # we use to copy the worker boot file.
     # If this test fails, the following needs updating:
     # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
-    pass
+    apache_beam_version = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-it",
+            "--entrypoint=bash",
+            image_name,
+            "-c" "pip freeze | egrep '^apache-beam='",
+        ],
+        stdout=subprocess.PIPE,
+        check=True,
+    )
+    assert apache_beam_version == "TODO"
 
 
 def test_tensorflow_version() -> None:
@@ -104,12 +120,27 @@ def test_tensorflow_version() -> None:
     # in the Dockerfile.
     # If this test fails, the following needs updating:
     # - Dockerfile: The `FROM tensorflow/tensorflow` version.
-    pass
+    tensorflow_version = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-it",
+            "--entrypoint=bash",
+            image_name,
+            "-c" "pip freeze | egrep '^tensorflow(-gpu)?='",
+        ],
+        stdout=subprocess.PIPE,
+        check=True,
+    )
+    assert tensorflow_version == "TODO"
 
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
+    region = "us-central1"
+    worker_zone = "us-east1-a"
     subprocess.run(
         [
             "python",
@@ -119,10 +150,10 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             "--gpu-required",
             "--runner=DataflowRunner",
             f"--project={PROJECT}",
-            "--region=us-east1",
+            f"--region={region}",
             "--worker_machine_type=custom-1-13312-ext",
             f"--worker_harness_container_image={image_name}",
-            "--worker_zone=us-east1-a",
+            f"--worker_zone={worker_zone}",
             f"--experiments=worker_accelerator=type={gpu_type},count=1,install-nvidia-driver",
             "--experiments=use_runner_v2",
         ],
