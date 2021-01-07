@@ -26,6 +26,10 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}"
 
+# TODO: REMOVE THIS AND DELETE RESOURCES
+BUCKET_NAME = f"dataflow-gpu-test"
+IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test"
+
 
 @pytest.fixture
 def bucket_name() -> str:
@@ -34,7 +38,7 @@ def bucket_name() -> str:
 
     yield BUCKET_NAME
 
-    bucket.delete()
+    # bucket.delete()
 
 
 @pytest.fixture
@@ -46,6 +50,7 @@ def image_name() -> str:
             "submit",
             f"--project={PROJECT}",
             f"--tag={IMAGE_NAME}",
+            "--timeout=30m",
             "--quiet",
         ],
         check=True,
@@ -53,27 +58,37 @@ def image_name() -> str:
 
     yield IMAGE_NAME
 
-    subprocess.run(
-        [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            IMAGE_NAME,
-            f"--project={PROJECT}",
-            "--quiet",
-        ],
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "container",
+    #         "images",
+    #         "delete",
+    #         IMAGE_NAME,
+    #         f"--project={PROJECT}",
+    #         "--quiet",
+    #     ],
+    #     check=True,
+    # )
 
 
-def test_python_version() -> None:
+def test_python_version(image_name: str) -> None:
     # Make sure the local and Docker Python versions are the same.
     # If this test fails, the following needs updating:
     # - noxfile_config.py: The Python 'ignored_versions' should only allow the Dockerfile Python version.
     # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
     # - Docs tutorial: https://cloud.google.com/dataflow/docs/samples/satellite-images-gpus
-    pass
+    subprocess.run([
+        # docker run --rm -it --entrypoint=/bin/bash $IMAGE -c "python --version"
+        'docker',
+        'run',
+        '--rm',
+        '-it',
+        '--entrypoint=/bin/bash',
+        image_name,
+        '-c'
+        'python --version'
+    ])
 
 
 def test_apache_beam_version() -> None:
