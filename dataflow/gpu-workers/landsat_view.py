@@ -125,7 +125,7 @@ def check_gpus(element: Any, gpu_required: bool) -> Any:
     """
     # Make sure we have a GPU available.
     gpu_devices = tf.config.list_physical_devices("GPU")
-    logging.info("GPU devices: {}".format(gpu_devices))
+    logging.info(f"GPU devices: {gpu_devices}")
     if len(gpu_devices) == 0:
         logging.warning("No GPUs found, defaulting to CPU")
         if gpu_required:
@@ -133,82 +133,60 @@ def check_gpus(element: Any, gpu_required: bool) -> Any:
     return element
 
 
-def get_valid_band_paths(
-    scene: str, band_names: List[str]
-) -> List[Tuple[str, Tuple[str, str]]]:
+def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     """Gets the Cloud Storage paths for each band in a Landsat scene.
 
     Args:
         scene: Landsat 8 scene ID.
-        band_names: List of the band names corresponding to [Red, Green, Blue] channels..
+        band_names: List of the band names corresponding to [Red, Green, Blue] channels.
 
     Returns:
-        A list of (scene, (band_name, band_path)) pairs.
-    """
-    try:
-        return [get_band_path(scene, band_name) for band_name in band_names]
-    except Exception as e:
-        # If it fails, don't crash the entire pipeline.
-        # Instead, log the error and skip this scene.
-        logging.error(e, exc_info=True)
-        return []
-
-
-def get_band_path(scene: str, band_name: str) -> Tuple[str, Tuple[str, str]]:
-    """Gets the Cloud Storage path for a single band in a Landsat scene.
-
-    Args:
-        scene: Landsat 8 scene ID.
-        band_name: A valid Landsat 8 band name.
-
-    Returns:
-        A (scene, (band_name, band_path)) pair.
+        A (scene, band_paths) pair.
 
     Raises:
-        ValueError: If the scene or band does not exist.
+        ValueError: If the scene or a band does not exist.
     """
     # Extract the metadata from the scene ID using a regular expression.
     m = SCENE_RE.match(scene)
-    if m:
-        g = m.groupdict()
-        scene_dir = "gs://gcp-public-data-landsat/{}/{}/{}/{}/{}".format(
-            g["sensor"], g["collection"], g["wrs_path"], g["wrs_row"], scene
-        )
+    if not m:
+        raise ValueError(f"invalid scene ID: {scene}")
 
-        band_path = "{}/{}_{}.TIF".format(scene_dir, scene, band_name)
+    g = m.groupdict()
+    scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
+
+    band_paths = [
+        f"{scene_dir}/{scene}_{band_name}.TIF"
+        for band_name in band_names
+    ]
+
+    for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
-            raise ValueError(
-                'failed to load band "{}", GCS path not found: {}'.format(
-                    band_name, band_path
-                )
-            )
+            raise ValueError(f"failed to load: {band_path}")
 
-        logging.info("{}: get_band_path({}): {}".format(scene, band_name, band_path))
-        return scene, (band_name, band_path)
-
-    raise ValueError("invalid scene ID: {}".format(scene))
+    return scene, band_paths
 
 
-def load_band_values(
-    scene: str, band_name_and_path: Tuple[str, str]
-) -> Tuple[str, Tuple[str, np.ndarray]]:
-    """Loads a band's data as a numpy array.
-
-    The band values are stored in a three-dimensional array with the shape:
-        (band, width, height).
+def load_values(scene: str, band_paths: List[str]) -> Tuple[str, np.ndarray]:
+    """Loads a scene's bands data as a numpy array.
 
     Args:
         scene: Landsat 8 scene ID.
-        band_path: A (band_name, band_path) pair.
-    Returns:
-        A (scene, (band_name, band_values)) pair, where band_values is a 2D numpy array of width*height.
-    """
-    band_name, band_path = band_name_and_path
+        band_paths: A list of the [Red, Green, Blue] band paths.
 
-    # Use rasterio to read the GeoTIFF values from the band files.
-    with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
-        logging.info("{}: load_band_values({})".format(scene, band_name))
-        return scene, (band_name, data.read(1))
+    Returns:
+        A (scene, values) pair.
+
+        The values are stored in a three-dimensional float32 array with shape:
+            (band, width, height)
+    """
+    def read_band(band_path):
+        # Use rasterio to read the GeoTIFF values from the band files.
+        with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
+            return data.read(1)
+
+    logging.info(f"{scene}: load_values({band_paths})")
+    values = [read_band(band_path) for band_path in band_paths]
+    return scene, np.array(values, np.float32)
 
 
 def preprocess_pixels(
@@ -235,11 +213,8 @@ def preprocess_pixels(
     Returns:
         A (scene, pixels) pair. The pixels are Image-ready values.
     """
-    values = np.array(values, np.float32)
     logging.info(
-        "{}: preprocess_pixels({}, min={}, max={}, gamma={})".format(
-            scene, values.shape, min_value, max_value, gamma
-        )
+        f"{scene}: preprocess_pixels({values.shape}:{values.dtype}, min={min_value}, max={max_value}, gamma={gamma})"
     )
 
     # Reshape (band, width, height) into (width, height, band).
@@ -299,18 +274,8 @@ def run(
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
-            | "Get RGB band paths" >> beam.FlatMap(get_valid_band_paths, rgb_band_names)
-            | "Load RGB band values" >> beam.MapTuple(load_band_values)
-            | "Group RGB band values per scene" >> beam.GroupByKey()
-            | "Index RGB band values in a dictionary"
-            >> beam.MapTuple(lambda scene, named_bands: (scene, dict(named_bands)))
-            | "Extract RGB pixels values"
-            >> beam.MapTuple(
-                lambda scene, bands_dict: (
-                    scene,
-                    [bands_dict[b] for b in rgb_band_names],
-                )
-            )
+            | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
+            | "Load RGB band values" >> beam.MapTuple(load_values)
             | "Preprocess RGB pixel values"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
             | "Convert RGB pixel values to image"
