@@ -114,6 +114,9 @@ SCENE_RE = re.compile(
 def check_gpus(element: Any, gpu_required: bool) -> Any:
     """Makes sure TensorFlow detects GPUs, otherwise raise a RuntimeError.
 
+    Note that this function must be run within a PTransform like beam.Map so
+    we are sure it's run by the workers, and not the launcher process.
+
     Args:
         element: An element
 
@@ -270,6 +273,14 @@ def run(
 
     options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=options) as pipeline:
+        # Optionally, validate that the workers are using GPUs.
+        (
+            pipeline
+            | beam.Create([None])
+            | "Check GPU availability" >> beam.Map(check_gpus, gpu_required)
+        )
+
+        # Convert Landsat 8 scenes into images.
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
@@ -285,13 +296,6 @@ def run(
                 )
             )
             | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
-        )
-
-        # Optionally, do some validations independently.
-        (
-            pipeline
-            | beam.Create([None])
-            | "Check GPU availability" >> beam.Map(check_gpus, gpu_required)
         )
 
 
