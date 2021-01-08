@@ -24,7 +24,7 @@ def batch_translate_text_with_model(
     model_id="YOUR_MODEL_ID",
 ):
     """Batch translate text using Translation model.
-     Model can be AutoML or General[built-in] model. """
+    Model can be AutoML or General[built-in] model."""
 
     client = translate.TranslationServiceClient()
 

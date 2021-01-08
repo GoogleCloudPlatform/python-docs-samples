@@ -15,7 +15,10 @@
 import os
 import uuid
 
+import backoff
+from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
 from google.cloud import storage
+from google.cloud.exceptions import NotFound
 import pytest
 
 import translate_v3_batch_translate_text_with_glossary_and_model
@@ -37,16 +40,24 @@ def glossary():
 
     yield glossary_id
 
-    try:
-        translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+    # clean up
+    @backoff.on_exception(
+        backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
+    )
+    def delete_glossary():
+        try:
+            translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
+        except NotFound as e:
+            # Ignoring this case.
+            print("Got NotFound, detail: {}".format(str(e)))
+
+    delete_glossary()
 
 
 @pytest.fixture(scope="function")
 def bucket():
     """Create a temporary bucket to store annotation output."""
-    bucket_name = "mike-test-delete-" + str(uuid.uuid1())
+    bucket_name = "test-bucket-for-glossary-" + str(uuid.uuid1())
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
 
