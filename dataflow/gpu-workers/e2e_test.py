@@ -29,8 +29,8 @@ IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
 
 @pytest.fixture(scope="session")
 def bucket_name() -> str:
-    client = storage.Client()
-    bucket = client.create_bucket(BUCKET_NAME)
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(BUCKET_NAME)
 
     yield BUCKET_NAME
 
@@ -167,7 +167,6 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
         [
             "python",
             "landsat_view.py",
-            "--scene=LC08_L1TP_115078_20200608_20200625_01_T1",
             f"--output-path-prefix=gs://{bucket_name}/outputs/",
             "--gpu-required",
             "--runner=DataflowRunner",
@@ -182,11 +181,10 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
         check=True,
     )
 
-    # Check that the output file was created and is not empty.
-    client = storage.Client()
-    output_file = client.get_bucket(bucket_name).get_blob(
-        "outputs/LC08_L1TP_115078_20200608_20200625_01_T1.jpeg"
-    )
-    assert output_file.size > 0
-
-    output_file.delete()
+    # Check that output files were created and are not empty.
+    storage_client = storage.Client()
+    output_files = storage_client.list_blobs(bucket_name, prefix='outputs/')
+    assert len(output_files) > 0, 'No output files found'
+    for output_file in output_files:
+        assert output_file.size > 0, f'Output file is empty: {output_file.name}'
+        output_file.delete()
