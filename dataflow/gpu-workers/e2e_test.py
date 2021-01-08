@@ -183,8 +183,8 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()
-    output_files = storage_client.list_blobs(bucket_name, prefix='outputs/')
-    assert len(output_files) > 0, 'No output files found'
+    output_files = list(storage_client.list_blobs(bucket_name, prefix="outputs/"))
+    assert len(output_files) > 0, "No output files found"
     for output_file in output_files:
-        assert output_file.size > 0, f'Output file is empty: {output_file.name}'
+        assert output_file.size > 0, f"Output file is empty: {output_file.name}"
         output_file.delete()

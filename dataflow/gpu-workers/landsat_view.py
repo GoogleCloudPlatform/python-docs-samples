@@ -158,8 +158,7 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [
-        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
