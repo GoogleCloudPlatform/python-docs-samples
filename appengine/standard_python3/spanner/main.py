@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START gae_python38_cloud_spanner]
+# [START gae_python3_cloud_spanner]
 import os
 
 from flask import Flask
@@ -33,4 +34,5 @@ def main():
     results = list(cursor)
 
     return 'Query Result: {}'.format(results[0][0])
+# [END gae_python3_cloud_spanner]
 # [END gae_python38_cloud_spanner]

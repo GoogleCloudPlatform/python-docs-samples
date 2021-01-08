@@ -18,4 +18,4 @@ import quickstart
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'Saved' in out
+    assert "Saved" in out

@@ -23,7 +23,7 @@ from requests.packages.urllib3.util.retry import Retry
 
 def test_args():
     name = str(uuid.uuid4())
-    port = 8080  # Each functions framework instance needs a unique por
+    port = os.getenv('PORT', 8080)  # Each functions framework instance needs a unique port
 
     process = subprocess.Popen(
       [
@@ -37,7 +37,7 @@ def test_args():
 
     # Send HTTP request simulating Pub/Sub message
     # (GCF translates Pub/Sub messages to HTTP requests internally)
-    BASE_URL = os.getenv('BASE_URL')
+    BASE_URL = f'http://localhost:{port}'
 
     retry_policy = Retry(total=6, backoff_factor=1)
     retry_adapter = requests.adapters.HTTPAdapter(

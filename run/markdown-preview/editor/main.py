@@ -29,6 +29,7 @@ def index():
     return render_template("index.html", default=f.read())
 
 
+# [START cloudrun_secure_request_do]
 # [START run_secure_request_do]
 @app.route("/render", methods=["POST"])
 def render_handler():
@@ -40,6 +41,7 @@ def render_handler():
     parsed_markdown = render.new_request(data)
     return parsed_markdown
 # [END run_secure_request_do]
+# [END cloudrun_secure_request_do]
 
 
 if __name__ == "__main__":

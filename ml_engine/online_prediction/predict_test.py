@@ -20,13 +20,15 @@ import pytest
 import predict
 
 MODEL = 'census'
-JSON_VERSION = 'v1json'
-EXAMPLES_VERSION = 'v1example'
+JSON_VERSION = 'v2json'
 PROJECT = 'python-docs-samples-tests'
+CONF_KEY = u'confidence'
+PRED_KEY = u'predictions'
 EXPECTED_OUTPUT = {
-    u'confidence': 0.7760371565818787,
-    u'predictions': u' <=50K'
+    CONF_KEY: 0.7760370969772339,
+    PRED_KEY: u' <=50K'
 }
+CONFIDENCE_EPSILON = 1e-4
 
 # Raise the socket timeout. The requests involved in the sample can take
 # a long time to complete.
@@ -37,15 +39,18 @@ with open('resources/census_test_data.json') as f:
     JSON = json.load(f)
 
 
-with open('resources/census_example_bytes.pb', 'rb') as f:
-    BYTESTRING = f.read()
-
-
 @pytest.mark.flaky
 def test_predict_json():
     result = predict.predict_json(
         PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
-    assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
+    # Result contains two identical predictions
+    assert len(result) == 2 and result[0] == result[1]
+    # Each prediction has `confidence` and `predictions`
+    assert result[0].keys() == EXPECTED_OUTPUT.keys()
+    # Prediction matches
+    assert result[0][PRED_KEY] == EXPECTED_OUTPUT[PRED_KEY]
+    # Confidence within epsilon
+    assert abs(result[0][CONF_KEY] - EXPECTED_OUTPUT[CONF_KEY]) < CONFIDENCE_EPSILON
 
 
 @pytest.mark.flaky
@@ -53,18 +58,3 @@ def test_predict_json_error():
     with pytest.raises(RuntimeError):
         predict.predict_json(
             PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
-
-
-@pytest.mark.flaky
-def test_census_example_to_bytes():
-    import tensorflow as tf
-    b = predict.census_to_example_bytes(JSON)
-    assert tf.train.Example.FromString(b) == tf.train.Example.FromString(
-        BYTESTRING)
-
-
-@pytest.mark.flaky(max_runs=6)
-def test_predict_examples():
-    result = predict.predict_examples(
-        PROJECT, MODEL, [BYTESTRING, BYTESTRING], version=EXAMPLES_VERSION)
-    assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result

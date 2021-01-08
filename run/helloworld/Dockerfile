@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_hello_dockerfile]
+# [START cloudrun_helloworld_dockerfile]
+# [START run_helloworld_dockerfile]
 
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
@@ -35,4 +36,5 @@ RUN pip install Flask gunicorn
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 
-# [END run_hello_dockerfile]
+# [END run_helloworld_dockerfile]
+# [END cloudrun_helloworld_dockerfile]

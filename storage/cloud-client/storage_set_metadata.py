@@ -30,11 +30,12 @@ def set_blob_metadata(bucket_name, blob_name):
     blob = bucket.get_blob(blob_name)
     metadata = {'color': 'Red', 'name': 'Test'}
     blob.metadata = metadata
+    blob.patch()
 
     print("The metadata for the blob {} is {}".format(blob.name, blob.metadata))
 
 
-# [END storage_get_metadata]
+# [END storage_set_metadata]
 
 if __name__ == "__main__":
     set_blob_metadata(bucket_name=sys.argv[1], blob_name=sys.argv[2])

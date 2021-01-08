@@ -27,11 +27,11 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     return 'Hello World!'
 # [END functions_helloworld_get]
@@ -42,11 +42,11 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     request_json = request.get_json(silent=True)
     request_args = request.args
@@ -116,11 +116,11 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
@@ -141,16 +141,16 @@ def hello_content(request):
 # [END functions_http_content]
 
 
-# [START functions_http_methods]
+# [START functions_http_method]
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
-         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     from flask import abort
 
@@ -160,7 +160,7 @@ def hello_method(request):
         return abort(403)
     else:
         return abort(405)
-# [END functions_http_methods]
+# [END functions_http_method]
 
 
 def hello_error_1(request):

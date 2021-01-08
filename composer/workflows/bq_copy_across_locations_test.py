@@ -14,34 +14,17 @@
 
 import os
 import os.path
-import sys
 
 from airflow import models
-import pytest
 
 from . import unit_testing
-
-
-@pytest.fixture(scope='module', autouse=True)
-def gcs_plugin():
-    plugins_dir = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-        'third_party',
-        'apache-airflow',
-        'plugins',
-    ))
-    sys.path.append(plugins_dir)
-    yield
-    sys.path.remove(plugins_dir)
 
 
 def test_dag():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
-    environment. This is a recommended sanity check by the official Airflow
+    environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     example_file_path = os.path.join(
