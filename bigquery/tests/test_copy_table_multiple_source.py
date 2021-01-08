@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six
+import io
 from google.cloud import bigquery
 
 from .. import copy_table_multiple_source
@@ -32,7 +32,7 @@ def test_copy_table_multiple_source(capsys, random_table_id, random_dataset_id, 
                 bigquery.SchemaField("post_abbr", "STRING"),
             ]
         )
-        body = six.BytesIO(data)
+        body = io.BytesIO(data)
         client.load_table_from_file(
             body, table_ref, location="US", job_config=job_config
         ).result()

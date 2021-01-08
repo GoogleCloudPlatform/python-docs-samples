@@ -16,7 +16,7 @@
 def load_table_uri_truncate_csv(table_id):
 
     # [START bigquery_load_table_gcs_csv_truncate]
-    import six
+    import io
 
     from google.cloud import bigquery
 
@@ -33,7 +33,7 @@ def load_table_uri_truncate_csv(table_id):
         ],
     )
 
-    body = six.BytesIO(b"Washington,WA")
+    body = io.BytesIO(b"Washington,WA")
     client.load_table_from_file(body, table_id, job_config=job_config).result()
     previous_rows = client.get_table(table_id).num_rows
     assert previous_rows > 0
