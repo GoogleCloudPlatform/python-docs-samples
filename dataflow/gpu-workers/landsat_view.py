@@ -119,6 +119,7 @@ def check_gpus(element: Any, gpu_required: bool) -> Any:
 
     Args:
         element: An element
+        gpu_required: If True, causes the pipeline to fail if GPUs are not detected.
 
     Returns:
         The same element it received as is.
@@ -264,6 +265,7 @@ def run(
         scenes: List of Landsat 8 scene IDs.
         output_path_prefix: Path prefix to save the output files.
         vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
+        gpu_required: If True, causes the pipeline to fail if GPUs are not detected.
         beam_args: Optional list of arguments for Beam pipeline options.
     """
     rgb_band_names = vis_params["rgb_band_names"]
