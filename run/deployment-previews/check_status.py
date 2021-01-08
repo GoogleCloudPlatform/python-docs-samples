@@ -245,7 +245,7 @@ def set(
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
             (
-                f"Status would have been created on {repo.repo_name}, "
+                f"Status would have been created on {repo_name}, "
                 f"commit {commit.sha[:7]}, linking to {revision_url} "
                 f"on service {service_obj['metadata']['name']}"
             )
@@ -260,7 +260,7 @@ def set(
         )
         click.secho("Success: ", fg="green", bold=True, nl=False)
         click.echo(
-            f"Status created on {repo.repo_name}, commit {commit.sha[:7]}, "
+            f"Status created on {repo_name}, commit {commit.sha[:7]}, "
             f"linking to {revision_url} on service {service_obj['metadata']['name']}"
         )
 
