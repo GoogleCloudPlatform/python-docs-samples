@@ -128,7 +128,7 @@ def github_token(project_id: str, ghtoken_secretname: str) -> str:
         error(e, context=f"finding secret {ghtoken_secretname}")
 
     # The secret was encoded for you as part of the secret creation, so decode it now.
-    github_token = response.payload.data.decode("UTF-8")
+    github_token = response.payload.data.decode("UTF-8").strip()
     return github_token
 
 
