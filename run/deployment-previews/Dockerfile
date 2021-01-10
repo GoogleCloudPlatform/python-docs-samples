@@ -27,5 +27,5 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 # Run the CLI
-ENTRYPOINT ["python3","/app/check_status.py"]
+ENTRYPOINT ["python3", "/app/check_status.py"]
 # [END cloudrun_deployment_preview_dockerfile]
