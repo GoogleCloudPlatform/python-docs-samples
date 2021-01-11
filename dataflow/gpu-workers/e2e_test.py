@@ -171,6 +171,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             "--runner=DataflowRunner",
             f"--project={PROJECT}",
             f"--region={region}",
+            f"--temp_location=gs://{bucket_name}/temp",
             "--worker_machine_type=custom-1-13312-ext",
             f"--worker_harness_container_image={image_name}",
             f"--worker_zone={worker_zone}",
