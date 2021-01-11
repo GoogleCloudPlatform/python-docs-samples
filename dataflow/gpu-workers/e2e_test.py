@@ -187,4 +187,3 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
     assert len(output_files) > 0, "No output files found"
     for output_file in output_files:
         assert output_file.size > 0, f"Output file is empty: {output_file.name}"
-        output_file.delete()
