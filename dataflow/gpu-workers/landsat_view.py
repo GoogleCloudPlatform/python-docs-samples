@@ -131,9 +131,10 @@ def check_gpus(element: Any, gpus_optional: bool) -> Any:
     gpu_devices = tf.config.list_physical_devices("GPU")
     logging.info(f"GPU devices: {gpu_devices}")
     if len(gpu_devices) == 0:
-        logging.warning("No GPUs found, defaulting to CPU")
-        if not gpus_optional:
-            raise RuntimeError("No GPUs found")
+        if gpus_optional:
+            logging.warning("No GPUs found, defaulting to CPU.")
+        else:
+            raise RuntimeError("No GPUs found.")
     return element
 
 
