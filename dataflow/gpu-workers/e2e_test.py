@@ -34,7 +34,7 @@ def bucket_name() -> str:
 
     yield BUCKET_NAME
 
-    bucket.delete()
+    bucket.delete(force=True)
 
 
 @pytest.fixture(scope="session")
