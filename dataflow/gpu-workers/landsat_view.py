@@ -111,7 +111,7 @@ SCENE_RE = re.compile(
 )
 
 
-def check_gpus(element: Any, gpu_required: bool) -> Any:
+def check_gpus(element: Any, gpus_optional: bool) -> Any:
     """Makes sure TensorFlow detects GPUs, otherwise raise a RuntimeError.
 
     Note that this function must be run within a PTransform like beam.Map so
@@ -119,7 +119,7 @@ def check_gpus(element: Any, gpu_required: bool) -> Any:
 
     Args:
         element: An element
-        gpu_required: If True, causes the pipeline to fail if GPUs are not detected.
+        gpus_optional: If True, the pipeline won't crash if GPUs are not found.
 
     Returns:
         The same element it received as is.
@@ -132,7 +132,7 @@ def check_gpus(element: Any, gpu_required: bool) -> Any:
     logging.info(f"GPU devices: {gpu_devices}")
     if len(gpu_devices) == 0:
         logging.warning("No GPUs found, defaulting to CPU")
-        if gpu_required:
+        if not gpus_optional:
             raise RuntimeError("No GPUs found")
     return element
 
@@ -158,7 +158,8 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [
+        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -255,7 +256,7 @@ def run(
     scenes: List[str],
     output_path_prefix: str,
     vis_params: Dict[str, Any],
-    gpu_required: bool,
+    gpus_optional: bool,
     beam_args: Optional[List[str]] = None,
 ) -> None:
     """Load multiple Landsat scenes and render them as JPEG files.
@@ -264,7 +265,7 @@ def run(
         scenes: List of Landsat 8 scene IDs.
         output_path_prefix: Path prefix to save the output files.
         vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
-        gpu_required: If True, causes the pipeline to fail if GPUs are not detected.
+        gpus_optional: If True, the pipeline won't crash if GPUs are not found.
         beam_args: Optional list of arguments for Beam pipeline options.
     """
     rgb_band_names = vis_params["rgb_band_names"]
@@ -278,7 +279,7 @@ def run(
         (
             pipeline
             | beam.Create([None])
-            | "Check GPU availability" >> beam.Map(check_gpus, gpu_required)
+            | "Check GPU availability" >> beam.Map(check_gpus, gpus_optional)
         )
 
         # Convert Landsat 8 scenes into images.
@@ -341,9 +342,9 @@ if __name__ == "__main__":
         "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
     )
     parser.add_argument(
-        "--gpu-required",
+        "--gpus-optional",
         action="store_true",
-        help="If set, raise an error if no GPUs are detected.",
+        help="If set, the pipeline won't crash if GPUs are not found.",
     )
     args, beam_args = parser.parse_known_args()
 
@@ -354,4 +355,5 @@ if __name__ == "__main__":
         "max": args.max,
         "gamma": args.gamma,
     }
-    run(scenes, args.output_path_prefix, vis_params, args.gpu_required, beam_args)
+    run(scenes, args.output_path_prefix,
+        vis_params, args.gpus_optional, beam_args)
