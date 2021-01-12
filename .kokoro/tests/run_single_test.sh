@@ -41,6 +41,36 @@ fi
 nox -s "$RUN_TESTS_SESSION"
 EXIT=$?
 
+echo "PWD: ${PWD}"
+
+# Inject region tag data into the test log
+set +e  # Don't fail the entire test if this step fails
+if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
+
+    export XUNIT_PATH="$PWD/sponge_log.xml"
+    export XUNIT_TMP_PATH="$(mktemp)"
+
+    if [[ -f "$XUNIT_PATH" ]]; then
+        echo "=== Injecting region tags into XUnit output ==="
+        echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
+
+	# We use `python3` because it will work even if we remove old
+	# python versions from the docker image.
+	echo "Calling python3 ${PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${PWD}"
+        cat "$XUNIT_PATH" | \
+	    python3 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
+        if [[ $? -eq 0 ]] && [[ -s "$XUNIT_PATH" ]]; then
+            mv $XUNIT_TMP_PATH $XUNIT_PATH
+        else
+            echo "Region tag injection FAILED; XUnit file not modified."
+        fi
+    else
+        echo "No XUnit output file found!"
+    fi
+    echo "=== Region tag injection complete! ==="
+fi
+set -e
+
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
 # to the Build Cop Bot.
 # See:
