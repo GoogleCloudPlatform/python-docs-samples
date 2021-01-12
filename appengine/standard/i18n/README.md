@@ -60,7 +60,7 @@ Move into this project directory and invoke the following command:
 
 This command creates a `locales/messages.pot` file in the `locales`
 directory which contains all the string found in your Python code and
-Jija2 tempaltes.
+Jinja2 templates.
 
 Since the babel configration file `main.mapping` contains a reference
 to `jinja2.ext.babel_extract` helper function which is provided by
