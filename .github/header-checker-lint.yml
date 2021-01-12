@@ -1,0 +1,15 @@
+{"allowedCopyrightHolders": [],
+ "allowedLicenses": ["Apache-2.0", "MIT", "BSD-3"],
+ "ignoreFiles": [],
+ "sourceFileExtensions": [
+ 	"ts", 
+ 	"js", 
+ 	"java", 
+ 	"sh", 
+ 	"Dockerfile", 
+ 	"yaml", 
+ 	"py",
+ 	"html",
+ 	"txt"
+ ]
+}
