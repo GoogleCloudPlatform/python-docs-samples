@@ -22,8 +22,8 @@ import joblib
 from sklearn.metrics import mean_absolute_error
 from google.cloud import storage
 
+from trainer import utils
 from trainer.sklearn_model import model
-from trainer.utils import load_data
 # [END ai_platform_sklearn_task_imports]
 
 # [START ai_platform_sklearn_task_args]
@@ -60,7 +60,7 @@ def fit_model(input_path, job_dir, degree=1, alpha=0):
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
 
     # Split datasets into training and testing
-    train_x, eval_x, train_y, eval_y = load_data(input_path)
+    train_x, eval_x, train_y, eval_y = utils.load_data(input_path)
 
     # Create sklearn pipeline for a polynomial model defined in model.py"""
     polynomial_model = model.polynomial_model(degree, alpha)

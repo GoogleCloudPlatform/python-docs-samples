@@ -22,8 +22,8 @@ import os
 import pandas as pd
 import tensorflow as tf
 
+from trainer import utils
 from trainer.tfkeras_model import model
-from trainer.tfkeras_model import utils
 # [END ai_platform_tfkeras_task_imports]
 
 # [START ai_platform_tfkeras_task_args]
@@ -39,7 +39,7 @@ def get_args():
         "--job-dir",
         type=str,
         required=True,
-        help="local or GCS location for writing checkpoints and exporting " "models",
+        help="local or GCS location for writing checkpoints and exporting models",
     )
     parser.add_argument(
         "--num-epochs",

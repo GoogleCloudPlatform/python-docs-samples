@@ -8,7 +8,7 @@ from google.cloud import storage
 from googleapiclient import discovery
 import pytest
 
-STAGING_BUCKET = f"sklearn-job-dir-{uuid.uuid4()}"
+STAGING_BUCKET = f"tfkeras-job-dir-{uuid.uuid4()}"
 INPUT_DIR = "inputs"
 TRAINER_DIR = "modules"
 MODELS_DIR = "models"
@@ -19,8 +19,8 @@ TRAIN_DATA_PATH = f"gs://{STAGING_BUCKET}/{INPUT_DIR}/{TRAIN_DATA}"
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-MODEL_NAME = f"sklearn-test-{uuid.uuid4()}"
-JOB_ID = f"sklearn_{str(uuid.uuid4())[:7]}"
+MODEL_NAME = f"tfkeras-test-{uuid.uuid4()}"
+JOB_ID = f"tfkeras_{str(uuid.uuid4())[:7]}"
 
 TERMINAL_STATES = ["SUCCEEDED", "FAILED", "CANCELLING", "CANCELLED"]
 
@@ -43,7 +43,7 @@ def setup_teardown():
     os.remove(TRAINER_TAR)
 
 @pytest.mark.timeout(1200)
-def test_sklearn(setup_teardown):
+def test_tfkeras(setup_teardown):
     ml = discovery.build('ml', 'v1')
 
     proj_id = f"projects/{PROJECT_ID}"
@@ -53,7 +53,7 @@ def test_sklearn(setup_teardown):
             "scaleTier": "STANDARD_1",
             "region": REGION,
             "packageUris": [f"gs://{STAGING_BUCKET}/{TRAINER_TAR}"],
-            "pythonModule": "trainer.sklearn_model.task",
+            "pythonModule": "trainer.tfkeras_model.task",
             "jobDir": JOB_DIR,
             "runtimeVersion": "2.3",
             "pythonVersion": "3.7",
@@ -72,4 +72,4 @@ def test_sklearn(setup_teardown):
         response = ml.projects().jobs().get(
             name=f"projects/{PROJECT_ID}/jobs/{JOB_ID}").execute()
 
-    assert setup_teardown.blob(f"{MODELS_DIR}/model.joblib").exists()
+    assert setup_teardown.blob(f"{MODELS_DIR}/tfkeras_model/saved_model.pb").exists()

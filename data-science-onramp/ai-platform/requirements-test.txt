@@ -1,1 +1,2 @@
 pytest==6.0.1
+pytest-timeout==1.4.2
