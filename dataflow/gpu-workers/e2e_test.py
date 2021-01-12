@@ -106,58 +106,6 @@ def test_python_version(image_name: str, configure_docker: None) -> None:
     assert python_version == "Python 3.6.9"
 
 
-def test_apache_beam_version(image_name: str, configure_docker: None) -> None:
-    # Make sure the installed Apache Beam version matches the Apache Beam image
-    # we use to copy the worker boot file.
-    # If this test fails, the following needs updating:
-    # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
-    apache_beam_version = (
-        subprocess.run(
-            [
-                "docker",
-                "run",
-                "--rm",
-                "-i",
-                "--entrypoint=bash",
-                image_name,
-                "-c",
-                "pip freeze | egrep '^apache-beam=='",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.decode("utf-8")
-        .strip()
-    )
-    assert apache_beam_version == "apache-beam==2.26.0"
-
-
-def test_tensorflow_version(image_name: str, configure_docker: None) -> None:
-    # Make sure the installed Tensorflow version matches the Tensorflow version
-    # in the Dockerfile.
-    # If this test fails, the following needs updating:
-    # - Dockerfile: The `FROM tensorflow/tensorflow` version.
-    tensorflow_version = (
-        subprocess.run(
-            [
-                "docker",
-                "run",
-                "--rm",
-                "-i",
-                "--entrypoint=bash",
-                image_name,
-                "-c",
-                "pip freeze | egrep '^tensorflow(-gpu)?=='",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.decode("utf-8")
-        .strip()
-    )
-    assert tensorflow_version == "tensorflow-gpu==2.4.0"
-
-
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
