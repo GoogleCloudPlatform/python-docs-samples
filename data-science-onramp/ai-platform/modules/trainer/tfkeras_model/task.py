@@ -143,6 +143,7 @@ def train_and_evaluate(input_path, job_dir, num_epochs=5,
     tf.keras.models.save_model(keras_model, export_path)
     print("Model exported to: {}".format(export_path))
     # [END ai_platform_tfkeras_task_train_and_evaluate_fit_export]
+# [END ai_platform_tfkeras_task_train_and_evaluate]
 
 if __name__ == "__main__":
     args = get_args()
