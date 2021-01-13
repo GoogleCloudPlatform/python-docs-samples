@@ -1,2 +1,2 @@
 google-cloud-documentai==0.3.0
-google-cloud-storage==1.33.0
+google-cloud-storage==1.35.0
