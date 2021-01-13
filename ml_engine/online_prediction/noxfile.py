@@ -25,7 +25,7 @@ import nox
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["2.7", "3.8"]
+IGNORED_VERSIONS = ["2.7", "3.8", "3.9"]
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
