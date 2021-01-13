@@ -124,7 +124,7 @@ def test_session_to_dataframe(capsys, clients):
         read_options=read_options,
     )
     read_session = bqstorageclient.create_read_session(
-        parent=parent, read_session=requested_session
+        parent=parent, read_session=requested_session, max_stream_count=1,
     )
 
     # This example reads from only a single stream. Read from multiple streams
