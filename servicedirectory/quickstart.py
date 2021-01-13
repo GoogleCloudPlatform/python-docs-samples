@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START servicedirectory_quickstart]
-from google.cloud import servicedirectory_v1beta1
+from google.cloud import servicedirectory_v1
 
 
 def list_namespaces(project_id, location_id):
