@@ -21,7 +21,7 @@ from google.cloud import servicedirectory_v1
 def list_namespaces(project_id, location_id):
     """Lists all namespaces in the given location."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
     response = client.list_namespaces(
         parent=f'projects/{project_id}/locations/{location_id}')
