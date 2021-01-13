@@ -45,6 +45,7 @@ RUN apt-get update \
     libffi-dev \
     liblzma-dev \
     libmagickwand-dev \
+    libmemcached-dev \
     libpython3-dev \
     libreadline-dev \
     libsnappy-dev \
