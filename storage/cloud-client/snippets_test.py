@@ -67,7 +67,7 @@ KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
 def test_enable_default_kms_key(test_bucket):
     # For debugging on Kokoro...
-    print(f"using CLOUD_KMS_KEY: {CLOUD_KMS_KEY}")
+    print(f"using KMS_KEY: {KMS_KEY}")
     storage_set_bucket_default_kms_key.enable_default_kms_key(
         bucket_name=test_bucket.name, kms_key_name=KMS_KEY
     )
