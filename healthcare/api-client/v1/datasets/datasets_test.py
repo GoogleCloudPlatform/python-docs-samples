@@ -156,11 +156,19 @@ def test_CRUD_dataset(capsys, crud_dataset_id):
 
 
 def test_patch_dataset(capsys, test_dataset):
-    datasets.patch_dataset(
-        project_id,
-        cloud_region,
-        dataset_id,
-        time_zone)
+    # To mitigate the flake with HttpErrors.
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def run_sample():
+        datasets.patch_dataset(
+            project_id,
+            cloud_region,
+            dataset_id,
+            time_zone)
+    run_sample()
 
     out, _ = capsys.readouterr()
 
