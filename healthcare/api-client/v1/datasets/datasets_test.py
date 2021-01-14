@@ -137,8 +137,16 @@ def test_CRUD_dataset(capsys, crud_dataset_id):
         cloud_region,
         crud_dataset_id)
 
-    datasets.get_dataset(
-        project_id, cloud_region, crud_dataset_id)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def get_dataset():
+        datasets.get_dataset(
+            project_id, cloud_region, crud_dataset_id)
+
+    get_dataset()
 
     datasets.list_datasets(
         project_id, cloud_region)

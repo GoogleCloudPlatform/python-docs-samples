@@ -56,7 +56,7 @@ def test_dataset():
 def test_fhir_store():
     # We see HttpErrors with "dataset not initialized" message.
     # I think retry will mitigate the flake.
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=60)
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=120)
     def create_fhir_store():
         return fhir_stores.create_fhir_store(
             service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
