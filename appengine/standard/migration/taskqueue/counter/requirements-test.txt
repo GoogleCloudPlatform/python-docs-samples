@@ -1,0 +1,2 @@
+pytest==6.1.1 ; python_version >= "3.0"
+pytest==4.6.11 ; python_version < "3.0"

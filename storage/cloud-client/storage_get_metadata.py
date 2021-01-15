@@ -27,6 +27,10 @@ def blob_metadata(bucket_name, blob_name):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
+
+    # Retrieve a blob, and its metadata, from Google Cloud Storage.
+    # Note that `get_blob` differs from `Bucket.blob`, which does not
+    # make an HTTP request.
     blob = bucket.get_blob(blob_name)
 
     print("Blob: {}".format(blob.name))
