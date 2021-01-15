@@ -1,2 +1,2 @@
-google-cloud-pubsub==2.2.0
 google-cloud-storage==1.35.0
+pytest==6.2.1
