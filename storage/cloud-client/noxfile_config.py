@@ -55,6 +55,9 @@ def get_cloud_kms_key():
     if session == 'py-3.8':
         return ('projects/python-docs-samples-tests-py38/locations/us/'
                 'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+    if session == 'py-3.9':
+        return ('projects/python-docs-samples-tests-py39/locations/us/'
+                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     return os.environ['CLOUD_KMS_KEY']
 
 

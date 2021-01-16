@@ -44,6 +44,10 @@ retry 3 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
 retry 3 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 
-# 3.8.0 (Łukasz Langa)
+# 3.8.0, 3.9.0 (Łukasz Langa)
 retry 3 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
       E3FF2839C048B25C084DEBE9B26995E310250568
+
+# 3.10.x and 3.11.x (Pablo Galindo Salgado)
+retry 3 gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
+      A035C8C19219BA821ECEA86B64E628F8D684696D
