@@ -33,33 +33,25 @@ logger = logging.getLogger()
 
 def init_connection_engine():
     db_config = {
-        # [START cloud_sql_postgres_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
         "pool_size": 5,
         # Temporarily exceeds the set pool_size if no connections are available.
         "max_overflow": 2,
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
-        # [END cloud_sql_postgres_sqlalchemy_limit]
 
-        # [START cloud_sql_postgres_sqlalchemy_backoff]
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
-        # [END cloud_sql_postgres_sqlalchemy_backoff]
 
-        # [START cloud_sql_postgres_sqlalchemy_timeout]
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
         "pool_timeout": 30,  # 30 seconds
-        # [END cloud_sql_postgres_sqlalchemy_timeout]
 
-        # [START cloud_sql_postgres_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
         # reestablished
         "pool_recycle": 1800,  # 30 minutes
-        # [END cloud_sql_postgres_sqlalchemy_lifetime]
     }
 
     if os.environ.get("DB_HOST"):
@@ -67,12 +59,14 @@ def init_connection_engine():
     else:
         return init_unix_connection_engine(db_config)
 
+# [START cloudrun_python_user_auth_secrets]
 def get_cred_config():
     if "CLOUD_SQL_CREDENTIALS_SECRET" in os.environ:
         name = os.environ['CLOUD_SQL_CREDENTIALS_SECRET']
         client = secretmanager.SecretManagerServiceClient()
         response = client.access_secret_version(request={"name": name})
         return json.loads(response.payload.data.decode("UTF-8"))
+    # [END cloudrun_python_user_auth_secrets]
     else:
         logger.info(
         'CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables.'
@@ -99,7 +93,6 @@ def get_cred_config():
     
 
 def init_tcp_connection_engine(db_config):
-    # [START cloud_sql_postgres_sqlalchemy_create_tcp]
     creds = get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -123,16 +116,11 @@ def init_tcp_connection_engine(db_config):
         ),
         **db_config
     )
-    # [END cloud_sql_postgres_sqlalchemy_create_tcp]
     pool.dialect.description_encoding = None
     return pool
 
-
+# [START cloudrun_python_user_auth_sql_connect]
 def init_unix_connection_engine(db_config):
-    # [START cloud_sql_postgres_sqlalchemy_create_socket]
-    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
-    # secrets secret.
     creds = get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -158,9 +146,9 @@ def init_unix_connection_engine(db_config):
         ),
         **db_config
     )
-    # [END cloud_sql_postgres_sqlalchemy_create_socket]
     pool.dialect.description_encoding = None
     return pool
+# [END cloudrun_python_user_auth_sql_connect]
 
 
 # This global variable is declared with a value of `None`, instead of calling
@@ -192,7 +180,7 @@ def index():
     context = get_index_context()
     return render_template('index.html', **context)
 
-
+ f
 def get_index_context():
     votes = []
 
@@ -241,6 +229,7 @@ def get_index_context():
         'lead_team': lead_team 
     }
 
+# [START cloudrun_python_user_auth_jwt]
 def jwt_authenticated(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -258,7 +247,7 @@ def jwt_authenticated(f):
         request.uid = decoded_token['uid']
         return f(*args, **kwargs)
     return decorated_function
-
+# [END cloudrun_python_user_auth_jwt]
 
 @app.route('/', methods=['POST'])
 @jwt_authenticated
@@ -275,7 +264,6 @@ def save_vote():
             status=400
         )
 
-    # [START cloud_sql_postgres_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO votes (time_cast, candidate, uid)"
@@ -289,15 +277,12 @@ def save_vote():
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
-        # [START_EXCLUDE]
         logger.exception(e)
         return Response(
             status=500,
             response="Unable to successfully cast vote! Please check the "
                      "application logs for more details."
         )
-        # [END_EXCLUDE]
-    # [END cloud_sql_postgres_sqlalchemy_connection]
 
     return Response(
         status=200,

@@ -18,8 +18,6 @@ window.onload = function () {
   initApp();
 };
 
-// [START cloudrun_end_user_firebase_sign_in]
-// [START run_end_user_firebase_sign_in]
 function signIn() {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('https://www.googleapis.com/auth/userinfo.email');
@@ -36,8 +34,6 @@ function signIn() {
       window.alert(`Sign in failed. Retry or check your browser logs.`);
     });
 }
-// [END run_end_user_firebase_sign_in]
-// [END cloudrun_end_user_firebase_sign_in]
 
 function signOut() {
   firebase
@@ -59,8 +55,6 @@ function toggle() {
   }
 }
 
-// [START cloudrun_end_user_token]
-// [START run_end_user_token]
 async function vote(team) {
   if (firebase.auth().currentUser) {
     // Retrieve JWT to identify the user to the Identity Platform service.
@@ -89,5 +83,3 @@ async function vote(team) {
     window.alert('User not signed in.');
   }
 }
-// [END run_end_user_token]
-// [END cloudrun_end_user_token]
