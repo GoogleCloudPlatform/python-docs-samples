@@ -1,0 +1,59 @@
+steps:
+
+- id: 'Add a Secret to Secret Manager'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      sed -i "s/PROJECT_ID:REGION:INSTANCE/${_CLOUD_SQL_CONNECTION_NAME}/" postgres-secrets.json
+      sed -i "s/PASSWORD_SECRET/${_DB_PASSWORD}/" postgres-secrets.json
+      sed -i "s/\"DB_NAME\": \"postgres\"/\"DB_NAME\": \"${_DB_NAME}\"/" postgres-secrets.json
+      sed -i "s/\"DB_USER\": \"postgres\"/\"DB_USER\": \"${_DB_USER}\"/" postgres-secrets.json
+
+      ./test/retry.sh "gcloud secrets create ${_SERVICE}-secrets \
+        --replication-policy="automatic" \
+        --data-file=postgres-secrets.json"
+
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} ."
+
+- id: 'Push Container Image'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "docker push gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}"
+
+- id: 'Deploy to Cloud Run'
+  name: 'gcr.io/cloud-builders/gcloud:latest'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - |
+    ./test/retry.sh "gcloud run deploy ${_SERVICE} \
+      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
+      --allow-unauthenticated \
+      --region ${_REGION} \
+      --platform ${_PLATFORM} \
+      --add-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
+      --update-env-vars CLOUD_SQL_CREDENTIALS_SECRET=projects/${PROJECT_ID}/secrets/${_SERVICE}-secrets/versions/latest"
+
+images:
+- gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}
+
+substitutions:
+  _SERVICE: idp-sql
+  _VERSION: manual
+  _REGION: us-central1
+  _PLATFORM: managed
+  _CLOUD_SQL_CONNECTION_NAME: $PROJECT_ID:us-central1:idp-sql-instance
+  _DB_NAME: postgres
+  _DB_USER: postgres
+  _DB_PASSWORD: password1234

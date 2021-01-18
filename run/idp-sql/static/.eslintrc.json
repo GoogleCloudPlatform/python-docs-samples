@@ -1,0 +1,12 @@
+{
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "no-unused-vars": "off"
+  },
+  "globals": {
+    "firebase": "readonly",
+    "config": "readonly"
+  }
+}
