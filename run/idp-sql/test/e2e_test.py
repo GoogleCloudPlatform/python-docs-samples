@@ -25,7 +25,7 @@ import pytest
 import requests
 from firebase_admin import auth
 
-#default_app = firebase_admin.initialize_app()
+# default_app = firebase_admin.initialize_app()
 
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
@@ -43,9 +43,9 @@ REGION = "us-central1"
 PLATFORM = "managed"
 
 # Retreieve Cloud SQL test config
-CLOUD_SQL_CONNECTION_NAME = os.environ.get("CLOUD_SQL_CONNECTION_NAME", None)
-if not CLOUD_SQL_CONNECTION_NAME:
-    raise Exception("'CLOUD_SQL_CONNECTION_NAME' env var not found")
+POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
+if not POSTGRES_INSTANCE:
+    raise Exception("'POSTGRES_INSTANCE' env var not found")
 
 DB_PASSWORD = os.environ.get("DB_PASSWORD", None)
 if not DB_PASSWORD:
@@ -54,18 +54,18 @@ if not DB_PASSWORD:
 # Firebase key to create Id Tokens
 IDP_KEY = os.environ.get("IDP_KEY", None)
 if not IDP_KEY:
-    # gcloud secrets versions access latest --secret="python-docs-samples-idp-key" --project="${GOOGLE_CLOUD_PROJECT}"
+    # TODO gcloud secrets versions access latest --secret="python-docs-samples-idp-key" --project="${GOOGLE_CLOUD_PROJECT}"
     raise Exception("'IDP_KEY' env var not found")
 
 
 @pytest.fixture
-def deployed_service() -> Iterator[str]:
+def deployed_service() -> str:
     substitutions = [
         f"_SERVICE={SERVICE_NAME},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_PASSWORD={DB_PASSWORD},"
-        f"_CLOUD_SQL_CONNECTION_NAME={CLOUD_SQL_CONNECTION_NAME},"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
@@ -136,7 +136,7 @@ def deployed_service() -> Iterator[str]:
 
 
 @pytest.fixture
-def jwt_token(deployed_service):
+def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id")
     response = requests.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",

@@ -39,15 +39,12 @@ def init_connection_engine():
         "max_overflow": 2,
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
-
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
-
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
         "pool_timeout": 30,  # 30 seconds
-
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
         # reestablished
@@ -59,38 +56,39 @@ def init_connection_engine():
     else:
         return init_unix_connection_engine(db_config)
 
+
 # [START cloudrun_python_user_auth_secrets]
 def get_cred_config():
     if "CLOUD_SQL_CREDENTIALS_SECRET" in os.environ:
-        name = os.environ['CLOUD_SQL_CREDENTIALS_SECRET']
+        name = os.environ["CLOUD_SQL_CREDENTIALS_SECRET"]
         client = secretmanager.SecretManagerServiceClient()
         response = client.access_secret_version(request={"name": name})
         return json.loads(response.payload.data.decode("UTF-8"))
     # [END cloudrun_python_user_auth_secrets]
     else:
         logger.info(
-        'CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables.'
+            "CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables."
         )
         if "DB_USER" not in os.environ:
-            raise Exception('DB_USER needs to be set.')
+            raise Exception("DB_USER needs to be set.")
 
         if "DB_PASSWORD" not in os.environ:
-            raise Exception('DB_PASSWORD needs to be set.')
+            raise Exception("DB_PASSWORD needs to be set.")
 
         if "DB_NAME" not in os.environ:
-            raise Exception('DB_NAME needs to be set.')
+            raise Exception("DB_NAME needs to be set.")
 
         if "CLOUD_SQL_CONNECTION_NAME" not in os.environ:
-            raise Exception('CLOUD_SQL_CONNECTION_NAME needs to be set.')
+            raise Exception("CLOUD_SQL_CONNECTION_NAME needs to be set.")
 
         return {
-            "DB_USER": os.environ['DB_USER'],
-            "DB_PASSWORD": os.environ['DB_PASSWORD'],
-            "DB_NAME": os.environ['DB_NAME'],
+            "DB_USER": os.environ["DB_USER"],
+            "DB_PASSWORD": os.environ["DB_PASSWORD"],
+            "DB_NAME": os.environ["DB_NAME"],
             "DB_HOST": os.environ.get("DB_HOST", None),
-            "CLOUD_SQL_CONNECTION_NAME": os.environ['CLOUD_SQL_CONNECTION_NAME'],
-        };
-    
+            "CLOUD_SQL_CONNECTION_NAME": os.environ["CLOUD_SQL_CONNECTION_NAME"],
+        }
+
 
 def init_tcp_connection_engine(db_config):
     creds = get_cred_config()
@@ -112,12 +110,13 @@ def init_tcp_connection_engine(db_config):
             password=db_pass,  # e.g. "my-database-password"
             host=db_hostname,  # e.g. "127.0.0.1"
             port=db_port,  # e.g. 5432
-            database=db_name  # e.g. "my-database-name"
+            database=db_name,  # e.g. "my-database-name"
         ),
-        **db_config
+        **db_config,
     )
     pool.dialect.description_encoding = None
     return pool
+
 
 # [START cloudrun_python_user_auth_sql_connect]
 def init_unix_connection_engine(db_config):
@@ -129,7 +128,6 @@ def init_unix_connection_engine(db_config):
     cloud_sql_connection_name = creds["CLOUD_SQL_CONNECTION_NAME"]
 
     pool = sqlalchemy.create_engine(
-
         # Equivalent URL:
         # postgres+pg8000://<db_user>:<db_pass>@/<db_name>
         #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
@@ -140,14 +138,16 @@ def init_unix_connection_engine(db_config):
             database=db_name,  # e.g. "my-database-name"
             query={
                 "unix_sock": "{}/{}/.s.PGSQL.5432".format(
-                    db_socket_dir,  # e.g. "/cloudsql"
-                    cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
-            }
+                    db_socket_dir, cloud_sql_connection_name  # e.g. "/cloudsql"
+                )  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+            },
         ),
-        **db_config
+        **db_config,
     )
     pool.dialect.description_encoding = None
     return pool
+
+
 # [END cloudrun_python_user_auth_sql_connect]
 
 
@@ -167,20 +167,20 @@ def create_tables():
         conn.execute(
             "CREATE TABLE IF NOT EXISTS votes "
             "( vote_id SERIAL NOT NULL, "
-              "time_cast timestamp NOT NULL, "
-              "candidate VARCHAR(6) NOT NULL, "
-              "uid VARCHAR(128) NOT NULL, "
-              "PRIMARY KEY (vote_id)"
+            "time_cast timestamp NOT NULL, "
+            "candidate VARCHAR(6) NOT NULL, "
+            "uid VARCHAR(128) NOT NULL, "
+            "PRIMARY KEY (vote_id)"
             ");"
         )
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
     context = get_index_context()
-    return render_template('index.html', **context)
+    return render_template("index.html", **context)
 
- f
+
 def get_index_context():
     votes = []
 
@@ -192,13 +192,16 @@ def get_index_context():
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
-            votes.append({
-                'candidate': row[0].strip(), # TODO(glasnt): what. 
-                'time_cast': row[1],
-                'uid': row[2]
-            })
+            votes.append(
+                {
+                    "candidate": row[0].strip(),  # TODO(glasnt): what.
+                    "time_cast": row[1],
+                    "uid": row[2],
+                }
+            )
         stmt = sqlalchemy.text(
-            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate")
+            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
+        )
         # Count number of votes for cats
         cats_result = conn.execute(stmt, candidate="CATS").fetchone()
         cats_count = cats_result[0]
@@ -206,63 +209,66 @@ def get_index_context():
         dogs_result = conn.execute(stmt, candidate="DOGS").fetchone()
         dogs_count = dogs_result[0]
 
-    lead_team = ''
+    lead_team = ""
     vote_diff = 0
-    leader_message = ''
+    leader_message = ""
     if cats_count != dogs_count:
         if cats_count > dogs_count:
-            lead_team = 'CATS'
+            lead_team = "CATS"
             vote_diff = cats_count - dogs_count
         else:
-            lead_team = 'DOGS'
+            lead_team = "DOGS"
             vote_diff = dogs_count - cats_count
-        leader_message = f"{lead_team} are running by {vote_diff} vote{'s' if vote_diff > 1 else ''}"
+        leader_message = (
+            f"{lead_team} are running by {vote_diff} vote{'s' if vote_diff > 1 else ''}"
+        )
     else:
         leader_message = "CATS and DOGS are evenly matched!"
 
-
     return {
-        'dogs_count': dogs_count,
-        'recent_votes': votes,
-        'cats_count': cats_count,
-        'leader_message': leader_message,
-        'lead_team': lead_team 
+        "dogs_count": dogs_count,
+        "recent_votes": votes,
+        "cats_count": cats_count,
+        "leader_message": leader_message,
+        "lead_team": lead_team,
     }
+
 
 # [START cloudrun_python_user_auth_jwt]
 def jwt_authenticated(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        header = request.headers.get('Authorization', None)
-        if header: 
-            token = header.split(' ')[1]
-            try: 
+        header = request.headers.get("Authorization", None)
+        if header:
+            token = header.split(" ")[1]
+            try:
                 decoded_token = firebase_admin.auth.verify_id_token(token)
             except Exception as e:
                 logger.exception(e)
-                return Response(status=403,response=f"Error with authentication: {e}")
+                return Response(status=403, response=f"Error with authentication: {e}")
         else:
             return Response(status=401)
-        
-        request.uid = decoded_token['uid']
+
+        request.uid = decoded_token["uid"]
         return f(*args, **kwargs)
+
     return decorated_function
+
+
 # [END cloudrun_python_user_auth_jwt]
 
-@app.route('/', methods=['POST'])
+
+@app.route("/", methods=["POST"])
 @jwt_authenticated
 def save_vote():
     # Get the team and time the vote was cast.
-    team = request.form['team']
+    team = request.form["team"]
     uid = request.uid
     time_cast = datetime.datetime.utcnow()
     # Verify that the team is one of the allowed options
     if team != "CATS" and team != "DOGS":
         logger.warning(team)
-        return Response(
-            response="Invalid team specified.",
-            status=400
-        )
+        return Response(response="Invalid team specified.", status=400)
 
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
@@ -281,15 +287,14 @@ def save_vote():
         return Response(
             status=500,
             response="Unable to successfully cast vote! Please check the "
-                     "application logs for more details."
+            "application logs for more details.",
         )
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(
-            team, time_cast)
+        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
     )
 
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)
