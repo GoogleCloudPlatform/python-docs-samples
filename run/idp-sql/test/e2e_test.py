@@ -137,7 +137,7 @@ def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id")
     response = requests.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",
-        body={"token": custom_token, "returnSecureToken": True},
+        json={"token": custom_token, "returnSecureToken": True},
     )
     tokens = response.body.to_json()
     id_token = tokens["idToken"]
