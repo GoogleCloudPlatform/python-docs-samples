@@ -17,10 +17,8 @@
 
 import os
 import subprocess
-import uuid
-from typing import Iterator, List, Tuple
 
-import firebase_admin
+#import firebase_admin
 import pytest
 import requests
 from firebase_admin import auth

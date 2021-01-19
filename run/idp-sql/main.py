@@ -13,17 +13,16 @@
 # limitations under the License.
 
 import datetime
+import json
 import logging
 import os
-import json
 from functools import wraps
 
-from flask import Flask, render_template, request, Response
-import sqlalchemy
 import firebase_admin
+import sqlalchemy
 from firebase_admin import auth
+from flask import Flask, Response, render_template, request
 from google.cloud import secretmanager
-
 
 default_app = firebase_admin.initialize_app()
 app = Flask(__name__, static_folder="static", static_url_path="")
