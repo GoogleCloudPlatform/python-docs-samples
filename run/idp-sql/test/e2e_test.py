@@ -54,7 +54,6 @@ if not POSTGRES_PASSWORD:
 # Firebase key to create Id Tokens
 IDP_KEY = os.environ.get("IDP_KEY", None)
 if not IDP_KEY:
-    # TODO gcloud secrets versions access latest --secret="python-docs-samples-idp-key" --project="${GOOGLE_CLOUD_PROJECT}"
     raise Exception("'IDP_KEY' env var not found")
 
 
