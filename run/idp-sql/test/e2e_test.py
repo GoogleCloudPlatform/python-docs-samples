@@ -47,9 +47,9 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
-DB_PASS = os.environ.get("DB_PASS", None)
-if not DB_PASS:
-    raise Exception("'DB_PASS' env var not found")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
+if not POSTGRES_PASSWORD:
+    raise Exception("'POSTGRES_PASSWORD' env var not found")
 
 # Firebase key to create Id Tokens
 IDP_KEY = os.environ.get("IDP_KEY", None)
@@ -64,7 +64,7 @@ def deployed_service() -> str:
         f"_SERVICE={SERVICE_NAME},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
-        f"_DB_PASSWORD={DB_PASS},"
+        f"_DB_PASSWORD={POSTGRES_PASSWORD},"
         f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE},"
     ]
     if SAMPLE_VERSION:
