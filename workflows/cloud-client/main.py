@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import os
-import time
 
 
 def execute_workflow(
@@ -21,20 +21,23 @@ def execute_workflow(
 ):
     """Execute a workflow and print the execution results."""
     # [START workflows_api_quickstart]
+    import time
+
     from google.cloud import workflows_v1beta
     from google.cloud.workflows import executions_v1beta
     from google.cloud.workflows.executions_v1beta.types import executions
 
     if not project:
-        raise Exception('GOOGLE_CLOUD_PROJECT is required.')
+        raise Exception('GOOGLE_CLOUD_PROJECT env var is required.')
 
+    # Set up API clients.
     execution_client = executions_v1beta.ExecutionsClient()
     workflows_client = workflows_v1beta.WorkflowsClient()
 
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project, location, workflow)
 
-    # Execute workflow
+    # Execute the workflow.
     response = execution_client.create_execution(request={"parent": parent})
     print(f"Created execution: {response.name}")
 

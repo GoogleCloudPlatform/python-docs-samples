@@ -2,17 +2,15 @@
 
 # Cloud Workflows Quickstart – Python
 
-This sample shows how to execute a Cloud Workflow and wait for the workflow execution results.
+This sample shows how to execute a Cloud Workflow and wait for the workflow execution results using the Python client libraries.
 
 ## Setup
-
-1. Read [Prerequisites][prereq] and [How to run a sample][run] first.
 
 1. Deploy the workflow, `myFirstWorkflow`:
 
     1. Copy the YAML from this file: https://github.com/GoogleCloudPlatform/workflows-samples/blob/main/src/myFirstWorkflow.workflows.yaml
     1. Paste the YAML into a file called `myFirstWorkflow.workflows.yaml`.
-    1. Run the command: `gcloud beta workflows deploy $WORKFLOW --source myFirstWorkflow.workflows.yaml`
+    1. Run the command: `gcloud workflows deploy myFirstWorkflow --source myFirstWorkflow.workflows.yaml`
 
 ## Run the Quickstart
 
@@ -36,7 +34,7 @@ You may want to refer to the [`Python Development Environment Setup Guide`][setu
 1. Start the application, setting your project name in an environment variable, `GOOGLE_CLOUD_PROJECT`:
 
     ```sh
-    GOOGLE_CLOUD_PROJECT=your-project
+    export GOOGLE_CLOUD_PROJECT=your-project-id
     python main.py
     ```
 
