@@ -54,11 +54,19 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
         echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
 
-	# We use `python3` because it will work even if we remove old
-	# python versions from the docker image.
-	echo "Calling python3 ${PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${PWD}"
+        # First, we generate a Python-specific "polyglot_snippet_data.json" file
+    	#   We use `python3` because it will work even if we remove old
+    	#   python versions from the docker image.
+        echo "Calling python3 ${POLYGLOT_PARSER_PATH} ${PWD}"
+        python3 "$POLYGLOT_PARSER_PATH" "$PWD"
+
+        # Then, we pass the "polyglot_snippet_data.json" file and the XUnit output
+        # to the "polyglot" parser.
+        #   This outputs the XUnit input with the snippet-test map added
+        #   Again, we use `python3` for version stability.
+    	echo "Calling: cat $XUNIT_PATH | python3 ${POLYGLOT_PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${PWD}"
         cat "$XUNIT_PATH" | \
-	    python3 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
+	    python3 "$POLYGLOT_PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
         if [[ $? -eq 0 ]] && [[ -s "$XUNIT_PATH" ]]; then
             mv $XUNIT_TMP_PATH $XUNIT_PATH
         else
