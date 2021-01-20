@@ -169,7 +169,7 @@ def blacken(session: nox.sessions.Session) -> None:
 #
 
 
-PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
+PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml", "-v"]
 
 
 def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
