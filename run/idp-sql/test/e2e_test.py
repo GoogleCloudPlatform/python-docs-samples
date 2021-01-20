@@ -139,7 +139,7 @@ def jwt_token() -> str:
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",
         json={"token": custom_token, "returnSecureToken": True},
     )
-    tokens = response.body.to_json()
+    tokens = response.json()
     id_token = tokens["idToken"]
     yield id_token
 
