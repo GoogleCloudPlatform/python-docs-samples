@@ -168,7 +168,7 @@ location that you specified.
 
 You can now run the Apache Beam pipeline in Dataflow by referring to the
 template file and passing the template
-[parameters](https://cloud.devsite.corp.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options)
+[parameters](https://cloud.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options)
 required by the pipeline.
 
 ```sh

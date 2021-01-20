@@ -17,7 +17,7 @@
 from os import environ
 import uuid
 
-from google.cloud import servicedirectory_v1beta1
+from google.cloud import servicedirectory_v1
 
 import pytest
 
@@ -30,12 +30,12 @@ NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
 
 @pytest.fixture(scope='module')
 def client():
-    return servicedirectory_v1beta1.RegistrationServiceClient()
+    return servicedirectory_v1.RegistrationServiceClient()
 
 
 @pytest.fixture(scope='module')
 def namespace(client):
-    namespace = servicedirectory_v1beta1.Namespace(
+    namespace = servicedirectory_v1.Namespace(
         name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
 
     client.create_namespace(
