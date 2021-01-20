@@ -130,14 +130,15 @@ ROOT=$(pwd)
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
-    echo "--- Installing PyYaml ---"
-    python3 -m pip install --user pyyaml
+    echo "--- Installing pip packages ---"
+    pip3 --version
+    pip3 install --user pyyaml frozendict recordclass
 
     # Use ${HOME} because trampoline will automatically clean up this
     # directory.
-    export REGION_TAG_PARSER_DIR="${HOME}/xunit-autolabeler-v2"
-    export POLYGLOT_PARSER_PATH="${REGION_TAG_PARSER_DIR}/cli_bootstrap.py"
-    export PYTHON_PARSER_PATH="${REGION_TAG_PARSER_DIR}/ast_parser/python_bootstrap.py"
+    export REGION_TAG_PARSER_DIR="${HOME}/region-tag-parser"
+    export POLYGLOT_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/cli_bootstrap.py"
+    export PYTHON_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/ast_parser/python_bootstrap.py"
 
     if [[ ! -f $POLYGLOT_PARSER_PATH ]]; then
         echo "--- Fetching injection script from HEAD (via GitHub) ---"
