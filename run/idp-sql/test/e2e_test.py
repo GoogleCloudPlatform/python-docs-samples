@@ -18,12 +18,12 @@
 import os
 import subprocess
 
-#import firebase_admin
 import pytest
 import requests
-from firebase_admin import auth
+import firebase_admin  # noqa: F401
+from firebase_admin import auth  # noqa: F401
 
-# default_app = firebase_admin.initialize_app()
+default_app = firebase_admin.initialize_app()
 
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
@@ -153,11 +153,23 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     client = requests.session()
 
     # Can successfully make a request
-    response = client.get(service_url, headers=headers)
-    body = response.text
-
+    response = client.get(service_url)
     assert response.status_code == 200
-    # TODO(glasnt) more checks
-    # * can make post with token
-    # * cannot make post with bad token
-    # * cannot make post with no token
+
+    # Can make post with token
+    response = client.post(
+        service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
+    )
+    assert response.status_code == 200
+
+    # Cannot make post with bad token
+    response = client.post(
+        service_url,
+        data={"team": "DOGS"},
+        headers={"Authorization": "Bearer iam-a-token"},
+    )
+    assert response.status_code == 403
+
+    # Cannot make post with no token
+    response = client.post(service_url, data={"team": "DOGS"})
+    assert response.status_code == 401

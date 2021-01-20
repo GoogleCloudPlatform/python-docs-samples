@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import datetime
+from functools import wraps
 import json
 import logging
 import os
-from functools import wraps
+from typing import List
 
-import firebase_admin
 import sqlalchemy
-from firebase_admin import auth
-from flask import Flask, Response, render_template, request
+import firebase_admin
+from firebase_admin import auth  # noqa: F401
+from flask import Flask, render_template, request, Response
 from google.cloud import secretmanager
 
 default_app = firebase_admin.initialize_app()
@@ -30,7 +31,7 @@ app = Flask(__name__, static_folder="static", static_url_path="")
 logger = logging.getLogger()
 
 
-def init_connection_engine():
+def init_connection_engine() -> dict[str, int]:
     db_config = {
         # Pool size is the maximum number of permanent connections to keep.
         "pool_size": 5,
@@ -57,7 +58,7 @@ def init_connection_engine():
 
 
 # [START cloudrun_python_user_auth_secrets]
-def get_cred_config():
+def get_cred_config() -> dict[str, str]:
     if "CLOUD_SQL_CREDENTIALS_SECRET" in os.environ:
         name = os.environ["CLOUD_SQL_CREDENTIALS_SECRET"]
         client = secretmanager.SecretManagerServiceClient()
@@ -89,7 +90,9 @@ def get_cred_config():
         }
 
 
-def init_tcp_connection_engine(db_config):
+def init_tcp_connection_engine(
+    db_config: dict[str, str]
+) -> sqlalchemy.engine.base.Engine:
     creds = get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -118,7 +121,9 @@ def init_tcp_connection_engine(db_config):
 
 
 # [START cloudrun_python_user_auth_sql_connect]
-def init_unix_connection_engine(db_config):
+def init_unix_connection_engine(
+    db_config: dict[str, str]
+) -> sqlalchemy.engine.base.Engine:
     creds = get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -158,7 +163,7 @@ db = None
 
 
 @app.before_first_request
-def create_tables():
+def create_tables() -> None:
     global db
     db = init_connection_engine()
     # Create tables (if they don't already exist)s
@@ -175,12 +180,12 @@ def create_tables():
 
 
 @app.route("/", methods=["GET"])
-def index():
+def index() -> str:
     context = get_index_context()
     return render_template("index.html", **context)
 
 
-def get_index_context():
+def get_index_context() -> dict[str, List[int, str]]:
     votes = []
 
     with db.connect() as conn:

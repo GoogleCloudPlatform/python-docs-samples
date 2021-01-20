@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import render_template
-
 
 def test_get_index(app, client):
-    assert client.get('/').status_code == 200
+    assert client.get("/").status_code == 200
+
 
 def test_post_no_jwt(app, client):
-    assert client.post('/').status_code == 401
+    assert client.post("/").status_code == 401
+
 
 def test_post_invalid_jwt(app, client):
-    assert client.post('/', headers={"Authorization": "Bearer iam-a-token"}).status_code == 403
+    assert (
+        client.post("/", headers={"Authorization": "Bearer iam-a-token"}).status_code
+        == 403
+    )
