@@ -134,7 +134,7 @@ def deployed_service() -> str:
 
 @pytest.fixture
 def jwt_token() -> str:
-    custom_token = auth.create_custom_token("a-user-id")
+    custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
     response = requests.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",
         json={"token": custom_token, "returnSecureToken": True},
