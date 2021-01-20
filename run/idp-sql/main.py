@@ -17,7 +17,7 @@ from functools import wraps
 import json
 import logging
 import os
-from typing import List
+from typing import Dict, Union
 
 import sqlalchemy
 import firebase_admin
@@ -31,7 +31,7 @@ app = Flask(__name__, static_folder="static", static_url_path="")
 logger = logging.getLogger()
 
 
-def init_connection_engine() -> dict[str, int]:
+def init_connection_engine() -> Dict[str, int]:
     db_config = {
         # Pool size is the maximum number of permanent connections to keep.
         "pool_size": 5,
@@ -58,7 +58,7 @@ def init_connection_engine() -> dict[str, int]:
 
 
 # [START cloudrun_python_user_auth_secrets]
-def get_cred_config() -> dict[str, str]:
+def get_cred_config() -> Dict[str, str]:
     if "CLOUD_SQL_CREDENTIALS_SECRET" in os.environ:
         name = os.environ["CLOUD_SQL_CREDENTIALS_SECRET"]
         client = secretmanager.SecretManagerServiceClient()
@@ -91,7 +91,7 @@ def get_cred_config() -> dict[str, str]:
 
 
 def init_tcp_connection_engine(
-    db_config: dict[str, str]
+    db_config: Dict[str, str]
 ) -> sqlalchemy.engine.base.Engine:
     creds = get_cred_config()
     db_user = creds["DB_USER"]
@@ -122,7 +122,7 @@ def init_tcp_connection_engine(
 
 # [START cloudrun_python_user_auth_sql_connect]
 def init_unix_connection_engine(
-    db_config: dict[str, str]
+    db_config: Dict[str, str]
 ) -> sqlalchemy.engine.base.Engine:
     creds = get_cred_config()
     db_user = creds["DB_USER"]
@@ -185,7 +185,7 @@ def index() -> str:
     return render_template("index.html", **context)
 
 
-def get_index_context() -> dict[str, List[int, str]]:
+def get_index_context() -> Dict[str, Union[int, str]]:
     votes = []
 
     with db.connect() as conn:

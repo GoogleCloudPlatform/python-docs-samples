@@ -23,8 +23,6 @@ import requests
 import firebase_admin  # noqa: F401
 from firebase_admin import auth  # noqa: F401
 
-default_app = firebase_admin.initialize_app()
-
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 if not GOOGLE_CLOUD_PROJECT:
