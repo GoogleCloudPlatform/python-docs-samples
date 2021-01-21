@@ -52,7 +52,9 @@ steps:
         "python",
         "manage.py",
         "collectstatic",
-        "--no-input",
+        "--verbosity",
+        "2",
+        "--no-input"
       ]
 
 substitutions:
