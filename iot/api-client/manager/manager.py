@@ -268,8 +268,11 @@ def get_state(service_account_json, project_id, cloud_region, registry_id, devic
 
     print("State history")
     states = client.list_device_states(request={"name": device_path}).device_states
-    for state in states:
-        print("State: {}".format(state))
+
+    # Avoid ReferenceError in py-3.9 builds.
+    if states:
+        for state in states:
+            print("State: {}".format(state))
 
     return states
 

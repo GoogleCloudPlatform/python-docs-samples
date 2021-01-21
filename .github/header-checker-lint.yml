@@ -1,6 +1,6 @@
-{"allowedCopyrightHolders": [],
+{"allowedCopyrightHolders": ["Google LLC"],
  "allowedLicenses": ["Apache-2.0", "MIT", "BSD-3"],
- "ignoreFiles": ["requirements.txt", "requirements-test.txt"],
+ "ignoreFiles": ["**/requirements.txt", "**/requirements-test.txt"],
  "sourceFileExtensions": [
  	"ts", 
  	"js", 
