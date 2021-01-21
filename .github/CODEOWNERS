@@ -39,7 +39,7 @@
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
-/iot/**/*.py                           @gguuss @GoogleCloudPlatform/python-samples-owners
+/iot/**/*.py                           @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-owners
 /jobs/**/*.py                          @GoogleCloudPlatform/python-samples-owners
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
