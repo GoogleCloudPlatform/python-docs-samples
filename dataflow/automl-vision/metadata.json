@@ -1,0 +1,32 @@
+{
+    "name": "Wildlife insights",
+    "description": "Train an AutoML model to classify animals from camera trap pictures.",
+    "parameters": [
+        {
+            "name": "cloud-storage-path",
+            "label": "Cloud Storage path",
+            "helpText": "Cloud Storage path to store the AutoML dataset images.",
+            "regexes": [
+                "gs:.*"
+            ]
+        },
+        {
+            "name": "min-images-per-class",
+            "label": "Minimum images per class",
+            "helpText": "Minimum number of images required per class for training.",
+            "isOptional": true,
+            "regexes": [
+                "[0-9]+"
+            ]
+        },
+        {
+            "name": "max-images-per-class",
+            "label": "Maximum images per class",
+            "helpText": "Maximum number of images allowed per class for training.",
+            "isOptional": true,
+            "regexes": [
+                "[0-9]+"
+            ]
+        }
+    ]
+}

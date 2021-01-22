@@ -1,0 +1,3 @@
+Pillow==8.1.0
+apache-beam[gcp]==2.27.0
+google-cloud-aiplatform==0.4.0
