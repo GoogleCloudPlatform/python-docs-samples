@@ -1,4 +1,4 @@
-runtime: python38
+runtime: python39
 
 env_variables:
   SPANNER_INSTANCE: "YOUR-SPANNER-INSTANCE-ID"

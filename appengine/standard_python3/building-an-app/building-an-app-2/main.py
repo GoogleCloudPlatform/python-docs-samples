@@ -17,15 +17,18 @@ import datetime
 from flask import Flask, render_template
 
 # [START gae_python38_datastore_store_and_fetch_times]
+# [START gae_python3_datastore_store_and_fetch_times]
 from google.cloud import datastore
 
 datastore_client = datastore.Client()
 
+# [END gae_python3_datastore_store_and_fetch_times]
 # [END gae_python38_datastore_store_and_fetch_times]
 app = Flask(__name__)
 
 
 # [START gae_python38_datastore_store_and_fetch_times]
+# [START gae_python3_datastore_store_and_fetch_times]
 def store_time(dt):
     entity = datastore.Entity(key=datastore_client.key('visit'))
     entity.update({
@@ -42,10 +45,12 @@ def fetch_times(limit):
     times = query.fetch(limit=limit)
 
     return times
+# [END gae_python3_datastore_store_and_fetch_times]
 # [END gae_python38_datastore_store_and_fetch_times]
 
 
 # [START gae_python38_datastore_render_times]
+# [START gae_python3_datastore_render_times]
 @app.route('/')
 def root():
     # Store the current access time in Datastore.
@@ -56,6 +61,7 @@ def root():
 
     return render_template(
         'index.html', times=times)
+# [END gae_python3_datastore_render_times]
 # [END gae_python38_datastore_render_times]
 
 

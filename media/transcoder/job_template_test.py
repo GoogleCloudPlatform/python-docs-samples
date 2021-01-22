@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import create_job_template
 import delete_job_template
@@ -22,7 +23,7 @@ import list_job_templates
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-template_id = "my-python-test-template"
+template_id = f"my-python-test-template-{uuid.uuid4()}"
 
 
 def test_template_operations(capsys):

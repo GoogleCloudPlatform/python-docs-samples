@@ -23,74 +23,136 @@ import uuid
 
 import pytest
 
+# build container image + push w/ cloud build
+# deploy to cloud run
+# get auth
 
-@pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
-    project = os.environ['GOOGLE_CLOUD_PROJECT']
+# Unique suffix to create distinct service names
+SUFFIX = uuid.uuid4().hex[:10]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+IMAGE_NAME = f"gcr.io/{PROJECT}/sys-package-{SUFFIX}"
 
-    # Build and Deploy Cloud Run Services
+
+@pytest.fixture
+def container_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "--tag",
+            IMAGE_NAME,
             "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            PROJECT,
             "--quiet",
-        ], check=True
+        ],
+        check=True,
+    )
+    yield IMAGE_NAME
+
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
     )
 
-    # Get the URL for the service and the token
-    service = subprocess.run(
+
+@pytest.fixture
+def deployed_service(container_image):
+    # Deploy image to Cloud Run
+    service_name = f"sys-package-{SUFFIX}"
+    subprocess.run(
         [
             "gcloud",
             "run",
+            "deploy",
+            service_name,
+            "--image",
+            container_image,
             "--project",
-            project,
-            "--platform=managed",
+            PROJECT,
             "--region=us-central1",
-            "services",
-            "describe",
-            f"sys-package-{suffix}",
-            "--format=value(status.url)",
+            "--platform=managed",
+            "--no-allow-unauthenticated",
         ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip()
+        check=True,
+    )
 
-    token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip()
-
-    yield service, token
+    yield service_name
 
     subprocess.run(
-        ["gcloud", "run", "services", "delete", f"sys-package-{suffix}",
-         "--project", project, "--platform", "managed", "--region",
-         "us-central1", "--quiet"],
-        check=True
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name,
+            "--platform=managed",
+            "--region=us-central1",
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
     )
 
 
-def test_end_to_end(services):
-    service = services[0].decode()
-    token = services[1].decode()
-    data = (
-        "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20"))
-    print(service)
-    print(f"{service}{data}")
+@pytest.fixture
+def service_url_auth_token(deployed_service):
+    # Get Cloud Run service URL and auth token
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+
+    yield service_url, auth_token
+
+
+def test_end_to_end(service_url_auth_token):
+    service_url, auth_token = service_url_auth_token
+
+    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20")
+    print(f"{service_url}{data}")
 
     req = request.Request(
-        f"{service}/{data}",
+        f"{service_url}/{data}",
         headers={
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {auth_token}",
         },
     )
 

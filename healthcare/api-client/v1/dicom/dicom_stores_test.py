@@ -152,17 +152,17 @@ def crud_dicom_store_id():
     clean_up()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def test_pubsub_topic():
     pubsub_client = pubsub_v1.PublisherClient()
     # Create the Pub/Sub topic
     topic_path = pubsub_client.topic_path(project_id, pubsub_topic)
-    pubsub_client.create_topic(topic_path)
+    pubsub_client.create_topic(request={"name": topic_path})
 
     yield pubsub_topic
 
     # Delete the Pub/Sub topic
-    pubsub_client.delete_topic(topic_path)
+    pubsub_client.delete_topic(request={"topic": topic_path})
 
 
 def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
@@ -189,8 +189,7 @@ def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
     assert "Deleted DICOM store" in out
 
 
-def test_patch_dicom_store(
-        test_dataset, test_dicom_store, test_pubsub_topic, capsys):
+def test_patch_dicom_store(test_dataset, test_dicom_store, test_pubsub_topic, capsys):
     dicom_stores.patch_dicom_store(
         project_id, cloud_region, dataset_id, dicom_store_id, test_pubsub_topic
     )

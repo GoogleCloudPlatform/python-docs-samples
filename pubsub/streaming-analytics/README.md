@@ -137,6 +137,7 @@ The following instructions will help you prepare your development environment.
 The following example will run a streaming pipeline. It will read messages from a Pub/Sub topic, then window them into fixed-sized intervals, and write one file per window into a GCS location.
 
 + `--project`: sets the Google Cloud project ID to run the pipeline on
++ `--region`: sets the Dataflow [regional endpoint](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
 + `--input_topic`: sets the input Pub/Sub topic to read messages from
 + `--output_path`: sets the output GCS path prefix to write files to
 + `--runner`: specifies the runner to run the pipeline, if not set to `DataflowRunner`, `DirectRunner` is used
@@ -146,6 +147,7 @@ The following example will run a streaming pipeline. It will read messages from 
 ```bash
 python PubSubToGCS.py \
   --project=$PROJECT_NAME \
+  --region=us-central1 \
   --input_topic=projects/$PROJECT_NAME/topics/$TOPIC_NAME \
   --output_path=gs://$BUCKET_NAME/samples/output \
   --runner=DataflowRunner \

@@ -55,7 +55,7 @@ def trigger_dag(data, context=None):
     )
     # Make a POST request to IAP which then Triggers the DAG
     make_iap_request(
-        webserver_url, client_id, method='POST', json={"conf": data})
+        webserver_url, client_id, method='POST', json={"conf": data, "replace_microseconds": 'false'})
 
 
 # This code is copied from

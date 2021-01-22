@@ -32,12 +32,12 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
         a/1.txt
         a/b/2.txt
 
-    If you just specify prefix = 'a', you'll get back:
+    If you specify prefix ='a/', without a delimiter, you'll get back:
 
         a/1.txt
         a/b/2.txt
 
-    However, if you specify prefix='a' and delimiter='/', you'll get back:
+    However, if you specify prefix='a/' and delimiter='/', you'll get back:
 
         a/1.txt
 
