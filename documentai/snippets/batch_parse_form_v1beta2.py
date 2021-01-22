@@ -24,6 +24,7 @@ def batch_parse_form(
     project_id="YOUR_PROJECT_ID",
     input_uri="gs://cloud-samples-data/documentai/form.pdf",
     destination_uri="gs://your-bucket-id/path/to/save/results/",
+    timeout=90
 ):
     """Parse a form"""
 
@@ -80,7 +81,7 @@ def batch_parse_form(
     operation = client.batch_process_documents(batch_request)
 
     # Wait for the operation to finish
-    operation.result()
+    operation.result(timeout)
 
     # Results are written to GCS. Use a regex to find
     # output files
