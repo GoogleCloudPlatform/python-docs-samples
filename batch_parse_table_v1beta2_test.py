@@ -41,6 +41,6 @@ def setup_teardown():
 
 
 def test_batch_parse_table(capsys):
-    batch_parse_table_v1beta2.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
+    batch_parse_table_v1beta2.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI, 120)
     out, _ = capsys.readouterr()
     assert "Output files:" in out
