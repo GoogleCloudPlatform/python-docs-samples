@@ -53,7 +53,7 @@ def init(bigquery_dataset, bigquery_table, pipeline_options=None):
             pipeline
             | "Create single element" >> beam.Create([None])
             | "Get images info" >> beam.FlatMap(get_images_info)
-            | "Filter invalid categories"
+            | "Filter invalid rows"
             >> beam.Filter(lambda x: x["category"] not in invalid_categories)
             | "Write images info"
             >> beam.io.WriteToBigQuery(
