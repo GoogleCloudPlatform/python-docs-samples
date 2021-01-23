@@ -102,7 +102,8 @@ def train_model(
     cloud_storage_path,
     bigquery_dataset,
     bigquery_table,
-    automl_model_name,
+    automl_dataset,
+    automl_model,
     min_images_per_class,
     max_images_per_class,
     automl_budget_milli_node_hours,
@@ -134,7 +135,7 @@ def train_model(
                 create_automl_dataset,
                 project=project,
                 region=region,
-                automl_model_name=automl_model_name,
+                automl_dataset=automl_dataset,
             )
             | "Import images" >> beam.MapTuple(import_images_to_automl_dataset)
             | "Train AutoML model"
@@ -142,7 +143,7 @@ def train_model(
                 train_automl_model,
                 project=project,
                 region=region,
-                automl_model_name=automl_model_name,
+                automl_model=automl_model,
                 automl_budget_milli_node_hours=automl_budget_milli_node_hours,
             )
         )
@@ -179,7 +180,7 @@ def write_dataset_csv_file(dataset_csv_filename, images):
     return dataset_csv_filename
 
 
-def create_automl_dataset(dataset_csv_filename, project, region, automl_model_name):
+def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset):
     from google.cloud import aiplatform
     from google.cloud.aiplatform.gapic.schema import trainingjob
 
@@ -193,16 +194,16 @@ def create_automl_dataset(dataset_csv_filename, project, region, automl_model_na
         parent=f"projects/{project}/locations/{region}",
     )
     for dataset in datasets:
-        if dataset.display_name == automl_model_name:
+        if dataset.display_name == automl_dataset:
             logging.info(f"AutoML dataset found: {dataset.name}\n{dataset}")
             return dataset.name, dataset_csv_filename
 
     # If no dataset was returned, then create it.
-    logging.warning(f"AutoML dataset not found: {automl_model_name}")
+    logging.warning(f"AutoML dataset not found: {automl_dataset}")
     response = client.create_dataset(
         parent=f"projects/{project}/locations/{region}",
         dataset={
-            "display_name": automl_model_name,
+            "display_name": automl_dataset,
             "metadata_schema_uri": "gs://google-cloud-aiplatform/schema/dataset/metadata/image_1.0.0.yaml",
         },
     )
@@ -239,7 +240,7 @@ def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
 
 
 def train_automl_model(
-    dataset_path, project, region, automl_model_name, automl_budget_milli_node_hours
+    dataset_path, project, region, automl_model, automl_budget_milli_node_hours
 ):
     from google.cloud import aiplatform
     from google.cloud.aiplatform.gapic.schema import trainingjob
@@ -254,14 +255,14 @@ def train_automl_model(
     response = client.create_training_pipeline(
         parent=f"projects/{project}/locations/{region}",
         training_pipeline={
-            "display_name": automl_model_name,
+            "display_name": automl_model,
             "training_task_definition": "gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml",
             "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
                 model_type="CLOUD",
                 budget_milli_node_hours=automl_budget_milli_node_hours,
             ).to_value(),
             "input_data_config": {"dataset_id": dataset_path.split("/")[-1]},
-            "model_to_upload": {"display_name": automl_model_name},
+            "model_to_upload": {"display_name": automl_model},
         },
     )
     logging.info(f"Training AutoML model, training pipeline: {response.name}")
@@ -297,7 +298,8 @@ if __name__ == "__main__":
     parser.add_argument("--cloud-storage-bucket", required=True)
     parser.add_argument("--bigquery-dataset", required=True)
     parser.add_argument("--bigquery-table", default="wildlife_insights")
-    parser.add_argument("--automl-model-name", default="wildlife_insights")
+    parser.add_argument("--automl-dataset", default="wildlife_insights")
+    parser.add_argument("--automl-model", default="wildlife_insights")
     parser.add_argument("--min-images-per-class", type=int, default=50)
     parser.add_argument("--max-images-per-class", type=int, default=80)
     parser.add_argument("--automl-budget-milli-node-hours", type=int, default=8000)
@@ -330,7 +332,8 @@ if __name__ == "__main__":
             cloud_storage_path=args.cloud_storage_path,
             bigquery_dataset=args.bigquery_dataset,
             bigquery_table=args.bigquery_table,
-            automl_model_name=args.automl_model_name,
+            automl_dataset=args.automl_dataset,
+            automl_model=args.automl_model,
             min_images_per_class=args.min_images_per_class,
             max_images_per_class=args.max_images_per_class,
             automl_budget_milli_node_hours=args.automl_budget_milli_node_hours,
