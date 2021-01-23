@@ -28,9 +28,6 @@ from PIL import Image, ImageFile
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
-from google.cloud import aiplatform
-from google.cloud.aiplatform.gapic.schema import trainingjob
-
 
 def init(bigquery_dataset, bigquery_table, pipeline_options=None):
     invalid_categories = {
@@ -183,6 +180,9 @@ def write_dataset_csv_file(dataset_csv_filename, images):
 
 
 def create_automl_dataset(dataset_csv_filename, project, region, automl_model_name):
+    from google.cloud import aiplatform
+    from google.cloud.aiplatform.gapic.schema import trainingjob
+
     # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#create-dataset
     client = aiplatform.gapic.DatasetServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -213,6 +213,9 @@ def create_automl_dataset(dataset_csv_filename, project, region, automl_model_na
 
 
 def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
+    from google.cloud import aiplatform
+    from google.cloud.aiplatform.gapic.schema import trainingjob
+
     # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#import-data
     client = aiplatform.gapic.DatasetServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -238,6 +241,9 @@ def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
 def train_automl_model(
     dataset_path, project, region, automl_model_name, automl_budget_milli_node_hours
 ):
+    from google.cloud import aiplatform
+    from google.cloud.aiplatform.gapic.schema import trainingjob
+
     # https://cloud.google.com/ai-platform-unified/docs/training/automl-api#training_an_automl_model_using_the_api
     client = aiplatform.gapic.PipelineServiceClient(
         client_options={
