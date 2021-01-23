@@ -282,8 +282,6 @@ def with_retries(f, max_attempts=3):
 
 
 if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.INFO)
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--init",
