@@ -3,11 +3,46 @@
     "description": "Train an AutoML model to classify animals from camera trap pictures.",
     "parameters": [
         {
-            "name": "cloud-storage-path",
-            "label": "Cloud Storage path",
-            "helpText": "Cloud Storage path to store the AutoML dataset images.",
+            "name": "cloud-storage-bucket",
+            "label": "Cloud Storage bucket",
+            "helpText": "Cloud Storage bucket name for the AutoML dataset image files.",
             "regexes": [
-                "gs:.*"
+                "[a-z0-9][-_.a-z0-9]+[a-z0-9]"
+            ]
+        },
+        {
+            "name": "bigquery-dataset",
+            "label": "BigQuery dataset",
+            "helpText": "BigQuery dataset ID for the images database.",
+            "regexes": [
+                "[_a-z0-9]+"
+            ]
+        },
+        {
+            "name": "bigquery-table",
+            "label": "BigQuery table",
+            "helpText": "BigQuery dataset ID for the images database.",
+            "isOptional": true,
+            "regexes": [
+                "[_a-z0-9]+"
+            ]
+        },
+        {
+            "name": "automl-dataset",
+            "label": "AutoML dataset",
+            "helpText": "AutoML dataset name.",
+            "isOptional": true,
+            "regexes": [
+                "[_a-z0-9]+"
+            ]
+        },
+        {
+            "name": "automl-model",
+            "label": "AutoML model",
+            "helpText": "AutoML model name.",
+            "isOptional": true,
+            "regexes": [
+                "[_a-z0-9]+"
             ]
         },
         {
@@ -23,6 +58,15 @@
             "name": "max-images-per-class",
             "label": "Maximum images per class",
             "helpText": "Maximum number of images allowed per class for training.",
+            "isOptional": true,
+            "regexes": [
+                "[0-9]+"
+            ]
+        },
+        {
+            "name": "automl-budget-milli-node-hours",
+            "label": "AutoML budget in milli-node-hours",
+            "helpText": "Training budget, see: https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodelmetadata",
             "isOptional": true,
             "regexes": [
                 "[0-9]+"
