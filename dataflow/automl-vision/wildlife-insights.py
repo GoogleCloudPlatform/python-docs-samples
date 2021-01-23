@@ -293,16 +293,47 @@ if __name__ == "__main__":
     parser.add_argument(
         "--init",
         action="store_true",
-        help="Creates a BigQuery table and initializes it with the WCS metadata file entries",
+        help="Creates a BigQuery table and initializes it with the WCS metadata file entries.",
     )
-    parser.add_argument("--cloud-storage-bucket", required=True)
-    parser.add_argument("--bigquery-dataset", required=True)
-    parser.add_argument("--bigquery-table", default="wildlife_insights")
-    parser.add_argument("--automl-dataset", default="wildlife_insights")
-    parser.add_argument("--automl-model", default="wildlife_insights")
-    parser.add_argument("--min-images-per-class", type=int, default=50)
-    parser.add_argument("--max-images-per-class", type=int, default=80)
-    parser.add_argument("--automl-budget-milli-node-hours", type=int, default=8000)
+    parser.add_argument(
+        "--cloud-storage-bucket",
+        required=True,
+        help="Cloud Storage bucket name for the AutoML dataset image files.",
+    )
+    parser.add_argument(
+        "--bigquery-dataset",
+        required=True,
+        help="BigQuery dataset ID for the images database.",
+    )
+    parser.add_argument(
+        "--bigquery-table",
+        default="wildlife_insights",
+        help="BigQuery dataset ID for the images database.",
+    )
+    parser.add_argument(
+        "--automl-dataset", default="wildlife_insights", help="AutoML dataset name."
+    )
+    parser.add_argument(
+        "--automl-model", default="wildlife_insights", help="AutoML model name."
+    )
+    parser.add_argument(
+        "--min-images-per-class",
+        type=int,
+        default=50,
+        help="Minimum number of images required per class for training.",
+    )
+    parser.add_argument(
+        "--max-images-per-class",
+        type=int,
+        default=80,
+        help="Maximum number of images allowed per class for training.",
+    )
+    parser.add_argument(
+        "--automl-budget-milli-node-hours",
+        type=int,
+        default=8000,
+        help="Training budget, see: https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodelmetadata",
+    )
     args, pipeline_args = parser.parse_known_args()
 
     cloud_storage_path = f"gs://{args.cloud_storage_bucket}/samples/wildlife-insights"
