@@ -296,9 +296,9 @@ if __name__ == "__main__":
         help="Creates a BigQuery table and initializes it with the WCS metadata file entries.",
     )
     parser.add_argument(
-        "--cloud-storage-bucket",
+        "--cloud-storage-path",
         required=True,
-        help="Cloud Storage bucket name for the AutoML dataset image files.",
+        help="Cloud Storage path to store the AutoML dataset files.",
     )
     parser.add_argument(
         "--bigquery-dataset",
@@ -336,10 +336,9 @@ if __name__ == "__main__":
     )
     args, pipeline_args = parser.parse_known_args()
 
-    cloud_storage_path = f"gs://{args.cloud_storage_bucket}/samples/wildlife-insights"
     pipeline_options = PipelineOptions(
         pipeline_args,
-        temp_location=f"{cloud_storage_path}/temp",
+        temp_location=f"{args.cloud_storage_path}/temp",
         save_main_session=True,
     )
     project = pipeline_options.get_all_options().get("project")

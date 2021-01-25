@@ -3,11 +3,11 @@
     "description": "Train an AutoML model to classify animals from camera trap pictures.",
     "parameters": [
         {
-            "name": "cloud-storage-bucket",
-            "label": "Cloud Storage bucket",
-            "helpText": "Cloud Storage bucket name for the AutoML dataset image files.",
+            "name": "cloud-storage-path",
+            "label": "Cloud Storage path",
+            "helpText": "Cloud Storage path to store the AutoML dataset files.",
             "regexes": [
-                "[a-z0-9][-_.a-z0-9]+[a-z0-9]"
+                "gs:\/\/.*"
             ]
         },
         {
