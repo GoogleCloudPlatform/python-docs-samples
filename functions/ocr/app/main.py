@@ -26,7 +26,7 @@ translate_client = translate.Client()
 publisher = pubsub_v1.PublisherClient()
 storage_client = storage.Client()
 
-project_id = os.environ["GCP_PROJECT"]
+project_id = os.environ["GCP_PROJECT_ID"]
 # [END functions_ocr_setup]
 
 
