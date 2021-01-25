@@ -110,7 +110,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
     region = "us-central1"
-    worker_zone = "us-central1-a"
+    worker_zone = "us-central1-f"
     subprocess.run(
         [
             "python",
