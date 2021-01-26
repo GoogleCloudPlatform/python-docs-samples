@@ -27,8 +27,8 @@ WORKDIR ${WORKDIR}
 COPY requirements.txt .
 COPY ${PY_FILE} .
 
-ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE="${WORKDIR}}/requirements.txt"
-ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/${PY_FILE}}"
+ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE="${WORKDIR}/requirements.txt"
+ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/${PY_FILE}"
 
 RUN pip install -U pip=='20.2.*' \
     && pip install -r requirements.txt
