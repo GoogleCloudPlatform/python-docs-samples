@@ -86,3 +86,6 @@ export GOOGLE_CLOUD_PROJECT_NUMBER=
 # These are optional, but for avoiding flakes in Kokoro builds.
 export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
+
+# For run/idp example, a Firebase IDP token
+export IDP_KEY=
