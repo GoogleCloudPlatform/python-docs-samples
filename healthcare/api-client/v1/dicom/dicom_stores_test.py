@@ -166,9 +166,12 @@ def test_pubsub_topic():
 
 
 def test_CRUD_dicom_store(test_dataset, crud_dicom_store_id, capsys):
-    dicom_stores.create_dicom_store(
-        project_id, cloud_region, dataset_id, crud_dicom_store_id
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create():
+        dicom_stores.create_dicom_store(
+            project_id, cloud_region, dataset_id, crud_dicom_store_id
+        )
+    create()
 
     dicom_stores.get_dicom_store(
         project_id, cloud_region, dataset_id, crud_dicom_store_id
