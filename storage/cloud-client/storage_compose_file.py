@@ -24,16 +24,17 @@ def compose_file(bucket_name, sources, destination_blob_name):
     """Concatenate source blobs into destination blob."""
 
     bucket_name = "your-bucket-name"
+    blob1_name = "object-name-1"
+    blob2_name = "object-namae-2"
     destination_blob_name = "destination-object-name"
-    blob1_name = "source-blob-1"
-    blob2_name = "source-blob-2"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
     blob1 = bucket.blob(blob1_name)
-    blob2_name = bucket.blob(blob2_name)
-    sources = [blob_1, blob_2]
+    blob2 = bucket.blob(blob2_name)
+    
+    sources = [blob1, blob2]
 
     destination = bucket.blob(destination_blob_name)
     destination.content_type = "text/plain"
