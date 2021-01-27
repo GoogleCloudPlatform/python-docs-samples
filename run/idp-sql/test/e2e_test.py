@@ -133,12 +133,17 @@ def deployed_service() -> str:
 @pytest.fixture
 def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
-    response = requests.post(
+    resp = requests.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",
         json={"token": custom_token, "returnSecureToken": True},
     )
-    tokens = response.json()
-    id_token = tokens["idToken"]
+    response = resp.json()
+    if "error" in response.keys():
+        print(response['message'], response['errors'])
+    assert "error" not in response.keys()
+    assert "idToken" in response.keys()
+
+    id_token = response["idToken"]
     yield id_token
 
     # no cleanup required
