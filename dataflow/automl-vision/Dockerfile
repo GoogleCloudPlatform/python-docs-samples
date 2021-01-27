@@ -17,18 +17,18 @@ FROM gcr.io/dataflow-templates-base/python3-template-launcher-base
 ARG PY_FILE=wildlife-insights.py
 ARG WORKDIR=/dataflow/template
 
-RUN apt-get update \
-    && apt-get install -y libffi-dev git \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p ${WORKDIR}
-
+RUN mkdir -p ${WORKDIR}}
 WORKDIR ${WORKDIR}
 
-COPY requirements.txt .
+COPY requirements.txt /tmp/requirements.txt
 COPY ${PY_FILE} .
+
+# Drop apache-beam from the requirements.txt file and install it separately.
+RUN APACHE_BEAM=`egrep '^apache-beam([=<>[]|$)' /tmp/requirements.txt` \
+    && egrep -v '^apache-beam([=<>[]|$)'  /tmp/requirements.txt > requirements.txt \
+    && pip install --no-cache-dir -U pip=='20.2.*' \
+    && pip install --no-cache-dir $APACHE_BEAM \
+    && pip install --no-cache-dir -r requirements.txt
 
 ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE="${WORKDIR}/requirements.txt"
 ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/${PY_FILE}"
-
-RUN pip install -U pip=='20.2.*' \
-    && pip install -r requirements.txt
