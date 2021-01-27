@@ -118,6 +118,9 @@ ${HOME}/cloud_sql_proxy -instances="${SQLSERVER_INSTANCE}"=tcp:1433 &>> \
        ${HOME}/cloud_sql_proxy-sqlserver.log &
 echo -e "\Cloud SQL proxy started for SQL Server."
 
+# For run/idp example, a Firebase IDP token
+export IDP_KEY=$(gcloud secrets versions access latest --secret="python-docs-samples-idp-key" --project="${GOOGLE_CLOUD_PROJECT}")
+
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
 set +e
