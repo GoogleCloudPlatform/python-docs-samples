@@ -404,20 +404,26 @@ def test_object_get_kms_key(test_bucket):
 
 
 def test_storage_compose_file(test_bucket):
-    source_files = ["test_upload_blob_1", "test_upload_blob_2"]
-    blob_list = []
-    for source in source_files:
+    sources = ["test_upload_blob_1", "test_upload_blob_2"]
+
+    for source in sources:
         blob = test_bucket.blob(source)
         blob.upload_from_string(source)
-        blob_list.append(blob)
+
 
     with tempfile.NamedTemporaryFile() as dest_file:
         destination = storage_compose_file.compose_file(
-            test_bucket.name, blob_list, dest_file.name
+            test_bucket.name, sources, dest_file.name
         )
         composed = destination.download_as_string()
 
-        assert composed.decode("utf-8") == source_files[0] + source_files[1]
+    with open('test_upload_blob_1','r') as fh:
+        source_file_1 = fh.read()
+
+    with open('test_upload_blob_2','r') as fh:
+        source_file_2 = fh.read()
+
+    assert composed.decode("utf-8") == source_file_1[0] + source_file_2[1]
 
 
 def test_cors_configuration(test_bucket, capsys):
