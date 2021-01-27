@@ -3,7 +3,7 @@ import logging
 import os
 from typing import Dict
 
-import pyodbc
+import pytds
 import pytest
 
 import main
@@ -45,7 +45,7 @@ def tcp_db_connection():
 def _common_setup():
     try:
         pool = main.init_connection_engine()
-    except pyodbc.OperationalError as e:
+    except pytds.OperationalError as e:
         logger.warning(
             'Could not connect to the production database. '
             'If running tests locally, is the cloud_sql_proxy currently running?'
