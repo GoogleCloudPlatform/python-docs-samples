@@ -66,7 +66,7 @@ def get_cred_config() -> Dict[str, str]:
         return json.loads(response.payload.data.decode("UTF-8"))
     # [END cloudrun_python_user_auth_secrets]
     else:
-        logger.warning(
+        logger.warning( # TODO(glasnt) REVERT
             "CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables."
         )
         if "DB_USER" not in os.environ:

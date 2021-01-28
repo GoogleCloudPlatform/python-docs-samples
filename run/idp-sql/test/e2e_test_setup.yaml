@@ -26,6 +26,7 @@ steps:
       sed -i "s/\"DB_USER\": \"postgres\"/\"DB_USER\": \"${_DB_USER}\"/" postgres-secrets.json
 
       ./test/retry.sh "gcloud secrets create ${_SERVICE}-secrets \
+        --project $PROJECT_ID \
         --replication-policy="automatic" \
         --data-file=postgres-secrets.json"
 
@@ -52,6 +53,7 @@ steps:
   - '-c'
   - |
     ./test/retry.sh "gcloud run deploy ${_SERVICE} \
+      --project $PROJECT_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --allow-unauthenticated \
       --region ${_REGION} \
