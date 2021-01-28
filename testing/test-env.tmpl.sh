@@ -79,10 +79,13 @@ export OBJECT_DETECTION_DATASET_ID=
 # and centralized models remove duplicate work across all languages.
 export OBJECT_DETECTION_MODEL_ID=
 
-# Transcoder API
-export GOOGLE_CLOUD_PROJECT_NUMBER=
+# Firebase IDP token for run/idp
+export IDP_KEY=
 
 # For git operations in the test driver(testing/run_tests.sh).
 # These are optional, but for avoiding flakes in Kokoro builds.
 export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
+
+# Pub/Sub Lite. For project `python-docs-samples-tests`.
+export GOOGLE_CLOUD_PROJECT_NUMBER
