@@ -166,7 +166,7 @@ def gcp_api_call(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
-    project = os.getenv('GCP_PROJECT')
+    project = os.getenv('GCP_PROJECT_ID')
     request_json = request.get_json()
 
     topic_name = request_json['topic']

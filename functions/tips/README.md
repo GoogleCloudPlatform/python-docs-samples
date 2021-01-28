@@ -3,7 +3,7 @@
 # Google Cloud Functions - Tips sample
 
 ## Running locally
-Set the `GCP_PROJECT` variable to the ID of the GCP project to use.
+Set the `GCP_PROJECT_ID` variable to the ID of the GCP project to use.
 
 ## More info
 See:

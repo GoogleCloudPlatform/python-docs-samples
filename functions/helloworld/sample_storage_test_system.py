@@ -22,7 +22,7 @@ import uuid
 from google.cloud import storage
 import pytest
 
-PROJECT = getenv('GCP_PROJECT')
+PROJECT = getenv('GCP_PROJECT_ID')
 BUCKET = getenv('BUCKET')
 
 assert PROJECT is not None

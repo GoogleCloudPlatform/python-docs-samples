@@ -39,7 +39,7 @@ from slack.errors import SlackApiError
 
 # [START functions_billing_limit]
 # [START functions_billing_stop]
-PROJECT_ID = os.getenv('GCP_PROJECT')
+PROJECT_ID = os.getenv('GCP_PROJECT_ID')
 PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_stop]
 # [END functions_billing_limit]
@@ -206,7 +206,7 @@ def __stop_instances(project_id, zone, instance_names, instances):
 
 
 # [START functions_billing_limit_appengine]
-APP_NAME = os.getenv('GCP_PROJECT')
+APP_NAME = os.getenv('GCP_PROJECT_ID')
 
 
 def limit_use_appengine(data, context):
