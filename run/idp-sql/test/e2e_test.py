@@ -135,7 +135,7 @@ def deployed_service() -> str:
 def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
     resp = requests.post(
-        f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${IDP_KEY}",
+        f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key={IDP_KEY}",
         data=json.dumps({"token": custom_token, "returnSecureToken": True}),
     )
     response = resp.json()
