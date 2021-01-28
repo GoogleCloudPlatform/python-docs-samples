@@ -19,11 +19,10 @@ steps:
   entrypoint: '/bin/bash'
   args:
     - '-c'
-    #- |
-    #  ./test/retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
-    #    "gcloud secrets delete ${_SERVICE}-secrets --quiet"
-
     - |
+      ./test/retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
+        "gcloud secrets delete ${_SERVICE}-secrets --quiet"
+
       ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
         "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
 
