@@ -88,4 +88,4 @@ export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
 
 # Pub/Sub Lite. For project `python-docs-samples-tests`.
-export GOOGLE_CLOUD_PROJECT_NUMBER
+export GOOGLE_CLOUD_PROJECT_NUMBER=
