@@ -42,7 +42,6 @@ PLATFORM = "managed"
 POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
-CLOUD_SQL_CONNECTION_NAME = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_INSTANCE}"
 
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
 if not POSTGRES_PASSWORD:
@@ -61,7 +60,7 @@ def deployed_service() -> str:
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_PASSWORD={POSTGRES_PASSWORD},"
-        f"_CLOUD_SQL_CONNECTION_NAME={CLOUD_SQL_CONNECTION_NAME},"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
