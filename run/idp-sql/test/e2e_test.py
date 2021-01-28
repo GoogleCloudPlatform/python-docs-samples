@@ -139,7 +139,9 @@ def jwt_token() -> str:
         data=json.dumps({"token": custom_token, "returnSecureToken": True}),
     )
     response = resp.json()
+
     if "error" in response.keys():
+        print("Error in REST API response")
         print(response.keys())
         print(response['error'])
     assert "error" not in response.keys()
