@@ -19,11 +19,10 @@ import json
 import os
 import subprocess
 
+import firebase_admin  # noqa: F401
 import pytest
 import requests
-import firebase_admin  # noqa: F401
 from firebase_admin import auth  # noqa: F401
-
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 if not GOOGLE_CLOUD_PROJECT:
