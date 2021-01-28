@@ -1,4 +1,4 @@
 google-cloud-storage==1.35.0
-google-cloud-bigquery[pandas,pyarrow]==2.6.2
+google-cloud-bigquery[pandas,pyarrow]==2.7.0
 matplotlib==3.1.2; python_version > '3.0'
 matplotlib==2.2.5; python_version < '3.0'
