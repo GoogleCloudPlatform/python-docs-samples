@@ -142,7 +142,7 @@ def jwt_token() -> str:
     if "error" in response.keys():
         print("Error in REST API response")
         print(response.keys())
-        print(response['error'])
+        print(response["error"])
     assert "error" not in response.keys()
     assert "idToken" in response.keys()
 
