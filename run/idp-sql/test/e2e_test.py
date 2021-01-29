@@ -19,6 +19,8 @@ import json
 import os
 import subprocess
 
+import uuid
+
 import firebase_admin  # noqa: F401
 import pytest
 import requests
