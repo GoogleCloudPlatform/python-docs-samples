@@ -22,5 +22,5 @@ setup(
     author_email="googleapis-publisher@google.com",
     description="Utilities used to unit test example DAGs",
     packages=find_packages(),
-    py_modules=['unit_testing']
+    py_modules=['dagtestutils']
 )
