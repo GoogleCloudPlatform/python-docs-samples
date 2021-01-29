@@ -1,2 +1,2 @@
 pytest==6.2.1
-git+https://github.com/GoogleCloudPlatform/python-docs-samples.git@refactor-composer-testing#egg=dagtestutils&subdirectory=composer/dagtestutils
+git+https://github.com/GoogleCloudPlatform/python-docs-samples.git@refactor-composer-testing#egg=dag_test_utils&subdirectory=composer/dag_test_utils
