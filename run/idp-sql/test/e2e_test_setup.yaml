@@ -22,7 +22,8 @@ steps:
     - |
       ./test/retry.sh "gcloud database create ${_DB_NAME} \
         --instance ${_DB_INSTANCE} \
-        --project $PROJECT_ID"
+        --project $PROJECT_ID" \
+        "gcloud database describe ${_DB_NAME} --instance ${_DB_INSTANCE}"
 
 - id: 'Add a Secret to Secret Manager'
   name: 'gcr.io/cloud-builders/gcloud'
@@ -38,12 +39,8 @@ steps:
       ./test/retry.sh "gcloud secrets create ${_SERVICE}-secrets \
         --project $PROJECT_ID \
         --replication-policy="automatic" \
-        --data-file=postgres-secrets.json"
-      
-      gcloud secrets describe ${_SERVICE}-secrets
-
-      gcloud secrets versions list ${_SERVICE}-secrets
-
+        --data-file=postgres-secrets.json" \
+        "gcloud secrets describe ${_SERVICE}-secrets"
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker'
