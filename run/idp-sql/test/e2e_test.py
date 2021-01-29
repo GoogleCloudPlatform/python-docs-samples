@@ -38,7 +38,7 @@ if not GOOGLE_CLOUD_PROJECT:
 SERVICE_NAME = os.environ.get("SERVICE_NAME", None)
 if not SERVICE_NAME:
     print("'SERVICE_NAME' envvar not found. Defaulting to 'idp-sql' with a unique suffix")
-    SERVICE_NAME = "idp-sql-{SUFFIX}"
+    SERVICE_NAME = f"idp-sql-{SUFFIX}"
 
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
 
