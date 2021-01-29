@@ -20,10 +20,10 @@ steps:
   args:
     - '-c'
     - |
-      ./test/retry.sh "gcloud sql database create ${_DB_NAME} \
+      ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
         --instance ${_DB_INSTANCE} \
         --project $PROJECT_ID" \
-        "gcloud sql database describe ${_DB_NAME} --instance ${_DB_INSTANCE}"
+        "gcloud sql database describes ${_DB_NAME} --instance ${_DB_INSTANCE}"
 
 - id: 'Add a Secret to Secret Manager'
   name: 'gcr.io/cloud-builders/gcloud'
