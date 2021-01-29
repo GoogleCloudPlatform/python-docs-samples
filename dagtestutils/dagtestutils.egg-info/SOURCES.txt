@@ -1,5 +1,0 @@
-setup.py
-dagtestutils.egg-info/PKG-INFO
-dagtestutils.egg-info/SOURCES.txt
-dagtestutils.egg-info/dependency_links.txt
-dagtestutils.egg-info/top_level.txt
