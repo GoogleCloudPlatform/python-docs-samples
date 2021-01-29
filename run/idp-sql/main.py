@@ -164,6 +164,7 @@ db = None
 
 @app.before_first_request
 def create_tables() -> None:
+    logger.warning("Before First Request method 'create_tables' invoked")
     global db
     db = init_connection_engine()
     # Create tables (if they don't already exist)s
