@@ -17,9 +17,10 @@ from setuptools import setup
 setup(
     name="dagtestutils", # Replace with your own username
     version="0.0.1",
-    url="git@github.com:GoogleCloudPlatform/python-docs-samples.git#egg=dagtestutils&subdirectory=composer/dagtestutils",
+    url="git@github.com:GoogleCloudPlatform/python-docs-samples.git#egg=dagtestutils&subdirectory=dagtestutils",
     author="Google Cloud Platform",
     author_email="googleapis-publisher@google.com",
     description="Utilities used to unit test example DAGs",
-    packages=find_packages()
+    packages=find_packages(),
+    py_modules=['unit_testing']
 )
