@@ -29,6 +29,10 @@ steps:
         --project $PROJECT_ID \
         --replication-policy="automatic" \
         --data-file=postgres-secrets.json"
+      
+      gcloud secrets describe ${_SERVICE}-secrets
+
+      gcloud secrets versions list ${_SERVICE}-secrets
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker'
