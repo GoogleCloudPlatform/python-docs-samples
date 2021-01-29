@@ -18,6 +18,7 @@ import json
 import logging
 import os
 from typing import Dict, Union
+import uuid
 
 import sqlalchemy
 import firebase_admin
