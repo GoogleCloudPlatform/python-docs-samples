@@ -131,8 +131,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
     echo "--- Installing pip packages ---"
-    pip3 --version
-    pip3 install --user pyyaml frozendict recordclass
+    python3 -m pip install --user pyyaml frozendict recordclass
 
     # Use ${HOME} because trampoline will automatically clean up this
     # directory.
@@ -143,7 +142,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     if [[ ! -f $POLYGLOT_PARSER_PATH ]]; then
         echo "--- Fetching injection script from HEAD (via GitHub) ---"
         git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
-        
+
         chmod +x $PYTHON_PARSER_PATH
         chmod +x $POLYGLOT_PARSER_PATH
     fi

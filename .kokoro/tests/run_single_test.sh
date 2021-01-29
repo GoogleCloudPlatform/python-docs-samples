@@ -51,7 +51,7 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export XUNIT_TMP_PATH="$(mktemp)"
 
     # We use `python3.8` because it is the version pip3 installs to.
-    export PYTHON_CMD="python3.8"
+    export PYTHON_CMD="python3"
 
     if [[ -f "$XUNIT_PATH" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
