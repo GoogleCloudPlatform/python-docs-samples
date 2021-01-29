@@ -192,7 +192,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT candidate, time_cast, uid FROM votes "
+            "SELECT candidate, time_cast FROM votes "
             "ORDER BY time_cast DESC LIMIT 5"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
@@ -200,8 +200,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
             votes.append(
                 {
                     "candidate": row[0].strip(),  # TODO(glasnt): what.
-                    "time_cast": row[1],
-                    "uid": row[2],
+                    "time_cast": row[1]
                 }
             )
         stmt = sqlalchemy.text(
