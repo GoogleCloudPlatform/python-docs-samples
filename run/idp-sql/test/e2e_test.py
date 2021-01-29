@@ -50,11 +50,19 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
-# TODO(glasnt): fix
-POSTGRES_DATABASE = f"{SERVICE_NAME}-database-{SUFFIX}"
+# TODO(glasnt): fix.
+# Presuming POSTGRES_INSTANCE comes in the form project:region:instance
+# Require the short form in some cases.
+# POSTGRES_INSTANCE_FULL: project:region:instance
+# POSTGRES_INSTANCE_NAME: instance only
 if ":" in POSTGRES_INSTANCE:
-    POSTGRES_INSTANCE = POSTGRES_INSTANCE.split(":")[-1]
-POSTGRES_INSTANCE = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_DATABASE}"
+    POSTGRES_INSTANCE_FULL = POSTGRES_INSTANCE
+    POSTGRES_INSTANCE_NAME = POSTGRES_INSTANCE.split(":")[-1]
+else:
+    POSTGRES_INSTANCE_FULL = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_INSTANCE}"
+    POSTGRES_INSTANCE_NAME = POSTGRES_INSTANCE
+
+POSTGRES_DATABASE = f"{SERVICE_NAME}-database-{SUFFIX}"
 
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
 if not POSTGRES_PASSWORD:
@@ -76,7 +84,7 @@ def postgres_database() -> str:
             "create",
             POSTGRES_DATABASE,
             "--instance",
-            POSTGRES_INSTANCE,
+            POSTGRES_INSTANCE_NAME,
             "--project",
             GOOGLE_CLOUD_PROJECT,
         ],
@@ -93,7 +101,7 @@ def postgres_database() -> str:
             "delete",
             POSTGRES_DATABASE,
             "--instance",
-            POSTGRES_INSTANCE,
+            POSTGRES_INSTANCE_NAME,
             "--project",
             GOOGLE_CLOUD_PROJECT,
             "--quiet",
@@ -110,7 +118,7 @@ def deployed_service() -> str:
         f"_REGION={REGION},"
         f"_DB_NAME={POSTGRES_DATABASE},"
         f"_DB_PASSWORD={POSTGRES_PASSWORD},"
-        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE},"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
