@@ -160,6 +160,8 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
 
     # Can successfully make a request
     response = client.get(service_url)
+    print(response.content)
+    print(response.status_code)
     assert response.status_code == 200
 
     # Can make post with token
