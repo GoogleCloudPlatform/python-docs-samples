@@ -14,6 +14,16 @@
 
 steps:
 
+- id: 'Create a dedicated database'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "gcloud database create ${_DB_NAME} \
+        --instance ${_DB_INSTANCE} \
+        --project $PROJECT_ID"
+
 - id: 'Add a Secret to Secret Manager'
   name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: '/bin/bash'
@@ -33,6 +43,7 @@ steps:
       gcloud secrets describe ${_SERVICE}-secrets
 
       gcloud secrets versions list ${_SERVICE}-secrets
+
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker'
@@ -73,6 +84,7 @@ substitutions:
   _VERSION: manual
   _REGION: us-central1
   _PLATFORM: managed
+  _DB_INSTANCE: idp-sql-instance
   _CLOUD_SQL_CONNECTION_NAME: $PROJECT_ID:us-central1:idp-sql-instance
   _DB_NAME: postgres
   _DB_USER: postgres

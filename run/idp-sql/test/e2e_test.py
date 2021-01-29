@@ -50,7 +50,7 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
-# TODO(glasnt): fix.
+# TODO(glasnt): cleanup
 # Presuming POSTGRES_INSTANCE comes in the form project:region:instance
 # Require the short form in some cases.
 # POSTGRES_INSTANCE_FULL: project:region:instance
@@ -73,42 +73,6 @@ IDP_KEY = os.environ.get("IDP_KEY", None)
 if not IDP_KEY:
     raise Exception("'IDP_KEY' env var not found")
 
-@pytest.fixture()
-def postgres_database() -> str: 
-    # Create database
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "databases",
-            "create",
-            POSTGRES_DATABASE,
-            "--instance",
-            POSTGRES_INSTANCE_NAME,
-            "--project",
-            GOOGLE_CLOUD_PROJECT,
-        ],
-        check=True,
-    )
-    yield POSTGRES_DATABASE
-
-    # cleanup
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "databases",
-            "delete",
-            POSTGRES_DATABASE,
-            "--instance",
-            POSTGRES_INSTANCE_NAME,
-            "--project",
-            GOOGLE_CLOUD_PROJECT,
-            "--quiet",
-        ],
-        check=True,
-    )
-
 
 @pytest.fixture
 def deployed_service() -> str:
@@ -117,6 +81,7 @@ def deployed_service() -> str:
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
         f"_DB_PASSWORD={POSTGRES_PASSWORD},"
         f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL},"
     ]
@@ -196,11 +161,6 @@ def jwt_token() -> str:
         data=json.dumps({"token": custom_token, "returnSecureToken": True}),
     )
     response = resp.json()
-
-    if "error" in response.keys():
-        print("Error in REST API response")
-        print(response.keys())
-        print(response["error"])
     assert "error" not in response.keys()
     assert "idToken" in response.keys()
 
@@ -210,8 +170,7 @@ def jwt_token() -> str:
     # no cleanup required
 
 
-def test_end_to_end(postgres_database: str, jwt_token: str, deployed_service: str) -> None:
-    database = postgres_database
+def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     token = jwt_token
     service_url = deployed_service
 
