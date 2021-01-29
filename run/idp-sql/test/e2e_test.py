@@ -26,14 +26,17 @@ from firebase_admin import auth  # noqa: F401
 
 default_app = firebase_admin.initialize_app()
 
+# Unique suffix to create distinct service names
+SUFFIX = uuid.uuid4().hex[:10]
+
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 if not GOOGLE_CLOUD_PROJECT:
     raise Exception("'GOOGLE_CLOUD_PROJECT' env var not found")
 
 SERVICE_NAME = os.environ.get("SERVICE_NAME", None)
 if not SERVICE_NAME:
-    print("'SERVICE_NAME' envvar not found. Defaulting to 'idp-sql'")
-    SERVICE_NAME = "idp-sql"
+    print("'SERVICE_NAME' envvar not found. Defaulting to 'idp-sql' with a unique suffix")
+    SERVICE_NAME = "idp-sql-{SUFFIX}"
 
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
 
@@ -45,6 +48,8 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
+POSTGRES_DATABASE = f"{SERVICE_NAME}-database-{SUFFIX}"
+
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
 if not POSTGRES_PASSWORD:
     raise Exception("'POSTGRES_PASSWORD' env var not found")
@@ -54,6 +59,42 @@ IDP_KEY = os.environ.get("IDP_KEY", None)
 if not IDP_KEY:
     raise Exception("'IDP_KEY' env var not found")
 
+@pytest.fixture()
+def postgres_database() -> str: 
+    # Create database
+    subprocess.run(
+        [
+            "gcloud",
+            "sql",
+            "databases",
+            "create",
+            POSTGRES_DATABASE,
+            "--instance",
+            POSTGRES_INSTANCE,
+            "--project",
+            PROJECT,
+        ],
+        check=True,
+    )
+    yield POSTGRES_DATABASE
+
+    # cleanup
+    subprocess.run(
+        [
+            "gcloud",
+            "sql",
+            "databases",
+            "delete",
+            POSTGRES_DATABASE,
+            "--instance",
+            POSTGRES_INSTANCE,
+            "--project",
+            PROJECT,
+            "--quiet",
+        ],
+        check=True,
+    )
+
 
 @pytest.fixture
 def deployed_service() -> str:
@@ -61,6 +102,7 @@ def deployed_service() -> str:
         f"_SERVICE={SERVICE_NAME},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
+        f"_DB_NAME={POSTGRES_DATABASE},"
         f"_DB_PASSWORD={POSTGRES_PASSWORD},"
         f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE},"
     ]
@@ -154,7 +196,8 @@ def jwt_token() -> str:
     # no cleanup required
 
 
-def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
+def test_end_to_end(postgres_database: str, jwt_token: str, deployed_service: str) -> None:
+    database = postgres_database
     token = jwt_token
     service_url = deployed_service
 
