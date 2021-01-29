@@ -50,7 +50,11 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
+# TODO(glasnt): fix
 POSTGRES_DATABASE = f"{SERVICE_NAME}-database-{SUFFIX}"
+if ":" in POSTGRES_INSTANCE:
+    POSTGRES_INSTANCE = POSTGRES_INSTANCE.split(":")[-1]
+POSTGRES_INSTANCE = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_DATABASE}"
 
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
 if not POSTGRES_PASSWORD:
@@ -74,7 +78,7 @@ def postgres_database() -> str:
             "--instance",
             POSTGRES_INSTANCE,
             "--project",
-            PROJECT,
+            GOOGLE_CLOUD_PROJECT,
         ],
         check=True,
     )
@@ -91,7 +95,7 @@ def postgres_database() -> str:
             "--instance",
             POSTGRES_INSTANCE,
             "--project",
-            PROJECT,
+            GOOGLE_CLOUD_PROJECT,
             "--quiet",
         ],
         check=True,
