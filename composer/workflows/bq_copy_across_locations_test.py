@@ -17,7 +17,7 @@ import os.path
 
 from airflow import models
 
-from . import unit_testing
+import unit_testing
 
 
 def test_dag():

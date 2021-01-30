@@ -15,11 +15,11 @@
 from airflow import exceptions
 import pytest
 
-from . import unit_testing
+import unit_testing
 
 
 def test_dag_no_dag():
-    from . import unit_testing as module  # Does not contain a DAG.
+    import unit_testing as module  # Does not contain a DAG.
     with pytest.raises(AssertionError):
         unit_testing.assert_has_valid_dag(module)
 

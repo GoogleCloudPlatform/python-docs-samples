@@ -17,7 +17,7 @@ import sys
 
 import pytest
 
-from . import unit_testing
+import unit_testing
 
 
 @pytest.fixture(scope='module', autouse=True)
