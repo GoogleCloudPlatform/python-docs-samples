@@ -186,7 +186,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
         service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
     )
     assert response.status_code == 200
-    assert "🐶" in response.content
+    assert "🐶" in response.content.decode("UTF-8")
 
     # Cannot make post with bad token
     response = client.post(

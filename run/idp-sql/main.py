@@ -199,7 +199,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
         for row in recent_votes:
             votes.append(
                 {
-                    "candidate": row[0].strip(),
+                    "candidate": row[0],
                     "time_cast": row[1],
                 }
             )
