@@ -66,7 +66,7 @@ def get_cred_config() -> Dict[str, str]:
         return json.loads(response.payload.data.decode("UTF-8"))
     # [END cloudrun_python_user_auth_secrets]
     else:
-        logger.warning( # TODO(glasnt) REVERT
+        logger.warning(  # TODO(glasnt) REVERT
             "CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables."
         )
         if "DB_USER" not in os.environ:
@@ -200,7 +200,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
             votes.append(
                 {
                     "candidate": row[0].strip(),  # TODO(glasnt): what.
-                    "time_cast": row[1]
+                    "time_cast": row[1],
                 }
             )
         stmt = sqlalchemy.text(
