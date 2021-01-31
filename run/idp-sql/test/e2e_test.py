@@ -133,7 +133,11 @@ def deployed_service() -> str:
     # Cleanup
 
     substitutions = [
-        f"_SERVICE={SERVICE_NAME}," f"_PLATFORM={PLATFORM}," f"_REGION={REGION},"
+        f"_SERVICE={SERVICE_NAME},"
+        f"_PLATFORM={PLATFORM},"
+        f"_REGION={REGION},"
+        f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
