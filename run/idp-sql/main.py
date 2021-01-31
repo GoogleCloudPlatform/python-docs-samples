@@ -17,13 +17,13 @@ from functools import wraps
 import json
 import logging
 import os
-from typing import Dict, Union
+from typing import Any, Callable, Dict, Union
 
-import sqlalchemy
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
 from flask import Flask, render_template, request, Response
 from google.cloud import secretmanager
+import sqlalchemy
 
 default_app = firebase_admin.initialize_app()
 app = Flask(__name__, static_folder="static", static_url_path="")
@@ -66,7 +66,7 @@ def get_cred_config() -> Dict[str, str]:
         return json.loads(response.payload.data.decode("UTF-8"))
     # [END cloudrun_python_user_auth_secrets]
     else:
-        logger.warning(  # TODO(glasnt) REVERT
+        logger.info(
             "CLOUD_SQL_CREDENTIALS_SECRET env var not set. Defaulting to environment variables."
         )
         if "DB_USER" not in os.environ:
@@ -199,7 +199,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
         for row in recent_votes:
             votes.append(
                 {
-                    "candidate": row[0].strip(),  # TODO(glasnt): what.
+                    "candidate": row[0].strip(),
                     "time_cast": row[1],
                 }
             )
@@ -239,9 +239,9 @@ def get_index_context() -> Dict[str, Union[int, str]]:
 
 
 # [START cloudrun_python_user_auth_jwt]
-def jwt_authenticated(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
+def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
+    @wraps(func)
+    def decorated_function(*args: Any, **kwargs: Any) -> Any:
         header = request.headers.get("Authorization", None)
         if header:
             token = header.split(" ")[1]
@@ -254,7 +254,7 @@ def jwt_authenticated(f):
             return Response(status=401)
 
         request.uid = decoded_token["uid"]
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return decorated_function
 
@@ -264,7 +264,7 @@ def jwt_authenticated(f):
 
 @app.route("/", methods=["POST"])
 @jwt_authenticated
-def save_vote():
+def save_vote() -> Response:
     # Get the team and time the vote was cast.
     team = request.form["team"]
     uid = request.uid

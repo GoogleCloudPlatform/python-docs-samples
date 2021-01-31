@@ -22,9 +22,9 @@ import subprocess
 import uuid
 
 import firebase_admin  # noqa: F401
+from firebase_admin import auth  # noqa: F401
 import pytest
 import requests
-from firebase_admin import auth  # noqa: F401
 
 default_app = firebase_admin.initialize_app()
 
@@ -37,7 +37,9 @@ if not GOOGLE_CLOUD_PROJECT:
 
 SERVICE_NAME = os.environ.get("SERVICE_NAME", None)
 if not SERVICE_NAME:
-    print("'SERVICE_NAME' envvar not found. Defaulting to 'idp-sql' with a unique suffix")
+    print(
+        "'SERVICE_NAME' envvar not found. Defaulting to 'idp-sql' with a unique suffix"
+    )
     SERVICE_NAME = f"idp-sql-{SUFFIX}"
 
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
@@ -50,7 +52,6 @@ POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
 if not POSTGRES_INSTANCE:
     raise Exception("'POSTGRES_INSTANCE' env var not found")
 
-# TODO(glasnt): cleanup
 # Presuming POSTGRES_INSTANCE comes in the form project:region:instance
 # Require the short form in some cases.
 # POSTGRES_INSTANCE_FULL: project:region:instance
@@ -178,8 +179,6 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
 
     # Can successfully make a request
     response = client.get(service_url)
-    print(response.content)
-    print(response.status_code)
     assert response.status_code == 200
 
     # Can make post with token
@@ -187,6 +186,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
         service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
     )
     assert response.status_code == 200
+    assert "🐶" in response.content
 
     # Cannot make post with bad token
     response = client.post(
