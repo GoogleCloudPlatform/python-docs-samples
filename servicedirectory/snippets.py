@@ -14,16 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import servicedirectory_v1beta1
+from google.cloud import servicedirectory_v1
 
 
 # [START servicedirectory_create_namespace]
 def create_namespace(project_id, location_id, namespace_id):
     """Creates a namespace in the given location."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
-    namespace = servicedirectory_v1beta1.Namespace(
+    namespace = servicedirectory_v1.Namespace(
         name=client.namespace_path(project_id, location_id, namespace_id))
 
     response = client.create_namespace(
@@ -42,7 +42,7 @@ def create_namespace(project_id, location_id, namespace_id):
 def delete_namespace(project_id, location_id, namespace_id):
     """Deletes a namespace in the given location."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
     namespace_name = client.namespace_path(project_id, location_id, namespace_id)
 
@@ -56,9 +56,9 @@ def delete_namespace(project_id, location_id, namespace_id):
 def create_service(project_id, location_id, namespace_id, service_id):
     """Creates a service in the given namespace."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
-    service = servicedirectory_v1beta1.Service(
+    service = servicedirectory_v1.Service(
         name=client.service_path(project_id, location_id, namespace_id,
                                  service_id))
 
@@ -78,7 +78,7 @@ def create_service(project_id, location_id, namespace_id, service_id):
 def delete_service(project_id, location_id, namespace_id, service_id):
     """Deletes a service in the given namespace."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
     service_name = client.service_path(project_id, location_id, namespace_id,
                                        service_id)
@@ -93,10 +93,10 @@ def delete_service(project_id, location_id, namespace_id, service_id):
 def resolve_service(project_id, location_id, namespace_id, service_id):
     """Resolves a service in the given namespace."""
 
-    client = servicedirectory_v1beta1.LookupServiceClient()
+    client = servicedirectory_v1.LookupServiceClient()
 
-    request = servicedirectory_v1beta1.ResolveServiceRequest(
-        name=servicedirectory_v1beta1.RegistrationServiceClient().service_path(
+    request = servicedirectory_v1.ResolveServiceRequest(
+        name=servicedirectory_v1.RegistrationServiceClient().service_path(
             project_id, location_id, namespace_id, service_id))
 
     response = client.resolve_service(request=request)
@@ -114,9 +114,9 @@ def create_endpoint(project_id, location_id, namespace_id, service_id,
                     endpoint_id, address, port):
     """Creates a endpoint in the given service."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
-    endpoint = servicedirectory_v1beta1.Endpoint(
+    endpoint = servicedirectory_v1.Endpoint(
         name=client.endpoint_path(project_id, location_id, namespace_id,
                                   service_id, endpoint_id),
         address=address,
@@ -140,7 +140,7 @@ def delete_endpoint(project_id, location_id, namespace_id, service_id,
                     endpoint_id):
     """Deletes a endpoin in the given service."""
 
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
 
     endpoint_name = client.endpoint_path(project_id, location_id, namespace_id,
                                          service_id, endpoint_id)

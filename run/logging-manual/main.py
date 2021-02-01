@@ -23,6 +23,9 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
+    # This is set as a custom environment variable on deployment.
+    # To automatically detect the current project, use the metadata server.
+    # https://cloud.google.com/run/docs/reference/container-contract#metadata-server
     PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     # [START cloudrun_manual_logging]

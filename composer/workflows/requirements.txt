@@ -3,5 +3,5 @@ cattrs==1.0.0 #this has to be explicitly pinned to 1.0.0 until airflow 1.10.13 w
 kubernetes==12.0.1
 scipy==1.4.1; python_version > '3.0'
 scipy==1.2.3; python_version < '3.0'
-numpy==1.17.4; python_version > '3.0'
+numpy==1.19.5; python_version > '3.0'
 numpy==1.16.6; python_version < '3.0'

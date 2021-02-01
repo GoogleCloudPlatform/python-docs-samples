@@ -21,14 +21,18 @@
 <body>
 <div>
   <p>Print BEARER TOKENS:
-    {% for token in tokens: %}
-      <li>{{token}}</li>
-    {% endfor %}
+    <ul>
+      {% for token in tokens: %}
+        <li>{{token}}</li>
+      {% endfor %}
+    </ul>
   </p>
   <p>Print CLAIMS:
-    {% for claim in claims: %}
-      <li>{{claim}}</li>
-    {% endfor %}
+    <ul>
+      {% for claim in claims: %}
+        <li>{{claim}}</li>
+      {% endfor %}
+    </ul>
   </p>
   <p>Messages received by this instance:</p>
   <ul>

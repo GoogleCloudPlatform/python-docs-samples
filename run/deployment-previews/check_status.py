@@ -128,7 +128,7 @@ def github_token(project_id: str, ghtoken_secretname: str) -> str:
         error(e, context=f"finding secret {ghtoken_secretname}")
 
     # The secret was encoded for you as part of the secret creation, so decode it now.
-    github_token = response.payload.data.decode("UTF-8")
+    github_token = response.payload.data.decode("UTF-8").strip()
     return github_token
 
 
@@ -245,7 +245,7 @@ def set(
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
             (
-                f"Status would have been created on {repo.repo_name}, "
+                f"Status would have been created on {repo_name}, "
                 f"commit {commit.sha[:7]}, linking to {revision_url} "
                 f"on service {service_obj['metadata']['name']}"
             )
@@ -260,7 +260,7 @@ def set(
         )
         click.secho("Success: ", fg="green", bold=True, nl=False)
         click.echo(
-            f"Status created on {repo.repo_name}, commit {commit.sha[:7]}, "
+            f"Status created on {repo_name}, commit {commit.sha[:7]}, "
             f"linking to {revision_url} on service {service_obj['metadata']['name']}"
         )
 
