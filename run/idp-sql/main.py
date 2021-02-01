@@ -166,10 +166,10 @@ db = None
 def create_tables() -> None:
     global db
     db = init_connection_engine()
-    # Create tables (if they don't already exist)s
+    # Create pet_votes table if it doesn't already exist
     with db.connect() as conn:
         result = conn.execute(
-            "CREATE TABLE IF NOT EXISTS votes "
+            "CREATE TABLE IF NOT EXISTS pet_votes "
             "( vote_id SERIAL NOT NULL, "
             "time_cast timestamp NOT NULL, "
             "candidate VARCHAR(6) NOT NULL, "
@@ -192,7 +192,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT candidate, time_cast FROM votes "
+            "SELECT candidate, time_cast FROM pet_votes "
             "ORDER BY time_cast DESC LIMIT 5"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
@@ -204,7 +204,7 @@ def get_index_context() -> Dict[str, Union[int, str]]:
                 }
             )
         stmt = sqlalchemy.text(
-            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
+            "SELECT COUNT(vote_id) FROM pet_votes WHERE candidate=:candidate"
         )
         # Count number of votes for cats
         cats_result = conn.execute(stmt, candidate="CATS").fetchone()
@@ -276,7 +276,7 @@ def save_vote() -> Response:
 
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate, uid)"
+        "INSERT INTO pet_votes (time_cast, candidate, uid)"
         " VALUES (:time_cast, :candidate, :uid)"
     )
     try:
