@@ -96,7 +96,7 @@ def get_images_info(_):
             }
 
 
-def train_model(
+def run(
     project,
     region,
     cloud_storage_path,
@@ -182,7 +182,6 @@ def write_dataset_csv_file(dataset_csv_filename, images):
 
 def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset):
     from google.cloud import aiplatform
-    from google.cloud.aiplatform.gapic.schema import trainingjob
 
     # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#create-dataset
     client = aiplatform.gapic.DatasetServiceClient(
@@ -209,13 +208,12 @@ def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset)
     )
     logging.info(f"Creating AutoML dataset, operation: {response.operation.name}")
     dataset = response.result()  # wait until the operation finishes
-    logging.info(f"AutoML dataset created: {dataset.name}\n{dataset}")
+    logging.info(f"AutoML dataset created:\n{dataset}")
     return dataset.name, dataset_csv_filename
 
 
 def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
     from google.cloud import aiplatform
-    from google.cloud.aiplatform.gapic.schema import trainingjob
 
     # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#import-data
     client = aiplatform.gapic.DatasetServiceClient(
@@ -265,8 +263,7 @@ def train_automl_model(
             "model_to_upload": {"display_name": automl_model},
         },
     )
-    logging.info(f"Training AutoML model, training pipeline: {response.name}")
-    logging.info(f"{response}")
+    logging.info(f"Training AutoML model, training pipeline:\n{response}")
     return response.name
 
 
@@ -343,10 +340,10 @@ if __name__ == "__main__":
     )
     project = pipeline_options.get_all_options().get("project")
     if not project:
-        parser.error("please provide a Google Cloud project ID: --project")
+        parser.error("please provide a Google Cloud project ID with --project")
     region = pipeline_options.get_all_options().get("region")
     if not region:
-        parser.error("please provide a Google Cloud compute region: --region")
+        parser.error("please provide a Google Cloud compute region with --region")
 
     if args.init:
         init(
@@ -356,7 +353,7 @@ if __name__ == "__main__":
         )
 
     else:
-        train_model(
+        run(
             project=project,
             region=region,
             cloud_storage_path=args.cloud_storage_path,
