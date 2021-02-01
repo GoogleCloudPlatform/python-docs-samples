@@ -100,7 +100,6 @@ def init_tcp_connection_engine(db_config):
             database=db_name,
             host=db_hostname,
             port=db_port,
-            query={"driver": "ODBC Driver 17 for SQL Server"},
         ),
         **db_config
     )
