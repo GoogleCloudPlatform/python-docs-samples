@@ -8,10 +8,10 @@ Add the following to your `requirements-test.txt` file:
 
 `git+https://github.com/GoogleCloudPlatform/python-docs-samples.git#egg=dag_test_utils&subdirectory=composer/dag_test_utils`
 
-Import the unit testing module
+Import the internal unit testing module
 
 ```python
-import unit_testing
+import internal_unit_testing
 ```
 
 Test your DAG
@@ -22,7 +22,7 @@ def test_dag_import():
     models.Variable.set('gcs_bucket', 'example_bucket')
     from . import my_dag as module
     # Check for DAG validity
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)
 ```
 
 For more examples, refer to the [`workflows`](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/workflows) directory.

@@ -22,6 +22,6 @@ setup(
     author="Google Cloud Platform",
     description="Utility used to unit test example Apache Airflow DAGs",
     packages=find_packages(),
-    py_modules=['unit_testing'],
+    py_modules=['internal_unit_testing'],
     install_requires=['apache-airflow[gcp]']
 )
