@@ -1,5 +1,5 @@
 # Version list reflects AI platform runtime 2.3
 # More information here https://cloud.google.com/ai-platform/training/docs/runtime-version-list
-google-api-python-client==1.9.3
-google-cloud-storage==1.35.0
-oauth2client<4
+google-api-python-client==1.9.0
+google-cloud-storage==1.32.0
+oauth2client==4.1.3

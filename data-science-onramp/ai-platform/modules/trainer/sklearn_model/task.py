@@ -18,16 +18,17 @@ import argparse
 import os
 import re
 
+from google.cloud import storage
 import joblib
 from sklearn.metrics import mean_absolute_error
-from google.cloud import storage
 
 from trainer import utils
 from trainer.sklearn_model import model
 # [END ai_platform_sklearn_task_imports]
 
+
 # [START ai_platform_sklearn_task_args]
-def get_args():
+def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input-path",
@@ -54,25 +55,32 @@ def get_args():
     return parser.parse_args()
 # [END ai_platform_sklearn_task_args]
 
+
 # [START ai_platform_sklearn_task_fit]
-def fit_model(input_path, job_dir, degree=1, alpha=0):
+def fit_model(
+    input_path: str,
+    job_dir: str,
+    degree: int = 1,
+    alpha: int = 0
+) -> None:
     """Train, evaluate and save model given model configuration"""
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
 
     # Split datasets into training and testing
-    train_x, eval_x, train_y, eval_y = utils.load_data(input_path)
+    train_feature, eval_feature, train_target, eval_target = utils.load_data(
+        input_path)
 
     # Create sklearn pipeline for a polynomial model defined in model.py"""
     polynomial_model = model.polynomial_model(degree, alpha)
 
     # Fit the sklearn model
     print("Fitting model...")
-    polynomial_model.fit(train_x, train_y)
+    polynomial_model.fit(train_feature, train_target)
 
     # Evaluate the model
     print("Evaluating model...")
-    pred_y = polynomial_model.predict(eval_x)
-    mae = mean_absolute_error(eval_y, pred_y)
+    pred_target = polynomial_model.predict(eval_feature)
+    mae = mean_absolute_error(eval_target, pred_target)
 
     print(f"Done. Model had MAE={mae}")
 # [END ai_platform_sklearn_task_fit]
@@ -93,12 +101,13 @@ def fit_model(input_path, job_dir, degree=1, alpha=0):
     print("Model saved")
 # [END ai_platform_sklearn_task_export]
 
+
 if __name__ == "__main__":
     args = get_args()
-    
+
     input_path = args.input_path
     job_dir = args.job_dir
-    
+
     kwargs = {}
     if args.degree:
         kwargs["degree"] = args.degree

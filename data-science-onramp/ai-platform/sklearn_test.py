@@ -1,4 +1,3 @@
-import glob
 import os
 import tarfile
 import time
@@ -24,12 +23,13 @@ JOB_ID = f"sklearn_{str(uuid.uuid4())[:7]}"
 
 TERMINAL_STATES = ["SUCCEEDED", "FAILED", "CANCELLING", "CANCELLED"]
 
+
 @pytest.fixture(autouse=True)
 def setup_teardown():
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(STAGING_BUCKET)
     bucket.blob(f"{INPUT_DIR}/{TRAIN_DATA}").upload_from_filename(TRAIN_DATA, timeout=600)
-    
+
     with tarfile.open(TRAINER_TAR, mode="x:gz") as tar:
         tar.add(f"{TRAINER_DIR}/")
 
@@ -41,6 +41,7 @@ def setup_teardown():
     bucket.delete()
 
     os.remove(TRAINER_TAR)
+
 
 @pytest.mark.timeout(1200)
 def test_sklearn(setup_teardown):

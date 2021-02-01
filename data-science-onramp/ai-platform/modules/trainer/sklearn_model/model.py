@@ -19,8 +19,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
 # [END ai_platform_sklearn_model_imports]
 
+
 # [START ai_platform_sklearn_model_polynomial_model]
-def polynomial_model(degree, alpha):
+def polynomial_model(
+    degree: int,
+    alpha: int
+) -> Pipeline:
     """Returns a scikit learn pipeline for the given hyperparameters"""
     return Pipeline(
         [

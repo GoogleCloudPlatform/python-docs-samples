@@ -15,11 +15,19 @@
 
 # [START ai_platform_tf_keras_model]
 # [START ai_platform_tfkeras_model_tf_import]
+import numpy as np
 import tensorflow as tf
 # [END ai_platform_tfkeras_model_tf_import]
 
+
 # [START ai_platform_tfkeras_model_input_fn]
-def input_fn(features, labels, num_epochs, batch_size, shuffle):
+def input_fn(
+    features: np.array,
+    labels: np.array,
+    num_epochs: int,
+    batch_size: int,
+    shuffle: bool
+) -> tf.data.Dataset:
     """Generates an input function to be used for model training"""
 
     inputs = (features, labels)
@@ -34,14 +42,19 @@ def input_fn(features, labels, num_epochs, batch_size, shuffle):
     return dataset
 # [END ai_platform_tfkeras_model_input_fn]
 
+
 # [START ai_platform_tfkeras_model_create_keras_model]
 # [START ai_platform_tfkeras_model_create_keras_model_init]
-def create_keras_model(input_dim, output_dim, learning_rate):
+def create_keras_model(
+    input_dim: int,
+    output_dim: int,
+    learning_rate: float
+) -> tf.keras.Sequential:
     """Creates Keras Model for regression"""
 
     # Define regularizers
-    k_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
-    b_regularizer = tf.keras.regularizers.l2(1e-4)
+    kernel_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
+    bias_regularizer = tf.keras.regularizers.l2(1e-4)
 # [END ai_platform_tfkeras_model_create_keras_model_init]
 # [START ai_platform_tfkeras_model_create_keras_model_define]
     # Define model layers
@@ -53,30 +66,30 @@ def create_keras_model(input_dim, output_dim, learning_rate):
                 11,
                 activation=tf.nn.relu,
                 input_shape=(input_dim,),
-                kernel_regularizer=k_regularizer,
-                bias_regularizer=b_regularizer,
+                kernel_regularizer=kernel_regularizer,
+                bias_regularizer=bias_regularizer,
             ),
             Dense(80, activation=tf.nn.relu),
             Dense(150, activation=tf.nn.relu),
             Dense(
                 300,
                 activation=tf.nn.relu,
-                kernel_regularizer=k_regularizer,
-                bias_regularizer=b_regularizer,
+                kernel_regularizer=kernel_regularizer,
+                bias_regularizer=bias_regularizer,
             ),
             Dense(500, activation=tf.nn.relu),
             Dense(
                 800,
                 activation=tf.nn.relu,
-                kernel_regularizer=k_regularizer,
-                bias_regularizer=b_regularizer,
+                kernel_regularizer=kernel_regularizer,
+                bias_regularizer=bias_regularizer,
             ),
             Dense(1000, activation=tf.nn.relu),
             Dense(
                 1500,
                 activation=tf.nn.relu,
-                kernel_regularizer=k_regularizer,
-                bias_regularizer=b_regularizer,
+                kernel_regularizer=kernel_regularizer,
+                bias_regularizer=bias_regularizer,
             ),
             Dense(output_dim),
         ]
