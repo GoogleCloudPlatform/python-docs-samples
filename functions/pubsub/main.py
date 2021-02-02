@@ -22,7 +22,7 @@ from google.cloud import pubsub_v1
 
 # Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+PROJECT_ID = os.getenv('GCP_PROJECT_ID')
 
 
 # Publishes a message to a Cloud Pub/Sub topic.
