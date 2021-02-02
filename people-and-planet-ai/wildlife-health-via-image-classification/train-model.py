@@ -146,6 +146,9 @@ def run(
                 automl_model=automl_model,
                 automl_budget_milli_node_hours=automl_budget_milli_node_hours,
             )
+            | "Wait for training" >> beam.Map(wait_for_training)
+            | "Export model"
+            >> beam.Map(export_model, cloud_storage_path=cloud_storage_path)
         )
 
 
@@ -250,21 +253,60 @@ def train_automl_model(
         }
     )
 
-    response = client.create_training_pipeline(
+    training_pipeline = client.create_training_pipeline(
         parent=f"projects/{project}/locations/{region}",
         training_pipeline={
             "display_name": automl_model,
             "input_data_config": {"dataset_id": dataset_path.split("/")[-1]},
             "model_to_upload": {"display_name": automl_model},
             "training_task_definition": "gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml",
-            "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
-                model_type="MOBILE_TF_VERSATILE_1",
-                budget_milli_node_hours=automl_budget_milli_node_hours,
-            ).to_value(),
+            # "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
+            #     model_type="MOBILE_TF_VERSATILE_1",
+            #     budget_milli_node_hours=automl_budget_milli_node_hours,
+            # ).to_value(),
+            "training_task_inputs": {
+                "model_type": "MOBILE_TF_VERSATILE_1",
+                "budget_milli_node_hours": automl_budget_milli_node_hours,
+            },
         },
     )
-    logging.info(f"Training AutoML model, training pipeline:\n{response}")
-    return response.name
+    logging.info(f"Training AutoML model, training pipeline:\n{training_pipeline}")
+    return training_pipeline.name
+
+
+def wait_for_training(training_pipeline_path: str):
+    from google.cloud import aiplatform
+
+    # https://cloud.google.com/ai-platform-unified/docs/training/automl-edge-api#get-pipeline
+    client = aiplatform.gapic.PipelineServiceClient(
+        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
+    )
+
+    while True:
+        training_pipeline = client.get_training_pipeline(name=training_pipeline_path)
+        if training_pipeline.state == training_pipeline.state.PIPELINE_STATE_SUCCEEDED:
+            return training_pipeline.model_to_upload.name
+        time.sleep(60)
+
+
+def export_model(model_path, cloud_storage_path):
+    from google.cloud import aiplatform
+
+    # https://cloud.google.com/ai-platform-unified/docs/export/export-edge-model#export
+    client = aiplatform.gapic.ModelServiceClient(
+        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
+    )
+    response = client.export_model(
+        name=model_path,
+        output_config={
+            "artifact_destination": {"output_uri_prefix": cloud_storage_path}
+        },
+    )
+    logging.info("Exporting model, operation:", response.operation.name)
+    logging.info(f"response:\n{response}")
+    export_model_response = response.result()
+    logging.info("Model exported")
+    logging.info(f"export_model_response:\n{export_model_response}")
 
 
 def url_get(url):
