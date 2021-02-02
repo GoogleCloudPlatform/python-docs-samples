@@ -13,9 +13,8 @@
 # limitations under the License.
 
 from airflow import exceptions
-import pytest
-
 import internal_unit_testing
+import pytest
 
 
 def test_dag_no_dag():

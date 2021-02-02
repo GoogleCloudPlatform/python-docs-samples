@@ -15,9 +15,8 @@
 import os.path
 import sys
 
-import pytest
-
 import internal_unit_testing
+import pytest
 
 
 @pytest.fixture(scope='module', autouse=True)
