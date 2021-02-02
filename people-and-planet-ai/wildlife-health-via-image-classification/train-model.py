@@ -260,14 +260,10 @@ def train_automl_model(
             "input_data_config": {"dataset_id": dataset_path.split("/")[-1]},
             "model_to_upload": {"display_name": automl_model},
             "training_task_definition": "gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml",
-            # "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
-            #     model_type="MOBILE_TF_VERSATILE_1",
-            #     budget_milli_node_hours=automl_budget_milli_node_hours,
-            # ).to_value(),
-            "training_task_inputs": {
-                "model_type": "MOBILE_TF_VERSATILE_1",
-                "budget_milli_node_hours": automl_budget_milli_node_hours,
-            },
+            "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
+                model_type="MOBILE_TF_VERSATILE_1",
+                budget_milli_node_hours=automl_budget_milli_node_hours,
+            ).to_value(),
         },
     )
     logging.info(f"Training AutoML model, training pipeline:\n{training_pipeline}")
