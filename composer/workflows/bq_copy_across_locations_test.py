@@ -17,7 +17,7 @@ import os.path
 
 from airflow import models
 
-from . import unit_testing
+import internal_unit_testing
 
 
 def test_dag():
@@ -34,4 +34,4 @@ def test_dag():
     models.Variable.set('gcs_source_bucket', 'example-project')
     models.Variable.set('gcs_dest_bucket', 'us-central1-f')
     from . import bq_copy_across_locations as module
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)

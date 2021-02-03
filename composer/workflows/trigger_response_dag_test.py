@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import unit_testing
+import internal_unit_testing
 
 
 def test_dag_import():
@@ -23,4 +23,4 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     from . import trigger_response_dag as module
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)
