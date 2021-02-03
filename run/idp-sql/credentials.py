@@ -17,6 +17,7 @@ import os
 from typing import Dict
 
 from google.cloud import secretmanager
+
 from middleware import logger
 
 

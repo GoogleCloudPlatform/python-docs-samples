@@ -16,9 +16,10 @@ import datetime
 import os
 from typing import Dict
 
+import sqlalchemy
+
 import credentials
 from middleware import logger
-import sqlalchemy
 
 # This global variable is declared with a value of `None`, instead of calling
 # `init_connection_engine()` immediately, to simplify testing. In general, it

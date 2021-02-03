@@ -17,9 +17,9 @@ import signal
 import sys
 from types import FrameType
 
+from flask import Flask, render_template, request, Response
 
 import database
-from flask import Flask, render_template, request, Response
 import middleware
 from middleware import jwt_authenticated, logger
 
