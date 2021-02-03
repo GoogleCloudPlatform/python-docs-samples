@@ -6,6 +6,9 @@
 # https://hub.docker.com/_/python
 FROM python:3.9
 
+# Send stdout/stderr out, do not buffer.
+ENV PYTHONUNBUFFERED 1
+
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
 COPY requirements.txt ./
@@ -23,4 +26,5 @@ COPY . ./
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
+# Using ENTRYPOINT to ensure SIGTERM is correctly handled.
+ENTRYPOINT ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "main:app"]
