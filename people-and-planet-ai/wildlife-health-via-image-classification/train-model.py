@@ -146,9 +146,6 @@ def run(
                 automl_model=automl_model,
                 automl_budget_milli_node_hours=automl_budget_milli_node_hours,
             )
-            | "Wait for training" >> beam.Map(wait_for_training)
-            | "Export model"
-            >> beam.Map(export_model, cloud_storage_path=cloud_storage_path)
         )
 
 
@@ -268,41 +265,6 @@ def train_automl_model(
     )
     logging.info(f"Training AutoML model, training pipeline:\n{training_pipeline}")
     return training_pipeline.name
-
-
-def wait_for_training(training_pipeline_path: str):
-    from google.cloud import aiplatform
-
-    # https://cloud.google.com/ai-platform-unified/docs/training/automl-edge-api#get-pipeline
-    client = aiplatform.gapic.PipelineServiceClient(
-        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
-    )
-
-    while True:
-        training_pipeline = client.get_training_pipeline(name=training_pipeline_path)
-        if training_pipeline.state == training_pipeline.state.PIPELINE_STATE_SUCCEEDED:
-            return training_pipeline.model_to_upload.name
-        time.sleep(60)
-
-
-def export_model(model_path, cloud_storage_path):
-    from google.cloud import aiplatform
-
-    # https://cloud.google.com/ai-platform-unified/docs/export/export-edge-model#export
-    client = aiplatform.gapic.ModelServiceClient(
-        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
-    )
-    response = client.export_model(
-        name=model_path,
-        output_config={
-            "artifact_destination": {"output_uri_prefix": cloud_storage_path}
-        },
-    )
-    logging.info("Exporting model, operation:", response.operation.name)
-    logging.info(f"response:\n{response}")
-    export_model_response = response.result()
-    logging.info("Model exported")
-    logging.info(f"export_model_response:\n{export_model_response}")
 
 
 def url_get(url):
