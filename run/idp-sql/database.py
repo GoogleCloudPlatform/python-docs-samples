@@ -130,7 +130,7 @@ def create_tables() -> None:
     # Create pet_votes table if it doesn't already exist
     with db.connect() as conn:
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS pet_votes2"
+            "CREATE TABLE IF NOT EXISTS pet_votes"
             "( vote_id SERIAL NOT NULL, "
             "time_cast timestamp NOT NULL, "
             "candidate VARCHAR(6) NOT NULL, "
