@@ -261,7 +261,7 @@ def train_automl_model(
             "model_to_upload": {"display_name": automl_model},
             "training_task_definition": "gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml",
             "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
-                model_type="MOBILE_TF_VERSATILE_1",
+                model_type="CLOUD",
                 budget_milli_node_hours=automl_budget_milli_node_hours,
             ).to_value(),
         },
