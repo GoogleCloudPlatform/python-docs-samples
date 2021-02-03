@@ -13,21 +13,20 @@
 # limitations under the License.
 
 from airflow import exceptions
+import internal_unit_testing
 import pytest
-
-from . import unit_testing
 
 
 def test_dag_no_dag():
-    from . import unit_testing as module  # Does not contain a DAG.
+    import internal_unit_testing as module  # Does not contain a DAG.
     with pytest.raises(AssertionError):
-        unit_testing.assert_has_valid_dag(module)
+        internal_unit_testing.assert_has_valid_dag(module)
 
 
 def test_dag_has_cycle():
     from . import unit_testing_cycle as module
     with pytest.raises(exceptions.AirflowDagCycleException):
-        unit_testing.assert_has_valid_dag(module)
+        internal_unit_testing.assert_has_valid_dag(module)
 
 
 # [START composer_dag_unit_testing_test]
@@ -42,5 +41,5 @@ def test_dag_with_variables():
 
     # The assert_has_valid_dag verifies that the module contains an Airflow DAG
     # and that the DAG contains no cycles.
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)
 # [END composer_dag_unit_testing_test]
