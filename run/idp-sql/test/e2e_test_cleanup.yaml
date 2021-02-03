@@ -30,7 +30,7 @@ steps:
         "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --quiet"
 
       ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
-        "gcloud sql databases delete ${_DB_NAME} --instance ${_INSTANCE} --quiet --project $PROJECT_ID"
+        "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
 substitutions:
   _SERVICE: idp-sql
