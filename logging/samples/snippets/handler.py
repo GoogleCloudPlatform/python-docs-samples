@@ -16,6 +16,7 @@
 
 
 def use_logging_handler():
+    # [START logging_stdlogging]
     # [START logging_handler_setup]
     # Imports the Cloud Logging client library
     import google.cloud.logging
@@ -43,6 +44,7 @@ def use_logging_handler():
     # [END logging_handler_usage]
 
     print("Logged: {}".format(text))
+    # [END logging_stdlogging]
 
 
 if __name__ == "__main__":
