@@ -31,11 +31,12 @@ from apache_beam.options.pipeline_options import PipelineOptions
 
 def init(bigquery_dataset, bigquery_table, pipeline_options=None):
     invalid_categories = {
-        "empty",
         "#ref!",
-        "unidentifiable",
-        "start",
+        "empty",
         "end",
+        "small mammal",
+        "start",
+        "unidentifiable",
         "unidentified",
         "unknown",
     }
@@ -54,7 +55,12 @@ def init(bigquery_dataset, bigquery_table, pipeline_options=None):
             | "Create single element" >> beam.Create([None])
             | "Get images info" >> beam.FlatMap(get_images_info)
             | "Filter invalid rows"
-            >> beam.Filter(lambda x: x["category"] not in invalid_categories)
+            >> beam.Filter(
+                lambda x: x["category"] not in invalid_categories
+                or x["category"].startswith("unknown ")
+                or x["category"].endswith(" desconocida")
+                or x["category"].endswith(" desconocido")
+            )
             | "Write images info"
             >> beam.io.WriteToBigQuery(
                 dataset=bigquery_dataset,
