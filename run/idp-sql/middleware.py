@@ -52,6 +52,7 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 
 
 def field_name_modifier(
+    # Changes the keys for some of the fields, to match Cloud Logging's expectations
     logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
 ) -> Dict:
     event_dict["severity"] = event_dict["level"]
