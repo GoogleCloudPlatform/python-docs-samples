@@ -174,7 +174,6 @@ def get_index_context() -> Dict:
 
 
 def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
-
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO pet_votes (time_cast, candidate, uid)"
