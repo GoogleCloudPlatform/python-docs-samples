@@ -143,9 +143,12 @@ def crud_hl7v2_store_id():
 
 
 def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
-    hl7v2_stores.create_hl7v2_store(
-        project_id, cloud_region, dataset_id, hl7v2_store_id
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create():
+        hl7v2_stores.create_hl7v2_store(
+            project_id, cloud_region, dataset_id, hl7v2_store_id
+        )
+    create()
 
     hl7v2_stores.get_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id)
 

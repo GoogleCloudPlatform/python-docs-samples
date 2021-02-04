@@ -1,5 +1,0 @@
-Flask==1.1.2
-Flask-SQLAlchemy==2.4.4
-gunicorn==20.0.4
-#psycopg2==2.8.5 # You will need either this or psycopg-binary, see http://initd.org/psycopg/docs/install.html for more info
-psycopg2-binary==2.8.6
