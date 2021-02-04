@@ -14,7 +14,7 @@
 
 from airflow import models
 
-from . import unit_testing
+import internal_unit_testing
 
 
 def test_dag_import():
@@ -30,4 +30,4 @@ def test_dag_import():
     models.Variable.set("gce_region", "us-central1-f")
     from . import dataflowtemplateoperator_tutorial as module
 
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)
