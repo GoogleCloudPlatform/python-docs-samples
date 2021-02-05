@@ -36,7 +36,11 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
     sources = [bucket.get_blob(first_blob_name), bucket.get_blob(second_blob_name)]
     destination.compose(sources)
 
-    print("New composite object {} in the bucket {} was created by combining {} and {}".format(destination_blob_name, bucket_name, first_blob_name, second_blob_name))
+    print(
+        "New composite object {} in the bucket {} was created by combining {} and {}".format(
+            destination_blob_name, bucket_name, first_blob_name, second_blob_name
+        )
+    )
     return destination
 
 
@@ -44,5 +48,7 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
 
 if __name__ == "__main__":
     compose_file(
-        bucket_name=sys.argv[1], sources=sys.argv[2], destination_blob_name=sys.argv[3],
+        bucket_name=sys.argv[1],
+        sources=sys.argv[2],
+        destination_blob_name=sys.argv[3],
     )
