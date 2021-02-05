@@ -195,17 +195,6 @@ def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset)
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
 
-    # Return the dataset if it exists.
-    datasets = client.list_datasets(
-        parent=f"projects/{project}/locations/{region}",
-    )
-    for dataset in datasets:
-        if dataset.display_name == automl_dataset:
-            logging.info(f"AutoML dataset found: {dataset.name}\n{dataset}")
-            return dataset.name, dataset_csv_filename
-
-    # If no dataset was returned, then create it.
-    logging.warning(f"AutoML dataset not found: {automl_dataset}")
     response = client.create_dataset(
         parent=f"projects/{project}/locations/{region}",
         dataset={
