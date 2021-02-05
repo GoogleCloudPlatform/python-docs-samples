@@ -49,6 +49,7 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
 if __name__ == "__main__":
     compose_file(
         bucket_name=sys.argv[1],
-        sources=sys.argv[2],
-        destination_blob_name=sys.argv[3],
+        first_blob_name=sys.argv[2],
+        second_blob_name=sys.argv[3],
+        destination_blob_name=sys.argv[4],
     )
