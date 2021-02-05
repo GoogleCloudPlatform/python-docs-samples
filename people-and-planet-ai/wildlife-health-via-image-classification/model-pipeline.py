@@ -34,6 +34,7 @@ def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=No
         "#ref!",
         "empty",
         "end",
+        "misfire",
         "small mammal",
         "start",
         "unidentifiable",
