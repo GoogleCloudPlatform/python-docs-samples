@@ -29,7 +29,7 @@ import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
 
-def init(bigquery_dataset, bigquery_table, pipeline_options=None):
+def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=None):
     invalid_categories = {
         "#ref!",
         "empty",
@@ -294,7 +294,7 @@ def with_retries(f, max_attempts=3):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--init",
+        "--create-images-database",
         action="store_true",
         help="Creates a BigQuery table and initializes it with the WCS metadata file entries.",
     )
@@ -351,8 +351,8 @@ if __name__ == "__main__":
     if not region:
         parser.error("please provide a Google Cloud compute region with --region")
 
-    if args.init:
-        init(
+    if args.create_images_database:
+        create_images_database(
             bigquery_dataset=args.bigquery_dataset,
             bigquery_table=args.bigquery_table,
             pipeline_options=pipeline_options,
