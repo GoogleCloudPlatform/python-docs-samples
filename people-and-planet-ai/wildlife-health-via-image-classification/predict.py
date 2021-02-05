@@ -58,6 +58,7 @@ def run(project, region, model_endpoint_id, image_file):
                     pred["displayNames"], pred["confidences"]
                 )
             ],
+            reverse=True,
             key=lambda x: x[1],
         )
 
