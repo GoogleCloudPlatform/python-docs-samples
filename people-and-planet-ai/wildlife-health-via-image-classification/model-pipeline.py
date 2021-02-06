@@ -163,6 +163,7 @@ def get_image(image_info, cloud_storage_path):
 
     # If the image file does not exist, try downloading it.
     image_path = f"{cloud_storage_path}/{file_name}"
+    logging.info(f"loading image: {image_path}")
     if not beam.io.gcp.gcsio.GcsIO().exists(image_path):
         image_url = f"{base_url}/{file_name}"
         logging.info(f"image not found, downloading: {image_path} [{image_url}]")
