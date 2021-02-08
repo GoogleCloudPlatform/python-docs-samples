@@ -147,7 +147,23 @@ def deployed_service() -> str:
         check=True,
     )
 
-    # Remove manually created database user.
+    # Remove manually created database and user.
+    subprocess.run(
+        [
+            "gcloud",
+            "sql",
+            "databases",
+            "delete",
+            POSTGRES_DATABASE,
+            "--instance",
+            POSTGRES_INSTANCE,
+            "--project",
+            GOOGLE_CLOUD_PROJECT,
+            "--quiet",
+        ],
+        check=True,
+    )
+
     subprocess.run(
         [
             "gcloud",
