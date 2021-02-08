@@ -37,22 +37,25 @@ if os.path.isfile(".env"):
     env.read_env(env_file)
 else:
     # TODO(glasnt) removed trampoline for testing
-    # [START cloudrun_django_secretconfig]
-    import google.auth
-    from google.cloud import secretmanager
+    if os.getenv('TRAMPOLINE_CI', None):
+        payload = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
+    else:
+        # [START cloudrun_django_secretconfig]
+        import google.auth
+        from google.cloud import secretmanager
 
-    _, project = google.auth.default()
+        _, project = google.auth.default()
 
-    if project:
-        client = secretmanager.SecretManagerServiceClient()
+        if project:
+            client = secretmanager.SecretManagerServiceClient()
 
-        SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
-        name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
-        payload = client.access_secret_version(name=name).payload.data.decode(
-            "UTF-8"
-        )
-        env = environ.Env()
-        env.read_env(io.StringIO(payload))
+            SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
+            name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+            payload = client.access_secret_version(name=name).payload.data.decode(
+                "UTF-8"
+            )
+    env = environ.Env()
+    env.read_env(io.StringIO(payload))
 # [END cloudrun_django_secretconfig]
     else:
         raise Exception("No environment configuration found.")
