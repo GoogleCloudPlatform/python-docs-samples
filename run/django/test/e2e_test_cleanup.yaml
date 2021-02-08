@@ -39,6 +39,5 @@ substitutions:
   _VERSION: manual
   _REGION: us-central1
   _PLATFORM: managed
-  _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings
   _SECRET_PASSWORD_NAME: admin_password
