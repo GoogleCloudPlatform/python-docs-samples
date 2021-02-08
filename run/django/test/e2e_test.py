@@ -66,7 +66,7 @@ SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 @pytest.fixture
 def deployed_service() -> str:
-    # NOTE(glasnt): cloudbuild doesn't have user create rights. 
+    # NOTE(glasnt): cloudbuild doesn't have user create rights.
     subprocess.run(
         [
             "gcloud",
@@ -116,30 +116,6 @@ def deployed_service() -> str:
         check=True,
     )
 
-    service_url = (
-        subprocess.run(
-            [
-                "gcloud",
-                "run",
-                "services",
-                "describe",
-                SERVICE,
-                "--project",
-                GOOGLE_CLOUD_PROJECT,
-                "--platform",
-                PLATFORM,
-                "--region",
-                REGION,
-                "--format",
-                "value(status.url)",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.strip()
-        .decode()
-    )
-
     yield SERVICE
 
     # Cleanup
@@ -171,7 +147,7 @@ def deployed_service() -> str:
         check=True,
     )
 
-    # Remove manually created database user. 
+    # Remove manually created database user.
     subprocess.run(
         [
             "gcloud",
