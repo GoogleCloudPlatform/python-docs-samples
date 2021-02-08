@@ -36,8 +36,7 @@ if os.path.isfile(".env"):
     env = environ.Env()
     env.read_env(env_file)
 else:
-    # TODO(glasnt) removed trampoline for testing
-    if os.getenv('TRAMPOLINE_CI', None):
+    if os.getenv("TRAMPOLINE_CI", None):
         payload = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     else:
         # [START cloudrun_django_secretconfig]
@@ -57,8 +56,7 @@ else:
     env = environ.Env()
     env.read_env(io.StringIO(payload))
 # [END cloudrun_django_secretconfig]
-    else:
-        raise Exception("No environment configuration found.")
+
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -117,10 +115,18 @@ DATABASES = {"default": env.db()}
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
