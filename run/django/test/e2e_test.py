@@ -124,8 +124,6 @@ def deployed_service() -> str:
         f"_SERVICE={SERVICE},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
-        f"_DB_NAME={POSTGRES_DATABASE},"
-        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
         f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
         f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
     ]
