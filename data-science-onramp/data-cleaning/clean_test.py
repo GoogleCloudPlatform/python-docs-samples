@@ -72,6 +72,11 @@ def setup_and_teardown_table():
     job_config = bigquery.LoadJobConfig(
         autodetect=True, write_disposition="WRITE_TRUNCATE"
     )
+
+    # Logging for debugging the flake:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/5312
+    print(f"df: {df}")
+    print(f"job_config: {job_config}")
     operation = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
 
     # Wait for job to complete
