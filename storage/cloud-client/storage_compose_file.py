@@ -20,21 +20,25 @@ import sys
 from google.cloud import storage
 
 
-def compose_file(bucket_name, sources, destination_blob_name):
+def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blob_name):
     """Concatenate source blobs into destination blob."""
     # bucket_name = "your-bucket-name"
-    # sources = [blob_1, blob_2]
+    # first_blob_name = "first-object-name"
+    # second_blob_name = "second-blob-name"
     # destination_blob_name = "destination-object-name"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     destination = bucket.blob(destination_blob_name)
     destination.content_type = "text/plain"
+
+    # sources is a list of Blob instances, up to the max of 32 instances per request
+    sources = [bucket.get_blob(first_blob_name), bucket.get_blob(second_blob_name)]
     destination.compose(sources)
 
     print(
-        "Composed new object {} in the bucket {}".format(
-            destination_blob_name, bucket.name
+        "New composite object {} in the bucket {} was created by combining {} and {}".format(
+            destination_blob_name, bucket_name, first_blob_name, second_blob_name
         )
     )
     return destination
@@ -44,5 +48,8 @@ def compose_file(bucket_name, sources, destination_blob_name):
 
 if __name__ == "__main__":
     compose_file(
-        bucket_name=sys.argv[1], sources=sys.argv[2], destination_blob_name=sys.argv[3],
+        bucket_name=sys.argv[1],
+        first_blob_name=sys.argv[2],
+        second_blob_name=sys.argv[3],
+        destination_blob_name=sys.argv[4],
     )
