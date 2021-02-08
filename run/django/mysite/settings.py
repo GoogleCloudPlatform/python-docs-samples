@@ -23,6 +23,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+import io
 import os
 
 import environ
@@ -30,32 +31,31 @@ import environ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_file = os.path.join(BASE_DIR, ".env")
 
-# If no .env has been provided, pull it from Secret Manager, storing it locally
-if not os.path.isfile(".env"):
-    if os.getenv('TRAMPOLINE_CI', None):
-        payload = f"SECRET_KEY=a\nGS_BUCKET_NAME=none\nDATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
-    else:
-        # [START cloudrun_django_secretconfig]
-        import google.auth
-        from google.cloud import secretmanager_v1
+# If no .env has been provided, pull it from Secret Manager
+if os.path.isfile(".env"):
+    env = environ.Env()
+    env.read_env(env_file)
+else:
+    # TODO(glasnt) removed trampoline for testing
+    # [START cloudrun_django_secretconfig]
+    import google.auth
+    from google.cloud import secretmanager
 
-        _, project = google.auth.default()
+    _, project = google.auth.default()
 
-        if project:
-            client = secretmanager_v1.SecretManagerServiceClient()
+    if project:
+        client = secretmanager.SecretManagerServiceClient()
 
-            SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
-            name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
-            payload = client.access_secret_version(name=name).payload.data.decode(
-                "UTF-8"
-            )
-
-    with open(env_file, "w") as f:
-        f.write(payload)
-
-env = environ.Env()
-env.read_env(env_file)
+        SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "django_settings")
+        name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+        payload = client.access_secret_version(name=name).payload.data.decode(
+            "UTF-8"
+        )
+        env = environ.Env()
+        env.read_env(io.StringIO(payload))
 # [END cloudrun_django_secretconfig]
+    else:
+        raise Exception("No environment configuration found.")
 
 SECRET_KEY = env("SECRET_KEY")
 

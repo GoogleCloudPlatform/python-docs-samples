@@ -35,7 +35,7 @@ steps:
       ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
         "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
-      ./test/retry.sh "gcloud sql users describe ${_DB_USER} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+      ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
         "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
         
 

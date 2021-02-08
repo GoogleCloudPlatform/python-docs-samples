@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2021 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,10 +27,11 @@ import requests
 SUFFIX = uuid.uuid4().hex[:10]
 
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
+PLATFORM = "managed"
 
-SERVICE_NAME = f"polls-{SUFFIX}"
+SERVICE = f"polls-{SUFFIX}"
 
 # Retreieve Cloud SQL test config
 POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
@@ -50,7 +51,7 @@ else:
 
 POSTGRES_DATABASE = f"django-database-{SUFFIX}"
 
-CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
+CLOUD_STORAGE_BUCKET = f"{GOOGLE_CLOUD_PROJECT}-media-{SUFFIX}"
 
 POSTGRES_DATABASE = f"polls-{SUFFIX}"
 POSTGRES_USER = f"django-{SUFFIX}"
@@ -64,8 +65,9 @@ SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 @pytest.fixture
 def deployed_service() -> str:
+
     substitutions = [
-        f"_SERVICE={SERVICE_NAME},"
+        f"_SERVICE={SERVICE},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
@@ -76,10 +78,10 @@ def deployed_service() -> str:
         f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
         f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
         f"_SECRET_PASSWORD_VALUE={ADMIN_PASSWORD},"
-        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL},"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL}"
     ]
     if SAMPLE_VERSION:
-        substitutions.append(f"_VERSION={SAMPLE_VERSION}")
+        substitutions.append(f",_VERSION={SAMPLE_VERSION}")
 
     subprocess.run(
         [
@@ -103,7 +105,7 @@ def deployed_service() -> str:
                 "run",
                 "services",
                 "describe",
-                SERVICE_NAME,
+                SERVICE,
                 "--project",
                 GOOGLE_CLOUD_PROJECT,
                 "--platform",
@@ -120,16 +122,19 @@ def deployed_service() -> str:
         .decode()
     )
 
-    yield service_url
+    yield SERVICE
 
     # Cleanup
 
     substitutions = [
-        f"_SERVICE={SERVICE_NAME},"
+        f"_SERVICE={SERVICE},"
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_USER={POSTGRES_USER},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
+        f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
+        f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
@@ -148,6 +153,7 @@ def deployed_service() -> str:
         + substitutions,
         check=True,
     )
+    
 
 @pytest.fixture
 def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
@@ -167,7 +173,7 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
                 "--format",
                 "value(status.url)",
                 "--project",
-                PROJECT,
+                GOOGLE_CLOUD_PROJECT,
             ],
             stdout=subprocess.PIPE,
             check=True,
@@ -177,7 +183,7 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     )
     auth_token = (
         subprocess.run(
-            ["gcloud", "auth", "print-identity-token", "--project", PROJECT],
+            ["gcloud", "auth", "print-identity-token", "--project", GOOGLE_CLOUD_PROJECT],
             stdout=subprocess.PIPE,
             check=True,
         )
@@ -218,5 +224,6 @@ def test_end_to_end(service_url_auth_token: List[str]) -> None:
 
     # Check Django admin landing page
     assert response.status_code == 200
+    assert "Please enter the correct username and password" not in body
     assert "Site administration" in body
     assert "Polls" in body

@@ -30,10 +30,13 @@ steps:
     args:
       - "-c"
       - |
+        echo -n "${_DB_PASS}" > db_password
         ./test/retry.sh "gcloud sql users create ${_DB_USER} \
+          --password $(cat db_password) \
           --instance ${_DB_INSTANCE} \
           --project ${PROJECT_ID}" \
-          "gcloud sql users describe ${_DB_USER} --instance ${_DB_INSTANCE}"
+          "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}"
+        rm db_password
 
   - id: "Create a dedicated storage bucket"
     name: "gcr.io/cloud-builders/gcloud"
@@ -54,33 +57,32 @@ steps:
       - "-c"
       - |
         echo "
-        DATABASE_URL=postgres://${_DB_USER}:${_DB_PASS}@//cloudsql/{PROJET_ID}:{_REGION}:{_DB_INSTANCE}/{POSTGRES_DATABASE}
+        DATABASE_URL=postgres://${_DB_USER}:${_DB_PASS}@//cloudsql/${_CLOUD_SQL_CONNECTION_NAME}/${_DB_NAME}
         GS_BUCKET_NAME=${_STORAGE_BUCKET}
-        SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]' | fold -w 30 | head -n1)" > ${_SECRET_SETTINGS_NAME}
+        SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]' | fold -w 30 | head -n1)
+        PASSWORD_NAME=${_SECRET_PASSWORD_NAME}" > ${_SECRET_SETTINGS_NAME}
 
         ./test/retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
           --project $PROJECT_ID \
           --data-file=${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets describe ${_SECRET_SETTINGS_NAME}"
 
-        PROJECT_NUMBER=$(gcloud projects list --filter "name=${PROJET_ID}" --format "value(projectNumber)")
-        CLOUDBUILD_SA=serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com
-
         gcloud secrets add-iam-policy-binding ${_SECRET_SETTINGS_NAME} \
-        --member ${CLOUDBUILD_SA} \
+        --member serviceAccount:$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")@cloudbuild.gserviceaccount.com \
         --role roles/secretmanager.secretAccessor \
         --project ${PROJECT_ID}
 
         rm ${_SECRET_SETTINGS_NAME}
 
-        cat ${_SECRET_PASSWORD_VALUE} > ${_SECRET_PASSWORD_NAME}
+        echo -n "${_SECRET_PASSWORD_VALUE}" > ${_SECRET_PASSWORD_NAME}
 
-        gcloud secrets create ${_SECRET_PASSWORD_NAME} \
-          --project ${PROJECT_ID} \
-          --data-file=${_SECRET_PASSWORD_NAME}
+        ./test/retry.sh "gcloud secrets create ${_SECRET_PASSWORD_NAME} \
+          --project $PROJECT_ID \
+          --data-file=${_SECRET_PASSWORD_NAME}" \
+          "gcloud secrets describe ${_SECRET_PASSWORD_NAME}"
 
         gcloud secrets add-iam-policy-binding ${_SECRET_PASSWORD_NAME} \
-          --member $CLOUDBUILD_SA \
+          --member serviceAccount:$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")@cloudbuild.gserviceaccount.com \
           --role roles/secretmanager.secretAccessor \
           --project ${PROJECT_ID}
 
@@ -107,11 +109,13 @@ steps:
     args:
       [
         "-i",
-        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+        "gcr.io/$PROJECT_ID/${_SERVICE}:${_VERSION}",
         "-s",
-        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "${_CLOUD_SQL_CONNECTION_NAME}",
         "-e",
         "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
+        "-e",
+        "PASSWORD_NAME=${_SECRET_PASSWORD_NAME}",
         "--",
         "python",
         "manage.py",
@@ -123,9 +127,9 @@ steps:
     args:
       [
         "-i",
-        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
+        "gcr.io/$PROJECT_ID/${_SERVICE}:${_VERSION}",
         "-s",
-        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
+        "${_CLOUD_SQL_CONNECTION_NAME}",
         "-e",
         "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
         "--",
