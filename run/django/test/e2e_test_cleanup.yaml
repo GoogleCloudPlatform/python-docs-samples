@@ -34,9 +34,6 @@ steps:
 
       ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
         "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
-
-      ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
-        "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
         
 
 substitutions:
@@ -45,7 +42,6 @@ substitutions:
   _REGION: us-central1
   _PLATFORM: managed
   _DB_NAME: django
-  _DB_USER: django
   _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings
   _SECRET_PASSWORD_NAME: admin_password

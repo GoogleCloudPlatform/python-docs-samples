@@ -63,8 +63,26 @@ ADMIN_PASSWORD = uuid.uuid4().hex[:26]
 SECRET_SETTINGS_NAME = f"django_settings-{SUFFIX}"
 SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
+
 @pytest.fixture
 def deployed_service() -> str:
+    # NOTE(glasnt): cloudbuild doesn't have user create rights. 
+    subprocess.run(
+        [
+            "gcloud",
+            "sql",
+            "users",
+            "create",
+            POSTGRES_USER,
+            "--password",
+            POSTGRES_PASSWORD,
+            "--instance",
+            POSTGRES_INSTANCE_NAME,
+            "--project",
+            GOOGLE_CLOUD_PROJECT,
+        ],
+        check=True,
+    )
 
     substitutions = [
         f"_SERVICE={SERVICE},"
@@ -131,7 +149,6 @@ def deployed_service() -> str:
         f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_NAME={POSTGRES_DATABASE},"
-        f"_DB_USER={POSTGRES_USER},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
         f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
         f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
@@ -153,7 +170,24 @@ def deployed_service() -> str:
         + substitutions,
         check=True,
     )
-    
+
+    # Remove manually created database user. 
+    subprocess.run(
+        [
+            "gcloud",
+            "sql",
+            "users",
+            "delete",
+            POSTGRES_USER,
+            "--instance",
+            POSTGRES_INSTANCE_NAME,
+            "--project",
+            GOOGLE_CLOUD_PROJECT,
+            "--quiet",
+        ],
+        check=True,
+    )
+
 
 @pytest.fixture
 def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
@@ -183,7 +217,13 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     )
     auth_token = (
         subprocess.run(
-            ["gcloud", "auth", "print-identity-token", "--project", GOOGLE_CLOUD_PROJECT],
+            [
+                "gcloud",
+                "auth",
+                "print-identity-token",
+                "--project",
+                GOOGLE_CLOUD_PROJECT,
+            ],
             stdout=subprocess.PIPE,
             check=True,
         )
