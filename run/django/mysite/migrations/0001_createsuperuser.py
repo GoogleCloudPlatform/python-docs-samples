@@ -30,7 +30,7 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
     if os.getenv("TRAMPOLINE_CI", None):
-        admin_password = "test"
+        admin_pass = "test"
     else:
         client = secretmanager.SecretManagerServiceClient()
 
