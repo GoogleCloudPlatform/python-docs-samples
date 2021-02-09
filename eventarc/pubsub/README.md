@@ -54,7 +54,7 @@ You may observe the Run service receiving an event in Cloud Logging:
 
 ```sh
 gcloud logging read "resource.type=cloud_run_revision AND \
-resource.labels.service_name=eventarc-pubsub2" \
+resource.labels.service_name=eventarc-pubsub" \
   --project $(gcloud config get-value project) \
   --limit 10 \
   --format 'value(textPayload)'
