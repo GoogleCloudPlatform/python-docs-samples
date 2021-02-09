@@ -18,7 +18,7 @@ import sys
 
 # [START storage_set_public_access_prevention_enforced]
 from google.cloud import storage
-from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_ENFORCED
+from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_ENFORCED
 
 
 def set_public_access_prevention_enforced(bucket_name):
