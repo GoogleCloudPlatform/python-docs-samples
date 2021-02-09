@@ -1,1 +1,1 @@
-google-cloud-pubsub==2.2.0
+google-cloud-pubsub==2.3.0
