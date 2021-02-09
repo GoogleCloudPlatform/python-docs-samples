@@ -19,6 +19,8 @@ import subprocess
 import time
 import uuid
 
+from google.api_core.exceptions import NotFound
+from google.cloud import pubsub_v1
 from google.cloud import storage
 from google.cloud.storage import Blob, notification
 
@@ -26,41 +28,92 @@ import pytest
 
 
 SUFFIX = uuid.uuid4().hex[0:6]
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+IMAGE_NAME = f"gcr.io/{PROJECT}/image-proc-{SUFFIX}"
 CLOUD_RUN_SERVICE = f"image-proc-{SUFFIX}"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
 OUTPUT_BUCKET = f"image-proc-output-{SUFFIX}"
+TOPIC = f"image_proc_{SUFFIX}"
 
 
-@pytest.fixture()
-def cloud_run_service():
-    # Build and Deploy Cloud Run Services
+@pytest.fixture
+def container_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
-        ["gcloud", "builds", "submit", "--project", PROJECT,
-         f"--substitutions=_SERVICE={CLOUD_RUN_SERVICE},_OUTPUT_BUCKET={OUTPUT_BUCKET}",
-         "--config=e2e_test_setup.yaml", "--quiet"],
-        check=True
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            "--tag",
+            IMAGE_NAME,
+            "--project",
+            PROJECT,
+            "--quiet",
+        ],
+        check=True,
     )
+    yield IMAGE_NAME
 
-    yield
-
-    # Delete Cloud Run service and image container
+    # Delete container image
     subprocess.run(
-        ["gcloud", "run", "services", "delete", CLOUD_RUN_SERVICE,
-         "--project", PROJECT, "--platform", "managed", "--region",
-         "us-central1", "--quiet"],
-        check=True
-    )
-
-    subprocess.run(
-        ["gcloud", "container", "images", "delete",
-         f"gcr.io/{PROJECT}/{CLOUD_RUN_SERVICE}", "--quiet"],
-        check=True
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
     )
 
 
 @pytest.fixture
-def service_url(cloud_run_service):
+def deployed_service(container_image, output_bucket):
+    # Deploy image to Cloud Run
+
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            CLOUD_RUN_SERVICE,
+            "--image",
+            container_image,
+            "--region=us-central1",
+            "--project",
+            PROJECT,
+            "--platform=managed",
+            "--set-env-vars",
+            f"BLURRED_BUCKET_NAME={output_bucket.name}",
+            "--no-allow-unauthenticated",
+        ],
+        check=True,
+    )
+
+    yield CLOUD_RUN_SERVICE
+
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            CLOUD_RUN_SERVICE,
+            "--platform=managed",
+            "--region=us-central1",
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture
+def service_url(deployed_service):
     # Get the URL for the cloud run service
     service_url = subprocess.run(
         [
@@ -72,77 +125,108 @@ def service_url(cloud_run_service):
             "--region=us-central1",
             "services",
             "describe",
-            CLOUD_RUN_SERVICE,
+            deployed_service,
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
-        check=True
+        check=True,
     ).stdout.strip()
 
     yield service_url.decode()
 
 
 @pytest.fixture()
-def pubsub_topic(service_url):
-    # Create pub/sub topic
-    topic = f"image_proc_{SUFFIX}"
-    subprocess.run(
-        ["gcloud", "pubsub", "topics", "create", topic,
-         "--project", PROJECT, "--quiet"], check=True
-    )
+def pubsub_topic():
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(PROJECT, TOPIC)
+    publisher.create_topic(request={"name": topic_path})
+    yield TOPIC
+    try:
+        publisher.delete_topic(request={"topic": topic_path})
+    except NotFound:
+        print("Topic not found, it was either never created or was already deleted.")
 
+
+@pytest.fixture(autouse=True)
+def pubsub_subscription(pubsub_topic, service_url):
     # Create pubsub push subscription to Cloud Run Service
     # Attach service account with Cloud Run Invoker role
     # See tutorial for details on setting up service-account:
     # https://cloud.google.com/run/docs/tutorials/pubsub
-    subprocess.run(
-        ["gcloud", "pubsub", "subscriptions", "create", f"{topic}_sub",
-         "--topic", topic, "--push-endpoint", service_url, "--project",
-         PROJECT, "--push-auth-service-account",
-         f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com", "--quiet"], check=True
+    publisher = pubsub_v1.PublisherClient()
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_id = f"{pubsub_topic}_sub"
+    topic_path = publisher.topic_path(PROJECT, pubsub_topic)
+    subscription_path = subscriber.subscription_path(PROJECT, subscription_id)
+    push_config = pubsub_v1.types.PushConfig(
+        push_endpoint=service_url,
+        oidc_token=pubsub_v1.types.PushConfig.OidcToken(
+            service_account_email=f"cloud-run-invoker@{PROJECT}.iam.gserviceaccount.com"
+        ),
     )
 
-    yield topic
+    # wrapping in 'with' block automatically calls close on gRPC channel
+    with subscriber:
+        subscriber.create_subscription(
+            request={
+                "name": subscription_path,
+                "topic": topic_path,
+                "push_config": push_config,
+            }
+        )
+    yield
+    subscriber = pubsub_v1.SubscriberClient()
 
-    # Delete topic
-    subprocess.run(
-        ["gcloud", "pubsub", "topics", "delete", topic,
-         "--project", PROJECT, "--quiet"], check=True
-    )
-
-    # Delete subscription
-    subprocess.run(
-        ["gcloud", "pubsub", "subscriptions", "delete", f"{topic}_sub",
-         "--project", PROJECT, "--quiet"], check=True
-    )
+    # delete subscription
+    with subscriber:
+        try:
+            subscriber.delete_subscription(request={"subscription": subscription_path})
+        except NotFound:
+            print(
+                "Unable to delete - subscription either never created or already deleted."
+            )
 
 
 @pytest.fixture()
-def storage_buckets(pubsub_topic):
-    # Create GCS Buckets
+def input_bucket(pubsub_topic):
+    # Create GCS Bucket
     storage_client = storage.Client()
     storage_client.create_bucket(INPUT_BUCKET)
-    storage_client.create_bucket(OUTPUT_BUCKET)
 
-    # Get input and output buckets
+    # Get input bucket
     input_bucket = storage_client.get_bucket(INPUT_BUCKET)
-    output_bucket = storage_client.get_bucket(OUTPUT_BUCKET)
 
     # Create pub/sub notification on input_bucket
-    notification.BucketNotification(input_bucket, topic_name=pubsub_topic,
-                                    topic_project=PROJECT, payload_format="JSON_API_V1").create()
+    notification.BucketNotification(
+        input_bucket,
+        topic_name=pubsub_topic,
+        topic_project=PROJECT,
+        payload_format="JSON_API_V1",
+    ).create()
 
-    yield input_bucket, output_bucket
+    yield input_bucket
 
-    # Delete GCS buckets
+    # Delete GCS bucket
     input_bucket.delete(force=True)
+
+
+@pytest.fixture()
+def output_bucket(pubsub_topic):
+    # Create GCS Bucket
+    storage_client = storage.Client()
+    storage_client.create_bucket(OUTPUT_BUCKET)
+
+    # Get output bucket
+    output_bucket = storage_client.get_bucket(OUTPUT_BUCKET)
+
+    yield output_bucket
+
+    # Delete GCS bucket
     output_bucket.delete(force=True)
 
 
-def test_end_to_end(storage_buckets):
+def test_end_to_end(input_bucket, output_bucket):
     # Upload image to the input bucket
-    input_bucket = storage_buckets[0]
-    output_bucket = storage_buckets[1]
 
     blob = Blob("zombie.jpg", input_bucket)
     blob.upload_from_filename("test-images/zombie.jpg", content_type="image/jpeg")

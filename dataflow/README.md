@@ -33,9 +33,7 @@ The following instructions help you prepare your Google Cloud project.
 
 1. [Enable billing](https://cloud.google.com/billing/docs/how-to/modify-project).
 
-1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=dataflow,compute_component,storage_component,storage_api,logging,cloudresourcemanager.googleapis.com,iam.googleapis.com):
-   Dataflow, Compute Engine, Cloud Storage, Cloud Storage JSON,
-   Stackdriver Logging, Cloud Resource Manager, and IAM API.
+1. [Enable the Dataflow API](https://console.cloud.google.com/flows/enableapi?apiid=dataflow).
 
 1. Create a service account JSON key via the
    [*Create service account key* page](https://console.cloud.google.com/apis/credentials/serviceaccountkey),

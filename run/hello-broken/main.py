@@ -38,6 +38,8 @@ def index():
     # [END cloudrun_broken_service_problem]
 
     return f"Hello {NAME}"
+
+
 # [END run_broken_service]
 # [END cloudrun_broken_service]
 

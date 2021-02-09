@@ -1,4 +1,4 @@
-runtime: python38
+runtime: python39
 
 #[START env]
 env_variables:

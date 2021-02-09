@@ -15,12 +15,14 @@
 import datetime
 
 # [START gae_python38_auth_verify_token]
+# [START gae_python3_auth_verify_token]
 from flask import Flask, render_template, request
 from google.auth.transport import requests
 from google.cloud import datastore
 import google.oauth2.id_token
 
 firebase_request_adapter = requests.Request()
+# [END gae_python3_auth_verify_token]
 # [END gae_python38_auth_verify_token]
 
 datastore_client = datastore.Client()
@@ -47,6 +49,7 @@ def fetch_times(limit):
 
 
 # [START gae_python38_auth_verify_token]
+# [START gae_python3_auth_verify_token]
 @app.route('/')
 def root():
     # Verify Firebase auth.
@@ -78,6 +81,7 @@ def root():
     return render_template(
         'index.html',
         user_data=claims, error_message=error_message, times=times)
+# [END gae_python3_auth_verify_token]
 # [END gae_python38_auth_verify_token]
 
 

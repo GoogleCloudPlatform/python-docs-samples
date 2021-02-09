@@ -14,27 +14,10 @@
 
 import os
 import os.path
-import sys
 
 from airflow import models
-import pytest
 
-from . import unit_testing
-
-
-@pytest.fixture(scope='module', autouse=True)
-def gcs_plugin():
-    plugins_dir = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-        'third_party',
-        'apache-airflow',
-        'plugins',
-    ))
-    sys.path.append(plugins_dir)
-    yield
-    sys.path.remove(plugins_dir)
+import internal_unit_testing
 
 
 def test_dag():
@@ -51,4 +34,4 @@ def test_dag():
     models.Variable.set('gcs_source_bucket', 'example-project')
     models.Variable.set('gcs_dest_bucket', 'us-central1-f')
     from . import bq_copy_across_locations as module
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)

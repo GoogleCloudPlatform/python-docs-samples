@@ -1,0 +1,16 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: main.app
+
+libraries:
+- name: grpcio
+  version: 1.0.0
+
+env_variables:
+  QUEUE: "YOUR_QUEUE_NAME"
+  LOCATION: "YOUR_PROJECT_LOCATION"
+  GOOGLE_CLOUD_PROJECT: "YOUR_PROJECT_ID"
