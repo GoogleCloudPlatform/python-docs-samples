@@ -24,6 +24,20 @@ steps:
           --project ${PROJECT_ID}" \
           "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE}"
 
+  - id: "Create a dedicated database user"
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        echo -n "${_DB_PASS}" > db_password
+        ./test/retry.sh "gcloud sql users create ${_DB_USER} \
+          --password $(cat db_password) \
+          --instance ${_DB_INSTANCE} \
+          --project ${PROJECT_ID}" \
+          "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}"
+        rm db_password
+
   - id: "Create a dedicated storage bucket"
     name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "/bin/bash"
