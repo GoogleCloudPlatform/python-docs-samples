@@ -18,7 +18,7 @@ import sys
 
 # [START storage_set_public_access_prevention_unspecified]
 from google.cloud import storage
-from google.cloud.storage.bucket import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
+from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
 
 
 def set_public_access_prevention_unspecified(bucket_name):
