@@ -41,7 +41,6 @@ runIfSuccessful() {
   if [ $? -eq 0 ]; then
     echo "running: $2"
     $($2 > /dev/null)
-  else return 1
   fi
 }
 
@@ -64,7 +63,6 @@ do
     if ((attempt_num==max_attempts))
     then
         echo "Attempt $attempt_num / $max_attempts failed! No more retries left!"
-        exit 1
     else
         echo "Attempt $attempt_num / $max_attempts failed!"
         sleep $((attempt_num++))

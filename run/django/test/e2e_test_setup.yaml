@@ -21,8 +21,7 @@ steps:
       - |
         ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
           --instance ${_DB_INSTANCE} \
-          --project ${PROJECT_ID}" \
-          "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE}"
+          --project ${PROJECT_ID}"
 
   - id: "Create a dedicated database user"
     name: "gcr.io/cloud-builders/gcloud"
@@ -34,8 +33,7 @@ steps:
         ./test/retry.sh "gcloud sql users create ${_DB_USER} \
           --password $(cat db_password) \
           --instance ${_DB_INSTANCE} \
-          --project ${PROJECT_ID}" \
-          "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}"
+          --project ${PROJECT_ID}"
         rm db_password
 
   - id: "Create a dedicated storage bucket"
@@ -47,8 +45,7 @@ steps:
         ./test/retry.sh "gsutil mb \
           -l ${_REGION} \
           -p ${PROJECT_ID} \
-          gs://${_STORAGE_BUCKET}" \
-          "gsutil ls gs://${_STORAGE_BUCKET}"
+          gs://${_STORAGE_BUCKET}"
 
   - id: "Add Django secrets to Secret Manager"
     name: "gcr.io/cloud-builders/gcloud"
@@ -64,8 +61,7 @@ steps:
 
         ./test/retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
           --project $PROJECT_ID \
-          --data-file=${_SECRET_SETTINGS_NAME}" \
-          "gcloud secrets describe ${_SECRET_SETTINGS_NAME}"
+          --data-file=${_SECRET_SETTINGS_NAME}"
 
         gcloud secrets add-iam-policy-binding ${_SECRET_SETTINGS_NAME} \
         --member serviceAccount:$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")@cloudbuild.gserviceaccount.com \
@@ -78,8 +74,7 @@ steps:
 
         ./test/retry.sh "gcloud secrets create ${_SECRET_PASSWORD_NAME} \
           --project $PROJECT_ID \
-          --data-file=${_SECRET_PASSWORD_NAME}" \
-          "gcloud secrets describe ${_SECRET_PASSWORD_NAME}"
+          --data-file=${_SECRET_PASSWORD_NAME}"
 
         gcloud secrets add-iam-policy-binding ${_SECRET_PASSWORD_NAME} \
           --member serviceAccount:$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")@cloudbuild.gserviceaccount.com \
