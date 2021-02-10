@@ -1,0 +1,21 @@
+# This file is used to generate README.rst
+
+product:
+  name: OpenCensus
+  short_name: OpenCensus
+  url: https://opencensus.io
+  description: > 
+    `OpenCensus `_ is a set of libraries for various languages that allow you to collect application metrics 
+    and distributed traces, then transfer the data to a backend of your choice in real time. This data can be 
+    analyzed by developers and admins to understand the health of the application and debug problems.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Write SLI Metrics
+  file: app.py
+  show_help: true
+
+folder: monitoring/opencensus
