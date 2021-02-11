@@ -159,8 +159,7 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [
-        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -277,16 +276,23 @@ def run(
     options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=options) as pipeline:
         # Optionally, validate that the workers are using GPUs.
-        (
+        gpu_check = (
             pipeline
             | beam.Create([None])
             | "Check GPU availability" >> beam.Map(check_gpus, gpus_optional)
         )
 
         # Convert Landsat 8 scenes into images.
+        # ℹ️ We pass `gpu_check` as an unused side input to force that step in
+        # the pipeline to wait for the check before continuing.
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
+            | "Wait for GPU check"
+            >> beam.Map(
+                lambda x, wait_for: x,
+                wait_for=beam.pvalue.AsSingleton(gpu_check),
+            )
             | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
             | "Load RGB band values" >> beam.MapTuple(load_values)
             | "Preprocess pixels"
@@ -356,5 +362,4 @@ if __name__ == "__main__":
         "max": args.max,
         "gamma": args.gamma,
     }
-    run(scenes, args.output_path_prefix,
-        vis_params, args.gpus_optional, beam_args)
+    run(scenes, args.output_path_prefix, vis_params, args.gpus_optional, beam_args)
