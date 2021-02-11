@@ -59,7 +59,7 @@ request_count_view = view_module.View(
     aggregation_module.CountAggregation(),
 )
 
-failed_request_count_vew = view_module.View(
+failed_request_count_view = view_module.View(
     "python_failed_request_count",
     "failed requests",
     [],
@@ -69,19 +69,19 @@ failed_request_count_vew = view_module.View(
 
 
 # register views
-def registerAllViews(view_manager: stats_module.stats.view_manager) -> None:
+def register_all_views(view_manager: stats_module.stats.view_manager) -> None:
     view_manager.register_view(latency_view)
     view_manager.register_view(request_count_view)
-    view_manager.register_view(failed_request_count_vew)
+    view_manager.register_view(failed_request_count_view)
 
 
 # set up exporter
-def setupOpenCensusAndPrometheusExporter() -> None:
+def setup_openCensus_and_prometheus_exporter() -> None:
     stats = stats_module.stats
     view_manager = stats.view_manager
     exporter = prometheus.new_stats_exporter(prometheus.Options(namespace="oc_python"))
     view_manager.register_exporter(exporter)
-    registerAllViews(view_manager)
+    register_all_views(view_manager)
 
 
 app = Flask(__name__)
@@ -116,5 +116,5 @@ def homePage() -> (str, int):
 
 
 if __name__ == "__main__":
-    setupOpenCensusAndPrometheusExporter()
+    setup_openCensus_and_prometheus_exporter()
     app.run(port=8080)

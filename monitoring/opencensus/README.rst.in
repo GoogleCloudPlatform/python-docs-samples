@@ -15,7 +15,7 @@ setup:
 
 samples:
 - name: Write SLI Metrics
-  file: app.py
+  file: main.py
   show_help: true
 
 folder: monitoring/opencensus
