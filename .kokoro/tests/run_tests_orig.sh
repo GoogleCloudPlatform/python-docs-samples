@@ -177,12 +177,12 @@ for file in **/requirements.txt; do
     EXIT=$?
 
     # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
-    # to the Build Cop Bot.
+    # to the FlakyBot.
     # See:
-    # https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+    # https://github.com/googleapis/repo-automation-bots/tree/master/packages/flakybot.
     if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "true" ]]; then
-      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-      $KOKORO_GFILE_DIR/linux_amd64/buildcop
+      chmod +x $KOKORO_GFILE_DIR/linux_amd64/flakybot
+      $KOKORO_GFILE_DIR/linux_amd64/flakybot
     fi
 
     if [[ $EXIT -ne 0 ]]; then
