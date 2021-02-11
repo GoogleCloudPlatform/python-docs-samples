@@ -1,0 +1,9 @@
+steps:
+  # build the docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/${PROJECT_ID}/cicd:${SHORT_SHA}', '.'] # tag docker image with commit sha
+    id: 'docker build'
+  # run the dag tests
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', 'gcr.io/${PROJECT_ID}/cicd:${SHORT_SHA}']
+    id: 'test-dags'
