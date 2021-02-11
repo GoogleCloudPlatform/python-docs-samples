@@ -27,10 +27,6 @@
 #
 # ./retry.sh "gcloud RESOURCE EXISTS?" "gcloud ACTION"
 #
-#
-# Note:
-#   $# - the number of command-line arguments passed
-#   $? - the exit value of the last command
 ##
 
 # Usage: try "cmd1" "cmd2"
@@ -41,7 +37,6 @@ runIfSuccessful() {
   if [ $? -eq 0 ]; then
     echo "running: $2"
     $($2 > /dev/null)
-  else return 1
   fi
 }
 
@@ -64,7 +59,7 @@ do
     if ((attempt_num==max_attempts))
     then
         echo "Attempt $attempt_num / $max_attempts failed! No more retries left!"
-        exit 1
+        exit
     else
         echo "Attempt $attempt_num / $max_attempts failed!"
         sleep $((attempt_num++))
