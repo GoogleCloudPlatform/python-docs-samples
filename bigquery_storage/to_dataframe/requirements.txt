@@ -1,4 +1,4 @@
-google-auth==1.24.0
+google-auth==1.26.1
 google-cloud-bigquery-storage==2.2.1
 google-cloud-bigquery==2.7.0
 pyarrow==3.0.0
