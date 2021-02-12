@@ -1,6 +1,7 @@
 
 # [START ai_platform_utils]
 # [START ai_platform_utils_imports]
+import typing
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -10,7 +11,7 @@ from sklearn.model_selection import train_test_split
 # [START ai_platform_utils_load_data]
 def load_data(
     input_path: str
-) -> tuple(np.array, np.array, np.array. np.array):
+) -> typing.Tuple[np.array, np.array, np.array, np.array]:
     """Loads data from GCS bucket into training and testing dataframes"""
     # Download data from GCS bucket and load data into dataframes
     df = pd.read_csv(input_path)

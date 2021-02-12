@@ -1,17 +1,20 @@
 import os
+import re
 import tarfile
 import time
 import uuid
 
 from google.cloud import storage
+from google.cloud.aiplatform import gapic as aip
 from googleapiclient import discovery
+
+from typing import Callable
 import pytest
 
 STAGING_BUCKET = f"sklearn-job-dir-{uuid.uuid4()}"
 INPUT_DIR = "inputs"
 TRAINER_DIR = "modules"
-MODELS_DIR = "models"
-JOB_DIR = f"gs://{STAGING_BUCKET}/{MODELS_DIR}"
+MODEL_DIR = "model"
 TRAIN_DATA = "train.csv"
 TRAINER_TAR = "trainer.tar.gz"
 TRAIN_DATA_PATH = f"gs://{STAGING_BUCKET}/{INPUT_DIR}/{TRAIN_DATA}"
@@ -20,14 +23,19 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 MODEL_NAME = f"sklearn-test-{uuid.uuid4()}"
 JOB_ID = f"sklearn_{str(uuid.uuid4())[:7]}"
+DEPLOY_IMAGE = "gcr.io/cloud-aiplatform/training/scikit-learn-cpu.0-23:latest"
 
-TERMINAL_STATES = ["SUCCEEDED", "FAILED", "CANCELLING", "CANCELLED"]
-
+TERMINAL_STATES = [
+    aip.JobState.JOB_STATE_SUCCEEDED,
+    aip.JobState.JOB_STATE_FAILED,
+    aip.JobState.JOB_STATE_CANCELLING,
+    aip.JobState.JOB_STATE_CANCELLED
+]
 
 @pytest.fixture(autouse=True)
 def setup_teardown():
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(STAGING_BUCKET)
+    bucket = storage_client.create_bucket(STAGING_BUCKET, location=REGION)
     bucket.blob(f"{INPUT_DIR}/{TRAIN_DATA}").upload_from_filename(TRAIN_DATA, timeout=600)
 
     with tarfile.open(TRAINER_TAR, mode="x:gz") as tar:
@@ -37,40 +45,48 @@ def setup_teardown():
 
     yield bucket
 
-    [blob.delete() for blob in bucket.list_blobs()]
-    bucket.delete()
+    # [blob.delete() for blob in bucket.list_blobs()]
+    # bucket.delete()
 
     os.remove(TRAINER_TAR)
 
 
 @pytest.mark.timeout(1200)
 def test_sklearn(setup_teardown):
-    ml = discovery.build('ml', 'v1')
+    client = aip.JobServiceClient(
+        client_options={
+            "api_endpoint": f"{REGION}-aiplatform.googleapis.com"
+        }
+    )
 
-    proj_id = f"projects/{PROJECT_ID}"
-    request_dict = {
-        "jobId": JOB_ID,
-        "trainingInput": {
-            "scaleTier": "STANDARD_1",
-            "region": REGION,
-            "packageUris": [f"gs://{STAGING_BUCKET}/{TRAINER_TAR}"],
-            "pythonModule": "trainer.sklearn_model.task",
-            "jobDir": JOB_DIR,
-            "runtimeVersion": "2.3",
-            "pythonVersion": "3.7",
-            "args": [
-                "--input-path",
-                TRAIN_DATA_PATH
-            ]
+    custom_job = {
+        "display_name": JOB_ID,
+        "job_spec": {
+            "base_output_directory": {"output_uri_prefix": f"gs://{STAGING_BUCKET}"},
+            "worker_pool_specs": [{
+                "replica_count": 1,
+                "machine_spec": {
+                    "machine_type": "n1-standard-4",
+                },
+                "python_package_spec": {
+                    "executor_image_uri": DEPLOY_IMAGE,
+                    "package_uris": [f"gs://{STAGING_BUCKET}/{TRAINER_TAR}"],
+                    "python_module": "trainer.sklearn_model.task",
+                    "args": [
+                        "--input-path",
+                        TRAIN_DATA_PATH
+                    ]
+                }
+            }]
         }
     }
 
-    response = ml.projects().jobs().create(parent=proj_id,
-                                           body=request_dict).execute()
+    parent = f"projects/{PROJECT_ID}/locations/{REGION}"
+    response = client.create_custom_job(parent=parent, custom_job=custom_job)
+    resource_name = response.name
 
-    while (response.get('state') not in TERMINAL_STATES):
+    while (response.state not in TERMINAL_STATES):
         time.sleep(10)
-        response = ml.projects().jobs().get(
-            name=f"projects/{PROJECT_ID}/jobs/{JOB_ID}").execute()
+        response = client.get_custom_job(name=resource_name)
 
-    assert setup_teardown.blob(f"{MODELS_DIR}/model.joblib").exists()
+    assert setup_teardown.blob(f"{MODEL_DIR}/model.joblib").exists()

@@ -7,4 +7,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     description="Data Science Onramp trainer application",
+    install_requires=[
+        "gcsfs"
+    ]
 )

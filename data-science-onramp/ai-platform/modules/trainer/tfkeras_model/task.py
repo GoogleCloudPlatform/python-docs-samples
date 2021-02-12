@@ -36,12 +36,6 @@ def get_args() -> argparse.Namespace:
         help="path to input data"
     )
     parser.add_argument(
-        "--job-dir",
-        type=str,
-        required=True,
-        help="local or GCS location for writing checkpoints and exporting models",
-    )
-    parser.add_argument(
         "--num-epochs",
         type=int,
         help="number of times to go through the data, default=20",
@@ -155,7 +149,7 @@ def train_and_evaluate(
 if __name__ == "__main__":
     args = get_args()
     input_path = args.input_path
-    job_dir = args.job_dir
+    job_dir = os.environ["AIP_MODEL_DIR"]
 
     kwargs = {}
     if args.num_epochs:
