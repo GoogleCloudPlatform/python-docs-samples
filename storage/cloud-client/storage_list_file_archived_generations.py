@@ -26,7 +26,7 @@ def list_file_archived_generations(bucket_name):
 
     storage_client = storage.Client()
 
-    blobs = storage_client.list_blobs(bucket_name)
+    blobs = storage_client.list_blobs(bucket_name, versions=True)
 
     for blob in blobs:
         print("{},{}".format(blob.name, blob.generation))
