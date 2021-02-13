@@ -18,14 +18,23 @@ import uuid
 
 from detect_intent_texts import detect_intent_texts
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-SESSION_ID = 'test_{}'.format(uuid.uuid4())
-TEXTS = ["hello", "book a meeting room", "Mountain View",
-         "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+SESSION_ID = "test_{}".format(uuid.uuid4())
+TEXTS = [
+    "hello",
+    "book a meeting room",
+    "Mountain View",
+    "tomorrow",
+    "10 AM",
+    "2 hours",
+    "10 people",
+    "A",
+    "yes",
+]
 
 
 def test_detect_intent_texts(capsys):
-    detect_intent_texts(PROJECT_ID, SESSION_ID, TEXTS, 'en-US')
+    detect_intent_texts(PROJECT_ID, SESSION_ID, TEXTS, "en-US")
     out, _ = capsys.readouterr()
 
-    assert 'Fulfillment text: All set!' in out
+    assert "Fulfillment text: All set!" in out

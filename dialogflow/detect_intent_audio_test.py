@@ -19,18 +19,18 @@ import uuid
 from detect_intent_audio import detect_intent_audio
 
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-SESSION_ID = 'test_{}'.format(uuid.uuid4())
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+SESSION_ID = "test_{}".format(uuid.uuid4())
 AUDIOS = [
-    '{0}/resources/book_a_room.wav'.format(DIRNAME),
-    '{0}/resources/mountain_view.wav'.format(DIRNAME),
-    '{0}/resources/today.wav'.format(DIRNAME),
+    "{0}/resources/book_a_room.wav".format(DIRNAME),
+    "{0}/resources/mountain_view.wav".format(DIRNAME),
+    "{0}/resources/today.wav".format(DIRNAME),
 ]
 
 
 def test_detect_intent_audio(capsys):
     for audio_file_path in AUDIOS:
-        detect_intent_audio(PROJECT_ID, SESSION_ID, audio_file_path, 'en-US')
+        detect_intent_audio(PROJECT_ID, SESSION_ID, audio_file_path, "en-US")
     out, _ = capsys.readouterr()
 
-    assert 'Fulfillment text: What time will the meeting start?' in out
+    assert "Fulfillment text: What time will the meeting start?" in out

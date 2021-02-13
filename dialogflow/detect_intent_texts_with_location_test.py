@@ -1,10 +1,9 @@
-# Copyright 2020 Google LLC
-#
+# Copyright 2017, Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,18 +16,28 @@ from __future__ import absolute_import
 import os
 import uuid
 
-import detect_intent_knowledge
+from detect_intent_texts_with_location import detect_intent_texts_with_location
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-SESSION_ID = "session_{}".format(uuid.uuid4())
-KNOWLEDGE_BASE_ID = "MjEwMjE4MDQ3MDQwMDc0NTQ3Mg"
-TEXTS = ["Where is my data stored?"]
+LOCATION_ID = "europe-west2"
+SESSION_ID = "test_{}".format(uuid.uuid4())
+TEXTS = [
+    "hello",
+    "book a meeting room",
+    "Mountain View",
+    "tomorrow",
+    "10 AM",
+    "2 hours",
+    "10 people",
+    "A",
+    "yes",
+]
 
 
-def test_detect_intent_knowledge(capsys):
-    detect_intent_knowledge.detect_intent_knowledge(
-        PROJECT_ID, SESSION_ID, "en-us", KNOWLEDGE_BASE_ID, TEXTS
+def test_detect_intent_texts_with_location(capsys):
+    detect_intent_texts_with_location(
+        PROJECT_ID, LOCATION_ID, SESSION_ID, TEXTS, "en-GB"
     )
-
     out, _ = capsys.readouterr()
-    assert "Knowledge results" in out
+
+    assert "Fulfillment text: All set!" in out

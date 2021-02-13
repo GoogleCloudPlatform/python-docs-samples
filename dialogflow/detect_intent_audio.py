@@ -31,8 +31,7 @@ import uuid
 
 
 # [START dialogflow_detect_intent_audio]
-def detect_intent_audio(project_id, session_id, audio_file_path,
-                        language_code):
+def detect_intent_audio(project_id, session_id, audio_file_path, language_code):
     """Returns the result of detect intent with an audio file as input.
 
     Using the same `session_id` between requests allows continuation
@@ -46,14 +45,16 @@ def detect_intent_audio(project_id, session_id, audio_file_path,
     sample_rate_hertz = 16000
 
     session = session_client.session_path(project_id, session_id)
-    print('Session path: {}\n'.format(session))
+    print("Session path: {}\n".format(session))
 
-    with open(audio_file_path, 'rb') as audio_file:
+    with open(audio_file_path, "rb") as audio_file:
         input_audio = audio_file.read()
 
     audio_config = dialogflow.InputAudioConfig(
-        audio_encoding=audio_encoding, language_code=language_code,
-        sample_rate_hertz=sample_rate_hertz)
+        audio_encoding=audio_encoding,
+        language_code=language_code,
+        sample_rate_hertz=sample_rate_hertz,
+    )
     query_input = dialogflow.QueryInput(audio_config=audio_config)
 
     request = dialogflow.DetectIntentRequest(
@@ -63,40 +64,43 @@ def detect_intent_audio(project_id, session_id, audio_file_path,
     )
     response = session_client.detect_intent(request=request)
 
-    print('=' * 20)
-    print('Query text: {}'.format(response.query_result.query_text))
-    print('Detected intent: {} (confidence: {})\n'.format(
-        response.query_result.intent.display_name,
-        response.query_result.intent_detection_confidence))
-    print('Fulfillment text: {}\n'.format(
-        response.query_result.fulfillment_text))
+    print("=" * 20)
+    print("Query text: {}".format(response.query_result.query_text))
+    print(
+        "Detected intent: {} (confidence: {})\n".format(
+            response.query_result.intent.display_name,
+            response.query_result.intent_detection_confidence,
+        )
+    )
+    print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+
+
 # [END dialogflow_detect_intent_audio]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        '--project-id',
-        help='Project/agent id.  Required.',
-        required=True)
+        "--project-id", help="Project/agent id.  Required.", required=True
+    )
     parser.add_argument(
-        '--session-id',
-        help='Identifier of the DetectIntent session. '
-        'Defaults to a random UUID.',
-        default=str(uuid.uuid4()))
+        "--session-id",
+        help="Identifier of the DetectIntent session. " "Defaults to a random UUID.",
+        default=str(uuid.uuid4()),
+    )
     parser.add_argument(
-        '--language-code',
+        "--language-code",
         help='Language code of the query. Defaults to "en-US".',
-        default='en-US')
+        default="en-US",
+    )
     parser.add_argument(
-        '--audio-file-path',
-        help='Path to the audio file.',
-        required=True)
+        "--audio-file-path", help="Path to the audio file.", required=True
+    )
 
     args = parser.parse_args()
 
     detect_intent_audio(
-        args.project_id, args.session_id, args.audio_file_path,
-        args.language_code)
+        args.project_id, args.session_id, args.audio_file_path, args.language_code
+    )

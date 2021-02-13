@@ -28,77 +28,88 @@ import uuid
 
 
 # [START dialogflow_detect_intent_with_sentiment_analysis]
-def detect_intent_with_sentiment_analysis(project_id, session_id, texts,
-                                          language_code):
+def detect_intent_with_sentiment_analysis(project_id, session_id, texts, language_code):
     """Returns the result of detect intent with texts as inputs and analyzes the
     sentiment of the query text.
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
     from google.cloud import dialogflow
+
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
-    print('Session path: {}\n'.format(session_path))
+    print("Session path: {}\n".format(session_path))
 
     for text in texts:
-        text_input = dialogflow.TextInput(
-            text=text, language_code=language_code)
+        text_input = dialogflow.TextInput(text=text, language_code=language_code)
 
         query_input = dialogflow.QueryInput(text=text_input)
 
         # Enable sentiment analysis
         sentiment_config = dialogflow.SentimentAnalysisRequestConfig(
-            analyze_query_text_sentiment=True)
+            analyze_query_text_sentiment=True
+        )
 
         # Set the query parameters with sentiment analysis
         query_params = dialogflow.QueryParameters(
-            sentiment_analysis_request_config=sentiment_config)
+            sentiment_analysis_request_config=sentiment_config
+        )
 
         response = session_client.detect_intent(
-            request={'session': session_path, 'query_input': query_input, 'query_params': query_params})
+            request={
+                "session": session_path,
+                "query_input": query_input,
+                "query_params": query_params,
+            }
+        )
 
-        print('=' * 20)
-        print('Query text: {}'.format(response.query_result.query_text))
-        print('Detected intent: {} (confidence: {})\n'.format(
-            response.query_result.intent.display_name,
-            response.query_result.intent_detection_confidence))
-        print('Fulfillment text: {}\n'.format(
-            response.query_result.fulfillment_text))
+        print("=" * 20)
+        print("Query text: {}".format(response.query_result.query_text))
+        print(
+            "Detected intent: {} (confidence: {})\n".format(
+                response.query_result.intent.display_name,
+                response.query_result.intent_detection_confidence,
+            )
+        )
+        print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
         # Score between -1.0 (negative sentiment) and 1.0 (positive sentiment).
-        print('Query Text Sentiment Score: {}\n'.format(
-            response.query_result.sentiment_analysis_result
-            .query_text_sentiment.score))
-        print('Query Text Sentiment Magnitude: {}\n'.format(
-            response.query_result.sentiment_analysis_result
-            .query_text_sentiment.magnitude))
+        print(
+            "Query Text Sentiment Score: {}\n".format(
+                response.query_result.sentiment_analysis_result.query_text_sentiment.score
+            )
+        )
+        print(
+            "Query Text Sentiment Magnitude: {}\n".format(
+                response.query_result.sentiment_analysis_result.query_text_sentiment.magnitude
+            )
+        )
+
+
 # [END dialogflow_detect_intent_with_sentiment_analysis]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        '--project-id',
-        help='Project/agent id.  Required.',
-        required=True)
+        "--project-id", help="Project/agent id.  Required.", required=True
+    )
     parser.add_argument(
-        '--session-id',
-        help='Identifier of the DetectIntent session. '
-             'Defaults to a random UUID.',
-        default=str(uuid.uuid4()))
+        "--session-id",
+        help="Identifier of the DetectIntent session. " "Defaults to a random UUID.",
+        default=str(uuid.uuid4()),
+    )
     parser.add_argument(
-        '--language-code',
+        "--language-code",
         help='Language code of the query. Defaults to "en-US".',
-        default='en-US')
-    parser.add_argument(
-        'texts',
-        nargs='+',
-        type=str,
-        help='Text inputs.')
+        default="en-US",
+    )
+    parser.add_argument("texts", nargs="+", type=str, help="Text inputs.")
 
     args = parser.parse_args()
 
     detect_intent_with_sentiment_analysis(
-        args.project_id, args.session_id, args.texts, args.language_code)
+        args.project_id, args.session_id, args.texts, args.language_code
+    )

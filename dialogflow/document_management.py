@@ -28,12 +28,13 @@ Examples:
 
 import argparse
 
-KNOWLEDGE_TYPES = ['KNOWLEDGE_TYPE_UNSPECIFIED', 'FAQ', 'EXTRACTIVE_QA']
+KNOWLEDGE_TYPES = ["KNOWLEDGE_TYPE_UNSPECIFIED", "FAQ", "EXTRACTIVE_QA"]
 
 
 # [START dialogflow_create_document]]
-def create_document(project_id, knowledge_base_id, display_name, mime_type,
-                    knowledge_type, content_uri):
+def create_document(
+    project_id, knowledge_base_id, display_name, mime_type, knowledge_type, content_uri
+):
     """Creates a Document.
 
     Args:
@@ -47,70 +48,84 @@ def create_document(project_id, knowledge_base_id, display_name, mime_type,
         content_uri: Uri of the document, e.g. gs://path/mydoc.csv,
             http://mypage.com/faq.html."""
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.DocumentsClient()
     knowledge_base_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
-        project_id, knowledge_base_id)
+        project_id, knowledge_base_id
+    )
 
     document = dialogflow.Document(
-        display_name=display_name, mime_type=mime_type,
-        content_uri=content_uri)
+        display_name=display_name, mime_type=mime_type, content_uri=content_uri
+    )
 
     document.knowledge_types.append(
         getattr(dialogflow.Document.KnowledgeType, knowledge_type)
     )
 
     response = client.create_document(parent=knowledge_base_path, document=document)
-    print('Waiting for results...')
+    print("Waiting for results...")
     document = response.result(timeout=120)
-    print('Created Document:')
-    print(' - Display Name: {}'.format(document.display_name))
-    print(' - Knowledge ID: {}'.format(document.name))
-    print(' - MIME Type: {}'.format(document.mime_type))
-    print(' - Knowledge Types:')
+    print("Created Document:")
+    print(" - Display Name: {}".format(document.display_name))
+    print(" - Knowledge ID: {}".format(document.name))
+    print(" - MIME Type: {}".format(document.mime_type))
+    print(" - Knowledge Types:")
     for knowledge_type in document.knowledge_types:
-        print('    - {}'.format(KNOWLEDGE_TYPES[knowledge_type]))
-    print(' - Source: {}\n'.format(document.content_uri))
+        print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
+    print(" - Source: {}\n".format(document.content_uri))
+
+
 # [END dialogflow_create_document]]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--project-id", help="Project id.  Required.", required=True)
     parser.add_argument(
-        '--project-id', help='Project id.  Required.', required=True)
-    parser.add_argument(
-        '--knowledge-base-id',
-        help='The id of the Knowledge Base that the Document belongs to',
-        required=True)
+        "--knowledge-base-id",
+        help="The id of the Knowledge Base that the Document belongs to",
+        required=True,
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
     create_parser = subparsers.add_parser(
-        'create', help='Create a Document for a certain Knowledge base.')
+        "create", help="Create a Document for a certain Knowledge base."
+    )
     create_parser.add_argument(
-        '--display-name',
-        help='A name of the Document, mainly used for display purpose, '
-             'can not be used to identify the Document.',
-        default=str(''))
+        "--display-name",
+        help="A name of the Document, mainly used for display purpose, "
+        "can not be used to identify the Document.",
+        default=str(""),
+    )
     create_parser.add_argument(
-        '--mime-type',
-        help='The mime-type of the Document, e.g. text/csv, text/html, '
-             'text/plain, text/pdf etc. ',
-        required=True)
+        "--mime-type",
+        help="The mime-type of the Document, e.g. text/csv, text/html, "
+        "text/plain, text/pdf etc. ",
+        required=True,
+    )
     create_parser.add_argument(
-        '--knowledge-type',
-        help='The knowledge-type of the Document, e.g. FAQ, EXTRACTIVE_QA.',
-        required=True)
+        "--knowledge-type",
+        help="The knowledge-type of the Document, e.g. FAQ, EXTRACTIVE_QA.",
+        required=True,
+    )
     create_parser.add_argument(
-        '--content-uri',
-        help='The uri of the Document, e.g. gs://path/mydoc.csv, '
-             'http://mypage.com/faq.html',
-        required=True)
+        "--content-uri",
+        help="The uri of the Document, e.g. gs://path/mydoc.csv, "
+        "http://mypage.com/faq.html",
+        required=True,
+    )
 
     args = parser.parse_args()
 
-    if args.command == 'create':
-        create_document(args.project_id, args.knowledge_base_id,
-                        args.display_name, args.mime_type, args.knowledge_type,
-                        args.content_uri)
+    if args.command == "create":
+        create_document(
+            args.project_id,
+            args.knowledge_base_id,
+            args.display_name,
+            args.mime_type,
+            args.knowledge_type,
+            args.content_uri,
+        )

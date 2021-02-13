@@ -28,8 +28,9 @@ import uuid
 
 
 # [START dialogflow_detect_intent_knowledge]
-def detect_intent_knowledge(project_id, session_id, language_code,
-                            knowledge_base_id, texts):
+def detect_intent_knowledge(
+    project_id, session_id, language_code, knowledge_base_id, texts
+):
     """Returns the result of detect intent with querying Knowledge Connector.
 
     Args:
@@ -41,69 +42,79 @@ def detect_intent_knowledge(project_id, session_id, language_code,
     texts: A list of text queries to send.
     """
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
-    print('Session path: {}\n'.format(session_path))
+    print("Session path: {}\n".format(session_path))
 
     for text in texts:
-        text_input = dialogflow.TextInput(
-            text=text, language_code=language_code)
+        text_input = dialogflow.TextInput(text=text, language_code=language_code)
 
         query_input = dialogflow.QueryInput(text=text_input)
 
-        knowledge_base_path = dialogflow.KnowledgeBasesClient \
-            .knowledge_base_path(project_id, knowledge_base_id)
+        knowledge_base_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
+            project_id, knowledge_base_id
+        )
 
         query_params = dialogflow.QueryParameters(
-            knowledge_base_names=[knowledge_base_path])
+            knowledge_base_names=[knowledge_base_path]
+        )
 
         request = dialogflow.DetectIntentRequest(
-            session=session_path,
-            query_input=query_input,
-            query_params=query_params
+            session=session_path, query_input=query_input, query_params=query_params
         )
         response = session_client.detect_intent(request=request)
 
-        print('=' * 20)
-        print('Query text: {}'.format(response.query_result.query_text))
-        print('Detected intent: {} (confidence: {})\n'.format(
-            response.query_result.intent.display_name,
-            response.query_result.intent_detection_confidence))
-        print('Fulfillment text: {}\n'.format(
-            response.query_result.fulfillment_text))
-        print('Knowledge results:')
+        print("=" * 20)
+        print("Query text: {}".format(response.query_result.query_text))
+        print(
+            "Detected intent: {} (confidence: {})\n".format(
+                response.query_result.intent.display_name,
+                response.query_result.intent_detection_confidence,
+            )
+        )
+        print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+        print("Knowledge results:")
         knowledge_answers = response.query_result.knowledge_answers
         for answers in knowledge_answers.answers:
-            print(' - Answer: {}'.format(answers.answer))
-            print(' - Confidence: {}'.format(
-                answers.match_confidence))
+            print(" - Answer: {}".format(answers.answer))
+            print(" - Confidence: {}".format(answers.match_confidence))
+
+
 # [END dialogflow_detect_intent_knowledge]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        '--project-id', help='Project/agent id.  Required.', required=True)
+        "--project-id", help="Project/agent id.  Required.", required=True
+    )
     parser.add_argument(
-        '--session-id',
-        help='ID of the DetectIntent session. '
-             'Defaults to a random UUID.',
-        default=str(uuid.uuid4()))
+        "--session-id",
+        help="ID of the DetectIntent session. " "Defaults to a random UUID.",
+        default=str(uuid.uuid4()),
+    )
     parser.add_argument(
-        '--language-code',
+        "--language-code",
         help='Language code of the query. Defaults to "en-US".',
-        default='en-US')
+        default="en-US",
+    )
     parser.add_argument(
-        '--knowledge-base-id',
-        help='The id of the Knowledge Base to query against',
-        required=True)
-    parser.add_argument('texts', nargs='+', type=str, help='Text inputs.')
+        "--knowledge-base-id",
+        help="The id of the Knowledge Base to query against",
+        required=True,
+    )
+    parser.add_argument("texts", nargs="+", type=str, help="Text inputs.")
 
     args = parser.parse_args()
 
-    detect_intent_knowledge(args.project_id, args.session_id,
-                            args.language_code, args.knowledge_base_id,
-                            args.texts)
+    detect_intent_knowledge(
+        args.project_id,
+        args.session_id,
+        args.language_code,
+        args.knowledge_base_id,
+        args.texts,
+    )

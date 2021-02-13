@@ -22,9 +22,9 @@ import pytest
 
 import document_management
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-KNOWLEDGE_BASE_NAME = 'knowledge_{}'.format(uuid.uuid4())
-DOCUMENT_DISPLAY_NAME = 'test_document_{}'.format(uuid.uuid4())
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+KNOWLEDGE_BASE_NAME = "knowledge_{}".format(uuid.uuid4())
+DOCUMENT_DISPLAY_NAME = "test_document_{}".format(uuid.uuid4())
 pytest.KNOWLEDGE_BASE_ID = None
 
 
@@ -33,17 +33,18 @@ def setup_teardown():
     # Create a knowledge base to use in document management
     client = dialogflow_v2beta1.KnowledgeBasesClient()
     project_path = client.common_project_path(PROJECT_ID)
-    knowledge_base = dialogflow_v2beta1.KnowledgeBase(
-        display_name=KNOWLEDGE_BASE_NAME)
-    response = client.create_knowledge_base(parent=project_path, knowledge_base=knowledge_base)
-    pytest.KNOWLEDGE_BASE_ID = response.name.split(
-        '/knowledgeBases/')[1].split('\n')[0]
+    knowledge_base = dialogflow_v2beta1.KnowledgeBase(display_name=KNOWLEDGE_BASE_NAME)
+    response = client.create_knowledge_base(
+        parent=project_path, knowledge_base=knowledge_base
+    )
+    pytest.KNOWLEDGE_BASE_ID = response.name.split("/knowledgeBases/")[1].split("\n")[0]
 
     yield
 
     # Delete the created knowledge base
     knowledge_base_path = client.knowledge_base_path(
-        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID)
+        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID
+    )
     request = dialogflow_v2beta1.DeleteKnowledgeBaseRequest(
         name=knowledge_base_path, force=True
     )
@@ -53,7 +54,12 @@ def setup_teardown():
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_document(capsys):
     document_management.create_document(
-        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID, DOCUMENT_DISPLAY_NAME,
-        'text/html', 'FAQ', 'https://cloud.google.com/storage/docs/faq')
+        PROJECT_ID,
+        pytest.KNOWLEDGE_BASE_ID,
+        DOCUMENT_DISPLAY_NAME,
+        "text/html",
+        "FAQ",
+        "https://cloud.google.com/storage/docs/faq",
+    )
     out, _ = capsys.readouterr()
     assert DOCUMENT_DISPLAY_NAME in out

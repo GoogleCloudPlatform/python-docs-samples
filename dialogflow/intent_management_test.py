@@ -19,24 +19,18 @@ import uuid
 
 import intent_management
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-INTENT_DISPLAY_NAME = 'test_{}'.format(uuid.uuid4())
-MESSAGE_TEXTS = [
-    'fake_message_text_for_testing_1',
-    'fake_message_text_for_testing_2'
-]
-TRAINING_PHRASE_PARTS = [
-    'fake_training_phrase_part_1',
-    'fake_training_phease_part_2'
-]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+INTENT_DISPLAY_NAME = "test_{}".format(uuid.uuid4())
+MESSAGE_TEXTS = ["fake_message_text_for_testing_1", "fake_message_text_for_testing_2"]
+TRAINING_PHRASE_PARTS = ["fake_training_phrase_part_1", "fake_training_phease_part_2"]
 
 
 def test_create_intent(capsys):
     intent_management.create_intent(
-        PROJECT_ID, INTENT_DISPLAY_NAME, TRAINING_PHRASE_PARTS, MESSAGE_TEXTS)
+        PROJECT_ID, INTENT_DISPLAY_NAME, TRAINING_PHRASE_PARTS, MESSAGE_TEXTS
+    )
 
-    intent_ids = intent_management._get_intent_ids(
-        PROJECT_ID, INTENT_DISPLAY_NAME)
+    intent_ids = intent_management._get_intent_ids(PROJECT_ID, INTENT_DISPLAY_NAME)
 
     assert len(intent_ids) == 1
 
@@ -51,8 +45,7 @@ def test_create_intent(capsys):
 
 
 def test_delete_session_entity_type(capsys):
-    intent_ids = intent_management._get_intent_ids(
-        PROJECT_ID, INTENT_DISPLAY_NAME)
+    intent_ids = intent_management._get_intent_ids(PROJECT_ID, INTENT_DISPLAY_NAME)
 
     for intent_id in intent_ids:
         intent_management.delete_intent(PROJECT_ID, intent_id)
@@ -62,7 +55,6 @@ def test_delete_session_entity_type(capsys):
 
     assert INTENT_DISPLAY_NAME not in out
 
-    intent_ids = intent_management._get_intent_ids(
-        PROJECT_ID, INTENT_DISPLAY_NAME)
+    intent_ids = intent_management._get_intent_ids(PROJECT_ID, INTENT_DISPLAY_NAME)
 
     assert len(intent_ids) == 0
