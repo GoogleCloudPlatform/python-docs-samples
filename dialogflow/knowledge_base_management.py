@@ -33,41 +33,41 @@ def create_knowledge_base(project_id, display_name):
         project_id: The GCP project linked with the agent.
         display_name: The display name of the Knowledge base."""
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.KnowledgeBasesClient()
     project_path = client.common_project_path(project_id)
 
-    knowledge_base = dialogflow.KnowledgeBase(
-        display_name=display_name)
+    knowledge_base = dialogflow.KnowledgeBase(display_name=display_name)
 
     response = client.create_knowledge_base(
-        parent=project_path,
-        knowledge_base=knowledge_base
+        parent=project_path, knowledge_base=knowledge_base
     )
 
-    print('Knowledge Base created:\n')
-    print('Display Name: {}\n'.format(response.display_name))
-    print('Knowledge ID: {}\n'.format(response.name))
+    print("Knowledge Base created:\n")
+    print("Display Name: {}\n".format(response.display_name))
+    print("Knowledge ID: {}\n".format(response.name))
+
+
 # [END dialogflow_create_knowledge_base]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        '--project-id', help='Project/agent id.', required=True)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--project-id", help="Project/agent id.", required=True)
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
-    create_parser = subparsers.add_parser(
-        'create', help='Create a new Knowledge base.')
+    create_parser = subparsers.add_parser("create", help="Create a new Knowledge base.")
     create_parser.add_argument(
-        '--display-name',
-        help='A name of the Knowledge base, used for display purpose, '
-             'can not be used to identify the Knowledge base.',
-        default=str(''))
+        "--display-name",
+        help="A name of the Knowledge base, used for display purpose, "
+        "can not be used to identify the Knowledge base.",
+        default=str(""),
+    )
 
     args = parser.parse_args()
 
-    if args.command == 'create':
+    if args.command == "create":
         create_knowledge_base(args.project_id, args.display_name)
