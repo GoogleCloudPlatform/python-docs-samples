@@ -25,7 +25,7 @@ import structlog
 default_app = firebase_admin.initialize_app()
 
 
-# [START cloudrun_python_user_auth_jwt]
+# [START cloudrun_user_auth_jwt]
 def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     @wraps(func)
     def decorated_function(*args: Any, **kwargs: Any) -> Any:
@@ -46,7 +46,7 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     return decorated_function
 
 
-# [END cloudrun_python_user_auth_jwt]
+# [END cloudrun_user_auth_jwt]
 
 # adapted from https://github.com/ymotongpoo/cloud-logging-configurations/blob/master/python/structlog/main.py
 

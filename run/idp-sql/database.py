@@ -86,7 +86,7 @@ def init_tcp_connection_engine(
     return pool
 
 
-# [START cloudrun_python_user_auth_sql_connect]
+# [START cloudrun_user_auth_sql_connect]
 def init_unix_connection_engine(
     db_config: Dict[str, str]
 ) -> sqlalchemy.engine.base.Engine:
@@ -120,7 +120,7 @@ def init_unix_connection_engine(
     return pool
 
 
-# [END cloudrun_python_user_auth_sql_connect]
+# [END cloudrun_user_auth_sql_connect]
 
 
 def create_tables() -> None:
