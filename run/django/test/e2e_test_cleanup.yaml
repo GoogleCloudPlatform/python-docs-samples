@@ -37,6 +37,9 @@ steps:
         ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
           "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
+        ./test/retry.sh "gsutil ls gs://{_STORAGE_BUCKET}" \
+          "gsutil -m rm -r gs://{_STORAGE_BUCKET} -p ${PROJET_ID}"
+
 substitutions:
   _SERVICE: django
   _VERSION: manual
@@ -47,3 +50,4 @@ substitutions:
   _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings
   _SECRET_PASSWORD_NAME: admin_password
+  _STORAGE_BUCKET: ${PROJECT_ID}-bucket
