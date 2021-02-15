@@ -50,11 +50,10 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 
 # adapted from https://github.com/ymotongpoo/cloud-logging-configurations/blob/master/python/structlog/main.py
 
-
 def field_name_modifier(
-    # Changes the keys for some of the fields, to match Cloud Logging's expectations
     logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
 ) -> Dict:
+    # Changes the keys for some of the fields, to match Cloud Logging's expectations
     event_dict["severity"] = event_dict["level"]
     del event_dict["level"]
     event_dict["message"] = event_dict["event"]
