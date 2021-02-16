@@ -15,11 +15,13 @@
 # [START cloudrun_django_superuser]
 import os
 
+from django.contrib.auth.models import User
 from django.db import migrations
 from django.db.backends.postgresql.schema import DatabaseSchemaEditor
 from django.db.migrations.state import StateApps
+
 import google.auth
-from google.cloud import secretmanager_v1
+from google.cloud import secretmanager
 
 
 def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> None:
@@ -28,9 +30,10 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
     Password is pulled from Secret Manger (previously created as part of tutorial)
     """
     if os.getenv("TRAMPOLINE_CI", None):
+        # We are in CI, so just create a placeholder user for unit testing.
         admin_password = "test"
     else:
-        client = secretmanager_v1.SecretManagerServiceClient()
+        client = secretmanager.SecretManagerServiceClient()
 
         # Get project value for identifying current context
         _, project = google.auth.default()
@@ -42,17 +45,15 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
             "UTF-8"
         )
 
-    # Create a new user using acquired password
-    from django.contrib.auth.models import User
-
-    User.objects.create_superuser("admin", password=admin_password)
+    # Create a new user using acquired password, stripping any accidentally stored newline characters
+    User.objects.create_superuser("admin", password=admin_password.strip())
 
 
 class Migration(migrations.Migration):
 
     initial = True
-
     dependencies = []
-
     operations = [migrations.RunPython(createsuperuser)]
+
+
 # [END cloudrun_django_superuser]
