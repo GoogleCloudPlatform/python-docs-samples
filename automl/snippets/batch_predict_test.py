@@ -20,9 +20,7 @@ import batch_predict
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 MODEL_ID = "TEN0000000000000000000"
-PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
-    "%Y%m%d%H%M%S"
-)
+PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
 def test_batch_predict(capsys):
@@ -32,16 +30,8 @@ def test_batch_predict(capsys):
     try:
         input_uri = "gs://{}/entity-extraction/input.jsonl".format(BUCKET_ID)
         output_uri = "gs://{}/{}/".format(BUCKET_ID, PREFIX)
-        batch_predict.batch_predict(
-            PROJECT_ID, MODEL_ID, input_uri, output_uri
-        )
+        batch_predict.batch_predict(PROJECT_ID, MODEL_ID, input_uri, output_uri)
         out, _ = capsys.readouterr()
-        assert (
-            "does not exist"
-            in out
-        )
+        assert "does not exist" in out
     except Exception as e:
-        assert (
-            "does not exist"
-            in e.message
-        )
+        assert "does not exist" in e.message

@@ -39,9 +39,7 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
     print("Model evaluation name: {}".format(response.name))
     print("Model annotation spec id: {}".format(response.annotation_spec_id))
     print("Create Time: {}".format(response.create_time))
-    print(
-        "Evaluation example count: {}".format(response.evaluated_example_count)
-    )
+    print("Evaluation example count: {}".format(response.evaluated_example_count))
     # [END automl_language_sentiment_analysis_get_model_evaluation]
     # [END automl_language_text_classification_get_model_evaluation]
     # [END automl_translate_get_model_evaluation]

@@ -26,28 +26,18 @@ def predict(project_id, model_id, content):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = automl.AutoMlClient.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = automl.AutoMlClient.model_path(project_id, "us-central1", model_id)
 
     # Supported mime_types: 'text/plain', 'text/html'
     # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#textsnippet
-    text_snippet = automl.TextSnippet(
-        content=content, mime_type="text/plain"
-    )
+    text_snippet = automl.TextSnippet(content=content, mime_type="text/plain")
     payload = automl.ExamplePayload(text_snippet=text_snippet)
 
     response = prediction_client.predict(name=model_full_id, payload=payload)
 
     for annotation_payload in response.payload:
-        print(
-            "Text Extract Entity Types: {}".format(
-                annotation_payload.display_name
-            )
-        )
-        print(
-            "Text Score: {}".format(annotation_payload.text_extraction.score)
-        )
+        print("Text Extract Entity Types: {}".format(annotation_payload.display_name))
+        print("Text Score: {}".format(annotation_payload.text_extraction.score))
         text_segment = annotation_payload.text_extraction.text_segment
         print("Text Extract Entity Content: {}".format(text_segment.content))
         print("Text Start Offset: {}".format(text_segment.start_offset))

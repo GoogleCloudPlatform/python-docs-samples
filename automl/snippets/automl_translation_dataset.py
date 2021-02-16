@@ -25,138 +25,6 @@ import argparse
 import os
 
 
-def create_dataset(project_id, compute_region, dataset_name, source, target):
-    """Create a dataset."""
-    # [START automl_translate_create_dataset]
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'PROJECT_ID_HERE'
-    # compute_region = 'COMPUTE_REGION_HERE'
-    # dataset_name = 'DATASET_NAME_HERE'
-    # source = 'LANGUAGE_CODE_OF_SOURCE_LANGUAGE'
-    # target = 'LANGUAGE_CODE_OF_TARGET_LANGUAGE'
-
-    from google.cloud import automl_v1beta1 as automl
-
-    client = automl.AutoMlClient()
-
-    # A resource that represents Google Cloud Platform location.
-    project_location = f"projects/{project_id}/locations/{compute_region}"
-
-    # Specify the source and target language.
-    dataset_metadata = {
-        "source_language_code": source,
-        "target_language_code": target,
-    }
-    # Set dataset name and dataset metadata
-    my_dataset = {
-        "display_name": dataset_name,
-        "translation_dataset_metadata": dataset_metadata,
-    }
-
-    # Create a dataset with the dataset metadata in the region.
-    dataset = client.create_dataset(parent=project_location, dataset=my_dataset)
-
-    # Display the dataset information
-    print("Dataset name: {}".format(dataset.name))
-    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print("Dataset display name: {}".format(dataset.display_name))
-    print("Translation dataset Metadata:")
-    print(
-        "\tsource_language_code: {}".format(
-            dataset.translation_dataset_metadata.source_language_code
-        )
-    )
-    print(
-        "\ttarget_language_code: {}".format(
-            dataset.translation_dataset_metadata.target_language_code
-        )
-    )
-    print("Dataset create time: {}".format(dataset.create_time))
-
-    # [END automl_translate_create_dataset]
-
-
-def list_datasets(project_id, compute_region, filter_):
-    """List Datasets."""
-    # [START automl_translate_list_datasets]
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'PROJECT_ID_HERE'
-    # compute_region = 'COMPUTE_REGION_HERE'
-    # filter_ = 'filter expression here'
-
-    from google.cloud import automl_v1beta1 as automl
-
-    client = automl.AutoMlClient()
-
-    # A resource that represents Google Cloud Platform location.
-    project_location = f"projects/{project_id}/locations/{compute_region}"
-
-    # List all the datasets available in the region by applying filter.
-    request = automl.ListDatasetsRequest(parent=project_location, filter=filter_)
-    response = client.list_datasets(request=request)
-
-    print("List of datasets:")
-    for dataset in response:
-        # Display the dataset information
-        print("Dataset name: {}".format(dataset.name))
-        print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-        print("Dataset display name: {}".format(dataset.display_name))
-        print("Translation dataset metadata:")
-        print(
-            "\tsource_language_code: {}".format(
-                dataset.translation_dataset_metadata.source_language_code
-            )
-        )
-        print(
-            "\ttarget_language_code: {}".format(
-                dataset.translation_dataset_metadata.target_language_code
-            )
-        )
-        print("Dataset create time: {}".format(dataset.create_time))
-
-    # [END automl_translate_list_datasets]
-
-
-def get_dataset(project_id, compute_region, dataset_id):
-    """Get the dataset."""
-    # [START automl_translate_get_dataset]
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'PROJECT_ID_HERE'
-    # compute_region = 'COMPUTE_REGION_HERE'
-    # dataset_id = 'DATASET_ID_HERE'
-
-    from google.cloud import automl_v1beta1 as automl
-
-    client = automl.AutoMlClient()
-
-    # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
-
-    # Get complete detail of the dataset.
-    dataset = client.get_dataset(name=dataset_full_id)
-
-    # Display the dataset information
-    print("Dataset name: {}".format(dataset.name))
-    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print("Dataset display name: {}".format(dataset.display_name))
-    print("Translation dataset metadata:")
-    print(
-        "\tsource_language_code: {}".format(
-            dataset.translation_dataset_metadata.source_language_code
-        )
-    )
-    print(
-        "\ttarget_language_code: {}".format(
-            dataset.translation_dataset_metadata.target_language_code
-        )
-    )
-    print("Dataset create time: {}".format(dataset.create_time))
-
-    # [END automl_translate_get_dataset]
-
-
 def import_data(project_id, compute_region, dataset_id, path):
     """Import sentence pairs to the dataset."""
     # [START automl_translate_import_data]
@@ -171,9 +39,7 @@ def import_data(project_id, compute_region, dataset_id, path):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Get the multiple Google Cloud Storage URIs
     input_uris = path.split(",")
@@ -202,9 +68,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Delete a dataset.
     response = client.delete_dataset(name=dataset_full_id)
@@ -222,21 +86,7 @@ if __name__ == "__main__":
     )
     subparsers = parser.add_subparsers(dest="command")
 
-    create_dataset_parser = subparsers.add_parser(
-        "create_dataset", help=create_dataset.__doc__
-    )
-    create_dataset_parser.add_argument("dataset_name")
-    create_dataset_parser.add_argument("source")
-    create_dataset_parser.add_argument("target")
-
-    list_datasets_parser = subparsers.add_parser(
-        "list_datasets", help=list_datasets.__doc__
-    )
-    list_datasets_parser.add_argument("filter", nargs="?", default="")
-
-    import_data_parser = subparsers.add_parser(
-        "import_data", help=import_data.__doc__
-    )
+    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
     import_data_parser.add_argument("dataset_id")
     import_data_parser.add_argument("path")
 
@@ -245,28 +95,11 @@ if __name__ == "__main__":
     )
     delete_dataset_parser.add_argument("dataset_id")
 
-    get_dataset_parser = subparsers.add_parser(
-        "get_dataset", help=get_dataset.__doc__
-    )
-    get_dataset_parser.add_argument("dataset_id")
-
     project_id = os.environ["PROJECT_ID"]
     compute_region = os.environ["REGION_NAME"]
 
     args = parser.parse_args()
 
-    if args.command == "create_dataset":
-        create_dataset(
-            project_id,
-            compute_region,
-            args.dataset_name,
-            args.source,
-            args.target,
-        )
-    if args.command == "list_datasets":
-        list_datasets(project_id, compute_region, args.filter)
-    if args.command == "get_dataset":
-        get_dataset(project_id, compute_region, args.dataset_id)
     if args.command == "import_data":
         import_data(project_id, compute_region, args.dataset_id, args.path)
     if args.command == "delete_dataset":

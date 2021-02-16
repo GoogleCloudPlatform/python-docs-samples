@@ -15,55 +15,31 @@
 # limitations under the License.
 
 import os
-import uuid
-
-import pytest
 
 import automl_translation_dataset
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-compute_region = "us-central1"
-dataset_id = "TRL3876092572857648864"
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+BUCKET_ID = "{}-lcm".format(PROJECT_ID)
+COMPUTE_REGION = "us-central1"
+DATASET_ID = "TRL00000000000000"
 
 
-@pytest.mark.slow
-def test_dataset_create_import_delete(capsys):
-    # create dataset
-    dataset_name = f"test_{uuid.uuid4().hex[:27]}"
-    automl_translation_dataset.create_dataset(
-        project_id, compute_region, dataset_name, "en", "ja"
-    )
-    out, _ = capsys.readouterr()
-    create_dataset_output = out.splitlines()
-    assert "Dataset id: " in create_dataset_output[1]
-
-    # import data
-    dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://{}-vcm/en-ja.csv".format(project_id)
-    automl_translation_dataset.import_data(
-        project_id, compute_region, dataset_id, data
-    )
-    out, _ = capsys.readouterr()
-    assert "Data imported." in out
-
-    # delete dataset
-    automl_translation_dataset.delete_dataset(
-        project_id, compute_region, dataset_id
-    )
-    out, _ = capsys.readouterr()
-    assert "Dataset deleted." in out
-
-
-def test_dataset_list_get(capsys):
-    # list datasets
-    automl_translation_dataset.list_datasets(project_id, compute_region, "")
-    out, _ = capsys.readouterr()
-    list_dataset_output = out.splitlines()
-    assert "Dataset id: " in list_dataset_output[2]
-
-    # get dataset
-    automl_translation_dataset.get_dataset(
-        project_id, compute_region, dataset_id
-    )
-    out, _ = capsys.readouterr()
-    assert "Dataset name: " in out
+def test_import_dataset(capsys):
+    # As importing a dataset can take a long time and only four operations can
+    # be run on a dataset at once. Try to import into a nonexistent dataset and
+    # confirm that the dataset was not found, but other elements of the request
+    # were valid.
+    try:
+        data = "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
+        automl_translation_dataset.import_data(
+            PROJECT_ID, COMPUTE_REGION, DATASET_ID, data
+        )
+        out, _ = capsys.readouterr()
+        assert (
+            "The Dataset doesn't exist or is inaccessible for use with AutoMl." in out
+        )
+    except Exception as e:
+        assert (
+            "The Dataset doesn't exist or is inaccessible for use with AutoMl."
+            in e.message
+        )

@@ -33,8 +33,6 @@ def test_translate_create_dataset(capsys):
     # Delete the created dataset
     dataset_id = out.splitlines()[1].split()[2]
     client = automl.AutoMlClient()
-    dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(PROJECT_ID, "us-central1", dataset_id)
     response = client.delete_dataset(name=dataset_full_id)
     response.result()

@@ -29,9 +29,7 @@ def get_dataset(project_id, dataset_id):
 
     client = automl.AutoMlClient()
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, "us-central1", dataset_id)
     dataset = client.get_dataset(name=dataset_full_id)
 
     # Display the dataset information

@@ -19,9 +19,7 @@ import export_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
-    "%Y%m%d%H%M%S"
-)
+PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 DATASET_ID = "TEN0000000000000000000"
 
 
@@ -36,8 +34,7 @@ def test_export_dataset(capsys):
         )
         out, _ = capsys.readouterr()
         assert (
-            "The Dataset doesn't exist or is inaccessible for use with AutoMl."
-            in out
+            "The Dataset doesn't exist or is inaccessible for use with AutoMl." in out
         )
     except Exception as e:
         assert (

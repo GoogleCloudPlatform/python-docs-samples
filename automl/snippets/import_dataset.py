@@ -25,9 +25,7 @@ def import_dataset(project_id, dataset_id, path):
 
     client = automl.AutoMlClient()
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, "us-central1", dataset_id)
     # Get the multiple Google Cloud Storage URIs
     input_uris = path.split(",")
     gcs_source = automl.GcsSource(input_uris=input_uris)

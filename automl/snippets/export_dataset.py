@@ -26,9 +26,7 @@ def export_dataset(project_id, dataset_id, gcs_uri):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, "us-central1", dataset_id)
 
     gcs_destination = automl.GcsDestination(output_uri_prefix=gcs_uri)
     output_config = automl.OutputConfig(gcs_destination=gcs_destination)
