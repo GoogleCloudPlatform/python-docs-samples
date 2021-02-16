@@ -14,22 +14,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 import io
 import json
 import logging
 import os
 import random
-import requests
 import time
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 import zipfile
-from PIL import Image, ImageFile
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+from PIL import Image, ImageFile
+import requests
 
 
-def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=None):
+def create_images_database(
+    bigquery_dataset: str,
+    bigquery_table: str,
+    pipeline_options: Optional[PipelineOptions] = None,
+) -> None:
+    """Creates the images database in BigQuery.
+
+    This is a one time only process. It reads the metadata file from the LILA
+    science WCS database, gets rid of invalid rows and uploads all the
+    `file_names` alongside their respective `category` into BigQuery.
+
+    Args:
+        bigquery_dataset: Dataset ID for the images database, the dataset must exist.
+        bigquery_table: Table ID for the images database, it is created if it doesn't exist.
+        pipeline_options: PipelineOptions for Apache Beam.
+    """
     invalid_categories = {
         "#ref!",
         "empty",
@@ -42,7 +57,9 @@ def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=No
         "unknown",
     }
 
-    # https://cloud.google.com/bigquery/docs/schemas
+    # We create a simple schema for the BigQuery table.
+    # For more information on BigQuery schemas, see:
+    #   https://cloud.google.com/bigquery/docs/schemas
     schema = ",".join(
         [
             "category:STRING",
@@ -53,7 +70,7 @@ def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=No
     with beam.Pipeline(options=pipeline_options) as pipeline:
         (
             pipeline
-            | "Create single element" >> beam.Create([None])
+            | "Create None" >> beam.Create([None])
             | "Get images info" >> beam.FlatMap(get_images_info)
             | "Filter invalid rows"
             >> beam.Filter(
@@ -62,7 +79,7 @@ def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=No
                 or x["category"].endswith(" desconocida")
                 or x["category"].endswith(" desconocido")
             )
-            | "Write images info"
+            | "Write images database"
             >> beam.io.WriteToBigQuery(
                 dataset=bigquery_dataset,
                 table=bigquery_table,
@@ -73,7 +90,8 @@ def create_images_database(bigquery_dataset, bigquery_table, pipeline_options=No
         )
 
 
-def get_images_info(_):
+def get_images_info(unused: Any) -> Iterable[Dict[str, str]]:
+    """Returns an iterable of {'category', 'file_name'} dicts. """
     metadata_url = (
         "https://lilablobssc.blob.core.windows.net/wcs/wcs_camera_traps.json.zip"
     )
@@ -104,18 +122,33 @@ def get_images_info(_):
 
 
 def run(
-    project,
-    region,
-    cloud_storage_path,
-    bigquery_dataset,
-    bigquery_table,
-    automl_dataset,
-    automl_model,
-    min_images_per_class,
-    max_images_per_class,
-    automl_budget_milli_node_hours,
-    pipeline_options=None,
-):
+    project: str,
+    region: str,
+    cloud_storage_path: str,
+    bigquery_dataset: str,
+    bigquery_table: str,
+    automl_dataset: str,
+    automl_model: str,
+    min_images_per_class: int,
+    max_images_per_class: int,
+    automl_budget_milli_node_hours: int,
+    pipeline_options: Optional[PipelineOptions] = None,
+) -> None:
+    """Creates a balanced dataset and signals AutoML to train a model.
+
+    Args:
+        project: Google Cloud Project ID.
+        region: Location for AutoML resources.
+        bigquery_dataset: Dataset ID for the images database, the dataset must exist.
+        bigquery_table: Table ID for the images database, the table must exist.
+        automl_dataset: AutoML dataset name.
+        automl_model: AutoML model name.
+        min_images_per_class: Minimum number of images required per class for training.
+        max_images_per_class: Maximum number of images allowed per class for training.
+        automl_budget_milli_node_hours: Training budget.
+        pipeline_options: PipelineOptions for Apache Beam.
+
+    """
     with beam.Pipeline(options=pipeline_options) as pipeline:
         images = (
             pipeline
@@ -156,31 +189,62 @@ def run(
         )
 
 
-def get_image(image_info, cloud_storage_path):
+def get_image(
+    image_info: Dict[str, str], cloud_storage_path: str
+) -> Optional[Tuple[str, str]]:
+    """Makes sure an image exists in Cloud Storage.
+
+    Checks if the image file_name exists in Cloud Storage.
+    If it doesn't exist, it downloads it from the LILA WCS dataset.
+    If the image can't be downloaded, it is skipped.
+
+    Args:
+        image_info: Dict of {'category', 'file_name'}.
+        cloud_storage_path: Cloud Storage path to look for and download images.
+
+    Returns:
+        A (category, image_gcs_path) tuple.
+    """
     base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
     category = image_info["category"]
     file_name = image_info["file_name"]
 
     # If the image file does not exist, try downloading it.
-    image_path = f"{cloud_storage_path}/{file_name}"
-    logging.info(f"loading image: {image_path}")
-    if not beam.io.gcp.gcsio.GcsIO().exists(image_path):
+    image_gcs_path = f"{cloud_storage_path}/{file_name}"
+    logging.info(f"loading image: {image_gcs_path}")
+    if not beam.io.gcp.gcsio.GcsIO().exists(image_gcs_path):
         image_url = f"{base_url}/{file_name}"
-        logging.info(f"image not found, downloading: {image_path} [{image_url}]")
+        logging.info(f"image not found, downloading: {image_gcs_path} [{image_url}]")
         try:
             ImageFile.LOAD_TRUNCATED_IMAGES = True
             image = Image.open(io.BytesIO(url_get(image_url)))
-            with beam.io.gcp.gcsio.GcsIO().open(image_path, "w") as f:
+            with beam.io.gcp.gcsio.GcsIO().open(image_gcs_path, "w") as f:
                 image.save(f, format="JPEG")
         except Exception as e:
             logging.warning(f"Failed to load image [{image_url}]: {e}")
             return
 
-    yield category, image_path
+    yield category, image_gcs_path
 
 
-def write_dataset_csv_file(dataset_csv_filename, images):
-    # https://cloud.google.com/ai-platform-unified/docs/datasets/prepare-image#csv
+def write_dataset_csv_file(
+    dataset_csv_filename: str, images: List[Tuple[str, str]]
+) -> str:
+    """Writes the dataset image file names and categories in a CSV file.
+
+    Each line in the output dataset CSV file is in the format:
+        image_gcs_path,category
+
+    For more information on the CSV format AutoML expects:
+        https://cloud.google.com/ai-platform-unified/docs/datasets/prepare-image#csv
+
+    Args:
+        dataset_csv_filename: Cloud Storage path for the output dataset CSV file.
+        images: List of (category, image_gcs_path) tuples.
+
+    Returns:
+        The unchanged dataset_csv_filename.
+    """
     logging.info(f"Writing AutoML dataset CSV file: {dataset_csv_filename}")
     with beam.io.gcp.gcsio.GcsIO().open(dataset_csv_filename, "w") as f:
         for category, image_gcs_path in images:
@@ -188,10 +252,25 @@ def write_dataset_csv_file(dataset_csv_filename, images):
     return dataset_csv_filename
 
 
-def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset):
+def create_automl_dataset(
+    dataset_csv_filename: str, project: str, region: str, automl_dataset: str
+) -> Tuple[str, str]:
+    """Creates an AutoML dataset.
+
+    For more information:
+        https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#create-dataset
+
+    Args:
+        dataset_csv_filename: Cloud Storage path for the dataset CSV file.
+        project: Google Cloud Project ID.
+        region: Location for AutoML resources.
+        automl_dataset: AutoML dataset name.
+
+    Returns:
+        A (automl_dataset_full_path, dataset_csv_filename) tuple.
+    """
     from google.cloud import aiplatform
 
-    # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#create-dataset
     client = aiplatform.gapic.DatasetServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
@@ -209,16 +288,29 @@ def create_automl_dataset(dataset_csv_filename, project, region, automl_dataset)
     return dataset.name, dataset_csv_filename
 
 
-def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
+def import_images_to_automl_dataset(
+    automl_dataset_full_path: str, dataset_csv_filename: str
+) -> str:
+    """Imports the images from the dataset CSV file into the AutoML dataset.
+
+    For more information:
+        https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#import-data
+
+    Args:
+        automl_dataset_full_path: The AutoML dataset full path.
+        dataset_csv_filename: Cloud Storage path for the dataset CSV file.
+
+    Returns:
+        The automl_dataset_full_path.
+    """
     from google.cloud import aiplatform
 
-    # https://cloud.google.com/ai-platform-unified/docs/datasets/create-dataset-api#import-data
     client = aiplatform.gapic.DatasetServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
 
     response = client.import_data(
-        name=dataset_path,
+        name=automl_dataset_full_path,
         import_configs=[
             {
                 "gcs_source": {"uris": [dataset_csv_filename]},
@@ -230,17 +322,35 @@ def import_images_to_automl_dataset(dataset_path, dataset_csv_filename):
         f"Importing data into AutoML dataset, operation: {response.operation.name}"
     )
     _ = response.result()  # wait until the operation finishes
-    logging.info(f"AutoML data imported: {dataset_path}")
-    return dataset_path
+    logging.info(f"AutoML data imported: {automl_dataset_full_path}")
+    return automl_dataset_full_path
 
 
 def train_automl_model(
-    dataset_path, project, region, automl_model, automl_budget_milli_node_hours
-):
+    automl_dataset_full_path: str,
+    project: str,
+    region: str,
+    automl_model: str,
+    automl_budget_milli_node_hours: int,
+) -> str:
+    """Starts an AutoML model training job.
+
+    For more information:
+        https://cloud.google.com/ai-platform-unified/docs/training/automl-api#training_an_automl_model_using_the_api
+
+    Args:
+        automl_dataset_full_path: The AutoML dataset full path.
+        project: Google Cloud Project ID.
+        region: Location for AutoML resources.
+        automl_model: AutoML model name.
+        automl_budget_milli_node_hours: Training budget.
+
+    Returns:
+        The AutoML training pipeline full path.
+    """
     from google.cloud import aiplatform
     from google.cloud.aiplatform.gapic.schema import trainingjob
 
-    # https://cloud.google.com/ai-platform-unified/docs/training/automl-api#training_an_automl_model_using_the_api
     client = aiplatform.gapic.PipelineServiceClient(
         client_options={
             "api_endpoint": "us-central1-aiplatform.googleapis.com",
@@ -251,7 +361,9 @@ def train_automl_model(
         parent=f"projects/{project}/locations/{region}",
         training_pipeline={
             "display_name": automl_model,
-            "input_data_config": {"dataset_id": dataset_path.split("/")[-1]},
+            "input_data_config": {
+                "dataset_id": automl_dataset_full_path.split("/")[-1]
+            },
             "model_to_upload": {"display_name": automl_model},
             "training_task_definition": "gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml",
             "training_task_inputs": trainingjob.definition.AutoMlImageClassificationInputs(
@@ -264,13 +376,32 @@ def train_automl_model(
     return training_pipeline.name
 
 
-def url_get(url):
+def url_get(url: str) -> bytes:
+    """Sends an HTTP GET request with retries.
+
+    Args:
+        url: URL for the request.
+
+    Returns:
+        The response content bytes.
+    """
     logging.info(f"url_get: {url}")
     return with_retries(lambda: requests.get(url).content)
 
 
-def with_retries(f, max_attempts=3):
-    # https://developers.google.com/drive/api/v3/handle-errors?hl=pt-pt#exponential-backoff
+def with_retries(f: Callable[[], Any], max_attempts: int = 3) -> Any:
+    """Runs a function with retries, using exponential backoff.
+
+    For more information:
+        https://developers.google.com/drive/api/v3/handle-errors?hl=pt-pt#exponential-backoff
+
+    Args:
+        f: A function that doesn't receive any input.
+        max_attempts: The maximum number of attempts to run the function.
+
+    Returns:
+        The return value of `f`, or an Exception if max_attempts was reached.
+    """
     for n in range(max_attempts + 1):
         try:
             return f()
@@ -283,6 +414,8 @@ def with_retries(f, max_attempts=3):
 
 
 if __name__ == "__main__":
+    import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--create-images-database",
@@ -302,7 +435,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--bigquery-table",
         default="wildlife_insights",
-        help="BigQuery dataset ID for the images database.",
+        help="BigQuery table ID for the images database.",
     )
     parser.add_argument(
         "--automl-dataset", default="wildlife_insights", help="AutoML dataset name."

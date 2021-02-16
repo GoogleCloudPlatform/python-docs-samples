@@ -15,33 +15,46 @@
 # limitations under the License.
 
 import base64
-import requests
+from typing import List, Tuple
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import predict
+import requests
 
 
-def instance_from_lila(image_file):
-    base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
-    image_bytes = requests.get(f"{base_url}/{image_file}").content
-    return predict.instance.ImageClassificationPredictionInstance(
-        content=base64.b64encode(image_bytes).decode("utf-8"),
-    ).to_value()
+def run(
+    project: str, region: str, model_endpoint_id: str, image_file: str
+) -> List[Tuple[str, float]]:
+    """Sends an image from the LILA WCS database for prediction.
 
+    Args:
+        project: Google Cloud Project ID.
+        region: Location for AutoML resources.
+        model_endpoint_id: Deployed AutoML model endpoint ID.
+        image_file: The image file path from LILA.
 
-def run(project, region, model_endpoint_id, image_file):
+    Returns:
+        The predictions as a list of (category, confidence) tuples, sorted by confidence.
+    """
     client = aiplatform.gapic.PredictionServiceClient(
         client_options={
             "api_endpoint": "us-central1-prediction-aiplatform.googleapis.com"
         }
     )
 
+    base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
+    image_bytes = requests.get(f"{base_url}/{image_file}").content
+
     # See gs://google-cloud-aiplatform/schema/predict/params/image_classification_1.0.0.yaml for the format of the parameters.
     response = client.predict(
         endpoint=client.endpoint_path(
             project=project, location=region, endpoint=model_endpoint_id
         ),
-        instances=[instance_from_lila(image_file)],
+        instances=[
+            predict.instance.ImageClassificationPredictionInstance(
+                content=base64.b64encode(image_bytes).decode("utf-8"),
+            ).to_value()
+        ],
         parameters=predict.params.ImageClassificationPredictionParams(
             confidence_threshold=0.1,
             max_predictions=5,
@@ -49,28 +62,43 @@ def run(project, region, model_endpoint_id, image_file):
     )
 
     # See gs://google-cloud-aiplatform/schema/predict/prediction/classification.yaml for the format of the predictions.
-    for prediction in response.predictions:
-        pred = dict(prediction)
-        return sorted(
-            [
-                (category, confidence)
-                for category, confidence in zip(
-                    pred["displayNames"], pred["confidences"]
-                )
-            ],
-            reverse=True,
-            key=lambda x: x[1],
-        )
+    prediction = [dict(pred) for pred in response.predictions][0]
+    return sorted(
+        [
+            (category, confidence)
+            for category, confidence in zip(
+                prediction["displayNames"], prediction["confidences"]
+            )
+        ],
+        reverse=True,
+        key=lambda x: x[1],
+    )
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project", required=True)
-    parser.add_argument("--region", required=True)
-    parser.add_argument("--model-endpoint-id", required=True)
-    parser.add_argument("--image-file", required=True)
+    parser.add_argument(
+        "--project",
+        required=True,
+        help="Google Cloud Project Id",
+    )
+    parser.add_argument(
+        "--region",
+        required=True,
+        help="Location for AutoML resources",
+    )
+    parser.add_argument(
+        "--model-endpoint-id",
+        required=True,
+        help="Deployed AutoML model endpoint ID",
+    )
+    parser.add_argument(
+        "--image-file",
+        required=True,
+        help="The image file path from LILA",
+    )
     args = parser.parse_args()
 
     predictions = run(
