@@ -38,8 +38,6 @@ def model_evaluation_id():
 
 
 def test_get_model_evaluation(capsys, model_evaluation_id):
-    get_model_evaluation.get_model_evaluation(
-        PROJECT_ID, MODEL_ID, model_evaluation_id
-    )
+    get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, model_evaluation_id)
     out, _ = capsys.readouterr()
     assert "Model evaluation name: " in out

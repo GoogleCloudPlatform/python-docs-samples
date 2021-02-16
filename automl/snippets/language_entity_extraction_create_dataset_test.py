@@ -26,17 +26,13 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 def test_entity_extraction_create_dataset(capsys):
     # create dataset
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    language_entity_extraction_create_dataset.create_dataset(
-        PROJECT_ID, dataset_name
-    )
+    language_entity_extraction_create_dataset.create_dataset(PROJECT_ID, dataset_name)
     out, _ = capsys.readouterr()
     assert "Dataset id: " in out
 
     # Delete the created dataset
     dataset_id = out.splitlines()[1].split()[2]
     client = automl.AutoMlClient()
-    dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(PROJECT_ID, "us-central1", dataset_id)
     response = client.delete_dataset(name=dataset_full_id)
     response.result()

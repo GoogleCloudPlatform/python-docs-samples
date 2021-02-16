@@ -31,10 +31,7 @@ def list_models(project_id):
     print("List of models:")
     for model in response:
         # Display the model information.
-        if (
-            model.deployment_state
-            == automl.Model.DeploymentState.DEPLOYED
-        ):
+        if model.deployment_state == automl.Model.DeploymentState.DEPLOYED:
             deployment_state = "deployed"
         else:
             deployment_state = "undeployed"

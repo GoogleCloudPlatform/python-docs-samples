@@ -31,8 +31,7 @@ def test_import_dataset(capsys):
         import_dataset.import_dataset(PROJECT_ID, DATASET_ID, data)
         out, _ = capsys.readouterr()
         assert (
-            "The Dataset doesn't exist or is inaccessible for use with AutoMl."
-            in out
+            "The Dataset doesn't exist or is inaccessible for use with AutoMl." in out
         )
     except Exception as e:
         assert (

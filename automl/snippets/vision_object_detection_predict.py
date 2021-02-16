@@ -26,9 +26,7 @@ def predict(project_id, model_id, file_path):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = automl.AutoMlClient.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = automl.AutoMlClient.model_path(project_id, "us-central1", model_id)
 
     # Read the file.
     with open(file_path, "rb") as content_file:
@@ -42,21 +40,13 @@ def predict(project_id, model_id, file_path):
     # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#predictrequest
     params = {"score_threshold": "0.8"}
 
-    request = automl.PredictRequest(
-        name=model_full_id,
-        payload=payload,
-        params=params
-    )
+    request = automl.PredictRequest(name=model_full_id, payload=payload, params=params)
 
     response = prediction_client.predict(request=request)
     print("Prediction results:")
     for result in response.payload:
         print("Predicted class name: {}".format(result.display_name))
-        print(
-            "Predicted class score: {}".format(
-                result.image_object_detection.score
-            )
-        )
+        print("Predicted class score: {}".format(result.image_object_detection.score))
         bounding_box = result.image_object_detection.bounding_box
         print("Normalized Vertices:")
         for vertex in bounding_box.normalized_vertices:
