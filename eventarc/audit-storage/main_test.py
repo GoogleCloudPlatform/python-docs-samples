@@ -42,4 +42,4 @@ def test_endpoint(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"Detected change in GCS bucket: {test_headers['Ce-Subject']}" in out
+    assert f"Detected change in Cloud Storage bucket: {test_headers['Ce-Subject']}" in out
