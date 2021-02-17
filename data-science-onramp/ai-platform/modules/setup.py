@@ -8,6 +8,6 @@ setup(
     include_package_data=True,
     description="Data Science Onramp trainer application",
     install_requires=[
-        "gcsfs"
+        "gcsfs==0.7.2"
     ]
 )
