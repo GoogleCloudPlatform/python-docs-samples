@@ -77,7 +77,7 @@ def setup_teardown(shared_state):
     aip_job_client.delete_custom_job(name=shared_state["model_name"]).result()
 
 
-@pytest.mark.timeout(1200)
+@pytest.mark.timeout(1800)
 def test_sklearn(setup_teardown, shared_state):
     bucket, aip_job_client = setup_teardown
 
