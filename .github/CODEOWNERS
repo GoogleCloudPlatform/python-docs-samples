@@ -48,6 +48,7 @@
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
+/monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
 /notebooks/**/*.py                     @alixhami @sirtorry @GoogleCloudPlatform/python-samples-owners
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
