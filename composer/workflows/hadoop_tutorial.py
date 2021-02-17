@@ -80,7 +80,7 @@ with models.DAG(
         num_workers=2,
         region='us-central1',
         zone=models.Variable.get('gce_zone'),
-        image_version='2.0-debian10',
+        image_version='2.0',
         master_machine_type='n1-standard-2',
         worker_machine_type='n1-standard-2')
 
