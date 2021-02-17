@@ -78,14 +78,17 @@ with models.DAG(
         # See https://airflow.apache.org/code.html#default-variables
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
+        region='us-central1',
         zone=models.Variable.get('gce_zone'),
-        master_machine_type='n1-standard-1',
-        worker_machine_type='n1-standard-1')
+        image_version='2.0-debian10',
+        master_machine_type='n1-standard-2',
+        worker_machine_type='n1-standard-2')
 
     # Run the Hadoop wordcount example installed on the Cloud Dataproc cluster
     # master node.
     run_dataproc_hadoop = dataproc_operator.DataProcHadoopOperator(
         task_id='run_dataproc_hadoop',
+        region='us-central1',
         main_jar=WORDCOUNT_JAR,
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         arguments=wordcount_args)
@@ -96,7 +99,8 @@ with models.DAG(
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
-        trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
+        trigger_rule=trigger_rule.TriggerRule.ALL_DONE,
+        region='us-central1',)
 
     # [START composer_hadoop_steps]
     # Define DAG dependencies.
