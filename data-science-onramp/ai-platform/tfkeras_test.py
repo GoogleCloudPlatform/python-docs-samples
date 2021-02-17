@@ -5,7 +5,6 @@ import uuid
 
 from google.cloud import storage
 from google.cloud.aiplatform import gapic as aip
-from googleapiclient import discovery
 import pytest
 
 STAGING_BUCKET = f"tfkeras-job-dir-{uuid.uuid4()}"
