@@ -39,7 +39,7 @@ def detect_text(bucket, filename):
     image = vision.Image(
         source=vision.ImageSource(gcs_image_uri=f"gs://{bucket}/{filename}")
     )
-    text_detection_response = vision_client.text_detection(source=image)
+    text_detection_response = vision_client.text_detection(image=image)
     annotations = text_detection_response.text_annotations
     if len(annotations) > 0:
         text = annotations[0].description

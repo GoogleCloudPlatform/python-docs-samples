@@ -30,8 +30,32 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 
     Note: Some samples in the list above are hosted in other repositories. They are noted with the symbol "&#10149;".
 
-
 ## How to run a sample locally
+
+Install [`pip`][pip] and [`virtualenv`][virtualenv] if you do not already have them.
+
+You may want to refer to the [`Python Development Environment Setup Guide`][setup] for Google Cloud Platform for instructions.   
+
+1. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
+
+    ```sh
+    virtualenv env
+    source env/bin/activate
+    ```
+
+1. Install the dependencies needed to run the samples.
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+1. Start the application
+
+    ```sh
+    python main.py
+    ```
+
+## How to run a sample in a container
 
 1. [Install docker locally](https://docs.docker.com/install/)
 
@@ -112,3 +136,6 @@ for more information.
 [events_storage]: audit-storage/README.md
 [anthos_events_storage]: audit-storage/anthos.md
 [testing]: https://cloud.google.com/run/docs/testing/local#running_locally_using_docker_with_access_to_services
+[setup]: https://cloud.google.com/python/setup
+[pip]: https://pip.pypa.io/
+[virtualenv]: https://virtualenv.pypa.io/

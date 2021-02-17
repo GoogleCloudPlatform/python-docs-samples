@@ -108,11 +108,15 @@ export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
      -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
-${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> \
+${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306,"${MYSQL_INSTANCE}" -dir "${HOME}" &>> \
        ${HOME}/cloud_sql_proxy.log &
-${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> \
+echo -e "\Cloud SQL proxy started for MySQL."
+${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432,"${POSTGRES_INSTANCE}" -dir "${HOME}" &>> \
        ${HOME}/cloud_sql_proxy-postgres.log &
-echo -e "\nCloud SQL proxy started."
+echo -e "\Cloud SQL proxy started for Postgres."
+${HOME}/cloud_sql_proxy -instances="${SQLSERVER_INSTANCE}"=tcp:1433 &>> \
+       ${HOME}/cloud_sql_proxy-sqlserver.log &
+echo -e "\Cloud SQL proxy started for SQL Server."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
@@ -126,18 +130,21 @@ ROOT=$(pwd)
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
-    echo "--- Installing PyYaml ---"
-    python3 -m pip install --user pyyaml
+    echo "--- Installing pip packages ---"
+    python3 -m pip install --user pyyaml frozendict recordclass
 
     # Use ${HOME} because trampoline will automatically clean up this
     # directory.
     export REGION_TAG_PARSER_DIR="${HOME}/region-tag-parser"
-    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+    export POLYGLOT_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/cli_bootstrap.py"
+    export PYTHON_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/ast_parser/python_bootstrap.py"
 
-    if [[ ! -f $PARSER_PATH ]]; then
+    if [[ ! -f $POLYGLOT_PARSER_PATH ]]; then
         echo "--- Fetching injection script from HEAD (via GitHub) ---"
         git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
-        chmod +x $PARSER_PATH
+
+        chmod +x $PYTHON_PARSER_PATH
+        chmod +x $POLYGLOT_PARSER_PATH
     fi
     echo "=== Region tag injector setup complete ==="
 fi

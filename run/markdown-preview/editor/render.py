@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_secure_request]
 # [START run_secure_request]
 import os
 import urllib
@@ -43,3 +44,4 @@ def new_request(data):
     response = urllib.request.urlopen(req)
     return response.read()
 # [END run_secure_request]
+# [END cloudrun_secure_request]

@@ -50,20 +50,36 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     export XUNIT_PATH="$PWD/sponge_log.xml"
     export XUNIT_TMP_PATH="$(mktemp)"
 
+    # We use `python3.8` because it is the version pip3 installs to.
+    export PYTHON_CMD="python3"
+
     if [[ -f "$XUNIT_PATH" ]]; then
         echo "=== Injecting region tags into XUnit output ==="
         echo "Processing XUnit output file: $XUNIT_PATH (saving output to $XUNIT_TMP_PATH)"
 
-	# We use `python3` because it will work even if we remove old
-	# python versions from the docker image.
-	echo "Calling python3 ${PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${PWD}"
+        TARGET_DIR=$PWD
+
+        # First, we generate a Python-specific "polyglot_snippet_data.json" file
+        # (cd'ing into script's working dir is necessary for imports to work)
+        echo "Calling $PYTHON_CMD ${PYTHON_PARSER_PATH} ${TARGET_DIR}"
+        pushd $(dirname $PYTHON_PARSER_PATH)
+        $PYTHON_CMD "$PYTHON_PARSER_PATH" "$TARGET_DIR"
+        popd
+
+        # Then, we pass the "polyglot_snippet_data.json" file and the XUnit output
+        # to the "polyglot" parser.
+        #   This outputs the XUnit input with the snippet-test map added
+        #   Again, we use `python3` for pip3 support.
+        echo "Calling: cat $XUNIT_PATH | $PYTHON_CMD ${POLYGLOT_PARSER_PATH} inject-snippet-mapping --output_file ${XUNIT_TMP_PATH} ${TARGET_DIR}"
+        pushd $(dirname $POLYGLOT_PARSER_PATH)
         cat "$XUNIT_PATH" | \
-	    python3 "$PARSER_PATH" inject-snippet-mapping --output_file "$XUNIT_TMP_PATH" "$PWD"
+        $PYTHON_CMD "$POLYGLOT_PARSER_PATH" --output_file "$XUNIT_TMP_PATH" inject-snippet-mapping "$TARGET_DIR"
         if [[ $? -eq 0 ]] && [[ -s "$XUNIT_PATH" ]]; then
             mv $XUNIT_TMP_PATH $XUNIT_PATH
         else
             echo "Region tag injection FAILED; XUnit file not modified."
         fi
+        popd
     else
         echo "No XUnit output file found!"
     fi
@@ -72,12 +88,12 @@ fi
 set -e
 
 # If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
-# to the Build Cop Bot.
+# to the FlakyBot.
 # See:
-# https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+# https://github.com/googleapis/repo-automation-bots/tree/master/packages/flakybot.
 if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "true" ]]; then
-    chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-    $KOKORO_GFILE_DIR/linux_amd64/buildcop
+    chmod +x $KOKORO_GFILE_DIR/linux_amd64/flakybot
+    $KOKORO_GFILE_DIR/linux_amd64/flakybot
 fi
 
 if [[ "${EXIT}" -ne 0 ]]; then

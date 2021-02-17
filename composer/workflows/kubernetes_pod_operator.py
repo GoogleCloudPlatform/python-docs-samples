@@ -223,7 +223,7 @@ with models.DAG(
         config_file='/home/airflow/composer_kube_config',
         # If true, the content of /airflow/xcom/return.json from container will
         # also be pushed to an XCom when the container ends.
-        xcom_push=False,
+        do_xcom_push=False,
         # List of Volume objects to pass to the Pod.
         volumes=[],
         # List of VolumeMount objects to pass to the Pod.

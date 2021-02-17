@@ -13,8 +13,6 @@
 # limitations under the License.
 import base64
 
-import copy
-
 from uuid import uuid4
 
 import pytest
@@ -71,15 +69,3 @@ def test_populated_message(client, capsys):
     out, _ = capsys.readouterr()
     ce_id = binary_headers['ce-id']
     assert f'Hello, {name}! ID: {ce_id}' in out
-
-
-def test_missing_required_fields(client, capsys):
-    for field in binary_headers:
-        test_headers = copy.copy(binary_headers)
-        test_headers.pop(field)
-
-        r = client.post('/', headers=test_headers)
-        assert r.status_code == 400
-
-        out, _ = capsys.readouterr()
-        assert 'MissingRequiredFields' in out

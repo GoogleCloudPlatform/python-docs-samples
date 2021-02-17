@@ -14,16 +14,10 @@
 
 # [START eventarc_pubsub_server]
 import base64
-
 import os
-
-import cloudevents.exceptions as cloud_exceptions
-from cloudevents.http import from_http
 
 from flask import Flask, request
 
-
-required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
 
 app = Flask(__name__)
 # [END eventarc_pubsub_server]
@@ -32,42 +26,26 @@ app = Flask(__name__)
 # [START eventarc_pubsub_handler]
 @app.route('/', methods=['POST'])
 def index():
-    # Create CloudEvent from HTTP headers and body
-    try:
-        event = from_http(request.headers, request.get_data())
-
-    except cloud_exceptions.MissingRequiredFields as e:
-        print(f"cloudevents.exceptions.MissingRequiredFields: {e}")
-        return "Failed to find all required cloudevent fields. ", 400
-
-    except cloud_exceptions.InvalidStructuredJSON as e:
-        print(f"cloudevents.exceptions.InvalidStructuredJSON: {e}")
-        return "Could not deserialize the payload as JSON. ", 400
-
-    except cloud_exceptions.InvalidRequiredFields as e:
-        print(f"cloudevents.exceptions.InvalidRequiredFields: {e}")
-        return "Request contained invalid required cloudevent fields. ", 400
-
-    envelope = event.data
-
-    if not envelope:
+    data = request.get_json()
+    if not data:
         msg = 'no Pub/Sub message received'
         print(f'error: {msg}')
         return f'Bad Request: {msg}', 400
 
-    if not isinstance(envelope, dict) or 'message' not in envelope:
+    if not isinstance(data, dict) or 'message' not in data:
         msg = 'invalid Pub/Sub message format'
         print(f'error: {msg}')
         return f'Bad Request: {msg}', 400
 
-    pubsub_message = envelope['message']
+    pubsub_message = data['message']
 
     name = 'World'
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
-    resp = f"Hello, {name}! ID: {event['id']}"
+    resp = f"Hello, {name}! ID: {request.headers.get('ce-id')}"
     print(resp)
+
     return (resp, 200)
 # [END eventarc_pubsub_handler]
 

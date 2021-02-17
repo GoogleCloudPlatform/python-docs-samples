@@ -19,7 +19,7 @@ import pytest
 
 import snippets
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 class CleanupClient(datastore.Client):
@@ -31,8 +31,9 @@ class CleanupClient(datastore.Client):
     def cleanup(self):
         with self.batch():
             self.delete_multi(
-                list(set([x.key for x in self.entities_to_delete])) +
-                list(set(self.keys_to_delete)))
+                list(set([x.key for x in self.entities_to_delete]))
+                + list(set(self.keys_to_delete))
+            )
 
 
 @pytest.yield_fixture
@@ -120,8 +121,7 @@ class TestDatastoreSnippets:
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_projection_query(self, client):
         priorities, percents = snippets.projection_query(client)
-        client.entities_to_delete.extend(
-            client.query(kind='Task').fetch())
+        client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert priorities
         assert percents
 
@@ -135,8 +135,7 @@ class TestDatastoreSnippets:
 
     def test_cursor_paging(self, client):
         for n in range(6):
-            client.entities_to_delete.append(
-                snippets.insert(client))
+            client.entities_to_delete.append(snippets.insert(client))
 
         @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
         def run_sample():
@@ -146,6 +145,7 @@ class TestDatastoreSnippets:
             assert len(page_one) == 5
             assert len(page_two)
             assert cursor_one
+
         run_sample()
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
@@ -187,8 +187,7 @@ class TestDatastoreSnippets:
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_keys_only_query(self, client):
         keys = snippets.keys_only_query(client)
-        client.entities_to_delete.extend(
-            client.query(kind='Task').fetch())
+        client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert keys
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
@@ -239,8 +238,9 @@ class TestDatastoreSnippets:
         assert task
 
     def transactional_single_entity_group_read_only(self, client):
-        task_list, tasks_in_list = \
-            snippets.transactional_single_entity_group_read_only(client)
+        task_list, tasks_in_list = snippets.transactional_single_entity_group_read_only(
+            client
+        )
         client.entities_to_delete.append(task_list)
         client.entities_to_delete.extend(tasks_in_list)
         assert task_list
@@ -248,33 +248,29 @@ class TestDatastoreSnippets:
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_namespace_run_query(self, client):
-        all_namespaces, filtered_namespaces = snippets.namespace_run_query(
-            client)
+        all_namespaces, filtered_namespaces = snippets.namespace_run_query(client)
         assert all_namespaces
         assert filtered_namespaces
-        assert 'google' in filtered_namespaces
+        assert "google" in filtered_namespaces
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_kind_run_query(self, client):
         kinds = snippets.kind_run_query(client)
-        client.entities_to_delete.extend(
-            client.query(kind='Task').fetch())
+        client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert kinds
-        assert 'Task' in kinds
+        assert "Task" in kinds
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_property_run_query(self, client):
         kinds = snippets.property_run_query(client)
-        client.entities_to_delete.extend(
-            client.query(kind='Task').fetch())
+        client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert kinds
-        assert 'Task' in kinds
+        assert "Task" in kinds
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def test_property_by_kind_run_query(self, client):
         reprs = snippets.property_by_kind_run_query(client)
-        client.entities_to_delete.extend(
-            client.query(kind='Task').fetch())
+        client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert reprs
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
