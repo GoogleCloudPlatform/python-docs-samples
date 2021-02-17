@@ -23,7 +23,7 @@ from google.cloud import pubsub_v1
 import pytest
 
 PROJECT = getenv('GCP_PROJECT')
-TOPIC = getenv('TOPIC')
+TOPIC = getenv('FUNCTIONS_TOPIC')
 
 assert PROJECT is not None
 assert TOPIC is not None

@@ -46,7 +46,7 @@ var iapSessionRefreshWindow = null;
 
 function sessionRefreshClicked() {
   if (iapSessionRefreshWindow == null) {
-    iapSessionRefreshWindow = window.open("/_gcp_iap/do_session_refresh");
+    iapSessionRefreshWindow = window.open("/?gcp-iap-mode=DO_SESSION_REFRESH");
     window.setTimeout(checkSessionRefresh, 500);
   }
   return false;

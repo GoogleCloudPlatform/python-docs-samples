@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_broken_service]
 # [START run_broken_service]
 import json
 import os
@@ -26,6 +27,7 @@ app = Flask(__name__)
 def index():
     print("hello: received request.")
 
+    # [START cloudrun_broken_service_problem]
     # [START run_broken_service_problem]
     NAME = os.getenv("NAME")
 
@@ -33,15 +35,20 @@ def index():
         print("Environment validation failed.")
         raise Exception("Missing required service parameter.")
     # [END run_broken_service_problem]
+    # [END cloudrun_broken_service_problem]
 
     return f"Hello {NAME}"
+
+
 # [END run_broken_service]
+# [END cloudrun_broken_service]
 
 
 @app.route("/improved", methods=["GET"])
 def improved():
     print("hello: received request.")
 
+    # [START cloudrun_broken_service_upgrade]
     # [START run_broken_service_upgrade]
     NAME = os.getenv("NAME")
 
@@ -53,10 +60,12 @@ def improved():
         }
         print(json.dumps(error_message))
     # [END run_broken_service_upgrade]
+    # [END cloudrun_broken_service_upgrade]
 
     return f"Hello {NAME}"
 
 
+# [START cloudrun_broken_service]
 # [START run_broken_service]
 if __name__ == "__main__":
     PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
@@ -65,3 +74,4 @@ if __name__ == "__main__":
     # application on Cloud Run. See entrypoint in Dockerfile.
     app.run(host="127.0.0.1", port=PORT, debug=True)
 # [END run_broken_service]
+# [END cloudrun_broken_service]

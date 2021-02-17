@@ -11,7 +11,7 @@ Samples showing how to create and run an
 ## Before you begin
 
 Follow the
-[Getting started with Google Cloud Dataflow](../README.md)
+[Getting started with Google Cloud Dataflow](../../README.md)
 page, and make sure you have a Google Cloud project with billing enabled
 and a *service account JSON key* set up in your `GOOGLE_APPLICATION_CREDENTIALS`
 environment variable.
@@ -168,14 +168,16 @@ location that you specified.
 
 You can now run the Apache Beam pipeline in Dataflow by referring to the
 template file and passing the template
-[parameters](https://cloud.devsite.corp.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options)
+[parameters](https://cloud.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options)
 required by the pipeline.
 
 ```sh
+export REGION="us-central1"
+
 # Run the Flex Template.
 gcloud dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
     --template-file-gcs-location "$TEMPLATE_PATH" \
-    --parameters input_subscription="$SUBSCRIPTION" \
+    --parameters input_subscription="projects/$PROJECT/subscriptions/$SUBSCRIPTION" \
     --parameters output_table="$PROJECT:$DATASET.$TABLE" \
     --region "$REGION"
 ```
@@ -222,7 +224,8 @@ The following sections describe how to delete or turn off these resources.
     gcloud dataflow jobs list \
         --filter 'NAME:streaming-beam AND STATE=Running' \
         --format 'value(JOB_ID)' \
-      | xargs gcloud dataflow jobs cancel
+        --region "$REGION" \
+      | xargs gcloud dataflow jobs cancel --region "$REGION"
     ```
 
 1. Delete the template spec file from Cloud Storage.

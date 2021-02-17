@@ -30,6 +30,7 @@ def set_blob_metadata(bucket_name, blob_name):
     blob = bucket.get_blob(blob_name)
     metadata = {'color': 'Red', 'name': 'Test'}
     blob.metadata = metadata
+    blob.patch()
 
     print("The metadata for the blob {} is {}".format(blob.name, blob.metadata))
 

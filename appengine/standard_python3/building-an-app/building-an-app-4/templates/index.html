@@ -5,10 +5,12 @@
 
   <!-- See https://github.com/firebase/firebaseui-web. -->
   <!-- [START gae_python38_auth_init_firebase] -->
+  <!-- [START gae_python3_auth_init_firebase] -->
   <!-- *******************************************************************************************
        * TODO(DEVELOPER): Paste the initialization snippet from:
        * http://console.firebase.google.com > Overview > Add Firebase to your web app.
        ***************************************************************************************** -->
+  <!-- [END gae_python3_auth_init_firebase] -->
   <!-- [END gae_python38_auth_init_firebase] -->
   <script>
     if (typeof firebase === 'undefined') {
@@ -18,8 +20,10 @@
     }
   </script>
   <!-- [START gae_python38_auth_include_firebaseui] -->
+  <!-- [START gae_python3_auth_include_firebaseui] -->
   <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.js"></script>
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css">
+  <!-- [END gae_python3_auth_include_firebaseui] -->
   <!-- [END gae_python38_auth_include_firebaseui] -->
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -30,6 +34,7 @@
 <h1>Datastore and Firebase Auth Example</h1>
 
 <!-- [START gae_python38_auth_firebase_html] -->
+<!-- [START gae_python3_auth_firebase_html] -->
 <div id="firebaseui-auth-container"></div>
 
 <button id="sign-out" hidden=true>Sign Out</button>
@@ -49,6 +54,7 @@
     <p>Error: {{ error_message }}</p>
   {% endif %}
 </div>
+<!-- [END gae_python3_auth_firebase_html] -->
 <!-- [END gae_python38_auth_firebase_html] -->
 </body>
 </html>

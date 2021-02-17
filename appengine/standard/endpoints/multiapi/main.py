@@ -27,7 +27,7 @@ class Response(messages.Message):
     message = messages.StringField(1)
 
 
-# [START multiclass]
+# [START endpoints_multiclass]
 api_collection = endpoints.api(name='library', version='v1.0')
 
 
@@ -39,7 +39,7 @@ class Shelves(remote.Service):
         return Response()
 
 
-# [START books]
+# [START endpoints_books]
 @api_collection.api_class(resource_name='books', path='books')
 class Books(remote.Service):
 
@@ -50,10 +50,10 @@ class Books(remote.Service):
     @endpoints.method(Request, Response)
     def best_sellers_list(self, request):
         return Response()
-# [END books]
-# [END multiclass]
+# [END endpoints_books]
+# [END endpoints_multiclass]
 
 
-# [START api_server]
+# [START endpoints_api_server]
 api = endpoints.api_server([api_collection])
-# [END api_server]
+# [END endpoints_api_server]

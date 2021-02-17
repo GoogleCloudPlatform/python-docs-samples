@@ -15,13 +15,9 @@
 # [START eventarc_gcs_server]
 import os
 
-import cloudevents.exceptions as cloud_exceptions
-from cloudevents.http import from_http
-
 from flask import Flask, request
 
 
-required_fields = ['Ce-Id', 'Ce-Source', 'Ce-Type', 'Ce-Specversion']
 app = Flask(__name__)
 # [END eventarc_gcs_server]
 
@@ -29,29 +25,12 @@ app = Flask(__name__)
 # [START eventarc_gcs_handler]
 @app.route('/', methods=['POST'])
 def index():
-    # Create CloudEvent from HTTP headers and body
-    try:
-        event = from_http(request.headers, request.get_data())
+    # Gets the GCS bucket name from the CloudEvent header
+    # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
+    bucket = request.headers.get('ce-subject')
 
-    except cloud_exceptions.MissingRequiredFields as e:
-        print(f"cloudevents.exceptions.MissingRequiredFields: {e}")
-        return "Failed to find all required cloudevent fields. ", 400
-
-    except cloud_exceptions.InvalidStructuredJSON as e:
-        print(f"cloudevents.exceptions.InvalidStructuredJSON: {e}")
-        return "Could not deserialize the payload as JSON. ", 400
-
-    except cloud_exceptions.InvalidRequiredFields as e:
-        print(f"cloudevents.exceptions.InvalidRequiredFields: {e}")
-        return "Request contained invalid required cloudevent fields. ", 400
-
-    if 'subject' not in event:
-        errmsg = 'Bad Request: expected header ce-subject'
-        print(errmsg)
-        return errmsg, 400
-
-    print(f"Detected change in GCS bucket: {event['subject']}")
-    return (f"Detected change in GCS bucket: {event['subject']}", 200)
+    print(f"Detected change in Cloud Storage bucket: {bucket}")
+    return (f"Detected change in Cloud Storage bucket: {bucket}", 200)
 # [END eventarc_gcs_handler]
 
 

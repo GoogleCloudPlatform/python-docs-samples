@@ -262,18 +262,18 @@ def set_dicom_store_iam_policy(
 ):
     """Sets the IAM policy for the specified dicom store.
 
-        A single member will be assigned a single role. A member can be any of:
+    A single member will be assigned a single role. A member can be any of:
 
-        - allUsers, that is, anyone
-        - allAuthenticatedUsers, anyone authenticated with a Google account
-        - user:email, as in 'user:somebody@example.com'
-        - group:email, as in 'group:admins@example.com'
-        - domain:domainname, as in 'domain:example.com'
-        - serviceAccount:email,
-            as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
+    - allUsers, that is, anyone
+    - allAuthenticatedUsers, anyone authenticated with a Google account
+    - user:email, as in 'user:somebody@example.com'
+    - group:email, as in 'group:admins@example.com'
+    - domain:domainname, as in 'domain:example.com'
+    - serviceAccount:email,
+        as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
 
-        A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
-        or 'roles/editor'
+    A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
+    or 'roles/editor'
     """
     client = get_client()
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(

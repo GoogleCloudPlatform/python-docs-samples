@@ -1,0 +1,3 @@
+# Ignore files for gcloud like Cloud Build.
+env/
+outputs/

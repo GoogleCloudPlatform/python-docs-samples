@@ -18,7 +18,6 @@ import sys
 
 # [START storage_change_file_storage_class]
 from google.cloud import storage
-from google.cloud.storage import constants
 
 
 def change_file_storage_class(bucket_name, blob_name):
@@ -30,7 +29,7 @@ def change_file_storage_class(bucket_name, blob_name):
 
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.get_blob(blob_name)
-    blob.update_storage_class(constants.NEARLINE_STORAGE_CLASS)
+    blob.update_storage_class("NEARLINE")
 
     print(
         "Blob {} in bucket {} had its storage class set to {}".format(

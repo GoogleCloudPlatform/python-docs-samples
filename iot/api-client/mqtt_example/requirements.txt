@@ -1,9 +1,9 @@
-cryptography==3.1.1
-google-api-python-client==1.12.2
+cryptography==3.4.6
+google-api-python-client==1.12.8
 google-auth-httplib2==0.0.4
-google-auth==1.22.1
-google-cloud-pubsub==1.7.0
-google-cloud-iot==2.0.1
+google-auth==1.26.1
+google-cloud-pubsub==2.3.0
+google-cloud-iot==2.0.2
 grpc-google-iam-v1==0.12.3
-pyjwt==1.7.1
+pyjwt==2.0.1
 paho-mqtt==1.5.1

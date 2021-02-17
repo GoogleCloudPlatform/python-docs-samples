@@ -16,7 +16,7 @@ from google.cloud import tasks
 
 
 def create_queue(project, location, queue_blue_name, queue_red_name):
-    # [START taskqueues_using_yaml]
+    # [START cloud_tasks_taskqueues_using_yaml]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -49,12 +49,12 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
     for queue in queues:
         response = client.create_queue(parent=parent, queue=queue)
         print(response)
-    # [END taskqueues_using_yaml]
+    # [END cloud_tasks_taskqueues_using_yaml]
     return response
 
 
 def update_queue(project, location, queue):
-    # [START taskqueues_processing_rate]
+    # [START cloud_tasks_taskqueues_processing_rate]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -72,12 +72,12 @@ def update_queue(project, location, queue):
 
     response = client.update_queue(queue=queue)
     print(response)
-    # [END taskqueues_processing_rate]
+    # [END cloud_tasks_taskqueues_processing_rate]
     return response
 
 
 def create_task(project, location, queue):
-    # [START taskqueues_new_task]
+    # [START cloud_tasks_taskqueues_new_task]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -102,12 +102,12 @@ def create_task(project, location, queue):
     response = client.create_task(parent=parent, task=task)
     eta = response.schedule_time.strftime("%m/%d/%Y, %H:%M:%S")
     print('Task {} enqueued, ETA {}.'.format(response.name, eta))
-    # [END taskqueues_new_task]
+    # [END cloud_tasks_taskqueues_new_task]
     return response
 
 
 def create_tasks_with_data(project, location, queue):
-    # [START taskqueues_passing_data]
+    # [START cloud_tasks_taskqueues_passing_data]
     import json
     client = tasks.CloudTasksClient()
 
@@ -146,12 +146,12 @@ def create_tasks_with_data(project, location, queue):
     print(response)
     response = client.create_task(parent=parent, task=task2)
     print(response)
-    # [END taskqueues_passing_data]
+    # [END cloud_tasks_taskqueues_passing_data]
     return response
 
 
 def create_task_with_name(project, location, queue, task_name):
-    # [START taskqueues_naming_tasks]
+    # [START cloud_tasks_taskqueues_naming_tasks]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -171,12 +171,12 @@ def create_task_with_name(project, location, queue, task_name):
     }
     response = client.create_task(parent=parent, task=task)
     print(response)
-    # [END taskqueues_naming_tasks]
+    # [END cloud_tasks_taskqueues_naming_tasks]
     return response
 
 
 def delete_task(project, location, queue):
-    # [START taskqueues_deleting_tasks]
+    # [START cloud_tasks_taskqueues_deleting_tasks]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -186,12 +186,12 @@ def delete_task(project, location, queue):
 
     task_path = client.task_path(project, location, queue, 'foo')
     response = client.delete_task(name=task_path)
-    # [END taskqueues_deleting_tasks]
+    # [END cloud_tasks_taskqueues_deleting_tasks]
     return response
 
 
 def purge_queue(project, location, queue):
-    # [START taskqueues_purging_tasks]
+    # [START cloud_tasks_taskqueues_purging_tasks]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -201,12 +201,12 @@ def purge_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.purge_queue(name=queue_path)
-    # [END taskqueues_purging_tasks]
+    # [END cloud_tasks_taskqueues_purging_tasks]
     return response
 
 
 def pause_queue(project, location, queue):
-    # [START taskqueues_pause_queue]
+    # [START cloud_tasks_taskqueues_pause_queue]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -216,12 +216,12 @@ def pause_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.pause_queue(name=queue_path)
-    # [END taskqueues_pause_queue]
+    # [END cloud_tasks_taskqueues_pause_queue]
     return response
 
 
 def delete_queue(project, location, queue):
-    # [START taskqueues_deleting_queues]
+    # [START cloud_tasks_taskqueues_deleting_queues]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -231,12 +231,12 @@ def delete_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.delete_queue(name=queue_path)
-    # [END taskqueues_deleting_queues]
+    # [END cloud_tasks_taskqueues_deleting_queues]
     return response
 
 
 def retry_task(project, location, fooqueue, barqueue, bazqueue):
-    # [START taskqueues_retrying_tasks]
+    # [START cloud_tasks_taskqueues_retrying_tasks]
     from google.protobuf import duration_pb2
 
     client = tasks.CloudTasksClient()
@@ -299,5 +299,5 @@ def retry_task(project, location, fooqueue, barqueue, bazqueue):
     for queue in queues:
         response = client.create_queue(parent=parent, queue=queue)
         print(response)
-    # [END taskqueues_retrying_tasks]
+    # [END cloud_tasks_taskqueues_retrying_tasks]
     return response

@@ -42,24 +42,4 @@ def test_endpoint(client, capsys):
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"Detected change in GCS bucket: {test_headers['Ce-Subject']}" in out
-
-
-def test_missing_subject(client, capsys):
-    r = client.post('/', headers=binary_headers)
-    assert r.status_code == 400
-
-    out, _ = capsys.readouterr()
-    assert 'Bad Request: expected header ce-subject' in out
-
-
-def test_missing_required_fields(client, capsys):
-    for field in binary_headers:
-        test_headers = copy.copy(binary_headers)
-        test_headers.pop(field)
-
-        r = client.post('/', headers=test_headers)
-        assert r.status_code == 400
-
-        out, _ = capsys.readouterr()
-        assert 'MissingRequiredFields' in out
+    assert f"Detected change in Cloud Storage bucket: {test_headers['Ce-Subject']}" in out

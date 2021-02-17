@@ -15,9 +15,6 @@
 # limitations under the License.
 
 
-# [START storage_get_bucket_metadata]
-import pprint
-# [END storage_get_bucket_metadata]
 import sys
 # [START storage_get_bucket_metadata]
 
@@ -54,7 +51,7 @@ def bucket_metadata(bucket_name):
     print("Time Created: {}".format(bucket.time_created))
     print("Versioning Enabled: {}".format(bucket.versioning_enabled))
     print("Labels:")
-    pprint.pprint(bucket.labels)
+    print(bucket.labels)
 
 
 # [END storage_get_bucket_metadata]

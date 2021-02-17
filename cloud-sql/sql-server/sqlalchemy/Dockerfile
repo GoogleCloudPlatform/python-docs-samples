@@ -14,7 +14,7 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.8-buster
+FROM python:3.9-buster
 
 #Download the desired package(s) for Microsoft ODBC 17 Driver
 RUN (curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) && \
