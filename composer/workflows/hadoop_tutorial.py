@@ -96,11 +96,11 @@ with models.DAG(
     # Delete Cloud Dataproc cluster.
     delete_dataproc_cluster = dataproc_operator.DataprocClusterDeleteOperator(
         task_id='delete_dataproc_cluster',
+        region='us-central1',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
-        trigger_rule=trigger_rule.TriggerRule.ALL_DONE,
-        region='us-central1')
+        trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
 
     # [START composer_hadoop_steps]
     # Define DAG dependencies.
