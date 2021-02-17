@@ -40,7 +40,6 @@ steps:
         ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
           "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
-
 substitutions:
   _SERVICE: django
   _VERSION: manual
