@@ -26,8 +26,9 @@ from airflow.utils.dates import days_ago
 from airflow.utils.state import State
 
 UUID = uuid.uuid4()
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "leah-playground")
-BUCKET_NAME = f"leah-{UUID}"
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "python-docs-samples-tests") #TODO change this as well
+BUCKET_NAME = f"test-bucket-{UUID}"
+
 
 with models.DAG(
     "example_gcs",
@@ -43,7 +44,7 @@ with models.DAG(
     )
     delete_bucket = GCSDeleteBucketOperator(task_id="delete_bucket", bucket_name=BUCKET_NAME)
 
-    create_bucket >> list_objects >> delete_bucket
+    create_bucket >> list_objects >> list_buckets_result >> delete_bucket
 
 
 if __name__ == "__main__":
