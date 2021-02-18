@@ -18,7 +18,7 @@ steps:
   name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: '/bin/bash'
   args:
-    - '-c'
+    - '-ec'
     - |
       ./test/retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
         "gcloud secrets delete ${_SERVICE}-secrets --quiet --project $PROJECT_ID"
