@@ -112,6 +112,7 @@ def deployed_service() -> str:
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
         f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
         f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
+        f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
