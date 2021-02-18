@@ -97,7 +97,7 @@ def update_source(source_name):
 def add_user_to_source(source_name):
     """Gives a user findingsEditor permission to the source."""
     user_email = "csccclienttest@gmail.com"
-    # [START securitycenter_update_source_iam]
+    # [START securitycenter_set_source_iam]
     # [START update_source_iam]
     from google.cloud import securitycenter
     from google.iam.v1 import policy_pb2
@@ -132,7 +132,7 @@ def add_user_to_source(source_name):
     print("Updated Policy: {}".format(updated))
 
     # [END update_source_iam]
-    # [END securitycenter_update_source_iam]
+    # [END securitycenter_set_source_iam]
     return binding, updated
 
 
@@ -210,7 +210,7 @@ def create_finding(source_name):
 
 def create_finding_with_source_properties(source_name):
     """Demonstrate creating a new finding with source properties. """
-    # [START securitycenter_create_finding_with_properties]
+    # [START securitycenter_create_finding_with_source_properties]
     # [START create_finding_with_properties]
     import datetime
 
@@ -262,11 +262,11 @@ def create_finding_with_source_properties(source_name):
     )
     print(created_finding)
     # [END create_finding_with_properties]
-    # [END securitycenter_create_finding_with_properties]
+    # [END securitycenter_create_finding_with_source_properties]
 
 
 def update_finding(source_name):
-    # [START securitycenter_update_finding]
+    # [START securitycenter_update_finding_source_properties]
     # [START update_finding]
     import datetime
 
@@ -310,7 +310,7 @@ def update_finding(source_name):
         )
     )
     # [END update_finding]
-    # [END securitycenter_update_finding]
+    # [END securitycenter_update_finding_source_properties]
 
 
 def update_finding_state(source_name):
@@ -347,7 +347,7 @@ def update_finding_state(source_name):
 def trouble_shoot(source_name):
     """Demonstrate calling test_iam_permissions to determine if the
     service account has the correct permisions."""
-    # [START securitycenter_test_iam_permissions]
+    # [START securitycenter_test_iam]
     # [START test_iam_permissions]
     from google.cloud import securitycenter
 
@@ -374,9 +374,9 @@ def trouble_shoot(source_name):
         )
     )
     # [END test_iam_permissions]
-    # [END securitycenter_test_iam_permissions]
+    # [END securitycenter_test_iam]
     assert len(permission_response.permissions) > 0
-    # [START securitycenter_test_iam_permissions]
+    # [START securitycenter_test_iam]
     # [START test_iam_permissions]
     # Check for permissions necessary to call set_finding_state.
     permission_response = client.test_iam_permissions(
@@ -389,7 +389,7 @@ def trouble_shoot(source_name):
         "Permision to update state? {}".format(len(permission_response.permissions) > 0)
     )
     # [END test_iam_permissions]
-    # [END securitycenter_test_iam_permissions]
+    # [END securitycenter_test_iam]
     return permission_response
     assert len(permission_response.permissions) > 0
 
@@ -453,7 +453,7 @@ def list_filtered_findings(source_name):
 
 
 def list_findings_at_time(source_name):
-    # [START securitycenter_list_findings_at_a_time]
+    # [START securitycenter_list_findings_at_time]
     # [START list_findings_at_a_time]
     from google.cloud import securitycenter
     from datetime import timedelta, datetime
@@ -471,9 +471,9 @@ def list_findings_at_time(source_name):
     #   source_name = "organizations/111122222444/sources/-"
     five_days_ago = str(datetime.now() - timedelta(days=5))
     # [END list_findings_at_a_time]
-    # [END securitycenter_list_findings_at_a_time]
+    # [END securitycenter_list_findings_at_time]
     i = -1
-    # [START securitycenter_list_findings_at_a_time]
+    # [START securitycenter_list_findings_at_time]
     # [START list_findings_at_a_time]
 
     finding_result_iterator = client.list_findings(
@@ -486,7 +486,7 @@ def list_findings_at_time(source_name):
             )
         )
     # [END list_findings_at_a_time]
-    # [END securitycenter_list_findings_at_a_time]
+    # [END securitycenter_list_findings_at_time]
     return i
 
 
