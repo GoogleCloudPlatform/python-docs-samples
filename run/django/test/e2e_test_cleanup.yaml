@@ -17,13 +17,16 @@ steps:
     name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "/bin/bash"
     args:
-      - "-c"
+      - "-ec"
       - |
         ./test/retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
 
         ./test/retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
           "gcloud secrets delete ${_SECRET_PASSWORD_NAME} --quiet --project $PROJECT_ID"
+
+        ./test/retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
+          "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
 
         ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
           "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
@@ -47,3 +50,4 @@ substitutions:
   _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings
   _SECRET_PASSWORD_NAME: admin_password
+  _STORAGE_BUCKET: ${PROJECT_ID}-bucket
