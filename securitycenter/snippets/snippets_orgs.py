@@ -37,7 +37,7 @@ def get_settings(organization_id):
 def update_asset_discovery_org_settings(organization_id):
     """Example showing how to update the asset discovery configuration
     for an organization."""
-    # [START securitycenter_update_org_settings]
+    # [START securitycenter_enable_asset_discovery]
     # [START update_org_settings]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -63,5 +63,5 @@ def update_asset_discovery_org_settings(organization_id):
     )
     print("Asset Discovery Enabled? {}".format(updated.enable_asset_discovery))
     # [END update_org_settings]
-    # [END securitycenter_update_org_settings]
+    # [END securitycenter_enable_asset_discovery]
     return updated
