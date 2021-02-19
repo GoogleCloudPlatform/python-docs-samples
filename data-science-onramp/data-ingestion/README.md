@@ -1,5 +1,5 @@
 # Data Ingestion
-This is part of a larger tutorial found on cloud.google.com
+This is part of a larger tutorial found on cloud.google.com.
 
 ## Holiday.csv Data
 
