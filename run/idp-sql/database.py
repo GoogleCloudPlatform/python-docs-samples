@@ -17,6 +17,8 @@ import os
 from typing import Dict
 
 import sqlalchemy
+from sqlalchemy.orm import close_all_sessions
+
 
 import credentials
 from middleware import logger
@@ -195,5 +197,5 @@ def shutdown() -> None:
         db.dispose()
         logger.info("Database connection disposed.")
     # Additionally, close all sessions.
-    sqlalchemy.orm.close_all_sessions()
+    close_all_sessions()
     logger.info("All sessions closed.")
