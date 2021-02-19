@@ -14,7 +14,9 @@
 
 # We want to use LTS ubuntu from our mirror because dockerhub has a
 # rate limit.
-FROM mirror.gcr.io/library/ubuntu:18.04
+# FROM mirror.gcr.io/library/ubuntu:18.04
+# However, now the above image is not working, we're using our own cache
+FROM gcr.io/cloud-devrel-kokoro-resources/ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
