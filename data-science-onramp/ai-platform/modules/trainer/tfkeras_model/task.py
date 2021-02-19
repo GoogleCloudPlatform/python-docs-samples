@@ -79,16 +79,17 @@ def train_and_evaluate(
 # [END ai_platform_tfkeras_task_train_and_evaluate_load]
 
     # [START ai_platform_tfkeras_task_train_and_evaluate_dimensions]
-    # Dimensions
+    # Extract dimensions of the data
     num_train_examples, input_dim = train_feature.shape
     num_eval_examples = eval_feature.shape[1]
+    output_dim = train_target.shape[1]
     # [END ai_platform_tfkeras_task_train_and_evaluate_dimensions]
 
     # [START ai_platform_tfkeras_task_train_and_evaluate_model]
     # Create the Keras Model
     keras_model = model.create_keras_model(
         input_dim=input_dim,
-        output_dim=train_target.shape[1],
+        output_dim=output_dim,
         learning_rate=learning_rate,
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_model]

@@ -15,10 +15,12 @@
 import os
 import tarfile
 import time
+from typing import Generator, Tuple
 import uuid
 
 from google.cloud import storage
 from google.cloud.aiplatform import gapic as aip
+from google.cloud.exceptions import NotFound
 import pytest
 
 STAGING_BUCKET = f"tfkeras-job-dir-{uuid.uuid4()}"
@@ -50,7 +52,10 @@ def shared_state():
 
 
 @pytest.fixture(autouse=True)
-def setup_teardown(shared_state):
+def setup_teardown(
+        shared_state: dict
+) -> Generator[Tuple[storage.bucket.Bucket, aip.JobServiceClient]]:
+
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(STAGING_BUCKET, location=REGION)
     bucket.blob(f"{INPUT_DIR}/{TRAIN_DATA}").upload_from_filename(TRAIN_DATA, timeout=600)
@@ -68,8 +73,10 @@ def setup_teardown(shared_state):
 
     yield bucket, aip_job_client
 
-    [blob.delete() for blob in bucket.list_blobs()]
-    bucket.delete()
+    try:
+        bucket.delete(force=True)
+    except NotFound:
+        print("Bucket not found.")
 
     os.remove(TRAINER_TAR)
 
@@ -77,7 +84,12 @@ def setup_teardown(shared_state):
 
 
 @pytest.mark.timeout(1800)
-def test_tfkeras(setup_teardown, shared_state):
+def test_tfkeras(setup_teardown: Generator[Tuple[
+        storage.bucket.Bucket,
+        aip.JobServiceClient
+    ]],
+    shared_state: dict
+) -> None:
     bucket, aip_job_client = setup_teardown
 
     custom_job = {
@@ -109,8 +121,9 @@ def test_tfkeras(setup_teardown, shared_state):
     resource_name = response.name
     shared_state["model_name"] = resource_name
 
+    # Subject to change with LRO availability
     while (response.state not in TERMINAL_STATES):
-        time.sleep(10)
+        time.sleep(60)
         response = aip_job_client.get_custom_job(name=resource_name)
 
     assert bucket.blob(f"{MODEL_DIR}/tfkeras_model/saved_model.pb").exists()
