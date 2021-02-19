@@ -194,3 +194,6 @@ def shutdown() -> None:
     if db:
         db.dispose()
         logger.info("Database connection disposed.")
+    # Additionally, close all sessions.
+    sqlalchemy.orm.close_all_sessions()
+    logger.info("All sessions closed.")
