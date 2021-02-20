@@ -15,7 +15,7 @@
 import os
 import tarfile
 import time
-from typing import Generator, Tuple
+from typing import Tuple
 import uuid
 
 from google.cloud import storage
@@ -54,7 +54,7 @@ def shared_state() -> dict:
 @pytest.fixture(autouse=True)
 def setup_teardown(
         shared_state: dict
-) -> Generator[Tuple[storage.bucket.Bucket, aip.JobServiceClient]]:
+) -> Tuple[storage.bucket.Bucket, aip.JobServiceClient]:
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(STAGING_BUCKET, location=REGION)
     bucket.blob(f"{INPUT_DIR}/{TRAIN_DATA}").upload_from_filename(TRAIN_DATA, timeout=600)
@@ -83,10 +83,8 @@ def setup_teardown(
 
 
 @pytest.mark.timeout(1800)
-def test_sklearn(setup_teardown: Generator[Tuple[
-        storage.bucket.Bucket,
-        aip.JobServiceClient
-    ]],
+def test_sklearn(
+    setup_teardown: Tuple[storage.bucket.Bucket, aip.JobServiceClient],
     shared_state: dict
 ) -> None:
     bucket, aip_job_client = setup_teardown
