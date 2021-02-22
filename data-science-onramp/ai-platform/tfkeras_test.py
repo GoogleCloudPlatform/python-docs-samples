@@ -46,7 +46,7 @@ TERMINAL_STATES = [
 
 
 @pytest.fixture
-def shared_state():
+def shared_state() -> dict:
     state = {}
     yield state
 
