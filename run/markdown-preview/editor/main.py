@@ -35,7 +35,7 @@ def index():
 def render_handler():
     body = request.get_json()
     if not body:
-        raise Exception("Invalid JSON")
+        return "Error rendering markdown: Invalid JSON", 400
 
     data = body["data"]
     try:
