@@ -15,46 +15,60 @@
 import datetime
 import logging
 import os
-
-from flask import Flask, render_template, request, Response
 import sqlalchemy
+import sys
+
+import tink
+from tink import aead
+from tink.integration import gcpkms
 
 
-app = Flask(__name__)
+# [START cloud_sql_mysql_cse_key]
+def init_tink():
+    aead.register()
+    key_uri = "gcp-kms://" + os.environ["KMS_KEY_URI"]
+    credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
 
-logger = logging.getLogger()
+    try:
+        gcp_client = gcpkms.GcpKmsClient(key_uri, credentials)
+        gcp_aead = gcp_client.get_aead(key_uri)
+    except tink.TinkError as e:
+        logging.error('Error initializing GCP client: %s', e)
+        return None
+
+    # Create envelope AEAD primitive using AES256 GCM for encrypting the data
+    try:
+        key_template = aead.aead_key_templates.AES256_GCM
+        env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
+    except tink.TinkError as e:
+        logging.error('Error creating primitive: %s', e)
+        return None
+    return env_aead
+# [END cloud_sql_mysql_cse_key]
 
 
+    
 def init_connection_engine():
     db_config = {
-        # [START cloud_sql_mysql_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
         "pool_size": 5,
         # Temporarily exceeds the set pool_size if no connections are available.
         "max_overflow": 2,
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
-        # [END cloud_sql_mysql_sqlalchemy_limit]
 
-        # [START cloud_sql_mysql_sqlalchemy_backoff]
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
-        # [END cloud_sql_mysql_sqlalchemy_backoff]
 
-        # [START cloud_sql_mysql_sqlalchemy_timeout]
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
         "pool_timeout": 30,  # 30 seconds
-        # [END cloud_sql_mysql_sqlalchemy_timeout]
 
-        # [START cloud_sql_mysql_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
         # reestablished
         "pool_recycle": 1800,  # 30 minutes
-        # [END cloud_sql_mysql_sqlalchemy_lifetime]
-
     }
 
     if os.environ.get("DB_HOST"):
@@ -64,7 +78,6 @@ def init_connection_engine():
 
 
 def init_tcp_connection_engine(db_config):
-    # [START cloud_sql_mysql_sqlalchemy_create_tcp]
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
@@ -90,13 +103,11 @@ def init_tcp_connection_engine(db_config):
         ),
         **db_config
     )
-    # [END cloud_sql_mysql_sqlalchemy_create_tcp]
 
     return pool
 
 
 def init_unix_connection_engine(db_config):
-    # [START cloud_sql_mysql_sqlalchemy_create_socket]
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
@@ -122,47 +133,45 @@ def init_unix_connection_engine(db_config):
         ),
         **db_config
     )
-    # [END cloud_sql_mysql_sqlalchemy_create_socket]
 
     return pool
 
 
-# This global variable is declared with a value of `None`, instead of calling
-# `init_connection_engine()` immediately, to simplify testing. In general, it
-# is safe to initialize your database connection pool when your script starts
-# -- there is no need to wait for the first request.
-db = None
+def init_db():
+    db = init_connection_engine()
 
-
-@app.before_first_request
-def create_tables():
-    global db
-    db = db or init_connection_engine()
     # Create tables (if they don't already exist)
     with db.connect() as conn:
         conn.execute(
             "CREATE TABLE IF NOT EXISTS votes "
             "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-            "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
+            "candidate CHAR(6) NOT NULL, voter_email VARBINARY(255), "
+            "PRIMARY KEY (vote_id) );"
         )
+    return db
 
 
-@app.route("/", methods=["GET"])
-def index():
-    context = get_index_context()
-    return render_template('index.html', **context)
 
-
-def get_index_context():
-    votes = []
+# [START cloud_sql_mysql_cse_query]
+def list_votes(db, eaead):
+    import sqlalchemy
+    
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT candidate, time_cast FROM votes " "ORDER BY time_cast DESC LIMIT 5"
+            "SELECT candidate, time_cast, voter_email FROM votes "
+            "ORDER BY time_cast DESC LIMIT 5"
         ).fetchall()
-        # Convert the results into a list of dicts representing votes
+
+        print("Team\tEmail\tTime Cast")
+        
         for row in recent_votes:
-            votes.append({"candidate": row[0], "time_cast": row[1]})
+            team = row[0]
+            email = eaead.decrypt(row[2], team.encode()).decode()
+            time_cast = row[1]
+
+            # Print recent votes
+            print("{}\t{}\t{}".format(team, email, time_cast))
 
         stmt = sqlalchemy.text(
             "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
@@ -173,51 +182,56 @@ def get_index_context():
         # Count number of votes for spaces
         space_result = conn.execute(stmt, candidate="SPACES").fetchone()
         space_count = space_result[0]
-    return {
-        'recent_votes': votes,
-        'space_count': space_count,
-        'tab_count': tab_count,
-    }
+
+        # Print total votes
+        print("")
+        print("Total: {} spaces, {} tabs".format(space_count, tab_count))
+# [END cloud_sql_mysql_cse_query]
 
 
-@app.route("/", methods=["POST"])
-def save_vote():
-    # Get the team and time the vote was cast.
-    team = request.form["team"]
+# [START cloud_sql_mysql_cse_insert]
+def add_vote(team, email, db, eaead):
+    import sqlalchemy
+
     time_cast = datetime.datetime.utcnow()
+    # Encrypt the email of the voter
+    encrypted_email = eaead.encrypt(email.encode(), team.encode())
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
-        logger.warning(team)
-        return Response(response="Invalid team specified.", status=400)
+        logger.error("Invalid team specified: {}".format(team))
+        return
 
-    # [START cloud_sql_mysql_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate, voter_email)"
+        " VALUES (:time_cast, :candidate, :voter_email)"
     )
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
-            conn.execute(stmt, time_cast=time_cast, candidate=team)
+            conn.execute(stmt, time_cast=time_cast, candidate=team,
+                         voter_email=encrypted_email)
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
-        # [START_EXCLUDE]
         logger.exception(e)
-        return Response(
-            status=500,
-            response="Unable to successfully cast vote! Please check the "
-            "application logs for more details.",
-        )
-        # [END_EXCLUDE]
-    # [END cloud_sql_mysql_sqlalchemy_connection]
 
-    return Response(
-        status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
-    )
+    print("Vote successfully cast for '{}' at time {}!".format(team, time_cast))
+# [END cloud_sql_mysql_cse_insert]
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080, debug=True)
+    db = init_db()
+    eaead = init_tink_eaead()
+
+    action = "VIEW"
+    if len(sys.argv) > 1:
+        action = sys.argv[1]
+    
+    if action == "VOTE_TABS":
+        add_vote(team="TABS", email=sys.argv[2], db=db, eaead=eaead)
+    elif action == "VOTE_SPACES":
+        add_vote(team="SPACES", email=sys.argv[2], db=db, eaead=eaead)
+    elif action == "VIEW":
+        list_votes(db=db, eaead)

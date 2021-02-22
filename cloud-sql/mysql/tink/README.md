@@ -1,4 +1,4 @@
-# Connecting to Cloud SQL - MySQL
+# Encrypting fields in Cloud SQL - MySQL with Tink
 
 ## Before you begin
 
@@ -11,11 +11,19 @@ database user, and database password that you create.
 
 1. Create a database for your application by following these 
 [instructions](https://cloud.google.com/sql/docs/mysql/create-manage-databases). Note the database
-name. 
+name.
+
+1. Create a KMS key for your application by following these
+[instructions](https://cloud.google.com/kms/docs/creating-keys). Copy the resource name of your
+created key.
 
 1. Create a service account with the 'Cloud SQL Client' permissions by following these 
 [instructions](https://cloud.google.com/sql/docs/mysql/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
-Download a JSON key to use to authenticate your connection. 
+Download a JSON key to use to authenticate your connection.
+
+1. Configure gRPC Root Certificates: On some platforms (notably macOS and Windows) you may need to
+accept the Google server certificates, see instructions for setting up
+[root certs](https://github.com/googleapis/google-cloud-cpp/blob/master/google/cloud/bigtable/examples/README.md#configure-grpc-root-certificates).
 
 ## Running locally
 
@@ -40,6 +48,7 @@ export DB_HOST='127.0.0.1:3306'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
+export KMS_KEY_URI='<KMS_KEY_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
@@ -58,6 +67,7 @@ $env:DB_HOST="127.0.0.1:3306"
 $env:DB_USER="<DB_USER_NAME>"
 $env:DB_PASS="<DB_PASSWORD>"
 $env:DB_NAME="<DB_NAME>"
+$env:KMS_KEY_URI='<KMS_KEY_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
@@ -92,6 +102,7 @@ export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
+export KMS_KEY_URI='<KMS_KEY_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
@@ -102,7 +113,7 @@ Then use this command to launch the proxy in the background:
 ./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
-### Testing the application
+### Install requirements
 
 Next, setup install the requirements into a virtual enviroment:
 ```bash
@@ -111,73 +122,15 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-Finally, start the application:
+### Run the demo
+
+Add new votes:
 ```bash
-python main.py
+python main.py VOTE_SPACES email@example.com
+python main.py VOTE_TABS other@example.com
 ```
 
-Navigate towards `http://127.0.0.1:8080` to verify your application is running correctly.
-
-## Google App Engine Standard
-
-To run on GAE-Standard, create an App Engine project by following the setup for these 
-[instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
-
-First, update `app.standard.yaml` with the correct values to pass the environment 
-variables into the runtime.
-
-Next, the following command will deploy the application to your Google Cloud project:
+View the collected votes:
 ```bash
-gcloud app deploy app.standard.yaml
+python main.py LIST
 ```
-
-## Google App Engine Flexible
-
-To run on GAE-Flexible, create an App Engine project by following the setup for these 
-[instructions](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin).
-
-First, update `app.flexible.yaml` with the correct values to pass the environment 
-variables into the runtime. Also update this file to configure either a TCP or a
-Unix domain socket connection to your database.
-
-Next, the following command will deploy the application to your Google Cloud project:
-```bash
-gcloud app deploy app.flexible.yaml
-```
-
-## Deploy to Cloud Run
-
-See the [Cloud Run documentation](https://cloud.google.com/sql/docs/mysql/connect-run)
-for more details on connecting a Cloud Run service to Cloud SQL.
-
-1. Build the container image:
-
-```sh
-gcloud builds submit --tag gcr.io/[YOUR_PROJECT_ID]/run-mysql
-```
-
-2. Deploy the service to Cloud Run:
-
-```sh
-gcloud run deploy run-mysql --image gcr.io/[YOUR_PROJECT_ID]/run-mysql
-```
-
-Take note of the URL output at the end of the deployment process.
-
-3. Configure the service for use with Cloud Run
-
-```sh
-gcloud run services update run-mysql \
-    --add-cloudsql-instances [INSTANCE_CONNECTION_NAME] \
-    --set-env-vars CLOUD_SQL_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME],\
-DB_USER=[MY_DB_USER],DB_PASS=[MY_DB_PASS],DB_NAME=[MY_DB]
-```
-Replace environment variables with the correct values for your Cloud SQL
-instance configuration.
-
-This step can be done as part of deployment but is separated for clarity.
-
-4. Navigate your browser to the URL noted in step 2.
-
-For more details about using Cloud Run see http://cloud.run.
-Review other [Python on Cloud Run samples](../../../run/).
