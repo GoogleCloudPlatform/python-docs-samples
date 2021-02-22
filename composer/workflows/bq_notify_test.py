@@ -14,7 +14,7 @@
 
 from airflow import models
 
-from . import unit_testing
+import internal_unit_testing
 
 
 def test_dag_import():
@@ -29,4 +29,4 @@ def test_dag_import():
     models.Variable.set('gce_zone', 'us-central1-f')
     models.Variable.set('email', 'notify@example.com')
     from . import bq_notify as module
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)
