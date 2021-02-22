@@ -191,11 +191,11 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
 
 def shutdown() -> None:
+    # Find all Sessions in memory and close them.
+    close_all_sessions()
+    logger.info("All sessions closed.")
     # Each connection was released on execution, so just formally
     # dispose of the db connection if it's been instantiated
     if db:
         db.dispose()
         logger.info("Database connection disposed.")
-    # Additionally, close all sessions.
-    close_all_sessions()
-    logger.info("All sessions closed.")
