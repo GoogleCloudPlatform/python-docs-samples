@@ -38,8 +38,12 @@ def render_handler():
         raise Exception("Invalid JSON")
 
     data = body["data"]
-    parsed_markdown = render.new_request(data)
-    return parsed_markdown
+    try:
+        parsed_markdown = render.new_request(data)
+        return parsed_markdown, 200
+    except Exception as err:
+        return f"Error rendering markdown: {err}", 500
+
 # [END run_secure_request_do]
 # [END cloudrun_secure_request_do]
 
