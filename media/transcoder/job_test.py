@@ -164,7 +164,7 @@ def test_create_job_from_ad_hoc(capsys, test_bucket):
 @retry(
     wait_exponential_multiplier=1000,
     wait_exponential_max=10000,
-    stop_max_attempt_number=10,
+    stop_max_attempt_number=20,
     retry_on_exception=None,
 )
 def _get_job_state(capsys, job_id):
