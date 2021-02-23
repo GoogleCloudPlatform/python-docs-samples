@@ -94,7 +94,7 @@ def shutdown_handler(signal: int, frame: FrameType) -> None:
     database.shutdown()
     middleware.logging_flush()
     print("Exiting process.", flush=True)
-    sys.exit(0)
+    #sys.exit(0)
 
 
 signal.signal(signal.SIGINT, shutdown_handler)  # handles Ctrl-C locally
