@@ -23,6 +23,9 @@ steps:
       ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
         "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --quiet"
 
+      echo "Sleeping, waiting for service reaping."
+      sleep 10
+
       ./test/retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
         "gcloud secrets delete ${_SERVICE}-secrets --quiet --project $PROJECT_ID"
 
