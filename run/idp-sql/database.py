@@ -194,8 +194,6 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     logger.info("Vote for %s saved.", team)
 
 
-
-
 def shutdown() -> None:
     # Find all Sessions in memory and close them.
     close_all_sessions()
@@ -205,4 +203,3 @@ def shutdown() -> None:
     if db:
         db.dispose()
         logger.info("Database connection disposed.")
-

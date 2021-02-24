@@ -50,6 +50,7 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 
 # adapted from https://github.com/ymotongpoo/cloud-logging-configurations/blob/master/python/structlog/main.py
 
+
 def field_name_modifier(
     logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
 ) -> Dict:
