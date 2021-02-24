@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Sometimes renovate tries to update it to 16.10. I don't think it's
-# worthwhile because 16.04 is an LTS release. Maybe we should think
-# about upgrading to 18.04 (the next LTS) instead.
-FROM ubuntu:18.04
+# We want to use LTS ubuntu from our mirror because dockerhub has a
+# rate limit.
+# FROM mirror.gcr.io/library/ubuntu:18.04
+# However, now the above image is not working, we're using our own cache
+FROM gcr.io/cloud-devrel-kokoro-resources/ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -104,7 +105,7 @@ RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
     && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
     && /tmp/fetch_gpg_keys.sh \
-    && for PYTHON_VERSION in 2.7.18 3.6.10 3.7.7 3.8.3 3.9.0; do \
+    && for PYTHON_VERSION in 2.7.18 3.6.12 3.7.9 3.8.7 3.9.1; do \
         wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
         && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -143,8 +144,8 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for 3.8.0
-RUN python3.8 /tmp/get-pip.py
+# Ensure Pip for python3
+RUN python3 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
 
 # Install "virtualenv", since the vast majority of users of this image
