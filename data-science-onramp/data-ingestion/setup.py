@@ -218,7 +218,8 @@ def main():
 
     print("Uploading citibike dataset...")
     write_to_bigquery(df, CITIBIKE_TABLE_NAME, DATASET_NAME)
-
 # [END datascienceonramp_data_ingestion]
+
+
 if __name__ == "__main__":
     main()
