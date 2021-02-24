@@ -161,7 +161,8 @@ def test_create_job_from_ad_hoc(capsys, test_bucket):
     assert "Deleted job" in out
 
 
-@backoff.on_exception(backoff.expo, AssertionError, max_time=600) # 10 minutes
+# Retrying up to 10 mins
+@backoff.on_exception(backoff.expo, AssertionError, max_time=600)
 def _get_job_state(capsys, job_id):
     try:
         get_job_state.get_job_state(project_id, location, job_id)
