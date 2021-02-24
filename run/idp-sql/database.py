@@ -19,7 +19,6 @@ from typing import Dict
 import sqlalchemy
 from sqlalchemy.orm import close_all_sessions
 
-
 import credentials
 from middleware import logger
 
@@ -131,7 +130,6 @@ def create_tables() -> None:
     logger.info("Creating tables")
     global db
     db = init_connection_engine()
-    log_pool_state(state="before", section="create_tables")
     # Create pet_votes table if it doesn't already exist
     with db.connect() as conn:
         conn.execute(
@@ -143,12 +141,10 @@ def create_tables() -> None:
             "PRIMARY KEY (vote_id)"
             ");"
         )
-    log_pool_state(state="after", section="create_tables")
 
 
 def get_index_context() -> Dict:
     votes = []
-    log_pool_state(state="before", section="get_index_context")
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
@@ -172,7 +168,6 @@ def get_index_context() -> Dict:
         # Count number of votes for dogs
         dogs_result = conn.execute(stmt, candidate="DOGS").fetchone()
         dogs_count = dogs_result[0]
-    log_pool_state(state="after", section="get_index_context")
     return {
         "dogs_count": dogs_count,
         "recent_votes": votes,
@@ -189,35 +184,20 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
-    log_pool_state(state="before", section="save_vote")
     with db.connect() as conn:
         conn.execute(stmt, time_cast=time_cast, candidate=team, uid=uid)
-    log_pool_state(state="after", section="save_vote")
     logger.info("Vote for %s saved.", team)
 
 
-def log_pool_state(state: str = "Pool", section: str = "Pool") -> None:
-    if db:
-        logger.info(
-            f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- db {id(db)} - pool {id(db.pool)} - {[db.pool.size(),  db.pool.checkedin(), db.pool.overflow(), db.pool.checkedout()] } "
-        )
-    else:
-        logger.info(
-            f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- no global db var active."
-        )
 
 
 def shutdown() -> None:
-    log_pool_state(state="top", section="shutdown")
     # Find all Sessions in memory and close them.
     close_all_sessions()
     logger.info("All sessions closed.")
     # Each connection was released on execution, so just formally
     # dispose of the db connection if it's been instantiated
     if db:
-        log_pool_state(state="before", section="shutdown")
         db.dispose()
         logger.info("Database connection disposed.")
-        log_pool_state(state="after", section="shutdown")
 
-    log_pool_state(state="bottom", section="shutdown")
