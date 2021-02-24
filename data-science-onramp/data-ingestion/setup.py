@@ -7,7 +7,7 @@ It needs the following arguments
 * the name of the BigQuery dataset to be created
 * an optional --test flag to upload a subset of the dataset for testing
 """
-
+# [START  datascienceonramp_data_ingestion]
 import random
 import sys
 
@@ -206,6 +206,6 @@ def main():
     print("Uploading citibike dataset...")
     write_to_bigquery(df, CITIBIKE_TABLE_NAME, DATASET_NAME)
 
-
+# [END datascienceonramp_data_ingestion]
 if __name__ == "__main__":
     main()
