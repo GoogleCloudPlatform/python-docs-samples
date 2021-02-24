@@ -31,8 +31,8 @@ db = None
 
 
 def init_connection_engine() -> Dict[str, int]:
-    if os.environ.get("TRAMPOLINE_CI", None) == "kokoro":
-        # Use a NullPool in the testing environment
+    if "TRAMPOLINE_CI" in os.environ:
+        logger.info("Using NullPool for testing")
         db_config = {"poolclass": NullPool}
     else:
         db_config = {
