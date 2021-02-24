@@ -208,12 +208,3 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     # Cannot make post with no token
     response = client.post(service_url, data={"team": "DOGS"})
     assert response.status_code == 401
-
-
-    # DEBUGGING
-    response = client.get(service_url)
-    assert response.status_code == 200
-    response = client.get(service_url)
-    assert response.status_code == 200
-    response = client.get(service_url)
-    assert response.status_code == 200

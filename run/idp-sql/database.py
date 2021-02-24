@@ -126,6 +126,7 @@ def init_unix_connection_engine(
 
 
 def create_tables() -> None:
+
     # This is called before any request on the main app, ensuring the database has been setup
     logger.info("Creating tables")
     global db
@@ -194,11 +195,15 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     log_pool_state(state="after", section="save_vote")
     logger.info("Vote for %s saved.", team)
 
-def log_pool_state(state="Pool",section="Pool"):
+
+def log_pool_state(state="Pool", section="Pool"):
     if db:
         logger.info(f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- db {id(db)} - pool {id(db.pool)} - {[db.pool.size(),  db.pool.checkedin(), db.pool.overflow(), db.pool.checkedout()] } ")
     else:
-        logger.info(f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- no global db var active.")
+        logger.info(
+            f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- no global db var active."
+        )
+
 
 def shutdown() -> None:
     log_pool_state(state="top", section="shutdown")
@@ -212,6 +217,5 @@ def shutdown() -> None:
         db.dispose()
         logger.info("Database connection disposed.")
         log_pool_state(state="after", section="shutdown")
-    
-    log_pool_state(state="bottom", section="shutdown")
 
+    log_pool_state(state="bottom", section="shutdown")
