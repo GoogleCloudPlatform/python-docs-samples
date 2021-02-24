@@ -196,9 +196,9 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
 def log_pool_state(state="Pool",section="Pool"):
     if db:
-        logger.info(f"{state} {section} -- {id(db)} - {db.pool.status()}")
+        logger.info(f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- db {id(db)} - pool {id(db.pool)} - {[db.pool.size(),  db.pool.checkedin(), db.pool.overflow(), db.pool.checkedout()] } ")
     else:
-        logger.info(f"{msg}: no global db var active.")
+        logger.info(f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- no global db var active.")
 
 def shutdown() -> None:
     log_pool_state(state="top", section="shutdown")
@@ -212,4 +212,6 @@ def shutdown() -> None:
         db.dispose()
         logger.info("Database connection disposed.")
         log_pool_state(state="after", section="shutdown")
+    
+    log_pool_state(state="bottom", section="shutdown")
 
