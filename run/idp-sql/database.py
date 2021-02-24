@@ -18,7 +18,6 @@ from typing import Dict
 
 import sqlalchemy
 from sqlalchemy.orm import close_all_sessions
-from sqlalchemy.pool import NullPool
 
 
 import credentials
@@ -33,7 +32,22 @@ db = None
 
 def init_connection_engine() -> Dict[str, int]:
     db_config = {
-        "poolclass": NullPool
+        # Pool size is the maximum number of permanent connections to keep.
+        "pool_size": 5,
+        # Temporarily exceeds the set pool_size if no connections are available.
+        "max_overflow": 2,
+        # The total number of concurrent connections for your application will be
+        # a total of pool_size and max_overflow.
+        # SQLAlchemy automatically uses delays between failed connection attempts,
+        # but provides no arguments for configuration.
+        # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
+        # new connection from the pool. After the specified amount of time, an
+        # exception will be thrown.
+        "pool_timeout": 30,  # 30 seconds
+        # 'pool_recycle' is the maximum number of seconds a connection can persist.
+        # Connections that live longer than the specified amount of time will be
+        # reestablished
+        "pool_recycle": 1800,  # 30 minutes
     }
 
     if os.environ.get("DB_HOST"):
@@ -113,8 +127,10 @@ def init_unix_connection_engine(
 
 def create_tables() -> None:
     # This is called before any request on the main app, ensuring the database has been setup
+    logger.info("Creating tables")
     global db
     db = init_connection_engine()
+    log_pool_state(state="before", section="create_tables")
     # Create pet_votes table if it doesn't already exist
     with db.connect() as conn:
         conn.execute(
@@ -126,10 +142,12 @@ def create_tables() -> None:
             "PRIMARY KEY (vote_id)"
             ");"
         )
+    log_pool_state(state="after", section="create_tables")
 
 
 def get_index_context() -> Dict:
     votes = []
+    log_pool_state(state="before", section="get_index_context")
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
@@ -153,7 +171,7 @@ def get_index_context() -> Dict:
         # Count number of votes for dogs
         dogs_result = conn.execute(stmt, candidate="DOGS").fetchone()
         dogs_count = dogs_result[0]
-
+    log_pool_state(state="after", section="get_index_context")
     return {
         "dogs_count": dogs_count,
         "recent_votes": votes,
@@ -170,18 +188,29 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
+    log_pool_state(state="before", section="save_vote")
     with db.connect() as conn:
         conn.execute(stmt, time_cast=time_cast, candidate=team, uid=uid)
-
+    log_pool_state(state="after", section="save_vote")
     logger.info("Vote for %s saved.", team)
 
+def log_pool_state(state="Pool",section="Pool"):
+    if db:
+        _, _, size, _, _, _, connections, _, _, overflow, _, _, _, _, checkedout = db.pool.status().split()
+        logger.info(f"{db.pool.status()}", state=state, iddb=id(db), size=size, connections=connections, overflow=overflow, checkedout=checkedout)
+    else:
+        logger.info(f"{msg}: no global db var active.")
 
 def shutdown() -> None:
+    log_pool_state(state="top", section="shutdown")
     # Find all Sessions in memory and close them.
     close_all_sessions()
     logger.info("All sessions closed.")
     # Each connection was released on execution, so just formally
     # dispose of the db connection if it's been instantiated
     if db:
+        log_pool_state(state="before", section="shutdown")
         db.dispose()
         logger.info("Database connection disposed.")
+        log_pool_state(state="after", section="shutdown")
+

@@ -48,7 +48,7 @@ def index() -> str:
             lead_team = "DOGS"
             vote_diff = dogs_count - cats_count
         leader_message = (
-            f"{lead_team} are running by {vote_diff} vote{'s' if vote_diff > 1 else ''}"
+            f"{lead_team} are winning by {vote_diff} vote{'s' if vote_diff > 1 else ''}"
         )
     else:
         leader_message = "CATS and DOGS are evenly matched!"
@@ -97,10 +97,11 @@ def shutdown_handler(signal: int, frame: FrameType) -> None:
     sys.exit(0)
 
 
-signal.signal(signal.SIGINT, shutdown_handler)  # handles Ctrl-C locally
-signal.signal(
-    signal.SIGTERM, shutdown_handler
-)  # handles Cloud Run container termination
+# handles Ctrl-C locally
+# signal.signal(signal.SIGINT, shutdown_handler)  
+
+# handles Cloud Run container termination
+signal.signal(signal.SIGTERM, shutdown_handler)  
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
