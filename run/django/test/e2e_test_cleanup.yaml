@@ -1,0 +1,53 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+  - id: "Delete resources"
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "/bin/bash"
+    args:
+      - "-ec"
+      - |
+        ./test/retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
+          "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
+
+        ./test/retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
+          "gcloud secrets delete ${_SECRET_PASSWORD_NAME} --quiet --project $PROJECT_ID"
+
+        ./test/retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
+          "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
+
+        ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
+          "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
+
+        ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
+          "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --quiet"
+
+        ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+          "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
+
+        ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
+          "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
+
+substitutions:
+  _SERVICE: django
+  _VERSION: manual
+  _REGION: us-central1
+  _PLATFORM: managed
+  _DB_USER: django
+  _DB_NAME: django
+  _DB_INSTANCE: django-instance
+  _SECRET_SETTINGS_NAME: django_settings
+  _SECRET_PASSWORD_NAME: admin_password
+  _STORAGE_BUCKET: ${PROJECT_ID}-bucket
