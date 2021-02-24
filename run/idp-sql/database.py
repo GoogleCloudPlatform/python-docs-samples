@@ -18,6 +18,7 @@ from typing import Dict
 
 import sqlalchemy
 from sqlalchemy.orm import close_all_sessions
+from sqlalchemy.pool import NullPool
 
 import credentials
 from middleware import logger
@@ -30,24 +31,28 @@ db = None
 
 
 def init_connection_engine() -> Dict[str, int]:
-    db_config = {
-        # Pool size is the maximum number of permanent connections to keep.
-        "pool_size": 5,
-        # Temporarily exceeds the set pool_size if no connections are available.
-        "max_overflow": 2,
-        # The total number of concurrent connections for your application will be
-        # a total of pool_size and max_overflow.
-        # SQLAlchemy automatically uses delays between failed connection attempts,
-        # but provides no arguments for configuration.
-        # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
-        # new connection from the pool. After the specified amount of time, an
-        # exception will be thrown.
-        "pool_timeout": 30,  # 30 seconds
-        # 'pool_recycle' is the maximum number of seconds a connection can persist.
-        # Connections that live longer than the specified amount of time will be
-        # reestablished
-        "pool_recycle": 1800,  # 30 minutes
-    }
+    if os.environ.get("TRAMPOLINE_CI", None) == "kokoro":
+        # Use a NullPool in the testing environment
+        db_config = {"poolclass": NullPool}
+    else:
+        db_config = {
+            # Pool size is the maximum number of permanent connections to keep.
+            "pool_size": 5,
+            # Temporarily exceeds the set pool_size if no connections are available.
+            "max_overflow": 2,
+            # The total number of concurrent connections for your application will be
+            # a total of pool_size and max_overflow.
+            # SQLAlchemy automatically uses delays between failed connection attempts,
+            # but provides no arguments for configuration.
+            # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
+            # new connection from the pool. After the specified amount of time, an
+            # exception will be thrown.
+            "pool_timeout": 30,  # 30 seconds
+            # 'pool_recycle' is the maximum number of seconds a connection can persist.
+            # Connections that live longer than the specified amount of time will be
+            # reestablished
+            "pool_recycle": 1800,  # 30 minutes
+        }
 
     if os.environ.get("DB_HOST"):
         return init_tcp_connection_engine(db_config)
