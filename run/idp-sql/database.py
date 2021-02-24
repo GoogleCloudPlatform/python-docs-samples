@@ -196,8 +196,7 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
 def log_pool_state(state="Pool",section="Pool"):
     if db:
-        _, _, size, _, _, _, connections, _, _, overflow, _, _, _, _, checkedout = db.pool.status().split()
-        logger.info(f"{db.pool.status()}", state=state, iddb=id(db), size=size, connections=connections, overflow=overflow, checkedout=checkedout)
+        logger.info(f"{state} {section} -- {db.pool.status()}")
     else:
         logger.info(f"{msg}: no global db var active.")
 
