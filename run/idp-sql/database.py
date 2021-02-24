@@ -196,9 +196,11 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     logger.info("Vote for %s saved.", team)
 
 
-def log_pool_state(state: str="Pool", section:str="Pool") -> None:
+def log_pool_state(state: str = "Pool", section: str = "Pool") -> None:
     if db:
-        logger.info(f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- db {id(db)} - pool {id(db.pool)} - {[db.pool.size(),  db.pool.checkedin(), db.pool.overflow(), db.pool.checkedout()] } ")
+        logger.info(
+            f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- db {id(db)} - pool {id(db.pool)} - {[db.pool.size(),  db.pool.checkedin(), db.pool.overflow(), db.pool.checkedout()] } "
+        )
     else:
         logger.info(
             f"{state[:5].ljust(5)} {section[:10].ljust(10)} -- no global db var active."
