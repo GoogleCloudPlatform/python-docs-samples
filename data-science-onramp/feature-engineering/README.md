@@ -14,10 +14,9 @@
 * Differences from original dataset: none
 * License: Public Domain
 
-### [US Holidays](https://www.kaggle.com/gsnehaa21/federal-holidays-usa-19662020)
-* Kaggle dataset
-* Downloaded directly from the website
-* Differences from original dataset: none
+### [US Holidays](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/data-science-onramp/data-ingestion/holidays.csv)
+* Small CSV
+* Derived from Public US Government Information
 * License: Public Domain
 
 ### [Weather](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=ghcn_d&page=dataset)

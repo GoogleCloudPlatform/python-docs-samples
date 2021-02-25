@@ -33,8 +33,6 @@ def new_request(data):
         raise Exception("EDITOR_UPSTREAM_RENDER_URL missing")
 
     req = urllib.request.Request(url, data=data.encode())
-
-    credentials, project = google.auth.default()
     auth_req = google.auth.transport.requests.Request()
     target_audience = url
 
