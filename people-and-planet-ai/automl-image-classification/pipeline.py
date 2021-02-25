@@ -191,7 +191,7 @@ def run(
 
 def get_image(
     image_info: Dict[str, str], cloud_storage_path: str
-) -> Optional[Tuple[str, str]]:
+) -> Iterable[Tuple[str, str]]:
     """Makes sure an image exists in Cloud Storage.
 
     Checks if the image file_name exists in Cloud Storage.
@@ -228,7 +228,7 @@ def get_image(
 
 
 def write_dataset_csv_file(
-    dataset_csv_filename: str, images: List[Tuple[str, str]]
+    dataset_csv_filename: str, images: Iterable[Tuple[str, str]]
 ) -> str:
     """Writes the dataset image file names and categories in a CSV file.
 
