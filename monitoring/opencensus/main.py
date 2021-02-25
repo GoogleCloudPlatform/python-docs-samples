@@ -16,7 +16,7 @@
 import random
 import time
 
-# [START sli_metrics_opencensus_setup]
+# [START monitoring_sli_metrics_opencensus_setup]
 from flask import Flask
 from opencensus.ext.prometheus import stats_exporter as prometheus
 from opencensus.stats import aggregation as aggregation_module
@@ -27,10 +27,10 @@ from opencensus.tags import tag_map as tag_map_module
 
 from prometheus_flask_exporter import PrometheusMetrics
 
-# [END sli_metrics_opencensus_setup]
+# [END monitoring_sli_metrics_opencensus_setup]
 
 # set up measures
-# [START sli_metrics_opencensus_measure]
+# [START monitoring_sli_metrics_opencensus_measure]
 m_request_count = measure_module.MeasureInt(
     "python_request_count", "total requests", "requests"
 )
@@ -40,11 +40,11 @@ m_failed_request_count = measure_module.MeasureInt(
 m_response_latency = measure_module.MeasureFloat(
     "python_response_latency", "response latency", "s"
 )
-# [END sli_metrics_opencensus_measure]
+# [END monitoring_sli_metrics_opencensus_measure]
 
 # set up stats recorder
 stats_recorder = stats_module.stats.stats_recorder
-# [START sli_metrics_opencensus_view]
+# [START monitoring_sli_metrics_opencensus_view]
 # set up views
 latency_view = view_module.View(
     "python_response_latency",
@@ -78,18 +78,18 @@ def register_all_views(view_manager: stats_module.stats.view_manager) -> None:
     view_manager.register_view(latency_view)
     view_manager.register_view(request_count_view)
     view_manager.register_view(failed_request_count_view)
-    # [END sli_metrics_opencensus_view]
+    # [END monitoring_sli_metrics_opencensus_view]
 
 
 # set up exporter
-# [START sli_metrics_opencensus_exporter]
+# [START monitoring_sli_metrics_opencensus_exporter]
 def setup_openCensus_and_prometheus_exporter() -> None:
     stats = stats_module.stats
     view_manager = stats.view_manager
     exporter = prometheus.new_stats_exporter(prometheus.Options(namespace="oc_python"))
     view_manager.register_exporter(exporter)
     register_all_views(view_manager)
-    # [END sli_metrics_opencensus_exporter]
+    # [END monitoring_sli_metrics_opencensus_exporter]
 
 
 app = Flask(__name__)
@@ -99,28 +99,28 @@ metrics = PrometheusMetrics(app)
 @app.route("/")
 def homePage() -> (str, int):
     # start timer
-    # [START sli_metrics_opencensus_latency]
+    # [START monitoring_sli_metrics_opencensus_latency]
     start_time = time.perf_counter()
-    # [START sli_metrics_opencensus_counts]
+    # [START monitoring_sli_metrics_opencensus_counts]
     mmap = stats_recorder.new_measurement_map()
-    # [END sli_metrics_opencensus_latency]
+    # [END monitoring_sli_metrics_opencensus_latency]
     # count request
     mmap.measure_int_put(m_request_count, 1)
     # fail 10% of the time
-    # [START sli_metrics_opencensus_latency]
+    # [START monitoring_sli_metrics_opencensus_latency]
     if random.randint(0, 100) > 90:
-        # [END sli_metrics_opencensus_latency]
+        # [END monitoring_sli_metrics_opencensus_latency]
         mmap.measure_int_put(m_failed_request_count, 1)
-        # [END sli_metrics_opencensus_counts]
-        # [START sli_metrics_opencensus_latency]
+        # [END monitoring_sli_metrics_opencensus_counts]
+        # [START monitoring_sli_metrics_opencensus_latency]
         response_latency = time.perf_counter() - start_time
         mmap.measure_float_put(m_response_latency, response_latency)
-        # [START sli_metrics_opencensus_counts]
+        # [START monitoring_sli_metrics_opencensus_counts]
         tmap = tag_map_module.TagMap()
         mmap.record(tmap)
         return ("error!", 500)
-        # [END sli_metrics_opencensus_latency]
-        # [END sli_metrics_opencensus_counts]
+        # [END monitoring_sli_metrics_opencensus_latency]
+        # [END monitoring_sli_metrics_opencensus_counts]
     else:
         random_delay = random.randint(0, 5000) / 1000
         # delay for a bit to vary latency measurement
