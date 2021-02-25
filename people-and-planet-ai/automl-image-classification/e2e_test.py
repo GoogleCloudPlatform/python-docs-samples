@@ -13,18 +13,18 @@
 # limitations under the License.
 
 from dataclasses import dataclass
-from typing import Any
-import mock
 import os
 import subprocess
+from typing import Any
 import uuid
 
+from apache_beam.options.pipeline_options import PipelineOptions
 from google.cloud import bigquery
 from google.cloud import storage
+import mock
 import pytest
 
 import pipeline
-from apache_beam.options.pipeline_options import PipelineOptions
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -50,12 +50,12 @@ class MockResponse:
 
 @dataclass
 class MockRequest:
-    def __init__(self, name: str) -> None:
+    def __init__(self: Any, name: str) -> None:
         self.name = f"{name}_request"
         self._response_name = f"{name}_response"
         self.operation = MockOperation()
 
-    def result(self) -> MockResponse:
+    def result(self: Any) -> MockResponse:
         return MockResponse(self._response_name)
 
 
