@@ -3,4 +3,4 @@
 #google-auth-httplib2==0.0.3
 google-cloud-storage==1.35.1
 google-cloud-dataproc==2.2.0
-google-cloud-bigquery==2.8.0
+google-cloud-bigquery==2.9.0
