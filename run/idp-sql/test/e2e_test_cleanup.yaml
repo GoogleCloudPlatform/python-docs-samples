@@ -20,6 +20,7 @@ steps:
   args:
     - '-ec'
     - |
+      gcloud --version
       ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
         "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --quiet"
 
