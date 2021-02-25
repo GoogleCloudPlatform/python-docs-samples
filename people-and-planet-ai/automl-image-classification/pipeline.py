@@ -20,7 +20,7 @@ import logging
 import os
 import random
 import time
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple
 import zipfile
 
 import apache_beam as beam
