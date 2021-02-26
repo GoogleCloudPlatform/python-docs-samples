@@ -19,7 +19,6 @@
 # To run in Dataflow, it must be in a subprocess since pytest is unpicklable.
 # ---------------------------------------------------------------------------- #
 
-from dataclasses import dataclass
 from typing import Any
 
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -33,21 +32,19 @@ MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
 
 
-@dataclass
 class MockOperation:
     name: str = "operation_path"
 
 
-@dataclass
 class MockResponse:
-    name: str
+    def __init__(self: Any, name: str) -> None:
+        self.name = name
 
 
-@dataclass
 class MockRequest:
     def __init__(self: Any, name: str) -> None:
-        self.name = "{name}_request"
-        self._response_name = "{name}_response"
+        self.name = f"{name}_request"
+        self._response_name = f"{name}_response"
         self.operation = MockOperation()
 
     def result(self: Any) -> MockResponse:
@@ -69,6 +66,7 @@ class MockRequest:
 def run_mock_pipeline(
     project: str, region: str, bucket: str, bigquery_dataset: str, bigquery_table: str
 ) -> None:
+    """Run the pipeline with mocked AutoML functions as no-op."""
     pipeline_args = [
         f"--project={project}",
         "--runner=DataflowRunner",
