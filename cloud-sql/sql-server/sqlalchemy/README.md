@@ -25,7 +25,7 @@
 
     3.  Click **CREATE**.
 
-1. Install the version of [Microsoft ODBC 17 Driver for SQL Server](https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15_) for your operating system.
+
 
 1. Create a service account with the 'Cloud SQL Client' permissions by following these 
 [instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
