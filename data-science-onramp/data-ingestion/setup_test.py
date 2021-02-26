@@ -69,7 +69,7 @@ DATAPROC_JOB = {  # Dataproc job configuration
         "args": [BUCKET_NAME, BQ_DATASET, "--test"],
         # Temporarily pin jar version due to breaking release
         # "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
-        "jar_file_uris":["gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.18.1.jar"],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.18.1.jar"],
     },
 }
 
