@@ -25,6 +25,8 @@ SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
+REGION = "us-central1"
+ZONE = "us-central1-f"
 
 
 @pytest.fixture(scope="session")
@@ -109,8 +111,6 @@ def test_python_version(image_name: str, configure_docker: None) -> None:
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
-    region = "us-central1"
-    worker_zone = "us-central1-a"
     subprocess.run(
         [
             "python",
@@ -118,11 +118,11 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             f"--output-path-prefix=gs://{bucket_name}/outputs/",
             "--runner=DataflowRunner",
             f"--project={PROJECT}",
-            f"--region={region}",
+            f"--region={REGION}",
             f"--temp_location=gs://{bucket_name}/temp",
             "--worker_machine_type=custom-1-13312-ext",
             f"--worker_harness_container_image={image_name}",
-            f"--worker_zone={worker_zone}",
+            f"--worker_zone={ZONE}",
             f"--experiments=worker_accelerator=type={gpu_type},count=1,install-nvidia-driver",
             "--experiments=use_runner_v2",
         ],
