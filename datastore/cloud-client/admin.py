@@ -39,7 +39,7 @@ def export_entities(project_id, output_url_prefix):
     op = client.export_entities(
         {"project_id": project_id, "output_url_prefix": output_url_prefix}
     )
-    response = op.result(timeout=200)
+    response = op.result(timeout=300)
 
     print("Entities were exported\n")
     return response
@@ -58,7 +58,7 @@ def import_entities(project_id, input_url):
     op = client.import_entities(
         {"project_id": project_id, "input_url": input_url}
     )
-    response = op.result(timeout=200)
+    response = op.result(timeout=300)
 
     print("Entities were imported\n")
     return response
