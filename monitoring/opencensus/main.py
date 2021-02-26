@@ -118,8 +118,8 @@ def homePage() -> (str, int):
         # [START monitoring_sli_metrics_opencensus_counts]
         tmap = tag_map_module.TagMap()
         mmap.record(tmap)
-        return ("error!", 500)
         # [END monitoring_sli_metrics_opencensus_latency]
+        return ("error!", 500)
         # [END monitoring_sli_metrics_opencensus_counts]
     else:
         random_delay = random.randint(0, 5000) / 1000
