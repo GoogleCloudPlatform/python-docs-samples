@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass
 import os
 import subprocess
-from typing import Any
 import uuid
 
 from google.cloud import bigquery
@@ -85,6 +83,7 @@ def test_end_to_end(
 
     py_code = f"""
 from apache_beam.options.pipeline_options import PipelineOptions
+from dataclasses import dataclass
 import mock
 import pipeline
 
@@ -98,12 +97,12 @@ class MockResponse:
 
 @dataclass
 class MockRequest:
-    def __init__(self: Any, name: str) -> None:
+    def __init__(self, name):
         self.name = "{{name}}_request"
         self._response_name = "{{name}}_response"
         self.operation = MockOperation()
 
-    def result(self: Any) -> MockResponse:
+    def result(self: Any):
         return MockResponse(self._response_name)
 
 @mock.patch(
@@ -132,15 +131,15 @@ def run_mock_pipeline():
     )
 
     pipeline.run(
-        project=PROJECT,
-        region=REGION,
+        project={PROJECT},
+        region={REGION},
         cloud_storage_path="gs://{bucket_name}",
-        bigquery_dataset=bigquery_dataset,
-        bigquery_table=bigquery_table,
-        automl_dataset=AUTOML_DATASET,
-        automl_model=AUTOML_MODEL,
-        min_images_per_class=MIN_IMAGES_PER_CLASS,
-        max_images_per_class=MAX_IMAGES_PER_CLASS,
+        bigquery_dataset={bigquery_dataset},
+        bigquery_table={bigquery_table},
+        automl_dataset={AUTOML_DATASET},
+        automl_model={AUTOML_MODEL},
+        min_images_per_class={MIN_IMAGES_PER_CLASS},
+        max_images_per_class={MAX_IMAGES_PER_CLASS},
         automl_budget_milli_node_hours=8000,
         pipeline_options=pipeline_options,
     )
