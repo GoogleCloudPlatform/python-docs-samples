@@ -18,13 +18,9 @@ import subprocess
 from typing import Any
 import uuid
 
-from apache_beam.options.pipeline_options import PipelineOptions
 from google.cloud import bigquery
 from google.cloud import storage
-import mock
 import pytest
-
-import pipeline
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -36,27 +32,6 @@ AUTOML_DATASET = "wildlife_insights_test"
 AUTOML_MODEL = "wildlife_insights_test"
 MIN_IMAGES_PER_CLASS = 0
 MAX_IMAGES_PER_CLASS = 0
-
-
-@dataclass
-class MockOperation:
-    name: str = "operation_path"
-
-
-@dataclass
-class MockResponse:
-    name: str
-
-
-@dataclass
-class MockRequest:
-    def __init__(self: Any, name: str) -> None:
-        self.name = f"{name}_request"
-        self._response_name = f"{name}_response"
-        self.operation = MockOperation()
-
-    def result(self: Any) -> MockResponse:
-        return MockResponse(self._response_name)
 
 
 @pytest.fixture(scope="session")
@@ -104,6 +79,33 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
     yield BIGQUERY_TABLE
 
 
+def test_end_to_end(
+    bucket_name: str, bigquery_dataset: str, bigquery_table: str
+) -> None:
+
+    py_code = f"""
+from apache_beam.options.pipeline_options import PipelineOptions
+import mock
+import pipeline
+
+@dataclass
+class MockOperation:
+    name: str = "operation_path"
+
+@dataclass
+class MockResponse:
+    name: str
+
+@dataclass
+class MockRequest:
+    def __init__(self: Any, name: str) -> None:
+        self.name = "{{name}}_request"
+        self._response_name = "{{name}}_response"
+        self.operation = MockOperation()
+
+    def result(self: Any) -> MockResponse:
+        return MockResponse(self._response_name)
+
 @mock.patch(
     "google.cloud.aiplatform_v1.services.dataset_service.DatasetServiceClient.create_dataset",
     lambda *args, **kwargs: MockRequest("create_dataset"),
@@ -116,24 +118,23 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
     "google.cloud.aiplatform_v1.services.pipeline_service.PipelineServiceClient.create_training_pipeline",
     lambda *args, **kwargs: MockRequest("create_training_pipeline"),
 )
-def test_end_to_end(
-    bucket_name: str, bigquery_dataset: str, bigquery_table: str
-) -> None:
+def run_mock_pipeline():
     pipeline_args = [
-        f"--project={PROJECT}",
+        "--project={PROJECT}",
         "--runner=DataflowRunner",
         "--requirements_file=requirements.txt",
-        f"--region={REGION}",
+        "--region={REGION}",
     ]
     pipeline_options = PipelineOptions(
         pipeline_args,
-        temp_location=f"gs://{bucket_name}/temp",
+        temp_location="gs://{bucket_name}/temp",
         save_main_session=True,
     )
+
     pipeline.run(
         project=PROJECT,
         region=REGION,
-        cloud_storage_path=f"gs://{bucket_name}",
+        cloud_storage_path="gs://{bucket_name}",
         bigquery_dataset=bigquery_dataset,
         bigquery_table=bigquery_table,
         automl_dataset=AUTOML_DATASET,
@@ -142,4 +143,10 @@ def test_end_to_end(
         max_images_per_class=MAX_IMAGES_PER_CLASS,
         automl_budget_milli_node_hours=8000,
         pipeline_options=pipeline_options,
+    )
+run_mock_pipeline()"""
+
+    subprocess.run(
+        ["python", "-c", py_code],
+        check=True,
     )
