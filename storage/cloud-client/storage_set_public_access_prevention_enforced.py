@@ -23,6 +23,7 @@ from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_ENFORCED
 
 def set_public_access_prevention_enforced(bucket_name):
     """Enforce public access prevention for a bucket."""
+    # The ID of your GCS bucket
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()

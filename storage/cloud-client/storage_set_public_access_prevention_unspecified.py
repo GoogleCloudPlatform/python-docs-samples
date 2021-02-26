@@ -23,6 +23,7 @@ from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
 
 def set_public_access_prevention_unspecified(bucket_name):
     """Sets the public access prevention status to unspecified, so that the bucket inherits its setting from its parent project."""
+    # The ID of your GCS bucket
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
