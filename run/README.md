@@ -16,6 +16,7 @@ This directory contains samples for [Google Cloud Run](https://cloud.run). [Clou
 |[Cloud SQL (MySQL)][mysql]        | Use MySQL with Cloud Run    |      -        |
 |[Cloud SQL (Postgres)][postgres]  | Use Postgres with Cloud Run |      -        |
 |[Django][django]                  | Deploy Django on Cloud Run  |      -        |
+|[Identity Platform][idp-sql]      | Authenticate users and connect to a Cloud SQL postgreSQL databases | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_idpsql] |
 
 For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Samples repository](https://github.com/GoogleCloudPlatform/cloud-run-samples).
 
@@ -111,6 +112,8 @@ for more information.
 [mysql]: ../cloud-sql/mysql/sqlalchemy
 [postgres]: ../cloud-sql/postgres/sqlalchemy
 [django]: django/
+[idp-sql]: idp-sql/
 [run_button_helloworld]: https://deploy.cloud.run/?git_repo=https://github.com/knative/docs&dir=docs/serving/samples/hello-world/helloworld-python
 [run_button_pubsub]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/pubsub
+[run_button_idpsql]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/idp-sql
 [testing]: https://cloud.google.com/run/docs/testing/local#running_locally_using_docker_with_access_to_services
