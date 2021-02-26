@@ -54,7 +54,9 @@ DATAPROC_JOB = {  # Dataproc job configuration
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
         "args": [BUCKET_NAME, BQ_DATASET, "--test"],
-        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
+        # Temporarily pin jar version due to breaking release
+        # "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
+        "jar_file_uris":["gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.18.1.jar"],
     },
 }
 
