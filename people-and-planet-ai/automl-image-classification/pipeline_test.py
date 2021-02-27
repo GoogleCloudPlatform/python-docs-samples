@@ -80,7 +80,8 @@ def run_mock_pipeline(
     )
 
     pipeline.run(
-        project={project},
+        project=project,
+        region=region,
         cloud_storage_path=f"gs://{bucket}",
         bigquery_dataset=bigquery_dataset,
         bigquery_table=bigquery_table,
