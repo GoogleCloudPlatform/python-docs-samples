@@ -29,8 +29,8 @@ def index():
     # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
     bucket = request.headers.get('ce-subject')
 
-    print(f"Detected change in GCS bucket: {bucket}")
-    return (f"Detected change in GCS bucket: {bucket}", 200)
+    print(f"Detected change in Cloud Storage bucket: {bucket}")
+    return (f"Detected change in Cloud Storage bucket: {bucket}", 200)
 # [END eventarc_gcs_handler]
 
 
