@@ -35,7 +35,6 @@ def client():
     yield client
 
 
-
 @pytest.mark.flaky
 def test_create_client():
     tasks.create_client(PROJECT)
