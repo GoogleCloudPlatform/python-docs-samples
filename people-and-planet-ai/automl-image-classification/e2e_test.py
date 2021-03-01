@@ -37,6 +37,9 @@ def bucket_name() -> str:
 
     yield BUCKET_NAME
 
+    # The Beam temp directory has >256 files so bucket.delete(force=True) fails.
+    for blob in storage_client.list_blobs(BUCKET_NAME):
+        blob.delete()
     bucket.delete(force=True)
 
 
