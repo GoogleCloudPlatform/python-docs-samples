@@ -44,14 +44,12 @@ PYTHON_LATENCIES_HISTOGRAM = Histogram(
 # [END monitoring_sli_metrics_prometheus_latency]
 def homePage():
     # count request
-    # [START monitoring_sli_metrics_prometheus_requests_count]
+    # [START monitoring_sli_metrics_prometheus_counts]
     PYTHON_REQUESTS_COUNTER.inc()
-    # [END monitoring_sli_metrics_prometheus_requests_count]
     # fail 10% of the time
     if random.randint(0, 100) > 90:
-        # [START monitoring_sli_metrics_prometheus_errors_count]
         PYTHON_FAILED_REQUESTS_COUNTER.inc()
-        # [END monitoring_sli_metrics_prometheus_errors_count]
+        # [END monitoring_sli_metrics_prometheus_counts]
         return ("error!", 500)
     else:
         random_delay = random.randint(0, 5000) / 1000
