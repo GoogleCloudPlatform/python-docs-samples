@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 import io
 import json
 import logging
@@ -127,8 +128,7 @@ def run(
     cloud_storage_path: str,
     bigquery_dataset: str,
     bigquery_table: str,
-    automl_dataset: str,
-    automl_model: str,
+    automl_name_prefix: str,
     min_images_per_class: int,
     max_images_per_class: int,
     automl_budget_milli_node_hours: int,
@@ -141,8 +141,7 @@ def run(
         region: Location for AutoML resources.
         bigquery_dataset: Dataset ID for the images database, the dataset must exist.
         bigquery_table: Table ID for the images database, the table must exist.
-        automl_dataset: AutoML dataset name.
-        automl_model: AutoML model name.
+        automl_name_prefix: Name prefix for AutoML resources.
         min_images_per_class: Minimum number of images required per class for training.
         max_images_per_class: Maximum number of images allowed per class for training.
         automl_budget_milli_node_hours: Training budget.
@@ -165,28 +164,34 @@ def run(
         )
 
         dataset_csv_filename = f"{cloud_storage_path}/automl-dataset.csv"
-        (
+        dataset_csv_file = (
             pipeline
             | "Dataset filename" >> beam.Create([dataset_csv_filename])
             | "Write dataset file"
             >> beam.Map(write_dataset_csv_file, images=beam.pvalue.AsIter(images))
-            | "Create AutoML dataset"
-            >> beam.Map(
-                create_automl_dataset,
-                project=project,
-                region=region,
-                automl_dataset=automl_dataset,
-            )
-            | "Import images" >> beam.MapTuple(import_images_to_automl_dataset)
-            | "Train AutoML model"
-            >> beam.Map(
-                train_automl_model,
-                project=project,
-                region=region,
-                automl_model=automl_model,
-                automl_budget_milli_node_hours=automl_budget_milli_node_hours,
-            )
         )
+
+        if automl_name_prefix:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            (
+                dataset_csv_file
+                | "Create AutoML dataset"
+                >> beam.Map(
+                    create_automl_dataset,
+                    project=project,
+                    region=region,
+                    automl_dataset=f"{automl_name_prefix}_{timestamp}",
+                )
+                | "Import images" >> beam.MapTuple(import_images_to_automl_dataset)
+                | "Train AutoML model"
+                >> beam.Map(
+                    train_automl_model,
+                    project=project,
+                    region=region,
+                    automl_model=f"{automl_name_prefix}_{timestamp}",
+                    automl_budget_milli_node_hours=automl_budget_milli_node_hours,
+                )
+            )
 
 
 def get_image(
@@ -438,10 +443,9 @@ if __name__ == "__main__":
         help="BigQuery table ID for the images database.",
     )
     parser.add_argument(
-        "--automl-dataset", default="wildlife_insights", help="AutoML dataset name."
-    )
-    parser.add_argument(
-        "--automl-model", default="wildlife_insights", help="AutoML model name."
+        "--automl-name-prefix",
+        default="wildlife_insights",
+        help="Name prefix for AutoML resources.",
     )
     parser.add_argument(
         "--min-images-per-class",
@@ -489,8 +493,7 @@ if __name__ == "__main__":
             cloud_storage_path=args.cloud_storage_path,
             bigquery_dataset=args.bigquery_dataset,
             bigquery_table=args.bigquery_table,
-            automl_dataset=args.automl_dataset,
-            automl_model=args.automl_model,
+            automl_name_prefix=args.automl_name_prefix,
             min_images_per_class=args.min_images_per_class,
             max_images_per_class=args.max_images_per_class,
             automl_budget_milli_node_hours=args.automl_budget_milli_node_hours,
