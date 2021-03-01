@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import backoff
 from google.cloud import datastore
@@ -25,14 +26,18 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 @pytest.yield_fixture
 def client():
     # We use namespace for isolating builds.
-    namespace = os.environ.get("RUN_TESTS_SESSION", "default")
+    namespace = uuid.uuid4().hex
     client = datastore.Client(PROJECT, namespace=namespace)
 
-    # Delete anything created during the previous tests.
+    # Delete anything created during the tests in the past.
     with client.batch():
         client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
     yield client
+
+    # Delete anything created during the tests.
+    with client.batch():
+        client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
 
 @pytest.mark.flaky
