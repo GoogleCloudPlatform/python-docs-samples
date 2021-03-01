@@ -1,0 +1,41 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+
+- id: 'Delete resources'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+    - '-ec'
+    - |
+      ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
+        "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --quiet"
+
+      ./test/retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
+        "gcloud secrets delete ${_SERVICE}-secrets --quiet --project $PROJECT_ID"
+
+      ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
+        "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
+
+      ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+        "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
+
+substitutions:
+  _SERVICE: idp-sql
+  _VERSION: manual
+  _REGION: us-central1
+  _PLATFORM: managed
+  _DB_NAME: idp-sql
+  _DB_INSTANCE: idp-sql-instance
