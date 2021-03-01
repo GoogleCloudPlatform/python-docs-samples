@@ -86,7 +86,7 @@ def test_end_to_end(
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={bigquery_table}",
-            "--automl-name-prefix=''",  # empty skips the AutoML operations.
+            "--automl-name-prefix=",  # empty skips the AutoML operations.
             f"--min-images-per-class={MIN_IMAGES_PER_CLASS}",
             f"--max-images-per-class={MAX_IMAGES_PER_CLASS}",
             "--runner=DataflowRunner",
