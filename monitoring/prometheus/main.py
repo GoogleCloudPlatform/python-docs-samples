@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+# [START monitoring_sli_metrics_prometheus_setup]
 import random
 import time
 
@@ -25,23 +26,32 @@ from prometheus_client import (
     REGISTRY,
 )
 
+# [END monitoring_sli_metrics_prometheus_setup]
 
 app = Flask(__name__)
+# [START monitoring_sli_metrics_prometheus_create_metrics]
 PYTHON_REQUESTS_COUNTER = Counter("python_requests", "total requests")
 PYTHON_FAILED_REQUESTS_COUNTER = Counter("python_failed_requests", "failed requests")
 PYTHON_LATENCIES_HISTOGRAM = Histogram(
     "python_request_latency", "request latency by path"
 )
+# [END monitoring_sli_metrics_prometheus_create_metrics]
 
 
 @app.route("/")
+# [START monitoring_sli_metrics_prometheus_latency]
 @PYTHON_LATENCIES_HISTOGRAM.time()
+# [END monitoring_sli_metrics_prometheus_latency]
 def homePage():
     # count request
+    # [START monitoring_sli_metrics_prometheus_requests_count]
     PYTHON_REQUESTS_COUNTER.inc()
+    # [END monitoring_sli_metrics_prometheus_requests_count]
     # fail 10% of the time
     if random.randint(0, 100) > 90:
+        # [START monitoring_sli_metrics_prometheus_errors_count]
         PYTHON_FAILED_REQUESTS_COUNTER.inc()
+        # [END monitoring_sli_metrics_prometheus_errors_count]
         return ("error!", 500)
     else:
         random_delay = random.randint(0, 5000) / 1000
@@ -50,9 +60,13 @@ def homePage():
         return "home page"
 
 
+# [START monitoring_sli_metrics_prometheus_metrics_endpoint]
 @app.route("/metrics", methods=["GET"])
 def stats():
     return generate_latest(REGISTRY), 200
+
+
+# [END monitoring_sli_metrics_prometheus_metrics_endpoint]
 
 
 if __name__ == "__main__":
