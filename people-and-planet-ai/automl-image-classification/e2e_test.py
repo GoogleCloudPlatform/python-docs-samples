@@ -26,6 +26,8 @@ BUCKET_NAME = f"wildlife-insights-test-{SUFFIX}"
 BIGQUERY_DATASET = f"wildlife_insights_test_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
+MIN_IMAGES_PER_CLASS = 1
+MAX_IMAGES_PER_CLASS = 1
 
 
 @pytest.fixture(scope="session")
@@ -79,12 +81,17 @@ def test_end_to_end(
     subprocess.run(
         [
             "python",
-            "pipeline_test.py",
+            "pipeline.py",
             f"--project={PROJECT}",
-            f"--region={REGION}",
-            f"--bucket={bucket_name}",
+            f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
-            f"--bigquery-table={bigquery_table}",
+            f"--bigquery-table={BIGQUERY_TABLE}",
+            f"--automl-name-prefix=''",  # empty skips the AutoML operations.
+            f"--min-images-per-class={MIN_IMAGES_PER_CLASS}",
+            f"--max-images-per-class={MAX_IMAGES_PER_CLASS}",
+            "--runner=DataflowRunner",
+            "--requirements_file=requirements.txt",
+            f"--region={REGION}",
         ],
         check=True,
     )
