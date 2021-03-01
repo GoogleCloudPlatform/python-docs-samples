@@ -24,13 +24,16 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 @pytest.yield_fixture
 def client():
-    client = datastore.Client(PROJECT)
+    # We use namespace for isolating builds.
+    namespace = os.environ.get("RUN_TESTS_SESSION", "default")
+    client = datastore.Client(PROJECT, namespace=namespace)
+
+    # Delete anything created during the previous tests.
+    with client.batch():
+        client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
     yield client
 
-    # Delete anything created during the test.
-    with client.batch():
-        client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
 
 @pytest.mark.flaky
