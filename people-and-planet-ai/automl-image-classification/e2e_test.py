@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 import os
 import subprocess
 import uuid
@@ -28,6 +29,7 @@ BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
+TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M")
 
 
 @pytest.fixture(scope="session")
@@ -37,9 +39,11 @@ def bucket_name() -> str:
 
     yield BUCKET_NAME
 
-    # The Beam temp directory has >256 files so bucket.delete(force=True) fails.
-    for blob in storage_client.list_blobs(BUCKET_NAME):
-        blob.delete()
+    # This test creates 1 image file per class, creating around 650 files.
+    # `bucket.delete(force=True)` does not work if the bucket has >256 files.
+    # Sequentially deleting many files with the client libraries can take
+    # several minutes, so we're using `gsutil -m` instead.
+    subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs:://{BUCKET_NAME}/*"])
     bucket.delete(force=True)
 
 
@@ -64,6 +68,7 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
             "pipeline.py",
             "--create-images-database",
             f"--project={PROJECT}",
+            f"--job_name=wildlife_images_database_{TIMESTAMP}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={BIGQUERY_TABLE}",
@@ -86,6 +91,7 @@ def test_end_to_end(
             "python",
             "pipeline.py",
             f"--project={PROJECT}",
+            f"--job_name=wildlife_train_{TIMESTAMP}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={bigquery_table}",
