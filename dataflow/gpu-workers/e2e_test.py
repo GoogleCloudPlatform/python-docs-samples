@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 import os
 import subprocess
 import uuid
@@ -23,6 +24,7 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+JOB_SUFFIX = f"{datetime.now().strftime('%Y%m%d-%H%M')}-{SUFFIX}"
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
 REGION = "us-central1"
@@ -117,6 +119,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             "landsat_view.py",
             f"--output-path-prefix=gs://{bucket_name}/outputs/",
             "--runner=DataflowRunner",
+            f"--job_name=gpu-workers-{JOB_SUFFIX}",
             f"--project={PROJECT}",
             f"--region={REGION}",
             f"--temp_location=gs://{bucket_name}/temp",
