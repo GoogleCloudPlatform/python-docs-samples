@@ -22,8 +22,8 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-BUCKET_NAME = f"wildlife-insights-test-{SUFFIX}"
-BIGQUERY_DATASET = f"wildlife_insights_test_{SUFFIX}"
+BUCKET_NAME = f"wildlife-insights-{SUFFIX}"
+BIGQUERY_DATASET = f"wildlife_insights_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
