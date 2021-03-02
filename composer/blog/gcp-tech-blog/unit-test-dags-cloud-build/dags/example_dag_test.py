@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from airflow import models
+
 import internal_unit_testing
 
 
 def test_dag_import():
+    models.Variable.set('gcp_project', 'python-docs-samples-tests')
     from . import example_dag
     internal_unit_testing.assert_has_valid_dag(example_dag)
