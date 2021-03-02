@@ -1,4 +1,4 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -106,19 +106,19 @@ class TestDatastoreSnippets:
     def test_batch_delete(self, client):
         snippets.batch_delete(client)
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_unindexed_property_query(self, client):
         tasks = snippets.unindexed_property_query(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_basic_query(self, client):
         tasks = snippets.basic_query(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_projection_query(self, client):
         priorities, percents = snippets.projection_query(client)
         client.entities_to_delete.extend(client.query(kind="Task").fetch())
@@ -137,7 +137,7 @@ class TestDatastoreSnippets:
         for n in range(6):
             client.entities_to_delete.append(snippets.insert(client))
 
-        @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+        @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
         def run_sample():
             results = snippets.cursor_paging(client)
             page_one, cursor_one, page_two, cursor_two = results
@@ -148,49 +148,49 @@ class TestDatastoreSnippets:
 
         run_sample()
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_property_filter(self, client):
         tasks = snippets.property_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_composite_filter(self, client):
         tasks = snippets.composite_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_key_filter(self, client):
         tasks = snippets.key_filter(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_ascending_sort(self, client):
         tasks = snippets.ascending_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_descending_sort(self, client):
         tasks = snippets.descending_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_multi_sort(self, client):
         tasks = snippets.multi_sort(client)
         client.entities_to_delete.extend(tasks)
         assert tasks
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_keys_only_query(self, client):
         keys = snippets.keys_only_query(client)
         client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert keys
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_distinct_on_query(self, client):
         tasks = snippets.distinct_on_query(client)
         client.entities_to_delete.extend(tasks)
@@ -246,33 +246,33 @@ class TestDatastoreSnippets:
         assert task_list
         assert tasks_in_list
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_namespace_run_query(self, client):
         all_namespaces, filtered_namespaces = snippets.namespace_run_query(client)
         assert all_namespaces
         assert filtered_namespaces
         assert "google" in filtered_namespaces
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_kind_run_query(self, client):
         kinds = snippets.kind_run_query(client)
         client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert kinds
         assert "Task" in kinds
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_property_run_query(self, client):
         kinds = snippets.property_run_query(client)
         client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert kinds
         assert "Task" in kinds
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_property_by_kind_run_query(self, client):
         reprs = snippets.property_by_kind_run_query(client)
         client.entities_to_delete.extend(client.query(kind="Task").fetch())
         assert reprs
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_index_merge_queries(self, client):
         snippets.index_merge_queries(client)
