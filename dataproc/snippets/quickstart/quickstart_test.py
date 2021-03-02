@@ -15,6 +15,8 @@
 import os
 import uuid
 
+import backoff
+from google.api_core.exceptions import ServiceUnavailable
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
@@ -39,7 +41,14 @@ SORT_CODE = (
 @pytest.fixture(autouse=True)
 def setup_teardown():
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(STAGING_BUCKET)
+
+    @backoff.on_exception(backoff.expo,
+                          ServiceUnavailable,
+                          max_tries=5)
+    def create_bucket():
+        return storage_client.create_bucket(STAGING_BUCKET)
+
+    bucket = create_bucket()
     blob = bucket.blob(JOB_FILE_NAME)
     blob.upload_from_string(SORT_CODE)
 
