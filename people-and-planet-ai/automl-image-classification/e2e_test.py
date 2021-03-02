@@ -23,13 +23,13 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+JOB_SUFFIX = f"{datetime.now().strftime('%Y%m%d-%H%M')}-{SUFFIX}"
 BUCKET_NAME = f"wildlife-insights-test-{SUFFIX}"
 BIGQUERY_DATASET = f"wildlife_insights_test_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
-JOB_SUFFIX = f"{datetime.now().strftime('%Y%m%d-%H%M')}-{SUFFIX}"
 
 
 @pytest.fixture(scope="session")
