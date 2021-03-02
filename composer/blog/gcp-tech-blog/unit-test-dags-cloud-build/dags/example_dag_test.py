@@ -13,8 +13,14 @@
 # limitations under the License.
 
 from airflow import models
-
+import airflow.utils.db
 import internal_unit_testing
+import pytest
+
+
+@pytest.fixture(autouse=True, scope="module")
+def initalize_airflow_database():
+    airflow.utils.db.initdb()
 
 
 def test_dag_import():
