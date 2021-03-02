@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from datetime import datetime
 import os
 import subprocess
 import uuid
@@ -23,7 +22,6 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-JOB_SUFFIX = f"{datetime.now().strftime('%Y%m%d-%H%M')}-{SUFFIX}"
 BUCKET_NAME = f"wildlife-insights-test-{SUFFIX}"
 BIGQUERY_DATASET = f"wildlife_insights_test_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
@@ -68,7 +66,7 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
             "pipeline.py",
             "--create-images-database",
             f"--project={PROJECT}",
-            f"--job_name=wildlife-images-database-{JOB_SUFFIX}",
+            f"--job_name=wildlife-images-database-{SUFFIX}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={BIGQUERY_TABLE}",
@@ -91,7 +89,7 @@ def test_end_to_end(
             "python",
             "pipeline.py",
             f"--project={PROJECT}",
-            f"--job_name=wildlife-train-{JOB_SUFFIX}",
+            f"--job_name=wildlife-train-{SUFFIX}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={bigquery_table}",
