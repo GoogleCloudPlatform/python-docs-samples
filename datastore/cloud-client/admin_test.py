@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2016 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -40,7 +40,7 @@ class TestDatastoreAdminSnippets:
     def test_list_index(self):
         assert admin.list_indexes(PROJECT)
 
-    @backoff.on_exception(backoff.expo, AssertionError, max_tries=3, max_time=540000)
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=3)
     def test_export_import_entities(self):
         response = admin.export_entities(PROJECT, "gs://" + BUCKET)
         assert response
