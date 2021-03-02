@@ -18,17 +18,47 @@ r"""This is an example to call REST API from TFServing docker containers.
 
 Examples:
     python automl_vision_edge_container_predict.py \
-    --image_file_path=./test.jpg --image_key=1 --port_number=8051
+    --image_file_path=./test.jpg --image_key=1 --port_number=8501
 
 """
 
 import argparse
 # [START automl_vision_edge_container_predict]
 import base64
+import cv2
 import io
 import json
 
 import requests
+
+def preprocess_image(image_file_path, max_width, max_height):
+    """Preprocesses input images for AutoML Vision Edge models.
+    
+    Args:
+        image_file_path: Path to a local image for the prediction request.
+        max_width: The max width for preprocessed images. The max width is 640
+            (1024) for AutoML Vision Image Classfication (Object Detection)
+            models.
+        max_height: The max width for preprocessed images. The max height is  
+            480 (1024) for AutoML Vision Image Classfication (Object
+            Detetion) models.
+    Returns:
+        The preprocessed encoded image bytes.
+    """
+    # cv2 is used to read, resize and encode images.
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
+    im = cv2.imread(image_file_path)
+    [height, width, _] = im.shape
+    if height > max_height or width > max_width:
+        ratio = max(height / float(max_width), width / float(max_height))
+        new_height = int(height / ratio + 0.5)
+        new_width = int(width / ratio + 0.5)
+        resized_im = cv2.resize(
+            im, (new_width, new_height), interpolation=cv2.INTER_AREA)
+        _, processed_image = cv2.imencode('.jpg', resized_im, encode_param)
+    else:
+        _, processed_image = cv2.imencode('.jpg', im, encode_param)
+    return base64.b64encode(processed_image).decode('utf-8')
 
 
 def container_predict(image_file_path, image_key, port_number=8501):
@@ -41,9 +71,12 @@ def container_predict(image_file_path, image_key, port_number=8501):
     Returns:
         The response of the prediction request.
     """
-
-    with io.open(image_file_path, 'rb') as image_file:
-        encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+    # AutoML Vision Edge models will preprocess the input images.
+    # The max width and height for AutoML Vision Image Classification and
+    # Object Detection models are 640*480 and 1024*1024 separately. The 
+    # example here is for Image Classification models.
+    encoded_image = preprocess_image(
+        image_file_path=image_file_path, max_width=640, max_height=480)
 
     # The example here only shows prediction with one image. You can extend it
     # to predict with a batch of images indicated by different keys, which can
