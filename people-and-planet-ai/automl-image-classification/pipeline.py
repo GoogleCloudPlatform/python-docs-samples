@@ -172,7 +172,7 @@ def run(
         )
 
         if automl_name_prefix:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             (
                 dataset_csv_file
                 | "Create AutoML dataset"
