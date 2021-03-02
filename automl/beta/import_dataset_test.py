@@ -18,7 +18,7 @@ import import_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-DATASET_ID = "TEN0000000000000000000"
+DATASET_ID = "VCN0000000000000000000"
 
 
 def test_import_dataset(capsys):
@@ -27,7 +27,7 @@ def test_import_dataset(capsys):
     # confirm that the dataset was not found, but other elements of the request
     # were valid.
     try:
-        data = "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
+        data = "gs://{}/video-classification/dataset.csv".format(BUCKET_ID)
         import_dataset.import_dataset(PROJECT_ID, DATASET_ID, data)
         out, _ = capsys.readouterr()
         assert (

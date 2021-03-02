@@ -24,7 +24,7 @@ def test_delete_model(capsys):
     # nonexistent model and confirm that the model was not found, but other
     # elements of the request were valid.
     try:
-        delete_model.delete_model(PROJECT_ID, "TRL0000000000000000000")
+        delete_model.delete_model(PROJECT_ID, "VCN0000000000000000000")
         out, _ = capsys.readouterr()
         assert "The model does not exist" in out
     except Exception as e:
