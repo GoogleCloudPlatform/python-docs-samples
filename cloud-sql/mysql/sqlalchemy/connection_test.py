@@ -4,8 +4,8 @@ import os
 from typing import Dict
 import uuid
 
-import pymysql
 import pytest
+import sqlalchemy
 
 import main
 
@@ -57,23 +57,30 @@ def unix_db_connection():
 
 
 def _common_setup():
+    pool = main.init_connection_engine()
+
+    table_name: str = uuid.uuid4().hex
+
     try:
-        pool = main.init_connection_engine()
-    except pymysql.err.OperationalError as e:
+        with pool.connect() as conn:
+            conn.execute(
+                f"CREATE TABLE IF NOT EXISTS `{table_name}`"
+                "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
+                "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
+            )
+    except sqlalchemy.exc.OperationalError as e:
         logger.warning(
             "Could not connect to the production database. "
             "If running tests locally, is the cloud_sql_proxy currently running?"
         )
+        # If there is cloud sql proxy log, dump the contents.
+        home_dir = os.environ.get("HOME", "")
+        log_file = f"{home_dir}/cloud_sql_proxy.log"
+        if home_dir and os.path.isfile(log_file):
+            print(f"Dumping the contents of {log_file}")
+            with open(log_file, "r") as f:
+                print(f.read())
         raise e
-
-    table_name: str = uuid.uuid4().hex
-
-    with pool.connect() as conn:
-        conn.execute(
-            f"CREATE TABLE IF NOT EXISTS `{table_name}`"
-            "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-            "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
-        )
 
     yield pool
 
