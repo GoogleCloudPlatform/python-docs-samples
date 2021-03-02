@@ -41,7 +41,7 @@ def bucket_name() -> str:
     # `bucket.delete(force=True)` does not work if the bucket has >256 files.
     # Sequentially deleting many files with the client libraries can take
     # several minutes, so we're using `gsutil -m` instead.
-    subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs:://{BUCKET_NAME}/*"])
+    subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs://{BUCKET_NAME}/*"])
     bucket.delete(force=True)
 
 
