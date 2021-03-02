@@ -29,7 +29,7 @@ BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
-TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M")
+TIMESTAMP = datetime.now().strftime("%Y%m%d-%H%M")
 
 
 @pytest.fixture(scope="session")
@@ -68,7 +68,7 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
             "pipeline.py",
             "--create-images-database",
             f"--project={PROJECT}",
-            f"--job_name=wildlife_images_database_{TIMESTAMP}",
+            f"--job_name=wildlife-images-database-{TIMESTAMP}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={BIGQUERY_TABLE}",
@@ -91,7 +91,7 @@ def test_end_to_end(
             "python",
             "pipeline.py",
             f"--project={PROJECT}",
-            f"--job_name=wildlife_train_{TIMESTAMP}",
+            f"--job_name=wildlife-train-{TIMESTAMP}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={bigquery_table}",
