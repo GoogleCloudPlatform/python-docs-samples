@@ -1,4 +1,4 @@
 Pillow==8.1.1
 apache-beam[gcp]==2.28.0  # Make sure the version matches the apache/beam_python* image tag referenced in the Dockerfile.
-rasterio==1.2.0
+rasterio==1.2.1
 tensorflow==2.4.0  # Make sure this matches the Dockerfile base image TensorFlow version.

@@ -14,6 +14,8 @@
 
 import uuid
 
+import backoff
+from google.api_core.exceptions import GatewayTimeout
 import pytest
 import requests
 import six
@@ -41,11 +43,15 @@ def test_upload_photo(app):
     test_photo_data = requests.get(TEST_PHOTO_URL).content
     test_photo_filename = 'flex_and_vision_{}.jpg'.format(uuid.uuid4().hex)
 
-    r = app.post(
-        '/upload_photo',
-        data={
-            'file': (six.BytesIO(test_photo_data), test_photo_filename)
-        }
-    )
+    @backoff.on_exception(backoff.expo, GatewayTimeout, max_time=120)
+    def run_sample():
+        return app.post(
+            '/upload_photo',
+            data={
+                'file': (six.BytesIO(test_photo_data), test_photo_filename)
+            }
+        )
+
+    r = run_sample()
 
     assert r.status_code == 302
