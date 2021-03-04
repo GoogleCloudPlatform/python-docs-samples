@@ -46,6 +46,12 @@ def get_args() -> argparse.Namespace:
         type=float,
         help="Regularization strength, default=0 (Standard Regression)",
     )
+    parser.add_argument(
+        "--model_dir",
+        type=str,
+        help="Output directory for the model.",
+        default=os.environ["AIP_MODEL_DIR"],
+    )
     return parser.parse_args()
 # [END ai_platform_sklearn_task_args]
 
@@ -53,7 +59,7 @@ def get_args() -> argparse.Namespace:
 # [START ai_platform_sklearn_task_fit]
 def fit_model(
     input_path: str,
-    job_dir: str,
+    model_dir: str,
     degree: int = 1,
     alpha: int = 0
 ) -> None:
@@ -82,7 +88,7 @@ def fit_model(
 # [START ai_platform_sklearn_task_export]
     # Save model to GCS
     print("Saving model")
-    matches = re.match("gs://(.*?)/(.*)", job_dir)
+    matches = re.match("gs://(.*?)/(.*)", model_dir)
     bucket = matches.group(1)
     blob = matches.group(2)
 
@@ -99,14 +105,11 @@ def fit_model(
 if __name__ == "__main__":
     args = get_args()
 
-    input_path = args.input_path
-    job_dir = os.environ["AIP_MODEL_DIR"]
-
     kwargs = {}
     if args.degree:
         kwargs["degree"] = args.degree
     if args.alpha:
         kwargs["alpha"] = args.alpha
 
-    fit_model(input_path, job_dir, **kwargs)
+    fit_model(args.input_path, args.model_dir, **kwargs)
 # [END ai_platform_sklearn_task]

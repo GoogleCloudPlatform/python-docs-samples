@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START ai_platform_setup]
 from setuptools import find_packages
 from setuptools import setup
 
@@ -20,8 +21,9 @@ setup(
     version="0.1",
     packages=find_packages(),
     include_package_data=True,
-    description="Data Science Onramp trainer application",
+    description="Tutorial Package",
     install_requires=[
         "gcsfs==0.7.2"
     ]
 )
+# [END ai_platform_setup]

@@ -56,6 +56,12 @@ def get_args() -> argparse.Namespace:
         choices=["DEBUG", "ERROR", "FATAL", "INFO", "WARN"],
         default="INFO",
     )
+    parser.add_argument(
+        "--model_dir",
+        type=str,
+        help="Output directory for the model.",
+        default=os.environ["AIP_MODEL_DIR"],
+    )
     return parser.parse_args()
 # [END ai_platform_tfkeras_task_args]
 
@@ -64,7 +70,7 @@ def get_args() -> argparse.Namespace:
 # [START ai_platform_tfkeras_task_train_and_evaluate_load]
 def train_and_evaluate(
     input_path: str,
-    job_dir: str,
+    model_dir: str,
     num_epochs: int = 5,
     batch_size: int = 128,
     learning_rate: float = 0.01
@@ -124,7 +130,7 @@ def train_and_evaluate(
 
     # Setup TensorBoard callback.
     tensorboard_cb = tf.keras.callbacks.TensorBoard(
-        os.path.join(job_dir, "keras_tensorboard"), histogram_freq=1
+        os.path.join(model_dir, "keras_tensorboard"), histogram_freq=1
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_tensorboard]
 
@@ -141,17 +147,14 @@ def train_and_evaluate(
     )
 
     # Export model
-    export_path = os.path.join(job_dir, "tfkeras_model/")
-    tf.keras.models.save_model(keras_model, export_path)
-    print(f"Model exported to: {export_path}")
+    keras_model.save(model_dir)
+    print(f"Model exported to: {model_dir}")
     # [END ai_platform_tfkeras_task_train_and_evaluate_fit_export]
 # [END ai_platform_tfkeras_task_train_and_evaluate]
 
 
 if __name__ == "__main__":
     args = get_args()
-    input_path = args.input_path
-    job_dir = os.environ["AIP_MODEL_DIR"]
 
     kwargs = {}
     if args.num_epochs:
@@ -163,5 +166,5 @@ if __name__ == "__main__":
 
     tf.compat.v1.logging.set_verbosity(args.verbosity)
 
-    train_and_evaluate(input_path, job_dir, **kwargs)
+    train_and_evaluate(args.input_path, args.model_dir, **kwargs)
 # [END ai_platform_tfkeras_task]

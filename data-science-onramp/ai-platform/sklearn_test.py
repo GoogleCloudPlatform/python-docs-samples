@@ -103,8 +103,7 @@ def test_sklearn(
                     "package_uris": [f"gs://{STAGING_BUCKET}/{TRAINER_TAR}"],
                     "python_module": "trainer.sklearn_model.task",
                     "args": [
-                        "--input-path",
-                        TRAIN_DATA_PATH
+                        f"--input-path={TRAIN_DATA_PATH}"
                     ]
                 }
             }]
