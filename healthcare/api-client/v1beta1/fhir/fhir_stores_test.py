@@ -30,7 +30,7 @@ dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 test_fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 
-BACKOFF_MAX_TIME=240
+BACKOFF_MAX_TIME = 240
 
 @pytest.fixture(scope="module")
 def test_dataset():
