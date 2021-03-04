@@ -14,7 +14,7 @@
 
 from airflow import models
 
-from . import unit_testing
+import internal_unit_testing
 
 
 def test_dag_import():
@@ -28,4 +28,4 @@ def test_dag_import():
     models.Variable.set('gcp_project', 'example-project')
     models.Variable.set('gce_zone', 'us-central1-f')
     from . import hadoop_tutorial as module
-    unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(module)

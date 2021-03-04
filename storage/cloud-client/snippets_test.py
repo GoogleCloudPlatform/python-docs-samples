@@ -405,15 +405,13 @@ def test_object_get_kms_key(test_bucket):
 
 def test_storage_compose_file(test_bucket):
     source_files = ["test_upload_blob_1", "test_upload_blob_2"]
-    blob_list = []
     for source in source_files:
         blob = test_bucket.blob(source)
         blob.upload_from_string(source)
-        blob_list.append(blob)
 
     with tempfile.NamedTemporaryFile() as dest_file:
         destination = storage_compose_file.compose_file(
-            test_bucket.name, blob_list, dest_file.name
+            test_bucket.name, source_files[0], source_files[1], dest_file.name
         )
         composed = destination.download_as_string()
 

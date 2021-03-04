@@ -15,7 +15,9 @@
 import os
 import uuid
 
+import backoff
 import pytest
+from requests.exceptions import HTTPError
 
 import fhir_stores  # noqa
 
@@ -27,6 +29,9 @@ service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 test_fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
+
+
+BACKOFF_MAX_TIME = 240
 
 
 @pytest.fixture(scope="module")
@@ -57,9 +62,14 @@ def test_fhir_store():
 
 
 def test_create_delete_fhir_store(test_dataset, capsys):
-    fhir_stores.create_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
-    )
+    # We see HttpErrors with "dataset not initialized" message.
+    # I think retry will mitigate the flake.
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME)
+    def create():
+        fhir_stores.create_fhir_store(
+            service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        )
+    create()
 
     fhir_stores.delete_fhir_store(
         service_account_json, project_id, cloud_region, dataset_id, fhir_store_id

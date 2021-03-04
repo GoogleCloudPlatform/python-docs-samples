@@ -1,3 +1,18 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 import re
 import uuid
@@ -54,7 +69,9 @@ DATAPROC_JOB = {  # Dataproc job configuration
     "pyspark_job": {
         "main_python_file_uri": f"gs://{BUCKET_NAME}/{BUCKET_BLOB}",
         "args": [BUCKET_NAME, BQ_TABLE, "--dry-run"],
-        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
+        # Temporarily pin jar version due to breaking release
+        # "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
+        "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.18.1.jar"],
     },
 }
 
@@ -72,6 +89,11 @@ def setup_and_teardown_table():
     job_config = bigquery.LoadJobConfig(
         autodetect=True, write_disposition="WRITE_TRUNCATE"
     )
+
+    # Logging for debugging the flake:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/5312
+    print(f"df: {df}")
+    print(f"job_config: {job_config}")
     operation = bq_client.load_table_from_dataframe(df, BQ_TABLE, job_config=job_config)
 
     # Wait for job to complete

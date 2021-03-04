@@ -3,6 +3,17 @@
 This sample shows how to create a service that processes Pub/Sub events using 
 [the CloudEvents SDK](https://github.com/cloudevents/sdk-python).
 
+## Setup
+
+Set the `gcloud` configuration variables:
+
+```sh
+gcloud config set project <PROJECT_ID>
+gcloud config set run/region us-central1
+gcloud config set run/platform managed
+gcloud config set eventarc/location us-central1
+```
+
 ## Quickstart
 
 Deploy your Cloud Run service:
@@ -10,17 +21,20 @@ Deploy your Cloud Run service:
 ```sh
 gcloud builds submit \
   --tag gcr.io/$(gcloud config get-value project)/eventarc-pubsub
+
 gcloud run deploy eventarc-pubsub \
   --image gcr.io/$(gcloud config get-value project)/eventarc-pubsub \
-  --platform managed
+  --platform managed \
+  --allow-unauthenticated
 ```
 
 Create a Cloud Eventarc trigger, which will also create a Pub/Sub topic:
 
 ```sh
-gcloud beta eventarc triggers create pubsub-trigger \
-  --destination-run-service eventarc-pubsub \
-  --matching-criteria "type=google.cloud.pubsub.topic.v1.messagePublished"
+gcloud eventarc triggers create pubsub-trigger \
+  --destination-run-service=events-pubsub \
+  --destination-run-region=us-central1 \
+  --event-filters="type=google.cloud.pubsub.topic.v1.messagePublished"
 ```
 
 ## Test
