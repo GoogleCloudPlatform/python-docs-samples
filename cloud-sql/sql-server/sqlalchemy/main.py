@@ -92,15 +92,14 @@ def init_tcp_connection_engine(db_config):
     # managing a pool of connections to your database
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
-        # mssql+pyodbc://<db_user>:<db_pass>@/<host>:<port>/<db_name>?driver=ODBC+Driver+17+for+SQL+Server
+        # mssql+pytds://<db_user>:<db_pass>@/<host>:<port>/<db_name>?driver=ODBC+Driver+17+for+SQL+Server
         sqlalchemy.engine.url.URL(
-            "mssql+pyodbc",
+            "mssql+pytds",
             username=db_user,
             password=db_pass,
             database=db_name,
             host=db_hostname,
             port=db_port,
-            query={"driver": "ODBC Driver 17 for SQL Server"},
         ),
         **db_config
     )

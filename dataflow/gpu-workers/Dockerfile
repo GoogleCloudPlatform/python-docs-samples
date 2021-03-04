@@ -27,7 +27,7 @@ RUN egrep -v '^tensorflow([=<>]|$)' requirements.txt > /tmp/requirements.txt \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Copy the Apache Beam required files from the Beam Python SDK image.
-COPY --from=apache/beam_python3.6_sdk:2.27.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.6_sdk:2.28.0 /opt/apache/beam /opt/apache/beam
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
