@@ -1,11 +1,25 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from contextlib import contextmanager
 import logging
 import os
 from typing import Dict
 import uuid
 
-import pymysql
 import pytest
+import sqlalchemy
 
 import main
 
@@ -57,23 +71,30 @@ def unix_db_connection():
 
 
 def _common_setup():
+    pool = main.init_connection_engine()
+
+    table_name: str = uuid.uuid4().hex
+
     try:
-        pool = main.init_connection_engine()
-    except pymysql.err.OperationalError as e:
+        with pool.connect() as conn:
+            conn.execute(
+                f"CREATE TABLE IF NOT EXISTS `{table_name}`"
+                "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
+                "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
+            )
+    except sqlalchemy.exc.OperationalError as e:
         logger.warning(
             "Could not connect to the production database. "
             "If running tests locally, is the cloud_sql_proxy currently running?"
         )
+        # If there is cloud sql proxy log, dump the contents.
+        home_dir = os.environ.get("HOME", "")
+        log_file = f"{home_dir}/cloud_sql_proxy.log"
+        if home_dir and os.path.isfile(log_file):
+            print(f"Dumping the contents of {log_file}")
+            with open(log_file, "r") as f:
+                print(f.read())
         raise e
-
-    table_name: str = uuid.uuid4().hex
-
-    with pool.connect() as conn:
-        conn.execute(
-            f"CREATE TABLE IF NOT EXISTS `{table_name}`"
-            "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-            "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
-        )
 
     yield pool
 
