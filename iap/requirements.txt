@@ -1,6 +1,6 @@
 cryptography==3.4.6
 flask==1.1.2
-google-auth==1.27.0
+google-auth==1.27.1
 gunicorn==20.0.4
 requests==2.25.1
 requests_toolbelt==0.9.1
