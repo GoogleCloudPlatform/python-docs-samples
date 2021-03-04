@@ -20,6 +20,7 @@ import pytest
 # user should substitute their project ID
 PROJECT_ID = 'your-project-id'
 
+
 @pytest.fixture(autouse=True, scope="module")
 def initalize_airflow_database():
     airflow.utils.db.initdb()
