@@ -78,28 +78,28 @@ def batch_process_documents(
     print("Output files:")
 
     for i, blob in enumerate(blob_list):
-        # Download the contents of this blob as a bytes object.
-        if ".json" not in blob.name:
-            print(f"skipping non-supported file type {blob.name}")
-            return
-        # Only parses JSON files
-        blob_as_bytes = blob.download_as_bytes()
+        # If JSON file, download the contents of this blob as a bytes object.
+        if ".json" in blob.name:
+            blob_as_bytes = blob.download_as_bytes()
 
-        document = documentai.types.Document.from_json(blob_as_bytes)
-        print(f"Fetched file {i + 1}")
+            document = documentai.types.Document.from_json(blob_as_bytes)
+            print(f"Fetched file {i + 1}")
 
-        # For a full list of Document object attributes, please reference this page: https://googleapis.dev/python/documentai/latest/_modules/google/cloud/documentai_v1beta3/types/document.html#Document
+            # For a full list of Document object attributes, please reference this page:
+            # https://cloud.google.com/document-ai/docs/reference/rpc/google.cloud.documentai.v1beta3#document
 
-        # Read the text recognition output from the processor
-        for page in document.pages:
-            for form_field in page.form_fields:
-                field_name = get_text(form_field.field_name, document)
-                field_value = get_text(form_field.field_value, document)
-                print("Extracted key value pair:")
-                print(f"\t{field_name}, {field_value}")
-            for paragraph in document.pages:
-                paragraph_text = get_text(paragraph.layout, document)
-                print(f"Paragraph text:\n{paragraph_text}")
+            # Read the text recognition output from the processor
+            for page in document.pages:
+                for form_field in page.form_fields:
+                    field_name = get_text(form_field.field_name, document)
+                    field_value = get_text(form_field.field_value, document)
+                    print("Extracted key value pair:")
+                    print(f"\t{field_name}, {field_value}")
+                for paragraph in document.pages:
+                    paragraph_text = get_text(paragraph.layout, document)
+                    print(f"Paragraph text:\n{paragraph_text}")
+        else:
+            print(f"Skipping non-supported file type {blob.name}")
 
 
 # Extract shards from the text field
