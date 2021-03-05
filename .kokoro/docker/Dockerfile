@@ -16,7 +16,7 @@
 # rate limit.
 # FROM mirror.gcr.io/library/ubuntu:18.04
 # However, now the above image is not working, we're using our own cache
-FROM gcr.io/cloud-devrel-kokoro-resources/ubuntu:18.04
+FROM gcr.io/cloud-devrel-kokoro-resources/ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -89,7 +89,7 @@ RUN apt-get update \
 
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
     msodbcsql17 \
@@ -105,7 +105,7 @@ RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
     && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
     && /tmp/fetch_gpg_keys.sh \
-    && for PYTHON_VERSION in 2.7.18 3.6.12 3.7.9 3.8.7 3.9.1; do \
+    && for PYTHON_VERSION in 2.7.18 3.6.13 3.7.10 3.8.8 3.9.2; do \
         wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
         && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
