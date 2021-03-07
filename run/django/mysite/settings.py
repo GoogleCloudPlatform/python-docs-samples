@@ -34,7 +34,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 env = environ.Env()
 # If no .env has been provided, pull it from Secret Manager
-if os.path.isfile(".env"):
+if os.path.isfile(env_file):
     env.read_env(env_file)
 else:
     # Create local settings if running with CI, for unit testing
@@ -117,9 +117,7 @@ DATABASES = {"default": env.db()}
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
