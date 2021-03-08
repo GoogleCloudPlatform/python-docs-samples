@@ -88,7 +88,7 @@ tayassu pecari,animals/0090/1218.jpg"""
                 autodetect=True,
             ),
         )
-        job.result()  # Waits for the job to complete.
+        job.result()  # wait for table to be loaded
 
     # The table is deleted when we delete the dataset.
     yield BIGQUERY_TABLE
