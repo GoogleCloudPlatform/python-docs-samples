@@ -45,7 +45,6 @@ def run(
     base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
     image_bytes = requests.get(f"{base_url}/{image_file}").content
 
-    # See gs://google-cloud-aiplatform/schema/predict/params/image_classification_1.0.0.yaml for the format of the parameters.
     response = client.predict(
         endpoint=client.endpoint_path(
             project=project, location=region, endpoint=model_endpoint_id
@@ -61,7 +60,6 @@ def run(
         ).to_value(),
     )
 
-    # See gs://google-cloud-aiplatform/schema/predict/prediction/classification.yaml for the format of the predictions.
     prediction = [dict(pred) for pred in response.predictions][0]
     return sorted(
         [
