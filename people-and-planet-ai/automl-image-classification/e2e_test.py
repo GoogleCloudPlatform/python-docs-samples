@@ -21,6 +21,9 @@ from google.cloud import bigquery
 from google.cloud import storage
 import pytest
 
+import deploy_model
+import predict
+
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"wildlife-insights-{SUFFIX}"
@@ -92,12 +95,16 @@ mazama temama,animals/0532/0525.jpg"""
 
 
 @pytest.fixture(scope="session")
-def model_endpoint() -> str:
-    pass
+def model_endpoint_id() -> str:
+    yield deploy_model.run(
+        project=PROJECT,
+        region=REGION,
+        model_path=AUTOML_MODEL_PATH,
+        model_endpoint_name="wildlife_insights",
+    )
 
 
 def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None:
-    # Create the images database table.
     subprocess.run(
         [
             "python",
@@ -116,7 +123,7 @@ def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None
     )
 
 
-def test_end_to_end(
+def test_preprocess_data(
     bucket_name: str, bigquery_dataset: str, bigquery_table: str
 ) -> None:
     subprocess.run(
@@ -137,3 +144,13 @@ def test_end_to_end(
         ],
         check=True,
     )
+
+
+def test_predict(model_endpoint_id: str) -> None:
+    predictions = predict.run(
+        project=PROJECT,
+        region=REGION,
+        model_endpoint_id=model_endpoint_id,
+        image_file="animals/0036/0072.jpg",  # tapirus indicus
+    )
+    assert len(predictions) > 0
