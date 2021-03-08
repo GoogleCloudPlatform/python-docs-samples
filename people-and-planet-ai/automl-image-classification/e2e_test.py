@@ -85,8 +85,7 @@ mazama temama,animals/0532/0525.jpg"""
                 autodetect=True,
             ),
         )
-
-    job.result()  # Waits for the job to complete.
+        job.result()  # Waits for the job to complete.
 
     # The table is deleted when we delete the dataset.
     yield BIGQUERY_TABLE
