@@ -104,8 +104,7 @@ def test_tfkeras(
                     "package_uris": [f"gs://{STAGING_BUCKET}/{TRAINER_TAR}"],
                     "python_module": "trainer.tfkeras_model.task",
                     "args": [
-                        "--input-path",
-                        TRAIN_DATA_PATH
+                        f"--input-path={TRAIN_DATA_PATH}"
                     ]
                 }
             }]
@@ -124,4 +123,4 @@ def test_tfkeras(
         time.sleep(60)
         response = aip_job_client.get_custom_job(name=resource_name)
 
-    assert bucket.blob(f"{MODEL_DIR}/tfkeras_model/saved_model.pb").exists()
+    assert bucket.blob(f"{MODEL_DIR}/saved_model.pb").exists()
