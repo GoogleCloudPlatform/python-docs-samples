@@ -114,7 +114,7 @@ def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None
             f"--job_name=wildlife-images-database-{SUFFIX}",
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
-            f"--bigquery-table={BIGQUERY_TABLE}",
+            f"--bigquery-table={BIGQUERY_TABLE}_test",
             "--runner=DataflowRunner",
             f"--region={REGION}",
             "--worker_machine_type=n1-standard-2",
@@ -123,7 +123,7 @@ def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None
     )
 
 
-def test_preprocess_data(
+def test_preprocess(
     bucket_name: str, bigquery_dataset: str, bigquery_table: str
 ) -> None:
     subprocess.run(
