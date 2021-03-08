@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
 import os
 import subprocess
 import uuid
@@ -58,7 +59,39 @@ def bigquery_dataset() -> str:
 
 
 @pytest.fixture(scope="session")
-def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
+def bigquery_table(bigquery_dataset: str) -> None:
+    # Create a small test table.
+    data = """category,file_name
+equus quagga,animals/0378/0118.jpg
+odontophorus balliviani,animals/0523/1368.jpg
+tayassu pecari,animals/0049/0849.jpg
+human,humans/0379/0877.jpg
+human,humans/0640/0467.jpg
+fossa fossana,animals/0620/0242.jpg
+lophotibis cristataa,animals/0605/1478.jpg
+alectoris rufa,animals/0059/1810.jpg
+tayassu pecari,animals/0090/1218.jpg
+mazama temama,animals/0532/0525.jpg"""
+
+    bigquery_client = bigquery.Client()
+    with io.StringIO(data) as source_file:
+        job = bigquery_client.load_table_from_file(
+            source_file,
+            f"{PROJECT}.{bigquery_dataset}.{BIGQUERY_TABLE}",
+            job_config=bigquery.LoadJobConfig(
+                source_format=bigquery.SourceFormat.CSV,
+                skip_leading_rows=1,
+                autodetect=True,
+            ),
+        )
+
+    job.result()  # Waits for the job to complete.
+
+    # The table is deleted when we delete the dataset.
+    yield BIGQUERY_TABLE
+
+
+def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None:
     # Create the images database table.
     subprocess.run(
         [
@@ -76,9 +109,6 @@ def bigquery_table(bucket_name: str, bigquery_dataset: str) -> None:
         ],
         check=True,
     )
-
-    # The table is deleted when we delete the dataset.
-    yield BIGQUERY_TABLE
 
 
 def test_end_to_end(
