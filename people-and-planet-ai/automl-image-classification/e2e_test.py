@@ -66,16 +66,16 @@ def bigquery_dataset() -> str:
 def bigquery_table(bigquery_dataset: str) -> str:
     # Create a small test table.
     data = """category,file_name
+alectoris rufa,animals/0059/1810.jpg
 equus quagga,animals/0378/0118.jpg
-odontophorus balliviani,animals/0523/1368.jpg
-tayassu pecari,animals/0049/0849.jpg
+fossa fossana,animals/0620/0242.jpg
 human,humans/0379/0877.jpg
 human,humans/0640/0467.jpg
-fossa fossana,animals/0620/0242.jpg
 lophotibis cristataa,animals/0605/1478.jpg
-alectoris rufa,animals/0059/1810.jpg
-tayassu pecari,animals/0090/1218.jpg
-mazama temama,animals/0532/0525.jpg"""
+mazama temama,animals/0532/0525.jpg
+odontophorus balliviani,animals/0523/1368.jpg
+tayassu pecari,animals/0049/0849.jpg
+tayassu pecari,animals/0090/1218.jpg"""
 
     bigquery_client = bigquery.Client()
     with io.StringIO(data) as source_file:
