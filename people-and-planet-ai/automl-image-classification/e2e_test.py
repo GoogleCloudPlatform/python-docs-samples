@@ -29,6 +29,7 @@ BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
+AUTOML_MODEL_PATH = ""
 
 
 @pytest.fixture(scope="session")
@@ -42,7 +43,7 @@ def bucket_name() -> str:
     # `bucket.delete(force=True)` does not work if the bucket has >256 files.
     # Sequentially deleting many files with the client libraries can take
     # several minutes, so we're using `gsutil -m` instead.
-    subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs://{BUCKET_NAME}/*"])
+    # subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs://{BUCKET_NAME}/*"])
     bucket.delete(force=True)
 
 
@@ -59,7 +60,7 @@ def bigquery_dataset() -> str:
 
 
 @pytest.fixture(scope="session")
-def bigquery_table(bigquery_dataset: str) -> None:
+def bigquery_table(bigquery_dataset: str) -> str:
     # Create a small test table.
     data = """category,file_name
 equus quagga,animals/0378/0118.jpg
@@ -89,6 +90,11 @@ mazama temama,animals/0532/0525.jpg"""
 
     # The table is deleted when we delete the dataset.
     yield BIGQUERY_TABLE
+
+
+@pytest.fixture(scope="session")
+def model_endpoint() -> str:
+    pass
 
 
 def test_create_images_database(bucket_name: str, bigquery_dataset: str) -> None:
