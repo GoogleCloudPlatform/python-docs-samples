@@ -45,7 +45,7 @@ def create_model_endpoint(project: str, region: str, model_endpoint_name: str) -
 
 def deploy_model(
     project: str, region: str, model_path: str, model_name: str, model_endpoint_id: str
-) -> None:
+) -> str:
     """Deploys an AutoML model into an endpoint.
 
     Args:
@@ -54,6 +54,9 @@ def deploy_model(
         model_path: AutoML full model path.
         model_name: AutoML deployed model name.
         model_endpoint_id: AutoML deployment endpoint ID.
+
+    Returns:
+        The deployed model_endpoint_id.
     """
     client = aiplatform.gapic.EndpointServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -80,6 +83,7 @@ def deploy_model(
     print(f"Deploying model, operation: {response.operation.name}")
     deployed_model = response.result()
     print(f"Model deployed\n{deployed_model}")
+    return model_endpoint_id
 
 
 def run(project: str, region: str, model_path: str, model_endpoint_name: str) -> None:
@@ -90,9 +94,14 @@ def run(project: str, region: str, model_path: str, model_endpoint_name: str) ->
         region: Location for AutoML resources.
         model_path: AutoML full model path.
         model_endpoint_name: AutoML deployment endpoint name.
+
+    Returns:
+        The deployed model_endpoint_id.
     """
     model_endpoint_id = create_model_endpoint(project, region, model_endpoint_name)
-    deploy_model(project, region, model_path, model_endpoint_name, model_endpoint_id)
+    return deploy_model(
+        project, region, model_path, model_endpoint_name, model_endpoint_id
+    )
 
 
 if __name__ == "__main__":
