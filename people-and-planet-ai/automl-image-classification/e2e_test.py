@@ -42,7 +42,7 @@ def bucket_name() -> str:
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(BUCKET_NAME)
 
-    logging.info(f"bucket_name: {BUCKET_NAME}")
+    logging.info(f"bucket_name: {repr(BUCKET_NAME)}")
     yield BUCKET_NAME
 
     # This test creates 1 image file per class, creating around 650 files.
@@ -60,7 +60,7 @@ def bigquery_dataset() -> str:
     dataset_id = f"{PROJECT}.{BIGQUERY_DATASET}"
     bigquery_client.create_dataset(bigquery.Dataset(dataset_id))
 
-    logging.info(f"bigquery_dataset: {BIGQUERY_DATASET}")
+    logging.info(f"bigquery_dataset: {repr(BIGQUERY_DATASET)}")
     yield BIGQUERY_DATASET
 
     bigquery_client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=True)
@@ -99,7 +99,7 @@ def bigquery_table(bigquery_dataset: str) -> str:
         job.result()  # wait for table to be loaded
 
     # The table is deleted when we delete the dataset.
-    logging.info(f"bigquery_table: {BIGQUERY_TABLE}")
+    logging.info(f"bigquery_table: {repr(BIGQUERY_TABLE)}")
     yield BIGQUERY_TABLE
 
 
@@ -112,7 +112,7 @@ def model_endpoint_id() -> str:
         model_endpoint_name="wildlife_insights",
     )
 
-    logging.info(f"endpoint_id: {endpoint_id}")
+    logging.info(f"endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
 
     client = aiplatform.gapic.EndpointServiceClient(
@@ -172,4 +172,4 @@ def test_predict(model_endpoint_id: str) -> None:
         model_endpoint_id=model_endpoint_id,
         image_file="animals/0036/0072.jpg",  # tapirus indicus
     )
-    assert len(predictions) > 0, f"predictions: {predictions}"
+    assert len(predictions) > 0, f"predictions: {repr(predictions)}"
