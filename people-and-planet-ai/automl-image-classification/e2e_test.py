@@ -125,7 +125,9 @@ def model_endpoint_id() -> str:
     )
 
     endpoint_path = client.endpoint_path(PROJECT, REGION, endpoint_id)
-    client.undeploy_model(endpoint=endpoint_path, deployed_model_id=deployed_model_id)
+    client.undeploy_model(
+        endpoint=endpoint_path, deployed_model_id=deployed_model_id
+    ).result()
     client.delete_endpoint(name=endpoint_path).result()
 
 
