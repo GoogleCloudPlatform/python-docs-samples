@@ -25,7 +25,7 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     models.Variable.set('gcs_bucket', 'example_bucket')
-    models.Variable.set('gcp_project', 'example-project')
+    # models.Variable.set('gcp_project', 'example-project')
     models.Variable.set('gce_zone', 'us-central1-f')
     models.Variable.set('email', 'notify@example.com')
     from . import bq_notify as module
