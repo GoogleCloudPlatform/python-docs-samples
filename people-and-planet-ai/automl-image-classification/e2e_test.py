@@ -114,7 +114,7 @@ def model_endpoint_id() -> str:
     print(f"model_path: {repr(AUTOML_MODEL_PATH)}")
     endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, AUTOML_ENDPOINT)
     deployed_model_id = deploy_model.deploy_model(
-        PROJECT, REGION, AUTOML_MODEL_PATH, AUTOML_ENDPOINT, model_endpoint_id
+        PROJECT, REGION, AUTOML_MODEL_PATH, AUTOML_ENDPOINT, endpoint_id
     )
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
