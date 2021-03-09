@@ -20,4 +20,4 @@ import pytest
 @pytest.fixture(autouse=True, scope="module")
 def initalizes_airflow_database():
     airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
-    airflow.utils.db.initdb()
+    # airflow.utils.db.initdb()
