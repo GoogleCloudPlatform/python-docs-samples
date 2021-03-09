@@ -79,7 +79,7 @@ def deploy_model(
     print(f"Deploying model, operation: {response.operation.name}")
     deployed_model = response.result()
     print(f"Model deployed\n{deployed_model}")
-    return deployed_model.name
+    return deployed_model.id
 
 
 def run(project: str, region: str, model_path: str, model_endpoint_name: str) -> None:
