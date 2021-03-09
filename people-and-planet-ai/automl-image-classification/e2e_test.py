@@ -30,6 +30,7 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"wildlife-insights-{SUFFIX}"
 BIGQUERY_DATASET = f"wildlife_insights_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
+AUTOML_ENDPOINT = f"wildlife_insights_{SUFFIX}"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
@@ -110,22 +111,22 @@ def bigquery_table(bigquery_dataset: str) -> str:
 
 @pytest.fixture(scope="session")
 def model_endpoint_id() -> str:
-    endpoint_id = deploy_model.run(
-        project=PROJECT,
-        region=REGION,
-        model_path=AUTOML_MODEL_PATH,
-        model_endpoint_name="wildlife_insights",
+    print(f"model_path: {repr(AUTOML_MODEL_PATH)}")
+    endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, AUTOML_ENDPOINT)
+    deployed_model_id = deploy_model.deploy_model(
+        PROJECT, REGION, AUTOML_MODEL_PATH, AUTOML_ENDPOINT, model_endpoint_id
     )
 
-    print(f"model_path: {repr(AUTOML_MODEL_PATH)}")
-    print(f"endpoint_id: {repr(endpoint_id)}")
+    print(f"model_endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
 
     client = aiplatform.gapic.EndpointServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
-    name = client.endpoint_path(project=PROJECT, location=REGION, endpoint=endpoint_id)
-    client.delete_endpoint(name=name).result()
+
+    endpoint_path = client.endpoint_path(PROJECT, REGION, endpoint_id)
+    client.undeploy_model(endpoint=endpoint_path, deployed_model_id=deployed_model_id)
+    client.delete_endpoint(name=endpoint_path).result()
 
 
 def test_create_images_database_table(bucket_name: str, bigquery_dataset: str) -> None:
