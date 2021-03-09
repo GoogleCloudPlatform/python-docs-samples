@@ -33,7 +33,9 @@ BIGQUERY_TABLE = "images_database"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
-AUTOML_MODEL_PATH = ""
+
+# Use a pre-trained pre-existing model, training one takes too long.
+AUTOML_MODEL_PATH = f"projects/{PROJECT}/locations/{REGION}/models/1590773423066316800"
 
 
 @pytest.fixture(scope="session")
@@ -68,6 +70,7 @@ def bigquery_dataset() -> str:
 @pytest.fixture(scope="session")
 def bigquery_table(bigquery_dataset: str) -> str:
     # Create a small test table.
+    table_id = f"{PROJECT}.{bigquery_dataset}.{BIGQUERY_TABLE}"
     schema = [
         bigquery.SchemaField("category", "STRING"),
         bigquery.SchemaField("file_name", "STRING"),
@@ -87,18 +90,21 @@ def bigquery_table(bigquery_dataset: str) -> str:
 
     bigquery_client = bigquery.Client()
     with io.StringIO("\n".join(rows)) as source_file:
-        job = bigquery_client.load_table_from_file(
+        bigquery_client.load_table_from_file(
             source_file,
-            f"{PROJECT}.{bigquery_dataset}.{BIGQUERY_TABLE}",
+            table_id,
             job_config=bigquery.LoadJobConfig(
                 source_format=bigquery.SourceFormat.CSV,
                 schema=schema,
             ),
-        )
-        job.result()  # wait for table to be loaded
+        ).result()
 
     # The table is deleted when we delete the dataset.
+    table = bigquery_client.get_table(table_id)
     print(f"bigquery_table: {repr(BIGQUERY_TABLE)}")
+    print(f"    table_id: {repr(table_id)}")
+    print(f"    num_rows: {repr(table.num_rows)}")
+    print(f"    schema: {repr(table.schema)}")
     yield BIGQUERY_TABLE
 
 
@@ -111,6 +117,7 @@ def model_endpoint_id() -> str:
         model_endpoint_name="wildlife_insights",
     )
 
+    print(f"model_path: {repr(AUTOML_MODEL_PATH)}")
     print(f"endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
 
