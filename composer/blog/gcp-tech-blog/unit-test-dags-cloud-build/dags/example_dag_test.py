@@ -23,7 +23,8 @@ PROJECT_ID = 'your-project-id'
 
 @pytest.fixture(autouse=True, scope="function")
 def initalize_airflow_database():
-    airflow.utils.db.resetdb(rbac=None) #this command will change in Airflow 2.0
+    airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
+
 
 def test_dag_import():
     models.Variable.set('gcp_project', PROJECT_ID)
