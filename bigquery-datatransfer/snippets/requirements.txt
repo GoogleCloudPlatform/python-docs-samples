@@ -1,1 +1,1 @@
-google-cloud-bigquery-datatransfer==3.0.0
+google-cloud-bigquery-datatransfer==3.0.1
