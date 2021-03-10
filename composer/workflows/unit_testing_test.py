@@ -21,9 +21,9 @@ import pytest
 
 @pytest.fixture(scope="function")
 def set_variables(airflow_database):
-    # models.Variable.set('gcp_project', 'example-project')
+    models.Variable.set('gcp_project', 'example-project')
     yield
-    # models.Variable.delete('gcp_project')
+    models.Variable.delete('gcp_project')
 
 
 def test_dag_no_dag():
