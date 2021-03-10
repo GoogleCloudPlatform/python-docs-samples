@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,13 @@
 # limitations under the License.
 
 
-import airflow.utils.db
 import pytest
 
 
-@pytest.fixture(autouse=True, scope="session")
-def initalizes_airflow_database():
+# this fixture initializes the Airflow DB once per session
+# it is used by DAGs in both the blogs and workflows directories
+@pytest.fixture(scope="session")
+def airflow_database():
+    import airflow.utils.db
+    # reset both resets and initializes a new database
     airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0

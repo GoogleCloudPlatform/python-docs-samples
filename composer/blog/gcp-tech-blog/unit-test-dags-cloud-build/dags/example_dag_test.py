@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from airflow import models
-import airflow.utils.db
 import internal_unit_testing
 import pytest
 
@@ -21,7 +20,13 @@ import pytest
 PROJECT_ID = 'your-project-id'
 
 
-def test_dag_import():
+@pytest.fixture(autouse=True, scope="function")
+def set_variables():
     models.Variable.set('gcp_project', PROJECT_ID)
+    yield
+    models.Variable.delete('gcp_project')
+
+
+def test_dag_import(airflow_database):
     from . import example_dag
     internal_unit_testing.assert_has_valid_dag(example_dag)
