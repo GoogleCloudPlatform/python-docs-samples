@@ -18,7 +18,7 @@ import pytest
 
 # this fixture initializes the Airflow DB once per session
 # it is used by DAGs in both the blogs and workflows directories
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def airflow_database():
     import airflow.utils.db
     # reset both resets and initializes a new database
