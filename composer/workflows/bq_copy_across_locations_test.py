@@ -22,7 +22,7 @@ import pytest
 
 
 @pytest.fixture(autouse=True, scope="function")
-def set_variables():
+def set_variables(airflow_database):
     example_file_path = os.path.join(
         os.path.abspath(os.path.dirname(__file__)),
         'bq_copy_eu_to_us_sample.csv')
@@ -35,7 +35,7 @@ def set_variables():
     models.Variable.delete('gcs_dest_bucket')
 
 
-def test_dag(airflow_database):
+def test_dag():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow

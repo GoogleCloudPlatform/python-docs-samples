@@ -20,7 +20,7 @@ import pytest
 
 
 @pytest.fixture(scope="function")
-def set_variables():
+def set_variables(airflow_database):
     models.Variable.set('gcp_project', 'example-project')
     yield
     models.Variable.delete('gcp_project')
@@ -39,7 +39,7 @@ def test_dag_has_cycle():
 
 
 # [START composer_dag_unit_testing_test]
-def test_dag_with_variables(set_variables, airflow_database):
+def test_dag_with_variables(set_variables):
 
     # Importing the module verifies that there are no syntax errors.
     from . import unit_testing_variables as module

@@ -19,13 +19,13 @@ import pytest
 
 
 @pytest.fixture(autouse=True, scope="function")
-def set_variables():
+def set_variables(airflow_database):
     models.Variable.set("project_id", "example-project")
     yield
     models.Variable.delete("project_id")
 
 
-def test_dag_import(airflow_database):
+def test_dag_import():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
