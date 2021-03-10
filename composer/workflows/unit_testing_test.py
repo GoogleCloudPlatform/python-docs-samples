@@ -39,7 +39,7 @@ def test_dag_has_cycle():
 
 
 # [START composer_dag_unit_testing_test]
-def test_dag_with_variables(set_variables):
+def test_dag_with_variables(set_variables, airflow_database):
 
     # Importing the module verifies that there are no syntax errors.
     from . import unit_testing_variables as module
