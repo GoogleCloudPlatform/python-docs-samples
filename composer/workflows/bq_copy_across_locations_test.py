@@ -35,7 +35,7 @@ def set_variables():
     models.Variable.delete('gcs_dest_bucket')
 
 
-def test_dag():
+def test_dag(airflow_database):
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
