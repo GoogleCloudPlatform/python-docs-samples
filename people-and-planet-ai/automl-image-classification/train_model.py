@@ -16,110 +16,15 @@
 
 from datetime import datetime
 import io
-import json
 import logging
-import os
 import random
 import time
 from typing import Any, Callable, Dict, Iterable, Optional, Tuple
-import zipfile
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from PIL import Image, ImageFile
 import requests
-
-
-def create_images_database(
-    bigquery_dataset: str,
-    bigquery_table: str,
-    pipeline_options: Optional[PipelineOptions] = None,
-) -> None:
-    """Creates the images database in BigQuery.
-
-    This is a one time only process. It reads the metadata file from the LILA
-    science WCS database, gets rid of invalid rows and uploads all the
-    `file_names` alongside their respective `category` into BigQuery.
-
-    Args:
-        bigquery_dataset: Dataset ID for the images database, the dataset must exist.
-        bigquery_table: Table ID for the images database, it is created if it doesn't exist.
-        pipeline_options: PipelineOptions for Apache Beam.
-    """
-    invalid_categories = {
-        "#ref!",
-        "empty",
-        "end",
-        "misfire",
-        "small mammal",
-        "start",
-        "unidentifiable",
-        "unidentified",
-        "unknown",
-    }
-
-    # We create a simple schema for the BigQuery table.
-    # For more information on BigQuery schemas, see:
-    #   https://cloud.google.com/bigquery/docs/schemas
-    schema = ",".join(
-        [
-            "category:STRING",
-            "file_name:STRING",
-        ]
-    )
-
-    with beam.Pipeline(options=pipeline_options) as pipeline:
-        (
-            pipeline
-            | "Create None" >> beam.Create([None])
-            | "Get images info" >> beam.FlatMap(get_images_info)
-            | "Filter invalid rows"
-            >> beam.Filter(
-                lambda x: x["category"] not in invalid_categories
-                or x["category"].startswith("unknown ")
-                or x["category"].endswith(" desconocida")
-                or x["category"].endswith(" desconocido")
-            )
-            | "Write images database"
-            >> beam.io.WriteToBigQuery(
-                dataset=bigquery_dataset,
-                table=bigquery_table,
-                schema=schema,
-                write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
-                create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            )
-        )
-
-
-def get_images_info(unused: Any) -> Iterable[Dict[str, str]]:
-    """Returns an iterable of {'category', 'file_name'} dicts. """
-    metadata_url = (
-        "https://lilablobssc.blob.core.windows.net/wcs/wcs_camera_traps.json.zip"
-    )
-
-    content = url_get(metadata_url)
-    with zipfile.ZipFile(io.BytesIO(content)) as zf:
-        filename = os.path.splitext(os.path.basename(metadata_url))[0]
-        with zf.open(filename) as f:
-            metadata = json.load(f)
-
-    categories = {
-        category["id"]: category["name"] for category in metadata["categories"]
-    }
-    file_names = {image["id"]: image["file_name"] for image in metadata["images"]}
-
-    for annotation in metadata["annotations"]:
-        category_id = annotation["category_id"]
-        image_id = annotation["image_id"]
-        if category_id not in categories:
-            logging.error(f"invalid category ID {category_id}, skipping")
-        elif image_id not in file_names:
-            logging.error(f"invalid image ID {image_id}, skipping")
-        else:
-            yield {
-                "category": categories[category_id],
-                "file_name": file_names[image_id],
-            }
 
 
 def run(
@@ -423,11 +328,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--create-images-database",
-        action="store_true",
-        help="Creates a BigQuery table and initializes it with the WCS metadata file entries.",
-    )
-    parser.add_argument(
         "--cloud-storage-path",
         required=True,
         help="Cloud Storage path to store the AutoML dataset files.",
@@ -439,12 +339,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--bigquery-table",
-        default="wildlife_insights",
+        default="wildlife_images_metadata",
         help="BigQuery table ID for the images database.",
     )
     parser.add_argument(
         "--automl-name-prefix",
-        default="wildlife_insights",
+        default="wildlife_classifier",
         help="Name prefix for AutoML resources.",
     )
     parser.add_argument(
@@ -467,11 +367,7 @@ if __name__ == "__main__":
     )
     args, pipeline_args = parser.parse_known_args()
 
-    pipeline_options = PipelineOptions(
-        pipeline_args,
-        temp_location=f"{args.cloud_storage_path}/temp",
-        save_main_session=True,
-    )
+    pipeline_options = PipelineOptions(pipeline_args, save_main_session=True)
     project = pipeline_options.get_all_options().get("project")
     if not project:
         parser.error("please provide a Google Cloud project ID with --project")
@@ -479,23 +375,15 @@ if __name__ == "__main__":
     if not region:
         parser.error("please provide a Google Cloud compute region with --region")
 
-    if args.create_images_database:
-        create_images_database(
-            bigquery_dataset=args.bigquery_dataset,
-            bigquery_table=args.bigquery_table,
-            pipeline_options=pipeline_options,
-        )
-
-    else:
-        run(
-            project=project,
-            region=region,
-            cloud_storage_path=args.cloud_storage_path,
-            bigquery_dataset=args.bigquery_dataset,
-            bigquery_table=args.bigquery_table,
-            automl_name_prefix=args.automl_name_prefix,
-            min_images_per_class=args.min_images_per_class,
-            max_images_per_class=args.max_images_per_class,
-            automl_budget_milli_node_hours=args.automl_budget_milli_node_hours,
-            pipeline_options=pipeline_options,
-        )
+    run(
+        project=project,
+        region=region,
+        cloud_storage_path=args.cloud_storage_path,
+        bigquery_dataset=args.bigquery_dataset,
+        bigquery_table=args.bigquery_table,
+        automl_name_prefix=args.automl_name_prefix,
+        min_images_per_class=args.min_images_per_class,
+        max_images_per_class=args.max_images_per_class,
+        automl_budget_milli_node_hours=args.automl_budget_milli_node_hours,
+        pipeline_options=pipeline_options,
+    )
