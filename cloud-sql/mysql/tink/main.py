@@ -24,7 +24,7 @@ from tink.integration import gcpkms
 
 
 # [START cloud_sql_mysql_cse_key]
-def init_tink():
+def init_tink_eaead():
     aead.register()
     key_uri = "gcp-kms://" + os.environ["KMS_KEY_URI"]
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
