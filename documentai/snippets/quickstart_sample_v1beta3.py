@@ -25,7 +25,13 @@ from google.cloud import documentai_v1beta3 as documentai
 
 
 def quickstart(project_id: str, location: str, processor_id: str, file_path: str):
-    client = documentai.DocumentProcessorServiceClient()
+
+    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    opts = {}
+    if location == "eu":
+        opts = {"api_endpoint": "eu-documentai.googleapis.com"}
+
+    client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
     # The full resource name of the processor, e.g.:
     # projects/project-id/locations/location/processor/processor-id
