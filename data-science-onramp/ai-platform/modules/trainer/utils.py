@@ -34,8 +34,8 @@ def load_data(
 
     # [START ai_platform_utils_extract_ft]
     # Extract feature and target columns
-    feature_col = df.iloc[:, :-1]
-    target_col = df.iloc[:, -1:]
+    feature_col = df.iloc[:, :10]
+    target_col = df.iloc[:, 10:]
     # [END ai_platform_utils_extract_ft]
 
     # [START ai_platform_utils_split]
