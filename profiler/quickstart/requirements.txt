@@ -1,1 +1,1 @@
-google-cloud-profiler==2.0.6
+google-cloud-profiler==3.0.0
