@@ -25,15 +25,16 @@ import pytest
 def airflow_database():
     import airflow.utils.db
 
-    # We use separate directory for local db path per session.
-    tmp_dir = tempfile.TemporaryDirectory()
-    os.environ['AIRFLOW_HOME']  = tmp_dir.name
-    print(f"Setting AIRFLOW_HOME to {tmp_dir.name}")
+    # We use separate directory for local db path per session
+    # by setting AIRFLOW_HOME env var, which is done in noxfile_config.py.
+
+    assert('AIRFLOW_HOME' in os.environ)
+
+    airflow_home = os.environ["AIRFLOW_HOME"]
+    airflow_db = f"{airflow_home}/airflow.db"
 
     # reset both resets and initializes a new database
     airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
 
-    yield
-
-    # cleaning up
-    tmp_dir.cleanup()
+    # Making sure we are using a data file there.
+    assert(os.path.isfile(airflow_db))
