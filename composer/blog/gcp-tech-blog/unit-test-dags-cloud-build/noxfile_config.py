@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ TEST_CONFIG_OVERRIDE = {
     "ignored_versions": ["2.7", "3.9"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
-    "enforce_type_hints": True,
+    "enforce_type_hints": False,
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
