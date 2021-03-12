@@ -13,6 +13,9 @@
 # limitations under the License.
 
 
+import os
+import tempfile
+
 import pytest
 
 
@@ -21,5 +24,16 @@ import pytest
 @pytest.fixture(scope="session")
 def airflow_database():
     import airflow.utils.db
+
+    # We use separate directory for local db path per session.
+    tmp_dir = tempfile.TemporaryDirectory()
+    os.environ['AIRFLOW_HOME']  = tmp_dir.name
+    print(f"Setting AIRFLOW_HOME to {tmp_dir.name}")
+
     # reset both resets and initializes a new database
     airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
+
+    yield
+
+    # cleaning up
+    tmp_dir.cleanup()
