@@ -13,10 +13,13 @@
 # limitations under the License.
 
 
-import airflow.utils.db
 import pytest
 
 
-@pytest.fixture(autouse=True, scope="session")
-def initalize_airflow_database():
-    airflow.utils.db.initdb()
+# this fixture initializes the Airflow DB once per session
+# it is used by DAGs in both the blogs and workflows directories
+@pytest.fixture(scope="session")
+def airflow_database():
+    import airflow.utils.db
+    # reset both resets and initializes a new database
+    airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0

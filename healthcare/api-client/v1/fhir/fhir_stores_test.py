@@ -40,9 +40,12 @@ resource_file = os.path.join(RESOURCES, source_file_name)
 import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 
+BACKOFF_MAX_TIME = 240
+
+
 @pytest.fixture(scope="module")
 def test_dataset():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
             datasets.create_dataset(project_id, cloud_region, dataset_id)
@@ -60,7 +63,7 @@ def test_dataset():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             datasets.delete_dataset(project_id, cloud_region, dataset_id)
@@ -76,7 +79,7 @@ def test_dataset():
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
             fhir_stores.create_fhir_store(
@@ -98,7 +101,7 @@ def test_fhir_store():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
@@ -124,7 +127,7 @@ def crud_fhir_store_id():
     yield fhir_store_id
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
@@ -147,7 +150,7 @@ def crud_fhir_store_id():
 
 @pytest.fixture(scope="module")
 def blob():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
             storage_client = storage.Client()
@@ -169,7 +172,7 @@ def blob():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             blob.delete()

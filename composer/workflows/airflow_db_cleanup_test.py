@@ -16,7 +16,7 @@
 import internal_unit_testing
 
 
-def test_dag_import():
+def test_dag_import(airflow_database):
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
