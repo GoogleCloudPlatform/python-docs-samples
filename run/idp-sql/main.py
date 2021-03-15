@@ -87,6 +87,7 @@ def save_vote() -> Response:
         response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
     )
 
+
 # https://cloud.google.com/blog/topics/developers-practitioners/graceful-shutdowns-cloud-run-deep-dive
 # [START cloudrun_sigterm_handler]
 def shutdown_handler(signal: int, frame: FrameType) -> None:
@@ -109,5 +110,3 @@ else:
     # [START cloudrun_sigterm_handler]
     signal.signal(signal.SIGTERM, shutdown_handler)
     # [END cloudrun_sigterm_handler]
-
-    
