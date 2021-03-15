@@ -704,12 +704,12 @@ commonly for APIs that read files from GCS. To run the tests for these
 samples, configure your GCS bucket name via the `CLOUD_STORAGE_BUCKET`
 environment variable.
 
-The resources required by tests can usually be found in the `./resources`
-folder inside the sample directory, as in [this
-example](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/automl/cloud-client/resources).
+The resources required by tests can usually be found in the `./samples`
+folder inside the respective products, as in [this
+example](https://github.com/googleapis/python-pubsub/tree/master/samples).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 
 ```console
-gsutil cp ./resources/* gs://$CLOUD_STORAGE_BUCKET/
+gsutil cp ./samples/* gs://$CLOUD_STORAGE_BUCKET/
 ```
