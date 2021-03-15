@@ -16,6 +16,7 @@
 
 
 def sync_recognize_with_multi_region_gcs():
+
     # [START speech_multi_region]
 
     # Imports the Google Cloud client library

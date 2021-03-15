@@ -16,7 +16,6 @@
 
 """Google Cloud Speech API sample application using the REST API for async
 batch processing.
-
 Example usage:
     python transcribe_async.py resources/audio.raw
     python transcribe_async.py gs://cloud-samples-tests/speech/vr.flac

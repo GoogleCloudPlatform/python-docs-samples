@@ -18,6 +18,10 @@ This directory contains samples for Google Cloud Speech API. The `Google Cloud S
 
 .. _Google Cloud Speech API: https://cloud.google.com/speech/docs/
 
+
+
+
+
 Setup
 -------------------------------------------------------------------------------
 
@@ -39,7 +43,7 @@ Install Dependencies
 
     .. code-block:: bash
 
-        $ git clone https://github.com/googleapis/python-speech.git   
+        $ git clone https://github.com/googleapis/python-speech.git
 
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
