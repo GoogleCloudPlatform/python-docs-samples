@@ -37,7 +37,7 @@ def run_quickstart():
     )
     print("\nProcessing video for label annotations:")
 
-    result = operation.result(timeout=120)
+    result = operation.result(timeout=180)
     print("\nFinished processing.")
 
     # first result is retrieved because a single video was processed
