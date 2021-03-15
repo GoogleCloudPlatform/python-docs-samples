@@ -711,5 +711,5 @@ You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 
 ```console
-gsutil cp ./samples/* gs://$CLOUD_STORAGE_BUCKET/
+gsutil cp ./samples/* gs://{$CLOUD_STORAGE_BUCKET}/
 ```
