@@ -15,7 +15,8 @@ import argparse
 import datetime
 from typing import Union
 
-import google.cloud.datastore
+import google.cloud.datastore  # noqa
+
 # [START datastore_build_service]
 from google.cloud import datastore
 
