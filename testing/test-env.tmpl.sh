@@ -103,3 +103,6 @@ export GITHUB_USERNAME=
 
 # For run/idp example, a Firebase IDP token
 export IDP_KEY=
+
+# Google Analytics APIs
+export GA_TEST_PROPERTY_ID=
