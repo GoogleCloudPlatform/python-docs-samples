@@ -26,11 +26,8 @@ def create_client(project_id):
 # [END datastore_build_service]
 
 
-import google.cloud.datastore  # noqa
-
-
 # [START datastore_add_entity]
-def add_task(client: google.cloud.datastore.Client, description: str):
+def add_task(client: datastore.Client, description: str):
     # Create an incomplete key for an entity of kind "Task". An incomplete
     # key is one where Datastore will automatically generate an Id
     key = client.key("Task")
@@ -55,7 +52,7 @@ def add_task(client: google.cloud.datastore.Client, description: str):
 
 
 # [START datastore_update_entity]
-def mark_done(client: google.cloud.datastore.Client, task_id: Union[str, int]):
+def mark_done(client: datastore.Client, task_id: Union[str, int]):
     with client.transaction():
         # Create a key for an entity of kind "Task", and with the supplied
         # `task_id` as its Id
@@ -78,7 +75,7 @@ def mark_done(client: google.cloud.datastore.Client, task_id: Union[str, int]):
 
 
 # [START datastore_retrieve_entities]
-def list_tasks(client: google.cloud.datastore.Client):
+def list_tasks(client: datastore.Client):
     # Create a query against all of your objects of kind "Task"
     query = client.query(kind="Task")
     query.order = ["created"]
@@ -90,7 +87,7 @@ def list_tasks(client: google.cloud.datastore.Client):
 
 
 # [START datastore_delete_entity]
-def delete_task(client: google.cloud.datastore.Client, task_id: Union[str, int]):
+def delete_task(client: datastore.Client, task_id: Union[str, int]):
     # Create a key for an entity of kind "Task", and with the supplied
     # `task_id` as its Id
     key = client.key("Task", task_id)
