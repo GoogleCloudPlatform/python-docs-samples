@@ -102,7 +102,7 @@ export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
-export KMS_KEY_URI='<KMS_KEY_URI>'
+export GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to

@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
-import logging
 import os
 import sqlalchemy
 import sys
 
-import tink
-from tink import aead
-from tink.integration import gcpkms
-
-
 # [START cloud_sql_mysql_cse_key]
 def init_tink_eaead():
+    import logging
+    import tink
+    from tink import aead
+    from tink.integration import gcpkms
+
     aead.register()
-    key_uri = "gcp-kms://" + os.environ["KMS_KEY_URI"]
+    key_uri = "gcp-kms://" + os.environ["GCP_KMS_URI"]
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
 
     try:
@@ -37,17 +35,14 @@ def init_tink_eaead():
         return None
 
     # Create envelope AEAD primitive using AES256 GCM for encrypting the data
-    try:
-        key_template = aead.aead_key_templates.AES256_GCM
-        env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
-    except tink.TinkError as e:
-        logging.error('Error creating primitive: %s', e)
-        return None
+    key_template = aead.aead_key_templates.AES256_GCM
+    env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
+
     return env_aead
 # [END cloud_sql_mysql_cse_key]
 
 
-    
+# [START cloud_sql_mysql_cse_db]    
 def init_connection_engine():
     db_config = {
         # Pool size is the maximum number of permanent connections to keep.
@@ -149,11 +144,11 @@ def init_db():
             "PRIMARY KEY (vote_id) );"
         )
     return db
-
+# [END cloud_sql_mysql_cse_db]
 
 
 # [START cloud_sql_mysql_cse_query]
-def list_votes(db, eaead):
+def query_and_decrypt_data(db, eaead):
     import sqlalchemy
     
     with db.connect() as conn:
@@ -171,26 +166,13 @@ def list_votes(db, eaead):
             time_cast = row[1]
 
             # Print recent votes
-            print("{}\t{}\t{}".format(team, email, time_cast))
-
-        stmt = sqlalchemy.text(
-            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
-        )
-        # Count number of votes for tabs
-        tab_result = conn.execute(stmt, candidate="TABS").fetchone()
-        tab_count = tab_result[0]
-        # Count number of votes for spaces
-        space_result = conn.execute(stmt, candidate="SPACES").fetchone()
-        space_count = space_result[0]
-
-        # Print total votes
-        print("")
-        print("Total: {} spaces, {} tabs".format(space_count, tab_count))
+            print(f"{team}\t{email}\t{time_cast}")
 # [END cloud_sql_mysql_cse_query]
 
 
 # [START cloud_sql_mysql_cse_insert]
-def add_vote(team, email, db, eaead):
+def encrypt_and_insert_data(team, email, db, eaead):
+    import datetime
     import sqlalchemy
 
     time_cast = datetime.datetime.utcnow()
@@ -206,17 +188,12 @@ def add_vote(team, email, db, eaead):
         "INSERT INTO votes (time_cast, candidate, voter_email)"
         " VALUES (:time_cast, :candidate, :voter_email)"
     )
-    try:
-        # Using a with statement ensures that the connection is always released
-        # back into the pool at the end of statement (even if an error occurs)
-        with db.connect() as conn:
-            conn.execute(stmt, time_cast=time_cast, candidate=team,
-                         voter_email=encrypted_email)
-    except Exception as e:
-        # If something goes wrong, handle the error in this section. This might
-        # involve retrying or adjusting parameters depending on the situation.
-        logger.exception(e)
 
+    # Using a with statement ensures that the connection is always released
+    # back into the pool at the end of statement (even if an error occurs)
+    with db.connect() as conn:
+        conn.execute(stmt, time_cast=time_cast, candidate=team,
+                     voter_email=encrypted_email)
     print("Vote successfully cast for '{}' at time {}!".format(team, time_cast))
 # [END cloud_sql_mysql_cse_insert]
 
@@ -230,8 +207,8 @@ if __name__ == "__main__":
         action = sys.argv[1]
     
     if action == "VOTE_TABS":
-        add_vote(team="TABS", email=sys.argv[2], db=db, eaead=eaead)
+        encrypt_and_insert_data(team="TABS", email=sys.argv[2], db=db, eaead=eaead)
     elif action == "VOTE_SPACES":
-        add_vote(team="SPACES", email=sys.argv[2], db=db, eaead=eaead)
+        encrypt_and_insert_data(team="SPACES", email=sys.argv[2], db=db, eaead=eaead)
     elif action == "VIEW":
-        list_votes(db=db, eaead)
+        query_and_decrypt_data(db=db, eaead)
