@@ -15,8 +15,6 @@ import argparse
 import datetime
 from typing import Union
 
-import google.cloud.datastore  # noqa
-
 # [START datastore_build_service]
 from google.cloud import datastore
 
@@ -26,6 +24,9 @@ def create_client(project_id):
 
 
 # [END datastore_build_service]
+
+
+import google.cloud.datastore  # noqa
 
 
 # [START datastore_add_entity]
