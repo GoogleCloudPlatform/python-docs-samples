@@ -13,6 +13,9 @@
 
 import argparse
 import datetime
+from typing import Union
+
+import google.cloud.datastore  # type: ignore
 
 # [START datastore_build_service]
 from google.cloud import datastore
@@ -26,11 +29,16 @@ def create_client(project_id):
 
 
 # [START datastore_add_entity]
-def add_task(client, description):
+def add_task(client: google.cloud.datastore.Client, description: str):
+    # Create an incomplete key for an entity of kind "Task". An incomplete
+    # key is one where Datastore will automatically generate an Id
     key = client.key("Task")
 
+    # Create an unsaved Entity object, and tell Datastore not to index the
+    # `description` field
     task = datastore.Entity(key, exclude_from_indexes=["description"])
 
+    # Apply new field values and save the Task entity to Datastore
     task.update(
         {
             "created": datetime.datetime.utcnow(),
@@ -38,9 +46,7 @@ def add_task(client, description):
             "done": False,
         }
     )
-
     client.put(task)
-
     return task.key
 
 
@@ -48,16 +54,22 @@ def add_task(client, description):
 
 
 # [START datastore_update_entity]
-def mark_done(client, task_id):
+def mark_done(client: google.cloud.datastore.Client, task_id: Union[str, int]):
     with client.transaction():
+        # Create a key for an entity of kind "Task", and with the supplied
+        # `task_id` as its Id
         key = client.key("Task", task_id)
+        # Use that key to load the entity
         task = client.get(key)
 
         if not task:
             raise ValueError(f"Task {task_id} does not exist.")
 
+        # Update a field indicating that the associated
+        # work has been completed
         task["done"] = True
 
+        # Persist the change back to Datastore
         client.put(task)
 
 
@@ -65,7 +77,8 @@ def mark_done(client, task_id):
 
 
 # [START datastore_retrieve_entities]
-def list_tasks(client):
+def list_tasks(client: google.cloud.datastore.Client):
+    # Create a query against all of your objects of kind "Task"
     query = client.query(kind="Task")
     query.order = ["created"]
 
@@ -76,8 +89,11 @@ def list_tasks(client):
 
 
 # [START datastore_delete_entity]
-def delete_task(client, task_id):
+def delete_task(client: google.cloud.datastore.Client, task_id: Union[str, int]):
+    # Create a key for an entity of kind "Task", and with the supplied
+    # `task_id` as its Id
     key = client.key("Task", task_id)
+    # Use that key to delete its associated document, if it exists
     client.delete(key)
 
 
