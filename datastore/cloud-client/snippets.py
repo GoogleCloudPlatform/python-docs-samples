@@ -22,7 +22,7 @@ if True:
 # [START datastore_named_key]
 # [START datastore_key_with_parent]
 # [START datastore_key_with_multilevel_parent]
-    # [START datastore_basic_entity]
+# [START datastore_basic_entity]
 # [START datastore_entity_with_parent]
 # [START datastore_properties]
 # [START datastore_array_value]
@@ -73,6 +73,7 @@ if True:
 # [START datastore_merged_index_tag_queries]
 # [START datastore_owner_size_tag_query]
 # [START datastore_size_coloration_query]
+    # hello world
     from google.cloud import datastore
 
     # Initialize a client and provide your `project_id`
@@ -82,7 +83,7 @@ if True:
 # [END datastore_named_key]
 # [END datastore_key_with_parent]
 # [END datastore_key_with_multilevel_parent]
-    # [END datastore_basic_entity]
+# [END datastore_basic_entity]
 # [END datastore_entity_with_parent]
 # [END datastore_properties]
 # [END datastore_array_value]
