@@ -16,8 +16,11 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-if True:
+import google.cloud.exceptions
+from google.cloud import datastore
 
+
+def _preamble():
 # [START datastore_incomplete_key]
 # [START datastore_named_key]
 # [START datastore_key_with_parent]
@@ -76,7 +79,7 @@ if True:
     from google.cloud import datastore
 
     # Initialize a client and provide your `project_id`
-    # client = datastore.Client(project_id)
+    client = datastore.Client('your_project_id')
 
 # [END datastore_incomplete_key]
 # [END datastore_named_key]
@@ -133,10 +136,6 @@ if True:
 # [END datastore_merged_index_tag_queries]
 # [END datastore_owner_size_tag_query]
 # [END datastore_size_coloration_query]
-
-
-
-import google.cloud.exceptions
 
 
 def incomplete_key(client):
