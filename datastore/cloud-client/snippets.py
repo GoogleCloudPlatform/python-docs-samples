@@ -16,7 +16,63 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
+# [START datastore_incomplete_key]
+# [START datastore_named_key]
+# [START datastore_key_with_parent]
+# [START datastore_key_with_multilevel_parent]
+# [START datastore_basic_entity]
+# [START datastore_entity_with_parent]
+# [START datastore_properties]
+# [START datastore_array_value]
+# [START datastore_array_value_inequality_range]
+# [START datastore_array_value_equality]
+# [START datastore_exploding_properties]
+# [START datastore_transactional_update]
+# [START datastore_transactional_retry]
+# [START datastore_transactional_get_or_create]
+# [START datastore_transactional_single_entity_group_read_only]
+# [START datastore_namespace_run_query]
+# [START datastore_kind_run_query]
+# [START datastore_property_run_query]
+# [START datastore_property_by_kind_run_query]
+# [START datastore_eventual_consistent_query]
+# [START datastore_built_in_index_queries]
+# [START datastore_merged_index_query]
+# [START datastore_merged_index_tag_queries]
+# [START datastore_owner_size_tag_query]
+# [START datastore_size_coloration_query]
 from google.cloud import datastore
+
+# Initialize a client and provide your `project_id`
+# client = datastore.Client(project_id)
+# [END datastore_incomplete_key]
+# [END datastore_named_key]
+# [END datastore_key_with_parent]
+# [END datastore_key_with_multilevel_parent]
+# [END datastore_basic_entity]
+# [END datastore_entity_with_parent]
+# [END datastore_properties]
+# [END datastore_array_value]
+# [END datastore_array_value_inequality_range]
+# [END datastore_array_value_equality]
+# [END datastore_exploding_properties]
+# [END datastore_transactional_update]
+# [END datastore_transactional_retry]
+# [END datastore_transactional_get_or_create]
+# [END datastore_transactional_single_entity_group_read_only]
+# [END datastore_namespace_run_query]
+# [END datastore_kind_run_query]
+# [END datastore_property_run_query]
+# [END datastore_property_by_kind_run_query]
+# [END datastore_eventual_consistent_query]
+# [END datastore_built_in_index_queries]
+# [END datastore_merged_index_query]
+# [END datastore_merged_index_tag_queries]
+# [END datastore_owner_size_tag_query]
+# [END datastore_size_coloration_query]
+
+
+
 import google.cloud.exceptions
 
 

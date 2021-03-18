@@ -15,10 +15,21 @@ import argparse
 import datetime
 from typing import Union
 
+# [START datastore_add_entity]
 # [START datastore_build_service]
+# [START datastore_update_entity]
+# [START datastore_retrieve_entities]
+# [START datastore_delete_entity]
 from google.cloud import datastore
 
+# [END datastore_add_entity]
+# [END datastore_build_service]
+# [END datastore_update_entity]
+# [END datastore_retrieve_entities]
+# [END datastore_delete_entity]
 
+
+# [START datastore_build_service]
 def create_client(project_id):
     return datastore.Client(project_id)
 
