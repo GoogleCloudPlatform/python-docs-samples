@@ -73,7 +73,6 @@ if True:
 # [START datastore_merged_index_tag_queries]
 # [START datastore_owner_size_tag_query]
 # [START datastore_size_coloration_query]
-    # hello world
     from google.cloud import datastore
 
     # Initialize a client and provide your `project_id`
