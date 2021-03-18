@@ -16,6 +16,8 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
+if True:
+
 # [START datastore_incomplete_key]
 # [START datastore_named_key]
 # [START datastore_key_with_parent]
@@ -71,10 +73,10 @@ from pprint import pprint
 # [START datastore_merged_index_tag_queries]
 # [START datastore_owner_size_tag_query]
 # [START datastore_size_coloration_query]
-from google.cloud import datastore
+    from google.cloud import datastore
 
-# Initialize a client and provide your `project_id`
-# client = datastore.Client(project_id)
+    # Initialize a client and provide your `project_id`
+    # client = datastore.Client(project_id)
 
 # [END datastore_incomplete_key]
 # [END datastore_named_key]
