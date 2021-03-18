@@ -172,7 +172,7 @@ def key_with_multilevel_parent(client):
 
 
 def basic_entity(client):
-    # [START datastore_basic_entity]
+# [START datastore_basic_entity]
     task = datastore.Entity(client.key("Task"))
     task.update(
         {
@@ -182,7 +182,7 @@ def basic_entity(client):
             "description": "Learn Cloud Datastore",
         }
     )
-    # [END datastore_basic_entity]
+# [END datastore_basic_entity]
 
     return task
 
