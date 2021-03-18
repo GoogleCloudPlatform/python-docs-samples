@@ -20,7 +20,7 @@ from pprint import pprint
 # [START datastore_named_key]
 # [START datastore_key_with_parent]
 # [START datastore_key_with_multilevel_parent]
-# [START datastore_basic_entity]
+    # [START datastore_basic_entity]
 # [START datastore_entity_with_parent]
 # [START datastore_properties]
 # [START datastore_array_value]
@@ -75,11 +75,12 @@ from google.cloud import datastore
 
 # Initialize a client and provide your `project_id`
 # client = datastore.Client(project_id)
+
 # [END datastore_incomplete_key]
 # [END datastore_named_key]
 # [END datastore_key_with_parent]
 # [END datastore_key_with_multilevel_parent]
-# [END datastore_basic_entity]
+    # [END datastore_basic_entity]
 # [END datastore_entity_with_parent]
 # [END datastore_properties]
 # [END datastore_array_value]
@@ -172,7 +173,7 @@ def key_with_multilevel_parent(client):
 
 
 def basic_entity(client):
-# [START datastore_basic_entity]
+    # [START datastore_basic_entity]
     task = datastore.Entity(client.key("Task"))
     task.update(
         {
@@ -182,7 +183,7 @@ def basic_entity(client):
             "description": "Learn Cloud Datastore",
         }
     )
-# [END datastore_basic_entity]
+    # [END datastore_basic_entity]
 
     return task
 
