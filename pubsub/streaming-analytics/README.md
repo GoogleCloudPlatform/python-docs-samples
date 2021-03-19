@@ -137,7 +137,14 @@ The following instructions will help you prepare your development environment.
 
 * [PubSubToGCS.py](PubSubToGCS.py)
 
-The following example will run a streaming pipeline. It will read messages from a Pub/Sub topic, then window them into fixed-sized intervals, and write one file per window into a GCS location.
+The following example will run a streaming pipeline. The pipelien does the following:
+1. Reads messages from a Pub/Sub topic.
+1. Group messages by fixed windows and break the grouped messages into batches.
+  1. Adds window info to each element/message.
+  1. Adds timestamp to each element/message.
+  1. Adds a random shard ID as key to each windowed element. This step helps shard the elements in the same window into small batches, so that multiple workers can help write the batched elements to Cloud Storage later.
+  1. Groups the windowed elements by key.
+1. Writes the grouped elements to a file on Cloud Storage.
 
 + `--project`: sets the Google Cloud project ID to run the pipeline on
 + `--region`: sets the Dataflow [regional endpoint](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
@@ -145,7 +152,7 @@ The following example will run a streaming pipeline. It will read messages from 
 + `--output_path`: sets the output GCS path prefix to write files to
 + `--runner`: specifies the runner to run the pipeline, if not set to `DataflowRunner`, `DirectRunner` is used
 + `--window_size [optional]`: specifies the window size in minutes, defaults to 1.0
-+ `--num_shards`: sets the number of shards when writing windowed elements to GCS, defaults to 1.
++ `--num_shards [optional]`: sets the number of shards when writing windowed elements to GCS, defaults to 5.
 + `--temp_location`: needed for executing the pipeline
 
 ```bash
@@ -156,7 +163,8 @@ python PubSubToGCS.py \
   --output_path=gs://$BUCKET_ID/samples/output \
   --runner=DataflowRunner \
   --window_size=1 \
-  --num_shards=2 \
+  # If set, you will write up to `num_shards` files per window to GCS.
+  # --num_shards=2 \
   --temp_location=gs://$BUCKET_ID/temp
 ```
 
