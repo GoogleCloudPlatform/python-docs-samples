@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# [START cloud_sql_mysql_cse_query]
 import os
 
 from .cloud_kms_env_aead import init_tink_env_aead
@@ -21,7 +23,7 @@ import sqlalchemy
 import tink
 
 
-# [START cloud_sql_mysql_cse_query]
+
 def main():
     db_user = os.environ["DB_USER"]  # e.g. "root", "mysql"
     db_pass = os.environ["DB_PASS"]  # e.g. "mysupersecretpassword"

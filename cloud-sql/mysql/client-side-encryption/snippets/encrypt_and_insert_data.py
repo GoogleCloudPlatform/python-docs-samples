@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloud_sql_mysql_cse_insert]
 import datetime
 import logging
 import os
@@ -24,7 +25,7 @@ import tink
 
 logger = logging.getLogger(__name__)
 
-# [START cloud_sql_mysql_cse_insert]
+
 
 
 def main():

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloud_sql_mysql_cse_key]
 import logging
 
 import tink
@@ -20,8 +21,6 @@ from tink.integration import gcpkms
 
 logger = logging.getLogger(__name__)
 
-
-# [START cloud_sql_mysql_cse_key]
 def init_tink_env_aead(
         key_uri: str,
         credentials: str) -> tink.aead.KmsEnvelopeAead:

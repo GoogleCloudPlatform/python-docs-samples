@@ -48,7 +48,7 @@ export DB_HOST='127.0.0.1:3306'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
-export KMS_KEY_URI='<KMS_KEY_URI>'
+export GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
@@ -67,7 +67,7 @@ $env:DB_HOST="127.0.0.1:3306"
 $env:DB_USER="<DB_USER_NAME>"
 $env:DB_PASS="<DB_PASSWORD>"
 $env:DB_NAME="<DB_NAME>"
-$env:KMS_KEY_URI='<KMS_KEY_URI>'
+$env:GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
 secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
@@ -126,11 +126,10 @@ pip install -r requirements.txt
 
 Add new votes:
 ```bash
-python main.py VOTE_SPACES email@example.com
-python main.py VOTE_TABS other@example.com
+python snippets/encrypt_and_insert_data.py 
 ```
 
 View the collected votes:
 ```bash
-python main.py LIST
+python snippets/query_and_decrypt_data.py 
 ```
