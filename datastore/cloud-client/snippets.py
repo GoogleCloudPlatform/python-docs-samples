@@ -78,8 +78,9 @@ def _preamble():
 # [START datastore_size_coloration_query]
     from google.cloud import datastore
 
-    # Initialize a client and provide your `project_id`
-    client = datastore.Client('your_project_id')
+    # For help authenticating your client, visit
+    # https://cloud.google.com/docs/authentication/getting-started
+    client = datastore.Client()
 
 # [END datastore_incomplete_key]
 # [END datastore_named_key]
@@ -209,8 +210,8 @@ def entity_with_parent(client):
 
 
 def properties(client):
-    key = client.key("Task")
     # [START datastore_properties]
+    key = client.key("Task")
     task = datastore.Entity(key, exclude_from_indexes=["description"])
     task.update(
         {
@@ -228,8 +229,8 @@ def properties(client):
 
 
 def array_value(client):
-    key = client.key("Task")
     # [START datastore_array_value]
+    key = client.key("Task")
     task = datastore.Entity(key)
     task.update({"tags": ["fun", "programming"], "collaborators": ["alice", "bob"]})
     # [END datastore_array_value]
@@ -355,9 +356,8 @@ def batch_lookup(client):
     # Create the entities we will lookup.
     batch_upsert(client)
 
-    keys = [client.key("Task", 1), client.key("Task", 2)]
-
     # [START datastore_batch_lookup]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     tasks = client.get_multi(keys)
     # [END datastore_batch_lookup]
 
@@ -368,9 +368,8 @@ def batch_delete(client):
     # Create the entities we will delete.
     batch_upsert(client)
 
-    keys = [client.key("Task", 1), client.key("Task", 2)]
-
     # [START datastore_batch_delete]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     client.delete_multi(keys)
     # [END datastore_batch_delete]
 
@@ -606,9 +605,9 @@ def kindless_query(client):
     # Create the entity that we're going to query.
     upsert(client)
 
-    last_seen_key = client.key("Task", "a")
 
     # [START datastore_kindless_query]
+    last_seen_key = client.key("Task", "a")
     query = client.query()
     query.key_filter(last_seen_key, ">")
     # [END datastore_kindless_query]
