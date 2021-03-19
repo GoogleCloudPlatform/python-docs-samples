@@ -40,9 +40,9 @@ class GroupMessagesByFixedWindows(PTransform):
             | "Window into fixed intervals"
             >> WindowInto(FixedWindows(self.window_size))
             | "Add timestamp to windowed elements" >> ParDo(AddTimestamp())
-            # Assign a random key to each windowed element based on number of shards.
+            # Assign a random key to each windowed element based on the number of shards.
             | "Add key" >> WithKeys(lambda _: random.randint(0, self.num_shards - 1))
-            # Group windowed elements by key. All the elements in a window must fit into
+            # Group windowed elements by key. All the elements in the same window must fit
             # memory for this. If not, you need to use `beam.util.BatchElements`.
             | "Group by key" >> GroupByKey()
         )
@@ -75,8 +75,8 @@ class WriteToGCS(DoFn):
         filename = "-".join([self.output_path, window_start, window_end, str(shard_id)])
 
         with io.gcsio.GcsIO().open(filename=filename, mode="w") as f:
-            for message in batch:
-                f.write(f"{message[0]},{message[1]}\n".encode("utf-8"))
+            for message_body, publish_time in batch:
+                f.write(f"{message_body},{publish_time}\n".encode("utf-8"))
 
 
 def run(input_topic, output_path, window_size=1.0, num_shards=5, pipeline_args=None):

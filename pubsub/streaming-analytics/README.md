@@ -137,13 +137,13 @@ The following instructions will help you prepare your development environment.
 
 * [PubSubToGCS.py](PubSubToGCS.py)
 
-The following example will run a streaming pipeline. The pipelien does the following:
+The following example will run a streaming pipeline. The pipeline does the following:
 1. Reads messages from a Pub/Sub topic.
-1. Group messages by fixed windows and break the grouped messages into batches.
-  1. Adds window info to each element/message.
-  1. Adds timestamp to each element/message.
-  1. Adds a random shard ID as key to each windowed element. This step helps shard the elements in the same window into small batches, so that multiple workers can help write the batched elements to Cloud Storage later.
-  1. Groups the windowed elements by key.
+1. Group messages into batches for every windows.
+  1. Adds window start and end time to each element/message.
+  1. Adds publish timestamp to each element/message.
+  1. Adds a random shard ID as key to each windowed element. *Sharding* lets you split the elements in the same window into multiple small batches. This way, multiple workers can each write a batch of elements into Cloud Storage. This results in one file per shard.
+  1. Groups the elements by their shard ID for every window.
 1. Writes the grouped elements to a file on Cloud Storage.
 
 + `--project`: sets the Google Cloud project ID to run the pipeline on
