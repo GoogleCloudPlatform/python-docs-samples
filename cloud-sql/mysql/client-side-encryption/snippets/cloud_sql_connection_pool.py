@@ -79,9 +79,9 @@ def init_db(
     db_pass: str,
     db_name: str,
     table_name: str,
-    cloud_sql_connection_name: str=None,
-    db_socket_dir: str=None,
-    db_host: str=None
+    cloud_sql_connection_name: str = None,
+    db_socket_dir: str = None,
+    db_host: str = None
 ) -> sqlalchemy.engine.base.Engine:
 
     if db_host:

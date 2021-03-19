@@ -52,10 +52,10 @@ def main():
         db_user,
         db_pass,
         db_name,
+        table_name,
         cloud_sql_connection_name,
         db_socket_dir,
-        db_host,
-        table_name,
+        db_host
     )
 
     encrypt_and_insert_data(db, env_aead, table_name, team, email)
