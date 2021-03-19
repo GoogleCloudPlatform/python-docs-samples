@@ -138,12 +138,15 @@ def check_gpus(element: Any, gpus_optional: bool) -> Any:
     return element
 
 
-def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
+def get_band_paths(
+    scene: str, band_names: List[str], unused_side_input: Any
+) -> Tuple[str, List[str]]:
     """Gets the Cloud Storage paths for each band in a Landsat scene.
 
     Args:
         scene: Landsat 8 scene ID.
         band_names: List of the band names corresponding to [Red, Green, Blue] channels.
+        unused_side_input: Used to wait for the GPU check, can be safely ignored.
 
     Returns:
         A (scene, band_paths) pair.
@@ -159,8 +162,7 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [
-        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -277,17 +279,24 @@ def run(
     options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=options) as pipeline:
         # Optionally, validate that the workers are using GPUs.
-        (
+        gpu_check = (
             pipeline
             | beam.Create([None])
             | "Check GPU availability" >> beam.Map(check_gpus, gpus_optional)
         )
 
         # Convert Landsat 8 scenes into images.
+        # ℹ️ We pass `gpu_check` as an unused side input to force that step in
+        # the pipeline to wait for the check before continuing.
         (
             pipeline
             | "Create scene IDs" >> beam.Create(scenes)
-            | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
+            | "Get RGB band paths"
+            >> beam.Map(
+                get_band_paths,
+                rgb_band_names,
+                unused_side_input=beam.pvalue.AsSingleton(gpu_check),
+            )
             | "Load RGB band values" >> beam.MapTuple(load_values)
             | "Preprocess pixels"
             >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
@@ -356,5 +365,4 @@ if __name__ == "__main__":
         "max": args.max,
         "gamma": args.gamma,
     }
-    run(scenes, args.output_path_prefix,
-        vis_params, args.gpus_optional, beam_args)
+    run(scenes, args.output_path_prefix, vis_params, args.gpus_optional, beam_args)
