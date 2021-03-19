@@ -23,7 +23,6 @@ from snippets.cloud_sql_connection_pool import init_db
 from snippets.encrypt_and_insert_data import encrypt_and_insert_data
 
 
-
 REQUIRED_ENV_VARS = [
     "MYSQL_USER", "MYSQL_PASS", "MYSQL_DB", "MYSQL_HOST", "GCP_KMS_URI"]
 
@@ -47,7 +46,7 @@ def setup_pool():
         db_name=os.environ["MYSQL_DB"],
         table_name=table_name,
         db_host=os.environ["MYSQL_HOST"],
-        
+
     )
 
     yield pool

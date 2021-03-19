@@ -17,15 +17,14 @@ import datetime
 import logging
 import os
 
-from .cloud_kms_env_aead import init_tink_env_aead
-from .cloud_sql_connection_pool import init_db
-
 import sqlalchemy
 import tink
 
+from .cloud_kms_env_aead import init_tink_env_aead
+from .cloud_sql_connection_pool import init_db
+
+
 logger = logging.getLogger(__name__)
-
-
 
 
 def main():

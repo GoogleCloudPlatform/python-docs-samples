@@ -60,7 +60,7 @@ def setup_pool():
         db_name=os.environ["MYSQL_DB"],
         table_name=table_name,
         db_host=os.environ["MYSQL_HOST"],
-        
+
     )
 
     yield pool

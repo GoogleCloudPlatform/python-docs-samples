@@ -15,6 +15,7 @@
 # [START cloud_sql_mysql_cse_db]
 import sqlalchemy
 
+
 def init_tcp_connection_engine(
     db_user: str, db_pass: str, db_name: str, db_host: str
 ) -> sqlalchemy.engine.base.Engine:
