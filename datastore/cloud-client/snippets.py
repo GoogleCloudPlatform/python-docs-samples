@@ -608,7 +608,6 @@ def kindless_query(client):
     # Create the entity that we're going to query.
     upsert(client)
 
-
     # [START datastore_kindless_query]
     last_seen_key = client.key("Task", "a")
     query = client.query()
