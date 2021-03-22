@@ -38,7 +38,11 @@ from snippets.encrypt_and_insert_data import encrypt_and_insert_data
 from snippets.query_and_decrypt_data import query_and_decrypt_data
 
 REQUIRED_ENV_VARS = [
-    "MYSQL_USER", "MYSQL_PASS", "MYSQL_DB", "MYSQL_HOST", "GCP_KMS_URI"]
+    "MYSQL_USER",
+    "MYSQL_PASSWORD",
+    "MYSQL_DATABASE",
+    "MYSQL_HOST",
+    "CLOUD_KMS_KEY"]
 
 table_name = f"votes_{uuid.uuid4().hex}"
 
@@ -56,8 +60,8 @@ def check_env_vars():
 def setup_pool():
     pool = init_db(
         db_user=os.environ["MYSQL_USER"],
-        db_pass=os.environ["MYSQL_PASS"],
-        db_name=os.environ["MYSQL_DB"],
+        db_pass=os.environ["MYSQL_PASSWORD"],
+        db_name=os.environ["MYSQL_DATABBASE"],
         table_name=table_name,
         db_host=os.environ["MYSQL_HOST"],
 
@@ -72,7 +76,7 @@ def setup_pool():
 @pytest.fixture(name="env_aead")
 def setup_key():
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
-    key_uri = "gcp-kms://" + os.environ["GCP_KMS_URI"]
+    key_uri = "gcp-kms://" + os.environ["CLOUD_KMS_KEY"]
 
     env_aead = init_tink_env_aead(key_uri, credentials)
 
