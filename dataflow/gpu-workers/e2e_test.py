@@ -76,7 +76,6 @@ def image_name() -> str:
                 "builds",
                 "submit",
                 f"--project={PROJECT}",
-                f"--tag={IMAGE_NAME}",
                 f"--config={f.name}",
                 "--timeout=30m",
                 "--quiet",
