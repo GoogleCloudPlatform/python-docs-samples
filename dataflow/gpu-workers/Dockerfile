@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Make sure the CUDA and cuDNN versions are compatible with your TensorFlow version.
+#   https://www.tensorflow.org/install/source#gpu
 FROM nvidia/cuda:11.0.3-cudnn8-runtime-ubuntu20.04
 
 ARG python_version=3.8
