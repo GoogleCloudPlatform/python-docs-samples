@@ -15,8 +15,11 @@
 # limitations under the License.
 
 import os
+import platform
 import subprocess
+import tempfile
 import uuid
+import yaml
 
 from google.cloud import storage
 import pytest
@@ -41,21 +44,47 @@ def bucket_name() -> str:
 
 @pytest.fixture(scope="session")
 def image_name() -> str:
-    subprocess.run(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            f"--project={PROJECT}",
-            f"--tag={IMAGE_NAME}",
-            "--timeout=30m",
-            "--quiet",
-        ],
-        check=True,
-    )
+    with tempfile.NamedTemporaryFile(suffix=".yaml") as f:
+        # Write the cloudconfig.yaml file, we use a custom config to
+        # pass the `python_version` since `gcloud builds submit` doesn't support
+        # it as part of its CLI.
+        cloudbuild_config = {
+            "steps": [
+                {
+                    "name": "gcr.io/cloud-builders/docker",
+                    "args": [
+                        "build",
+                        f"--tag={IMAGE_NAME}",
+                        f"--build-arg='python_version={platform.python_version()}'",
+                        ".",
+                    ],
+                },
+                {
+                    "name": "gcr.io/cloud-builders/docker",
+                    "args": ["push", IMAGE_NAME],
+                },
+            ],
+        }
+        yaml.dump(cloudbuild_config, f)
+
+        # Launch the Cloud Build job using our custom config.
+        subprocess.run(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                f"--project={PROJECT}",
+                f"--tag={IMAGE_NAME}",
+                f"--config={f.name}",
+                "--timeout=30m",
+                "--quiet",
+            ],
+            check=True,
+        )
 
     yield IMAGE_NAME
 
+    # Delete the image when we're done.
     subprocess.run(
         [
             "gcloud",
@@ -79,33 +108,6 @@ def configure_docker() -> None:
             "configure-docker",
         ]
     )
-
-
-def test_python_version(image_name: str, configure_docker: None) -> None:
-    # Make sure the local and Docker Python versions are the same.
-    # If this test fails, the following needs updating:
-    # - noxfile_config.py: The Python 'ignored_versions' should only allow the Dockerfile Python version.
-    # - Dockerfile: The `COPY --from=apache/beam` for the worker boot file.
-    # - Docs tutorial: https://cloud.google.com/dataflow/docs/samples/satellite-images-gpus
-    python_version = (
-        subprocess.run(
-            [
-                "docker",
-                "run",
-                "--rm",
-                "-i",
-                "--entrypoint=bash",
-                image_name,
-                "-c",
-                "python --version",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.decode("utf-8")
-        .strip()
-    )
-    assert python_version == "Python 3.6.9"
 
 
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
