@@ -49,7 +49,7 @@ def image_name() -> str:
             "builds",
             "submit",
             f"--project={PROJECT}",
-            f"--substitutions='_PYTHON_VERSION={platform.python_version()}'",
+            f"--substitutions=_PYTHON_VERSION={platform.python_version()}",
             "--timeout=30m",
             "--quiet",
         ],
