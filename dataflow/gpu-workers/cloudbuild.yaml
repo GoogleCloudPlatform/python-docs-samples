@@ -14,7 +14,7 @@
 
 # To build the container image:
 #   PYTHON_VERSION=`python -c 'import platform; print(platform.python_version())'`
-#   gcloud builds submit --substitutions _PYTHON_VERSION=$PYTHON_VERSION .
+#   gcloud builds submit --substitutions _PYTHON_VERSION=$PYTHON_VERSION . --timeout 20m
 
 steps:
   # Build the container image with the Python version of our choice.
