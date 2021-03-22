@@ -17,12 +17,10 @@
 import os
 import platform
 import subprocess
-import tempfile
 import uuid
 
 from google.cloud import storage
 import pytest
-import yaml
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -44,44 +42,19 @@ def bucket_name() -> str:
 
 @pytest.fixture(scope="session")
 def image_name() -> str:
-    with tempfile.NamedTemporaryFile("w", suffix=".yaml") as f:
-        # Write the cloudconfig.yaml file, we use a custom config to
-        # pass the `python_version` since `gcloud builds submit` doesn't support
-        # it as part of its CLI.
-        cloudbuild_config = {
-            "steps": [
-                {
-                    # Build the image.
-                    "name": "gcr.io/cloud-builders/docker",
-                    "args": [
-                        "build",
-                        f"--tag={IMAGE_NAME}",
-                        f"--build-arg='python_version={platform.python_version()}'",
-                        ".",
-                    ],
-                },
-                {
-                    # Push the image.
-                    "name": "gcr.io/cloud-builders/docker",
-                    "args": ["push", IMAGE_NAME],
-                },
-            ],
-        }
-        yaml.dump(cloudbuild_config, f)
-
-        # Launch the Cloud Build job using our custom config.
-        subprocess.run(
-            [
-                "gcloud",
-                "builds",
-                "submit",
-                f"--project={PROJECT}",
-                f"--config={f.name}",
-                "--timeout=30m",
-                "--quiet",
-            ],
-            check=True,
-        )
+    # See the `cloudbuild.yaml` for the configuration for this build.
+    subprocess.run(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            f"--project={PROJECT}",
+            f"--substitutions='_PYTHON_VERSION={platform.python_version()}'",
+            "--timeout=30m",
+            "--quiet",
+        ],
+        check=True,
+    )
 
     yield IMAGE_NAME
 
