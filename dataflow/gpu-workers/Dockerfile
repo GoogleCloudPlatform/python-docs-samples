@@ -39,4 +39,5 @@ RUN apt-get update \
     && pip install --no-cache-dir -r requirements.txt \
     && conda clean -y --all --force-pkgs-dirs
 
+# Set the entrypoint to Apache Beam SDK worker launcher.
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
