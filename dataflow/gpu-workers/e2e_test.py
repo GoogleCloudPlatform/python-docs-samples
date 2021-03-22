@@ -19,10 +19,10 @@ import platform
 import subprocess
 import tempfile
 import uuid
-import yaml
 
 from google.cloud import storage
 import pytest
+import yaml
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -44,13 +44,14 @@ def bucket_name() -> str:
 
 @pytest.fixture(scope="session")
 def image_name() -> str:
-    with tempfile.NamedTemporaryFile(suffix=".yaml") as f:
+    with tempfile.NamedTemporaryFile("w", suffix=".yaml") as f:
         # Write the cloudconfig.yaml file, we use a custom config to
         # pass the `python_version` since `gcloud builds submit` doesn't support
         # it as part of its CLI.
         cloudbuild_config = {
             "steps": [
                 {
+                    # Build the image.
                     "name": "gcr.io/cloud-builders/docker",
                     "args": [
                         "build",
@@ -60,6 +61,7 @@ def image_name() -> str:
                     ],
                 },
                 {
+                    # Push the image.
                     "name": "gcr.io/cloud-builders/docker",
                     "args": ["push", IMAGE_NAME],
                 },
