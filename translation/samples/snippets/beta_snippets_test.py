@@ -75,7 +75,7 @@ def test_batch_translate_text(capsys, bucket):
     beta_snippets.batch_translate_text(
         PROJECT_ID,
         "gs://cloud-samples-data/translation/text.txt",
-        "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
+        "gs://{}/translation/BATCH_TRANSLATION_BETA_OUTPUT/".format(bucket.name),
     )
     out, _ = capsys.readouterr()
     assert "Total Characters: 13" in out

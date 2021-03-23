@@ -40,7 +40,7 @@ def bucket():
 def test_batch_translate_text_with_model(capsys, bucket):
     translate_v3_batch_translate_text_with_model.batch_translate_text_with_model(
         "gs://cloud-samples-data/translation/custom_model_text.txt",
-        "gs://{}/translation/BATCH_TRANSLATION_OUTPUT/".format(bucket.name),
+        "gs://{}/translation/BATCH_TRANSLATION_MODEL_OUTPUT/".format(bucket.name),
         PROJECT_ID,
         MODEL_ID,
     )
