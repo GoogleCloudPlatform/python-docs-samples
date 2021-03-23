@@ -17,9 +17,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-# [START cloudrun_django_localstatic]
+# [START gaestd_py_django_local_static]
 urlpatterns = [
     path('', include('polls.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-# [END cloudrun_django_localstatic]
+# [END gaestd_py_django_local_static]

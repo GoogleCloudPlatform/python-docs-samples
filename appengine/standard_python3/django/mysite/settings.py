@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import io
+import os
 
 import environ
 from google.cloud import secretmanager
- 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -159,4 +158,3 @@ USE_TZ = True
 STATIC_ROOT = "static"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = []
-
