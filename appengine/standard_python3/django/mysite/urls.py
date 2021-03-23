@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START gaestd_py_django_local_static]
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-# [START gaestd_py_django_local_static]
 urlpatterns = [
     path('', include('polls.urls')),
     path('admin/', admin.site.urls),
