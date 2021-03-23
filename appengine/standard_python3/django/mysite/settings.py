@@ -22,7 +22,7 @@ from google.cloud import secretmanager
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# [START gaestd_py_django_secret_config]
 env = environ.Env(DEBUG=(bool, False))
 env_file = os.path.join(BASE_DIR, ".env")
 
@@ -30,6 +30,7 @@ if os.path.isfile(env_file):
     # Use a local secret file, if provided
 
     env.read_env(env_file)
+# [START_EXCLUDE]
 elif os.getenv("TRAMPOLINE_CI", None):
     # Create local settings if running with CI, for unit testing
 
@@ -38,9 +39,9 @@ elif os.getenv("TRAMPOLINE_CI", None):
         f"DATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     )
     env.read_env(io.StringIO(placeholder))
+# [END_EXCLUDE]
 elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     # Pull secrets from Secret Manager
-    # [START cloudrun_django_secretconfig]
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     client = secretmanager.SecretManagerServiceClient()
@@ -49,10 +50,9 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
     env.read_env(io.StringIO(payload))
-    # [END cloudrun_django_secretconfig]
 else:
-    raise Exception("No local .env of GOOGLE_CLOUD_PROJECT detected. No secrets found.")
-
+    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+# [END gaestd_py_django_secret_config]
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -109,7 +109,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 
 # Database
-# [START db_setup]
+# [START gaestd_py_django_database_config]
 DATABASES = {"default": env.db()}
 
 if not os.getenv("GAE_APPLICATION", None):
@@ -117,7 +117,7 @@ if not os.getenv("GAE_APPLICATION", None):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
 
-# [END db_setup]
+# [END gaestd_py_django_database_config]
 
 # Use a in-memory sqlite3 database when testing in CI systems
 if os.getenv("TRAMPOLINE_CI", None):
