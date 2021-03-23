@@ -25,7 +25,7 @@ import pytest
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"dataflow-gpu-test-{SUFFIX}"
-IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/gpu-workers/test-{SUFFIX}:latest"
+IMAGE_TAG = f"dataflow/gpu-workers/test-{SUFFIX}:latest"
 REGION = "us-central1"
 ZONE = "us-central1-f"
 
@@ -43,20 +43,24 @@ def bucket_name() -> str:
 @pytest.fixture(scope="session")
 def image_name() -> str:
     # See the `cloudbuild.yaml` for the configuration for this build.
+    substitutions = {
+        "_PYTHON_VERSION": platform.python_version(),
+        "_IMAGE_TAG": IMAGE_TAG,
+    }
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
             f"--project={PROJECT}",
-            f"--substitutions=_PYTHON_VERSION={platform.python_version()}",
+            f"--substitutions={','.join([k + '=' + v for k, v in substitutions.items()])}",
             "--timeout=30m",
             "--quiet",
         ],
         check=True,
     )
 
-    yield IMAGE_NAME
+    yield f"gcr.io/{PROJECT}/{IMAGE_TAG}"
 
     # Delete the image when we're done.
     subprocess.run(
@@ -65,7 +69,7 @@ def image_name() -> str:
             "container",
             "images",
             "delete",
-            IMAGE_NAME,
+            f"gcr.io/{PROJECT}/{IMAGE_TAG}",
             f"--project={PROJECT}",
             "--quiet",
         ],
