@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-# [START dbconfig]
+# [START gke_django_database_config]
 DATABASES = {
     'default': {
         # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
@@ -89,7 +89,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-# [END dbconfig]
+# [END gke_django_database_config]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -105,11 +105,9 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-# [START staticurl]
+# [START gke_django_staticconfig]
 STATIC_URL = '/static/'
-# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
-# [END staticurl]
+# [END gke_django_staticconfig]
 
 STATIC_ROOT = 'static/'
