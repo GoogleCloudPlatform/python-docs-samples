@@ -117,6 +117,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             "landsat_view.py",
             f"--output-path-prefix=gs://{bucket_name}/outputs/",
             "--runner=DataflowRunner",
+            f"--job_name=gpu-workers-{SUFFIX}",
             f"--project={PROJECT}",
             f"--region={REGION}",
             f"--temp_location=gs://{bucket_name}/temp",
@@ -131,8 +132,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()
-    output_files = list(storage_client.list_blobs(
-        bucket_name, prefix="outputs/"))
+    output_files = list(storage_client.list_blobs(bucket_name, prefix="outputs/"))
     assert len(output_files) > 0, "No output files found"
     for output_file in output_files:
         assert output_file.size > 0, f"Output file is empty: {output_file.name}"

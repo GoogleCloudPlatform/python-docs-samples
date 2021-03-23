@@ -89,6 +89,7 @@ def save_vote() -> Response:
 
 
 # https://cloud.google.com/blog/topics/developers-practitioners/graceful-shutdowns-cloud-run-deep-dive
+# [START cloudrun_sigterm_handler]
 def shutdown_handler(signal: int, frame: FrameType) -> None:
     logger.info("Signal received, safely shutting down.")
     database.shutdown()
@@ -97,6 +98,8 @@ def shutdown_handler(signal: int, frame: FrameType) -> None:
     sys.exit(0)
 
 
+# [END cloudrun_sigterm_handler]
+
 if __name__ == "__main__":
     # handles Ctrl-C locally
     signal.signal(signal.SIGINT, shutdown_handler)
@@ -104,4 +107,6 @@ if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
 else:
     # handles Cloud Run container termination
+    # [START cloudrun_sigterm_handler]
     signal.signal(signal.SIGTERM, shutdown_handler)
+    # [END cloudrun_sigterm_handler]
