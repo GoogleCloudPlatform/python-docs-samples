@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from concurrent.futures import TimeoutError
 import os
 
 import backoff
@@ -41,7 +42,7 @@ class TestDatastoreAdminSnippets:
     def test_list_index(self):
         assert admin.list_indexes(PROJECT)
 
-    @backoff.on_exception(backoff.expo, RetryError, max_tries=3)
+    @backoff.on_exception(backoff.expo, (RetryError, TimeoutError), max_tries=3)
     def test_export_import_entities(self):
         response = admin.export_entities(PROJECT, "gs://" + BUCKET)
         assert response
