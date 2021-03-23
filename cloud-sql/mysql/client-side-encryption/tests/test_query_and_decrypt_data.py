@@ -61,7 +61,7 @@ def setup_pool():
     pool = init_db(
         db_user=os.environ["MYSQL_USER"],
         db_pass=os.environ["MYSQL_PASSWORD"],
-        db_name=os.environ["MYSQL_DATABBASE"],
+        db_name=os.environ["MYSQL_DATABASE"],
         table_name=table_name,
         db_host=os.environ["MYSQL_HOST"],
 
