@@ -47,6 +47,7 @@ def image_name() -> str:
         "_PYTHON_VERSION": platform.python_version(),
         "_IMAGE_TAG": IMAGE_TAG,
     }
+    print(f"-- Cloud build substitutions: {substitutions}")
     subprocess.run(
         [
             "gcloud",
