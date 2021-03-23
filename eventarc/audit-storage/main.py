@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_gcs_server]
+# [START eventarc_audit_storage_server]
 import os
 
 from flask import Flask, request
 
 
 app = Flask(__name__)
-# [END eventarc_gcs_server]
+# [END eventarc_audit_storage_server]
 
 
-# [START eventarc_gcs_handler]
+# [START eventarc_audit_storage_handler]
 @app.route('/', methods=['POST'])
 def index():
     # Gets the GCS bucket name from the CloudEvent header
@@ -31,10 +31,10 @@ def index():
 
     print(f"Detected change in Cloud Storage bucket: {bucket}")
     return (f"Detected change in Cloud Storage bucket: {bucket}", 200)
-# [END eventarc_gcs_handler]
+# [END eventarc_audit_storage_handler]
 
 
-# [START eventarc_gcs_server]
+# [START eventarc_audit_storage_server]
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-# [END eventarc_gcs_server]
+# [END eventarc_audit_storage_server]
