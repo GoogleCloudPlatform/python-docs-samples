@@ -88,6 +88,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install Bazel for compiling Tink in Cloud SQL Client Side Encryption Samples
+# TODO: Delete this section once google/tink#483 is resolved
 RUN apt install -y curl gpgconf gpg \
   && curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
   && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
