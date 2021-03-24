@@ -29,7 +29,7 @@ def run(host, port, api_key, auth_token, timeout, use_tls, servername_override, 
             creds = grpc.ssl_channel_credentials(f.read())
         channel_opts = ()
         if servername_override:
-          channel_opts += ((
+            channel_opts += ((
                         'grpc.ssl_target_name_override', servername_override,),)
         channel = grpc.secure_channel('{}:{}'.format(host, port), creds, channel_opts)
     else:
