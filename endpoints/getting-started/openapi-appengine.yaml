@@ -4,7 +4,7 @@ info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
-host: "YOUR-PROJECT-ID.appspot.com"
+host: "folk-dev-com-db.appspot.com"
 # [END swagger]
 consumes:
 - "application/json"
@@ -153,5 +153,5 @@ securityDefinitions:
     type: "oauth2"
     x-google-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
     x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
-    x-google-audiences: "YOUR-PROJECT-ID"
+    x-google-audiences: "folk-dev-com-db"
   # [END firebaseAuth]
