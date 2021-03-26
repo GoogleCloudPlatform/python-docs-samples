@@ -83,13 +83,14 @@ def setup_key():
     yield env_aead
 
 
-def test_query_and_decrypt_data(check_env_vars, pool, env_aead, caplog):
+def test_query_and_decrypt_data(capsys, check_env_vars, pool, env_aead):
     # Insert data into table before testing
     encrypt_and_insert_data(
         pool, env_aead, table_name, "SPACES", "hello@example.com")
-
-    with caplog.at_level(logging.INFO):
-        query_and_decrypt_data(
-            pool, env_aead, table_name)
-        assert "Team\tEmail\tTime Cast" in caplog.text
-        assert "hello@example.com" in caplog.text
+    
+    query_and_decrypt_data(
+        pool, env_aead, table_name)
+    
+    captured = capsys.readouterr()
+    assert "Team\tEmail\tTime Cast" in captured.out
+    assert "hello@example.com" in captured.out

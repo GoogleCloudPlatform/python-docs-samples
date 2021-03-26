@@ -69,11 +69,11 @@ def setup_key():
     yield env_aead
 
 
-def test_encrypt_and_insert_data(check_env_vars, pool, env_aead, caplog):
-    with caplog.at_level(logging.INFO):
-        encrypt_and_insert_data(
-            pool, env_aead, table_name, "SPACES", "hello@example.com")
-        assert "Vote successfully cast for SPACES" in caplog.text
+def test_encrypt_and_insert_data(capsys, check_env_vars, pool, env_aead):
+    encrypt_and_insert_data(
+        pool, env_aead, table_name, "SPACES", "hello@example.com")
+    captured = capsys.readouterr()
+    assert "Vote successfully cast for SPACES" in captured.out
 
     decrypted_emails = []
     with pool.connect() as conn:
