@@ -26,7 +26,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
 import uuid
 
@@ -87,10 +86,10 @@ def test_query_and_decrypt_data(capsys, check_env_vars, pool, env_aead):
     # Insert data into table before testing
     encrypt_and_insert_data(
         pool, env_aead, table_name, "SPACES", "hello@example.com")
-    
+
     query_and_decrypt_data(
         pool, env_aead, table_name)
-    
+
     captured = capsys.readouterr()
     assert "Team\tEmail\tTime Cast" in captured.out
     assert "hello@example.com" in captured.out

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
 import uuid
 
@@ -73,7 +72,7 @@ def test_encrypt_and_insert_data(capsys, check_env_vars, pool, env_aead):
     encrypt_and_insert_data(
         pool, env_aead, table_name, "SPACES", "hello@example.com")
     captured = capsys.readouterr()
-    assert "Vote successfully cast for SPACES" in captured.out
+    assert "Vote successfully cast for 'SPACES'" in captured.out
 
     decrypted_emails = []
     with pool.connect() as conn:
