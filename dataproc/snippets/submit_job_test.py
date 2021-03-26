@@ -30,11 +30,11 @@ CLUSTER = {
     'config': {
         'master_config': {
             'num_instances': 1,
-            'machine_type_uri': 'n1-standard-1'
+            'machine_type_uri': 'n1-standard-2'
         },
         'worker_config': {
             'num_instances': 2,
-            'machine_type_uri': 'n1-standard-1'
+            'machine_type_uri': 'n1-standard-2'
         }
     }
 }
