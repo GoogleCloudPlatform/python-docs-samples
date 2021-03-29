@@ -21,7 +21,7 @@ created key.
 [instructions](https://cloud.google.com/sql/docs/mysql/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
 Download a JSON key to use to authenticate your connection.
 
-1. Configure gRPC Root Certificates: On some platforms (notably macOS and Windows) you may need to
+1. **macOS / Windows only**: Configure gRPC Root Certificates: On some platforms you may need to
 accept the Google server certificates, see instructions for setting up
 [root certs](https://github.com/googleapis/google-cloud-cpp/blob/master/google/cloud/bigtable/examples/README.md#configure-grpc-root-certificates).
 
