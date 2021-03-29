@@ -74,7 +74,10 @@ def encrypt_and_insert_data(
     email: str,
 ) -> None:
     time_cast = datetime.datetime.utcnow()
-    # Encrypt the email of the voter
+    # Use the envelope AEAD primitive to encrypt the email, using the team name as
+    # associated data. Encryption with associated data ensures authenticity
+    # (who the sender is) and integrity (the data has not been tampered with) of that
+    # data, but not its secrecy. (see RFC 5116 for more info)
     encrypted_email = env_aead.encrypt(email.encode(), team.encode())
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":

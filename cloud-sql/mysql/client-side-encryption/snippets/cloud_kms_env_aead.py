@@ -35,6 +35,8 @@ def init_tink_env_aead(
         raise e
 
     # Create envelope AEAD primitive using AES256 GCM for encrypting the data
+    # This key should only be used for client-side encryption to ensure authenticity and integrity
+    # of data.
     key_template = aead.aead_key_templates.AES256_GCM
     env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
 

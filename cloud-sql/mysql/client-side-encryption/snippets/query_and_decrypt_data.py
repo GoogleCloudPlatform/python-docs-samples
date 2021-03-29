@@ -79,6 +79,10 @@ def query_and_decrypt_data(
 
         for row in recent_votes:
             team = row[0]
+            # Use the envelope AEAD primitive to decrypt the email, using the team name as
+            # associated data. Encryption with associated data ensures authenticity
+            # (who the sender is) and integrity (the data has not been tampered with) of that
+            # data, but not its secrecy. (see RFC 5116 for more info)
             email = env_aead.decrypt(row[2], team.encode()).decode()
             time_cast = row[1]
 
