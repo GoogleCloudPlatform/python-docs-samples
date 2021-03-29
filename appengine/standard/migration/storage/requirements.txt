@@ -1,2 +1,2 @@
-google-cloud-storage==1.36.2
+google-cloud-storage==1.37.0
 Flask==1.1.2
