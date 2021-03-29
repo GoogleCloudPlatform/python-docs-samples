@@ -51,6 +51,9 @@ def run(
     science WCS database, gets rid of invalid rows and uploads all the
     `file_names` alongside their respective `category` into BigQuery.
 
+    To learn more about the WCS Camera Traps dataset:
+        http://lila.science/datasets/wcscameratraps
+
     Args:
         bigquery_dataset: Dataset ID for the images database, the dataset must exist.
         bigquery_table: Table ID for the images database, it is created if it doesn't exist.
