@@ -19,6 +19,7 @@ import pytest
 
 
 @pytest.fixture(autouse=True, scope="function")
+# The fixture `airflow_database` lives in composer/conftest.py.
 def set_variables(airflow_database):
 
     models.Variable.set('gcs_bucket', 'example_bucket')

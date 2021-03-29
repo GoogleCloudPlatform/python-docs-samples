@@ -13,6 +13,9 @@
 # limitations under the License.
 
 
+import os
+import tempfile
+
 import pytest
 
 
@@ -21,5 +24,17 @@ import pytest
 @pytest.fixture(scope="session")
 def airflow_database():
     import airflow.utils.db
+
+    # We use separate directory for local db path per session
+    # by setting AIRFLOW_HOME env var, which is done in noxfile_config.py.
+
+    assert('AIRFLOW_HOME' in os.environ)
+
+    airflow_home = os.environ["AIRFLOW_HOME"]
+    airflow_db = f"{airflow_home}/airflow.db"
+
     # reset both resets and initializes a new database
     airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
+
+    # Making sure we are using a data file there.
+    assert(os.path.isfile(airflow_db))
