@@ -18,12 +18,12 @@ from google.cloud import aiplatform
 
 
 def create_model_endpoint(project: str, region: str, model_endpoint_name: str) -> str:
-    """Creates an AutoML model endpoint.
+    """Creates a model endpoint in AI Platform.
 
     Args:
         project: Google Cloud Project Id.
-        region: Location for AutoML resources.
-        model_endpoint_name: AutoML deployment endpoint name.
+        region: Location for AI PLatform resources.
+        model_endpoint_name: AI Platform deployment endpoint name.
 
     Returns:
         The deployed model_endpoint_id.
@@ -46,14 +46,14 @@ def create_model_endpoint(project: str, region: str, model_endpoint_name: str) -
 def deploy_model(
     project: str, region: str, model_path: str, model_name: str, model_endpoint_id: str
 ) -> str:
-    """Deploys an AutoML model into an endpoint.
+    """Deploys a model into an endpoint in AI Platform.
 
     Args:
         project: Google Cloud Project Id.
-        region: Location for AutoML resources.
-        model_path: AutoML full model path.
-        model_name: AutoML deployed model name.
-        model_endpoint_id: AutoML deployment endpoint ID.
+        region: Location for AI Platform resources.
+        model_path: full model path.
+        model_name: deployed model name.
+        model_endpoint_id: deployment endpoint ID.
 
     Returns:
         The deployed_model_id.
@@ -83,13 +83,13 @@ def deploy_model(
 
 
 def run(project: str, region: str, model_path: str, model_endpoint_name: str) -> None:
-    """Creates an AutoML endpoint and deploys a model to it.
+    """Creates an endpoint in AI Platform and deploys a model to it.
 
     Args:
         project: Google Cloud Project Id.
-        region: Location for AutoML resources.
-        model_path: AutoML full model path.
-        model_endpoint_name: AutoML deployment endpoint name.
+        region: Location for AI Platform resources.
+        model_path: full model path.
+        model_endpoint_name: deployment endpoint name.
 
     Returns:
         The deployed model_endpoint_id.
@@ -111,17 +111,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--region",
         required=True,
-        help="Location for AutoML resources",
+        help="Location for AI Platform resources",
     )
     parser.add_argument(
         "--model-path",
         required=True,
-        help="AutoML full model path",
+        help="Full model path",
     )
     parser.add_argument(
         "--model-endpoint-name",
         required=True,
-        help="AutoML deployment endpoint name",
+        help="Deployment endpoint name",
     )
     args = parser.parse_args()
 

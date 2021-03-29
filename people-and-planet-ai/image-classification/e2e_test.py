@@ -30,13 +30,13 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 BUCKET_NAME = f"wildlife-insights-{SUFFIX}"
 BIGQUERY_DATASET = f"wildlife_insights_{SUFFIX}"
 BIGQUERY_TABLE = "images_database"
-AUTOML_ENDPOINT = f"wildlife_insights_{SUFFIX}"
+MODEL_ENDPOINT = f"wildlife_insights_{SUFFIX}"
 REGION = "us-central1"
 MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
 
 # Use a pre-trained pre-existing model, training one takes too long.
-AUTOML_MODEL_PATH = f"projects/{PROJECT}/locations/{REGION}/models/1590773423066316800"
+MODEL_PATH = f"projects/{PROJECT}/locations/{REGION}/models/1590773423066316800"
 
 
 @pytest.fixture(scope="session")
@@ -111,10 +111,10 @@ def bigquery_table(bigquery_dataset: str) -> str:
 
 @pytest.fixture(scope="session")
 def model_endpoint_id() -> str:
-    print(f"model_path: {repr(AUTOML_MODEL_PATH)}")
-    endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, AUTOML_ENDPOINT)
+    print(f"model_path: {repr(MODEL_PATH)}")
+    endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, MODEL_ENDPOINT)
     deployed_model_id = deploy_model.deploy_model(
-        PROJECT, REGION, AUTOML_MODEL_PATH, AUTOML_ENDPOINT, endpoint_id
+        PROJECT, REGION, MODEL_PATH, MODEL_ENDPOINT, endpoint_id
     )
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
@@ -150,7 +150,7 @@ def test_create_images_database_table(bucket_name: str, bigquery_dataset: str) -
     )
 
 
-def test_preprocess(
+def test_train_model(
     bucket_name: str, bigquery_dataset: str, bigquery_table: str
 ) -> None:
     subprocess.run(
@@ -160,7 +160,7 @@ def test_preprocess(
             f"--cloud-storage-path=gs://{bucket_name}",
             f"--bigquery-dataset={bigquery_dataset}",
             f"--bigquery-table={bigquery_table}",
-            "--automl-name-prefix=",  # empty skips the AutoML operations.
+            "--ai-platform-name-prefix=",  # empty skips the AI Platform operations.
             f"--min-images-per-class={MIN_IMAGES_PER_CLASS}",
             f"--max-images-per-class={MAX_IMAGES_PER_CLASS}",
             "--runner=DataflowRunner",

@@ -29,8 +29,8 @@ def run(
 
     Args:
         project: Google Cloud Project ID.
-        region: Location for AutoML resources.
-        model_endpoint_id: Deployed AutoML model endpoint ID.
+        region: Location for AI Platform resources.
+        model_endpoint_id: Deployed model endpoint ID.
         image_file: The image file path from LILA.
 
     Returns:
@@ -85,12 +85,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--region",
         required=True,
-        help="Location for AutoML resources",
+        help="Location for AI Platform resources",
     )
     parser.add_argument(
         "--model-endpoint-id",
         required=True,
-        help="Deployed AutoML model endpoint ID",
+        help="Deployed model endpoint ID",
     )
     parser.add_argument(
         "--image-file",
