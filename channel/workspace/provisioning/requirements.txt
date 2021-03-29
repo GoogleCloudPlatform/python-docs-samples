@@ -1,0 +1,2 @@
+argparse==1.4.0
+google-cloud-channel==0.2.0

@@ -107,3 +107,9 @@ export IDP_KEY=
 # Dialogflow examples.
 export SMART_REPLY_MODEL=
 export SMART_REPLY_ALLOWLIST=
+
+# Channel Services examples
+export CHANNEL_RESELLER_ACCOUNT_ID=
+export CHANNEL_RESELLER_ADMIN_USER=
+export CHANNEL_CUSTOMER_PARENT_DOMAIN=
+export CHANNEL_JSON_KEY_FILE=
