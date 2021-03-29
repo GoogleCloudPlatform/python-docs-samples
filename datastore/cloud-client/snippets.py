@@ -137,6 +137,7 @@ def _preamble():
     # [END datastore_merged_index_tag_queries]
     # [END datastore_owner_size_tag_query]
     # [END datastore_size_coloration_query]
+    assert client is not None
 
 
 def incomplete_key(client):
