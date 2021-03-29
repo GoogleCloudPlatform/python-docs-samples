@@ -185,6 +185,9 @@ def basic_entity(client):
             "description": "Learn Cloud Datastore",
         }
     )
+    # Access fields
+    task["category"]  # "Personal"
+    task["priority"]  # 4
     # [END datastore_basic_entity]
 
     return task
@@ -204,6 +207,9 @@ def entity_with_parent(client):
             "description": "Learn Cloud Datastore",
         }
     )
+    # Access fields
+    task["category"]  # "Personal"
+    task["priority"]  # 4
     # [END datastore_entity_with_parent]
 
     return task
@@ -223,6 +229,9 @@ def properties(client):
             "percent_complete": 10.5,
         }
     )
+    # Access fields
+    task["category"]  # "Personal"
+    task["priority"]  # 4
     # [END datastore_properties]
 
     return task
@@ -233,8 +242,8 @@ def array_value(client):
     key = client.key("Task")
     task = datastore.Entity(key)
     task.update({"tags": ["fun", "programming"], "collaborators": ["alice", "bob"]})
-
-    # To access array values:
+    # Access fields
+    task["collaborators"]  # ["alice", "bob"]
     task["tags"]  # ["fun", "programming"]
     # [END datastore_array_value]
 
