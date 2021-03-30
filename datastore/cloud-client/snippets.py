@@ -17,7 +17,7 @@ import datetime
 from pprint import pprint
 
 import google.cloud.exceptions
-from google.cloud import datastore
+from google.cloud import datastore  # noqa: I100
 
 
 def _preamble():
