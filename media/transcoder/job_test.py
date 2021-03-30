@@ -83,7 +83,7 @@ def test_bucket():
     blob.upload_from_filename(test_overlay_file)
 
     yield bucket
-    # bucket.delete(force=True)
+    bucket.delete(force=True)
 
 
 def test_create_job_from_preset(capsys, test_bucket):
