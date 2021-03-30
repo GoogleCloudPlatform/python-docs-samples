@@ -103,7 +103,7 @@ def test_end_to_end(bucket_name: str, image_name: str) -> None:
             f"--region={REGION}",
             f"--temp_location=gs://{bucket_name}/temp",
             "--worker_machine_type=custom-1-13312-ext",
-            f"--disk_size_gb=300",
+            "--disk_size_gb=300",
             f"--worker_harness_container_image={image_name}",
             f"--worker_zone={ZONE}",
             f"--experiments=worker_accelerator=type={gpu_type},count=1,install-nvidia-driver",
