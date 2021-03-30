@@ -22,7 +22,7 @@ def create_model_endpoint(project: str, region: str, model_endpoint_name: str) -
 
     Args:
         project: Google Cloud Project Id.
-        region: Location for AI PLatform resources.
+        region: Location for AI Platform resources.
         model_endpoint_name: AI Platform deployment endpoint name.
 
     Returns:
