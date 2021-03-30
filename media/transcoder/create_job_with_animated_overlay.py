@@ -43,7 +43,7 @@ def create_job_with_animated_overlay(
         overlay_image_uri: Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
         output_uri: Uri of the video output folder in the Cloud Storage bucket."""
 
-    client = transcoder_v1beta1.TranscoderServiceClient()
+    client = TranscoderServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
     job = transcoder_v1beta1.types.Job()
