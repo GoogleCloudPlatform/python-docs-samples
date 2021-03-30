@@ -188,13 +188,25 @@ def blob():
 
 
 def test_crud_fhir_store(test_dataset, capsys):
-    fhir_stores.create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _create():
+        fhir_stores.create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    _create()
 
-    fhir_stores.get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _get():
+        fhir_stores.get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    _get()
 
-    fhir_stores.list_fhir_stores(project_id, cloud_region, dataset_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _list():
+        fhir_stores.list_fhir_stores(project_id, cloud_region, dataset_id)
+    _list()
 
-    fhir_stores.delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _delete():
+        fhir_stores.delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    _delete()
 
     out, _ = capsys.readouterr()
 
