@@ -47,11 +47,6 @@ def bucket_name() -> str:
     print(f"bucket_name: {repr(BUCKET_NAME)}")
     yield BUCKET_NAME
 
-    # This test creates 1 image file per class, creating around 650 files.
-    # `bucket.delete(force=True)` does not work if the bucket has >256 files.
-    # Sequentially deleting many files with the client libraries can take
-    # several minutes, so we're using `gsutil -m` instead.
-    # subprocess.call(["gsutil", "-m", "rm", "-rf", f"gs://{BUCKET_NAME}/*"])
     bucket.delete(force=True)
 
 
