@@ -16,8 +16,128 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-from google.cloud import datastore
 import google.cloud.exceptions
+from google.cloud import datastore  # noqa: I100
+
+
+def _preamble():
+    # [START datastore_incomplete_key]
+    # [START datastore_named_key]
+    # [START datastore_key_with_parent]
+    # [START datastore_key_with_multilevel_parent]
+    # [START datastore_basic_entity]
+    # [START datastore_entity_with_parent]
+    # [START datastore_properties]
+    # [START datastore_array_value]
+    # [START datastore_upsert]
+    # [START datastore_insert]
+    # [START datastore_update]
+    # [START datastore_lookup]
+    # [START datastore_delete]
+    # [START datastore_batch_upsert]
+    # [START datastore_batch_lookup]
+    # [START datastore_batch_delete]
+    # [START datastore_unindexed_property_query]
+    # [START datastore_basic_query]
+    # [START datastore_projection_query]
+    # [START datastore_ancestor_query]
+    # [START datastore_run_query]
+    # [START datastore_limit]
+    # [START datastore_cursor_paging]
+    # [START datastore_property_filter]
+    # [START datastore_composite_filter]
+    # [START datastore_key_filter]
+    # [START datastore_ascending_sort]
+    # [START datastore_descending_sort]
+    # [START datastore_multi_sort]
+    # [START datastore_keys_only_query]
+    # [START datastore_distinct_on_query]
+    # [START datastore_kindless_query]
+    # [START datastore_inequality_range]
+    # [START datastore_inequality_invalid]
+    # [START datastore_equal_and_inequality_range]
+    # [START datastore_inequality_sort]
+    # [START datastore_inequality_sort_invalid_not_same]
+    # [START datastore_inequality_sort_invalid_not_first]
+    # [START datastore_array_value_inequality_range]
+    # [START datastore_array_value_equality]
+    # [START datastore_exploding_properties]
+    # [START datastore_transactional_update]
+    # [START datastore_transactional_retry]
+    # [START datastore_transactional_get_or_create]
+    # [START datastore_transactional_single_entity_group_read_only]
+    # [START datastore_namespace_run_query]
+    # [START datastore_kind_run_query]
+    # [START datastore_property_run_query]
+    # [START datastore_property_by_kind_run_query]
+    # [START datastore_eventual_consistent_query]
+    # [START datastore_built_in_index_queries]
+    # [START datastore_merged_index_query]
+    # [START datastore_merged_index_tag_queries]
+    # [START datastore_owner_size_tag_query]
+    # [START datastore_size_coloration_query]
+    from google.cloud import datastore
+
+    # For help authenticating your client, visit
+    # https://cloud.google.com/docs/authentication/getting-started
+    client = datastore.Client()
+
+    # [END datastore_incomplete_key]
+    # [END datastore_named_key]
+    # [END datastore_key_with_parent]
+    # [END datastore_key_with_multilevel_parent]
+    # [END datastore_basic_entity]
+    # [END datastore_entity_with_parent]
+    # [END datastore_properties]
+    # [END datastore_array_value]
+    # [END datastore_upsert]
+    # [END datastore_insert]
+    # [END datastore_update]
+    # [END datastore_lookup]
+    # [END datastore_delete]
+    # [END datastore_batch_upsert]
+    # [END datastore_batch_lookup]
+    # [END datastore_batch_delete]
+    # [END datastore_unindexed_property_query]
+    # [END datastore_basic_query]
+    # [END datastore_projection_query]
+    # [END datastore_ancestor_query]
+    # [END datastore_run_query]
+    # [END datastore_limit]
+    # [END datastore_cursor_paging]
+    # [END datastore_property_filter]
+    # [END datastore_composite_filter]
+    # [END datastore_key_filter]
+    # [END datastore_ascending_sort]
+    # [END datastore_descending_sort]
+    # [END datastore_multi_sort]
+    # [END datastore_keys_only_query]
+    # [END datastore_distinct_on_query]
+    # [END datastore_kindless_query]
+    # [END datastore_inequality_range]
+    # [END datastore_inequality_invalid]
+    # [END datastore_equal_and_inequality_range]
+    # [END datastore_inequality_sort]
+    # [END datastore_inequality_sort_invalid_not_same]
+    # [END datastore_inequality_sort_invalid_not_first]
+    # [END datastore_array_value_inequality_range]
+    # [END datastore_array_value_equality]
+    # [END datastore_exploding_properties]
+    # [END datastore_transactional_update]
+    # [END datastore_transactional_retry]
+    # [END datastore_transactional_get_or_create]
+    # [END datastore_transactional_single_entity_group_read_only]
+    # [END datastore_namespace_run_query]
+    # [END datastore_kind_run_query]
+    # [END datastore_property_run_query]
+    # [END datastore_property_by_kind_run_query]
+    # [END datastore_eventual_consistent_query]
+    # [END datastore_built_in_index_queries]
+    # [END datastore_merged_index_query]
+    # [END datastore_merged_index_tag_queries]
+    # [END datastore_owner_size_tag_query]
+    # [END datastore_size_coloration_query]
+    assert client is not None
 
 
 def incomplete_key(client):
@@ -91,8 +211,8 @@ def entity_with_parent(client):
 
 
 def properties(client):
-    key = client.key("Task")
     # [START datastore_properties]
+    key = client.key("Task")
     task = datastore.Entity(key, exclude_from_indexes=["description"])
     task.update(
         {
@@ -110,8 +230,8 @@ def properties(client):
 
 
 def array_value(client):
-    key = client.key("Task")
     # [START datastore_array_value]
+    key = client.key("Task")
     task = datastore.Entity(key)
     task.update({"tags": ["fun", "programming"], "collaborators": ["alice", "bob"]})
     # [END datastore_array_value]
@@ -237,9 +357,8 @@ def batch_lookup(client):
     # Create the entities we will lookup.
     batch_upsert(client)
 
-    keys = [client.key("Task", 1), client.key("Task", 2)]
-
     # [START datastore_batch_lookup]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     tasks = client.get_multi(keys)
     # [END datastore_batch_lookup]
 
@@ -250,9 +369,8 @@ def batch_delete(client):
     # Create the entities we will delete.
     batch_upsert(client)
 
-    keys = [client.key("Task", 1), client.key("Task", 2)]
-
     # [START datastore_batch_delete]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     client.delete_multi(keys)
     # [END datastore_batch_delete]
 
@@ -304,6 +422,8 @@ def projection_query(client):
     query.projection = ["priority", "percent_complete"]
     # [END datastore_projection_query]
 
+    # This block intentionally doesn't include the top level import because
+    # it doesn't use a `datastore.Client` instance
     # [START datastore_run_query_projection]
     priorities = []
     percent_completes = []
@@ -486,9 +606,8 @@ def kindless_query(client):
     # Create the entity that we're going to query.
     upsert(client)
 
-    last_seen_key = client.key("Task", "a")
-
     # [START datastore_kindless_query]
+    last_seen_key = client.key("Task", "a")
     query = client.query()
     query.key_filter(last_seen_key, ">")
     # [END datastore_kindless_query]
