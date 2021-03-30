@@ -41,7 +41,18 @@ def bucket_name() -> str:
 
 
 @pytest.fixture(scope="session")
-def image_name() -> str:
+def configure_docker() -> None:
+    subprocess.run(
+        [
+            "gcloud",
+            "auth",
+            "configure-docker",
+        ]
+    )
+
+
+@pytest.fixture(scope="session")
+def image_name(configure_docker: None) -> str:
     # See the `cloudbuild.yaml` for the configuration for this build.
     substitutions = {
         "_PYTHON_VERSION": platform.python_version(),
