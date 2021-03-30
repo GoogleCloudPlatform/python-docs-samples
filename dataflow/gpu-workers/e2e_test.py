@@ -78,17 +78,6 @@ def image_name() -> str:
     )
 
 
-@pytest.fixture(scope="session")
-def configure_docker() -> None:
-    subprocess.run(
-        [
-            "gcloud",
-            "auth",
-            "configure-docker",
-        ]
-    )
-
-
 def test_end_to_end(bucket_name: str, image_name: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     gpu_type = "nvidia-tesla-t4"
