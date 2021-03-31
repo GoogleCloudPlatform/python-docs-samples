@@ -16,7 +16,7 @@
 #   https://www.tensorflow.org/install/source#gpu
 # Check the Nvidia container registry catalog to look at the available Nvidia images:
 #   https://ngc.nvidia.com/catalog/containers/nvidia:cuda
-FROM nvidia/cuda:11.0.3-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 # The Python version of the Dockerfile MUST match the Python version you use
 # to launch the Dataflow job.
