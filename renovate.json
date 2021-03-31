@@ -6,9 +6,8 @@
   "rebaseWhen": "never",
   "masterIssue": true,
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt", "requirements-composer.txt"]
+    "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
   },
-  "ignoreDeps":["cattrs"],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
