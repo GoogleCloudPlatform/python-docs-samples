@@ -43,10 +43,10 @@ def main(account_name: str, admin_user: str, customer_domain: str, key_file: str
 
     entitlement = create_entitlement(client, customer, offer)
 
-    # [START getAdminSDKCustomerId]
+    # [START channel_get_admin_sdk_customer_id]
     customer_id = customer.cloud_identity_id
     print(customer_id)
-    # [END getAdminSDKCustomerId]
+    # [END channel_get_admin_sdk_customer_id]
 
     suspend_entitlement(client, entitlement)
 
@@ -61,7 +61,7 @@ def create_client(admin_user: str, key_file: str) -> CloudChannelServiceClient:
     Returns:
       The created Channel Service API client
     """
-    # [START createClient]
+    # [START channel_create_client]
 
     # Set up credentials with user impersonation
     credentials = service_account.Credentials.from_service_account_file(
@@ -72,7 +72,7 @@ def create_client(admin_user: str, key_file: str) -> CloudChannelServiceClient:
     client = channel.CloudChannelServiceClient(credentials=credentials_delegated)
 
     print("=== Created client")
-    # [END createClient]
+    # [END channel_create_client]
 
     return client
 
@@ -83,7 +83,7 @@ def select_offer(client: CloudChannelServiceClient, account_name: str) -> types.
     Returns:
       A Channel API Offer for Workspace
     """
-    # [START selectOffer]
+    # [START channel_select_offer]
     request = channel.ListOffersRequest(parent=account_name)
     offers = client.list_offers(request)
 
@@ -102,7 +102,7 @@ def select_offer(client: CloudChannelServiceClient, account_name: str) -> types.
 
     print("=== Selected offer")
     print(selected_offer)
-    # [END selectOffer]
+    # [END channel_select_offer]
 
     return selected_offer
 
@@ -113,7 +113,7 @@ def check_exists(client: CloudChannelServiceClient, account_name: str, customer_
     Raises:
       Exception: if the domain is already in use
     """
-    # [START checkExists]
+    # [START channel_check_exists]
     # Determine if customer already has a cloud identity
     request = channel.CheckCloudIdentityAccountsExistRequest(
       parent=account_name, domain=customer_domain)
@@ -124,7 +124,7 @@ def check_exists(client: CloudChannelServiceClient, account_name: str, customer_
         raise Exception(
           "Cloud identity already exists. Customer must be transferred. " +
           "Out of scope for this codelab")
-    # [END checkExists]
+    # [END channel_check_exists]
 
 
 def create_customer(client: CloudChannelServiceClient, account_name: str, customer_domain: str) -> Any:
@@ -136,7 +136,7 @@ def create_customer(client: CloudChannelServiceClient, account_name: str, custom
     Returns:
       The created Channel API Customer
     """
-    # [START createCustomer]
+    # [START channel_create_customer]
     # Create the Customer resource
     request = channel.CreateCustomerRequest(
         parent=account_name,
@@ -156,9 +156,9 @@ def create_customer(client: CloudChannelServiceClient, account_name: str, custom
 
     print("=== Created customer")
     print(customer)
-    # [END createCustomer]
+    # [END channel_create_customer]
 
-    # [START provisionCloudIdentity]
+    # [START channel_provision_cloud_identity]
     cloud_identity_info = channel.CloudIdentityInfo(
         alternate_email="john.doe@gmail.com", language_code="en-US")
 
@@ -177,7 +177,7 @@ def create_customer(client: CloudChannelServiceClient, account_name: str, custom
     customer = operation.result(TIMEOUT)
 
     print("=== Provisioned cloud identity")
-    # [END provisionCloudIdentity]
+    # [END channel_provision_cloud_identity]
 
     return customer
 
@@ -192,7 +192,7 @@ def create_entitlement(client: CloudChannelServiceClient, customer: types.custom
     Returns:
       The created Entitlement
     """
-    # [START createEntitlement]
+    # [START channel_create_entitlement]
     request = channel.CreateEntitlementRequest(
         parent=customer.name,
         entitlement={
@@ -229,7 +229,7 @@ def create_entitlement(client: CloudChannelServiceClient, customer: types.custom
 
     print("=== Created entitlement")
     print(entitlement)
-    # [END createEntitlement]
+    # [END channel_create_entitlement]
 
     return entitlement
 
@@ -243,7 +243,7 @@ def suspend_entitlement(client: CloudChannelServiceClient, entitlement: types.en
     Returns:
       The suspended Entitlement
     """
-    # [START suspendEntitlement]
+    # [START channel_suspend_entitlement]
     request = channel.SuspendEntitlementRequest(name=entitlement.name)
 
     # This call returns a long-running operation.
@@ -254,7 +254,7 @@ def suspend_entitlement(client: CloudChannelServiceClient, entitlement: types.en
 
     print("=== Suspended entitlement")
     print(result)
-    # [END suspendEntitlement]
+    # [END channel_suspend_entitlement]
 
     return result
 
@@ -268,7 +268,7 @@ def transfer_entitlement(client: CloudChannelServiceClient, customer: types.cust
     Returns:
       google.protobuf.Empty on success
     """
-    # [START transferEntitlement]
+    # [START channel_transfer_entitlement]
     request = channel.TransferEntitlementsToGoogleRequest(
       parent=customer.name,
       entitlements=[entitlement])
@@ -281,7 +281,7 @@ def transfer_entitlement(client: CloudChannelServiceClient, customer: types.cust
 
     print("=== Transfered entitlement")
     print(result)
-    # [END transferEntitlement]
+    # [END channel_transfer_entitlement]
 
     return result
 
@@ -292,13 +292,13 @@ def delete_customer(client: CloudChannelServiceClient, customer: types.customers
     Args:
       customer: a Customer to delete
     """
-    # [START deleteCustomer]
+    # [START channel_delete_customer]
     request = channel.DeleteCustomerRequest(name=customer.name)
 
     client.delete_customer(request)
 
     print("=== Deleted customer")
-    # [END deleteCustomer]
+    # [END channel_delete_customer]
 
 
 if __name__ == "__main__":
