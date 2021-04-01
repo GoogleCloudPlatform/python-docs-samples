@@ -46,12 +46,13 @@ def setup():
         conn_vars["db_pass"] = os.environ["MYSQL_PASSWORD"]
         conn_vars["db_name"] = os.environ["MYSQL_DATABASE"]
         conn_vars["db_host"] = os.environ["MYSQL_HOST"]
-        conn_vars["instance_conn_name"] = os.environ["MYSQL_CONNECTION_NAME"]
+        conn_vars["instance_conn_name"] = os.environ["MYSQL_INSTANCE"]
         conn_vars["db_socket_dir"] = os.getenv("DB_SOCKET_DIR", "/cloudsql")
     except KeyError:
         raise Exception(
             "The following env variables must be set to run these tests:"
-            "MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST"
+            "MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST, "
+            "MYSQL_INSTANCE"
         )
     else:
         yield connection_vars

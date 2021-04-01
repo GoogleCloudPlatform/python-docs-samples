@@ -37,10 +37,12 @@ from snippets.cloud_kms_env_aead import init_tink_env_aead
 def setup():
     kms_uri = os.environ["CLOUD_KMS_KEY"]
 
-    yield kms_uri
+    yield kms_uri, credentials
 
 
 def test_cloud_kms_env_aead(capsys, kms_uri):
+    credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
+    
     # Create env_aead primitive
     env_aead = init_tink_env_aead(kms_uri, credentials)
 
