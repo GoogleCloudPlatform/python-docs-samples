@@ -123,6 +123,21 @@ def test_deidentify_with_fpe(capsys):
     assert "372819127" not in out
 
 
+def test_deidentify_with_deterministic(capsys):
+    deid.deidentify_with_deterministic(
+        GCLOUD_PROJECT,
+        HARMFUL_STRING,
+        ["US_SOCIAL_SECURITY_NUMBER"],
+        surrogate_type=SURROGATE_TYPE,
+        key_name=KEY_NAME,
+        wrapped_key=WRAPPED_KEY,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "My SSN is" in out
+    assert "372819127" not in out
+
+
 def test_deidentify_with_fpe_uses_surrogate_info_types(capsys):
     deid.deidentify_with_fpe(
         GCLOUD_PROJECT,
@@ -205,6 +220,22 @@ def test_reidentify_with_fpe(capsys):
     out, _ = capsys.readouterr()
 
     assert "731997681" not in out
+
+
+def test_reidentify_with_deterministic(capsys):
+    labeled_fpe_string = "My SSN is SSN_TOKEN(36):ATeRUd3WWnAHHFtjtl1bv+CT09FZ7hyqNas="
+
+    deid.reidentify_with_deterministic(
+        GCLOUD_PROJECT,
+        labeled_fpe_string,
+        surrogate_type=SURROGATE_TYPE,
+        key_name=KEY_NAME,
+        wrapped_key=WRAPPED_KEY,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "SSN_TOKEN(" not in out
 
 
 def test_deidentify_free_text_with_fpe_using_surrogate(capsys):
