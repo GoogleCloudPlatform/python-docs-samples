@@ -44,7 +44,7 @@ def test_cloud_kms_env_aead(capsys, kms_uri):
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
 
     # Create env_aead primitive
-    env_aead = init_tink_env_aead(kms_uri, credentials)
+    init_tink_env_aead(kms_uri, credentials)
 
     captured = capsys.readouterr().out
     assert f"Created envelope AEAD Primitive using KMS URI: {kms_uri}" in captured

@@ -32,9 +32,9 @@ import uuid
 import pytest
 
 from snippets.cloud_sql_connection_pool import (
-    init_unix_connection_engine,
-    init_tcp_connection_engine,
     init_db,
+    init_tcp_connection_engine,
+    init_unix_connection_engine
 )
 
 
@@ -67,7 +67,7 @@ def test_init_tcp_connection_engine(capsys, conn_vars):
     )
 
     captured = capsys.readouterr().out
-    assert f"Created TCP connection pool" in captured
+    assert "Created TCP connection pool" in captured
 
 
 def test_init_unix_connection_engine(capsys, conn_vars):
@@ -80,7 +80,7 @@ def test_init_unix_connection_engine(capsys, conn_vars):
     )
 
     captured = capsys.readouterr().out
-    assert f"Created Unix socket connection pool" in captured
+    assert "Created Unix socket connection pool" in captured
 
 
 def test_init_db(capsys, conn_vars):
