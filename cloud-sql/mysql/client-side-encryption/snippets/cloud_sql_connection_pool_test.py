@@ -55,7 +55,7 @@ def setup():
             "MYSQL_INSTANCE"
         )
     else:
-        yield connection_vars
+        yield conn_vars
 
 
 def test_init_tcp_connection_engine(capsys, conn_vars):
