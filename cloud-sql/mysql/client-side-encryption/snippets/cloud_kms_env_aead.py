@@ -38,7 +38,7 @@ def init_tink_env_aead(key_uri: str, credentials: str) -> tink.aead.KmsEnvelopeA
     key_template = aead.aead_key_templates.AES256_GCM
     env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
 
-    print(f"Created envelope AEAD Primitive using KMS URI: {kms_uri}")
+    print(f"Created envelope AEAD Primitive using KMS URI: {key_uri}")
 
     return env_aead
 

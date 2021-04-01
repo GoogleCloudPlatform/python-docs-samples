@@ -55,9 +55,9 @@ def setup_pool():
         pool = init_db(
             db_user=db_user,
             db_pass=db_pass,
-            db_name=db_host,
+            db_name=db_name,
             table_name=table_name,
-            db_host=db_name,
+            db_host=db_host,
         )
 
         yield pool

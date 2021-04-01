@@ -94,9 +94,10 @@ def init_db(
             "team CHAR(6) NOT NULL, voter_email VARBINARY(255), "
             "PRIMARY KEY (vote_id) );"
         )
+    
+    print(f"Created table {table_name} in db {db_name}")
     return db
 
-    print(f"Created table {table_name} in db {db_name}")
 
 
 # [END cloud_sql_mysql_cse_db]
