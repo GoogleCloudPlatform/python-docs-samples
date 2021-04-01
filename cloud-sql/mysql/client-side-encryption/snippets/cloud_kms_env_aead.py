@@ -22,9 +22,7 @@ from tink.integration import gcpkms
 logger = logging.getLogger(__name__)
 
 
-def init_tink_env_aead(
-        key_uri: str,
-        credentials: str) -> tink.aead.KmsEnvelopeAead:
+def init_tink_env_aead(key_uri: str, credentials: str) -> tink.aead.KmsEnvelopeAead:
     aead.register()
 
     try:
@@ -39,6 +37,8 @@ def init_tink_env_aead(
     # of data.
     key_template = aead.aead_key_templates.AES256_GCM
     env_aead = aead.KmsEnvelopeAead(key_template, gcp_aead)
+
+    print(f"Created envelope AEAD Primitive using KMS URI: {kms_uri}")
 
     return env_aead
 

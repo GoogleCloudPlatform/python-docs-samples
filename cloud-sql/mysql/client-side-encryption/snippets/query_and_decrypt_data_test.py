@@ -36,40 +36,34 @@ from snippets.cloud_sql_connection_pool import init_db
 from snippets.encrypt_and_insert_data import encrypt_and_insert_data
 from snippets.query_and_decrypt_data import query_and_decrypt_data
 
-REQUIRED_ENV_VARS = [
-    "MYSQL_USER",
-    "MYSQL_PASSWORD",
-    "MYSQL_DATABASE",
-    "MYSQL_HOST",
-    "CLOUD_KMS_KEY"]
-
 table_name = f"votes_{uuid.uuid4().hex}"
-
-
-@pytest.fixture
-def check_env_vars():
-    for var in REQUIRED_ENV_VARS:
-        if not os.environ.get(var):
-            raise Exception(
-                f"Environment variable {var} must be set to perform tests.")
-    yield
 
 
 @pytest.fixture(name="pool")
 def setup_pool():
-    pool = init_db(
-        db_user=os.environ["MYSQL_USER"],
-        db_pass=os.environ["MYSQL_PASSWORD"],
-        db_name=os.environ["MYSQL_DATABASE"],
-        table_name=table_name,
-        db_host=os.environ["MYSQL_HOST"],
+    try:
+        db_user = os.environ["MYSQL_USER"]
+        db_pass = os.environ["MYSQL_PASSWORD"]
+        db_name = os.environ["MYSQL_DATABASE"]
+        db_host = os.environ["MYSQL_HOST"]
+    except KeyError:
+        raise Exception(
+            "The following env variables must be set to run these tests:"
+            "MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST"
+        )
+    else:
+        pool = init_db(
+            db_user=db_user,
+            db_pass=db_pass,
+            db_name=db_host,
+            table_name=table_name,
+            db_host=db_name,
+        )
 
-    )
+        yield pool
 
-    yield pool
-
-    with pool.connect() as conn:
-        conn.execute(f"DROP TABLE IF EXISTS `{table_name}`")
+        with pool.connect() as conn:
+            conn.execute(f"DROP TABLE IF EXISTS `{table_name}`")
 
 
 @pytest.fixture(name="env_aead")
@@ -82,13 +76,11 @@ def setup_key():
     yield env_aead
 
 
-def test_query_and_decrypt_data(capsys, check_env_vars, pool, env_aead):
+def test_query_and_decrypt_data(capsys, pool, env_aead):
     # Insert data into table before testing
-    encrypt_and_insert_data(
-        pool, env_aead, table_name, "SPACES", "hello@example.com")
+    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
 
-    query_and_decrypt_data(
-        pool, env_aead, table_name)
+    query_and_decrypt_data(pool, env_aead, table_name)
 
     captured = capsys.readouterr()
     assert "Team\tEmail\tTime Cast" in captured.out

@@ -39,7 +39,7 @@ def init_tcp_connection_engine(
             database=db_name,  # e.g. "my-database-name"
         ),
     )
-
+    print("Created TCP connection pool")
     return pool
 
 
@@ -62,14 +62,10 @@ def init_unix_connection_engine(
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
-            query={
-                "unix_socket": "{}/{}".format(
-                    db_socket_dir, cloud_sql_connection_name  # e.g. "/cloudsql"
-                )  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
-            },
+            query={"unix_socket": f"{db_socket_dir}/{cloud_sql_connection_name}"},
         ),
     )
-
+    print("Created Unix socket connection pool")
     return pool
 
 
@@ -80,7 +76,7 @@ def init_db(
     table_name: str,
     cloud_sql_connection_name: str = None,
     db_socket_dir: str = None,
-    db_host: str = None
+    db_host: str = None,
 ) -> sqlalchemy.engine.base.Engine:
 
     if db_host:
@@ -99,6 +95,8 @@ def init_db(
             "PRIMARY KEY (vote_id) );"
         )
     return db
+
+    print(f"Created table {table_name} in db {db_name}")
 
 
 # [END cloud_sql_mysql_cse_db]

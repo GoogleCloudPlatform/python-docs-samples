@@ -60,7 +60,7 @@ def main():
         table_name,
         cloud_sql_connection_name,
         db_socket_dir,
-        db_host
+        db_host,
     )
 
     encrypt_and_insert_data(db, env_aead, table_name, team, email)
@@ -81,7 +81,7 @@ def encrypt_and_insert_data(
     encrypted_email = env_aead.encrypt(email.encode(), team.encode())
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
-        logger.error("Invalid team specified: {}".format(team))
+        logger.error(f"Invalid team specified: {team}")
         return
 
     # Preparing a statement before hand can help protect against injections.
@@ -93,9 +93,8 @@ def encrypt_and_insert_data(
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.connect() as conn:
-        conn.execute(stmt, time_cast=time_cast, team=team,
-                     voter_email=encrypted_email)
-    print("Vote successfully cast for '{}' at time {}!".format(team, time_cast))
+        conn.execute(stmt, time_cast=time_cast, team=team, voter_email=encrypted_email)
+    print(f"Vote successfully cast for '{team}' at time {time_cast}!")
 
 
 # [END cloud_sql_mysql_cse_insert]

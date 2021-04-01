@@ -56,7 +56,7 @@ def main():
         table_name,
         cloud_sql_connection_name,
         db_socket_dir,
-        db_host
+        db_host,
     )
 
     encrypt_and_insert_data(db, env_aead, table_name, team, email)
