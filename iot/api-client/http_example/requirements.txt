@@ -3,6 +3,6 @@ google-api-python-client==2.1.0
 google-auth-httplib2==0.1.0
 google-auth==1.28.0
 google-cloud-iot==2.0.2
-google-cloud-pubsub==2.4.0
+google-cloud-pubsub==2.4.1
 pyjwt==2.0.1
 requests==2.25.1
