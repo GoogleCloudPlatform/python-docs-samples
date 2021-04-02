@@ -187,7 +187,7 @@ class TestContainerAnalysisSamples:
             # clean up
             client.delete_subscription({"subscription": subscription_name})
 
-    def test_poll_discovery_occurrence(self):
+    def test_poll_discovery_occurrence_fails(self):
         # try with no discovery occurrence
         try:
             samples.poll_discovery_finished(self.image_url, 5, PROJECT_ID)
@@ -197,6 +197,8 @@ class TestContainerAnalysisSamples:
             # we expect timeout error
             assert False
 
+    @pytest.mark.flaky(max_runs=3, min_passes=1)
+    def test_poll_discovery_occurrence(self):
         # create discovery occurrence
         note_id = 'discovery-note-{}'.format(uuid.uuid4())
         client = containeranalysis_v1.ContainerAnalysisClient()
@@ -220,7 +222,6 @@ class TestContainerAnalysisSamples:
             create_occurrence(parent=f"projects/{PROJECT_ID}",
                               occurrence=occurrence)
 
-        # poll again
         disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
         status = disc.discovery.analysis_status
         assert disc is not None
