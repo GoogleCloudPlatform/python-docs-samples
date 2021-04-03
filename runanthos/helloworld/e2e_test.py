@@ -80,7 +80,7 @@ def deployed_service(container_image):
             container_image,
             "--project",
             PROJECT,
-            "--cluster", 
+            "--cluster",
             CRFA_CLUSTER,
             "--cluster-location",
             CRFA_CLUSTER_ZONE,
