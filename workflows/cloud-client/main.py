@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2021 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,11 @@ def execute_workflow(
     from google.cloud import workflows_v1beta
     from google.cloud.workflows import executions_v1beta
     from google.cloud.workflows.executions_v1beta.types import executions
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project = 'my-project-id'
+    # location = 'us- central1'
+    # workflow = 'myFirstWorkflow'
 
     if not project:
         raise Exception('GOOGLE_CLOUD_PROJECT env var is required.')
