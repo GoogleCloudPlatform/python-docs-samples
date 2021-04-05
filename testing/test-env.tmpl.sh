@@ -103,3 +103,7 @@ export GITHUB_USERNAME=
 
 # For run/idp example, a Firebase IDP token
 export IDP_KEY=
+
+# Dialogflow examples.
+export SMART_REPLY_MODEL=
+export SMART_REPLY_ALLOWLIST=

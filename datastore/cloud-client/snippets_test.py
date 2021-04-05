@@ -31,7 +31,7 @@ class CleanupClient(datastore.Client):
     def cleanup(self):
         with self.batch():
             self.delete_multi(
-                list(set([x.key for x in self.entities_to_delete]))
+                list(set([x.key for x in self.entities_to_delete if x]))
                 + list(set(self.keys_to_delete))
             )
 

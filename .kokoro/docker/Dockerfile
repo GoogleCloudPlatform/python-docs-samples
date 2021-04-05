@@ -87,6 +87,18 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# Install Bazel for compiling Tink in Cloud SQL Client Side Encryption Samples
+# TODO: Delete this section once google/tink#483 is resolved
+RUN apt install -y curl gpgconf gpg \
+  && curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
+  && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
+  && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list \
+  && apt update &&  apt install -y bazel \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \

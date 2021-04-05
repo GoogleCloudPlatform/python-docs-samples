@@ -15,7 +15,7 @@
 import os
 import uuid
 
-import apache_beam as beam
+from apache_beam.io.gcp.gcsio import GcsIO
 from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.test_utils import TempDir
@@ -47,8 +47,9 @@ UUID = uuid.uuid1().hex
 def test_pubsub_to_gcs():
     PubSubToGCS.run(
         input_topic="unused",  # mocked by TestStream
-        output_path="gs://{}/pubsub/{}/output".format(BUCKET, UUID),
+        output_path=f"gs://{BUCKET}/pubsub/{UUID}/output",
         window_size=1,  # 1 minute
+        num_shards=1,
         pipeline_args=[
             "--project",
             PROJECT,
@@ -58,8 +59,8 @@ def test_pubsub_to_gcs():
     )
 
     # Check for output files on GCS.
-    gcs_client = beam.io.gcp.gcsio.GcsIO()
-    files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
+    gcs_client = GcsIO()
+    files = gcs_client.list_prefix(f"gs://{BUCKET}/pubsub/{UUID}")
     assert len(files) > 0
 
     # Clean up.
