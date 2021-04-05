@@ -20,6 +20,8 @@ Example usage:
     python create_job_with_periodic_images_spritesheet.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri>
 """
 
+# [START transcoder_create_job_with_periodic_images_spritesheet]
+
 import argparse
 
 from google.cloud.video import transcoder_v1beta1
@@ -27,8 +29,6 @@ from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 from google.protobuf import duration_pb2 as duration
-
-# [START transcoder_create_job_with_periodic_images_spritesheet]
 
 
 def create_job_with_periodic_images_spritesheet(
@@ -49,7 +49,10 @@ def create_job_with_periodic_images_spritesheet(
     job.input_uri = input_uri
     job.output_uri = output_uri
     job.config = transcoder_v1beta1.types.JobConfig(
+        # Create an ad-hoc job. For more information, see https://cloud.google.com/transcoder/docs/how-to/jobs#create_jobs_ad_hoc.
+        # See all options for the job config at https://cloud.google.com/transcoder/docs/reference/rest/v1beta1/JobConfig.
         elementary_streams=[
+            # This section defines the output video stream.
             transcoder_v1beta1.types.ElementaryStream(
                 key="video-stream0",
                 video_stream=transcoder_v1beta1.types.VideoStream(
@@ -60,6 +63,7 @@ def create_job_with_periodic_images_spritesheet(
                     frame_rate=60,
                 ),
             ),
+            # This section defines the output audio stream.
             transcoder_v1beta1.types.ElementaryStream(
                 key="audio-stream0",
                 audio_stream=transcoder_v1beta1.types.AudioStream(
@@ -67,6 +71,7 @@ def create_job_with_periodic_images_spritesheet(
                 ),
             ),
         ],
+        # This section multiplexes the output audio and video together into a container.
         mux_streams=[
             transcoder_v1beta1.types.MuxStream(
                 key="sd",
@@ -74,7 +79,10 @@ def create_job_with_periodic_images_spritesheet(
                 elementary_streams=["video-stream0", "audio-stream0"],
             ),
         ],
+        # Generate two sprite sheets from the input video into the GCS bucket. For more information, see
+        # https://cloud.google.com/transcoder/docs/how-to/generate-spritesheet#generate_image_periodically.
         sprite_sheets=[
+            # Generate a sprite sheet with 64x32px images. An image is taken every 7 seconds from the video.
             transcoder_v1beta1.types.SpriteSheet(
                 file_prefix="small-sprite-sheet",
                 sprite_width_pixels=64,
@@ -83,6 +91,7 @@ def create_job_with_periodic_images_spritesheet(
                     seconds=7,
                 ),
             ),
+            # Generate a sprite sheet with 128x72px images. An image is taken every 7 seconds from the video.
             transcoder_v1beta1.types.SpriteSheet(
                 file_prefix="large-sprite-sheet",
                 sprite_width_pixels=128,

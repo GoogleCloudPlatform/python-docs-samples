@@ -105,7 +105,7 @@ def test_create_job_from_preset(capsys, test_bucket):
 
     time.sleep(30)
 
-    _get_job_state(capsys, job_id)
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -144,7 +144,7 @@ def test_create_job_from_template(capsys, test_bucket):
 
     time.sleep(30)
 
-    _get_job_state(capsys, job_id)
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -178,7 +178,7 @@ def test_create_job_from_ad_hoc(capsys, test_bucket):
 
     time.sleep(30)
 
-    _get_job_state(capsys, job_id)
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -212,7 +212,7 @@ def test_create_job_with_static_overlay(capsys, test_bucket):
 
     time.sleep(30)
 
-    _get_job_state(capsys, job_id)
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -246,7 +246,7 @@ def test_create_job_with_animated_overlay(capsys, test_bucket):
 
     time.sleep(30)
 
-    _get_job_state(capsys, job_id)
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -275,18 +275,22 @@ def test_create_job_with_set_number_spritesheet(capsys, test_bucket):
 
     get_job.get_job(project_id, location, job_id)
     out, _ = capsys.readouterr()
-    assert job_name in out
+    assert (
+        job_name in out
+    )  # Get the job name so you can use it later to get the job and delete the job.
 
-    time.sleep(30)
+    time.sleep(
+        30
+    )  # Transcoding jobs need time to complete. Once the job completes, check the job state.
 
-    _get_job_state(capsys, job_id)
-    _get_file_in_bucket(
+    _assert_job_state_succeeded(capsys, job_id)
+    _assert_file_in_bucket(
         capsys,
         output_dir_for_set_number_spritesheet
         + small_spritesheet_file_prefix
         + spritesheet_file_suffix,
     )
-    _get_file_in_bucket(
+    _assert_file_in_bucket(
         capsys,
         output_dir_for_set_number_spritesheet
         + large_spritesheet_file_prefix
@@ -320,18 +324,22 @@ def test_create_job_with_periodic_spritesheet(capsys, test_bucket):
 
     get_job.get_job(project_id, location, job_id)
     out, _ = capsys.readouterr()
-    assert job_name in out
+    assert (
+        job_name in out
+    )  # Get the job name so you can use it later to get the job and delete the job.
 
-    time.sleep(30)
+    time.sleep(
+        30
+    )  # Transcoding jobs need time to complete. Once the job completes, check the job state.
 
-    _get_job_state(capsys, job_id)
-    _get_file_in_bucket(
+    _assert_job_state_succeeded(capsys, job_id)
+    _assert_file_in_bucket(
         capsys,
         output_dir_for_periodic_spritesheet
         + small_spritesheet_file_prefix
         + spritesheet_file_suffix,
     )
-    _get_file_in_bucket(
+    _assert_file_in_bucket(
         capsys,
         output_dir_for_periodic_spritesheet
         + large_spritesheet_file_prefix
@@ -349,7 +357,7 @@ def test_create_job_with_periodic_spritesheet(capsys, test_bucket):
 
 # Retrying up to 10 mins.
 @backoff.on_exception(backoff.expo, AssertionError, max_time=600)
-def _get_job_state(capsys, job_id):
+def _assert_job_state_succeeded(capsys, job_id):
     try:
         get_job_state.get_job_state(project_id, location, job_id)
     except HttpError as err:
@@ -359,7 +367,7 @@ def _get_job_state(capsys, job_id):
     assert job_succeeded_state in out
 
 
-def _get_file_in_bucket(capsys, directory_and_filename):
+def _assert_file_in_bucket(capsys, directory_and_filename):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     assert storage.Blob(bucket=bucket, name=directory_and_filename).exists(
