@@ -26,15 +26,10 @@ def company_name():
     email_alert_search_sample.tear_down(company_name, job_name)
 
 
-def retry_delay():
-    # Always wait 10 seconds
-    yield 10
-
-
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_email_alert_search_sample(company_name, capsys):
 
-    @backoff.on_exception(retry_delay, AssertionError, max_time=600)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()

@@ -17,6 +17,7 @@
 /bigquery_storage/**/*.py              @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigtable/**/*.py                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
 /blog/**/*.py                          @GoogleCloudPlatform/python-samples-owners
+/channel/**/*.py                       @max-mathieu @GoogleCloudPlatform/python-samples-owners
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
 /cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
