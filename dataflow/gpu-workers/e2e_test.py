@@ -56,7 +56,7 @@ def image_name(configure_docker: None) -> str:
     # See the `cloudbuild.yaml` for the configuration for this build.
     substitutions = {
         "_PYTHON_VERSION": platform.python_version(),
-        "_IMAGE_TAG": IMAGE_NAME,
+        "_IMAGE": IMAGE_NAME,
     }
     print(f"-- Cloud build substitutions: {substitutions}")
     subprocess.run(
