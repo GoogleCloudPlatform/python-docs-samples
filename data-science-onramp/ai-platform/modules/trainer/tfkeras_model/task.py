@@ -122,18 +122,6 @@ def train_and_evaluate(
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_validation_data]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_tensorboard]
-    # Setup Learning Rate decay.
-    lr_decay_cb = tf.keras.callbacks.LearningRateScheduler(
-        lambda epoch: learning_rate + 0.02 * (0.5 ** (1 + epoch)), verbose=True
-    )
-
-    # Setup TensorBoard callback.
-    tensorboard_cb = tf.keras.callbacks.TensorBoard(
-        os.path.join(model_dir, "keras_tensorboard"), histogram_freq=1
-    )
-    # [END ai_platform_tfkeras_task_train_and_evaluate_tensorboard]
-
     # [START ai_platform_tfkeras_task_train_and_evaluate_fit_export]
     # Train model
     keras_model.fit(
@@ -143,7 +131,6 @@ def train_and_evaluate(
         validation_data=validation_dataset,
         validation_steps=1,
         verbose=1,
-        callbacks=[lr_decay_cb, tensorboard_cb],
     )
 
     # Export model
