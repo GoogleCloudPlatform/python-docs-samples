@@ -20,14 +20,14 @@ Example usage:
     python create_job_from_preset.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri> [--preset <preset>]
 """
 
+# [START transcoder_create_job_from_preset]
+
 import argparse
 
 from google.cloud.video import transcoder_v1beta1
 from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
-
-# [START transcoder_create_job_from_preset]
 
 
 def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
