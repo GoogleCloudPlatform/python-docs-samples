@@ -286,12 +286,14 @@ def test_create_job_with_set_number_spritesheet(capsys, test_bucket):
     _assert_job_state_succeeded(capsys, job_id)
     _assert_file_in_bucket(
         capsys,
+        test_bucket,
         output_dir_for_set_number_spritesheet
         + small_spritesheet_file_prefix
         + spritesheet_file_suffix,
     )
     _assert_file_in_bucket(
         capsys,
+        test_bucket,
         output_dir_for_set_number_spritesheet
         + large_spritesheet_file_prefix
         + spritesheet_file_suffix,
@@ -335,12 +337,14 @@ def test_create_job_with_periodic_spritesheet(capsys, test_bucket):
     _assert_job_state_succeeded(capsys, job_id)
     _assert_file_in_bucket(
         capsys,
+        test_bucket,
         output_dir_for_periodic_spritesheet
         + small_spritesheet_file_prefix
         + spritesheet_file_suffix,
     )
     _assert_file_in_bucket(
         capsys,
+        test_bucket,
         output_dir_for_periodic_spritesheet
         + large_spritesheet_file_prefix
         + spritesheet_file_suffix,
@@ -367,9 +371,6 @@ def _assert_job_state_succeeded(capsys, job_id):
     assert job_succeeded_state in out
 
 
-def _assert_file_in_bucket(capsys, directory_and_filename):
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-    assert storage.Blob(bucket=bucket, name=directory_and_filename).exists(
-        storage_client
-    )
+def _assert_file_in_bucket(capsys, test_bucket, directory_and_filename):
+    blob = test_bucket.blob(directory_and_filename)
+    assert blob.exists()
