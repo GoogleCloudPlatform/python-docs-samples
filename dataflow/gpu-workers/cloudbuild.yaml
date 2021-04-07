@@ -22,14 +22,14 @@ steps:
     args:
       [ 'build'
       , '--build-arg=python_version=$_PYTHON_VERSION'
-      , '--tag=gcr.io/$PROJECT_ID/$_IMAGE_TAG'
+      , '--tag=gcr.io/$PROJECT_ID/$_IMAGE'
       , '.'
       ]
 
   # Push the image to Container Registry.
   - name: gcr.io/cloud-builders/docker
-    args: [ 'push', 'gcr.io/$PROJECT_ID/$_IMAGE_TAG' ]
+    args: [ 'push', 'gcr.io/$PROJECT_ID/$_IMAGE' ]
 
 substitutions:
   _PYTHON_VERSION: '3.8'
-  _IMAGE_TAG: samples/dataflow/tensorflow-gpu:latest
+  _IMAGE: samples/dataflow/tensorflow-gpu:latest
