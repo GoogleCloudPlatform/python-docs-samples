@@ -1,5 +1,4 @@
 apache-airflow[gcp]==1.10.14
-SQLAlchemy==1.3.23 # must be under 1.4 until at least Airflow 2.0 (check airflow setup.py for restrictions)
 kubernetes==12.0.1
 scipy==1.4.1; python_version > '3.0'
 scipy==1.2.3; python_version < '3.0'
