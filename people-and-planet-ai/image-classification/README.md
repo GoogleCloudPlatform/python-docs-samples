@@ -1,6 +1,6 @@
 # AutoML image classification
 
-1. 🎬 Watch the video introduction in Youtube!
+1. 🎬 Watch the introduction video in Youtube!
 
    [![Watch the video in YouTube](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0 "Watch the video in YouTube")
 
