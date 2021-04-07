@@ -38,25 +38,28 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7"],
+    'ignored_versions': ["2.7"],
+
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
-    "enforce_type_hints": False,
+    'enforce_type_hints': False,
+
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
-    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+    'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    'envs': {},
 }
 
 
 try:
     # Ensure we can import noxfile_config in the project's directory.
-    sys.path.append(".")
+    sys.path.append('.')
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
     print("No user noxfile_config found: detail: {}".format(e))
@@ -71,12 +74,12 @@ def get_pytest_env_vars() -> Dict[str, str]:
     ret = {}
 
     # Override the GCLOUD_PROJECT and the alias.
-    env_key = TEST_CONFIG["gcloud_project_env"]
+    env_key = TEST_CONFIG['gcloud_project_env']
     # This should error out if not set.
-    ret["GOOGLE_CLOUD_PROJECT"] = os.environ[env_key]
+    ret['GOOGLE_CLOUD_PROJECT'] = os.environ[env_key]
 
     # Apply user supplied envs.
-    ret.update(TEST_CONFIG["envs"])
+    ret.update(TEST_CONFIG['envs'])
     return ret
 
 
@@ -85,7 +88,7 @@ def get_pytest_env_vars() -> Dict[str, str]:
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
+IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
@@ -134,7 +137,7 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session: nox.sessions.Session) -> None:
-    if not TEST_CONFIG["enforce_type_hints"]:
+    if not TEST_CONFIG['enforce_type_hints']:
         session.install("flake8", "flake8-import-order")
     else:
         session.install("flake8", "flake8-import-order", "flake8-annotations")
@@ -143,11 +146,9 @@ def lint(session: nox.sessions.Session) -> None:
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
         ",".join(local_names),
-        ".",
+        "."
     ]
     session.run("flake8", *args)
-
-
 #
 # Black
 #
@@ -160,7 +161,6 @@ def blacken(session: nox.sessions.Session) -> None:
 
     session.run("black", *python_files)
 
-
 #
 # Sample Tests
 #
@@ -169,9 +169,7 @@ def blacken(session: nox.sessions.Session) -> None:
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
-def _session_tests(
-    session: nox.sessions.Session, post_install: Callable = None
-) -> None:
+def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         session.install("-r", "requirements.txt")
@@ -202,9 +200,9 @@ def py(session: nox.sessions.Session) -> None:
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        session.skip(
-            "SKIPPED: {} tests are disabled for this sample.".format(session.python)
-        )
+        session.skip("SKIPPED: {} tests are disabled for this sample.".format(
+            session.python
+        ))
 
 
 #
