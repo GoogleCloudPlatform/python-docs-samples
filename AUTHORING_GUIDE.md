@@ -705,11 +705,11 @@ samples, configure your GCS bucket name via the `CLOUD_STORAGE_BUCKET`
 environment variable.
 
 The resources required by tests can usually be found in the `./resources`
-folder inside the sample directory, as in [this
-example](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/automl/cloud-client/resources).
+folder inside the `samples/snippets` directory in client libraries, as in 
+[this example](https://github.com/googleapis/python-automl/tree/master/samples/snippets/resources).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 
 ```console
-gsutil cp ./resources/* gs://$CLOUD_STORAGE_BUCKET/
+gsutil cp ./samples/snippets/resources/* gs://{$CLOUD_STORAGE_BUCKET}/
 ```
