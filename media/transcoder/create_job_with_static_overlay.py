@@ -20,6 +20,8 @@ Example usage:
     python create_job_with_static_overlay.py --project-id <project-id> --location <location> --input-uri <uri> --overlay-image-uri <uri> --output-uri <uri>
 """
 
+# [START transcoder_create_job_with_static_overlay]
+
 import argparse
 
 from google.cloud.video import transcoder_v1beta1
@@ -27,8 +29,6 @@ from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 from google.protobuf import duration_pb2 as duration
-
-# [START transcoder_create_job_with_static_overlay]
 
 
 def create_job_with_static_overlay(

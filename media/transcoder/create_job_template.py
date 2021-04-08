@@ -20,14 +20,14 @@ Example usage:
     python create_job_template.py --project-id <project-id> [--location <location>] [--template-id <template-id>]
 """
 
+# [START transcoder_create_job_template]
+
 import argparse
 
 from google.cloud.video import transcoder_v1beta1
 from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
-
-# [START transcoder_create_job_template]
 
 
 def create_job_template(project_id, location, template_id):
