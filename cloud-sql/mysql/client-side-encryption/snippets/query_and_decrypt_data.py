@@ -23,7 +23,7 @@ from .cloud_sql_connection_pool import init_db
 from .encrypt_and_insert_data import encrypt_and_insert_data
 
 
-def main():
+def main() -> None:
     db_user = os.environ["DB_USER"]  # e.g. "root", "mysql"
     db_pass = os.environ["DB_PASS"]  # e.g. "mysupersecretpassword"
     db_name = os.environ["DB_NAME"]  # e.g. "votes_db"

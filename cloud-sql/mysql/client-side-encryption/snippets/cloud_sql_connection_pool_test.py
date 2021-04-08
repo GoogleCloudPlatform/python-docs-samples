@@ -37,9 +37,11 @@ from snippets.cloud_sql_connection_pool import (
     init_unix_connection_engine
 )
 
+from typing import Dict
+
 
 @pytest.fixture(name="conn_vars")
-def setup():
+def setup() -> Dict[str, str]:
     try:
         conn_vars = {}
         conn_vars["db_user"] = os.environ["MYSQL_USER"]
@@ -58,7 +60,10 @@ def setup():
         yield conn_vars
 
 
-def test_init_tcp_connection_engine(capsys, conn_vars):
+def test_init_tcp_connection_engine(
+    capsys: pytest.CaptureFixture,
+    conn_vars: Dict[str, str]) -> None:
+
     init_tcp_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
@@ -70,7 +75,10 @@ def test_init_tcp_connection_engine(capsys, conn_vars):
     assert "Created TCP connection pool" in captured
 
 
-def test_init_unix_connection_engine(capsys, conn_vars):
+def test_init_unix_connection_engine(
+    capsys: pytest.CaptureFixture,
+    conn_vars: Dict[str, str]) -> None:
+
     init_unix_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
@@ -83,7 +91,10 @@ def test_init_unix_connection_engine(capsys, conn_vars):
     assert "Created Unix socket connection pool" in captured
 
 
-def test_init_db(capsys, conn_vars):
+def test_init_db(
+    capsys: pytest.CaptureFixture,
+    conn_vars: Dict[str, str]) -> None:
+    
     table_name = f"votes_{uuid.uuid4().hex}"
 
     init_db(

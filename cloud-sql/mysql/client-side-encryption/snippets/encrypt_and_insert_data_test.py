@@ -16,6 +16,8 @@ import os
 import uuid
 
 import pytest
+import sqlalchemy
+import tink
 
 from snippets.cloud_kms_env_aead import init_tink_env_aead
 from snippets.cloud_sql_connection_pool import init_db
@@ -26,7 +28,7 @@ table_name = f"votes_{uuid.uuid4().hex}"
 
 
 @pytest.fixture(name="pool")
-def setup_pool():
+def setup_pool() -> sqlalchemy.engine.Engine:
     try:
         db_user = os.environ["MYSQL_USER"]
         db_pass = os.environ["MYSQL_PASSWORD"]
@@ -53,7 +55,7 @@ def setup_pool():
 
 
 @pytest.fixture(name="env_aead")
-def setup_key():
+def setup_key() -> tink.aead.KmsEnvelopeAead:
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
     key_uri = "gcp-kms://" + os.environ["CLOUD_KMS_KEY"]
 
@@ -62,7 +64,11 @@ def setup_key():
     yield env_aead
 
 
-def test_encrypt_and_insert_data(capsys, pool, env_aead):
+def test_encrypt_and_insert_data(
+    capsys: pytest.CaptureFixture,
+    pool: sqlalchemy.engine.Engine,
+    env_aead: tink.aead.KmsEnvelopeAead
+    ) -> None:
     encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
     captured = capsys.readouterr()
 

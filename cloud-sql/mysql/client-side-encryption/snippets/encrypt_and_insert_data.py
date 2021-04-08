@@ -27,7 +27,7 @@ from .cloud_sql_connection_pool import init_db
 logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     db_user = os.environ["DB_USER"]  # e.g. "root", "mysql"
     db_pass = os.environ["DB_PASS"]  # e.g. "mysupersecretpassword"
     db_name = os.environ["DB_NAME"]  # e.g. "votes_db"
