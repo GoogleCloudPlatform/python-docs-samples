@@ -61,8 +61,8 @@ def setup() -> Dict[str, str]:
 
 
 def test_init_tcp_connection_engine(
-    capsys: pytest.CaptureFixture,
-    conn_vars: Dict[str, str]) -> None:
+        capsys: pytest.CaptureFixture,
+        conn_vars: Dict[str, str]) -> None:
 
     init_tcp_connection_engine(
         db_user=conn_vars["db_user"],
@@ -76,8 +76,8 @@ def test_init_tcp_connection_engine(
 
 
 def test_init_unix_connection_engine(
-    capsys: pytest.CaptureFixture,
-    conn_vars: Dict[str, str]) -> None:
+        capsys: pytest.CaptureFixture,
+        conn_vars: Dict[str, str]) -> None:
 
     init_unix_connection_engine(
         db_user=conn_vars["db_user"],
@@ -92,9 +92,9 @@ def test_init_unix_connection_engine(
 
 
 def test_init_db(
-    capsys: pytest.CaptureFixture,
-    conn_vars: Dict[str, str]) -> None:
-    
+        capsys: pytest.CaptureFixture,
+        conn_vars: Dict[str, str]) -> None:
+
     table_name = f"votes_{uuid.uuid4().hex}"
 
     init_db(

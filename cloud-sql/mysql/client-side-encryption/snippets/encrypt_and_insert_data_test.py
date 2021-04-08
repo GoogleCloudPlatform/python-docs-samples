@@ -68,8 +68,13 @@ def test_encrypt_and_insert_data(
     capsys: pytest.CaptureFixture,
     pool: sqlalchemy.engine.Engine,
     env_aead: tink.aead.KmsEnvelopeAead
-    ) -> None:
-    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
+) -> None:
+    encrypt_and_insert_data(
+        pool,
+        env_aead,
+        table_name,
+        "SPACES",
+        "hello@example.com")
     captured = capsys.readouterr()
 
     decrypted_emails = []
