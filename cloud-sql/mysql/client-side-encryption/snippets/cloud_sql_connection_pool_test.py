@@ -27,6 +27,7 @@
 # limitations under the License.
 
 import os
+from typing import Dict
 import uuid
 
 import pytest
@@ -36,8 +37,6 @@ from snippets.cloud_sql_connection_pool import (
     init_tcp_connection_engine,
     init_unix_connection_engine
 )
-
-from typing import Dict
 
 
 @pytest.fixture(name="conn_vars")

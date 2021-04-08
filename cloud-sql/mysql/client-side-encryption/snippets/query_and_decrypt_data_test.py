@@ -69,7 +69,7 @@ def setup_pool() -> sqlalchemy.engine.Engine:
 
 
 @pytest.fixture(name="env_aead")
-def setup_key():
+def setup_key() -> tink.aead.KmsEnvelopeAead:
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
     key_uri = "gcp-kms://" + os.environ["CLOUD_KMS_KEY"]
 
