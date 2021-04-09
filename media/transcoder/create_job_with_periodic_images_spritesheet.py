@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Transcoder sample for creating a job based on a supplied job config that includes an animated overlay.
+"""Google Cloud Transcoder sample for creating a job that generates two spritesheets from the input video. Each spritesheet contains images that are captured periodically.
 
 Example usage:
-    python create_job_with_animated_overlay.py --project-id <project-id> --location <location> --input-uri <uri> --overlay-image-uri <uri> --output-uri <uri>
+    python create_job_with_periodic_images_spritesheet.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri>
 """
 
-# [START transcoder_create_job_with_animated_overlay]
+# [START transcoder_create_job_with_periodic_images_spritesheet]
 
 import argparse
 
@@ -31,16 +31,15 @@ from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
 from google.protobuf import duration_pb2 as duration
 
 
-def create_job_with_animated_overlay(
-    project_id, location, input_uri, overlay_image_uri, output_uri
+def create_job_with_periodic_images_spritesheet(
+    project_id, location, input_uri, output_uri
 ):
-    """Creates a job based on an ad-hoc job configuration that includes an animated image overlay.
+    """Creates a job based on an ad-hoc job configuration that generates two spritesheets.
 
     Args:
         project_id: The GCP project ID.
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
-        overlay_image_uri: Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
         output_uri: Uri of the video output folder in the Cloud Storage bucket."""
 
     client = TranscoderServiceClient()
@@ -50,7 +49,10 @@ def create_job_with_animated_overlay(
     job.input_uri = input_uri
     job.output_uri = output_uri
     job.config = transcoder_v1beta1.types.JobConfig(
+        # Create an ad-hoc job. For more information, see https://cloud.google.com/transcoder/docs/how-to/jobs#create_jobs_ad_hoc.
+        # See all options for the job config at https://cloud.google.com/transcoder/docs/reference/rest/v1beta1/JobConfig.
         elementary_streams=[
+            # This section defines the output video stream.
             transcoder_v1beta1.types.ElementaryStream(
                 key="video-stream0",
                 video_stream=transcoder_v1beta1.types.VideoStream(
@@ -61,6 +63,7 @@ def create_job_with_animated_overlay(
                     frame_rate=60,
                 ),
             ),
+            # This section defines the output audio stream.
             transcoder_v1beta1.types.ElementaryStream(
                 key="audio-stream0",
                 audio_stream=transcoder_v1beta1.types.AudioStream(
@@ -68,6 +71,7 @@ def create_job_with_animated_overlay(
                 ),
             ),
         ],
+        # This section multiplexes the output audio and video together into a container.
         mux_streams=[
             transcoder_v1beta1.types.MuxStream(
                 key="sd",
@@ -75,48 +79,26 @@ def create_job_with_animated_overlay(
                 elementary_streams=["video-stream0", "audio-stream0"],
             ),
         ],
-        overlays=[
-            transcoder_v1beta1.types.Overlay(
-                image=transcoder_v1beta1.types.Overlay.Image(
-                    uri=overlay_image_uri,
-                    resolution=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
-                        x=0,
-                        y=0,
-                    ),
-                    alpha=1,
+        # Generate two sprite sheets from the input video into the GCS bucket. For more information, see
+        # https://cloud.google.com/transcoder/docs/how-to/generate-spritesheet#generate_image_periodically.
+        sprite_sheets=[
+            # Generate a sprite sheet with 64x32px images. An image is taken every 7 seconds from the video.
+            transcoder_v1beta1.types.SpriteSheet(
+                file_prefix="small-sprite-sheet",
+                sprite_width_pixels=64,
+                sprite_height_pixels=32,
+                interval=duration.Duration(
+                    seconds=7,
                 ),
-                animations=[
-                    transcoder_v1beta1.types.Overlay.Animation(
-                        animation_fade=transcoder_v1beta1.types.Overlay.AnimationFade(
-                            fade_type=transcoder_v1beta1.types.Overlay.FadeType.FADE_IN,
-                            xy=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
-                                x=0.5,
-                                y=0.5,
-                            ),
-                            start_time_offset=duration.Duration(
-                                seconds=5,
-                            ),
-                            end_time_offset=duration.Duration(
-                                seconds=10,
-                            ),
-                        ),
-                    ),
-                    transcoder_v1beta1.types.Overlay.Animation(
-                        animation_fade=transcoder_v1beta1.types.Overlay.AnimationFade(
-                            fade_type=transcoder_v1beta1.types.Overlay.FadeType.FADE_OUT,
-                            xy=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
-                                x=0.5,
-                                y=0.5,
-                            ),
-                            start_time_offset=duration.Duration(
-                                seconds=12,
-                            ),
-                            end_time_offset=duration.Duration(
-                                seconds=15,
-                            ),
-                        ),
-                    ),
-                ],
+            ),
+            # Generate a sprite sheet with 128x72px images. An image is taken every 7 seconds from the video.
+            transcoder_v1beta1.types.SpriteSheet(
+                file_prefix="large-sprite-sheet",
+                sprite_width_pixels=128,
+                sprite_height_pixels=72,
+                interval=duration.Duration(
+                    seconds=7,
+                ),
             ),
         ],
     )
@@ -125,7 +107,7 @@ def create_job_with_animated_overlay(
     return response
 
 
-# [END transcoder_create_job_with_animated_overlay]
+# [END transcoder_create_job_with_periodic_images_spritesheet]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -141,20 +123,14 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--overlay-image-uri",
-        help="Uri of the overlay JPEG image in the Cloud Storage bucket. Must be a JPEG.",
-        required=True,
-    )
-    parser.add_argument(
         "--output-uri",
         help="Uri of the video output folder in the Cloud Storage bucket. Must end in '/'.",
         required=True,
     )
     args = parser.parse_args()
-    create_job_with_animated_overlay(
+    create_job_with_periodic_images_spritesheet(
         args.project_id,
         args.location,
         args.input_uri,
-        args.overlay_image_uri,
         args.output_uri,
     )
