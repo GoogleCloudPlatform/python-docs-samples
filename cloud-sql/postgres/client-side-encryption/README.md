@@ -18,18 +18,18 @@ name.
 created key.
 
 1. Create a service account with the 'Cloud SQL Client' permissions by following these 
-[instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
+[instructions](https://cloud.google.com/sql/docs/postgres/connect-admin-proxy#create-service-account).
 Download a JSON key to use to authenticate your connection.
 
 1. **macOS / Windows only**: Configure gRPC Root Certificates: On some platforms you may need to
 accept the Google server certificates, see instructions for setting up
 [root certs](https://github.com/googleapis/google-cloud-cpp/blob/master/google/cloud/bigtable/examples/README.md#configure-grpc-root-certificates).
+ 
 
 ## Running locally
 
 To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions
-[here](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
+following the instructions [here](https://cloud.google.com/sql/docs/postgres/connect-admin-proxy#install).
 
 Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
 On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
@@ -51,13 +51,15 @@ export DB_NAME='<DB_NAME>'
 export GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/quickstart) to
 help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
 ```bash
 ./cloud_sql_proxy -instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
+
+Note: if you are running a local Postgres server, you will need to turn it off before running the command above or use a different port.
 
 #### Windows/PowerShell
 Use these PowerShell commands to initialize environment variables:
@@ -70,7 +72,7 @@ $env:DB_NAME="<DB_NAME>"
 $env:GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/quickstart) to
 help keep secrets safe.
 
 Then use this command to launch the proxy in a separate PowerShell session:
@@ -78,21 +80,18 @@ Then use this command to launch the proxy in a separate PowerShell session:
 Start-Process -filepath "C:\<path to proxy exe>" -ArgumentList "-instances=<project-id>:<region>:<instance-name>=tcp:5432 -credential_file=<CREDENTIALS_JSON_FILE>"
 ```
 
+Note: if you are running a local Postgres server, you will need to turn it off before running the command above or use a different port.
+
 ### Launch proxy with Unix Domain Socket
 NOTE: this option is currently only supported on Linux and Mac OS. Windows users should use the
 [Launch proxy with TCP](#launch-proxy-with-tcp) option.
 
-To use a Unix socket, you'll need to create a directory and give write access to the user running
-the proxy. For example:
+To use a Unix socket, you'll need to create a directory for the sockets and
+initialize an environment variable containing the directory you just created.
+For example:
 
 ```bash
-sudo mkdir /cloudsql
-sudo chown -R $USER /cloudsql
-```
-
-You'll also need to initialize an environment variable containing the directory you just created:
-```bash
-export DB_SOCKET_DIR=/path/to/the/new/directory
+export DB_SOCKET_DIR=$(mktemp -d cloudsql)
 ```
 
 Use these terminal commands to initialize other environment variables as well:
@@ -105,7 +104,7 @@ export DB_NAME='<DB_NAME>'
 export GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/quickstart) to
 help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
