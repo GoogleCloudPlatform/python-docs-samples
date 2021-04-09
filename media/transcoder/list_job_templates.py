@@ -20,13 +20,13 @@ Example usage:
     python list_job_templates.py --project-id <project-id> --location <location>
 """
 
+# [START transcoder_list_job_templates]
+
 import argparse
 
 from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
-
-# [START transcoder_list_job_templates]
 
 
 def list_job_templates(project_id, location):
