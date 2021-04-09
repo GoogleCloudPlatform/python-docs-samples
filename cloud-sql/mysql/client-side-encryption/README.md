@@ -124,12 +124,7 @@ pip install -r requirements.txt
 
 ### Run the demo
 
-Add new votes:
-```bash
-python snippets/encrypt_and_insert_data.py 
-```
-
-View the collected votes:
+Add new votes and the collected votes:
 ```bash
 python snippets/query_and_decrypt_data.py 
 ```
