@@ -17,7 +17,6 @@ import sqlalchemy
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import Integer
-from sqlalchemy import LargeBinary
 from sqlalchemy import String
 from sqlalchemy import Table
 
@@ -66,7 +65,7 @@ def init_db(
             table_name,
             metadata,
             Column("vote_id", Integer, primary_key=True, nullable=False),
-            Column("voter_email", LargeBinary, nullable=False),
+            Column("voter_email",  sqlalchemy.types.VARBINARY, nullable=False),
             Column("time_cast", DateTime, nullable=False),
             Column("candidate", String(6), nullable=False),
         )
