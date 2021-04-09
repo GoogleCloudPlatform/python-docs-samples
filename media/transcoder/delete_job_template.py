@@ -20,13 +20,13 @@ Example usage:
     python delete_job_template.py --project-id <project-id> --location <location> --template-id <template-id>
 """
 
+# [START transcoder_delete_job_template]
+
 import argparse
 
 from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
     TranscoderServiceClient,
 )
-
-# [START transcoder_delete_job_template]
 
 
 def delete_job_template(project_id, location, template_id):
