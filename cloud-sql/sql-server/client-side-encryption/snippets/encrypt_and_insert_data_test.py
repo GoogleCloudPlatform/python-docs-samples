@@ -80,7 +80,7 @@ def test_encrypt_and_insert_data(
     decrypted_emails = []
     with pool.connect() as conn:
         results = conn.execute(
-            f"SELECT TOP(5) team, time_cast, voter_email FROM {table_name} " 
+            f"SELECT TOP(5) team, time_cast, voter_email FROM {table_name} "
             "ORDER BY time_cast DESC"
         ).fetchall()
 

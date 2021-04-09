@@ -71,7 +71,7 @@ def query_and_decrypt_data(
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            f"SELECT TOP(5) team, time_cast, voter_email FROM {table_name} " 
+            f"SELECT TOP(5) team, time_cast, voter_email FROM {table_name} "
             "ORDER BY time_cast DESC"
         ).fetchall()
 

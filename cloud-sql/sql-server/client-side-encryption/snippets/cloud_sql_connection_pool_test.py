@@ -35,7 +35,6 @@ import pytest
 from snippets.cloud_sql_connection_pool import (
     init_db,
     init_tcp_connection_engine,
-    init_unix_connection_engine
 )
 
 
@@ -74,8 +73,6 @@ def test_init_tcp_connection_engine(
     assert "Created TCP connection pool" in captured
 
 
-
-
 def test_init_db(
         capsys: pytest.CaptureFixture,
         conn_vars: Dict[str, str]) -> None:
@@ -87,7 +84,7 @@ def test_init_db(
         db_name=conn_vars["db_name"],
         db_pass=conn_vars["db_pass"],
         db_host=conn_vars["db_host"],
-        table_name=table_name, 
+        table_name=table_name,
     )
 
     captured = capsys.readouterr().out
