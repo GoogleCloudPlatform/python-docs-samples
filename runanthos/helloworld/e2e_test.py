@@ -140,7 +140,7 @@ def crfa_cluster_ingress_address(deployed_service):
 
 def test_end_to_end(crfa_cluster_ingress_address):
     service_name, ingress_addr = crfa_cluster_ingress_address
-  
+
     req = request.Request(
         f"http://{ingress_addr}",
         headers={
