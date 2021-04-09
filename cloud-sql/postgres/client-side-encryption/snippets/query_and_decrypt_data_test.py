@@ -65,7 +65,7 @@ def setup_pool() -> sqlalchemy.engine.Engine:
         yield pool
 
         with pool.connect() as conn:
-            conn.execute(f"DROP TABLE IF EXISTS `{table_name}`")
+            conn.execute(f"DROP TABLE IF EXISTS {table_name}")
 
 
 @pytest.fixture(name="env_aead")

@@ -62,7 +62,11 @@ def init_unix_connection_engine(
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
-            query={"unix_socket": f"{db_socket_dir}/{cloud_sql_connection_name}"},
+            query={
+                "unix_sock": "{}/{}/.s.PGSQL.5432".format(
+                    db_socket_dir,  # e.g. "/cloudsql"
+                    cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+            }
         ),
     )
     print("Created Unix socket connection pool")
