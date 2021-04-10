@@ -79,8 +79,8 @@ with models.DAG(
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
         zone=models.Variable.get('gce_zone'),
-        master_machine_type='n1-standard-1',
-        worker_machine_type='n1-standard-1')
+        master_machine_type='n1-standard-2',
+        worker_machine_type='n1-standard-2')
 
     # Run the Hadoop wordcount example installed on the Cloud Dataproc cluster
     # master node.
