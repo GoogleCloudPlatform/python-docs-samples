@@ -115,6 +115,18 @@ assign_issues_by:
   to:
   - dukeng
   - ziweizhao
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
+
+assign_prs_by:
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
 
 
 assign_issues:
