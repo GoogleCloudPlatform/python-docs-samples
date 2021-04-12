@@ -1,6 +1,7 @@
 from airflow.utils import dates
 from airflow import models
 from airflow.hooks.base_hook import BaseHook
+from airflow.utils.state import State
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
 from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
 from airflow.providers.google.cloud.operators.gcs import GCSDeleteBucketOperator
@@ -67,4 +68,8 @@ with models.DAG(
         bucket_name=BUCKET_NAME
     ) 
 
-validate_file_exists >> start_dataflow_job >> execute_bigquery_sql >> delete_bucket
+    validate_file_exists >> start_dataflow_job >> execute_bigquery_sql >> delete_bucket
+
+if __name__ == "__main__":
+    crm_workflow_dag.clear(dag_run_state=State.NONE)
+    crm_workflow_dag.run()

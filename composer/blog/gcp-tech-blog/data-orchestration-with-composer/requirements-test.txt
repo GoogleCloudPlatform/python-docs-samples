@@ -1,0 +1,2 @@
+pytest==6.2.1
+git+https://github.com/GoogleCloudPlatform/python-docs-samples.git#egg=dag_test_utils&subdirectory=composer/dag_test_utils # DAG unit test utility
