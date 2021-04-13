@@ -99,7 +99,10 @@ To run this sample:
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/healthcare/api-client/v1/datasets before
                             running the sample.
-        delete-dataset      Deletes a dataset.
+        delete-dataset      Deletes a dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/healthcare/api-client/v1/datasets before
+                            running the sample.
         get-dataset         Gets any metadata associated with a dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/healthcare/api-client/v1/datasets before
