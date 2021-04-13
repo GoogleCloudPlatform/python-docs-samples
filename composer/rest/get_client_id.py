@@ -61,9 +61,9 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Project ID.')
     parser.add_argument(
-        'location', help='Region of the Cloud Composer environent.')
+        'location', help='Region of the Cloud Composer environment.')
     parser.add_argument(
-        'composer_environment', help='Name of the Cloud Composer environent.')
+        'composer_environment', help='Name of the Cloud Composer environment.')
 
     args = parser.parse_args()
     get_client_id(
