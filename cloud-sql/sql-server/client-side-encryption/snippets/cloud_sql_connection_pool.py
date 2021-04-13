@@ -18,7 +18,6 @@ import sqlalchemy
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import Table
 
 
@@ -73,7 +72,7 @@ def init_db(
             Column("vote_id", Integer, primary_key=True, nullable=False),
             Column("voter_email", sqlalchemy.types.VARBINARY, nullable=False),
             Column("time_cast", DateTime, nullable=False),
-            Column("team", String(6), nullable=False),
+            Column("team", sqlalchemy.types.VARCHAR(6), nullable=False),
         )
         metadata.create_all()
 
