@@ -64,7 +64,7 @@
 /tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/trace/**/*.py                         @dukeng @ziweizhao @GoogleCloudPlatform/python-samples-owners
+/trace/**/*.py                         @ymotongpoo @GoogleCloudPlatform/python-samples-owners
 /translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /vision/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
