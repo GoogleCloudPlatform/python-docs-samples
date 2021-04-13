@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START cloud_sql_sqlserver_cse_db]
+import pytds
 import sqlalchemy
 from sqlalchemy import Column
 from sqlalchemy import DateTime
@@ -32,18 +33,23 @@ def init_tcp_connection_engine(
     host_args = db_host.split(":")
     db_hostname, db_port = host_args[0], int(host_args[1])
 
-    pool = sqlalchemy.create_engine(
-        # Equivalent URL:
-        # mssql+pytds://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        sqlalchemy.engine.url.URL(
-            drivername="mssql+pytds",
-            username=db_user,  # e.g. "my-database-user"
+    def connect_with_pytds() -> pytds.Connection:
+        return pytds.connect(
+            db_hostname,  # e.g. "127.0.0.1"
+            user=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
-            host=db_hostname,  # e.g. "127.0.0.1"
-            port=db_port,  # e.g. 1433
             database=db_name,  # e.g. "my-database-name"
-        ),
+            port=db_port,  # e.g. 1433
+            bytes_to_unicode=False # disables automatic decoding of bytes
+        )
+
+    pool = sqlalchemy.create_engine(
+        # This allows us to use the pytds sqlalchemy dialect, but also set the
+        # bytes_to_unicode flag to False, which is not supported by the dialect
+        "mssql+pytds://localhost",
+        creator=connect_with_pytds,
     )
+
     print("Created TCP connection pool")
     return pool
 
