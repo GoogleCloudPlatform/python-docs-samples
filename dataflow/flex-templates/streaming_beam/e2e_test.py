@@ -18,7 +18,7 @@ import uuid
 from google.cloud import bigquery
 import pytest
 
-from . import testing_utils
+from .. import testing_utils
 
 
 SUFFIX = uuid.uuid4().hex[0:6]
