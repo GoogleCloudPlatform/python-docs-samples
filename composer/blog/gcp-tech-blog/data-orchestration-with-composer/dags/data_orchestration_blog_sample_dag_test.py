@@ -17,10 +17,10 @@ import internal_unit_testing
 import pytest
 
 # user should substitute their project ID
-PROJECT_ID = 'rds-sandbox'
-BUCKET_NAME = 'rds_demo_data'
+PROJECT_ID = 'your-project-id'
+BUCKET_NAME = 'your-bucket-name'
 FILE_NAME = 'incoming_100.txt'
-BQ_SQL_STRING = 'SELECT COUNT(*) FROM `rds-demos.iwd_demo.inspiring_women` LIMIT 1000'
+BQ_SQL_STRING = 'SELECT COUNT(*) FROM `your-project-id.iwd_demo.inspiring_women` LIMIT 1000'
 
 @pytest.fixture(autouse=True, scope="function")
 # The fixture `airflow_database` lives in composer/conftest.py.
