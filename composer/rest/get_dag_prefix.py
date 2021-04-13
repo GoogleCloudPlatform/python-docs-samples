@@ -48,15 +48,16 @@ def get_dag_prefix(project_id, location, composer_environment):
     # [END composer_get_environment_dag_prefix]
 
 
+# Usage: python get_dag_prefix.py your_project_id your_region your_environment_name
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Project ID.')
     parser.add_argument(
-        'location', help='Region of the Cloud Composer environent.')
+        'location', help='Region of the Cloud Composer environment.')
     parser.add_argument(
-        'composer_environment', help='Name of the Cloud Composer environent.')
+        'composer_environment', help='Name of the Cloud Composer environment.')
 
     args = parser.parse_args()
     get_dag_prefix(
