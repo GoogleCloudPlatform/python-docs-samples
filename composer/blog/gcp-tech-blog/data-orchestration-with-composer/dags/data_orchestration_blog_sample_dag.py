@@ -22,10 +22,15 @@ from airflow.providers.google.cloud.operators.gcs import GCSDeleteBucketOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCheckOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
 
+# Assumes existence of the following Airflow Variables
+PROJECT_ID = models.Variable.get("gcp_project")
 BUCKET_NAME = models.Variable.get("bucket_name")
-FILE_NAME = models.Variable.get("file_name")
-BQ_SQL_STRING = models.Variable.get("bq_sql_string")
+DATA_FILE_NAME = models.Variable.get("file_name")
+DATASET = models.Variable.get("bigquery_dataset")
+TABLE = models.Variable.get("bigquery_table")
 
+# Slack error notification example taken from Kaxil Naik's blog on Slack Integratin:
+# https://medium.com/datareply/integrating-slack-alerts-in-airflow-c9dcd155105
 def on_failure_callback(context):
     ti = context.get('task_instance')
     slack_msg = """
@@ -50,7 +55,7 @@ def on_failure_callback(context):
     slack_error.execute(context)
 
 with models.DAG(
-    'transform-crm-workload',
+    'transform_crm_workload',
     schedule_interval=None,
     start_date=dates.days_ago(0),    
     default_args={ 'on_failure_callback': on_failure_callback}
@@ -59,21 +64,26 @@ with models.DAG(
     validate_file_exists = GCSObjectExistenceSensor(
         task_id="validate_file_exists",
         bucket=BUCKET_NAME,
-        object=FILE_NAME
+        object=DATA_FILE_NAME
     )
 
     start_dataflow_job = DataflowTemplatedJobStartOperator(
         task_id="start-dataflow-template-job",
-        job_name='crm_wordcount',
-        template='gs://dataflow-templates/latest/Word_Count',
+        job_name='crm_customers_transform',
+        template="gs://dataflow-templates/latest/GCS_Text_to_BigQuery",
         parameters={
-            'inputFile': "gs://{bucket}/{filename}".format(bucket=BUCKET_NAME, filename=FILE_NAME),
-            'output': "gs://{bucket}/output".format(bucket=BUCKET_NAME)}
+            "javascriptTextTransformGcsPath": "gs://{bucket}/crm_transform_udf.js".format(bucket=BUCKET_NAME),            
+            "javascriptTextTransformFunctionName": "transform",
+            "JSONPath": "gs://{bucket}/crm_schema.json".format(bucket=BUCKET_NAME),
+            "outputTable": "{project_id}:{dataset}.{table}".format(project_id=PROJECT_ID, dataset=DATASET, table=TABLE),
+            "inputFilePattern": "gs://{bucket}/{filename}".format(bucket=BUCKET_NAME, filename=DATA_FILE_NAME),
+            "bigQueryLoadingTemporaryDirectory": "gs://{bucket}/tmp/".format(bucket=BUCKET_NAME)
+        }
     )
-
+    
     execute_bigquery_sql = BigQueryCheckOperator(
         task_id='execute_bigquery_sql',
-        sql=BQ_SQL_STRING,
+        sql='SELECT COUNT(*) FROM `{project_id}.{dataset}.{table}` LIMIT 1000'.format(project_id=PROJECT_ID, dataset=DATASET, table=TABLE),
         use_legacy_sql=False
     )
 
