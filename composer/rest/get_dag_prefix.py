@@ -47,6 +47,7 @@ def get_dag_prefix(project_id, location, composer_environment):
     print(environment_data['config']['dagGcsPrefix'])
     # [END composer_get_environment_dag_prefix]
 
+
 # Usage: python get_dag_prefix.py your_project_id your_region your_environment_name
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

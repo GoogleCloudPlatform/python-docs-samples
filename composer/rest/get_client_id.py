@@ -54,6 +54,7 @@ def get_client_id(project_id, location, composer_environment):
     print(query_string['client_id'][0])
     # [END composer_get_environment_client_id]
 
+
 # Usage: python get_client_id.py your_project_id your_region your_environment_name
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
