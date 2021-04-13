@@ -18,7 +18,7 @@ name.
 created key.
 
 1. Create a service account with the 'Cloud SQL Client' permissions by following these 
-[instructions](https://cloud.google.com/sql/docs/sqlserver/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
+[instructions](https://cloud.google.com/sql/docs/sqlserver/connect-admin-proxy#create-service-account).
 Download a JSON key to use to authenticate your connection.
 
 1. **macOS / Windows only**: Configure gRPC Root Certificates: On some platforms you may need to
@@ -29,7 +29,7 @@ accept the Google server certificates, see instructions for setting up
 
 To run this application locally, download and install the `cloud_sql_proxy` by
 following the instructions
-[here](https://cloud.google.com/sql/docs/sqlserver/sql-proxy#install).
+[here](https://cloud.google.com/sql/docs/sqlserver/connect-admin-proxy#install).
 
 Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
 On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
@@ -51,7 +51,7 @@ export DB_NAME='<DB_NAME>'
 export GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/quickstart) to
 help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
@@ -70,7 +70,7 @@ $env:DB_NAME="<DB_NAME>"
 $env:GCP_KMS_URI='<GCP_KMS_URI>'
 ```
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more
-secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/quickstart) to
 help keep secrets safe.
 
 Then use this command to launch the proxy in a separate PowerShell session:
