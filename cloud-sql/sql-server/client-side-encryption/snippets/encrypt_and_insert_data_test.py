@@ -85,7 +85,7 @@ def test_encrypt_and_insert_data(
 
         for row in results:
             team = row[0]
-            email = env_aead.decrypt(row[2], team.encode()).decode()
+            email = env_aead.decrypt(row[2], team).decode()
             decrypted_emails.append(email)
 
     assert "Vote successfully cast for 'SPACES'" in captured.out

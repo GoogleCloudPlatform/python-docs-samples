@@ -83,7 +83,7 @@ def query_and_decrypt_data(
             # associated data. Encryption with associated data ensures authenticity
             # (who the sender is) and integrity (the data has not been tampered with) of that
             # data, but not its secrecy. (see RFC 5116 for more info)
-            email = env_aead.decrypt(row[2], team.encode()).decode()
+            email = env_aead.decrypt(row[2], team).decode()
             time_cast = row[1]
 
             # Print recent votes
