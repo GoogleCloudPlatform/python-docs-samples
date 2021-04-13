@@ -65,7 +65,7 @@ def init_db(
     db = init_tcp_connection_engine(db_user, db_pass, db_name, db_host)
 
     # Create tables (if they don't already exist)
-    if not db.has_table("votes"):
+    if not db.has_table(table_name):
         metadata = sqlalchemy.MetaData(db)
         Table(
             table_name,
