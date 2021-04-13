@@ -40,13 +40,13 @@ secret_env = secret.Secret(
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
 secret_volume = secret.Secret(
-    'volume',
+    deploy_type='volume',
     # Path where we mount the secret as volume
-    '/var/secrets/google',
+    deploy_target='/var/secrets/google',
     # Name of Kubernetes Secret
-    'service-account',
+    secret='service-account',
     # Key in the form of service account file name
-    'service-account.json')
+    key='service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
 
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -217,7 +217,7 @@ with models.DAG(
         # resources = pod.Resources() instead passing a dict
         # For more info see:
         # https://github.com/apache/airflow/pull/4551
-        resources={'limit_memory': 1, 'limit_cpu': 1},
+        resources={'limit_memory': "250M", 'limit_cpu': "100m"},
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.
         config_file='/home/airflow/composer_kube_config',
