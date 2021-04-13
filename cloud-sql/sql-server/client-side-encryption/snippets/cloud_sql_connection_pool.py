@@ -40,7 +40,7 @@ def init_tcp_connection_engine(
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
             port=db_port,  # e.g. 1433
-            bytes_to_unicode=False # disables automatic decoding of bytes
+            bytes_to_unicode=False  # disables automatic decoding of bytes
         )
 
     pool = sqlalchemy.create_engine(
@@ -71,7 +71,7 @@ def init_db(
             table_name,
             metadata,
             Column("vote_id", Integer, primary_key=True, nullable=False),
-            Column("voter_email",  sqlalchemy.types.VARBINARY, nullable=False),
+            Column("voter_email", sqlalchemy.types.VARBINARY, nullable=False),
             Column("time_cast", DateTime, nullable=False),
             Column("candidate", String(6), nullable=False),
         )

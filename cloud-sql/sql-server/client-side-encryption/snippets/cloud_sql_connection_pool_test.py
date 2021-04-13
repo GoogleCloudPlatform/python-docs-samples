@@ -38,8 +38,7 @@ def setup() -> Dict[str, str]:
         raise Exception(
             "The following env variables must be set to run these tests:"
             "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST, "
-            "SQLSERVER_INSTANCE"
-        )
+            "SQLSERVER_INSTANCE")
     else:
         yield conn_vars
 

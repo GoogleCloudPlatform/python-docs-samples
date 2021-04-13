@@ -37,8 +37,7 @@ def setup_pool() -> sqlalchemy.engine.Engine:
     except KeyError:
         raise Exception(
             "The following env variables must be set to run these tests:"
-            "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST"
-        )
+            "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST")
     else:
         pool = init_db(
             db_user=db_user,
