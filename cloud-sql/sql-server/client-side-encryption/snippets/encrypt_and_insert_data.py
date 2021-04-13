@@ -87,7 +87,7 @@ def encrypt_and_insert_data(
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         f"INSERT INTO {table_name} (time_cast, team, voter_email)"
-        " VALUES (:time_cast, :team, :voter_email)"
+        " VALUES (:time_cast, :team, CONVERT(varbinary(max), :voter_email, 0))"
     )
 
     # Using a with statement ensures that the connection is always released
