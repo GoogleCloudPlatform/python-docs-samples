@@ -12,8 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
+import random
+
 from google.cloud import bigquery
 import pytest
+
+
+RESOURCE_PREFIX = "python_bigquery_samples_snippets"
+
+
+def resource_prefix() -> str:
+    timestamp = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    random_string = hex(random.randrange(1000000))[2:]
+    return f"{RESOURCE_PREFIX}_{timestamp}_{random_string}"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_datasets(bigquery_client: bigquery.Client):
+    yesterday = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    for dataset in bigquery_client.list_datasets():
+        if (
+            dataset.dataset_id.startswith(RESOURCE_PREFIX)
+            and dataset.created < yesterday
+        ):
+            bigquery_client.delete_dataset(
+                dataset, delete_contents=True, not_found_ok=True
+            )
 
 
 @pytest.fixture(scope="session")
@@ -25,3 +50,18 @@ def bigquery_client():
 @pytest.fixture(scope="session")
 def project_id(bigquery_client):
     return bigquery_client.project
+
+
+@pytest.fixture(scope="session")
+def dataset_id(bigquery_client: bigquery.Client, project_id: str):
+    dataset_id = resource_prefix()
+    full_dataset_id = f"{project_id}.{dataset_id}"
+    dataset = bigquery.Dataset(full_dataset_id)
+    bigquery_client.create_dataset(dataset)
+    yield dataset_id
+    bigquery_client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture
+def bigquery_client_patch(monkeypatch, bigquery_client):
+    monkeypatch.setattr(bigquery, "Client", lambda: bigquery_client)
