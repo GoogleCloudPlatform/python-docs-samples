@@ -1,0 +1,33 @@
+
+# Cluster Status sample for Google Kubernetes Engine
+
+This sample demonstrates how to retrieve GKE cluster statuses across multiple GCP projects. 
+
+## Setup
+
+Before you can run or deploy the sample, you will need to do the following:
+
+1. If not already done, enable the Cloud Resource Manager API
+   and check the quota for your project at
+   https://console.developers.google.com/apis/api/cloudresourcemanager
+   
+2. If not already done, enable the Kubernetes Engine API
+   and check the quota for your project at
+   https://console.developers.google.com/apis/api/container
+   
+3. This sample uses Application Default Credentials for authentication.
+   If not already done, install the gcloud CLI from
+   https://cloud.google.com/sdk and run
+   `gcloud beta auth application-default login`.
+   For more information, see
+   https://developers.google.com/identity/protocols/application-default-credentials
+   
+4. Install the Python client library for Google APIs by running
+   `pip install --upgrade google-api-python-client
+
+## Running locally
+
+Refer to the [top-level README](../README.md) for instructions on running and deploying.
+
+Running the sample:
+    $ python main.py
