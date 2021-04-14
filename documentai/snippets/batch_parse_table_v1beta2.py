@@ -24,7 +24,7 @@ def batch_parse_table(
     project_id="YOUR_PROJECT_ID",
     input_uri="gs://cloud-samples-data/documentai/form.pdf",
     destination_uri="gs://your-bucket-id/path/to/save/results/",
-    timeout=90
+    timeout=90,
 ):
     """Parse a form"""
 

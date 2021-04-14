@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-from google.cloud import documentai_v1beta3 as documentai
+from google.cloud import documentai_v1 as documentai
 
 # [START documentai_quickstart]
 
@@ -45,7 +45,7 @@ def quickstart(project_id: str, location: str, processor_id: str, file_path: str
     document = {"content": image_content, "mime_type": "application/pdf"}
 
     # Configure the process request
-    request = {"name": name, "document": document}
+    request = {"name": name, "raw_document": document}
 
     result = client.process_document(request=request)
     document = result.document
