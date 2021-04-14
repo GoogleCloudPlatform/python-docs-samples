@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ai_platform_tf_keras_model]
+# [START ai_platform_tfkeras_model]
 """Defines a Keras model and input function for training."""
 
 # [START ai_platform_tfkeras_model_tf_import]
@@ -102,4 +102,4 @@ def create_keras_model(
     return model
 # [END ai_platform_tfkeras_model_create_keras_model_define]
 # [END ai_platform_tfkeras_model_create_keras_model]
-# [END ai_platform_tf_keras_model]
+# [END ai_platform_tfkeras_model]

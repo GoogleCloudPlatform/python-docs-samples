@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-A sample app demonstrating Stackdriver Trace
+A sample app demonstrating Google Cloud Trace
 """
 import mock
 
