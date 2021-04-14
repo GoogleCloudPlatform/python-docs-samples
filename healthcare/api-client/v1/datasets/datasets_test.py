@@ -173,9 +173,7 @@ def test_patch_dataset(capsys, test_dataset):
 
 
 def test_deidentify_dataset(capsys, test_dataset, dest_dataset_id):
-    datasets.deidentify_dataset(
-        project_id, cloud_region, dataset_id, dest_dataset_id
-    )
+    datasets.deidentify_dataset(project_id, cloud_region, dataset_id, dest_dataset_id)
 
     out, _ = capsys.readouterr()
 
