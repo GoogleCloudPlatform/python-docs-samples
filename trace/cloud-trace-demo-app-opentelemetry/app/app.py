@@ -32,10 +32,13 @@ app = flask.Flask(__name__)
 FlaskInstrumentor().instrument_app(app)
 
 
-exporter = CloudTraceSpanExporter()
-trace.set_tracer_provider(TracerProvider())
-trace.get_tracer_provider().add_span_processor(SimpleExportSpanProcessor(exporter))
-propagators.set_global_textmap(CloudTraceFormatPropagator())
+def configure_exporter(exporter):
+    trace.set_tracer_provider(TracerProvider())
+    trace.get_tracer_provider().add_span_processor(SimpleExportSpanProcessor(exporter))
+    propagators.set_global_textmap(CloudTraceFormatPropagator())
+
+
+configure_exporter(CloudTraceSpanExporter())
 tracer = trace.get_tracer(__name__)
 
 
