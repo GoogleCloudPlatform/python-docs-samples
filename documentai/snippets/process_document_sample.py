@@ -25,7 +25,7 @@
 def process_document_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ):
-    from google.cloud import documentai_v1beta3 as documentai
+    from google.cloud import documentai_v1 as documentai
 
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = {}
@@ -46,7 +46,7 @@ def process_document_sample(
     document = {"content": image_content, "mime_type": "application/pdf"}
 
     # Configure the process request
-    request = {"name": name, "document": document}
+    request = {"name": name, "raw_document": document}
 
     # Recognizes text entities in the PDF document
     result = client.process_document(request=request)

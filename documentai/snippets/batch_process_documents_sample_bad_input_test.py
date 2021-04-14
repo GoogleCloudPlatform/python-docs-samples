@@ -16,7 +16,7 @@
 import os
 from uuid import uuid4
 
-from samples.snippets import batch_process_documents_sample_v1beta3
+from samples.snippets import batch_process_documents_sample
 
 location = "us"
 project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -29,7 +29,7 @@ BUCKET_NAME = f"document-ai-python-{uuid4()}"
 
 def test_batch_process_documents_with_bad_input(capsys):
     try:
-        batch_process_documents_sample_v1beta3.batch_process_documents(
+        batch_process_documents_sample.batch_process_documents(
             project_id=project_id,
             location=location,
             processor_id=processor_id,
