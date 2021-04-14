@@ -8,4 +8,4 @@ opentelemetry-instrumentation-grpc==0.16b1
 opentelemetry-exporter-jaeger==0.16b1
 opentelemetry-instrumentation-requests==0.16b1
 opentelemetry-instrumentation-wsgi==0.16b1
-opentelemetry-sdk==0.16b1
+opentelemetry-sdk==1.0.0
