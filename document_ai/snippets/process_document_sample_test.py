@@ -15,7 +15,8 @@
 
 import os
 
-from samples.snippets import quickstart_sample_v1beta3
+from samples.snippets import process_document_sample
+
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -23,8 +24,8 @@ processor_id = "90484cfdedb024f6"
 file_path = "resources/invoice.pdf"
 
 
-def test_quickstart(capsys):
-    quickstart_sample_v1beta3.quickstart(
+def test_process_documents(capsys):
+    process_document_sample.process_document_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
