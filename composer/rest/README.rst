@@ -61,6 +61,15 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
+Determine client ID associated with a Cloud Composer environment
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+You can also get the client ID using the following command, where `AIRFLOW_URL`_ would be the URL of your Airflow webserver (ex. https://*****************-tp.appspot.com)
+
+.. code-block::bash
+
+    $ curl -v AIRFLOW_URL 2>&1 >/dev/null | grep -o "client_id\=[A-Za-z0-9-]*\.apps\.googleusercontent\.com"
+
 Determine Cloud Storage path for DAGs
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
