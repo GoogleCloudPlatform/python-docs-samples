@@ -324,3 +324,10 @@ def test_collection_group_query(db):
 
 def test_list_document_subcollections():
     snippets.list_document_subcollections()
+
+
+def test_create_and_build_bundle():
+    from google.cloud.firestore_v1._helpers import deserialize_bundle
+    bundle, buffer = snippets.create_and_build_bundle()
+    assert "latest-stories-query" in bundle.named_queries
+    assert bundle.build() == buffer
