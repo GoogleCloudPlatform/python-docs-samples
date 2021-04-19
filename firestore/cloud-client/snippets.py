@@ -1094,7 +1094,14 @@ def list_document_subcollections():
     # [END fs_list_document_subcollections]
 
 
+def _setup_bundle():
+    from google.cloud import firestore
+    db = firestore.Client()
+    db.collection("stories").document("news-item").set({"title": "Wow!"})
+
+
 def create_and_build_bundle():
+    _setup_bundle()
     # [START fs_create_and_builde_bundle]
     from google.cloud import firestore
     from google.cloud.firestore_bundle import FirestoreBundle
@@ -1102,12 +1109,12 @@ def create_and_build_bundle():
     db = firestore.Client()
     bundle = FirestoreBundle("latest-stories")
 
-    docSnapshot = db.collection("stories").document("news-item").get()
+    doc_snapshot = db.collection("stories").document("news-item").get()
     query = db.collection("stories")._query()
 
     # Build the bundle
     # Note how `query` is named "latest-stories-query"
-    bundle_buffer: str = bundle.add_document(docSnapshot).add_named_query(
+    bundle_buffer: str = bundle.add_document(doc_snapshot).add_named_query(
         "latest-stories-query", query,
     ).build()
     # [END fs_create_and_builde_bundle]
