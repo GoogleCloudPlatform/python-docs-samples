@@ -137,13 +137,10 @@ def test_remove_bucket_conditional_iam_binding(bucket):
 
 
 def test_set_bucket_public_iam(public_bucket):
-    role = "roles/storage.objectViewer"
-    member = "allUsers"
-    storage_set_bucket_public_iam.set_bucket_public_iam(
-        public_bucket.name, role, member
-    )
+    storage_set_bucket_public_iam.set_bucket_public_iam(public_bucket.name)
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
     assert any(
-        binding["role"] == role and member in binding["members"]
+        binding["role"] == "roles/storage.objectViewer"
+        and "allUsers" in binding["members"]
         for binding in policy.bindings
     )
