@@ -55,15 +55,16 @@ def get_client_id(project_id, location, composer_environment):
     # [END composer_get_environment_client_id]
 
 
+# Usage: python get_client_id.py your_project_id your_region your_environment_name
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Project ID.')
     parser.add_argument(
-        'location', help='Region of the Cloud Composer environent.')
+        'location', help='Region of the Cloud Composer environment.')
     parser.add_argument(
-        'composer_environment', help='Name of the Cloud Composer environent.')
+        'composer_environment', help='Name of the Cloud Composer environment.')
 
     args = parser.parse_args()
     get_client_id(

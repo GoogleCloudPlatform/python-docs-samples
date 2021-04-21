@@ -39,6 +39,7 @@ def test_quickstart(capsys, test_book):
     def eventually_consistent_test():
         quickstart.list_books()
         out, _ = capsys.readouterr()
-        assert test_book.title in out
+        with quickstart.client.context():
+            assert test_book.title in out
 
     eventually_consistent_test()

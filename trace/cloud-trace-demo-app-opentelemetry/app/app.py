@@ -19,23 +19,26 @@ import time
 
 # [START trace_demo_imports]
 import flask
-
-from opentelemetry import trace
+from opentelemetry import propagators, trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
+from opentelemetry.tools.cloud_trace_propagator import CloudTraceFormatPropagator
 
 # [END trace_demo_imports]
 
 app = flask.Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
 
 
 def configure_exporter(exporter):
     trace.set_tracer_provider(TracerProvider())
-
     trace.get_tracer_provider().add_span_processor(SimpleExportSpanProcessor(exporter))
+    propagators.set_global_textmap(CloudTraceFormatPropagator())
 
 
+configure_exporter(CloudTraceSpanExporter())
 tracer = trace.get_tracer(__name__)
 
 
@@ -54,4 +57,3 @@ def template_test():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)
-    configure_exporter(CloudTraceSpanExporter())
