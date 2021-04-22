@@ -16,6 +16,8 @@ import os
 import uuid
 
 from google.cloud import storage
+from googleapiclient.errors import HttpError
+import backoff
 import pytest
 
 import storage_add_bucket_default_owner
@@ -131,6 +133,7 @@ def test_print_blob_acl(test_blob, capsys):
     assert out
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_print_blob_acl_for_user(test_blob, capsys):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
