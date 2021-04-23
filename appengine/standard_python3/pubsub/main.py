@@ -85,6 +85,13 @@ def receive_messages_handler():
         # case they would all share the same token for a limited time window.
         claim = id_token.verify_oauth2_token(token, requests.Request(),
                                              audience='example.com')
+
+        # IMPORTANT: you should validate claim details not covered by signature
+        # and audience verification above, including:
+        #   - Ensure that `claim["email"]` is equal to the expected service
+        #     account set up in the push subscription settings.
+        #   - Ensure that `claim["email_verified"]` is set to true.
+
         CLAIMS.append(claim)
     except Exception as e:
         return 'Invalid token: {}\n'.format(e), 400
