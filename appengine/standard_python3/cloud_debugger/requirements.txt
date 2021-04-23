@@ -1,2 +1,2 @@
 Flask==1.1.2
-google-python-cloud-debugger==2.16
+google-python-cloud-debugger==2.17
