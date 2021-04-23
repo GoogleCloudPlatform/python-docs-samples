@@ -35,6 +35,8 @@ def create_fhir_store(project_id, location, dataset_id, fhir_store_id, version):
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the FHIR store's parent dataset ID
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
+    # version = 'R4'  # replace with the FHIR store version
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
@@ -239,6 +241,7 @@ def patch_fhir_store(project_id, location, dataset_id, fhir_store_id):
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
