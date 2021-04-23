@@ -902,7 +902,6 @@ def cursor_multiple_conditions():
     start_at_name = (
         db.collection(u'cities')
         .order_by(u'name')
-        .order_by(u'state')
         .start_at({
             u'name': u'Springfield'
         })
