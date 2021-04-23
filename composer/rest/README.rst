@@ -81,7 +81,7 @@ To run this sample:
     optional arguments:
       -h, --help            show this help message and exit
 
-In case of any issue with `get_client_id.py`_, you can also get the client ID using the following command, where `AIRFLOW_URL`_ would be the URL of your Airflow webserver (ex. `https://*****************-tp.appspot.com`_):
+In case of any issue with `get_client_id.py`, you can also get the client ID using the following command, where `AIRFLOW_URL` would be the URL of your Airflow webserver (ex. `https://*****************-tp.appspot.com`_):
 
 .. code-block:: bash
 
