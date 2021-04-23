@@ -18,24 +18,17 @@ import pytest
 
 # user should substitute their project ID
 PROJECT_ID = 'your-project-id'
-BUCKET_NAME = 'your-bucket-name'
-DATA_FILE_NAME = 'gcs://tbc'
-DATASET = 'your-output-dataset'
-TABLE = 'your-output-table'
-
+DATASET = 'your-bq-output-dataset'
+TABLE = 'your-bq-output-table'
 
 @pytest.fixture(autouse=True, scope="function")
 # The fixture `airflow_database` lives in composer/conftest.py.
 def set_variables(airflow_database):
     models.Variable.set('gcp_project', PROJECT_ID)
-    models.Variable.set('bucket_name', BUCKET_NAME)
-    models.Variable.set('file_name', DATA_FILE_NAME)
     models.Variable.set('bigquery_dataset', DATASET)
     models.Variable.set('bigquery_table', TABLE)
     yield
     models.Variable.delete('gcp_project')
-    models.Variable.delete('bucket_name')
-    models.Variable.delete('file_name')
     models.Variable.delete('bigquery_dataset')
     models.Variable.delete('bigquery_table')
 
