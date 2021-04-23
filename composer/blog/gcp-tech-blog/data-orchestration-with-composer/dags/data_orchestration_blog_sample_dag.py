@@ -87,7 +87,7 @@ with models.DAG(
             "outputTable": "{project_id}:{dataset}.{table}".format(project_id=PROJECT_ID, dataset=DATASET, table=TABLE)
         }
     )
-    
+
     execute_bigquery_sql = BigQueryCheckOperator(
         task_id='execute_bigquery_sql',
         sql='SELECT COUNT(*) FROM `{project_id}.{dataset}.{table}` LIMIT 1000'.format(project_id=PROJECT_ID, dataset=DATASET, table=TABLE),
