@@ -68,3 +68,4 @@
 /translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /vision/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/workflows/**/*.py                      @grant @GoogleCloudPlatform/python-samples-owners
