@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from airflow.utils import dates
 from airflow import models
+
 from airflow.hooks.base_hook import BaseHook
-from airflow.utils.state import State
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
 from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCheckOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
+
+from airflow.utils.dates import days_ago
+from airflow.utils.state import State
 
 # Sample data
 BUCKET_NAME = 'gs://cloud-samples-data/composer/data-orchestration-blog-example'
@@ -30,16 +32,17 @@ PROJECT_ID = models.Variable.get("gcp_project")
 DATASET = models.Variable.get("bigquery_dataset")
 TABLE = models.Variable.get("bigquery_table")
 
+
 # Slack error notification example taken from Kaxil Naik's blog on Slack Integration:
 # https://medium.com/datareply/integrating-slack-alerts-in-airflow-c9dcd155105
 def on_failure_callback(context):
     ti = context.get('task_instance')
     slack_msg = """
-            :red_circle: Task Failed. 
-            *Task*: {task}  
-            *Dag*: {dag} 
-            *Execution Time*: {exec_date}  
-            *Log Url*: {log_url} 
+            :red_circle: Task Failed.
+            *Task*: {task}
+            *Dag*: {dag}
+            *Execution Time*: {exec_date}
+            *Log Url*: {log_url}
             """.format(
             task=ti.task_id,
             dag=ti.dag_id,
@@ -55,10 +58,11 @@ def on_failure_callback(context):
         message=slack_msg)
     slack_error.execute(context)
 
+
 with models.DAG(
     'dataflow_to_bq_workflow',
     schedule_interval=None,
-    start_date=dates.days_ago(1),    
+    start_date=days_ago(1),
     default_args={'on_failure_callback': on_failure_callback}
 ) as dag:
 
@@ -70,14 +74,13 @@ with models.DAG(
 
 # See Launching Dataflow pipelines with Cloud Composer tutorial for further guidance
 # https://cloud.google.com/composer/docs/how-to/using/using-dataflow-template-operator
-
     start_dataflow_job = DataflowTemplatedJobStartOperator(
         task_id="start-dataflow-template-job",
         job_name='csv_to_bq_transform',
         template="gs://dataflow-templates/latest/GCS_Text_to_BigQuery",
         parameters={
             "javascriptTextTransformFunctionName": "transform",
-            "javascriptTextTransformGcsPath": "gs://{bucket}/udf_transform.js".format(bucket=BUCKET_NAME),                        
+            "javascriptTextTransformGcsPath": "gs://{bucket}/udf_transform.js".format(bucket=BUCKET_NAME),  
             "JSONPath": "gs://{bucket}/bq_schema.json".format(bucket=BUCKET_NAME),
             "inputFilePattern": "gs://{bucket}/{filename}".format(bucket=BUCKET_NAME, filename=DATA_FILE_NAME),
             "bigQueryLoadingTemporaryDirectory": "gs://{bucket}/tmp/".format(bucket=BUCKET_NAME),
@@ -92,6 +95,7 @@ with models.DAG(
     )
 
     validate_file_exists >> start_dataflow_job >> execute_bigquery_sql
+
 
 if __name__ == "__main__":
     dag.clear(dag_run_state=State.NONE)

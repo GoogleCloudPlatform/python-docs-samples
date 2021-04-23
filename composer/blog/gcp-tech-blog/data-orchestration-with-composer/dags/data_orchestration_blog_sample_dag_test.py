@@ -21,6 +21,7 @@ PROJECT_ID = 'your-project-id'
 DATASET = 'your-bq-output-dataset'
 TABLE = 'your-bq-output-table'
 
+
 @pytest.fixture(autouse=True, scope="function")
 # The fixture `airflow_database` lives in composer/conftest.py.
 def set_variables(airflow_database):
@@ -31,6 +32,7 @@ def set_variables(airflow_database):
     models.Variable.delete('gcp_project')
     models.Variable.delete('bigquery_dataset')
     models.Variable.delete('bigquery_table')
+
 
 def test_dag_import():
     from . import data_orchestration_blog_sample_dag
