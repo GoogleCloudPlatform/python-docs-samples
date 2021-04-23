@@ -1,3 +1,5 @@
 apache-airflow[gcp]==1.10.14
-apache-airflow-backport-providers-google==2021.3.3
 apache-airflow-backport-providers-apache-beam==2021.3.13
+apache-airflow-backport-providers-google==2021.3.3
+apache-airflow-backport-providers-http==2021.4.10
+apache-airflow-backport-providers-slack==2021.3.3

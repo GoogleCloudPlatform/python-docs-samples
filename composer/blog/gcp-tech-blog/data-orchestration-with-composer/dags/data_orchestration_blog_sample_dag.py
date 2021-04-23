@@ -15,10 +15,10 @@
 from airflow import models
 
 from airflow.hooks.base_hook import BaseHook
-from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
-from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCheckOperator
-from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
+from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
+from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
+from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
 from airflow.utils.dates import days_ago
 from airflow.utils.state import State
@@ -80,7 +80,7 @@ with models.DAG(
         template="gs://dataflow-templates/latest/GCS_Text_to_BigQuery",
         parameters={
             "javascriptTextTransformFunctionName": "transform",
-            "javascriptTextTransformGcsPath": "gs://{bucket}/udf_transform.js".format(bucket=BUCKET_NAME),  
+            "javascriptTextTransformGcsPath": "gs://{bucket}/udf_transform.js".format(bucket=BUCKET_NAME),
             "JSONPath": "gs://{bucket}/bq_schema.json".format(bucket=BUCKET_NAME),
             "inputFilePattern": "gs://{bucket}/{filename}".format(bucket=BUCKET_NAME, filename=DATA_FILE_NAME),
             "bigQueryLoadingTemporaryDirectory": "gs://{bucket}/tmp/".format(bucket=BUCKET_NAME),
