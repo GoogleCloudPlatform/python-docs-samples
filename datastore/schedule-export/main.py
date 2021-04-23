@@ -34,7 +34,13 @@ def datastore_export(event, context):
             metadata.
     '''
 
-    json_data = json.loads(base64.b64decode(event['data']).decode('utf-8'))
+    if "data" in event:
+        # Triggered via Cloud Scheduler, decode the inner data field of the json payload.
+        json_data = json.loads(base64.b64decode(event['data']).decode('utf-8'))
+    else:
+        # Otherwise, for instance if triggered via the Cloud Console on a Cloud Function, the event is the data.
+        json_data = event;
+
     bucket = json_data['bucket']
     entity_filter = {}
 
