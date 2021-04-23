@@ -43,8 +43,9 @@ def test_index(test_book):
     @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
     def eventually_consistent_test():
         r = client.get('/')
-        assert r.status_code == 200
-        assert test_book.title in r.data.decode('utf-8')
+        with flask_app.client.context():
+            assert r.status_code == 200
+            assert test_book.title in r.data.decode('utf-8')
 
     eventually_consistent_test()
 

@@ -20,17 +20,17 @@ import sys
 from google.cloud import storage
 
 
-def set_bucket_public_iam(bucket_name, role, member):
+def set_bucket_public_iam(bucket_name):
     """Set a public IAM Policy to bucket"""
     # bucket_name = "your-bucket-name"
-    # role = "IAM role, e.g. roles/storage.objectViewer"
-    # member = "IAM identity, e.g. allUsers"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
     policy = bucket.get_iam_policy(requested_policy_version=3)
-    policy.bindings.append({"role": role, "members": {member}})
+    policy.bindings.append(
+        {"role": "roles/storage.objectViewer", "members": {"allUsers"}}
+    )
 
     bucket.set_iam_policy(policy)
 
@@ -41,5 +41,5 @@ def set_bucket_public_iam(bucket_name, role, member):
 
 if __name__ == "__main__":
     set_bucket_public_iam(
-        bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3],
+        bucket_name=sys.argv[1],
     )

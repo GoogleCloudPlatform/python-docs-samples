@@ -88,8 +88,11 @@ def test_client_library_query_bqstorage():
     client = bigquery.Client()
     sql = "SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`"
 
-    # Use a BigQuery Storage API client to download results more quickly.
-    df = client.query(sql).to_dataframe(create_bqstorage_client=True)
+    # The client library uses the BigQuery Storage API to download results to a
+    # pandas dataframe if the API is enabled on the project, the
+    # `google-cloud-bigquery-storage` package is installed, and the `pyarrow`
+    # package is installed.
+    df = client.query(sql).to_dataframe()
     # [END bigquery_migration_client_library_query_bqstorage]
     assert len(df) > 0
 

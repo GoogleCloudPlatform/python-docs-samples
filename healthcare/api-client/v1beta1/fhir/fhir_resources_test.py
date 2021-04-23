@@ -33,6 +33,9 @@ fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
 
 
+BACKOFF_MAX_TIME = 240
+
+
 # A giveup callback for backoff.
 def fatal_code(e):
     return 400 <= e.response.status_code < 500
@@ -56,7 +59,7 @@ def test_dataset():
 def test_fhir_store():
     # We see HttpErrors with "dataset not initialized" message.
     # I think retry will mitigate the flake.
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=120)
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME)
     def create_fhir_store():
         return fhir_stores.create_fhir_store(
             service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
@@ -257,7 +260,7 @@ def test_conditional_delete_resource(
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
     def create_encounter():
         encounter_response = fhir_resources.create_encounter(
             service_account_json,
@@ -273,7 +276,7 @@ def test_conditional_delete_resource(
 
     encounter_resource_id = create_encounter()
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
     def create_observation():
         fhir_resources.create_observation(
             service_account_json,
@@ -288,7 +291,7 @@ def test_conditional_delete_resource(
 
     create_observation()
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=60, giveup=fatal_code)
+    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
     def conditional_delete_resource():
         fhir_resources.conditional_delete_resource(
             service_account_json,

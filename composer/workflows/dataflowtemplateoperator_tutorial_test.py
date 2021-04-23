@@ -15,6 +15,20 @@
 from airflow import models
 
 import internal_unit_testing
+import pytest
+
+
+@pytest.fixture(autouse=True, scope="function")
+def set_variables(airflow_database):
+    models.Variable.set("bucket_path", "gs://example_bucket")
+    models.Variable.set("project_id", "example-project")
+    models.Variable.set("gce_zone", "us-central1-f")
+    models.Variable.set("gce_region", "us-central1-f")
+    yield
+    models.Variable.delete('bucket_path')
+    models.Variable.delete('project_id')
+    models.Variable.delete('gce_zone')
+    models.Variable.delete('gce_region')
 
 
 def test_dag_import():
@@ -24,10 +38,7 @@ def test_dag_import():
     environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    models.Variable.set("bucket_path", "gs://example_bucket")
-    models.Variable.set("project_id", "example-project")
-    models.Variable.set("gce_zone", "us-central1-f")
-    models.Variable.set("gce_region", "us-central1-f")
+
     from . import dataflowtemplateoperator_tutorial as module
 
     internal_unit_testing.assert_has_valid_dag(module)

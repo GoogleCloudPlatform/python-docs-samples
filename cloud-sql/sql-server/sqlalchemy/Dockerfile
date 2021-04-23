@@ -16,11 +16,6 @@
 # https://hub.docker.com/_/python
 FROM python:3.9-buster
 
-#Download the desired package(s) for Microsoft ODBC 17 Driver
-RUN (curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) && \
-        curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-        apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17  unixodbc-dev
-
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
 COPY requirements.txt ./

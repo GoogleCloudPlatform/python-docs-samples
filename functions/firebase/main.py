@@ -38,11 +38,6 @@ def hello_rtdb(data, context):
     """
     trigger_resource = context.resource
 
-    if 'params' in data:
-        print('Path parameters:')
-        for param, value in data['params'].items():
-            print(f'  {param}: {value}')
-
     print('Function triggered by change to: %s' % trigger_resource)
     print('Admin?: %s' % data.get("admin", False))
     print('Delta:')
