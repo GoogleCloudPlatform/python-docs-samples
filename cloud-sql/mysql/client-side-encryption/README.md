@@ -115,7 +115,7 @@ Then use this command to launch the proxy in the background:
 
 ### Install requirements
 
-Next, setup install the requirements into a virtual enviroment:
+Next, setup install the requirements into a virtual environment:
 ```bash
 virtualenv --python python3 env
 source env/bin/activate
