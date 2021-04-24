@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     description="Tutorial Package",
     install_requires=[
-        "gcsfs==0.8.0"
+        "gcsfs==2021.4.0"
     ]
 )
 # [END ai_platform_setup]
