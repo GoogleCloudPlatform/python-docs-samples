@@ -1,4 +1,4 @@
-pygithub==1.54.1
+pygithub==1.55
 click==7.1.2
 google-cloud-secret-manager==2.4.0
 google-api-python-client==2.1.0
