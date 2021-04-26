@@ -15,9 +15,9 @@
 import os
 import uuid
 
+import backoff
 from google.cloud import storage
 from googleapiclient.errors import HttpError
-import backoff
 import pytest
 
 import storage_add_bucket_default_owner
