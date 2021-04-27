@@ -1,4 +1,5 @@
-# Copyright 2017, Google, Inc.
+# Copyright 2017 Google, LLC.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -324,3 +325,8 @@ def test_collection_group_query(db):
 
 def test_list_document_subcollections():
     snippets.list_document_subcollections()
+
+
+def test_create_and_build_bundle():
+    bundle, buffer = snippets.create_and_build_bundle()
+    assert "latest-stories-query" in bundle.named_queries
