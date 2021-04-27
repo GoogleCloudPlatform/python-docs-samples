@@ -11,36 +11,37 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
-from conftest import Utils
 import time
 
 import pytest
 
+import conftest as utils
 
-@pytest.fixture(scope="session")
-def bucket_name(utils: Utils) -> str:
-    return utils.storage_bucket("dataflow-flex-templates-streaming-beam")
-
-
-@pytest.fixture(scope="session")
-def pubsub_topic(utils: Utils) -> str:
-    return utils.pubsub_topic("dataflow-flex-templates-streaming-beam")
+NAME = "dataflow-flex-templates-streaming-beam"
 
 
 @pytest.fixture(scope="session")
-def pubsub_subscription(utils: Utils, pubsub_topic: str) -> str:
-    return utils.pubsub_subscription(
-        pubsub_topic, "dataflow-flex-templates-streaming-beam"
-    )
+def bucket_name() -> str:
+    return utils.storage_bucket(NAME)
 
 
 @pytest.fixture(scope="session")
-def bigquery_dataset(utils: Utils) -> str:
-    return utils.bigquery_dataset("dataflow_flex_templates")
+def pubsub_topic() -> str:
+    return utils.pubsub_topic(NAME)
 
 
 @pytest.fixture(scope="session")
-def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
+def pubsub_subscription(pubsub_topic: str) -> str:
+    return utils.pubsub_subscription(pubsub_topic, NAME)
+
+
+@pytest.fixture(scope="session")
+def bigquery_dataset() -> str:
+    return utils.bigquery_dataset(NAME.replace("-", "_"))
+
+
+@pytest.fixture(scope="session")
+def pubsub_publisher(pubsub_topic: str) -> bool:
     return utils.pubsub_publisher(
         pubsub_topic,
         new_msg=lambda i: json.dumps(
@@ -53,12 +54,12 @@ def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
 
 
 @pytest.fixture(scope="session")
-def flex_template_image(utils: Utils) -> str:
-    return utils.container_image(f"dataflow/flex-templates/streaming-beam")
+def flex_template_image() -> str:
+    return utils.container_image(NAME)
 
 
 @pytest.fixture(scope="session")
-def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
+def flex_template_path(bucket_name: str, flex_template_image: str) -> str:
     return utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
         template_image=flex_template_image,
@@ -67,7 +68,6 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
 
 
 def test_run_template(
-    utils: Utils,
     bucket_name: str,
     pubsub_publisher: str,
     pubsub_subscription: str,
@@ -75,9 +75,9 @@ def test_run_template(
     bigquery_dataset: str,
 ) -> None:
 
-    bigquery_table = "streaming_beam"
+    bigquery_table = "output_table"
     job_name = utils.dataflow_flex_template_run(
-        job_name="flex-templates-streaming-beam",
+        job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
