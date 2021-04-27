@@ -20,12 +20,20 @@ import pytest
 
 
 RESOURCE_PREFIX = "python_bigquery_samples_snippets"
+RESOURCE_DATE_FORMAT = "%Y%m%d_%H%M%S"
+RESOURCE_DATE_LENGTH = 4 + 2 + 2 + 1 + 2 + 2 + 2
 
 
 def resource_prefix() -> str:
-    timestamp = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.datetime.utcnow().strftime(RESOURCE_DATE_FORMAT)
     random_string = hex(random.randrange(1000000))[2:]
     return f"{RESOURCE_PREFIX}_{timestamp}_{random_string}"
+
+
+def resource_name_to_date(resource_name: str):
+    start_date = len(RESOURCE_PREFIX) + 1
+    date_string = resource_name[start_date : start_date + RESOURCE_DATE_LENGTH]
+    return datetime.strptime(date_string, RESOURCE_DATE_FORMAT)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -34,7 +42,7 @@ def cleanup_datasets(bigquery_client: bigquery.Client):
     for dataset in bigquery_client.list_datasets():
         if (
             dataset.dataset_id.startswith(RESOURCE_PREFIX)
-            and dataset.created < yesterday
+            and resource_name_to_date(dataset.dataset_id) < yesterday
         ):
             bigquery_client.delete_dataset(
                 dataset, delete_contents=True, not_found_ok=True
