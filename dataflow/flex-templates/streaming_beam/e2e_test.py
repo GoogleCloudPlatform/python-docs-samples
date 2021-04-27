@@ -13,34 +13,37 @@
 import json
 import time
 
-import conftest as utils
+try:
+    from conftest import Utils
+except ModuleNotFoundError:
+    pass
 import pytest
 
 NAME = "dataflow-flex-templates-streaming-beam"
 
 
 @pytest.fixture(scope="session")
-def bucket_name() -> str:
+def bucket_name(utils: Utils) -> str:
     return utils.storage_bucket(NAME)
 
 
 @pytest.fixture(scope="session")
-def pubsub_topic() -> str:
+def pubsub_topic(utils: Utils) -> str:
     return utils.pubsub_topic(NAME)
 
 
 @pytest.fixture(scope="session")
-def pubsub_subscription(pubsub_topic: str) -> str:
+def pubsub_subscription(utils: Utils, pubsub_topic: str) -> str:
     return utils.pubsub_subscription(pubsub_topic, NAME)
 
 
 @pytest.fixture(scope="session")
-def bigquery_dataset() -> str:
+def bigquery_dataset(utils: Utils) -> str:
     return utils.bigquery_dataset(NAME.replace("-", "_"))
 
 
 @pytest.fixture(scope="session")
-def pubsub_publisher(pubsub_topic: str) -> bool:
+def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
     return utils.pubsub_publisher(
         pubsub_topic,
         new_msg=lambda i: json.dumps(
@@ -53,12 +56,12 @@ def pubsub_publisher(pubsub_topic: str) -> bool:
 
 
 @pytest.fixture(scope="session")
-def flex_template_image() -> str:
+def flex_template_image(utils: Utils) -> str:
     return utils.container_image(NAME)
 
 
 @pytest.fixture(scope="session")
-def flex_template_path(bucket_name: str, flex_template_image: str) -> str:
+def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
     return utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
         template_image=flex_template_image,
@@ -67,6 +70,7 @@ def flex_template_path(bucket_name: str, flex_template_image: str) -> str:
 
 
 def test_run_template(
+    utils: Utils,
     bucket_name: str,
     pubsub_publisher: str,
     pubsub_subscription: str,
