@@ -92,7 +92,7 @@ def test_run_template(
 
     # Check for output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
-    rows = utils.bigquery_query(query)
-    assert rows.total_rows > 0
+    rows = list(utils.bigquery_query(query))
+    assert len(rows) > 0
     for row in rows:
         assert "score" in row
