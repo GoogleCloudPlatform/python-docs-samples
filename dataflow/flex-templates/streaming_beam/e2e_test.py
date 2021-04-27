@@ -10,103 +10,90 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
-import os
-import subprocess
+import json
+from conftest import Utils
 import time
-import uuid
 
-from google.cloud import bigquery
 import pytest
 
-from .. import testing_utils
 
-
-SUFFIX = uuid.uuid4().hex[0:6]
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-BUCKET_NAME = f"flex-templates-streaming-beam-{SUFFIX}"
-BIGQUERY_DATASET = f"flex_templates_{SUFFIX}"
-BIGQUERY_TABLE = "streaming_beam"
-TOPIC = f"flex-templates-streaming-beam-{SUFFIX}"
-SUBSCRIPTION = TOPIC
-IMAGE_NAME = f"gcr.io/{PROJECT}/dataflow/flex-templates/streaming-beam-{SUFFIX}:latest"
-TEMPLATE_FILE = "template.json"
-REGION = "us-central1"
+@pytest.fixture(scope="session")
+def bucket_name(utils: Utils) -> str:
+    return utils.storage_bucket("dataflow-flex-templates-streaming-beam")
 
 
 @pytest.fixture(scope="session")
-def bucket_name() -> str:
-    return testing_utils.storage_bucket(BUCKET_NAME)
+def pubsub_topic(utils: Utils) -> str:
+    return utils.pubsub_topic("dataflow-flex-templates-streaming-beam")
 
 
 @pytest.fixture(scope="session")
-def topic_path() -> str:
-    return testing_utils.pubsub_topic(PROJECT, TOPIC)
+def pubsub_subscription(utils: Utils, pubsub_topic: str) -> str:
+    return utils.pubsub_subscription(
+        pubsub_topic, "dataflow-flex-templates-streaming-beam"
+    )
 
 
 @pytest.fixture(scope="session")
-def subscription_path(topic_path: str) -> str:
-    return testing_utils.pubsub_subscription(PROJECT, topic_path, SUBSCRIPTION)
+def bigquery_dataset(utils: Utils) -> str:
+    return utils.bigquery_dataset("dataflow_flex_templates")
 
 
 @pytest.fixture(scope="session")
-def bigquery_dataset() -> str:
-    return testing_utils.bigquery_dataset(PROJECT, BIGQUERY_DATASET)
+def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
+    return utils.pubsub_publisher(
+        pubsub_topic,
+        new_msg=lambda i: json.dumps(
+            {
+                "url": "https://beam.apache.org/",
+                "review": "positive" if i % 2 == 0 else "negative",
+            }
+        ),
+    )
 
 
 @pytest.fixture(scope="session")
-def publisher(topic_path: str) -> bool:
-    return testing_utils.pubsub_publisher(topic_path)
+def flex_template_image(utils: Utils) -> str:
+    return utils.container_image(f"dataflow/flex-templates/streaming-beam")
 
 
 @pytest.fixture(scope="session")
-def template_image() -> str:
-    return testing_utils.container_image(PROJECT, IMAGE_NAME)
-
-
-@pytest.fixture(scope="session")
-def template_path(bucket_name: str, template_image: str) -> str:
-    return testing_utils.dataflow_flex_template_build(
+def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
+    return utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
-        template_file=TEMPLATE_FILE,
-        template_image=template_image,
+        template_image=flex_template_image,
         metadata_file="metadata.json",
     )
 
 
 def test_run_template(
-    publisher: str,
+    utils: Utils,
     bucket_name: str,
-    template_path: str,
-    dataset: str,
-    subscription_path: str,
+    pubsub_publisher: str,
+    pubsub_subscription: str,
+    flex_template_path: str,
+    bigquery_dataset: str,
 ) -> None:
 
-    job_name = f"flex-templates-streaming-beam-{SUFFIX}"
-    subprocess.call(
-        [
-            "gcloud",
-            "dataflow",
-            "flex-template",
-            "run",
-            job_name,
-            f"--template-file-gcs-location={template_path}",
-            f"--temp_location=gs://{bucket_name}/temp",
-            f"--parameters=input_subscription={subscription_path}",
-            f"--parameters=output_table={dataset}.{BIGQUERY_TABLE}",
-            f"--region={REGION}",
-        ],
-        check=True,
+    bigquery_table = "streaming_beam"
+    job_name = utils.dataflow_flex_template_run(
+        job_name="flex-templates-streaming-beam",
+        template_path=flex_template_path,
+        bucket_name=bucket_name,
+        parameters={
+            "input_subscription": pubsub_subscription,
+            "output_table": f"{bigquery_dataset}.{bigquery_table}",
+        },
     )
 
+    # Since this is a streaming job, it will never finish running.
     # Wait for 10 minutes, and then cancel the job.
     time.sleep(10 * 60)
-    testing_utils.dataflow_jobs_cancel(PROJECT, job_name)
+    utils.dataflow_jobs_cancel(job_name)
 
     # Check for output data in BigQuery.
-    bigquery_client = bigquery.Client()
-    query = f"SELECT * FROM {PROJECT}.{BIGQUERY_DATASET}.{BIGQUERY_TABLE}"
-    query_job = bigquery_client.query(query)
-    rows = query_job.result()
+    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
+    rows = utils.bigquery_query(query)
     assert rows.total_rows > 0
     for row in rows:
-        assert row["score"] == 1
+        assert "score" in row
