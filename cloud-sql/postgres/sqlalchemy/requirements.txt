@@ -1,4 +1,4 @@
 Flask==1.1.2
-pg8000==1.19.2 # Do not upgrade >=1.6.6 until https://github.com/tlocke/pg8000/commit/3a2e7439ae3613367ec231218d7e0f541466d1e5#commitcomment-43174891 is resolved
+pg8000==1.19.3 # Do not upgrade >=1.6.6 until https://github.com/tlocke/pg8000/commit/3a2e7439ae3613367ec231218d7e0f541466d1e5#commitcomment-43174891 is resolved
 SQLAlchemy==1.4.11
 gunicorn==20.1.0
