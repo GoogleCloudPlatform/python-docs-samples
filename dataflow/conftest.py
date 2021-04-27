@@ -16,18 +16,9 @@ import json
 import multiprocessing as mp
 import os
 import subprocess
-from typing import Callable, Dict, Optional
+from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
 
-import backoff
-from google.cloud import bigquery
-from google.cloud import pubsub
-from google.cloud import storage
-from google.cloud.bigquery.table import RowIterator
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-
-dataflow = build("dataflow", "v1b3")
 
 # Default options.
 UUID = uuid.uuid4().hex[0:6]
@@ -39,6 +30,8 @@ RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
 
 def storage_bucket(bucket_name: str) -> str:
+    from google.cloud import storage
+
     storage_client = storage.Client()
     bucket_unique_name = f"{bucket_name}-{UUID}"
     bucket = storage_client.create_bucket(bucket_unique_name)
@@ -50,6 +43,8 @@ def storage_bucket(bucket_name: str) -> str:
 
 
 def bigquery_dataset(dataset_name: str, project: str = PROJECT) -> str:
+    from google.cloud import bigquery
+
     bigquery_client = bigquery.Client()
     dataset = bigquery_client.create_dataset(
         bigquery.Dataset(f"{project}.{dataset_name}_{UUID}")
@@ -61,13 +56,17 @@ def bigquery_dataset(dataset_name: str, project: str = PROJECT) -> str:
     bigquery_client.delete_dataset(dataset.full_dataset_id, delete_contents=True)
 
 
-def bigquery_query(query: str) -> RowIterator:
+def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
+    from google.cloud import bigquery
+
     bigquery_client = bigquery.Client()
-    query_job = bigquery_client.query(query)
-    return query_job.result()
+    for row in bigquery_client.query(query):
+        yield dict(row)
 
 
 def pubsub_topic(topic_name: str, project: str = PROJECT) -> str:
+    from google.cloud import pubsub
+
     publisher_client = pubsub.PublisherClient()
     topic_path = publisher_client.topic_path(project, f"{topic_name}-{UUID}")
     topic = publisher_client.create_topic(topic_path)
@@ -88,6 +87,8 @@ def pubsub_topic(topic_name: str, project: str = PROJECT) -> str:
 def pubsub_subscription(
     topic_path: str, subscription_name: str, project: str = PROJECT
 ) -> str:
+    from google.cloud import pubsub
+
     subscriber = pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, f"{subscription_name}-{UUID}"
@@ -121,6 +122,8 @@ def pubsub_publisher(
         {"id": i, "content": f"message {i}"}
     ),
 ) -> bool:
+    from google.cloud import pubsub
+
     def _infinite_publish_job() -> None:
         publisher_client = pubsub.PublisherClient()
         for i in itertools.count():
@@ -176,6 +179,10 @@ def container_image(
 def dataflow_job_id_from_job_name(
     job_name: str, project: str = PROJECT
 ) -> Optional[str]:
+    from googleapiclient.discovery import build
+
+    dataflow = build("dataflow", "v1b3")
+
     # Only return the 50 most recent results - our job is likely to be in here.
     # If the job is not found, first try increasing this number.
     # For more info see:
@@ -198,26 +205,35 @@ def dataflow_job_id_from_job_name(
     return None
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
 def dataflow_jobs_cancel(job_name: str, project: str = PROJECT) -> None:
-    # To cancel a dataflow job, we need its ID, not its name
-    job_id = dataflow_job_id_from_job_name(project, job_name)
+    import backoff
+    from googleapiclient.discovery import build
+    from googleapiclient.errors import HttpError
 
-    if job_id is not None:
-        # Cancel the Dataflow job if it exists.
-        # If it doesn't, job_id will be equal to None.
-        # For more info, see:
-        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
-        request = (
-            dataflow.projects()
-            .jobs()
-            .update(
-                projectId=project,
-                jobId=job_id,
-                body={"requestedState": "JOB_STATE_CANCELLED"},
+    dataflow = build("dataflow", "v1b3")
+
+    @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
+    def cancel():
+        # To cancel a dataflow job, we need its ID, not its name
+        job_id = dataflow_job_id_from_job_name(project, job_name)
+
+        if job_id is not None:
+            # Cancel the Dataflow job if it exists.
+            # If it doesn't, job_id will be equal to None.
+            # For more info, see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
+            request = (
+                dataflow.projects()
+                .jobs()
+                .update(
+                    projectId=project,
+                    jobId=job_id,
+                    body={"requestedState": "JOB_STATE_CANCELLED"},
+                )
             )
-        )
-        request.execute()
+            request.execute()
+
+    cancel()
 
 
 @staticmethod
@@ -228,6 +244,8 @@ def dataflow_flex_template_build(
     project: str = PROJECT,
     template_file: str = "template.json",
 ) -> str:
+    from google.cloud import storage
+
     subprocess.call(
         [
             "gcloud",
