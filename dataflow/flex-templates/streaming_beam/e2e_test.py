@@ -13,9 +13,8 @@
 import json
 import time
 
-import pytest
-
 import conftest as utils
+import pytest
 
 NAME = "dataflow-flex-templates-streaming-beam"
 
