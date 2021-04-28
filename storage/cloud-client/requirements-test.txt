@@ -1,2 +1,3 @@
 pytest==6.2.1
 mock==4.0.3
+backoff==1.10.0
