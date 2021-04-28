@@ -14,12 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storagetransfer_get_latest_transfer_operation]
+# [START storagetransfer_create_retry_handler]
 
-"""Command-line sample that checks the latest operation of a transfer.
-This sample is used on this page:
-    https://cloud.google.com/storage/transfer/create-transfer
-For more information, see README.md.
+"""Command-line sample that gets a transfer job using retries
 """
 
 import googleapiclient.discovery
@@ -39,3 +36,4 @@ def get_transfer_job_with_retries(project_id, job_name, retries):
         + transferJob.get("name")
         + " using {} retries".format(retries)
     )
+# [END storagetransfer_create_retry_handler]
