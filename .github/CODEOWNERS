@@ -17,6 +17,7 @@
 /bigquery_storage/**/*.py              @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigtable/**/*.py                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
 /blog/**/*.py                          @GoogleCloudPlatform/python-samples-owners
+/channel/**/*.py                       @max-mathieu @GoogleCloudPlatform/python-samples-owners
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
 /cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
@@ -49,6 +50,7 @@
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
+/monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
 /notebooks/**/*.py                     @alixhami @sirtorry @GoogleCloudPlatform/python-samples-owners
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
@@ -62,7 +64,8 @@
 /tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/trace/**/*.py                         @dukeng @ziweizhao @GoogleCloudPlatform/python-samples-owners
+/trace/**/*.py                         @ymotongpoo @GoogleCloudPlatform/python-samples-owners
 /translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /vision/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/workflows/**/*.py                      @grant @GoogleCloudPlatform/python-samples-owners
