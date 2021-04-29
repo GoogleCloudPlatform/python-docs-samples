@@ -16,7 +16,11 @@ import time
 try:
     from conftest import Utils
 except ModuleNotFoundError:
-    pass
+    from typing import Any
+
+    # `conftest` cannot be imported when running in `nox`, but we still
+    # try to import it for the autocomplete when writing the tests.
+    Utils = Any
 import pytest
 
 NAME = "dataflow-flex-templates-streaming-beam"
