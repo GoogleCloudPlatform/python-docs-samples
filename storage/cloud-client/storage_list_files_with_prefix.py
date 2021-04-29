@@ -37,11 +37,13 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
         a/1.txt
         a/b/2.txt
 
-    However, if you specify prefix='a/' and delimiter='/', you'll get back:
+    However, if you specify prefix='a/' and delimiter='/', you'll get back
+    only the file directly under 'a/':
 
         a/1.txt
 
-    Additionally, the same request will return blobs.prefixes populated with:
+    As part of the response, you'll also get back a blobs.prefixes entity
+    that lists the "subfolders" under `a/`:
 
         a/b/
     """
@@ -49,9 +51,7 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     storage_client = storage.Client()
 
     # Note: Client.list_blobs requires at least package version 1.17.0.
-    blobs = storage_client.list_blobs(
-        bucket_name, prefix=prefix, delimiter=delimiter
-    )
+    blobs = storage_client.list_blobs(bucket_name, prefix=prefix, delimiter=delimiter)
 
     print("Blobs:")
     for blob in blobs:
