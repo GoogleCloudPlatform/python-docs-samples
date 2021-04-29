@@ -307,6 +307,6 @@ class Utils:
         yield unique_job_name
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def utils() -> Utils:
     return Utils()
