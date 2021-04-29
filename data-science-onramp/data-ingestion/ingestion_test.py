@@ -31,8 +31,8 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
 
 # Google Cloud Storage constants
-BUCKET_NAME = f"setup-test-{TEST_ID}"
-BUCKET_BLOB = "setup.py"
+BUCKET_NAME = f"ingestion-test-{TEST_ID}"
+BUCKET_BLOB = "ingestion.py"
 
 BQ_DATASET = f"setup-test-{TEST_ID}".replace("-", "_")
 BQ_CITIBIKE_TABLE = "RAW_DATA"
@@ -42,9 +42,9 @@ BQ_TABLES = [
 ]
 
 # Dataproc constants
-DATAPROC_CLUSTER = f"setup-test-{TEST_ID}"
+DATAPROC_CLUSTER = f"ingestion-test-{TEST_ID}"
 CLUSTER_REGION = "us-central1"
-CLUSTER_IMAGE = "1.5.4-debian10"
+CLUSTER_IMAGE = "2.0-debian10"
 CLUSTER_CONFIG = {  # Dataproc cluster configuration
     "project_id": PROJECT_ID,
     "cluster_name": DATAPROC_CLUSTER,
