@@ -31,6 +31,7 @@ ZONE = "us-west1-b"
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
 
+@dataclass
 class Utils:
     uuid: str = UUID
     project: str = PROJECT
