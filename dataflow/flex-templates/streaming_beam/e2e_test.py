@@ -28,27 +28,27 @@ NAME = "dataflow-flex-templates-streaming-beam"
 
 @pytest.fixture(scope="session")
 def bucket_name(utils: Utils) -> str:
-    return utils.storage_bucket(NAME)
+    yield from utils.storage_bucket(NAME)
 
 
 @pytest.fixture(scope="session")
 def pubsub_topic(utils: Utils) -> str:
-    return utils.pubsub_topic(NAME)
+    yield from utils.pubsub_topic(NAME)
 
 
 @pytest.fixture(scope="session")
 def pubsub_subscription(utils: Utils, pubsub_topic: str) -> str:
-    return utils.pubsub_subscription(pubsub_topic, NAME)
+    yield from utils.pubsub_subscription(pubsub_topic, NAME)
 
 
 @pytest.fixture(scope="session")
 def bigquery_dataset(utils: Utils) -> str:
-    return utils.bigquery_dataset(NAME.replace("-", "_"))
+    yield from utils.bigquery_dataset(NAME.replace("-", "_"))
 
 
 @pytest.fixture(scope="session")
 def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
-    return utils.pubsub_publisher(
+    yield from utils.pubsub_publisher(
         pubsub_topic,
         new_msg=lambda i: json.dumps(
             {
@@ -61,12 +61,12 @@ def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    return utils.container_image(NAME)
+    yield from utils.container_image(NAME)
 
 
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
-    return utils.dataflow_flex_template_build(
+    yield from utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
         template_image=flex_template_image,
         metadata_file="metadata.json",
