@@ -260,7 +260,7 @@ class Utils:
     ) -> str:
         from google.cloud import storage
 
-        subprocess.call(
+        subprocess.run(
             [
                 "gcloud",
                 "dataflow",
@@ -290,7 +290,7 @@ class Utils:
         region: str = REGION,
     ) -> str:
         unique_job_name = f"{job_name}-{UUID}"
-        subprocess.call(
+        subprocess.run(
             [
                 "gcloud",
                 "dataflow",
