@@ -88,7 +88,7 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        subprocess.check_call(
+        subprocess.run(
             ["gcloud", "pubsub", "--project", project, "topics", "delete", topic],
             check=True,
         )
@@ -114,7 +114,7 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        subprocess.check_call(
+        subprocess.run(
             [
                 "gcloud",
                 "pubsub",
