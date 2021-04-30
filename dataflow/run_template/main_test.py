@@ -31,7 +31,12 @@ import pytest
 
 from werkzeug.urls import url_encode
 
-from . import main
+# Relative imports cannot be found when running in `nox`, but we still
+# try to import it for the autocomplete when writing the tests.
+try:
+    from . import main
+except ModuleNotFoundError:
+    import main
 
 
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds

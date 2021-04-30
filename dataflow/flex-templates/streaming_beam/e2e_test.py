@@ -13,13 +13,13 @@
 import json
 import time
 
+# `conftest` cannot be imported when running in `nox`, but we still
+# try to import it for the autocomplete when writing the tests.
 try:
     from conftest import Utils
 except ModuleNotFoundError:
     from typing import Any
 
-    # `conftest` cannot be imported when running in `nox`, but we still
-    # try to import it for the autocomplete when writing the tests.
     Utils = Any
 import pytest
 
