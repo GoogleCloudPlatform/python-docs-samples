@@ -35,7 +35,7 @@ from werkzeug.urls import url_encode
 # try to import it for the autocomplete when writing the tests.
 try:
     from . import main
-except ModuleNotFoundError:
+except ImportError:
     import main
 
 
