@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
+from google.api_core.exceptions import ServiceUnavailable
+
 import pytest
 
 import analyze
@@ -57,9 +61,19 @@ def test_analyze_labels_file(capsys):
 
 @pytest.mark.slow
 def test_analyze_explicit_content(capsys):
-    analyze.analyze_explicit_content("gs://cloud-samples-data/video/cat.mp4")
-    out, _ = capsys.readouterr()
-    assert "pornography" in out
+    try_count = 0
+    while try_count < 3:
+        try:
+            analyze.analyze_explicit_content("gs://cloud-samples-data/video/cat.mp4")
+            out, _ = capsys.readouterr()
+            assert "pornography" in out
+        except ServiceUnavailable as e:
+            # Service is throttling or not available for the moment, sleep for 5 sec and retrying again.
+            print("Got service unavailable exception: {}".format(str(e)))
+            time.sleep(5)
+            continue
+        try_count = try_count + 1
+        break
 
 
 @pytest.mark.slow
