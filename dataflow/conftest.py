@@ -279,6 +279,7 @@ class Utils:
         storage_client = storage.Client()
         storage_client.bucket(bucket_name).blob(template_file).delete()
 
+    @staticmethod
     def dataflow_flex_template_run(
         job_name: str,
         template_path: str,
@@ -304,7 +305,7 @@ class Utils:
             check=True,
         )
 
-        yield unique_job_name
+        return unique_job_name
 
 
 @pytest.fixture(scope="session")
