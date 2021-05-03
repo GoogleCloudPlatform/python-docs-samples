@@ -54,7 +54,7 @@ import os
 import airflow
 from airflow import settings
 from airflow.configuration import conf
-from airflow.jobs import BaseJob
+from airflow.jobs.base_job import BaseJob
 from airflow.models import DAG, DagModel, DagRun, Log, SlaMiss, \
     TaskInstance, Variable, XCom
 from airflow.operators.python_operator import PythonOperator
