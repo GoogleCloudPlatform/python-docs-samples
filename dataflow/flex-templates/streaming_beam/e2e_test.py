@@ -83,7 +83,7 @@ def test_run_template(
 ) -> None:
 
     bigquery_table = "output_table"
-    job_name = utils.dataflow_flex_template_run(
+    job_id = utils.dataflow_flex_template_run(
         job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
@@ -96,7 +96,7 @@ def test_run_template(
     # Since this is a streaming job, it will never finish running.
     # Wait for 10 minutes, and then cancel the job.
     time.sleep(10 * 60)
-    utils.dataflow_jobs_cancel(job_name)
+    utils.dataflow_jobs_cancel_by_job_id(job_id)
 
     # Check for output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"

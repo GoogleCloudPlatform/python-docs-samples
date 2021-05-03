@@ -11,12 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from dataclasses import dataclass
-from datetime import time
 import itertools
 import json
 import multiprocessing as mp
 import os
 import subprocess
+import time
 from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
 
@@ -28,6 +28,7 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-west1"
 ZONE = "us-west1-b"
 
+CONSOLE_URL = "https://console.cloud.google.com"
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
 
@@ -46,7 +47,8 @@ class Utils:
         bucket_unique_name = f"{bucket_name}-{UUID}"
         bucket = storage_client.create_bucket(bucket_unique_name)
 
-        print(f"storage_bucket: {repr(bucket_unique_name)}")
+        print(f"storage_bucket: {bucket_unique_name}")
+        print(f"\t{CONSOLE_URL}/storage/browser/{bucket_unique_name}&project={PROJECT}")
         yield bucket_unique_name
 
         bucket.delete(force=True)
@@ -81,7 +83,10 @@ class Utils:
         topic_path = publisher_client.topic_path(project, f"{topic_name}-{UUID}")
         topic = publisher_client.create_topic(topic_path)
 
-        print(f"pubsub_topic: {repr(topic.name)}")
+        print(f"pubsub_topic: {topic.name}")
+        print(
+            f"\t{CONSOLE_URL}/cloudpubsub/topic/detail/{topic.name}&project={project}"
+        )
         yield topic.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -107,7 +112,10 @@ class Utils:
         )
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
-        print(f"pubsub_subscription: {repr(subscription.name)}")
+        print(f"pubsub_subscription: {subscription.name}")
+        print(
+            f"\t{CONSOLE_URL}/cloudpubsub/subscription/detail/{subscription.name}&project={project}"
+        )
         yield subscription.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -122,7 +130,7 @@ class Utils:
                 project,
                 "subscriptions",
                 "delete",
-                subscription_name,
+                subscription.name,
             ],
             check=True,
         )
@@ -139,18 +147,20 @@ class Utils:
         def _infinite_publish_job() -> None:
             publisher_client = pubsub.PublisherClient()
             for i in itertools.count():
-                publisher_client.publish(
-                    topic_path, new_msg(i).encode("utf-8")
-                ).result()
+                msg = new_msg(i)
+                print(f">> publish[{i}]: {repr(msg)}")
+                publisher_client.publish(topic_path, msg.encode("utf-8")).result()
                 time.sleep(1)
 
         # Start a subprocess in the background to do the publishing.
+        print(f"Starting publisher on {topic_path}")
         p = mp.Process(target=_infinite_publish_job)
         p.start()
 
         yield p.is_alive()
 
         # For cleanup, terminate the background process.
+        print("Stopping publisher")
         p.join(timeout=0)
         p.terminate()
 
@@ -174,6 +184,10 @@ class Utils:
             check=True,
         )
 
+        print(f"container_image: {image_name}")
+        print(
+            f"\t{CONSOLE_URL}/gcr/images/{project}/GLOBAL/{image_path}?project={project}"
+        )
         yield image_name
 
         subprocess.run(
@@ -199,7 +213,7 @@ class Utils:
         dataflow = build("dataflow", "v1b3")
 
         # Only return the 50 most recent results - our job is likely to be in here.
-        # If the job is not found, first try increasing this number.
+        # If the job is not found, first try increasing this number.[]''job_id
         # For more info see:
         #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
         jobs_request = (
@@ -220,7 +234,27 @@ class Utils:
         return None
 
     @staticmethod
-    def dataflow_jobs_cancel(job_name: str, project: str = PROJECT) -> None:
+    def dataflow_jobs_cancel_by_job_id(job_id: str, project: str = PROJECT) -> None:
+        from googleapiclient.discovery import build
+
+        dataflow = build("dataflow", "v1b3")
+
+        # For more info, see:
+        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
+        print(f"Canceling Dataflow job ID: {job_id}")
+        request = (
+            dataflow.projects()
+            .jobs()
+            .update(
+                projectId=project,
+                jobId=job_id,
+                body={"requestedState": "JOB_STATE_CANCELLED"},
+            )
+        )
+        request.execute()
+
+    @staticmethod
+    def dataflow_jobs_cancel_by_job_name(job_name: str, project: str = PROJECT) -> None:
         import backoff
         from googleapiclient.discovery import build
         from googleapiclient.errors import HttpError
@@ -229,24 +263,11 @@ class Utils:
 
         @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
         def cancel():
-            # To cancel a dataflow job, we need its ID, not its name
+            # To cancel a dataflow job, we need its ID, not its name.
+            # If it doesn't, job_id will be equal to None.
             job_id = Utils.dataflow_job_id_from_job_name(project, job_name)
-
             if job_id is not None:
-                # Cancel the Dataflow job if it exists.
-                # If it doesn't, job_id will be equal to None.
-                # For more info, see:
-                #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
-                request = (
-                    dataflow.projects()
-                    .jobs()
-                    .update(
-                        projectId=project,
-                        jobId=job_id,
-                        body={"requestedState": "JOB_STATE_CANCELLED"},
-                    )
-                )
-                request.execute()
+                Utils.dataflow_jobs_cancel_by_job_id(job_id)
 
         cancel()
 
@@ -260,13 +281,14 @@ class Utils:
     ) -> str:
         from google.cloud import storage
 
-        subprocess.run(
+        template_gcs_path = f"gs://{bucket_name}/{template_file}"
+        p = subprocess.run(
             [
                 "gcloud",
                 "dataflow",
                 "flex-template",
                 "build",
-                f"gs://{bucket_name}/{template_file}",
+                template_gcs_path,
                 f"--project={project}",
                 f"--image={template_image}",
                 "--sdk-language=PYTHON",
@@ -275,7 +297,8 @@ class Utils:
             check=True,
         )
 
-        yield f"gs://{bucket_name}/{template_file}"
+        print(f"dataflow_flex_template_build: {template_gcs_path}")
+        yield template_gcs_path
 
         storage_client = storage.Client()
         storage_client.bucket(bucket_name).blob(template_file).delete()
@@ -290,7 +313,7 @@ class Utils:
         region: str = REGION,
     ) -> str:
         unique_job_name = f"{job_name}-{UUID}"
-        subprocess.run(
+        stdout = subprocess.run(
             [
                 "gcloud",
                 "dataflow",
@@ -304,9 +327,18 @@ class Utils:
             ]
             + [f"--parameters={name}={value}" for name, value in parameters.items()],
             check=True,
-        )
+            capture_output=True,
+        ).stdout.decode("utf-8")
 
-        return unique_job_name
+        print(f"Launched Dataflow template job: {unique_job_name}")
+        print(stdout)
+
+        try:
+            job_id = json.loads(stdout)["job_id"]
+            print(f"\t{CONSOLE_URL}/dataflow/jobs/{region}/{job_id}&project={project}")
+        except:
+            print(f"\t{CONSOLE_URL}/dataflow/jobs&project={project}")
+        return job_id
 
 
 @pytest.fixture(scope="session")
