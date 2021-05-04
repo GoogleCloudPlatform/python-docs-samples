@@ -33,26 +33,29 @@ import datetime
 # [START composer_notify_failure]
 from airflow import models
 # [END composer_notify_failure]
-from airflow.contrib.operators import bigquery_get_data
 # [START composer_bigquery]
-from airflow.contrib.operators import bigquery_operator
+from airflow.providers.google.cloud.operators import bigquery
 # [END composer_bigquery]
-from airflow.contrib.operators import bigquery_to_gcs
+from airflow.providers.google.cloud.transfers import bigquery_to_gcs
 # [START composer_bash_bq]
-from airflow.operators import bash_operator
+from airflow.operators import bash
 # [END composer_bash_bq]
 # [START composer_email]
-from airflow.operators import email_operator
+from airflow.operators import email
 # [END composer_email]
 from airflow.utils import trigger_rule
 
 
 bq_dataset_name = 'airflow_bq_notify_dataset_{{ ds_nodash }}'
-bq_recent_questions_table_id = bq_dataset_name + '.recent_questions'
-BQ_MOST_POPULAR_TABLE_NAME = 'most_popular'
-bq_most_popular_table_id = bq_dataset_name + '.' + BQ_MOST_POPULAR_TABLE_NAME
-output_file = 'gs://{gcs_bucket}/recent_questionsS.csv'.format(
+bq_recent_questions_table_id = 'recent_questions'
+bq_most_popular_table_id = 'most_popular'
+output_file = '{gcs_bucket}/recent_questionsS.csv'.format(
     gcs_bucket=models.Variable.get('gcs_bucket'))
+location = 'US'
+project_id = models.Variable.get('gcp_project')
+
+#TODO: Update query dates
+#TODO: fix string formatting
 
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
@@ -63,10 +66,27 @@ output_file = 'gs://{gcs_bucket}/recent_questionsS.csv'.format(
 max_query_date = '2018-02-01'
 min_query_date = '2018-01-01'
 
+RECENT_QUESTIONS_QUERY = """
+        SELECT owner_display_name, title, view_count
+        FROM `bigquery-public-data.stackoverflow.posts_questions`
+        WHERE creation_date < CAST('{max_date}' AS TIMESTAMP)
+            AND creation_date >= CAST('{min_date}' AS TIMESTAMP)
+        ORDER BY view_count DESC
+        LIMIT 100
+        """.format(max_date=max_query_date, min_date=min_query_date)
+
+MOST_POPULAR_QUERY = """
+        SELECT title, view_count
+        FROM `{table}`
+        ORDER BY view_count DESC
+        LIMIT 1
+        """.format(table=project_id + "." + bq_dataset_name + "." + bq_recent_questions_table_id)
+
 yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
     datetime.datetime.min.time())
 
+# TODO: Add info about sendgrid operator config
 # [START composer_notify_failure]
 default_dag_args = {
     'start_date': yesterday,
@@ -76,7 +96,7 @@ default_dag_args = {
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': models.Variable.get('gcp_project')
+    'project_id': project_id
 }
 
 with models.DAG(
@@ -87,7 +107,7 @@ with models.DAG(
 
     # [START composer_bash_bq]
     # Create BigQuery output dataset.
-    make_bq_dataset = bash_operator.BashOperator(
+    make_bq_dataset = bash.BashOperator(
         task_id='make_bq_dataset',
         # Executing 'bq' command requires Google Cloud SDK which comes
         # preinstalled in Cloud Composer.
@@ -96,53 +116,64 @@ with models.DAG(
     # [END composer_bash_bq]
 
     # [START composer_bigquery]
-    # Query recent StackOverflow questions.
-    bq_recent_questions_query = bigquery_operator.BigQueryOperator(
-        task_id='bq_recent_questions_query',
-        sql="""
-        SELECT owner_display_name, title, view_count
-        FROM `bigquery-public-data.stackoverflow.posts_questions`
-        WHERE creation_date < CAST('{max_date}' AS TIMESTAMP)
-            AND creation_date >= CAST('{min_date}' AS TIMESTAMP)
-        ORDER BY view_count DESC
-        LIMIT 100
-        """.format(max_date=max_query_date, min_date=min_query_date),
-        use_legacy_sql=False,
-        destination_dataset_table=bq_recent_questions_table_id)
+    bq_recent_questions_query = bigquery.BigQueryInsertJobOperator(
+        task_id="bq_recent_questions_query",
+        configuration={
+            "query": {
+                "query": RECENT_QUESTIONS_QUERY,
+                "useLegacySql": False,
+                "destinationTable": {
+                        "projectId": project_id,
+                        "datasetId": bq_dataset_name,
+                        "tableId": bq_recent_questions_table_id
+                    }
+            }
+        },
+        location=location,
+    )
     # [END composer_bigquery]
 
+
+
     # Export query result to Cloud Storage.
-    export_questions_to_gcs = bigquery_to_gcs.BigQueryToCloudStorageOperator(
+    export_questions_to_gcs = bigquery_to_gcs.BigQueryToGCSOperator(
         task_id='export_recent_questions_to_gcs',
-        source_project_dataset_table=bq_recent_questions_table_id,
+        source_project_dataset_table=f"{project_id}.{bq_dataset_name}.{bq_recent_questions_table_id}",
         destination_cloud_storage_uris=[output_file],
         export_format='CSV')
 
     # Perform most popular question query.
-    bq_most_popular_query = bigquery_operator.BigQueryOperator(
-        task_id='bq_most_popular_question_query',
-        sql="""
-        SELECT title, view_count
-        FROM `{table}`
-        ORDER BY view_count DESC
-        LIMIT 1
-        """.format(table=bq_recent_questions_table_id),
-        use_legacy_sql=False,
-        destination_dataset_table=bq_most_popular_table_id)
+    bq_most_popular_query = bigquery.BigQueryInsertJobOperator(
+        task_id="bq_most_popular_question_query",
+        configuration={
+            "query": {
+                "query": MOST_POPULAR_QUERY,
+                "useLegacySql": False,
+                "destinationTable": {
+                    "projectId": project_id, 
+                    "datasetId": bq_dataset_name,
+                    "tableId": bq_most_popular_table_id
+                }
+            }
+        },
+        location=location,
+    )
+
+    
 
     # Read most popular question from BigQuery to XCom output.
     # XCom is the best way to communicate between operators, but can only
     # transfer small amounts of data. For passing large amounts of data, store
     # the data in Cloud Storage and pass the path to the data if necessary.
     # https://airflow.apache.org/concepts.html#xcoms
-    bq_read_most_popular = bigquery_get_data.BigQueryGetDataOperator(
+    bq_read_most_popular = bigquery.BigQueryGetDataOperator(
         task_id='bq_read_most_popular',
         dataset_id=bq_dataset_name,
-        table_id=BQ_MOST_POPULAR_TABLE_NAME)
+        table_id=bq_most_popular_table_id)
 
     # [START composer_email]
     # Send email confirmation
-    email_summary = email_operator.EmailOperator(
+    email_summary = email.EmailOperator(
         task_id='email_summary',
         to=models.Variable.get('email'),
         subject='Sample BigQuery notify data ready',
@@ -167,7 +198,7 @@ with models.DAG(
 
     # Delete BigQuery dataset
     # Delete the bq table
-    delete_bq_dataset = bash_operator.BashOperator(
+    delete_bq_dataset = bash.BashOperator(
         task_id='delete_bq_dataset',
         bash_command='bq rm -r -f %s' % bq_dataset_name,
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
