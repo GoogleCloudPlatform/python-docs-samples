@@ -28,7 +28,6 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-west1"
 ZONE = "us-west1-b"
 
-CONSOLE_URL = "https://console.cloud.google.com"
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
 
@@ -48,7 +47,6 @@ class Utils:
         bucket = storage_client.create_bucket(bucket_unique_name)
 
         print(f"storage_bucket: {bucket_unique_name}")
-        print(f"\t{CONSOLE_URL}/storage/browser/{bucket_unique_name}&project={PROJECT}")
         yield bucket_unique_name
 
         bucket.delete(force=True)
@@ -84,9 +82,6 @@ class Utils:
         topic = publisher_client.create_topic(topic_path)
 
         print(f"pubsub_topic: {topic.name}")
-        print(
-            f"\t{CONSOLE_URL}/cloudpubsub/topic/detail/{topic.name}&project={project}"
-        )
         yield topic.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -112,9 +107,6 @@ class Utils:
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
         print(f"pubsub_subscription: {subscription.name}")
-        print(
-            f"\t{CONSOLE_URL}/cloudpubsub/subscription/detail/{subscription.name}&project={project}"
-        )
         yield subscription.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -184,9 +176,6 @@ class Utils:
         subprocess.run(cmd, check=True)
 
         print(f"container_image: {image_name}")
-        print(
-            f"\t{CONSOLE_URL}/gcr/images/{project}/GLOBAL/{image_path}?project={project}"
-        )
         yield image_name
 
         cmd = [
@@ -322,21 +311,14 @@ class Utils:
             "utf-8"
         )
         print(stdout)
-
-        print(f"Launched Dataflow template job: {unique_job_name}")
-
-        try:
-            job_id = json.loads(stdout)["job_id"]
-            print(f"\t{CONSOLE_URL}/dataflow/jobs/{region}/{job_id}&project={project}")
-        except:
-            print(f"\t{CONSOLE_URL}/dataflow/jobs&project={project}")
-        return job_id
+        print(f"Launched Dataflow Flex Template job: {unique_job_name}")
+        return json.loads(stdout)["job_id"]
 
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
     # Some commands like `gcloud dataflow flex-template` are only available
     # in the latest gcloud versions.
-    subprocess.run(["gcloud", "components", "update", "--quiet"], check=True)
+    # subprocess.run(["gcloud", "components", "update", "--quiet"], check=True)
     subprocess.run(["gcloud", "version"])
     return Utils()
