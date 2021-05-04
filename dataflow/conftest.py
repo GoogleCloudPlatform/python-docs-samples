@@ -93,10 +93,9 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        subprocess.run(
-            ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name],
-            check=True,
-        )
+        cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
+        print(cmd)
+        subprocess.run(cmd, check=True)
 
     @staticmethod
     def pubsub_subscription(
@@ -122,18 +121,17 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        subprocess.run(
-            [
-                "gcloud",
-                "pubsub",
-                "--project",
-                project,
-                "subscriptions",
-                "delete",
-                subscription.name,
-            ],
-            check=True,
-        )
+        cmd = [
+            "gcloud",
+            "pubsub",
+            "--project",
+            project,
+            "subscriptions",
+            "delete",
+            subscription.name,
+        ]
+        print(cmd)
+        subprocess.run(cmd, check=True)
 
     @staticmethod
     def pubsub_publisher(
@@ -171,18 +169,19 @@ class Utils:
         tag: str = "latest",
     ) -> str:
         image_name = f"gcr.io/{project}/{image_path}-{UUID}:{tag}"
-        subprocess.run(["gcloud", "auth", "configure-docker"], check=True)
-        subprocess.run(
-            [
-                "gcloud",
-                "builds",
-                "submit",
-                f"--project={project}",
-                f"--tag={image_name}",
-                ".",
-            ],
-            check=True,
-        )
+        cmd = ["gcloud", "auth", "configure-docker"]
+        print(cmd)
+        subprocess.run(cmd, check=True)
+        cmd = [
+            "gcloud",
+            "builds",
+            "submit",
+            f"--project={project}",
+            f"--tag={image_name}",
+            ".",
+        ]
+        print(cmd)
+        subprocess.run(cmd, check=True)
 
         print(f"container_image: {image_name}")
         print(
@@ -190,18 +189,17 @@ class Utils:
         )
         yield image_name
 
-        subprocess.run(
-            [
-                "gcloud",
-                "container",
-                "images",
-                "delete",
-                image_name,
-                f"--project={project}",
-                "--quiet",
-            ],
-            check=True,
-        )
+        cmd = [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            image_name,
+            f"--project={project}",
+            "--quiet",
+        ]
+        print(cmd)
+        subprocess.run(cmd, check=True)
 
     @staticmethod
     def dataflow_job_id_from_job_name(
@@ -280,20 +278,19 @@ class Utils:
         template_file: str = "template.json",
     ) -> str:
         template_gcs_path = f"gs://{bucket_name}/{template_file}"
-        subprocess.run(
-            [
-                "gcloud",
-                "dataflow",
-                "flex-template",
-                "build",
-                template_gcs_path,
-                f"--project={project}",
-                f"--image={template_image}",
-                "--sdk-language=PYTHON",
-                f"--metadata-file={metadata_file}",
-            ],
-            check=True,
-        )
+        cmd = [
+            "gcloud",
+            "dataflow",
+            "flex-template",
+            "build",
+            template_gcs_path,
+            f"--project={project}",
+            f"--image={template_image}",
+            "--sdk-language=PYTHON",
+            f"--metadata-file={metadata_file}",
+        ]
+        print(cmd)
+        subprocess.run(cmd, check=True)
 
         print(f"dataflow_flex_template_build: {template_gcs_path}")
         yield template_gcs_path
@@ -309,25 +306,24 @@ class Utils:
         region: str = REGION,
     ) -> str:
         unique_job_name = f"{job_name}-{UUID}"
-        stdout = subprocess.run(
-            [
-                "gcloud",
-                "dataflow",
-                "flex-template",
-                "run",
-                unique_job_name,
-                f"--template-file-gcs-location={template_path}",
-                f"--project={project}",
-                f"--region={region}",
-                f"--temp_location=gs://{bucket_name}/temp",
-            ]
-            + [f"--parameters={name}={value}" for name, value in parameters.items()],
-            check=True,
-            capture_output=True,
-        ).stdout.decode("utf-8")
+        cmd = [
+            "gcloud",
+            "dataflow",
+            "flex-template",
+            "run",
+            unique_job_name,
+            f"--template-file-gcs-location={template_path}",
+            f"--project={project}",
+            f"--region={region}",
+            f"--temp_location=gs://{bucket_name}/temp",
+        ] + [f"--parameters={name}={value}" for name, value in parameters.items()]
+        print(cmd)
+        stdout = subprocess.run(cmd, check=True, capture_output=True).stdout.decode(
+            "utf-8"
+        )
+        print(stdout)
 
         print(f"Launched Dataflow template job: {unique_job_name}")
-        print(stdout)
 
         try:
             job_id = json.loads(stdout)["job_id"]
