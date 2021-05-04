@@ -335,4 +335,5 @@ class Utils:
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
+    subprocess.run(["gcloud", "--version"])
     return Utils()
