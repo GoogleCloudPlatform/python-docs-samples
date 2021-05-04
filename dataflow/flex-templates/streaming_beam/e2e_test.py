@@ -73,7 +73,7 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
     )
 
 
-def test_run_template(
+def test_flex_template_run(
     utils: Utils,
     bucket_name: str,
     pubsub_publisher: str,

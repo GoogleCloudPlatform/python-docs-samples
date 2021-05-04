@@ -335,5 +335,8 @@ class Utils:
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
-    subprocess.run(["gcloud", "--version"])
+    # Some commands like `gcloud dataflow flex-template` are only available
+    # in the latest gcloud versions.
+    subprocess.run(["gcloud", "components", "update", "--quiet"], check=True)
+    subprocess.run(["gcloud", "version"])
     return Utils()
