@@ -94,7 +94,7 @@ class Utils:
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
         subprocess.run(
-            ["gcloud", "pubsub", "--project", project, "topics", "delete", topic],
+            ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name],
             check=True,
         )
 
@@ -141,6 +141,7 @@ class Utils:
         new_msg: Callable[[int], str] = lambda i: json.dumps(
             {"id": i, "content": f"message {i}"}
         ),
+        sleep_sec: int = 1,
     ) -> bool:
         from google.cloud import pubsub
 
@@ -148,9 +149,8 @@ class Utils:
             publisher_client = pubsub.PublisherClient()
             for i in itertools.count():
                 msg = new_msg(i)
-                print(f">> publish[{i}]: {repr(msg)}")
                 publisher_client.publish(topic_path, msg.encode("utf-8")).result()
-                time.sleep(1)
+                time.sleep(sleep_sec)
 
         # Start a subprocess in the background to do the publishing.
         print(f"Starting publisher on {topic_path}")
@@ -279,10 +279,8 @@ class Utils:
         project: str = PROJECT,
         template_file: str = "template.json",
     ) -> str:
-        from google.cloud import storage
-
         template_gcs_path = f"gs://{bucket_name}/{template_file}"
-        p = subprocess.run(
+        subprocess.run(
             [
                 "gcloud",
                 "dataflow",
@@ -299,9 +297,7 @@ class Utils:
 
         print(f"dataflow_flex_template_build: {template_gcs_path}")
         yield template_gcs_path
-
-        storage_client = storage.Client()
-        storage_client.bucket(bucket_name).blob(template_file).delete()
+        # The template file gets deleted when we delete the bucket.
 
     @staticmethod
     def dataflow_flex_template_run(
