@@ -34,7 +34,7 @@ def airflow_database():
     airflow_db = f"{airflow_home}/airflow.db"
 
     # reset both resets and initializes a new database
-    airflow.utils.db.resetdb(rbac=None)  # this command will change in Airflow 2.0
+    airflow.utils.db.resetdb()
 
     # Making sure we are using a data file there.
     assert(os.path.isfile(airflow_db))
