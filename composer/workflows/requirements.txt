@@ -1,4 +1,6 @@
-apache-airflow[gcp]==2.0.1
+apache-airflow[google]==2.0.1
+apache-airflow-providers-apache-beam==1.0.1
+apache-airflow-providers-cncf-kubernetes==1.1.0
 kubernetes==17.17.0
 scipy==1.4.1; python_version > '3.0'
 scipy==1.2.3; python_version < '3.0'
