@@ -117,7 +117,7 @@ DATABASES = {"default": env.db()}
 
 # K_SERVICE means we're in Cloud Run. PROJECT_ID means we're in Cloud Build
 # Only use local proxy if neither of these values are present.
-if not all([os.environ.get(x) for x in ["K_SERVICE", "PROJECT_ID"]])
+if not all([os.environ.get(x) for x in ["K_SERVICE", "PROJECT_ID"]]):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
 
