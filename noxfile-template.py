@@ -173,6 +173,9 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
 def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
+    if TEST_CONFIG['pip_version_override']:
+        pip_version = TEST_CONFIG['pip_version_override']
+        session.install(f'pip=={pip_version}')
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         if os.path.exists("constraints.txt"):
