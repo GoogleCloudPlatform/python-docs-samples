@@ -172,10 +172,16 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
-        session.install("-r", "requirements.txt")
+        if os.path.exists("constraints.txt"):
+            session.install("-r", "requirements.txt", "-c", "constraints.txt")
+        else:
+            session.install("-r", "requirements.txt")
 
     if os.path.exists("requirements-test.txt"):
-        session.install("-r", "requirements-test.txt")
+        if os.path.exists("constraints-test.txt"):
+            session.install("-r", "requirements-test.txt", "-c", "constraints-test.txt")
+        else:
+            session.install("-r", "requirements-test.txt")
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
