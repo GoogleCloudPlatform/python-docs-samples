@@ -43,7 +43,7 @@ def pubsub_subscription(utils: Utils, pubsub_topic: str) -> str:
 
 @pytest.fixture(scope="session")
 def bigquery_dataset(utils: Utils) -> str:
-    yield from utils.bigquery_dataset(NAME.replace("-", "_"))
+    yield from utils.bigquery_dataset(NAME)
 
 
 @pytest.fixture(scope="session")

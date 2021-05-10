@@ -57,13 +57,15 @@ class Utils:
 
         bigquery_client = bigquery.Client()
         dataset = bigquery_client.create_dataset(
-            bigquery.Dataset(f"{project}.{dataset_name}_{UUID}")
+            bigquery.Dataset(f"{project}.{dataset_name.replace('-', '_')}_{UUID}")
         )
 
         print(f"bigquery_dataset: {dataset.full_dataset_id}")
         yield dataset.full_dataset_id
 
-        bigquery_client.delete_dataset(dataset.full_dataset_id, delete_contents=True)
+        bigquery_client.delete_dataset(
+            dataset.full_dataset_id.replace(":", "."), delete_contents=True
+        )
 
     @staticmethod
     def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
@@ -295,6 +297,7 @@ class Utils:
         region: str = REGION,
     ) -> str:
         unique_job_name = f"{job_name}-{UUID}"
+        print(f"dataflow_job_name: {unique_job_name}")
         cmd = [
             "gcloud",
             "dataflow",
@@ -317,5 +320,6 @@ class Utils:
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
+    print(f"Test unique identifier: {UUID}")
     subprocess.run(["gcloud", "version"])
     return Utils()
