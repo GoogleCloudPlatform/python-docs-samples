@@ -134,6 +134,11 @@ assign_issues_by:
   to:
   - fjanosi-google
   - joeklemm
+- labels:
+  - 'api: datascienceonramp'
+  to:
+  - leahecole
+  - bradmiro
 
 assign_prs_by:
 - labels:
