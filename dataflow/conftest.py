@@ -310,12 +310,24 @@ class Utils:
             f"--temp_location=gs://{bucket_name}/temp",
         ] + [f"--parameters={name}={value}" for name, value in parameters.items()]
         print(cmd)
-        stdout = subprocess.run(cmd, check=True, capture_output=True).stdout.decode(
-            "utf-8"
-        )
-        print(stdout)
-        print(f"Launched Dataflow Flex Template job: {unique_job_name}")
-        return json.loads(stdout)["job_id"]
+        try:
+            p = subprocess.run(cmd, check=True, capture_output=True)
+            stdout = p.stdout.decode("utf-8")
+            stderr = p.stdout.decode("utf-8")
+            print("--- stderr ---")
+            print(stderr.decode("utf-8"))
+            print("--- stdout ---")
+            print(stdout.decode("utf-8"))
+            print("--- end ---")
+            print(f"Launched Dataflow Flex Template job: {unique_job_name}")
+            return json.loads(stdout)["job_id"]
+        except subprocess.CalledProcessError as e:
+            print(e)
+            print("--- stderr ---")
+            print(e.stderr.decode("utf-8"))
+            print("--- stdout ---")
+            print(e.stdout.decode("utf-8"))
+            print("--- end ---")
 
 
 @pytest.fixture(scope="session")
