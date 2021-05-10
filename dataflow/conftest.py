@@ -268,6 +268,7 @@ class Utils:
         project: str = PROJECT,
         template_file: str = "template.json",
     ) -> str:
+        # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/build
         template_gcs_path = f"gs://{bucket_name}/{template_file}"
         cmd = [
             "gcloud",
@@ -296,6 +297,7 @@ class Utils:
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:
+        # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/run
         unique_job_name = f"{job_name}-{UUID}"
         print(f"dataflow_job_name: {unique_job_name}")
         cmd = [
@@ -307,8 +309,13 @@ class Utils:
             f"--template-file-gcs-location={template_path}",
             f"--project={project}",
             f"--region={region}",
-            f"--temp_location=gs://{bucket_name}/temp",
-        ] + [f"--parameters={name}={value}" for name, value in parameters.items()]
+        ] + [
+            f"--parameters={name}={value}"
+            for name, value in {
+                **parameters,
+                "temp_location": f"gs://{bucket_name}/temp",
+            }.items()
+        ]
         print(cmd)
         try:
             p = subprocess.run(cmd, check=True, capture_output=True)
