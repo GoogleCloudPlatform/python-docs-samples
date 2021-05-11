@@ -317,7 +317,12 @@ class Utils:
         ]
         print(cmd)
         try:
-            p = subprocess.run(cmd, check=True, capture_output=True)
+            # The `capture_output` option was added in Python 3.7, so we must
+            # pass the `stdout` and `stderr` options explicitly to support 3.6.
+            # https://docs.python.org/3/library/subprocess.html#subprocess.run
+            p = subprocess.run(
+                cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
             print("--- stderr ---")
             print(p.stderr.decode("utf-8"))
             print("--- stdout ---")
