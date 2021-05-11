@@ -319,15 +319,13 @@ class Utils:
         print(cmd)
         try:
             p = subprocess.run(cmd, check=True, capture_output=True)
-            stdout = p.stdout.decode("utf-8")
-            stderr = p.stdout.decode("utf-8")
             print("--- stderr ---")
-            print(stderr.decode("utf-8"))
+            print(p.stderr.decode("utf-8"))
             print("--- stdout ---")
-            print(stdout.decode("utf-8"))
+            print(p.stdout.decode("utf-8"))
             print("--- end ---")
             print(f"Launched Dataflow Flex Template job: {unique_job_name}")
-            return json.loads(stdout)["job_id"]
+            return json.loads(p.stdout.decode("utf-8"))["job_id"]
         except subprocess.CalledProcessError as e:
             print(e)
             print("--- stderr ---")
