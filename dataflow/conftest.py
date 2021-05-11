@@ -21,6 +21,7 @@ from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
 
 import pytest
+import yaml
 
 # Default options.
 UUID = uuid.uuid4().hex[0:6]
@@ -245,10 +246,7 @@ class Utils:
     @staticmethod
     def dataflow_jobs_cancel_by_job_name(job_name: str, project: str = PROJECT) -> None:
         import backoff
-        from googleapiclient.discovery import build
         from googleapiclient.errors import HttpError
-
-        dataflow = build("dataflow", "v1b3")
 
         @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
         def cancel():
@@ -325,7 +323,7 @@ class Utils:
             print(p.stdout.decode("utf-8"))
             print("--- end ---")
             print(f"Launched Dataflow Flex Template job: {unique_job_name}")
-            return json.loads(p.stdout.decode("utf-8"))["job_id"]
+            return yaml.safe_load(p.stdout.decode("utf-8"))["job"]["id"]
         except subprocess.CalledProcessError as e:
             print(e)
             print("--- stderr ---")
