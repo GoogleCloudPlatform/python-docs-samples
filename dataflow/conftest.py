@@ -16,6 +16,7 @@ import json
 import multiprocessing as mp
 import os
 import subprocess
+import sys
 import time
 from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
@@ -323,20 +324,20 @@ class Utils:
             p = subprocess.run(
                 cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
-            print("--- stderr ---")
-            print(p.stderr.decode("utf-8"))
-            print("--- stdout ---")
-            print(p.stdout.decode("utf-8"))
-            print("--- end ---")
+            stdout = p.stdout.decode("utf-8")
+            stderr = p.stderr.decode("utf-8")
             print(f"Launched Dataflow Flex Template job: {unique_job_name}")
-            return yaml.safe_load(p.stdout.decode("utf-8"))["job"]["id"]
         except subprocess.CalledProcessError as e:
-            print(e)
+            print(e, file=sys.stderr)
+            stdout = stdout.decode("utf-8")
+            stderr = stderr.decode("utf-8")
+        finally:
             print("--- stderr ---")
-            print(e.stderr.decode("utf-8"))
+            print(stderr)
             print("--- stdout ---")
-            print(e.stdout.decode("utf-8"))
+            print(stdout)
             print("--- end ---")
+        return yaml.safe_load(stdout)["job"]["id"]
 
 
 @pytest.fixture(scope="session")
