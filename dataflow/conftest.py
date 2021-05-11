@@ -21,7 +21,6 @@ from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
 
 import pytest
-import yaml
 
 # Default options.
 UUID = uuid.uuid4().hex[0:6]
@@ -295,6 +294,8 @@ class Utils:
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:
+        import yaml
+
         # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/run
         unique_job_name = f"{job_name}-{UUID}"
         print(f"dataflow_job_name: {unique_job_name}")
