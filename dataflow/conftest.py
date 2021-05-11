@@ -225,38 +225,37 @@ class Utils:
 
     @staticmethod
     def dataflow_jobs_cancel_by_job_id(job_id: str, project: str = PROJECT) -> None:
+        import backoff
         from googleapiclient.discovery import build
+        from googleapiclient.errors import HttpError
 
         dataflow = build("dataflow", "v1b3")
 
-        # For more info, see:
-        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
-        print(f"Canceling Dataflow job ID: {job_id}")
-        request = (
-            dataflow.projects()
-            .jobs()
-            .update(
-                projectId=project,
-                jobId=job_id,
-                body={"requestedState": "JOB_STATE_CANCELLED"},
+        @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
+        def cancel_job():
+            # For more info, see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
+            print(f"Canceling Dataflow job ID: {job_id}")
+            request = (
+                dataflow.projects()
+                .jobs()
+                .update(
+                    projectId=project,
+                    jobId=job_id,
+                    body={"requestedState": "JOB_STATE_CANCELLED"},
+                )
             )
-        )
-        request.execute()
+            request.execute()
+
+        cancel_job()
 
     @staticmethod
     def dataflow_jobs_cancel_by_job_name(job_name: str, project: str = PROJECT) -> None:
-        import backoff
-        from googleapiclient.errors import HttpError
-
-        @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
-        def cancel():
-            # To cancel a dataflow job, we need its ID, not its name.
-            # If it doesn't, job_id will be equal to None.
-            job_id = Utils.dataflow_job_id_from_job_name(project, job_name)
-            if job_id is not None:
-                Utils.dataflow_jobs_cancel_by_job_id(job_id)
-
-        cancel()
+        # To cancel a dataflow job, we need its ID, not its name.
+        # If it doesn't, job_id will be equal to None.
+        job_id = Utils.dataflow_job_id_from_job_name(project, job_name)
+        if job_id is not None:
+            Utils.dataflow_jobs_cancel_by_job_id(job_id)
 
     @staticmethod
     def dataflow_flex_template_build(
