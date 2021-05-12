@@ -162,4 +162,4 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = []
 
 # https://code.djangoproject.com/ticket/32741
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
