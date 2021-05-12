@@ -33,6 +33,7 @@ steps:
         "-e",
         "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
         "-e",
+        "K_SERVICE=${_SERVICE_NAME}",
         "--",
         "python",
         "manage.py",
