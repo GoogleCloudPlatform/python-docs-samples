@@ -227,40 +227,21 @@ class Utils:
     def dataflow_jobs_cancel_by_job_id(
         job_id: str, project: str = PROJECT, region: str = REGION
     ) -> None:
-        import backoff
-        from googleapiclient.discovery import build
-        from googleapiclient.errors import HttpError
-
-        dataflow = build("dataflow", "v1b3")
-
-        @backoff.on_exception(backoff.expo, HttpError, max_time=RETRY_MAX_TIME)
-        def cancel_job():
-            # For more info, see:
-            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
-            print(f"Canceling Dataflow job ID: {job_id}")
-            # request = (
-            #     dataflow.projects()
-            #     .jobs()
-            #     .update(
-            #         projectId=project,
-            #         jobId=job_id,
-            #         location=region,
-            #         body={"requestedState": "JOB_STATE_CANCELLED"},
-            #     )
-            # )
-            # request.execute()
-            cmd = [
-                "gcloud",
-                f"--project={project}",
-                "dataflow",
-                "jobs",
-                "cancel",
-                job_id,
-                f"--region={region}",
-            ]
-            subprocess.run(cmd, check=True)
-
-        cancel_job()
+        print(f"Canceling Dataflow job ID: {job_id}")
+        # We get an error using the googleapiclient.discovery APIs, probably
+        # due to incompatible dependencies with apache-beam.
+        # We use gcloud instead to cancel the job.
+        #   https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/cancel
+        cmd = [
+            "gcloud",
+            f"--project={project}",
+            "dataflow",
+            "jobs",
+            "cancel",
+            job_id,
+            f"--region={region}",
+        ]
+        subprocess.run(cmd, check=True)
 
     @staticmethod
     def dataflow_jobs_cancel_by_job_name(
