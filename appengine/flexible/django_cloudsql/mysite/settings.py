@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 import io
+import os
 
 import environ
 from google.cloud import secretmanager
@@ -178,4 +177,4 @@ GS_DEFAULT_ACL = "publicRead"
 # [END staticurl]
 
 # https://code.djangoproject.com/ticket/32741
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
