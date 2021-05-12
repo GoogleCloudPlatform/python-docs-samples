@@ -238,17 +238,27 @@ class Utils:
             # For more info, see:
             #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
             print(f"Canceling Dataflow job ID: {job_id}")
-            request = (
-                dataflow.projects()
-                .jobs()
-                .update(
-                    projectId=project,
-                    jobId=job_id,
-                    location=region,
-                    body={"requestedState": "JOB_STATE_CANCELLED"},
-                )
-            )
-            request.execute()
+            # request = (
+            #     dataflow.projects()
+            #     .jobs()
+            #     .update(
+            #         projectId=project,
+            #         jobId=job_id,
+            #         location=region,
+            #         body={"requestedState": "JOB_STATE_CANCELLED"},
+            #     )
+            # )
+            # request.execute()
+            cmd = [
+                "gcloud",
+                f"--project={project}",
+                "dataflow",
+                "jobs",
+                "cancel",
+                job_id,
+                f"--region={region}",
+            ]
+            subprocess.run(cmd, check=True)
 
         cancel_job()
 
