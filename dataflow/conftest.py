@@ -224,7 +224,9 @@ class Utils:
         return None
 
     @staticmethod
-    def dataflow_jobs_cancel_by_job_id(job_id: str, project: str = PROJECT) -> None:
+    def dataflow_jobs_cancel_by_job_id(
+        job_id: str, project: str = PROJECT, region: str = REGION
+    ) -> None:
         import backoff
         from googleapiclient.discovery import build
         from googleapiclient.errors import HttpError
@@ -242,6 +244,7 @@ class Utils:
                 .update(
                     projectId=project,
                     jobId=job_id,
+                    location=region,
                     body={"requestedState": "JOB_STATE_CANCELLED"},
                 )
             )
@@ -250,12 +253,14 @@ class Utils:
         cancel_job()
 
     @staticmethod
-    def dataflow_jobs_cancel_by_job_name(job_name: str, project: str = PROJECT) -> None:
+    def dataflow_jobs_cancel_by_job_name(
+        job_name: str, project: str = PROJECT, region: str = REGION
+    ) -> None:
         # To cancel a dataflow job, we need its ID, not its name.
         # If it doesn't, job_id will be equal to None.
         job_id = Utils.dataflow_job_id_from_job_name(project, job_name)
         if job_id is not None:
-            Utils.dataflow_jobs_cancel_by_job_id(job_id)
+            Utils.dataflow_jobs_cancel_by_job_id(job_id, project, region)
 
     @staticmethod
     def dataflow_flex_template_build(
