@@ -112,6 +112,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
 
+# [START dbconfig]
 # [START gaeflex_py_django_database_config]
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
@@ -122,6 +123,7 @@ if not os.getenv("GAE_INSTANCE", None):
     DATABASES["default"]["PORT"] = 5432
 
 # [END gaeflex_py_django_database_config]
+# [END dbconfig]
 
 # Use a in-memory sqlite3 database when testing in CI systems
 if os.getenv("TRAMPOLINE_CI", None):
@@ -164,6 +166,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
+# [START staticurl]
 # [START gaeflex_py_django_staticconfig]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
@@ -172,3 +175,4 @@ DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
 # [END gaeflex_py_django_staticconfig]
+# [END staticurl]
