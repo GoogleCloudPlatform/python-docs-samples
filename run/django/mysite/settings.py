@@ -27,7 +27,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 
 # Attempt to load the Project ID into the environment, safely failing on error.
 try:
-    _, os.environ['GOOGLE_CLOUD_PROJECT'] = google.auth.default()
+    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
 except google.exceptions.DefaultCredentialsError as e:
     pass
 
@@ -116,7 +116,7 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {"default": env.db()}
 
 # Seeing K_SERVICE means we're in Cloud Run, which means we don't use the proxy.
-if not os.environ.get('K_SERVICE'):
+if not os.environ.get("K_SERVICE"):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
 
@@ -126,10 +126,18 @@ if not os.environ.get('K_SERVICE'):
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
