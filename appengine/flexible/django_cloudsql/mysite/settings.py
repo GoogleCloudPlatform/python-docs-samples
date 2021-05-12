@@ -176,3 +176,6 @@ STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
 # [END gaeflex_py_django_staticconfig]
 # [END staticurl]
+
+# https://code.djangoproject.com/ticket/32741
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
