@@ -106,7 +106,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "mysite.wsgi.application"
 
-
 # Database
 # [START gaestd_py_django_database_config]
 # Use django-environ to parse the connection string
@@ -146,7 +145,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 
 LANGUAGE_CODE = "en-us"
@@ -161,5 +159,7 @@ STATIC_ROOT = "static"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = []
 
-# https://code.djangoproject.com/ticket/32741
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

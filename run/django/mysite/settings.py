@@ -63,11 +63,13 @@ else:
 # [END cloudrun_django_secretconfig]
 SECRET_KEY = env("SECRET_KEY")
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # Change this to "False" when you are ready for production
 DEBUG = True
 
+# SECURITY WARNING: It's recommended that you change this setting when
+# running in production. The URL will be known once you first deploy
+# to Cloud Run.
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -169,5 +171,7 @@ STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
 # [END cloudrun_django_staticconfig]
 
-# https://code.djangoproject.com/ticket/32741
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

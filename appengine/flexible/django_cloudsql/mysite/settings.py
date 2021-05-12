@@ -21,7 +21,6 @@ from google.cloud import secretmanager
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # [START gaeflex_py_django_secret_config]
 env = environ.Env(DEBUG=(bool, False))
 env_file = os.path.join(BASE_DIR, ".env")
@@ -64,7 +63,6 @@ DEBUG = True
 # SECURITY WARNING: App Engine's security features ensure that it is safe to
 # have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
 # app not on App Engine, make sure to set an appropriate host here.
-# See https://docs.djangoproject.com/en/1.10/ref/settings/
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -176,5 +174,7 @@ GS_DEFAULT_ACL = "publicRead"
 # [END gaeflex_py_django_staticconfig]
 # [END staticurl]
 
-# https://code.djangoproject.com/ticket/32741
-DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
