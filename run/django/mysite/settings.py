@@ -113,6 +113,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
+# [START cloudrun_django_dbconfig]
 # [START cloudrun_django_database_config]
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
@@ -123,6 +124,7 @@ if not os.environ.get("K_SERVICE"):
     DATABASES["default"]["PORT"] = 5432
 
 # [END cloudrun_django_database_config]
+# [END cloudrun_django_dbconfig]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
