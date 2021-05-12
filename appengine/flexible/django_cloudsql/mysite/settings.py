@@ -14,6 +14,7 @@
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import io
 
 import environ
 from google.cloud import secretmanager
@@ -36,6 +37,7 @@ elif os.getenv("TRAMPOLINE_CI", None):
 
     placeholder = (
         f"SECRET_KEY=a\n"
+        "GS_BUCKET_NAME=None\n"
         f"DATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     )
     env.read_env(io.StringIO(placeholder))
