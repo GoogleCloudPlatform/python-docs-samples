@@ -28,7 +28,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 # Attempt to load the Project ID into the environment, safely failing on error.
 try:
     _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except google.exceptions.DefaultCredentialsError as e:
+except google.exceptions.DefaultCredentialsError:
     pass
 
 if os.path.isfile(env_file):
