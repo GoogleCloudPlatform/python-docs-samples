@@ -1,2 +1,2 @@
-Flask==1.1.2
+Flask==1.1.4
 google-api-python-client==1.12.8; python_version < '3.0'
