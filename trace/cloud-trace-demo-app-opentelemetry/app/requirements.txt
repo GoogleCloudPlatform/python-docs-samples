@@ -1,6 +1,6 @@
 Flask==1.1.4
 opentelemetry-exporter-google-cloud==0.18b0
-opentelemetry-tools-google-cloud==0.18b0
+opentelemetry-tools-google-cloud==0.18b1
 opentelemetry-instrumentation-flask==0.17b0
 grpcio==1.37.1
 httpretty==1.1.1
