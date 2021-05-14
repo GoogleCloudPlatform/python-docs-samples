@@ -1,4 +1,4 @@
-flask==1.1.2
+flask==1.1.4
 requests==2.25.1
 requests_toolbelt==0.9.1
 google-auth==1.30.0
