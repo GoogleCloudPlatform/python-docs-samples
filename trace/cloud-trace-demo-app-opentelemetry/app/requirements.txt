@@ -1,4 +1,4 @@
-Flask==1.1.2
+Flask==1.1.4
 opentelemetry-exporter-google-cloud==0.18b0
 opentelemetry-tools-google-cloud==0.18b0
 opentelemetry-instrumentation-flask==0.17b0
