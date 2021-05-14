@@ -1,2 +1,2 @@
-flask==2.0.0
+flask==1.1.4
 google-cloud-error-reporting==1.1.2

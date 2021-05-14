@@ -1,4 +1,4 @@
 # [START ndb_version]
 google-cloud-ndb==1.8.0
 # [END ndb_version]
-flask==2.0.0
+flask==1.1.4
