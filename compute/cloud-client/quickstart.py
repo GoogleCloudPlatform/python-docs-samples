@@ -21,14 +21,17 @@ line to create, list and delete an instance in a given project in a given zone.
 
 import argparse
 # [START compute_instances_list]
+# [START compute_instances_list_all]
 # [START compute_instances_create]
 # [START compute_instances_delete]
-# [START compute_instances_check]
+# [START compute_instances_operation_check]
 import typing
+
 import google.cloud.compute_v1 as gce
-# [END compute_instances_check]
+# [END compute_instances_operation_check]
 # [END compute_instances_delete]
 # [END compute_instances_create]
+# [END compute_instances_list_all]
 # [END compute_instances_list]
 
 
@@ -48,8 +51,10 @@ def list_instances(project: str, zone: str) -> typing.Iterable[gce.Instance]:
     instance_client = gce.InstancesClient()
     instance_list = instance_client.list(project=project, zone=zone)
     return instance_list
+# [END compute_instances_list]
 
 
+# [START compute_instances_list_all]
 def list_all_instances(project: str) -> typing.Dict[str, typing.Iterable[gce.Instance]]:
     """
     Returns a dictionary of all instances present in a project, grouped by their zone.
@@ -68,7 +73,7 @@ def list_all_instances(project: str) -> typing.Dict[str, typing.Iterable[gce.Ins
         if response.instances:
             all_instances[zone] = response.instances
     return all_instances
-# [END compute_instances_list]
+# [END compute_instances_list_all]
 
 
 # [START compute_instances_create]
@@ -159,7 +164,7 @@ def delete_instance(project: str, zone: str, machine_name: str) -> None:
 # [END compute_instances_delete]
 
 
-# [START compute_instances_check]
+# [START compute_instances_operation_check]
 def wait_for_operation(operation: gce.Operation, project: str) -> gce.Operation:
     """
     This method waits for an operation to be completed. Calling this function
@@ -184,12 +189,11 @@ def wait_for_operation(operation: gce.Operation, project: str) -> gce.Operation:
         kwargs['region'] = operation.region.rsplit('/', maxsplit=1)[1]
     else:
         client = gce.GlobalOperationsClient()
-    print(kwargs)
     return client.wait(**kwargs)
-# [END compute_instances_check]
+# [END compute_instances_operation_check]
 
 
-def main(project, zone, machine_name):
+def main(project: str, zone: str, machine_name: str) -> None:
     # You can find the list of available machine types using:
     # https://cloud.google.com/sdk/gcloud/reference/compute/machine-types/list
     machine_type = f"zones/{zone}/machineTypes/f1-micro"
@@ -203,7 +207,7 @@ def main(project, zone, machine_name):
     print(f"Instances found in {zone}: ", ", ".join(i.name for i in zone_instances))
 
     all_instances = list_all_instances(project)
-    print(f"Instances found in project: ")
+    print(f"Instances found in project {project}:")
     for i_zone, instances in all_instances.items():
         print(f"{i_zone}: ", ", ".join(i.name for i in instances))
 
