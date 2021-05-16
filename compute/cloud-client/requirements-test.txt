@@ -1,0 +1,2 @@
+google-cloud-compute==0.3.0
+pytest==6.2.4

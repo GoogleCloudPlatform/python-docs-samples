@@ -20,6 +20,7 @@ line to create, list and delete an instance in a given project in a given zone.
 """
 
 import argparse
+
 # [START compute_instances_list]
 # [START compute_instances_list_all]
 # [START compute_instances_create]
@@ -28,6 +29,7 @@ import argparse
 import typing
 
 import google.cloud.compute_v1 as gce
+
 # [END compute_instances_operation_check]
 # [END compute_instances_delete]
 # [END compute_instances_create]
@@ -51,6 +53,8 @@ def list_instances(project: str, zone: str) -> typing.Iterable[gce.Instance]:
     instance_client = gce.InstancesClient()
     instance_list = instance_client.list(project=project, zone=zone)
     return instance_list
+
+
 # [END compute_instances_list]
 
 
@@ -73,12 +77,15 @@ def list_all_instances(project: str) -> typing.Dict[str, typing.Iterable[gce.Ins
         if response.instances:
             all_instances[zone] = response.instances
     return all_instances
+
+
 # [END compute_instances_list_all]
 
 
 # [START compute_instances_create]
-def create_instance(project: str, zone: str, machine_type: str,
-                    machine_name: str, source_image: str) -> gce.Instance:
+def create_instance(
+    project: str, zone: str, machine_type: str, machine_name: str, source_image: str
+) -> gce.Instance:
     """
     Sends an instance creation request to GCP and waits for it to complete.
 
@@ -102,7 +109,9 @@ def create_instance(project: str, zone: str, machine_type: str,
     # Every machine requires at least one persistent disk
     disk = gce.AttachedDisk()
     initialize_params = gce.AttachedDiskInitializeParams()
-    initialize_params.source_image = source_image  # "projects/debian-cloud/global/images/family/debian-10"
+    initialize_params.source_image = (
+        source_image  # "projects/debian-cloud/global/images/family/debian-10"
+    )
     initialize_params.disk_size_gb = "10"
     disk.initialize_params = initialize_params
     disk.auto_delete = True
@@ -118,7 +127,9 @@ def create_instance(project: str, zone: str, machine_type: str,
     instance = gce.Instance()
     instance.name = machine_name
     instance.disks = [disk]
-    instance.machine_type = machine_type  # "zones/europe-central2-a/machineTypes/n1-standard-8"
+    instance.machine_type = (
+        machine_type  # "zones/europe-central2-a/machineTypes/n1-standard-8"
+    )
     instance.network_interfaces = [network_interface]
 
     # Preparing the InsertInstanceRequest
@@ -137,6 +148,8 @@ def create_instance(project: str, zone: str, machine_type: str,
         pass
     print(f"Instance {machine_name} created.")
     return instance
+
+
 # [END compute_instances_create]
 
 
@@ -153,7 +166,9 @@ def delete_instance(project: str, zone: str, machine_name: str) -> None:
     instance_client = gce.InstancesClient()
 
     print(f"Deleting {machine_name} from {zone}...")
-    operation = instance_client.delete(project=project, zone=zone, instance=machine_name)
+    operation = instance_client.delete(
+        project=project, zone=zone, instance=machine_name
+    )
     operation = wait_for_operation(operation, project)
     if operation.error:
         pass
@@ -161,6 +176,8 @@ def delete_instance(project: str, zone: str, machine_name: str) -> None:
         pass
     print(f"Instance {machine_name} deleted.")
     return
+
+
 # [END compute_instances_delete]
 
 
@@ -178,18 +195,20 @@ def wait_for_operation(operation: gce.Operation, project: str) -> gce.Operation:
     Returns:
         Finished Operation object.
     """
-    kwargs = {'project': project, 'operation': operation.name}
+    kwargs = {"project": project, "operation": operation.name}
     if operation.zone:
         client = gce.ZoneOperationsClient()
         # Operation.zone is a full URL address of a zone, so we need to extract just the name
-        kwargs['zone'] = operation.zone.rsplit('/', maxsplit=1)[1]
+        kwargs["zone"] = operation.zone.rsplit("/", maxsplit=1)[1]
     elif operation.region:
         client = gce.RegionOperationsClient()
         # Operation.region is a full URL address of a zone, so we need to extract just the name
-        kwargs['region'] = operation.region.rsplit('/', maxsplit=1)[1]
+        kwargs["region"] = operation.region.rsplit("/", maxsplit=1)[1]
     else:
         client = gce.GlobalOperationsClient()
     return client.wait(**kwargs)
+
+
 # [END compute_instances_operation_check]
 
 
@@ -204,19 +223,20 @@ def main(project: str, zone: str, machine_name: str) -> None:
     create_instance(project, zone, machine_type, machine_name, source_image)
 
     zone_instances = list_instances(project, zone)
-    print(f"Instances found in {zone}: ", ", ".join(i.name for i in zone_instances))
+    print(f"Instances found in {zone}:", ", ".join(i.name for i in zone_instances))
 
     all_instances = list_all_instances(project)
     print(f"Instances found in project {project}:")
     for i_zone, instances in all_instances.items():
-        print(f"{i_zone}: ", ", ".join(i.name for i in instances))
+        print(f"{i_zone}:", ", ".join(i.name for i in instances))
 
     delete_instance(project, zone, machine_name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
     parser.add_argument("zone", help="Google Cloud zone name")
