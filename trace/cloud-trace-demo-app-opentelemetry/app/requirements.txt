@@ -1,7 +1,8 @@
+# Don't upgrade to 2.0.0 until opentelemtry-instrumentation-flask is okay with it
 Flask==1.1.4
 opentelemetry-exporter-google-cloud==0.18b1
 opentelemetry-tools-google-cloud==0.18b1
-opentelemetry-instrumentation-flask==0.17b0
+opentelemetry-instrumentation-flask==0.17b0 # Requires Flask~=1.0
 grpcio==1.37.1
 httpretty==1.1.1
 google-cloud-monitoring==1.1.0
