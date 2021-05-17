@@ -1,4 +1,4 @@
-flask==1.1.2
+flask==1.1.4
 pytest==6.2.4
 requests==2.25.1
 responses==0.13.3
