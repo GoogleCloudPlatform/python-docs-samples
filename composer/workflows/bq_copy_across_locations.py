@@ -40,10 +40,10 @@ import io
 import logging
 
 from airflow import models
+from airflow.operators import dummy
 from airflow.providers.google.cloud.transfers import bigquery_to_gcs
 from airflow.providers.google.cloud.transfers import gcs_to_bigquery
 from airflow.providers.google.cloud.transfers import gcs_to_gcs
-from airflow.operators import dummy
 
 
 # --------------------------------------------------------------------------------

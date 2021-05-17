@@ -72,6 +72,5 @@ with models.DAG(
                 "useLegacySql": False
             }
         }
-
-)
+    )
     # [END composer_connections_custom]
