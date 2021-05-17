@@ -114,8 +114,8 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
 
-# If we are not in App Engine Flex, use the local proxy
-if not os.getenv("GAE_INSTANCE", None):
+# If the flag as been set, configure to use proxy
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
 

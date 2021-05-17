@@ -121,8 +121,8 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
 
-# Seeing K_SERVICE means we're in Cloud Run, which means we don't use the proxy.
-if not os.environ.get("K_SERVICE"):
+# If the flag as been set, configure to use proxy
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
 
