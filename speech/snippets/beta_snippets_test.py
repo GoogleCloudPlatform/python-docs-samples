@@ -66,7 +66,8 @@ def test_transcribe_multilanguage_file(capsys):
     transcribe_file_with_multilanguage()
     out, err = capsys.readouterr()
 
-    assert "how are you doing estoy bien e tu" in out
+    assert "First alternative of result" in out
+    assert "Transcript" in out
 
 
 def test_transcribe_word_level_confidence(capsys):
