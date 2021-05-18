@@ -49,13 +49,10 @@ from airflow.utils import trigger_rule
 bq_dataset_name = 'airflow_bq_notify_dataset_{{ ds_nodash }}'
 bq_recent_questions_table_id = 'recent_questions'
 bq_most_popular_table_id = 'most_popular'
-output_file = '{gcs_bucket}/recent_questionsS.csv'.format(
-    gcs_bucket=models.Variable.get('gcs_bucket'))
+gcs_bucket = models.Variable.get('gcs_bucket')
+output_file = f'{gcs_bucket}/recent_questionsS.csv'
 location = 'US'
 project_id = models.Variable.get('gcp_project')
-
-# TODO: Update query dates
-# TODO: fix string formatting
 
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
@@ -66,27 +63,26 @@ project_id = models.Variable.get('gcp_project')
 max_query_date = '2018-02-01'
 min_query_date = '2018-01-01'
 
-RECENT_QUESTIONS_QUERY = """
+RECENT_QUESTIONS_QUERY = f"""
         SELECT owner_display_name, title, view_count
         FROM `bigquery-public-data.stackoverflow.posts_questions`
-        WHERE creation_date < CAST('{max_date}' AS TIMESTAMP)
-            AND creation_date >= CAST('{min_date}' AS TIMESTAMP)
+        WHERE creation_date < CAST('{max_query_date}' AS TIMESTAMP)
+            AND creation_date >= CAST('{min_query_date}' AS TIMESTAMP)
         ORDER BY view_count DESC
         LIMIT 100
-        """.format(max_date=max_query_date, min_date=min_query_date)
+        """
 
-MOST_POPULAR_QUERY = """
+MOST_POPULAR_QUERY = f"""
         SELECT title, view_count
-        FROM `{table}`
+        FROM `{project_id}.{bq_dataset_name}.{bq_recent_questions_table_id}`
         ORDER BY view_count DESC
         LIMIT 1
-        """.format(table=project_id + "." + bq_dataset_name + "." + bq_recent_questions_table_id)
+        """
 
 yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
     datetime.datetime.min.time())
 
-# TODO: Add info about sendgrid operator config
 # [START composer_notify_failure]
 default_dag_args = {
     'start_date': yesterday,
@@ -111,8 +107,7 @@ with models.DAG(
         task_id='make_bq_dataset',
         # Executing 'bq' command requires Google Cloud SDK which comes
         # preinstalled in Cloud Composer.
-        bash_command='bq ls {} || bq mk {}'.format(
-            bq_dataset_name, bq_dataset_name))
+        bash_command=f'bq ls {bq_dataset_name} || bq mk {bq_dataset_name}')
     # [END composer_bash_bq]
 
     # [START composer_bigquery]
@@ -168,7 +163,7 @@ with models.DAG(
         table_id=bq_most_popular_table_id)
 
     # [START composer_email]
-    # Send email confirmation
+    # Send email confirmation (you will need to set up the email operator)
     email_summary = email.EmailOperator(
         task_id='email_summary',
         to=models.Variable.get('email'),
