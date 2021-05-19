@@ -22,5 +22,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     description="Tutorial Package",
+    install_requires=[
+        "gcsfs"
+    ]
 )
 # [END ai_platform_setup]
