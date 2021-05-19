@@ -20,7 +20,7 @@ setup(
     version="0.0.1",
     url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/dag_test_utils",
     author="Google LLC",
-    description="Internal utility used to unit test example Apache Airflow DAGs for Google Cloud Composer",
+    description="Utility used to unit test example Apache Airflow DAGs for Google Cloud Composer. This is not an officially supported Google product.",
     packages=find_packages(),
     py_modules=['internal_unit_testing'],
     install_requires=['apache-airflow[google]==1.10.15']
