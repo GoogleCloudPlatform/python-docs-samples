@@ -48,6 +48,9 @@ branchProtectionRules:
     - "Kokoro CI - Python 3.7"
     - "Kokoro CI - Python 3.8"
     - "cla/google"
+    - "Disruptive region tag removal"
+    - "Mismatched region tag"
+    - "Region tag product prefix"
 # List of explicit permissions to add (additive only)
 permissionRules:
     # Team slug to add to repository permissions
