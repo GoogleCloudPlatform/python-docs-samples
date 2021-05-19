@@ -15,43 +15,14 @@
 import os
 import uuid
 
-import backoff
-from google.api_core.exceptions import DeadlineExceeded, GoogleAPICallError
 from google.cloud import storage
-from google.cloud.exceptions import NotFound
 import pytest
 
 import translate_v3_batch_translate_text_with_glossary
-import translate_v3_create_glossary
-import translate_v3_delete_glossary
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
-
-
-@pytest.fixture(scope="session")
-def glossary():
-    """Get the ID of a glossary available to session (do not mutate/delete)."""
-    glossary_id = "test-{}".format(uuid.uuid4())
-    translate_v3_create_glossary.create_glossary(
-        PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
-    )
-
-    yield glossary_id
-
-    # cleanup
-    @backoff.on_exception(
-        backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
-    )
-    def delete_glossary():
-        try:
-            translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-        except NotFound as e:
-            # Ignoring this case.
-            print("Got NotFound, detail: {}".format(str(e)))
-
-    delete_glossary()
+GLOSSARY_ID = "DO_NOT_DELETE_TEST_GLOSSARY"
 
 
 @pytest.fixture(scope="function")
@@ -67,12 +38,12 @@ def bucket():
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
+def test_batch_translate_text_with_glossary(capsys, bucket):
     translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
         "gs://cloud-samples-data/translation/text_with_glossary.txt",
         "gs://{}/translation/BATCH_TRANSLATION_GLOS_OUTPUT/".format(bucket.name),
         PROJECT_ID,
-        glossary,
+        GLOSSARY_ID,
         320,
     )
 
