@@ -103,7 +103,7 @@ def setup_and_teardown_bucket():
 
     # Upload file
     blob = bucket.blob(BUCKET_BLOB)
-    blob.upload_from_filename("setup.py")
+    blob.upload_from_filename("ingestion.py")
 
     yield
 
