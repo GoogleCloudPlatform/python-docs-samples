@@ -58,7 +58,6 @@ CLUSTER_CONFIG = {  # Dataproc cluster configuration
         "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
         "software_config": {
             "image_version": CLUSTER_IMAGE,
-            "optional_components": [5],
         },
     },
 }
