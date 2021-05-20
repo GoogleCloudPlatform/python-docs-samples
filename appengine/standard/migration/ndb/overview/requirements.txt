@@ -2,4 +2,5 @@
 rsa==4.5; python_version < '3'
 googleapis_common_protos
 google-cloud-ndb
-flask==1.1.2
+Flask==1.1.4; python_version < '3.0'
+Flask==2.0.0; python_version > '3.0'
