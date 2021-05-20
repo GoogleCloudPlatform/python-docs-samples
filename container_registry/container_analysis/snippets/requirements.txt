@@ -1,6 +1,6 @@
 google-cloud-pubsub==2.5.0
 google-cloud-containeranalysis==2.2.3
-grafeas==1.0.1
+grafeas==1.1.0
 pytest==5.3.0; python_version > "3.0"
 pytest==4.6.6; python_version < "3.0"
 flaky==3.7.0
