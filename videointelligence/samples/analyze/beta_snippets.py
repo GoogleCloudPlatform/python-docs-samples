@@ -227,7 +227,7 @@ def track_objects_gcs(gcs_uri):
     )
     print("\nProcessing video for object annotations.")
 
-    result = operation.result(timeout=300)
+    result = operation.result(timeout=500)
     print("\nFinished processing.\n")
 
     # The first result is retrieved because a single video was processed.
@@ -291,7 +291,7 @@ def track_objects(path):
     )
     print("\nProcessing video for object annotations.")
 
-    result = operation.result(timeout=300)
+    result = operation.result(timeout=500)
     print("\nFinished processing.\n")
 
     # The first result is retrieved because a single video was processed.
