@@ -20,7 +20,6 @@
 def create_source(organization_id):
     """Create a new findings source. """
     # [START securitycenter_create_source]
-    # [START create_source]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -38,14 +37,12 @@ def create_source(organization_id):
         }
     )
     print("Created Source: {}".format(created.name))
-    # [END create_source]
     # [END securitycenter_create_source]
 
 
 def get_source(source_name):
     """Gets an existing source."""
     # [START securitycenter_get_source]
-    # [START get_source]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -59,7 +56,6 @@ def get_source(source_name):
     source = client.get_source(request={"name": source_name})
 
     print("Source: {}".format(source))
-    # [END get_source]
     # [END securitycenter_get_source]
     return source
 
@@ -67,7 +63,6 @@ def get_source(source_name):
 def update_source(source_name):
     """Updates a source's display name."""
     # [START securitycenter_update_source]
-    # [START update_source]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
 
@@ -89,7 +84,6 @@ def update_source(source_name):
         }
     )
     print("Updated Source: {}".format(updated))
-    # [END update_source]
     # [END securitycenter_update_source]
     return updated
 
@@ -98,7 +92,6 @@ def add_user_to_source(source_name):
     """Gives a user findingsEditor permission to the source."""
     user_email = "csccclienttest@gmail.com"
     # [START securitycenter_set_source_iam]
-    # [START update_source_iam]
     from google.cloud import securitycenter
     from google.iam.v1 import policy_pb2
 
@@ -131,7 +124,6 @@ def add_user_to_source(source_name):
 
     print("Updated Policy: {}".format(updated))
 
-    # [END update_source_iam]
     # [END securitycenter_set_source_iam]
     return binding, updated
 
@@ -140,7 +132,6 @@ def list_source(organization_id):
     """Lists finding sources."""
     i = -1
     # [START securitycenter_list_sources]
-    # [START list_sources]
     from google.cloud import securitycenter
 
     # Create a new client.
@@ -152,7 +143,6 @@ def list_source(organization_id):
     # Call the API and print out each existing source.
     for i, source in enumerate(client.list_sources(request={"parent": org_name})):
         print(i, source)
-    # [END list_sources]
     # [END securitycenter_list_sources]
     return i
 
@@ -160,7 +150,6 @@ def list_source(organization_id):
 def create_finding(source_name):
     """Creates a new finding."""
     # [START securitycenter_create_finding]
-    # [START create_finding]
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import CreateFindingRequest, Finding
     import datetime
@@ -203,7 +192,6 @@ def create_finding(source_name):
         request=request
     )
     print(created_finding)
-    # [END create_finding]
     # [END securitycenter_create_finding]
     return created_finding
 
@@ -211,7 +199,6 @@ def create_finding(source_name):
 def create_finding_with_source_properties(source_name):
     """Demonstrate creating a new finding with source properties. """
     # [START securitycenter_create_finding_with_source_properties]
-    # [START create_finding_with_properties]
     import datetime
 
     from google.cloud import securitycenter
@@ -261,13 +248,11 @@ def create_finding_with_source_properties(source_name):
         }
     )
     print(created_finding)
-    # [END create_finding_with_properties]
     # [END securitycenter_create_finding_with_source_properties]
 
 
 def update_finding(source_name):
     # [START securitycenter_update_finding_source_properties]
-    # [START update_finding]
     import datetime
 
     from google.cloud import securitycenter
@@ -309,14 +294,12 @@ def update_finding(source_name):
             updated_finding.source_properties, updated_finding.event_time
         )
     )
-    # [END update_finding]
     # [END securitycenter_update_finding_source_properties]
 
 
 def update_finding_state(source_name):
     """Demonstrate updating only a finding state."""
     # [START securitycenter_update_finding_state]
-    # [START update_finding_state]
     import datetime
 
     from google.cloud import securitycenter
@@ -340,7 +323,6 @@ def update_finding_state(source_name):
         }
     )
     print(f"New state: {new_finding.state}")
-    # [END update_finding_state]
     # [END securitycenter_update_finding_state]
 
 
@@ -348,7 +330,6 @@ def trouble_shoot(source_name):
     """Demonstrate calling test_iam_permissions to determine if the
     service account has the correct permisions."""
     # [START securitycenter_test_iam]
-    # [START test_iam_permissions]
     from google.cloud import securitycenter
 
     # Create a client.
@@ -373,11 +354,9 @@ def trouble_shoot(source_name):
             len(permission_response.permissions) > 0
         )
     )
-    # [END test_iam_permissions]
     # [END securitycenter_test_iam]
     assert len(permission_response.permissions) > 0
     # [START securitycenter_test_iam]
-    # [START test_iam_permissions]
     # Check for permissions necessary to call set_finding_state.
     permission_response = client.test_iam_permissions(
         request={
@@ -388,7 +367,6 @@ def trouble_shoot(source_name):
     print(
         "Permision to update state? {}".format(len(permission_response.permissions) > 0)
     )
-    # [END test_iam_permissions]
     # [END securitycenter_test_iam]
     return permission_response
     assert len(permission_response.permissions) > 0
@@ -396,7 +374,6 @@ def trouble_shoot(source_name):
 
 def list_all_findings(organization_id):
     # [START securitycenter_list_all_findings]
-    # [START list_all_findings]
     from google.cloud import securitycenter
 
     # Create a client.
@@ -415,14 +392,12 @@ def list_all_findings(organization_id):
                 i, finding_result.finding.name, finding_result.finding.resource_name
             )
         )
-    # [END list_all_findings]
     # [END securitycenter_list_all_findings]
     return i
 
 
 def list_filtered_findings(source_name):
     # [START securitycenter_list_filtered_findings]
-    # [START list_filtered_findings]
     from google.cloud import securitycenter
 
     # Create a new client.
@@ -447,14 +422,12 @@ def list_filtered_findings(source_name):
                 i, finding_result.finding.name, finding_result.finding.resource_name
             )
         )
-    # [END list_filtered_findings]
     # [END securitycenter_list_filtered_findings]
     return i
 
 
 def list_findings_at_time(source_name):
     # [START securitycenter_list_findings_at_time]
-    # [START list_findings_at_a_time]
     from google.cloud import securitycenter
     from datetime import timedelta, datetime
 
@@ -470,11 +443,9 @@ def list_findings_at_time(source_name):
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
     five_days_ago = str(datetime.now() - timedelta(days=5))
-    # [END list_findings_at_a_time]
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
-    # [START list_findings_at_a_time]
 
     finding_result_iterator = client.list_findings(
         request={"parent": source_name, "filter": five_days_ago}
@@ -485,7 +456,6 @@ def list_findings_at_time(source_name):
                 i, finding_result.finding.name, finding_result.finding.resource_name
             )
         )
-    # [END list_findings_at_a_time]
     # [END securitycenter_list_findings_at_time]
     return i
 
@@ -493,7 +463,6 @@ def list_findings_at_time(source_name):
 def get_iam_policy(source_name):
     """Gives a user findingsEditor permission to the source."""
     # [START securitycenter_get_source_iam]
-    # [START get_source_iam]
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
@@ -507,7 +476,6 @@ def get_iam_policy(source_name):
     # Get the old policy so we can do an incremental update.
     policy = client.get_iam_policy(request={"resource": source_name})
     print("Policy: {}".format(policy))
-    # [END get_source_iam]
     # [END securitycenter_get_source_iam]
 
 
@@ -515,7 +483,6 @@ def group_all_findings(organization_id):
     """Demonstrates grouping all findings across an organization."""
     i = 0
     # [START securitycenter_group_all_findings]
-    # [START group_all_findings]
     from google.cloud import securitycenter
 
     # Create a client.
@@ -532,7 +499,6 @@ def group_all_findings(organization_id):
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
-    # [END group_all_findings]
     # [END securitycenter_group_all_findings]
     return i
 
