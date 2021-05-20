@@ -6,7 +6,7 @@ This package is used internally to unit test the validity of all Cloud Composer 
 
 Add the following to your `requirements-test.txt` file:
 
-`git+https://github.com/GoogleCloudPlatform/python-docs-samples.git#egg=dag_test_utils&subdirectory=composer/dag_test_utils`
+`cloud_composer_dag_test_utils`
 
 Import the internal unit testing module
 
