@@ -16,12 +16,12 @@ from setuptools import find_packages
 from setuptools import setup
 
 setup(
-    name="dag_test_utils",
+    name="cloud_composer_dag_test_utils",
     version="0.0.1",
-    url="git@github.com:GoogleCloudPlatform/python-docs-samples.git#egg=dag_test_utils&subdirectory=composer/dag_test_utils",
-    author="Google Cloud Platform",
-    description="Utility used to unit test example Apache Airflow DAGs",
+    url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/dag_test_utils",
+    author="Google LLC",
+    description="Utility used to unit test example Apache Airflow DAGs for Google Cloud Composer. This is not an officially supported Google product.",
     packages=find_packages(),
     py_modules=['internal_unit_testing'],
-    install_requires=['apache-airflow[gcp]']
+    install_requires=['apache-airflow[google]==1.10.15']
 )
