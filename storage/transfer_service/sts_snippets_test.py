@@ -86,4 +86,4 @@ def test_get_transfer_Job_with_retries(capsys):
     out, _ = capsys.readouterr()
     # This sample isn't really meant to do anything, just check that it ran without any issues
     # when we populated num_retries
-    assert str(retries) in out
+    assert f"using {str(retries)} retries" in out
