@@ -100,7 +100,7 @@ folder.
 If your sample is a quickstart — intended to demonstrate how to quickly get
 started with using a service or API — it should be in a _quickstart_ folder.
 
-### Python Version
+### Python Versions
 
 Samples should support Python 3.6, 3.7, and 3.8.
 
