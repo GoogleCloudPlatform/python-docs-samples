@@ -15,32 +15,27 @@ interacting with Google Cloud libraries, APIs, or services.
 * **Idiomatic.** Each sample should follow widely accepted Python best
 practices as covered below.
 
-## Sample Guidelines
 
-This section covers guidelines for Python samples. Note that
-[Testing Guidelines](#testing-guidelines) are covered separately below.
+## FAQs
 
-
-### FAQs
-
-#### Are there any canonical samples?
+### Are there any canonical samples?
 
 We recommend referencing the following samples and sample tests:
 
- * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client
+ * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client)
 
-#### Where should I put my samples?
+### Where should I put my samples?
 
 See [Folder Location](#folder-location). Samples live in this repository, **python-docs-samples**,
 or in a library repository.
 
-#### Where are the client libraries?
+### Where are the client libraries?
 
 Python libraries repositories live in https://github.com/googleapis/ in repositories named **python-API**.
 Each repository contains _one_ library. For example, https://github.com/googleapis/python-bigquery
 contains the `google-cloud-bigquery` library.
 
-#### Who reviews my PR?
+### Who reviews my PR?
 
 This is a work in progress - in **python-docs-samples**, your PR will
 automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
@@ -65,9 +60,12 @@ We recommend using the Python version management tool [Pyenv](https://github.com
 Afterwards, see [Test Environment Setup](#test-environment-setup).
 
 
-### Sample Requirements
+## Sample Guidelines
 
-#### Folder Location
+This section covers guidelines for Python samples. Note that
+[Testing Guidelines](#testing-guidelines) are covered separately below.
+
+### Folder Location
 
 Samples that primarily show the use of one client library should be placed in the
 client library repository `googleapis/python-{api}`. Other samples should be placed in this repository
