@@ -17,6 +17,7 @@ import os
 import googleapiclient.discovery
 
 import check_latest_transfer_operation
+import get_transfer_job_with_retries
 
 
 def test_latest_transfer_operation(capsys):
@@ -50,3 +51,39 @@ def test_latest_transfer_operation(capsys):
     # The latest operation field can take a while to populate, so to avoid a
     # flaky test we just check that the job exists and the field was checked
     assert job_name in out
+
+
+def test_get_transfer_Job_with_retries(capsys):
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+    transfer_job = {
+        "description": "Sample job",
+        "status": "ENABLED",
+        "projectId": project_id,
+        "schedule": {
+            "scheduleStartDate": {"day": "01", "month": "01", "year": "2000"},
+            "startTimeOfDay": {"hours": "00", "minutes": "00", "seconds": "00"},
+        },
+        "transferSpec": {
+            "gcsDataSource": {"bucketName": project_id + "-storagetransfer-source"},
+            "gcsDataSink": {"bucketName": project_id + "-storagetransfer-sink"},
+            "objectConditions": {
+                "minTimeElapsedSinceLastModification": "2592000s"  # 30 days
+            },
+            "transferOptions": {"deleteObjectsFromSourceAfterTransfer": "true"},
+        },
+    }
+    storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
+    result = storagetransfer.transferJobs().create(body=transfer_job).execute()
+
+    job_name = result.get("name")
+
+    retries = 3
+
+    get_transfer_job_with_retries.get_transfer_job_with_retries(
+        project_id, job_name, retries
+    )
+    out, _ = capsys.readouterr()
+    # This sample isn't really meant to do anything, just check that it ran without any issues
+    # when we populated num_retries
+    assert f"using {str(retries)} retries" in out
