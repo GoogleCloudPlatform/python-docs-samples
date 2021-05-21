@@ -6,7 +6,7 @@
 * Add changes to the [CHANGELOG](./CHANGELOG.md)
 * If any usage info has changed, update the [README](./README.md)
 * [Test the distribution locally](#how-to-test-the-distribution-locally) in the [workflows directory](../workflows)
-* Open a PR and request reviews from a Python Samples owner and a Composer Codeowner
+* Open a PR and request reviews from a [Python Samples owner](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners) and a [Composer Codeowner](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/.github/CODEOWNERS#L24)
 * Once the PR is approved and merged, [push the new version to PyPI](#how-to-push-the-new-version-to-pypi)
 
 ## How to test the distribution locally
