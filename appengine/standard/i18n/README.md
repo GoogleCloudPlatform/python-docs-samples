@@ -84,7 +84,7 @@ update the translations by the following command:
 
     $ pybabel update -l ja -d locales -i locales/messages.pot
 
-Note: If you run `pybabel init` against an existant translations file,
+Note: If you run `pybabel init` against an existent translations file,
 you will lose your translations.
 
 
@@ -114,7 +114,7 @@ the Python runtime.
 For strings in Jinja2 templates, there is the `i18n_utils.BaseHandler`
 class from which you can extend in order to have a handy property
 named `jinja2_env` that lazily initializes Jinja2 environment for you
-with the `jinja2.ext.i18n` extention, and similar to the
+with the `jinja2.ext.i18n` extension, and similar to the
 `I18nMiddleware`, installs `gettext` and `ngettext` functions to the
 global namespace of the Jinja2 environment.
 
