@@ -57,10 +57,10 @@ def get_args() -> argparse.Namespace:
         default="INFO",
     )
     parser.add_argument(
-        "--model_dir",
+        "--model-dir",
         type=str,
         help="Output directory for the model.",
-        default=os.environ["AIP_MODEL_DIR"],
+        default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
 # [END ai_platform_tfkeras_task_args]
