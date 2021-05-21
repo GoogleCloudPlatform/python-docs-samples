@@ -134,6 +134,11 @@ assign_issues_by:
   to:
   - fjanosi-google
   - joeklemm
+- labels:
+  - 'api: datascienceonramp'
+  to:
+  - leahecole
+  - bradmiro
 
 assign_prs_by:
 - labels:
@@ -146,7 +151,6 @@ assign_prs_by:
 assign_issues:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
@@ -155,7 +159,6 @@ assign_issues:
 assign_prs:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
