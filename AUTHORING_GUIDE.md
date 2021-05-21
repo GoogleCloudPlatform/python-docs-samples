@@ -681,6 +681,7 @@ of some options:
 * Enforce type hints.
 * Specify a different Google Cloud Project.
 * Add additional environment variables. Also see [Environment Variables](#environment-variables).
+* Override the version of `pip` used by nox
 
 Options are documented inside the [noxfile_config.py](noxfile_config.py).
 
