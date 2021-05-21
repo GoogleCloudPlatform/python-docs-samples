@@ -615,9 +615,6 @@ This repository supports two ways to run tests locally.
     slower than the first one. This option is also useful if you need
     to simulate the CI system.
 
-#### nox setup
-
-Install nox. `pip install nox`.
 
 ### Running tests with nox
 
