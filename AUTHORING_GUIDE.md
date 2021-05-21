@@ -50,7 +50,7 @@ Feel free to reach out to your assigned reviewer if it's been a few days and you
 
 ### How do I set up my environment?
 
-You should install the latest patch version of each minor version listed in (Python Versions)[#python-versions].
+You should install the latest patch version of each minor version listed in [Python Versions](#python-versions).
 
 We recommend using the Python version management tool [Pyenv](https://github.com/pyenv/pyenv) if you are using MacOS or Linux.
 
@@ -793,4 +793,3 @@ See https://docs.python.org/3/library/pdb.html.
 ### How do I do that in IntelliJ, VSCode, etc.?
 
 These IDEs just inject the breakpoint above into the code, so it should work.
-
