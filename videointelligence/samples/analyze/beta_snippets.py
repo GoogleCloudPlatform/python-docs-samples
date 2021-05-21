@@ -39,6 +39,9 @@ Usage Examples:
 
     python beta_snippets.py streaming-automl-classification resources/cat.mp4 \
     $PROJECT_ID $MODEL_ID
+
+    python beta_snippets.py streaming-automl-object-tracking resources/cat.mp4 \
+    $PROJECT_ID $MODEL_ID
 """
 
 import argparse
@@ -762,6 +765,110 @@ def streaming_automl_classification(path, project_id, model_id):
     # [END video_streaming_automl_classification_beta]
 
 
+def streaming_automl_object_tracking(path, project_id, model_id):
+    # [START video_streaming_automl_object_tracking_beta]
+    import io
+
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
+    # project_id = 'project_id'
+    # model_id = 'automl_object_tracking_model_id'
+
+    client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    model_path = "projects/{}/locations/us-central1/models/{}".format(
+        project_id, model_id
+    )
+
+    automl_config = videointelligence.StreamingAutomlObjectTrackingConfig(
+        model_name=model_path
+    )
+
+    video_config = videointelligence.StreamingVideoConfig(
+        feature=videointelligence.StreamingFeature.STREAMING_AUTOML_OBJECT_TRACKING,
+        automl_object_tracking_config=automl_config,
+    )
+
+    # config_request should be the first in the stream of requests.
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
+        video_config=video_config
+    )
+
+    # Set the chunk size to 5MB (recommended less than 10MB).
+    chunk_size = 5 * 1024 * 1024
+
+    # Load file content.
+    # Note: Input videos must have supported video codecs. See
+    # https://cloud.google.com/video-intelligence/docs/streaming/streaming#supported_video_codecs
+    # for more details.
+    stream = []
+    with io.open(path, "rb") as video_file:
+        while True:
+            data = video_file.read(chunk_size)
+            if not data:
+                break
+            stream.append(data)
+
+    def stream_generator():
+        yield config_request
+        for chunk in stream:
+            yield videointelligence.StreamingAnnotateVideoRequest(input_content=chunk)
+
+    requests = stream_generator()
+
+    # streaming_annotate_video returns a generator.
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=900)
+
+    # Each response corresponds to about 1 second of video.
+    for response in responses:
+        # Check for errors.
+        if response.error.message:
+            print(response.error.message)
+            break
+
+        object_annotations = response.annotation_results.object_annotations
+
+        # object_annotations could be empty
+        if not object_annotations:
+            continue
+
+        for annotation in object_annotations:
+            # Each annotation has one frame, which has a timeoffset.
+            frame = annotation.frames[0]
+            time_offset = (
+                frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
+            )
+
+            description = annotation.entity.description
+            confidence = annotation.confidence
+
+            # track_id tracks the same object in the video.
+            track_id = annotation.track_id
+
+            # description is in Unicode
+            print("{}s".format(time_offset))
+            print(u"\tEntity description: {}".format(description))
+            print("\tTrack Id: {}".format(track_id))
+            if annotation.entity.entity_id:
+                print("\tEntity id: {}".format(annotation.entity.entity_id))
+
+            print("\tConfidence: {}".format(confidence))
+
+            # Every annotation has only one frame
+            frame = annotation.frames[0]
+            box = frame.normalized_bounding_box
+            print("\tBounding box position:")
+            print("\tleft  : {}".format(box.left))
+            print("\ttop   : {}".format(box.top))
+            print("\tright : {}".format(box.right))
+            print("\tbottom: {}\n".format(box.bottom))
+    # [END video_streaming_automl_object_tracking_beta]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -826,6 +933,13 @@ if __name__ == "__main__":
     video_streaming_automl_classification_parser.add_argument("project_id")
     video_streaming_automl_classification_parser.add_argument("model_id")
 
+    video_streaming_automl_object_tracking_parser = subparsers.add_parser(
+        "streaming-automl-object-tracking", help=streaming_automl_object_tracking.__doc__
+    )
+    video_streaming_automl_object_tracking_parser.add_argument("path")
+    video_streaming_automl_object_tracking_parser.add_argument("project_id")
+    video_streaming_automl_object_tracking_parser.add_argument("model_id")
+
     args = parser.parse_args()
 
     if args.command == "transcription":
@@ -850,3 +964,5 @@ if __name__ == "__main__":
         annotation_to_storage_streaming(args.path, args.output_uri)
     elif args.command == "streaming-automl-classification":
         streaming_automl_classification(args.path, args.project_id, args.model_id)
+    elif args.command == "streaming-automl-object-tracking":
+        streaming_automl_object_tracking(args.path, args.project_id, args.model_id)

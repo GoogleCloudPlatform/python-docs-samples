@@ -176,3 +176,13 @@ def test_streaming_automl_classification(capsys, video_path):
     beta_snippets.streaming_automl_classification(video_path, project_id, model_id)
     out, _ = capsys.readouterr()
     assert "brush_hair" in out
+
+
+# Flaky Gateway
+@pytest.mark.flaky(max_runs=3, min_passes=1)
+def test_streaming_automl_object_tracking(capsys, video_path):
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    model_id = "VOT282620667826798592"
+    beta_snippets.streaming_automl_object_tracking(video_path, project_id, model_id)
+    out, _ = capsys.readouterr()
+    assert "Track Id" in out
