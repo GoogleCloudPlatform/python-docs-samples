@@ -33,7 +33,7 @@ def resource_prefix() -> str:
 def resource_name_to_date(resource_name: str):
     start_date = len(RESOURCE_PREFIX) + 1
     date_string = resource_name[start_date : start_date + RESOURCE_DATE_LENGTH]
-    return datetime.strptime(date_string, RESOURCE_DATE_FORMAT)
+    return datetime.datetime.strptime(date_string, RESOURCE_DATE_FORMAT)
 
 
 @pytest.fixture(scope="session", autouse=True)
