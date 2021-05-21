@@ -151,7 +151,6 @@ assign_prs_by:
 assign_issues:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
@@ -160,7 +159,6 @@ assign_issues:
 assign_prs:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
