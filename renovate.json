@@ -11,7 +11,12 @@
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
-      "updateTypes": ["minor", "major"]
+      "separateMinorPatch": true
+    },
+    {
+      "packagePatterns": ["pytest"],
+      "updateTypes": ["patch"],
+      "enabled": false
     }
   ]
 }
