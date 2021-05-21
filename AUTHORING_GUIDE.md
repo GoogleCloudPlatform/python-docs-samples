@@ -44,7 +44,7 @@ You can (and probably should) also assign a teammate in addition to the auto-ass
 owner to review your code for product-specific needs.
 
 In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
-from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapisteams/python-samples-owners).
+from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
 
 Feel free to reach out to your assigned reviewer if it's been a few days and you haven't gotten a response!
 
