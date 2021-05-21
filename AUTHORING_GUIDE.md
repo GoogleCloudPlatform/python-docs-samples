@@ -316,9 +316,8 @@ testing libraries), the testing requirements may be listed in a separate
 
 #### Developing samples for un-released changes
 
-Pip has VCS support. Use the branch name or commit hash instead of the package name.
+Pip has [VCS support](https://pip.pypa.io/en/stable/cli/pip_install/#vcs-support). Use the branch name or commit hash instead of the package name.
 
-https://pip.pypa.io/en/stable/cli/pip_install/#vcs-support
 
 **pip install**:
 ```
