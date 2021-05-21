@@ -56,7 +56,7 @@ We recommend using the Python version management tool [Pyenv](https://github.com
 
 **Googlers:** See [the internal Python policies doc]([https://g3doc.corp.google.com/company/teams/cloud-devrel/dpe/samples/python.md?cl=head).
 
-**Using MacOS?:**: See [Setting up a Mac development environment with pyenv and pyenv-virtualenv](MAC_SETUP.md).
+**Using MacOS?:** See [Setting up a Mac development environment with pyenv and pyenv-virtualenv](MAC_SETUP.md).
 
 Afterwards, see [Test Environment Setup](#test-environment-setup).
 
