@@ -48,6 +48,10 @@ TEST_CONFIG = {
     # to use your own Cloud project.
     "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+    # If you need to use a specific version of pip,
+    # change pip_version_override to the string representation
+    # of the version number, for example, "20.2.4"
+    "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {},
@@ -172,6 +176,9 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 def _session_tests(
     session: nox.sessions.Session, post_install: Callable = None
 ) -> None:
+    if TEST_CONFIG["pip_version_override"]:
+        pip_version = TEST_CONFIG["pip_version_override"]
+        session.install(f"pip=={pip_version}")
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         if os.path.exists("constraints.txt"):
@@ -198,7 +205,7 @@ def _session_tests(
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
         success_codes=[0, 5],
-        env=get_pytest_env_vars()
+        env=get_pytest_env_vars(),
     )
 
 
