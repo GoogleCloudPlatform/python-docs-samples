@@ -93,7 +93,7 @@ def init_tcp_connection_engine(db_config):
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # mssql+pytds://<db_user>:<db_pass>@/<host>:<port>/<db_name>?driver=ODBC+Driver+17+for+SQL+Server
-        sqlalchemy.engine.url.URL(
+        sqlalchemy.engine.url.URL.create(
             "mssql+pytds",
             username=db_user,
             password=db_pass,
