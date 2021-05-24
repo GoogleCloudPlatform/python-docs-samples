@@ -20,6 +20,27 @@ import pytest
 
 
 # this fixture initializes the Airflow DB once per session
+# it is used by DAGs in both the blogs and workflows directories, 
+# unless there exists a conftest at a lower level
+@pytest.fixture(scope="session")
+def airflow_database():
+    import airflow.utils.db
+
+    # We use separate directory for local db path per session
+    # by setting AIRFLOW_HOME env var, which is done in noxfile_config.py.
+
+    assert('AIRFLOW_HOME' in os.environ)
+
+    airflow_home = os.environ["AIRFLOW_HOME"]
+    airflow_db = f"{airflow_home}/airflow.db"
+
+    # reset both resets and initializes a new database
+    airflow.utils.db.resetdb()
+
+    # Making sure we are using a data file there.
+    assert(os.path.isfile(airflow_db))
+
+# this fixture initializes the Airflow DB once per session
 # it is used by DAGs in both the blogs and workflows directories
 @pytest.fixture(scope="session")
 def airflow_database():
