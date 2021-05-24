@@ -80,7 +80,7 @@ def init_tcp_connection_engine(db_config):
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # mysql+pymysql://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        sqlalchemy.engine.url.URL(
+        sqlalchemy.engine.url.URL.create(
             drivername="mysql+pymysql",
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
@@ -109,7 +109,7 @@ def init_unix_connection_engine(db_config):
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_socket=<socket_path>/<cloud_sql_instance_name>
-        sqlalchemy.engine.url.URL(
+        sqlalchemy.engine.url.URL.create(
             drivername="mysql+pymysql",
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
