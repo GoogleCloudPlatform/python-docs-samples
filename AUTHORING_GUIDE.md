@@ -15,6 +15,52 @@ interacting with Google Cloud libraries, APIs, or services.
 * **Idiomatic.** Each sample should follow widely accepted Python best
 practices as covered below.
 
+
+## FAQs
+
+### Are there any canonical samples?
+
+We recommend referencing the following samples and sample tests:
+
+ * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client)
+
+### Where should I put my samples?
+
+See [Folder Location](#folder-location). Samples live in this repository, **python-docs-samples**,
+or in a library repository.
+
+### Where are the client libraries?
+
+Python libraries repositories live in https://github.com/googleapis/ in repositories named **python-API**.
+Each repository contains _one_ library. For example, https://github.com/googleapis/python-bigquery
+contains the `google-cloud-bigquery` library.
+
+### Who reviews my PR?
+
+This is a work in progress - in **python-docs-samples**, your PR will
+automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
+You can assign a new person using the `blunderbuss:assign` label if your assignee is OOO or busy.
+You can (and probably should) also assign a teammate in addition to the auto-assigned
+owner to review your code for product-specific needs.
+
+In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
+from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
+
+Feel free to reach out to your assigned reviewer if it's been a few days and you haven't gotten a response!
+
+### How do I set up my environment?
+
+You should install the latest patch version of each minor version listed in [Python Versions](#python-versions).
+
+We recommend using the Python version management tool [Pyenv](https://github.com/pyenv/pyenv) if you are using MacOS or Linux.
+
+**Googlers:** See [the internal Python policies doc](https://g3doc.corp.google.com/company/teams/cloud-devrel/dpe/samples/python.md?cl=head).
+
+**Using MacOS?:** See [Setting up a Mac development environment with pyenv and pyenv-virtualenv](MAC_SETUP.md).
+
+Afterwards, see [Test Environment Setup](#test-environment-setup).
+
+
 ## Sample Guidelines
 
 This section covers guidelines for Python samples. Note that
@@ -23,7 +69,7 @@ This section covers guidelines for Python samples. Note that
 ### Folder Location
 
 Samples that primarily show the use of one client library should be placed in the
-client library repository. Other samples should be placed in this repository
+client library repository `googleapis/python-{api}`. Other samples should be placed in this repository
 `python-docs-samples`.
 
 **Library repositories:** Each sample should be in the top-level samples folder `samples`
@@ -54,7 +100,7 @@ folder.
 If your sample is a quickstart — intended to demonstrate how to quickly get
 started with using a service or API — it should be in a _quickstart_ folder.
 
-### Python Version
+### Python Versions
 
 Samples should support Python 3.6, 3.7, and 3.8.
 
@@ -227,7 +273,7 @@ def adder(a: int, b: int) -> int:
     return a+b
 ```
 
-Type hinting is enforced using [`flake8-annotations`](https://pypi.org/project/flake8-annotations/), which is enabled by setting the `enforce_type_hints` variable to `True` in the appropriate `noxfile_config.py`. Type hinting is expected in all new samples, and will gradually be added to all compatible existing samples. 
+Type hinting is enforced using [`flake8-annotations`](https://pypi.org/project/flake8-annotations/), which is enabled by setting the `enforce_type_hints` variable to `True` in the appropriate `noxfile_config.py`. Type hinting is expected in all new samples, and will gradually be added to all compatible existing samples.
 
 If there is an `Args` section within the function's docstring, consider
 documenting the argument types there as well. For example:
@@ -268,6 +314,24 @@ If a sample has testing requirements that differ from its runtime requirements
 (such as dependencies on [pytest](http://pytest.org/en/latest/) or other
 testing libraries), the testing requirements may be listed in a separate
 `requirements-test.txt` file instead of the main `requirements.txt` file.
+
+#### Developing samples for un-released changes
+
+Pip has [VCS support](https://pip.pypa.io/en/stable/cli/pip_install/#vcs-support). Use the branch name or commit hash instead of the package name.
+
+
+**pip install**:
+```
+pip install git+https://github.com/googleapis/python-firestore.git@ee518b741eb5d7167393c23baa1e29ace861b253
+```
+
+**requirements.txt**:
+```
+Flask==1.1.1
+PyMySQL==0.9.3
+git+https://github.com/googleapis/python-firestore.git@ee518b741eb5d7167393c23baa1e29ace861b253
+```
+
 
 ### Region Tags
 
@@ -548,23 +612,9 @@ This repository supports two ways to run tests locally.
 
     This is another way of running the tests. Setup is easier because
     you only need to instal Docker. The test execution will be bit
-    slower than the first one.
+    slower than the first one. This option is also useful if you need
+    to simulate the CI system.
 
-#### nox setup
-
-Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
-
-#### `noxfile_config.py`
-
-The [`noxfile_config.py`](noxfile_config.py) allows for customization
-of some options:
-
-* Ignore specific Python versions.
-* Enforce type hints.
-* Specify a different Google Cloud Project.
-* Add additional environment variables. Also see [Environment Variables](#environment-variables).
-
-Options are documented inside the [noxfile_config.py](noxfile_config.py).
 
 ### Running tests with nox
 
@@ -572,6 +622,9 @@ Automated testing for samples is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
 including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
+
+Sample tests are run through [pytest](https://pytest.org). Do not use
+[unittest](https://docs.python.org/3/library/unittest.html).
 
 __Note:__
 
@@ -616,6 +669,20 @@ To run a specific test from a specific following:
 ```console
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
+
+#### `noxfile_config.py`
+
+The [`noxfile_config.py`](noxfile_config.py) allows for customization
+of some options:
+
+* Ignore specific Python versions.
+* Enforce type hints.
+* Specify a different Google Cloud Project.
+* Add additional environment variables. Also see [Environment Variables](#environment-variables).
+* Override the version of `pip` used by nox
+
+Options are documented inside the [noxfile_config.py](noxfile_config.py).
+
 
 ### Running tests with Docker
 
@@ -705,7 +772,7 @@ samples, configure your GCS bucket name via the `CLOUD_STORAGE_BUCKET`
 environment variable.
 
 The resources required by tests can usually be found in the `./resources`
-folder inside the `samples/snippets` directory in client libraries, as in 
+folder inside the `samples/snippets` directory in client libraries, as in
 [this example](https://github.com/googleapis/python-automl/tree/master/samples/snippets/resources).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
@@ -713,3 +780,14 @@ You can upload those resources to your own GCS bucket to run the tests with
 ```console
 gsutil cp ./samples/snippets/resources/* gs://{$CLOUD_STORAGE_BUCKET}/
 ```
+
+## Debugging
+
+### Can I use a debugger for samples?
+
+Yes, you can use `pdb` or any Python debugger. For pdb, use `import pdb; pdb.set_trace()` (<3.7) or `breakpoint` (3.7+).
+See https://docs.python.org/3/library/pdb.html.
+
+### How do I do that in IntelliJ, VSCode, etc.?
+
+These IDEs just inject the breakpoint above into the code, so it should work.
