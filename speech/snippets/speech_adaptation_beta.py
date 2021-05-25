@@ -48,7 +48,7 @@ def sample_recognize(storage_uri, phrase):
     # The higher the boost, the higher the chance of false positive
     # recognition as well. Can accept wide range of positive values.
     # Most use cases are best served with values between 0 and 20.
-    # Using a binary search happroach may help you find the optimal value.
+    # Using a binary search approach may help you find the optimal value.
     boost = 20.0
     speech_contexts_element = {"phrases": phrases, "boost": boost}
     speech_contexts = [speech_contexts_element]
