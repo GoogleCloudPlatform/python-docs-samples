@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import google.auth
 import pytest
 import requests
 
@@ -23,11 +22,13 @@ AUDIENCE = 'http://www.testing.com'
 def test_vm_identity():
     try:
         # Check if we're running in a GCP VM:
-        _ = requests.get('http://metadata.google.internal/computeMetadata/v1/',
+        r = requests.get('http://metadata.google.internal/computeMetadata/v1/project/project-id',
                          headers={'Metadata-Flavor': 'Google'})
+        project_id = r.text
     except requests.exceptions.ConnectionError:
         # Guess we're not running in a GCP VM, we need to skip this test
         pytest.skip("Test can only be run inside GCE VM.")
+        return
 
     token = vm_identity.acquire_token(AUDIENCE)
     assert isinstance(token, str) and token
@@ -36,4 +37,4 @@ def test_vm_identity():
     assert verification['aud'] == AUDIENCE
     assert verification['email_verified']
     assert verification['iss'] == 'https://accounts.google.com'
-    assert verification['google']['compute_engine']['project_id'] == google.auth.default()[1]
+    assert verification['google']['compute_engine']['project_id'] == project_id
