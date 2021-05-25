@@ -102,7 +102,7 @@ def batch_process_documents(
                     field_value = get_text(form_field.field_value, document)
                     print("Extracted key value pair:")
                     print(f"\t{field_name}, {field_value}")
-                for paragraph in document.pages:
+                for paragraph in page.paragraphs:
                     paragraph_text = get_text(paragraph.layout, document)
                     print(f"Paragraph text:\n{paragraph_text}")
         else:
