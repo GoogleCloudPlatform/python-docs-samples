@@ -36,4 +36,4 @@ def test_vm_identity():
     assert verification['aud'] == AUDIENCE
     assert verification['email_verified']
     assert verification['iss'] == 'https://accounts.google.com'
-    assert verification['google']['compute_engine']['project_name'] == google.auth.default()[1]
+    assert verification['google']['compute_engine']['project_id'] == google.auth.default()[1]
