@@ -49,7 +49,7 @@ def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dc
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     # dcm_file = 'dicom000_0001.dcm'  # replace with a DICOM file
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, location)
 
@@ -105,7 +105,7 @@ def dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id):
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, location)
 
     dicomweb_path = "{}/datasets/{}/dicomStores/{}/dicomWeb/instances".format(
@@ -163,7 +163,7 @@ def dicomweb_retrieve_study(
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     # study_uid = '1.3.6.1.4.1.5062.55.1.227'  # replace with the study UID
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, location)
 
@@ -222,7 +222,7 @@ def dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id):
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, location)
 
     dicomweb_path = "{}/datasets/{}/dicomStores/{}/dicomWeb/studies".format(
@@ -291,7 +291,7 @@ def dicomweb_retrieve_instance(
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     # study_uid = '1.3.6.1.4.1.5062.55.1.2270943358.716200484.1363785608958.61.0'  # replace with the study UID
     # series_uid = '2.24.52329571877967561426579904912379710633'  # replace with the series UID
     # instance_uid = '1.3.6.2.4.2.14619.5.2.1.6280.6001.129311971280445372188125744148'  # replace with the instance UID
@@ -366,7 +366,7 @@ def dicomweb_retrieve_rendered(
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     # study_uid = '1.3.6.1.4.1.5062.55.1.2270943358.716200484.1363785608958.61.0'  # replace with the study UID
     # series_uid = '2.24.52329571877967561426579904912379710633'  # replace with the series UID
     # instance_uid = '1.3.6.2.4.2.14619.5.2.1.6280.6001.129311971280445372188125744148'  # replace with the instance UID
@@ -434,7 +434,7 @@ def dicomweb_delete_study(project_id, location, dataset_id, dicom_store_id, stud
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the parent dataset's location
     # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
-    # dicom_store_id = 'my-fhir-store' # replace with the DICOM store ID
+    # dicom_store_id = 'my-dicom-store' # replace with the DICOM store ID
     # study_uid = '1.3.6.1.4.1.5062.55.1.2270943358.716200484.1363785608958.61.0'  # replace with the study UID
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, location)
 

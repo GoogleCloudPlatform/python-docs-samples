@@ -19,6 +19,7 @@ import os
 # [START healthcare_create_dicom_store]
 def create_dicom_store(project_id, location, dataset_id, dicom_store_id):
     """Creates a new DICOM store within the parent dataset.
+
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
@@ -443,7 +444,7 @@ def parse_command_line_args():
         help="GCP project name",
     )
 
-    parser.add_argument("--location", default="us-central1", help="GCP region")
+    parser.add_argument("--location", default="us-central1", help="GCP location")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
