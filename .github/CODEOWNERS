@@ -60,7 +60,7 @@
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/storage/**/*.py                       @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/python-samples-owners
+/storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
 /tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
