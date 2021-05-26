@@ -101,7 +101,7 @@ def add_data_types():
     db.collection(u'data').document(u'one').set(data)
     # [END firestore_data_set_from_map_nested]
 
-
+# [START custom_class_def]
 # [START firestore_data_custom_type_definition]
 class City(object):
     def __init__(self, name, state, country, capital=False, population=0,
@@ -161,10 +161,11 @@ class City(object):
             )'
         )
 # [END firestore_data_custom_type_definition]
-
+# [END custom_class_def]
 
 def add_example_data():
     db = firestore.Client()
+    # [START add_example_data]
     # [START firestore_data_get_dataset]
     cities_ref = db.collection(u'cities')
     cities_ref.document(u'BJ').set(
@@ -182,6 +183,7 @@ def add_example_data():
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
     # [END firestore_data_get_dataset]
+    # [END add_example_data]
 
 
 def add_custom_class_with_id():
