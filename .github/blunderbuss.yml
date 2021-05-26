@@ -40,8 +40,10 @@ assign_issues_by:
   - shollyman
 - labels:
   - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
   to:
-  - billyjacobson
+  - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
   - 'api: billingbudgets'
   to:
@@ -49,7 +51,7 @@ assign_issues_by:
 - labels:
   - 'api: cloudsql'
   to:
-  - GoogleCloudPlatform/cloud-sql-dpes
+  - GoogleCloudPlatform/infra-db-dpes
 - labels:
   - 'api: containeranalysis'
   to:
@@ -66,8 +68,6 @@ assign_issues_by:
   to:
   - bradmiro
 - labels:
-  - 'api: datastore'
-  - 'api: firestore'
   to:
   - GoogleCloudPlatform/firestore-dpe
 - labels:
