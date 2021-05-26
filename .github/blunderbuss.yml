@@ -68,9 +68,6 @@ assign_issues_by:
   to:
   - bradmiro
 - labels:
-  to:
-  - GoogleCloudPlatform/firestore-dpe
-- labels:
   - 'api: dns'
   to:
   - michaelawyu
