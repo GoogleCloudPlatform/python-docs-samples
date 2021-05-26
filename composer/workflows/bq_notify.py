@@ -163,7 +163,9 @@ with models.DAG(
         table_id=bq_most_popular_table_id)
 
     # [START composer_email]
-    # Send email confirmation (you will need to set up the email operator)
+    # Send email confirmation (you will need to set up the email operator
+    # See https://cloud.google.com/composer/docs/how-to/managing/creating#notification
+    # for more info on configuring the email operator in Cloud Composer)
     email_summary = email.EmailOperator(
         task_id='email_summary',
         to=models.Variable.get('email'),
