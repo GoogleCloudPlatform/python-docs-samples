@@ -139,10 +139,20 @@ assign_issues_by:
 
 assign_prs_by:
 - labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
   - 'api: cloudiot'
   to:
   - fjanosi-google
   - joeklemm
+- labels:
+  - 'api: cloudsql'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
 
 
 assign_issues:
