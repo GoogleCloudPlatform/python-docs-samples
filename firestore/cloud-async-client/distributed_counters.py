@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START fs_counter_classes_async]
 # [START firestore_solution_sharded_counter_custom_type_async]
 import random
 
@@ -44,9 +43,7 @@ class Counter(object):
         self._num_shards = num_shards
 
     # [END firestore_solution_sharded_counter_custom_type_async]
-    # [END fs_counter_classes_async]
 
-    # [START fs_create_counter_async]
     # [START firestore_solution_sharded_counter_create_async]
     async def init_counter(self, doc_ref):
         """
@@ -61,9 +58,7 @@ class Counter(object):
             await col_ref.document(str(num)).set(shard.to_dict())
 
     # [END firestore_solution_sharded_counter_create_async]
-    # [END fs_create_counter_async]
 
-    # [START fs_increment_counter_async]
     # [START firestore_solution_sharded_counter_increment_async]
     async def increment_counter(self, doc_ref):
         """Increment a randomly picked shard."""
@@ -73,9 +68,7 @@ class Counter(object):
         return await shard_ref.update({"count": firestore.Increment(1)})
 
     # [END firestore_solution_sharded_counter_increment_async]
-    # [END fs_increment_counter_async]
 
-    # [START fs_get_count_async]
     # [START firestore_solution_sharded_counter_get_async]
     async def get_count(self, doc_ref):
         """Return a total count across all shards."""
@@ -86,4 +79,3 @@ class Counter(object):
         return total
 
     # [END firestore_solution_sharded_counter_get_async]
-    # [END fs_get_count_async]
