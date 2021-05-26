@@ -50,7 +50,7 @@ bq_dataset_name = 'airflow_bq_notify_dataset_{{ ds_nodash }}'
 bq_recent_questions_table_id = 'recent_questions'
 bq_most_popular_table_id = 'most_popular'
 gcs_bucket = models.Variable.get('gcs_bucket')
-output_file = f'{gcs_bucket}/recent_questionsS.csv'
+output_file = f'{gcs_bucket}/recent_questions.csv'
 location = 'US'
 project_id = models.Variable.get('gcp_project')
 
