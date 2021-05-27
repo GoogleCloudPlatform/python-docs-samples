@@ -15,13 +15,22 @@
 from setuptools import find_packages
 from setuptools import setup
 
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+
 setup(
     name="cloud_composer_dag_test_utils",
-    version="0.0.1",
+    version="1.0.0",
     url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/dag_test_utils",
     author="Google LLC",
     description="Utility used to unit test example Apache Airflow DAGs for Google Cloud Composer. This is not an officially supported Google product.",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     py_modules=['internal_unit_testing'],
-    install_requires=['apache-airflow[google]==1.10.15']
+    install_requires=['apache-airflow[google] >= 2.0.0, < 3.0.0']
 )
