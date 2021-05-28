@@ -1,3 +1,4 @@
+test: "please ignore"
 alwaysCreateStatusCheck: true
 ignoreFiles:
   - README.md
