@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+testing: "please ignore"
 # Whether or not rebase-merging is enabled on this repository.
 # Defaults to `true`
 rebaseMergeAllowed: true
