@@ -116,7 +116,7 @@ attrs==20.3.0
 aws-sam-translator==1.34.0
 aws-xray-sdk==2.6.0
 azure-batch==10.0.0
-azure-common==1.1.26
+azure-common==1.1.27
 azure-core==1.11.0
 azure-cosmos==3.2.0
 azure-datalake-store==0.0.52
