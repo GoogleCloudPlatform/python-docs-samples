@@ -50,7 +50,7 @@ apache-airflow-providers-apache-kylin==1.0.1
 apache-airflow-providers-apache-livy==1.0.1
 apache-airflow-providers-apache-pig==1.0.1
 apache-airflow-providers-apache-pinot==1.0.1
-apache-airflow-providers-apache-spark==1.0.1
+apache-airflow-providers-apache-spark==1.0.3
 apache-airflow-providers-apache-sqoop==1.0.1
 apache-airflow-providers-celery==1.0.1
 apache-airflow-providers-cloudant==1.0.1
