@@ -71,7 +71,7 @@ apache-airflow-providers-http==1.1.0
 apache-airflow-providers-imap==1.0.1
 apache-airflow-providers-jdbc==1.0.1
 apache-airflow-providers-jenkins==1.0.1
-apache-airflow-providers-jira==1.0.1
+apache-airflow-providers-jira==1.0.2
 apache-airflow-providers-microsoft-azure==1.1.0
 apache-airflow-providers-microsoft-mssql==1.0.1
 apache-airflow-providers-microsoft-winrm==1.0.1
