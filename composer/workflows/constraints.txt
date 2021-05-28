@@ -119,7 +119,7 @@ azure-batch==10.0.0
 azure-common==1.1.26
 azure-core==1.11.0
 azure-cosmos==3.2.0
-azure-datalake-store==0.0.51
+azure-datalake-store==0.0.52
 azure-identity==1.5.0
 azure-keyvault-certificates==4.2.1
 azure-keyvault-keys==4.3.1
