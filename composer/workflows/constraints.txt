@@ -57,7 +57,7 @@ apache-airflow-providers-cloudant==1.0.1
 apache-airflow-providers-cncf-kubernetes==1.0.1
 apache-airflow-providers-databricks==1.0.1
 apache-airflow-providers-datadog==1.0.1
-apache-airflow-providers-dingding==1.0.1
+apache-airflow-providers-dingding==1.0.2
 apache-airflow-providers-discord==1.0.1
 apache-airflow-providers-docker==1.0.1
 apache-airflow-providers-elasticsearch==1.0.4
