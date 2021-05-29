@@ -348,7 +348,7 @@ protobuf==3.14.0
 psutil==5.8.0
 psycopg2-binary==2.8.6
 ptyprocess==0.7.0
-py4j==0.10.9
+py4j==0.10.9.2
 py==1.10.0
 pyOpenSSL==19.1.0
 pyarrow==3.0.0
