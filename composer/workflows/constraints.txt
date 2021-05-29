@@ -13,7 +13,7 @@ Flask-OpenID==1.2.5
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
 Flask==1.1.2
-GitPython==3.1.13
+GitPython==3.1.17
 HeapDict==1.0.1
 JPype1==1.2.1
 JayDeBeApi==1.2.3
