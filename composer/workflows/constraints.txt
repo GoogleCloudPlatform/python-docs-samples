@@ -96,7 +96,7 @@ apache-airflow-providers-sftp==1.1.0
 apache-airflow-providers-singularity==1.0.1
 apache-airflow-providers-slack==2.0.0
 apache-airflow-providers-snowflake==1.1.0
-apache-airflow-providers-sqlite==1.0.1
+apache-airflow-providers-sqlite==1.0.2
 apache-airflow-providers-ssh==1.1.0
 apache-airflow-providers-telegram==1.0.2
 apache-airflow-providers-vertica==1.0.1
