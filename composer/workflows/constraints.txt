@@ -82,7 +82,7 @@ apache-airflow-providers-openfaas==1.1.0
 apache-airflow-providers-opsgenie==1.0.1
 apache-airflow-providers-oracle==1.0.1
 apache-airflow-providers-pagerduty==1.0.1
-apache-airflow-providers-papermill==1.0.1
+apache-airflow-providers-papermill==1.0.2
 apache-airflow-providers-plexus==1.0.1
 apache-airflow-providers-postgres==1.0.2
 apache-airflow-providers-presto==1.0.1
