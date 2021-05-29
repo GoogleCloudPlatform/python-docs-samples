@@ -462,7 +462,7 @@ toolz==0.11.1
 tornado==6.1
 tqdm==4.56.2
 traitlets==5.0.5
-typed-ast==1.4.2
+typed-ast==1.4.3
 typing-extensions==3.7.4.3
 typing-inspect==0.6.0
 tzlocal==2.1
