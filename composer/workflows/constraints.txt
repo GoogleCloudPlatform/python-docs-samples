@@ -423,7 +423,7 @@ snowballstemmer==2.1.0
 snowflake-connector-python==2.3.10
 snowflake-sqlalchemy==1.2.4
 sortedcontainers==2.3.0
-soupsieve==2.2
+soupsieve==2.2.1
 sphinx-airflow-theme==0.0.2
 sphinx-argparse==0.2.5
 sphinx-autoapi==1.0.0
