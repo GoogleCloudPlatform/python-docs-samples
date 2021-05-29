@@ -312,7 +312,7 @@ natsort==7.1.1
 nbclient==0.5.2
 nbformat==5.1.2
 nest-asyncio==1.5.1
-networkx==2.5
+networkx==2.5.1
 nodeenv==1.5.0
 nteract-scrapbook==0.4.2
 ntlm-auth==1.5.0
