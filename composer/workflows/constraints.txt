@@ -411,7 +411,7 @@ sasl==0.2.1
 semver==2.13.0
 sendgrid==6.6.0
 sentinels==1.0.0
-sentry-sdk==0.20.1
+sentry-sdk==0.20.3
 setproctitle==1.2.2
 simple-salesforce==1.10.1
 six==1.15.0
