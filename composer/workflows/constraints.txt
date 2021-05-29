@@ -326,7 +326,7 @@ pandas==1.2.2
 papermill==2.3.2
 parameterized==0.8.1
 paramiko==2.7.2
-parso==0.8.1
+parso==0.8.2
 pathspec==0.8.1
 pbr==5.5.1
 pdpyras==4.1.2
