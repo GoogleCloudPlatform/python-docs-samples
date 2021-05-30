@@ -306,7 +306,7 @@ multi-key-dict==2.0.3
 multidict==5.1.0
 mypy-extensions==0.4.3
 mypy==0.770
-mysql-connector-python==8.0.22
+mysql-connector-python==8.0.25
 mysqlclient==1.3.14
 natsort==7.1.1
 nbclient==0.5.2
