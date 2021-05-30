@@ -342,7 +342,7 @@ pre-commit==2.10.1
 presto-python-client==0.7.0
 prison==0.1.3
 prometheus-client==0.8.0
-prompt-toolkit==3.0.16
+prompt-toolkit==3.0.18
 proto-plus==1.13.0
 protobuf==3.14.0
 psutil==5.8.0
