@@ -59,7 +59,7 @@ apache-airflow-providers-databricks==1.0.1
 apache-airflow-providers-datadog==1.0.1
 apache-airflow-providers-dingding==1.0.2
 apache-airflow-providers-discord==1.0.1
-apache-airflow-providers-docker==1.0.1
+apache-airflow-providers-docker==1.2.0
 apache-airflow-providers-elasticsearch==1.0.4
 apache-airflow-providers-exasol==1.1.1
 apache-airflow-providers-facebook==1.0.1
