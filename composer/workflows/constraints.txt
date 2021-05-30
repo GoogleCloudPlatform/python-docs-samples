@@ -310,7 +310,7 @@ mysql-connector-python==8.0.22
 mysqlclient==1.3.14
 natsort==7.1.1
 nbclient==0.5.2
-nbformat==5.1.2
+nbformat==5.1.3
 nest-asyncio==1.5.1
 networkx==2.5.1
 nodeenv==1.5.0
