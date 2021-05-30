@@ -392,7 +392,7 @@ python-telegram-bot==13.0
 python3-openid==3.2.0
 pytz==2020.5
 pytzdata==2020.1
-pywinrm==0.4.1
+pywinrm==0.4.2
 pyzmq==22.0.3
 qds-sdk==1.16.1
 redis==3.5.3
