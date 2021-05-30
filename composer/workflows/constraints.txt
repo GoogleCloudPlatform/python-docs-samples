@@ -108,7 +108,7 @@ appdirs==1.4.4
 argcomplete==1.12.3
 arrow==0.17.0
 asn1crypto==1.4.0
-astroid==2.4.2
+astroid==2.5.7
 async-generator==1.10
 async-timeout==3.0.1
 atlasclient==1.0.0
