@@ -439,7 +439,7 @@ sphinxcontrib-httpdomain==1.7.0
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-redoc==1.6.0
-sphinxcontrib-serializinghtml==1.1.4
+sphinxcontrib-serializinghtml==1.1.5
 sphinxcontrib-spelling==5.2.1
 spython==0.0.85
 sshpubkeys==3.3.1
