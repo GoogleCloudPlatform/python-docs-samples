@@ -54,7 +54,7 @@ apache-airflow-providers-apache-spark==1.0.3
 apache-airflow-providers-apache-sqoop==1.0.1
 apache-airflow-providers-celery==1.0.1
 apache-airflow-providers-cloudant==1.0.1
-apache-airflow-providers-cncf-kubernetes==1.0.1
+apache-airflow-providers-cncf-kubernetes==1.2.0
 apache-airflow-providers-databricks==1.0.1
 apache-airflow-providers-datadog==1.0.1
 apache-airflow-providers-dingding==1.0.2
