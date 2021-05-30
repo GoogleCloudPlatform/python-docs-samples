@@ -277,7 +277,7 @@ jsonpickle==2.0.0
 jsonpointer==2.0
 jsonschema==3.2.0
 junit-xml==1.9
-jupyter-client==6.1.11
+jupyter-client==6.1.12
 jupyter-core==4.7.1
 jwcrypto==0.8
 kombu==4.6.11
