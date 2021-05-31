@@ -185,7 +185,7 @@ docutils==0.17.1
 ecdsa==0.14.1
 elasticsearch-dbapi==0.1.0
 elasticsearch-dsl==7.3.0
-elasticsearch==7.5.1
+elasticsearch==7.13.0
 email-validator==1.1.2
 entrypoints==0.3
 eventlet==0.30.1
