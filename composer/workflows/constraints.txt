@@ -218,7 +218,7 @@ google-cloud-bigquery==2.8.0
 google-cloud-bigtable==1.7.0
 google-cloud-container==1.0.1
 google-cloud-core==1.6.0
-google-cloud-datacatalog==0.7.0
+google-cloud-datacatalog==0.8.0
 google-cloud-dataproc==1.1.1
 google-cloud-dlp==1.0.0
 google-cloud-kms==1.4.0
