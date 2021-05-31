@@ -252,7 +252,7 @@ hmsclient==0.1.1
 httplib2==0.19.0
 humanize==3.2.0
 hvac==0.10.14
-identify==1.5.13
+identify==1.6.2
 idna==2.10
 imagesize==1.2.0
 importlib-metadata==1.7.0
