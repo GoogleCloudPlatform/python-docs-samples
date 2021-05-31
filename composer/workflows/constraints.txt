@@ -165,7 +165,7 @@ colorama==0.4.4
 colorlog==4.7.2
 commonmark==0.9.1
 connexion==2.7.0
-coverage==5.4
+coverage==5.5
 croniter==0.3.37
 cryptography==3.4.5
 curlify==2.2.1
