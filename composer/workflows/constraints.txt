@@ -176,7 +176,7 @@ decorator==4.4.2
 defusedxml==0.6.0
 dill==0.3.3
 distlib==0.3.2
-distributed==2.19.0
+distributed==2.30.1
 dnspython==1.16.0
 docker-pycreds==0.4.0
 docker==3.7.3
