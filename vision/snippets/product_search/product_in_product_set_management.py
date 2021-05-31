@@ -147,7 +147,7 @@ def purge_products_in_product_set(
         "force": force
     })
 
-    operation.result(timeout=300)
+    operation.result(timeout=500)
 
     print('Deleted products in product set.')
 # [END vision_product_search_purge_products_in_product_set]
