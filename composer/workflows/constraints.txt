@@ -162,7 +162,7 @@ clickclick==20.10.2
 cloudant==2.14.0
 cloudpickle==1.4.1
 colorama==0.4.4
-colorlog==4.7.2
+colorlog==4.8.0
 commonmark==0.9.1
 connexion==2.7.0
 coverage==5.5
