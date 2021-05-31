@@ -10,7 +10,7 @@ Flask-JWT-Extended==3.25.1
 Flask-Login==0.5.0
 Flask-OAuthlib==0.9.6
 Flask-OpenID==1.2.5
-Flask-SQLAlchemy==2.4.4
+Flask-SQLAlchemy==2.5.1
 Flask-WTF==0.15.1
 Flask==1.1.2
 GitPython==3.1.17
