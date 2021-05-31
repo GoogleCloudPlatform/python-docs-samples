@@ -153,7 +153,7 @@ cattrs==1.7.1
 celery==4.4.7
 certifi==2020.12.5
 cffi==1.14.5
-cfgv==3.2.0
+cfgv==3.3.0
 cfn-lint==0.49.2
 cgroupspy==0.1.6
 chardet==3.0.4
