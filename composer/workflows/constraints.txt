@@ -171,7 +171,7 @@ cryptography==3.4.5
 curlify==2.2.1
 cx-Oracle==8.1.0
 dask==2021.2.0
-datadog==0.40.0
+datadog==0.41.0
 decorator==4.4.2
 defusedxml==0.7.1
 dill==0.3.3
