@@ -34,7 +34,7 @@ Sphinx==3.5.4
 Unidecode==1.2.0
 WTForms==2.3.3
 Werkzeug==1.0.1
-adal==1.2.6
+adal==1.2.7
 aiohttp==3.7.4.post0
 alabaster==0.7.12
 alembic==1.6.5
