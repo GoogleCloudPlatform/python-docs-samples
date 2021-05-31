@@ -93,7 +93,7 @@ apache-airflow-providers-samba==1.0.1
 apache-airflow-providers-segment==1.0.1
 apache-airflow-providers-sendgrid==1.0.2
 apache-airflow-providers-sftp==1.1.0
-apache-airflow-providers-singularity==1.0.1
+apache-airflow-providers-singularity==1.1.0
 apache-airflow-providers-slack==2.0.0
 apache-airflow-providers-snowflake==1.3.0
 apache-airflow-providers-sqlite==1.0.2
