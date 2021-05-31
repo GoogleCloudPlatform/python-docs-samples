@@ -206,7 +206,7 @@ def purge_orphan_products(project_id, location, force):
         "force": force
     })
 
-    operation.result(timeout=300)
+    operation.result(timeout=500)
 
     print('Orphan products deleted.')
 # [END vision_product_search_purge_orphan_products]
