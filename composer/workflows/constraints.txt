@@ -160,7 +160,7 @@ chardet==3.0.4
 click==7.1.2
 clickclick==20.10.2
 cloudant==2.14.0
-cloudpickle==1.4.1
+cloudpickle==1.6.0
 colorama==0.4.4
 colorlog==4.8.0
 commonmark==0.9.1
