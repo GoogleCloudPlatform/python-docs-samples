@@ -271,7 +271,7 @@ jira==2.0.0
 jmespath==0.10.0
 json-merge-patch==0.2
 jsondiff==1.2.0
-jsonpatch==1.28
+jsonpatch==1.32
 jsonpath-ng==1.5.2
 jsonpickle==2.0.0
 jsonpointer==2.0
