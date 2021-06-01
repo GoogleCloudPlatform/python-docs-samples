@@ -1,1 +1,1 @@
-google-cloud-dialogflow-cx==0.4.1
+google-cloud-dialogflow-cx==0.5.0
