@@ -371,7 +371,7 @@ pyodbc==4.0.30
 pyparsing==2.4.7
 pyrsistent==0.17.3
 pysftp==0.2.9
-pyspark==3.0.1
+pyspark==3.1.2
 pytest-cov==2.11.1
 pytest-forked==1.3.0
 pytest-instafail==0.4.2
