@@ -94,11 +94,14 @@ def test_flex_template_run(
     )
 
     # Since this is a streaming job, it will never finish running.
-    # Wait for 10 minutes, and then cancel the job.
-    time.sleep(10 * 60)
+    # First, lets wait until the job is running.
+    utils.dataflow_jobs_wait(job_id)
+
+    # Then, wait a minute for data to arrive, get processed, and cancel it.
+    time.sleep(60)
     utils.dataflow_jobs_cancel_by_job_id(job_id)
 
-    # Check for output data in BigQuery.
+    # Check for the output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0

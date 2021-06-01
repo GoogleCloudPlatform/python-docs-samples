@@ -224,6 +224,31 @@ class Utils:
         return None
 
     @staticmethod
+    def dataflow_jobs_wait(
+        job_id: str,
+        project: str = PROJECT,
+        status: str = "JOB_STATE_RUNNING",
+    ) -> bool:
+        from googleapiclient.discovery import build
+
+        dataflow = build("dataflow", "v1b3")
+
+        sleep_time_seconds = 30
+        max_sleep_time = 10 * 60
+        print(f"Waiting for Dataflow job ID: {job_id} (until status {status})")
+        for _ in range(0, max_sleep_time, sleep_time_seconds):
+            # For more info see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
+            jobs_request = (
+                dataflow.projects().jobs().get(projectId=project, jobId=job_id)
+            )
+            response = jobs_request.execute()
+            if response["currentState"] == status:
+                return True
+            time.sleep(30)
+        return False
+
+    @staticmethod
     def dataflow_jobs_cancel_by_job_id(
         job_id: str, project: str = PROJECT, region: str = REGION
     ) -> None:
