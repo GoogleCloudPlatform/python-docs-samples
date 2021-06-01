@@ -338,7 +338,7 @@ pipdeptree==2.0.0
 pluggy==0.13.1
 ply==3.11
 portalocker==1.7.1
-pre-commit==2.10.1
+pre-commit==2.13.0
 presto-python-client==0.7.0
 prison==0.1.3
 prometheus-client==0.8.0
