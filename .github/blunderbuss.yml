@@ -119,7 +119,8 @@ assign_issues_by:
 - labels:
   - 'api: storage'
   to:
-  - GoogleCloudPlatform/storage-dpe
+  - cojenco
+  - andrewsg
 - labels:
   - 'api: cloudtrace'
   - 'api: trace'
