@@ -1,6 +1,6 @@
 # Cloud Composer DAG Testing Utility
 
-This package is used internally to unit test the validity of all Cloud Composer sample DAGs. It is not supported for external production use.
+This package is used internally to unit test the validity of all Cloud Composer sample DAGs. It is not supported for external production use. The [latest release can be found on PyPI](https://pypi.org/project/cloud-composer-dag-test-utils/).
 
 ## Instructions
 

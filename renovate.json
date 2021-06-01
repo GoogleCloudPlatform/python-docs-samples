@@ -8,7 +8,17 @@
   "pip_requirements": {
     "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
   },
+  "ignorePaths" : ["composer/workflows/constraints.txt"],
   "packageRules": [
+    {
+      "packagePatterns": ["pytest"],
+      "separateMinorPatch": true
+    },
+    {
+      "packagePatterns": ["pytest"],
+      "updateTypes": ["patch"],
+      "enabled": false
+    },
     {
       "packagePatterns": ["pytest"],
       "updateTypes": ["minor", "major"]
