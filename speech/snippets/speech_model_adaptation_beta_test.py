@@ -25,7 +25,7 @@ import speech_model_adaptation_beta
 
 STORAGE_URI = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
 _, PROJECT_ID = google.auth.default()
-LOCATION = "us-west1"
+LOCATION = "global"
 client = speech.AdaptationClient()
 
 
