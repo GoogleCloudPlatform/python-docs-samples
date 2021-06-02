@@ -17,7 +17,7 @@
 import datetime
 
 from airflow import models
-from airflow.operators import dummy_operator
+from airflow.operators import dummy
 
 
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -30,6 +30,5 @@ with models.DAG(
         'composer_sample_cycle',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-    start = dummy_operator.DummyOperator(task_id='oops_a_cycle')
-    end = dummy_operator.DummyOperator(task_id='oops_a_cycle')
-    start >> end
+    start = dummy.DummyOperator(task_id='oops_a_cycle')
+    start >> start

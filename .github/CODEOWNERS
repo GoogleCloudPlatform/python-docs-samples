@@ -10,16 +10,16 @@
 *                               @GoogleCloudPlatform/python-samples-owners
 
 /appengine/**/*.py                     @engelke @GoogleCloudPlatform/python-samples-owners
-/auth/**/*.py                            @busunkim96 @GoogleCloudPlatform/python-samples-owners
+/auth/**/*.py                          @busunkim96 @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigquery_storage/**/*.py              @shollyman @GoogleCloudPlatform/python-samples-owners
-/bigtable/**/*.py                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
+/bigtable/**/*.py                      @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /blog/**/*.py                          @GoogleCloudPlatform/python-samples-owners
 /channel/**/*.py                       @max-mathieu @GoogleCloudPlatform/python-samples-owners
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
-/cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
+/cloud-sql/**/*.py                     @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
 /composer/**/*.py                      @leahecole @rachael-ds @rafalbiegacz @GoogleCloudPlatform/python-samples-owners
 /compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
@@ -29,13 +29,13 @@
 /dataflow/**/*.py                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/**/*.py                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
 /dataproc/**/*.py                      @bradmiro @GoogleCloudPlatform/python-samples-owners
-/datastore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
+/datastore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
 /error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
 /eventarc/**/*.py                      @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
-/firestore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
+/firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
@@ -60,7 +60,7 @@
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/storage/**/*.py                       @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/python-samples-owners
+/storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
 /tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
