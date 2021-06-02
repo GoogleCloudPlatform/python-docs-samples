@@ -101,6 +101,7 @@ def add_data_types():
     db.collection(u'data').document(u'one').set(data)
     # [END firestore_data_set_from_map_nested]
 
+
 # [START custom_class_def]
 # [START firestore_data_custom_type_definition]
 class City(object):
@@ -162,6 +163,7 @@ class City(object):
         )
 # [END firestore_data_custom_type_definition]
 # [END custom_class_def]
+
 
 def add_example_data():
     db = firestore.Client()
