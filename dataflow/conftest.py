@@ -235,6 +235,12 @@ class Utils:
 
         sleep_time_seconds = 30
         max_sleep_time = 10 * 60
+
+        # It takes a couple seconds for the job_id to be findable by the API client.
+        # Sleep for a small duration initially to wait until we can access the job
+        # from the client library.
+        time.sleep(sleep_time_seconds)
+
         print(f"Waiting for Dataflow job ID: {job_id} (until status {status})")
         for _ in range(0, max_sleep_time, sleep_time_seconds):
             # For more info see:
@@ -245,7 +251,7 @@ class Utils:
             response = jobs_request.execute()
             if response["currentState"] == status:
                 return True
-            time.sleep(30)
+            time.sleep(sleep_time_seconds)
         return False
 
     @staticmethod
