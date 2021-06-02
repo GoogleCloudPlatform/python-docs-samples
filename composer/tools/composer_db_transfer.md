@@ -4,16 +4,16 @@ This document describes usage of composer_db_transfer.py script.
 
 Purpose of the script it to provide a tool to migrate the metadata database,
 DAGs, data and plugins from Composer environments with Airflow 1.10.14/15 to
-Composer environment with Airflow 2.0.1+.
+existing Composer environment with Airflow 2.0.1+.
 
 Dedicated tool is needed as in-place upgrade is not supported between those
 versions.
 
 ## Prerequisites
 
-1.  [Make sure you are authorized](https://cloud.google.com/sdk/gcloud/reference/auth/login) through `gcloud auth login` before invoking the
-    script . The
-    script requires [permissions to access the Composer environment](https://cloud.google.com/composer/docs/how-to/access-control)
+1.  [Make sure you are authorized](https://cloud.google.com/sdk/gcloud/reference/auth/login)
+    through `gcloud auth login` before invoking the script . The script requires
+    [permissions to access the Composer environment](https://cloud.google.com/composer/docs/how-to/access-control)
     (roles/composer.environmentAndStorageObjectAdmin role is sufficient) and its
     GKE cluster (container.*).
 
@@ -21,8 +21,9 @@ versions.
     kubectl (e.g. if you are not able to successfully execute
     `kubectl get pods`, the script will fail). "Unable to connect to the server:
     dial tcp [IP ADDRESS]:443: connect: connection timed out" reported by
-    kubectl indicates that kubectl can not connect to GKE cluster. [Refer to the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell) about setting up access to private GKE cluster if you have
-    private IP environment.
+    kubectl indicates that kubectl can not connect to GKE cluster.
+    [Refer to the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell)
+    about setting up access to private GKE cluster if you have private IP environment.
 
 1.  Supported source versions: all Composer versions with Airflow 1.10.14 or
     1.10.15
@@ -33,7 +34,11 @@ versions.
 1.  The script depends on Python 3.6 (or newer), gcloud and kubectl. Make sure
     you have all those tools installed.
 
-1.  Make sure that your Composer environment is healthy. Refer to [this documentation](https://cloud.google.com/composer/docs/monitoring-dashboard) more information specific signals indicating good "Environment health" and "Database health". If your environment is not healthy, fix the environment before running this script.
+1.  Make sure that your Composer environment is healthy. Refer to
+    [this documentation](https://cloud.google.com/composer/docs/monitoring-dashboard)
+    for more information specific signals indicating good "Environment health" and
+    "Database health". If your environment is not healthy, fix the environment before
+    running this script.
 
 1.  Make sure that you have write access to the current directory. The script
     exports KUBECONFIG environment variable to store credentials to the
@@ -72,7 +77,7 @@ versions.
     existing in the environment's bucket are not deleted.
 
 1.  The script does not override gcloud configuration and exports it's own
-    kubeconfig. Temporary files for GKE deployment and kubeconfig are created in the
+    kubeconfig. Temporary files for GKE deployment and kubeconfig created in the
     working directory have unique names.
 
 1.  File with fernet key created by export operation is not deleted by import
@@ -83,7 +88,7 @@ versions.
 ### Export from an old environment (Airflow 1.10.14/15)
 
 CSV files with exported database are stored as /export/tables/[TABLE NAME].csv
-in the environment's bucket. dags, plugins and data directories are stored in
+in the environment's bucket. DAGs, plugins and data directories are stored in
 /export/dirs in the environment's bucket.
 
 A file with a fernet key is going to be created on the machine executing the
@@ -133,9 +138,13 @@ python3 composer_db_transfer.py import \
     connection timed out" might indicate that network settings prevent kubectl
     from connecting to GKE cluster. This is especially likely if you have a
     private IP environment. In such a case additional configuration might be
-    required. Check [the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell) for more information.
+    required. Check
+    [the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell)
+    for more information.
 
-1.  If the error seems to be related to required permissions, double check that you have permissions to [access the Composer environment and its GKE cluster](https://cloud.google.com/composer/docs/how-to/access-control).
+1.  If the error seems to be related to required permissions, double check that
+    you have permissions to
+    [access the Composer environment and its GKE cluster](https://cloud.google.com/composer/docs/how-to/access-control).
 
 1.  "HTTPError 403: The service account does not have the required permissions
     for the bucket" might indicate that imported data was not properly copied to
@@ -146,4 +155,6 @@ python3 composer_db_transfer.py import \
     indicate that the relevant workload was terminated. Possibly the environment
     is not healthy.
 
-1.  Follow up with [support channels](https://cloud.google.com/composer/docs/getting-support) if you need additional help. When contacting Google Cloud Support, make sure to provide all relevant information including complete output from this script.
+1.  Follow up with [support channels](https://cloud.google.com/composer/docs/getting-support)
+    if you need additional help. When contacting Google Cloud Support, make sure to provide
+    all relevant information including complete output from this script.
