@@ -248,7 +248,11 @@ class Utils:
             jobs_request = (
                 dataflow.projects()
                 .jobs()
-                .get(projectId=project, jobId=job_id, jobView="JOB_VIEW_SUMMARY")
+                .get(
+                    projectId=project,
+                    jobId=job_id,
+                    view="JOB_VIEW_SUMMARY",
+                )
             )
             response = jobs_request.execute()
             print(response)
