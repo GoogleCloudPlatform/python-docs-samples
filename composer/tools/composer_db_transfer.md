@@ -11,8 +11,8 @@ versions.
 
 ## Prerequisites
 
-1.  Make sure you are authorized through `gcloud auth login` before invoking the
-    script (https://cloud.google.com/sdk/gcloud/reference/auth/login). The
+1.  [Make sure you are authorized](https://cloud.google.com/sdk/gcloud/reference/auth/login) through `gcloud auth login` before invoking the
+    script . The
     script requires permissions to access the Composer environment
     (roles/composer.environmentAndStorageObjectAdmin role is sufficient) and its
     GKE cluster (container.*).
