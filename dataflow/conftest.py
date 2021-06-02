@@ -246,9 +246,12 @@ class Utils:
             # For more info see:
             #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
             jobs_request = (
-                dataflow.projects().jobs().get(projectId=project, jobId=job_id)
+                dataflow.projects()
+                .jobs()
+                .get(projectId=project, jobId=job_id, jobView="JOB_VIEW_SUMMARY")
             )
             response = jobs_request.execute()
+            print(response)
             if response["currentState"] == status:
                 return True
             time.sleep(sleep_time_seconds)
