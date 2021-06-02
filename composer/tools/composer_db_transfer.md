@@ -33,10 +33,7 @@ versions.
 1.  The script depends on Python 3.6 (or newer), gcloud and kubectl. Make sure
     you have all those tools installed.
 
-1.  Make sure that your Composer environment is healthy ("Environment health",
-    "Database health" - see:
-    https://cloud.google.com/composer/docs/monitoring-dashboard). If it is not
-    healthy, first step is to fix the environment.
+1.  Make sure that your Composer environment is healthy. Refer to [this documentation](https://cloud.google.com/composer/docs/monitoring-dashboard) more information specific signals indicating good "Environment health" and "Database health". If your environment is not healthy, fix the environment before running this script.
 
 1.  Make sure that you have write access to the current directory. The script
     exports KUBECONFIG environment variable to store credentials to the
@@ -62,7 +59,7 @@ versions.
     environment.
 
 1.  The script does not prevent DAGs from being scheduled in both old and new
-    environment. If can be prevented e.g. by pausing the DAGs before exporting
+    environment. This can be prevented by pausing the DAGs before exporting
     them and unpausing them in the new environment.
 
 1.  Airflow web server in target environment might temporarily not be available
@@ -72,10 +69,10 @@ versions.
     they might appear in the web UI with some delay.
 
 1.  Import operation removes all records from the target environment. Files
-    existing in environment's bucket are not deleted.
+    existing in the environment's bucket are not deleted.
 
 1.  The script does not override gcloud configuration and exports it's own
-    kubeconfig. Temporary files for GKE deployment and kubeconfig created in
+    kubeconfig. Temporary files for GKE deployment and kubeconfig are created in the
     working directory have unique names.
 
 1.  File with fernet key created by export operation is not deleted by import
@@ -89,7 +86,7 @@ CSV files with exported database are stored as /export/tables/[TABLE NAME].csv
 in the environment's bucket. dags, plugins and data directories are stored in
 /export/dirs in the environment's bucket.
 
-File with a fernet key is going to be created on the machine executing the
+A file with a fernet key is going to be created on the machine executing the
 script.
 
 ```
