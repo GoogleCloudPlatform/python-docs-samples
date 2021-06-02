@@ -136,9 +136,7 @@ python3 composer_db_transfer.py import \
     connection timed out" might indicate that network settings prevent kubectl
     from connecting to GKE cluster. This is especially likely if you have a
     private IP environment. In such a case additional configuration might be
-    required. Check
-    https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell
-    for more details.
+    required. Check [the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell) for more information.
 
 1.  If the error seems to be related to required permissions, check
     https://cloud.google.com/composer/docs/how-to/access-control. The script
