@@ -40,7 +40,7 @@ versions.
 
 1.  Make sure that you have write access to the current directory. The script
     exports KUBECONFIG environment variable to store credentials to the
-    Composer's GKE cluster in current directory (on the machine that executes
+    Composer's GKE cluster in the current directory (on the machine that executes
     the script). The purpose is not to interfere with existing GKE-related
     user's configuration.
 
