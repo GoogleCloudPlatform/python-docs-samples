@@ -149,6 +149,4 @@ python3 composer_db_transfer.py import \
     indicate that the relevant workload was terminated. Possibly the environment
     is not healthy.
 
-1.  Check https://cloud.google.com/composer/docs/getting-support if you need
-    additional help. When contacting Google Cloud Support, make sure to provide
-    all relevant information including complete output from this script.
+1.  Follow up with [support channels](https://cloud.google.com/composer/docs/getting-support) if you need additional help. When contacting Google Cloud Support, make sure to provide all relevant information including complete output from this script.
