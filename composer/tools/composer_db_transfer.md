@@ -68,10 +68,11 @@ versions.
     them and unpausing them in the new environment.
 
 1.  Airflow web server in target environment might temporarily not be available
-    after the database transfer.
+    after the database transfer (up to a couple of minutes).
 
 1.  The environment might need some time to parse imported DAGs. As a result
-    they might appear in the web UI with some delay.
+    they might appear in the web UI with some delay (depending on a number and
+    complexity of the DAGs).
 
 1.  Import operation removes all records from the target environment. Files
     existing in the environment's bucket are not deleted.
@@ -97,7 +98,7 @@ script.
 ```
 python3 composer_db_transfer.py export \
     --project [PROJECT NAME] \
-    --environment [ENVIRONMENT NAME] \
+    --environment [SOURCE ENVIRONMENT NAME] \
     --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE - TO BE CREATED]
 ```
@@ -124,7 +125,7 @@ phase.
 ```
 python3 composer_db_transfer.py import \
     --project [PROJECT NAME] \
-    --environment [ENVIRONMENT NAME] \
+    --environment [TARGET ENVIRONMENT NAME] \
     --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE FROM SOURCE ENVIRONMENT]
 ```
