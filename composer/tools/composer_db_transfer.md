@@ -88,9 +88,9 @@ versions.
 
 ### Export from an old environment (Airflow 1.10.14/15)
 
-CSV files with exported database are stored as /export/tables/[TABLE NAME].csv
-in the environment's bucket. DAGs, plugins and data directories are stored in
-/export/dirs in the environment's bucket.
+As a result of export operation CSV files with exported database are stored as
+/export/tables/[TABLE NAME].csv in the environment's bucket. DAGs, plugins and
+data directories are stored in /export/dirs in the environment's bucket.
 
 A file with a fernet key is going to be created on the machine executing the
 script.
