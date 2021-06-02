@@ -15,6 +15,8 @@
 import os
 import uuid
 
+import backoff
+from botocore.exceptions import ClientError
 from google.cloud import storage
 import pytest
 
@@ -61,12 +63,16 @@ def test_blob(test_bucket):
     yield blob
 
 def test_list_buckets(capsys, hmac_fixture, test_bucket):
-    list_gcs_buckets.list_gcs_buckets(
-        google_access_key_id=hmac_fixture[0].access_id, google_access_key_secret=hmac_fixture[1]
-    )
-    out, _ = capsys.readouterr()
-    assert "Buckets:" in out
-    assert test_bucket.name in out
+    # Retry request because the created key may not be fully propagated for up
+    # to 15s.
+    @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
+    def list_buckets():
+        list_gcs_buckets.list_gcs_buckets(
+            google_access_key_id=hmac_fixture[0].access_id, google_access_key_secret=hmac_fixture[1]
+        )
+        out, _ = capsys.readouterr()
+        assert "Buckets:" in out
+        assert test_bucket.name in out
 
 def test_list_blobs(capsys, hmac_fixture, test_bucket, test_blob):
     list_gcs_objects.list_gcs_objects(
