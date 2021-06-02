@@ -18,8 +18,8 @@
 import datetime
 
 from airflow import models
-from airflow.contrib.kubernetes import secret
-from airflow.contrib.operators import kubernetes_pod_operator
+from airflow.kubernetes.secret import Secret
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 
 
 # A Secret is an object that contains a small amount of sensitive data such as
@@ -29,7 +29,7 @@ from airflow.contrib.operators import kubernetes_pod_operator
 # exposure.
 
 # [START composer_kubernetespodoperator_secretobject]
-secret_env = secret.Secret(
+secret_env = Secret(
     # Expose the secret as environment variable.
     deploy_type='env',
     # The name of the environment variable, since deploy_type is `env` rather
@@ -39,7 +39,7 @@ secret_env = secret.Secret(
     secret='airflow-secrets',
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
-secret_volume = secret.Secret(
+secret_volume = Secret(
     deploy_type='volume',
     # Path where we mount the secret as volume
     deploy_target='/var/secrets/google',
@@ -66,7 +66,7 @@ with models.DAG(
     # created upon environment creation.
 
     # [START composer_kubernetespodoperator_minconfig]
-    kubernetes_min_pod = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_min_pod = KubernetesPodOperator(
         # The ID specified for the task.
         task_id='pod-ex-minimum',
         # Name of task you want to run, used to generate Pod ID.
@@ -90,7 +90,7 @@ with models.DAG(
         image='gcr.io/gcp-runtimes/ubuntu_18_0_4')
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
-    kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubenetes_template_ex = KubernetesPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
         namespace='default',
@@ -119,7 +119,7 @@ with models.DAG(
         config_file="{{ conf.get('core', 'kube_config') }}")
     # [END composer_kubernetespodoperator_templateconfig]
     # [START composer_kubernetespodoperator_secretconfig]
-    kubernetes_secret_vars_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_secret_vars_ex = KubernetesPodOperator(
         task_id='ex-kube-secrets',
         name='ex-kube-secrets',
         namespace='default',
@@ -135,7 +135,7 @@ with models.DAG(
             'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
-    kubernetes_affinity_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_affinity_ex = KubernetesPodOperator(
         task_id='ex-pod-affinity',
         name='ex-pod-affinity',
         namespace='default',
@@ -177,7 +177,7 @@ with models.DAG(
         })
     # [END composer_kubernetespodaffinity]
     # [START composer_kubernetespodoperator_fullconfig]
-    kubernetes_full_pod = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_full_pod = KubernetesPodOperator(
         task_id='ex-all-configs',
         name='pi',
         namespace='default',
