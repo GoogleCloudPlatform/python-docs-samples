@@ -43,6 +43,7 @@ def hmac_fixture():
     hmac_key.update()
     hmac_key.delete()
 
+
 @pytest.fixture(scope="module")
 def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
@@ -54,6 +55,7 @@ def test_bucket():
     yield bucket
     bucket.delete(force=True)
 
+
 @pytest.fixture(scope="module")
 def test_blob(test_bucket):
     """Yields a blob that is deleted after the test completes."""
@@ -61,6 +63,7 @@ def test_blob(test_bucket):
     blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
+
 
 def test_list_buckets(capsys, hmac_fixture, test_bucket):
     # Retry request because the created key may not be fully propagated for up
@@ -73,6 +76,7 @@ def test_list_buckets(capsys, hmac_fixture, test_bucket):
         out, _ = capsys.readouterr()
         assert "Buckets:" in out
         assert test_bucket.name in out
+
 
 def test_list_blobs(capsys, hmac_fixture, test_bucket, test_blob):
     # Retry request because the created key may not be fully propagated for up
