@@ -138,9 +138,7 @@ python3 composer_db_transfer.py import \
     private IP environment. In such a case additional configuration might be
     required. Check [the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell) for more information.
 
-1.  If the error seems to be related to required permissions, check
-    https://cloud.google.com/composer/docs/how-to/access-control. The script
-    requires permissions to access the Composer environment and its GKE cluster.
+1.  If the error seems to be related to required permissions, double check that you have permissions to [access the Composer environment and its GKE cluster](https://cloud.google.com/composer/docs/how-to/access-control).
 
 1.  "HTTPError 403: The service account does not have the required permissions
     for the bucket" might indicate that imported data was not properly copied to
