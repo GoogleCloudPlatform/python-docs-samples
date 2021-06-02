@@ -13,7 +13,7 @@ versions.
 
 1.  [Make sure you are authorized](https://cloud.google.com/sdk/gcloud/reference/auth/login) through `gcloud auth login` before invoking the
     script . The
-    script requires permissions to access the Composer environment
+    script requires [permissions to access the Composer environment](https://cloud.google.com/composer/docs/how-to/access-control)
     (roles/composer.environmentAndStorageObjectAdmin role is sufficient) and its
     GKE cluster (container.*).
 
