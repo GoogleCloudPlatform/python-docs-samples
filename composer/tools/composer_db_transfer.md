@@ -21,9 +21,7 @@ versions.
     kubectl (e.g. if you are not able to successfully execute
     `kubectl get pods`, the script will fail). "Unable to connect to the server:
     dial tcp [IP ADDRESS]:443: connect: connection timed out" reported by
-    kubectl indicates that kubectl can not connect to GKE cluster. Check
-    https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell
-    for instructions about setting up access to private GKE cluster if you have
+    kubectl indicates that kubectl can not connect to GKE cluster. [Refer to the documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#cloud_shell) about setting up access to private GKE cluster if you have
     private IP environment.
 
 1.  Supported source versions: all Composer versions with Airflow 1.10.14 or
