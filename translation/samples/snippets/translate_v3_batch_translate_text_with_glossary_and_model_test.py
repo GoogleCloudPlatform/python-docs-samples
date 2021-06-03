@@ -22,7 +22,7 @@ import translate_v3_batch_translate_text_with_glossary_and_model
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_ID = "DO_NOT_DELETE_TEST_GLOSSARY"
-MODEL_ID = "TRL3128559826197068699"
+MODEL_ID = "TRL251293382528204800"
 
 
 @pytest.fixture(scope="function")
