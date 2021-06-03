@@ -40,7 +40,8 @@ def test_model_adaptation_beta(custom_class_id, phrase_set_id, capsys):
 
 @pytest.fixture
 def custom_class_id():
-    custom_class_id = f"customClassId{uuid.uuid4()}"
+    # The custom class id can't be too long
+    custom_class_id = f"customClassId{str(uuid.uuid4())[:8]}"
     yield custom_class_id
     # clean up resources
     CLASS_PARENT = (
@@ -51,7 +52,8 @@ def custom_class_id():
 
 @pytest.fixture
 def phrase_set_id():
-    phrase_set_id = f"phraseSetId{uuid.uuid4()}"
+    # The phrase set id can't be too long
+    phrase_set_id = f"phraseSetId{str(uuid.uuid4())[:8]}"
     yield phrase_set_id
     # clean up resources
     PHRASE_PARENT = (
