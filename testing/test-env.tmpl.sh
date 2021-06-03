@@ -50,11 +50,6 @@ export SLACK_TEST_SIGNATURE=
 export SLACK_SECRET=
 export FUNCTIONS_TOPIC=
 
-# HMAC SA Credentials for S3 SDK samples
-export GOOGLE_CLOUD_PROJECT_S3_SDK=
-export STORAGE_HMAC_ACCESS_KEY_ID=
-export STORAGE_HMAC_ACCESS_SECRET_KEY=
-
 # Service account for HMAC samples
 export HMAC_KEY_TEST_SERVICE_ACCOUNT=
 
