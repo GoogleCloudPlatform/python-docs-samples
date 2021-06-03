@@ -1,4 +1,4 @@
 geojson==2.5.0
-google-cloud-bigquery==2.17.0
+google-cloud-bigquery==2.18.0
 google-cloud-bigquery-storage==2.4.0
 Shapely==1.7.1
