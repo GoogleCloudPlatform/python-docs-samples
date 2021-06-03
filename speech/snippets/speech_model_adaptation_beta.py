@@ -33,7 +33,7 @@ def transcribe_with_model_adaptation(
     # The parent resource where the custom class and phrase set will be created.
     parent = f"projects/{project_id}/locations/{location}"
 
-    # Create the custom class
+    # Create the custom class resource
     custom_class_response = adaptation_client.create_custom_class(
         {
             "parent": parent,
@@ -47,25 +47,25 @@ def transcribe_with_model_adaptation(
             },
         }
     )
-
-    # Create the phrase set
+    custom_class_name = custom_class_response.name
+    # Create the phrase set resource
     phrase_set_response = adaptation_client.create_phrase_set(
         {
             "parent": parent,
             "phrase_set_id": phrase_set_id,
             "phrase_set": {
                 "boost": 10,
-                "phrases": [{"value": f"Visit restaurants like ${custom_class_id}"}],
+                "phrases": [{"value": f"Visit restaurants like ${custom_class_name}"}],
             },
         }
     )
-
+    phrase_set_name = phrase_set_response.name
     # The next section shows how to use the newly created custom
     # class and phrase set to send a transcription request with speech adaptation
 
     # Speech adaptation configuration
     speech_adaptation = speech.SpeechAdaptation(
-        phrase_sets=[phrase_set_response], custom_classes=[custom_class_response]
+        phrase_set_references=[phrase_set_name]
     )
 
     # speech configuration object
