@@ -184,7 +184,13 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     retry_strategy = Retry(
         total=3,
         status_forcelist=[400, 401, 403, 500, 502, 503, 504],
-        method_whitelist=["GET", "POST"],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3
+    )
+    retry_strategy_400 = Retry(
+        total=3,
+        status_forcelist=[500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
         backoff_factor=3
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -208,6 +214,8 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     assert response.status_code == 200
     assert "🐶" in response.content.decode("UTF-8")
 
+    adapter = HTTPAdapter(max_retries=retry_strategy_400)
+    client.mount("https://", adapter)
     # Cannot make post with bad token
     response = client.post(
         service_url,

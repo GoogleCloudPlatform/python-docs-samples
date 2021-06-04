@@ -20,14 +20,15 @@ import datetime
 import os
 import subprocess
 import time
-import requests
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
 import uuid
 
 from google.cloud import logging_v2
 
 import pytest
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
@@ -153,7 +154,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     retry_strategy = Retry(
         total=3,
         status_forcelist=[400, 401, 403, 500, 502, 503, 504],
-        method_whitelist=["GET", "POST"],
+        allowed_methods=["GET", "POST"],
         backoff_factor=3
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -168,10 +169,8 @@ def test_end_to_end(service_url_auth_token, deployed_service):
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
-    assert response.status == 200
-
-    body = response.read()
-    assert body.decode() == "Hello Logger!"
+    assert response.status_code == 200
+    assert "Hello Logger!" in response.content.decode("UTF-8")
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
