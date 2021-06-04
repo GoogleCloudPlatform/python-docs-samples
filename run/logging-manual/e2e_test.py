@@ -20,7 +20,9 @@ import datetime
 import os
 import subprocess
 import time
-from urllib import request
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import uuid
 
 from google.cloud import logging_v2
@@ -148,14 +150,24 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     service_url, auth_token = service_url_auth_token
 
     # Test that the service is responding
-    req = request.Request(
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+        method_whitelist=["GET", "POST"],
+        backoff_factor=3
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(
         service_url,
         headers={
             "Authorization": f"Bearer {auth_token}",
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
-    response = request.urlopen(req)
     assert response.status == 200
 
     body = response.read()
