@@ -16,6 +16,7 @@
 
 # [START composer_dag_unit_testing]
 from airflow import models
+from airflow.utils.dag_cycle_tester import test_cycle
 
 
 def assert_has_valid_dag(module):
@@ -26,7 +27,7 @@ def assert_has_valid_dag(module):
     for dag in vars(module).values():
         if isinstance(dag, models.DAG):
             no_dag_found = False
-            dag.test_cycle()  # Throws if a task cycle is found.
+            test_cycle(dag)  # Throws if a task cycle is found.
 
     if no_dag_found:
         raise AssertionError('module does not contain a valid DAG')

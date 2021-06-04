@@ -18,22 +18,22 @@ import main
 
 
 def test_index():
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     main.app.testing = True
-    main.app.config['TRACER'] = main.initialize_tracer(project_id)
+    main.app.config["TRACER"] = main.initialize_tracer(project_id)
     client = main.app.test_client()
 
-    resp = client.get('/index.html')
+    resp = client.get("/index.html")
     assert resp.status_code == 200
-    assert 'Tracing requests' in resp.data.decode('utf-8')
+    assert "Tracing requests" in resp.data.decode("utf-8")
 
 
 def test_redirect():
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     main.app.testing = True
-    main.app.config['TRACER'] = main.initialize_tracer(project_id)
+    main.app.config["TRACER"] = main.initialize_tracer(project_id)
     client = main.app.test_client()
 
-    resp = client.get('/')
+    resp = client.get("/")
     assert resp.status_code == 302
-    assert '/index.html' in resp.headers.get('location', '')
+    assert "/index.html" in resp.headers.get("location", "")

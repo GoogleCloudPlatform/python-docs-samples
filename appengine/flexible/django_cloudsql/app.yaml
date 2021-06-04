@@ -11,15 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+#
 # [START runtime]
+# [START gaeflex_py_django_app_yaml]
 runtime: python
 env: flex
 entrypoint: gunicorn -b :$PORT mysite.wsgi
 
 beta_settings:
-    cloud_sql_instances: <your-cloudsql-connection-string>
+    cloud_sql_instances: PROJECT_ID:REGION:INSTANCE_NAME
 
 runtime_config:
   python_version: 3
+# [END gaeflex_py_django_app_yaml]
 # [END runtime]
