@@ -1,6 +1,5 @@
-# Ignore files for gcloud like Cloud Build.
-.mypy_cache/
-.nox/
-__pycache__/
-env/
-outputs/
+# Ignore everything except the source files.
+**/*
+!Dockerfile
+!requirements.txt
+!*.py
