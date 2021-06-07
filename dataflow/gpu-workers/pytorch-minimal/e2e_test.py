@@ -20,7 +20,6 @@ try:
     from conftest import Utils
 except ModuleNotFoundError:
     Utils = None
-from google.cloud import storage
 import pytest
 
 NAME = "dataflow-gpu-pytorch"
