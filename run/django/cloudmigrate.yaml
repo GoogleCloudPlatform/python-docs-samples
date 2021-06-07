@@ -54,7 +54,7 @@ steps:
         "collectstatic",
         "--verbosity",
         "2",
-        "--no-input"
+        "--no-input",
       ]
 
 substitutions:

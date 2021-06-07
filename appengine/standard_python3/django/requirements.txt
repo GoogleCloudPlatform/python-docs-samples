@@ -1,2 +1,4 @@
 Django==3.2.4
-PyMySQL==1.0.2
+django-environ==0.4.5
+psycopg2-binary==2.8.6
+google-cloud-secret-manager==2.3.0
