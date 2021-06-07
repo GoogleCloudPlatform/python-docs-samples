@@ -200,7 +200,7 @@ class Utils:
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
-            yield f"gcr.io/{project}/{image_name}:latest"
+            yield f"gcr.io/{project}/{image_name}-{UUID}:latest"
         else:
             raise ValueError("must specify either `config` or `image_name`")
 
@@ -210,7 +210,7 @@ class Utils:
                 "container",
                 "images",
                 "delete",
-                f"gcr.io/{project}/{image_name}:latest",
+                f"gcr.io/{project}/{image_name}-{UUID}:latest",
                 f"--project={project}",
                 "--quiet",
             ]
