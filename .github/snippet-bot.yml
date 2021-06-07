@@ -1,0 +1,4 @@
+aggregateChecks: true
+alwaysCreateStatusCheck: true
+ignoreFiles:
+  - README.md

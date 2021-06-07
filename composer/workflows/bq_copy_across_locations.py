@@ -40,10 +40,10 @@ import io
 import logging
 
 from airflow import models
-from airflow.contrib.operators import bigquery_to_gcs
-from airflow.contrib.operators import gcs_to_bq
-from airflow.contrib.operators import gcs_to_gcs
-from airflow.operators import dummy_operator
+from airflow.operators import dummy
+from airflow.providers.google.cloud.transfers import bigquery_to_gcs
+from airflow.providers.google.cloud.transfers import gcs_to_bigquery
+from airflow.providers.google.cloud.transfers import gcs_to_gcs
 
 
 # --------------------------------------------------------------------------------
@@ -127,12 +127,12 @@ with models.DAG(
         'composer_sample_bq_copy_across_locations',
         default_args=default_args,
         schedule_interval=None) as dag:
-    start = dummy_operator.DummyOperator(
+    start = dummy.DummyOperator(
         task_id='start',
         trigger_rule='all_success'
     )
 
-    end = dummy_operator.DummyOperator(
+    end = dummy.DummyOperator(
         task_id='end',
         trigger_rule='all_success'
     )
@@ -148,7 +148,7 @@ with models.DAG(
         table_source = record['table_source']
         table_dest = record['table_dest']
 
-        BQ_to_GCS = bigquery_to_gcs.BigQueryToCloudStorageOperator(
+        BQ_to_GCS = bigquery_to_gcs.BigQueryToGCSOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_BQ_to_GCS'.format(table_source.replace(":", "_")),
             source_project_dataset_table=table_source,
@@ -157,7 +157,7 @@ with models.DAG(
             export_format='AVRO'
         )
 
-        GCS_to_GCS = gcs_to_gcs.GoogleCloudStorageToGoogleCloudStorageOperator(
+        GCS_to_GCS = gcs_to_gcs.GCSToGCSOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_GCS_to_GCS'.format(table_source.replace(":", "_")),
             source_bucket=source_bucket,
@@ -166,7 +166,7 @@ with models.DAG(
             # destination_object='{}-*.avro'.format(table_dest)
         )
 
-        GCS_to_BQ = gcs_to_bq.GoogleCloudStorageToBigQueryOperator(
+        GCS_to_BQ = gcs_to_bigquery.GCSToBigQueryOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_GCS_to_BQ'.format(table_dest.replace(":", "_")),
             bucket=dest_bucket,
