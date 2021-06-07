@@ -276,39 +276,42 @@ def run(
     max_value = vis_params["max"]
     gamma = vis_params["gamma"]
 
-    options = PipelineOptions(beam_args, save_main_session=True)
-    with beam.Pipeline(options=options) as pipeline:
-        # Optionally, validate that the workers are using GPUs.
-        gpu_check = (
-            pipeline
-            | beam.Create([None])
-            | "Check GPU availability" >> beam.Map(check_gpus, gpus_optional)
-        )
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
 
-        # Convert Landsat 8 scenes into images.
-        # ℹ️ We pass `gpu_check` as an unused side input to force that step in
-        # the pipeline to wait for the check before continuing.
-        (
-            pipeline
-            | "Create scene IDs" >> beam.Create(scenes)
-            | "Get RGB band paths"
-            >> beam.Map(
-                get_band_paths,
-                rgb_band_names,
-                unused_side_input=beam.pvalue.AsSingleton(gpu_check),
-            )
-            | "Load RGB band values" >> beam.MapTuple(load_values)
-            | "Preprocess pixels"
-            >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
-            | "Convert to image"
-            >> beam.MapTuple(
-                lambda scene, rgb_pixels: (
-                    scene,
-                    Image.fromarray(rgb_pixels.numpy(), mode="RGB"),
-                )
-            )
-            | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
+    # We currently cannot use the `with` statement to run without waiting.
+    #   https://issues.apache.org/jira/browse/BEAM-12455
+    pipeline = beam.Pipeline(options=beam_options)
+
+    # Convert Landsat 8 scenes into images.
+    # ℹ️ We pass `gpu_check` as an unused side input to force that step in
+    # the pipeline to wait for the check before continuing.
+    (
+        pipeline
+        | "Create scene IDs" >> beam.Create(scenes)
+        | "Get RGB band paths"
+        >> beam.Map(
+            get_band_paths,
+            rgb_band_names,
+            unused_side_input=beam.pvalue.AsSingleton(
+                pipeline
+                | beam.Create([None])
+                | "Check GPUs" >> beam.Map(check_gpus, gpus_optional)
+            ),
         )
+        | "Load RGB band values" >> beam.MapTuple(load_values)
+        | "Preprocess pixels"
+        >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
+        | "Convert to image"
+        >> beam.MapTuple(
+            lambda scene, rgb_pixels: (
+                scene,
+                Image.fromarray(rgb_pixels.numpy(), mode="RGB"),
+            )
+        )
+        | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
+    )
+
+    pipeline.run()
 
 
 if __name__ == "__main__":
