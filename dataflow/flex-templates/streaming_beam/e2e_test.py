@@ -13,14 +13,12 @@
 import json
 import time
 
-# `conftest` cannot be imported when running in `nox`, but we still
-# try to import it for the autocomplete when writing the tests.
 try:
+    # `conftest` cannot be imported when running in `nox`, but we still
+    # try to import it for the autocomplete when writing the tests.
     from conftest import Utils
 except ModuleNotFoundError:
-    from typing import Any
-
-    Utils = Any
+    Utils = None
 import pytest
 
 NAME = "dataflow-flex-templates-streaming-beam"
@@ -61,7 +59,7 @@ def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    yield from utils.container_image(NAME)
+    yield from utils.cloud_build_submit(NAME)
 
 
 @pytest.fixture(scope="session")

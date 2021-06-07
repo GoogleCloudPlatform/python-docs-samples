@@ -26,7 +26,7 @@
 # -----------------------------------------------------------------------------
 
 substitutions:
-  _OUTPUT_PATH: please set --substitutions _OUTPUT_PATH=gs://my-bucket/output/path
+  _GCS_PATH: please set --substitutions _GCS_PATH=gs://my-bucket/samples/dataflow/landsat
   _REGION: us-central1
   _WORKER_ZONE: us-central1-f
   _GPU_TYPE: nvidia-tesla-t4
@@ -37,10 +37,11 @@ steps:
   entrypoint: python
   args:
   - /pipeline/main.py
-  - --output-path-prefix=$_OUTPUT_PATH
+  - --output-path-prefix=$_GCS_PATH/outputs/
   - --runner=DataflowRunner
   - --project=$PROJECT_ID
   - --region=$_REGION
+  - --temp_location=$_GCS_PATH/temp
   - --worker_machine_type=custom-1-13312-ext
   - --worker_harness_container_image=gcr.io/$PROJECT_ID/samples/dataflow/landsat-gpu:latest
   - --worker_zone=$_WORKER_ZONE

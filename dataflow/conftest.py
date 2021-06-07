@@ -158,40 +158,64 @@ class Utils:
         p.terminate()
 
     @staticmethod
-    def container_image(
-        image_path: str,
+    def cloud_build_submit(
+        image_name: Optional[str] = None,
+        config: Optional[str] = None,
+        substitutions: Optional[Dict[str, str]] = None,
         project: str = PROJECT,
-        tag: str = "latest",
-    ) -> str:
-        image_name = f"gcr.io/{project}/{image_path}-{UUID}:{tag}"
+    ) -> None:
+        """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
         cmd = ["gcloud", "auth", "configure-docker"]
         print(cmd)
-        subprocess.run(cmd, check=True)
-        cmd = [
-            "gcloud",
-            "builds",
-            "submit",
-            f"--project={project}",
-            f"--tag={image_name}",
-            ".",
-        ]
-        print(cmd)
-        subprocess.run(cmd, check=True)
 
-        print(f"container_image: {image_name}")
-        yield image_name
+        if substitutions:
+            cmd_substitutions = [
+                f"--substitutions={','.join([k + '=' + v for k, v in substitutions.items()])}"
+            ]
+        else:
+            cmd_substitutions = []
 
-        cmd = [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            image_name,
-            f"--project={project}",
-            "--quiet",
-        ]
-        print(cmd)
         subprocess.run(cmd, check=True)
+        if config:
+            cmd = [
+                "gcloud",
+                "builds",
+                "submit",
+                f"--project={project}",
+                f"--config={config}",
+                *cmd_substitutions,
+            ]
+            print(cmd)
+            subprocess.run(cmd, check=True)
+            yield config
+        elif image_name:
+            cmd = [
+                "gcloud",
+                "builds",
+                "submit",
+                f"--project={project}",
+                f"--tag=gcr.io/{project}/{image_name}:latest",
+                *cmd_substitutions,
+                ".",
+            ]
+            print(cmd)
+            subprocess.run(cmd, check=True)
+            yield f"gcr.io/{project}/{image_name}:latest"
+        else:
+            raise ValueError("must specify either `config` or `image_name`")
+
+        if image_name:
+            cmd = [
+                "gcloud",
+                "container",
+                "images",
+                "delete",
+                f"gcr.io/{project}/{image_name}:latest",
+                f"--project={project}",
+                "--quiet",
+            ]
+            print(cmd)
+            subprocess.run(cmd, check=True)
 
     @staticmethod
     def dataflow_job_id_from_job_name(
