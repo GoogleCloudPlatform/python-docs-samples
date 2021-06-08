@@ -1,4 +1,5 @@
-google-cloud-monitoring==2.2.1
+# opencensus-ext-stackdriver 0.7.4 depends on google-cloud-monitoring<1.0.0 and >=0.30.0
+google-cloud-monitoring==0.36.0
 google-cloud-trace==0.24.0
 opencensus==0.7.13
 # Don't upgrade to 2.0.0 yet until opencensus-ext-flask is okay with it
