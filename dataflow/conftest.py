@@ -194,7 +194,7 @@ class Utils:
                 "builds",
                 "submit",
                 f"--project={project}",
-                f"--tag=gcr.io/{project}/{image_name}:latest",
+                f"--tag=gcr.io/{project}/{image_name}-{UUID}:latest",
                 *cmd_substitutions,
                 ".",
             ]
