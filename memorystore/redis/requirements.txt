@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START memorystore_requirements]
-Flask==1.1.2
-gunicorn==20.0.4
+Flask==2.0.1
+gunicorn==20.1.0
 redis==3.5.3
 # [END memorystore_requirements]

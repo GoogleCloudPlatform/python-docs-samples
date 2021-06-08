@@ -13,36 +13,35 @@
 # limitations under the License.
 
 import argparse
-import json
 import os
-
-from googleapiclient import discovery
-
-
-# [START healthcare_get_client]
-def get_client():
-    """Returns an authorized API client.
-
-    Discovers the Healthcare API and
-    creates a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable.
-    """
-    api_version = "v1"
-    service_name = "healthcare"
-
-    return discovery.build(service_name, api_version)
-# [END healthcare_get_client]
 
 
 # [START healthcare_create_fhir_store]
-def create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
-    """Creates a new FHIR store within the parent dataset."""
-    client = get_client()
+def create_fhir_store(project_id, location, dataset_id, fhir_store_id, version):
+    """Creates a new FHIR store within the parent dataset.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the FHIR store's parent dataset ID
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
+    # version = 'R4'  # replace with the FHIR store version
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
-    body = {"version": "STU3"}
+    body = {"version": version}
 
     request = (
         client.projects()
@@ -62,11 +61,27 @@ def create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
 
 
 # [START healthcare_delete_fhir_store]
-def delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
-    """Deletes the specified FHIR store."""
-    client = get_client()
+def delete_fhir_store(project_id, location, dataset_id, fhir_store_id):
+    """Deletes the specified FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the FHIR store's parent dataset
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -88,11 +103,30 @@ def delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
 
 
 # [START healthcare_get_fhir_store]
-def get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
-    """Gets the specified FHIR store."""
-    client = get_client()
+def get_fhir_store(project_id, location, dataset_id, fhir_store_id):
+    """Gets the specified FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    # Imports Python's built-in "json" module
+    import json
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the FHIR store's parent dataset
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -107,14 +141,32 @@ def get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
 
 
 # [START healthcare_get_metadata]
-def get_fhir_store_metadata(project_id, cloud_region, dataset_id, fhir_store_id):
+def get_fhir_store_metadata(project_id, location, dataset_id, fhir_store_id):
     """Gets the FHIR capability statement (STU3, R4), or the conformance statement
     in the DSTU2 case for the store, which contains a description of functionality
     supported by the server.
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    # Imports Python's built-in "json" module
+    import json
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -129,11 +181,26 @@ def get_fhir_store_metadata(project_id, cloud_region, dataset_id, fhir_store_id)
 
 
 # [START healthcare_list_fhir_stores]
-def list_fhir_stores(project_id, cloud_region, dataset_id):
-    """Lists the FHIR stores in the given dataset."""
-    client = get_client()
+def list_fhir_stores(project_id, location, dataset_id):
+    """Lists the FHIR stores in the given dataset.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
     fhir_stores = (
@@ -156,14 +223,31 @@ def list_fhir_stores(project_id, cloud_region, dataset_id):
 
 
 # [START healthcare_patch_fhir_store]
-def patch_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
-    """Updates the FHIR store."""
-    client = get_client()
+def patch_fhir_store(project_id, location, dataset_id, fhir_store_id):
+    """Updates the FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the dataset's location
+    # dataset_id = 'my-dataset'  # replace with your dataset ID
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
+    # TODO(developer): Replace with the full URI of an existing Pub/Sub topic
     patch = {"notificationConfig": None}
 
     request = (
@@ -184,12 +268,29 @@ def patch_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
 
 
 # [START healthcare_export_fhir_resources_gcs]
-def export_fhir_store_gcs(project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri):
+def export_fhir_store_gcs(project_id, location, dataset_id, fhir_store_id, gcs_uri):
     """Export resources to a Google Cloud Storage bucket by copying
-    them from the FHIR store."""
-    client = get_client()
+    them from the FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
+    # gcs_uri = 'my-bucket' # replace with a Cloud Storage bucket
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -213,13 +314,29 @@ def export_fhir_store_gcs(project_id, cloud_region, dataset_id, fhir_store_id, g
 
 
 # [START healthcare_import_fhir_resources]
-def import_fhir_resources(project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri):
+def import_fhir_resources(project_id, location, dataset_id, fhir_store_id, gcs_uri):
     """Import resources into the FHIR store by copying them from the
     specified source.
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store ID
+    # gcs_uri = 'my-bucket'  # replace with a Cloud Storage bucket
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -248,11 +365,27 @@ def import_fhir_resources(project_id, cloud_region, dataset_id, fhir_store_id, g
 
 
 # [START healthcare_fhir_store_get_iam_policy]
-def get_fhir_store_iam_policy(project_id, cloud_region, dataset_id, fhir_store_id):
-    """Gets the IAM policy for the specified FHIR store."""
-    client = get_client()
+def get_fhir_store_iam_policy(project_id, location, dataset_id, fhir_store_id):
+    """Gets the IAM policy for the specified FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -274,7 +407,13 @@ def get_fhir_store_iam_policy(project_id, cloud_region, dataset_id, fhir_store_i
 
 # [START healthcare_fhir_store_set_iam_policy]
 def set_fhir_store_iam_policy(
-    project_id, cloud_region, dataset_id, fhir_store_id, member, role, etag=None,
+    project_id,
+    location,
+    dataset_id,
+    fhir_store_id,
+    member,
+    role,
+    etag=None,
 ):
     """Sets the IAM policy for the specified FHIR store.
         A single member will be assigned a single role. A member can be any of:
@@ -287,10 +426,27 @@ def set_fhir_store_iam_policy(
             as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Instantiates an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
+    # member = 'myemail@example.com'  # replace with an authorized member
+    # role = 'roles/viewer'  # replace with a Healthcare API IAM role
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
@@ -329,9 +485,7 @@ def parse_command_line_args():
         help="GCP cloud project name",
     )
 
-    parser.add_argument(
-        "--cloud_region", default="us-central1", help="GCP cloud region"
-    )
+    parser.add_argument("--location", default="us-central1", help="GCP location")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
@@ -388,33 +542,47 @@ def run_command(args):
 
     elif args.command == "create-fhir-store":
         create_fhir_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "delete-fhir-store":
         delete_fhir_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "get-fhir-store":
         get_fhir_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "get-fhir-store-metadata":
         get_fhir_store_metadata(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "list-fhir-stores":
         list_fhir_stores(
-            args.project_id, args.cloud_region, args.dataset_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
         )
 
     elif args.command == "patch-fhir-store":
         patch_fhir_store(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.fhir_store_id,
             args.pubsub_topic,
@@ -423,7 +591,7 @@ def run_command(args):
     elif args.command == "export-fhir-store-gcs":
         export_fhir_store_gcs(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.fhir_store_id,
             args.gcs_uri,
@@ -432,7 +600,7 @@ def run_command(args):
     elif args.command == "import-fhir-resources":
         import_fhir_resources(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.fhir_store_id,
             args.gcs_uri,
@@ -440,13 +608,16 @@ def run_command(args):
 
     elif args.command == "get_iam_policy":
         get_fhir_store_iam_policy(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.project_id,
+            args.location,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "set_iam_policy":
         set_fhir_store_iam_policy(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.fhir_store_id,
             args.member,

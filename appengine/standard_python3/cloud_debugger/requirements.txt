@@ -1,2 +1,2 @@
-Flask==1.1.2
-google-python-cloud-debugger==2.15
+Flask==2.0.1
+google-python-cloud-debugger==2.17

@@ -20,18 +20,20 @@ import time
 from flask import Flask, redirect, url_for
 
 # [START trace_setup_python_configure]
-from opentelemetry import trace
+from opentelemetry import propagate, trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 
 
 def initialize_tracer(project_id):
     trace.set_tracer_provider(TracerProvider())
     cloud_trace_exporter = CloudTraceSpanExporter(project_id)
     trace.get_tracer_provider().add_span_processor(
-        SimpleExportSpanProcessor(cloud_trace_exporter)
+        SimpleSpanProcessor(cloud_trace_exporter)
     )
+    propagate.set_global_textmap(CloudTraceFormatPropagator())
     opentelemetry_tracer = trace.get_tracer(__name__)
 
     return opentelemetry_tracer
@@ -51,10 +53,10 @@ def root():
 @app.route("/index.html", methods=["GET"])
 def index():
     tracer = app.config["TRACER"]
-    tracer.start_as_current_span(name="index")
-    # Add up to 1 sec delay, weighted toward zero
-    time.sleep(random.random() ** 2)
-    result = "Tracing requests"
+    with tracer.start_as_current_span(name="index"):
+        # Add up to 1 sec delay, weighted toward zero
+        time.sleep(random.random() ** 2)
+        result = "Tracing requests"
 
     return result
 
@@ -74,7 +76,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    tracer = initialize_tracer(args.project_id)
-    app.config["TRACER"] = tracer
+    app.config["TRACER"] = initialize_tracer(args.project_id)
 
     app.run()

@@ -87,6 +87,18 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# Install Bazel for compiling Tink in Cloud SQL Client Side Encryption Samples
+# TODO: Delete this section once google/tink#483 is resolved
+RUN apt install -y curl gpgconf gpg \
+  && curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
+  && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
+  && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list \
+  && apt update &&  apt install -y bazel \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
@@ -133,7 +145,7 @@ RUN set -ex \
 # Install pip on Python 3.6 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 10.0.1
+ENV PYTHON_PIP_VERSION 20.2.4
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -153,7 +165,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 304.0.0
+ENV CLOUD_SDK_VERSION 339.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
