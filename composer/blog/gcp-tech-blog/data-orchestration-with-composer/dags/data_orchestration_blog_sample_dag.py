@@ -14,7 +14,7 @@
 
 from airflow import models
 
-from airflow.hooks.base_hook import BaseHook
+from airflow.hooks.base import BaseHook
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCheckOperator
 from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
