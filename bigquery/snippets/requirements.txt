@@ -1,4 +1,4 @@
-google-cloud-bigquery==2.19.0
+google-cloud-bigquery==2.20.0
 google-cloud-bigquery-storage==2.4.0
 google-auth-oauthlib==0.4.4
 grpcio==1.38.0
