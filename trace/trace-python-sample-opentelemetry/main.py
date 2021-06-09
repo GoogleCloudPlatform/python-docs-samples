@@ -20,20 +20,20 @@ import time
 from flask import Flask, redirect, url_for
 
 # [START trace_setup_python_configure]
-from opentelemetry import propagators, trace
+from opentelemetry import propagate, trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleExportSpanProcessor
-from opentelemetry.tools.cloud_trace_propagator import CloudTraceFormatPropagator
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 
 
 def initialize_tracer(project_id):
     trace.set_tracer_provider(TracerProvider())
     cloud_trace_exporter = CloudTraceSpanExporter(project_id)
     trace.get_tracer_provider().add_span_processor(
-        SimpleExportSpanProcessor(cloud_trace_exporter)
+        SimpleSpanProcessor(cloud_trace_exporter)
     )
-    propagators.set_global_textmap(CloudTraceFormatPropagator())
+    propagate.set_global_textmap(CloudTraceFormatPropagator())
     opentelemetry_tracer = trace.get_tracer(__name__)
 
     return opentelemetry_tracer
