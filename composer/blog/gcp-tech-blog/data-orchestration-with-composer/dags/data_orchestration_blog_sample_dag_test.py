@@ -23,7 +23,7 @@ TABLE = 'your-bq-output-table'
 
 
 @pytest.fixture(autouse=True, scope="function")
-# The fixture `airflow_database` lives in composer/conftest.py.
+# The fixture `airflow_database` lives in ./conftest.py.
 def set_variables(airflow_database):
     models.Variable.set('gcp_project', PROJECT_ID)
     models.Variable.set('bigquery_dataset', DATASET)
