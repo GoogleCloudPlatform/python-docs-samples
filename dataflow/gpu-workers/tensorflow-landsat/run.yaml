@@ -28,6 +28,7 @@
 substitutions:
   _OUTPUT_PATH: please run with --substitutions _OUTPUT_PATH=gs://$BUCKET/samples/dataflow/landsat/outputs/
   _IMAGE: samples/dataflow/landsat-gpu:latest
+  _JOB_NAME: ''
   _TEMP_LOCATION: ''
   _REGION: us-central1
   _GPU_TYPE: nvidia-tesla-t4
@@ -42,6 +43,7 @@ steps:
   - --runner=DataflowRunner
   - --project=$PROJECT_ID
   - --region=$_REGION
+  - --job_name=$_JOB_NAME
   - --temp_location=$_TEMP_LOCATION
   - --worker_machine_type=custom-1-13312-ext
   - --worker_harness_container_image=gcr.io/$PROJECT_ID/$_IMAGE

@@ -93,7 +93,7 @@ def test_flex_template_run(
 
     # Since this is a streaming job, it will never finish running.
     # First, lets wait until the job is running.
-    utils.dataflow_jobs_wait(job_id)
+    utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
     # Then, wait a minute for data to arrive, get processed, and cancel it.
     time.sleep(60)

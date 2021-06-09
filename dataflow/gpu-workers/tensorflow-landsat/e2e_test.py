@@ -38,14 +38,20 @@ def worker_image(utils: Utils) -> str:
 
 def test_end_to_end(utils: Utils, bucket_name: str, worker_image: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
+    job_name = utils.hyphen_name(NAME)
     utils.cloud_build_submit(
         config="run.yaml",
         substitutions={
             "_IMAGE": worker_image,
+            "_JOB_NAME": job_name,
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
             "_OUTPUT_PATH": f"gs://{bucket_name}/outputs/",
         },
     )
+
+    # Wait until the job finishes.
+    status = utils.dataflow_jobs_wait(job_name=job_name)
+    assert status == "JOB_STATE_DONE", f"Dataflow pipeline finished in {status} status"
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()

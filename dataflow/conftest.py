@@ -13,13 +13,14 @@
 from dataclasses import dataclass
 import itertools
 import json
+import logging
 import multiprocessing as mp
 import os
 import re
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import uuid
 
 import pytest
@@ -230,40 +231,89 @@ class Utils:
             subprocess.run(cmd, check=True)
 
     @staticmethod
-    def dataflow_jobs_wait(
-        job_id: str,
+    def dataflow_jobs_get(
+        job_id: Optional[str] = None,
+        job_name: Optional[str] = None,
         project: str = PROJECT,
-        status: str = "JOB_STATE_RUNNING",
-    ) -> bool:
+        region: str = REGION,
+        list_page_size=100,
+    ) -> Optional[Dict[str, Any]]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
 
-        sleep_time_seconds = 30
-        max_sleep_time = 10 * 60
-
-        print(f"Waiting for Dataflow job ID: {job_id} (until status {status})")
-        for _ in range(0, max_sleep_time, sleep_time_seconds):
-            try:
-                # For more info see:
-                #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
-                jobs_request = (
-                    dataflow.projects()
-                    .jobs()
-                    .get(
-                        projectId=project,
-                        jobId=job_id,
-                        view="JOB_VIEW_SUMMARY",
-                    )
+        if job_id:
+            # For more info see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
+            request = (
+                dataflow.projects()
+                .jobs()
+                .get(
+                    projectId=project,
+                    jobId=job_id,
+                    view="JOB_VIEW_SUMMARY",
                 )
-                response = jobs_request.execute()
-                print(response)
-                if response["currentState"] == status:
-                    return True
-            except Exception:
-                pass
-            time.sleep(sleep_time_seconds)
-        return False
+            )
+            job = request.execute()
+            print(job)
+            return job
+
+        elif job_name:
+            # For more info see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
+            request = (
+                dataflow.projects()
+                .jobs()
+                .list(
+                    projectId=project,
+                    filter="ACTIVE",
+                    pageSize=list_page_size,
+                    location=region,
+                )
+            )
+            for job in request.execute()["jobs"]:
+                if job["name"] == job_name:
+                    print(job)
+                    return job
+            return None
+
+        else:
+            raise ValueError("must specify either `job_id` or `job_name`")
+
+    @staticmethod
+    def dataflow_jobs_wait(
+        job_id: Optional[str] = None,
+        job_name: Optional[str] = None,
+        project: str = PROJECT,
+        region: str = REGION,
+        until_status: Union[str, Iterable[str]] = {
+            "JOB_STATE_DONE",
+            "JOB_STATE_FAILED",
+            "JOB_STATE_CANCELLED",
+        },
+        timeout_sec: str = 600,
+        poll_interval_sec=30,
+        list_page_size=100,
+    ) -> Optional[str]:
+        """For a list of all the valid states:
+        https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
+        """
+        target_status = (
+            {until_status} if isinstance(until_status, str) else set(until_status)
+        )
+        print(f"Waiting for Dataflow job until {target_status}")
+        status = None
+        for _ in range(0, timeout_sec, poll_interval_sec):
+            try:
+                status = Utils.dataflow_jobs_get(
+                    job_id, job_name, project, region, list_page_size
+                )
+                if status in target_status:
+                    return status
+            except Exception as e:
+                logging.warning(e)
+            time.sleep(poll_interval_sec)
+        return status
 
     @staticmethod
     def dataflow_jobs_cancel_by_job_id(
