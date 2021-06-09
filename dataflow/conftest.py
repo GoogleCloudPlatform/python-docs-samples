@@ -207,7 +207,7 @@ class Utils:
                 "builds",
                 "submit",
                 f"--project={project}",
-                f"--tag=gcr.io/{project}/{image_name}-{UUID}:latest",
+                f"--tag=gcr.io//{project}/{image_name}-{UUID}:latest",
                 *cmd_substitutions,
                 ".",
             ]
@@ -223,7 +223,7 @@ class Utils:
                 "container",
                 "images",
                 "delete",
-                f"gcr.io/{project}/{image_name}-{UUID}:latest",
+                f"gcr.io//{project}/{image_name}-{UUID}:latest",
                 f"--project={project}",
                 "--quiet",
             ]
@@ -352,7 +352,7 @@ class Utils:
             "build",
             template_gcs_path,
             f"--project={project}",
-            f"--image=gcr.io/{project}/{image_name}",
+            f"--image=gcr.io//{project}/{image_name}",
             "--sdk-language=PYTHON",
             f"--metadata-file={metadata_file}",
         ]
