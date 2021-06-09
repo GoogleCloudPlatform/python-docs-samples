@@ -13,9 +13,10 @@
 # limitations under the License.
 # [START composer_relationship_parent]
 from airflow import DAG
-from airflow.utils.dates import days_ago
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.operators.dummy import DummyOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.utils.dates import days_ago
+
 
 with DAG(
     dag_id="controller_dag_to_trigger_other_dags",

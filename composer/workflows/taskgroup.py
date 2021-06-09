@@ -38,4 +38,3 @@ with DAG(dag_id="taskgroup_example", start_date=days_ago(1)) as dag:
 
     start >> section_1 >> some_other_task >> section_2 >> end
 # [END composer_taskgroup]
-
