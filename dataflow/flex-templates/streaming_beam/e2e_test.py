@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     Utils = None
 import pytest
 
-NAME = "dataflow-flex-templates-streaming-beam"
+NAME = "dataflow/flex-templates/streaming-beam"
 
 
 @pytest.fixture(scope="session")
@@ -66,7 +66,7 @@ def flex_template_image(utils: Utils) -> str:
 def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
     yield from utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
-        template_image=flex_template_image,
+        image_name=flex_template_image,
         metadata_file="metadata.json",
     )
 

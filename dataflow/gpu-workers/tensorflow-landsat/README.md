@@ -33,14 +33,13 @@ We launch the job using the worker image to make sure the job launches
 with the same Python version as the workers.
 
 ```sh
-export GCS_PATH="gs://$BUCKET/samples/dataflow/landsat"
+export OUTPUT_PATH="gs://$BUCKET/samples/dataflow/landsat/output-images/"
 export REGION="us-central1"
-export WORKER_ZONE="us-central1-f"
 export GPU_TYPE="nvidia-tesla-t4"
 
 gcloud beta builds submit \
     --config run.yaml \
-    --substitutions _GCS_PATH=$GCS_PATH,_REGION=$REGION,_WORKER_ZONE=$WORKER_ZONE,_GPU_TYPE=$GPU_TYPE \
+    --substitutions _GCS_PATH=$GCS_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
 ```
 

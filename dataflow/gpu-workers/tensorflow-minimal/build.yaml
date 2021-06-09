@@ -19,14 +19,14 @@
 #   https://cloud.google.com/build/docs/build-config
 # -----------------------------------------------------------------------------
 
+substitutions:
+  _IMAGE: samples/dataflow/tensorflow-gpu:latest
+
 steps:
 - name: gcr.io/cloud-builders/docker
-  args:
-  - build
-  - --tag=gcr.io/$PROJECT_ID/samples/dataflow/tensorflow-gpu:latest
-  - .
+  args: [ build, --tag=gcr.io/$PROJECT_ID/$_IMAGE, . ]
 
-images: [gcr.io/$PROJECT_ID/samples/dataflow/tensorflow-gpu:latest]
+images: [ gcr.io/$PROJECT_ID/$_IMAGE ]
 
 options:
   machineType: E2_HIGHCPU_8

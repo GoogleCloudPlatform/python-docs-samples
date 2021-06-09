@@ -138,15 +138,12 @@ def check_gpus(element: Any, gpus_optional: bool) -> Any:
     return element
 
 
-def get_band_paths(
-    scene: str, band_names: List[str], unused_side_input: Any
-) -> Tuple[str, List[str]]:
+def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     """Gets the Cloud Storage paths for each band in a Landsat scene.
 
     Args:
         scene: Landsat 8 scene ID.
         band_names: List of the band names corresponding to [Red, Green, Blue] channels.
-        unused_side_input: Used to wait for the GPU check, can be safely ignored.
 
     Returns:
         A (scene, band_paths) pair.
@@ -288,16 +285,14 @@ def run(
     (
         pipeline
         | "Create scene IDs" >> beam.Create(scenes)
-        | "Get RGB band paths"
+        | "Check GPU availability"
         >> beam.Map(
-            get_band_paths,
-            rgb_band_names,
+            lambda x, unused_side_input: x,
             unused_side_input=beam.pvalue.AsSingleton(
-                pipeline
-                | beam.Create([None])
-                | "Check GPUs" >> beam.Map(check_gpus, gpus_optional)
+                pipeline | beam.Create([None]) | beam.Map(check_gpus)
             ),
         )
+        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         | "Load RGB band values" >> beam.MapTuple(load_values)
         | "Preprocess pixels"
         >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)

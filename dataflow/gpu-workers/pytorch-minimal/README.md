@@ -27,12 +27,11 @@ with the same Python version as the workers.
 
 ```sh
 export REGION="us-central1"
-export WORKER_ZONE="us-central1-f"
 export GPU_TYPE="nvidia-tesla-t4"
 
 gcloud beta builds submit \
     --config run.yaml \
-    --substitutions _REGION=$REGION,_WORKER_ZONE=$WORKER_ZONE,_GPU_TYPE=$GPU_TYPE \
+    --substitutions _REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
 ```
 

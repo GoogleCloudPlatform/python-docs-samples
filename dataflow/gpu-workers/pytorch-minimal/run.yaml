@@ -26,14 +26,14 @@
 # -----------------------------------------------------------------------------
 
 substitutions:
+  _IMAGE: samples/dataflow/pytorch-gpu:latest
   _TEMP_LOCATION: ''
   _REGION: us-central1
-  _WORKER_ZONE: us-central1-f
   _GPU_TYPE: nvidia-tesla-t4
   _GPU_COUNT: '1'
 
 steps:
-- name: gcr.io/$PROJECT_ID/samples/dataflow/pytorch-gpu:latest
+- name: gcr.io/$PROJECT_ID/$_IMAGE
   entrypoint: python
   args:
   - /pipeline/main.py
@@ -41,9 +41,8 @@ steps:
   - --project=$PROJECT_ID
   - --region=$_REGION
   - --temp_location=$_TEMP_LOCATION
-  - --worker_harness_container_image=gcr.io/$PROJECT_ID/samples/dataflow/pytorch-gpu:latest
-  - --worker_zone=$_WORKER_ZONE
-  - --disk_size_gb=50
+  - --worker_harness_container_image=gcr.io/$PROJECT_ID/$_IMAGE
+  - --disk_size_gb=20
   - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
   - --experiment=use_runner_v2
 

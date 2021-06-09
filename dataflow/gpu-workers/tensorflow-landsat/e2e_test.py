@@ -23,7 +23,7 @@ except ModuleNotFoundError:
 from google.cloud import storage
 import pytest
 
-NAME = "dataflow-gpu-landsat"
+NAME = "dataflow/gpu-workers/tensorflow-landsat"
 
 
 @pytest.fixture(scope="session")
@@ -40,12 +40,16 @@ def test_end_to_end(utils: Utils, bucket_name: str, worker_image: str) -> None:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     utils.cloud_build_submit(
         config="run.yaml",
-        substitutions={"_GCS_PATH": f"gs://{bucket_name}"},
+        substitutions={
+            "_IMAGE": worker_image,
+            "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
+            "_OUTPUT_PATH": f"gs://{bucket_name}/outputs/",
+        },
     )
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()
     output_files = list(storage_client.list_blobs(bucket_name, prefix="outputs/"))
-    assert len(output_files) > 0, "No output files found"
+    assert len(output_files) > 0, f"No files found in gs://{bucket_name}/outputs/"
     for output_file in output_files:
         assert output_file.size > 0, f"Output file is empty: {output_file.name}"

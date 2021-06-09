@@ -18,6 +18,7 @@ from typing import Any, List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.pvalue import AsSingleton
 import torch
 
 
@@ -41,7 +42,13 @@ def run(input_text: str, beam_args: Optional[List[str]] = None) -> None:
     (
         pipeline
         | "Create data" >> beam.Create([input_text])
-        | "Check GPU availability" >> beam.Map(check_gpus)
+        | "Check GPU availability"
+        >> beam.Map(
+            lambda x, unused_side_input: x,
+            unused_side_input=beam.pvalue.AsSingleton(
+                pipeline | beam.Create([None]) | beam.Map(check_gpus)
+            ),
+        )
         | "My transform" >> beam.Map(logging.info)
     )
     pipeline.run()

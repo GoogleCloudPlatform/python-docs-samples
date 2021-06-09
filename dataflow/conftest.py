@@ -15,6 +15,7 @@ import itertools
 import json
 import multiprocessing as mp
 import os
+import re
 import subprocess
 import sys
 import time
@@ -31,6 +32,9 @@ ZONE = "us-west1-b"
 
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
+HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
+UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
+
 
 @dataclass
 class Utils:
@@ -40,25 +44,33 @@ class Utils:
     zone: str = ZONE
 
     @staticmethod
-    def storage_bucket(bucket_name: str) -> str:
+    def hyphen_name(name: str) -> str:
+        return f"{HYPHEN_NAME_RE.sub('-', name)}-{UUID}"
+
+    @staticmethod
+    def underscore_name(name: str) -> str:
+        return f"{UNDERSCORE_NAME_RE.sub('_', name)}-{UUID}"
+
+    @staticmethod
+    def storage_bucket(name: str) -> str:
         from google.cloud import storage
 
         storage_client = storage.Client()
-        bucket_unique_name = f"{bucket_name}-{UUID}"
-        bucket = storage_client.create_bucket(bucket_unique_name)
+        bucket = storage_client.create_bucket(Utils.hyphen_name(name))
 
-        print(f"storage_bucket: {bucket_unique_name}")
-        yield bucket_unique_name
+        print(f"storage_bucket: {bucket.name}")
+        yield bucket.name
 
         bucket.delete(force=True)
 
     @staticmethod
-    def bigquery_dataset(dataset_name: str, project: str = PROJECT) -> str:
+    def bigquery_dataset(name: str, project: str = PROJECT) -> str:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
+
         dataset = bigquery_client.create_dataset(
-            bigquery.Dataset(f"{project}.{dataset_name.replace('-', '_')}_{UUID}")
+            bigquery.Dataset(f"{project}.{Utils.underscore_name(name)}")
         )
 
         print(f"bigquery_dataset: {dataset.full_dataset_id}")
@@ -77,11 +89,11 @@ class Utils:
             yield dict(row)
 
     @staticmethod
-    def pubsub_topic(topic_name: str, project: str = PROJECT) -> str:
+    def pubsub_topic(name: str, project: str = PROJECT) -> str:
         from google.cloud import pubsub
 
         publisher_client = pubsub.PublisherClient()
-        topic_path = publisher_client.topic_path(project, f"{topic_name}-{UUID}")
+        topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
         topic = publisher_client.create_topic(topic_path)
 
         print(f"pubsub_topic: {topic.name}")
@@ -98,14 +110,14 @@ class Utils:
     @staticmethod
     def pubsub_subscription(
         topic_path: str,
-        subscription_name: str,
+        name: str,
         project: str = PROJECT,
     ) -> str:
         from google.cloud import pubsub
 
         subscriber = pubsub.SubscriberClient()
         subscription_path = subscriber.subscription_path(
-            project, f"{subscription_name}-{UUID}"
+            project, Utils.hyphen_name(name)
         )
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
@@ -200,7 +212,7 @@ class Utils:
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
-            yield f"gcr.io/{project}/{image_name}-{UUID}:latest"
+            yield f"{image_name}-{UUID}:latest"
         else:
             raise ValueError("must specify either `config` or `image_name`")
 
@@ -216,36 +228,6 @@ class Utils:
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
-
-    @staticmethod
-    def dataflow_job_id_from_job_name(
-        job_name: str,
-        project: str = PROJECT,
-    ) -> Optional[str]:
-        from googleapiclient.discovery import build
-
-        dataflow = build("dataflow", "v1b3")
-
-        # Only return the 50 most recent results - our job is likely to be in here.
-        # If the job is not found, first try increasing this number.[]''job_id
-        # For more info see:
-        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
-        jobs_request = (
-            dataflow.projects()
-            .jobs()
-            .list(
-                projectId=project,
-                filter="ACTIVE",
-                pageSize=50,
-            )
-        )
-        response = jobs_request.execute()
-
-        # Search for the job in the list that has our name (names are unique)
-        for job in response["jobs"]:
-            if job["name"] == job_name:
-                return job["id"]
-        return None
 
     @staticmethod
     def dataflow_jobs_wait(
@@ -304,19 +286,9 @@ class Utils:
         subprocess.run(cmd, check=True)
 
     @staticmethod
-    def dataflow_jobs_cancel_by_job_name(
-        job_name: str, project: str = PROJECT, region: str = REGION
-    ) -> None:
-        # To cancel a dataflow job, we need its ID, not its name.
-        # If it doesn't, job_id will be equal to None.
-        job_id = Utils.dataflow_job_id_from_job_name(project, job_name)
-        if job_id is not None:
-            Utils.dataflow_jobs_cancel_by_job_id(job_id, project, region)
-
-    @staticmethod
     def dataflow_flex_template_build(
         bucket_name: str,
-        template_image: str,
+        image_name: str,
         metadata_file: str,
         project: str = PROJECT,
         template_file: str = "template.json",
@@ -330,7 +302,7 @@ class Utils:
             "build",
             template_gcs_path,
             f"--project={project}",
-            f"--image={template_image}",
+            f"--image=gcr.io/{project}/{image_name}",
             "--sdk-language=PYTHON",
             f"--metadata-file={metadata_file}",
         ]
@@ -353,7 +325,7 @@ class Utils:
         import yaml
 
         # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/run
-        unique_job_name = f"{job_name}-{UUID}"
+        unique_job_name = Utils.hyphen_name(job_name)
         print(f"dataflow_job_name: {unique_job_name}")
         cmd = [
             "gcloud",
