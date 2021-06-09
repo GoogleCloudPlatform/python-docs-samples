@@ -14,20 +14,15 @@
 # [START composer_grouping_airflow_1]
 
 from airflow import DAG
-from airflow import models
-import datetime
-
-from airflow.operators.dummy_operator import DummyOperator
-
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.dummy_operator import DummyOperator
 from airflow.utils.dates import days_ago
 
 DAG_NAME = 'all_tasks_in_one_dag'
 
 args = {'owner': 'airflow', 'start_date': days_ago(1), 'schedule_interval': "@once"}
 
-with DAG(
-    dag_id=DAG_NAME, default_args=args) as dag:
+with DAG(dag_id=DAG_NAME, default_args=args) as dag:
 
     start = DummyOperator(
         task_id='start'
@@ -36,12 +31,12 @@ with DAG(
     task_1 = BashOperator(
         task_id='op-1',
         bash_command=':',
-       dag=dag)
+        dag=dag)
 
     task_2 = BashOperator(
         task_id='op-2',
         bash_command=':',
-       dag=dag)
+        dag=dag)
 
     some_other_task = DummyOperator(
         task_id='some-other-task'
@@ -50,12 +45,12 @@ with DAG(
     task_3 = BashOperator(
         task_id='op-3',
         bash_command=':',
-       dag=dag)
+        dag=dag)
 
     task_4 = BashOperator(
         task_id='op-4',
         bash_command=':',
-       dag=dag)
+        dag=dag)
 
     end = DummyOperator(
         task_id='end'

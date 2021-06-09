@@ -13,9 +13,9 @@
 # limitations under the License.
 # [START composer_relationship_parent_airflow_1]
 from airflow import DAG
-from airflow.utils.dates import days_ago
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.dummy_operator import DummyOperator
+from airflow.utils.dates import days_ago
 
 
 with DAG(
