@@ -1,1 +1,1 @@
-google-cloud-compute==0.3.0
+google-cloud-compute==0.4.0
