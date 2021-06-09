@@ -35,9 +35,6 @@ gcloud beta builds submit \
     --no-source
 ```
 
-> ℹ️ Make sure the GPU type you choose is available in the worker zone for the job.
-> For more information, see [GPU availability](https://cloud.google.com/dataflow/docs/resources/locations#gpu_availability).
-
 ## What's next?
 
 For a more complete example, take a look at

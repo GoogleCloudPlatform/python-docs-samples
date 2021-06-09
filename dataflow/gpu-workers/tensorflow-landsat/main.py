@@ -278,10 +278,6 @@ def run(
     # We currently cannot use the `with` statement to run without waiting.
     #   https://issues.apache.org/jira/browse/BEAM-12455
     pipeline = beam.Pipeline(options=beam_options)
-
-    # Convert Landsat 8 scenes into images.
-    # ℹ️ We pass `gpu_check` as an unused side input to force that step in
-    # the pipeline to wait for the check before continuing.
     (
         pipeline
         | "Create scene IDs" >> beam.Create(scenes)
@@ -305,7 +301,6 @@ def run(
         )
         | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
     )
-
     pipeline.run()
 
 

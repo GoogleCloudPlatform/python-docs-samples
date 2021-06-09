@@ -42,6 +42,3 @@ gcloud beta builds submit \
     --substitutions _GCS_PATH=$GCS_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
 ```
-
-> ℹ️ Make sure the GPU type you choose is available in the worker zone for the job.
-> For more information, see [GPU availability](https://cloud.google.com/dataflow/docs/resources/locations#gpu_availability).

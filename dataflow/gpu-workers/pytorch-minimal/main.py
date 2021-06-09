@@ -18,7 +18,6 @@ from typing import Any, List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.pvalue import AsSingleton
 import torch
 
 
@@ -35,9 +34,6 @@ def check_gpus(element: Any, gpus_optional: bool = False) -> Any:
 
 def run(input_text: str, beam_args: Optional[List[str]] = None) -> None:
     beam_options = PipelineOptions(beam_args, save_main_session=True)
-
-    # We currently cannot use the `with` statement to run without waiting.
-    #   https://issues.apache.org/jira/browse/BEAM-12455
     pipeline = beam.Pipeline(options=beam_options)
     (
         pipeline

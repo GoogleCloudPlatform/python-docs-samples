@@ -260,7 +260,7 @@ class Utils:
                 print(response)
                 if response["currentState"] == status:
                     return True
-            except:
+            except Exception:
                 pass
             time.sleep(sleep_time_seconds)
         return False
