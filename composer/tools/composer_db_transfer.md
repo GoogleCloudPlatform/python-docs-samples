@@ -103,12 +103,28 @@ python3 composer_db_transfer.py export \
     --fernet-key-file [PATH TO FERNET KEY FILE - TO BE CREATED]
 ```
 
+Example:
+
+```
+python3 composer_db_transfer.py export \
+    --project my-project \
+    --environment my-airflow-1-composer-environment \
+    --location europe-west4 \
+    --fernet-key-file my-fernet-key
+```
+
 ### Copying the files between the environments
 
 Exported files can be copied to the target environment, e.g. with:
 
 ```
 gsutil -m cp -r gs://[SOURCE ENV BUCKET NAME]/export gs://[TARGET ENV BUCKET NAME]/import
+```
+
+Example:
+
+```
+gsutil -m cp -r gs://europe-west4-my-airflow-1-composer-environment-123456abc-bucket/export gs://europe-west4-my-airflow-2-composer-environment-789xyz-bucket/import
 ```
 
 ### Import to a new environment (Airflow 2.0.1+)
@@ -128,6 +144,16 @@ python3 composer_db_transfer.py import \
     --environment [TARGET ENVIRONMENT NAME] \
     --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE FROM SOURCE ENVIRONMENT]
+```
+
+Example:
+
+```
+python3 composer_db_transfer.py import \
+    --project my-project \
+    --environment my-airflow-2-composer-environment \
+    --location europe-west4 \
+    --fernet-key-file my-fernet-key
 ```
 
 ## Troubleshooting
