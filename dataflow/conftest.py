@@ -49,7 +49,7 @@ class Utils:
 
     @staticmethod
     def underscore_name(name: str) -> str:
-        return f"{UNDERSCORE_NAME_RE.sub('_', name)}-{UUID}"
+        return f"{UNDERSCORE_NAME_RE.sub('_', name)}_{UUID}"
 
     @staticmethod
     def storage_bucket(name: str) -> str:
