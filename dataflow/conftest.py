@@ -207,13 +207,13 @@ class Utils:
                 "builds",
                 "submit",
                 f"--project={project}",
-                f"--tag=gcr.io/{project}/{image_name}-{UUID}:latest",
+                f"--tag=gcr.io/{project}/{image_name}:{UUID}",
                 *cmd_substitutions,
                 ".",
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
-            yield f"{image_name}-{UUID}:latest"
+            yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
 
@@ -223,7 +223,7 @@ class Utils:
                 "container",
                 "images",
                 "delete",
-                f"gcr.io/{project}/{image_name}-{UUID}:latest",
+                f"gcr.io/{project}/{image_name}:{UUID}",
                 f"--project={project}",
                 "--force-delete-tags",
                 "--quiet",
