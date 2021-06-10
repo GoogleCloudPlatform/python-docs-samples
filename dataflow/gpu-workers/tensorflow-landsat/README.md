@@ -39,6 +39,6 @@ export GPU_TYPE="nvidia-tesla-t4"
 
 gcloud beta builds submit \
     --config run.yaml \
-    --substitutions _GCS_PATH=$GCS_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
+    --substitutions _OUTPUT_PATH=$OUTPUT_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
 ```
