@@ -1,4 +1,4 @@
-# PyTorch GPU minimal pipeline
+# TensorFlow GPU minimal pipeline
 
 ## Before you begin
 
