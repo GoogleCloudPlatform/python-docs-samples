@@ -307,7 +307,10 @@ class Utils:
         for _ in range(0, timeout_sec, poll_interval_sec):
             try:
                 job = Utils.dataflow_jobs_get(
-                    job_id, job_name, project, region, list_page_size
+                    job_id=job_id,
+                    job_name=job_name,
+                    project=project,
+                    list_page_size=list_page_size,
                 )
                 status = job["currentStatus"]
                 if status in target_status:
