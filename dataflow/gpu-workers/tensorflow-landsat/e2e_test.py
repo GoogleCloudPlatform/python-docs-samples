@@ -36,19 +36,26 @@ def worker_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(NAME, config="build.yaml")
 
 
-def test_end_to_end(utils: Utils, bucket_name: str, worker_image: str) -> None:
+@pytest.fixture(scope="session")
+def job_name(utils: Utils) -> str:
+    yield utils.hyphen_name(NAME)
+
+
+@pytest.fixture(scope="session")
+def run_job(utils: Utils, job_name: str, bucket_name: str, worker_image: str) -> str:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
-    job_name = utils.hyphen_name(NAME)
-    utils.cloud_build_submit(
+    yield from utils.cloud_build_submit(
         config="run.yaml",
         substitutions={
-            "_IMAGE": worker_image,
             "_JOB_NAME": job_name,
+            "_IMAGE": worker_image,
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
             "_OUTPUT_PATH": f"gs://{bucket_name}/outputs/",
         },
     )
 
+
+def test_tensorflow_landsat(utils: Utils, job_name: str, run_job: str) -> None:
     # Wait until the job finishes.
     status = utils.dataflow_jobs_wait(job_name=job_name)
     assert status == "JOB_STATE_DONE", f"Dataflow pipeline finished in {status} status"

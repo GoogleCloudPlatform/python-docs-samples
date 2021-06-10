@@ -180,6 +180,7 @@ class Utils:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
         cmd = ["gcloud", "auth", "configure-docker"]
         print(cmd)
+        subprocess.run(cmd, check=True)
 
         if substitutions:
             cmd_substitutions = [
@@ -188,7 +189,6 @@ class Utils:
         else:
             cmd_substitutions = []
 
-        subprocess.run(cmd, check=True)
         if config:
             cmd = [
                 "gcloud",
@@ -318,7 +318,9 @@ class Utils:
             except Exception as e:
                 logging.exception(e)
             time.sleep(poll_interval_sec)
-        return status
+        raise RuntimeError(
+            f"Dataflow job not found, job_id={job_id}, job_name={job_name}"
+        )
 
     @staticmethod
     def dataflow_jobs_cancel_by_job_id(
