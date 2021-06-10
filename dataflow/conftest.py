@@ -305,9 +305,10 @@ class Utils:
         status = None
         for _ in range(0, timeout_sec, poll_interval_sec):
             try:
-                status = Utils.dataflow_jobs_get(
+                job = Utils.dataflow_jobs_get(
                     job_id, job_name, project, region, list_page_size
                 )
+                status = job["currentStatus"]
                 if status in target_status:
                     return status
             except Exception as e:
