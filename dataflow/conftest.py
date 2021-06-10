@@ -225,6 +225,7 @@ class Utils:
                 "delete",
                 f"gcr.io/{project}/{image_name}-{UUID}:latest",
                 f"--project={project}",
+                "--force-delete-tags",
                 "--quiet",
             ]
             print(cmd)
@@ -271,7 +272,9 @@ class Utils:
                     location=region,
                 )
             )
-            for job in request.execute()["jobs"]:
+            response = request.execute()
+            print(response)
+            for job in response["jobs"]:
                 if job["name"] == job_name:
                     print(job)
                     return job
@@ -312,7 +315,7 @@ class Utils:
                 if status in target_status:
                     return status
             except Exception as e:
-                logging.warning(e)
+                logging.exception(e)
             time.sleep(poll_interval_sec)
         return status
 
