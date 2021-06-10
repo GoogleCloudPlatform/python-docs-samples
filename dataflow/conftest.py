@@ -236,7 +236,6 @@ class Utils:
         job_id: Optional[str] = None,
         job_name: Optional[str] = None,
         project: str = PROJECT,
-        region: str = REGION,
         list_page_size=100,
     ) -> Optional[Dict[str, Any]]:
         from googleapiclient.discovery import build
@@ -269,7 +268,6 @@ class Utils:
                     projectId=project,
                     filter="ACTIVE",
                     pageSize=list_page_size,
-                    location=region,
                 )
             )
             response = request.execute()
