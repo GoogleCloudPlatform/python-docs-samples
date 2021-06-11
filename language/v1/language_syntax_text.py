@@ -61,7 +61,7 @@ def sample_analyze_syntax(text_content):
             u"Location of this token in overall document: {}".format(text.begin_offset)
         )
         # Get the part of speech information for this token.
-        # Parts of spech are as defined in:
+        # Part of speech is defined in:
         # http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
         part_of_speech = token.part_of_speech
         # Get the tag, e.g. NOUN, ADJ for Adjective, et al.
