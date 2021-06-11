@@ -1,3 +1,4 @@
+# opencensus-ext-stackdriver 0.7.4 depends on google-cloud-monitoring<1.0.0 and >=0.30.0
 google-cloud-monitoring==0.36.0
 google-cloud-trace==0.24.0
 opencensus==0.7.13
