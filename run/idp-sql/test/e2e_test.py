@@ -25,6 +25,8 @@ import firebase_admin  # noqa: F401
 from firebase_admin import auth  # noqa: F401
 import pytest
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 default_app = firebase_admin.initialize_app()
 
@@ -179,7 +181,24 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     token = jwt_token
     service_url = deployed_service
 
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3
+    )
+
+    retry_strategy_500 = Retry(
+        total=3,
+        status_forcelist=[500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3
+    )
+
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
     client = requests.session()
+    client.mount("https://", adapter)
 
     # Can successfully make a request
     response = client.get(service_url)
@@ -197,6 +216,8 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     assert response.status_code == 200
     assert "🐶" in response.content.decode("UTF-8")
 
+    adapter = HTTPAdapter(max_retries=retry_strategy_500)
+    client.mount("https://", adapter)
     # Cannot make post with bad token
     response = client.post(
         service_url,
