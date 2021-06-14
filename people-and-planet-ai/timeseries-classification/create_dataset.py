@@ -36,13 +36,13 @@ def to_unix_time(timestamp: datetime) -> int:
     return time.mktime(timestamp.timetuple())
 
 
-def read_data(file_path: str, time_step_delta: timedelta) -> pd.DataFrame:
-    mmsi = os.path.splitext(os.path.basename(file_path))[0]
-    with tf.io.gfile.GFile(file_path, "rb") as f:
+def read_data(data_file: str) -> pd.DataFrame:
+    mmsi = os.path.splitext(os.path.basename(data_file))[0]
+    with tf.io.gfile.GFile(data_file, "rb") as f:
         ship_time_steps = (
             pd.DataFrame(np.load(f)["x"])
             .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
-            .resample(time_step_delta, on="timestamp")
+            .resample(TIME_STEP_DELTA, on="timestamp")
             .mean()
             .reset_index()
             .interpolate()
@@ -54,8 +54,8 @@ def read_data(file_path: str, time_step_delta: timedelta) -> pd.DataFrame:
         return ship_time_steps
 
 
-def read_labels_file(file_path: str) -> pd.DataFrame:
-    with tf.io.gfile.GFile(file_path, "r") as f:
+def read_labels_file(labels_file: str) -> pd.DataFrame:
+    with tf.io.gfile.GFile(labels_file, "r") as f:
         return (
             pd.read_csv(f, parse_dates=["start_time", "end_time"])
             .astype({"mmsi": int})
@@ -125,7 +125,7 @@ def GenerateData(pipeline, input_data_pattern: str, labels: pd.DataFrame):
         pipeline
         | "Input file pattern" >> beam.Create([input_data_pattern])
         | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
-        | "Read data" >> beam.Map(read_data, TIME_STEP_DELTA)
+        | "Read data" >> beam.Map(read_data)
         | "Label data" >> beam.Map(label_data, labels)
         | "Get training points"
         >> beam.FlatMap(generate_training_points, trainer.PADDING)

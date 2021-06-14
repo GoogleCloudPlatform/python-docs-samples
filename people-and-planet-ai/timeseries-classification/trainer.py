@@ -168,7 +168,7 @@ def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
     return keras.Model(input_layers, output_layers)
 
 
-def train_model(
+def run(
     train_files: str,
     eval_files: str,
     model_dir: str,
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     parser.add_argument("--tensorboard-dir", default="tensorboard")
     args = parser.parse_args()
 
-    train_model(
+    run(
         train_files=args.train_files,
         eval_files=args.eval_files,
         model_dir=args.output_dir,
