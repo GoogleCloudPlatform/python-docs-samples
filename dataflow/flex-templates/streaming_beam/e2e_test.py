@@ -10,6 +10,7 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
+from conftest import PROJECT
 import json
 import time
 
@@ -78,6 +79,7 @@ def test_flex_template_run(
     pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
+    project: str = PROJECT,
 ) -> None:
 
     bigquery_table = "output_table"
@@ -86,8 +88,8 @@ def test_flex_template_run(
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
-            "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.{bigquery_table}",
+            "input_subscription": f"projects/{project}/subscriptions/{pubsub_subscription}",
+            "output_table": f"{project}:{bigquery_dataset}.{bigquery_table}",
         },
     )
 
@@ -97,7 +99,7 @@ def test_flex_template_run(
 
     # Then, wait a minute for data to arrive, get processed, and cancel it.
     time.sleep(60)
-    utils.dataflow_jobs_cancel_by_job_id(job_id)
+    utils.dataflow_jobs_cancel(job_id)
 
     # Check for the output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"

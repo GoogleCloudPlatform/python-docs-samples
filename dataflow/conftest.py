@@ -312,7 +312,7 @@ class Utils:
                     project=project,
                     list_page_size=list_page_size,
                 )
-                status = job["currentStatus"]
+                status = job["currentState"]
                 if status in target_status:
                     return status
             except Exception as e:
@@ -323,7 +323,7 @@ class Utils:
         )
 
     @staticmethod
-    def dataflow_jobs_cancel_by_job_id(
+    def dataflow_jobs_cancel(
         job_id: str, project: str = PROJECT, region: str = REGION
     ) -> None:
         print(f"Canceling Dataflow job ID: {job_id}")
@@ -340,6 +340,7 @@ class Utils:
             job_id,
             f"--region={region}",
         ]
+        print(cmd)
         subprocess.run(cmd, check=True)
 
     @staticmethod
