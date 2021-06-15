@@ -28,8 +28,7 @@ import pytest
 # Default options.
 UUID = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-west1"
-ZONE = "us-west1-b"
+REGION = "us-central1"
 
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
@@ -42,7 +41,6 @@ class Utils:
     uuid: str = UUID
     project: str = PROJECT
     region: str = REGION
-    zone: str = ZONE
 
     @staticmethod
     def hyphen_name(name: str) -> str:
@@ -59,10 +57,11 @@ class Utils:
         storage_client = storage.Client()
         bucket = storage_client.create_bucket(Utils.hyphen_name(name))
 
-        print(f"storage_bucket: {bucket.name}")
+        print(f"Created storage_bucket: {bucket.name}")
         yield bucket.name
 
         bucket.delete(force=True)
+        print(f"Deleted storage_bucket: {bucket.name}")
 
     @staticmethod
     def bigquery_dataset(name: str, project: str = PROJECT) -> str:
@@ -74,12 +73,13 @@ class Utils:
             bigquery.Dataset(f"{project}.{Utils.underscore_name(name)}")
         )
 
-        print(f"bigquery_dataset: {dataset.full_dataset_id}")
+        print(f"Created bigquery_dataset: {dataset.full_dataset_id}")
         yield dataset.full_dataset_id
 
         bigquery_client.delete_dataset(
             dataset.full_dataset_id.replace(":", "."), delete_contents=True
         )
+        print(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
 
     @staticmethod
     def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
@@ -97,7 +97,7 @@ class Utils:
         topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
         topic = publisher_client.create_topic(topic_path)
 
-        print(f"pubsub_topic: {topic.name}")
+        print(f"Created pubsub_topic: {topic.name}")
         yield topic.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -107,6 +107,7 @@ class Utils:
         cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
         print(cmd)
         subprocess.run(cmd, check=True)
+        print(f"Deleted pubsub_topic: {topic.name}")
 
     @staticmethod
     def pubsub_subscription(
@@ -122,7 +123,7 @@ class Utils:
         )
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
-        print(f"pubsub_subscription: {subscription.name}")
+        print(f"Created pubsub_subscription: {subscription.name}")
         yield subscription.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -140,6 +141,7 @@ class Utils:
         ]
         print(cmd)
         subprocess.run(cmd, check=True)
+        print(f"Deleted pubsub_subscription: {subscription.name}")
 
     @staticmethod
     def pubsub_publisher(
@@ -203,6 +205,7 @@ class Utils:
                 ]
                 print(cmd)
                 subprocess.run(cmd, check=True)
+                print(f"Cloud build finished successfully: {config}")
                 yield f.read()
         elif image_name:
             cmd = [
@@ -216,6 +219,7 @@ class Utils:
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
+            print(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
@@ -233,6 +237,7 @@ class Utils:
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
+            print(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
     def dataflow_jobs_get(
@@ -258,7 +263,7 @@ class Utils:
                 )
             )
             job = request.execute()
-            print(job)
+            print(f"Dataflow job: {job}")
             return job
 
         elif job_name:
@@ -274,10 +279,10 @@ class Utils:
                 )
             )
             response = request.execute()
-            print(response)
+            print(f"Finding job {job_name}, response={response}")
             for job in response["jobs"]:
                 if job["name"] == job_name:
-                    print(job)
+                    print(f"Dataflow job: {job}")
                     return job
             return None
 
@@ -305,7 +310,9 @@ class Utils:
         target_status = (
             {until_status} if isinstance(until_status, str) else set(until_status)
         )
-        print(f"Waiting for Dataflow job until {target_status}")
+        print(
+            f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
+        )
         status = None
         for _ in range(0, timeout_sec, poll_interval_sec):
             try:
@@ -345,6 +352,7 @@ class Utils:
         ]
         print(cmd)
         subprocess.run(cmd, check=True)
+        print(f"Cancelled Dataflow job: {job_id}")
 
     @staticmethod
     def dataflow_flex_template_build(

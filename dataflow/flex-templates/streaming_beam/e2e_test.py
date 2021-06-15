@@ -87,7 +87,7 @@ def test_flex_template_run(
         bucket_name=bucket_name,
         parameters={
             "input_subscription": f"projects/{utils.project}/subscriptions/{pubsub_subscription}",
-            "output_table": f"{utils.kproject}:{bigquery_dataset}.{bigquery_table}",
+            "output_table": f"{utils.project}:{bigquery_dataset}.{bigquery_table}",
         },
     )
 
