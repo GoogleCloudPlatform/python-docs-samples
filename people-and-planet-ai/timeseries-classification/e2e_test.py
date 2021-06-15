@@ -73,26 +73,36 @@ def test_serialize_deserialize():
     assert set(outputs.keys()) == set(trainer.OUTPUTS_SPEC.keys())
 
 
-@mock.patch.object(trainer, "PADDING", 1)
+@mock.patch.object(trainer.main, "PADDING", 1)
 def test_e2e_local():
     with tempfile.TemporaryDirectory() as temp_dir:
+        train_data_dir = os.path.join(temp_dir, "data", "train")
+        eval_data_dir = os.path.join(temp_dir, "data", "eval")
+        model_dir = os.path.join(temp_dir, "model")
+        tensorboard_dir = os.path.join(temp_dir, "tensorboard")
+
         # Create the dataset TFRecord files.
-        train_files, eval_files = create_dataset.run(
-            input_data="test_data/*.npz",
-            input_labels="test_data/*.csv",
-            output_datasets_path=temp_dir,
+        create_dataset.run(
+            data_files="test_data/*.npz",
+            label_files="test_data/*.csv",
+            train_data_dir=train_data_dir,
+            eval_data_dir=eval_data_dir,
+            beam_args=[],
         )
+        assert os.listdir(train_data_dir), "no training files found"
+        assert os.listdir(eval_data_dir), "no evaluation files found"
 
         # Train the model and save it.
-        model_dir = os.path.join(temp_dir, "model")
-        trainer.train_model(
-            train_files=train_files,
-            eval_files=eval_files,
+        trainer.run(
+            train_data_dir=train_data_dir,
+            eval_data_dir=eval_data_dir,
             model_dir=model_dir,
-            tensorboard_dir=os.path.join(temp_dir, "tensorboard"),
+            tensorboard_dir=tensorboard_dir,
             train_steps=1,
             eval_steps=1,
         )
+        assert os.listdir(model_dir), "no model files found"
+        assert os.listdir(tensorboard_dir), "no tensorboard files found"
 
         # Load the trained model and make a prediction.
         trained_model = keras.models.load_model(model_dir)

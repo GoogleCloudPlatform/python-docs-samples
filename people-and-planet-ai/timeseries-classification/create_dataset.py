@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 from datetime import datetime, timedelta
 import logging
 import os
@@ -127,12 +128,13 @@ def GenerateData(pipeline, input_data: str, input_labels: str):
 
 
 def run(
-    input_data: str,
-    input_labels: str,
-    output_datasets_path: str,
+    data_files: str,
+    label_files: str,
+    train_data_dir: str,
+    eval_data_dir: str,
     train_eval_split: Tuple[int, int] = [80, 20],
     beam_args: Optional[List[str]] = None,
-) -> Tuple[str, str]:
+) -> None:
     beam_options = PipelineOptions(
         beam_args,
         type_check_additional="all",
@@ -141,7 +143,7 @@ def run(
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, evaluation_data = (
             pipeline
-            | "Generate data" >> GenerateData(input_data, input_labels)
+            | "Generate data" >> GenerateData(data_files, label_files)
             | "Serialize TFRecords" >> beam.Map(trainer.serialize)
             | "Train-eval split"
             >> beam.Partition(
@@ -149,50 +151,50 @@ def run(
             )
         )
 
-        train_files_prefix = f"{output_datasets_path}/train/data"
         (
             training_data
             | "Write train files"
             >> beam.io.WriteToTFRecord(
-                train_files_prefix,
+                f"{train_data_dir}/part",
                 file_name_suffix=".tfrecords.gz",
                 compression_type=beam.io.filesystems.CompressionTypes.GZIP,
             )
         )
 
-        eval_files_prefix = f"{output_datasets_path}/eval/data"
         (
             evaluation_data
             | "Write eval files"
             >> beam.io.WriteToTFRecord(
-                eval_files_prefix,
+                f"{eval_data_dir}/part",
                 file_name_suffix=".tfrecords.gz",
                 compression_type=beam.io.filesystems.CompressionTypes.GZIP,
             )
         )
 
-    return f"{train_files_prefix}*", f"{eval_files_prefix}*"
-
 
 if __name__ == "__main__":
-    import argparse
-
     logging.getLogger().setLevel(logging.INFO)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--input-data",
+        "--data-files",
         required=True,
         help="File pattern for input data.",
     )
     parser.add_argument(
-        "--input-labels",
+        "--label-files",
         required=True,
         help="File pattern for data labels.",
     )
     parser.add_argument(
-        "--output-datasets-path",
+        "--train-dataset-path",
         required=True,
-        help="Output path prefix for training and evaluation dataset files.",
+        help="Path prefix for training dataset files.",
+    )
+    parser.add_argument(
+        "--eval-dataset-path",
+        required=True,
+        help="Path prefix for training dataset files.",
     )
     parser.add_argument(
         "--train-eval-split",
@@ -204,9 +206,10 @@ if __name__ == "__main__":
     args, beam_args = parser.parse_known_args()
 
     train_files, eval_files = run(
-        input_data=args.input_data,
-        input_labels=args.input_labels,
-        output_datasets_path=args.output_datasets_path,
+        data_files=args.data_files,
+        label_files=args.label_files,
+        train_data_dir=args.train_dataset_path,
+        eval_data_dir=args.eval_dataset_path,
         train_eval_split=args.train_eval_split,
         beam_args=beam_args,
     )

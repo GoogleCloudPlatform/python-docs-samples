@@ -104,8 +104,8 @@ def deserialize(
     return parse_features(INPUTS_SPEC), parse_features(OUTPUTS_SPEC)
 
 
-def build_dataset(files_pattern: str, batch_size: int = 64) -> tf.data.Dataset:
-    file_names = tf.io.gfile.glob(files_pattern)
+def build_dataset(data_dir: str, batch_size: int = 64) -> tf.data.Dataset:
+    file_names = tf.io.gfile.glob(f"{data_dir}/*")
     return (
         tf.data.TFRecordDataset(file_names, compression_type="GZIP")
         .map(deserialize, num_parallel_calls=tf.data.AUTOTUNE)
@@ -169,16 +169,16 @@ def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
 
 
 def run(
-    train_files: str,
-    eval_files: str,
+    train_data_dir: str,
+    eval_data_dir: str,
     model_dir: str,
     tensorboard_dir: str,
     train_steps=1000,
     eval_steps=100,
 ) -> None:
     # Create the training and evaluation datasets from the TFRecord files.
-    train_dataset = build_dataset(train_files)
-    eval_dataset = build_dataset(eval_files)
+    train_dataset = build_dataset(train_data_dir)
+    eval_dataset = build_dataset(eval_data_dir)
 
     # Build and compile the model.
     model = build_model(train_dataset)
@@ -213,8 +213,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     run(
-        train_files=args.train_files,
-        eval_files=args.eval_files,
+        train_data_dir=args.train_files,
+        eval_data_dir=args.eval_files,
         model_dir=args.output_dir,
         tensorboard_dir=args.tensorboard_dir,
     )
