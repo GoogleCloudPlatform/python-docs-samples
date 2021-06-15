@@ -12,13 +12,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Example of verifying Google Compute Engine virtual machine identity.
 
-# [START compute_vm_identity_verify_token]
+This sample will work only on a GCE virtual machine, as it relies on
+communication with metadata server (https://cloud.google.com/compute/docs/storing-retrieving-metadata).
+
+Example is used on: https://cloud.google.com/compute/docs/instances/verifying-instance-identity
+"""
 import pprint
 
+# [START compute_vm_identity_verify_token]
 import google.auth.transport.requests
 from google.oauth2 import id_token
-
 # [END compute_vm_identity_verify_token]
 
 # [START compute_vm_identity_acquire_token]
@@ -42,19 +48,15 @@ def acquire_token(audience: str = AUDIENCE_URL) -> str:
     # Extract and return the token from the response.
     r.raise_for_status()
     return r.text
-
-
 # [END compute_vm_identity_acquire_token]
 
+
 # [START compute_vm_identity_verify_token]
-
-
-def verity_token(token: str, audience: str) -> dict:
+def verify_token(token: str, audience: str) -> dict:
     """Verify token signature and return the token payload"""
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
     return payload
-
 # [END compute_vm_identity_verify_token]
 
 
@@ -62,4 +64,4 @@ if __name__ == '__main__':
     token_ = acquire_token()
     print("Received token:", token_)
     print("Token verification:")
-    pprint.pprint(verity_token(acquire_token(AUDIENCE_URL), AUDIENCE_URL))
+    pprint.pprint(verify_token(acquire_token(AUDIENCE_URL), AUDIENCE_URL))
