@@ -34,7 +34,7 @@ def bucket_name(utils: Utils) -> str:
 @pytest.fixture(scope="session")
 def build_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(
-        NAME,
+        image_name=NAME,
         config="build.yaml",
         substitutions={"_IMAGE": f"{NAME}:{utils.uuid}"},
     )
@@ -49,8 +49,10 @@ def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
             "_JOB_NAME": utils.hyphen_name(NAME),
             "_IMAGE": f"{NAME}:{utils.uuid}",
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
+            "_REGION": utils.region,
             "_OUTPUT_PATH": f"gs://{bucket_name}/outputs/",
         },
+        source="--no-source",
     )
 
 

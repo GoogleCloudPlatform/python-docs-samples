@@ -50,4 +50,5 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
 
+# Use the Compute Engine default service account to launch the job.
 serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com

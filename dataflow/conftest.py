@@ -174,6 +174,7 @@ class Utils:
     def cloud_build_submit(
         image_name: Optional[str] = None,
         config: Optional[str] = None,
+        source: str = ".",
         substitutions: Optional[Dict[str, str]] = None,
         project: str = PROJECT,
     ) -> None:
@@ -198,6 +199,7 @@ class Utils:
                     f"--project={project}",
                     f"--config={config}",
                     *cmd_substitutions,
+                    source,
                 ]
                 print(cmd)
                 subprocess.run(cmd, check=True)
@@ -210,7 +212,7 @@ class Utils:
                 f"--project={project}",
                 f"--tag=gcr.io/{project}/{image_name}:{UUID}",
                 *cmd_substitutions,
-                ".",
+                source,
             ]
             print(cmd)
             subprocess.run(cmd, check=True)
