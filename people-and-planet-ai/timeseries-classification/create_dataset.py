@@ -144,7 +144,11 @@ def run(
     train_eval_split: Tuple[int, int] = [80, 20],
     beam_args: Optional[List[str]] = None,
 ) -> Tuple[str, str]:
-    beam_options = PipelineOptions(beam_args, type_check_additional="all")
+    beam_options = PipelineOptions(
+        beam_args,
+        type_check_additional="all",
+        save_main_session=True,
+    )
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, evaluation_data = (
             pipeline
