@@ -273,8 +273,9 @@ class Utils:
                 dataflow.projects()
                 .jobs()
                 .list(
+                    # We don't filter="ACTIVE" because we still want to return the
+                    # job if it failed, is already done, or was cancelled.
                     projectId=project,
-                    filter="ACTIVE",
                     pageSize=list_page_size,
                 )
             )
@@ -295,11 +296,7 @@ class Utils:
         job_name: Optional[str] = None,
         project: str = PROJECT,
         region: str = REGION,
-        until_status: Union[str, Iterable[str]] = {
-            "JOB_STATE_DONE",
-            "JOB_STATE_FAILED",
-            "JOB_STATE_CANCELLED",
-        },
+        until_status: str = "JOB_STATE_DONE",
         timeout_sec: str = 600,
         poll_interval_sec=30,
         list_page_size=100,
@@ -307,9 +304,14 @@ class Utils:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
-        target_status = (
-            {until_status} if isinstance(until_status, str) else set(until_status)
-        )
+
+        # Wait until we reach the desired status, or the job finished in some way.
+        target_status = {
+            until_status,
+            "JOB_STATE_DONE",
+            "JOB_STATE_FAILED",
+            "JOB_STATE_CANCELLED",
+        }
         print(
             f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
         )
