@@ -72,7 +72,12 @@ def read_labels(file_pattern: str) -> pd.DataFrame:
     ).sort_values("start_time")
 
 
-def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
+def label_data(data: pd.DataFrame, input_labels: str) -> pd.DataFrame:
+    # TODO: read_labels only once per worker
+    #   Try passing the DataFrame directly, most likely most efficient.
+    #   Read unsorted into a PCollection, then get as side inputs and sort in-place.
+    #   Maybe serialize?
+    labels = read_labels(input_labels)
     data_with_labels = (
         pd.merge_asof(
             left=data,
@@ -120,13 +125,13 @@ def generate_training_points(
 @beam.ptransform_fn
 @beam.typehints.with_input_types(beam.pvalue.PBegin)
 @beam.typehints.with_output_types(Dict[str, np.ndarray])
-def GenerateData(pipeline, input_data_pattern: str, labels: pd.DataFrame):
+def GenerateData(pipeline, input_data: str, input_labels: str):
     return (
         pipeline
-        | "Input file pattern" >> beam.Create([input_data_pattern])
+        | "Input data" >> beam.Create([input_data])
         | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
         | "Read data" >> beam.Map(read_data)
-        | "Label data" >> beam.Map(label_data, labels)
+        | "Label data" >> beam.Map(label_data, input_labels)
         | "Get training points"
         >> beam.FlatMap(generate_training_points, trainer.PADDING)
     )
@@ -139,15 +144,13 @@ def run(
     train_eval_split: Tuple[int, int] = [80, 20],
     beam_args: Optional[List[str]] = None,
 ) -> Tuple[str, str]:
-    labels = read_labels(input_labels)
-
     beam_options = PipelineOptions(beam_args, type_check_additional="all")
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, evaluation_data = (
             pipeline
-            | "Generate data" >> GenerateData(input_data, labels)
+            | "Generate data" >> GenerateData(input_data, input_labels)
             | "Serialize TFRecords" >> beam.Map(trainer.serialize)
-            | "Train/eval split"
+            | "Train-eval split"
             >> beam.Partition(
                 lambda _, n: random.choices([0, 1], train_eval_split)[0], 2
             )
@@ -156,7 +159,7 @@ def run(
         train_files_prefix = f"{output_datasets_path}/train/data"
         (
             training_data
-            | "Write train TFRecords"
+            | "Write train files"
             >> beam.io.WriteToTFRecord(
                 train_files_prefix,
                 file_name_suffix=".tfrecords.gz",
@@ -167,7 +170,7 @@ def run(
         eval_files_prefix = f"{output_datasets_path}/eval/data"
         (
             evaluation_data
-            | "Write eval TFRecords"
+            | "Write eval files"
             >> beam.io.WriteToTFRecord(
                 eval_files_prefix,
                 file_name_suffix=".tfrecords.gz",

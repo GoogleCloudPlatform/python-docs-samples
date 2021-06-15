@@ -19,11 +19,13 @@ python create_dataset.py \
 
 ```sh
 python create_dataset.py \
-    --output-path-prefix "gs://$BUCKET/global-fishing-watch/dataset" \
-    --runner DataflowRunner \
+    --input-data "gs://$BUCKET/global-fishing-watch/data/252626663422393.npz" \
+    --input-labels "gs://$BUCKET/global-fishing-watch/data/labels/*.csv" \
+    --output-datasets-path "gs://$BUCKET/global-fishing-watch/datasets" \
+    --runner "DataflowRunner" \
     --project "$PROJECT" \
-    --region "$REGION" \
-    --temp_location "gs://$BUCKET/temp"
-
-python trainer.py
+    --temp_location "gs://$BUCKET/global-fishing-watch/temp" \
+    --region "us-central1" \
+    --requirements_file "./requirements.txt"
+    --setup_file "./setup.py"
 ```
