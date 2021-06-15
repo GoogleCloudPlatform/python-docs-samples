@@ -264,13 +264,19 @@ def _sink_pubsub_setup(client):
     )  # API call
     # [END sink_topic_permissions]
 
-    return topic
+    # create callback wrapper to delete topic when done
+    class TopicDeleter:
+        def delete(self):
+            client.delete_topic(request={"topic": topic_path})
+
+    return topic, TopicDeleter()
 
 
 @snippet
 def sink_pubsub(client, to_delete):
     """Sink log entries to pubsub."""
-    topic = _sink_pubsub_setup(client)
+    topic, topic_deleter = _sink_pubsub_setup(client)
+    to_delete.append(topic_deleter)
     sink_name = "robots-pubsub-%d" % (_millis(),)
     filter_str = "logName:apache-access AND textPayload:robot"
     updated_filter = "textPayload:robot"
@@ -282,6 +288,7 @@ def sink_pubsub(client, to_delete):
     sink.create()  # API call
     assert sink.exists()  # API call
     # [END sink_pubsub_create]
+    to_delete.append(sink)
     created_sink = sink
 
     # [START client_list_sinks]
