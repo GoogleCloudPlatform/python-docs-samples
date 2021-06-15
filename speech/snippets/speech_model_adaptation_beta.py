@@ -64,9 +64,7 @@ def transcribe_with_model_adaptation(
     # class and phrase set to send a transcription request with speech adaptation
 
     # Speech adaptation configuration
-    speech_adaptation = speech.SpeechAdaptation(
-        phrase_set_references=[phrase_set_name]
-    )
+    speech_adaptation = speech.SpeechAdaptation(phrase_set_references=[phrase_set_name])
 
     # speech configuration object
     config = speech.RecognitionConfig(
