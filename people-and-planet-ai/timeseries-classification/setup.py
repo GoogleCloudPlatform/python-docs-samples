@@ -15,11 +15,8 @@
 import os
 import setuptools
 
-if os.path.exists("requirements.txt"):
-    with open("requirements.txt") as f:
-        requirements = f.readlines()
-else:
-    requirements = []
+with open("requirements.txt") as f:
+    requirements = f.readlines()
 
 setuptools.setup(
     name=os.path.basename(os.getcwd()),

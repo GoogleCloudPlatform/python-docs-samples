@@ -18,7 +18,7 @@ import logging
 import os
 import random
 import time
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, Any
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -74,8 +74,7 @@ def read_labels(file_pattern: str) -> pd.DataFrame:
     ).sort_values("start_time")
 
 
-def label_data(data: pd.DataFrame, input_labels: str) -> pd.DataFrame:
-    labels = read_labels(input_labels)
+def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
     data_with_labels = (
         pd.merge_asof(
             left=data,
@@ -113,20 +112,6 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
         }
 
 
-@beam.ptransform_fn
-@beam.typehints.with_input_types(beam.pvalue.PBegin)
-@beam.typehints.with_output_types(Dict[str, np.ndarray])
-def GenerateData(pipeline, input_data: str, input_labels: str):
-    return (
-        pipeline
-        | "Input data" >> beam.Create([input_data])
-        | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
-        | "Read data" >> beam.Map(read_data)
-        | "Label data" >> beam.Map(label_data, input_labels)
-        | "Get training points" >> beam.FlatMap(generate_training_points)
-    )
-
-
 def run(
     data_files: str,
     label_files: str,
@@ -135,19 +120,26 @@ def run(
     train_eval_split: Tuple[int, int] = [80, 20],
     beam_args: Optional[List[str]] = None,
 ) -> None:
+
     beam_options = PipelineOptions(
         beam_args,
         type_check_additional="all",
         save_main_session=True,
     )
     with beam.Pipeline(options=beam_options) as pipeline:
+        labels = read_labels(label_files)
+
         training_data, evaluation_data = (
             pipeline
-            | "Generate data" >> GenerateData(data_files, label_files)
+            | "Data files" >> beam.Create([data_files])
+            | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
+            | "Read data" >> beam.Map(read_data)
+            | "Label data" >> beam.Map(label_data, labels)
+            | "Get training points" >> beam.FlatMap(generate_training_points)
             | "Serialize TFRecords" >> beam.Map(trainer.serialize)
             | "Train-eval split"
             >> beam.Partition(
-                lambda _, n: random.choices([0, 1], train_eval_split)[0], 2
+                lambda x, n: random.choices([0, 1], train_eval_split)[0], 2
             )
         )
 
@@ -184,17 +176,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--label-files",
         required=True,
-        help="File pattern for data labels.",
+        help="File pattern for input data labels.",
     )
     parser.add_argument(
-        "--train-dataset-path",
+        "--train-data-dir",
         required=True,
-        help="Path prefix for training dataset files.",
+        help="Directory path for the output training dataset files.",
     )
     parser.add_argument(
-        "--eval-dataset-path",
+        "--eval-data-dir",
         required=True,
-        help="Path prefix for training dataset files.",
+        help="Directory path for the output evaluation dataset files.",
     )
     parser.add_argument(
         "--train-eval-split",
@@ -205,14 +197,11 @@ if __name__ == "__main__":
     )
     args, beam_args = parser.parse_known_args()
 
-    train_files, eval_files = run(
+    run(
         data_files=args.data_files,
         label_files=args.label_files,
-        train_data_dir=args.train_dataset_path,
-        eval_data_dir=args.eval_dataset_path,
+        train_data_dir=args.train_data_dir,
+        eval_data_dir=args.eval_data_dir,
         train_eval_split=args.train_eval_split,
         beam_args=beam_args,
     )
-
-    print(f"train_files: {train_files}")
-    print(f"eval_files: {eval_files}")

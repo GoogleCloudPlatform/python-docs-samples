@@ -173,9 +173,10 @@ def run(
     eval_data_dir: str,
     model_dir: str,
     tensorboard_dir: str,
-    train_steps=1000,
-    eval_steps=100,
+    train_steps=10000,
+    eval_steps=1000,
 ) -> None:
+
     # Create the training and evaluation datasets from the TFRecord files.
     train_dataset = build_dataset(train_data_dir)
     eval_dataset = build_dataset(eval_data_dir)
@@ -210,6 +211,8 @@ if __name__ == "__main__":
     parser.add_argument("--eval-files", required=True)
     parser.add_argument("--model-dir", default=os.environ.get("AIP_MODEL_DIR", "model"))
     parser.add_argument("--tensorboard-dir", default="tensorboard")
+    parser.add_argument("--train-steps", default=1000)
+    parser.add_argument("--eval-steps", default=100)
     args = parser.parse_args()
 
     run(
