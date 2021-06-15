@@ -28,5 +28,6 @@ python create_dataset.py \
     --project "$PROJECT" \
     --temp_location "gs://$BUCKET/global-fishing-watch/temp" \
     --region "us-central1" \
-    --setup_file "./setup.py"
+    --setup_file "./setup.py" \
+    --min_num_workers 30
 ```

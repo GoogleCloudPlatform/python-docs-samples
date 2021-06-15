@@ -56,7 +56,7 @@ def read_data(data_file: str) -> pd.DataFrame:
         return ship_time_steps
 
 
-def read_labels_file(labels_file: str) -> pd.DataFrame:
+def read_labels(labels_file: str) -> pd.DataFrame:
     with tf.io.gfile.GFile(labels_file, "r") as f:
         return (
             pd.read_csv(f, parse_dates=["start_time", "end_time"])
@@ -66,12 +66,6 @@ def read_labels_file(labels_file: str) -> pd.DataFrame:
                 end_time=lambda df: df["end_time"].map(to_unix_time),
             )
         )
-
-
-def read_labels(file_pattern: str) -> pd.DataFrame:
-    return pd.concat(
-        [read_labels_file(filename) for filename in tf.io.gfile.glob(file_pattern)]
-    ).sort_values("start_time")
 
 
 def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
@@ -127,7 +121,9 @@ def run(
         save_main_session=True,
     )
     with beam.Pipeline(options=beam_options) as pipeline:
-        labels = read_labels(label_files)
+        labels = pd.concat(
+            [read_labels(filename) for filename in tf.io.gfile.glob(label_files)]
+        ).sort_values("start_time")
 
         training_data, evaluation_data = (
             pipeline
