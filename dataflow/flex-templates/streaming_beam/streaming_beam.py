@@ -24,82 +24,99 @@ import argparse
 import json
 import logging
 import time
+from typing import Any, Dict, List
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import apache_beam.transforms.window as window
 
 # Defines the BigQuery schema for the output table.
-SCHEMA = ','.join([
-    'url:STRING',
-    'num_reviews:INTEGER',
-    'score:FLOAT64',
-    'first_date:TIMESTAMP',
-    'last_date:TIMESTAMP',
-])
+SCHEMA = ",".join(
+    [
+        "url:STRING",
+        "num_reviews:INTEGER",
+        "score:FLOAT64",
+        "first_date:TIMESTAMP",
+        "last_date:TIMESTAMP",
+    ]
+)
 
 
-def parse_json_message(message):
+def parse_json_message(message: str) -> Dict[str, Any]:
     """Parse the input json message and add 'score' & 'processing_time' keys."""
     row = json.loads(message)
     return {
-        'url': row['url'],
-        'score': 1.0 if row['review'] == 'positive' else 0.0,
-        'processing_time': int(time.time()),
+        "url": row["url"],
+        "score": 1.0 if row["review"] == "positive" else 0.0,
+        "processing_time": int(time.time()),
     }
 
 
-def get_statistics(url_messages):
-    """Get statistics from the input URL messages."""
-    url, messages = url_messages
-    return {
-        'url': url,
-        'num_reviews': len(messages),
-        'score': sum(msg['score'] for msg in messages) / len(messages),
-        'first_date': min(msg['processing_time'] for msg in messages),
-        'last_date': max(msg['processing_time'] for msg in messages),
-    }
-
-
-def run(args, input_subscription, output_table, window_interval):
+def run(
+    input_subscription: str,
+    output_table: str,
+    window_interval_sec: int = 60,
+    beam_args: List[str] = None,
+) -> None:
     """Build and run the pipeline."""
-    options = PipelineOptions(args, save_main_session=True, streaming=True)
+    options = PipelineOptions(beam_args, save_main_session=True, streaming=True)
 
     with beam.Pipeline(options=options) as pipeline:
-
-        # Read the messages from PubSub and process them.
         messages = (
             pipeline
-            | 'Read from Pub/Sub' >> beam.io.ReadFromPubSub(
-                subscription=input_subscription).with_output_types(bytes)
-            | 'UTF-8 bytes to string' >> beam.Map(lambda msg: msg.decode('utf-8'))
-            | 'Parse JSON messages' >> beam.Map(parse_json_message)
-            | 'Fixed-size windows' >> beam.WindowInto(
-                window.FixedWindows(int(window_interval), 0))
-            | 'Add URL keys' >> beam.Map(lambda msg: (msg['url'], msg))
-            | 'Group by URLs' >> beam.GroupByKey()
-            | 'Get statistics' >> beam.Map(get_statistics))
+            | "Read from Pub/Sub"
+            >> beam.io.ReadFromPubSub(
+                subscription=input_subscription
+            ).with_output_types(bytes)
+            | "UTF-8 bytes to string" >> beam.Map(lambda msg: msg.decode("utf-8"))
+            | "Parse JSON messages" >> beam.Map(parse_json_message)
+            | "Fixed-size windows"
+            >> beam.WindowInto(window.FixedWindows(window_interval_sec, 0))
+            | "Add URL keys" >> beam.WithKeys(lambda msg: msg["url"])
+            | "Group by URLs" >> beam.GroupByKey()
+            | "Get statistics"
+            >> beam.MapTuple(
+                lambda url, messages: {
+                    "url": url,
+                    "num_reviews": len(messages),
+                    "score": sum(msg["score"] for msg in messages) / len(messages),
+                    "first_date": min(msg["processing_time"] for msg in messages),
+                    "last_date": max(msg["processing_time"] for msg in messages),
+                }
+            )
+        )
 
         # Output the results into BigQuery table.
-        _ = messages | 'Write to Big Query' >> beam.io.WriteToBigQuery(
-            output_table, schema=SCHEMA)
+        _ = messages | "Write to Big Query" >> beam.io.WriteToBigQuery(
+            output_table, schema=SCHEMA
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--output_table',
-        help='Output BigQuery table for results specified as: '
-        'PROJECT:DATASET.TABLE or DATASET.TABLE.')
+        "--output_table",
+        help="Output BigQuery table for results specified as: "
+        "PROJECT:DATASET.TABLE or DATASET.TABLE.",
+    )
     parser.add_argument(
-        '--input_subscription',
-        help='Input PubSub subscription of the form '
-        '"projects/<PROJECT>/subscriptions/<SUBSCRIPTION>."')
+        "--input_subscription",
+        help="Input PubSub subscription of the form "
+        '"projects/<PROJECT>/subscriptions/<SUBSCRIPTION>."',
+    )
     parser.add_argument(
-        '--window_interval',
+        "--window_interval_sec",
         default=60,
-        help='Window interval in seconds for grouping incoming messages.')
-    known_args, pipeline_args = parser.parse_known_args()
-    run(pipeline_args, known_args.input_subscription, known_args.output_table,
-        known_args.window_interval)
+        type=int,
+        help="Window interval in seconds for grouping incoming messages.",
+    )
+    args, beam_args = parser.parse_known_args()
+
+    run(
+        input_subscription=args.input_subscription,
+        output_table=args.output_table,
+        window_interval_sec=args.window_interval_sec,
+        beam_args=beam_args,
+    )
