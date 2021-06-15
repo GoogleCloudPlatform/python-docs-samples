@@ -14,14 +14,14 @@
 
 import argparse
 import logging
-from typing import Any, List, Optional
+from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import torch
 
 
-def check_gpus(element: Any, gpus_optional: bool = False) -> Any:
+def check_gpus(_: None, gpus_optional: bool = False) -> None:
     """Validates that we are detecting GPUs, otherwise raise a RuntimeError."""
     if torch.cuda.is_available():
         logging.info(f"Using GPU: {torch.cuda.get_device_name(0)}")
@@ -29,7 +29,6 @@ def check_gpus(element: Any, gpus_optional: bool = False) -> Any:
         logging.warning("No GPUs found, defaulting to CPU.")
     else:
         raise RuntimeError("No GPUs found.")
-    return element
 
 
 def run(input_text: str, beam_args: Optional[List[str]] = None) -> None:

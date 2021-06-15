@@ -14,14 +14,14 @@
 
 import argparse
 import logging
-from typing import Any, List, Optional
+from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import tensorflow as tf
 
 
-def check_gpus(element: Any, gpus_optional: bool = False) -> Any:
+def check_gpus(_: None, gpus_optional: bool = False) -> None:
     """Validates that we are detecting GPUs, otherwise raise a RuntimeError."""
     gpu_devices = tf.config.list_physical_devices("GPU")
     if gpu_devices:
@@ -30,7 +30,6 @@ def check_gpus(element: Any, gpus_optional: bool = False) -> Any:
         logging.warning("No GPUs found, defaulting to CPU.")
     else:
         raise RuntimeError("No GPUs found.")
-    return element
 
 
 def run(input_text: str, beam_args: Optional[List[str]] = None) -> None:

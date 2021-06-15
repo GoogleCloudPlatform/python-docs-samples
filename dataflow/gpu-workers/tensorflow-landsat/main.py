@@ -111,31 +111,15 @@ SCENE_RE = re.compile(
 )
 
 
-def check_gpus(element: Any, gpus_optional: bool) -> Any:
-    """Makes sure TensorFlow detects GPUs, otherwise raise a RuntimeError.
-
-    Note that this function must be run within a PTransform like beam.Map so
-    we are sure it's run by the workers, and not the launcher process.
-
-    Args:
-        element: An element
-        gpus_optional: If True, the pipeline won't crash if GPUs are not found.
-
-    Returns:
-        The same element it received as is.
-
-    Raises:
-        RuntimeError: If no GPUs were found by TensorFlow.
-    """
-    # Make sure we have a GPU available.
+def check_gpus(_: None, gpus_optional: bool = False) -> None:
+    """Validates that we are detecting GPUs, otherwise raise a RuntimeError."""
     gpu_devices = tf.config.list_physical_devices("GPU")
-    logging.info(f"GPU devices: {gpu_devices}")
-    if len(gpu_devices) == 0:
-        if gpus_optional:
-            logging.warning("No GPUs found, defaulting to CPU.")
-        else:
-            raise RuntimeError("No GPUs found.")
-    return element
+    if gpu_devices:
+        logging.info(f"Using GPU: {gpu_devices}")
+    elif gpus_optional:
+        logging.warning("No GPUs found, defaulting to CPU.")
+    else:
+        raise RuntimeError("No GPUs found.")
 
 
 def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
@@ -274,9 +258,6 @@ def run(
     gamma = vis_params["gamma"]
 
     beam_options = PipelineOptions(beam_args, save_main_session=True)
-
-    # We currently cannot use the `with` statement to run without waiting.
-    #   https://issues.apache.org/jira/browse/BEAM-12455
     pipeline = beam.Pipeline(options=beam_options)
     (
         pipeline
