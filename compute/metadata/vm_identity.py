@@ -25,7 +25,6 @@ import pprint
 # [START compute_vm_identity_verify_token]
 import google.auth.transport.requests
 from google.oauth2 import id_token
-
 # [END compute_vm_identity_verify_token]
 
 # [START compute_vm_identity_acquire_token]
@@ -49,18 +48,15 @@ def acquire_token(audience: str = AUDIENCE_URL) -> str:
     # Extract and return the token from the response.
     r.raise_for_status()
     return r.text
-
-
 # [END compute_vm_identity_acquire_token]
 
+
 # [START compute_vm_identity_verify_token]
-def verity_token(token: str, audience: str) -> dict:
+def verify_token(token: str, audience: str) -> dict:
     """Verify token signature and return the token payload"""
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
     return payload
-
-
 # [END compute_vm_identity_verify_token]
 
 
@@ -68,4 +64,4 @@ if __name__ == '__main__':
     token_ = acquire_token()
     print("Received token:", token_)
     print("Token verification:")
-    pprint.pprint(verity_token(acquire_token(AUDIENCE_URL), AUDIENCE_URL))
+    pprint.pprint(verify_token(acquire_token(AUDIENCE_URL), AUDIENCE_URL))

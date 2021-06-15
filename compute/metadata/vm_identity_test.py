@@ -32,7 +32,7 @@ def test_vm_identity():
 
     token = vm_identity.acquire_token(AUDIENCE)
     assert isinstance(token, str) and token
-    verification = vm_identity.verity_token(token, AUDIENCE)
+    verification = vm_identity.verify_token(token, AUDIENCE)
     assert isinstance(verification, dict) and verification
     assert verification['aud'] == AUDIENCE
     assert verification['email_verified']
