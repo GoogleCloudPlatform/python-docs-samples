@@ -10,7 +10,6 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
-from conftest import PROJECT
 import json
 import time
 
@@ -79,7 +78,6 @@ def test_flex_template_run(
     pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
-    project: str = PROJECT,
 ) -> None:
 
     bigquery_table = "output_table"
@@ -88,8 +86,8 @@ def test_flex_template_run(
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
-            "input_subscription": f"projects/{project}/subscriptions/{pubsub_subscription}",
-            "output_table": f"{project}:{bigquery_dataset}.{bigquery_table}",
+            "input_subscription": f"projects/{utils.project}/subscriptions/{pubsub_subscription}",
+            "output_table": f"{utils.kproject}:{bigquery_dataset}.{bigquery_table}",
         },
     )
 

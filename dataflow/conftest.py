@@ -20,7 +20,7 @@ import re
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Dict, Iterable, List, Optional, Union
+from typing import Any, Callable, Dict, Iterable, Optional, Union
 import uuid
 
 import pytest
