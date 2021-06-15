@@ -15,12 +15,14 @@
 import os
 import setuptools
 
-with open("requirements.txt") as f:
-    requirements = f.readlines()
+try:
+    with open("requirements.txt") as f:
+        requirements = f.readlines()
+except Exception:
+    requirements = []
 
 setuptools.setup(
     name=os.path.basename(os.getcwd()),
     packages=setuptools.find_packages(),
     install_requires=requirements,
-    package_data={"": ["requirements.txt"]},
 )

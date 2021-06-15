@@ -20,7 +20,7 @@ python create_dataset.py \
 
 ```sh
 python create_dataset.py \
-    --data-files "gs://$BUCKET/global-fishing-watch/data/252626663422393.npz" \
+    --data-files "gs://$BUCKET/global-fishing-watch/data/*.npz" \
     --label-files "gs://$BUCKET/global-fishing-watch/data/labels/*.csv" \
     --train-data-dir "gs://$BUCKET/global-fishing-watch/datasets/train" \
     --eval-data-dir "gs://$BUCKET/global-fishing-watch/datasets/eval" \
