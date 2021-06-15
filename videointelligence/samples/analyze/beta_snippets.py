@@ -604,7 +604,7 @@ def detect_explicit_content_streaming(path):
     # The default timeout is about 300 seconds.
     # To process longer videos it should be set to
     # larger than the length (in seconds) of the stream.
-    responses = client.streaming_annotate_video(requests, timeout=600)
+    responses = client.streaming_annotate_video(requests, timeout=900)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
