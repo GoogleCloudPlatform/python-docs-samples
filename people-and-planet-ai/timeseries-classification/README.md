@@ -26,6 +26,5 @@ python create_dataset.py \
     --project "$PROJECT" \
     --temp_location "gs://$BUCKET/global-fishing-watch/temp" \
     --region "us-central1" \
-    --requirements_file "./requirements.txt"
     --setup_file "./setup.py"
 ```

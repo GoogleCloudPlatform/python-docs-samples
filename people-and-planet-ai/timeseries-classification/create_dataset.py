@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from datetime import datetime, timedelta
+import logging
 import os
 import random
 import time
@@ -73,10 +74,6 @@ def read_labels(file_pattern: str) -> pd.DataFrame:
 
 
 def label_data(data: pd.DataFrame, input_labels: str) -> pd.DataFrame:
-    # TODO: read_labels only once per worker
-    #   Try passing the DataFrame directly, most likely most efficient.
-    #   Read unsorted into a PCollection, then get as side inputs and sort in-place.
-    #   Maybe serialize?
     labels = read_labels(input_labels)
     data_with_labels = (
         pd.merge_asof(
@@ -97,24 +94,17 @@ def label_data(data: pd.DataFrame, input_labels: str) -> pd.DataFrame:
     )
 
 
-def generate_training_points(
-    labeled_data: pd.DataFrame,
-    padding: int,
-) -> Iterable[Dict[str, np.ndarray]]:
-    midpoints = (
-        labeled_data[padding:-padding].query("is_fishing == is_fishing").index.tolist()
-    )
+def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
+    padding = trainer.PADDING
+    midpoints = data[padding:-padding].query("is_fishing == is_fishing").index.tolist()
     for midpoint in midpoints:
         inputs = (
-            labeled_data.drop(columns=["distance_from_shore", "is_fishing"])
+            data.drop(columns=["distance_from_shore", "is_fishing"])
             .loc[midpoint - padding : midpoint + padding]
             .to_dict("list")
         )
         outputs = (
-            labeled_data[["is_fishing"]]
-            .loc[midpoint:midpoint]
-            .astype("int8")
-            .to_dict("list")
+            data[["is_fishing"]].loc[midpoint:midpoint].astype("int8").to_dict("list")
         )
         yield {
             name: np.reshape(values, (len(values), 1))
@@ -132,8 +122,7 @@ def GenerateData(pipeline, input_data: str, input_labels: str):
         | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
         | "Read data" >> beam.Map(read_data)
         | "Label data" >> beam.Map(label_data, input_labels)
-        | "Get training points"
-        >> beam.FlatMap(generate_training_points, trainer.PADDING)
+        | "Get training points" >> beam.FlatMap(generate_training_points)
     )
 
 
@@ -188,6 +177,7 @@ def run(
 if __name__ == "__main__":
     import argparse
 
+    logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input-data",
