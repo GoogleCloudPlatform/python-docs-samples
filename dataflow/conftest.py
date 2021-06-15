@@ -190,17 +190,18 @@ class Utils:
             cmd_substitutions = []
 
         if config:
-            cmd = [
-                "gcloud",
-                "builds",
-                "submit",
-                f"--project={project}",
-                f"--config={config}",
-                *cmd_substitutions,
-            ]
-            print(cmd)
-            subprocess.run(cmd, check=True)
-            yield config
+            with open(config) as f:
+                cmd = [
+                    "gcloud",
+                    "builds",
+                    "submit",
+                    f"--project={project}",
+                    f"--config={config}",
+                    *cmd_substitutions,
+                ]
+                print(cmd)
+                subprocess.run(cmd, check=True)
+                yield f.read()
         elif image_name:
             cmd = [
                 "gcloud",
