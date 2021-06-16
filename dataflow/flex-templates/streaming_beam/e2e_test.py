@@ -100,7 +100,7 @@ def test_flex_template_run(
     utils.dataflow_jobs_cancel(job_id)
 
     # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
+    query = f"SELECT * FROM `{bigquery_dataset.replace(':', '.')}.{bigquery_table}`"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0
     for row in rows:

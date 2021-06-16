@@ -100,6 +100,7 @@ class Utils:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
+        print(f"Bigquery query: {query}")
         for row in bigquery_client.query(query):
             yield dict(row)
 
