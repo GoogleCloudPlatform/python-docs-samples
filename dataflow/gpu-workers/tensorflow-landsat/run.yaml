@@ -49,6 +49,7 @@ steps:
   - --worker_harness_container_image=gcr.io/$PROJECT_ID/$_IMAGE
   - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
   - --experiment=use_runner_v2
+  - --disk_size_gb=50
 
 options:
   logging: CLOUD_LOGGING_ONLY
