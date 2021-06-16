@@ -99,6 +99,10 @@ def test_flex_template_run(
     time.sleep(60)
     utils.dataflow_jobs_cancel(job_id)
 
+    # After cancelling, wait a minute to make sure the table is created in BigQuery.
+    # TODO: poll for this with a timeout inside `bigquery_query`
+    time.sleep(60)
+
     # Check for the output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
     rows = list(utils.bigquery_query(query))
