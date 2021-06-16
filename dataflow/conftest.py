@@ -427,8 +427,8 @@ class Utils:
             print(f"Launched Dataflow Flex Template job: {unique_job_name}")
         except subprocess.CalledProcessError as e:
             print(e, file=sys.stderr)
-            stdout = stdout.decode("utf-8")
-            stderr = stderr.decode("utf-8")
+            stdout = e.stdout.decode("utf-8")
+            stderr = e.stderr.decode("utf-8")
         finally:
             print("--- stderr ---")
             print(stderr)

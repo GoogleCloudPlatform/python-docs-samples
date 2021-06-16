@@ -240,7 +240,6 @@ def run(
     scenes: List[str],
     output_path_prefix: str,
     vis_params: Dict[str, Any],
-    gpus_optional: bool,
     beam_args: Optional[List[str]] = None,
 ) -> None:
     """Load multiple Landsat scenes and render them as JPEG files.
@@ -249,7 +248,6 @@ def run(
         scenes: List of Landsat 8 scene IDs.
         output_path_prefix: Path prefix to save the output files.
         vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
-        gpus_optional: If True, the pipeline won't crash if GPUs are not found.
         beam_args: Optional list of arguments for Beam pipeline options.
     """
     rgb_band_names = vis_params["rgb_band_names"]
@@ -325,11 +323,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
     )
-    parser.add_argument(
-        "--gpus-optional",
-        action="store_true",
-        help="If set, the pipeline won't crash if GPUs are not found.",
-    )
     args, beam_args = parser.parse_known_args()
 
     scenes = args.scenes or DEFAULT_SCENES
@@ -339,4 +332,4 @@ if __name__ == "__main__":
         "max": args.max,
         "gamma": args.gamma,
     }
-    run(scenes, args.output_path_prefix, vis_params, args.gpus_optional, beam_args)
+    run(scenes, args.output_path_prefix, vis_params, beam_args)
