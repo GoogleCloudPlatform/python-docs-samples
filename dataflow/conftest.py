@@ -17,6 +17,7 @@ import logging
 import multiprocessing as mp
 import os
 import re
+import platform
 import subprocess
 import sys
 import time
@@ -35,6 +36,8 @@ RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
 UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
 
+PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
+
 
 @dataclass
 class Utils:
@@ -44,11 +47,12 @@ class Utils:
 
     @staticmethod
     def hyphen_name(name: str) -> str:
-        return f"{HYPHEN_NAME_RE.sub('-', name)}-{UUID}"
+        unique_name = f"{name}-{PYTHON_VERSION}-{UUID}"
+        return HYPHEN_NAME_RE.sub("-", unique_name)
 
     @staticmethod
     def underscore_name(name: str) -> str:
-        return f"{UNDERSCORE_NAME_RE.sub('_', name)}_{UUID}"
+        return UNDERSCORE_NAME_RE.sub("_", Utils.hyphen_name(name))
 
     @staticmethod
     def storage_bucket(name: str) -> str:
