@@ -58,7 +58,7 @@ def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
 
 def test_tensorflow_landsat(utils: Utils, run_job: str) -> None:
     # Wait until the job finishes.
-    timeout = 20 * 60  # 20 minutes
+    timeout = 30 * 60  # 30 minutes
     status = utils.dataflow_jobs_wait(
         job_name=utils.hyphen_name(NAME), timeout_sec=timeout
     )
