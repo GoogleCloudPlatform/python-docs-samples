@@ -331,7 +331,7 @@ class Utils:
                 logging.exception(e)
             time.sleep(poll_interval_sec)
         raise RuntimeError(
-            f"Dataflow job not found, job_id={job_id}, job_name={job_name}"
+            f"Dataflow job not found in status {target_status}: job_id={job_id}, job_name={job_name}"
         )
 
     @staticmethod
