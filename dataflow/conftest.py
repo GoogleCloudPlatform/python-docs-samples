@@ -263,7 +263,7 @@ class Utils:
                 )
             )
             job = request.execute()
-            print(f"Dataflow job: {job}")
+            print(f"Found Dataflow job: {job}")
             return job
 
         elif job_name:
@@ -280,10 +280,10 @@ class Utils:
                 )
             )
             response = request.execute()
-            print(f"Finding job {job_name}, response={response}")
+            print(f"Finding Dataflow job {job_name}")
             for job in response["jobs"]:
                 if job["name"] == job_name:
-                    print(f"Dataflow job: {job}")
+                    print(f"Found job: {job}")
                     return job
             return None
 
