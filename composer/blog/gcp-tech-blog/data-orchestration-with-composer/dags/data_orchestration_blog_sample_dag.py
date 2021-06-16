@@ -37,18 +37,13 @@ TABLE = models.Variable.get("bigquery_table")
 # https://medium.com/datareply/integrating-slack-alerts-in-airflow-c9dcd155105
 def on_failure_callback(context):
     ti = context.get("task_instance")
-    slack_msg = """
+    slack_msg = f"""
             :red_circle: Task Failed.
-            *Task*: {task}
-            *Dag*: {dag}
-            *Execution Time*: {exec_date}
-            *Log Url*: {log_url}
-            """.format(
-        task=ti.task_id,
-        dag=ti.dag_id,
-        log_url=ti.log_url,
-        exec_date=context.get("execution_date"),
-    )
+            *Task*: {ti.task_id}
+            *Dag*: {ti.dag_id}
+            *Execution Time*: {context.get('execution_date')}
+            *Log Url*: {ti.log_url}
+            """
     slack_webhook_token = BaseHook.get_connection("slack_connection").password
     slack_error = SlackWebhookOperator(
         task_id="post_slack_error",
