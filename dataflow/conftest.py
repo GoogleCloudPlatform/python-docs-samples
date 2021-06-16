@@ -240,11 +240,36 @@ class Utils:
             print(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
+    def dataflow_jobs_list(
+        project: str = PROJECT, page_size: int = 30
+    ) -> Iterable[dict]:
+        from googleapiclient.discovery import build
+
+        dataflow = build("dataflow", "v1b3")
+
+        response = {"nextPageToken": None}
+        while "nextPageToken" in response:
+            # For more info see:
+            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
+            request = (
+                dataflow.projects()
+                .jobs()
+                .list(
+                    projectId=project,
+                    pageToken=response["nextPageToken"],
+                    pageSize=page_size,
+                )
+            )
+            response = request.execute()
+            for job in response["jobs"]:
+                yield job
+
+    @staticmethod
     def dataflow_jobs_get(
         job_id: Optional[str] = None,
         job_name: Optional[str] = None,
         project: str = PROJECT,
-        list_page_size=100,
+        list_page_size=30,
     ) -> Optional[Dict[str, Any]]:
         from googleapiclient.discovery import build
 
@@ -262,30 +287,17 @@ class Utils:
                     view="JOB_VIEW_SUMMARY",
                 )
             )
+            # If the job is not found, this throws an HttpError exception.
             job = request.execute()
             print(f"Found Dataflow job: {job}")
             return job
 
         elif job_name:
-            # For more info see:
-            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
-            request = (
-                dataflow.projects()
-                .jobs()
-                .list(
-                    # We don't filter="ACTIVE" because we still want to return the
-                    # job if it failed, is already done, or was cancelled.
-                    projectId=project,
-                    pageSize=list_page_size,
-                )
-            )
-            response = request.execute()
-            print(f"Finding Dataflow job {job_name}")
-            for job in response["jobs"]:
+            for job in Utils.dataflow_jobs_list(project, list_page_size):
                 if job["name"] == job_name:
-                    print(f"Found job: {job}")
+                    print(f"Found Dataflow job: {job}")
                     return job
-            return None
+            raise ValueError(f"Dataflow job not found: job_name={job_name}")
 
         else:
             raise ValueError("must specify either `job_id` or `job_name`")
@@ -295,9 +307,8 @@ class Utils:
         job_id: Optional[str] = None,
         job_name: Optional[str] = None,
         project: str = PROJECT,
-        region: str = REGION,
         until_status: str = "JOB_STATE_DONE",
-        timeout_sec: str = 600,
+        timeout_sec: str = 600,  # defaults to 10 minutes
         poll_interval_sec=30,
         list_page_size=100,
     ) -> Optional[str]:
