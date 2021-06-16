@@ -24,7 +24,7 @@ from airflow.utils.dates import days_ago
 from airflow.utils.state import State
 
 # Sample data
-BUCKET_NAME = "gs://cloud-samples-data/composer/data-orchestration-blog-example"
+BUCKET_NAME = "cloud-samples-data/composer/data-orchestration-blog-example"
 DATA_FILE_NAME = "bike_station_data.csv"
 
 # Assumes existence of the following Airflow Variables
@@ -79,27 +79,17 @@ with models.DAG(
         template="gs://dataflow-templates/latest/GCS_Text_to_BigQuery",
         parameters={
             "javascriptTextTransformFunctionName": "transform",
-            "javascriptTextTransformGcsPath": "gs://{bucket}/udf_transform.js".format(
-                bucket=BUCKET_NAME
-            ),
-            "JSONPath": "gs://{bucket}/bq_schema.json".format(bucket=BUCKET_NAME),
-            "inputFilePattern": "gs://{bucket}/{filename}".format(
-                bucket=BUCKET_NAME, filename=DATA_FILE_NAME
-            ),
-            "bigQueryLoadingTemporaryDirectory": "gs://{bucket}/tmp/".format(
-                bucket=BUCKET_NAME
-            ),
-            "outputTable": "{project_id}:{dataset}.{table}".format(
-                project_id=PROJECT_ID, dataset=DATASET, table=TABLE
-            ),
+            "javascriptTextTransformGcsPath": f"gs://{BUCKET_NAME}/udf_transform.js",
+            "JSONPath": f"gs://{BUCKET_NAME}/bq_schema.json",
+            "inputFilePattern": f"gs://{BUCKET_NAME}/{DATA_FILE_NAME}",
+            "bigQueryLoadingTemporaryDirectory": f"gs://{BUCKET_NAME}/tmp/",
+            "outputTable": f"{PROJECT_ID}:{DATASET}.{TABLE}",
         },
     )
 
     execute_bigquery_sql = BigQueryCheckOperator(
         task_id="execute_bigquery_sql",
-        sql="SELECT COUNT(*) FROM `{project_id}.{dataset}.{table}`".format(
-            project_id=PROJECT_ID, dataset=DATASET, table=TABLE
-        ),
+        sql=f"SELECT COUNT(*) FROM `{PROJECT_ID}.{DATASET}.{TABLE}`",
         use_legacy_sql=False,
     )
 
