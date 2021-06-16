@@ -364,7 +364,7 @@ class Utils:
     def dataflow_jobs_cancel(
         job_id: str, project: str = PROJECT, region: str = REGION
     ) -> None:
-        print(f">> Canceling Dataflow job ID: {job_id}")
+        print(f">> Cancelling Dataflow job ID: {job_id}")
         # We get an error using the googleapiclient.discovery APIs, probably
         # due to incompatible dependencies with apache-beam.
         # We use gcloud instead to cancel the job.
