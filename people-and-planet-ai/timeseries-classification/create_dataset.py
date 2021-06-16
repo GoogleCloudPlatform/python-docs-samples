@@ -133,7 +133,6 @@ def run(
             | "Read data" >> beam.Map(read_data)
             | "Label data" >> beam.Map(label_data, labels)
             | "Get training points" >> beam.FlatMap(generate_training_points)
-            | "Reshuffle data" >> beam.Reshuffle()
             | "Serialize TFRecords" >> beam.Map(trainer.serialize)
             | "Train-eval split"
             >> beam.Partition(
