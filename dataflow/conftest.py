@@ -64,6 +64,16 @@ class Utils:
         print(f"Created storage_bucket: {bucket.name}")
         yield bucket.name
 
+        # Print all the objects in the bucket before deleting for debugging.
+        print(f"Deleting bucket {bucket.name} with the following contents:")
+        total_files = 0
+        total_size = 0
+        for blob in bucket.list_blobs():
+            print(f"- {blob.name} ({blob.size} bytes)")
+            total_files += 1
+            total_size += blob.size
+        print(f"Total {total_files} files ({total_size} bytes)")
+
         bucket.delete(force=True)
         print(f"Deleted storage_bucket: {bucket.name}")
 
