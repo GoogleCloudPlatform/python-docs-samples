@@ -95,8 +95,9 @@ def test_flex_template_run(
     # First, lets wait until the job is running.
     utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
-    # Then, wait a couple minutes for data to arrive, get processed, and cancel it.
-    time.sleep(2 * 60)
+    # Then, for a while for data to arrive, get processed, and cancel it.
+    print(f">> Pipeline is running, waiting for messages to arrive")
+    time.sleep(60)
     utils.dataflow_jobs_cancel(job_id)
 
     # Check for the output data in BigQuery.
