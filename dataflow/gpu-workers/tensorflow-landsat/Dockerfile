@@ -33,6 +33,8 @@ RUN apt-get update \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements and check that there are no conflicts.
+    # Since the image already has all the dependencies installed,
+    # there's no need to run with the --requirements_file option.
     && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check

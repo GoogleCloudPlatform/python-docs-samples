@@ -22,6 +22,8 @@ COPY requirements.txt .
 COPY *.py ./
 
 # Install the pipeline requirements and check that there are no conflicts.
+# Since the image already has all the dependencies installed,
+# there's no need to run with the --requirements_file option.
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
