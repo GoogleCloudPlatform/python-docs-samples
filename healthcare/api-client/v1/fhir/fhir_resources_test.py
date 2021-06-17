@@ -38,7 +38,7 @@ version = "R4"
 resource_type = "Patient"
 
 
-BACKOFF_MAX_TIME = 240
+BACKOFF_MAX_TIME = 500
 
 
 @pytest.fixture(scope="module")

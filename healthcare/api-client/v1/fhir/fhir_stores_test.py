@@ -41,7 +41,7 @@ resource_file = os.path.join(RESOURCES, source_file_name)
 import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 
-BACKOFF_MAX_TIME = 240
+BACKOFF_MAX_TIME = 500
 
 
 @pytest.fixture(scope="module")
