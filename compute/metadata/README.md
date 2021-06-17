@@ -11,5 +11,6 @@ These samples demonstrate interacting with the Compute Engine metadata service. 
 These samples are used on the following documentation page:
 
 > https://cloud.google.com/compute/docs/metadata
+> https://cloud.google.com/compute/docs/instances/verifying-instance-identity
 
 <!-- end-auto-doc-link -->
