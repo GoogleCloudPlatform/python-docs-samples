@@ -52,11 +52,10 @@ import argparse
 import logging
 import os
 import re
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.typehints.typehints import Optional
 import numpy as np
 from PIL import Image
 import rasterio
