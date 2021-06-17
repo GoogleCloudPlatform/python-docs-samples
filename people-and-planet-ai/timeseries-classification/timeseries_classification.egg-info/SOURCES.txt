@@ -1,9 +1,0 @@
-README.md
-setup.py
-timeseries_classification.egg-info/PKG-INFO
-timeseries_classification.egg-info/SOURCES.txt
-timeseries_classification.egg-info/dependency_links.txt
-timeseries_classification.egg-info/requires.txt
-timeseries_classification.egg-info/top_level.txt
-trainer/__init__.py
-trainer/main.py
