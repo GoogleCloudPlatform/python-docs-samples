@@ -25,7 +25,7 @@ ARG python_version=3.8
 WORKDIR /root
 
 # Copy the Apache Beam worker files and the requirements.txt file.
-COPY --from=apache/beam_python3.8_sdk:2.29.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 
 # Update PATH so we find our new Conda and Python installations.
