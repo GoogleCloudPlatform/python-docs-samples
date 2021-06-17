@@ -56,7 +56,7 @@ def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     )
 
 
-def test_tensorflow_landsat(utils: Utils, run_job: str) -> None:
+def test_tensorflow_landsat(utils: Utils, bucket_name: str, run_job: str) -> None:
     # Wait until the job finishes.
     timeout = 30 * 60  # 30 minutes
     status = utils.dataflow_jobs_wait(
@@ -66,6 +66,7 @@ def test_tensorflow_landsat(utils: Utils, run_job: str) -> None:
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()
+    print(f">> Checking for output files in: gs://{bucket_name}/outputs/")
     output_files = list(storage_client.list_blobs(bucket_name, prefix="outputs/"))
     assert len(output_files) > 0, f"No files found in gs://{bucket_name}/outputs/"
     for output_file in output_files:
