@@ -433,6 +433,7 @@ class Utils:
             f"--template-file-gcs-location={template_path}",
             f"--project={project}",
             f"--region={region}",
+            f"--staging-location=gs://{bucket_name}/staging",
         ] + [
             f"--parameters={name}={value}"
             for name, value in {
