@@ -1,4 +1,4 @@
 google-cloud-pubsub==2.5.0
 google-cloud-storage==1.38.0
-google-cloud-translate==3.1.0
+google-cloud-translate==3.2.0
 google-cloud-vision==2.3.1

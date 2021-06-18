@@ -31,15 +31,20 @@ import pytest
 
 from werkzeug.urls import url_encode
 
-import main
+# Relative imports cannot be found when running in `nox`, but we still
+# try to import it for the autocomplete when writing the tests.
+try:
+    from . import main
+except ImportError:
+    import main
 
 
 RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
-dataflow = build('dataflow', 'v1b3')
+dataflow = build("dataflow", "v1b3")
 
 
 # Create a fake "app" for generating test request contexts.
@@ -53,8 +58,9 @@ def app():
 @pytest.fixture(scope="function")
 def dataflow_job_name(request):
     label = request.param
-    job_name = datetime.now().strftime('{}-%Y%m%d-%H%M%S-{}'.format(
-        label, uuid.uuid4().hex[:5]))
+    job_name = datetime.now().strftime(
+        "{}-%Y%m%d-%H%M%S-{}".format(label, uuid.uuid4().hex[:5])
+    )
 
     yield job_name
 
@@ -69,17 +75,21 @@ def dataflow_job_name(request):
 # Takes in a Dataflow job name and returns its job ID
 def get_job_id_from_name(job_name):
     # list the 50 most recent Dataflow jobs
-    jobs_request = dataflow.projects().jobs().list(
-        projectId=PROJECT,
-        filter="ACTIVE",
-        pageSize=50  # only return the 50 most recent results - our job is likely to be in here. If the job is not found, first try increasing this number. For more info see:https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
+    jobs_request = (
+        dataflow.projects()
+        .jobs()
+        .list(
+            projectId=PROJECT,
+            filter="ACTIVE",
+            pageSize=50,  # only return the 50 most recent results - our job is likely to be in here. If the job is not found, first try increasing this number. For more info see:https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list
+        )
     )
     response = jobs_request.execute()
 
     # search for the job in the list that has our name (names are unique)
-    for job in response['jobs']:
-        if job['name'] == job_name:
-            return job['id']
+    for job in response["jobs"]:
+        if job["name"] == job_name:
+            return job["id"]
     # if we don't find a job, just return
     return
 
@@ -92,32 +102,40 @@ def dataflow_jobs_cancel(job_name):
 
     if job_id:
         # Cancel the Dataflow job if it exists. If it doesn't, job_id will be equal to None. For more info, see: https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/update
-        request = dataflow.projects().jobs().update(
-            projectId=PROJECT,
-            jobId=job_id,
-            body={'requestedState': 'JOB_STATE_CANCELLED'}
+        request = (
+            dataflow.projects()
+            .jobs()
+            .update(
+                projectId=PROJECT,
+                jobId=job_id,
+                body={"requestedState": "JOB_STATE_CANCELLED"},
+            )
         )
         request.execute()
 
 
-@pytest.mark.parametrize('dataflow_job_name', [('test_run_template_empty')], indirect=True)
+@pytest.mark.parametrize(
+    "dataflow_job_name", [("test_run_template_empty")], indirect=True
+)
 def test_run_template_python_empty_args(app, dataflow_job_name):
     project = PROJECT
-    template = 'gs://dataflow-templates/latest/Word_Count'
+    template = "gs://dataflow-templates/latest/Word_Count"
     with pytest.raises(HttpError):
         main.run(project, dataflow_job_name, template)
 
 
-@pytest.mark.parametrize('dataflow_job_name', [('test_run_template_python')], indirect=True)
+@pytest.mark.parametrize(
+    "dataflow_job_name", [("test_run_template_python")], indirect=True
+)
 def test_run_template_python(app, dataflow_job_name):
     project = PROJECT
-    template = 'gs://dataflow-templates/latest/Word_Count'
+    template = "gs://dataflow-templates/latest/Word_Count"
     parameters = {
-        'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
-        'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
+        "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
+        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
     res = main.run(project, dataflow_job_name, template, parameters)
-    assert 'test_run_template_python' in res['job']['name']
+    assert "test_run_template_python" in res["job"]["name"]
 
 
 def test_run_template_http_empty_args(app):
@@ -126,46 +144,52 @@ def test_run_template_http_empty_args(app):
             main.run_template(flask.request)
 
 
-@pytest.mark.parametrize('dataflow_job_name', [('test_run_template_url')], indirect=True)
+@pytest.mark.parametrize(
+    "dataflow_job_name", [("test_run_template_url")], indirect=True
+)
 def test_run_template_http_url(app, dataflow_job_name):
     args = {
-        'project': PROJECT,
-        'job': dataflow_job_name,
-        'template': 'gs://dataflow-templates/latest/Word_Count',
-        'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
-        'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
+        "project": PROJECT,
+        "job": dataflow_job_name,
+        "template": "gs://dataflow-templates/latest/Word_Count",
+        "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
+        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
-    with app.test_request_context('/?' + url_encode(args)):
+    with app.test_request_context("/?" + url_encode(args)):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert 'test_run_template_url' in data['job']['name']
+        assert "test_run_template_url" in data["job"]["name"]
 
 
-@pytest.mark.parametrize('dataflow_job_name', [('test_run_template_data')], indirect=True)
+@pytest.mark.parametrize(
+    "dataflow_job_name", [("test_run_template_data")], indirect=True
+)
 def test_run_template_http_data(app, dataflow_job_name):
     args = {
-        'project': PROJECT,
-        'job': dataflow_job_name,
-        'template': 'gs://dataflow-templates/latest/Word_Count',
-        'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
-        'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
+        "project": PROJECT,
+        "job": dataflow_job_name,
+        "template": "gs://dataflow-templates/latest/Word_Count",
+        "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
+        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
     with app.test_request_context(data=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert 'test_run_template_data' in data['job']['name']
+        assert "test_run_template_data" in data["job"]["name"]
 
 
-@pytest.mark.parametrize('dataflow_job_name', [('test_run_template_json')], indirect=True)
+@pytest.mark.parametrize(
+    "dataflow_job_name", [("test_run_template_json")], indirect=True
+)
 def test_run_template_http_json(app, dataflow_job_name):
     args = {
-        'project': PROJECT,
-        'job': dataflow_job_name,
-        'template': 'gs://dataflow-templates/latest/Word_Count',
-        'inputFile': 'gs://apache-beam-samples/shakespeare/kinglear.txt',
-        'output': 'gs://{}/dataflow/wordcount/outputs'.format(BUCKET),
+        "project": PROJECT,
+        "job": dataflow_job_name,
+        "template": "gs://dataflow-templates/latest/Word_Count",
+        "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
+        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
     with app.test_request_context(json=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert 'test_run_template_json' in data['job']['name']
+        assert "test_run_template_json" in data["job"]["name"]

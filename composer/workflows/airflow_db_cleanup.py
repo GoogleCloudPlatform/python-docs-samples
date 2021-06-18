@@ -54,10 +54,10 @@ import os
 import airflow
 from airflow import settings
 from airflow.configuration import conf
-from airflow.jobs import BaseJob
+from airflow.jobs.base_job import BaseJob
 from airflow.models import DAG, DagModel, DagRun, Log, SlaMiss, \
     TaskInstance, Variable, XCom
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 import dateutil.parser
 from sqlalchemy import and_, func
 from sqlalchemy.exc import ProgrammingError
