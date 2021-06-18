@@ -30,9 +30,11 @@ def list_alert_policies(project_name):
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(name=project_name)
     print(
-        tabulate.tabulate(
-            [(policy.name, policy.display_name) for policy in policies],
-            ("name", "display_name"),
+        str(
+            tabulate.tabulate(
+                [(policy.name, policy.display_name) for policy in policies],
+                ("name", "display_name"),
+            )
         )
     )
 
