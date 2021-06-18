@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
+import logging
 import time
 
 try:
@@ -96,8 +97,8 @@ def test_flex_template_run(
     utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
     # Then, for a while for data to arrive, get processed, and cancel it.
-    print(">> Pipeline is running, waiting for messages to arrive")
-    time.sleep(5 * 60)
+    logging.info("Pipeline is running, waiting for messages to arrive")
+    time.sleep(60)
     utils.dataflow_jobs_cancel(job_id)
 
     # Check for the output data in BigQuery.

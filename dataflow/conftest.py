@@ -61,21 +61,21 @@ class Utils:
         storage_client = storage.Client()
         bucket = storage_client.create_bucket(Utils.hyphen_name(name))
 
-        print(f">> Created storage_bucket: {bucket.name}")
+        logging.info(f"Created storage_bucket: {bucket.name}")
         yield bucket.name
 
         # Print all the objects in the bucket before deleting for debugging.
-        print(f">> Deleting bucket {bucket.name} with the following contents:")
+        logging.info(f"Deleting bucket {bucket.name} with the following contents:")
         total_files = 0
         total_size = 0
         for blob in bucket.list_blobs():
-            print(f"  - {blob.name} ({blob.size} bytes)")
+            logging.info(f"  - {blob.name} ({blob.size} bytes)")
             total_files += 1
             total_size += blob.size
-        print(f">> Total {total_files} files ({total_size} bytes)")
+        logging.info(f"Total {total_files} files ({total_size} bytes)")
 
         bucket.delete(force=True)
-        print(f">> Deleted storage_bucket: {bucket.name}")
+        logging.info(f"Deleted storage_bucket: {bucket.name}")
 
     @staticmethod
     def bigquery_dataset(name: str, project: str = PROJECT) -> str:
@@ -87,20 +87,20 @@ class Utils:
             bigquery.Dataset(f"{project}.{Utils.underscore_name(name)}")
         )
 
-        print(f">> Created bigquery_dataset: {dataset.full_dataset_id}")
+        logging.info(f"Created bigquery_dataset: {dataset.full_dataset_id}")
         yield dataset.full_dataset_id
 
         bigquery_client.delete_dataset(
             dataset.full_dataset_id.replace(":", "."), delete_contents=True
         )
-        print(f">> Deleted bigquery_dataset: {dataset.full_dataset_id}")
+        logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
 
     @staticmethod
     def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
-        print(f">> Bigquery query: {query}")
+        logging.info(f"Bigquery query: {query}")
         for row in bigquery_client.query(query):
             yield dict(row)
 
@@ -112,7 +112,7 @@ class Utils:
         topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
         topic = publisher_client.create_topic(topic_path)
 
-        print(f">> Created pubsub_topic: {topic.name}")
+        logging.info(f"Created pubsub_topic: {topic.name}")
         yield topic.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -120,9 +120,9 @@ class Utils:
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
         cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
         subprocess.run(cmd, check=True)
-        print(f">> Deleted pubsub_topic: {topic.name}")
+        logging.info(f"Deleted pubsub_topic: {topic.name}")
 
     @staticmethod
     def pubsub_subscription(
@@ -138,7 +138,7 @@ class Utils:
         )
         subscription = subscriber.create_subscription(subscription_path, topic_path)
 
-        print(f">> Created pubsub_subscription: {subscription.name}")
+        logging.info(f"Created pubsub_subscription: {subscription.name}")
         yield subscription.name
 
         # Due to the pinned library dependencies in apache-beam, client
@@ -154,9 +154,9 @@ class Utils:
             "delete",
             subscription.name,
         ]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
         subprocess.run(cmd, check=True)
-        print(f">> Deleted pubsub_subscription: {subscription.name}")
+        logging.info(f"Deleted pubsub_subscription: {subscription.name}")
 
     @staticmethod
     def pubsub_publisher(
@@ -176,14 +176,14 @@ class Utils:
                 time.sleep(sleep_sec)
 
         # Start a subprocess in the background to do the publishing.
-        print(f">> Starting publisher on {topic_path}")
+        logging.info(f"Starting publisher on {topic_path}")
         p = mp.Process(target=_infinite_publish_job)
         p.start()
 
         yield p.is_alive()
 
         # For cleanup, terminate the background process.
-        print(">> Stopping publisher")
+        logging.info("Stopping publisher")
         p.join(timeout=0)
         p.terminate()
 
@@ -197,7 +197,7 @@ class Utils:
     ) -> None:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
         cmd = ["gcloud", "auth", "configure-docker"]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
         subprocess.run(cmd, check=True)
 
         if substitutions:
@@ -218,9 +218,9 @@ class Utils:
                     *cmd_substitutions,
                     source,
                 ]
-                print(f">> {cmd}")
+                logging.info(f"{cmd}")
                 subprocess.run(cmd, check=True)
-                print(f">> Cloud build finished successfully: {config}")
+                logging.info(f"Cloud build finished successfully: {config}")
                 yield f.read()
         elif image_name:
             cmd = [
@@ -232,9 +232,9 @@ class Utils:
                 *cmd_substitutions,
                 source,
             ]
-            print(f">> {cmd}")
+            logging.info(f"{cmd}")
             subprocess.run(cmd, check=True)
-            print(f">> Created image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
@@ -250,9 +250,9 @@ class Utils:
                 "--force-delete-tags",
                 "--quiet",
             ]
-            print(f">> {cmd}")
+            logging.info(f"{cmd}")
             subprocess.run(cmd, check=True)
-            print(f">> Deleted image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
     def dataflow_jobs_list(
@@ -304,13 +304,13 @@ class Utils:
             )
             # If the job is not found, this throws an HttpError exception.
             job = request.execute()
-            print(f">> Found Dataflow job: {job}")
+            logging.info(f"Found Dataflow job: {job}")
             return job
 
         elif job_name:
             for job in Utils.dataflow_jobs_list(project, list_page_size):
                 if job["name"] == job_name:
-                    print(f">> Found Dataflow job: {job}")
+                    logging.info(f"Found Dataflow job: {job}")
                     return job
             raise ValueError(f"Dataflow job not found: job_name={job_name}")
 
@@ -324,7 +324,7 @@ class Utils:
         project: str = PROJECT,
         until_status: str = "JOB_STATE_DONE",
         timeout_sec: str = 600,  # defaults to 10 minutes
-        poll_interval_sec=30,
+        poll_interval_sec=60,
         list_page_size=100,
     ) -> Optional[str]:
         """For a list of all the valid states:
@@ -338,10 +338,9 @@ class Utils:
             "JOB_STATE_FAILED",
             "JOB_STATE_CANCELLED",
         }
-        print(
-            f">> Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
+        logging.info(
+            f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
         )
-        status = None
         for _ in range(0, timeout_sec, poll_interval_sec):
             try:
                 job = Utils.dataflow_jobs_get(
@@ -352,7 +351,13 @@ class Utils:
                 )
                 status = job["currentState"]
                 if status in target_status:
+                    logging.info(
+                        f"Job status {status} in {target_status}, done waiting"
+                    )
                     return status
+                logging.info(
+                    f"Job status {status} not in {target_status}, retrying in {poll_interval_sec} seconds"
+                )
             except Exception as e:
                 logging.exception(e)
             time.sleep(poll_interval_sec)
@@ -364,11 +369,24 @@ class Utils:
     def dataflow_jobs_cancel(
         job_id: str, project: str = PROJECT, region: str = REGION
     ) -> None:
-        print(f">> Cancelling Dataflow job ID: {job_id}")
+        logging.info(f"Cancelling Dataflow job ID: {job_id}")
         # We get an error using the googleapiclient.discovery APIs, probably
         # due to incompatible dependencies with apache-beam.
         # We use gcloud instead to cancel the job.
-        #   https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/cancel
+        # https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/drain
+        cmd = [
+            "gcloud",
+            f"--project={project}",
+            "dataflow",
+            "jobs",
+            "drain",
+            job_id,
+            f"--region={region}",
+        ]
+        logging.info(f"{cmd}")
+        subprocess.run(cmd, check=True)
+
+        # https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/cancel
         cmd = [
             "gcloud",
             f"--project={project}",
@@ -378,9 +396,9 @@ class Utils:
             job_id,
             f"--region={region}",
         ]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
         subprocess.run(cmd, check=True)
-        print(f">> Cancelled Dataflow job: {job_id}")
+        logging.info(f"Cancelled Dataflow job: {job_id}")
 
     @staticmethod
     def dataflow_flex_template_build(
@@ -403,10 +421,10 @@ class Utils:
             "--sdk-language=PYTHON",
             f"--metadata-file={metadata_file}",
         ]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
         subprocess.run(cmd, check=True)
 
-        print(f">> dataflow_flex_template_build: {template_gcs_path}")
+        logging.info(f"dataflow_flex_template_build: {template_gcs_path}")
         yield template_gcs_path
         # The template file gets deleted when we delete the bucket.
 
@@ -423,7 +441,7 @@ class Utils:
 
         # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/run
         unique_job_name = Utils.hyphen_name(job_name)
-        print(f">> dataflow_job_name: {unique_job_name}")
+        logging.info(f"dataflow_job_name: {unique_job_name}")
         cmd = [
             "gcloud",
             "dataflow",
@@ -438,10 +456,10 @@ class Utils:
             f"--parameters={name}={value}"
             for name, value in {
                 **parameters,
-                "temp_location": f"gs://{bucket_name}/temp",
             }.items()
         ]
-        print(f">> {cmd}")
+        logging.info(f"{cmd}")
+
         try:
             # The `capture_output` option was added in Python 3.7, so we must
             # pass the `stdout` and `stderr` options explicitly to support 3.6.
@@ -451,22 +469,22 @@ class Utils:
             )
             stdout = p.stdout.decode("utf-8")
             stderr = p.stderr.decode("utf-8")
-            print(f">> Launched Dataflow Flex Template job: {unique_job_name}")
+            logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
         except subprocess.CalledProcessError as e:
-            print(e, file=sys.stderr)
+            logging.info(e, file=sys.stderr)
             stdout = e.stdout.decode("utf-8")
             stderr = e.stderr.decode("utf-8")
         finally:
-            print("--- stderr ---")
-            print(stderr)
-            print("--- stdout ---")
-            print(stdout)
-            print("--- end ---")
+            logging.info("--- stderr ---")
+            logging.info(stderr)
+            logging.info("--- stdout ---")
+            logging.info(stdout)
+            logging.info("--- end ---")
         return yaml.safe_load(stdout)["job"]["id"]
 
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
-    print(f">> Test unique identifier: {UUID}")
+    logging.info(f"Test unique identifier: {UUID}")
     subprocess.run(["gcloud", "version"])
     return Utils()
