@@ -125,7 +125,9 @@ def pochan():
 def test_list_alert_policies(capsys, pochan):
     snippets.list_alert_policies(pochan.project_name)
     out, _ = capsys.readouterr()
-    assert pochan.alert_policy.display_name in out
+    # Only check up to the first 20 characters of the display name
+    # as long strings printed to the console are truncated.
+    assert pochan.alert_policy.display_name[0:20] in out
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
@@ -136,7 +138,7 @@ def test_enable_alert_policies(capsys, pochan):
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, True)
+    snippets.enable_alert_policies(pochan.project_name, True, "name='{}'".format(pochan.alert_policy.name))
     out, _ = capsys.readouterr()
     assert (
         "Enabled {0}".format(pochan.project_name) in out
@@ -144,7 +146,7 @@ def test_enable_alert_policies(capsys, pochan):
     )
 
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, False)
+    snippets.enable_alert_policies(pochan.project_name, False, "name='{}'".format(pochan.alert_policy.name))
     out, _ = capsys.readouterr()
     assert (
         "Disabled {}".format(pochan.project_name) in out
