@@ -341,6 +341,7 @@ class Utils:
         logging.info(
             f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
         )
+        status = None
         for _ in range(0, timeout_sec + 1, poll_interval_sec):
             try:
                 job = Utils.dataflow_jobs_get(
@@ -361,9 +362,14 @@ class Utils:
             except Exception as e:
                 logging.exception(e)
             time.sleep(poll_interval_sec)
-        raise RuntimeError(
-            f"Dataflow job not found in status {target_status}: job_id={job_id}, job_name={job_name}"
-        )
+        if status is None:
+            raise RuntimeError(
+                f"Dataflow job not found: timeout_sec={timeout_sec}, target_status={target_status}, job_id={job_id}, job_name={job_name}"
+            )
+        else:
+            raise RuntimeError(
+                f"Dataflow job finished in status {status} but expected {target_status}: job_id={job_id}, job_name={job_name}"
+            )
 
     @staticmethod
     def dataflow_jobs_cancel(
