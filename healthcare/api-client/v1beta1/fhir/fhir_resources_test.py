@@ -33,7 +33,7 @@ fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
 
 
-BACKOFF_MAX_TIME = 240
+BACKOFF_MAX_TIME = 500
 
 
 # A giveup callback for backoff.
