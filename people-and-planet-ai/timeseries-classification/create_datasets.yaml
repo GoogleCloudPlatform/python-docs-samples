@@ -13,29 +13,33 @@
 # limitations under the License.
 
 # -----------------------------------------------------------------------------
-# This Cloud Build config runs a Dataflow job to create the TFRecords dataset.
+# This Cloud Build config runs a Dataflow job to create the TFRecord datasets.
 #
 # To learn more about this file:
 #   https://cloud.google.com/build/docs/build-config
 # -----------------------------------------------------------------------------
 
 substitutions:
+  _BUCKET: please set --substitutions _BUCKET=my-bucket-name
   _REGION: us-central1
-  _WORKER_ZONE: us-central1-f
-  _GPU_TYPE: nvidia-tesla-t4
-  _GPU_COUNT: '1'
+  _IMAGE: samples/global-fishing-watch:latest
+  _STORAGE_DIR: samples/global-fishing-watch
 
 steps:
-- name: gcr.io/$PROJECT_ID/global-fishing-watch/worker:latest
+- name: gcr.io/$PROJECT_ID/$_IMAGE
   entrypoint: python
   args:
-  - /pipeline/main.py
+  - /app/create_datasets.py
+  - --data-files=gs://$_BUCKET/$_STORAGE_DIR/data/*.npz
+  - --label-files=gs://$_BUCKET/$_STORAGE_DIR/labels/*.csv
+  - --train-data-dir=gs://$_BUCKET/$_STORAGE_DIR/datasets/train
+  - --eval-data-dir=gs://$_BUCKET/$_STORAGE_DIR/datasets/eval
   - --runner=DataflowRunner
   - --project=$PROJECT_ID
+  - --temp_location=gs://$_BUCKET/$_STORAGE_DIR/temp
   - --region=$_REGION
-  - --worker_harness_container_image=gcr.io/$PROJECT_ID/global-fishing-watch/worker:latest
-  - --worker_zone=$_WORKER_ZONE
   - --experiment=use_runner_v2
+  - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
 
 options:
   logging: CLOUD_LOGGING_ONLY

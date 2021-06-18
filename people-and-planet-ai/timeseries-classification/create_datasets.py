@@ -18,7 +18,7 @@ import logging
 import os
 import random
 import time
-from typing import Dict, Iterable, List, Optional, Tuple, Any
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
