@@ -323,7 +323,7 @@ class Utils:
         job_name: Optional[str] = None,
         project: str = PROJECT,
         until_status: str = "JOB_STATE_DONE",
-        timeout_sec: str = 600,  # defaults to 10 minutes
+        timeout_sec: str = 20 * 60,  # defaults to 20 minutes
         poll_interval_sec=60,
         list_page_size=100,
     ) -> Optional[str]:
@@ -341,7 +341,7 @@ class Utils:
         logging.info(
             f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
         )
-        for _ in range(0, timeout_sec, poll_interval_sec):
+        for _ in range(0, timeout_sec + 1, poll_interval_sec):
             try:
                 job = Utils.dataflow_jobs_get(
                     job_id=job_id,
@@ -485,6 +485,7 @@ class Utils:
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
+    logging.getLogger().setLevel(logging.info)
     logging.info(f"Test unique identifier: {UUID}")
     subprocess.run(["gcloud", "version"])
     return Utils()
