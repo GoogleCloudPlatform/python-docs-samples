@@ -485,7 +485,7 @@ class Utils:
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
-    logging.getLogger().setLevel(logging.info)
+    logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Test unique identifier: {UUID}")
     subprocess.run(["gcloud", "version"])
     return Utils()
