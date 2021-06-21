@@ -22,7 +22,7 @@
 /cloud-sql/**/*.py                     @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
 /composer/**/*.py                      @leahecole @rachael-ds @rafalbiegacz @GoogleCloudPlatform/python-samples-owners
-/compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
+/compute/**/*.py                       @m-strzelczyk @GoogleCloudPlatform/python-samples-owners
 /container_registry/**/*.py            @donmccasland @dinagraves @kelsk @GoogleCloudPlatform/python-samples-owners
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datacatalog/**/*.py                   @shollyman @GoogleCloudPlatform/python-samples-owners
