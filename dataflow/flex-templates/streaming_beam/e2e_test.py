@@ -101,7 +101,9 @@ def run_dataflow_job(
     utils.dataflow_jobs_cancel(job_id)
 
 
-def test_flex_template_run(utils: Utils, run_dataflow_job: str) -> None:
+def test_flex_template_run(
+    utils: Utils, bigquery_dataset: str, run_dataflow_job: str
+) -> None:
     # Wait for a while for data to arrive and get processed.
     logging.info("Pipeline is running, waiting for messages to arrive")
     time.sleep(5 * 60)
