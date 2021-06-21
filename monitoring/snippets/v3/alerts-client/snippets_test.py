@@ -123,11 +123,20 @@ def pochan():
 
 
 def test_list_alert_policies(capsys, pochan):
-    snippets.list_alert_policies(pochan.project_name)
-    out, _ = capsys.readouterr()
-    # Only check up to the first 20 characters of the display name
-    # as long strings printed to the console are truncated.
-    assert pochan.alert_policy.display_name[0:20] in out
+    # Query snippets.list_alert_policies() for up to 5 seconds
+    # to allow the newly created policy to appear in the list.
+    retry = 5
+    while retry:
+        snippets.list_alert_policies(pochan.project_name)
+        out, _ = capsys.readouterr()
+        # Only check up to the first 20 characters of the display name
+        # as long strings printed to the console are truncated.
+        if pochan.alert_policy.display_name[0:20] in out:
+            break
+        retry = retry - 1
+        time.sleep(1)
+
+    assert retry > 0
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
