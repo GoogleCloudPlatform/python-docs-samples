@@ -108,7 +108,7 @@ To run this sample:
         list-dicom-stores   Lists the DICOM stores in the given dataset.
         patch-dicom-store   Updates the DICOM store.
         get_iam_policy      Gets the IAM policy for the specified DICOM store.
-        set_iam_policy      Sets the IAM policy for the specified dicom store. A
+        set_iam_policy      Sets the IAM policy for the specified DICOM store. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
                             allAuthenticatedUsers, anyone authenticated with a
@@ -129,7 +129,7 @@ To run this sample:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --location LOCATION   GCP region
+      --location LOCATION   GCP location
       --dataset_id DATASET_ID
                             Name of dataset
       --dicom_store_id DICOM_STORE_ID

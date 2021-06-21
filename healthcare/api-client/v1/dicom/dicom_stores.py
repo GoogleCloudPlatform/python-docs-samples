@@ -371,7 +371,7 @@ def get_dicom_store_iam_policy(project_id, location, dataset_id, dicom_store_id)
 def set_dicom_store_iam_policy(
     project_id, location, dataset_id, dicom_store_id, member, role, etag=None
 ):
-    """Sets the IAM policy for the specified dicom store.
+    """Sets the IAM policy for the specified DICOM store.
 
     A single member will be assigned a single role. A member can be any of:
 
