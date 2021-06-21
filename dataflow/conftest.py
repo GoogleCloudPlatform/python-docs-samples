@@ -322,8 +322,9 @@ class Utils:
         job_id: Optional[str] = None,
         job_name: Optional[str] = None,
         project: str = PROJECT,
+        region: str = REGION,
         until_status: str = "JOB_STATE_DONE",
-        timeout_sec: str = 20 * 60,  # defaults to 20 minutes
+        timeout_sec: str = 30 * 60,
         poll_interval_sec=60,
         list_page_size=100,
     ) -> Optional[str]:
@@ -356,6 +357,11 @@ class Utils:
                         f"Job status {status} in {target_status}, done waiting"
                     )
                     return status
+                elif status == "JOB_STATE_FAILED":
+                    raise RuntimeError(
+                        "Dataflow job failed:\n"
+                        f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}"
+                    )
                 logging.info(
                     f"Job status {status} not in {target_status}, retrying in {poll_interval_sec} seconds"
                 )

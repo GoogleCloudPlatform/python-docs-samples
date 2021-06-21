@@ -72,23 +72,23 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
     )
 
 
-def test_flex_template_run(
+@pytest.fixture(scope="session")
+def run_dataflow_job(
     utils: Utils,
     bucket_name: str,
     pubsub_publisher: str,
     pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
-) -> None:
+) -> str:
 
-    bigquery_table = "output_table"
     job_id = utils.dataflow_flex_template_run(
         job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
             "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.{bigquery_table}",
+            "output_table": f"{bigquery_dataset}.output_table",
         },
     )
 
@@ -96,13 +96,18 @@ def test_flex_template_run(
     # First, lets wait until the job is running.
     utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
-    # Then, for a while for data to arrive, get processed, and cancel it.
-    logging.info("Pipeline is running, waiting for messages to arrive")
-    time.sleep(5 * 60)
+    yield job_id
+
     utils.dataflow_jobs_cancel(job_id)
 
+
+def test_flex_template_run(utils: Utils, run_dataflow_job: str) -> None:
+    # Wait for a while for data to arrive and get processed.
+    logging.info("Pipeline is running, waiting for messages to arrive")
+    time.sleep(5 * 60)
+
     # Check for the output data in BigQuery.
-    query = f"SELECT * FROM `{bigquery_dataset.replace(':', '.')}.{bigquery_table}`"
+    query = f"SELECT * FROM `{bigquery_dataset.replace(':', '.')}.output_table`"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0
     for row in rows:

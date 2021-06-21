@@ -40,7 +40,7 @@ def build_image(utils: Utils) -> str:
 
 
 @pytest.fixture(scope="session")
-def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
+def run_dataflow_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     yield from utils.cloud_build_submit(
         config="run.yaml",
@@ -54,7 +54,7 @@ def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     )
 
 
-def test_tensorflow_minimal(utils: Utils, run_job: str) -> None:
+def test_tensorflow_minimal(utils: Utils, run_dataflow_job: str) -> None:
     # Wait until the job finishes.
     status = utils.dataflow_jobs_wait(job_name=utils.hyphen_name(NAME))
     assert status == "JOB_STATE_DONE", f"Dataflow pipeline finished in {status} status"

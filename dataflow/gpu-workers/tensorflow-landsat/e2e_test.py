@@ -41,7 +41,7 @@ def build_image(utils: Utils) -> str:
 
 
 @pytest.fixture(scope="session")
-def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
+def run_dataflow_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     yield from utils.cloud_build_submit(
         config="run.yaml",
@@ -56,7 +56,9 @@ def run_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     )
 
 
-def test_tensorflow_landsat(utils: Utils, bucket_name: str, run_job: str) -> None:
+def test_tensorflow_landsat(
+    utils: Utils, bucket_name: str, run_dataflow_job: str
+) -> None:
     # Wait until the job finishes.
     timeout = 30 * 60  # 30 minutes
     status = utils.dataflow_jobs_wait(

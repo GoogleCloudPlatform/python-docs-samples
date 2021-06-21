@@ -7,20 +7,14 @@
 ## Before you begin
 
 Make sure you have followed the
-[Dataflow setup instructions](../../README.md), and additionally:
-
-* Use or [create a Cloud Storage bucket](https://console.cloud.google.com/storage/create-bucket).
-
-Finally, save your resource names in environment variables.
-
-```sh
-export PROJECT=$(gcloud config get-value project)
-export BUCKET="my-bucket-name"
-```
+[Dataflow setup instructions](../../README.md).
 
 ## Building the Docker image
 
-We use Cloud Build to build the container image for the workers.
+We use
+[Cloud Build](https://cloud.google.com/build)
+to build the container image for the workers and save it in
+[Container Registry](https://cloud.google.com/container-registry/).
 
 ```sh
 gcloud builds submit --config build.yaml
@@ -28,9 +22,10 @@ gcloud builds submit --config build.yaml
 
 ## Running the Dataflow job with GPUs
 
-We use Cloud Build to run the Dataflow job.
-We launch the job using the worker image to make sure the job launches
-with the same Python version as the workers.
+We use Cloud Build to run the [Dataflow](https://cloud.google.com/dataflow) job.
+
+> ℹ️ We launch the job using the worker image to make sure the job launches
+> with the same Python version as the workers and all the dependencies installed.
 
 ```sh
 export OUTPUT_PATH="gs://$BUCKET/samples/dataflow/landsat/output-images/"
