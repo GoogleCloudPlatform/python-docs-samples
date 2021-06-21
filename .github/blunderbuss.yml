@@ -53,6 +53,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
+  - 'api: compute'
+  to:
+  - m-strzelczyk
+- labels:
   - 'api: containeranalysis'
   to:
   - donmccasland
