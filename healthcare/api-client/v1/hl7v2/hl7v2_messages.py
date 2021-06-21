@@ -13,35 +13,37 @@
 # limitations under the License.
 
 import argparse
-import json
 import os
-
-from googleapiclient import discovery
-
-
-# [START healthcare_get_client]
-def get_client():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
-    api_version = "v1"
-    service_name = "healthcare"
-
-    return discovery.build(service_name, api_version)
-
-
-# [END healthcare_get_client]
 
 
 # [START healthcare_create_hl7v2_message]
 def create_hl7v2_message(
-    project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
+    project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_file
 ):
     """Creates an HL7v2 message and sends a notification to the
     Cloud Pub/Sub topic.
-    """
-    client = get_client()
-    hl7v2_parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    # Imports Python's built-in "json" module
+    import json
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # hl7v2_message_file = 'hl7v2-message.json'  # replace with the path to the HL7v2 file
+    hl7v2_parent = "projects/{}/locations/{}".format(project_id, location)
     hl7v2_store_name = "{}/datasets/{}/hl7V2Stores/{}".format(
         hl7v2_parent, dataset_id, hl7v2_store_id
     )
@@ -68,11 +70,28 @@ def create_hl7v2_message(
 
 # [START healthcare_delete_hl7v2_message]
 def delete_hl7v2_message(
-    project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+    project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
 ):
-    """Deletes an HL7v2 message."""
-    client = get_client()
-    hl7v2_parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+    """Deletes an HL7v2 message.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # hl7v2_message_id = '2yqbdhYHlk_ucSmWkcKOVm_N0p0OpBXgIlVG18rB-cw='  # replace with the HL7v2 message ID that was returned by the server
+    hl7v2_parent = "projects/{}/locations/{}".format(project_id, location)
     hl7v2_message = "{}/datasets/{}/hl7V2Stores/{}/messages/{}".format(
         hl7v2_parent, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
@@ -96,11 +115,28 @@ def delete_hl7v2_message(
 
 # [START healthcare_get_hl7v2_message]
 def get_hl7v2_message(
-    project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+    project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
 ):
-    """Gets an HL7v2 message."""
-    client = get_client()
-    hl7v2_parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+    """Gets an HL7v2 message.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # hl7v2_message_id = '2yqbdhYHlk_ucSmWkcKOVm_N0p0OpBXgIlVG18rB-cw='  # replace with the HL7v2 message ID that was returned by the server
+    hl7v2_parent = "projects/{}/locations/{}".format(project_id, location)
     hl7v2_message_name = "{}/datasets/{}/hl7V2Stores/{}/messages/{}".format(
         hl7v2_parent, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
@@ -130,14 +166,33 @@ def get_hl7v2_message(
 
 # [START healthcare_ingest_hl7v2_message]
 def ingest_hl7v2_message(
-    project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
+    project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_file
 ):
     """Ingests a new HL7v2 message from the hospital and sends a notification
     to the Cloud Pub/Sub topic. Return is an HL7v2 ACK message if the message
     was successfully stored.
-    """
-    client = get_client()
-    hl7v2_parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    # Imports Python's built-in "json" module
+    import json
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # hl7v2_message_file = 'hl7v2-message.json'  # replace with the path to the HL7v2 file
+    hl7v2_parent = "projects/{}/locations/{}".format(project_id, location)
     hl7v2_store_name = "{}/datasets/{}/hl7V2Stores/{}".format(
         hl7v2_parent, dataset_id, hl7v2_store_id
     )
@@ -163,13 +218,28 @@ def ingest_hl7v2_message(
 
 
 # [START healthcare_list_hl7v2_messages]
-def list_hl7v2_messages(project_id, cloud_region, dataset_id, hl7v2_store_id):
+def list_hl7v2_messages(project_id, location, dataset_id, hl7v2_store_id):
     """Lists all the messages in the given HL7v2 store with support for
     filtering.
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_messages_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_message_path = "{}/hl7V2Stores/{}".format(
         hl7v2_messages_parent, hl7v2_store_id
@@ -198,18 +268,35 @@ def list_hl7v2_messages(project_id, cloud_region, dataset_id, hl7v2_store_id):
 # [START healthcare_patch_hl7v2_message]
 def patch_hl7v2_message(
     project_id,
-    cloud_region,
+    location,
     dataset_id,
     hl7v2_store_id,
     hl7v2_message_id,
     label_key,
     label_value,
 ):
-    """Updates the message."""
-    client = get_client()
-    hl7v2_message_parent = "projects/{}/locations/{}".format(
-        project_id, cloud_region
-    )
+    """Updates the message.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # hl7v2_message_id = '2yqbdhYHlk_ucSmWkcKOVm_N0p0OpBXgIlVG18rB-cw='  # replace with the HL7v2 message ID that was returned by the server
+    # label_key = 'key1'  # replace with a key
+    # label_value = 'label2'  # replace with a key value
+    hl7v2_message_parent = "projects/{}/locations/{}".format(project_id, location)
     hl7v2_message_name = "{}/datasets/{}/hl7V2Stores/{}/messages/{}".format(
         hl7v2_message_parent, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
@@ -250,7 +337,7 @@ def parse_command_line_args():
         help="GCP project name",
     )
 
-    parser.add_argument("--cloud_region", default="us-central1", help="GCP region")
+    parser.add_argument("--location", default="us-central1", help="GCP location")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
@@ -302,7 +389,7 @@ def run_command(args):
     elif args.command == "create-hl7v2-message":
         create_hl7v2_message(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.hl7v2_message_file,
@@ -311,7 +398,7 @@ def run_command(args):
     elif args.command == "delete-hl7v2-message":
         delete_hl7v2_message(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.hl7v2_message_id,
@@ -320,7 +407,7 @@ def run_command(args):
     elif args.command == "get-hl7v2-message":
         get_hl7v2_message(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.hl7v2_message_id,
@@ -329,7 +416,7 @@ def run_command(args):
     elif args.command == "ingest-hl7v2-message":
         ingest_hl7v2_message(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.hl7v2_message_file,
@@ -337,13 +424,13 @@ def run_command(args):
 
     elif args.command == "list-hl7v2-messages":
         list_hl7v2_messages(
-            args.project_id, args.cloud_region, args.dataset_id, args.hl7v2_store_id
+            args.project_id, args.location, args.dataset_id, args.hl7v2_store_id
         )
 
     elif args.command == "patch-hl7v2-message":
         patch_hl7v2_message(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.hl7v2_message_id,
