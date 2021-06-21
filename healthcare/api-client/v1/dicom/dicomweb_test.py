@@ -26,8 +26,7 @@ import datasets  # noqa
 import dicom_stores  # noqa
 import dicomweb  # noqa
 
-cloud_region = "us-central1"
-base_url = "https://healthcare.googleapis.com/v1"
+location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 dataset_id = "test_dataset-{}".format(uuid.uuid4())
@@ -50,7 +49,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
-            datasets.create_dataset(project_id, cloud_region, dataset_id)
+            datasets.create_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
             # likely the first request failed on the client side, but
@@ -68,7 +67,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+            datasets.delete_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 403:
@@ -85,7 +84,7 @@ def test_dicom_store():
     def create():
         try:
             dicom_stores.create_dicom_store(
-                project_id, cloud_region, dataset_id, dicom_store_id
+                project_id, location, dataset_id, dicom_store_id
             )
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
@@ -109,7 +108,7 @@ def test_dicom_store():
     def clean_up():
         try:
             dicom_stores.delete_dicom_store(
-                project_id, cloud_region, dataset_id, dicom_store_id
+                project_id, location, dataset_id, dicom_store_id
             )
         except HttpError as err:
             # The API returns 404 when the DICOM store doesn't exist.
@@ -130,7 +129,7 @@ def test_dicom_store():
 
 def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        project_id, location, dataset_id, dicom_store_id, dcm_file
     )
 
     out, _ = capsys.readouterr()
@@ -141,16 +140,12 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_search_instance_studies(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        project_id, location, dataset_id, dicom_store_id, dcm_file
     )
 
-    dicomweb.dicomweb_search_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id
-    )
+    dicomweb.dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id)
 
-    dicomweb.dicomweb_search_studies(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id
-    )
+    dicomweb.dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -163,11 +158,11 @@ def test_dicomweb_search_instance_studies(test_dataset, test_dicom_store, capsys
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     try:
         dicomweb.dicomweb_store_instance(
-            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+            project_id, location, dataset_id, dicom_store_id, dcm_file
         )
 
         dicomweb.dicomweb_retrieve_study(
-            base_url, project_id, cloud_region, dataset_id, dicom_store_id, study_uid
+            project_id, location, dataset_id, dicom_store_id, study_uid
         )
 
         # Assert study was downloaded
@@ -186,13 +181,12 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
 def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
     try:
         dicomweb.dicomweb_store_instance(
-            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+            project_id, location, dataset_id, dicom_store_id, dcm_file
         )
 
         dicomweb.dicomweb_retrieve_instance(
-            base_url,
             project_id,
-            cloud_region,
+            location,
             dataset_id,
             dicom_store_id,
             study_uid,
@@ -216,13 +210,12 @@ def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
 def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
     try:
         dicomweb.dicomweb_store_instance(
-            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+            project_id, location, dataset_id, dicom_store_id, dcm_file
         )
 
         dicomweb.dicomweb_retrieve_rendered(
-            base_url,
             project_id,
-            cloud_region,
+            location,
             dataset_id,
             dicom_store_id,
             study_uid,
@@ -245,11 +238,11 @@ def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        project_id, location, dataset_id, dicom_store_id, dcm_file
     )
 
     dicomweb.dicomweb_delete_study(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, study_uid
+        project_id, location, dataset_id, dicom_store_id, study_uid
     )
 
     out, _ = capsys.readouterr()
