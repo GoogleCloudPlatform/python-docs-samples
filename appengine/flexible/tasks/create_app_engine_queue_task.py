@@ -33,6 +33,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # queue = 'my-appengine-queue'
     # location = 'us-central1'
     # payload = 'hello' or {'param': 'value'} for application/json
+    # in_seconds = None
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)

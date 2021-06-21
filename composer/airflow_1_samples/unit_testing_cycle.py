@@ -12,33 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_bashoperator_python2]
+"""An example DAG demonstrating a cyle in the task IDs."""
+
 import datetime
 
 from airflow import models
-from airflow.operators import bash_operator
+from airflow.operators import dummy_operator
 
 
-yesterday = datetime.datetime.combine(
-    datetime.datetime.today() - datetime.timedelta(1),
-    datetime.datetime.min.time())
-
+yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_dag_args = {
-    # Setting start date as yesterday starts the DAG immediately when it is
-    # detected in the Cloud Storage bucket.
     'start_date': yesterday,
 }
 
 with models.DAG(
-        'composer_sample_bashoperator_python2',
+        'composer_sample_cycle',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-
-    run_python2 = bash_operator.BashOperator(
-        task_id='run_python2',
-        # This example runs a Python script from the data folder to prevent
-        # Airflow from attempting to parse the script as a DAG.
-        bash_command='python2 /home/airflow/gcs/data/python2_script.py',
-    )
-# [END composer_bashoperator_python2]
+    start = dummy_operator.DummyOperator(task_id='oops_a_cycle')
+    end = dummy_operator.DummyOperator(task_id='oops_a_cycle')
+    start >> end
