@@ -76,7 +76,7 @@ def create_http_task(
 
     if task_name is not None:
         # Add the name to tasks.
-        task["name"] = task_name
+        task["name"] = client.task_path(project, location, queue, task_name)
 
     # Use the client to build and send the task.
     response = client.create_task(request={"parent": parent, "task": task})
