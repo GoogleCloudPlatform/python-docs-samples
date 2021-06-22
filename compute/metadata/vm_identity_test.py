@@ -48,6 +48,7 @@ def test_vm_identity():
 
     # Because new GCE instances can have their clocks skewed by a lot, we want
     # to make sure we don't try to verify token too soon.
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/6156
     wait_for_token(token)
 
     # Proceed with verification of the received token.
