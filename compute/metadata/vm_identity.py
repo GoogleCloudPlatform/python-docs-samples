@@ -61,7 +61,7 @@ def verify_token(token: str, audience: str) -> dict:
 
 
 if __name__ == '__main__':
-    token_ = acquire_token()
+    token_ = acquire_token(AUDIENCE_URL)
     print("Received token:", token_)
     print("Token verification:")
-    pprint.pprint(verify_token(acquire_token(AUDIENCE_URL), AUDIENCE_URL))
+    pprint.pprint(verify_token(token_, AUDIENCE_URL))
