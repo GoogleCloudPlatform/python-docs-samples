@@ -8,7 +8,7 @@
   "pip_requirements": {
     "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
   },
-  "ignorePaths" : ["composer/workflows/constraints.txt"],
+  "ignorePaths" : ["composer/workflows/constraints.txt", "composer/blog/[\\S/]*constraints.txt"],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
