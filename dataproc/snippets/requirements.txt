@@ -1,6 +1,6 @@
 
 backoff==1.10.0
-grpcio==1.38.0
+grpcio==1.38.1
 google-auth==1.31.0
 google-auth-httplib2==0.1.0
 google-cloud==0.34.0
