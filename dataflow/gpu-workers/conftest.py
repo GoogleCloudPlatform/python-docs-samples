@@ -21,7 +21,7 @@ import platform
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Union
+from typing import Any, Callable, Dict, Iterable, Optional
 import uuid
 
 import pytest
