@@ -21,7 +21,7 @@ FROM nvcr.io/nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 WORKDIR /pipeline
 
 # Copy the Apache Beam worker files and the pipeline source files.
-COPY --from=apache/beam_python3.8_sdk:2.29.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 COPY *.py ./
 

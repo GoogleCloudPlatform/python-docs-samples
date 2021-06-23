@@ -17,7 +17,7 @@ FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
 WORKDIR /pipeline
 
 # Copy the Apache Beam worker files and the pipeline source files.
-COPY --from=apache/beam_python3.8_sdk:2.29.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 COPY *.py ./
 
