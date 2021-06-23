@@ -284,7 +284,7 @@ class Utils:
         job_id: Optional[str] = None,
         job_name: Optional[str] = None,
         project: str = PROJECT,
-        list_page_size=30,
+        list_page_size: int = 30,
     ) -> Optional[Dict[str, Any]]:
         from googleapiclient.discovery import build
 
@@ -343,7 +343,7 @@ class Utils:
             f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
         )
         status = None
-        for _ in range(0, timeout_sec + 1, poll_interval_sec):
+        for _ in range(0, timeout_sec, poll_interval_sec):
             try:
                 job = Utils.dataflow_jobs_get(
                     job_id=job_id,
