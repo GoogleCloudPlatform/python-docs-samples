@@ -1,0 +1,2 @@
+google-cloud-storage==1.38.0
+pytest==6.2.4

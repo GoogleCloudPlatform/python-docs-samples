@@ -1,0 +1,6 @@
+# Ignore files for docker.
+.mypy_cache/
+.nox/
+__pycache__/
+env/
+outputs/
