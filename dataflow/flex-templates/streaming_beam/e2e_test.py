@@ -11,18 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
-import logging
 import time
 
+# `conftest` cannot be imported when running in `nox`, but we still
+# try to import it for the autocomplete when writing the tests.
 try:
-    # `conftest` cannot be imported when running in `nox`, but we still
-    # try to import it for the autocomplete when writing the tests.
     from conftest import Utils
 except ModuleNotFoundError:
-    Utils = None
+    from typing import Any
+
+    Utils = Any
 import pytest
 
-NAME = "dataflow/flex-templates/streaming-beam"
+NAME = "dataflow-flex-templates-streaming-beam"
 
 
 @pytest.fixture(scope="session")
@@ -60,56 +61,48 @@ def pubsub_publisher(utils: Utils, pubsub_topic: str) -> bool:
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    yield from utils.cloud_build_submit(NAME)
+    yield from utils.container_image(NAME)
 
 
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
     yield from utils.dataflow_flex_template_build(
         bucket_name=bucket_name,
-        image_name=flex_template_image,
+        template_image=flex_template_image,
         metadata_file="metadata.json",
     )
 
 
-@pytest.fixture(scope="session")
-def run_dataflow_job(
+def test_flex_template_run(
     utils: Utils,
     bucket_name: str,
     pubsub_publisher: str,
     pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
-) -> str:
+) -> None:
 
+    bigquery_table = "output_table"
     job_id = utils.dataflow_flex_template_run(
         job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
             "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.output_table",
+            "output_table": f"{bigquery_dataset}.{bigquery_table}",
         },
     )
 
     # Since this is a streaming job, it will never finish running.
     # First, lets wait until the job is running.
-    utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
+    utils.dataflow_jobs_wait(job_id)
 
-    yield job_id
-
-    utils.dataflow_jobs_cancel(job_id)
-
-
-def test_flex_template_run(
-    utils: Utils, bigquery_dataset: str, run_dataflow_job: str
-) -> None:
-    # Wait for a while for data to arrive and get processed.
-    logging.info("Pipeline is running, waiting for messages to arrive")
-    time.sleep(5 * 60)
+    # Then, wait a minute for data to arrive, get processed, and cancel it.
+    time.sleep(60)
+    utils.dataflow_jobs_cancel_by_job_id(job_id)
 
     # Check for the output data in BigQuery.
-    query = f"SELECT * FROM `{bigquery_dataset.replace(':', '.')}.output_table`"
+    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0
     for row in rows:
