@@ -16,8 +16,8 @@ import json
 import logging
 import multiprocessing as mp
 import os
-import re
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -325,8 +325,8 @@ class Utils:
         region: str = REGION,
         until_status: str = "JOB_STATE_DONE",
         timeout_sec: str = 30 * 60,
-        poll_interval_sec=60,
-        list_page_size=100,
+        poll_interval_sec: int = 60,
+        list_page_size: int = 100,
     ) -> Optional[str]:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
