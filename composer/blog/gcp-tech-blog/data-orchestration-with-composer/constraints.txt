@@ -1,6 +1,6 @@
 # This file is from https://raw.githubusercontent.com/apache/airflow/constraints-2.0.1/constraints-3.8.txt
 APScheduler==3.7.0
-Authlib==0.15.3
+Authlib==0.15.4
 Babel==2.9.1
 Flask-AppBuilder==3.3.0
 Flask-Babel==1.0.0
