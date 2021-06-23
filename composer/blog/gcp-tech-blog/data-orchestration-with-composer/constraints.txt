@@ -388,7 +388,7 @@ python-jose==3.2.0
 python-ldap==3.3.1
 python-nvd3==0.15.0
 python-slugify==4.0.1
-python-telegram-bot==13.0
+python-telegram-bot==13.6
 python3-openid==3.2.0
 pytz==2020.5
 pytzdata==2020.1
