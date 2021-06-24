@@ -360,7 +360,7 @@ pycparser==2.20
 pycryptodomex==3.10.1
 pydata-google-auth==1.1.0
 pydruid==0.6.2
-pyenchant==3.2.0
+pyenchant==3.2.1
 pyexasol==0.17.0
 pyflakes==2.2.0
 pykerberos==1.2.1
