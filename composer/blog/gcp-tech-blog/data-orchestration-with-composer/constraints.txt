@@ -122,7 +122,7 @@ azure-cosmos==3.2.0
 azure-datalake-store==0.0.52
 azure-identity==1.6.0
 azure-keyvault-certificates==4.2.1
-azure-keyvault-keys==4.3.1
+azure-keyvault-keys==4.4.0
 azure-keyvault-secrets==4.2.0
 azure-keyvault==4.1.0
 azure-kusto-data==0.1.0
