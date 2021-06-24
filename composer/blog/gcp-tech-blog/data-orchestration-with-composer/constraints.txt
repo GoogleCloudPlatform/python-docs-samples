@@ -189,7 +189,7 @@ elasticsearch==7.13.0
 email-validator==1.1.2
 entrypoints==0.3
 eventlet==0.31.0
-execnet==1.8.1
+execnet==1.9.0
 facebook-business==9.0.3
 fastavro==1.4.1
 filelock==3.0.12
