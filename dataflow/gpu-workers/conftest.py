@@ -208,20 +208,25 @@ class Utils:
             cmd_substitutions = []
 
         if config:
-            with open(config) as f:
-                cmd = [
-                    "gcloud",
-                    "builds",
-                    "submit",
-                    f"--project={project}",
-                    f"--config={config}",
-                    *cmd_substitutions,
-                    source,
-                ]
-                logging.info(f"{cmd}")
-                subprocess.run(cmd, check=True)
-                logging.info(f"Cloud build finished successfully: {config}")
-                yield f.read()
+            try:
+                with open(config) as f:
+                    cmd = [
+                        "gcloud",
+                        "builds",
+                        "submit",
+                        f"--project={project}",
+                        f"--config={config}",
+                        *cmd_substitutions,
+                        source,
+                    ]
+                    logging.info(f"{cmd}")
+                    subprocess.run(cmd, check=True)
+                    logging.info(f"Cloud build finished successfully: {config}")
+                    yield f.read()
+            except Exception as e:
+                logging.exception(e)
+                logging.warning(f'Current directory: {os.getcwd()}')
+                yield config
         elif image_name:
             cmd = [
                 "gcloud",
