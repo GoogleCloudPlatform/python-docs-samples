@@ -20,10 +20,9 @@ try:
     from conftest import Utils
 except ModuleNotFoundError:
     Utils = None
-from google.cloud import storage
 import pytest
 
-NAME = "dataflow/gpu-workers/tensorflow-landsat"
+NAME = "dataflow/gpu-examples/pytorch-minimal"
 
 
 @pytest.fixture(scope="session")
@@ -35,7 +34,7 @@ def bucket_name(utils: Utils) -> str:
 def build_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(
         image_name=NAME,
-        config="tensorflow-landsat/build.yaml",
+        config="build.yaml",
         substitutions={"_IMAGE": f"{NAME}:{utils.uuid}"},
     )
 
@@ -44,32 +43,18 @@ def build_image(utils: Utils) -> str:
 def run_dataflow_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     yield from utils.cloud_build_submit(
-        config="tensorflow-landsat/run.yaml",
+        config="run.yaml",
         substitutions={
             "_JOB_NAME": utils.hyphen_name(NAME),
             "_IMAGE": f"{NAME}:{utils.uuid}",
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
             "_REGION": utils.region,
-            "_OUTPUT_PATH": f"gs://{bucket_name}/outputs/",
         },
         source="--no-source",
     )
 
 
-def test_tensorflow_landsat(
-    utils: Utils, bucket_name: str, run_dataflow_job: str
-) -> None:
+def test_pytorch_minimal(utils: Utils, run_dataflow_job: str) -> None:
     # Wait until the job finishes.
-    timeout = 30 * 60  # 30 minutes
-    status = utils.dataflow_jobs_wait(
-        job_name=utils.hyphen_name(NAME), timeout_sec=timeout
-    )
+    status = utils.dataflow_jobs_wait(job_name=utils.hyphen_name(NAME))
     assert status == "JOB_STATE_DONE", f"Dataflow pipeline finished in {status} status"
-
-    # Check that output files were created and are not empty.
-    storage_client = storage.Client()
-    print(f">> Checking for output files in: gs://{bucket_name}/outputs/")
-    output_files = list(storage_client.list_blobs(bucket_name, prefix="outputs/"))
-    assert len(output_files) > 0, f"No files found in gs://{bucket_name}/outputs/"
-    for output_file in output_files:
-        assert output_file.size > 0, f"Output file is empty: {output_file.name}"

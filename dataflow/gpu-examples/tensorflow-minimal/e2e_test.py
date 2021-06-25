@@ -22,7 +22,7 @@ except ModuleNotFoundError:
     Utils = None
 import pytest
 
-NAME = "dataflow/gpu-workers/tensorflow-minimal"
+NAME = "dataflow/gpu-examples/tensorflow-minimal"
 
 
 @pytest.fixture(scope="session")
@@ -34,7 +34,7 @@ def bucket_name(utils: Utils) -> str:
 def build_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(
         image_name=NAME,
-        config="tensorflow-minimal/build.yaml",
+        config="build.yaml",
         substitutions={"_IMAGE": f"{NAME}:{utils.uuid}"},
     )
 
@@ -43,7 +43,7 @@ def build_image(utils: Utils) -> str:
 def run_dataflow_job(utils: Utils, bucket_name: str, build_image: str) -> str:
     # Run the Beam pipeline in Dataflow making sure GPUs are used.
     yield from utils.cloud_build_submit(
-        config="tensorflow-minimal/run.yaml",
+        config="run.yaml",
         substitutions={
             "_JOB_NAME": utils.hyphen_name(NAME),
             "_IMAGE": f"{NAME}:{utils.uuid}",
