@@ -27,7 +27,7 @@ We use Cloud Build to run the [Dataflow](https://cloud.google.com/dataflow) job.
 export REGION="us-central1"
 export GPU_TYPE="nvidia-tesla-t4"
 
-gcloud beta builds submit \
+gcloud builds submit \
     --config run.yaml \
     --substitutions _REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
