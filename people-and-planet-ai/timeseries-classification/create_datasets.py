@@ -123,7 +123,7 @@ def run(
     with beam.Pipeline(options=beam_options) as pipeline:
         labels = pd.concat(
             [read_labels(filename) for filename in tf.io.gfile.glob(label_files)]
-        ).sort_values("start_time")
+        ).sort_values(by="start_time")
 
         training_data, evaluation_data = (
             pipeline

@@ -23,7 +23,7 @@ export STORAGE_DIR="samples/global-fishing-watch"
 ## Building the container image
 
 ```sh
-gcloud builds submit . --config="build.yaml"
+gcloud builds submit --config="build.yaml"
 ```
 
 ## Creating the datasets with Dataflow
