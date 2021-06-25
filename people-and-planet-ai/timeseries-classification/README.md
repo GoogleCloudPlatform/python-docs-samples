@@ -2,12 +2,14 @@
 
 ## TODO: add a README at the top level directory
 
+ℹ️ The bucket _must_ be in the same location where the Vertex AI job runs.
+
 ```sh
 # Google Cloud resources
 export PROJECT=$(gcloud config get-value project)
 export BUCKET="my-bucket-name"
 
-export REGION="us-central1"
+export LOCATION="us-central1"
 export STORAGE_DIR="samples/global-fishing-watch"
 ```
 
@@ -29,17 +31,17 @@ gcloud builds submit . --config="build.yaml"
 ```sh
 gcloud beta builds submit --no-source \
     --config="create_datasets.yaml" \
-    --substitutions _BUCKET=$BUCKET,_REGION=$REGION
+    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION
 ```
 
 ## Training the model in Vertex AI
 
 ```sh
-# TODO: have all the code in a single file (?) (how does Vertex AI handle requirements.txt?)
-
-# specify baseOutputDirectory: https://cloud.google.com/vertex-ai/docs/reference/rest/v1/CustomJobSpec#FIELDS.base_output_directory
-
-python run_training_job.py
+# TODO: maybe change this to a Cloud Run config as well (?)
+python run_training_job.py \
+    --project "$PROJECT" \
+    --bucket "$BUCKET" \
+    --location "$LOCATION"
 ```
 
 ## TODO: Hyperparameter tuning

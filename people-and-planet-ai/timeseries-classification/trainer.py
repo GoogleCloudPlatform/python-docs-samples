@@ -109,7 +109,6 @@ def build_dataset(data_dir: str, batch_size: int = 64) -> tf.data.Dataset:
     return (
         tf.data.TFRecordDataset(file_names, compression_type="GZIP")
         .map(deserialize, num_parallel_calls=tf.data.AUTOTUNE)
-        .cache()
         .shuffle(batch_size * 100)
         .batch(batch_size)
         .prefetch(tf.data.AUTOTUNE)
@@ -171,11 +170,11 @@ def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
+    train_steps: int = 1000,
+    eval_steps: int = 100,
     model_dir: str = "model",
-    checkpoint_dir: str = "checkpoint",
+    checkpoint_dir: str = "checkpoints",
     tensorboard_dir: str = "logs",
-    train_steps=10000,
-    eval_steps=1000,
 ) -> None:
 
     # Create the training and evaluation datasets from the TFRecord files.
@@ -209,8 +208,10 @@ if __name__ == "__main__":
     import os
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train-files", required=True)
-    parser.add_argument("--eval-files", required=True)
+    parser.add_argument("--train-data-dir", required=True)
+    parser.add_argument("--eval-data-dir", required=True)
+    parser.add_argument("--train-steps", default=1000, type=int)
+    parser.add_argument("--eval-steps", default=100, type=int)
     parser.add_argument("--model-dir", default=os.environ.get("AIP_MODEL_DIR", "model"))
     parser.add_argument(
         "--checkpoint-dir", default=os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints")
@@ -218,14 +219,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tensorboard-dir", default=os.environ.get("AIP_TENSORBOARD_LOG_DIR", "logs")
     )
-    parser.add_argument("--train-steps", default=1000)
-    parser.add_argument("--eval-steps", default=100)
     args = parser.parse_args()
 
     run(
-        train_data_dir=args.train_files,
-        eval_data_dir=args.eval_files,
-        model_dir=args.output_dir,
+        train_data_dir=args.train_data_dir,
+        eval_data_dir=args.eval_data_dir,
+        train_steps=args.train_steps,
+        eval_steps=args.eval_steps,
+        model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
         tensorboard_dir=args.tensorboard_dir,
     )

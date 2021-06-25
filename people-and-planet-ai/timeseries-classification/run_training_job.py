@@ -17,7 +17,16 @@ import argparse
 from google.cloud import aiplatform
 
 
-def run(project: str, image: str, location: str = "us-central1", num_replicas: int = 4):
+def run(
+    project: str,
+    bucket: str,
+    location: str,
+    storage_path: str,
+    train_steps: int,
+    eval_steps: int,
+    image: str,
+    num_workers: int = 4,
+):
     client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
@@ -26,6 +35,10 @@ def run(project: str, image: str, location: str = "us-central1", num_replicas: i
         custom_job={
             "display_name": "global-fishing-watch",
             "job_spec": {
+                # https://cloud.google.com/vertex-ai/docs/reference/rest/v1/CustomJobSpec
+                "base_output_directory": {
+                    "output_uri_prefix": f"gs://{bucket}/{storage_path}",
+                },
                 # https://cloud.google.com/vertex-ai/docs/training/distributed-training
                 "worker_pool_specs": [
                     {
@@ -33,22 +46,35 @@ def run(project: str, image: str, location: str = "us-central1", num_replicas: i
                         "machine_spec": {"machine_type": "e2-standard-4"},
                         "replica_count": 1,
                         "container_spec": {
-                            "image_uri": image,
-                            "command": [],
-                            "args": [],
+                            "image_uri": f"gcr.io/{project}/{image}",
+                            "command": ["python"],
+                            "args": [
+                                "trainer.py",
+                                f"--train-data-dir=gs://{bucket}/{storage_path}/datasets/train",
+                                f"--eval-data-dir=gs://{bucket}/{storage_path}/datasets/eval",
+                                f"--train-steps={train_steps}",
+                                f"--eval-steps={eval_steps}",
+                            ],
                         },
                     },
-                    {
-                        # Workers
-                        "machine_spec": {"machine_type": "e2-standard-4"},
-                        "replica_count": num_replicas,
-                        "container_spec": {
-                            "image_uri": image,
-                            "command": [],
-                            "args": [],
-                        },
-                    },
-                ]
+                    # TODO: figure out how to use multiple workers for training
+                    # {
+                    #     # Workers
+                    #     "machine_spec": {"machine_type": "e2-standard-4"},
+                    #     "replica_count": num_workers,
+                    #     "container_spec": {
+                    #         "image_uri": f"gcr.io/{project}/{image}",
+                    #         "command": ["python"],
+                    #         "args": [
+                    #             "trainer.py",
+                    #             f"--train-data-dir=gs://{bucket}/{storage_path}/datasets/train",
+                    #             f"--eval-data-dir=gs://{bucket}/{storage_path}/datasets/eval",
+                    #             f"--train-steps={train_steps}",
+                    #             f"--eval-steps={eval_steps}",
+                    #         ],
+                    #     },
+                    # },
+                ],
             },
         },
     )
@@ -58,14 +84,22 @@ def run(project: str, image: str, location: str = "us-central1", num_replicas: i
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", required=True)
-    parser.add_argument("--image", required=True)
-    parser.add_argument("--location", default="us-central1")
-    parser.add_argument("--num-replicas", default=4, type=int)
+    parser.add_argument("--bucket", required=True)
+    parser.add_argument("--location", required=True)
+    parser.add_argument("--storage-path", default="samples/global-fishing-watch")
+    parser.add_argument("--image", default="samples/global-fishing-watch:latest")
+    parser.add_argument("--num-workers", default=4, type=int)
+    parser.add_argument("--train-steps", default=1000, type=int)
+    parser.add_argument("--eval-steps", default=100, type=int)
     args = parser.parse_args()
 
     run(
         project=args.project,
-        image=args.image,
+        bucket=args.bucket,
         location=args.location,
-        num_replicas=args.num_replicas,
+        storage_path=args.storage_path,
+        train_steps=args.train_steps,
+        eval_steps=args.eval_steps,
+        image=args.image,
+        num_workers=args.num_workers,
     )

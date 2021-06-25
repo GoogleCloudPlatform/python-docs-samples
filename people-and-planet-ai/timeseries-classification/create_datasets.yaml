@@ -21,7 +21,7 @@
 
 substitutions:
   _BUCKET: please set --substitutions _BUCKET=my-bucket-name
-  _REGION: us-central1
+  _LOCATION: us-central1
   _IMAGE: samples/global-fishing-watch:latest
   _STORAGE_DIR: samples/global-fishing-watch
 
@@ -37,7 +37,7 @@ steps:
   - --runner=DataflowRunner
   - --project=$PROJECT_ID
   - --temp_location=gs://$_BUCKET/$_STORAGE_DIR/temp
-  - --region=$_REGION
+  - --region=$_LOCATION
   - --experiment=use_runner_v2
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
 
