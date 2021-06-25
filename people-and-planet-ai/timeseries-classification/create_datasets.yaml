@@ -41,7 +41,5 @@ steps:
   - --experiment=use_runner_v2
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
 
-options:
-  logging: CLOUD_LOGGING_ONLY
-
 serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com
+logsBucket: gs://$_BUCKET/$_STORAGE_DIR/logs/create_datasets

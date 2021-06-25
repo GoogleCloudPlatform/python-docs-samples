@@ -115,51 +115,54 @@ def run(
     beam_args: Optional[List[str]] = None,
 ) -> None:
 
+    labels = pd.concat(
+        [read_labels(filename) for filename in tf.io.gfile.glob(label_files)]
+    ).sort_values(by="start_time")
+
     beam_options = PipelineOptions(
         beam_args,
         type_check_additional="all",
         save_main_session=True,
     )
-    with beam.Pipeline(options=beam_options) as pipeline:
-        labels = pd.concat(
-            [read_labels(filename) for filename in tf.io.gfile.glob(label_files)]
-        ).sort_values(by="start_time")
+    pipeline = beam.Pipeline(options=beam_options)
 
-        training_data, evaluation_data = (
-            pipeline
-            | "Data files" >> beam.Create([data_files])
-            | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
-            | "Reshuffle files" >> beam.Reshuffle()
-            | "Read data" >> beam.Map(read_data)
-            | "Label data" >> beam.Map(label_data, labels)
-            | "Get training points" >> beam.FlatMap(generate_training_points)
-            | "Reshuffle points" >> beam.Reshuffle()
-            | "Serialize TFRecords" >> beam.Map(trainer.serialize)
-            | "Train-eval split"
-            >> beam.Partition(
-                lambda x, n: random.choices([0, 1], train_eval_split)[0], 2
-            )
+    training_data, evaluation_data = (
+        pipeline
+        | "Data files" >> beam.Create([data_files])
+        | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
+        | "Reshuffle files" >> beam.Reshuffle()
+        | "Read data" >> beam.Map(read_data)
+        | "Label data" >> beam.Map(label_data, labels)
+        | "Get training points" >> beam.FlatMap(generate_training_points)
+        | "Reshuffle points" >> beam.Reshuffle()
+        | "Serialize TFRecords" >> beam.Map(trainer.serialize)
+        | "Train-eval split"
+        >> beam.Partition(
+            lambda x, n: random.choices([0, 1], train_eval_split)[0], 2
         )
+    )
 
-        (
-            training_data
-            | "Write train files"
-            >> beam.io.WriteToTFRecord(
-                f"{train_data_dir}/part",
-                file_name_suffix=".tfrecords.gz",
-                compression_type=beam.io.filesystems.CompressionTypes.GZIP,
-            )
+    (
+        training_data
+        | "Write train files"
+        >> beam.io.WriteToTFRecord(
+            f"{train_data_dir}/part",
+            file_name_suffix=".tfrecords.gz",
+            compression_type=beam.io.filesystems.CompressionTypes.GZIP,
         )
+    )
 
-        (
-            evaluation_data
-            | "Write eval files"
-            >> beam.io.WriteToTFRecord(
-                f"{eval_data_dir}/part",
-                file_name_suffix=".tfrecords.gz",
-                compression_type=beam.io.filesystems.CompressionTypes.GZIP,
-            )
+    (
+        evaluation_data
+        | "Write eval files"
+        >> beam.io.WriteToTFRecord(
+            f"{eval_data_dir}/part",
+            file_name_suffix=".tfrecords.gz",
+            compression_type=beam.io.filesystems.CompressionTypes.GZIP,
         )
+    )
+
+    pipeline.run()
 
 
 if __name__ == "__main__":

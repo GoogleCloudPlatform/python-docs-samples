@@ -29,9 +29,10 @@ gcloud builds submit --config="build.yaml"
 ## Creating the datasets with Dataflow
 
 ```sh
-gcloud beta builds submit --no-source \
+gcloud builds submit \
     --config="create_datasets.yaml" \
-    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION
+    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION \
+    --no-source
 ```
 
 ## Training the model in Vertex AI
