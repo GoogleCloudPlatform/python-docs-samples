@@ -31,7 +31,7 @@ fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 test_fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 
 
-BACKOFF_MAX_TIME = 240
+BACKOFF_MAX_TIME = 500
 
 
 @pytest.fixture(scope="module")

@@ -89,8 +89,8 @@ To run this sample:
 
     $ python hl7v2_stores.py
 
-    usage: hl7v2_stores.py [-h] [--project_id PROJECT_ID]
-                           [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+    usage: hl7v2_stores.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
+                           [--dataset_id DATASET_ID]
                            [--hl7v2_store_id HL7V2_STORE_ID]
                            [--pubsub_topic PUBSUB_TOPIC] [--member MEMBER]
                            [--role ROLE]
@@ -104,8 +104,8 @@ To run this sample:
         get-hl7v2-store     Gets the specified HL7v2 store.
         list-hl7v2-stores   Lists the HL7v2 stores in the given dataset.
         patch-hl7v2-store   Updates the HL7v2 store.
-        get_iam_policy      Gets the IAM policy for the specified hl7v2 store.
-        set_iam_policy      Sets the IAM policy for the specified hl7v2 store. A
+        get_iam_policy      Gets the IAM policy for the specified HL7v2 store.
+        set_iam_policy      Sets the IAM policy for the specified HL7v2 store. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
                             allAuthenticatedUsers, anyone authenticated with a
@@ -122,8 +122,7 @@ To run this sample:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --cloud_region CLOUD_REGION
-                            GCP region
+      --location LOCATION   GCP location
       --dataset_id DATASET_ID
                             Name of dataset
       --hl7v2_store_id HL7V2_STORE_ID
@@ -152,8 +151,7 @@ To run this sample:
 
     $ python hl7v2_messages.py
 
-    usage: hl7v2_messages.py [-h] [--project_id PROJECT_ID]
-                             [--cloud_region CLOUD_REGION]
+    usage: hl7v2_messages.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
                              [--dataset_id DATASET_ID]
                              [--hl7v2_store_id HL7V2_STORE_ID]
                              [--hl7v2_message_file HL7V2_MESSAGE_FILE]
@@ -185,8 +183,7 @@ To run this sample:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --cloud_region CLOUD_REGION
-                            GCP region
+      --location LOCATION   GCP location
       --dataset_id DATASET_ID
                             Name of dataset
       --hl7v2_store_id HL7V2_STORE_ID
