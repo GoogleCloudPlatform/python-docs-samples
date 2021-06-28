@@ -43,7 +43,8 @@ def run(
                 "worker_pool_specs": [
                     {
                         # Scheduler
-                        "machine_spec": {"machine_type": "e2-standard-4"},
+                        # "machine_spec": {"machine_type": "e2-standard-4"},
+                        "machine_spec": {"machine_type": "e2-highcpu-32"},
                         "replica_count": 1,
                         "container_spec": {
                             "image_uri": f"gcr.io/{project}/{image}",
