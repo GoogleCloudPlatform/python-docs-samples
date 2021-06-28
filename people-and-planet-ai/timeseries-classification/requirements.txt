@@ -1,4 +1,5 @@
 apache-beam[gcp]==2.30.0
-google-cloud-aiplatform==1.0.1
+google-cloud-aiplatform==1.1.1
+google-cloud-bigquery==2.18.0 # Indirect dependency, but there is a version conflict that causes pip to hang unless we constraint this.
 pandas==1.2.4
 tensorflow==2.5.0
