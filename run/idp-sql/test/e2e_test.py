@@ -77,7 +77,6 @@ if not IDP_KEY:
     raise Exception("'IDP_KEY' env var not found")
 
 
-
 retry_strategy = Retry(
     total=3,
     status_forcelist=[400, 401, 403, 500, 502, 503, 504],
