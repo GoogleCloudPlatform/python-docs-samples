@@ -14,6 +14,7 @@
 
 from functools import reduce
 import logging
+import os
 from typing import Any, Dict, Tuple
 
 import tensorflow as tf
@@ -35,6 +36,14 @@ INPUTS_SPEC = {
 OUTPUTS_SPEC = {
     "is_fishing": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
 }
+
+# Default options.
+TRAIN_STEPS = 10000
+EVAL_STEPS = 1000
+BATCH_SIZE = 256
+MODEL_DIR = os.environ.get("AIP_MODEL_DIR", "model")
+CHECKPOINT_DIR = os.environ.get("AIP_CHECKPOINTS_DIR", "checkpoints")
+TENSORBOARD_DIR = os.environ.get("AIP_TENSORBOARD_DIR", "tensorboard")
 
 
 def validated(
@@ -105,7 +114,7 @@ def deserialize(
     return parse_features(INPUTS_SPEC), parse_features(OUTPUTS_SPEC)
 
 
-def build_dataset(data_dir: str, batch_size: int = 64) -> tf.data.Dataset:
+def build_dataset(data_dir: str, batch_size: int = BATCH_SIZE) -> tf.data.Dataset:
     file_names = tf.io.gfile.glob(f"{data_dir}/*")
     return (
         tf.data.TFRecordDataset(file_names, compression_type="GZIP")
@@ -171,17 +180,18 @@ def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
-    train_steps: int = 1000,
-    eval_steps: int = 100,
-    model_dir: str = "model",
-    checkpoint_dir: str = "checkpoints",
-    tensorboard_dir: str = "logs",
+    train_steps: int = TRAIN_STEPS,
+    eval_steps: int = EVAL_STEPS,
+    model_dir: str = MODEL_DIR,
+    checkpoint_dir: str = CHECKPOINT_DIR,
+    tensorboard_dir: str = TENSORBOARD_DIR,
+    batch_size: int = BATCH_SIZE,
 ) -> None:
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
-    train_dataset = build_dataset(train_data_dir)
-    eval_dataset = build_dataset(eval_data_dir)
+    train_dataset = build_dataset(train_data_dir, batch_size)
+    eval_dataset = build_dataset(eval_data_dir, batch_size)
 
     # Build and compile the model.
     logging.info("Building the model")
@@ -210,20 +220,16 @@ def run(
 
 if __name__ == "__main__":
     import argparse
-    import os
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
-    parser.add_argument("--train-steps", default=1000, type=int)
-    parser.add_argument("--eval-steps", default=100, type=int)
-    parser.add_argument("--model-dir", default=os.environ.get("AIP_MODEL_DIR", "model"))
-    parser.add_argument(
-        "--checkpoint-dir", default=os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints")
-    )
-    parser.add_argument(
-        "--tensorboard-dir", default=os.environ.get("AIP_TENSORBOARD_LOG_DIR", "logs")
-    )
+    parser.add_argument("--train-steps", type=int, default=TRAIN_STEPS)
+    parser.add_argument("--eval-steps", type=int, default=EVAL_STEPS)
+    parser.add_argument("--model-dir", default=MODEL_DIR)
+    parser.add_argument("--checkpoint-dir", default=CHECKPOINT_DIR)
+    parser.add_argument("--tensorboard-dir", default=TENSORBOARD_DIR)
+    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
     args = parser.parse_args()
 
     run(
