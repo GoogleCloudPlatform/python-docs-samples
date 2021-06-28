@@ -20,26 +20,19 @@
 # -----------------------------------------------------------------------------
 
 substitutions:
-  _REGION: us-central1
+  _BUCKET: please set --substitutions _BUCKET=my-bucket-name
+  _LOCATION: us-central1
   _IMAGE: samples/global-fishing-watch:latest
+  _STORAGE_DIR: samples/global-fishing-watch
 
 steps:
 - name: gcr.io/$PROJECT_ID/$_IMAGE
   entrypoint: python
   args:
-  - /app/create_datasets.py
-  - --data-files=gs://$_BUCKET/$_STORAGE_DIR/data/*.npz
-  - --label-files=gs://$_BUCKET/$_STORAGE_DIR/labels/*.csv
-  - --train-data-dir=gs://$_BUCKET/$_STORAGE_DIR/datasets/train
-  - --eval-data-dir=gs://$_BUCKET/$_STORAGE_DIR/datasets/eval
-  - --runner=DataflowRunner
+  - /app/run_training_job.py
   - --project=$PROJECT_ID
-  - --temp_location=gs://$_BUCKET/$_STORAGE_DIR/temp
-  - --region=$_REGION
-  - --experiment=use_runner_v2
-  - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
-
-options:
-  logging: CLOUD_LOGGING_ONLY
+  - --bucket=$_BUCKET
+  - --location=$_LOCATION
 
 serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com
+logsBucket: gs://$_BUCKET/$_STORAGE_DIR/logs/run_training_job

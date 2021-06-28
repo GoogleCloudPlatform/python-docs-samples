@@ -38,6 +38,11 @@ gcloud builds submit \
 ## Training the model in Vertex AI
 
 ```sh
+gcloud builds submit \
+    --config="run_training_job.yaml" \
+    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION \
+    --no-source
+
 # TODO: maybe change this to a Cloud Run config as well (?)
 python run_training_job.py \
     --project "$PROJECT" \
