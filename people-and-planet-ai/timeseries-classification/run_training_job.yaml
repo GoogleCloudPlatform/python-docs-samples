@@ -21,6 +21,8 @@
 
 substitutions:
   _BUCKET: please set --substitutions _BUCKET=my-bucket-name
+  _TRAIN_STEPS: '10000'
+  _EVAL_STEPS: '1000'
   _LOCATION: us-central1
   _IMAGE: samples/global-fishing-watch:latest
   _STORAGE_DIR: samples/global-fishing-watch
@@ -33,6 +35,10 @@ steps:
   - --project=$PROJECT_ID
   - --bucket=$_BUCKET
   - --location=$_LOCATION
+  - --storage-dir=$_STORAGE_DIR
+  - --image=$_IMAGE
+  - --train-steps=$_TRAIN_STEPS
+  - --eval-steps=$_EVAL_STEPS
 
 serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com
-logsBucket: gs://$_BUCKET/$_STORAGE_DIR/logs/run_training_job
+logsBucket: gs://$_BUCKET/$_STORAGE_DIR/run_training_job_logs

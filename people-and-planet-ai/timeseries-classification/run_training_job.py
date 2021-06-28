@@ -21,10 +21,10 @@ def run(
     project: str,
     bucket: str,
     location: str,
-    storage_path: str,
+    storage_dir: str,
+    image: str,
     train_steps: int,
     eval_steps: int,
-    image: str,
     num_workers: int = 4,
 ):
     client = aiplatform.gapic.JobServiceClient(
@@ -37,7 +37,7 @@ def run(
             "job_spec": {
                 # https://cloud.google.com/vertex-ai/docs/reference/rest/v1/CustomJobSpec
                 "base_output_directory": {
-                    "output_uri_prefix": f"gs://{bucket}/{storage_path}",
+                    "output_uri_prefix": f"gs://{bucket}/{storage_dir}",
                 },
                 # https://cloud.google.com/vertex-ai/docs/training/distributed-training
                 "worker_pool_specs": [
@@ -50,8 +50,8 @@ def run(
                             "command": ["python"],
                             "args": [
                                 "trainer.py",
-                                f"--train-data-dir=gs://{bucket}/{storage_path}/datasets/train",
-                                f"--eval-data-dir=gs://{bucket}/{storage_path}/datasets/eval",
+                                f"--train-data-dir=gs://{bucket}/{storage_dir}/datasets/train",
+                                f"--eval-data-dir=gs://{bucket}/{storage_dir}/datasets/eval",
                                 f"--train-steps={train_steps}",
                                 f"--eval-steps={eval_steps}",
                             ],
@@ -67,8 +67,8 @@ def run(
                     #         "command": ["python"],
                     #         "args": [
                     #             "trainer.py",
-                    #             f"--train-data-dir=gs://{bucket}/{storage_path}/datasets/train",
-                    #             f"--eval-data-dir=gs://{bucket}/{storage_path}/datasets/eval",
+                    #             f"--train-data-dir=gs://{bucket}/{storage_dir}/datasets/train",
+                    #             f"--eval-data-dir=gs://{bucket}/{storage_dir}/datasets/eval",
                     #             f"--train-steps={train_steps}",
                     #             f"--eval-steps={eval_steps}",
                     #         ],
@@ -86,20 +86,20 @@ if __name__ == "__main__":
     parser.add_argument("--project", required=True)
     parser.add_argument("--bucket", required=True)
     parser.add_argument("--location", required=True)
-    parser.add_argument("--storage-path", default="samples/global-fishing-watch")
+    parser.add_argument("--storage-dir", default="samples/global-fishing-watch")
     parser.add_argument("--image", default="samples/global-fishing-watch:latest")
-    parser.add_argument("--num-workers", default=4, type=int)
     parser.add_argument("--train-steps", default=1000, type=int)
     parser.add_argument("--eval-steps", default=100, type=int)
+    parser.add_argument("--num-workers", default=4, type=int)
     args = parser.parse_args()
 
     run(
         project=args.project,
         bucket=args.bucket,
         location=args.location,
-        storage_path=args.storage_path,
+        storage_dir=args.storage_dir,
+        image=args.image,
         train_steps=args.train_steps,
         eval_steps=args.eval_steps,
-        image=args.image,
         num_workers=args.num_workers,
     )

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from functools import reduce
+import logging
 from typing import Any, Dict, Tuple
 
 import tensorflow as tf
@@ -178,10 +179,12 @@ def run(
 ) -> None:
 
     # Create the training and evaluation datasets from the TFRecord files.
+    logging.info("Creating datasets")
     train_dataset = build_dataset(train_data_dir)
     eval_dataset = build_dataset(eval_data_dir)
 
     # Build and compile the model.
+    logging.info("Building the model")
     model = build_model(train_dataset)
     model.compile(
         optimizer="adam",
@@ -191,6 +194,7 @@ def run(
 
     # Train the model.
     # TODO: add checkpointing: https://www.tensorflow.org/guide/keras/train_and_evaluate#checkpointing_models
+    logging.info("Training the model.")
     model.fit(
         train_dataset.repeat(),
         steps_per_epoch=train_steps,
@@ -200,6 +204,7 @@ def run(
     )
 
     # Save the trained model.
+    logging.info(f"Saving the model: {model_dir}")
     model.save(model_dir)
 
 

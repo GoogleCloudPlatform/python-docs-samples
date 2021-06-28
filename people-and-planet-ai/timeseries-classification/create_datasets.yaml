@@ -42,4 +42,4 @@ steps:
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
 
 serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com
-logsBucket: gs://$_BUCKET/$_STORAGE_DIR/logs/create_datasets
+logsBucket: gs://$_BUCKET/$_STORAGE_DIR/create_datasets_logs
