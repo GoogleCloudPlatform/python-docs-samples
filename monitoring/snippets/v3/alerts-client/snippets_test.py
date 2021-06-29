@@ -14,6 +14,7 @@
 
 from __future__ import print_function
 
+from datetime import datetime
 import random
 import string
 import time
@@ -61,6 +62,17 @@ class PochanFixture:
         self.notification_channel_client = (
             monitoring_v3.NotificationChannelServiceClient()
         )
+
+        # delete all existing policies older than 1 hour prior to testing
+        for policy in self.alert_policy_client.list_alert_policies(name=self.project_name):
+            seconds_since_creation = datetime.timestamp(datetime.utcnow())-datetime.timestamp(policy.creation_record.mutate_time)
+            if seconds_since_creation > 3600:
+                try:
+                    self.alert_policy_client.delete_alert_policy(
+                        name=policy.name
+                    )
+                except NotFound:
+                    print("Ignored NotFound when deleting a policy.")
 
     def __enter__(self):
         @retry(
