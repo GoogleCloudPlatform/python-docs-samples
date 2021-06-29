@@ -1,0 +1,4 @@
+apache-airflow[google]==2.0.1
+apache-airflow-providers-apache-beam==3.0.0
+apache-airflow-providers-slack==4.0.0
+apache-airflow-providers-http==2.0.0
