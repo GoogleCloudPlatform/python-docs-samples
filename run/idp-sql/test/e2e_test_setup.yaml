@@ -70,7 +70,8 @@ steps:
       --region ${_REGION} \
       --platform ${_PLATFORM} \
       --add-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
-      --update-secrets CLOUD_SQL_CREDENTIALS_SECRET=${_SERVICE}-secrets:latest,TRAMPOLINE_CI=kokoro"
+      --update-secrets CLOUD_SQL_CREDENTIALS_SECRET=${_SERVICE}-secrets:latest \
+      --update-env-vars TRAMPOLINE_CI=kokoro"
 
 images:
 - gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}
