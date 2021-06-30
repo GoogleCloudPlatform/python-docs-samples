@@ -33,7 +33,7 @@ def set_public_access_prevention_unspecified(bucket_name):
     bucket.patch()
 
     print(
-        "Public access prevention is 'unspecified' for {}.".format(bucket.name)
+        f"Public access prevention is 'unspecified' for {bucket.name}."
     )
 
 

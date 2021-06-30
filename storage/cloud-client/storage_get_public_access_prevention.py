@@ -30,8 +30,7 @@ def get_public_access_prevention(bucket_name):
     iam_configuration = bucket.iam_configuration
 
     print(
-        "Public access prevention is {} for {}."
-        .format(iam_configuration.public_access_prevention, bucket.name)
+        f"Public access prevention is {iam_configuration.public_access_prevention} for {bucket.name}."
     )
 
 

@@ -33,7 +33,7 @@ def set_public_access_prevention_enforced(bucket_name):
     bucket.patch()
 
     print(
-        "Public access prevention is set to enforced for {}.".format(bucket.name)
+        f"Public access prevention is set to enforced for {bucket.name}."
     )
 
 

@@ -28,32 +28,28 @@ def bucket_metadata(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    print("ID: {}".format(bucket.id))
-    print("Name: {}".format(bucket.name))
-    print("Storage Class: {}".format(bucket.storage_class))
-    print("Location: {}".format(bucket.location))
-    print("Location Type: {}".format(bucket.location_type))
-    print("Cors: {}".format(bucket.cors))
+    print(f"ID: {bucket.id}")
+    print(f"Name: {bucket.name}")
+    print(f"Storage Class: {bucket.storage_class}")
+    print(f"Location: {bucket.location}")
+    print(f"Location Type: {bucket.location_type}")
+    print(f"Cors: {bucket.cors}")
     print(
-        "Default Event Based Hold: {}".format(bucket.default_event_based_hold)
+        f"Default Event Based Hold: {bucket.default_event_based_hold}"
     )
-    print("Default KMS Key Name: {}".format(bucket.default_kms_key_name))
-    print("Metageneration: {}".format(bucket.metageneration))
-    print("Public Access Prevention: {}".format(bucket.iam_configuration.public_access_prevention))
+    print(f"Default KMS Key Name: {bucket.default_kms_key_name}")
+    print(f"Metageneration: {bucket.metageneration}")
+    print(f"Public Access Prevention: {bucket.iam_configuration.public_access_prevention}")
     print(
-        "Retention Effective Time: {}".format(
-            bucket.retention_policy_effective_time
-        )
+        f"Retention Effective Time: {bucket.retention_policy_effective_time}"
     )
-    print("Retention Period: {}".format(bucket.retention_period))
-    print("Retention Policy Locked: {}".format(bucket.retention_policy_locked))
-    print("Requester Pays: {}".format(bucket.requester_pays))
-    print("Self Link: {}".format(bucket.self_link))
-    print("Time Created: {}".format(bucket.time_created))
-    print("Versioning Enabled: {}".format(bucket.versioning_enabled))
-    print("Labels:")
-    print(bucket.labels)
-
+    print(f"Retention Period: {bucket.retention_period}")
+    print(f"Retention Policy Locked: {bucket.retention_policy_locked}")
+    print(f"Requester Pays: {bucket.requester_pays}")
+    print(f"Self Link: {bucket.self_link}")
+    print(f"Time Created: {bucket.time_created}")
+    print(f"Versioning Enabled: {bucket.versioning_enabled}")
+    print(f"Labels: {bucket.labels}")
 
 # [END storage_get_bucket_metadata]
 
