@@ -31,7 +31,7 @@ def bucket():
     os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "uniform-bucket-level-access-{}".format(uuid.uuid4().hex)
+        bucket_name = f"uniform-bucket-level-access-{uuid.uuid4().hex}"
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket

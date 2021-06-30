@@ -24,7 +24,7 @@ def test_get_public_access_prevention(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Public access prevention is unspecified for {}.".format(bucket.name)
+        f"Public access prevention is unspecified for {bucket.name}."
         in out
     )
 
@@ -36,7 +36,7 @@ def test_set_public_access_prevention_enforced(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Public access prevention is set to enforced for {}.".format(bucket.name)
+        f"Public access prevention is set to enforced for {bucket.name}."
         in out
     )
 
@@ -48,6 +48,6 @@ def test_set_public_access_prevention_unspecified(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Public access prevention is 'unspecified' for {}.".format(bucket.name)
+        f"Public access prevention is 'unspecified' for {bucket.name}."
         in out
     )
