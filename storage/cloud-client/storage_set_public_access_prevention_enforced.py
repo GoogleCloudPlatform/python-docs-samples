@@ -29,12 +29,12 @@ def set_public_access_prevention_enforced(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    bucket.iam_configuration.public_access_prevention = PUBLIC_ACCESS_PREVENTION_ENFORCED
+    bucket.iam_configuration.public_access_prevention = (
+        PUBLIC_ACCESS_PREVENTION_ENFORCED
+    )
     bucket.patch()
 
-    print(
-        f"Public access prevention is set to enforced for {bucket.name}."
-    )
+    print(f"Public access prevention is set to enforced for {bucket.name}.")
 
 
 # [END storage_set_public_access_prevention_enforced]
