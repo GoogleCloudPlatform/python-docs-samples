@@ -32,12 +32,13 @@ def run_create_datasets():
             train_data_dir=args["train_data_dir"],
             eval_data_dir=args["eval_data_dir"],
             train_eval_split=args.get("train_eval_split", [80, 20]),
+            # Apache Beam runner pipeline options.
             runner="DataflowRunner",
             job_id=args.get("job_id", default_job_id),
             project=args["project"],
             region=args["region"],
+            sdk_container_image=args["container_image"],
             temp_location=args.get("temp_location"),
-            sdk_container_image=args["image"],
             experiments=["use_runner_v2"],
         )
 
@@ -47,7 +48,7 @@ def run_create_datasets():
             "job_url": f"https://console.cloud.google.com/dataflow/jobs/{args['region']}/{job_id}?project={args['project']}",
         }
     except Exception as e:
-        return { 'error': f"{type(e).__name__}: {e}" }
+        return {"error": f"{type(e).__name__}: {e}"}
 
 
 @app.route("/train-model", methods=["POST"])
@@ -58,10 +59,10 @@ def run_train_model():
         job_id = train_model.run(
             project=args["project"],
             region=args["region"],
+            container_image=args["container_image"],
             train_data_dir=args["train_data_dir"],
             eval_data_dir=args["eval_data_dir"],
             output_dir=args["output_dir"],
-            image=args["image"],
             train_steps=args.get("train_steps", 10000),
             eval_steps=args.get("eval_steps", 1000),
         )
@@ -72,7 +73,7 @@ def run_train_model():
             "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}?project={args['project']}",
         }
     except Exception as e:
-        return { 'error': f"{type(e).__name__}: {e}" }
+        return {"error": f"{type(e).__name__}: {e}"}
 
 
 @app.route("/predict", methods=["POST"])
@@ -88,7 +89,7 @@ def run_predict():
         # Convert the numpy arrays to Python lists to make them JSON-encodable.
         return {name: values.tolist() for name, values in predictions.items()}
     except Exception as e:
-        return { 'error': f"{type(e).__name__}: {e}" }
+        return {"error": f"{type(e).__name__}: {e}"}
 
 
 if __name__ == "__main__":

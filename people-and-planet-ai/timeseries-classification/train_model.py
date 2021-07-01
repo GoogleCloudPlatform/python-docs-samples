@@ -20,10 +20,10 @@ from google.cloud import aiplatform
 def run(
     project: str,
     region: str,
+    container_image: str,
     train_data_dir: str,
     eval_data_dir: str,
     output_dir: str,
-    image: str,
     train_steps: int,
     eval_steps: int,
 ):
@@ -46,7 +46,7 @@ def run(
                         "machine_spec": {"machine_type": "e2-highcpu-4"},
                         "replica_count": 1,
                         "container_spec": {
-                            "image_uri": image,
+                            "image_uri": container_image,
                             "command": ["python"],
                             "args": [
                                 "trainer.py",
