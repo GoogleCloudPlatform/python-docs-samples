@@ -25,7 +25,6 @@ def run_create_datasets():
     try:
         args = flask.request.get_json()
 
-        default_job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
         job_id = create_datasets.run(
             raw_data_dir=args["raw_data_dir"],
             raw_labels_dir=args["raw_labels_dir"],
@@ -34,7 +33,7 @@ def run_create_datasets():
             train_eval_split=args.get("train_eval_split", [80, 20]),
             # Apache Beam runner pipeline options.
             runner="DataflowRunner",
-            job_id=args.get("job_id", default_job_id),
+            job_name=f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
             project=args["project"],
             region=args["region"],
             sdk_container_image=args["container_image"],
