@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 from datetime import datetime, timedelta
-import logging
 import os
 import random
 import time
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -107,28 +105,29 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
 
 
 def run(
-    data_files: str,
-    label_files: str,
+    data_dir: str,
+    labels_dir: str,
     train_data_dir: str,
     eval_data_dir: str,
     train_eval_split: Tuple[int, int] = [80, 20],
-    beam_args: Optional[List[str]] = None,
+    **pipeline_options,
 ) -> None:
 
     labels = pd.concat(
-        [read_labels(filename) for filename in tf.io.gfile.glob(label_files)]
+        [read_labels(filename) for filename in tf.io.gfile.glob(f"{labels_dir}/*.csv")]
     ).sort_values(by="start_time")
 
     beam_options = PipelineOptions(
-        beam_args,
+        flags=[],
         type_check_additional="all",
         save_main_session=True,
+        **pipeline_options,
     )
     pipeline = beam.Pipeline(options=beam_options)
 
     training_data, evaluation_data = (
         pipeline
-        | "Data files" >> beam.Create([data_files])
+        | "Data files" >> beam.Create([f"{data_dir}/*.npz"])
         | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
         | "Reshuffle files" >> beam.Reshuffle()
         | "Read data" >> beam.Map(read_data)
@@ -160,46 +159,3 @@ def run(
     )
 
     pipeline.run()
-
-
-if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.INFO)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--data-files",
-        required=True,
-        help="File pattern for input data.",
-    )
-    parser.add_argument(
-        "--label-files",
-        required=True,
-        help="File pattern for input data labels.",
-    )
-    parser.add_argument(
-        "--train-data-dir",
-        required=True,
-        help="Directory path for the output training dataset files.",
-    )
-    parser.add_argument(
-        "--eval-data-dir",
-        required=True,
-        help="Directory path for the output evaluation dataset files.",
-    )
-    parser.add_argument(
-        "--train-eval-split",
-        type=int,
-        default=[80, 20],
-        nargs=2,
-        help="The ratio to split the data into training and evaluation datasets.",
-    )
-    args, beam_args = parser.parse_known_args()
-
-    run(
-        data_files=args.data_files,
-        label_files=args.label_files,
-        train_data_dir=args.train_data_dir,
-        eval_data_dir=args.eval_data_dir,
-        train_eval_split=args.train_eval_split,
-        beam_args=beam_args,
-    )

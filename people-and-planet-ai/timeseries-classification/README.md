@@ -2,15 +2,13 @@
 
 ## TODO: add a README at the top level directory
 
-ℹ️ The bucket _must_ be in the same location where the Vertex AI job runs.
+ℹ️ The bucket _must_ be in the same region where the Vertex AI job runs.
 
 ```sh
 # Google Cloud resources
 export PROJECT=$(gcloud config get-value project)
 export BUCKET="my-bucket-name"
-
-export LOCATION="us-central1"
-export STORAGE_DIR="samples/global-fishing-watch"
+export REGION="us-central1"
 ```
 
 ## Uploading the data into Cloud Storage
@@ -23,31 +21,47 @@ export STORAGE_DIR="samples/global-fishing-watch"
 ## Building the container image
 
 ```sh
-gcloud builds submit --config="build.yaml"
+gcloud builds submit . --tag="gcr.io/$PROJECT/samples/global-fishing-watch:latest"
 ```
 
-## Creating the datasets with Dataflow
+## Deploying to Cloud Run
+
+https://docs.gunicorn.org/en/stable/settings.html
 
 ```sh
-gcloud builds submit \
-    --config="create_datasets.yaml" \
-    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION \
-    --no-source
+gcloud run deploy "global-fishing-watch" \
+    --image="gcr.io/$PROJECT/samples/global-fishing-watch:latest" \
+    --command="gunicorn" \
+    --args="--threads=8,--timeout=0,main:app" \
+    --region="$REGION" \
+    --no-allow-unauthenticated
 ```
-
-## Training the model in Vertex AI
 
 ```sh
-gcloud builds submit \
-    --config="run_training_job.yaml" \
-    --substitutions _BUCKET=$BUCKET,_LOCATION=$LOCATION \
-    --no-source
-
-# TODO: maybe change this to a Cloud Run config as well (?)
-python run_training_job.py \
-    --project "$PROJECT" \
-    --bucket "$BUCKET" \
-    --location "$LOCATION"
+export SERVICE_URL=$(gcloud run services describe "global-fishing-watch" \
+    --region="$REGION" \
+    --format="get(status.url)")
 ```
 
-## TODO: Hyperparameter tuning
+https://cloud.google.com/run/docs/authenticating/overview
+
+## Creating the datasets
+
+```sh
+curl "$SERVICE_URL/create-datasets" \
+    -H "Authorization: Bearer $(gcloud auth print-identity-token)"
+```
+
+## Training the model
+
+```sh
+curl "$SERVICE_URL/train-model" \
+    -H "Authorization: Bearer $(gcloud auth print-identity-token)"
+```
+
+## Getting predictions
+
+```sh
+curl "$SERVICE_URL/predict" \
+    -H "Authorization: Bearer $(gcloud auth print-identity-token)"
+```

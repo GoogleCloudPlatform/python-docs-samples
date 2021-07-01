@@ -19,6 +19,7 @@ WORKDIR /app
 # Copy the Apache Beam worker files and the pipeline source files.
 COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 COPY *.py ./
+COPY constraints.txt ./
 COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt \
