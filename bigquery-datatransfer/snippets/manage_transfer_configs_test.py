@@ -52,9 +52,7 @@ def test_update_credentials_with_service_account(
 
 def test_schedule_backfill(capsys, transfer_config_name):
     runs = manage_transfer_configs.schedule_backfill(
-        {
-            "transfer_config_name": transfer_config_name,
-        }
+        {"transfer_config_name": transfer_config_name}
     )
     out, _ = capsys.readouterr()
     assert "Started transfer runs:" in out
