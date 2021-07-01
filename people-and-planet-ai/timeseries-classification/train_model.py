@@ -17,7 +17,7 @@ from google.cloud import aiplatform
 
 def run(
     project: str,
-    location: str,
+    region: str,
     train_data_dir: str,
     eval_data_dir: str,
     output_dir: str,
@@ -29,7 +29,7 @@ def run(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
     response = client.create_custom_job(
-        parent=f"projects/{project}/locations/{location}",
+        parent=f"projects/{project}/locations/{region}",
         custom_job={
             "display_name": "global-fishing-watch",
             "job_spec": {
@@ -41,8 +41,7 @@ def run(
                 "worker_pool_specs": [
                     {
                         # Scheduler
-                        # "machine_spec": {"machine_type": "e2-standard-4"},
-                        "machine_spec": {"machine_type": "e2-highcpu-32"},
+                        "machine_spec": {"machine_type": "e2-highcpu-4"},
                         "replica_count": 1,
                         "container_spec": {
                             "image_uri": image,
@@ -60,4 +59,6 @@ def run(
             },
         },
     )
-    print("response:", response)
+    print("Vertex AI job response:")
+    print(response)
+    return response.name.split("/")[-1]

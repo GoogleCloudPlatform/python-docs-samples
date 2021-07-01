@@ -1,93 +1,79 @@
 #!/usr/bin/env python
 
 from datetime import datetime
-from flask import Flask
+import flask
 import json
 
 import create_datasets
 import train_model
 import predict
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 
 @app.route("/create-datasets")
 def run_create_datasets():
-    project = "dcavazos-lyra"
-    location = "us-central1"
-    data_dir = f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/data"
-    labels_dir = f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/labels"
-    train_data_dir = (
-        f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/datasets/train"
-    )
-    eval_data_dir = (
-        f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/datasets/eval"
-    )
-    image = "gcr.io/dcavazos-lyra/samples/global-fishing-watch:latest"
-    temp_dir = None
-    train_eval_split = [80, 20]
+    request = flask.request.get_json()
 
-    job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
-    create_datasets.run(
-        data_dir=data_dir,
-        labels_dir=labels_dir,
-        train_data_dir=train_data_dir,
-        eval_data_dir=eval_data_dir,
-        train_eval_split=train_eval_split,
+    default_job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    job_id = create_datasets.run(
+        raw_data_dir=request["raw_data_dir"],
+        raw_labels_dir=request["raw_labels_dir"],
+        train_data_dir=request["train_data_dir"],
+        eval_data_dir=request["eval_data_dir"],
+        train_eval_split=request.get("train_eval_split", [80, 20]),
         runner="DataflowRunner",
-        job_id=job_id,
-        project=project,
-        region=location,
-        temp_location=temp_dir,
-        sdk_container_image=image,
+        job_id=request.get("job_id", default_job_id),
+        project=request["project"],
+        region=request["region"],
+        temp_location=request.get("temp_location"),
+        sdk_container_image=request["image"],
         experiments=["use_runner_v2"],
     )
-    return job_id
+
+    response = {
+        "job_type": "Dataflow pipeline",
+        "job_id": job_id,
+        "job_url": f"https://console.cloud.google.com/dataflow/jobs/{request['region']}/{job_id}?project={request['project']}",
+    }
+    return json.dumps(response, indent=2)
 
 
 @app.route("/train-model")
 def run_train_model():
-    project = "dcavazos-lyra"
-    location = "us-central1"
-    train_data_dir = (
-        f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/datasets/train"
+    request = flask.request.get_json()
+
+    job_id = train_model.run(
+        project=request["project"],
+        region=request["region"],
+        train_data_dir=request["train_data_dir"],
+        eval_data_dir=request["eval_data_dir"],
+        output_dir=request["output_dir"],
+        image=request["image"],
+        train_steps=request.get("train_steps", 10000),
+        eval_steps=request.get("eval_steps", 1000),
     )
-    eval_data_dir = (
-        f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/datasets/eval"
-    )
-    output_dir = f"gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/training"
-    image = "gcr.io/dcavazos-lyra/samples/global-fishing-watch:latest"
-    train_steps = 10000
-    eval_steps = 1000
-    job_id = (
-        f"global-fishing-watch-train-model-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
-    )
-    train_model.run(
-        project=project,
-        location=location,
-        train_data_dir=train_data_dir,
-        eval_data_dir=eval_data_dir,
-        output_dir=output_dir,
-        image=image,
-        train_steps=train_steps,
-        eval_steps=eval_steps,
-    )
-    return job_id
+
+    response = {
+        "job_type": "Vertex AI custom training",
+        "job_id": job_id,
+        "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{request['region']}/training/{job_id}?project={request['project']}",
+    }
+    return json.dumps(response, indent=2)
 
 
 @app.route("/predict")
 def run_predict():
-    model_dir = "gs://dcavazos-lyra-us-central1/samples/global-fishing-watch/model"
-    inputs = {
-        k: list(range(49))
-        for k in ["course", "distance_from_port", "lat", "lon", "speed", "timestamp"]
-    }
+    request = flask.request.get_json()
 
-    predictions = predict.run(model_dir, inputs)
-    return json.dumps(
-        {name: values.tolist() for name, values in predictions.items()},
-        indent=2,
+    predictions = predict.run(
+        model_dir=request["model_dir"],
+        inputs=request["inputs"],
     )
+
+    # Convert the numpy arrays to Python lists to make them JSON-encodable.
+    response = {name: values.tolist() for name, values in predictions.items()}
+    return json.dumps(response, indent=2)
 
 
 if __name__ == "__main__":

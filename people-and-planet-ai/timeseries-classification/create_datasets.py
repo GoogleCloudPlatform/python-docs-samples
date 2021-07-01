@@ -105,16 +105,19 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
 
 
 def run(
-    data_dir: str,
-    labels_dir: str,
+    raw_data_dir: str,
+    raw_labels_dir: str,
     train_data_dir: str,
     eval_data_dir: str,
     train_eval_split: Tuple[int, int] = [80, 20],
     **pipeline_options,
-) -> None:
+) -> str:
 
     labels = pd.concat(
-        [read_labels(filename) for filename in tf.io.gfile.glob(f"{labels_dir}/*.csv")]
+        [
+            read_labels(filename)
+            for filename in tf.io.gfile.glob(f"{raw_labels_dir}/*.csv")
+        ]
     ).sort_values(by="start_time")
 
     beam_options = PipelineOptions(
@@ -127,7 +130,7 @@ def run(
 
     training_data, evaluation_data = (
         pipeline
-        | "Data files" >> beam.Create([f"{data_dir}/*.npz"])
+        | "Data files" >> beam.Create([f"{raw_data_dir}/*.npz"])
         | "Expand pattern" >> beam.FlatMap(tf.io.gfile.glob)
         | "Reshuffle files" >> beam.Reshuffle()
         | "Read data" >> beam.Map(read_data)
@@ -158,4 +161,5 @@ def run(
         )
     )
 
-    pipeline.run()
+    result = pipeline.run()
+    return result._job.id

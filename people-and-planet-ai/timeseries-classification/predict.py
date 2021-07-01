@@ -15,20 +15,31 @@
 import numpy as np
 from tensorflow import keras
 
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import trainer
 
 
-def run(model_dir: str, inputs: Dict[str, Any]) -> Dict[str, np.ndarray]:
+def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
+    # Our model always expects a batch prediction,
+    # so we create a batch with a single prediction request.
+    #   {input: [time_steps, 1]} --> {input: [1, time_steps, 1]}
     batch_size = 1
     inputs_batch = {
         name: np.reshape(values, (batch_size, len(values), 1))
         for name, values in inputs.items()
     }
+
+    # Get our model's predictions.
     model = keras.models.load_model(model_dir)
+
+    # Include the timestamp for each prediction so we can merge them back to the request data.
     predictions_batch = {
         "timestamp": [inputs_batch["timestamp"][0][trainer.PADDING : -trainer.PADDING]],
         **model.predict(inputs_batch),
     }
+
+    # We got a batch of a single prediction, with a single number per time step.
+    # So we extract the single prediction and flatten into a 1-dimensional vector.
+    #   {output: [1, time_steps, 1]} --> {output: [time_steps]}
     return {name: values[0].flatten() for name, values in predictions_batch.items()}
