@@ -14,6 +14,7 @@
 
 import datetime
 import os
+import random
 import uuid
 
 from google.api_core import client_options
@@ -21,7 +22,38 @@ import google.api_core.exceptions
 import google.auth
 from google.cloud import bigquery
 from google.cloud import bigquery_datatransfer
+from google.cloud import pubsub_v1
 import pytest
+
+
+RESOURCE_PREFIX = "python_bigquery_datatransfer_samples_snippets"
+RESOURCE_DATE_FORMAT = "%Y%m%d%H%M%S"
+RESOURCE_DATE_LENGTH = 4 + 2 + 2 + 2 + 2 + 2
+
+
+def resource_prefix() -> str:
+    timestamp = datetime.datetime.utcnow().strftime(RESOURCE_DATE_FORMAT)
+    random_string = hex(random.randrange(1000000))[2:]
+    return f"{RESOURCE_PREFIX}_{timestamp}_{random_string}"
+
+
+def resource_name_to_date(resource_name: str):
+    start_date = len(RESOURCE_PREFIX) + 1
+    date_string = resource_name[start_date : start_date + RESOURCE_DATE_LENGTH]
+    parsed_date = datetime.datetime.strptime(date_string, RESOURCE_DATE_FORMAT)
+    return parsed_date
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_pubsub_topics(pubsub_client: pubsub_v1.PublisherClient, project_id):
+    yesterday = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    for topic in pubsub_client.list_topics(project=f"projects/{project_id}"):
+        topic_id = topic.name.split("/")[-1]
+        if (
+            topic_id.startswith(RESOURCE_PREFIX)
+            and resource_name_to_date(topic_id) < yesterday
+        ):
+            pubsub_client.delete_topic(topic=topic.name)
 
 
 def temp_suffix():
@@ -33,6 +65,21 @@ def temp_suffix():
 def bigquery_client(default_credentials):
     credentials, project_id = default_credentials
     return bigquery.Client(credentials=credentials, project=project_id)
+
+
+@pytest.fixture(scope="session")
+def pubsub_client(default_credentials):
+    credentials, _ = default_credentials
+    return pubsub_v1.PublisherClient(credentials=credentials)
+
+
+@pytest.fixture(scope="session")
+def pubsub_topic(pubsub_client: pubsub_v1.PublisherClient, project_id):
+    topic_id = resource_prefix()
+    topic_path = pubsub_v1.PublisherClient.topic_path(project_id, topic_id)
+    pubsub_client.create_topic(name=topic_path)
+    yield topic_path
+    pubsub_client.delete_topic(topic=topic_path)
 
 
 @pytest.fixture(scope="session")
@@ -56,10 +103,10 @@ def project_id():
 @pytest.fixture(scope="session")
 def service_account_name(default_credentials):
     credentials, _ = default_credentials
-    # Note: this property is not available when running with user account
-    # credentials, but only service account credentials are used in our test
-    # infrastructure.
-    return credentials.service_account_email
+    # The service_account_email attribute is not available when running with
+    # user account credentials, but should be available when running from our
+    # continuous integration tests.
+    return getattr(credentials, "service_account_email", None)
 
 
 @pytest.fixture(scope="session")
