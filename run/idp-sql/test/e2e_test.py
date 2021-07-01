@@ -77,6 +77,21 @@ if not IDP_KEY:
     raise Exception("'IDP_KEY' env var not found")
 
 
+retry_strategy = Retry(
+    total=3,
+    status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+    allowed_methods=["GET", "POST"],
+    backoff_factor=3
+)
+
+retry_strategy_500 = Retry(
+    total=3,
+    status_forcelist=[500, 502, 503, 504],
+    allowed_methods=["GET", "POST"],
+    backoff_factor=3
+)
+
+
 @pytest.fixture
 def deployed_service() -> str:
     substitutions = [
@@ -163,7 +178,12 @@ def deployed_service() -> str:
 @pytest.fixture
 def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
-    resp = requests.post(
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    resp = client.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key={IDP_KEY}",
         data=json.dumps({"token": custom_token, "returnSecureToken": True}),
     )
@@ -180,20 +200,6 @@ def jwt_token() -> str:
 def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     token = jwt_token
     service_url = deployed_service
-
-    retry_strategy = Retry(
-        total=3,
-        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
-        allowed_methods=["GET", "POST"],
-        backoff_factor=3
-    )
-
-    retry_strategy_500 = Retry(
-        total=3,
-        status_forcelist=[500, 502, 503, 504],
-        allowed_methods=["GET", "POST"],
-        backoff_factor=3
-    )
 
     adapter = HTTPAdapter(max_retries=retry_strategy)
 
