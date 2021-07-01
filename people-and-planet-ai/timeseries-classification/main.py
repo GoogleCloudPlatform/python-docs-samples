@@ -13,7 +13,6 @@ app = flask.Flask(__name__)
 @app.route("/ping", methods=["POST"])
 def run_root():
     args = flask.request.get_json()
-    print(f"args: {args}")
 
     return {
         "response": "Your request was successful! 🎉",
@@ -24,7 +23,6 @@ def run_root():
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets():
     args = flask.request.get_json()
-    print(f"args: {args}")
 
     default_job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
     job_id = create_datasets.run(
@@ -52,7 +50,6 @@ def run_create_datasets():
 @app.route("/train-model", methods=["POST"])
 def run_train_model():
     args = flask.request.get_json()
-    print(f"args: {args}")
 
     job_id = train_model.run(
         project=args["project"],
@@ -75,7 +72,6 @@ def run_train_model():
 @app.route("/predict", methods=["POST"])
 def run_predict():
     args = flask.request.get_json()
-    print(f"args: {args}")
 
     predictions = predict.run(
         model_dir=args["model_dir"],

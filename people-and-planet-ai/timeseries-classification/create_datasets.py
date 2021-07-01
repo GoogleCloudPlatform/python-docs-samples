@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from datetime import datetime, timedelta
+import logging
 import os
 import random
 import time
@@ -162,4 +163,6 @@ def run(
     )
 
     result = pipeline.run()
+    logging.info(result)
+    logging.info(result._job)
     return result._job.id

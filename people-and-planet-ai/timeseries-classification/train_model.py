@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
 from google.cloud import aiplatform
 
 
@@ -59,6 +61,6 @@ def run(
             },
         },
     )
-    print("Vertex AI job response:")
-    print(response)
+    logging.info("Vertex AI job response:")
+    logging.info(response)
     return response.name.split("/")[-1]

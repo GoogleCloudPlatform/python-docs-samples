@@ -15,7 +15,7 @@
 import numpy as np
 from tensorflow import keras
 
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import trainer
 
