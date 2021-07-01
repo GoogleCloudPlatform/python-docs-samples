@@ -34,6 +34,7 @@ gcloud run deploy "global-fishing-watch" \
     --command="gunicorn" \
     --args="--threads=8,--timeout=0,main:app" \
     --region="$REGION" \
+    --memory="1G" \
     --no-allow-unauthenticated
 ```
 
