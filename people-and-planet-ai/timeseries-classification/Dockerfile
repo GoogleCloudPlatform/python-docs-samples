@@ -16,11 +16,10 @@ FROM python:3.8-slim
 
 WORKDIR /app
 
-# Copy the Apache Beam worker files and the pipeline source files.
-COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
+# Copy the pipeline source files and the Apache Beam worker files.
 COPY *.py ./
-COPY constraints.txt ./
 COPY requirements.txt ./
+COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 
 RUN pip install --no-cache-dir -r requirements.txt \
     && pip check
