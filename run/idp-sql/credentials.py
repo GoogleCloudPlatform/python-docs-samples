@@ -22,7 +22,7 @@ from middleware import logger
 # [START cloudrun_user_auth_secrets]
 def get_cred_config() -> Dict[str, str]:
     secret = os.environ.get("CLOUD_SQL_CREDENTIALS_SECRET")
-    if secret: 
+    if secret:
         return json.loads(secret)
     # [END cloudrun_user_auth_secrets]
     else:
