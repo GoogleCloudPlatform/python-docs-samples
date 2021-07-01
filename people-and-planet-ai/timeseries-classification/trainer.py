@@ -42,8 +42,8 @@ TRAIN_STEPS = 10000
 EVAL_STEPS = 1000
 BATCH_SIZE = 256
 MODEL_DIR = os.environ.get("AIP_MODEL_DIR", "model")
-CHECKPOINT_DIR = os.environ.get("AIP_CHECKPOINTS_DIR", "checkpoints")
-TENSORBOARD_DIR = os.environ.get("AIP_TENSORBOARD_DIR", "tensorboard")
+CHECKPOINT_DIR = os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints")
+TENSORBOARD_DIR = os.environ.get("AIP_TENSORBOARD_LOG_DIR", "tensorboard")
 
 
 def validated(
