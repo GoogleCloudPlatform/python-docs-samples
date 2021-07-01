@@ -22,64 +22,73 @@ def run_root():
 
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets():
-    args = flask.request.get_json()
+    try:
+        args = flask.request.get_json()
 
-    default_job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
-    job_id = create_datasets.run(
-        raw_data_dir=args["raw_data_dir"],
-        raw_labels_dir=args["raw_labels_dir"],
-        train_data_dir=args["train_data_dir"],
-        eval_data_dir=args["eval_data_dir"],
-        train_eval_split=args.get("train_eval_split", [80, 20]),
-        runner="DataflowRunner",
-        job_id=args.get("job_id", default_job_id),
-        project=args["project"],
-        region=args["region"],
-        temp_location=args.get("temp_location"),
-        sdk_container_image=args["image"],
-        experiments=["use_runner_v2"],
-    )
+        default_job_id = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        job_id = create_datasets.run(
+            raw_data_dir=args["raw_data_dir"],
+            raw_labels_dir=args["raw_labels_dir"],
+            train_data_dir=args["train_data_dir"],
+            eval_data_dir=args["eval_data_dir"],
+            train_eval_split=args.get("train_eval_split", [80, 20]),
+            runner="DataflowRunner",
+            job_id=args.get("job_id", default_job_id),
+            project=args["project"],
+            region=args["region"],
+            temp_location=args.get("temp_location"),
+            sdk_container_image=args["image"],
+            experiments=["use_runner_v2"],
+        )
 
-    return {
-        "job_type": "Dataflow pipeline",
-        "job_id": job_id,
-        "job_url": f"https://console.cloud.google.com/dataflow/jobs/{args['region']}/{job_id}?project={args['project']}",
-    }
+        return {
+            "job_type": "Dataflow pipeline",
+            "job_id": job_id,
+            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{args['region']}/{job_id}?project={args['project']}",
+        }
+    except Exception as e:
+        return { 'error': f"{type(e).__name__}: {e}" }
 
 
 @app.route("/train-model", methods=["POST"])
 def run_train_model():
-    args = flask.request.get_json()
+    try:
+        args = flask.request.get_json()
 
-    job_id = train_model.run(
-        project=args["project"],
-        region=args["region"],
-        train_data_dir=args["train_data_dir"],
-        eval_data_dir=args["eval_data_dir"],
-        output_dir=args["output_dir"],
-        image=args["image"],
-        train_steps=args.get("train_steps", 10000),
-        eval_steps=args.get("eval_steps", 1000),
-    )
+        job_id = train_model.run(
+            project=args["project"],
+            region=args["region"],
+            train_data_dir=args["train_data_dir"],
+            eval_data_dir=args["eval_data_dir"],
+            output_dir=args["output_dir"],
+            image=args["image"],
+            train_steps=args.get("train_steps", 10000),
+            eval_steps=args.get("eval_steps", 1000),
+        )
 
-    return {
-        "job_type": "Vertex AI custom training",
-        "job_id": job_id,
-        "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}?project={args['project']}",
-    }
+        return {
+            "job_type": "Vertex AI custom training",
+            "job_id": job_id,
+            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}?project={args['project']}",
+        }
+    except Exception as e:
+        return { 'error': f"{type(e).__name__}: {e}" }
 
 
 @app.route("/predict", methods=["POST"])
 def run_predict():
-    args = flask.request.get_json()
+    try:
+        args = flask.request.get_json()
 
-    predictions = predict.run(
-        model_dir=args["model_dir"],
-        inputs=args["inputs"],
-    )
+        predictions = predict.run(
+            model_dir=args["model_dir"],
+            inputs=args["inputs"],
+        )
 
-    # Convert the numpy arrays to Python lists to make them JSON-encodable.
-    return {name: values.tolist() for name, values in predictions.items()}
+        # Convert the numpy arrays to Python lists to make them JSON-encodable.
+        return {name: values.tolist() for name, values in predictions.items()}
+    except Exception as e:
+        return { 'error': f"{type(e).__name__}: {e}" }
 
 
 if __name__ == "__main__":
