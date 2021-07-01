@@ -67,7 +67,7 @@ def run_train_model():
 
         return {
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}?project={args['project']}",
+            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}/cpu?project={args['project']}",
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
