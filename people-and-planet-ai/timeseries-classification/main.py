@@ -11,6 +11,11 @@ import predict
 app = flask.Flask(__name__)
 
 
+@app.route("/")
+def run_root():
+    return "Your request was successful! 🎉"
+
+
 @app.route("/create-datasets")
 def run_create_datasets():
     request = flask.request.get_json()

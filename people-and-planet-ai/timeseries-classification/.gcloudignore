@@ -1,6 +1,5 @@
 # Ignore everything except the source files.
 **/*
 !Dockerfile
-!constraints.txt
 !requirements.txt
 !*.py
