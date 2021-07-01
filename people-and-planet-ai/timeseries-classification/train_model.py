@@ -23,7 +23,7 @@ def run(
     container_image: str,
     train_data_dir: str,
     eval_data_dir: str,
-    output_dir: str,
+    training_dir: str,
     train_steps: int,
     eval_steps: int,
 ):
@@ -37,13 +37,12 @@ def run(
             "job_spec": {
                 # https://cloud.google.com/vertex-ai/docs/reference/rest/v1/CustomJobSpec
                 "base_output_directory": {
-                    "output_uri_prefix": output_dir,
+                    "output_uri_prefix": training_dir,
                 },
                 # https://cloud.google.com/vertex-ai/docs/training/distributed-training
                 "worker_pool_specs": [
                     {
-                        # Scheduler
-                        "machine_spec": {"machine_type": "e2-highcpu-4"},
+                        "machine_spec": {"machine_type": "e2-standard-4"},
                         "replica_count": 1,
                         "container_spec": {
                             "image_uri": container_image,

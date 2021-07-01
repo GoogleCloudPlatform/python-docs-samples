@@ -60,7 +60,7 @@ def run_train_model():
             container_image=args["container_image"],
             train_data_dir=args["train_data_dir"],
             eval_data_dir=args["eval_data_dir"],
-            output_dir=args["output_dir"],
+            training_dir=args["training_dir"],
             train_steps=args.get("train_steps", 10000),
             eval_steps=args.get("eval_steps", 1000),
         )
