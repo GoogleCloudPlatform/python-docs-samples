@@ -42,7 +42,6 @@ def run_create_datasets():
         )
 
         return {
-            "job_type": "Dataflow pipeline",
             "job_id": job_id,
             "job_url": f"https://console.cloud.google.com/dataflow/jobs/{args['region']}/{job_id}?project={args['project']}",
         }
@@ -67,7 +66,6 @@ def run_train_model():
         )
 
         return {
-            "job_type": "Vertex AI custom training",
             "job_id": job_id,
             "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}?project={args['project']}",
         }
