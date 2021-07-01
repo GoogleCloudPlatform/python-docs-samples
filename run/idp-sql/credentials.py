@@ -16,19 +16,14 @@ import json
 import os
 from typing import Dict
 
-from google.cloud import secretmanager
-
 from middleware import logger
 
 
 # [START cloudrun_user_auth_secrets]
 def get_cred_config() -> Dict[str, str]:
-    if "CLOUD_SQL_CREDENTIALS_SECRET" in os.environ:
-        name = os.environ["CLOUD_SQL_CREDENTIALS_SECRET"]
-        client = secretmanager.SecretManagerServiceClient()
-        response = client.access_secret_version(request={"name": name})
-        logger.info("Credentials pulled from CLOUD_SQL_CREDENTIALS_SECRET")
-        return json.loads(response.payload.data.decode("UTF-8"))
+    secret = os.environ.get("CLOUD_SQL_CREDENTIALS_SECRET")
+    if secret:
+        return json.loads(secret)
     # [END cloudrun_user_auth_secrets]
     else:
         logger.info(
