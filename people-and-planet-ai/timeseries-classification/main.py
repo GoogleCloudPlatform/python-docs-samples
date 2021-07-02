@@ -41,7 +41,7 @@ temp_dir = f"gs://{bucket}/{storage_path}/temp"
 
 @app.route("/ping", methods=["POST"])
 def run_root():
-    args = flask.request.get_json()
+    args = flask.request.get_json() or {}
 
     return {
         "response": "Your request was successful! 🎉",
@@ -52,7 +52,7 @@ def run_root():
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets():
     try:
-        args = flask.request.get_json()
+        args = flask.request.get_json() or {}
 
         job_id = create_datasets.run(
             raw_data_dir=raw_data_dir,
@@ -81,7 +81,7 @@ def run_create_datasets():
 @app.route("/train-model", methods=["POST"])
 def run_train_model():
     try:
-        args = flask.request.get_json()
+        args = flask.request.get_json() or {}
 
         job_id = train_model.run(
             project=project,
@@ -105,7 +105,7 @@ def run_train_model():
 @app.route("/predict", methods=["POST"])
 def run_predict():
     try:
-        args = flask.request.get_json()
+        args = flask.request.get_json() or {}
 
         predictions = predict.run(
             model_dir=args.get("model_dir", f"{training_dir}/model"),
