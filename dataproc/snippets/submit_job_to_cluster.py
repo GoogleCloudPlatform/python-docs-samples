@@ -137,7 +137,7 @@ def list_clusters_with_details(dataproc, project, region):
             (
                 "{} - {}".format(
                     cluster.cluster_name,
-                    cluster.status.State.Name(cluster.status.state),
+                    cluster.status.state.name,
                 )
             )
         )
