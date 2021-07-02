@@ -26,17 +26,16 @@ import predict
 app = flask.Flask(__name__)
 
 project = os.environ["PROJECT"]
-bucket = os.environ["BUCKET"]
 region = os.environ["REGION"]
+storage_path = os.environ["STORAGE_PATH"]
 container_image = os.environ["CONTAINER_IMAGE"]
-storage_path = os.environ.get("STORAGE_PATH", "samples/global-fishing-watch")
 
-raw_data_dir = f"gs://{bucket}/{storage_path}/data"
-raw_labels_dir = f"gs://{bucket}/{storage_path}/labels"
-train_data_dir = f"gs://{bucket}/{storage_path}/datasets/train"
-eval_data_dir = f"gs://{bucket}/{storage_path}/datasets/eval"
-training_dir = f"gs://{bucket}/{storage_path}/training"
-temp_dir = f"gs://{bucket}/{storage_path}/temp"
+raw_data_dir = f"{storage_path}/data"
+raw_labels_dir = f"{storage_path}/labels"
+train_data_dir = f"{storage_path}/datasets/train"
+eval_data_dir = f"{storage_path}/datasets/eval"
+training_dir = f"{storage_path}/training"
+temp_dir = f"{storage_path}/temp"
 
 
 @app.route("/ping", methods=["POST"])
