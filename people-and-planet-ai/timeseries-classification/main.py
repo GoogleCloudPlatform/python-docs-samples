@@ -72,7 +72,7 @@ def run_create_datasets():
 
         return {
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{args['region']}/{job_id}?project={args['project']}",
+            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}",
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
@@ -96,7 +96,7 @@ def run_train_model():
 
         return {
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{args['region']}/training/{job_id}/cpu?project={args['project']}",
+            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{region}/training/{job_id}/cpu?project={project}",
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
