@@ -24,8 +24,9 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     training_dir: str,
-    train_steps: int,
-    eval_steps: int,
+    train_steps: int = 10000,
+    eval_steps: int = 1000,
+    machine_type: str = "e2-standard-8",
 ):
     client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -42,7 +43,7 @@ def run(
                 # https://cloud.google.com/vertex-ai/docs/training/distributed-training
                 "worker_pool_specs": [
                     {
-                        "machine_spec": {"machine_type": "e2-standard-4"},
+                        "machine_spec": {"machine_type": machine_type},
                         "replica_count": 1,
                         "container_spec": {
                             "image_uri": container_image,

@@ -92,6 +92,7 @@ def run_train_model():
             training_dir=training_dir,
             train_steps=args.get("train_steps", 10000),
             eval_steps=args.get("eval_steps", 1000),
+            machine_type=args.get("machine_type", "e2-standard-8"),
         )
 
         return {
