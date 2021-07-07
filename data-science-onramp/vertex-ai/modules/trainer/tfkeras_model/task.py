@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ai_platform_tfkeras_task]
+# [START vertex_ai_tfkeras_task]
 """Trains a Keras model to predict number of trips
 started and ended at Citibike stations. """
 
-# [START ai_platform_tfkeras_task_imports]
+# [START vertex_ai_tfkeras_task_imports]
 import argparse
 import os
 
@@ -27,7 +27,7 @@ from trainer.tfkeras_model import model
 # [END ai_platform_tfkeras_task_imports]
 
 
-# [START ai_platform_tfkeras_task_args]
+# [START vertex_ai_tfkeras_task_args]
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -66,8 +66,8 @@ def get_args() -> argparse.Namespace:
 # [END ai_platform_tfkeras_task_args]
 
 
-# [START ai_platform_tfkeras_task_train_and_evaluate]
-# [START ai_platform_tfkeras_task_train_and_evaluate_load]
+# [START vertex_ai_tfkeras_task_train_and_evaluate]
+# [START vertex_ai_tfkeras_task_train_and_evaluate_load]
 def train_and_evaluate(
     input_path: str,
     model_dir: str,
@@ -84,14 +84,14 @@ def train_and_evaluate(
     train_feature, eval_feature, train_target, eval_target = utils.load_data(input_path)
 # [END ai_platform_tfkeras_task_train_and_evaluate_load]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_dimensions]
+    # [START vertex_ai_tfkeras_task_train_and_evaluate_dimensions]
     # Extract dimensions of the data
     num_train_examples, input_dim = train_feature.shape
     num_eval_examples = eval_feature.shape[1]
     output_dim = train_target.shape[1]
     # [END ai_platform_tfkeras_task_train_and_evaluate_dimensions]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_model]
+    # [START vertex_ai_tfkeras_task_train_and_evaluate_model]
     # Create the Keras Model
     keras_model = model.create_keras_model(
         input_dim=input_dim,
@@ -100,7 +100,7 @@ def train_and_evaluate(
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_model]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_training_data]
+    # [START vertex_ai_tfkeras_task_train_and_evaluate_training_data]
     # Pass a numpy array by passing DataFrame.values
     training_dataset = model.input_fn(
         features=train_feature.values,
@@ -111,7 +111,7 @@ def train_and_evaluate(
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_training_data]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_validation_data]
+    # [START vertex_ai_tfkeras_task_train_and_evaluate_validation_data]
     # Pass a numpy array by passing DataFrame.values
     validation_dataset = model.input_fn(
         features=eval_feature.values,
@@ -122,7 +122,7 @@ def train_and_evaluate(
     )
     # [END ai_platform_tfkeras_task_train_and_evaluate_validation_data]
 
-    # [START ai_platform_tfkeras_task_train_and_evaluate_fit_export]
+    # [START vertex_ai_tfkeras_task_train_and_evaluate_fit_export]
     # Train model
     keras_model.fit(
         training_dataset,
