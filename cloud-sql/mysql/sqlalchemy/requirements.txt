@@ -1,4 +1,4 @@
 Flask==2.0.1
-SQLAlchemy==1.4.11
+SQLAlchemy==1.4.19
 PyMySQL==1.0.2
 gunicorn==20.1.0
