@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START vertex_ai_setup]
+# [START vertexai_setup]
 from setuptools import find_packages
 from setuptools import setup
 
@@ -26,4 +26,4 @@ setup(
         "gcsfs"
     ]
 )
-# [END vertex_ai_setup]
+# [END vertexai_setup]

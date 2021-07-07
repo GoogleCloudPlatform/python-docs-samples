@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START vertex_ai_tfkeras_model]
+# [START vertexai_tfkeras_model]
 """Defines a Keras model and input function for training."""
 
-# [START vertex_ai_tfkeras_model_tf_import]
+# [START vertexai_tfkeras_model_tf_import]
 import numpy as np
 import tensorflow as tf
-# [END vertex_ai_tfkeras_model_tf_import]
+# [END vertexai_tfkeras_model_tf_import]
 
 
-# [START vertex_ai_tfkeras_model_input_fn]
+# [START vertexai_tfkeras_model_input_fn]
 def input_fn(
     features: np.array,
     labels: np.array,
@@ -41,11 +41,11 @@ def input_fn(
     dataset = dataset.repeat(num_epochs)
     dataset = dataset.batch(batch_size)
     return dataset
-# [END vertex_ai_tfkeras_model_input_fn]
+# [END vertexai_tfkeras_model_input_fn]
 
 
-# [START vertex_ai_tfkeras_model_create_keras_model]
-# [START vertex_ai_tfkeras_model_create_keras_model_init]
+# [START vertexai_tfkeras_model_create_keras_model]
+# [START vertexai_tfkeras_model_create_keras_model_init]
 def create_keras_model(
     input_dim: int,
     output_dim: int,
@@ -56,8 +56,8 @@ def create_keras_model(
     # Define regularizers
     kernel_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
     bias_regularizer = tf.keras.regularizers.l2(1e-4)
-# [END vertex_ai_tfkeras_model_create_keras_model_init]
-# [START vertex_ai_tfkeras_model_create_keras_model_define]
+# [END vertexai_tfkeras_model_create_keras_model_init]
+# [START vertexai_tfkeras_model_create_keras_model_define]
     # Define model layers
     Dense = tf.keras.layers.Dense
     # Define Keras model
@@ -100,6 +100,6 @@ def create_keras_model(
     model.compile(loss="mae", optimizer="adam", metrics=["mae"])
 
     return model
-# [END vertex_ai_tfkeras_model_create_keras_model_define]
-# [END vertex_ai_tfkeras_model_create_keras_model]
-# [END vertex_ai_tfkeras_model]
+# [END vertexai_tfkeras_model_create_keras_model_define]
+# [END vertexai_tfkeras_model_create_keras_model]
+# [END vertexai_tfkeras_model]
