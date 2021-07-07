@@ -24,7 +24,7 @@ import tensorflow as tf
 
 from trainer import utils
 from trainer.tfkeras_model import model
-# [END ai_platform_tfkeras_task_imports]
+# [END vertexai_tfkeras_task_imports]
 
 
 # [START vertexai_tfkeras_task_args]
@@ -63,7 +63,7 @@ def get_args() -> argparse.Namespace:
         default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
-# [END ai_platform_tfkeras_task_args]
+# [END vertexai_tfkeras_task_args]
 
 
 # [START vertexai_tfkeras_task_train_and_evaluate]
@@ -82,14 +82,14 @@ def train_and_evaluate(
 
     # Split datasets into training and testing
     train_feature, eval_feature, train_target, eval_target = utils.load_data(input_path)
-# [END ai_platform_tfkeras_task_train_and_evaluate_load]
+# [END vertexai_tfkeras_task_train_and_evaluate_load]
 
     # [START vertexai_tfkeras_task_train_and_evaluate_dimensions]
     # Extract dimensions of the data
     num_train_examples, input_dim = train_feature.shape
     num_eval_examples = eval_feature.shape[1]
     output_dim = train_target.shape[1]
-    # [END ai_platform_tfkeras_task_train_and_evaluate_dimensions]
+    # [END vertexai_tfkeras_task_train_and_evaluate_dimensions]
 
     # [START vertexai_tfkeras_task_train_and_evaluate_model]
     # Create the Keras Model
@@ -98,7 +98,7 @@ def train_and_evaluate(
         output_dim=output_dim,
         learning_rate=learning_rate,
     )
-    # [END ai_platform_tfkeras_task_train_and_evaluate_model]
+    # [END vertexai_tfkeras_task_train_and_evaluate_model]
 
     # [START vertexai_tfkeras_task_train_and_evaluate_training_data]
     # Pass a numpy array by passing DataFrame.values
@@ -109,7 +109,7 @@ def train_and_evaluate(
         num_epochs=num_epochs,
         batch_size=batch_size,
     )
-    # [END ai_platform_tfkeras_task_train_and_evaluate_training_data]
+    # [END vertexai_tfkeras_task_train_and_evaluate_training_data]
 
     # [START vertexai_tfkeras_task_train_and_evaluate_validation_data]
     # Pass a numpy array by passing DataFrame.values
@@ -120,7 +120,7 @@ def train_and_evaluate(
         num_epochs=num_epochs,
         batch_size=num_eval_examples,
     )
-    # [END ai_platform_tfkeras_task_train_and_evaluate_validation_data]
+    # [END vertexai_tfkeras_task_train_and_evaluate_validation_data]
 
     # [START vertexai_tfkeras_task_train_and_evaluate_fit_export]
     # Train model
@@ -136,8 +136,8 @@ def train_and_evaluate(
     # Export model
     keras_model.save(model_dir)
     print(f"Model exported to: {model_dir}")
-    # [END ai_platform_tfkeras_task_train_and_evaluate_fit_export]
-# [END ai_platform_tfkeras_task_train_and_evaluate]
+    # [END vertexai_tfkeras_task_train_and_evaluate_fit_export]
+# [END vertexai_tfkeras_task_train_and_evaluate]
 
 
 if __name__ == "__main__":
@@ -154,4 +154,4 @@ if __name__ == "__main__":
     tf.compat.v1.logging.set_verbosity(args.verbosity)
 
     train_and_evaluate(args.input_path, args.model_dir, **kwargs)
-# [END ai_platform_tfkeras_task]
+# [END vertexai_tfkeras_task]
