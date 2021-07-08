@@ -17,7 +17,7 @@
 wordcount example, and deletes the cluster.
 
 This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * gcp_project - Google Cloud Project to use for the Cloud Dataproc cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataproc cluster should be
   created.
