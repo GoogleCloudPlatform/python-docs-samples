@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START vertexai_tfkeras_task]
+# [START aiplatform_tfkeras_task]
 """Trains a Keras model to predict number of trips
 started and ended at Citibike stations. """
 
-# [START vertexai_tfkeras_task_imports]
+# [START aiplatform_tfkeras_task_imports]
 import argparse
 import os
 
@@ -24,10 +24,10 @@ import tensorflow as tf
 
 from trainer import utils
 from trainer.tfkeras_model import model
-# [END vertexai_tfkeras_task_imports]
+# [END aiplatform_tfkeras_task_imports]
 
 
-# [START vertexai_tfkeras_task_args]
+# [START aiplatform_tfkeras_task_args]
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -63,11 +63,11 @@ def get_args() -> argparse.Namespace:
         default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
-# [END vertexai_tfkeras_task_args]
+# [END aiplatform_tfkeras_task_args]
 
 
-# [START vertexai_tfkeras_task_train_and_evaluate]
-# [START vertexai_tfkeras_task_train_and_evaluate_load]
+# [START aiplatform_tfkeras_task_train_and_evaluate]
+# [START aiplatform_tfkeras_task_train_and_evaluate_load]
 def train_and_evaluate(
     input_path: str,
     model_dir: str,
@@ -82,25 +82,25 @@ def train_and_evaluate(
 
     # Split datasets into training and testing
     train_feature, eval_feature, train_target, eval_target = utils.load_data(input_path)
-# [END vertexai_tfkeras_task_train_and_evaluate_load]
+# [END aiplatform_tfkeras_task_train_and_evaluate_load]
 
-    # [START vertexai_tfkeras_task_train_and_evaluate_dimensions]
+    # [START aiplatform_tfkeras_task_train_and_evaluate_dimensions]
     # Extract dimensions of the data
     num_train_examples, input_dim = train_feature.shape
     num_eval_examples = eval_feature.shape[1]
     output_dim = train_target.shape[1]
-    # [END vertexai_tfkeras_task_train_and_evaluate_dimensions]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_dimensions]
 
-    # [START vertexai_tfkeras_task_train_and_evaluate_model]
+    # [START aiplatform_tfkeras_task_train_and_evaluate_model]
     # Create the Keras Model
     keras_model = model.create_keras_model(
         input_dim=input_dim,
         output_dim=output_dim,
         learning_rate=learning_rate,
     )
-    # [END vertexai_tfkeras_task_train_and_evaluate_model]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_model]
 
-    # [START vertexai_tfkeras_task_train_and_evaluate_training_data]
+    # [START aiplatform_tfkeras_task_train_and_evaluate_training_data]
     # Pass a numpy array by passing DataFrame.values
     training_dataset = model.input_fn(
         features=train_feature.values,
@@ -109,9 +109,9 @@ def train_and_evaluate(
         num_epochs=num_epochs,
         batch_size=batch_size,
     )
-    # [END vertexai_tfkeras_task_train_and_evaluate_training_data]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_training_data]
 
-    # [START vertexai_tfkeras_task_train_and_evaluate_validation_data]
+    # [START aiplatform_tfkeras_task_train_and_evaluate_validation_data]
     # Pass a numpy array by passing DataFrame.values
     validation_dataset = model.input_fn(
         features=eval_feature.values,
@@ -120,9 +120,9 @@ def train_and_evaluate(
         num_epochs=num_epochs,
         batch_size=num_eval_examples,
     )
-    # [END vertexai_tfkeras_task_train_and_evaluate_validation_data]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_validation_data]
 
-    # [START vertexai_tfkeras_task_train_and_evaluate_fit_export]
+    # [START aiplatform_tfkeras_task_train_and_evaluate_fit_export]
     # Train model
     keras_model.fit(
         training_dataset,
@@ -136,8 +136,8 @@ def train_and_evaluate(
     # Export model
     keras_model.save(model_dir)
     print(f"Model exported to: {model_dir}")
-    # [END vertexai_tfkeras_task_train_and_evaluate_fit_export]
-# [END vertexai_tfkeras_task_train_and_evaluate]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_fit_export]
+# [END aiplatform_tfkeras_task_train_and_evaluate]
 
 
 if __name__ == "__main__":
@@ -154,4 +154,4 @@ if __name__ == "__main__":
     tf.compat.v1.logging.set_verbosity(args.verbosity)
 
     train_and_evaluate(args.input_path, args.model_dir, **kwargs)
-# [END vertexai_tfkeras_task]
+# [END aiplatform_tfkeras_task]
