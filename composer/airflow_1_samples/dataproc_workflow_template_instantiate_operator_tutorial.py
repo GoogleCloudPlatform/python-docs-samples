@@ -18,7 +18,7 @@
 Spark Pi Job.
 
 This DAG relies on an Airflow variable
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataproc Template.
 """
 

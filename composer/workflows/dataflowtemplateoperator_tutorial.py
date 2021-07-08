@@ -19,7 +19,7 @@
 text file and adds the rows to a BigQuery table.
 
 This DAG relies on four Airflow variables
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
   created.
