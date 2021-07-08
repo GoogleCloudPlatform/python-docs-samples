@@ -98,7 +98,7 @@ with models.DAG(
     create_dataproc_cluster = dataproc.DataprocCreateClusterOperator(
         task_id='create_dataproc_cluster',
         # Give the cluster a unique name by appending the date scheduled.
-        # See https://airflow.apache.org/code.html#default-variables
+        # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         cluster_config=CLUSTER_CONFIG,
         region=models.Variable.get('gce_region'))
