@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ai_platform_sklearn_model]
-# [START ai_platform_sklearn_model_imports]
+# [START aiplatform_sklearn_model]
+# [START aiplatform_sklearn_model_imports]
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
-# [END ai_platform_sklearn_model_imports]
+# [END aiplatform_sklearn_model_imports]
 
 
-# [START ai_platform_sklearn_model_polynomial_model]
+# [START aiplatform_sklearn_model_polynomial_model]
 def polynomial_model(
     degree: int,
     alpha: int
@@ -32,5 +32,5 @@ def polynomial_model(
             ("ridge regression", Ridge(alpha=alpha)),
         ]
     )
-# [END ai_platform_sklearn_model_polynomial_model]
-# [END ai_platform_sklearn_model]
+# [END aiplatform_sklearn_model_polynomial_model]
+# [END aiplatform_sklearn_model]
