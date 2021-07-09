@@ -20,8 +20,9 @@ async def quickstart_new_instance():
     # [START firestore_setup_client_create_async]
     from google.cloud import firestore
 
-    # Project ID is determined by the GCLOUD_PROJECT environment variable
-    db = firestore.AsyncClient()
+    # The `project` parameter is optional and if not supplied will
+    # fall back to your gcloud project configuration.
+    db = firestore.AsyncClient(project='my-project-id')
     # [END firestore_setup_client_create_async]
 
     return db
