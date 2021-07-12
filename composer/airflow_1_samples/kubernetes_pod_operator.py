@@ -97,7 +97,7 @@ with models.DAG(
         image='bash',
         # All parameters below are able to be templated with jinja -- cmds,
         # arguments, env_vars, and config_file. For more information visit:
-        # https://airflow.apache.org/code.html#default-variables
+        # https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
 
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.

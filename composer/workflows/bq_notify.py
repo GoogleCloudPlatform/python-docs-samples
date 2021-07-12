@@ -20,7 +20,7 @@ with path to the CSV file and the title and view count of the most popular
 question. Lastly, the DAG cleans up the BigQuery dataset.
 
 This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * gcp_project - Google Cloud Project to use for BigQuery.
 * gcs_bucket - Google Cloud Storage bucket to use for result CSV file.
   See https://cloud.google.com/storage/docs/creating-buckets for creating a

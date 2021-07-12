@@ -29,10 +29,10 @@ async def quickstart_new_instance():
 
 async def quickstart_add_data_one():
     db = firestore.AsyncClient()
-    # [START firestore_setup_dataset_pt1]
+    # [START firestore_setup_dataset_pt1_async]
     doc_ref = db.collection("users").document("alovelace")
     await doc_ref.set({"first": "Ada", "last": "Lovelace", "born": 1815})
-    # [END firestore_setup_dataset_pt1]
+    # [END firestore_setup_dataset_pt1_async]
 
 
 async def quickstart_add_data_two():
