@@ -22,17 +22,14 @@ import os
 # that our new projects are enforced to have
 # 'constraints/iam.disableServiceAccountKeyCreation' policy.
 def get_service_account_email():
-    session = os.environ.get('RUN_TESTS_SESSION')
-    if session == 'py-3.6':
-        return ('py36-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.7':
-        return ('py37-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.8':
-        return ('py38-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    return os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
+    session = os.environ.get("RUN_TESTS_SESSION")
+    if session == "py-3.6":
+        return "py36-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.7":
+        return "py37-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.8":
+        return "py38-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    return os.environ["HMAC_KEY_TEST_SERVICE_ACCOUNT"]
 
 
 TEST_CONFIG_OVERRIDE = {
