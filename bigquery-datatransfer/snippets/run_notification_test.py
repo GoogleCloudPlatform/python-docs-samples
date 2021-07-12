@@ -17,7 +17,8 @@ from . import run_notification
 
 def test_run_notification(capsys, transfer_config_name, pubsub_topic):
     run_notification.run_notification(
-        transfer_config_name=transfer_config_name, pubsub_topic=pubsub_topic,
+        transfer_config_name=transfer_config_name,
+        pubsub_topic=pubsub_topic,
     )
     out, _ = capsys.readouterr()
     assert "Updated config:" in out
