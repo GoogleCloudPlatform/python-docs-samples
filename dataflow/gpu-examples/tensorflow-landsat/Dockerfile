@@ -28,7 +28,8 @@ COPY *.py ./
 # If you need a different Python version, consider:
 #   https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
 RUN apt-get update \
-    && apt-get install -y curl python3.8 python3-distutils \
+    # Since Apache Beam 2.31.0, we need g++ to compile google-cloud-profiler.
+    && apt-get install -y curl g++ python3.8 python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \

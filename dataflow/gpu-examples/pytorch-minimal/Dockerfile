@@ -21,10 +21,14 @@ COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 COPY *.py ./
 
-# Install the pipeline requirements and check that there are no conflicts.
-# Since the image already has all the dependencies installed,
-# there's no need to run with the --requirements_file option.
-RUN pip install --no-cache-dir --upgrade pip \
+RUN apt-get update \
+    # Since Apache Beam 2.31.0, we need g++ to compile google-cloud-profiler.
+    && apt-get -y install g++ \
+    && rm -rf /var/lib/apt/lists/* \
+    # Install the pipeline requirements and check that there are no conflicts.
+    # Since the image already has all the dependencies installed,
+    # there's no need to run with the --requirements_file option.
+    && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
