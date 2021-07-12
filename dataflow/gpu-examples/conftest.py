@@ -31,7 +31,8 @@ UUID = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 
-RETRY_MAX_TIME = 5 * 60  # 5 minutes in seconds
+TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
+POLL_INTERVAL_SEC = 60  # 1 minute in seconds
 
 HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
 UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
@@ -178,13 +179,20 @@ class Utils:
         # Start a subprocess in the background to do the publishing.
         logging.info(f"Starting publisher on {topic_path}")
         p = mp.Process(target=_infinite_publish_job)
+
+        # We set the subprocess as a daemon so the main process doesn't wait for
+        # the subprocess to finish. Since this is an infinite loop, it will
+        # never finish, so it would cause the whole test to hang.
+        # Typically, `terminate` should stop the subprocess during the fixture
+        # cleanup phase, but we've had cases where the tests hang, most likely
+        # due to concurrency issues with pytest running in parallel.
+        p.daemon = True
         p.start()
 
         yield p.is_alive()
 
         # For cleanup, terminate the background process.
         logging.info("Stopping publisher")
-        p.join(timeout=0)
         p.terminate()
 
     @staticmethod
@@ -225,7 +233,7 @@ class Utils:
                     yield f.read()
             except Exception as e:
                 logging.exception(e)
-                logging.warning(f'Current directory: {os.getcwd()}')
+                logging.warning(f"Current directory: {os.getcwd()}")
                 yield config
         elif image_name:
             cmd = [
@@ -329,9 +337,9 @@ class Utils:
         project: str = PROJECT,
         region: str = REGION,
         until_status: str = "JOB_STATE_DONE",
-        timeout_sec: str = 30 * 60,
-        poll_interval_sec: int = 60,
         list_page_size: int = 100,
+        timeout_sec: str = TIMEOUT_SEC,
+        poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> Optional[str]:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
