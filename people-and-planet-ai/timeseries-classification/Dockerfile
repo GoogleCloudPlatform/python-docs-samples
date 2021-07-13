@@ -20,7 +20,10 @@ WORKDIR /app
 COPY *.py ./
 COPY requirements.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends g++ \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
