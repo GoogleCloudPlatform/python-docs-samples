@@ -19,10 +19,10 @@ WORKDIR /app
 # Copy the pipeline source files and the Apache Beam worker files.
 COPY *.py ./
 COPY requirements.txt ./
-COPY --from=apache/beam_python3.8_sdk:2.30.0 /opt/apache/beam /opt/apache/beam
 
 RUN pip install --no-cache-dir -r requirements.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
+COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]

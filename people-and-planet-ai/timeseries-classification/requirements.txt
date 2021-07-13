@@ -1,5 +1,5 @@
 Flask==2.0.1
-apache-beam[gcp]==2.30.0
+apache-beam[gcp]==2.31.0
 google-cloud-aiplatform==1.1.1
 gunicorn==20.1.0
 pandas==1.2.4
