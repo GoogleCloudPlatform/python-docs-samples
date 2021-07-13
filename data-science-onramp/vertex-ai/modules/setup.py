@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ai_platform_setup]
+# [START aiplatform_setup]
 from setuptools import find_packages
 from setuptools import setup
 
@@ -26,4 +26,4 @@ setup(
         "gcsfs"
     ]
 )
-# [END ai_platform_setup]
+# [END aiplatform_setup]

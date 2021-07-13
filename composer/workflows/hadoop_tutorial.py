@@ -17,7 +17,7 @@
 wordcount example, and deletes the cluster.
 
 This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * gcp_project - Google Cloud Project to use for the Cloud Dataproc cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataproc cluster should be
   created.
@@ -98,7 +98,7 @@ with models.DAG(
     create_dataproc_cluster = dataproc.DataprocCreateClusterOperator(
         task_id='create_dataproc_cluster',
         # Give the cluster a unique name by appending the date scheduled.
-        # See https://airflow.apache.org/code.html#default-variables
+        # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         cluster_config=CLUSTER_CONFIG,
         region=models.Variable.get('gce_region'))
