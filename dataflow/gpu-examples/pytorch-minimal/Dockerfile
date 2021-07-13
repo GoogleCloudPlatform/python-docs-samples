@@ -12,18 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
+FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
 
 WORKDIR /pipeline
 
-# Copy the Apache Beam worker files and the pipeline source files.
-COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 COPY *.py ./
 
 RUN apt-get update \
-    # Since Apache Beam 2.31.0, we need g++ to compile google-cloud-profiler.
-    && apt-get -y install g++ \
+    && apt-get install -y --no-install-recommends g++ \
     && rm -rf /var/lib/apt/lists/* \
     # Install the pipeline requirements and check that there are no conflicts.
     # Since the image already has all the dependencies installed,
@@ -33,4 +30,5 @@ RUN apt-get update \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
+COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]

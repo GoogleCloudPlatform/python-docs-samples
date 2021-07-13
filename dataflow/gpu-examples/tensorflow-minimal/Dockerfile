@@ -20,25 +20,22 @@ FROM nvcr.io/nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 WORKDIR /pipeline
 
-# Copy the Apache Beam worker files and the pipeline source files.
-COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 COPY requirements.txt .
 COPY *.py ./
 
 # If you need a different Python version, consider:
 #   https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa
 RUN apt-get update \
-    # Since Apache Beam 2.31.0, we need g++ to compile google-cloud-profiler.
-    && apt-get install -y curl g++ python3.8 python3-distutils \
+    && apt-get install -y --no-install-recommends curl g++ python3.8-dev python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements and check that there are no conflicts.
     # Since the image already has all the dependencies installed,
     # there's no need to run with the --requirements_file option.
-    && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
+COPY --from=apache/beam_python3.8_sdk:2.31.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
