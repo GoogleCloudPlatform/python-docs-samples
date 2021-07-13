@@ -226,7 +226,7 @@ def py(session: nox.sessions.Session) -> None:
 
 
 def _get_repo_root() -> Optional[str]:
-    """ Returns the root folder of the project. """
+    """Returns the root folder of the project."""
     # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
     for i in range(10):

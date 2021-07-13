@@ -13,9 +13,6 @@
 # limitations under the License.
 
 import datetime
-import os
-
-import pytest
 
 from . import quickstart
 
@@ -25,11 +22,6 @@ def now_millis():
         (datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds()
         * 1000
     )
-
-
-@pytest.fixture()
-def project_id():
-    return os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_quickstart_wo_snapshot(capsys, project_id):
