@@ -19,6 +19,8 @@ from typing import Dict, List
 
 import trainer
 
+model = None
+
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
     # Our model always expects a batch prediction,
@@ -30,8 +32,10 @@ def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]
         for name, values in inputs.items()
     }
 
-    # Get our model's predictions.
-    model = keras.models.load_model(model_dir)
+    # Cache the model so it only has to be loaded once per runtime.
+    global model
+    if model is None:
+        model = keras.models.load_model(model_dir)
 
     # Include the timestamp for each prediction so we can merge them back to the request data.
     predictions_batch = {
