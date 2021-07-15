@@ -49,7 +49,7 @@ def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
+        bucket_name = "bucket-storage-s3-test-{}".format(uuid.uuid4())
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
@@ -70,7 +70,8 @@ def test_blob(test_bucket):
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
 def test_list_buckets(capsys, hmac_fixture, test_bucket):
     list_gcs_buckets.list_gcs_buckets(
-        google_access_key_id=hmac_fixture[0].access_id, google_access_key_secret=hmac_fixture[1]
+        google_access_key_id=hmac_fixture[0].access_id,
+        google_access_key_secret=hmac_fixture[1],
     )
     out, _ = capsys.readouterr()
     assert "Buckets:" in out
