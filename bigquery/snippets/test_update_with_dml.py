@@ -15,13 +15,13 @@
 from google.cloud import bigquery
 import pytest
 
-from conftest import resource_prefix
+from conftest import prefixer
 import update_with_dml
 
 
 @pytest.fixture
 def table_id(bigquery_client: bigquery.Client, project_id: str, dataset_id: str):
-    table_id = f"{resource_prefix()}_update_with_dml"
+    table_id = f"{prefixer.create_prefix()}_update_with_dml"
     yield table_id
     full_table_id = f"{project_id}.{dataset_id}.{table_id}"
     bigquery_client.delete_table(full_table_id, not_found_ok=True)

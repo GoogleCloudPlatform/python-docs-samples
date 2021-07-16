@@ -12,38 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
-import random
-
 from google.cloud import bigquery
 import pytest
+import test_utils.prefixer
 
 
-RESOURCE_PREFIX = "python_bigquery_samples_snippets"
-RESOURCE_DATE_FORMAT = "%Y%m%d_%H%M%S"
-RESOURCE_DATE_LENGTH = 4 + 2 + 2 + 1 + 2 + 2 + 2
-
-
-def resource_prefix() -> str:
-    timestamp = datetime.datetime.utcnow().strftime(RESOURCE_DATE_FORMAT)
-    random_string = hex(random.randrange(1000000))[2:]
-    return f"{RESOURCE_PREFIX}_{timestamp}_{random_string}"
-
-
-def resource_name_to_date(resource_name: str):
-    start_date = len(RESOURCE_PREFIX) + 1
-    date_string = resource_name[start_date : start_date + RESOURCE_DATE_LENGTH]
-    return datetime.datetime.strptime(date_string, RESOURCE_DATE_FORMAT)
+prefixer = test_utils.prefixer.Prefixer("python-bigquery", "samples/snippets")
 
 
 @pytest.fixture(scope="session", autouse=True)
 def cleanup_datasets(bigquery_client: bigquery.Client):
-    yesterday = datetime.datetime.utcnow() - datetime.timedelta(days=1)
     for dataset in bigquery_client.list_datasets():
-        if (
-            dataset.dataset_id.startswith(RESOURCE_PREFIX)
-            and resource_name_to_date(dataset.dataset_id) < yesterday
-        ):
+        if prefixer.should_cleanup(dataset.dataset_id):
             bigquery_client.delete_dataset(
                 dataset, delete_contents=True, not_found_ok=True
             )
@@ -62,12 +42,23 @@ def project_id(bigquery_client):
 
 @pytest.fixture(scope="session")
 def dataset_id(bigquery_client: bigquery.Client, project_id: str):
-    dataset_id = resource_prefix()
+    dataset_id = prefixer.create_prefix()
     full_dataset_id = f"{project_id}.{dataset_id}"
     dataset = bigquery.Dataset(full_dataset_id)
     bigquery_client.create_dataset(dataset)
     yield dataset_id
     bigquery_client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture
+def random_table_id(bigquery_client: bigquery.Client, project_id: str, dataset_id: str):
+    """Create a new table ID each time, so random_table_id can be used as
+    target for load jobs.
+    """
+    random_table_id = prefixer.create_prefix()
+    full_table_id = f"{project_id}.{dataset_id}.{random_table_id}"
+    yield full_table_id
+    bigquery_client.delete_table(full_table_id, not_found_ok=True)
 
 
 @pytest.fixture
