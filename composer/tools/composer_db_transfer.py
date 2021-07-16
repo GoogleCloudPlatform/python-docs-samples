@@ -26,7 +26,7 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.0"
+SCRIPT_VERSION = "1.1"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
@@ -597,7 +597,7 @@ class EnvironmentUtils:
 
     @staticmethod
     def get_gke_credentials(gke_id: str) -> None:
-        """Gets credentials of gived GKE cluster."""
+        """Gets credentials of a given GKE cluster."""
         items = gke_id.split("/")
         if (
             len(items) != 6
@@ -618,20 +618,6 @@ class EnvironmentUtils:
             items[3],
         ]
         Command.run_shell_command(shell_command)
-
-    @staticmethod
-    def access_gke_cluster(
-        project_name: str, environment_name: str, location: str
-    ) -> str:
-        """Gets credentials for the environment's cluster and returns its id."""
-        logger.info("*** Inspecting GKE cluster...")
-        environment_config = EnvironmentUtils.read_environment_config(
-            project_name, environment_name, location
-        )
-        gke_id = environment_config["config"]["gkeCluster"]
-        logger.info("GKE URL: %s", gke_id)
-        EnvironmentUtils.get_gke_credentials(gke_id)
-        return gke_id
 
     @staticmethod
     def get_pods_config() -> typing.Dict[typing.Any, typing.Any]:
@@ -877,6 +863,8 @@ spec:
 class DatabasePorter:
     """Common routines for exporter and importer."""
 
+    AIRFLOW_VERSION_RE = re.compile("composer-.*-airflow-([0-9]+).([0-9]+).([0-9]+).*")
+
     def __init__(self: typing.Any, expected_airflow_database_version: str) -> None:
         self._expected_airflow_database_version = expected_airflow_database_version
 
@@ -884,6 +872,8 @@ class DatabasePorter:
         """Gathers information about the Composer environment."""
         logger.info("*** Inspecting Composer environment...")
         self.unique_id = EnvironmentUtils.unique_id()
+        self._read_environment_configuration()
+        self._check_airflow_version()
         self._access_gke_cluster()
         self.pods_config = EnvironmentUtils.get_pods_config()
         self._read_environment_variables_from_monitoring_pod()
@@ -903,13 +893,38 @@ class DatabasePorter:
         self._check_composer_system_namespace()
         self._check_cloud_sql_proxy()
 
-    def _access_gke_cluster(self: typing.Any) -> None:
-        """Exports custom KUBECTL and requests credentials to the GKE cluster."""
-        self._kubeconfig_file_name = f"kubeconfig-{self.unique_id}"
-        os.environ["KUBECONFIG"] = self._kubeconfig_file_name
-        EnvironmentUtils.access_gke_cluster(
+    def _read_environment_configuration(self: typing.Any) -> None:
+        logger.info("*** Reading environment configuration...")
+        self.environment_config = EnvironmentUtils.read_environment_config(
             self.project_name, self.environment_name, self.location
         )
+        self.gke_id = self.environment_config["config"]["gkeCluster"]
+        logger.info("GKE URL: %s", self.gke_id)
+        self.image_version = self.environment_config["config"]["softwareConfig"][
+            "imageVersion"
+        ]
+        logger.info("Image version: %s", self.image_version)
+
+    def _check_airflow_version(self: typing.Any) -> None:
+        """Checks Airflow version."""
+        logger.info("*** Checking Airflow version...")
+        if DatabasePorter.AIRFLOW_VERSION_RE.match(self.image_version):
+            v1, v2, v3 = DatabaseImporter.AIRFLOW_VERSION_RE.match(
+                self.image_version
+            ).groups()
+            if self.is_good_airflow_version(int(v1), int(v2), int(v3)):
+                return
+        raise Exception(
+            f"{self.bad_airflow_message} "
+            f"Image version of this environment: {self.image_version}."
+        )
+
+    def _access_gke_cluster(self: typing.Any) -> None:
+        """Exports custom KUBECTL and requests credentials to the GKE cluster."""
+        logger.info("*** Getting credentials to GKE cluster...")
+        self._kubeconfig_file_name = f"kubeconfig-{self.unique_id}"
+        os.environ["KUBECONFIG"] = self._kubeconfig_file_name
+        EnvironmentUtils.get_gke_credentials(self.gke_id)
 
     def _remove_temporary_kubeconfig(self: typing.Any) -> None:
         """Removes temporary kubeconfig file."""
@@ -942,6 +957,7 @@ class DatabasePorter:
 
     def _find_worker_pod(self: typing.Any) -> None:
         """Finds namespace and name of a worker pod existing in an environment."""
+        logger.info("*** Finding existing worker pod...")
         self.worker_container_name = "airflow-worker"
         pod_desc = EnvironmentUtils.get_pod_with_label(
             self.pods_config, self.worker_container_name
@@ -955,6 +971,7 @@ class DatabasePorter:
     def _read_environment_variables_from_monitoring_pod(self: typing.Any) -> None:
         """Reads relevant environment variables from airflow-monitoring."""
         logger.info("*** Reading environment variables from airflow-monitoring pod...")
+        logger.info("Finding existing monitoring pod...")
         pod_desc = EnvironmentUtils.get_pod_with_label(
             self.pods_config, "airflow-monitoring"
         )
@@ -1082,6 +1099,7 @@ class DatabaseImporter(DatabasePorter):
     EXPECTED_AIRFLOW_DATABASE_VERSION = "POSTGRES_13"
     DATABASE_CREATION_JOB_IMAGE_VERSION = "1.10.14"
     DATABASE_CREATION_JOB_IMAGE_TAG = "cloud_composer_service_2021-03-07-RC1"
+    TEMPORARY_DATABASE_NAME = "temporary-database"
 
     def __init__(
         self: typing.Any,
@@ -1095,6 +1113,12 @@ class DatabaseImporter(DatabasePorter):
         self.environment_name = environment_name
         self.location = location
         self.fernet_key_file = fernet_key_file
+        self.is_good_airflow_version = (
+            lambda a, b, c: True if a == 2 and (b > 0 or c >= 1) else False
+        )
+        self.bad_airflow_message = (
+            "Import operation supports only Airflow 2.0.1+."
+        )
 
     def _read_source_fernet_key(self: typing.Any) -> None:
         """Reads fernet key from source environment."""
@@ -1141,54 +1165,95 @@ class DatabaseImporter(DatabasePorter):
             )
             logger.info(output)
 
+    def _delete_database(self: typing.Any, database_name: str) -> None:
+        EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            "psql postgres://root:${SQL_PASSWORD}"
+            f"@{self.sql_proxy}/postgres -p 3306 -t -c "
+            f"'drop database \"{database_name}\" WITH (FORCE);'",
+            log_command=False,
+            log_error=False,
+        )
+
+    def _delete_old_temporary_database_if_exists(self: typing.Any) -> None:
+        """Deletes temporary database from previous failed attempts."""
+        logger.info(
+            "*** Deleting temporary database created with previous failed import "
+            "attempts (if exists)...",
+        )
+        try:
+            self._delete_database(DatabaseImporter.TEMPORARY_DATABASE_NAME)
+        except Command.CommandExecutionError:
+            pass
+
     def _create_new_database(self: typing.Any) -> None:
         """Creates new database in target environment."""
         logger.info("*** Creating new database...")
-        self.temporary_database_name = f"temporary-database-{self.unique_id}"
         EnvironmentUtils.create_database_through_exising_workload(
             self.worker_pod_namespace,
             self.worker_pod_name,
             "airflow-worker",
             self.sql_instance_name,
             self.tenant_project_name,
-            self.temporary_database_name,
+            DatabaseImporter.TEMPORARY_DATABASE_NAME,
         )
+
+    def _ar_multiregion_from_location(self: typing.Any, location: str) -> str:
+        if location in {"eu", "us", "asia"}:
+            return location
+        for prefix, multiregion in [
+            ("us-", "us"),
+            ("europe-", "eu"),
+            ("asia-", "asia"),
+            ("northamerica-", "us"),
+            ("southamerica-", "us"),
+            ("australia-", "asia"),
+        ]:
+            if location.startswith(prefix):
+                return multiregion
+        return "us"
 
     def _get_image_for_db_creation_job(self: typing.Any) -> None:
         """Gets suitable image to generate a new database with 1.10.14 schema."""
         logger.info("Checking airflow-worker image in existing worker pod...")
         ar_path = re.compile(
-            "[a-z-]+.pkg.dev/cloud-airflow-releaser/"
-            "(airflow-worker-scheduler-[0-9-]+)/"
-            "airflow-worker-scheduler-[0-9-]+:(.*)"
+            "([a-z0-9-]+)-docker.pkg.dev/.*(?:airflow-worker-scheduler-|composer-images-).*"
         )
         gcr_path = re.compile(
-            "[a-z.]*gcr.io/cloud-airflow-releaser/"
-            "(airflow-worker-scheduler-[0-9.]+):(.*)"
+            "([a-z.]*gcr.io)/.*(?:airflow-worker-scheduler-|composer-images-).*"
         )
         for container in self.worker_pod_desc["spec"]["containers"]:
             container_image = container["image"]
             logger.info("  Checking %s...", container_image)
             if ar_path.match(container_image):
-                image, tag = ar_path.match(container_image).groups()
+                repository_location = ar_path.match(container_image).groups()[0]
+                repository_multiregion = self._ar_multiregion_from_location(
+                    repository_location
+                )
+                repository = f"{repository_multiregion}-docker.pkg.dev"
                 image_version = (
                     DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION.replace(
                         ".", "-"
                     )
                 )
                 new_image = f"airflow-worker-scheduler-{image_version}"
-                image = container_image.replace(image, new_image).replace(
-                    tag, DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG
+                image = (
+                    f"{repository}/cloud-airflow-releaser/{new_image}"
+                    f"/{new_image}:"
+                    f"{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
                 )
                 break
             elif gcr_path.match(container_image):
-                image, tag = gcr_path.match(container_image).groups()
+                repository = gcr_path.match(container_image).groups()[0]
                 new_image = (
                     "airflow-worker-scheduler"
                     f"-{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION}"
                 )
-                image = container_image.replace(image, new_image).replace(
-                    tag, DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG
+                image = (
+                    f"{repository}/cloud-airflow-releaser/{new_image}"
+                    f":{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
                 )
                 break
         else:
@@ -1208,7 +1273,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_pod_namespace,
             self._get_image_for_db_creation_job(),
             self.gcs_bucket_name,
-            self.temporary_database_name,
+            DatabaseImporter.TEMPORARY_DATABASE_NAME,
             self.project_name,
             self.unique_id,
             self.sql_proxy,
@@ -1249,7 +1314,7 @@ class DatabaseImporter(DatabasePorter):
                 self.worker_pod_name,
                 self.worker_container_name,
                 "psql postgres://root:${SQL_PASSWORD}"
-                f"@{self.sql_proxy}/{self.temporary_database_name} "
+                f"@{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
                 f"-p 3306 -t -c 'DELETE FROM {table};'",
             )
             logger.info(output)
@@ -1262,7 +1327,7 @@ class DatabaseImporter(DatabasePorter):
             command = (
                 f"gcloud sql import csv {self.sql_instance_name} "
                 f"{self._cloud_storage_path_to_imported_table(table)} "
-                f"--database={self.temporary_database_name} "
+                f"--database={DatabaseImporter.TEMPORARY_DATABASE_NAME} "
                 f"--project {self.tenant_project_name} "
                 f"--table={table} -q --async"
             )
@@ -1291,7 +1356,7 @@ class DatabaseImporter(DatabasePorter):
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://"
             "${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:3306"
-            f"/{self.temporary_database_name} && "
+            f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
             "export AIRFLOW__CORE__FERNET_KEY="
             f"{self.fernet_key},{self.fernet_key_from_source_environment} "
             "&& airflow rotate-fernet-key"
@@ -1314,7 +1379,7 @@ class DatabaseImporter(DatabasePorter):
                 key = columns[0]
                 command = (
                     "psql postgres://root:${SQL_PASSWORD}@"
-                    f"{self.sql_proxy}/{self.temporary_database_name} -p 3306 -t -c "
+                    f"{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} -p 3306 -t -c "
                     f"\"SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('{table}', "
                     f"'{key}')), (SELECT (MAX({key}) + 1) FROM {table}), FALSE);\""
                 )
@@ -1333,7 +1398,7 @@ class DatabaseImporter(DatabasePorter):
             "export "
             "AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
-            f"{self.sql_proxy}:3306/{self.temporary_database_name} "
+            f"{self.sql_proxy}:3306/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
             "&& airflow db upgrade"
         )
         output = EnvironmentUtils.execute_command_in_a_pod(
@@ -1351,15 +1416,7 @@ class DatabaseImporter(DatabasePorter):
             self.sql_database,
         )
         try:
-            output = EnvironmentUtils.execute_command_in_a_pod(
-                self.worker_pod_namespace,
-                self.worker_pod_name,
-                self.worker_container_name,
-                "psql postgres://root:${SQL_PASSWORD}"
-                f"@{self.sql_proxy}/postgres -p 3306 -t -c "
-                f"'drop database \"{self.sql_database}\" WITH (FORCE);'",
-            )
-            logger.info(output)
+            self._delete_database(self.sql_database)
         except Command.CommandExecutionError:
             logger.warning(
                 "Deleting empty database failed, but trying to proceed anyway. "
@@ -1391,7 +1448,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_container_name,
             "psql postgres://root:${SQL_PASSWORD}"
             f"@{self.sql_proxy}/postgres -p 3306 -t -c "
-            f'\'ALTER DATABASE "{self.temporary_database_name}" '
+            f'\'ALTER DATABASE "{DatabaseImporter.TEMPORARY_DATABASE_NAME}" '
             f'RENAME TO "{self.sql_database}";\'',
         )
         logger.info(output)
@@ -1401,13 +1458,16 @@ class DatabaseImporter(DatabasePorter):
         self._check_environment()
         self._read_source_fernet_key()
         self._fail_fast_if_there_are_no_files_to_import()
-        self._grant_permissions()
         self._copy_csv_files_to_tp_if_drs_is_enabled()
+        self._delete_old_temporary_database_if_exists()
         self._create_new_database()
         self._initialize_new_database()
         self._clean_prepopulated_tables()
-        self._import_tables()
-        self._revoke_permissions()
+        try:
+            self._grant_permissions()
+            self._import_tables()
+        finally:
+            self._revoke_permissions()
         self._fix_sequence_numbers_in_db()
         self._apply_migrations()
         self._rotate_fernet_key()
@@ -1445,6 +1505,12 @@ python3 composer_db_transfer.py import ...
         self.environment_name = environment_name
         self.location = location
         self.fernet_key_file = fernet_key_file
+        self.is_good_airflow_version = (
+            lambda a, b, c: True if a == 1 and b == 10 and c >= 14 else False
+        )
+        self.bad_airflow_message = (
+            "Export operation supports only Airflow 1.10.x, x >= 14."
+        )
 
     def _cloud_storage_path_to_exported_table(self: typing.Any, table: str) -> str:
         """Translates table name into a path to CSV file in a bucket."""
@@ -1554,9 +1620,11 @@ python3 composer_db_transfer.py import ...
     def export_database(self: typing.Any) -> None:
         """Exports the database to CSV files in the environment's bucket."""
         self._check_environment()
-        self._grant_permissions()
-        self._export_tables()
-        self._revoke_permissions()
+        try:
+            self._grant_permissions()
+            self._export_tables()
+        finally:
+            self._revoke_permissions()
         self._copy_csv_files_to_cp_if_drs_is_enabled()
         self._postprocess_tables()
         self._export_dags_plugins_and_data()
