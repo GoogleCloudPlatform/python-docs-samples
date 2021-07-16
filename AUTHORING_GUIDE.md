@@ -72,7 +72,7 @@ Samples that primarily show the use of one client library should be placed in th
 client library repository `googleapis/python-{api}`. Other samples should be placed in this repository
 `python-docs-samples`.
 
-**Library repositories:** Each sample should be in the top-level samples folder `samples`
+**Library repositories:** Each sample should be in a folder under the top-level samples folder `samples`
 in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/master/samples)
 for an example.
 
