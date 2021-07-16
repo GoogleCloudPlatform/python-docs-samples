@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ai_platform_sklearn_task]
-# [START ai_platform_sklearn_task_imports]
+# [START aiplatform_sklearn_task]
+# [START aiplatform_sklearn_task_imports]
 import argparse
 import os
 import re
@@ -24,10 +24,10 @@ from sklearn.metrics import mean_absolute_error
 
 from trainer import utils
 from trainer.sklearn_model import model
-# [END ai_platform_sklearn_task_imports]
+# [END aiplatform_sklearn_task_imports]
 
 
-# [START ai_platform_sklearn_task_args]
+# [START aiplatform_sklearn_task_args]
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -53,10 +53,10 @@ def get_args() -> argparse.Namespace:
         default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
-# [END ai_platform_sklearn_task_args]
+# [END aiplatform_sklearn_task_args]
 
 
-# [START ai_platform_sklearn_task_fit]
+# [START aiplatform_sklearn_task_fit]
 def fit_model(
     input_path: str,
     model_dir: str,
@@ -83,9 +83,9 @@ def fit_model(
     mae = mean_absolute_error(eval_target, pred_target)
 
     print(f"Done. Model had MAE={mae}")
-# [END ai_platform_sklearn_task_fit]
+# [END aiplatform_sklearn_task_fit]
 
-# [START ai_platform_sklearn_task_export]
+# [START aiplatform_sklearn_task_export]
     # Save model to GCS
     print("Saving model")
     matches = re.match("gs://(.*?)/(.*)", model_dir)
@@ -99,7 +99,7 @@ def fit_model(
     client = storage.Client()
     client.bucket(bucket).blob(blob_name).upload_from_filename(model_dump)
     print("Model saved")
-# [END ai_platform_sklearn_task_export]
+# [END aiplatform_sklearn_task_export]
 
 
 if __name__ == "__main__":
@@ -112,4 +112,4 @@ if __name__ == "__main__":
         kwargs["alpha"] = args.alpha
 
     fit_model(args.input_path, args.model_dir, **kwargs)
-# [END ai_platform_sklearn_task]
+# [END aiplatform_sklearn_task]

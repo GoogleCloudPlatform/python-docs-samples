@@ -1,5 +1,5 @@
 Flask==2.0.1
-SQLAlchemy==1.4.11
+SQLAlchemy==1.4.19
 python-tds==1.11.0
 sqlalchemy-pytds==0.3.3
 pyopenssl==20.0.1

@@ -63,14 +63,15 @@ steps:
   args:
   - '-c'
   - |
-    ./test/retry.sh "gcloud run deploy ${_SERVICE} \
+    ./test/retry.sh "gcloud beta run deploy ${_SERVICE} \
       --project $PROJECT_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --allow-unauthenticated \
       --region ${_REGION} \
       --platform ${_PLATFORM} \
       --add-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
-      --update-env-vars CLOUD_SQL_CREDENTIALS_SECRET=projects/${PROJECT_ID}/secrets/${_SERVICE}-secrets/versions/latest,TRAMPOLINE_CI=kokoro"
+      --update-secrets CLOUD_SQL_CREDENTIALS_SECRET=${_SERVICE}-secrets:latest \
+      --update-env-vars TRAMPOLINE_CI=kokoro"
 
 images:
 - gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}

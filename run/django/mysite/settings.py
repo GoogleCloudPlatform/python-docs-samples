@@ -29,7 +29,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 # Attempt to load the Project ID into the environment, safely failing on error.
 try:
     _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except google.exceptions.DefaultCredentialsError:
+except google.auth.exceptions.DefaultCredentialsError:
     pass
 
 if os.path.isfile(env_file):
@@ -163,7 +163,7 @@ USE_TZ = True
 # [START cloudrun_django_staticconfig]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-
+STATIC_URL = "/static/"
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_DEFAULT_ACL = "publicRead"
