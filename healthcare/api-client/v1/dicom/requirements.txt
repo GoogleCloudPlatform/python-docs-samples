@@ -1,5 +1,5 @@
 google-api-python-client==2.11.0
 google-auth-httplib2==0.1.0
 google-auth==1.31.0
-google-cloud-pubsub==2.6.0
+google-cloud-pubsub==2.6.1
 requests==2.25.1

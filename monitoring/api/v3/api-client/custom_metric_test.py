@@ -63,12 +63,12 @@ def custom_metric(client):
     custom_metric_descriptor = create_custom_metric(
         client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
 
-    # wait until metric has been created, use the get call to wait until
-    # a response comes back with the new metric with 10 retries.
+    # Wait up to 50 seconds until metric has been created. Use the get call
+    # to wait until a response comes back with the new metric with 10 retries.
     custom_metric = None
     retry_count = 0
     while not custom_metric and retry_count < 10:
-        time.sleep(1)
+        time.sleep(5)
         retry_count += 1
         custom_metric = get_custom_metric(
             client, PROJECT_RESOURCE, METRIC_RESOURCE)
