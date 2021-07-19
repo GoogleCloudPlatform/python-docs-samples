@@ -12,7 +12,6 @@ For more details on how to work with this sample read the [Google Cloud Run Pyth
 ## Dependencies
 
 * **flask**: web server framework
-* **google-cloud-secret-manager**: Google Secret Manager client library
 * **firebase-admin**: verifying JWT token
 * **sqlalchemy + pg8000**: postgresql interface
 * **Firebase JavaScript SDK**: client-side library for authentication flow
@@ -22,7 +21,7 @@ For more details on how to work with this sample read the [Google Cloud Run Pyth
 Cloud Run services can be [configured with Environment Variables](https://cloud.google.com/run/docs/configuring/environment-variables).
 Required variables for this sample include:
 
-* `CLOUD_SQL_CREDENTIALS_SECRET`: the resource ID of the secret, in format: `projects/PROJECT_ID/secrets/SECRET_ID/versions/VERSION`. See [postgres-secrets.json](postgres-secrets.json) for secret content.
+* `CLOUD_SQL_CREDENTIALS_SECRET`: the resource ID of the secret, in format: `projects/PROJECT_ID/secrets/SECRET_ID/versions/VERSION` when deployed to Cloud Run. At runtime, Cloud Run will inject the secret value as an environment variable, for more info see [Using secrets](https://cloud.google.com/run/docs/configuring/secrets#command-line). See [postgres-secrets.json](postgres-secrets.json) for secret content.
 
 OR
 
