@@ -19,7 +19,7 @@ from plugins and dynamically builds the tasks based on the list of tables.
 Lastly, the DAG defines a specific application logger to generate logs.
 
 This DAG relies on three Airflow variables
-(https://airflow.apache.org/concepts.html#variables):
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html:
 * table_list_file_path - CSV file listing source and target tables, including
 Datasets.
 * gcs_source_bucket - Google Cloud Storage bucket to use for exporting
