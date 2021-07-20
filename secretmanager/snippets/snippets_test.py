@@ -22,9 +22,13 @@ from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
 from create_secret import create_secret
 from delete_secret import delete_secret
+from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
+from destroy_secret_version_with_etag import destroy_secret_version_with_etag
 from disable_secret_version import disable_secret_version
+from disable_secret_version_with_etag import disable_secret_version_with_etag
 from enable_secret_version import enable_secret_version
+from enable_secret_version_with_etag import enable_secret_version_with_etag
 from get_secret import get_secret
 from get_secret_version import get_secret_version
 from iam_grant_access import iam_grant_access
@@ -33,6 +37,7 @@ from list_secret_versions import list_secret_versions
 from list_secrets import list_secrets
 from quickstart import quickstart
 from update_secret import update_secret
+from update_secret_with_etag import update_secret_with_etag
 
 
 @pytest.fixture()
@@ -64,7 +69,7 @@ def secret(client, project_id):
         }
     )
 
-    yield project_id, secret_id
+    yield project_id, secret_id, secret.etag
 
     print("deleting secret {}".format(secret_id))
     try:
@@ -79,7 +84,7 @@ another_secret = secret
 
 @pytest.fixture()
 def secret_version(client, secret):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
 
     print("adding secret version to {}".format(secret_id))
     parent = client.secret_path(project_id, secret_id)
@@ -88,7 +93,7 @@ def secret_version(client, secret):
         request={"parent": parent, "payload": {"data": payload}}
     )
 
-    yield project_id, secret_id, version.name.rsplit("/", 1)[-1]
+    yield project_id, secret_id, version.name.rsplit("/", 1)[-1], version.etag
 
 
 another_secret_version = secret_version
@@ -100,13 +105,13 @@ def test_quickstart(project_id):
 
 
 def test_access_secret_version(secret_version):
-    project_id, secret_id, version_id = secret_version
+    project_id, secret_id, version_id, _ = secret_version
     version = access_secret_version(project_id, secret_id, version_id)
     assert version.payload.data == b"hello world!"
 
 
 def test_add_secret_version(secret):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     payload = "test123"
     version = add_secret_version(project_id, secret_id, payload)
     assert secret_id in version.name
@@ -120,7 +125,7 @@ def test_create_secret(client, project_id):
 
 
 def test_delete_secret(client, secret):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     delete_secret(project_id, secret_id)
     with pytest.raises(exceptions.NotFound):
         print("{}".format(client))
@@ -128,14 +133,29 @@ def test_delete_secret(client, secret):
         client.access_secret_version(request={"name": name})
 
 
+def test_delete_secret_with_etag(client, secret):
+    project_id, secret_id, etag = secret
+    delete_secret_with_etag(project_id, secret_id, etag)
+    with pytest.raises(exceptions.NotFound):
+        print("{}".format(client))
+        name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+        client.access_secret_version(request={"name": name})
+
+
 def test_destroy_secret_version(client, secret_version):
-    project_id, secret_id, version_id = secret_version
+    project_id, secret_id, version_id, _ = secret_version
     version = destroy_secret_version(project_id, secret_id, version_id)
     assert version.destroy_time
 
 
+def test_destroy_secret_version_with_etag(client, secret_version):
+    project_id, secret_id, version_id, etag = secret_version
+    version = destroy_secret_version_with_etag(project_id, secret_id, version_id, etag)
+    assert version.destroy_time
+
+
 def test_enable_disable_secret_version(client, secret_version):
-    project_id, secret_id, version_id = secret_version
+    project_id, secret_id, version_id, _ = secret_version
     version = disable_secret_version(project_id, secret_id, version_id)
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
@@ -143,34 +163,43 @@ def test_enable_disable_secret_version(client, secret_version):
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
 
+def test_enable_disable_secret_version_with_etag(client, secret_version):
+    project_id, secret_id, version_id, etag = secret_version
+    version = disable_secret_version_with_etag(project_id, secret_id, version_id, etag)
+    assert version.state == secretmanager.SecretVersion.State.DISABLED
+
+    version = enable_secret_version_with_etag(project_id, secret_id, version_id, version.etag)
+    assert version.state == secretmanager.SecretVersion.State.ENABLED
+
+
 def test_get_secret_version(client, secret_version):
-    project_id, secret_id, version_id = secret_version
+    project_id, secret_id, version_id, _ = secret_version
     version = get_secret_version(project_id, secret_id, version_id)
     assert secret_id in version.name
     assert version_id in version.name
 
 
 def test_get_secret(client, secret):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     snippet_secret = get_secret(project_id, secret_id)
     assert secret_id in snippet_secret.name
 
 
 def test_iam_grant_access(client, secret, iam_user):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     policy = iam_grant_access(project_id, secret_id, iam_user)
     assert any(iam_user in b.members for b in policy.bindings)
 
 
 def test_iam_revoke_access(client, secret, iam_user):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     policy = iam_revoke_access(project_id, secret_id, iam_user)
     assert not any(iam_user in b.members for b in policy.bindings)
 
 
 def test_list_secret_versions(capsys, secret_version, another_secret_version):
-    project_id, secret_id, version_id = secret_version
-    _, _, another_version_id = another_secret_version
+    project_id, secret_id, version_id, _ = secret_version
+    _, _, another_version_id, _ = another_secret_version
     list_secret_versions(project_id, secret_id)
 
     out, _ = capsys.readouterr()
@@ -180,8 +209,8 @@ def test_list_secret_versions(capsys, secret_version, another_secret_version):
 
 
 def test_list_secrets(capsys, secret, another_secret):
-    project_id, secret_id = secret
-    _, another_secret_id = another_secret
+    project_id, secret_id, _ = secret
+    _, another_secret_id, _ = another_secret
     list_secrets(project_id)
 
     out, _ = capsys.readouterr()
@@ -190,6 +219,12 @@ def test_list_secrets(capsys, secret, another_secret):
 
 
 def test_update_secret(secret):
-    project_id, secret_id = secret
+    project_id, secret_id, _ = secret
     secret = update_secret(project_id, secret_id)
+    assert secret.labels["secretmanager"] == "rocks"
+
+
+def test_update_secret_with_etag(secret):
+    project_id, secret_id, etag = secret
+    secret = update_secret_with_etag(project_id, secret_id, etag)
     assert secret.labels["secretmanager"] == "rocks"
