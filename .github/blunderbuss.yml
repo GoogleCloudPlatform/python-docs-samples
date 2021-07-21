@@ -1,3 +1,17 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 assign_issues_by:
 - labels:
   - 'api: appengine'
@@ -26,8 +40,10 @@ assign_issues_by:
   - shollyman
 - labels:
   - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
   to:
-  - billyjacobson
+  - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
   - 'api: billingbudgets'
   to:
@@ -35,7 +51,11 @@ assign_issues_by:
 - labels:
   - 'api: cloudsql'
   to:
-  - GoogleCloudPlatform/cloud-sql-dpes
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: compute'
+  to:
+  - m-strzelczyk
 - labels:
   - 'api: containeranalysis'
   to:
@@ -51,11 +71,6 @@ assign_issues_by:
   - 'api: dataproc'
   to:
   - bradmiro
-- labels:
-  - 'api: datastore'
-  - 'api: firestore'
-  to:
-  - GoogleCloudPlatform/firestore-dpe
 - labels:
   - 'api: dns'
   to:
@@ -108,27 +123,55 @@ assign_issues_by:
 - labels:
   - 'api: storage'
   to:
-  - GoogleCloudPlatform/storage-dpe
+  - cojenco
+  - andrewsg
 - labels:
   - 'api: cloudtrace'
   - 'api: trace'
   to:
   - dukeng
   - ziweizhao
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
+- labels:
+  - 'api: datascienceonramp'
+  to:
+  - leahecole
+  - bradmiro
+
+assign_prs_by:
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
+- labels:
+  - 'api: cloudsql'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
 
 
 assign_issues:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
+  - dandhlee
 
 assign_prs:
   - busunkim96
   - leahecole
-  - tmatsuo
   - engelke
   - kurtisvg
   - dinagraves
+  - dandhlee

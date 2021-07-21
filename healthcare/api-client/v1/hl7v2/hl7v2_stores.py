@@ -15,29 +15,28 @@
 import argparse
 import os
 
-from googleapiclient import discovery
-
-
-# [START healthcare_get_client]
-def get_client():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
-    api_version = "v1"
-    service_name = "healthcare"
-
-    return discovery.build(service_name, api_version)
-
-
-# [END healthcare_get_client]
-
 
 # [START healthcare_create_hl7v2_store]
-def create_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
-    """Creates a new HL7v2 store within the parent dataset."""
-    client = get_client()
+def create_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
+    """Creates a new HL7v2 store within the parent dataset.
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset ID
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
     request = (
@@ -57,11 +56,27 @@ def create_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
 
 
 # [START healthcare_delete_hl7v2_store]
-def delete_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
-    """Deletes the specified HL7v2 store."""
-    client = get_client()
+def delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
+    """Deletes the specified HL7v2 store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
 
@@ -82,11 +97,27 @@ def delete_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
 
 
 # [START healthcare_get_hl7v2_store]
-def get_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
-    """Gets the specified HL7v2 store."""
-    client = get_client()
+def get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
+    """Gets the specified HL7v2 store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
 
@@ -108,11 +139,26 @@ def get_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
 
 
 # [START healthcare_list_hl7v2_stores]
-def list_hl7v2_stores(project_id, cloud_region, dataset_id):
-    """Lists the HL7v2 stores in the given dataset."""
-    client = get_client()
+def list_hl7v2_stores(project_id, location, dataset_id):
+    """Lists the HL7v2 stores in the given dataset.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
     hl7v2_stores = (
@@ -129,7 +175,8 @@ def list_hl7v2_stores(project_id, cloud_region, dataset_id):
         print(
             "HL7v2 store: {}\n"
             "Notification config: {}".format(
-                hl7v2_store.get("name"), hl7v2_store.get("notificationConfig"),
+                hl7v2_store.get("name"),
+                hl7v2_store.get("notificationConfig"),
             )
         )
 
@@ -140,14 +187,31 @@ def list_hl7v2_stores(project_id, cloud_region, dataset_id):
 
 
 # [START healthcare_patch_hl7v2_store]
-def patch_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
-    """Updates the HL7v2 store."""
-    client = get_client()
+def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
+    """Updates the HL7v2 store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
 
+    # TODO(developer): Replace with the full URI of an existing Pub/Sub topic
     patch = {"notificationConfigs": None}
 
     request = (
@@ -169,11 +233,27 @@ def patch_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id):
 
 
 # [START healthcare_hl7v2_store_get_iam_policy]
-def get_hl7v2_store_iam_policy(project_id, cloud_region, dataset_id, hl7v2_store_id):
-    """Gets the IAM policy for the specified hl7v2 store."""
-    client = get_client()
+def get_hl7v2_store_iam_policy(project_id, location, dataset_id, hl7v2_store_id):
+    """Gets the IAM policy for the specified HL7v2 store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
 
@@ -195,9 +275,9 @@ def get_hl7v2_store_iam_policy(project_id, cloud_region, dataset_id, hl7v2_store
 
 # [START healthcare_hl7v2_store_set_iam_policy]
 def set_hl7v2_store_iam_policy(
-    project_id, cloud_region, dataset_id, hl7v2_store_id, member, role, etag=None
+    project_id, location, dataset_id, hl7v2_store_id, member, role, etag=None
 ):
-    """Sets the IAM policy for the specified hl7v2 store.
+    """Sets the IAM policy for the specified HL7v2 store.
         A single member will be assigned a single role. A member can be any of:
         - allUsers, that is, anyone
         - allAuthenticatedUsers, anyone authenticated with a Google account
@@ -208,10 +288,27 @@ def set_hl7v2_store_iam_policy(
             as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the HL7v2 store's parent dataset
+    # hl7v2_store_id = 'my-hl7v2-store'  # replace with the HL7v2 store's ID
+    # member = 'myemail@example.com'  # replace with an authorized member
+    # role = 'roles/viewer'  # replace with a Healthcare API IAM role
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
 
@@ -250,7 +347,7 @@ def parse_command_line_args():
         help="GCP project name",
     )
 
-    parser.add_argument("--cloud_region", default="us-central1", help="GCP region")
+    parser.add_argument("--location", default="us-central1", help="GCP location")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
@@ -296,26 +393,26 @@ def run_command(args):
 
     elif args.command == "create-hl7v2-store":
         create_hl7v2_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.hl7v2_store_id
+            args.project_id, args.location, args.dataset_id, args.hl7v2_store_id
         )
 
     elif args.command == "delete-hl7v2-store":
         delete_hl7v2_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.hl7v2_store_id
+            args.project_id, args.location, args.dataset_id, args.hl7v2_store_id
         )
 
     elif args.command == "get-hl7v2-store":
         get_hl7v2_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.hl7v2_store_id
+            args.project_id, args.location, args.dataset_id, args.hl7v2_store_id
         )
 
     elif args.command == "list-hl7v2-stores":
-        list_hl7v2_stores(args.project_id, args.cloud_region, args.dataset_id)
+        list_hl7v2_stores(args.project_id, args.location, args.dataset_id)
 
     elif args.command == "patch-hl7v2-store":
         patch_hl7v2_store(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.hl7v2_store_id,
             args.pubsub_topic,
@@ -323,15 +420,15 @@ def run_command(args):
 
     elif args.command == "get_hl7v2_store_iam_policy":
         get_hl7v2_store_iam_policy(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id
+            args.project_id, args.location, args.dataset_id, args.hl7v2_store_id
         )
 
     elif args.command == "set_hl7v2_store_iam_policy":
         set_hl7v2_store_iam_policy(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
-            args.fhir_store_id,
+            args.hl7v2_store_id,
             args.member,
             args.role,
         )

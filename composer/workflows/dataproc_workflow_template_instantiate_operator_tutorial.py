@@ -18,14 +18,14 @@
 Spark Pi Job.
 
 This DAG relies on an Airflow variable
-https://airflow.apache.org/concepts.html#variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataproc Template.
 """
 
 import datetime
 
 from airflow import models
-from airflow.contrib.operators import dataproc_operator
+from airflow.providers.google.cloud.operators.dataproc import DataprocInstantiateWorkflowTemplateOperator
 from airflow.utils.dates import days_ago
 
 project_id = models.Variable.get("project_id")
@@ -48,7 +48,7 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
 
-    start_template_job = dataproc_operator.DataprocWorkflowTemplateInstantiateOperator(
+    start_template_job = DataprocInstantiateWorkflowTemplateOperator(
         # The task id of your job
         task_id="dataproc_workflow_dag",
         # The template id of your workflow

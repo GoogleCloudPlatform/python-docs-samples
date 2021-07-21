@@ -17,8 +17,8 @@
 import datetime
 
 from airflow import models
-from airflow.operators import bash_operator
-from airflow.operators import dummy_operator
+from airflow.operators import bash
+from airflow.operators import dummy
 
 
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -28,12 +28,12 @@ default_dag_args = {
 }
 
 with models.DAG(
-        'composer_sample_cycle',
+        'composer_sample_variables',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-    start = dummy_operator.DummyOperator(task_id='start')
-    end = dummy_operator.DummyOperator(task_id='end')
-    variable_example = bash_operator.BashOperator(
+    start = dummy.DummyOperator(task_id='start')
+    end = dummy.DummyOperator(task_id='end')
+    variable_example = bash.BashOperator(
         task_id='variable_example',
         bash_command='echo project_id=' + models.Variable.get('gcp_project'))
     start >> variable_example >> end
