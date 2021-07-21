@@ -110,6 +110,7 @@ USE_TZ = True
 
 # [START gke_django_staticconfig]
 STATIC_URL = '/static/'
+# STATIC_URL = 'https://storage.googleapis.com/[YOUR_GCS_BUCKET]/static/'
 # [END gke_django_staticconfig]
 
 STATIC_ROOT = 'static/'
