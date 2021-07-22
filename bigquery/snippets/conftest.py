@@ -50,6 +50,31 @@ def dataset_id(bigquery_client: bigquery.Client, project_id: str):
     bigquery_client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
 
 
+@pytest.fixture(scope="session")
+def dataset_id_us_east1(bigquery_client: bigquery.Client, project_id: str):
+    dataset_id = prefixer.create_prefix()
+    full_dataset_id = f"{project_id}.{dataset_id}"
+    dataset = bigquery.Dataset(full_dataset_id)
+    dataset.location = "us-east1"
+    bigquery_client.create_dataset(dataset)
+    yield dataset_id
+    bigquery_client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture(scope="session")
+def table_id_us_east1(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id_us_east1: str
+):
+    table_id = prefixer.create_prefix()
+    full_table_id = f"{project_id}.{dataset_id_us_east1}.{table_id}"
+    table = bigquery.Table(
+        full_table_id, schema=[bigquery.SchemaField("string_col", "STRING")]
+    )
+    bigquery_client.create_table(table)
+    yield full_table_id
+    bigquery_client.delete_table(table, not_found_ok=True)
+
+
 @pytest.fixture
 def random_table_id(bigquery_client: bigquery.Client, project_id: str, dataset_id: str):
     """Create a new table ID each time, so random_table_id can be used as
