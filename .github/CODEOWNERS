@@ -38,7 +38,7 @@
 /error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
 /eventarc/**/*.py                      @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
-/functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
+/functions/**/*.py                     @ace-n @engelke @dinagraves @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
