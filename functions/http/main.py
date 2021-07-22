@@ -93,9 +93,8 @@ def parse_multipart(request):
 
 # [START functions_http_cors]
 def cors_enabled_function(request):
-    # For more information about CORS and CORS preflight requests, see
+    # For more information about CORS and CORS preflight requests, see:
     # https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
-    # for more information.
 
     # Set CORS headers for the preflight request
     if request.method == 'OPTIONS':
