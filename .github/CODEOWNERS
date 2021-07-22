@@ -46,6 +46,7 @@
 /jobs/**/*.py                          @GoogleCloudPlatform/python-samples-owners
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
+/kubernetes_engine/django_tutorial/**/*.py @glasnt @GoogleCloudPlatform/python-samples-owners
 /language/**/*.py                      @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /media/**/*.py                         @irataxy @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
