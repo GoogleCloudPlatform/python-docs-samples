@@ -1,4 +1,4 @@
-google-cloud-error-reporting==1.2.0
+google-cloud-error-reporting==1.2.1
 google-cloud-pubsub==2.6.1
 python-dateutil==2.8.2
 requests==2.25.1
