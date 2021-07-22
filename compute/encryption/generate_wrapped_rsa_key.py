@@ -42,7 +42,7 @@ def get_google_public_cert_key():
 
     # Load the certificate.
     certificate = x509.load_pem_x509_certificate(
-        r.text.encode('utf-8'), default_backend())
+        r.content, default_backend())
 
     # Get the certicate's public key.
     public_key = certificate.public_key()
