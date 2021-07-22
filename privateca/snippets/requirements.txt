@@ -1,0 +1,2 @@
+google-cloud-private-ca==0.4.0
+google-cloud-kms==2.3.0

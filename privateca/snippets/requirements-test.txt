@@ -1,0 +1,2 @@
+pytest==6.2.4
+google-auth==1.32.1
