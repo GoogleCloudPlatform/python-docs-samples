@@ -9,9 +9,9 @@
 # explicitly taken by someone else.
 *                               @GoogleCloudPlatform/python-samples-owners
 
-/appengine/**/*.py                     @engelke @GoogleCloudPlatform/python-samples-owners
-/appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/python-samples-owners
-/appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/python-samples-owners
+/appengine/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /auth/**/*.py                          @busunkim96 @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
@@ -33,12 +33,12 @@
 /dataproc/**/*.py                      @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datastore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
-/dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
+/dns/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
 /error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
-/eventarc/**/*.py                      @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
+/eventarc/**/*.py                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
-/functions/**/*.py                     @ace-n @grant @GoogleCloudPlatform/python-samples-owners
+/functions/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
@@ -57,8 +57,8 @@
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
-/run/**/*.py                           @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
-/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/python-samples-owners
+/run/**/*.py                           @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
@@ -70,4 +70,4 @@
 /translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /vision/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/workflows/**/*.py                      @grant @GoogleCloudPlatform/python-samples-owners
+/workflows/**/*.py                     @GoogleCloudPlatform/python-samples-owners
