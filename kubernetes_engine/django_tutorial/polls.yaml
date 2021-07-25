@@ -49,6 +49,11 @@ spec:
         imagePullPolicy: Always
         env:
             # [START cloudsql_secrets]
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: database
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
