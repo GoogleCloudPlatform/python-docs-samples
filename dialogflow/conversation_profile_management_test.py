@@ -59,7 +59,7 @@ def test_create_conversation_profile(capsys):
     conversation_profile_management.delete_conversation_profile(
         PROJECT_ID, conversation_profile_id)
 
-    # Verify the converstion profile is deleted.
+    # Verify the conversation profile is deleted.
     conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
     out, _ = capsys.readouterr()
