@@ -188,12 +188,14 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     )
 
     # Retry a maximum number of 10 times to find results in stackdriver
+    found = False
     for x in range(10):
         iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
+            found = True
             # If there are any results, exit loop
             break
         # Linear backoff
         time.sleep(3 * x)
 
-    assert iterator.num_results
+    assert found
