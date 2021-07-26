@@ -21,7 +21,7 @@ import time
 import uuid
 
 from google.api_core.exceptions import NotFound
-from google.cloud import logging_v2
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 from google.cloud import pubsub_v1
 
 
