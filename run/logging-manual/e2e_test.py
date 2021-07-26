@@ -195,6 +195,9 @@ def test_end_to_end(service_url_auth_token, deployed_service):
             found = True
             # If there are any results, exit loop
             break
+        # When message found, exit loop
+        if found is True:
+            break
         # Linear backoff
         time.sleep(3 * x)
 
