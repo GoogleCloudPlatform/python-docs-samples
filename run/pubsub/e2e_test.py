@@ -211,7 +211,7 @@ def test_end_to_end(pubsub_topic):
     # Retry a maximum number of 10 times to find results in stackdriver
     found = False
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
                 found = True
