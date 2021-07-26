@@ -59,15 +59,12 @@ def bigquery_dataset(utils: Utils) -> str:
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    yield from utils.container_image(NAME)
+    yield from utils.cloud_build_submit(NAME)
 
 
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
-    yield from utils.dataflow_flex_template_build(
-        bucket_name=bucket_name,
-        image_name=flex_template_image,
-    )
+    yield from utils.dataflow_flex_template_build(bucket_name, flex_template_image)
 
 
 def test_flex_template_streaming_beam(
