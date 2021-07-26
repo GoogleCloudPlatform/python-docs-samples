@@ -70,43 +70,6 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
     )
 
 
-@pytest.fixture(scope="session")
-def run_dataflow_job(
-    utils: Utils,
-    bucket_name: str,
-    pubsub_publisher: str,
-    pubsub_subscription: str,
-    bigquery_dataset: str,
-    flex_template_path: str,
-) -> None:
-
-    bigquery_table = "output_table"
-    job_id = utils.dataflow_flex_template_run(
-        job_name=NAME,
-        template_path=flex_template_path,
-        bucket_name=bucket_name,
-        parameters={
-            "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.{bigquery_table}",
-        },
-    )
-
-    # Since this is a streaming job, it will never finish running.
-    # First, lets wait until the job is running.
-    utils.dataflow_jobs_wait(job_id)
-
-    # Then, wait a minute for data to arrive, get processed, and cancel it.
-    time.sleep(60)
-    utils.dataflow_jobs_cancel_by_job_id(job_id)
-
-    # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
-    rows = list(utils.bigquery_query(query))
-    assert len(rows) > 0
-    for row in rows:
-        assert "score" in row
-
-
 def test_flex_template_streaming_beam(
     utils: Utils,
     bucket_name: str,
@@ -129,11 +92,11 @@ def test_flex_template_streaming_beam(
 
     # Since this is a streaming job, it will never finish running.
     # First, lets wait until the job is running.
-    utils.dataflow_jobs_wait(job_id)
+    utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
     # Then, wait a minute for data to arrive, get processed, and cancel it.
     time.sleep(60)
-    utils.dataflow_jobs_cancel(job_id)
+    utils.dataflow_jobs_cancel(job_id, drain=True)
 
     # Check for the output data in BigQuery.
     query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
