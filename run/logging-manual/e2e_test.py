@@ -22,7 +22,7 @@ import subprocess
 import time
 import uuid
 
-from google.cloud import logging_v2
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 import pytest
 
@@ -174,7 +174,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
-    client = logging_v2.LoggingServiceV2Client()
+    client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
     # We add timestamp for making the query faster.
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -189,7 +189,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
 
     # Retry a maximum number of 10 times to find results in stackdriver
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
             # If there are any results, exit loop
             break
