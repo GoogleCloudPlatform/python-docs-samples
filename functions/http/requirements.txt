@@ -1,2 +1,2 @@
-google-cloud-storage==1.38.0
+google-cloud-storage==1.41.0
 xmltodict==0.12.0
