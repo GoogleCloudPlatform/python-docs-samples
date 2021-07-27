@@ -21,8 +21,8 @@ import time
 import uuid
 
 from google.api_core.exceptions import NotFound
-from google.cloud import logging_v2
 from google.cloud import pubsub_v1
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 
 import pytest
@@ -196,7 +196,7 @@ def test_end_to_end(pubsub_topic):
 
     # Check the logs for "Hello Runner"
     time.sleep(20)  # Slight delay writing to stackdriver
-    client = logging_v2.LoggingServiceV2Client()
+    client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
 
     # We add timestamp for making the query faster.
@@ -211,7 +211,7 @@ def test_end_to_end(pubsub_topic):
     # Retry a maximum number of 10 times to find results in stackdriver
     found = False
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
                 found = True
