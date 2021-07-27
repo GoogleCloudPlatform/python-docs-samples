@@ -91,8 +91,8 @@ def test_flex_template_streaming_beam(
     # First, lets wait until the job is running.
     utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
-    # Then, wait a minute for data to arrive, get processed, and cancel it.
-    time.sleep(60)
+    # Then, wait 3 minutes for data to arrive, get processed, and cancel it.
+    time.sleep(3 * 60)
     utils.dataflow_jobs_cancel(job_id, drain=True)
 
     # Check for the output data in BigQuery.
