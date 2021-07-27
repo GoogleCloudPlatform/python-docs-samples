@@ -2,7 +2,7 @@
 
 1. 🎬 Watch the 8min introduction video on Youtube!
 
-   [![Watch the video in YouTube](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0 "Watch the video in YouTube")
+   [![Watch the video in YouTube](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0 "Watch the video on YouTube")
 
 1. 📜 Read more about this sample in the [blog post](https://cloud.google.com/blog/topics/developers-practitioners/recovering-global-wildlife-populations-using-ml).
 
