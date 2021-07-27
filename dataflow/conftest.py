@@ -352,6 +352,7 @@ class Utils:
             "JOB_STATE_DONE",
             "JOB_STATE_FAILED",
             "JOB_STATE_CANCELLED",
+            "JOB_STATE_DRAINED",
         }
         logging.info(
             f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
