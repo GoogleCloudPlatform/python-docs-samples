@@ -12,17 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.8-slim
+# Each version of TensorFlow requires a specific CUDA/cuDNN version:
+#   https://www.tensorflow.org/install/source#gpu
+# For a list of all the nvidia images:
+#   https://ngc.nvidia.com/catalog/containers/nvidia:cuda/tags
+FROM nvcr.io/nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04
 
 WORKDIR /app
 
-# Copy the pipeline source files and the Apache Beam worker files.
+# Copy the pipeline source files and the requirements file.
 COPY *.py ./
 COPY requirements.txt ./
 
+# Install Python 3 and other required dependencies.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends g++ \
+    && apt-get install -y --no-install-recommends curl g++ python3.8-dev python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 \
+    && curl https://bootstrap.pypa.io/get-pip.py | python \
+    # Install the pipeline requirements and check that there are no conflicts.
+    # Since the image already has all the dependencies installed,
+    # there's no need to run with the --requirements_file option.
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 

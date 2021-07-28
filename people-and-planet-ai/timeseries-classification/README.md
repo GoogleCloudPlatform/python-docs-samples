@@ -34,7 +34,9 @@ gsutil -mq cp -rn ~/training-data/data/time-ranges ${STORAGE_PATH}/labels
 
 ```sh
 # Build the container image.
-gcloud builds submit . --tag="${CONTAINER_IMAGE}"
+gcloud builds submit . \
+    --tag="${CONTAINER_IMAGE}" \
+    --machine-type "e2-highcpu-8"
 ```
 
 ```sh
