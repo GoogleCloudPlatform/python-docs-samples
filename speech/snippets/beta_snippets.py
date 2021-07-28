@@ -25,6 +25,7 @@ Example usage:
     python beta_snippets.py multi-channel
     python beta_snippets.py multi-language
     python beta_snippets.py word-level-conf
+    python beta_snippets.py spoken-punctuation-emojis
 """
 
 import argparse
@@ -291,6 +292,40 @@ def transcribe_file_with_word_level_confidence():
     # [END speech_transcribe_word_level_confidence_beta]
 
 
+def transcribe_file_with_spoken_punctuation_end_emojis():
+    """Transcribe the given audio file with spoken punctuation and emojis enabled."""
+    # [START speech_transcribe_spoken_punctuation_emojis_beta]
+    from google.cloud import speech_v1p1beta1 as speech
+    from google.protobuf import wrappers_pb2
+
+    client = speech.SpeechClient()
+
+    speech_file = "resources/commercial_mono.wav"
+
+    with io.open(speech_file, "rb") as audio_file:
+        content = audio_file.read()
+
+    audio = speech.RecognitionAudio(content=content)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
+        language_code="en-US",
+        # Enable spoken punctuation
+        enable_spoken_punctuation=wrappers_pb2.BoolValue(value=True),
+        # Enable spoken emojis
+        enable_spoken_emojis=wrappers_pb2.BoolValue(value=True),
+    )
+
+    response = client.recognize(config=config, audio=audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print("-" * 20)
+        print(u"First alternative of result {}".format(i))
+        print(u"Transcript: {}".format(alternative.transcript))
+    # [END speech_transcribe_spoken_punctuation_emojis_beta]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -313,3 +348,5 @@ if __name__ == "__main__":
         transcribe_file_with_multilanguage()
     elif args.command == "word-level-conf":
         transcribe_file_with_word_level_confidence()
+    elif args.command == "spoken-punctuation-emojis":
+        transcribe_file_with_spoken_punctuation_end_emojis()
