@@ -89,9 +89,11 @@ def run_train_model():
             train_data_dir=train_data_dir,
             eval_data_dir=eval_data_dir,
             training_dir=training_dir,
-            train_steps=args.get("train_steps", 10000),
-            eval_steps=args.get("eval_steps", 1000),
-            machine_type=args.get("machine_type", "e2-standard-8"),
+            train_steps=args.get("train_steps"),
+            eval_steps=args.get("eval_steps"),
+            machine_type=args.get("machine_type"),
+            gpu_type=args.get("gpu_type"),
+            gpu_count=args.get("gpu_count"),
         )
 
         return {

@@ -13,8 +13,15 @@
 # limitations under the License.
 
 import logging
+from typing import Optional
 
 from google.cloud import aiplatform
+
+DEFAULT_TRAIN_STEPS = 10000
+DEFAULT_EVAL_STEPS = 1000
+DEFAULT_MACHINE_TYPE = "n1-standard-4"
+DEFAULT_GPU_TYPE = "NVIDIA_TESLA_T4"
+DEFAULT_GPU_COUNT = 2
 
 
 def run(
@@ -24,9 +31,11 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     training_dir: str,
-    train_steps: int = 10000,
-    eval_steps: int = 1000,
-    machine_type: str = "e2-standard-8",
+    train_steps: Optional[int] = None,
+    eval_steps: Optional[int] = None,
+    machine_type: Optional[str] = None,
+    gpu_type: Optional[str] = None,
+    gpu_count: Optional[str] = None,
 ):
     client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -43,8 +52,12 @@ def run(
                 # https://cloud.google.com/vertex-ai/docs/training/distributed-training
                 "worker_pool_specs": [
                     {
-                        "machine_spec": {"machine_type": machine_type},
                         "replica_count": 1,
+                        "machine_spec": {
+                            "machine_type": machine_type or DEFAULT_MACHINE_TYPE,
+                            "accelerator_type": gpu_type or DEFAULT_GPU_TYPE,
+                            "accelerator_count": gpu_count or DEFAULT_GPU_COUNT,
+                        },
                         "container_spec": {
                             "image_uri": container_image,
                             "command": ["python"],
@@ -52,8 +65,8 @@ def run(
                                 "trainer.py",
                                 f"--train-data-dir={train_data_dir}",
                                 f"--eval-data-dir={eval_data_dir}",
-                                f"--train-steps={train_steps}",
-                                f"--eval-steps={eval_steps}",
+                                f"--train-steps={train_steps or DEFAULT_TRAIN_STEPS}",
+                                f"--eval-steps={eval_steps or DEFAULT_EVAL_STEPS}",
                             ],
                         },
                     },
