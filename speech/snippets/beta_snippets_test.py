@@ -20,6 +20,7 @@ from beta_snippets import (
     transcribe_file_with_metadata,
     transcribe_file_with_multichannel,
     transcribe_file_with_multilanguage,
+    transcribe_file_with_spoken_punctuation_end_emojis,
     transcribe_file_with_word_level_confidence,
 )
 
@@ -75,3 +76,10 @@ def test_transcribe_word_level_confidence(capsys):
     out, err = capsys.readouterr()
 
     assert "OK Google stream stranger things from Netflix to my TV" in out
+
+
+def test_transcribe_file_with_spoken_punctuation_end_emojis(capsys):
+    transcribe_file_with_spoken_punctuation_end_emojis()
+    out, err = capsys.readouterr()
+
+    assert "First alternative of result " in out
