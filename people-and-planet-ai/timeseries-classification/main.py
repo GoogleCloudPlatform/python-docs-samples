@@ -91,6 +91,7 @@ def run_train_model():
             training_dir=training_dir,
             train_steps=args.get("train_steps"),
             eval_steps=args.get("eval_steps"),
+            batch_size=args.get("batch_size"),
             machine_type=args.get("machine_type"),
             gpu_type=args.get("gpu_type"),
             gpu_count=args.get("gpu_count"),

@@ -37,14 +37,6 @@ OUTPUTS_SPEC = {
     "is_fishing": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
 }
 
-# Default options.
-TRAIN_STEPS = 10000
-EVAL_STEPS = 1000
-BATCH_SIZE = 256
-MODEL_DIR = os.environ.get("AIP_MODEL_DIR", "model")
-CHECKPOINT_DIR = os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints")
-TENSORBOARD_DIR = os.environ.get("AIP_TENSORBOARD_LOG_DIR", "tensorboard")
-
 
 def validated(
     tensor_dict: Dict[str, tf.Tensor],
@@ -181,12 +173,12 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
-    train_steps: int = TRAIN_STEPS,
-    eval_steps: int = EVAL_STEPS,
-    model_dir: str = MODEL_DIR,
-    checkpoint_dir: str = CHECKPOINT_DIR,
-    tensorboard_dir: str = TENSORBOARD_DIR,
-    batch_size: int = BATCH_SIZE,
+    train_steps: int,
+    eval_steps: int,
+    batch_size: int,
+    model_dir: str,
+    checkpoint_dir: str,
+    tensorboard_dir: str,
 ) -> None:
 
     # For this sample we are using a mirrored distribution strategy,
@@ -241,12 +233,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
-    parser.add_argument("--train-steps", type=int, default=TRAIN_STEPS)
-    parser.add_argument("--eval-steps", type=int, default=EVAL_STEPS)
-    parser.add_argument("--model-dir", default=MODEL_DIR)
-    parser.add_argument("--checkpoint-dir", default=CHECKPOINT_DIR)
-    parser.add_argument("--tensorboard-dir", default=TENSORBOARD_DIR)
-    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
+    parser.add_argument("--train-steps", type=int)
+    parser.add_argument("--eval-steps", type=int)
+    parser.add_argument("--batch-size", type=int)
+    parser.add_argument(
+        "--model-dir",
+        default=os.environ.get("AIP_MODEL_DIR", "model"),
+    )
+    parser.add_argument(
+        "--checkpoint-dir",
+        default=os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints"),
+    )
+    parser.add_argument(
+        "--tensorboard-dir",
+        default=os.environ.get("AIP_TENSORBOARD_LOG_DIR", "tensorboard"),
+    )
     args = parser.parse_args()
 
     run(
@@ -254,6 +255,7 @@ if __name__ == "__main__":
         eval_data_dir=args.eval_data_dir,
         train_steps=args.train_steps,
         eval_steps=args.eval_steps,
+        batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
         tensorboard_dir=args.tensorboard_dir,

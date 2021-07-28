@@ -19,6 +19,7 @@ from google.cloud import aiplatform
 
 DEFAULT_TRAIN_STEPS = 10000
 DEFAULT_EVAL_STEPS = 1000
+DEFAULT_BATCH_SIZE = 256
 DEFAULT_MACHINE_TYPE = "n1-standard-4"
 DEFAULT_GPU_TYPE = "NVIDIA_TESLA_T4"
 DEFAULT_GPU_COUNT = 2
@@ -33,6 +34,7 @@ def run(
     training_dir: str,
     train_steps: Optional[int] = None,
     eval_steps: Optional[int] = None,
+    batch_size: Optional[int] = None,
     machine_type: Optional[str] = None,
     gpu_type: Optional[str] = None,
     gpu_count: Optional[str] = None,
@@ -65,6 +67,7 @@ def run(
                                 "trainer.py",
                                 f"--train-data-dir={train_data_dir}",
                                 f"--eval-data-dir={eval_data_dir}",
+                                f"--batch-size={batch_size or DEFAULT_BATCH_SIZE}",
                                 f"--train-steps={train_steps or DEFAULT_TRAIN_STEPS}",
                                 f"--eval-steps={eval_steps or DEFAULT_EVAL_STEPS}",
                             ],
