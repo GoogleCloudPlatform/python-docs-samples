@@ -79,7 +79,6 @@ assign_issues_by:
   - 'api: functions'
   to:
   - ace-n
-  - grant
 - labels:
   - 'api: healthcare'
   to:
@@ -109,7 +108,6 @@ assign_issues_by:
   - 'api: run'
   to:
   - averikitsch
-  - grant
 - labels:
   - 'api: cloudscheduler'
   - 'api: cloudtasks'
