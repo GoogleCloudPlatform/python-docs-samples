@@ -114,18 +114,18 @@ def deserialize(
     return parse_features(INPUTS_SPEC), parse_features(OUTPUTS_SPEC)
 
 
-def build_dataset(data_dir: str, batch_size: int = BATCH_SIZE) -> tf.data.Dataset:
+def create_dataset(data_dir: str, batch_size: int) -> tf.data.Dataset:
     file_names = tf.io.gfile.glob(f"{data_dir}/*")
     return (
         tf.data.TFRecordDataset(file_names, compression_type="GZIP")
         .map(deserialize, num_parallel_calls=tf.data.AUTOTUNE)
-        .shuffle(batch_size * 100)
+        .shuffle(batch_size * 128)
         .batch(batch_size)
         .prefetch(tf.data.AUTOTUNE)
     )
 
 
-def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
+def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
     input_layers = {
         field: keras.layers.Input(shape=spec.shape, dtype=spec.dtype, name=field)
         for field, spec in INPUTS_SPEC.items()
@@ -137,7 +137,8 @@ def build_model(train_dataset: tf.data.Dataset) -> keras.Model:
         return layer(input_layers[field])
 
     def geo_point(lat_field: str, lon_field: str):
-        # https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
+        # We transform each (lat, lon) pair into a 3D point in the unit sphere.
+        #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
         class GeoPoint(keras.layers.Layer):
             def call(self, latlon):
                 lat, lon = latlon
@@ -188,29 +189,45 @@ def run(
     batch_size: int = BATCH_SIZE,
 ) -> None:
 
+    # For this sample we are using a mirrored distribution strategy,
+    # which consists of a single machine with multiple GPUs.
+    #   https://blog.tensorflow.org/2020/12/getting-started-with-distributed-tensorflow-on-gcp.html
+    strategy = tf.distribute.MirroredStrategy()
+
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
-    train_dataset = build_dataset(train_data_dir, batch_size)
-    eval_dataset = build_dataset(eval_data_dir, batch_size)
+    total_batch_size = batch_size * strategy.num_replicas_in_sync
+    train_dataset = create_dataset(train_data_dir, total_batch_size)
+    eval_dataset = create_dataset(eval_data_dir, total_batch_size)
 
-    # Build and compile the model.
-    logging.info("Building the model")
-    model = build_model(train_dataset)
-    model.compile(
-        optimizer="adam",
-        loss={"is_fishing": "binary_crossentropy"},
-        metrics={"is_fishing": ["accuracy"]},
-    )
+    # Create and compile the model inside the distribution strategy scope.
+    with strategy.scope():
+        logging.info("Creating the model")
+        model = create_model(train_dataset)
+
+        logging.info("Compiling the model")
+        model.compile(
+            optimizer="adam",
+            loss={"is_fishing": "binary_crossentropy"},
+            metrics={"is_fishing": ["accuracy"]},
+        )
 
     # Train the model.
-    # TODO: add checkpointing: https://www.tensorflow.org/guide/keras/train_and_evaluate#checkpointing_models
-    logging.info("Training the model.")
+    logging.info("Training the model")
     model.fit(
         train_dataset.repeat(),
         steps_per_epoch=train_steps,
         validation_data=eval_dataset.repeat(),
         validation_steps=eval_steps,
-        callbacks=[keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch")],
+        callbacks=[
+            keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
+            keras.callbacks.ModelCheckpoint(
+                filepath=checkpoint_dir + "/{epoch}",
+                save_best_only=True,  # Only save a model if `val_loss` has improved.
+                monitor="val_loss",
+                verbose=1,
+            ),
+        ],
     )
 
     # Save the trained model.
