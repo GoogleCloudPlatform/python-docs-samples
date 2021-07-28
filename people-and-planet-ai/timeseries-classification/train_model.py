@@ -13,16 +13,8 @@
 # limitations under the License.
 
 import logging
-from typing import Optional
 
 from google.cloud import aiplatform
-
-DEFAULT_TRAIN_STEPS = 10000
-DEFAULT_EVAL_STEPS = 1000
-DEFAULT_BATCH_SIZE = 256
-DEFAULT_MACHINE_TYPE = "n1-standard-4"
-DEFAULT_GPU_TYPE = "NVIDIA_TESLA_T4"
-DEFAULT_GPU_COUNT = 2
 
 
 def run(
@@ -32,12 +24,12 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     training_dir: str,
-    train_steps: Optional[int] = None,
-    eval_steps: Optional[int] = None,
-    batch_size: Optional[int] = None,
-    machine_type: Optional[str] = None,
-    gpu_type: Optional[str] = None,
-    gpu_count: Optional[str] = None,
+    train_steps: int,
+    eval_steps: int,
+    batch_size: int,
+    machine_type: str,
+    gpu_type: str,
+    gpu_count: str,
 ):
     client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
@@ -56,9 +48,9 @@ def run(
                     {
                         "replica_count": 1,
                         "machine_spec": {
-                            "machine_type": machine_type or DEFAULT_MACHINE_TYPE,
-                            "accelerator_type": gpu_type or DEFAULT_GPU_TYPE,
-                            "accelerator_count": gpu_count or DEFAULT_GPU_COUNT,
+                            "machine_type": machine_type,
+                            "accelerator_type": gpu_type,
+                            "accelerator_count": gpu_count,
                         },
                         "container_spec": {
                             "image_uri": container_image,
@@ -67,9 +59,9 @@ def run(
                                 "trainer.py",
                                 f"--train-data-dir={train_data_dir}",
                                 f"--eval-data-dir={eval_data_dir}",
-                                f"--batch-size={batch_size or DEFAULT_BATCH_SIZE}",
-                                f"--train-steps={train_steps or DEFAULT_TRAIN_STEPS}",
-                                f"--eval-steps={eval_steps or DEFAULT_EVAL_STEPS}",
+                                f"--train-steps={train_steps}",
+                                f"--eval-steps={eval_steps}",
+                                f"--batch-size={batch_size}",
                             ],
                         },
                     },

@@ -14,7 +14,7 @@
 
 import logging
 import random
-from typing import Tuple
+from typing import List
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -30,7 +30,7 @@ def run(
     raw_labels_dir: str,
     train_data_dir: str,
     eval_data_dir: str,
-    train_eval_split: Tuple[int, int] = [80, 20],
+    train_eval_split: List[int],
     **pipeline_options,
 ) -> str:
 
