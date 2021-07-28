@@ -13,9 +13,9 @@
 # limitations under the License.
 #
 
-from google.cloud import documentai_v1 as documentai
 
 # [START documentai_quickstart]
+from google.cloud import documentai_v1 as documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id= 'YOUR_PROJECT_ID'
