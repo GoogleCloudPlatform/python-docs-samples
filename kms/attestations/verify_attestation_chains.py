@@ -13,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This application verifies HSM certificate chains.
+"""This application verifies HSM attestations using certificate chains
+obtained from Cloud HSM and the HSM manufacturer.
 
 For more information, visit https://cloud.google.com/kms/docs/attest-key.
 """

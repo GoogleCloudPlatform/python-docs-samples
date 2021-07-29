@@ -19,4 +19,5 @@ samples:
   file: verify_attestation.py
   show_help: True
 
-folder: kms/attestations
+folder: samples/attestations
+
