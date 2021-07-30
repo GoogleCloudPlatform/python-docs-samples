@@ -18,6 +18,7 @@ for Cloud Run or Cloud Functions"""
 
 # [START google_auth_idtoken_serverless]
 # [START functions_bearer_token]
+# [START cloudrun_service_to_service_auth]
 # [START run_service_to_service_auth]
 import urllib
 
@@ -42,5 +43,6 @@ def make_authorized_get_request(service_url):
 
     return response.read()
 # [END run_service_to_service_auth]
+# [END cloudrun_service_to_service_auth]
 # [END functions_bearer_token]
 # [END google_auth_idtoken_serverless]
