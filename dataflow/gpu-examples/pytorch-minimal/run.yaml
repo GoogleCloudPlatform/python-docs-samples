@@ -44,6 +44,7 @@ steps:
   - --job_name=$_JOB_NAME
   - --temp_location=$_TEMP_LOCATION
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
+  - --machine_type=n1-standard-4
   - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
   - --experiment=use_runner_v2
   - --disk_size_gb=50
