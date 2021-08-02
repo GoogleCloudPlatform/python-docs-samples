@@ -61,7 +61,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-        
+
         # Create Timestamp protobuf.
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(d)
