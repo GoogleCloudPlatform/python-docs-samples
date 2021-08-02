@@ -33,7 +33,7 @@ ENV PATH=/opt/python/bin:/opt/conda/bin:$PATH
 
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y wget \
+    && apt-get install -y g++ wget \
     && rm -rf /var/lib/apt/lists/* \
     # The nvidia image doesn't come with Python pre-installed.
     # We use Miniconda to install the Python version of our choice.
