@@ -15,7 +15,6 @@
 # limitations under the License.
 
 # [START privateca_create_certificate]
-from google.cloud import kms
 import google.cloud.security.privateca_v1 as privateca_v1
 from google.protobuf import duration_pb2
 
@@ -26,13 +25,10 @@ def create_certificate(
     ca_pool_name: str,
     ca_name: str,
     certificate_name: str,
-    kms_location: str,
-    key_ring_id: str,
-    key_id: str,
-    key_version_id: str,
     common_name: str,
     domain_name: str,
     certificate_lifetime: int,
+    public_key_bytes: bytes,
 ) -> None:
     """
     Create a Certificate which is issued by the Certificate Authority present in the CA Pool.
@@ -44,30 +40,21 @@ def create_certificate(
         ca_pool_name: set a unique name for the CA pool.
         ca_name: the name of the certificate authority which issues the certificate.
         certificate_name: set a unique name for the certificate.
-        kms_location: Cloud KMS location.
-        key_ring_id: ID of the Cloud KMS key ring.
-        key_id: ID of the key to use.
-        key_version_id: verstion ID of the key to use.
         common_name: a title for your certificate.
         domain_name: fully qualified domain name for your certificate.
         certificate_lifetime: the validity of the certificate in seconds.
+        public_key_bytes: public key used in signing the certificates.
     """
 
-    kmsClient = kms.KeyManagementServiceClient()
     caServiceClient = privateca_v1.CertificateAuthorityServiceClient()
 
-    # To sign and issue a certificate, a public key is essential. Here, we are making use
-    # of Cloud KMS to retrieve an already created public key. For more info, see: https://cloud.google.com/kms/docs/retrieve-public-key.
-    # Generating keys locally is also possible.
+    # The public key used to sign the certificate can be generated using any crypto library/framework.
+    # Also you can use Cloud KMS to retrieve an already created public key.
+    # For more info, see: https://cloud.google.com/kms/docs/retrieve-public-key.
 
-    key_version_name = kmsClient.crypto_key_version_path(
-        project_id, kms_location, key_ring_id, key_id, key_version_id
-    )
-    kms_public_key = kmsClient.get_public_key(name=key_version_name)
-
-    # Set the Public Key and its format as obtained from the Cloud KMS.
+    # Set the Public Key and its format.
     public_key = privateca_v1.PublicKey(
-        key=str.encode(kms_public_key.pem),
+        key=public_key_bytes,
         format_=privateca_v1.PublicKey.KeyFormat.PEM,
     )
 
