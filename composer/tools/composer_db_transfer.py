@@ -820,8 +820,6 @@ spec:
         command:
         - /var/local/db_init.sh
         name: airflow-database-init-job
-        securityContext:
-          privileged: true
         env:
         - name: GCS_BUCKET
           value: {bucket}
@@ -933,7 +931,7 @@ class DatabasePorter:
 
     def _grant_permissions(self: typing.Any) -> None:
         """Grants required permissions."""
-        if not self.is_drs_enabled:
+        if not self.is_drs_compliant:
             logger.info("*** Granting required permissions...")
             EnvironmentUtils.grant_permissions_to_the_bucket(
                 self.sql_service_account,
@@ -946,7 +944,7 @@ class DatabasePorter:
     def _revoke_permissions(self: typing.Any) -> None:
         """Revokes no longer required permissions."""
         logger.info("*** Revoking no longer needed permissions...")
-        if not self.is_drs_enabled:
+        if not self.is_drs_compliant:
             EnvironmentUtils.revoke_permissions_to_the_bucket(
                 self.sql_service_account,
                 self.gcs_bucket_name,
@@ -1043,12 +1041,6 @@ class DatabasePorter:
             self.composer_system_namespace_exists = True
         except Exception:
             self.composer_system_namespace_exists = False
-        if self.composer_system_namespace_exists:
-            raise Exception(
-                "'composer-system' namespace has been detected in your GKE cluster. "
-                "It means that your environment is newer than this script. Please "
-                "check if newer version of this script is available."
-            )
 
     def _check_cloud_sql_proxy(self: typing.Any) -> None:
         """Sets sql proxy."""
@@ -1064,8 +1056,8 @@ class DatabasePorter:
 
     def _check_drs_and_select_db_storage_bucket(self: typing.Any) -> None:
         """Checks if the environment is DRS-compliant."""
-        logger.info("*** Checking if DRS is enabled...")
-        self.is_drs_enabled = False
+        logger.info("*** Checking if the environment is DRS-compliant...")
+        self.is_drs_compliant = False
         bucket_name_prefix = self.cp_bucket_name[: -len("-bucket")]
         agent_bucket_name = f"{bucket_name_prefix}-agent"
         try:
@@ -1077,17 +1069,19 @@ class DatabasePorter:
                 log_command=False,
                 log_error=False,
             )
-            self.is_drs_enabled = True
+            self.is_drs_compliant = True
             logger.info(
-                "%s bucket has been found -> DRS is enabled.", agent_bucket_name
+                "%s bucket has been found -> environment is DRS compliant.",
+                agent_bucket_name,
             )
         except Exception as e:  # pylint: disable=broad-except
             logger.info(
-                "%s bucket has not been found -> DRS is disabled. (%s)",
+                "%s bucket has not been found -> environment is not DRS compliant."
+                " (%s)",
                 agent_bucket_name,
                 e,
             )
-        if self.is_drs_enabled:
+        if self.is_drs_compliant:
             self.gcs_bucket_name = agent_bucket_name
         logger.info("Bucket in customer project:  %s.", self.cp_bucket_name)
         logger.info("Bucket accessible from tenant project:  %s.", self.gcs_bucket_name)
@@ -1116,9 +1110,7 @@ class DatabaseImporter(DatabasePorter):
         self.is_good_airflow_version = (
             lambda a, b, c: True if a == 2 and (b > 0 or c >= 1) else False
         )
-        self.bad_airflow_message = (
-            "Import operation supports only Airflow 2.0.1+."
-        )
+        self.bad_airflow_message = "Import operation supports only Airflow 2.0.1+."
 
     def _read_source_fernet_key(self: typing.Any) -> None:
         """Reads fernet key from source environment."""
@@ -1149,9 +1141,9 @@ class DatabaseImporter(DatabasePorter):
         """Translates table name into a path to CSV file."""
         return f"gs://{self.gcs_bucket_name}/import/tables/{table}.csv"
 
-    def _copy_csv_files_to_tp_if_drs_is_enabled(self: typing.Any) -> None:
+    def _copy_csv_files_to_tp_if_drs_compliant(self: typing.Any) -> None:
         """Copies CSV files to tenant project if DRS is enabled."""
-        if self.is_drs_enabled:
+        if self.is_drs_compliant:
             logger.info("*** Copying CSV files to tenant project...")
             command = (
                 f"gsutil -m cp -r gs://{self.cp_bucket_name}/import/tables/* "
@@ -1458,7 +1450,7 @@ class DatabaseImporter(DatabasePorter):
         self._check_environment()
         self._read_source_fernet_key()
         self._fail_fast_if_there_are_no_files_to_import()
-        self._copy_csv_files_to_tp_if_drs_is_enabled()
+        self._copy_csv_files_to_tp_if_drs_compliant()
         self._delete_old_temporary_database_if_exists()
         self._create_new_database()
         self._initialize_new_database()
@@ -1568,9 +1560,9 @@ python3 composer_db_transfer.py import ...
         for table, _, _ in tables:
             self._post_process_exported_table(table)
 
-    def _copy_csv_files_to_cp_if_drs_is_enabled(self: typing.Any) -> None:
-        """Copies CSV files to customer's project if DRS is enabled."""
-        if self.is_drs_enabled:
+    def _copy_csv_files_to_cp_if_drs_compliant(self: typing.Any) -> None:
+        """Copies CSV files to customer's project for DRS-compliant env."""
+        if self.is_drs_compliant:
             logger.info("*** Copying CSV files to customer's project...")
             command = (
                 f"gsutil -m cp -r gs://{self.gcs_bucket_name}/export/tables/* "
@@ -1625,7 +1617,7 @@ python3 composer_db_transfer.py import ...
             self._export_tables()
         finally:
             self._revoke_permissions()
-        self._copy_csv_files_to_cp_if_drs_is_enabled()
+        self._copy_csv_files_to_cp_if_drs_compliant()
         self._postprocess_tables()
         self._export_dags_plugins_and_data()
         self._remove_temporary_kubeconfig()
