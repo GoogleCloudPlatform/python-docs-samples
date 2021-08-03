@@ -134,7 +134,7 @@ To run this sample:
                             'serviceAccount:my-other-
                             app@appspot.gserviceaccount.com' A role can be any IAM
                             role, such as 'roles/viewer', 'roles/owner', or
-                            'roles/editor' See
+                            'roles/editor'. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/master/healthcare/api-client/v1/hl7v2
                             before running the sample.
