@@ -22,6 +22,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
+    from google.protobuf import timestamp_pb2
     import datetime
     import json
 
@@ -59,7 +60,11 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
-        timestamp = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
+        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
+
+        # Create Timestamp protobuf.
+        timestamp = timestamp_pb2.Timestamp()
+        timestamp.FromDatetime(d)
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
