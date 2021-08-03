@@ -17,8 +17,13 @@ import time
 import typing
 import uuid
 
+from cryptography.hazmat.backends.openssl.backend import backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+
+from cryptography.hazmat.primitives.serialization import Encoding
+from cryptography.hazmat.primitives.serialization import PublicFormat
+
 import google.auth
-from google.cloud import kms
 
 from create_certificate import create_certificate
 from disable_certificate_authority import disable_certificate_authority
@@ -31,7 +36,6 @@ LOCATION = "europe-west1"
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CERTIFICATE_LIFETIME = 1000000
-KEY_VERSION = 1
 DOMAIN_NAME = "domain.com"
 
 
@@ -42,48 +46,21 @@ def generate_name() -> str:
 def test_create_and_revoke_certificate_authority(
     certificate_authority, capsys: typing.Any
 ) -> None:
-    KEY_RING_ID = generate_name()
-    CRYPTO_KEY_ID = generate_name()
     CERT_NAME = generate_name()
 
     CA_POOL_NAME, CA_NAME = certificate_authority
     enable_certificate_authority(PROJECT, LOCATION, CA_POOL_NAME, CA_NAME)
 
-    kms_client = kms.KeyManagementServiceClient()
-
-    kms_location_name = kms_client.common_location_path(PROJECT, LOCATION)
-
-    kms_client.create_key_ring(
-        request={
-            "parent": kms_location_name,
-            "key_ring_id": KEY_RING_ID,
-            "key_ring": {},
-        }
+    private_key = rsa.generate_private_key(
+        public_exponent=65537, key_size=2048, backend=backend
     )
 
-    key_ring_path = kms_client.key_ring_path(PROJECT, LOCATION, KEY_RING_ID)
-
-    purpose = kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN
-    algorithm = (
-        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA256
-    )
-    key = {
-        "purpose": purpose,
-        "version_template": {
-            "algorithm": algorithm,
-        },
-    }
-
-    kms_client.create_crypto_key(
-        request={
-            "parent": key_ring_path,
-            "crypto_key_id": CRYPTO_KEY_ID,
-            "crypto_key": key,
-        }
+    public_key_bytes = private_key.public_key().public_bytes(
+        Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
     )
 
     # Wait while crypto key is generating
-    time.sleep(30)
+    time.sleep(5)
 
     create_certificate(
         PROJECT,
@@ -91,13 +68,10 @@ def test_create_and_revoke_certificate_authority(
         CA_POOL_NAME,
         CA_NAME,
         CERT_NAME,
-        LOCATION,
-        KEY_RING_ID,
-        CRYPTO_KEY_ID,
-        KEY_VERSION,
         COMMON_NAME,
         DOMAIN_NAME,
         CERTIFICATE_LIFETIME,
+        public_key_bytes,
     )
 
     revoke_certificate(
