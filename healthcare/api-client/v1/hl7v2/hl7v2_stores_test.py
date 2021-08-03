@@ -161,7 +161,7 @@ def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
 
     # Check that create/get/list/delete worked
     assert "Created HL7v2 store" in out
-    assert "Name" in out
+    assert "Creat" in out
     assert "hl7V2Stores" in out
     assert "Deleted HL7v2 store" in out
 
