@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import time
 import typing
 import uuid
 
@@ -37,6 +38,7 @@ def temp_bucket():
 def test_set_usage_export_bucket_default(capsys: typing.Any,
                                          temp_bucket: storage.Bucket) -> None:
     set_usage_export_bucket(project_id=PROJECT, bucket_name=temp_bucket.name)
+    time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
     assert(uel.bucket_name == temp_bucket.name)
     assert(uel.report_name_prefix == 'usage_gce')
@@ -44,6 +46,7 @@ def test_set_usage_export_bucket_default(capsys: typing.Any,
     assert('default prefix of `usage_gce`.' in out)
 
     disable_usage_export(project_id=PROJECT)
+    time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
     assert(uel.bucket_name == '')
     assert(uel.report_name_prefix == '')
@@ -53,6 +56,7 @@ def test_set_usage_export_bucket_custom(capsys: typing.Any,
                                         temp_bucket: storage.Bucket) -> None:
     set_usage_export_bucket(project_id=PROJECT, bucket_name=temp_bucket.name,
                             report_name_prefix=TEST_PREFIX)
+    time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
     assert(uel.bucket_name == temp_bucket.name)
     assert(uel.report_name_prefix == TEST_PREFIX)
@@ -60,6 +64,7 @@ def test_set_usage_export_bucket_custom(capsys: typing.Any,
     assert('usage_gce' not in out)
 
     disable_usage_export(project_id=PROJECT)
+    time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
     assert(uel.bucket_name == '')
     assert(uel.report_name_prefix == '')
