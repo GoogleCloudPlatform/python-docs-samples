@@ -36,7 +36,7 @@ MIN_IMAGES_PER_CLASS = 1
 MAX_IMAGES_PER_CLASS = 1
 
 # Use a pre-trained pre-existing model, training one takes too long.
-MODEL_PATH = f"projects/{PROJECT}/locations/{REGION}/models/1590773423066316800"
+MODEL_PATH = f"projects/{PROJECT}/locations/{REGION}/models/712175671543070720"
 
 
 @pytest.fixture(scope="session")
