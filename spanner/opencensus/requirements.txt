@@ -1,0 +1,3 @@
+google-cloud-spanner~=3.7
+opencensus-ext-stackdriver~=0.7
+opencensus~=0.7
