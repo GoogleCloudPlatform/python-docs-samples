@@ -34,7 +34,7 @@ import storage_remove_file_owner
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
 TEST_EMAIL = (
-    "google-auth-system-tests"
+    "jenkins-and-travis"
     "@python-docs-samples-tests.iam.gserviceaccount.com"
 )
 
