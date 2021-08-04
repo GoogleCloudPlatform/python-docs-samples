@@ -158,7 +158,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
             keras.layers.concatenate(preprocessed_inputs, name="deep_layers"),
             keras.layers.Conv1D(
                 filters=8,
-                kernel_size=PADDING + 1 + PADDING,
+                kernel_size=PADDING + 1,
                 data_format="channels_last",
                 activation="relu",
             ),

@@ -25,9 +25,9 @@ import tensorflow as tf
 import trainer
 
 
-# Duration of a time step in the timeseries.
+# Duration of a time step interval in the timeseries.
 # Training and prediction data must be resampled to this time step delta.
-TIME_STEP_DELTA = timedelta(hours=1)
+TIME_STEP_INTERVAL = timedelta(hours=1)
 
 
 def to_unix_time(timestamp: datetime) -> int:
@@ -40,7 +40,7 @@ def read_data(data_file: str) -> pd.DataFrame:
         ship_time_steps = (
             pd.DataFrame(np.load(f)["x"])
             .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
-            .resample(TIME_STEP_DELTA, on="timestamp")
+            .resample(TIME_STEP_INTERVAL, on="timestamp")
             .mean()
             .reset_index()
             .interpolate()
@@ -84,18 +84,29 @@ def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
+def generate_data_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
     padding = trainer.PADDING
-    midpoints = data[padding:-padding].query("is_fishing == is_fishing").index.tolist()
-    for midpoint in midpoints:
+
+    # Pandas assigns NaN (Not-a-Number) if a value is missing.
+    # If is_fishing equals itself it means it's populated because (NaN != NaN).
+    # For the training data points, we only get points where we have a label.
+    data_point_indices = data[padding:].query("is_fishing == is_fishing").index.tolist()
+    for data_point_index in data_point_indices:
+        # For the inputs, we grab the past data and the data point itself.
         inputs = (
             data.drop(columns=["distance_from_shore", "is_fishing"])
-            .loc[midpoint - padding : midpoint + padding]
+            .loc[data_point_index - padding : data_point_index]
             .to_dict("list")
         )
+
+        # For the outputs, we only grab the label from the data point itself.
         outputs = (
-            data[["is_fishing"]].loc[midpoint:midpoint].astype("int8").to_dict("list")
+            data[["is_fishing"]]
+            .loc[data_point_index:data_point_index]
+            .astype("int8")
+            .to_dict("list")
         )
+
         yield {
             name: np.reshape(values, (len(values), 1))
             for name, values in {**inputs, **outputs}.items()
