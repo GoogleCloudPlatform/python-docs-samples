@@ -566,6 +566,2163 @@ tables = [
 ]
 
 
+sql_dump_of_empty_airflow_1_10_14_database_for_postgres_13 = r"""
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.3
+-- Dumped by pg_dump version 13.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: ab_permission; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_permission (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+--
+-- Name: ab_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_permission_id_seq OWNED BY public.ab_permission.id;
+
+
+--
+-- Name: ab_permission_view; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_permission_view (
+    id integer NOT NULL,
+    permission_id integer,
+    view_menu_id integer
+);
+
+
+--
+-- Name: ab_permission_view_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_permission_view_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_permission_view_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_permission_view_id_seq OWNED BY public.ab_permission_view.id;
+
+
+--
+-- Name: ab_permission_view_role; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_permission_view_role (
+    id integer NOT NULL,
+    permission_view_id integer,
+    role_id integer
+);
+
+
+--
+-- Name: ab_permission_view_role_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_permission_view_role_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_permission_view_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_permission_view_role_id_seq OWNED BY public.ab_permission_view_role.id;
+
+
+--
+-- Name: ab_register_user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_register_user (
+    id integer NOT NULL,
+    first_name character varying(64) NOT NULL,
+    last_name character varying(64) NOT NULL,
+    username character varying(64) NOT NULL,
+    password character varying(256),
+    email character varying(64) NOT NULL,
+    registration_date timestamp without time zone,
+    registration_hash character varying(256)
+);
+
+
+--
+-- Name: ab_register_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_register_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_register_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_register_user_id_seq OWNED BY public.ab_register_user.id;
+
+
+--
+-- Name: ab_role; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_role (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL
+);
+
+
+--
+-- Name: ab_role_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_role_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_role_id_seq OWNED BY public.ab_role.id;
+
+
+--
+-- Name: ab_user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_user (
+    id integer NOT NULL,
+    first_name character varying(64) NOT NULL,
+    last_name character varying(64) NOT NULL,
+    username character varying(64) NOT NULL,
+    password character varying(256),
+    active boolean,
+    email character varying(64) NOT NULL,
+    last_login timestamp without time zone,
+    login_count integer,
+    fail_login_count integer,
+    created_on timestamp without time zone,
+    changed_on timestamp without time zone,
+    created_by_fk integer,
+    changed_by_fk integer
+);
+
+
+--
+-- Name: ab_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_user_id_seq OWNED BY public.ab_user.id;
+
+
+--
+-- Name: ab_user_role; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_user_role (
+    id integer NOT NULL,
+    user_id integer,
+    role_id integer
+);
+
+
+--
+-- Name: ab_user_role_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_user_role_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_user_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_user_role_id_seq OWNED BY public.ab_user_role.id;
+
+
+--
+-- Name: ab_view_menu; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ab_view_menu (
+    id integer NOT NULL,
+    name character varying(250) NOT NULL
+);
+
+
+--
+-- Name: ab_view_menu_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ab_view_menu_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ab_view_menu_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ab_view_menu_id_seq OWNED BY public.ab_view_menu.id;
+
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+--
+-- Name: chart; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chart (
+    id integer NOT NULL,
+    label character varying(200),
+    conn_id character varying(250) NOT NULL,
+    user_id integer,
+    chart_type character varying(100),
+    sql_layout character varying(50),
+    sql text,
+    y_log_scale boolean,
+    show_datatable boolean,
+    show_sql boolean,
+    height integer,
+    default_params character varying(5000),
+    x_is_date boolean,
+    iteration_no integer,
+    last_modified timestamp with time zone
+);
+
+
+--
+-- Name: chart_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chart_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chart_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chart_id_seq OWNED BY public.chart.id;
+
+
+--
+-- Name: connection; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.connection (
+    id integer NOT NULL,
+    conn_id character varying(250),
+    conn_type character varying(500),
+    host character varying(100),
+    schema character varying(500),
+    login character varying(500),
+    password character varying(5000),
+    port integer,
+    extra character varying(5000),
+    is_encrypted boolean,
+    is_extra_encrypted boolean
+);
+
+
+--
+-- Name: connection_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.connection_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: connection_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.connection_id_seq OWNED BY public.connection.id;
+
+
+--
+-- Name: dag; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dag (
+    dag_id character varying(250) NOT NULL,
+    is_paused boolean,
+    is_subdag boolean,
+    is_active boolean,
+    last_scheduler_run timestamp with time zone,
+    last_pickled timestamp with time zone,
+    last_expired timestamp with time zone,
+    scheduler_lock boolean,
+    pickle_id integer,
+    fileloc character varying(2000),
+    owners character varying(2000),
+    description text,
+    default_view character varying(25),
+    schedule_interval text,
+    root_dag_id character varying(250)
+);
+
+
+--
+-- Name: dag_code; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dag_code (
+    fileloc_hash bigint NOT NULL,
+    fileloc character varying(2000) NOT NULL,
+    source_code text NOT NULL,
+    last_updated timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: dag_pickle; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dag_pickle (
+    id integer NOT NULL,
+    pickle bytea,
+    created_dttm timestamp with time zone,
+    pickle_hash bigint
+);
+
+
+--
+-- Name: dag_pickle_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dag_pickle_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dag_pickle_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dag_pickle_id_seq OWNED BY public.dag_pickle.id;
+
+
+--
+-- Name: dag_run; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dag_run (
+    id integer NOT NULL,
+    dag_id character varying(250),
+    execution_date timestamp with time zone,
+    state character varying(50),
+    run_id character varying(250),
+    external_trigger boolean,
+    conf bytea,
+    end_date timestamp with time zone,
+    start_date timestamp with time zone
+);
+
+
+--
+-- Name: dag_run_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dag_run_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dag_run_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dag_run_id_seq OWNED BY public.dag_run.id;
+
+
+--
+-- Name: dag_tag; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dag_tag (
+    name character varying(100) NOT NULL,
+    dag_id character varying(250) NOT NULL
+);
+
+
+--
+-- Name: import_error; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.import_error (
+    id integer NOT NULL,
+    "timestamp" timestamp with time zone,
+    filename character varying(1024),
+    stacktrace text
+);
+
+
+--
+-- Name: import_error_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.import_error_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: import_error_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.import_error_id_seq OWNED BY public.import_error.id;
+
+
+--
+-- Name: job; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.job (
+    id integer NOT NULL,
+    dag_id character varying(250),
+    state character varying(20),
+    job_type character varying(30),
+    start_date timestamp with time zone,
+    end_date timestamp with time zone,
+    latest_heartbeat timestamp with time zone,
+    executor_class character varying(500),
+    hostname character varying(100),
+    unixname character varying(1000)
+);
+
+
+--
+-- Name: job_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.job_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.job_id_seq OWNED BY public.job.id;
+
+
+--
+-- Name: known_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.known_event (
+    id integer NOT NULL,
+    label character varying(200),
+    start_date timestamp without time zone,
+    end_date timestamp without time zone,
+    user_id integer,
+    known_event_type_id integer,
+    description text
+);
+
+
+--
+-- Name: known_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.known_event_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: known_event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.known_event_id_seq OWNED BY public.known_event.id;
+
+
+--
+-- Name: known_event_type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.known_event_type (
+    id integer NOT NULL,
+    know_event_type character varying(200)
+);
+
+
+--
+-- Name: known_event_type_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.known_event_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: known_event_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.known_event_type_id_seq OWNED BY public.known_event_type.id;
+
+
+--
+-- Name: kube_resource_version; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.kube_resource_version (
+    one_row_id boolean DEFAULT true NOT NULL,
+    resource_version character varying(255),
+    CONSTRAINT kube_resource_version_one_row_id CHECK (one_row_id)
+);
+
+
+--
+-- Name: kube_worker_uuid; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.kube_worker_uuid (
+    one_row_id boolean DEFAULT true NOT NULL,
+    worker_uuid character varying(255),
+    CONSTRAINT kube_worker_one_row_id CHECK (one_row_id)
+);
+
+
+--
+-- Name: log; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log (
+    id integer NOT NULL,
+    dttm timestamp with time zone,
+    dag_id character varying(250),
+    task_id character varying(250),
+    event character varying(30),
+    execution_date timestamp with time zone,
+    owner character varying(500),
+    extra text
+);
+
+
+--
+-- Name: log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_id_seq OWNED BY public.log.id;
+
+
+--
+-- Name: rendered_task_instance_fields; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rendered_task_instance_fields (
+    dag_id character varying(250) NOT NULL,
+    task_id character varying(250) NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    rendered_fields json NOT NULL
+);
+
+
+--
+-- Name: serialized_dag; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.serialized_dag (
+    dag_id character varying(250) NOT NULL,
+    fileloc character varying(2000) NOT NULL,
+    fileloc_hash bigint NOT NULL,
+    data json NOT NULL,
+    last_updated timestamp with time zone NOT NULL,
+    dag_hash character varying(32) DEFAULT 'Hash not calculated yet'::character varying NOT NULL
+);
+
+
+--
+-- Name: sla_miss; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sla_miss (
+    task_id character varying(250) NOT NULL,
+    dag_id character varying(250) NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    email_sent boolean,
+    "timestamp" timestamp with time zone,
+    description text,
+    notification_sent boolean
+);
+
+
+--
+-- Name: slot_pool; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.slot_pool (
+    id integer NOT NULL,
+    pool character varying(50),
+    slots integer,
+    description text
+);
+
+
+--
+-- Name: slot_pool_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.slot_pool_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: slot_pool_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.slot_pool_id_seq OWNED BY public.slot_pool.id;
+
+
+--
+-- Name: task_fail; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.task_fail (
+    id integer NOT NULL,
+    task_id character varying(250) NOT NULL,
+    dag_id character varying(250) NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    start_date timestamp with time zone,
+    end_date timestamp with time zone,
+    duration integer
+);
+
+
+--
+-- Name: task_fail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.task_fail_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_fail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.task_fail_id_seq OWNED BY public.task_fail.id;
+
+
+--
+-- Name: task_instance; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.task_instance (
+    task_id character varying(250) NOT NULL,
+    dag_id character varying(250) NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    start_date timestamp with time zone,
+    end_date timestamp with time zone,
+    duration double precision,
+    state character varying(20),
+    try_number integer,
+    hostname character varying(100),
+    unixname character varying(1000),
+    job_id integer,
+    pool character varying(50) NOT NULL,
+    queue character varying(256),
+    priority_weight integer,
+    operator character varying(1000),
+    queued_dttm timestamp with time zone,
+    pid integer,
+    max_tries integer DEFAULT '-1'::integer,
+    executor_config bytea,
+    pool_slots integer
+);
+
+
+--
+-- Name: task_reschedule; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.task_reschedule (
+    id integer NOT NULL,
+    task_id character varying(250) NOT NULL,
+    dag_id character varying(250) NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    try_number integer NOT NULL,
+    start_date timestamp with time zone NOT NULL,
+    end_date timestamp with time zone NOT NULL,
+    duration integer NOT NULL,
+    reschedule_date timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: task_reschedule_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.task_reschedule_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_reschedule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.task_reschedule_id_seq OWNED BY public.task_reschedule.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(250),
+    email character varying(500),
+    password character varying(255),
+    superuser boolean
+);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: variable; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.variable (
+    id integer NOT NULL,
+    key character varying(250),
+    val text,
+    is_encrypted boolean
+);
+
+
+--
+-- Name: variable_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.variable_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: variable_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.variable_id_seq OWNED BY public.variable.id;
+
+
+--
+-- Name: xcom; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.xcom (
+    id integer NOT NULL,
+    key character varying(512),
+    value bytea,
+    "timestamp" timestamp with time zone NOT NULL,
+    execution_date timestamp with time zone NOT NULL,
+    task_id character varying(250) NOT NULL,
+    dag_id character varying(250) NOT NULL
+);
+
+
+--
+-- Name: xcom_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.xcom_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: xcom_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.xcom_id_seq OWNED BY public.xcom.id;
+
+
+--
+-- Name: ab_permission id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission ALTER COLUMN id SET DEFAULT nextval('public.ab_permission_id_seq'::regclass);
+
+
+--
+-- Name: ab_permission_view id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view ALTER COLUMN id SET DEFAULT nextval('public.ab_permission_view_id_seq'::regclass);
+
+
+--
+-- Name: ab_permission_view_role id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view_role ALTER COLUMN id SET DEFAULT nextval('public.ab_permission_view_role_id_seq'::regclass);
+
+
+--
+-- Name: ab_register_user id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_register_user ALTER COLUMN id SET DEFAULT nextval('public.ab_register_user_id_seq'::regclass);
+
+
+--
+-- Name: ab_role id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_role ALTER COLUMN id SET DEFAULT nextval('public.ab_role_id_seq'::regclass);
+
+
+--
+-- Name: ab_user id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user ALTER COLUMN id SET DEFAULT nextval('public.ab_user_id_seq'::regclass);
+
+
+--
+-- Name: ab_user_role id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user_role ALTER COLUMN id SET DEFAULT nextval('public.ab_user_role_id_seq'::regclass);
+
+
+--
+-- Name: ab_view_menu id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_view_menu ALTER COLUMN id SET DEFAULT nextval('public.ab_view_menu_id_seq'::regclass);
+
+
+--
+-- Name: chart id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chart ALTER COLUMN id SET DEFAULT nextval('public.chart_id_seq'::regclass);
+
+
+--
+-- Name: connection id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.connection ALTER COLUMN id SET DEFAULT nextval('public.connection_id_seq'::regclass);
+
+
+--
+-- Name: dag_pickle id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_pickle ALTER COLUMN id SET DEFAULT nextval('public.dag_pickle_id_seq'::regclass);
+
+
+--
+-- Name: dag_run id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_run ALTER COLUMN id SET DEFAULT nextval('public.dag_run_id_seq'::regclass);
+
+
+--
+-- Name: import_error id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.import_error ALTER COLUMN id SET DEFAULT nextval('public.import_error_id_seq'::regclass);
+
+
+--
+-- Name: job id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.job ALTER COLUMN id SET DEFAULT nextval('public.job_id_seq'::regclass);
+
+
+--
+-- Name: known_event id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event ALTER COLUMN id SET DEFAULT nextval('public.known_event_id_seq'::regclass);
+
+
+--
+-- Name: known_event_type id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event_type ALTER COLUMN id SET DEFAULT nextval('public.known_event_type_id_seq'::regclass);
+
+
+--
+-- Name: log id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log ALTER COLUMN id SET DEFAULT nextval('public.log_id_seq'::regclass);
+
+
+--
+-- Name: slot_pool id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slot_pool ALTER COLUMN id SET DEFAULT nextval('public.slot_pool_id_seq'::regclass);
+
+
+--
+-- Name: task_fail id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_fail ALTER COLUMN id SET DEFAULT nextval('public.task_fail_id_seq'::regclass);
+
+
+--
+-- Name: task_reschedule id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_reschedule ALTER COLUMN id SET DEFAULT nextval('public.task_reschedule_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+
+
+--
+-- Name: variable id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.variable ALTER COLUMN id SET DEFAULT nextval('public.variable_id_seq'::regclass);
+
+
+--
+-- Name: xcom id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.xcom ALTER COLUMN id SET DEFAULT nextval('public.xcom_id_seq'::regclass);
+
+
+--
+-- Data for Name: ab_permission; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_permission (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_permission_view; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_permission_view (id, permission_id, view_menu_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_permission_view_role; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_permission_view_role (id, permission_view_id, role_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_register_user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_register_user (id, first_name, last_name, username, password, email, registration_date, registration_hash) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_role; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_role (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_user (id, first_name, last_name, username, password, active, email, last_login, login_count, fail_login_count, created_on, changed_on, created_by_fk, changed_by_fk) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_user_role; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_user_role (id, user_id, role_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ab_view_menu; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ab_view_menu (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+\.
+
+
+--
+-- Data for Name: chart; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.chart (id, label, conn_id, user_id, chart_type, sql_layout, sql, y_log_scale, show_datatable, show_sql, height, default_params, x_is_date, iteration_no, last_modified) FROM stdin;
+\.
+
+
+--
+-- Data for Name: connection; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.connection (id, conn_id, conn_type, host, schema, login, password, port, extra, is_encrypted, is_extra_encrypted) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dag; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dag (dag_id, is_paused, is_subdag, is_active, last_scheduler_run, last_pickled, last_expired, scheduler_lock, pickle_id, fileloc, owners, description, default_view, schedule_interval, root_dag_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dag_code; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dag_code (fileloc_hash, fileloc, source_code, last_updated) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dag_pickle; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dag_pickle (id, pickle, created_dttm, pickle_hash) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dag_run; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dag_run (id, dag_id, execution_date, state, run_id, external_trigger, conf, end_date, start_date) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dag_tag; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dag_tag (name, dag_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: import_error; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.import_error (id, "timestamp", filename, stacktrace) FROM stdin;
+\.
+
+
+--
+-- Data for Name: job; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.job (id, dag_id, state, job_type, start_date, end_date, latest_heartbeat, executor_class, hostname, unixname) FROM stdin;
+\.
+
+
+--
+-- Data for Name: known_event; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.known_event (id, label, start_date, end_date, user_id, known_event_type_id, description) FROM stdin;
+\.
+
+
+--
+-- Data for Name: known_event_type; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.known_event_type (id, know_event_type) FROM stdin;
+\.
+
+
+--
+-- Data for Name: kube_resource_version; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.kube_resource_version (one_row_id, resource_version) FROM stdin;
+\.
+
+
+--
+-- Data for Name: kube_worker_uuid; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.kube_worker_uuid (one_row_id, worker_uuid) FROM stdin;
+\.
+
+
+--
+-- Data for Name: log; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.log (id, dttm, dag_id, task_id, event, execution_date, owner, extra) FROM stdin;
+\.
+
+
+--
+-- Data for Name: rendered_task_instance_fields; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.rendered_task_instance_fields (dag_id, task_id, execution_date, rendered_fields) FROM stdin;
+\.
+
+
+--
+-- Data for Name: serialized_dag; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.serialized_dag (dag_id, fileloc, fileloc_hash, data, last_updated, dag_hash) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sla_miss; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sla_miss (task_id, dag_id, execution_date, email_sent, "timestamp", description, notification_sent) FROM stdin;
+\.
+
+
+--
+-- Data for Name: slot_pool; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.slot_pool (id, pool, slots, description) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_fail; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.task_fail (id, task_id, dag_id, execution_date, start_date, end_date, duration) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_instance; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.task_instance (task_id, dag_id, execution_date, start_date, end_date, duration, state, try_number, hostname, unixname, job_id, pool, queue, priority_weight, operator, queued_dttm, pid, max_tries, executor_config, pool_slots) FROM stdin;
+\.
+
+
+--
+-- Data for Name: task_reschedule; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.task_reschedule (id, task_id, dag_id, execution_date, try_number, start_date, end_date, duration, reschedule_date) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, username, email, password, superuser) FROM stdin;
+\.
+
+
+--
+-- Data for Name: variable; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.variable (id, key, val, is_encrypted) FROM stdin;
+\.
+
+
+--
+-- Data for Name: xcom; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.xcom (id, key, value, "timestamp", execution_date, task_id, dag_id) FROM stdin;
+\.
+
+
+--
+-- Name: ab_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_permission_id_seq', 1, false);
+
+
+--
+-- Name: ab_permission_view_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_permission_view_id_seq', 1, false);
+
+
+--
+-- Name: ab_permission_view_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_permission_view_role_id_seq', 1, false);
+
+
+--
+-- Name: ab_register_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_register_user_id_seq', 1, false);
+
+
+--
+-- Name: ab_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_role_id_seq', 1, false);
+
+
+--
+-- Name: ab_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_user_id_seq', 1, false);
+
+
+--
+-- Name: ab_user_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_user_role_id_seq', 1, false);
+
+
+--
+-- Name: ab_view_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ab_view_menu_id_seq', 1, false);
+
+
+--
+-- Name: chart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.chart_id_seq', 1, true);
+
+
+--
+-- Name: connection_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.connection_id_seq', 40, true);
+
+
+--
+-- Name: dag_pickle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.dag_pickle_id_seq', 1, false);
+
+
+--
+-- Name: dag_run_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.dag_run_id_seq', 1, false);
+
+
+--
+-- Name: import_error_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.import_error_id_seq', 1, false);
+
+
+--
+-- Name: job_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.job_id_seq', 1, false);
+
+
+--
+-- Name: known_event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.known_event_id_seq', 1, false);
+
+
+--
+-- Name: known_event_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.known_event_type_id_seq', 4, true);
+
+
+--
+-- Name: log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.log_id_seq', 1, false);
+
+
+--
+-- Name: slot_pool_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.slot_pool_id_seq', 1, true);
+
+
+--
+-- Name: task_fail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.task_fail_id_seq', 1, false);
+
+
+--
+-- Name: task_reschedule_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.task_reschedule_id_seq', 1, false);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.user_id_seq', 1, false);
+
+
+--
+-- Name: variable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.variable_id_seq', 1, false);
+
+
+--
+-- Name: xcom_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.xcom_id_seq', 1, false);
+
+
+--
+-- Name: ab_permission ab_permission_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission
+    ADD CONSTRAINT ab_permission_name_key UNIQUE (name);
+
+
+--
+-- Name: ab_permission ab_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission
+    ADD CONSTRAINT ab_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_permission_view ab_permission_view_permission_id_view_menu_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view
+    ADD CONSTRAINT ab_permission_view_permission_id_view_menu_id_key UNIQUE (permission_id, view_menu_id);
+
+
+--
+-- Name: ab_permission_view ab_permission_view_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view
+    ADD CONSTRAINT ab_permission_view_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_permission_view_role ab_permission_view_role_permission_view_id_role_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view_role
+    ADD CONSTRAINT ab_permission_view_role_permission_view_id_role_id_key UNIQUE (permission_view_id, role_id);
+
+
+--
+-- Name: ab_permission_view_role ab_permission_view_role_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view_role
+    ADD CONSTRAINT ab_permission_view_role_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_register_user ab_register_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_register_user
+    ADD CONSTRAINT ab_register_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_register_user ab_register_user_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_register_user
+    ADD CONSTRAINT ab_register_user_username_key UNIQUE (username);
+
+
+--
+-- Name: ab_role ab_role_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_role
+    ADD CONSTRAINT ab_role_name_key UNIQUE (name);
+
+
+--
+-- Name: ab_role ab_role_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_role
+    ADD CONSTRAINT ab_role_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_user ab_user_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user
+    ADD CONSTRAINT ab_user_email_key UNIQUE (email);
+
+
+--
+-- Name: ab_user ab_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user
+    ADD CONSTRAINT ab_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_user_role ab_user_role_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user_role
+    ADD CONSTRAINT ab_user_role_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ab_user_role ab_user_role_user_id_role_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user_role
+    ADD CONSTRAINT ab_user_role_user_id_role_id_key UNIQUE (user_id, role_id);
+
+
+--
+-- Name: ab_user ab_user_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user
+    ADD CONSTRAINT ab_user_username_key UNIQUE (username);
+
+
+--
+-- Name: ab_view_menu ab_view_menu_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_view_menu
+    ADD CONSTRAINT ab_view_menu_name_key UNIQUE (name);
+
+
+--
+-- Name: ab_view_menu ab_view_menu_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_view_menu
+    ADD CONSTRAINT ab_view_menu_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: chart chart_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chart
+    ADD CONSTRAINT chart_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: connection connection_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.connection
+    ADD CONSTRAINT connection_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dag_code dag_code_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_code
+    ADD CONSTRAINT dag_code_pkey PRIMARY KEY (fileloc_hash);
+
+
+--
+-- Name: dag_pickle dag_pickle_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_pickle
+    ADD CONSTRAINT dag_pickle_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dag dag_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag
+    ADD CONSTRAINT dag_pkey PRIMARY KEY (dag_id);
+
+
+--
+-- Name: dag_run dag_run_dag_id_execution_date_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_run
+    ADD CONSTRAINT dag_run_dag_id_execution_date_key UNIQUE (dag_id, execution_date);
+
+
+--
+-- Name: dag_run dag_run_dag_id_run_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_run
+    ADD CONSTRAINT dag_run_dag_id_run_id_key UNIQUE (dag_id, run_id);
+
+
+--
+-- Name: dag_run dag_run_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_run
+    ADD CONSTRAINT dag_run_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dag_tag dag_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_tag
+    ADD CONSTRAINT dag_tag_pkey PRIMARY KEY (name, dag_id);
+
+
+--
+-- Name: import_error import_error_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.import_error
+    ADD CONSTRAINT import_error_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.job
+    ADD CONSTRAINT job_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: known_event known_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event
+    ADD CONSTRAINT known_event_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: known_event_type known_event_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event_type
+    ADD CONSTRAINT known_event_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: kube_resource_version kube_resource_version_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.kube_resource_version
+    ADD CONSTRAINT kube_resource_version_pkey PRIMARY KEY (one_row_id);
+
+
+--
+-- Name: kube_worker_uuid kube_worker_uuid_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.kube_worker_uuid
+    ADD CONSTRAINT kube_worker_uuid_pkey PRIMARY KEY (one_row_id);
+
+
+--
+-- Name: log log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log
+    ADD CONSTRAINT log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rendered_task_instance_fields rendered_task_instance_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rendered_task_instance_fields
+    ADD CONSTRAINT rendered_task_instance_fields_pkey PRIMARY KEY (dag_id, task_id, execution_date);
+
+
+--
+-- Name: serialized_dag serialized_dag_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.serialized_dag
+    ADD CONSTRAINT serialized_dag_pkey PRIMARY KEY (dag_id);
+
+
+--
+-- Name: sla_miss sla_miss_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sla_miss
+    ADD CONSTRAINT sla_miss_pkey PRIMARY KEY (task_id, dag_id, execution_date);
+
+
+--
+-- Name: slot_pool slot_pool_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slot_pool
+    ADD CONSTRAINT slot_pool_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: slot_pool slot_pool_pool_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.slot_pool
+    ADD CONSTRAINT slot_pool_pool_key UNIQUE (pool);
+
+
+--
+-- Name: task_fail task_fail_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_fail
+    ADD CONSTRAINT task_fail_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_instance task_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_instance
+    ADD CONSTRAINT task_instance_pkey PRIMARY KEY (task_id, dag_id, execution_date);
+
+
+--
+-- Name: task_reschedule task_reschedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_reschedule
+    ADD CONSTRAINT task_reschedule_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users user_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT user_username_key UNIQUE (username);
+
+
+--
+-- Name: variable variable_key_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.variable
+    ADD CONSTRAINT variable_key_key UNIQUE (key);
+
+
+--
+-- Name: variable variable_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.variable
+    ADD CONSTRAINT variable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: xcom xcom_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.xcom
+    ADD CONSTRAINT xcom_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dag_id_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dag_id_state ON public.dag_run USING btree (dag_id, state);
+
+
+--
+-- Name: idx_fileloc_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_fileloc_hash ON public.serialized_dag USING btree (fileloc_hash);
+
+
+--
+-- Name: idx_job_state_heartbeat; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_job_state_heartbeat ON public.job USING btree (state, latest_heartbeat);
+
+
+--
+-- Name: idx_log_dag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_log_dag ON public.log USING btree (dag_id);
+
+
+--
+-- Name: idx_root_dag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_root_dag_id ON public.dag USING btree (root_dag_id);
+
+
+--
+-- Name: idx_task_fail_dag_task_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_task_fail_dag_task_date ON public.task_fail USING btree (dag_id, task_id, execution_date);
+
+
+--
+-- Name: idx_task_reschedule_dag_task_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_task_reschedule_dag_task_date ON public.task_reschedule USING btree (dag_id, task_id, execution_date);
+
+
+--
+-- Name: idx_xcom_dag_task_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_xcom_dag_task_date ON public.xcom USING btree (dag_id, task_id, execution_date);
+
+
+--
+-- Name: job_type_heart; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX job_type_heart ON public.job USING btree (job_type, latest_heartbeat);
+
+
+--
+-- Name: sm_dag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sm_dag ON public.sla_miss USING btree (dag_id);
+
+
+--
+-- Name: ti_dag_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_dag_date ON public.task_instance USING btree (dag_id, execution_date);
+
+
+--
+-- Name: ti_dag_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_dag_state ON public.task_instance USING btree (dag_id, state);
+
+
+--
+-- Name: ti_job_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_job_id ON public.task_instance USING btree (job_id);
+
+
+--
+-- Name: ti_pool; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_pool ON public.task_instance USING btree (pool, state, priority_weight);
+
+
+--
+-- Name: ti_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_state ON public.task_instance USING btree (state);
+
+
+--
+-- Name: ti_state_lkp; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_state_lkp ON public.task_instance USING btree (dag_id, task_id, execution_date, state);
+
+
+--
+-- Name: ti_worker_healthcheck; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ti_worker_healthcheck ON public.task_instance USING btree (end_date, hostname, state);
+
+
+--
+-- Name: ab_permission_view ab_permission_view_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view
+    ADD CONSTRAINT ab_permission_view_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.ab_permission(id);
+
+
+--
+-- Name: ab_permission_view_role ab_permission_view_role_permission_view_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view_role
+    ADD CONSTRAINT ab_permission_view_role_permission_view_id_fkey FOREIGN KEY (permission_view_id) REFERENCES public.ab_permission_view(id);
+
+
+--
+-- Name: ab_permission_view_role ab_permission_view_role_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view_role
+    ADD CONSTRAINT ab_permission_view_role_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.ab_role(id);
+
+
+--
+-- Name: ab_permission_view ab_permission_view_view_menu_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_permission_view
+    ADD CONSTRAINT ab_permission_view_view_menu_id_fkey FOREIGN KEY (view_menu_id) REFERENCES public.ab_view_menu(id);
+
+
+--
+-- Name: ab_user ab_user_changed_by_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user
+    ADD CONSTRAINT ab_user_changed_by_fk_fkey FOREIGN KEY (changed_by_fk) REFERENCES public.ab_user(id);
+
+
+--
+-- Name: ab_user ab_user_created_by_fk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user
+    ADD CONSTRAINT ab_user_created_by_fk_fkey FOREIGN KEY (created_by_fk) REFERENCES public.ab_user(id);
+
+
+--
+-- Name: ab_user_role ab_user_role_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user_role
+    ADD CONSTRAINT ab_user_role_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.ab_role(id);
+
+
+--
+-- Name: ab_user_role ab_user_role_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ab_user_role
+    ADD CONSTRAINT ab_user_role_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.ab_user(id);
+
+
+--
+-- Name: chart chart_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chart
+    ADD CONSTRAINT chart_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: dag_tag dag_tag_dag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dag_tag
+    ADD CONSTRAINT dag_tag_dag_id_fkey FOREIGN KEY (dag_id) REFERENCES public.dag(dag_id);
+
+
+--
+-- Name: known_event known_event_known_event_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event
+    ADD CONSTRAINT known_event_known_event_type_id_fkey FOREIGN KEY (known_event_type_id) REFERENCES public.known_event_type(id);
+
+
+--
+-- Name: known_event known_event_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.known_event
+    ADD CONSTRAINT known_event_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: task_reschedule task_reschedule_dag_task_date_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task_reschedule
+    ADD CONSTRAINT task_reschedule_dag_task_date_fkey FOREIGN KEY (task_id, dag_id, execution_date) REFERENCES public.task_instance(task_id, dag_id, execution_date) ON DELETE CASCADE;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE ALL ON SCHEMA public FROM cloudsqladmin;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO cloudsqlsuperuser;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+"""
+
+
 class EnvironmentUtils:
     """Utility functions for interactions with Composer environment."""
 
@@ -784,78 +2941,6 @@ class EnvironmentUtils:
         return EnvironmentUtils.execute_command_in_a_pod(
             namespace, pod_name, container_name, command
         )
-
-    @staticmethod
-    def run_database_creation_workload_for_source_version(
-        namespace: str,
-        image: str,
-        bucket: str,
-        temporary_database_name: str,
-        customer_project: str,
-        unique_id: str,
-        sql_proxy: str,
-    ) -> str:
-        """Runs airflow-database-init-job job on environment's GKE cluster."""
-        workload_definition = f"""apiVersion: batch/v1
-kind: Job
-metadata:
-  name: airflow-database-init-job-{unique_id}
-  namespace: {namespace}
-  labels:
-    run: airflow-database-init-job
-spec:
-  backoffLimit: 12
-  template:
-    metadata:
-      name: airflow-database-init-job-{unique_id}
-    spec:
-      priorityClassName: high-priority
-      volumes:
-      - name: airflow-config
-        configMap:
-          name: airflow-configmap
-      containers:
-      - image: {image}
-        imagePullPolicy: IfNotPresent
-        command:
-        - /var/local/db_init.sh
-        name: airflow-database-init-job
-        env:
-        - name: GCS_BUCKET
-          value: {bucket}
-        - name: AIRFLOW_HOME
-          value: /etc/airflow
-        - name: DAGS_FOLDER
-          value: /home/airflow/gcs/dags
-        - name: SQL_DATABASE
-          value: {temporary_database_name}
-        - name: SQL_USER
-          value: root
-        - name: SQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: airflow-secrets
-              key: sql_password
-        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-          value: "postgresql+psycopg2://$(SQL_USER):$(SQL_PASSWORD)@{sql_proxy}:3306/$(SQL_DATABASE)"
-        - name: AIRFLOW__CORE__FERNET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: airflow-secrets
-              key: fernet_key
-        - name: GCP_PROJECT
-          value: {customer_project}
-        - name: COMPOSER_PYTHON_VERSION
-          value: "3"
-        volumeMounts:
-        - name: airflow-config
-          mountPath: /etc/airflow/airflow_cfg
-      dnsPolicy: ClusterFirst
-      restartPolicy: Never
-      securityContext: {{}}
-      terminationGracePeriodSeconds: 30
-"""
-        return EnvironmentUtils.create_gke_worfload(workload_definition, unique_id)
 
 
 class DatabasePorter:
@@ -1258,58 +3343,82 @@ class DatabaseImporter(DatabasePorter):
         )
         return image
 
-    def _initialize_new_database(self: typing.Any) -> None:
-        """Creates a new database with a schema consistent with Airflow 1.10.14."""
-        logger.info("*** Setting up new database...")
-        EnvironmentUtils.run_database_creation_workload_for_source_version(
-            self.worker_pod_namespace,
-            self._get_image_for_db_creation_job(),
-            self.gcs_bucket_name,
-            DatabaseImporter.TEMPORARY_DATABASE_NAME,
-            self.project_name,
-            self.unique_id,
-            self.sql_proxy,
-        )
-        logger.info("Waiting for job completion...")
+    def _write_empty_af_1_10_14_psql_dump_to_a_local_file(self: typing.Any) -> None:
+        """Writes an empty Airflow 1.10.14 database to a local file."""
+        logger.info("Writing an empty Airflow 1.10.14 database to a local file...")
+        self.temporary_file_for_psql_dump = "empty_af_1_10_14_psql_dump.sql"
+        with open(self.temporary_file_for_psql_dump, mode="w") as file:
+            file.write(sql_dump_of_empty_airflow_1_10_14_database_for_postgres_13)
+
+    def _move_empty_af_1_10_14_psql_dump_to_the_import_bucket(self: typing.Any) -> None:
+        """Moves an empty Airflow 1.10.14 database to import location."""
+        logger.info("Moving an empty Airflow 1.10.14 database to import location...")
         Command.run_shell_command(
             [
                 "kubectl",
-                "wait",
-                "--for=condition=complete",
-                "--timeout=300s",
-                f"job/airflow-database-init-job-{self.unique_id}",
-                "-n",
-                self.worker_pod_namespace,
+                "cp",
+                self.temporary_file_for_psql_dump,
+                f"{self.worker_pod_namespace}/{self.worker_pod_name}"
+                f":{self.temporary_file_for_psql_dump}",
+                "-c",
+                self.worker_container_name,
             ]
         )
-
-    def _clean_prepopulated_tables(self: typing.Any) -> None:
-        """Removes default entries from the new database to avoid key collision."""
-        logger.info(
-            "*** Removing automatically created entries in the new " "database..."
+        Command.run_shell_command(
+            [
+                "rm",
+                "-f",
+                self.temporary_file_for_psql_dump,
+            ]
         )
-        for table in [
-            "alembic_version",
-            "chart",
-            "connection",
-            "job",
-            "known_event_type",
-            "kube_resource_version",
-            "kube_worker_uuid",
-            "serialized_dag",
-            "slot_pool",
-            "task_instance",
-        ]:
-            logger.info('*** Removing entries from the table "%s"...', table)
-            output = EnvironmentUtils.execute_command_in_a_pod(
-                self.worker_pod_namespace,
-                self.worker_pod_name,
-                self.worker_container_name,
-                "psql postgres://root:${SQL_PASSWORD}"
-                f"@{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
-                f"-p 3306 -t -c 'DELETE FROM {table};'",
-            )
-            logger.info(output)
+        EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            f"gsutil mv {self.temporary_file_for_psql_dump} "
+            f"gs://{self.gcs_bucket_name}/import/{self.temporary_file_for_psql_dump}",
+        )
+
+    def _load_empty_af_1_10_14_psql_dump_to_the_cloud_sql(self: typing.Any) -> None:
+        """Loads an empty Airflow 1.10.14 database."""
+        logger.info("Loading empty Airflow 1.10.14 database...")
+        command = (
+            f"gcloud sql import sql {self.sql_instance_name} "
+            f"gs://{self.gcs_bucket_name}/import/{self.temporary_file_for_psql_dump} "
+            f"--database={DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            f"--project {self.tenant_project_name} "
+            "-q"
+        )
+        output = EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            command,
+        )
+        logger.info(output)
+
+    def _remove_empty_af_1_10_14_psql_dump_from_the_import_bucket(
+        self: typing.Any,
+    ) -> None:
+        """Removes empty Airflow 1.10.14 database from import location."""
+        logger.info("Removing empty Airflow 1.10.14 database from import location...")
+        EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            f"gsutil rm gs://{self.gcs_bucket_name}"
+            f"/import/{self.temporary_file_for_psql_dump}",
+        )
+
+    def _initialize_new_database_with_empty_af_1_10_14_psql_dump(
+        self: typing.Any,
+    ) -> None:
+        """Initiates an empty Airflow 1.10.14 database in CloudSQL."""
+        logger.info("Initializing an empty Airflow 1.10.14 database...")
+        self._write_empty_af_1_10_14_psql_dump_to_a_local_file()
+        self._move_empty_af_1_10_14_psql_dump_to_the_import_bucket()
+        self._load_empty_af_1_10_14_psql_dump_to_the_cloud_sql()
+        self._remove_empty_af_1_10_14_psql_dump_from_the_import_bucket()
 
     def _import_tables(self: typing.Any) -> None:
         """Imports CSV files to temporary database."""
@@ -1453,10 +3562,9 @@ class DatabaseImporter(DatabasePorter):
         self._copy_csv_files_to_tp_if_drs_compliant()
         self._delete_old_temporary_database_if_exists()
         self._create_new_database()
-        self._initialize_new_database()
-        self._clean_prepopulated_tables()
         try:
             self._grant_permissions()
+            self._initialize_new_database_with_empty_af_1_10_14_psql_dump()
             self._import_tables()
         finally:
             self._revoke_permissions()
