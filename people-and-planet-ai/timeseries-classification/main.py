@@ -19,10 +19,6 @@ import os
 
 import flask
 
-import create_datasets
-import train_model
-import predict
-
 app = flask.Flask(__name__)
 
 # Default values for dataset creation.
@@ -61,22 +57,26 @@ def run_root():
 
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets():
+    import create_datasets
+
     try:
         args = flask.request.get_json() or {}
+        runner_params = {
+            "runner": "DataflowRunner",
+            "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+            "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
+            "project": args.get("project", PROJECT),
+            "region": args.get("region", REGION),
+            "temp_location": TEMP_DIR,
+            "experiments": ["use_runner_v2"],
+        }
         params = {
             "raw_data_dir": RAW_DATA_DIR,
             "raw_labels_dir": RAW_LABELS_DIR,
             "train_data_dir": TRAIN_DATA_DIR,
             "eval_data_dir": EVAL_DATA_DIR,
             "train_eval_split": args.get("train_eval_split", DEFAULT_TRAIN_EVAL_SPLIT),
-            # Apache Beam runner pipeline options.
-            "runner": "DataflowRunner",
-            "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "project": args.get("project", PROJECT),
-            "region": args.get("region", REGION),
-            "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
-            "temp_location": TEMP_DIR,
-            "experiments": ["use_runner_v2"],
+            **runner_params,
         }
         job_id = create_datasets.run(**params)
 
@@ -91,6 +91,8 @@ def run_create_datasets():
 
 @app.route("/train-model", methods=["POST"])
 def run_train_model():
+    import train_model
+
     try:
         args = flask.request.get_json() or {}
         params = {
@@ -120,6 +122,8 @@ def run_train_model():
 
 @app.route("/predict", methods=["POST"])
 def run_predict():
+    import predict
+
     try:
         args = flask.request.get_json() or {}
         predictions = predict.run(

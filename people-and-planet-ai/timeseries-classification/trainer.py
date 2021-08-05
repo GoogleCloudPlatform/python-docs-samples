@@ -22,9 +22,6 @@ from tensorflow import keras
 from tensorflow.keras.layers.experimental import preprocessing
 
 
-# Time steps before and after a point to consider for prediction.
-PADDING = 24
-
 INPUTS_SPEC = {
     "distance_from_port": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
     "speed": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
@@ -36,6 +33,8 @@ INPUTS_SPEC = {
 OUTPUTS_SPEC = {
     "is_fishing": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
 }
+
+PADDING = 24
 
 
 def validated(
@@ -139,9 +138,8 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
                 z = tf.cos(lat)
                 return tf.concat([x, y, z], axis=-1)
 
-        lat_input = input_layers[lat_name]
-        lon_input = input_layers[lon_name]
-        return GeoPoint(name=f"{lat_name}_{lon_name}")((lat_input, lon_input))
+        lat_lon_input_layers = (input_layers[lat_name], input_layers[lon_name])
+        return GeoPoint(name=f"{lat_name}_{lon_name}")(lat_lon_input_layers)
 
     def sequential_layers(first_layer, *layers) -> keras.layers.Layer:
         return reduce(lambda layer, result: result(layer), layers, first_layer)
@@ -158,7 +156,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
             keras.layers.concatenate(preprocessed_inputs, name="deep_layers"),
             keras.layers.Conv1D(
                 filters=32,
-                kernel_size=24,
+                kernel_size=PADDING,
                 data_format="channels_last",
                 activation="relu",
             ),
@@ -177,14 +175,13 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
             keras.layers.Conv1DTranspose(
                 name="is_fishing",
                 filters=1,
-                kernel_size=24,
+                kernel_size=PADDING,
                 data_format="channels_last",
                 activation="sigmoid",
             ),
         )
     }
     return keras.Model(input_layers, output_layers)
-
 
 
 def run(
@@ -201,24 +198,24 @@ def run(
     # For this sample we are using a mirrored distribution strategy,
     # which consists of a single machine with multiple GPUs.
     #   https://blog.tensorflow.org/2020/12/getting-started-with-distributed-tensorflow-on-gcp.html
-    strategy = tf.distribute.MirroredStrategy()
+    distributed_strategy = tf.distribute.MirroredStrategy()
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
-    total_batch_size = batch_size * strategy.num_replicas_in_sync
+    total_batch_size = batch_size * distributed_strategy.num_replicas_in_sync
     train_dataset = create_dataset(train_data_dir, total_batch_size)
     eval_dataset = create_dataset(eval_data_dir, total_batch_size)
 
     # Create and compile the model inside the distribution strategy scope.
-    with strategy.scope():
+    with distributed_strategy.scope():
         logging.info("Creating the model")
         model = create_model(train_dataset)
 
         logging.info("Compiling the model")
         model.compile(
-            optimizer="adam",
-            loss={"is_fishing": "binary_crossentropy"},
-            metrics={"is_fishing": ["accuracy"]},
+            optimizer="adam",  #                           https://keras.io/api/optimizers
+            loss={"is_fishing": "binary_crossentropy"},  # https://keras.io/api/losses
+            metrics={"is_fishing": ["accuracy"]},  #       https://keras.io/api/metrics
         )
 
     # Train the model.
@@ -250,9 +247,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
-    parser.add_argument("--train-steps", type=int)
-    parser.add_argument("--eval-steps", type=int)
-    parser.add_argument("--batch-size", type=int)
+    parser.add_argument("--train-steps", type=int, required=True)
+    parser.add_argument("--eval-steps", type=int, required=True)
+    parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument(
         "--model-dir",
         default=os.environ.get("AIP_MODEL_DIR", "model"),
@@ -267,6 +264,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    logging.getLogger().setLevel(logging.INFO)
     run(
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,

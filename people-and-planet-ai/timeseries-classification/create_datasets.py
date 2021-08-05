@@ -56,7 +56,7 @@ def run(
         | "Reshuffle files" >> beam.Reshuffle()
         | "Read data" >> beam.Map(data_utils.read_data)
         | "Label data" >> beam.Map(data_utils.label_data, labels)
-        | "Get training points" >> beam.FlatMap(data_utils.generate_training_points)
+        | "Get data points" >> beam.FlatMap(data_utils.generate_data_points)
         | "Serialize TFRecords" >> beam.Map(trainer.serialize)
         | "Train-eval split"
         >> beam.Partition(lambda x, n: random.choices([0, 1], train_eval_split)[0], 2)
@@ -86,3 +86,24 @@ def run(
     logging.info(result)
     logging.info(result._job)
     return result._job.id
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--raw-data-dir", required=True)
+    parser.add_argument("--raw-labels-dir", required=True)
+    parser.add_argument("--train-data-dir", required=True)
+    parser.add_argument("--eval-data-dir", required=True)
+    parser.add_argument("--train-eval-split", type=int, nargs="+", default=[80, 20])
+    args, beam_args = parser.parse_known_args()
+
+    logging.getLogger().setLevel(logging.INFO)
+    run(
+        raw_data_dir=args.raw_data_dir,
+        raw_labels_dir=args.raw_labels_dir,
+        train_data_dir=args.train_data_dir,
+        eval_data_dir=args.eval_data_dir,
+        train_eval_split=args.train_eval_split,
+    )

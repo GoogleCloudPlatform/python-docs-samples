@@ -87,24 +87,23 @@ def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
 
 
 def generate_data_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
-    padding = trainer.PADDING
-
     # Pandas assigns NaN (Not-a-Number) if a value is missing.
     # If is_fishing equals itself it means it's populated because (NaN != NaN).
     # For the training data points, we only get points where we have a label.
+    padding = trainer.PADDING
     data_point_indices = data[padding:].query("is_fishing == is_fishing").index.tolist()
-    for data_point_index in data_point_indices:
+    for point_index in data_point_indices:
         # For the inputs, we grab the past data and the data point itself.
         inputs = (
             data.drop(columns=["distance_from_shore", "is_fishing"])
-            .loc[data_point_index - padding : data_point_index]
+            .loc[point_index - padding : point_index]
             .to_dict("list")
         )
 
         # For the outputs, we only grab the label from the data point itself.
         outputs = (
             data[["is_fishing"]]
-            .loc[data_point_index:data_point_index]
+            .loc[point_index:point_index]
             .astype("int8")
             .to_dict("list")
         )
