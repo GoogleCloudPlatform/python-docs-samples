@@ -37,17 +37,17 @@ DEFAULT_GPU_TYPE = "NVIDIA_TESLA_T4"
 DEFAULT_GPU_COUNT = 2
 
 # Google Cloud resources.
-project = os.environ["PROJECT"]
-region = os.environ["REGION"]
-storage_path = os.environ["STORAGE_PATH"]
-container_image = os.environ["CONTAINER_IMAGE"]
+PROJECT = os.environ["PROJECT"]
+REGION = os.environ["REGION"]
+STORAGE_PATH = os.environ["STORAGE_PATH"]
+CONTAINER_IMAGE = os.environ["CONTAINER_IMAGE"]
 
-raw_data_dir = f"{storage_path}/data"
-raw_labels_dir = f"{storage_path}/labels"
-train_data_dir = f"{storage_path}/datasets/train"
-eval_data_dir = f"{storage_path}/datasets/eval"
-training_dir = f"{storage_path}/training"
-temp_dir = f"{storage_path}/temp"
+RAW_DATA_DIR = f"{STORAGE_PATH}/data"
+RAW_LABELS_DIR = f"{STORAGE_PATH}/labels"
+TRAIN_DATA_DIR = f"{STORAGE_PATH}/datasets/train"
+EVAL_DATA_DIR = f"{STORAGE_PATH}/datasets/eval"
+TRAINING_DIR = f"{STORAGE_PATH}/training"
+TEMP_DIR = f"{STORAGE_PATH}/temp"
 
 
 @app.route("/ping", methods=["POST"])
@@ -64,25 +64,25 @@ def run_create_datasets():
     try:
         args = flask.request.get_json() or {}
         params = {
-            "raw_data_dir": raw_data_dir,
-            "raw_labels_dir": raw_labels_dir,
-            "train_data_dir": train_data_dir,
-            "eval_data_dir": eval_data_dir,
+            "raw_data_dir": RAW_DATA_DIR,
+            "raw_labels_dir": RAW_LABELS_DIR,
+            "train_data_dir": TRAIN_DATA_DIR,
+            "eval_data_dir": EVAL_DATA_DIR,
             "train_eval_split": args.get("train_eval_split", DEFAULT_TRAIN_EVAL_SPLIT),
             # Apache Beam runner pipeline options.
             "runner": "DataflowRunner",
             "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "project": project,
-            "region": region,
-            "sdk_container_image": container_image,
-            "temp_location": temp_dir,
+            "project": args.get("project", PROJECT),
+            "region": args.get("region", REGION),
+            "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
+            "temp_location": TEMP_DIR,
             "experiments": ["use_runner_v2"],
         }
         job_id = create_datasets.run(**params)
 
         return {
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}",
+            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
             "params": params,
         }
     except Exception as e:
@@ -94,12 +94,12 @@ def run_train_model():
     try:
         args = flask.request.get_json() or {}
         params = {
-            "project": project,
-            "region": region,
-            "container_image": container_image,
-            "train_data_dir": train_data_dir,
-            "eval_data_dir": eval_data_dir,
-            "training_dir": training_dir,
+            "project": args.get("project", PROJECT),
+            "region": args.get("region", REGION),
+            "container_image": args.get("container_image", CONTAINER_IMAGE),
+            "train_data_dir": TRAIN_DATA_DIR,
+            "eval_data_dir": EVAL_DATA_DIR,
+            "training_dir": TRAINING_DIR,
             "train_steps": args.get("train_steps", DEFAULT_TRAIN_STEPS),
             "eval_steps": args.get("eval_steps", DEFAULT_EVAL_STEPS),
             "batch_size": args.get("batch_size", DEFAULT_BATCH_SIZE),
@@ -111,7 +111,7 @@ def run_train_model():
 
         return {
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{region}/training/{job_id}/cpu?project={project}",
+            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{REGION}/training/{job_id}/cpu?project={PROJECT}",
             "params": params,
         }
     except Exception as e:
@@ -123,7 +123,7 @@ def run_predict():
     try:
         args = flask.request.get_json() or {}
         predictions = predict.run(
-            model_dir=args.get("model_dir", f"{training_dir}/model"),
+            model_dir=args.get("model_dir", f"{TRAINING_DIR}/model"),
             inputs=args["inputs"],
         )
 

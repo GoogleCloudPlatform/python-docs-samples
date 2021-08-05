@@ -119,16 +119,16 @@ def create_dataset(data_dir: str, batch_size: int) -> tf.data.Dataset:
 
 def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
     input_layers = {
-        field: keras.layers.Input(shape=spec.shape, dtype=spec.dtype, name=field)
-        for field, spec in INPUTS_SPEC.items()
+        name: keras.layers.Input(shape=spec.shape, dtype=spec.dtype, name=name)
+        for name, spec in INPUTS_SPEC.items()
     }
 
-    def normalize(field: str):
-        layer = preprocessing.Normalization(name=f"{field}_normalized")
-        layer.adapt(train_dataset.map(lambda inputs, outputs: inputs[field]))
-        return layer(input_layers[field])
+    def normalize(name: str):
+        layer = preprocessing.Normalization(name=f"{name}_normalized")
+        layer.adapt(train_dataset.map(lambda inputs, outputs: inputs[name]))
+        return layer(input_layers[name])
 
-    def geo_point(lat_field: str, lon_field: str):
+    def geo_point(lat_name: str, lon_name: str):
         # We transform each (lat, lon) pair into a 3D point in the unit sphere.
         #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
         class GeoPoint(keras.layers.Layer):
@@ -139,9 +139,9 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
                 z = tf.cos(lat)
                 return tf.concat([x, y, z], axis=-1)
 
-        lat_input = input_layers[lat_field]
-        lon_input = input_layers[lon_field]
-        return GeoPoint(name=f"{lat_field}_{lon_field}")((lat_input, lon_input))
+        lat_input = input_layers[lat_name]
+        lon_input = input_layers[lon_name]
+        return GeoPoint(name=f"{lat_name}_{lon_name}")((lat_input, lon_input))
 
     def sequential_layers(first_layer, *layers) -> keras.layers.Layer:
         return reduce(lambda layer, result: result(layer), layers, first_layer)
@@ -157,17 +157,34 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         "is_fishing": sequential_layers(
             keras.layers.concatenate(preprocessed_inputs, name="deep_layers"),
             keras.layers.Conv1D(
-                filters=8,
-                kernel_size=PADDING + 1,
+                filters=32,
+                kernel_size=24,
                 data_format="channels_last",
                 activation="relu",
             ),
-            keras.layers.Dense(16, "relu"),
-            keras.layers.Dense(4, "relu"),
-            keras.layers.Dense(1, "sigmoid", name="is_fishing"),
+            keras.layers.Conv1D(
+                filters=16,
+                kernel_size=12,
+                data_format="channels_last",
+                activation="relu",
+            ),
+            keras.layers.Conv1DTranspose(
+                filters=4,
+                kernel_size=12,
+                data_format="channels_last",
+                activation="relu",
+            ),
+            keras.layers.Conv1DTranspose(
+                name="is_fishing",
+                filters=1,
+                kernel_size=24,
+                data_format="channels_last",
+                activation="sigmoid",
+            ),
         )
     }
     return keras.Model(input_layers, output_layers)
+
 
 
 def run(

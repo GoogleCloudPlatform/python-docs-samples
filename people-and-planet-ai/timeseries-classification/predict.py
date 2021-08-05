@@ -13,37 +13,35 @@
 # limitations under the License.
 
 import numpy as np
+import pandas as pd
 from tensorflow import keras
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-import trainer
+import data_utils
 
-model = None
+model: Optional[keras.Model] = None
+
+
+def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
+    normalized_inputs = data_utils.with_fixed_time_steps(inputs)
+
+    # Our model always expects a batch prediction, so we create a batch with
+    # a single prediction request.
+    #   {input: [time_steps, 1]} --> {input: [1, time_steps, 1]}
+    inputs_batch = {
+        name: np.reshape(values, (1, len(values), 1))
+        for name, values in normalized_inputs.to_dict("list").items()
+    }
+
+    predictions = model.predict(inputs_batch)
+    return normalized_inputs.assign(is_fishing=predictions["is_fishing"][0])
 
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
-    # Our model always expects a batch prediction,
-    # so we create a batch with a single prediction request.
-    #   {input: [time_steps, 1]} --> {input: [1, time_steps, 1]}
-    batch_size = 1
-    inputs_batch = {
-        name: np.reshape(values, (batch_size, len(values), 1))
-        for name, values in inputs.items()
-    }
-
     # Cache the model so it only has to be loaded once per runtime.
     global model
     if model is None:
         model = keras.models.load_model(model_dir)
 
-    # Include the timestamp for each prediction so we can merge them back to the request data.
-    predictions_batch = {
-        "timestamp": [inputs_batch["timestamp"][0][trainer.PADDING : -trainer.PADDING]],
-        **model.predict(inputs_batch),
-    }
-
-    # We got a batch of a single prediction, with a single number per time step.
-    # So we extract the single prediction and flatten into a 1-dimensional vector.
-    #   {output: [1, time_steps, 1]} --> {output: [time_steps]}
-    return {name: values[0].flatten() for name, values in predictions_batch.items()}
+    return predict(model, inputs).to_dict("list")

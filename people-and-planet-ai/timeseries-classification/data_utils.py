@@ -34,22 +34,24 @@ def to_unix_time(timestamp: datetime) -> int:
     return time.mktime(timestamp.timetuple())
 
 
+def with_fixed_time_steps(input_data: Dict[str, np.ndarray]) -> pd.DataFrame:
+    return (
+        pd.DataFrame(input_data)
+        .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
+        .resample(TIME_STEP_INTERVAL, on="timestamp")
+        .mean()
+        .reset_index()
+        .interpolate()
+        .assign(timestamp=lambda df: df["timestamp"].map(to_unix_time))
+    )
+
+
 def read_data(data_file: str) -> pd.DataFrame:
     mmsi = os.path.splitext(os.path.basename(data_file))[0]
     with tf.io.gfile.GFile(data_file, "rb") as f:
-        ship_time_steps = (
-            pd.DataFrame(np.load(f)["x"])
-            .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
-            .resample(TIME_STEP_INTERVAL, on="timestamp")
-            .mean()
-            .reset_index()
-            .interpolate()
-            .assign(
-                mmsi=lambda df: df["mmsi"].map(lambda _: int(mmsi)),
-                timestamp=lambda df: df["timestamp"].map(to_unix_time),
-            )
+        return with_fixed_time_steps(np.load(f)["x"]).assign(
+            mmsi=lambda df: df["mmsi"].map(lambda _: int(mmsi)),
         )
-        return ship_time_steps
 
 
 def read_labels(labels_file: str) -> pd.DataFrame:
