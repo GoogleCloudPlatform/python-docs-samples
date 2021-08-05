@@ -33,7 +33,10 @@ import storage_remove_file_owner
 
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account. Retrieve a service account email with storage admin permissions.
-TEST_EMAIL = os.environ["ACL_TEST_EMAIL"]
+TEST_EMAIL = (
+    "py38-storage-test"
+    "@python-docs-samples-tests.iam.gserviceaccount.com"
+)
 
 
 @pytest.fixture(scope="module")

@@ -77,7 +77,6 @@ TEST_CONFIG_OVERRIDE = {
     'envs': {
         'HMAC_KEY_TEST_SERVICE_ACCOUNT': get_service_account_email(),
         'CLOUD_KMS_KEY': get_cloud_kms_key(),
-        'ACL_TEST_EMAIL': get_service_account_email(),
         # Some tests can not use multiple projects because of several reasons:
         # 1. The new projects is enforced to have the
         # 'constraints/iam.disableServiceAccountKeyCreation' policy.
