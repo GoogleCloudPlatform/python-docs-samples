@@ -57,7 +57,7 @@ def publish(request):
 # [END functions_pubsub_publish]
 
 
-# [START functions_pubsub_subscribe]
+# [START functions_cloudevent_pubsub]
 # Triggered from a message on a Cloud Pub/Sub topic.
 def subscribe(cloudevent):
     # Print out the data from Pub/Sub, to prove that it worked
