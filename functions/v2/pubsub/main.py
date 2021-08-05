@@ -62,4 +62,4 @@ def publish(request):
 def subscribe(cloudevent):
     # Print out the data from Pub/Sub, to prove that it worked
     print(base64.b64decode(cloudevent.data["message"]["data"]))
-# [END functions_pubsub_subscribe]
+# [END functions_cloudevent_pubsub]
