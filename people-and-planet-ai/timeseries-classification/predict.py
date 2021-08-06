@@ -19,6 +19,7 @@ from tensorflow import keras
 from typing import Dict, List, Optional
 
 import data_utils
+import trainer
 
 model: Optional[keras.Model] = None
 
@@ -35,7 +36,9 @@ def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
     }
 
     predictions = model.predict(inputs_batch)
-    return normalized_inputs.assign(is_fishing=predictions["is_fishing"][0])
+    return normalized_inputs[trainer.PADDING :].assign(
+        is_fishing=predictions["is_fishing"][0]
+    )
 
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
