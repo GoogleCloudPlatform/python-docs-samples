@@ -160,9 +160,9 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
                 data_format="channels_last",
                 activation="relu",
             ),
-            keras.layers.Dense(filters=16, activation="relu"),
-            keras.layers.Dense(filters=8, activation="relu"),
-            keras.layers.Dense(filters=1, activation="sigmoid", name="is_fishing"),
+            keras.layers.Dense(16, activation="relu"),
+            keras.layers.Dense(8, activation="relu"),
+            keras.layers.Dense(1, activation="sigmoid", name="is_fishing"),
         )
     }
     return keras.Model(input_layers, output_layers)
