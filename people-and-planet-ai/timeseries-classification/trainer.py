@@ -34,7 +34,9 @@ OUTPUTS_SPEC = {
     "is_fishing": tf.TensorSpec(shape=(None, 1), dtype=tf.float32),
 }
 
-PADDING = 24
+PADDING_OUTER = 24
+PADDING_INNER = 12
+PADDING = PADDING_OUTER + PADDING_INNER
 
 
 def validated(
@@ -156,26 +158,26 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
             keras.layers.concatenate(preprocessed_inputs, name="deep_layers"),
             keras.layers.Conv1D(
                 filters=32,
-                kernel_size=PADDING,
+                kernel_size=PADDING_OUTER + 1,
                 data_format="channels_last",
                 activation="relu",
             ),
             keras.layers.Conv1D(
                 filters=16,
-                kernel_size=12,
+                kernel_size=PADDING_INNER + 1,
                 data_format="channels_last",
                 activation="relu",
             ),
             keras.layers.Conv1DTranspose(
                 filters=4,
-                kernel_size=12,
+                kernel_size=PADDING_INNER + 1,
                 data_format="channels_last",
                 activation="relu",
             ),
             keras.layers.Conv1DTranspose(
                 name="is_fishing",
                 filters=1,
-                kernel_size=PADDING,
+                kernel_size=PADDING_OUTER + 1,
                 data_format="channels_last",
                 activation="sigmoid",
             ),
