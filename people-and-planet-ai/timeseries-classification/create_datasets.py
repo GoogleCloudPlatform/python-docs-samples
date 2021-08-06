@@ -56,7 +56,7 @@ def run(
         | "Reshuffle files" >> beam.Reshuffle()
         | "Read data" >> beam.Map(data_utils.read_data)
         | "Label data" >> beam.Map(data_utils.label_data, labels)
-        | "Get data points" >> beam.FlatMap(data_utils.generate_data_points)
+        | "Get training points" >> beam.FlatMap(data_utils.generate_training_points)
         | "Serialize TFRecords" >> beam.Map(trainer.serialize)
         | "Train-eval split"
         >> beam.Partition(lambda x, n: random.choices([0, 1], train_eval_split)[0], 2)
