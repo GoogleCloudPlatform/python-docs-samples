@@ -18,6 +18,7 @@ from datetime import datetime
 import os
 
 import flask
+import numpy as np
 
 app = flask.Flask(__name__)
 
@@ -81,6 +82,7 @@ def run_create_datasets():
         job_id = create_datasets.run(**params)
 
         return {
+            "method": "create-datasets",
             "job_id": job_id,
             "job_url": f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
             "params": params,
@@ -112,6 +114,7 @@ def run_train_model():
         job_id = train_model.run(**params)
 
         return {
+            "method": "train-model",
             "job_id": job_id,
             "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{REGION}/training/{job_id}/cpu?project={PROJECT}",
             "params": params,
@@ -126,13 +129,21 @@ def run_predict():
 
     try:
         args = flask.request.get_json() or {}
-        predictions = predict.run(
-            model_dir=args.get("model_dir", f"{TRAINING_DIR}/model"),
-            inputs=args["inputs"],
-        )
+        params = {
+            "model_dir": args.get("model_dir", f"{TRAINING_DIR}/model"),
+            "inputs": args["inputs"],
+        }
+        predictions = predict.run(**params)
 
         # Convert the numpy arrays to Python lists to make them JSON-encodable.
-        return {name: values.tolist() for name, values in predictions.items()}
+        return {
+            "method": "predict",
+            "model_dir": params["model_dir"],
+            "input_shapes": {
+                name: np.shape(values) for name, values in params["inputs"].items()
+            },
+            "predictions": predictions,
+        }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
 
