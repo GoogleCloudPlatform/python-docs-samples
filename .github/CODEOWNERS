@@ -30,7 +30,7 @@
 /datacatalog/**/*.py                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/**/*.py                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/**/*.py                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
-/dataproc/**/*.py                      @bradmiro @GoogleCloudPlatform/python-samples-owners
+/dataproc/**/*.py                      @loferris @GoogleCloudPlatform/python-samples-owners
 /datastore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /dns/**/*.py                           @GoogleCloudPlatform/python-samples-owners
