@@ -161,7 +161,6 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
                 activation="relu",
             ),
             keras.layers.Dense(16, activation="relu"),
-            keras.layers.Dense(8, activation="relu"),
             keras.layers.Dense(1, activation="sigmoid", name="is_fishing"),
         )
     }
