@@ -58,11 +58,26 @@ def iam_user():
 
 
 @pytest.fixture()
-def secret(client, project_id):
-    parent = f"projects/{project_id}"
+def secret_id(client, project_id):
     secret_id = "python-secret-{}".format(uuid.uuid4())
 
+    yield secret_id
+
+    secret_path = client.secret_path(project_id, secret_id)
+    print("deleting secret {}".format(secret_id))
+    try:
+        client.delete_secret(request={"name": secret_path})
+    except exceptions.NotFound:
+        # Secret was already deleted, probably in the test
+        print(f"Secret {secret_id} was not found.")
+        pass
+
+
+@pytest.fixture()
+def secret(client, project_id, secret_id):
     print("creating secret {}".format(secret_id))
+
+    parent = f"projects/{project_id}"
     secret = client.create_secret(
         request={
             "parent": parent,
@@ -72,16 +87,6 @@ def secret(client, project_id):
     )
 
     yield project_id, secret_id, secret.etag
-
-    print("deleting secret {}".format(secret_id))
-    try:
-        client.delete_secret(request={"name": secret.name})
-    except exceptions.NotFound:
-        # Secret was already deleted, probably in the test
-        pass
-
-
-another_secret = secret
 
 
 @pytest.fixture()
@@ -107,13 +112,15 @@ def pubsub_message():
     message_bytes = message.encode()
     base64_bytes = base64.b64encode(message_bytes)
     return {
-        "attributes": {"eventType": "SECRET_UPDATE", "secretId": "projects/p/secrets/s"},
-        "data": base64_bytes
+        "attributes": {
+            "eventType": "SECRET_UPDATE",
+            "secretId": "projects/p/secrets/s",
+        },
+        "data": base64_bytes,
     }
 
 
-def test_quickstart(project_id):
-    secret_id = "python-secret-{}".format(uuid.uuid4())
+def test_quickstart(project_id, secret_id):
     quickstart(project_id, secret_id)
 
 
@@ -130,11 +137,9 @@ def test_add_secret_version(secret):
     assert secret_id in version.name
 
 
-def test_create_secret(client, project_id):
-    secret_id = "python-secret-{}".format(uuid.uuid4())
+def test_create_secret(client, project_id, secret_id):
     secret = create_secret(project_id, secret_id)
     assert secret_id in secret.name
-    client.delete_secret(request={"name": secret.name})
 
 
 def test_delete_secret(client, secret):
@@ -181,7 +186,9 @@ def test_enable_disable_secret_version_with_etag(client, secret_version):
     version = disable_secret_version_with_etag(project_id, secret_id, version_id, etag)
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
-    version = enable_secret_version_with_etag(project_id, secret_id, version_id, version.etag)
+    version = enable_secret_version_with_etag(
+        project_id, secret_id, version_id, version.etag
+    )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
 
@@ -221,14 +228,12 @@ def test_list_secret_versions(capsys, secret_version, another_secret_version):
     assert another_version_id in out
 
 
-def test_list_secrets(capsys, secret, another_secret):
+def test_list_secrets(capsys, secret):
     project_id, secret_id, _ = secret
-    _, another_secret_id, _ = another_secret
     list_secrets(project_id)
 
     out, _ = capsys.readouterr()
     assert secret_id in out
-    assert another_secret_id in out
 
 
 def test_update_secret(secret):
@@ -239,7 +244,9 @@ def test_update_secret(secret):
 
 def test_consume_event_notification(pubsub_message):
     got = consume_event_notification(pubsub_message, None)
-    assert got == "Received SECRET_UPDATE for projects/p/secrets/s. New metadata: hello!"
+    assert (
+        got == "Received SECRET_UPDATE for projects/p/secrets/s. New metadata: hello!"
+    )
 
 
 def test_update_secret_with_etag(secret):
