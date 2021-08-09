@@ -123,7 +123,7 @@ def create_instance(
     initialize_params.source_image = (
         source_image  # "projects/debian-cloud/global/images/family/debian-10"
     )
-    initialize_params.disk_size_gb = "10"
+    initialize_params.disk_size_gb = 10
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     disk.boot = True
