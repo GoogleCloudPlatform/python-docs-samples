@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import google.auth
 from google.auth import downscoped
 from google.auth.transport import requests
 from google.cloud import storage
-
-import google.oauth2
+from google.oauth2 import credentials
 
 
 OBJECT_PREFIX_NAME = "customer-a"
@@ -105,14 +104,14 @@ def token_consumer(bucket_name, object_name):
         # locally.
         return get_token_from_broker(bucket_name, OBJECT_PREFIX_NAME)
 
-    credentials = google.oauth2.credentials.Credentials(
+    creds = credentials.Credentials(
         None,
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
         refresh_handler=refresh_handler,
     )
 
     # Initialize a storage client with the oauth2 credentials.
-    storage_client = storage.Client(credentials=credentials)
+    storage_client = storage.Client(credentials=creds)
     # The token broker has readonly access to the specified bucket object.
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(object_name)
