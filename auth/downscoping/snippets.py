@@ -63,6 +63,10 @@ def get_token_from_broker(bucket_name, object_prefix):
     # [START auth_downscoping_initialize_downscoped_cred]
     # Retrieve the source credentials via ADC.
     source_credentials, _ = google.auth.default()
+    if source_credentials.requires_scopes:
+        source_credentials = source_credentials.with_scopes(
+            ["https://www.googleapis.com/auth/cloud-platform"]
+        )
 
     # Create the downscoped credentials.
     downscoped_credentials = downscoped.Credentials(
