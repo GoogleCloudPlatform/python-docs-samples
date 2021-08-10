@@ -73,9 +73,14 @@ def list_all_instances(
         iterable collections of Instance objects as values.
     """
     instance_client = compute_v1.InstancesClient()
-    agg_list = instance_client.aggregated_list(project=project_id)
+    # Use the `max_results` parameter to limit the number of results that the API returns per response page.
+    request = compute_v1.AggregatedListInstancesRequest(project=project_id, max_results=5)
+    agg_list = instance_client.aggregated_list(request=request)
     all_instances = {}
     print("Instances found:")
+    # Despite using the `max_results` parameter, you don't need to handle the pagination
+    # yourself. The returned `AggregatedListPager` object handles pagination
+    # automatically, returning separated pages as you iterate over the results.
     for zone, response in agg_list:
         if response.instances:
             all_instances[zone] = response.instances
