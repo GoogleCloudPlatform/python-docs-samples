@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2021, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,20 +14,13 @@
 import os
 import re
 
-import transcribe_async
+import transcribe_async_file
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe(capsys):
-    transcribe_async.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
-    out, err = capsys.readouterr()
-
-    assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)
-
-
-def test_transcribe_gcs(capsys):
-    transcribe_async.transcribe_gcs("gs://python-docs-samples-tests/speech/audio.flac")
+    transcribe_async_file.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
     out, err = capsys.readouterr()
 
     assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)
