@@ -16,15 +16,16 @@
 
 """Demonstrates how to use Downscoping with Credential Access Boundaries."""
 
+# [START auth_downscoping_token_broker]
 import google.auth
 
 from google.auth import downscoped
 from google.auth.transport import requests
+# [END auth_downscoping_token_broker]
+# [START auth_downscoping_token_consumer]
 from google.cloud import storage
 from google.oauth2 import credentials
-
-
-OBJECT_PREFIX_NAME = "customer-a"
+# [END auth_downscoping_token_consumer]
 
 
 # [START auth_downscoping_token_broker]
@@ -38,25 +39,28 @@ def get_token_from_broker(bucket_name, object_prefix):
             prefix string.
 
     Returns:
-        Tuple[str, datetime]: The downscoped access token and its expiry date.
+        Tuple[str, datetime.datetime]: The downscoped access token and its expiry date.
     """
     # [START auth_downscoping_rules]
     # Initialize the credential access boundary rules.
     available_resource = f"//storage.googleapis.com/projects/_/buckets/{bucket_name}"
     # Downscoped credentials will have readonly access to the resource.
     available_permissions = ["inRole:roles/storage.objectViewer"]
+    # Only objects starting with the specified prefix string in the object name
+    # will be allowed read access.
     availability_expression = (
         "resource.name.startsWith('projects/_/buckets/{}/objects/{}')".format(
             bucket_name, object_prefix
         )
     )
-
     availability_condition = downscoped.AvailabilityCondition(availability_expression)
+    # Define the single access boundary rule using the above properties.
     rule = downscoped.AccessBoundaryRule(
         available_resource=available_resource,
         available_permissions=available_permissions,
         availability_condition=availability_condition,
     )
+    # Define the credential access boundary with all the relevants rules.
     credential_access_boundary = downscoped.CredentialAccessBoundary(rules=[rule])
     # [END auth_downscoping_rules]
 
@@ -106,7 +110,7 @@ def token_consumer(bucket_name, object_name):
         # secure authenticated channel.
         # For illustration purposes, we are generating the downscoped token
         # locally.
-        return get_token_from_broker(bucket_name, OBJECT_PREFIX_NAME)
+        return get_token_from_broker(bucket_name, object_name[0:3])
 
     creds = credentials.Credentials(
         None,
@@ -125,60 +129,17 @@ def token_consumer(bucket_name, object_name):
 # [END auth_downscoping_token_consumer]
 
 
-def upload_object(storage_client, bucket_name, source_file_name, destination_blob_name):
-    """Upload object from source file to specified object under blob name.
-
-    By default the object is created as non-public.
-
-    Args:
-        storage_client (google.cloud.storage.Client): The storage client
-            instance.
-        bucket_name (str): The name of the cloud storage bucket.
-        source_file_name (str): The file path to the source file to upload.
-        destination_blob_name (str): The object name under which the file will
-            be uploaded.
-    """
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename(source_file_name)
-
-
-def delete_object(storage_client, bucket_name, blob_name):
-    """Delete object of blob name under specified bucket.
-
-    Args:
-        storage_client (google.cloud.storage.Client): The storage client
-            instance.
-        bucket_name (str): The name of the cloud storage bucket.
-        blob_name (str): The object name in the storage bucket to be deleted.
-    """
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-    blob.delete()
-
-
-def main(bucket_name, filename):
+def main(bucket_name, object_name):
     """The main function used to test downscoping functionality.
 
-    This will upload the file to the storage bucket, generate downscoped
-    tokens (readonly access), inject them into a storage instance and then
-    test readonly access. On completion, the object will be deleted.
+    This will generate downscope tokens (readonly access), inject them
+    into a storage instance and then test readonly access.
 
     Args:
         bucket_name (str): The name of the cloud storage bucket.
-        filename (str): The file path to the source file to upload.
+        object_name (str): The name of the object in the bucket.
     """
     # Storage client using ADC.
-    storage_client = storage.Client()
-    try:
-        # The name of the test object to be accessed in the bucket.
-        blob_name = f"{OBJECT_PREFIX_NAME}-data.txt"
-        print("Uploading object...")
-        upload_object(storage_client, bucket_name, filename, blob_name)
-
-        print("Testing token consumer read access...")
-        token_consumer(bucket_name, blob_name)
-    finally:
-        print("Deleting object...")
-        delete_object(storage_client, bucket_name, blob_name)
+    print("Testing token consumer read access...")
+    token_consumer(bucket_name, object_name)
     print("Done")

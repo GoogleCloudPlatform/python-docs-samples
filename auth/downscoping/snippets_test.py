@@ -14,37 +14,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
-import tempfile
+import uuid
+
+from google.cloud import storage
 
 import pytest
 
 from snippets import main
 
 
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+@pytest.fixture(scope="module")
+def test_bucket():
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "bucket-downscoping-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket = storage.Client().create_bucket(bucket.name)
+    yield bucket
+    bucket.delete(force=True)
 
 
-@pytest.fixture()
-def test_file():
-    _, file_path = tempfile.mkstemp()
-
-    with open(file_path, "w+b") as f:
-        f.write(b"hello world")
-
-    yield file_path
-
-    os.remove(file_path)
+@pytest.fixture(scope="module")
+def test_blob(test_bucket):
+    """Yields a blob that is deleted after the test completes."""
+    bucket = test_bucket
+    blob = bucket.blob("customer-a-data.txt")
+    blob.upload_from_string("hello world")
+    yield blob
 
 
-def test_main(capsys, test_file):
-    main(BUCKET, test_file)
+def test_main(capsys, test_blob):
+    main(test_blob.bucket.name, test_blob.name)
     out, err = capsys.readouterr()
 
     assert not re.search(
         r"error", out, re.IGNORECASE
     ), f"Error detected in the output: {out}"
-    assert re.search(
-        r"Uploading.*Testing.*Deleting.*Done", out, re.DOTALL
-    ), f"Unexpected output: {out}"
+    assert re.search(r"Testing.*Done", out, re.DOTALL), f"Unexpected output: {out}"

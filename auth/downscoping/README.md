@@ -17,17 +17,12 @@ information](https://developers.google.com/identity/protocols/application-defaul
 
         $ pip install -r requirements.txt
 
-3. You will also need to create resources on the [Google Developers Console](https://console.developers.google.com). This includes
-creating a private Cloud Storage bucket and setting the environment variable `CLOUD_STORAGE_BUCKET` value to the bucket name.
-The application default credentials principal should have the ability to create and manage objects in that bucket.
-
-4. Set the environment variable `GOOGLE_CLOUD_PROJECT` to the project ID.
+3. Set the environment variable `GOOGLE_CLOUD_PROJECT` to the project ID.
 More details are available in the [AUTHORING_GUIDE](../../AUTHORING_GUIDE.md).
 
-5. To run the samples, the `main(bucket_name, filename)` function should be run with the created bucket name
-and the path to a test file to use to test access.
+4. To run the samples, the `main(bucket_name, object_name)` function should be run with a created storage bucket name and the object name in that bucket of the file to use to test access.
 
-6. To run the tests:
+5. To run the tests, you will also need the application default credentials principal should have the ability to create and delete a storage bucket:
 
         $ nox -s py-3.7 -- snippets_test.py
 
