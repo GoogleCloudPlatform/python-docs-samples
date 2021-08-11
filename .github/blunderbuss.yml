@@ -156,6 +156,11 @@ assign_prs_by:
   - 'api: cloudsql'
   to:
   - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: auth'
+  to:
+  - arithmetic1728
+  - silvolu
 
 
 assign_issues:
