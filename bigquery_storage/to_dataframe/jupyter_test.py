@@ -49,60 +49,12 @@ def _strip_region_tags(sample_text):
     return "\n".join(magic_lines)
 
 
-def test_jupyter_small_query(ipython):
-    ip = IPython.get_ipython()
-    ip.extension_manager.load_extension("google.cloud.bigquery")
-
-    # Include a small query to demonstrate that it falls back to the
-    # tabledata.list API when the BQ Storage API cannot be used.
-    sample = """
-    # [START bigquerystorage_jupyter_tutorial_fallback]
-    %%bigquery stackoverflow --use_bqstorage_api
-    SELECT
-      CONCAT(
-        'https://stackoverflow.com/questions/',
-        CAST(id as STRING)) as url,
-      view_count
-    FROM `bigquery-public-data.stackoverflow.posts_questions`
-    WHERE tags like '%google-bigquery%'
-    ORDER BY view_count DESC
-    LIMIT 10
-    # [END bigquerystorage_jupyter_tutorial_fallback]
-    """
-
-    result = ip.run_cell(_strip_region_tags(sample))
-    result.raise_error()  # Throws an exception if the cell failed.
-    assert "stackoverflow" in ip.user_ns  # verify that variable exists
-
-
 def test_jupyter_tutorial(ipython):
     ip = IPython.get_ipython()
     ip.extension_manager.load_extension("google.cloud.bigquery")
 
     # This code sample intentionally queries a lot of data to demonstrate the
     # speed-up of using the BigQuery Storage API to download the results.
-    sample = """
-    # [START bigquerystorage_jupyter_tutorial_query]
-    %%bigquery tax_forms --use_bqstorage_api
-    SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`
-    # [END bigquerystorage_jupyter_tutorial_query]
-    """
-    result = ip.run_cell(_strip_region_tags(sample))
-    result.raise_error()  # Throws an exception if the cell failed.
-
-    assert "tax_forms" in ip.user_ns  # verify that variable exists
-    tax_forms = ip.user_ns["tax_forms"]
-
-    # [START bigquerystorage_jupyter_tutorial_results]
-    tax_forms.head()
-    # [END bigquerystorage_jupyter_tutorial_results]
-
-    # [START bigquerystorage_jupyter_tutorial_context]
-    import google.cloud.bigquery.magics
-
-    google.cloud.bigquery.magics.context.use_bqstorage_api = True
-    # [END bigquerystorage_jupyter_tutorial_context]
-
     sample = """
     # [START bigquerystorage_jupyter_tutorial_query_default]
     %%bigquery tax_forms
