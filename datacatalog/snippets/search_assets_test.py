@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import re
-
-from ..v1beta1 import create_fileset_entry
+import search_assets
 
 
-def test_create_fileset_entry(capsys, client, random_entry_name):
-
-    entry_name_pattern = "(?P<entry_group_name>.+?)/entries/(?P<entry_id>.+?$)"
-    entry_name_matches = re.match(entry_name_pattern, random_entry_name)
-    entry_group_name = entry_name_matches.group("entry_group_name")
-    entry_id = entry_name_matches.group("entry_id")
-
-    create_fileset_entry.create_fileset_entry(client, entry_group_name, entry_id)
+def test_search_assets(capsys, project_id, random_existing_tag_template_id):
+    override_values = {
+        "project_id": project_id,
+        "tag_template_id": random_existing_tag_template_id,
+    }
+    search_assets.search_assets(override_values)
     out, err = capsys.readouterr()
-    assert "Created entry {}".format(random_entry_name) in out
+    assert "Results in project:" in out
+    assert random_existing_tag_template_id in out

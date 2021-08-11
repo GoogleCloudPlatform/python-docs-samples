@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "datacatalog_lookup_entry_sql_resource")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-datacatalog
 
@@ -24,16 +22,15 @@
 #   description: Lookup Entry using SQL resource
 #   usage: python3 samples/v1beta1/datacatalog_lookup_entry_sql_resource.py [--sql_name "[SQL Resource Name]"]
 
-# [START datacatalog_lookup_entry_sql_resource]
-from google.cloud import datacatalog_v1beta1
 
-
-def sample_lookup_entry(sql_name):
+def sample_lookup_entry(sql_name: str):
+    # [START data_catalog_lookup_entry_sql_resource_v1beta1]
+    from google.cloud import datacatalog_v1beta1
     """
     Lookup Entry using SQL resource
 
     Args:
-      sql_name The SQL name of the Google Cloud Platform resource the Data Catalog
+      sql_name (str): The SQL name of the Google Cloud Platform resource the Data Catalog
       entry represents.
       Examples:
       bigquery.table.`bigquery-public-data`.new_york_taxi_trips.taxi_zone_geom
@@ -43,14 +40,12 @@ def sample_lookup_entry(sql_name):
     client = datacatalog_v1beta1.DataCatalogClient()
 
     # sql_name = '[SQL Resource Name]'
-    response = client.lookup_entry(request = {'sql_resource': sql_name})
-    entry = response
-    print(u"Entry name: {}".format(entry.name))
-    print(u"Entry type: {}".format(datacatalog_v1beta1.EntryType(entry.type).name))
-    print(u"Linked resource: {}".format(entry.linked_resource))
-
-
-# [END datacatalog_lookup_entry_sql_resource]
+    entry = client.lookup_entry(request={"sql_resource": sql_name})
+    print(f"Entry name: {entry.name}")
+    print(f"Entry type: {datacatalog_v1beta1.EntryType(entry.type_).name}")
+    print(f"Linked resource: {entry.linked_resource}")
+    # [END data_catalog_lookup_entry_sql_resource_v1beta1]
+    return entry
 
 
 def main():

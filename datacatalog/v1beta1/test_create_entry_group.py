@@ -12,18 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import datacatalog_v1beta1
 
-from ...quickstart import create_fileset_entry_quickstart
+import create_entry_group
 
 
-def test_create_fileset_entry_quickstart(
-    capsys, client, project_id, random_entry_group_id, random_entry_id
-):
+def test_create_entry_group(capsys, client, project_id, random_entry_group_id):
 
-    create_fileset_entry_quickstart.create_fileset_entry_quickstart(
-        client, project_id, random_entry_group_id, random_entry_id
-    )
+    create_entry_group.create_entry_group(project_id, random_entry_group_id)
     out, err = capsys.readouterr()
     assert (
         "Created entry group"
@@ -32,9 +27,3 @@ def test_create_fileset_entry_quickstart(
         )
         in out
     )
-
-    expected_entry_name = datacatalog_v1beta1.DataCatalogClient.entry_path(
-        project_id, "us-central1", random_entry_group_id, random_entry_id
-    )
-
-    assert "Created entry {}".format(expected_entry_name) in out

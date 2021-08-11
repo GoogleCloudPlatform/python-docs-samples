@@ -14,40 +14,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 import lookup_entry
 
-BIGQUERY_PROJECT = 'bigquery-public-data'
-BIGQUERY_DATASET = 'new_york_taxi_trips'
-BIGQUERY_TABLE = 'taxi_zone_geom'
+BIGQUERY_PROJECT = "bigquery-public-data"
+BIGQUERY_DATASET = "new_york_taxi_trips"
+BIGQUERY_TABLE = "taxi_zone_geom"
 
-PUBSUB_PROJECT = 'pubsub-public-data'
-PUBSUB_TOPIC = 'taxirides-realtime'
-
-
-def test_lookup_bigquery_dataset():
-    assert lookup_entry.lookup_bigquery_dataset(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
+PUBSUB_PROJECT = "pubsub-public-data"
+PUBSUB_TOPIC = "taxirides-realtime"
 
 
-def test_lookup_bigquery_dataset_sql_resource():
-    assert lookup_entry.lookup_bigquery_dataset_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
-
-
-def test_lookup_bigquery_table():
-    assert lookup_entry.lookup_bigquery_table(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
-
-
-def test_lookup_bigquery_table_sql_resource():
-    assert lookup_entry.lookup_bigquery_table_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
-
-
-def test_lookup_pubsub_topic():
-    assert lookup_entry.lookup_pubsub_topic(PUBSUB_PROJECT, PUBSUB_TOPIC)
-
-
-def test_lookup_pubsub_topic_sql_resource():
-    assert lookup_entry.lookup_pubsub_topic_sql_resource(
-        PUBSUB_PROJECT, PUBSUB_TOPIC)
+def test_lookup_entry(capsys):
+    override_values = {
+        "bigquery_project_id": BIGQUERY_PROJECT,
+        "dataset_id": BIGQUERY_DATASET,
+        "table_id": BIGQUERY_TABLE,
+        "pubsub_project_id": PUBSUB_PROJECT,
+        "topic_id": PUBSUB_TOPIC,
+    }
+    dataset_resource = f"//bigquery.googleapis.com/projects/{BIGQUERY_PROJECT}/datasets/{BIGQUERY_DATASET}"
+    table_resource = f"//bigquery.googleapis.com/projects/{BIGQUERY_PROJECT}/datasets/{BIGQUERY_DATASET}/tables/{BIGQUERY_TABLE}"
+    topic_resource = (
+        f"//pubsub.googleapis.com/projects/{PUBSUB_PROJECT}/topics/{PUBSUB_TOPIC}"
+    )
+    lookup_entry.lookup_entry(override_values)
+    out, err = capsys.readouterr()
+    assert re.search(
+        f"(Retrieved entry .+ for BigQuery Dataset resource {dataset_resource})", out
+    )
+    assert re.search(
+        f"(Retrieved entry .+ for BigQuery Table resource {table_resource})", out
+    )
+    assert re.search(
+        f"(Retrieved entry .+ for Pub/Sub Topic resource {topic_resource})", out
+    )

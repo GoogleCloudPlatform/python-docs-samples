@@ -17,7 +17,6 @@ from __future__ import print_function
 import os
 from pathlib import Path
 import sys
-from typing import Callable, Dict, List, Optional
 
 import nox
 
@@ -28,9 +27,8 @@ import nox
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
 
-BLACK_VERSION = "black==19.10b0"
-
 # Copy `noxfile_config.py` to your directory and modify it instead.
+
 
 # `TEST_CONFIG` dict is a configuration hook that allows users to
 # modify the test configurations. The values here should be in sync
@@ -40,19 +38,12 @@ BLACK_VERSION = "black==19.10b0"
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
     "ignored_versions": ["2.7"],
-    # Old samples are opted out of enforcing Python type hints
-    # All new samples should feature them
-    "enforce_type_hints": False,
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
     "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
-    # If you need to use a specific version of pip,
-    # change pip_version_override to the string representation
-    # of the version number, for example, "20.2.4"
-    "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {},
@@ -71,7 +62,7 @@ except ImportError as e:
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
 
-def get_pytest_env_vars() -> Dict[str, str]:
+def get_pytest_env_vars():
     """Returns a dict for pytest invocation."""
     ret = {}
 
@@ -87,7 +78,7 @@ def get_pytest_env_vars() -> Dict[str, str]:
 
 # DO NOT EDIT - automatically generated.
 # All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9"]
+ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8"]
 
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
@@ -100,7 +91,7 @@ INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE",
 #
 
 
-def _determine_local_import_names(start_dir: str) -> List[str]:
+def _determine_local_import_names(start_dir):
     """Determines all import names that should be considered "local".
 
     This is used when running the linter to insure that import order is
@@ -138,11 +129,8 @@ FLAKE8_COMMON_ARGS = [
 
 
 @nox.session
-def lint(session: nox.sessions.Session) -> None:
-    if not TEST_CONFIG["enforce_type_hints"]:
-        session.install("flake8", "flake8-import-order")
-    else:
-        session.install("flake8", "flake8-import-order", "flake8-annotations")
+def lint(session):
+    session.install("flake8", "flake8-import-order")
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
@@ -154,19 +142,6 @@ def lint(session: nox.sessions.Session) -> None:
 
 
 #
-# Black
-#
-
-
-@nox.session
-def blacken(session: nox.sessions.Session) -> None:
-    session.install(BLACK_VERSION)
-    python_files = [path for path in os.listdir(".") if path.endswith(".py")]
-
-    session.run("black", *python_files)
-
-
-#
 # Sample Tests
 #
 
@@ -174,24 +149,13 @@ def blacken(session: nox.sessions.Session) -> None:
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
-def _session_tests(
-    session: nox.sessions.Session, post_install: Callable = None
-) -> None:
-    if TEST_CONFIG["pip_version_override"]:
-        pip_version = TEST_CONFIG["pip_version_override"]
-        session.install(f"pip=={pip_version}")
+def _session_tests(session, post_install=None):
     """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
-        if os.path.exists("constraints.txt"):
-            session.install("-r", "requirements.txt", "-c", "constraints.txt")
-        else:
-            session.install("-r", "requirements.txt")
+        session.install("-r", "requirements.txt")
 
     if os.path.exists("requirements-test.txt"):
-        if os.path.exists("constraints-test.txt"):
-            session.install("-r", "requirements-test.txt", "-c", "constraints-test.txt")
-        else:
-            session.install("-r", "requirements-test.txt")
+        session.install("-r", "requirements-test.txt")
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
@@ -206,12 +170,12 @@ def _session_tests(
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
         success_codes=[0, 5],
-        env=get_pytest_env_vars(),
+        env=get_pytest_env_vars()
     )
 
 
 @nox.session(python=ALL_VERSIONS)
-def py(session: nox.sessions.Session) -> None:
+def py(session):
     """Runs py.test for a sample using the specified version of Python."""
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
@@ -226,19 +190,14 @@ def py(session: nox.sessions.Session) -> None:
 #
 
 
-def _get_repo_root() -> Optional[str]:
-    """Returns the root folder of the project."""
+def _get_repo_root():
+    """ Returns the root folder of the project. """
     # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
     for i in range(10):
         if p is None:
             break
         if Path(p / ".git").exists():
-            return str(p)
-        # .git is not available in repos cloned via Cloud Build
-        # setup.py is always in the library's root, so use that instead
-        # https://github.com/googleapis/synthtool/issues/792
-        if Path(p / "setup.py").exists():
             return str(p)
         p = p.parent
     raise Exception("Unable to detect repository root.")
@@ -249,7 +208,7 @@ GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 
 @nox.session
 @nox.parametrize("path", GENERATED_READMES)
-def readmegen(session: nox.sessions.Session, path: str) -> None:
+def readmegen(session, path):
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
     dir_ = os.path.dirname(path)

@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
 # limitations under the License.
 
 
-from ..v1beta1 import create_entry_group
+import grant_tag_template_user_role
 
 
-def test_create_entry_group(capsys, client, project_id, random_entry_group_id):
-
-    create_entry_group.create_entry_group(request = {'parent': client, 'entry_group_id': project_id, 'entry_group': random_entry_group_id})
+def test_grant_tag_template_user_role(
+    capsys, project_id, random_existing_tag_template_id, valid_member_id
+):
+    override_values = {
+        "project_id": project_id,
+        "tag_template_id": random_existing_tag_template_id,
+        "member_id": valid_member_id,
+    }
+    grant_tag_template_user_role.grant_tag_template_user_role(override_values)
     out, err = capsys.readouterr()
-    assert (
-        "Created entry group"
-        " projects/{}/locations/{}/entryGroups/{}".format(
-            project_id, "us-central1", random_entry_group_id
-        )
-        in out
-    )
+    assert f"Member: {valid_member_id}, Role: roles/datacatalog.tagTemplateUser" in out

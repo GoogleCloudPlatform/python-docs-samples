@@ -13,13 +13,11 @@
 # limitations under the License.
 
 
-def create_entry_group(client, project_id, entry_group_id):
-
-    # [START datacatalog_create_entry_group_tag]
+def create_entry_group(project_id, entry_group_id):
+    # [START data_catalog_create_entry_group_v1beta1]
     from google.cloud import datacatalog_v1beta1
 
-    # TODO(developer): Construct a Data Catalog client object.
-    # client = datacatalog_v1beta1.DataCatalogClient()
+    client = datacatalog_v1beta1.DataCatalogClient()
 
     # TODO(developer): Set entry_group_id to the ID of the
     #  entry group to create.
@@ -35,9 +33,7 @@ def create_entry_group(client, project_id, entry_group_id):
     # entry_group_id = "your_entry_group_id"
 
     # Construct a full location path to be the parent of the entry group.
-    parent = datacatalog_v1beta1.DataCatalogClient.location_path(
-        project_id, location_id
-    )
+    parent = f"projects/{project_id}/locations/{location_id}"
 
     # Construct a full EntryGroup object to send to the API.
     entry_group = datacatalog_v1beta1.EntryGroup()
@@ -48,6 +44,11 @@ def create_entry_group(client, project_id, entry_group_id):
     # Raises google.api_core.exceptions.AlreadyExists if the Entry Group
     # already exists within the project.
     entry_group = client.create_entry_group(
-        request = {'parent': parent, 'entry_group_id': entry_group_id, 'entry_group': entry_group})  # Make an API request.
+        request={
+            "parent": parent,
+            "entry_group_id": entry_group_id,
+            "entry_group": entry_group,
+        }
+    )  # Make an API request.
     print("Created entry group {}".format(entry_group.name))
-    # [END datacatalog_create_entry_group_tag]
+    # [END data_catalog_create_entry_group_v1beta1]
