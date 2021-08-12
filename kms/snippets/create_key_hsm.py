@@ -30,6 +30,8 @@ def create_key_hsm(project_id, location_id, key_ring_id, id):
 
     # Import the client library.
     from google.cloud import kms
+    from google.protobuf import duration_pb2
+    import datetime
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
@@ -46,7 +48,11 @@ def create_key_hsm(project_id, location_id, key_ring_id, id):
         'version_template': {
             'algorithm': algorithm,
             'protection_level': protection_level
-        }
+        },
+
+        # Optional: customize how long key versions should be kept before
+        # destroying.
+        'destroy_scheduled_duration': duration_pb2.Duration().FromTimedelta(datetime.timedelta(days=1))
     }
 
     # Call the API.
