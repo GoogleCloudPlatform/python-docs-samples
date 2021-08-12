@@ -59,7 +59,12 @@ def set_usage_export_bucket(project_id: str, bucket_name: str,
         project=project_id, usage_export_location_resource=usage_export_location)
 
     op_client = compute_v1.GlobalOperationsClient()
-    op_client.wait(project=project_id, operation=operation.name)
+
+    while operation.status != compute_v1.Operation.Status.DONE:
+        operation = op_client.wait(
+            operation=operation.name, project=project_id
+        )
+
 # [END compute_usage_report_set]
 
 
@@ -113,5 +118,9 @@ def disable_usage_export(project_id: str) -> None:
         project=project_id, usage_export_location_resource=None)
 
     op_client = compute_v1.GlobalOperationsClient()
-    op_client.wait(project=project_id, operation=operation.name)
+
+    while operation.status != compute_v1.Operation.Status.DONE:
+        operation = op_client.wait(
+            operation=operation.name, project=project_id
+        )
 # [END compute_usage_report_disable]
