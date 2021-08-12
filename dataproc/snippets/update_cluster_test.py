@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This sample walks a user through updating the number of clusters using the Dataproc
+# client library.
+
+
 import os
 import uuid
 
-from google.cloud import dataproc_v1 as dataproc
+from google.cloud.dataproc_v1.services.cluster_controller.client import (
+    ClusterControllerClient,
+)
 import pytest
 
-import submit_job
+import update_cluster
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-CLUSTER_NAME = "py-sj-test-{}".format(str(uuid.uuid4()))
+CLUSTER_NAME = f"py-cc-test-{str(uuid.uuid4())}"
+NEW_NUM_INSTANCES = 5
 CLUSTER = {
     "project_id": PROJECT_ID,
     "cluster_name": CLUSTER_NAME,
@@ -35,11 +42,7 @@ CLUSTER = {
 
 
 @pytest.fixture(autouse=True)
-def setup_teardown():
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
-    )
-
+def setup_teardown(cluster_client):
     # Create the cluster.
     operation = cluster_client.create_cluster(
         request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
@@ -57,8 +60,21 @@ def setup_teardown():
     )
 
 
-def test_submit_job(capsys):
-    submit_job.submit_job(PROJECT_ID, REGION, CLUSTER_NAME)
-    out, _ = capsys.readouterr()
+@pytest.fixture
+def cluster_client():
+    cluster_client = ClusterControllerClient(
+        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
+    )
+    return cluster_client
 
-    assert "Job finished successfully" in out
+
+def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
+    # Wrapper function for client library function
+    update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
+    new_num_cluster = cluster_client.get_cluster(
+        project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
+    )
+
+    out, _ = capsys.readouterr()
+    assert CLUSTER_NAME in out
+    assert new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES

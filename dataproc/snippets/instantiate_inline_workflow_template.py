@@ -27,11 +27,11 @@ from google.cloud import dataproc_v1 as dataproc
 
 def instantiate_inline_workflow_template(project_id, region):
     """This sample walks a user through submitting a workflow
-       for a Cloud Dataproc using the Python client library.
+    for a Cloud Dataproc using the Python client library.
 
-       Args:
-           project_id (string): Project to use for running the workflow.
-           region (string): Region where the workflow resources should live.
+    Args:
+        project_id (string): Project to use for running the workflow.
+        region (string): Region where the workflow resources should live.
     """
 
     # Create a client with the endpoint set to the desired region.

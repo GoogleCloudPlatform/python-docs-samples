@@ -77,8 +77,10 @@ def download_output(project, cluster_id, output_bucket, job_id):
     print("Downloading output file.")
     client = storage.Client(project=project)
     bucket = client.get_bucket(output_bucket)
-    output_blob = "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
-        cluster_id, job_id
+    output_blob = (
+        "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
+            cluster_id, job_id
+        )
     )
     return bucket.blob(output_blob).download_as_string()
 
@@ -230,8 +232,10 @@ def main(
         region = get_region_from_zone(zone)
         # Use a regional gRPC endpoint. See:
         # https://cloud.google.com/dataproc/docs/concepts/regional-endpoints
-        client_transport = cluster_controller_grpc_transport.ClusterControllerGrpcTransport(
-            address="{}-dataproc.googleapis.com:443".format(region)
+        client_transport = (
+            cluster_controller_grpc_transport.ClusterControllerGrpcTransport(
+                address="{}-dataproc.googleapis.com:443".format(region)
+            )
         )
         job_transport = job_controller_grpc_transport.JobControllerGrpcTransport(
             address="{}-dataproc.googleapis.com:443".format(region)
