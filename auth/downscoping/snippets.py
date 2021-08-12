@@ -105,9 +105,9 @@ def token_consumer(bucket_name, object_name):
     # Create the OAuth credentials from the downscoped token and pass a
     # refresh handler to handle token expiration. We are passing a
     # refresh_handler instead of a one-time access token/expiry pair.
-    # This will allow the credentials to generate new downscoped tokens on
-    # demand every time a token is expired, seamlessly without any
-    # additional code changes.
+    # This will allow the consumer to obtain new downscoped tokens on
+    # demand every time a token is expired, without any additional code
+    # changes.
     def refresh_handler(request, scopes=None):
         # The common pattern of usage is to have a token broker pass the
         # downscoped short-lived access tokens to a token consumer via some

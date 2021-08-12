@@ -11,7 +11,7 @@ This section contains samples for
 ## Running the samples
 
 1. Your environment must be setup with [authentication
-information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running on Compute Engine, this is already setup. You can also use `gcloud auth application-default login`.
+information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running on Cloud Shell or Compute Engine, this is already setup. You can also use `gcloud auth application-default login`.
 
 2. Install dependencies from `requirements.txt`
 
