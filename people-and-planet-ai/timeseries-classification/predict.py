@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict, List, Optional
+
 import numpy as np
 import pandas as pd
 from tensorflow import keras
-
-from typing import Dict, List, Optional
 
 import data_utils
 import trainer

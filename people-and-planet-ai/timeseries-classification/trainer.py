@@ -196,9 +196,9 @@ def run(
 
         logging.info("Compiling the model")
         model.compile(
-            optimizer="adam",  #                           https://keras.io/api/optimizers
+            optimizer="adam",  # https://keras.io/api/optimizers
             loss={"is_fishing": "binary_crossentropy"},  # https://keras.io/api/losses
-            metrics={"is_fishing": ["accuracy"]},  #       https://keras.io/api/metrics
+            metrics={"is_fishing": ["accuracy"]},  # https://keras.io/api/metrics
         )
 
     # Train the model.

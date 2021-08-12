@@ -12,108 +12,281 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
-import tempfile
-from unittest import mock
+import platform
+import subprocess
+import time
+import uuid
 
+from google.cloud import aiplatform
+from google.cloud import storage
+from googleapiclient.discovery import build
 import numpy as np
+import pandas as pd
 import pytest
-import tensorflow as tf
-from tensorflow import keras
+import requests
 
-import create_dataset
-import trainer
+dataflow = build("dataflow", "v1b3")
 
 
-TEST_VALUE_DICT = {
-    "distance_from_port": [[182558.08203125], [181616.03125], [180523.0390625]],
-    "speed": [[3.275000035775], [3.2000000477], [3.0750000477]],
-    "course": [[81.87499809262499], [36.5999984741], [83.60000038145]],
-    "lat": [[-22.482420921325], [-22.4892024994], [-22.500276088725002]],
-    "lon": [[-40.124936103825], [-40.1333656311], [-40.146536827074996]],
-    "is_fishing": [[1.0]],
+PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
+
+NAME = "ppai/timeseries-classification-py{PYTHON_VERSION}"
+
+UUID = uuid.uuid4().hex[0:6]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
+
+TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
+POLL_INTERVAL_SEC = 60  # 1 minute in seconds
+
+DATAFLOW_FINISHED_STATE = {
+    "JOB_STATE_DONE",
+    "JOB_STATE_FAILED",
+    "JOB_STATE_CANCELLED",
+    "JOB_STATE_DRAINED",
 }
 
-
-def test_validated_missing_field():
-    tensor_dict = {}
-    values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
-    with pytest.raises(KeyError):
-        trainer.validated(tensor_dict, values_spec)
-
-
-def test_validated_incompatible_type():
-    tensor_dict = {"x": tf.constant(["a", "b", "c"])}
-    values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
-    with pytest.raises(TypeError):
-        trainer.validated(tensor_dict, values_spec)
+VERTEX_AI_FINISHED_STATE = (
+    {
+        "JOB_STATE_SUCCEEDED",
+        "JOB_STATE_FAILED",
+        "JOB_STATE_CANCELLED",
+    },
+)
 
 
-def test_validated_incompatible_shape():
-    tensor_dict = {"x": tf.constant([1.0])}
-    values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
-    with pytest.raises(ValueError):
-        trainer.validated(tensor_dict, values_spec)
+@pytest.fixture(scope="session")
+def bucket_name() -> str:
+    storage_client = storage.Client()
+
+    bucket_name = f"{NAME.replace('/', '-')}-{UUID}"
+    bucket = storage_client.create_bucket(bucket_name)
+
+    logging.info(f"bucket_name: {bucket_name}")
+    yield bucket_name
+
+    bucket.delete(force=True)
 
 
-def test_validated_ok():
-    tensor_dict = {"x": tf.constant([1.0, 2.0, 3.0])}
-    values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
-    trainer.validated(tensor_dict, values_spec)
+@pytest.fixture(scope="session")
+def raw_data_dir(bucket_name: str) -> str:
+    storage_client = storage.Client()
 
-    tensor_dict = {"x": tf.constant([[1.0], [2.0], [3.0]])}
-    values_spec = {"x": tf.TensorSpec(shape=(None, 1), dtype=tf.float32)}
-    trainer.validated(tensor_dict, values_spec)
+    raw_data_dir = "data"
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(f"{raw_data_dir}/56980685061237.npz")
+    blob.upload_from_filename("test_data/56980685061237.npz")
 
+    logging.info(f"raw_data_dir: gs://{bucket_name}/{raw_data_dir}")
+    yield f"gs://{bucket_name}/{raw_data_dir}"
 
-def test_serialize_deserialize():
-    serialized = trainer.serialize(TEST_VALUE_DICT)
-    inputs, outputs = trainer.deserialize(serialized)
-    assert set(inputs.keys()) == set(trainer.INPUTS_SPEC.keys())
-    assert set(outputs.keys()) == set(trainer.OUTPUTS_SPEC.keys())
+    blob.delete()
 
 
-@mock.patch.object(trainer.main, "PADDING", 1)
-def test_e2e_local():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        train_data_dir = os.path.join(temp_dir, "data", "train")
-        eval_data_dir = os.path.join(temp_dir, "data", "eval")
-        model_dir = os.path.join(temp_dir, "model")
-        tensorboard_dir = os.path.join(temp_dir, "tensorboard")
+@pytest.fixture(scope="session")
+def raw_labels_dir(bucket_name: str) -> str:
+    storage_client = storage.Client()
 
-        # Create the dataset TFRecord files.
-        create_dataset.run(
-            data_files="test_data/*.npz",
-            label_files="test_data/*.csv",
-            train_data_dir=train_data_dir,
-            eval_data_dir=eval_data_dir,
-            beam_args=[],
+    raw_labels_dir = "labels"
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(f"{raw_labels_dir}/labels.csv")
+    blob.upload_from_filename("test_data/labels.csv")
+
+    logging.info(f"raw_labels_dir: gs://{bucket_name}/{raw_labels_dir}")
+    yield f"gs://{bucket_name}/{raw_labels_dir}"
+
+    blob.delete()
+
+
+@pytest.fixture(scope="session")
+def container_image() -> str:
+    # https://cloud.google.com/sdk/gcloud/reference/builds/submit
+    container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
+    subprocess.run(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            ".",
+            f"--tag={container_image}",
+            "--machine-type=e2-highcpu-8",
+        ],
+        check=True,
+    )
+
+    logging.info(f"container_image: {container_image}")
+    yield container_image
+
+    # https://cloud.google.com/sdk/gcloud/reference/container/images/delete
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            container_image,
+            "--force-delete-tags",
+            "--quiet",
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def service_url(bucket_name: str, container_image: str) -> str:
+    # https://cloud.google.com/sdk/gcloud/reference/run/deploy
+    service_name = f"{NAME.replace('/', '-')}-{UUID}"
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            service_name,
+            f"--image={container_image}",
+            "--command=gunicorn",
+            "--args=--threads=8,--timeout=0,main:app",
+            f"--region={REGION}",
+            "--memory=1G",
+            f"--ser-env-vars=PROJECT={PROJECT}",
+            f"--ser-env-vars=STORAGE_PATH=gs://{bucket_name}",
+            f"--ser-env-vars=REGION={REGION}",
+            f"--ser-env-vars=CONTAINER_IMAGE={container_image}",
+            "--no-allow-unauthenticated",
+        ],
+        check=True,
+    )
+
+    # https://cloud.google.com/sdk/gcloud/reference/run/services/describe
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                "global-fishing-watch",
+                f"--region={REGION}",
+                "--format=get(status.url)",
+            ],
+            capture_output=True,
         )
-        assert os.listdir(train_data_dir), "no training files found"
-        assert os.listdir(eval_data_dir), "no evaluation files found"
+        .stdout.decode("utf-8")
+        .strip()
+    )
 
-        # Train the model and save it.
-        trainer.run(
-            train_data_dir=train_data_dir,
-            eval_data_dir=eval_data_dir,
-            model_dir=model_dir,
-            tensorboard_dir=tensorboard_dir,
-            train_steps=1,
-            eval_steps=1,
+    logging.info(f"service_url: {service_url}")
+    yield service_url
+
+    # https://cloud.google.com/sdk/gcloud/reference/run/services/delete
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name,
+            f"--region={REGION}",
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def access_token() -> str:
+    yield (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            capture_output=True,
         )
-        assert os.listdir(model_dir), "no model files found"
-        assert os.listdir(tensorboard_dir), "no tensorboard files found"
+        .stdout.decode("utf-8")
+        .strip()
+    )
 
-        # Load the trained model and make a prediction.
-        trained_model = keras.models.load_model(model_dir)
-        np_dict = {
-            field: np.reshape(value, (1, len(value), 1))
-            for field, value in TEST_VALUE_DICT.items()
-            if field in trainer.INPUTS_SPEC
-        }
-        predictions = trained_model.predict(np_dict)
 
-        # Check that we get predictions of the correct type and shape.
-        assert set(predictions.keys()) == {"is_fishing"}
-        assert predictions["is_fishing"].dtype == np.float32
-        assert predictions["is_fishing"].shape == (1, 1, 1)
+@pytest.fixture(scope="session")
+def create_datasets(
+    service_url: str, access_token: str, raw_data_dir: str, raw_labels_dir: str
+) -> str:
+
+    response = requests.post(
+        f"{service_url}/create-datasets",
+        headers={"Authorization": f"Bearer {access_token}"},
+        json={
+            "raw_data_dir": raw_data_dir,
+            "raw_labels_dir": raw_labels_dir,
+        },
+    ).json()
+    job_id = response["job_id"]
+    job_url = response["job_url"]
+    logging.info(f"create_datasets job_id: {job_id}")
+    logging.info(f"create_datasets job_url: {job_url}")
+
+    # Wait until the Dataflow job finishes.
+    for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
+        # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
+        job = (
+            dataflow.projects()
+            .jobs()
+            .get(
+                projectId=PROJECT,
+                jobId=job_id,
+                view="JOB_VIEW_SUMMARY",
+            )
+            .execute()
+        )
+
+        if job["currentState"] in DATAFLOW_FINISHED_STATE:
+            break
+        time.sleep(POLL_INTERVAL_SEC)
+
+    yield job_id
+
+
+@pytest.fixture(scope="session")
+def train_model(service_url: str, access_token: str, create_datasets: str) -> str:
+    response = requests.post(
+        url=f"{service_url}/train-model",
+        headers={"Authorization": f"Bearer {access_token}"},
+        json={
+            "train_steps": 1000,
+            "eval_steps": 100,
+            "batch_size": 32,
+        },
+    ).json()
+    job_id = response["job_id"]
+    job_url = response["job_url"]
+    logging.info(f"train_model job_id: {job_id}")
+    logging.info(f"train_model job_url: {job_url}")
+
+    # Wait until the model training job finishes.
+    ai_client = aiplatform.gapic.JobServiceClient(
+        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
+    )
+    for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
+        # https://googleapis.dev/python/aiplatform/latest/aiplatform_v1/job_service.html
+        job = ai_client.get_custom_job(
+            name=f"projects/{PROJECT}/locations/{REGION}/customJobs/{job_id}"
+        )
+        if job.state.name in VERTEX_AI_FINISHED_STATE:
+            break
+        time.sleep(POLL_INTERVAL_SEC)
+
+    yield job_id
+
+
+def predict(service_url: str, access_token: str, train_model: str) -> None:
+    with open("test_data/56980685061237.npz", "rb") as f:
+        input_data = pd.DataFrame(np.load(f)["x"])
+
+    response = requests.post(
+        url=f"{service_url}/predict",
+        headers={"Authorization": f"Bearer {access_token}"},
+        json={"inputs": input_data.to_dict("list")},
+    ).json()
+    predictions = pd.DataFrame(response["predictions"])
+
+    # Check that we get non-empty predictions.
+    assert "is_fishing" in predictions
+    assert len(predictions["is_fishing"]) > 0
