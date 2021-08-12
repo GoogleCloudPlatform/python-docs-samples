@@ -62,7 +62,7 @@ def get_token_from_broker(bucket_name, object_prefix):
         available_permissions=available_permissions,
         availability_condition=availability_condition,
     )
-    # Define the credential access boundary with all the relevant rules.
+    # Define the Credential Access Boundary with all the relevant rules.
     credential_access_boundary = downscoped.CredentialAccessBoundary(rules=[rule])
     # [END auth_downscoping_rules]
 
