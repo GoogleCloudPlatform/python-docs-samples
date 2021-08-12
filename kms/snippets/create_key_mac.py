@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 
 
-# [START kms_create_key_asymmetric_decrypt]
-def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, id):
+# [START kms_create_key_mac]
+def create_key_mac(project_id, location_id, key_ring_id, id):
     """
-    Creates a new asymmetric decryption key in Cloud KMS.
+    Creates a new key in Cloud KMS for HMAC operations.
 
     Args:
         project_id (string): Google Cloud project ID (e.g. 'my-project').
         location_id (string): Cloud KMS location (e.g. 'us-east1').
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
-        id (string): ID of the key to create (e.g. 'my-asymmetric-decrypt-key').
+        id (string): ID of the key to create (e.g. 'my-mac-key').
 
     Returns:
         CryptoKey: Cloud KMS key.
@@ -40,8 +40,8 @@ def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, id):
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
 
     # Build the key.
-    purpose = kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
-    algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_DECRYPT_OAEP_2048_SHA256
+    purpose = kms.CryptoKey.CryptoKeyPurpose.MAC
+    algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.HMAC_SHA256
     key = {
         'purpose': purpose,
         'version_template': {
@@ -55,6 +55,6 @@ def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, id):
 
     # Call the API.
     created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': id, 'crypto_key': key})
-    print('Created asymmetric decrypt key: {}'.format(created_key.name))
+    print('Created mac key: {}'.format(created_key.name))
     return created_key
-# [END kms_create_key_asymmetric_decrypt]
+# [END kms_create_key_mac]
