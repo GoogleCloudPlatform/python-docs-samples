@@ -32,9 +32,9 @@ import storage_remove_bucket_owner
 import storage_remove_file_owner
 
 # Typically we'd use a @example.com address, but GCS requires a real Google
-# account.
+# account. Retrieve a service account email with storage admin permissions.
 TEST_EMAIL = (
-    "google-auth-system-tests"
+    "py38-storage-test"
     "@python-docs-samples-tests.iam.gserviceaccount.com"
 )
 
