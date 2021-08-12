@@ -22,8 +22,13 @@ from google.cloud import storage
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
+    # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
+
+    # The ID of your GCS object
     # source_blob_name = "storage-object-name"
+
+    # The path to which the file should be downloaded
     # destination_file_name = "local/path/to/file"
 
     storage_client = storage.Client()
@@ -38,8 +43,8 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
     blob.download_to_filename(destination_file_name)
 
     print(
-        "Blob {} downloaded to {}.".format(
-            source_blob_name, destination_file_name
+        "Downloaded storage object {} from bucket {} to local file {}.".format(
+            source_blob_name, bucket_name, destination_file_name
         )
     )
 
