@@ -77,7 +77,10 @@ def _create_instance(request: compute_v1.InsertInstanceRequest):
     operation_client = compute_v1.ZoneOperationsClient()
 
     operation = instance_client.insert(request=request)
-    operation_client.wait(operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT)
+    while operation.status != compute_v1.Operation.Status.DONE:
+        operation = operation_client.wait(
+            operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT
+        )
 
     return instance_client.get(project=PROJECT, zone=INSTANCE_ZONE, instance=request.instance_resource.name)
 
@@ -87,7 +90,10 @@ def _delete_instance(instance: compute_v1.Instance):
     operation_client = compute_v1.ZoneOperationsClient()
 
     operation = instance_client.delete(project=PROJECT, zone=INSTANCE_ZONE, instance=instance.name)
-    operation_client.wait(operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT)
+    while operation.status != compute_v1.Operation.Status.DONE:
+        operation = operation_client.wait(
+            operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT
+        )
 
 
 def _get_status(instance: compute_v1.Instance) -> compute_v1.Instance.Status:

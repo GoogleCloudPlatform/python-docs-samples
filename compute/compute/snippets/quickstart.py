@@ -121,6 +121,7 @@ def create_instance(
         Instance object.
     """
     instance_client = compute_v1.InstancesClient()
+    operation_client = compute_v1.ZoneOperationsClient()
 
     # Describe the size and source image of the boot disk to attach to the instance.
     disk = compute_v1.AttachedDisk()
@@ -155,8 +156,7 @@ def create_instance(
     # Wait for the create operation to complete.
     print(f"Creating the {instance_name} instance in {zone}...")
     operation = instance_client.insert(request=request)
-    if operation.status == compute_v1.Operation.Status.RUNNING:
-        operation_client = compute_v1.ZoneOperationsClient()
+    while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=zone, project=project_id
         )
@@ -180,13 +180,13 @@ def delete_instance(project_id: str, zone: str, machine_name: str) -> None:
         machine_name: name of the machine you want to delete.
     """
     instance_client = compute_v1.InstancesClient()
+    operation_client = compute_v1.ZoneOperationsClient()
 
     print(f"Deleting {machine_name} from {zone}...")
     operation = instance_client.delete(
         project=project_id, zone=zone, instance=machine_name
     )
-    if operation.status == compute_v1.Operation.Status.RUNNING:
-        operation_client = compute_v1.ZoneOperationsClient()
+    while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=zone, project=project_id
         )

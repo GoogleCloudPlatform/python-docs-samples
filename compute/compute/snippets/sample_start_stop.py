@@ -35,7 +35,10 @@ def start_instance(project_id: str, zone: str, instance_name: str):
 
     op = instance_client.start(project=project_id, zone=zone, instance=instance_name)
 
-    op_client.wait(project=project_id, zone=zone, operation=op.name)
+    while op.status != compute_v1.Operation.Status.DONE:
+        op = op_client.wait(
+            operation=op.name, zone=zone, project=project_id
+        )
     return
 # [END compute_start_instance]
 
@@ -71,7 +74,10 @@ def start_instance_with_encryption_key(project_id: str, zone: str, instance_name
     op = instance_client.start_with_encryption_key(project=project_id, zone=zone, instance=instance_name,
                                                    instances_start_with_encryption_key_request_resource=enc_data)
 
-    op_client.wait(project=project_id, zone=zone, operation=op.name)
+    while op.status != compute_v1.Operation.Status.DONE:
+        op = op_client.wait(
+            operation=op.name, zone=zone, project=project_id
+        )
     return
 # [END compute_start_enc_instance]
 
@@ -91,7 +97,10 @@ def stop_instance(project_id: str, zone: str, instance_name: str):
 
     op = instance_client.stop(project=project_id, zone=zone, instance=instance_name)
 
-    op_client.wait(project=project_id, zone=zone, operation=op.name)
+    while op.status != compute_v1.Operation.Status.DONE:
+        op = op_client.wait(
+            operation=op.name, zone=zone, project=project_id
+        )
     return
 # [END compute_stop_instance]
 
@@ -111,6 +120,9 @@ def reset_instance(project_id: str, zone: str, instance_name: str):
 
     op = instance_client.reset(project=project_id, zone=zone, instance=instance_name)
 
-    op_client.wait(project=project_id, zone=zone, operation=op.name)
+    while op.status != compute_v1.Operation.Status.DONE:
+        op = op_client.wait(
+            operation=op.name, zone=zone, project=project_id
+        )
     return
 # [END compute_reset_instance]
