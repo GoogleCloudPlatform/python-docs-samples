@@ -22,9 +22,13 @@ from google.cloud import storage
 
 def move_blob(bucket_name, blob_name, destination_bucket_name, destination_blob_name):
     """Moves a blob from one bucket to another with a new name."""
+    # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
+    # The ID of your GCS object
     # blob_name = "your-object-name"
+    # The ID of the bucket to move the object to
     # destination_bucket_name = "destination-bucket-name"
+    # The ID of your new GCS object (optional)
     # destination_blob_name = "destination-object-name"
 
     storage_client = storage.Client()
