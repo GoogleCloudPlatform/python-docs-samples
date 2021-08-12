@@ -12,7 +12,7 @@
 /appengine/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
-/auth/**/*.py                          @busunkim96 @GoogleCloudPlatform/python-samples-owners
+/auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-owners
