@@ -82,7 +82,7 @@ def setup_teardown(
     aip_job_client.delete_custom_job(name=shared_state["model_name"]).result()
 
 
-@pytest.mark.timeout(1800)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_sklearn(
     setup_teardown: Tuple[storage.bucket.Bucket, aip.JobServiceClient],
     shared_state: dict,
