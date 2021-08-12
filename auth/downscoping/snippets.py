@@ -21,10 +21,12 @@ import google.auth
 
 from google.auth import downscoped
 from google.auth.transport import requests
+
 # [END auth_downscoping_token_broker]
 # [START auth_downscoping_token_consumer]
 from google.cloud import storage
 from google.oauth2 import credentials
+
 # [END auth_downscoping_token_consumer]
 
 
@@ -33,8 +35,8 @@ def get_token_from_broker(bucket_name, object_prefix):
     """Simulates token broker generating downscoped tokens for specified bucket.
 
     Args:
-        bucket_name (str): The name of the cloud storage bucket.
-        object_prefix (str): The prefix string of the object blob name. This is used
+        bucket_name (str): The name of the Cloud Storage bucket.
+        object_prefix (str): The prefix string of the object name. This is used
             to ensure access is restricted to only objects starting with this
             prefix string.
 
@@ -42,7 +44,7 @@ def get_token_from_broker(bucket_name, object_prefix):
         Tuple[str, datetime.datetime]: The downscoped access token and its expiry date.
     """
     # [START auth_downscoping_rules]
-    # Initialize the credential access boundary rules.
+    # Initialize the Credential Access Boundary rules.
     available_resource = f"//storage.googleapis.com/projects/_/buckets/{bucket_name}"
     # Downscoped credentials will have readonly access to the resource.
     available_permissions = ["inRole:roles/storage.objectViewer"]
@@ -60,7 +62,7 @@ def get_token_from_broker(bucket_name, object_prefix):
         available_permissions=available_permissions,
         availability_condition=availability_condition,
     )
-    # Define the credential access boundary with all the relevants rules.
+    # Define the credential access boundary with all the relevant rules.
     credential_access_boundary = downscoped.CredentialAccessBoundary(rules=[rule])
     # [END auth_downscoping_rules]
 
@@ -81,7 +83,7 @@ def get_token_from_broker(bucket_name, object_prefix):
     # Refresh the tokens.
     downscoped_credentials.refresh(requests.Request())
 
-    # These values will need to be passed to the Token Consumer.
+    # These values will need to be passed to the token consumer.
     access_token = downscoped_credentials.token
     expiry = downscoped_credentials.expiry
     # [END auth_downscoping_initialize_downscoped_cred]
@@ -96,21 +98,28 @@ def token_consumer(bucket_name, object_name):
     """Tests token consumer readonly access to the specified object.
 
     Args:
-        bucket_name (str): The name of the cloud storage bucket.
-        object_name (str): The name of the object in the storage bucket to
-            read.
+        bucket_name (str): The name of the Cloud Storage bucket.
+        object_name (str): The name of the object in the Cloud Storage bucket
+            to read.
     """
     # Create the OAuth credentials from the downscoped token and pass a
-    # refresh handler to handle token expiration. Passing the original
-    # downscoped token or the expiry here is optional, as the refresh_handler
-    # will generate the downscoped token on demand.
+    # refresh handler to handle token expiration. We are passing a
+    # refresh_handler instead of a one-time access token/expiry pair.
+    # This will allow the credentials to generate new downscoped tokens on
+    # demand every time a token is expired, seamlessly without any
+    # additional code changes.
     def refresh_handler(request, scopes=None):
         # The common pattern of usage is to have a token broker pass the
         # downscoped short-lived access tokens to a token consumer via some
         # secure authenticated channel.
         # For illustration purposes, we are generating the downscoped token
         # locally.
-        return get_token_from_broker(bucket_name, object_name[0:3])
+        # We want to test the ability to limit access to objects with a certain
+        # prefix string in the resource bucket. object_name[0:3] is the prefix
+        # here. This field is not required if access to all bucket resources are
+        # allowed. If access to limited resources in the bucket is needed, this
+        # mechanism can be used.
+        return get_token_from_broker(bucket_name, object_prefix=object_name[0:3])
 
     creds = credentials.Credentials(
         None,
@@ -118,7 +127,7 @@ def token_consumer(bucket_name, object_name):
         refresh_handler=refresh_handler,
     )
 
-    # Initialize a storage client with the oauth2 credentials.
+    # Initialize a Cloud Storage client with the oauth2 credentials.
     storage_client = storage.Client(credentials=creds)
     # The token broker has readonly access to the specified bucket object.
     bucket = storage_client.bucket(bucket_name)
@@ -136,7 +145,7 @@ def main(bucket_name, object_name):
     into a storage instance and then test readonly access.
 
     Args:
-        bucket_name (str): The name of the cloud storage bucket.
+        bucket_name (str): The name of the Cloud Storage bucket.
         object_name (str): The name of the object in the bucket.
     """
     # Storage client using ADC.

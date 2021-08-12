@@ -22,7 +22,7 @@ More details are available in the [AUTHORING_GUIDE](../../AUTHORING_GUIDE.md).
 
 4. To run the samples, the `main(bucket_name, object_name)` function should be run with a created storage bucket name and the object name in that bucket of the file to use to test access.
 
-5. To run the tests, you will also need the application default credentials principal should have the ability to create and delete a storage bucket:
+5. To run the tests, the application default credentials principal should have the ability to create and delete a Cloud Storage bucket:
 
         $ nox -s py-3.7 -- snippets_test.py
 
