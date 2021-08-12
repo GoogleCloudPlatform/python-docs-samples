@@ -125,12 +125,13 @@ def get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     hl7v2_store = hl7v2_stores.get(name=hl7v2_store_name).execute()
 
     print("Name: {}".format(hl7v2_store.get("name")))
-    print("Notification config:")
-    if hl7v2_store.get("notificationConfig") is not None:
-        notification_config = hl7v2_store.get("notificationConfig")
-        print(
-            "\tCloud Pub/Sub topic: {}".format(notification_config.get("pubsubTopic"))
-        )
+    if hl7v2_store.get("notificationConfigs") is not None:
+        print("Notification configs:")
+        for notification_config in hl7v2_store.get("notificationConfigs"):
+            print(
+                "\tPub/Sub topic: {}".format(notification_config.get("pubsubTopic")),
+                "\tFilter: {}".format(notification_config.get("filter")),
+            )
 
     return hl7v2_store
 
@@ -172,14 +173,16 @@ def list_hl7v2_stores(project_id, location, dataset_id):
     )
 
     for hl7v2_store in hl7v2_stores:
-        print(
-            "HL7v2 store: {}\n"
-            "Notification config: {}".format(
-                hl7v2_store.get("name"),
-                hl7v2_store.get("notificationConfig"),
-            )
-        )
-
+        print("HL7v2 store:\nName: {}".format(hl7v2_store.get("name")))
+        if hl7v2_store.get("notificationConfigs") is not None:
+            print("Notification configs:")
+            for notification_config in hl7v2_store.get("notificationConfigs"):
+                print(
+                    "\tPub/Sub topic: {}".format(
+                        notification_config.get("pubsubTopic")
+                    ),
+                    "\tFilter: {}".format(notification_config.get("filter")),
+                )
     return hl7v2_stores
 
 
@@ -287,7 +290,7 @@ def set_hl7v2_store_iam_policy(
         - serviceAccount:email,
             as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
-        or 'roles/editor'
+        or 'roles/editor'.
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
     before running the sample."""
