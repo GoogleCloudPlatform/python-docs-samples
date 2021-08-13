@@ -107,7 +107,7 @@ def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     with tempfile.NamedTemporaryFile("w", suffix=".json") as f:
-        json.dump(
+        config = json.dumps(
             {
                 "steps": [
                     {
@@ -117,9 +117,10 @@ def container_image(bucket_name: str) -> str:
                 ],
                 "images": [container_image],
                 "options": {"machineType": "E2_HIGHCPU_8"},
-            },
-            f,
+            }
         )
+        logging.info(f"container_image Cloud Build config file:\n{config}")
+        f.write(config)
         subprocess.run(["gcloud", "builds", "submit", f"--config={f.name}"], check=True)
 
     logging.info(f"container_image: {container_image}")
