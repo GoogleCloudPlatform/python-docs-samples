@@ -120,7 +120,7 @@ def container_image(bucket_name: str) -> str:
             }
         )
         logging.info(f"container_image Cloud Build config file:\n{config}")
-        f.write(config)
+        f.write(config.encode("utf-8"))
         subprocess.run(["gcloud", "builds", "submit", f"--config={f.name}"], check=True)
 
     logging.info(f"container_image: {container_image}")
