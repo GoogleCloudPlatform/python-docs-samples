@@ -103,7 +103,7 @@ def raw_labels_dir(bucket_name: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def container_image(bucket_name: str) -> str:
+def container_image() -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     subprocess.run(
