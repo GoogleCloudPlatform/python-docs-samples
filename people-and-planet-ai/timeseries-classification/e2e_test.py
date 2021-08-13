@@ -106,7 +106,7 @@ def raw_labels_dir(bucket_name: str) -> str:
 def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
-    with tempfile.NamedTemporaryFile("w", suffix=".json") as f:
+    with tempfile.NamedTemporaryFile(suffix=".json") as f:
         config = json.dumps(
             {
                 "steps": [
