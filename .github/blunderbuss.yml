@@ -27,7 +27,6 @@ assign_issues_by:
   - 'api: videointelligence'
   - 'api: vision'
   to:
-  - sirtorry
   - telpirion
 - labels:
   - 'api: dataflow'
@@ -70,7 +69,7 @@ assign_issues_by:
 - labels:
   - 'api: dataproc'
   to:
-  - bradmiro
+  - loferris
 - labels:
   - 'api: dns'
   to:
@@ -95,7 +94,7 @@ assign_issues_by:
 - labels:
   - 'api: notebooks'
   to:
-  - sirtorry
+  - alecglassford
 - labels:
   - 'api: cloudprofiler'
   to:

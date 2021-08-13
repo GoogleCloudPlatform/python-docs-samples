@@ -23,10 +23,8 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
   created.
-* gce_region - Google Compute Engine region where Cloud Dataflow cluster should be
-  created.
-Learn more about the difference between the two here:
-https://cloud.google.com/compute/docs/regions-zones
+For more info on zones where Dataflow is available see:
+https://cloud.google.com/dataflow/docs/resources/locations
 * bucket_path - Google Cloud Storage bucket where you've stored the User Defined
 Function (.js), the input file (.txt), and the JSON schema (.json).
 """
