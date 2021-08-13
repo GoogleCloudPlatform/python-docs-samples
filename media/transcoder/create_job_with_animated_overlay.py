@@ -17,15 +17,15 @@
 """Google Cloud Transcoder sample for creating a job based on a supplied job config that includes an animated overlay.
 
 Example usage:
-    python create_job_with_animated_overlay.py --project-id <project-id> --location <location> --input-uri <uri> --overlay-image-uri <uri> --output-uri <uri>
+    python create_job_with_animated_overlay.py --project_id <project-id> --location <location> --input_uri <uri> --overlay_image_uri <uri> --output_uri <uri>
 """
 
 # [START transcoder_create_job_with_animated_overlay]
 
 import argparse
 
-from google.cloud.video import transcoder_v1beta1
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video import transcoder_v1
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 from google.protobuf import duration_pb2 as duration
@@ -46,50 +46,51 @@ def create_job_with_animated_overlay(
     client = TranscoderServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
-    job = transcoder_v1beta1.types.Job()
+    job = transcoder_v1.types.Job()
     job.input_uri = input_uri
     job.output_uri = output_uri
-    job.config = transcoder_v1beta1.types.JobConfig(
+    job.config = transcoder_v1.types.JobConfig(
         elementary_streams=[
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="video-stream0",
-                video_stream=transcoder_v1beta1.types.VideoStream(
-                    codec="h264",
-                    height_pixels=360,
-                    width_pixels=640,
-                    bitrate_bps=550000,
-                    frame_rate=60,
+                video_stream=transcoder_v1.types.VideoStream(
+                    h264=transcoder_v1.types.VideoStream.H264CodecSettings(
+                        height_pixels=360,
+                        width_pixels=640,
+                        bitrate_bps=550000,
+                        frame_rate=60,
+                    ),
                 ),
             ),
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="audio-stream0",
-                audio_stream=transcoder_v1beta1.types.AudioStream(
+                audio_stream=transcoder_v1.types.AudioStream(
                     codec="aac", bitrate_bps=64000
                 ),
             ),
         ],
         mux_streams=[
-            transcoder_v1beta1.types.MuxStream(
+            transcoder_v1.types.MuxStream(
                 key="sd",
                 container="mp4",
                 elementary_streams=["video-stream0", "audio-stream0"],
             ),
         ],
         overlays=[
-            transcoder_v1beta1.types.Overlay(
-                image=transcoder_v1beta1.types.Overlay.Image(
+            transcoder_v1.types.Overlay(
+                image=transcoder_v1.types.Overlay.Image(
                     uri=overlay_image_uri,
-                    resolution=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
+                    resolution=transcoder_v1.types.Overlay.NormalizedCoordinate(
                         x=0,
                         y=0,
                     ),
                     alpha=1,
                 ),
                 animations=[
-                    transcoder_v1beta1.types.Overlay.Animation(
-                        animation_fade=transcoder_v1beta1.types.Overlay.AnimationFade(
-                            fade_type=transcoder_v1beta1.types.Overlay.FadeType.FADE_IN,
-                            xy=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
+                    transcoder_v1.types.Overlay.Animation(
+                        animation_fade=transcoder_v1.types.Overlay.AnimationFade(
+                            fade_type=transcoder_v1.types.Overlay.FadeType.FADE_IN,
+                            xy=transcoder_v1.types.Overlay.NormalizedCoordinate(
                                 x=0.5,
                                 y=0.5,
                             ),
@@ -101,10 +102,10 @@ def create_job_with_animated_overlay(
                             ),
                         ),
                     ),
-                    transcoder_v1beta1.types.Overlay.Animation(
-                        animation_fade=transcoder_v1beta1.types.Overlay.AnimationFade(
-                            fade_type=transcoder_v1beta1.types.Overlay.FadeType.FADE_OUT,
-                            xy=transcoder_v1beta1.types.Overlay.NormalizedCoordinate(
+                    transcoder_v1.types.Overlay.Animation(
+                        animation_fade=transcoder_v1.types.Overlay.AnimationFade(
+                            fade_type=transcoder_v1.types.Overlay.FadeType.FADE_OUT,
+                            xy=transcoder_v1.types.Overlay.NormalizedCoordinate(
                                 x=0.5,
                                 y=0.5,
                             ),
@@ -129,24 +130,24 @@ def create_job_with_animated_overlay(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
         help="The location to start this job in.",
         default="us-central1",
     )
     parser.add_argument(
-        "--input-uri",
+        "--input_uri",
         help="Uri of the video in the Cloud Storage bucket.",
         required=True,
     )
     parser.add_argument(
-        "--overlay-image-uri",
+        "--overlay_image_uri",
         help="Uri of the overlay JPEG image in the Cloud Storage bucket. Must be a JPEG.",
         required=True,
     )
     parser.add_argument(
-        "--output-uri",
+        "--output_uri",
         help="Uri of the video output folder in the Cloud Storage bucket. Must end in '/'.",
         required=True,
     )
