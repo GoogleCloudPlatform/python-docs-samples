@@ -56,6 +56,8 @@ VERTEX_AI_FINISHED_STATE = (
     },
 )
 
+logging.getLogger().setLevel(logging.INFO)
+
 
 @pytest.fixture(scope="session")
 def bucket_name() -> str:
