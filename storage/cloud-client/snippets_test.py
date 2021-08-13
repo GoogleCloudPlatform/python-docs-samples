@@ -286,7 +286,7 @@ def test_rename_blob(test_blob):
     try:
         bucket.delete_blob("test_rename_blob")
     except google.cloud.exceptions.exceptions.NotFound:
-        pass
+        print("test_rename_blob not found in bucket {}".format(bucket.name))
 
     storage_rename_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
 
@@ -301,7 +301,7 @@ def test_move_blob(test_bucket_create, test_blob):
     try:
         test_bucket_create.delete_blob("test_move_blob")
     except google.cloud.exceptions.NotFound:
-        pass
+        print("test_move_blob not found in bucket {}".format(test_bucket_create.name))
 
     storage_move_file.move_blob(
         bucket.name, test_blob.name, test_bucket_create.name, "test_move_blob"
