@@ -149,6 +149,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--image={container_image}",
             "--command=gunicorn",
             "--args=--threads=8,--timeout=0,main:app",
+            "--platform=managed",
             f"--region={REGION}",
             "--memory=1G",
             f"--set-env-vars=PROJECT={PROJECT}",
