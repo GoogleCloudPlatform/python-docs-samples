@@ -17,15 +17,15 @@
 """Google Cloud Transcoder sample for creating a job based on a job preset.
 
 Example usage:
-    python create_job_from_preset.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri> [--preset <preset>]
+    python create_job_from_preset.py --project_id <project-id> --location <location> --input_uri <uri> --output_uri <uri> [--preset <preset>]
 """
 
 # [START transcoder_create_job_from_preset]
 
 import argparse
 
-from google.cloud.video import transcoder_v1beta1
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video import transcoder_v1
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
@@ -43,7 +43,7 @@ def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
     client = TranscoderServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
-    job = transcoder_v1beta1.types.Job()
+    job = transcoder_v1.types.Job()
     job.input_uri = input_uri
     job.output_uri = output_uri
     job.template_id = preset
@@ -57,7 +57,7 @@ def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
         help="The location to start this job in.",

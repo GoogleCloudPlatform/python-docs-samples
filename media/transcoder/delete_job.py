@@ -17,14 +17,14 @@
 """Google Cloud Transcoder sample for deleting a job.
 
 Example usage:
-    python delete_job.py --project-id <project-id> --location <location> --job-id <job-id>
+    python delete_job.py --project_id <project-id> --location <location> --job_id <job-id>
 """
 
 # [START transcoder_delete_job]
 
 import argparse
 
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
@@ -49,8 +49,8 @@ def delete_job(project_id, location, job_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument("--location", help="The location of the job.", required=True)
-    parser.add_argument("--job-id", help="The job ID.", required=True)
+    parser.add_argument("--job_id", help="The job ID.", required=True)
     args = parser.parse_args()
     delete_job(args.project_id, args.location, args.job_id)
