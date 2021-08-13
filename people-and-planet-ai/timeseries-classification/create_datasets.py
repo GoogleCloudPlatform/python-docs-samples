@@ -14,7 +14,7 @@
 
 import logging
 import random
-from typing import List
+from typing import Any, List
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -31,7 +31,7 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     train_eval_split: List[int],
-    **beam_args,
+    **beam_args: Any,
 ) -> str:
 
     labels = pd.concat(

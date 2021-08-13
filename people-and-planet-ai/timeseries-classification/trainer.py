@@ -122,16 +122,16 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         for name, spec in INPUTS_SPEC.items()
     }
 
-    def normalize(name: str):
+    def normalize(name: str) -> keras.layers.Layer:
         layer = preprocessing.Normalization(name=f"{name}_normalized")
         layer.adapt(train_dataset.map(lambda inputs, outputs: inputs[name]))
         return layer(input_layers[name])
 
-    def geo_point(lat_name: str, lon_name: str):
+    def geo_point(lat_name: str, lon_name: str) -> keras.layers.Layer:
         # We transform each (lat, lon) pair into a 3D point in the unit sphere.
         #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
         class GeoPoint(keras.layers.Layer):
-            def call(self, latlon):
+            def call(self: Any, latlon: Tuple[tf.Tensor, tf.Tensor]) -> tf.Tensor:
                 lat, lon = latlon
                 x = tf.cos(lon) * tf.sin(lat)
                 y = tf.sin(lon) * tf.sin(lat)
@@ -141,7 +141,9 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         lat_lon_input_layers = (input_layers[lat_name], input_layers[lon_name])
         return GeoPoint(name=f"{lat_name}_{lon_name}")(lat_lon_input_layers)
 
-    def sequential_layers(first_layer, *layers) -> keras.layers.Layer:
+    def sequential_layers(
+        first_layer: keras.layers.Layer, *layers: keras.layers.Layer
+    ) -> keras.layers.Layer:
         return reduce(lambda layer, result: result(layer), layers, first_layer)
 
     preprocessed_inputs = [

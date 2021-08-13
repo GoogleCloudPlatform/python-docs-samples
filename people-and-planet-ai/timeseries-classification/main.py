@@ -48,7 +48,7 @@ TEMP_DIR = f"{STORAGE_PATH}/temp"
 
 
 @app.route("/ping", methods=["POST"])
-def run_root():
+def run_root() -> dict:
     args = flask.request.get_json() or {}
     return {
         "response": "Your request was successful! 🎉",
@@ -57,7 +57,7 @@ def run_root():
 
 
 @app.route("/create-datasets", methods=["POST"])
-def run_create_datasets():
+def run_create_datasets() -> dict:
     import create_datasets
 
     try:
@@ -92,7 +92,7 @@ def run_create_datasets():
 
 
 @app.route("/train-model", methods=["POST"])
-def run_train_model():
+def run_train_model() -> dict:
     import train_model
 
     try:
@@ -124,7 +124,7 @@ def run_train_model():
 
 
 @app.route("/predict", methods=["POST"])
-def run_predict():
+def run_predict() -> dict:
     import predict
 
     try:

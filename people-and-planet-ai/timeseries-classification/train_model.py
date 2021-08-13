@@ -30,7 +30,7 @@ def run(
     machine_type: str,
     gpu_type: str,
     gpu_count: str,
-):
+) -> str:
     client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )

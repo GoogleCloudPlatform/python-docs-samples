@@ -36,28 +36,28 @@ TEST_VALUE_DICT = {
 }
 
 
-def test_validated_missing_field():
+def test_validated_missing_field() -> None:
     tensor_dict = {}
     values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
     with pytest.raises(KeyError):
         trainer.validated(tensor_dict, values_spec)
 
 
-def test_validated_incompatible_type():
+def test_validated_incompatible_type() -> None:
     tensor_dict = {"x": tf.constant(["a", "b", "c"])}
     values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
     with pytest.raises(TypeError):
         trainer.validated(tensor_dict, values_spec)
 
 
-def test_validated_incompatible_shape():
+def test_validated_incompatible_shape() -> None:
     tensor_dict = {"x": tf.constant([1.0])}
     values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
     with pytest.raises(ValueError):
         trainer.validated(tensor_dict, values_spec)
 
 
-def test_validated_ok():
+def test_validated_ok() -> None:
     tensor_dict = {"x": tf.constant([1.0, 2.0, 3.0])}
     values_spec = {"x": tf.TensorSpec(shape=(3,), dtype=tf.float32)}
     trainer.validated(tensor_dict, values_spec)
@@ -67,7 +67,7 @@ def test_validated_ok():
     trainer.validated(tensor_dict, values_spec)
 
 
-def test_serialize_deserialize():
+def test_serialize_deserialize() -> None:
     serialized = trainer.serialize(TEST_VALUE_DICT)
     inputs, outputs = trainer.deserialize(serialized)
     assert set(inputs.keys()) == set(trainer.INPUTS_SPEC.keys())
@@ -75,7 +75,7 @@ def test_serialize_deserialize():
 
 
 @mock.patch.object(trainer, "PADDING", 2)
-def test_e2e_local():
+def test_e2e_local() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         train_data_dir = os.path.join(temp_dir, "datasets", "train")
         eval_data_dir = os.path.join(temp_dir, "datasets", "eval")
