@@ -172,7 +172,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
                 "run",
                 "services",
                 "describe",
-                "global-fishing-watch",
+                service_name,
                 "--platform=managed",
                 f"--project={PROJECT}",
                 f"--region={REGION}",
