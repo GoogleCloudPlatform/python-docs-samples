@@ -57,6 +57,7 @@ import storage_move_file
 import storage_object_get_kms_key
 import storage_remove_bucket_label
 import storage_remove_cors_configuration
+import storage_rename_file
 import storage_set_bucket_default_kms_key
 import storage_set_metadata
 import storage_upload_file
@@ -285,11 +286,28 @@ def test_rename_blob(test_blob):
     try:
         bucket.delete_blob("test_rename_blob")
     except google.cloud.exceptions.exceptions.NotFound:
-        pass
+        print("test_rename_blob not found in bucket {}".format(bucket.name))
 
-    storage_move_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
+    storage_rename_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
 
     assert bucket.get_blob("test_rename_blob") is not None
+    assert bucket.get_blob(test_blob.name) is None
+
+
+def test_move_blob(test_bucket_create, test_blob):
+    bucket = test_blob.bucket
+    storage.Client().create_bucket(test_bucket_create)
+
+    try:
+        test_bucket_create.delete_blob("test_move_blob")
+    except google.cloud.exceptions.NotFound:
+        print("test_move_blob not found in bucket {}".format(test_bucket_create.name))
+
+    storage_move_file.move_blob(
+        bucket.name, test_blob.name, test_bucket_create.name, "test_move_blob"
+    )
+
+    assert test_bucket_create.get_blob("test_move_blob") is not None
     assert bucket.get_blob(test_blob.name) is None
 
 
