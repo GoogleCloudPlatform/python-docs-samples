@@ -117,7 +117,8 @@ def container_image(bucket_name: str) -> str:
                 ],
                 "images": [container_image],
                 "options": {"machineType": "E2_HIGHCPU_8"},
-            }
+            },
+            f,
         )
         subprocess.run(["gcloud", "builds", "submit", f"--config={f.name}"], check=True)
 
