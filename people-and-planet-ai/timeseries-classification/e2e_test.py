@@ -229,12 +229,15 @@ def create_datasets(
             "raw_labels_dir": raw_labels_dir,
         },
     ).json()
+    logging.info(f"create_datasets response: {response}")
+
     job_id = response["job_id"]
     job_url = response["job_url"]
     logging.info(f"create_datasets job_id: {job_id}")
     logging.info(f"create_datasets job_url: {job_url}")
 
     # Wait until the Dataflow job finishes.
+    logging.info("Waiting for datasets to be created.")
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
         job = (
@@ -252,6 +255,7 @@ def create_datasets(
             break
         time.sleep(POLL_INTERVAL_SEC)
 
+    logging.info("Datasets were created successfully.")
     yield job_id
 
 
@@ -266,6 +270,8 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
             "batch_size": 32,
         },
     ).json()
+    logging.info(f"train_model response: {response}")
+
     job_id = response["job_id"]
     job_url = response["job_url"]
     logging.info(f"train_model job_id: {job_id}")
@@ -275,6 +281,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
     ai_client = aiplatform.gapic.JobServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
+    logging.info("Waiting for model to train.")
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         # https://googleapis.dev/python/aiplatform/latest/aiplatform_v1/job_service.html
         job = ai_client.get_custom_job(
@@ -284,6 +291,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
             break
         time.sleep(POLL_INTERVAL_SEC)
 
+    logging.info("Model was trained successfully.")
     yield job_id
 
 
@@ -296,6 +304,8 @@ def test_predict(service_url: str, access_token: str, train_model: str) -> None:
         headers={"Authorization": f"Bearer {access_token}"},
         json={"inputs": input_data.to_dict("list")},
     ).json()
+    logging.info(f"predict response: {response}")
+
     predictions = pd.DataFrame(response["predictions"])
 
     # Check that we get non-empty predictions.
