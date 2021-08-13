@@ -64,7 +64,7 @@ def bucket_name() -> str:
     storage_client = storage.Client()
 
     bucket_name = f"{NAME.replace('/', '-')}-{UUID}"
-    bucket = storage_client.create_bucket(bucket_name)
+    bucket = storage_client.create_bucket(bucket_name, location=REGION)
 
     logging.info(f"bucket_name: {bucket_name}")
     yield bucket_name
