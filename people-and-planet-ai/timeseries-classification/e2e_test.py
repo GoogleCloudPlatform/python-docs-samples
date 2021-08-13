@@ -111,7 +111,7 @@ def container_image() -> str:
             "submit",
             f"--tag={container_image}",
             f"--project={PROJECT}",
-            "--machineType=e2-highcpu-8",
+            "--machine-type=e2-highcpu-8",
             "--quiet",
         ],
         check=True,
