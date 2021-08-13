@@ -85,10 +85,19 @@ def entry(client, entry_group_name):
     random_entry_id = "example_entry_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    entry = datacatalog_v1beta1.CreateEntryRequest
-    entry = client.create_entry(
-        request={"parent": entry_group_name, "entry_id": random_entry_id, "entry": {"type_": "DATA_STREAM", "name": "samples_test_entry"}}
+
+    request = datacatalog_v1beta1.CreateEntryRequest(
+        parent=entry_group_name,
+        entry_id=random_entry_id,
+        entry=datacatalog_v1beta1.Entry(
+            type_=datacatalog_v1beta1.EntryType.DATA_STREAM,
+            name="samples_test_entry",
+            user_specified_system="sample_system",
+        )
     )
+
+    entry = client.create_entry(request)
+
     yield entry.name
     client.delete_entry(request={"name": entry.name})
 
