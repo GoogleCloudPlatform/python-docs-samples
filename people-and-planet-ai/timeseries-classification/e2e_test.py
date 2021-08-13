@@ -196,6 +196,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             "--platform=managed",
             f"--project={PROJECT}",
             f"--region={REGION}",
+            "--quiet",
         ],
         check=True,
     )
