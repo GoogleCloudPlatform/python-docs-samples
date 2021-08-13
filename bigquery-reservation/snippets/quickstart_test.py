@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 from . import quickstart
-
-
-@pytest.fixture()
-def project_id() -> str:
-    return os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_quickstart(capsys: pytest.CaptureFixture, project_id: str) -> None:
