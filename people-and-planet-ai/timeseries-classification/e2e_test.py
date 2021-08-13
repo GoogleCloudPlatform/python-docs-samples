@@ -32,7 +32,7 @@ dataflow = build("dataflow", "v1b3")
 
 PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
 
-NAME = "ppai/timeseries-classification-py{PYTHON_VERSION}"
+NAME = f"ppai/timeseries-classification-py{PYTHON_VERSION}"
 
 UUID = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
