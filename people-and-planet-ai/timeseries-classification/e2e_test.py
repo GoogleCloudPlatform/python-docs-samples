@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import logging
 import os
 import platform
 import subprocess
+import tempfile
 import time
 import uuid
 
@@ -104,19 +106,20 @@ def raw_labels_dir(bucket_name: str) -> str:
 def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
-    subprocess.run(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            ".",
-            f"--tag={container_image}",
-            "--machine-type=e2-highcpu-8",
-            f"--region={REGION}",
-            f"--gcs-source-staging-dir=gs://{bucket_name}/cloud-build",
-        ],
-        check=True,
-    )
+    with tempfile.NamedTemporaryFile("w") as f:
+        json.dump(
+            {
+                "steps": [
+                    {
+                        "name": "gcr.io/cloud-builders/docker",
+                        "args": ["build", ".", f"--tag={container_image}"],
+                    }
+                ],
+                "images": [container_image],
+                "options": {"machineType": "E2_HIGHCPU_8"},
+            }
+        )
+        subprocess.run(["gcloud", "builds", "submit", f"--config={f.name}"], check=True)
 
     logging.info(f"container_image: {container_image}")
     yield container_image
