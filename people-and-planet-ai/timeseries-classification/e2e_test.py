@@ -150,6 +150,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             "--command=gunicorn",
             "--args=--threads=8,--timeout=0,main:app",
             "--platform=managed",
+            f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=1G",
             f"--set-env-vars=PROJECT={PROJECT}",
@@ -170,6 +171,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
                 "services",
                 "describe",
                 "global-fishing-watch",
+                f"--project={PROJECT}",
                 f"--region={REGION}",
                 "--format=get(status.url)",
             ],
@@ -190,6 +192,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             "services",
             "delete",
             service_name,
+            f"--project={PROJECT}",
             f"--region={REGION}",
         ],
         check=True,
@@ -200,7 +203,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
 def access_token() -> str:
     yield (
         subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
+            ["gcloud", "auth", "print-identity-token", f"--project={PROJECT}"],
             capture_output=True,
         )
         .stdout.decode("utf-8")
