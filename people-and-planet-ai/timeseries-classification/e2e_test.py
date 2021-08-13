@@ -101,7 +101,7 @@ def raw_labels_dir(bucket_name: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def container_image() -> str:
+def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     subprocess.run(
@@ -112,6 +112,8 @@ def container_image() -> str:
             ".",
             f"--tag={container_image}",
             "--machine-type=e2-highcpu-8",
+            f"--region={REGION}",
+            f"--gcs-source-staging-dir=gs://{bucket_name}/cloud-build",
         ],
         check=True,
     )
