@@ -276,7 +276,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
     yield job_id
 
 
-def predict(service_url: str, access_token: str, train_model: str) -> None:
+def test_predict(service_url: str, access_token: str, train_model: str) -> None:
     with open("test_data/56980685061237.npz", "rb") as f:
         input_data = pd.DataFrame(np.load(f)["x"])
 
