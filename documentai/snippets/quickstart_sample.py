@@ -15,7 +15,7 @@
 
 
 # [START documentai_quickstart]
-from google.cloud import documentai_v1 as documentai
+
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id= 'YOUR_PROJECT_ID'
@@ -25,6 +25,8 @@ from google.cloud import documentai_v1 as documentai
 
 
 def quickstart(project_id: str, location: str, processor_id: str, file_path: str):
+
+    from google.cloud import documentai_v1 as documentai
 
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = {}
