@@ -106,22 +106,18 @@ def raw_labels_dir(bucket_name: str) -> str:
 def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
-    with tempfile.NamedTemporaryFile(suffix=".json") as f:
-        config = json.dumps(
-            {
-                "steps": [
-                    {
-                        "name": "gcr.io/cloud-builders/docker",
-                        "args": ["build", ".", f"--tag={container_image}"],
-                    }
-                ],
-                "images": [container_image],
-                "options": {"machineType": "E2_HIGHCPU_8"},
-            }
-        )
-        logging.info(f"container_image Cloud Build config file:\n{config}")
-        f.write(config.encode("utf-8"))
-        subprocess.run(["gcloud", "builds", "submit", f"--config={f.name}"], check=True)
+    subprocess.run(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            f"--tag={container_image}",
+            f"--project={PROJECT}",
+            "--machineType=e2-highcpu-8",
+            "--quiet",
+        ],
+        check=True,
+    )
 
     logging.info(f"container_image: {container_image}")
     yield container_image
@@ -134,6 +130,7 @@ def container_image(bucket_name: str) -> str:
             "images",
             "delete",
             container_image,
+            f"--project={PROJECT}",
             "--force-delete-tags",
             "--quiet",
         ],
