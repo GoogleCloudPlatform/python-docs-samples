@@ -18,7 +18,6 @@ def client_query_w_timestamp_params():
     # [START bigquery_query_params_timestamps]
     import datetime
 
-    import pytz
     from google.cloud import bigquery
 
     # Construct a BigQuery client object.
@@ -30,7 +29,7 @@ def client_query_w_timestamp_params():
             bigquery.ScalarQueryParameter(
                 "ts_value",
                 "TIMESTAMP",
-                datetime.datetime(2016, 12, 7, 8, 0, tzinfo=pytz.UTC),
+                datetime.datetime(2016, 12, 7, 8, 0, tzinfo=datetime.timezone.utc),
             )
         ]
     )
