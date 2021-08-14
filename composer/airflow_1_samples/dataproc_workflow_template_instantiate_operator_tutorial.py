@@ -55,6 +55,8 @@ with models.DAG(
         template_id="sparkpi",
         project_id=project_id,
         # The region for the template
+        # For more info on regions where Dataflow is available see:
+        # https://cloud.google.com/dataflow/docs/resources/locations
         region="us-central1",
     )
 

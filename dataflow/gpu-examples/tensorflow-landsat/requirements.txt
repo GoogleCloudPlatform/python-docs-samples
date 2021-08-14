@@ -1,4 +1,4 @@
 Pillow==8.2.0
 apache-beam[gcp]==2.31.0
 rasterio==1.2.4
-tensorflow==2.5.0
+tensorflow==2.5.1

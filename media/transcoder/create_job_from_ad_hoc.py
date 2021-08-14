@@ -17,15 +17,15 @@
 """Google Cloud Transcoder sample for creating a job based on a supplied job config.
 
 Example usage:
-    python create_job_from_ad_hoc.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri>
+    python create_job_from_ad_hoc.py --project_id <project-id> --location <location> --input_uri <uri> --output_uri <uri>
 """
 
 # [START transcoder_create_job_from_ad_hoc]
 
 import argparse
 
-from google.cloud.video import transcoder_v1beta1
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video import transcoder_v1
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
@@ -42,45 +42,47 @@ def create_job_from_ad_hoc(project_id, location, input_uri, output_uri):
     client = TranscoderServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
-    job = transcoder_v1beta1.types.Job()
+    job = transcoder_v1.types.Job()
     job.input_uri = input_uri
     job.output_uri = output_uri
-    job.config = transcoder_v1beta1.types.JobConfig(
+    job.config = transcoder_v1.types.JobConfig(
         elementary_streams=[
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="video-stream0",
-                video_stream=transcoder_v1beta1.types.VideoStream(
-                    codec="h264",
-                    height_pixels=360,
-                    width_pixels=640,
-                    bitrate_bps=550000,
-                    frame_rate=60,
+                video_stream=transcoder_v1.types.VideoStream(
+                    h264=transcoder_v1.types.VideoStream.H264CodecSettings(
+                        height_pixels=360,
+                        width_pixels=640,
+                        bitrate_bps=550000,
+                        frame_rate=60,
+                    ),
                 ),
             ),
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="video-stream1",
-                video_stream=transcoder_v1beta1.types.VideoStream(
-                    codec="h264",
-                    height_pixels=720,
-                    width_pixels=1280,
-                    bitrate_bps=2500000,
-                    frame_rate=60,
+                video_stream=transcoder_v1.types.VideoStream(
+                    h264=transcoder_v1.types.VideoStream.H264CodecSettings(
+                        height_pixels=720,
+                        width_pixels=1280,
+                        bitrate_bps=2500000,
+                        frame_rate=60,
+                    ),
                 ),
             ),
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="audio-stream0",
-                audio_stream=transcoder_v1beta1.types.AudioStream(
+                audio_stream=transcoder_v1.types.AudioStream(
                     codec="aac", bitrate_bps=64000
                 ),
             ),
         ],
         mux_streams=[
-            transcoder_v1beta1.types.MuxStream(
+            transcoder_v1.types.MuxStream(
                 key="sd",
                 container="mp4",
                 elementary_streams=["video-stream0", "audio-stream0"],
             ),
-            transcoder_v1beta1.types.MuxStream(
+            transcoder_v1.types.MuxStream(
                 key="hd",
                 container="mp4",
                 elementary_streams=["video-stream1", "audio-stream0"],
@@ -96,7 +98,7 @@ def create_job_from_ad_hoc(project_id, location, input_uri, output_uri):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
         help="The location to start this job in.",

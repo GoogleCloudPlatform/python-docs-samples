@@ -17,14 +17,14 @@
 """Google Cloud Transcoder sample for listing jobs in a location.
 
 Example usage:
-    python list_jobs.py --project-id <project-id> --location <location>
+    python list_jobs.py --project_id <project-id> --location <location>
 """
 
 # [START transcoder_list_jobs]
 
 import argparse
 
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
@@ -51,7 +51,7 @@ def list_jobs(project_id, location):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument("--location", help="The location of the jobs.", required=True)
     args = parser.parse_args()
     list_jobs(args.project_id, args.location)
