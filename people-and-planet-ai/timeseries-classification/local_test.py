@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import subprocess
 import tempfile
 from unittest import mock
 

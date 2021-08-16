@@ -65,6 +65,7 @@ def run_create_datasets() -> dict:
         runner_params = {
             "runner": "DataflowRunner",
             "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+            "save_main_session": args.get("save_main_session", True),
             "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
             "project": args.get("project", PROJECT),
             "region": args.get("region", REGION),
