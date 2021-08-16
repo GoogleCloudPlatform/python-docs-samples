@@ -43,8 +43,6 @@ def get_client(service_account_json):
     )
 
 
-
-
 def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
     """Creates a dataset."""
     client = get_client(service_account_json)
@@ -68,8 +66,6 @@ def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
         return ""
 
 
-
-
 def delete_dataset(service_account_json, project_id, cloud_region, dataset_id):
     """Deletes a dataset."""
     client = get_client(service_account_json)
@@ -86,8 +82,6 @@ def delete_dataset(service_account_json, project_id, cloud_region, dataset_id):
     except HttpError as e:
         print("Error, dataset not deleted: {}".format(e))
         return ""
-
-
 
 
 def create_fhir_store(
@@ -114,8 +108,6 @@ def create_fhir_store(
     return response
 
 
-
-
 def delete_fhir_store(
     service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
 ):
@@ -137,8 +129,6 @@ def delete_fhir_store(
     response = request.execute()
     print("Deleted FHIR store: {}".format(fhir_store_id))
     return response
-
-
 
 
 def parse_command_line_args():

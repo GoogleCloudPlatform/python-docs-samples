@@ -45,8 +45,6 @@ def get_session(service_account_json):
     return session
 
 
-
-
 def create_patient(
     service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
@@ -77,8 +75,6 @@ def create_patient(
     print("Created Patient resource with ID {}".format(resource["id"]))
 
     return response
-
-
 
 
 def create_encounter(
@@ -129,8 +125,6 @@ def create_encounter(
     return response
 
 
-
-
 def create_observation(
     service_account_json,
     base_url,
@@ -176,8 +170,6 @@ def create_observation(
     return response
 
 
-
-
 def delete_resource(
     service_account_json,
     base_url,
@@ -207,8 +199,6 @@ def delete_resource(
     print("Deleted {} resource with ID {}.".format(resource_type, resource_id))
 
     return response
-
-
 
 
 # [START healthcare_conditional_update_resource]
