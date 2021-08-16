@@ -1,2 +1,2 @@
-google-cloud-bigquery==2.23.2
+google-cloud-bigquery==2.24.0
 Flask==2.0.1
