@@ -155,7 +155,8 @@ def read_timeseries(client, project_resource, custom_metric_type):
         filter='metric.type="{0}"'.format(custom_metric_type),
         pageSize=3,
         interval_startTime=get_start_time(),
-        interval_endTime=get_now_rfc3339())
+        interval_endTime=get_now_rfc(),
+    )
     response = request.execute()
     return response
 
