@@ -109,7 +109,8 @@ def write_timeseries_value(client, project_resource,
     """Write the custom metric obtained by get_custom_data_point at a point in
     time."""
     # Specify a new data point for the time series.
-    now = get_now()
+    now = 
+    ()
     timeseries_data = {
         "metric": {
             "type": custom_metric_type,
@@ -155,7 +156,7 @@ def read_timeseries(client, project_resource, custom_metric_type):
         filter='metric.type="{0}"'.format(custom_metric_type),
         pageSize=3,
         interval_startTime=get_start_time(),
-        interval_endTime=get_now_rfc(),
+        interval_endTime=get_now(),
     )
     response = request.execute()
     return response
