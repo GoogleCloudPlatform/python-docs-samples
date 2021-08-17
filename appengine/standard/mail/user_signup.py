@@ -89,7 +89,7 @@ class ConfirmUserSignupHandler(webapp2.RequestHandler):
         if code:
             record = ndb.Key(UserConfirmationRecord, code).get()
             # 2-hour time limit on confirming.
-            if record and (datetime.datetime.now() - record.timestamp <
+            if record and (datetime.datetime.now(tz=datetime.timezone.utc) - record.timestamp <
                            datetime.timedelta(hours=2)):
                 record.confirmed = True
                 record.put()

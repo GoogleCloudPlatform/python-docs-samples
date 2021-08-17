@@ -50,7 +50,7 @@ from airflow.providers.google.cloud.transfers import gcs_to_gcs
 # Set default arguments
 # --------------------------------------------------------------------------------
 
-yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+yesterday = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1)
 
 default_args = {
     'owner': 'airflow',

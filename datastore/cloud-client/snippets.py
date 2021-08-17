@@ -218,7 +218,7 @@ def properties(client):
         {
             "category": "Personal",
             "description": "Learn Cloud Datastore",
-            "created": datetime.datetime.utcnow(),
+            "created": datetime.datetime.now(tz=datetime.timezone.utc),
             "done": False,
             "priority": 4,
             "percent_complete": 10.5,
@@ -536,7 +536,7 @@ def key_filter(client):
 def ascending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_ascending_sort]
@@ -550,7 +550,7 @@ def ascending_sort(client):
 def descending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_descending_sort]
@@ -564,7 +564,7 @@ def descending_sort(client):
 def multi_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_multi_sort]
@@ -721,7 +721,7 @@ def exploding_properties(client):
         {
             "tags": ["fun", "programming", "learn"],
             "collaborators": ["alice", "bob", "charlie"],
-            "created": datetime.datetime.utcnow(),
+            "created": datetime.datetime.now(tz=datetime.timezone.utc),
         }
     )
     # [END datastore_exploding_properties]
@@ -767,7 +767,7 @@ def transactional_update(client):
 def transactional_get_or_create(client):
     # [START datastore_transactional_get_or_create]
     with client.transaction():
-        key = client.key("Task", datetime.datetime.utcnow().isoformat())
+        key = client.key("Task", datetime.datetime.now(tz=datetime.timezone.utc).isoformat())
 
         task = client.get(key)
 

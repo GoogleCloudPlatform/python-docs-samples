@@ -55,8 +55,8 @@ import paho.mqtt.client as mqtt
 def create_jwt(project_id, private_key_file, algorithm):
     """Create a JWT (https://jwt.io) to establish an MQTT connection."""
     token = {
-        'iat': datetime.datetime.utcnow(),
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        'iat': datetime.datetime.now(tz=datetime.timezone.utc),
+        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60),
         'aud': project_id
     }
     with open(private_key_file, 'r') as f:

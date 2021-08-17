@@ -49,13 +49,13 @@ def format_rfc3339(datetime_instance=None):
 
 def get_start_time():
     # Return now- 5 minutes
-    start_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
+    start_time = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(minutes=5)
     return format_rfc3339(start_time)
 
 
 def get_now_rfc3339():
     # Return now
-    return format_rfc3339(datetime.datetime.utcnow())
+    return format_rfc3339(datetime.datetime.now(tz=datetime.timezone.utc))
 
 
 def create_custom_metric(client, project_id,

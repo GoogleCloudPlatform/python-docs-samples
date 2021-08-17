@@ -21,7 +21,7 @@ from airflow.operators import bash_operator
 from airflow.operators import dummy_operator
 
 
-yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+yesterday = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1)
 
 default_dag_args = {
     'start_date': yesterday,

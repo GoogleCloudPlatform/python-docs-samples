@@ -292,7 +292,7 @@ and 10`.
 
 Always create timezone aware datetime objects. For libraries that use protobuf,
 omitting the timezone may lead to unexpected behavior when the datetime
-is converted to a protobuf tiemstamp.
+is converted to a protobuf timestamp.
 
 ```py
 import datetime

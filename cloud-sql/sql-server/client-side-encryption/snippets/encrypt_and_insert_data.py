@@ -73,7 +73,7 @@ def encrypt_and_insert_data(
     team: str,
     email: str,
 ) -> None:
-    time_cast = datetime.datetime.utcnow()
+    time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Use the envelope AEAD primitive to encrypt the email, using the team name as
     # associated data. Encryption with associated data ensures authenticity
     # (who the sender is) and integrity (the data has not been tampered with) of that

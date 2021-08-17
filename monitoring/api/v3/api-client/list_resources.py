@@ -45,7 +45,7 @@ def get_start_time():
     arbitrarily to be an hour ago and 5 minutes
     """
     # Return an hour ago - 5 minutes
-    start_time = (datetime.datetime.utcnow() -
+    start_time = (datetime.datetime.now(tz=datetime.timezone.utc) -
                   datetime.timedelta(hours=1, minutes=5))
     return format_rfc3339(start_time)
 
@@ -56,7 +56,7 @@ def get_end_time():
     :return: The start time to begin reading time series values, picked
     arbitrarily to be an hour ago, or 5 minutes from the start time.
     """
-    end_time = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+    end_time = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(hours=1)
     return format_rfc3339(end_time)
 
 

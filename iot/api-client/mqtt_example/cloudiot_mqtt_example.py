@@ -65,9 +65,9 @@ def create_jwt(project_id, private_key_file, algorithm):
 
     token = {
         # The time that the token was issued at
-        "iat": datetime.datetime.utcnow(),
+        "iat": datetime.datetime.now(tz=datetime.timezone.utc),
         # The time the token expires.
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=20),
+        "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=20),
         # The audience field should always be set to the GCP project id.
         "aud": project_id,
     }
@@ -228,7 +228,7 @@ def listen_for_messages(
     # [START iot_listen_for_messages]
     global minimum_backoff_time
 
-    jwt_iat = datetime.datetime.utcnow()
+    jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
     jwt_exp_mins = jwt_expires_minutes
     # Use gateway to connect to server
     client = get_client(
@@ -276,10 +276,10 @@ def listen_for_messages(
             minimum_backoff_time *= 2
             client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
 
-        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        seconds_since_issue = (datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print("Refreshing token after {}s".format(seconds_since_issue))
-            jwt_iat = datetime.datetime.utcnow()
+            jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
             client.loop()
             client.disconnect()
             client = get_client(
@@ -326,7 +326,7 @@ def send_data_from_bound_device(
     device_topic = "/devices/{}/{}".format(device_id, "state")
     gateway_topic = "/devices/{}/{}".format(gateway_id, "state")
 
-    jwt_iat = datetime.datetime.utcnow()
+    jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
     jwt_exp_mins = jwt_expires_minutes
     # Use gateway to connect to server
     client = get_client(
@@ -374,10 +374,10 @@ def send_data_from_bound_device(
         )
         client.publish(device_topic, "{} : {}".format(device_id, payload))
 
-        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        seconds_since_issue = (datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print("Refreshing token after {}s").format(seconds_since_issue)
-            jwt_iat = datetime.datetime.utcnow()
+            jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
             client = get_client(
                 project_id,
                 cloud_region,
@@ -500,7 +500,7 @@ def mqtt_device_demo(args):
 
     mqtt_topic = "/devices/{}/{}".format(args.device_id, sub_topic)
 
-    jwt_iat = datetime.datetime.utcnow()
+    jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
     jwt_exp_mins = args.jwt_expires_minutes
     client = get_client(
         args.project_id,
@@ -536,10 +536,10 @@ def mqtt_device_demo(args):
         payload = "{}/{}-payload-{}".format(args.registry_id, args.device_id, i)
         print("Publishing message {}/{}: '{}'".format(i, args.num_messages, payload))
         # [START iot_mqtt_jwt_refresh]
-        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        seconds_since_issue = (datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print("Refreshing token after {}s".format(seconds_since_issue))
-            jwt_iat = datetime.datetime.utcnow()
+            jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
             client.loop()
             client.disconnect()
             client = get_client(

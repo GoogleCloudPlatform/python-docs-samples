@@ -42,9 +42,9 @@ _BACKOFF_DURATION = 60
 def create_jwt(project_id, private_key_file, algorithm):
     token = {
         # The time the token was issued.
-        "iat": datetime.datetime.utcnow(),
+        "iat": datetime.datetime.now(tz=datetime.timezone.utc),
         # Token expiration time.
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60),
         # The audience field should always be set to the GCP project id.
         "aud": project_id,
     }
@@ -209,7 +209,7 @@ def main():
     args = parse_command_line_args()
 
     jwt_token = create_jwt(args.project_id, args.private_key_file, args.algorithm)
-    jwt_iat = datetime.datetime.utcnow()
+    jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
     jwt_exp_mins = args.jwt_expires_minutes
 
     print(
@@ -229,13 +229,13 @@ def main():
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     for i in range(1, args.num_messages + 1):
-        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        seconds_since_issue = (datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print("Refreshing token after {}s").format(seconds_since_issue)
             jwt_token = create_jwt(
                 args.project_id, args.private_key_file, args.algorithm
             )
-            jwt_iat = datetime.datetime.utcnow()
+            jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
 
         payload = "{}/{}-payload-{}".format(args.registry_id, args.device_id, i)
 

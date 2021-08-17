@@ -82,10 +82,10 @@ def create_jwt(project_id, private_key_file, algorithm, jwt_expires_minutes):
 
     token = {
         # The time that the token was issued at
-        'iat': datetime.datetime.utcnow(),
+        'iat': datetime.datetime.now(tz=datetime.timezone.utc),
         # The time the token expires.
         'exp': (
-            datetime.datetime.utcnow() +
+            datetime.datetime.now(tz=datetime.timezone.utc) +
             datetime.timedelta(minutes=jwt_expires_minutes)),
         # The audience field should always be set to the GCP project id.
         'aud': project_id

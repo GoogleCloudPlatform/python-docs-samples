@@ -18,7 +18,7 @@ import datetime
 import airflow
 from airflow.operators import bash
 
-YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
+YESTERDAY = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1)
 
 default_args = {
     'owner': 'Composer Example',

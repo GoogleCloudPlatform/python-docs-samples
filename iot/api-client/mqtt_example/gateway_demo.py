@@ -131,7 +131,7 @@ if __name__ == "__main__":
                 logwriter = csv.writer(csvfile, dialect="excel")
                 logwriter.writerow(
                     [
-                        datetime.datetime.now().isoformat(),
+                        datetime.datetime.now(tz=datetime.timezone.utc).isoformat(),
                         message.topic,
                         message.payload,
                     ]

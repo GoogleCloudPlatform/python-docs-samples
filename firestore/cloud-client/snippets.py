@@ -91,7 +91,7 @@ def add_data_types():
         u'stringExample': u'Hello, World!',
         u'booleanExample': True,
         u'numberExample': 3.14159265,
-        u'dateExample': datetime.datetime.now(),
+        u'dateExample': datetime.datetime.now(tz=datetime.timezone.utc),
         u'arrayExample': [5, True, u'hello'],
         u'nullExample': None,
         u'objectExample': {

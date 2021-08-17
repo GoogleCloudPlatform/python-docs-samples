@@ -54,7 +54,7 @@ def fetch_times(limit):
 @app.route('/')
 def root():
     # Store the current access time in Datastore.
-    store_time(datetime.datetime.now())
+    store_time(datetime.datetime.now(tz=datetime.timezone.utc))
 
     # Fetch the most recent 10 access times from Datastore.
     times = fetch_times(10)

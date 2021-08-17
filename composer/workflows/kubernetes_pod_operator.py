@@ -49,7 +49,7 @@ secret_volume = Secret(
     key='service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
 
-YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
+YESTERDAY = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1)
 
 # If a Pod fails to launch, or has an error occur in the container, Airflow
 # will show the task as failed, as well as contain all of the task logs

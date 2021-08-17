@@ -73,7 +73,7 @@ def root():
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
 
-            store_time(claims['email'], datetime.datetime.now())
+            store_time(claims['email'], datetime.datetime.now(tz=datetime.timezone.utc))
             times = fetch_times(claims['email'], 10)
 
         except ValueError as exc:

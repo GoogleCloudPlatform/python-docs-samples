@@ -37,7 +37,7 @@ def path_to_key(datastore, path):
 
 def save_page(ds, page, content):
     with ds.transaction():
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
         current_key = path_to_key(ds, '{}.page/current.revision'.format(page))
         revision_key = path_to_key(ds, '{}.page/{}.revision'.format(page, now))
 

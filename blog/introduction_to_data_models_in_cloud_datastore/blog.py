@@ -43,7 +43,7 @@ def create_user(ds, username, profile):
 
 
 def create_post(ds, username, post_content):
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
     key = path_to_key(ds, '{0}.user/{1}.post'.format(username, now))
     entity = datastore.Entity(key)
 
@@ -57,7 +57,7 @@ def create_post(ds, username, post_content):
 
 
 def repost(ds, username, original):
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
     new_key = path_to_key(ds, '{0}.user/{1}.post'.format(username, now))
     new = datastore.Entity(new_key)
 
