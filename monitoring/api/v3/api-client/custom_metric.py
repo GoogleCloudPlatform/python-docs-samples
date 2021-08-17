@@ -109,8 +109,7 @@ def write_timeseries_value(client, project_resource,
     """Write the custom metric obtained by get_custom_data_point at a point in
     time."""
     # Specify a new data point for the time series.
-    now = 
-    ()
+    now = get_now()
     timeseries_data = {
         "metric": {
             "type": custom_metric_type,
