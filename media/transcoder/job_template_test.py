@@ -15,6 +15,8 @@
 import os
 import uuid
 
+from google.api_core.exceptions import NotFound
+
 import create_job_template
 import delete_job_template
 import get_job_template
@@ -35,7 +37,10 @@ def test_template_operations(capsys):
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"
     )
 
-    delete_job_template.delete_job_template(project_id, location, template_id)
+    try:
+        delete_job_template.delete_job_template(project_id, location, template_id)
+    except NotFound as e:
+        print(f"Ignoring NotFound, details: {e}")
     out, _ = capsys.readouterr()
 
     create_job_template.create_job_template(project_id, location, template_id)

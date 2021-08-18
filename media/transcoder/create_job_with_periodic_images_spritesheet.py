@@ -17,15 +17,15 @@
 """Google Cloud Transcoder sample for creating a job that generates two spritesheets from the input video. Each spritesheet contains images that are captured periodically.
 
 Example usage:
-    python create_job_with_periodic_images_spritesheet.py --project-id <project-id> --location <location> --input-uri <uri> --output-uri <uri>
+    python create_job_with_periodic_images_spritesheet.py --project_id <project-id> --location <location> --input_uri <uri> --output_uri <uri>
 """
 
 # [START transcoder_create_job_with_periodic_images_spritesheet]
 
 import argparse
 
-from google.cloud.video import transcoder_v1beta1
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video import transcoder_v1
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 from google.protobuf import duration_pb2 as duration
@@ -45,35 +45,36 @@ def create_job_with_periodic_images_spritesheet(
     client = TranscoderServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
-    job = transcoder_v1beta1.types.Job()
+    job = transcoder_v1.types.Job()
     job.input_uri = input_uri
     job.output_uri = output_uri
-    job.config = transcoder_v1beta1.types.JobConfig(
+    job.config = transcoder_v1.types.JobConfig(
         # Create an ad-hoc job. For more information, see https://cloud.google.com/transcoder/docs/how-to/jobs#create_jobs_ad_hoc.
         # See all options for the job config at https://cloud.google.com/transcoder/docs/reference/rest/v1beta1/JobConfig.
         elementary_streams=[
             # This section defines the output video stream.
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="video-stream0",
-                video_stream=transcoder_v1beta1.types.VideoStream(
-                    codec="h264",
-                    height_pixels=360,
-                    width_pixels=640,
-                    bitrate_bps=550000,
-                    frame_rate=60,
+                video_stream=transcoder_v1.types.VideoStream(
+                    h264=transcoder_v1.types.VideoStream.H264CodecSettings(
+                        height_pixels=360,
+                        width_pixels=640,
+                        bitrate_bps=550000,
+                        frame_rate=60,
+                    ),
                 ),
             ),
             # This section defines the output audio stream.
-            transcoder_v1beta1.types.ElementaryStream(
+            transcoder_v1.types.ElementaryStream(
                 key="audio-stream0",
-                audio_stream=transcoder_v1beta1.types.AudioStream(
+                audio_stream=transcoder_v1.types.AudioStream(
                     codec="aac", bitrate_bps=64000
                 ),
             ),
         ],
         # This section multiplexes the output audio and video together into a container.
         mux_streams=[
-            transcoder_v1beta1.types.MuxStream(
+            transcoder_v1.types.MuxStream(
                 key="sd",
                 container="mp4",
                 elementary_streams=["video-stream0", "audio-stream0"],
@@ -83,7 +84,7 @@ def create_job_with_periodic_images_spritesheet(
         # https://cloud.google.com/transcoder/docs/how-to/generate-spritesheet#generate_image_periodically.
         sprite_sheets=[
             # Generate a sprite sheet with 64x32px images. An image is taken every 7 seconds from the video.
-            transcoder_v1beta1.types.SpriteSheet(
+            transcoder_v1.types.SpriteSheet(
                 file_prefix="small-sprite-sheet",
                 sprite_width_pixels=64,
                 sprite_height_pixels=32,
@@ -92,7 +93,7 @@ def create_job_with_periodic_images_spritesheet(
                 ),
             ),
             # Generate a sprite sheet with 128x72px images. An image is taken every 7 seconds from the video.
-            transcoder_v1beta1.types.SpriteSheet(
+            transcoder_v1.types.SpriteSheet(
                 file_prefix="large-sprite-sheet",
                 sprite_width_pixels=128,
                 sprite_height_pixels=72,
@@ -111,19 +112,19 @@ def create_job_with_periodic_images_spritesheet(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
         help="The location to start this job in.",
         default="us-central1",
     )
     parser.add_argument(
-        "--input-uri",
+        "--input_uri",
         help="Uri of the video in the Cloud Storage bucket.",
         required=True,
     )
     parser.add_argument(
-        "--output-uri",
+        "--output_uri",
         help="Uri of the video output folder in the Cloud Storage bucket. Must end in '/'.",
         required=True,
     )

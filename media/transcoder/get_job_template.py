@@ -17,14 +17,14 @@
 """Google Cloud Transcoder sample for getting a job template.
 
 Example usage:
-    python get_job_template.py --project-id <project-id> --location <location> --template-id <template-id>
+    python get_job_template.py --project_id <project-id> --location <location> --template_id <template-id>
 """
 
 # [START transcoder_get_job_template]
 
 import argparse
 
-from google.cloud.video.transcoder_v1beta1.services.transcoder_service import (
+from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
@@ -49,10 +49,10 @@ def get_job_template(project_id, location, template_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id", help="Your Cloud project ID.", required=True)
+    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location", help="The location of the template.", required=True
     )
-    parser.add_argument("--template-id", help="The job template ID.", required=True)
+    parser.add_argument("--template_id", help="The job template ID.", required=True)
     args = parser.parse_args()
     get_job_template(args.project_id, args.location, args.template_id)
