@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,8 +28,9 @@ import nox
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
 
-# Copy `noxfile_config.py` to your directory and modify it instead.
+BLACK_VERSION = "black==19.10b0"
 
+# Copy `noxfile_config.py` to your directory and modify it instead.
 
 # `TEST_CONFIG` dict is a configuration hook that allows users to
 # modify the test configurations. The values here should be in sync
@@ -38,15 +39,17 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7"],
+    'ignored_versions': [],
+
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
-    "enforce_type_hints": False,
+    'enforce_type_hints': False,
+
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
-    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+    'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
     # If you need to use a specific version of pip,
     # change pip_version_override to the string representation
@@ -54,13 +57,13 @@ TEST_CONFIG = {
     "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    'envs': {},
 }
 
 
 try:
     # Ensure we can import noxfile_config in the project's directory.
-    sys.path.append(".")
+    sys.path.append('.')
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
     print("No user noxfile_config found: detail: {}".format(e))
@@ -75,26 +78,25 @@ def get_pytest_env_vars() -> Dict[str, str]:
     ret = {}
 
     # Override the GCLOUD_PROJECT and the alias.
-    env_key = TEST_CONFIG["gcloud_project_env"]
+    env_key = TEST_CONFIG['gcloud_project_env']
     # This should error out if not set.
-    ret["GOOGLE_CLOUD_PROJECT"] = os.environ[env_key]
-    ret["GCLOUD_PROJECT"] = os.environ[env_key]  # deprecated
+    ret['GOOGLE_CLOUD_PROJECT'] = os.environ[env_key]
 
     # Apply user supplied envs.
-    ret.update(TEST_CONFIG["envs"])
+    ret.update(TEST_CONFIG['envs'])
     return ret
 
 
 # DO NOT EDIT - automatically generated.
-# All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9"]
+# All versions used to test samples.
+ALL_VERSIONS = ["3.6", "3.7", "3.8", "3.9"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
+IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
-INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
+INSTALL_LIBRARY_FROM_SOURCE = os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False) in ("True", "true")
 #
 # Style Checks
 #
@@ -102,6 +104,7 @@ INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE",
 
 def _determine_local_import_names(start_dir: str) -> List[str]:
     """Determines all import names that should be considered "local".
+
     This is used when running the linter to insure that import order is
     properly checked.
     """
@@ -138,7 +141,7 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session: nox.sessions.Session) -> None:
-    if not TEST_CONFIG["enforce_type_hints"]:
+    if not TEST_CONFIG['enforce_type_hints']:
         session.install("flake8", "flake8-import-order")
     else:
         session.install("flake8", "flake8-import-order", "flake8-annotations")
@@ -147,11 +150,9 @@ def lint(session: nox.sessions.Session) -> None:
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
         ",".join(local_names),
-        ".",
+        "."
     ]
     session.run("flake8", *args)
-
-
 #
 # Black
 #
@@ -159,11 +160,10 @@ def lint(session: nox.sessions.Session) -> None:
 
 @nox.session
 def blacken(session: nox.sessions.Session) -> None:
-    session.install("black")
+    session.install(BLACK_VERSION)
     python_files = [path for path in os.listdir(".") if path.endswith(".py")]
 
     session.run("black", *python_files)
-
 
 #
 # Sample Tests
@@ -173,9 +173,7 @@ def blacken(session: nox.sessions.Session) -> None:
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 
-def _session_tests(
-    session: nox.sessions.Session, post_install: Callable = None
-) -> None:
+def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     if TEST_CONFIG["pip_version_override"]:
         pip_version = TEST_CONFIG["pip_version_override"]
         session.install(f"pip=={pip_version}")
@@ -205,7 +203,7 @@ def _session_tests(
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
         success_codes=[0, 5],
-        env=get_pytest_env_vars(),
+        env=get_pytest_env_vars()
     )
 
 
@@ -215,9 +213,9 @@ def py(session: nox.sessions.Session) -> None:
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        session.skip(
-            "SKIPPED: {} tests are disabled for this sample.".format(session.python)
-        )
+        session.skip("SKIPPED: {} tests are disabled for this sample.".format(
+            session.python
+        ))
 
 
 #
@@ -226,14 +224,18 @@ def py(session: nox.sessions.Session) -> None:
 
 
 def _get_repo_root() -> Optional[str]:
-    """Returns the root folder of the project."""
-    # Get root of this repository.
-    # Assume we don't have directories nested deeper than 10 items.
+    """ Returns the root folder of the project. """
+    # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
     for i in range(10):
         if p is None:
             break
         if Path(p / ".git").exists():
+            return str(p)
+        # .git is not available in repos cloned via Cloud Build
+        # setup.py is always in the library's root, so use that instead
+        # https://github.com/googleapis/synthtool/issues/792
+        if Path(p / "setup.py").exists():
             return str(p)
         p = p.parent
     raise Exception("Unable to detect repository root.")
