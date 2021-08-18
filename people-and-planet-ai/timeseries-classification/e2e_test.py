@@ -48,13 +48,11 @@ DATAFLOW_FINISHED_STATE = {
     "JOB_STATE_DRAINED",
 }
 
-VERTEX_AI_FINISHED_STATE = (
-    {
-        "JOB_STATE_SUCCEEDED",
-        "JOB_STATE_FAILED",
-        "JOB_STATE_CANCELLED",
-    },
-)
+VERTEX_AI_FINISHED_STATE = {
+    "JOB_STATE_SUCCEEDED",
+    "JOB_STATE_FAILED",
+    "JOB_STATE_CANCELLED",
+}
 
 logging.getLogger().setLevel(logging.INFO)
 
