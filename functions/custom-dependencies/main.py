@@ -13,51 +13,50 @@
 # limitations under the License.
 
 # [START functions_custom_dependencies]
-import os
 import subprocess
 
-from flask import Flask, make_response
+from flask import make_response
 
 
 def http_handler(request):
     try:
-        image = __create_diagram(request.args.get("dot"))
+        image = __create_diagram(request.args.get('dot'))
         response = make_response(image)
-        response.headers.set("Content-Type", "image/png")
+        response.headers.set('Content-Type', 'image/png')
         return response
 
     except Exception as e:
-        print("error: {}".format(e))
+        print('error: {}'.format(e))
 
         # If no graphviz definition or bad graphviz def, return 400
-        if "syntax" in str(e):
-            return make_response("Bad Request: {}".format(e), 400)
+        if 'syntax' in str(e):
+            return make_response('Bad Request: {}'.format(e), 400)
 
-        return make_response("Internal Server Error", 500)
+        return make_response('Internal Server Error', 500)
 
 
 # Helper function that generates a diagram based
 # on a graphviz DOT diagram description.
 def __create_diagram(dot):
     if not dot:
-        raise Exception("syntax: no graphviz definition provided")
+        raise Exception('syntax: no graphviz definition provided')
 
     dot_args = [  # These args add a watermark to the dot graphic.
-        "-Glabel=Made on Cloud Functions",
-        "-Gfontsize=10",
-        "-Glabeljust=right",
-        "-Glabelloc=bottom",
-        "-Gfontcolor=gray",
-        "-Tpng",
+        '-Glabel=Made on Cloud Functions',
+        '-Gfontsize=10',
+        '-Glabeljust=right',
+        '-Glabelloc=bottom',
+        '-Gfontcolor=gray',
+        '-Tpng',
     ]
 
     # Uses local `dot` binary from Graphviz:
     # https://graphviz.gitlab.io
     image = subprocess.run(
-        ["dot"] + dot_args, input=dot.encode("utf-8"), stdout=subprocess.PIPE
+        ['dot'] + dot_args, input=dot.encode('utf-8'), stdout=subprocess.PIPE
     ).stdout
 
     if not image:
-        raise Exception("syntax: bad graphviz definition provided")
+        raise Exception('syntax: bad graphviz definition provided')
     return image
 # [END functions_custom_dependencies]

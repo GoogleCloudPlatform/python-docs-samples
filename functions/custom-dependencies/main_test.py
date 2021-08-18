@@ -17,13 +17,14 @@
 
 
 from unittest.mock import Mock
-import pytest
+
 import flask
+import pytest
 
 import main
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def app():
     return flask.Flask(__name__)
 
@@ -37,20 +38,20 @@ def test_empty_query_string(app):
 
 def test_empty_dot_parameter(app):
     with app.test_request_context():
-        req = Mock(args={"dot": ""})
+        req = Mock(args={'dot': ''})
         res = main.http_handler(req)
         assert res.status_code == 400
 
 
 def test_bad_dot_parameter(app):
     with app.test_request_context():
-        req = Mock(args={"dot": "digraph"})
+        req = Mock(args={'dot': 'digraph'})
         res = main.http_handler(req)
         assert res.status_code == 400
 
 
 def test_good_dot_parameter(app):
     with app.test_request_context():
-        req = Mock(args={"dot": "digraph G { A -> {B, C, D} -> {F} }"})
+        req = Mock(args={'dot': 'digraph G { A -> {B, C, D} -> {F} }'})
         res = main.http_handler(req)
-        assert res.headers["Content-Type"] == "image/png"
+        assert res.headers['Content-Type'] == 'image/png'
