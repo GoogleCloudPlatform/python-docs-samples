@@ -288,6 +288,20 @@ When documenting primitive types, be sure to note if they have a particular set
 of constraints. For example, `A base64-encoded string` or `Must be between 0
 and 10`.
 
+### `datetime.datetime` Objects
+
+Always create timezone aware datetime objects. For libraries that use protobuf,
+omitting the timezone may lead to unexpected behavior when the datetime
+is converted to a protobuf tiemstamp.
+
+```py
+import datetime
+
+now = datetime.datetime.now(tz=datetime.timezone.utc)
+```
+
+For more information see the [Python datetime documentation](https://docs.python.org/3/library/datetime.html#datetime.datetime.utcfromtimestamp).
+
 ### README File
 
 Each sample should have a `README.md` file that provides instructions for how
