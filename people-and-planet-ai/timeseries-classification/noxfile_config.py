@@ -42,6 +42,6 @@ TEST_CONFIG_OVERRIDE = {
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {
-        "PYTEST_ADDOPTS": "-n=8",  # parallelize tests in multiple CPUs
+        "PYTEST_ADDOPTS": "-n=16",  # parallelize tests in multiple CPUs
     },
 }
