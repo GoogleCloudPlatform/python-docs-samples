@@ -309,3 +309,5 @@ def test_predict(service_url: str, access_token: str, train_model: str) -> None:
     # Check that we get non-empty predictions.
     assert "is_fishing" in predictions
     assert len(predictions["is_fishing"]) > 0
+
+    assert False, "Expected failure to debug logs"
