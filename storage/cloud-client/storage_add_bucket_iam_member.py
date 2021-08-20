@@ -23,8 +23,8 @@ from google.cloud import storage
 def add_bucket_iam_member(bucket_name, role, member):
     """Add a new member to an IAM Policy"""
     # bucket_name = "your-bucket-name"
-    # role = "IAM role, e.g. roles/storage.objectViewer"
-    # member = "IAM identity, e.g. user: name@example.com"
+    # role = "IAM role, e.g., roles/storage.objectViewer"
+    # member = "IAM identity, e.g., user: name@example.com"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
