@@ -34,7 +34,7 @@ def print_images_list(project: str) -> None:
     """
     images_client = compute_v1.ImagesClient()
     # Listing only non-deprecated images to reduce the size of the reply.
-    images_list_request = compute_v1.ListImagesRequest(project=project, max_results=3,
+    images_list_request = compute_v1.ListImagesRequest(project=project, max_results=100,
                                                        filter="deprecated.state != DEPRECATED")
 
     # Although the `max_results` parameter is specified in the request, the iterable returned
