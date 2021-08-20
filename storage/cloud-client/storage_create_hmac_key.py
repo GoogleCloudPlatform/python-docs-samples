@@ -25,7 +25,7 @@ def create_key(project_id, service_account_email):
     Create a new HMAC key using the given project and service account.
     """
     # project_id = 'Your Google Cloud project ID'
-    # service_account_email = 'Service account used to generate HMAC key'
+    # service_account_email = 'Service account used to generate the HMAC key'
 
     storage_client = storage.Client(project=project_id)
 
