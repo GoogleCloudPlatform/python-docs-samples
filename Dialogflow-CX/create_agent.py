@@ -15,6 +15,7 @@
 
 """DialogFlow API Create Agent Sample"""
 
+## [START dialogflow_cx_create_agent_sample]
 from google.cloud.dialogflowcx_v3.services.agents.client import AgentsClient
 from google.cloud.dialogflowcx_v3.types.agent import Agent
 
@@ -34,3 +35,4 @@ def create_agent(project_id, display_name):
     response = agents_client.create_agent(request={"agent": agent, "parent": parent})
 
     return response
+## [END dialogflow_cx_create_agent_sample]
