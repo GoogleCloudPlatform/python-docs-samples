@@ -63,14 +63,14 @@ with models.DAG(
     start_date=days_ago(1),
     tags=['example'],
 ) as dag:
-    # [START howto_operator_gke_create_cluster]
+    # [START composer_gke_create_cluster]
     create_cluster = GKECreateClusterOperator(
         task_id="create_cluster",
         project_id=GCP_PROJECT_ID,
         location=GCP_LOCATION,
         body=CLUSTER,
     )
-    # [END howto_operator_gke_create_cluster]
+    # [END composer_gke_create_cluster]
 
     # [START composer_kubernetespodoperator_minconfig]
     kubernetes_min_pod = GKEStartPodOperator(
