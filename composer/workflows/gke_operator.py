@@ -19,9 +19,9 @@
 Example Airflow DAG for Google Kubernetes Engine.
 """
 
+# [START composer_gkeoperator]
 import os
 
-import uuid
 
 from airflow import models
 from airflow.kubernetes.secret import Secret
@@ -72,7 +72,7 @@ with models.DAG(
     )
     # [END composer_gke_create_cluster]
 
-    # [START composer_kubernetespodoperator_minconfig]
+    # [START composer_gkeoperator_minconfig]
     kubernetes_min_pod = GKEStartPodOperator(
         # The ID specified for the task.
         task_id='pod-ex-minimum',
@@ -98,7 +98,8 @@ with models.DAG(
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
         image='gcr.io/gcp-runtimes/ubuntu_18_0_4')
-    
+        # [END composer_gkeoperator_minconfig]
+
     kubenetes_template_ex = GKEStartPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
@@ -262,3 +263,4 @@ with models.DAG(
     create_cluster >> kubernetes_secret_vars_ex >> delete_cluster
     create_cluster >> kubenetes_template_ex >> delete_cluster
 
+# [END composer_gkeoperator]
