@@ -99,7 +99,8 @@ with models.DAG(
         # (the default service account has permission)
         image='gcr.io/gcp-runtimes/ubuntu_18_0_4')
         # [END composer_gkeoperator_minconfig]
-
+    
+    # [START composer_gkeoperator_templateconfig]
     kubenetes_template_ex = GKEStartPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
@@ -125,7 +126,8 @@ with models.DAG(
         # setting the environment variable `MY_VALUE`. The pod will fail if
         # `my_value` is not set in the Airflow UI.
         env_vars={'MY_VALUE': '{{ var.value.my_value }}'})
-
+    # [END composer_gkeoperator_templateconfig]
+    
     kubernetes_secret_vars_ex = GKEStartPodOperator(
         task_id='ex-kube-secrets',
         name='ex-kube-secrets',
