@@ -44,13 +44,17 @@ def location_path(project_id: str, location: str) -> str:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def capacity_commitment(location_path: str, reservation_client: reservation_service.ReservationServiceClient) -> reservation_types.CapacityCommitment:
+def capacity_commitment(
+    location_path: str, reservation_client: reservation_service.ReservationServiceClient
+) -> reservation_types.CapacityCommitment:
     # TODO(b/196082966): If custom names or creation date property are added,
     # do pre-test cleanup of past commitments.
     commitment = reservation_types.CapacityCommitment()
     commitment.slot_count = 100
     commitment.plan = reservation_types.CapacityCommitment.CommitmentPlan.FLEX
-    commitment = reservation_client.create_capacity_commitment(parent=location_path, capacity_commitment=commitment)
+    commitment = reservation_client.create_capacity_commitment(
+        parent=location_path, capacity_commitment=commitment
+    )
     yield commitment
     # Commitments can only be removed after 1 minute.
     now = datetime.datetime.now(datetime.timezone.utc)
