@@ -22,7 +22,7 @@ def create_routine(routine_id):
     # Construct a BigQuery client object.
     client = bigquery.Client()
 
-    # TODO(developer): Choose a fully-qualified ID for the routine.
+    # TODO(developer): Choose a fully qualified ID for the routine.
     # routine_id = "my-project.my_dataset.my_routine"
 
     routine = bigquery.Routine(
