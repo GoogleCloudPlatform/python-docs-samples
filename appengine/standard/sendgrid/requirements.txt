@@ -1,1 +1,1 @@
-sendgrid==6.8.0
+sendgrid==6.8.1
