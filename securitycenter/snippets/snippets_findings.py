@@ -158,7 +158,7 @@ def create_finding(source_name):
     client = securitycenter.SecurityCenterClient()
 
     # Use the current time as the finding "event time".
-    event_time = datetime.datetime.now()
+    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
 
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -230,7 +230,7 @@ def create_finding_with_source_properties(source_name):
     num_value.number_value = 1234
 
     # Use the current time as the finding "event time".
-    event_time = datetime.datetime.now()
+    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
 
     finding = Finding(
         state=Finding.State.ACTIVE,
@@ -268,7 +268,7 @@ def update_finding(source_name):
 
     # Set the update time to Now.  This must be some time greater then the
     # event_time on the original finding.
-    event_time = datetime.datetime.now()
+    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
 
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -319,7 +319,7 @@ def update_finding_state(source_name):
         request={
             "name": finding_name,
             "state": Finding.State.INACTIVE,
-            "start_time": datetime.datetime.now(),
+            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
         }
     )
     print(f"New state: {new_finding.state}")
