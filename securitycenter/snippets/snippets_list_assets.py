@@ -66,7 +66,7 @@ def list_assets_with_filters_and_read_time(organization_id):
     """Demonstrate listing assets with a filter."""
     i = 0
     # [START securitycenter_list_assets_at_time]
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     from google.cloud import securitycenter
 
@@ -82,7 +82,7 @@ def list_assets_with_filters_and_read_time(organization_id):
     )
 
     # Lists assets as of yesterday.
-    read_time = datetime.utcnow() - timedelta(days=1)
+    read_time = datetime.now(tz=timezone.utc) - timedelta(days=1)
 
     # Call the API and print results.
     asset_iterator = client.list_assets(
