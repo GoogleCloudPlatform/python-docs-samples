@@ -67,6 +67,7 @@ def write_time_series(project_id):
     series.resource.type = "gce_instance"
     series.resource.labels["instance_id"] = "1234567890123456789"
     series.resource.labels["zone"] = "us-central1-f"
+    series.metric.labels["TestLabel"] = "My Label Data"
     now = time.time()
     seconds = int(now)
     nanos = int((now - seconds) * 10 ** 9)
