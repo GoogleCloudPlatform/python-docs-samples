@@ -30,7 +30,7 @@ def http_handler(request):
 
         # If no graphviz definition or bad graphviz def, return 400
         if 'syntax' in str(e):
-            return make_response('Bad Request: {}'.format(e), 400)
+            return make_response(f'Bad Request: {e}', 400)
 
         return make_response('Internal Server Error', 500)
 
