@@ -38,7 +38,7 @@ def batch_translate_text(
     output_config = {"gcs_destination": gcs_destination}
     parent = f"projects/{project_id}/locations/{location}"
 
-    # Supported language codes: https://cloud.google.com/translate/docs/language
+    # Supported language codes: https://cloud.google.com/translate/docs/languages
     operation = client.batch_translate_text(
         request={
             "parent": parent,
