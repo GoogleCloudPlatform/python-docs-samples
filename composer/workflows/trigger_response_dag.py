@@ -24,7 +24,7 @@ from airflow.operators.bash_operator import BashOperator
 
 with airflow.DAG(
         'composer_sample_trigger_response_dag',
-        start_date= datetime.datetime(2021, 1, 1),
+        start_date=datetime.datetime(2021, 1, 1),
         # Not scheduled, trigger only
         schedule_interval=None) as dag:
 
