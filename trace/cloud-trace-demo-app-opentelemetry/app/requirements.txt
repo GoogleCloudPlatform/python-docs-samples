@@ -5,5 +5,5 @@ opentelemetry-propagator-gcp==1.0.0
 opentelemetry-instrumentation-flask==0.20b0
 grpcio==1.39.0
 httpretty==1.1.4
-google-cloud-monitoring==2.4.2
+google-cloud-monitoring==2.5.0
 google-cloud-trace==0.24.0
