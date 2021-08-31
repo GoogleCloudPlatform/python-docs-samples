@@ -21,7 +21,6 @@ import airflow
 from airflow.operators.bash_operator import BashOperator
 
 
-
 with airflow.DAG(
         'composer_sample_trigger_response_dag',
         start_date=datetime.datetime(2021, 1, 1),
