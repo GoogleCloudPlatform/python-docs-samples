@@ -642,9 +642,10 @@ Sample tests are run through [pytest](https://pytest.org). Do not use
 
 __Note:__
 
-**Library repositories:** If you are working on an existing project, a `noxfile.py` will already exist.
+**Library repositories:** If you are working on an existing project (meaning that a `samples` directory already exists), a `noxfile.py` will already exist within that `samples` directory.
+
 For new samples, create a new `noxfile.py` and paste the contents of
-[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py)
+[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py). Note - there may be a `noxfile.py` in the repo already in the root directory, but this is used for testing the libraries, not the samples, so you will still need to make a samples noxfile.
 
 **python-docs-samples:** As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
