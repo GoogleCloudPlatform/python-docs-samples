@@ -143,31 +143,6 @@ def test_detect_text_gcs(capsys):
     assert "Text" in out
 
 
-# Flaky InvalidArgument
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_track_objects(capsys):
-    in_file = "./resources/googlework_tiny.mp4"
-    beta_snippets.track_objects(in_file)
-    out, _ = capsys.readouterr()
-    assert "Entity id" in out
-
-
-# Flaky exceeding designed timeout
-@pytest.mark.slow
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_track_objects_gcs():
-    in_file = "gs://cloud-samples-data/video/cat.mp4"
-    object_annotations = beta_snippets.track_objects_gcs(in_file)
-
-    text_exists = False
-    for object_annotation in object_annotations:
-        if "CAT" in object_annotation.entity.description.upper():
-            text_exists = True
-    assert text_exists
-    assert object_annotations[0].frames[0].normalized_bounding_box.left >= 0.0
-    assert object_annotations[0].frames[0].normalized_bounding_box.left <= 1.0
-
-
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):

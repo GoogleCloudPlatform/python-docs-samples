@@ -24,8 +24,6 @@ Usage Examples:
     python beta_snippets.py video-text-gcs \
         gs://python-docs-samples-tests/video/googlework_tiny.mp4
 
-    python beta_snippets.py track-objects resources/cat.mp4
-
     python beta_snippets.py streaming-labels resources/cat.mp4
 
     python beta_snippets.py streaming-shot-change resources/cat.mp4
@@ -210,130 +208,6 @@ def video_detect_text(path):
         print("\tVertex.x: {}, Vertex.y: {}".format(vertex.x, vertex.y))
     # [END video_detect_text_beta]
     return annotation_result.text_annotations
-
-
-def track_objects_gcs(gcs_uri):
-    # [START video_object_tracking_gcs_beta]
-    """Object Tracking."""
-    from google.cloud import videointelligence_v1p2beta1 as videointelligence
-
-    # It is recommended to use location_id as 'us-east1' for the best latency
-    # due to different types of processors used in this region and others.
-    video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.Feature.OBJECT_TRACKING]
-    operation = video_client.annotate_video(
-        request={
-            "features": features,
-            "input_uri": gcs_uri,
-            "location_id": "us-east1",
-        }
-    )
-    print("\nProcessing video for object annotations.")
-
-    result = operation.result(timeout=500)
-    print("\nFinished processing.\n")
-
-    # The first result is retrieved because a single video was processed.
-    object_annotations = result.annotation_results[0].object_annotations
-
-    # Get only the first annotation for demo purposes.
-    object_annotation = object_annotations[0]
-    # description is in Unicode
-    print(u"Entity description: {}".format(object_annotation.entity.description))
-    if object_annotation.entity.entity_id:
-        print("Entity id: {}".format(object_annotation.entity.entity_id))
-
-    print(
-        "Segment: {}s to {}s".format(
-            object_annotation.segment.start_time_offset.seconds
-            + object_annotation.segment.start_time_offset.microseconds / 1e6,
-            object_annotation.segment.end_time_offset.seconds
-            + object_annotation.segment.end_time_offset.microseconds / 1e6,
-        )
-    )
-
-    print("Confidence: {}".format(object_annotation.confidence))
-
-    # Here we print only the bounding box of the first frame in this segment
-    frame = object_annotation.frames[0]
-    box = frame.normalized_bounding_box
-    print(
-        "Time offset of the first frame: {}s".format(
-            frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
-        )
-    )
-    print("Bounding box position:")
-    print("\tleft  : {}".format(box.left))
-    print("\ttop   : {}".format(box.top))
-    print("\tright : {}".format(box.right))
-    print("\tbottom: {}".format(box.bottom))
-    print("\n")
-    # [END video_object_tracking_gcs_beta]
-    return object_annotations
-
-
-def track_objects(path):
-    # [START video_object_tracking_beta]
-    """Object Tracking."""
-    from google.cloud import videointelligence_v1p2beta1 as videointelligence
-
-    video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.Feature.OBJECT_TRACKING]
-
-    with io.open(path, "rb") as file:
-        input_content = file.read()
-
-    # It is recommended to use location_id as 'us-east1' for the best latency
-    # due to different types of processors used in this region and others.
-    operation = video_client.annotate_video(
-        request={
-            "features": features,
-            "input_content": input_content,
-            "location_id": "us-east1",
-        }
-    )
-    print("\nProcessing video for object annotations.")
-
-    result = operation.result(timeout=500)
-    print("\nFinished processing.\n")
-
-    # The first result is retrieved because a single video was processed.
-    object_annotations = result.annotation_results[0].object_annotations
-
-    # Get only the first annotation for demo purposes.
-    object_annotation = object_annotations[0]
-    # description is in Unicode
-    print(u"Entity description: {}".format(object_annotation.entity.description))
-    if object_annotation.entity.entity_id:
-        print("Entity id: {}".format(object_annotation.entity.entity_id))
-
-    print(
-        "Segment: {}s to {}s".format(
-            object_annotation.segment.start_time_offset.seconds
-            + object_annotation.segment.start_time_offset.microseconds / 1e6,
-            object_annotation.segment.end_time_offset.seconds
-            + object_annotation.segment.end_time_offset.microseconds / 1e6,
-        )
-    )
-
-    print("Confidence: {}".format(object_annotation.confidence))
-
-    # Here we print only the bounding box of the first frame in this segment
-    frame = object_annotation.frames[0]
-    box = frame.normalized_bounding_box
-    print(
-        "Time offset of the first frame: {}s".format(
-            frame.time_offset.seconds + frame.time_offset.microseconds / 1e6
-        )
-    )
-    print("Bounding box position:")
-    print("\tleft  : {}".format(box.left))
-    print("\ttop   : {}".format(box.top))
-    print("\tright : {}".format(box.right))
-    print("\tbottom: {}".format(box.bottom))
-    print("\n")
-    # [END video_object_tracking_beta]
-    return object_annotations
 
 
 def detect_labels_streaming(path):
@@ -890,16 +764,6 @@ if __name__ == "__main__":
     )
     video_text_parser.add_argument("path")
 
-    video_object_tracking_gcs_parser = subparsers.add_parser(
-        "track-objects-gcs", help=track_objects_gcs.__doc__
-    )
-    video_object_tracking_gcs_parser.add_argument("gcs_uri")
-
-    video_object_tracking_parser = subparsers.add_parser(
-        "track-objects", help=track_objects.__doc__
-    )
-    video_object_tracking_parser.add_argument("path")
-
     video_streaming_labels_parser = subparsers.add_parser(
         "streaming-labels", help=detect_labels_streaming.__doc__
     )
@@ -948,10 +812,6 @@ if __name__ == "__main__":
         video_detect_text_gcs(args.gcs_uri)
     elif args.command == "video-text":
         video_detect_text(args.path)
-    elif args.command == "track-objects-gcs":
-        track_objects_gcs(args.gcs_uri)
-    elif args.command == "track-objects":
-        track_objects(args.path)
     elif args.command == "streaming-labels":
         detect_labels_streaming(args.path)
     elif args.command == "streaming-shot-change":
