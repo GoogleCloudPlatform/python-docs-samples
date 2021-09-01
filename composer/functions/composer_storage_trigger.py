@@ -51,10 +51,10 @@ def trigger_dag(data, context=None):
     dag_name = 'composer_sample_trigger_response_dag'
 
     if USE_EXPERIMENTAL_API:
-        endpoint = 'api/experimental/dags/{}/dag_runs'.format(dag_name)
+        endpoint = f'api/experimental/dags/{dag_name}/dag_runs'
         json_data = {'conf': data, 'replace_microseconds': 'false'}
     else:
-        endpoint = 'api/v1/dags/{}/dagRuns'.format(dag_name)
+        endpoint = f'api/v1/dags/{dag_name}/dagRuns'
         json_data = {'conf': data}
     webserver_url = (
         'https://'
