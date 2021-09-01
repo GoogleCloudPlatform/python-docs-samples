@@ -13,8 +13,8 @@
 
 """Test for create_agent"""
 
-from datetime import date
 import os
+import uuid
 
 from google.cloud.dialogflowcx_v3.services.agents.client import AgentsClient
 from google.cloud.dialogflowcx_v3.types.agent import DeleteAgentRequest
@@ -34,8 +34,7 @@ def delete_agent(name):
 
 
 def test_create_agent():
-    today = date.today()
-    agentName = "tempAgent." + today.strftime("%d.%m.%Y")
+    agentName = f"fake_agent_{uuid.uuid4()}"
     response = create_agent(PROJECT_ID, agentName)
     delete_agent(response.name)
 
