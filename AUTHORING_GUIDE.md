@@ -1,7 +1,7 @@
 # Python Sample Authoring Guide
 
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
-we're opinioned and fussy. This guide is a reference for the format and
+we're opinionated and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 repo. The guidelines below are intended to ensure that all Python samples
