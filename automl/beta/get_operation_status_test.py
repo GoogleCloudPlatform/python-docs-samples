@@ -30,7 +30,7 @@ def operation_id():
         project_location, filter_=""
     ).pages
     page = next(generator)
-    operation = page.next()
+    operation = next(page)
     yield operation.name
 
 
