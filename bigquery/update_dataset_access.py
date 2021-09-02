@@ -28,8 +28,8 @@ def update_dataset_access(dataset_id):
 
     entry = bigquery.AccessEntry(
         role="READER",
-        entity_type="userByEmail",
-        entity_id="sample.bigquery.dev@gmail.com",
+        entity_type="groupByEmail",
+        entity_id="cloud-developer-relations@google.com",
     )
 
     entries = list(dataset.access_entries)
