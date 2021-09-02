@@ -40,13 +40,11 @@ def test_analyze_content_text(capsys):
     out, _ = capsys.readouterr()
     assert 'Display Name: {}'.format(KNOWLEDGE_BASE_DISPLAY_NAME) in out
 
-    # Create documents. Note that you should get read permission of bucket gs://ruogu/parsed_5_24/7157212.html
-    # via Pantheon for service account (google application credential account) from here:
-    # https://pantheon.corp.google.com/storage/browser/ruogu/parsed_5_24/?project=agent-assistant-demo
+    # Create documents.
     document_management.create_document(PROJECT_ID, knowledge_base_id,
                                         DOCUMENT_DISPLAY_NAME, 'text/html',
                                         'ARTICLE_SUGGESTION',
-                                        'gs://ruogu/parsed_5_24/7157212.html')
+                                        'https://support.google.com/googleshopping/answer/9116497')
     out, _ = capsys.readouterr()
     document_id = out.split('documents/')[1].split(' - MIME Type:')[0].rstrip()
 
