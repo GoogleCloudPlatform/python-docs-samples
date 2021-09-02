@@ -21,23 +21,38 @@ def create_custom_entry(override_values):
 
     # Google Cloud Platform project.
     project_id = "my-project"
-    # Entry group to be created.
-    # For sample code demonstrating entry group creation, see quickstart:
-    # https://cloud.google.com/data-catalog/docs/quickstart-tagging
-    entry_group_name = "my_existing_entry_group"
+    # Entry Group to be created.
+    entry_group_id = "my_new_entry_group_id"
     # Entry to be created.
     entry_id = "my_new_entry_id"
+    # Currently, Data Catalog stores metadata in the us-central1 region.
+    location = "us-central1"
 
     # [END data_catalog_create_custom_entry]
 
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     project_id = override_values.get("project_id", project_id)
-    entry_group_name = override_values.get("entry_group_name", entry_group_name)
     entry_id = override_values.get("entry_id", entry_id)
+    entry_group_id = override_values.get("entry_group_id", entry_group_id)
 
     # [START data_catalog_create_custom_entry]
     datacatalog = datacatalog_v1.DataCatalogClient()
+
+    # Create an Entry Group.
+    entry_group_obj = datacatalog_v1.types.EntryGroup()
+    entry_group_obj.display_name = "My awesome Entry Group"
+    entry_group_obj.description = "This Entry Group represents an external system"
+
+    entry_group = datacatalog.create_entry_group(
+        parent=datacatalog_v1.DataCatalogClient.common_location_path(
+            project_id, location
+        ),
+        entry_group_id=entry_group_id,
+        entry_group=entry_group_obj,
+    )
+    entry_group_name = entry_group.name
+    print("Created entry group: {}".format(entry_group_name))
 
     # Create an Entry.
     entry = datacatalog_v1.types.Entry()

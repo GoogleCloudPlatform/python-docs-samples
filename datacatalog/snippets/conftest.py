@@ -127,22 +127,3 @@ def random_existing_tag_template_id(client, project_id, resources_to_delete):
     )
     yield random_tag_template_id
     resources_to_delete["templates"].append(random_tag_template.name)
-
-
-@pytest.fixture
-def random_existing_entry_group(
-    client, project_id, random_entry_group_id, resources_to_delete
-):
-    entry_group_obj = datacatalog_v1.types.EntryGroup()
-    entry_group_obj.display_name = f"python_sample_{temp_suffix()}"
-    entry_group_obj.description = "Data Catalog samples test entry group."
-
-    entry_group = datacatalog.create_entry_group(
-        parent=datacatalog_v1.DataCatalogClient.common_location_path(
-            project_id, LOCATION
-        ),
-        entry_group_id=random_entry_group_id,
-        entry_group=entry_group_obj,
-    )
-    yield entry_group
-    resources_to_delete["entry_groups"].append(entry_group.name)
