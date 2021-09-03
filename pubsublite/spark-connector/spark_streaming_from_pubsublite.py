@@ -6,6 +6,7 @@ def spark_streaming_from_pubsublite(
 ):
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
+    from pyspark.sql.types import BinaryType, StringType
 
     # TODO(developer):
     # project_number = 11223344556677
@@ -24,10 +25,8 @@ def spark_streaming_from_pubsublite(
     )
 
     # Expand data field
-    sdf = (
-        sdf
-        .withColumn("", sdf.data)
-        .withColumn("data", )
+    sdf = sdf.withColumn("data", sdf.data.cast(StringType())).withColumn(
+        "key", sdf.key.cast(StringType())
     )
 
     query = (
@@ -36,8 +35,6 @@ def spark_streaming_from_pubsublite(
         .trigger(processingTime="1 second")
         .start()
     )
-
-
 
     query.awaitTermination(300)
     query.stop()

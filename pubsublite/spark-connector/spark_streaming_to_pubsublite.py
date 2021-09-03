@@ -4,7 +4,8 @@ import argparse
 def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: str):
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
-    from pyspark.sql.types import BinaryType, StringType
+    from pyspark.sql.functions import array, create_map, lit, udf
+    from pyspark.sql.types import ArrayType, BinaryType, MapType, StringType
 
     # TODO(developer):
     # project_number = 11223344556677
@@ -18,9 +19,27 @@ def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: 
     # DataFrame[timestamp: timestamp, value: bigint]
     sdf = spark.readStream.format("rate").option("rowsPerSecond", 1).load()
 
+    def count_by_digit(n, digit, count=0):
+        for i in str(n):
+            if i == digit:
+                count +=1
+        return count
+
+    count_by_digit_udf = udf(lambda z, digit: count_by_digit(z, digit))
+
     sdf = sdf.withColumn(
-        "timestamp", sdf.timestamp.cast(StringType()).cast(BinaryType())
-    ).withColumn("value", sdf.value.cast(StringType()).cast(BinaryType()))
+        "key", (sdf.value % 5).cast(StringType()).cast(BinaryType())
+    ).withColumn(
+        "event_timestamp", sdf.timestamp
+    ).withColumn(
+        "data", lit(".").cast(BinaryType())
+    ).withColumn(
+        "attributes", create_map(sdf.value.cast(StringType()), array(lit("hello").cast(BinaryType())))
+    )
+    
+    sdf = sdf.withColumn(
+        "attributes", sdf.attributes.cast(MapType(StringType(), ArrayType(BinaryType(), True),True))
+    )
 
     query = (
         sdf.writeStream.format("pubsublite")
