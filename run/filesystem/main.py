@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2021 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,35 +12,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_helloworld_service]
-# [START run_helloworld_service]
+import datetime
 import os
 import signal
 import sys
-from flask import Flask
+from flask import Flask, abort, request, redirect
+from os.path import isfile, isdir, join
 
 app = Flask(__name__)
 
-mnt_dir = "/mnt/"
+mnt_dir = os.environ.get('MNT_DIR', '/mnt/nfs/filestore')
+filename = os.environ.get('FILENAME', 'test')
 
-@app.route("/")
-def hello_world():
-    files = os.listdir(mnt_dir)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
+    # Redirect to mount path
+    path = '/' + path
+    if (not path.startswith(mnt_dir)):
+        return redirect(mnt_dir)
 
-    for f in files:
-        print(f)
+    # Print mount path
+    html = '<html><body>\n'
+    if (path != mnt_dir):
+        html += f'<a href=\"{mnt_dir}\">{mnt_dir}</a><br/><br/>\n'
+    else:
+        # Write a new test file
+        write_file(mnt_dir, filename)
 
-    s = "-"
-    return s.join(files)
+    # Return all files if path is a directory, else return the file
+    if (isdir(path)):
+        for file in os.listdir(path):
+            full_path = join(path, file)
+            if isfile(full_path):
+                html += f'<a href=\"{full_path}\">{file}</a><br/>\n'
+    else:
+        try:
+            html += read_file(path)
+        except Exception:
+            abort(404, description='Error retrieving file.')
+
+    html += '</body></html>\n'
+    return html
+
+
+def write_file(mnt_dir, filename):
+    '''Write files to a directory with date created'''
+    date = datetime.datetime.now()
+    file_date = date.strftime('%c').replace(' ','-')
+    f = open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a')
+    f.write(f'This test file was created on {date}.')
+    f.close()
+
+
+def read_file(full_path):
+    '''Read files and return contents'''
+    with open(full_path, 'r') as reader:
+        return reader.read()
+
 
 def shutdown_handler(signal, frame):
-    print("SIGTERM!")
-    sys.exit(0)
+    '''SIGTERM handler'''
+    print('Caught SIGTERM signal.', flush=True)
+    sys.exit()
+    # return
 
 
+# Register SIGTERM handler
 signal.signal(signal.SIGTERM, shutdown_handler)
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
-# [END run_helloworld_service]
-# [END cloudrun_helloworld_service]
+# To locally run the app
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))

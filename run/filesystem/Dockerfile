@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2021 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_helloworld_dockerfile]
-# [START run_helloworld_dockerfile]
-
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
 FROM python:3.9-slim
 
+# Install system dependencies
 RUN apt-get update -y && apt-get install -y \
-    dumb-init \
+    tini \
     nfs-common \
     && apt-get clean
 
-RUN mkdir -p /mnt/nfs/filestore
+# Create mount directory for service
+ENV MNT_DIR /mnt/nfs/filestore
+RUN mkdir -p $MNT_DIR
 
 # Copy local code to the container image.
 ENV APP_HOME /app
@@ -32,14 +32,10 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install production dependencies.
-RUN pip install Flask gunicorn
+RUN pip install -r requirements.txt
 
-# ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-ENTRYPOINT exec mount -o nolock 10.45.51.106:/vol1 /mnt/nfs/filestore
+# Set the init-process (PID1) as the default executable
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
+# Pass the startup script as arguments to Tini
 CMD ["/app/run.sh"]
