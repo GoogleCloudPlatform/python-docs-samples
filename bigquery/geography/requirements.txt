@@ -13,10 +13,10 @@ geopandas==0.9.0
 google-api-core==2.0.1
 google-auth==2.0.2
 google-cloud-bigquery==2.26.0
-google-cloud-bigquery-storage==2.6.3
+google-cloud-bigquery-storage==2.7.0
 google-cloud-core==2.0.0
-google-crc32c==1.1.3
-google-resumable-media==2.0.1
+google-crc32c==1.1.2
+google-resumable-media==2.0.2
 googleapis-common-protos==1.53.0
 grpcio==1.39.0
 idna==3.2
