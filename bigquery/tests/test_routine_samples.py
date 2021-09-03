@@ -32,7 +32,6 @@ def test_create_routine_ddl(capsys, random_routine_id, client):
     out, err = capsys.readouterr()
 
     assert "Created routine {}".format(random_routine_id) in out
-    return routine
     assert routine.type_ == "SCALAR_FUNCTION"
     assert routine.language == "SQL"
     expected_arguments = [
