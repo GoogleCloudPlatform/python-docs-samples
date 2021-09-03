@@ -34,7 +34,7 @@ def transcribe_with_model_adaptation(
     parent = f"projects/{project_id}/locations/{location}"
 
     # Create the custom class resource
-    custom_class_response = adaptation_client.create_custom_class(
+    adaptation_client.create_custom_class(
         {
             "parent": parent,
             "custom_class_id": custom_class_id,
@@ -47,7 +47,9 @@ def transcribe_with_model_adaptation(
             },
         }
     )
-    custom_class_name = custom_class_response.name
+    custom_class_name = (
+        f"projects/{project_id}/locations/{location}/customClasses/{custom_class_id}"
+    )
     # Create the phrase set resource
     phrase_set_response = adaptation_client.create_phrase_set(
         {
@@ -55,7 +57,9 @@ def transcribe_with_model_adaptation(
             "phrase_set_id": phrase_set_id,
             "phrase_set": {
                 "boost": 10,
-                "phrases": [{"value": f"Visit restaurants like ${custom_class_name}"}],
+                "phrases": [
+                    {"value": f"Visit restaurants like ${{{custom_class_name}}}"}
+                ],
             },
         }
     )
@@ -88,4 +92,5 @@ def transcribe_with_model_adaptation(
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     # [END speech_transcribe_with_model_adaptation]
+
     return response.results[0].alternatives[0].transcript
