@@ -280,14 +280,14 @@ with models.DAG(
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
     # [END composer_gkeoperator_fullconfig]
-    # # [START howto_operator_gke_delete_cluster]
-    # delete_cluster = GKEDeleteClusterOperator(
-    #     task_id="delete_cluster",
-    #     name=CLUSTER_NAME,
-    #     project_id=GCP_PROJECT_ID,
-    #     location=GCP_LOCATION,
-    # )
-    # [END howto_operator_gke_delete_cluster]
+    # [START composer_gkeoperator_delete_cluster]
+    delete_cluster = GKEDeleteClusterOperator(
+        task_id="delete_cluster",
+        name=CLUSTER_NAME,
+        project_id=GCP_PROJECT_ID,
+        location=GCP_LOCATION,
+    )
+    # [END composer_gkeoperator_delete_cluster]
     # kubernetes_min_pod
     # create_cluster >> kubernetes_min_pod >> delete_cluster
     # create_cluster >> kubernetes_full_pod >> delete_cluster
