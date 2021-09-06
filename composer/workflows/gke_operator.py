@@ -30,6 +30,9 @@ from dependencies.kubernetes_engine_leah import (
     GKEDeleteClusterOperator,
     GKEStartPodOperator,
 )
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+
 # from airflow.providers.google.cloud.operators.kubernetes_engine import (
 #     GKECreateClusterOperator,
 #     GKEDeleteClusterOperator,
@@ -39,23 +42,23 @@ from airflow.utils.dates import days_ago
 
 GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "leah-playground")
 GCP_LOCATION = os.environ.get("GCP_GKE_LOCATION", "us-west1-a")
-CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-1")
+CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-2")
 
 # [START howto_operator_gcp_gke_create_cluster_definition]
 CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}]}
 # [END howto_operator_gcp_gke_create_cluster_definition]
 
-# [START composer_kubernetespodoperator_secretobject]
-secret_env = Secret(
-    # Expose the secret as environment variable.
-    deploy_type='env',
-    # The name of the environment variable, since deploy_type is `env` rather
-    # than `volume`.
-    deploy_target='SQL_CONN',
-    # Name of the Kubernetes Secret
-    secret='airflow-secrets',
-    # Key of a secret stored in this Secret object
-    key='sql_alchemy_conn')
+# # [START composer_kubernetespodoperator_secretobject]
+# secret_env = Secret(
+#     # Expose the secret as environment variable.
+#     deploy_type='env',
+#     # The name of the environment variable, since deploy_type is `env` rather
+#     # than `volume`.
+#     deploy_target='SQL_CONN',
+#     # Name of the Kubernetes Secret
+#     secret='airflow-secrets',
+#     # Key of a secret stored in this Secret object
+#     key='sql_alchemy_conn')
 
 with models.DAG(
     "example_gcp_gke",
@@ -71,6 +74,33 @@ with models.DAG(
         body=CLUSTER,
     )
     # [END composer_gke_create_cluster]
+    # def gcloud_call():
+    #     """Print the Airflow context and ds variable from the context."""
+    #     import subprocess
+    #     subprocess.run([
+    #         "gcloud",
+    #         "container", 
+    #         "clusters",
+    #         "get-credentials",
+    #         f"{CLUSTER_NAME}",
+    #         "--zone", 
+    #         f"{GCP_LOCATION}",
+    #         "--project",
+    #         f"{GCP_PROJECT_ID}"
+    #     ], check=True)
+    #     return 'Whatever you return gets printed in the logs'
+
+    # set_secret = PythonOperator(
+    #     task_id='set_secret',
+    #     python_callable=gcloud_call,
+    # )
+    # set_secret = BashOperator(
+    #     task_id = "set_secret",
+    #     # bash_command = f"gcloud --version && gcloud container clusters get-credentials {CLUSTER_NAME} --zone {GCP_LOCATION} --project {GCP_PROJECT_ID} && kubectl create secret generic airflow-secrets --from-literal sql_alchemy_conn=test_value",
+    #     bash_command = f"gcloud container clusters get-credentials {CLUSTER_NAME} --zone {GCP_LOCATION} --project {GCP_PROJECT_ID}",
+
+    #     env = {'KUBECONFIG': '/home/airflow/gcs/dags/composer_kube_config'}
+    # )
 
     # [START composer_gkeoperator_minconfig]
     kubernetes_min_pod = GKEStartPodOperator(
@@ -128,72 +158,72 @@ with models.DAG(
         env_vars={'MY_VALUE': '{{ var.value.my_value }}'})
     # [END composer_gkeoperator_templateconfig]
     
-    kubernetes_secret_vars_ex = GKEStartPodOperator(
-        task_id='ex-kube-secrets',
-        name='ex-kube-secrets',
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
-        cluster_name=CLUSTER_NAME,
-        namespace='default',
-        image='ubuntu',
-        startup_timeout_seconds=300,
-        # The secrets to pass to Pod, the Pod will fail to create if the
-        # secrets you specify in a Secret object do not exist in Kubernetes.
-        secrets=[secret_env],
+    # kubernetes_secret_vars_ex = GKEStartPodOperator(
+    #     task_id='ex-kube-secrets',
+    #     name='ex-kube-secrets',
+    #     project_id=GCP_PROJECT_ID,
+    #     location=GCP_LOCATION,
+    #     cluster_name=CLUSTER_NAME,
+    #     namespace='default',
+    #     image='ubuntu',
+    #     startup_timeout_seconds=300,
+    #     # The secrets to pass to Pod, the Pod will fail to create if the
+    #     # secrets you specify in a Secret object do not exist in Kubernetes.
+    #     secrets=[secret_env],
 
-        # env_vars allows you to specify environment variables for your
-        # container to use. env_vars is templated.
-        env_vars={})
-        # env_vars={
-        #     'EXAMPLE_VAR': '/example/value',
-        #     'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
-    # [END composer_kubernetespodoperator_secretconfig]
-    # [START composer_kubernetespodaffinity]
-    kubernetes_affinity_ex = GKEStartPodOperator(
-        task_id='ex-pod-affinity',
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
-        cluster_name=CLUSTER_NAME,
-        name='ex-pod-affinity',
-        namespace='default',
-        image='perl',
-        cmds=['perl'],
-        arguments=['-Mbignum=bpi', '-wle', 'print bpi(2000)'],
-        # affinity allows you to constrain which nodes your pod is eligible to
-        # be scheduled on, based on labels on the node. In this case, if the
-        # label 'cloud.google.com/gke-nodepool' with value
-        # 'nodepool-label-value' or 'nodepool-label-value2' is not found on any
-        # nodes, it will fail to schedule.
-        affinity={
-            'nodeAffinity': {
-                # requiredDuringSchedulingIgnoredDuringExecution means in order
-                # for a pod to be scheduled on a node, the node must have the
-                # specified labels. However, if labels on a node change at
-                # runtime such that the affinity rules on a pod are no longer
-                # met, the pod will still continue to run on the node.
-                'requiredDuringSchedulingIgnoredDuringExecution': {
-                    'nodeSelectorTerms': [{
-                        'matchExpressions': [{
-                            # When nodepools are created in Google Kubernetes
-                            # Engine, the nodes inside of that nodepool are
-                            # automatically assigned the label
-                            # 'cloud.google.com/gke-nodepool' with the value of
-                            # the nodepool's name.
-                            'key': 'cloud.google.com/gke-nodepool',
-                            'operator': 'In',
-                            # The label key's value that pods can be scheduled
-                            # on.
-                            'values': [
-                                'pool-0',
-                                'pool-1',
-                            ]
-                        }]
-                    }]
-                }
-            }
-        })
-    # [END composer_kubernetespodaffinity]
-    # [START composer_kubernetespodoperator_fullconfig]
+    #     # env_vars allows you to specify environment variables for your
+    #     # container to use. env_vars is templated.
+    #     env_vars={})
+    #     # env_vars={
+    #     #     'EXAMPLE_VAR': '/example/value',
+    #     #     'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
+    # # [END composer_kubernetespodoperator_secretconfig]
+    # # [START composer_kubernetespodaffinity]
+    # kubernetes_affinity_ex = GKEStartPodOperator(
+    #     task_id='ex-pod-affinity',
+    #     project_id=GCP_PROJECT_ID,
+    #     location=GCP_LOCATION,
+    #     cluster_name=CLUSTER_NAME,
+    #     name='ex-pod-affinity',
+    #     namespace='default',
+    #     image='perl',
+    #     cmds=['perl'],
+    #     arguments=['-Mbignum=bpi', '-wle', 'print bpi(2000)'],
+    #     # affinity allows you to constrain which nodes your pod is eligible to
+    #     # be scheduled on, based on labels on the node. In this case, if the
+    #     # label 'cloud.google.com/gke-nodepool' with value
+    #     # 'nodepool-label-value' or 'nodepool-label-value2' is not found on any
+    #     # nodes, it will fail to schedule.
+    #     affinity={
+    #         'nodeAffinity': {
+    #             # requiredDuringSchedulingIgnoredDuringExecution means in order
+    #             # for a pod to be scheduled on a node, the node must have the
+    #             # specified labels. However, if labels on a node change at
+    #             # runtime such that the affinity rules on a pod are no longer
+    #             # met, the pod will still continue to run on the node.
+    #             'requiredDuringSchedulingIgnoredDuringExecution': {
+    #                 'nodeSelectorTerms': [{
+    #                     'matchExpressions': [{
+    #                         # When nodepools are created in Google Kubernetes
+    #                         # Engine, the nodes inside of that nodepool are
+    #                         # automatically assigned the label
+    #                         # 'cloud.google.com/gke-nodepool' with the value of
+    #                         # the nodepool's name.
+    #                         'key': 'cloud.google.com/gke-nodepool',
+    #                         'operator': 'In',
+    #                         # The label key's value that pods can be scheduled
+    #                         # on.
+    #                         'values': [
+    #                             'pool-0',
+    #                             'pool-1',
+    #                         ]
+    #                     }]
+    #                 }]
+    #             }
+    #         }
+    #     })
+    # # [END composer_kubernetespodaffinity]
+    # [START composer_gkeoperator_fullconfig]
     kubernetes_full_pod = GKEStartPodOperator(
         task_id='ex-all-configs',
         name='pi',
@@ -250,19 +280,20 @@ with models.DAG(
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
-    # [START howto_operator_gke_delete_cluster]
-    delete_cluster = GKEDeleteClusterOperator(
-        task_id="delete_cluster",
-        name=CLUSTER_NAME,
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
-    )
+    # [END composer_gkeoperator_fullconfig]
+    # # [START howto_operator_gke_delete_cluster]
+    # delete_cluster = GKEDeleteClusterOperator(
+    #     task_id="delete_cluster",
+    #     name=CLUSTER_NAME,
+    #     project_id=GCP_PROJECT_ID,
+    #     location=GCP_LOCATION,
+    # )
     # [END howto_operator_gke_delete_cluster]
     # kubernetes_min_pod
-    create_cluster >> kubernetes_min_pod >> delete_cluster
-    create_cluster >> kubernetes_full_pod >> delete_cluster
-    create_cluster >> kubernetes_affinity_ex >> delete_cluster
-    create_cluster >> kubernetes_secret_vars_ex >> delete_cluster
-    create_cluster >> kubenetes_template_ex >> delete_cluster
+    # create_cluster >> kubernetes_min_pod >> delete_cluster
+    # create_cluster >> kubernetes_full_pod >> delete_cluster
+    # create_cluster >> kubernetes_affinity_ex >> delete_cluster
+    # create_cluster >> set_secret >> kubernetes_secret_vars_ex >> delete_cluster
+    # create_cluster >> kubenetes_template_ex >> delete_cluster
 
 # [END composer_gkeoperator]
