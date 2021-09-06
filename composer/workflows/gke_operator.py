@@ -45,7 +45,7 @@ GCP_LOCATION = os.environ.get("GCP_GKE_LOCATION", "us-west1-a")
 CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-2")
 
 # [START howto_operator_gcp_gke_create_cluster_definition]
-CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}]}
+CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
 # [END howto_operator_gcp_gke_create_cluster_definition]
 
 # # [START composer_kubernetespodoperator_secretobject]
@@ -178,51 +178,50 @@ with models.DAG(
     #     #     'EXAMPLE_VAR': '/example/value',
     #     #     'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
     # # [END composer_kubernetespodoperator_secretconfig]
-    # # [START composer_kubernetespodaffinity]
-    # kubernetes_affinity_ex = GKEStartPodOperator(
-    #     task_id='ex-pod-affinity',
-    #     project_id=GCP_PROJECT_ID,
-    #     location=GCP_LOCATION,
-    #     cluster_name=CLUSTER_NAME,
-    #     name='ex-pod-affinity',
-    #     namespace='default',
-    #     image='perl',
-    #     cmds=['perl'],
-    #     arguments=['-Mbignum=bpi', '-wle', 'print bpi(2000)'],
-    #     # affinity allows you to constrain which nodes your pod is eligible to
-    #     # be scheduled on, based on labels on the node. In this case, if the
-    #     # label 'cloud.google.com/gke-nodepool' with value
-    #     # 'nodepool-label-value' or 'nodepool-label-value2' is not found on any
-    #     # nodes, it will fail to schedule.
-    #     affinity={
-    #         'nodeAffinity': {
-    #             # requiredDuringSchedulingIgnoredDuringExecution means in order
-    #             # for a pod to be scheduled on a node, the node must have the
-    #             # specified labels. However, if labels on a node change at
-    #             # runtime such that the affinity rules on a pod are no longer
-    #             # met, the pod will still continue to run on the node.
-    #             'requiredDuringSchedulingIgnoredDuringExecution': {
-    #                 'nodeSelectorTerms': [{
-    #                     'matchExpressions': [{
-    #                         # When nodepools are created in Google Kubernetes
-    #                         # Engine, the nodes inside of that nodepool are
-    #                         # automatically assigned the label
-    #                         # 'cloud.google.com/gke-nodepool' with the value of
-    #                         # the nodepool's name.
-    #                         'key': 'cloud.google.com/gke-nodepool',
-    #                         'operator': 'In',
-    #                         # The label key's value that pods can be scheduled
-    #                         # on.
-    #                         'values': [
-    #                             'pool-0',
-    #                             'pool-1',
-    #                         ]
-    #                     }]
-    #                 }]
-    #             }
-    #         }
-    #     })
-    # # [END composer_kubernetespodaffinity]
+    # [START composer_gkeoperator_affinity]
+    kubernetes_affinity_ex = GKEStartPodOperator(
+        task_id='ex-pod-affinity',
+        project_id=GCP_PROJECT_ID,
+        location=GCP_LOCATION,
+        cluster_name=CLUSTER_NAME,
+        name='ex-pod-affinity',
+        namespace='default',
+        image='perl',
+        cmds=['perl'],
+        arguments=['-Mbignum=bpi', '-wle', 'print bpi(2000)'],
+        # affinity allows you to constrain which nodes your pod is eligible to
+        # be scheduled on, based on labels on the node. In this case, if the
+        # label 'cloud.google.com/gke-nodepool' with value
+        # 'nodepool-label-value' or 'nodepool-label-value2' is not found on any
+        # nodes, it will fail to schedule.
+        affinity={
+            'nodeAffinity': {
+                # requiredDuringSchedulingIgnoredDuringExecution means in order
+                # for a pod to be scheduled on a node, the node must have the
+                # specified labels. However, if labels on a node change at
+                # runtime such that the affinity rules on a pod are no longer
+                # met, the pod will still continue to run on the node.
+                'requiredDuringSchedulingIgnoredDuringExecution': {
+                    'nodeSelectorTerms': [{
+                        'matchExpressions': [{
+                            # When nodepools are created in Google Kubernetes
+                            # Engine, the nodes inside of that nodepool are
+                            # automatically assigned the label
+                            # 'cloud.google.com/gke-nodepool' with the value of
+                            # the nodepool's name.
+                            'key': 'cloud.google.com/gke-nodepool',
+                            'operator': 'In',
+                            # The label key's value that pods can be scheduled
+                            # on.
+                            'values': [
+                                'pool-1',
+                            ]
+                        }]
+                    }]
+                }
+            }
+        })
+    # [END composer_gkeoperator_affinity]
     # [START composer_gkeoperator_fullconfig]
     kubernetes_full_pod = GKEStartPodOperator(
         task_id='ex-all-configs',
