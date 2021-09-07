@@ -40,11 +40,13 @@ def test_analyze_content_text(capsys):
     out, _ = capsys.readouterr()
     assert 'Display Name: {}'.format(KNOWLEDGE_BASE_DISPLAY_NAME) in out
 
-    # Create documents.
+    # Create documents. Note that you should get read permission of bucket gs://cloud-samples-data/dialogflow/participant_test.html
+    # via Pantheon for service account (google application credential account) from here:
+    # https://support.google.com/googleshopping/answer/9116497
     document_management.create_document(PROJECT_ID, knowledge_base_id,
                                         DOCUMENT_DISPLAY_NAME, 'text/html',
                                         'ARTICLE_SUGGESTION',
-                                        'https://support.google.com/googleshopping/answer/9116497')
+                                        'gs://cloud-samples-data/dialogflow/participant_test.html')
     out, _ = capsys.readouterr()
     document_id = out.split('documents/')[1].split(' - MIME Type:')[0].rstrip()
 
