@@ -18,28 +18,17 @@
 import datetime
 
 import airflow
-from airflow.operators import bash_operator
+from airflow.operators.bash_operator import BashOperator
 
-
-default_args = {
-    'owner': 'Composer Example',
-    'depends_on_past': False,
-    'email': [''],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
-    'start_date': datetime.datetime(2017, 1, 1),
-}
 
 with airflow.DAG(
         'composer_sample_trigger_response_dag',
-        default_args=default_args,
+        start_date=datetime.datetime(2021, 1, 1),
         # Not scheduled, trigger only
         schedule_interval=None) as dag:
 
     # Print the dag_run's configuration, which includes information about the
     # Cloud Storage object change.
-    print_gcs_info = bash_operator.BashOperator(
+    print_gcs_info = BashOperator(
         task_id='print_gcs_info', bash_command='echo {{ dag_run.conf }}')
 # [END composer_trigger_response_dag]
