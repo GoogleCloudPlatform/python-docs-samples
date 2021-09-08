@@ -53,7 +53,7 @@ def explicit_compute_engine(project):
     from google.cloud import storage
 
     # Explicitly use Compute Engine credentials. These credentials are
-    # available on Compute Engine, App Engine Flexible, and Container Engine.
+    # available on Compute Engine, App Engine Flexible, and Kubernetes Engine.
     credentials = compute_engine.Credentials()
 
     # Create the client using the credentials and specifying a project ID.
