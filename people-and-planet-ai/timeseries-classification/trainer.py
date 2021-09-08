@@ -127,6 +127,16 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         layer.adapt(train_dataset.map(lambda inputs, outputs: inputs[name]))
         return layer(input_layers[name])
 
+    def direction(course_name: str) -> keras.layers.Layer:
+        class Direction(keras.layers.Layer):
+            def call(self: Any, course: tf.Tensor) -> tf.Tensor:
+                x = tf.cos(course)
+                y = tf.sin(course)
+                return tf.concat([x, y], axis=-1)
+
+        input_layer = input_layers[course_name]
+        return Direction(name=f"{course_name}_direction")(input_layer)
+
     def geo_point(lat_name: str, lon_name: str) -> keras.layers.Layer:
         # We transform each (lat, lon) pair into a 3D point in the unit sphere.
         #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
@@ -149,7 +159,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
     preprocessed_inputs = [
         normalize("distance_from_port"),
         normalize("speed"),
-        normalize("course"),
+        direction("course"),
         geo_point("lat", "lon"),
     ]
 
