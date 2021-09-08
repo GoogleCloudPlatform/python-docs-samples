@@ -26,7 +26,7 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
@@ -3179,6 +3179,7 @@ class DatabaseImporter(DatabasePorter):
     DATABASE_CREATION_JOB_IMAGE_VERSION = "1.10.14"
     DATABASE_CREATION_JOB_IMAGE_TAG = "cloud_composer_service_2021-03-07-RC1"
     TEMPORARY_DATABASE_NAME = "temporary-database"
+    SQL_PROXY_PORT = 3306
 
     def __init__(
         self: typing.Any,
@@ -3248,7 +3249,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_pod_name,
             self.worker_container_name,
             "psql postgres://root:${SQL_PASSWORD}"
-            f"@{self.sql_proxy}/postgres -p 3306 -t -c "
+            f"@{self.sql_proxy}/postgres -p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
             f"'drop database \"{database_name}\" WITH (FORCE);'",
             log_command=False,
             log_error=False,
@@ -3276,72 +3277,6 @@ class DatabaseImporter(DatabasePorter):
             self.tenant_project_name,
             DatabaseImporter.TEMPORARY_DATABASE_NAME,
         )
-
-    def _ar_multiregion_from_location(self: typing.Any, location: str) -> str:
-        if location in {"eu", "us", "asia"}:
-            return location
-        for prefix, multiregion in [
-            ("us-", "us"),
-            ("europe-", "eu"),
-            ("asia-", "asia"),
-            ("northamerica-", "us"),
-            ("southamerica-", "us"),
-            ("australia-", "asia"),
-        ]:
-            if location.startswith(prefix):
-                return multiregion
-        return "us"
-
-    def _get_image_for_db_creation_job(self: typing.Any) -> None:
-        """Gets suitable image to generate a new database with 1.10.14 schema."""
-        logger.info("Checking airflow-worker image in existing worker pod...")
-        ar_path = re.compile(
-            "([a-z0-9-]+)-docker.pkg.dev/.*(?:airflow-worker-scheduler-|composer-images-).*"
-        )
-        gcr_path = re.compile(
-            "([a-z.]*gcr.io)/.*(?:airflow-worker-scheduler-|composer-images-).*"
-        )
-        for container in self.worker_pod_desc["spec"]["containers"]:
-            container_image = container["image"]
-            logger.info("  Checking %s...", container_image)
-            if ar_path.match(container_image):
-                repository_location = ar_path.match(container_image).groups()[0]
-                repository_multiregion = self._ar_multiregion_from_location(
-                    repository_location
-                )
-                repository = f"{repository_multiregion}-docker.pkg.dev"
-                image_version = (
-                    DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION.replace(
-                        ".", "-"
-                    )
-                )
-                new_image = f"airflow-worker-scheduler-{image_version}"
-                image = (
-                    f"{repository}/cloud-airflow-releaser/{new_image}"
-                    f"/{new_image}:"
-                    f"{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
-                )
-                break
-            elif gcr_path.match(container_image):
-                repository = gcr_path.match(container_image).groups()[0]
-                new_image = (
-                    "airflow-worker-scheduler"
-                    f"-{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION}"
-                )
-                image = (
-                    f"{repository}/cloud-airflow-releaser/{new_image}"
-                    f":{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
-                )
-                break
-        else:
-            raise Exception(
-                "Could not find any Airflow worker container in worker pod."
-            )
-        logger.info(
-            "The following image will be used for database " "initialization: %s.",
-            image,
-        )
-        return image
 
     def _write_empty_af_1_10_14_psql_dump_to_a_local_file(self: typing.Any) -> None:
         """Writes an empty Airflow 1.10.14 database to a local file."""
@@ -3456,7 +3391,7 @@ class DatabaseImporter(DatabasePorter):
         command = (
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://"
             "${SQL_USER}:${SQL_PASSWORD}@"
-            f"{self.sql_proxy}:3306"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
             f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
             "export AIRFLOW__CORE__FERNET_KEY="
             f"{self.fernet_key},{self.fernet_key_from_source_environment} "
@@ -3480,7 +3415,8 @@ class DatabaseImporter(DatabasePorter):
                 key = columns[0]
                 command = (
                     "psql postgres://root:${SQL_PASSWORD}@"
-                    f"{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} -p 3306 -t -c "
+                    f"{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+                    f"-p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
                     f"\"SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('{table}', "
                     f"'{key}')), (SELECT (MAX({key}) + 1) FROM {table}), FALSE);\""
                 )
@@ -3492,15 +3428,54 @@ class DatabaseImporter(DatabasePorter):
                 )
                 logger.info(output)
 
+    def _update_airflow_db_connection(self: typing.Any) -> None:
+        """Updates airflow_db entry in connection table."""
+        export_db_connection_string = (
+            "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME}"
+        )
+
+        logger.info("Removing airflow_db connection from connections table...")
+        try:
+            EnvironmentUtils.execute_command_in_a_pod(
+                self.worker_pod_namespace,
+                self.worker_pod_name,
+                self.worker_container_name,
+                f"{export_db_connection_string} && "
+                "airflow connections delete airflow_db",
+            )
+        except Command.CommandExecutionError:
+            logger.info(
+                "airflow_db connection could not be deleted. "
+                "Proceeding anyways (it could not exist and this is not a "
+                "problem)..."
+            )
+
+        logger.info("Creating new airflow_db connection...")
+        EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            f"{export_db_connection_string} && "
+            "airflow connections add airflow_db "
+            "--conn-type postgres "
+            "--conn-login $SQL_USER "
+            "--conn-password $SQL_PASSWORD "
+            f"--conn-host {self.sql_proxy} "
+            f"--conn-port {DatabaseImporter.SQL_PROXY_PORT} "
+            f"--conn-schema {self.sql_database}",
+        )
+
     def _apply_migrations(self: typing.Any) -> None:
         """Applies database migrations (1.10.15->2.0.1) to the new database."""
         logger.info("*** Applying migrations...")
         command = (
-            "export "
-            "AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
-            f"{self.sql_proxy}:3306/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
-            "&& airflow db upgrade"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} && airflow db upgrade"
         )
         output = EnvironmentUtils.execute_command_in_a_pod(
             self.worker_pod_namespace,
@@ -3548,7 +3523,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_pod_name,
             self.worker_container_name,
             "psql postgres://root:${SQL_PASSWORD}"
-            f"@{self.sql_proxy}/postgres -p 3306 -t -c "
+            f"@{self.sql_proxy}/postgres -p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
             f'\'ALTER DATABASE "{DatabaseImporter.TEMPORARY_DATABASE_NAME}" '
             f'RENAME TO "{self.sql_database}";\'',
         )
@@ -3571,6 +3546,7 @@ class DatabaseImporter(DatabasePorter):
         self._fix_sequence_numbers_in_db()
         self._apply_migrations()
         self._rotate_fernet_key()
+        self._update_airflow_db_connection()
         self._delete_old_database()
         self._import_dags_plugins_and_data()
         self._switch_database_to_the_new_one()
