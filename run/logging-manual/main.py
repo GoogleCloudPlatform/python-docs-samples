@@ -37,13 +37,16 @@ def index():
     global_log_fields = {}
 
     # Add log correlation to nest all log messages.
-    trace_header = request.headers.get("X-Cloud-Trace-Context")
+    # This is only relevant in HTTP-based contexts, and is ignored elsewhere.
+    # (In particular, non-HTTP-based Cloud Functions.)
+    if "request" in locals():
+        trace_header = request.headers.get("X-Cloud-Trace-Context")
 
-    if trace_header and PROJECT:
-        trace = trace_header.split("/")
-        global_log_fields[
-            "logging.googleapis.com/trace"
-        ] = f"projects/{PROJECT}/traces/{trace[0]}"
+        if trace_header and PROJECT:
+            trace = trace_header.split("/")
+            global_log_fields[
+                "logging.googleapis.com/trace"
+            ] = f"projects/{PROJECT}/traces/{trace[0]}"
 
     # Complete a structured log entry.
     entry = dict(
