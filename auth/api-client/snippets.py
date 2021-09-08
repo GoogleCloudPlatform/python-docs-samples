@@ -58,7 +58,7 @@ def explicit_compute_engine(project):
     import googleapiclient.discovery
 
     # Explicitly use Compute Engine credentials. These credentials are
-    # available on Compute Engine, App Engine Flexible, and Container Engine.
+    # available on Compute Engine, App Engine Flexible, and Kubernetes Engine.
     credentials = compute_engine.Credentials()
 
     # Explicitly pass the credentials to the client library.
