@@ -40,6 +40,9 @@ Usage Examples:
 
     python beta_snippets.py streaming-automl-object-tracking resources/cat.mp4 \
     $PROJECT_ID $MODEL_ID
+
+    python beta_snippets.py streaming-automl-action-recognition \
+    resources/cat.mp4 $PROJECT_ID $MODEL_ID
 """
 
 import argparse
@@ -743,6 +746,81 @@ def streaming_automl_object_tracking(path, project_id, model_id):
     # [END video_streaming_automl_object_tracking_beta]
 
 
+def streaming_automl_action_recognition(path, project_id, model_id):
+    # [START video_streaming_automl_action_recognition_beta]
+    import io
+
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
+    # project_id = 'project_id'
+    # model_id = 'automl_action_recognition_model_id'
+
+    client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    model_path = "projects/{}/locations/us-central1/models/{}".format(
+        project_id, model_id
+    )
+
+    automl_config = videointelligence.StreamingAutomlActionRecognitionConfig(
+        model_name=model_path
+    )
+
+    video_config = videointelligence.StreamingVideoConfig(
+        feature=videointelligence.StreamingFeature.STREAMING_AUTOML_ACTION_RECOGNITION,
+        automl_action_recognition_config=automl_config,
+    )
+
+    # config_request should be the first in the stream of requests.
+    config_request = videointelligence.StreamingAnnotateVideoRequest(
+        video_config=video_config
+    )
+
+    # Set the chunk size to 5MB (recommended less than 10MB).
+    chunk_size = 5 * 1024 * 1024
+
+    def stream_generator():
+        yield config_request
+        # Load file content.
+        # Note: Input videos must have supported video codecs. See
+        # https://cloud.google.com/video-intelligence/docs/streaming/streaming#supported_video_codecs
+        # for more details.
+        with io.open(path, "rb") as video_file:
+            while True:
+                data = video_file.read(chunk_size)
+                if not data:
+                    break
+                yield videointelligence.StreamingAnnotateVideoRequest(
+                    input_content=data
+                )
+
+    requests = stream_generator()
+
+    # streaming_annotate_video returns a generator.
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the video.
+    responses = client.streaming_annotate_video(requests, timeout=900)
+
+    # Each response corresponds to about 1 second of video.
+    for response in responses:
+        # Check for errors.
+        if response.error.message:
+            print(response.error.message)
+            break
+
+        for label in response.annotation_results.label_annotations:
+            for frame in label.frames:
+                print(
+                    "At {:3d}s segment, {:5.1%} {}".format(
+                        frame.time_offset.seconds,
+                        frame.confidence,
+                        label.entity.entity_id,
+                    )
+                )
+    # [END video_streaming_automl_action_recognition_beta]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -804,6 +882,13 @@ if __name__ == "__main__":
     video_streaming_automl_object_tracking_parser.add_argument("project_id")
     video_streaming_automl_object_tracking_parser.add_argument("model_id")
 
+    video_streaming_automl_action_recognition_parser = subparsers.add_parser(
+        "streaming-automl-action-recognition", help=streaming_automl_action_recognition.__doc__
+    )
+    video_streaming_automl_action_recognition_parser.add_argument("path")
+    video_streaming_automl_action_recognition_parser.add_argument("project_id")
+    video_streaming_automl_action_recognition_parser.add_argument("model_id")
+
     args = parser.parse_args()
 
     if args.command == "transcription":
@@ -826,3 +911,5 @@ if __name__ == "__main__":
         streaming_automl_classification(args.path, args.project_id, args.model_id)
     elif args.command == "streaming-automl-object-tracking":
         streaming_automl_object_tracking(args.path, args.project_id, args.model_id)
+    elif args.command == "streaming-automl-action-recognition":
+        streaming_automl_action_recognition(args.path, args.project_id, args.model_id)
