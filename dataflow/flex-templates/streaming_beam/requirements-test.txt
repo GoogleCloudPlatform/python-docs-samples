@@ -1,5 +1,5 @@
 google-api-python-client==2.19.1
-google-cloud-storage==1.42.0
+google-cloud-storage==1.42.1
 pytest-xdist==2.3.0
 pytest==6.2.4
 pyyaml==5.4.1
