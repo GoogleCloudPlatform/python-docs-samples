@@ -1,45 +1,45 @@
 import argparse
 
+from pyspark.sql.types import ArrayType, MapType
+
 
 def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: str):
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
     from pyspark.sql.functions import array, create_map, lit, udf
-    from pyspark.sql.types import ArrayType, BinaryType, MapType, StringType
+    from pyspark.sql.types import BinaryType, StringType
 
     # TODO(developer):
     # project_number = 11223344556677
     # location = "us-central1-a"
     # topic_id = "your-topic-id"
 
-    spark = SparkSession.builder.appName("poc").master("yarn").getOrCreate()
+    # spark = SparkSession.builder.appName("poc").master("yarn").getOrCreate()
+    spark = SparkSession.builder.appName("poc").getOrCreate()
 
-    # RateStreamSource is a streaming source that generates consecutive
-    # numbers with timestamp that can be useful for testing and PoCs.
-    # DataFrame[timestamp: timestamp, value: bigint]
+    # Create a RateStreamSource that generates consecutive numbers with timestamps:
+    # |-- timestamp: timestamp (nullable = true)
+    # |-- value: long (nullable = true)
     sdf = spark.readStream.format("rate").option("rowsPerSecond", 1).load()
 
-    def count_by_digit(n, digit, count=0):
-        for i in str(n):
-            if i == digit:
-                count +=1
-        return count
+    divisible_by_two_udf = udf(lambda z: "even" if str(z)[-1] % 2 == 0 else "odd")
 
-    count_by_digit_udf = udf(lambda z, digit: count_by_digit(z, digit))
+    long_to_str_udf = udf(lambda n: str(n))
 
     sdf = sdf.withColumn(
         "key", (sdf.value % 5).cast(StringType()).cast(BinaryType())
     ).withColumn(
         "event_timestamp", sdf.timestamp
     ).withColumn(
-        "data", lit(".").cast(BinaryType())
-    ).withColumn(
-        "attributes", create_map(sdf.value.cast(StringType()), array(lit("hello").cast(BinaryType())))
+        "data", sdf.value.cast(StringType()).cast(BinaryType())
+    # ).withColumn(
+        # "attributes", create_map(
+            # lit("prop1"), array(divisible_by_two_udf("value").cast(BinaryType()))).cast(MapType(StringType(), ArrayType(BinaryType()), True))
+    ).drop(
+        "value", "timestamp"
     )
     
-    sdf = sdf.withColumn(
-        "attributes", sdf.attributes.cast(MapType(StringType(), ArrayType(BinaryType(), True),True))
-    )
+    sdf.printSchema()
 
     query = (
         sdf.writeStream.format("pubsublite")
