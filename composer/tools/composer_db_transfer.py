@@ -36,7 +36,7 @@ EXPORT
   python3 composer_db_transfer.py export \
     --project [PROJECT NAME] \
     --environment [ENVIRONMENT NAME] \
-    --location [REGION]
+    --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE - TO BE CREATED]
 
   CSV files with exported database are stored as
@@ -60,7 +60,7 @@ IMPORT
   python3 composer_db_transfer.py import \
     --project [PROJECT NAME] \
     --environment [ENVIRONMENT NAME] \
-    --location [REGION]
+    --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE FROM SOURCE ENVIRONMENT]
 
   CSV files that should be imported are expected to be stored as
@@ -71,6 +71,10 @@ IMPORT
   `fernet-key-file` parameter specifies path to the fernet key file of the
   source environment on the machine executing the script. It is created during
   export phase.
+
+  Additional --use-private-gke-endpoint option can be used to access
+  environment's GKE cluster through internal endpoint. It might be useful for
+  private IP environments.
 
 TROUBLESHOOTING
 
@@ -159,10 +163,11 @@ class DatabaseUtils:
         Returned expression transforms nullable column into either its value
         (if not null) or DatabaseUtils.null_string (if null).
         This is necessary to process exported columns as MySQL exports nulls as
-        opening double-quote and capital N ("N), wchich breaks CSV file structure.
-        Null can not be transformed into empty string here, because during import
-        from CSV PostgreSQL differentiates between quoted empty string (translated
-        to empty string) and unquoted empty string (translated to null).
+        opening double-quote and capital N ("N), wchich breaks CSV file
+        structure. Null can not be transformed into empty string here, because
+        during import from CSV PostgreSQL differentiates between quoted empty
+        string (translated to empty string) and unquoted empty string
+        (translated to null).
 
         Args:
           column: name of the column
@@ -2753,7 +2758,10 @@ class EnvironmentUtils:
         return json.loads(environment_json)
 
     @staticmethod
-    def get_gke_credentials(gke_id: str) -> None:
+    def get_gke_credentials(
+        gke_id: str,
+        use_private_gke_endpoint: bool,
+    ) -> None:
         """Gets credentials of a given GKE cluster."""
         items = gke_id.split("/")
         if (
@@ -2774,6 +2782,8 @@ class EnvironmentUtils:
             "--zone" if items[2] == "zones" else "--region",
             items[3],
         ]
+        if use_private_gke_endpoint:
+            shell_command.append("--internal-ip")
         Command.run_shell_command(shell_command)
 
     @staticmethod
@@ -2948,8 +2958,13 @@ class DatabasePorter:
 
     AIRFLOW_VERSION_RE = re.compile("composer-.*-airflow-([0-9]+).([0-9]+).([0-9]+).*")
 
-    def __init__(self: typing.Any, expected_airflow_database_version: str) -> None:
+    def __init__(
+        self: typing.Any,
+        expected_airflow_database_version: str,
+        use_private_gke_endpoint: bool,
+    ) -> None:
         self._expected_airflow_database_version = expected_airflow_database_version
+        self._use_private_gke_endpoint = use_private_gke_endpoint
 
     def _check_environment(self: typing.Any) -> None:
         """Gathers information about the Composer environment."""
@@ -3007,7 +3022,10 @@ class DatabasePorter:
         logger.info("*** Getting credentials to GKE cluster...")
         self._kubeconfig_file_name = f"kubeconfig-{self.unique_id}"
         os.environ["KUBECONFIG"] = self._kubeconfig_file_name
-        EnvironmentUtils.get_gke_credentials(self.gke_id)
+        EnvironmentUtils.get_gke_credentials(
+            self.gke_id,
+            self._use_private_gke_endpoint,
+        )
 
     def _remove_temporary_kubeconfig(self: typing.Any) -> None:
         """Removes temporary kubeconfig file."""
@@ -3187,8 +3205,12 @@ class DatabaseImporter(DatabasePorter):
         environment_name: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
-        super().__init__(DatabaseImporter.EXPECTED_AIRFLOW_DATABASE_VERSION)
+        super().__init__(
+            DatabaseImporter.EXPECTED_AIRFLOW_DATABASE_VERSION,
+            use_private_gke_endpoint,
+        )
         self.project_name = project_name
         self.environment_name = environment_name
         self.location = location
@@ -3575,8 +3597,12 @@ python3 composer_db_transfer.py import ...
         environment_name: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
-        super().__init__(DatabaseExporter.EXPECTED_AIRFLOW_DATABASE_VERSION)
+        super().__init__(
+            DatabaseExporter.EXPECTED_AIRFLOW_DATABASE_VERSION,
+            use_private_gke_endpoint,
+        )
         self.project_name = project_name
         self.environment_name = environment_name
         self.location = location
@@ -3714,21 +3740,37 @@ class ComposerDatabaseMigration:
 
     @staticmethod
     def export_database(
-        project_name: str, environment_name: str, location: str, fernet_key_file: str
+        project_name: str,
+        environment_name: str,
+        location: str,
+        fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Exports Airflow database to the bucket in customer's project."""
         database_importer = DatabaseExporter(
-            project_name, environment_name, location, fernet_key_file
+            project_name,
+            environment_name,
+            location,
+            fernet_key_file,
+            use_private_gke_endpoint,
         )
         database_importer.export_database()
 
     @staticmethod
     def import_database(
-        project_name: str, environment_name: str, location: str, fernet_key_file: str
+        project_name: str,
+        environment_name: str,
+        location: str,
+        fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Imports Airflow database from the bucket in customer's project."""
         database_importer = DatabaseImporter(
-            project_name, environment_name, location, fernet_key_file
+            project_name,
+            environment_name,
+            location,
+            fernet_key_file,
+            use_private_gke_endpoint,
         )
         database_importer.import_database()
 
@@ -3739,16 +3781,25 @@ class ComposerDatabaseMigration:
         environment: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Triggers selected operation (import/export)."""
         logger.info("Database migration script for Cloud Composer")
         if operation == "export":
             ComposerDatabaseMigration.export_database(
-                project, environment, location, fernet_key_file
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
         elif operation == "import":
             ComposerDatabaseMigration.import_database(
-                project, environment, location, fernet_key_file
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
         else:
             logger.error("Operation %s is not supported.", operation)
@@ -3760,11 +3811,17 @@ class ComposerDatabaseMigration:
         environment: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         logger.info("Database transfer tool for Cloud Composer v.%s", SCRIPT_VERSION)
         try:
             ComposerDatabaseMigration.trigger_operation(
-                operation, project, environment, location, fernet_key_file
+                operation,
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
             exit(0)
         except Exception as e:  # pylint: disable=broad-except
@@ -3792,6 +3849,9 @@ def parse_arguments() -> typing.Dict[typing.Any, typing.Any]:
     argument_parser.add_argument("--environment", type=str, required=True)
     argument_parser.add_argument("--location", type=str, required=True)
     argument_parser.add_argument("--fernet-key-file", type=str, required=True)
+    argument_parser.add_argument(
+        "--use-private-gke-endpoint", required=False, action="store_true"
+    )
     return argument_parser.parse_args()
 
 
@@ -3803,4 +3863,5 @@ if __name__ == "__main__":
         args.environment,
         args.location,
         args.fernet_key_file,
+        args.use_private_gke_endpoint,
     )
