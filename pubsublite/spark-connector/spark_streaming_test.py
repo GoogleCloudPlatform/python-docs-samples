@@ -13,23 +13,27 @@
 # limitations under the License.
 
 
-import os, pathlib, pytest, re, uuid
+import os
+import pathlib
+import re
+from typing import Generator
+import uuid
 
 from google.api_core.exceptions import NotFound
 from google.cloud import dataproc_v1, storage
-from google.cloud.pubsublite import AdminClient, Topic, Subscription
+from google.cloud.pubsublite import AdminClient, Subscription, Topic
 from google.cloud.pubsublite.types import (
     CloudRegion,
     CloudZone,
     SubscriptionPath,
     TopicPath,
 )
-from google.protobuf.duration_pb2 import Duration
+import pytest
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 CLOUD_REGION = "us-west1"
-ZONE_ID = 'a'
+ZONE_ID = "a"
 CLUSTER_ID = os.environ["PUBSUBLITE_CLUSTER_ID"]
 BUCKET = os.environ["PUBSUBLITE_BUCKET_ID"]
 UUID = uuid.uuid4().hex
@@ -39,28 +43,28 @@ CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
 
 
 @pytest.fixture(scope="module")
-def client():
+def client() -> Generator[AdminClient, None, None]:
     yield AdminClient(CLOUD_REGION)
 
 
 @pytest.fixture(scope="module")
-def topic(client: AdminClient):
+def topic(client: AdminClient) -> Generator[Topic, None, None]:
     location = CloudZone(CloudRegion(CLOUD_REGION), ZONE_ID)
     topic_path = TopicPath(PROJECT_NUMBER, location, TOPIC_ID)
     topic = Topic(
         name=str(topic_path),
         partition_config=Topic.PartitionConfig(
+            # A topic must have at least one partition.
             count=1,
             capacity=Topic.PartitionConfig.Capacity(
-                    publish_mib_per_sec=4,
-                    subscribe_mib_per_sec=8,
-                ),
+                # Set publish throughput capacity per partition to 4 MiB/s.
+                publish_mib_per_sec=4,
+                # Set subscribe throughput capacity per partition to 4 MiB/s.
+                subscribe_mib_per_sec=8,
             ),
+        ),
         retention_config=Topic.RetentionConfig(
-            # Set storage per partition to 30 GiB.
             per_partition_bytes=30 * 1024 * 1024 * 1024,
-            # Allow messages to be retained for 1 day.
-            period=Duration(seconds=60 * 60 * 24),
         ),
     )
 
@@ -68,7 +72,7 @@ def topic(client: AdminClient):
         response = client.get_topic(topic.name)
     except NotFound:
         response = client.create_topic(topic)
-    
+
     yield response
 
     try:
@@ -78,7 +82,9 @@ def topic(client: AdminClient):
 
 
 @pytest.fixture(scope="module")
-def subscription(client: AdminClient, topic: Topic):
+def subscription(
+    client: AdminClient, topic: Topic
+) -> Generator[Subscription, None, None]:
     location = CloudZone(CloudRegion(CLOUD_REGION), ZONE_ID)
     subscription_path = SubscriptionPath(PROJECT_NUMBER, location, SUBSCRIPTION_ID)
 
@@ -86,7 +92,7 @@ def subscription(client: AdminClient, topic: Topic):
         name=str(subscription_path),
         topic=topic.name,
         delivery_config=Subscription.DeliveryConfig(
-            delivery_requirement=Subscription.DeliveryConfig.DeliveryRequirement.DELIVER_AFTER_STORED,
+            delivery_requirement=Subscription.DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY,
         ),
     )
 
@@ -101,33 +107,36 @@ def subscription(client: AdminClient, topic: Topic):
         pass
 
 
-def _pyfile(source_file):
-    from google.cloud import storage
+def pyfile(source_file: str) -> str:
     storage_client = storage.Client()
     bucket = storage_client.bucket(BUCKET)
     destination_blob_name = os.path.join(UUID, source_file)
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(source_file)
-    return "gs://" + blob.bucket.name + "/" + blob.name 
+    return "gs://" + blob.bucket.name + "/" + blob.name
 
 
-def test_spark_streaming_to_pubsublite(topic):
+def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
     from google.cloud.dataproc_v1.types import LoggingConfig
 
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)}
+        client_options={
+            "api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)
+        }
     )
 
     # Create the job config.
     job = {
         "placement": {"cluster_name": CLUSTER_ID},
         "pyspark_job": {
-            "main_python_file_uri": _pyfile("spark_streaming_to_pubsublite_example.py"),
-            "jar_file_uris": ["https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"],
-            "properties": {"spark.master": "yarn"}, 
+            "main_python_file_uri": pyfile("spark_streaming_to_pubsublite_example.py"),
+            "jar_file_uris": [
+                "https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"
+            ],
+            "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
-            "args": [PROJECT_NUMBER, CLOUD_REGION+"-"+ZONE_ID, TOPIC_ID],
+            "args": [PROJECT_NUMBER, CLOUD_REGION + "-" + ZONE_ID, TOPIC_ID],
         },
     }
 
@@ -147,26 +156,37 @@ def test_spark_streaming_to_pubsublite(topic):
         .download_as_text()
     )
 
-    assert "INFO com.google.cloud.pubsublite.spark.PslStreamWriter: Committed 1 messages for epochId" in output
+    assert (
+        "INFO com.google.cloud.pubsublite.spark.PslStreamWriter: Committed 1 messages for epochId"
+        in output
+    )
 
 
-def test_spark_streaming_from_pubsublite(topic, subscription):
+def test_spark_streaming_from_pubsublite(
+    topic: Topic, subscription: Subscription
+) -> None:
     from google.cloud.dataproc_v1.types import LoggingConfig
 
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)}
+        client_options={
+            "api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)
+        }
     )
 
     # Create the job config.
     job = {
         "placement": {"cluster_name": CLUSTER_ID},
         "pyspark_job": {
-            "main_python_file_uri": _pyfile("spark_streaming_from_pubsublite_example.py"),
-            "jar_file_uris": ["https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"],
-            "properties": {"spark.master": "yarn"}, 
+            "main_python_file_uri": pyfile(
+                "spark_streaming_from_pubsublite_example.py"
+            ),
+            "jar_file_uris": [
+                "https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"
+            ],
+            "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
-            "args": [PROJECT_NUMBER, CLOUD_REGION+"-"+ZONE_ID, SUBSCRIPTION_ID],
+            "args": [PROJECT_NUMBER, CLOUD_REGION + "-" + ZONE_ID, SUBSCRIPTION_ID],
         },
     }
 

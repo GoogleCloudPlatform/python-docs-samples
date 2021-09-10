@@ -1,12 +1,11 @@
 import argparse
 
-from pyspark.sql.types import ArrayType, MapType
 
-
-def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: str):
+def spark_streaming_to_pubsublite(
+    project_number: int, location: str, topic_id: str
+) -> None:
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
-    from pyspark.sql.functions import array, create_map, lit, udf
     from pyspark.sql.types import BinaryType, StringType
 
     # TODO(developer):
@@ -14,31 +13,28 @@ def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: 
     # location = "us-central1-a"
     # topic_id = "your-topic-id"
 
-    # spark = SparkSession.builder.appName("poc").master("yarn").getOrCreate()
-    spark = SparkSession.builder.appName("poc").getOrCreate()
+    spark = SparkSession.builder.appName("write-app").master("yarn").getOrCreate()
 
     # Create a RateStreamSource that generates consecutive numbers with timestamps:
     # |-- timestamp: timestamp (nullable = true)
     # |-- value: long (nullable = true)
     sdf = spark.readStream.format("rate").option("rowsPerSecond", 1).load()
 
-    divisible_by_two_udf = udf(lambda z: "even" if str(z)[-1] % 2 == 0 else "odd")
+    # divisible_by_two_udf = udf(lambda z: "even" if str(z)[-1] % 2 == 0 else "odd")
 
-    long_to_str_udf = udf(lambda n: str(n))
-
-    sdf = sdf.withColumn(
-        "key", (sdf.value % 5).cast(StringType()).cast(BinaryType())
-    ).withColumn(
-        "event_timestamp", sdf.timestamp
-    ).withColumn(
-        "data", sdf.value.cast(StringType()).cast(BinaryType())
-    # ).withColumn(
-        # "attributes", create_map(
+    sdf = (
+        sdf.withColumn("key", (sdf.value % 5).cast(StringType()).cast(BinaryType()))
+        .withColumn("event_timestamp", sdf.timestamp)
+        .withColumn(
+            "data",
+            sdf.value.cast(StringType()).cast(BinaryType())
+            # ).withColumn(
+            # "attributes", create_map(
             # lit("prop1"), array(divisible_by_two_udf("value").cast(BinaryType()))).cast(MapType(StringType(), ArrayType(BinaryType()), True))
-    ).drop(
-        "value", "timestamp"
+        )
+        .drop("value", "timestamp")
     )
-    
+
     sdf.printSchema()
 
     query = (
@@ -60,8 +56,7 @@ def spark_streaming_to_pubsublite(project_number: int, location: str, topic_id: 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_number", help="Google Cloud Project Number")
     parser.add_argument("location", help="Your Cloud location, e.g. us-central1-a")

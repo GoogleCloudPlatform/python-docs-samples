@@ -17,18 +17,17 @@ import argparse
 
 def spark_streaming_from_pubsublite(
     project_number: int, location: str, subscription_id: str
-):
+) -> None:
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
-    from pyspark.sql.types import BinaryType, StringType
+    from pyspark.sql.types import StringType
 
     # TODO(developer):
     # project_number = 11223344556677
     # location = "us-central1-a"
     # subscription_id = "your-subscription-id"
 
-    # spark = SparkSession.builder.appName("poc").master("yarn").getOrCreate()
-    spark = SparkSession.builder.appName("poc").getOrCreate()
+    spark = SparkSession.builder.appName("read-app").master("yarn").getOrCreate()
 
     sdf = (
         spark.readStream.format("pubsublite")
@@ -38,6 +37,8 @@ def spark_streaming_from_pubsublite(
         )
         .load()
     )
+
+    sdf = sdf.withColumn("data", sdf.data.cast(StringType()))
 
     query = (
         sdf.writeStream.format("console")
@@ -53,8 +54,7 @@ def spark_streaming_from_pubsublite(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_number", help="Google Cloud Project Number")
     parser.add_argument("location", help="Your Cloud location, e.g. us-central1-a")
