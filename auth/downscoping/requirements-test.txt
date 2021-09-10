@@ -1,2 +1,2 @@
 pytest==6.2.4
-google-cloud-storage==1.42.0
+google-cloud-storage==1.42.1
