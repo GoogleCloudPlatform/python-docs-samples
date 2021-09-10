@@ -18,7 +18,7 @@ import argparse
 def spark_streaming_from_pubsublite(
     project_number: int, location: str, subscription_id: str
 ) -> None:
-    # [START pubsublite_spark_streaming_to_pubsublite]
+    # [START pubsublite_spark_streaming_from_pubsublite]
     from pyspark.sql import SparkSession
     from pyspark.sql.types import StringType
 
@@ -49,7 +49,7 @@ def spark_streaming_from_pubsublite(
 
     query.awaitTermination(120)
     query.stop()
-    # [END pubsublite_spark_streaming_to_pubsublite]
+    # [END pubsublite_spark_streaming_from_pubsublite]
 
 
 if __name__ == "__main__":
