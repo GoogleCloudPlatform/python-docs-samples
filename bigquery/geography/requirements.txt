@@ -18,7 +18,7 @@ google-cloud-core==2.0.0
 google-crc32c==1.1.2
 google-resumable-media==2.0.2
 googleapis-common-protos==1.53.0
-grpcio==1.39.0
+grpcio==1.40.0
 idna==3.2
 importlib-metadata==4.8.1
 libcst==0.3.20
