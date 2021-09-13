@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START functions_cloudevent_storage]
+# [START functions_helloworld_storage]
 # Triggered by a change in a storage bucket
 def hello_gcs(cloudevent):
     data = cloudevent.data
@@ -34,4 +34,4 @@ def hello_gcs(cloudevent):
     print(f"Metageneration: {metageneration}")
     print(f"Created: {timeCreated}")
     print(f"Updated: {updated}")
-# END functions_cloudevent_storage
+# [END functions_helloworld_storage]
