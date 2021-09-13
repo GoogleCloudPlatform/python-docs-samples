@@ -27,11 +27,11 @@ def hello_gcs(cloudevent):
     timeCreated = data["timeCreated"]
     updated = data["updated"]
 
-    print('Event ID: {}'.format(event_id))
-    print('Event type: {}'.format(event_type))
-    print('Bucket: {}'.format(bucket))
-    print('File: {}'.format(name))
-    print('Metageneration: {}'.format(metageneration))
-    print('Created: {}'.format(timeCreated))
-    print('Updated: {}'.format(updated))
+    print(f"Event ID: {event_id}")
+    print(f"Event type: {event_type}")
+    print(f"Bucket: {bucket}")
+    print(f"File: {name}")
+    print(f"Metageneration: {metageneration}")
+    print(f"Created: {timeCreated}")
+    print(f"Updated: {updated}")
 # END functions_cloudevent_storage
