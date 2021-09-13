@@ -70,7 +70,7 @@ def disable_pubsub_notifications(project_id):
 
 
 def test_enable_pubsub_notifications(
-        capsys, project_id, pubsub_topics, disable_pubsub_notifications
+    capsys, project_id, pubsub_topics, disable_pubsub_notifications
 ):
     conversation_topic, analysis_topic = pubsub_topics
 
