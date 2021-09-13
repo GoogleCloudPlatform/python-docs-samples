@@ -18,7 +18,7 @@
 # The bookshelf frontend replication controller ensures that at least 3
 # instances of the bookshelf app are running on the cluster.
 # For more info about Pods see:
-#   https://cloud.google.com/container-engine/docs/pods/
+#   https://kubernetes.io/docs/concepts/workloads/pods/
 # For more info about Deployments:
 #   https://kubernetes.io/docs/user-guide/deployments/
 
@@ -100,12 +100,12 @@ spec:
 
 # [START service]
 # The polls service provides a load-balancing proxy over the polls app
-# pods. By specifying the type as a 'LoadBalancer', Container Engine will
+# pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
 # create an external HTTP load balancer.
 # For more information about Services see:
-#   https://cloud.google.com/container-engine/docs/services/
+#   https://kubernetes.io/docs/concepts/services-networking/service/
 # For more information about external HTTP load balancing see:
-#   https://cloud.google.com/container-engine/docs/load-balancer
+#   https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
 apiVersion: v1
 kind: Service
 metadata:
