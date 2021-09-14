@@ -77,8 +77,8 @@ def topic(client: AdminClient) -> Generator[Topic, None, None]:
 
     try:
         client.delete_topic(response.name)
-    except NotFound:
-        pass
+    except NotFound as e:
+        print(e.message)
 
 
 @pytest.fixture(scope="module")
@@ -103,8 +103,8 @@ def subscription(
     yield response
     try:
         client.delete_subscription(response.name)
-    except NotFound:
-        pass
+    except NotFound as e:
+        print(e.message)
 
 
 def pyfile(source_file: str) -> str:
@@ -132,7 +132,7 @@ def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
         "pyspark_job": {
             "main_python_file_uri": pyfile("spark_streaming_to_pubsublite_example.py"),
             "jar_file_uris": [
-                "https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"
+                "gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar"
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
@@ -182,7 +182,7 @@ def test_spark_streaming_from_pubsublite(
                 "spark_streaming_from_pubsublite_example.py"
             ),
             "jar_file_uris": [
-                "https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar"
+                "gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar"
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
