@@ -182,8 +182,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
-    train_steps: int,
-    eval_steps: int,
+    train_epochs: int,
     batch_size: int,
     model_dir: str,
     checkpoint_dir: str,
@@ -216,10 +215,9 @@ def run(
     # Train the model.
     logging.info("Training the model")
     model.fit(
-        train_dataset.repeat(),
-        steps_per_epoch=train_steps,
-        validation_data=eval_dataset.repeat(),
-        validation_steps=eval_steps,
+        train_dataset,
+        epochs=train_epochs,
+        validation_data=eval_dataset,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
