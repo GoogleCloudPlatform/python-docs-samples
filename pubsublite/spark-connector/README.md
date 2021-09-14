@@ -2,7 +2,7 @@
 
 The samples in this directory show how to read messages from and write messages to Pub/Sub Lite from an [Apache Spark] cluster using the [Pub/Sub Lite Spark Connector].
 
-Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag.
+Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag.
 
 ## Before you begin
 
@@ -30,22 +30,22 @@ Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsu
    gcloud init
    ```
 
-1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=pubsublite,dataproc,storage_component): Pub/Sub Lite, Dataproc, Cloud Storage.
+1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=pubsublite.googleapis.com,dataproc,storage_component): Pub/Sub Lite, Dataproc, Cloud Storage.
 
 1. Create a Pub/Sub Lite [topic] and [subscription] in a supported [location].
 
    ```bash
    export TOPIC_ID=your-topic-id
    export SUBSCRIPTION_ID=your-subscription-id
-   export LOCATION=your-location
+   export PUBSUBLITE_LOCATION=your-location
 
    gcloud pubsub lite-topics create $TOPIC_ID \
-     --location=$LOCATION \
+     --location=$PUBSUBLITE_LOCATION \
      --partitions=1 \
      --per-partition-bytes=30GiB
 
    gcloud pubsub lite-subscriptions create $SUBSCRIPTION_ID \
-      --location=$LOCATION \
+      --location=$PUBSUBLITE_LOCATION \
       --topic=$TOPIC_ID
    ```
 
@@ -105,10 +105,10 @@ Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsu
 
     ```sh
     export CLUSTER_ID=your-cluster-id
-    export CLOUD_REGION=your-region
+    export DATAPROC_REGION=your-dataproc-region
 
     gcloud dataproc clusters create $CLUSTER_ID \
-      --region $CLOUD_REGION \
+      --region $DATAPROC_REGION \
       --image-version 1.5-debian10 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --enable-component-gateway
@@ -124,17 +124,23 @@ To submit a write job:
 export PROJECT_NUMBER=$(gcloud projects list --filter="projectId:$PROJECT_ID" --format="value(PROJECT_NUMBER)")
 
 gcloud dataproc jobs submit pyspark spark_streaming_to_pubsublite_example.py \
-    --region=$CLOUD_REGION \
+    --region=$DATAPROC_REGION \
     --cluster=$CLUSTER_ID \
     --jars=https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
-    -- $PROJECT_NUMBER $LOCATION $TOPIC_ID
+    -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $TOPIC_ID
 ```
 
-The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar.
+The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar suffixed by `with-dependencies`.
 
 Visit the job URL in the command output or the jobs panel in [Cloud Console for Dataproc] to monitor the job progress.
+
+You should see INFO logging like the following in the output:
+
+```none
+INFO com.google.cloud.pubsublite.spark.PslStreamWriter: Committed 1 messages for epochId ..
+```
 
 ## Reading from Pub/Sub Lite
 
@@ -144,16 +150,16 @@ To submit a read job:
 
 ```sh
 gcloud dataproc jobs submit pyspark spark_streaming_from_pubsublite_example.py \
-    --region=$CLOUD_REGION \
+    --region=$DATAPROC_REGION \
     --cluster=$CLUSTER_ID \
     --jars=https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
-    -- $PROJECT_NUMBER $LOCATION $SUBSCRIPTION_ID
+    -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $SUBSCRIPTION_ID
 ```
-The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar.
+The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar suffixed by `with-dependencies`.
 
-Here is some example output:
+Here is an example output:
 
 ```none
 +--------------------+---------+------+---+----+--------------------+--------------------+----------+
@@ -172,10 +178,6 @@ Here is some example output:
 [Cloud Shell]: https://console.cloud.google.com/cloudshell/editor/
 [*New Project* page]: https://console.cloud.google.com/projectcreate
 [Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project/
-[*Create service account key* page]: https://console.cloud.google.com/apis/credentials/serviceaccountkey/
-[GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam/
-[Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts/
-[Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts/
 
 [Install Python and virtualenv]: https://cloud.google.com/python/setup/
 [Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd

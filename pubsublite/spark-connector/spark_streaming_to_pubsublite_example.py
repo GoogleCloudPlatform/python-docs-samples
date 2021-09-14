@@ -34,18 +34,10 @@ def spark_streaming_to_pubsublite(
     # |-- value: long (nullable = true)
     sdf = spark.readStream.format("rate").option("rowsPerSecond", 1).load()
 
-    # divisible_by_two_udf = udf(lambda z: "even" if str(z)[-1] % 2 == 0 else "odd")
-
     sdf = (
         sdf.withColumn("key", (sdf.value % 5).cast(StringType()).cast(BinaryType()))
         .withColumn("event_timestamp", sdf.timestamp)
-        .withColumn(
-            "data",
-            sdf.value.cast(StringType()).cast(BinaryType())
-            # ).withColumn(
-            # "attributes", create_map(
-            # lit("prop1"), array(divisible_by_two_udf("value").cast(BinaryType()))).cast(MapType(StringType(), ArrayType(BinaryType()), True))
-        )
+        .withColumn("data", sdf.value.cast(StringType()).cast(BinaryType()))
         .drop("value", "timestamp")
     )
 
@@ -63,6 +55,7 @@ def spark_streaming_to_pubsublite(
         .start()
     )
 
+    # Wait 60 seconds to terminate the query.
     query.awaitTermination(60)
     query.stop()
     # [END pubsublite_spark_streaming_to_pubsublite]
