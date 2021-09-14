@@ -76,7 +76,7 @@ Visit this Maven [link](https://search.maven.org/artifact/com.google.cloud/pubsu
 1. Create a virtual environment and activate it.
 
     ```bash
-    virtualenv env
+    python -m venv env
     source env/bin/activate
     ```
    > Once you are finished with the tutorial, you can deactivate
