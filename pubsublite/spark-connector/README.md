@@ -76,7 +76,7 @@ Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a
 1. Create a virtual environment and activate it.
 
     ```bash
-    virtualenv env
+    python -m venv env
     source env/bin/activate
     ```
    > Once you are finished with the tutorial, you can deactivate
