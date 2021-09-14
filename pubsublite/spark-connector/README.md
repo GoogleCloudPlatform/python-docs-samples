@@ -2,7 +2,7 @@
 
 The samples in this directory show how to read messages from and write messages to Pub/Sub Lite from an [Apache Spark] cluster using the [Pub/Sub Lite Spark Connector].
 
-Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag.
+Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag. Alternatively, you can get this JAR from this [public Cloud Storage location](gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar).
 
 ## Before you begin
 
@@ -126,13 +126,11 @@ export PROJECT_NUMBER=$(gcloud projects list --filter="projectId:$PROJECT_ID" --
 gcloud dataproc jobs submit pyspark spark_streaming_to_pubsublite_example.py \
     --region=$DATAPROC_REGION \
     --cluster=$CLUSTER_ID \
-    --jars=https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar \
+    --jars=gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
     -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $TOPIC_ID
 ```
-
-The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar suffixed by `with-dependencies`.
 
 Visit the job URL in the command output or the jobs panel in [Cloud Console for Dataproc] to monitor the job progress.
 
@@ -152,12 +150,11 @@ To submit a read job:
 gcloud dataproc jobs submit pyspark spark_streaming_from_pubsublite_example.py \
     --region=$DATAPROC_REGION \
     --cluster=$CLUSTER_ID \
-    --jars=https://search.maven.org/remotecontent?filepath=com/google/cloud/pubsublite-spark-sql-streaming/0.3.1/pubsublite-spark-sql-streaming-0.3.1-with-dependencies.jar \
+    --jars=gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
     -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $SUBSCRIPTION_ID
 ```
-The preceding command hardcodes the connector version. Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to learn and download the latest version of the connector's uber jar suffixed by `with-dependencies`.
 
 Here is an example output:
 
