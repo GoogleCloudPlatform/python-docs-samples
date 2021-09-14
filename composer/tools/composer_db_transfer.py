@@ -3069,49 +3069,74 @@ class DatabasePorter:
         ) = EnvironmentUtils.get_namespace_and_name_from_pod(pod_desc)
         self.worker_pod_desc = pod_desc
 
+    def _get_airflow_monitoring_container_description(
+        self: typing.Any,
+        monitoring_pod_description: typing.Dict[typing.Any, typing.Any],
+    ) -> typing.Dict[typing.Any, typing.Any]:
+        """Finds airflow-monitoring container in monitoring pod description."""
+        for container in monitoring_pod_description["spec"]["containers"]:
+            if container["name"] == "airflow-monitoring":
+                return container
+        raise Exception("airflow-monitoring container could not be found.")
+
+    def _get_environment_variable_from_container_description(
+        self: typing.Any,
+        variable_name: str,
+        container_description: typing.Dict[typing.Any, typing.Any],
+    ) -> str:
+        """Reads environment variable from monitoring"""
+        for variable in container_description["env"]:
+            if variable["name"] == variable_name:
+                logger.info(
+                    'Fetch environment variable: %s = "%s"',
+                    variable_name,
+                    variable["value"],
+                )
+                return variable["value"]
+        raise Exception(
+            f"Environment variable {variable} could not be found in the container."
+        )
+
     def _read_environment_variables_from_monitoring_pod(self: typing.Any) -> None:
         """Reads relevant environment variables from airflow-monitoring."""
         logger.info("*** Reading environment variables from airflow-monitoring pod...")
         logger.info("Finding existing monitoring pod...")
-        pod_desc = EnvironmentUtils.get_pod_with_label(
+        monitoring_pod_description = EnvironmentUtils.get_pod_with_label(
             self.pods_config, "airflow-monitoring"
         )
-        (
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-        ) = EnvironmentUtils.get_namespace_and_name_from_pod(pod_desc)
-        self.airflow_database_version = (
-            EnvironmentUtils.read_env_variable_from_container(
-                monitoring_pod_namespace,
-                monitoring_pod_name,
-                "airflow-monitoring",
-                "AIRFLOW_DATABASE_VERSION",
+        monitoring_container_description = (
+            self._get_airflow_monitoring_container_description(
+                monitoring_pod_description
             )
         )
-        self.sql_instance_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "SQL_INSTANCE_NAME",
-        ).split(":")[1]
-        self.sql_database = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "SQL_DATABASE",
+        self.airflow_database_version = (
+            self._get_environment_variable_from_container_description(
+                "AIRFLOW_DATABASE_VERSION",
+                monitoring_container_description,
+            )
         )
-        self.gcs_bucket_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "GCS_BUCKET",
+        self.sql_instance_name = (
+            self._get_environment_variable_from_container_description(
+                "SQL_INSTANCE_NAME",
+                monitoring_container_description,
+            ).split(":")[1]
+        )
+        self.sql_database = self._get_environment_variable_from_container_description(
+            "SQL_DATABASE",
+            monitoring_container_description,
+        )
+        self.gcs_bucket_name = (
+            self._get_environment_variable_from_container_description(
+                "GCS_BUCKET",
+                monitoring_container_description,
+            )
         )
         self.cp_bucket_name = self.gcs_bucket_name
-        self.tenant_project_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "TENANT_PROJECT",
+        self.tenant_project_name = (
+            self._get_environment_variable_from_container_description(
+                "TENANT_PROJECT",
+                monitoring_container_description,
+            )
         )
 
     def _read_fernet_key(self: typing.Any) -> None:
