@@ -38,12 +38,12 @@ def run_natality_tutorial(override_values={}):
 
     # Prepare a reference to a new dataset for storing the query results.
     dataset_id = "natality_regression"
-    dataset_id_full = "{}.{}".format(client.project, dataset_id)
+    dataset_id_full = f"{client.project}.{dataset_id}"
     # [END bigquery_query_natality_tutorial]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     dataset_id = override_values.get("dataset_id", dataset_id)
-    dataset_id_full = "{}.{}".format(client.project, dataset_id)
+    dataset_id_full = f"{client.project}.{dataset_id}"
     # [START bigquery_query_natality_tutorial]
 
     dataset = bigquery.Dataset(dataset_id_full)
@@ -51,15 +51,13 @@ def run_natality_tutorial(override_values={}):
     # Create the new BigQuery dataset.
     dataset = client.create_dataset(dataset)
 
-    # In the new BigQuery dataset, create a reference to a new table for
-    # storing the query results.
-    table_ref = dataset.table("regression_input")
-
     # Configure the query job.
     job_config = bigquery.QueryJobConfig()
 
-    # Set the destination table to the table reference created above.
-    job_config.destination = table_ref
+    # Set the destination table to where you want to store query results.
+    # As of google-cloud-bigquery 1.11.0, a fully qualified table ID can be
+    # used in place of a TableReference.
+    job_config.destination = f"{dataset_id_full}.regression_input"
 
     # Set up a query in Standard SQL, which is the default for the BigQuery
     # Python client library.
