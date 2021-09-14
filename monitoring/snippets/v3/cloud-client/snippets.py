@@ -18,16 +18,15 @@ import pprint
 import time
 import uuid
 
-from google.api import label_pb2 as ga_label
-from google.api import metric_pb2 as ga_metric
-from google.cloud import monitoring_v3
-
-
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def create_metric_descriptor(project_id):
     # [START monitoring_create_metric]
+    from google.api import label_pb2 as ga_label
+    from google.api import metric_pb2 as ga_metric
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
     descriptor = ga_metric.MetricDescriptor()
@@ -51,6 +50,8 @@ def create_metric_descriptor(project_id):
 
 def delete_metric_descriptor(descriptor_name):
     # [START monitoring_delete_metric]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     client.delete_metric_descriptor(name=descriptor_name)
     print("Deleted metric descriptor {}.".format(descriptor_name))
@@ -59,6 +60,8 @@ def delete_metric_descriptor(descriptor_name):
 
 def write_time_series(project_id):
     # [START monitoring_write_timeseries]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
 
@@ -82,6 +85,8 @@ def write_time_series(project_id):
 
 def list_time_series(project_id):
     # [START monitoring_read_timeseries_simple]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
     interval = monitoring_v3.TimeInterval()
@@ -111,6 +116,8 @@ def list_time_series(project_id):
 
 def list_time_series_header(project_id):
     # [START monitoring_read_timeseries_fields]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
     now = time.time()
@@ -137,6 +144,8 @@ def list_time_series_header(project_id):
 
 def list_time_series_aggregate(project_id):
     # [START monitoring_read_timeseries_align]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
 
@@ -172,6 +181,8 @@ def list_time_series_aggregate(project_id):
 
 def list_time_series_reduce(project_id):
     # [START monitoring_read_timeseries_reduce]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
 
@@ -209,6 +220,8 @@ def list_time_series_reduce(project_id):
 
 def list_metric_descriptors(project_id):
     # [START monitoring_list_descriptors]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
     for descriptor in client.list_metric_descriptors(name=project_name):
@@ -218,6 +231,8 @@ def list_metric_descriptors(project_id):
 
 def list_monitored_resources(project_id):
     # [START monitoring_list_resources]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
     resource_descriptors = client.list_monitored_resource_descriptors(name=project_name)
@@ -228,6 +243,8 @@ def list_monitored_resources(project_id):
 
 def get_monitored_resource_descriptor(project_id, resource_type_name):
     # [START monitoring_get_resource]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     resource_path = (
         f"projects/{project_id}/monitoredResourceDescriptors/{resource_type_name}"
@@ -238,6 +255,8 @@ def get_monitored_resource_descriptor(project_id, resource_type_name):
 
 def get_metric_descriptor(metric_name):
     # [START monitoring_get_descriptor]
+    from google.cloud import monitoring_v3
+
     client = monitoring_v3.MetricServiceClient()
     descriptor = client.get_metric_descriptor(name=metric_name)
     pprint.pprint(descriptor)
