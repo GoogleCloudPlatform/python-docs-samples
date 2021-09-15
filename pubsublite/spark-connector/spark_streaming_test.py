@@ -23,6 +23,7 @@ from google.api_core.exceptions import NotFound
 from google.cloud import dataproc_v1, storage
 from google.cloud.pubsublite import AdminClient, Subscription, Topic
 from google.cloud.pubsublite.types import (
+    BacklogLocation,
     CloudRegion,
     CloudZone,
     SubscriptionPath,
@@ -98,7 +99,7 @@ def subscription(client: AdminClient) -> Generator[Subscription, None, None]:
     try:
         response = client.get_subscription(subscription.name)
     except NotFound:
-        response = client.create_subscription(subscription)
+        response = client.create_subscription(subscription, BacklogLocation.BEGINNING)
     yield response
     try:
         client.delete_subscription(response.name)
