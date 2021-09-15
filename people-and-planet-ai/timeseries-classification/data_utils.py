@@ -41,8 +41,8 @@ def with_fixed_time_steps(input_data: Dict[str, np.ndarray]) -> pd.DataFrame:
         .resample(TIME_STEP_INTERVAL, on="timestamp")
         .mean()
         .reset_index()
-        .interpolate()
         .assign(timestamp=lambda df: df["timestamp"].map(to_unix_time))
+        .interpolate()
     )
 
 
