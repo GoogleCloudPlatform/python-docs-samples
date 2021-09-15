@@ -34,20 +34,6 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 
-# [START composer_gke_create_cluster]
-# [START composer_gkeoperator_minconfig]
-# [START composer_gkeoperator_templateconfig]
-# [START composer_gkeoperator_affinity]
-# [START composer_gkeoperator_fullconfig]
-GCP_PROJECT_ID = "my-project-id"
-GCP_LOCATION = "us-west1-a"
-CLUSTER_NAME = "example-cluster"
-# [END composer_gkeoperator_minconfig]
-# [END composer_gkeoperator_templateconfig]
-# [END composer_gkeoperator_affinity]
-# [END composer_gkeoperator_fullconfig]
-CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
-# [END composer_gke_create_cluster]
 
 with models.DAG(
     "example_gcp_gke",
@@ -55,6 +41,21 @@ with models.DAG(
     start_date=days_ago(1),
     tags=['example'],
 ) as dag:
+
+    # [START composer_gke_create_cluster]
+    # [START composer_gkeoperator_minconfig]
+    # [START composer_gkeoperator_templateconfig]
+    # [START composer_gkeoperator_affinity]
+    # [START composer_gkeoperator_fullconfig]
+    GCP_PROJECT_ID = "my-project-id"
+    GCP_LOCATION = "us-west1-a"
+    CLUSTER_NAME = "example-cluster"
+    # [END composer_gkeoperator_minconfig]
+    # [END composer_gkeoperator_templateconfig]
+    # [END composer_gkeoperator_affinity]
+    # [END composer_gkeoperator_fullconfig]
+    CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
+    # [END composer_gke_create_cluster]
     # [START composer_gke_create_cluster]
     create_cluster = GKECreateClusterOperator(
         task_id="create_cluster",
