@@ -25,40 +25,22 @@ import os
 
 from airflow import models
 from airflow.kubernetes.secret import Secret
-from dependencies.kubernetes_engine_leah import (
+from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKECreateClusterOperator,
     GKEDeleteClusterOperator,
     GKEStartPodOperator,
 )
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-
-# from airflow.providers.google.cloud.operators.kubernetes_engine import (
-#     GKECreateClusterOperator,
-#     GKEDeleteClusterOperator,
-#     GKEStartPodOperator,
-# )
 from airflow.utils.dates import days_ago
 
 GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "leah-playground")
 GCP_LOCATION = os.environ.get("GCP_GKE_LOCATION", "us-west1-a")
-CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-2")
+CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-3")
 
 # [START howto_operator_gcp_gke_create_cluster_definition]
 CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
 # [END howto_operator_gcp_gke_create_cluster_definition]
-
-# # [START composer_kubernetespodoperator_secretobject]
-# secret_env = Secret(
-#     # Expose the secret as environment variable.
-#     deploy_type='env',
-#     # The name of the environment variable, since deploy_type is `env` rather
-#     # than `volume`.
-#     deploy_target='SQL_CONN',
-#     # Name of the Kubernetes Secret
-#     secret='airflow-secrets',
-#     # Key of a secret stored in this Secret object
-#     key='sql_alchemy_conn')
 
 with models.DAG(
     "example_gcp_gke",
@@ -74,33 +56,7 @@ with models.DAG(
         body=CLUSTER,
     )
     # [END composer_gke_create_cluster]
-    # def gcloud_call():
-    #     """Print the Airflow context and ds variable from the context."""
-    #     import subprocess
-    #     subprocess.run([
-    #         "gcloud",
-    #         "container", 
-    #         "clusters",
-    #         "get-credentials",
-    #         f"{CLUSTER_NAME}",
-    #         "--zone", 
-    #         f"{GCP_LOCATION}",
-    #         "--project",
-    #         f"{GCP_PROJECT_ID}"
-    #     ], check=True)
-    #     return 'Whatever you return gets printed in the logs'
 
-    # set_secret = PythonOperator(
-    #     task_id='set_secret',
-    #     python_callable=gcloud_call,
-    # )
-    # set_secret = BashOperator(
-    #     task_id = "set_secret",
-    #     # bash_command = f"gcloud --version && gcloud container clusters get-credentials {CLUSTER_NAME} --zone {GCP_LOCATION} --project {GCP_PROJECT_ID} && kubectl create secret generic airflow-secrets --from-literal sql_alchemy_conn=test_value",
-    #     bash_command = f"gcloud container clusters get-credentials {CLUSTER_NAME} --zone {GCP_LOCATION} --project {GCP_PROJECT_ID}",
-
-    #     env = {'KUBECONFIG': '/home/airflow/gcs/dags/composer_kube_config'}
-    # )
 
     # [START composer_gkeoperator_minconfig]
     kubernetes_min_pod = GKEStartPodOperator(
@@ -157,27 +113,7 @@ with models.DAG(
         # `my_value` is not set in the Airflow UI.
         env_vars={'MY_VALUE': '{{ var.value.my_value }}'})
     # [END composer_gkeoperator_templateconfig]
-    
-    # kubernetes_secret_vars_ex = GKEStartPodOperator(
-    #     task_id='ex-kube-secrets',
-    #     name='ex-kube-secrets',
-    #     project_id=GCP_PROJECT_ID,
-    #     location=GCP_LOCATION,
-    #     cluster_name=CLUSTER_NAME,
-    #     namespace='default',
-    #     image='ubuntu',
-    #     startup_timeout_seconds=300,
-    #     # The secrets to pass to Pod, the Pod will fail to create if the
-    #     # secrets you specify in a Secret object do not exist in Kubernetes.
-    #     secrets=[secret_env],
-
-    #     # env_vars allows you to specify environment variables for your
-    #     # container to use. env_vars is templated.
-    #     env_vars={})
-    #     # env_vars={
-    #     #     'EXAMPLE_VAR': '/example/value',
-    #     #     'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
-    # # [END composer_kubernetespodoperator_secretconfig]
+   
     # [START composer_gkeoperator_affinity]
     kubernetes_affinity_ex = GKEStartPodOperator(
         task_id='ex-pod-affinity',
@@ -288,11 +224,10 @@ with models.DAG(
         location=GCP_LOCATION,
     )
     # [END composer_gkeoperator_delete_cluster]
-    # kubernetes_min_pod
-    # create_cluster >> kubernetes_min_pod >> delete_cluster
-    # create_cluster >> kubernetes_full_pod >> delete_cluster
-    # create_cluster >> kubernetes_affinity_ex >> delete_cluster
-    # create_cluster >> set_secret >> kubernetes_secret_vars_ex >> delete_cluster
-    # create_cluster >> kubenetes_template_ex >> delete_cluster
+
+    create_cluster >> kubernetes_min_pod >> delete_cluster
+    create_cluster >> kubernetes_full_pod >> delete_cluster
+    create_cluster >> kubernetes_affinity_ex >> delete_cluster
+    create_cluster >> kubenetes_template_ex >> delete_cluster
 
 # [END composer_gkeoperator]

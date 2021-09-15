@@ -1,3 +1,5 @@
-apache-airflow[apache.beam,google]==2.1.2
+apache-airflow==2.1.2
+apache-airflow-providers-apache-beam==3.0.0
+apache-airflow-providers-google==5.1.0
 apache-airflow-providers-cncf-kubernetes==2.0.2
 scipy==1.4.1; python_version > '3.0'
