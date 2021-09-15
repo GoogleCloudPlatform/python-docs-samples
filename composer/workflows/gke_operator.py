@@ -34,13 +34,20 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 
-GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "leah-playground")
-GCP_LOCATION = os.environ.get("GCP_GKE_LOCATION", "us-west1-a")
-CLUSTER_NAME = os.environ.get("GCP_GKE_CLUSTER_NAME", "leah-playground-3")
-
-# [START howto_operator_gcp_gke_create_cluster_definition]
+# [START composer_gke_create_cluster]
+# [START composer_gkeoperator_minconfig]
+# [START composer_gkeoperator_templateconfig]
+# [START composer_gkeoperator_affinity]
+# [START composer_gkeoperator_fullconfig]
+GCP_PROJECT_ID = "my-project-id"
+GCP_LOCATION = "us-west1-a"
+CLUSTER_NAME = "example-cluster"
+# [END composer_gkeoperator_minconfig]
+# [END composer_gkeoperator_templateconfig]
+# [END composer_gkeoperator_affinity]
+# [END composer_gkeoperator_fullconfig]
 CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
-# [END howto_operator_gcp_gke_create_cluster_definition]
+# [END composer_gke_create_cluster]
 
 with models.DAG(
     "example_gcp_gke",
