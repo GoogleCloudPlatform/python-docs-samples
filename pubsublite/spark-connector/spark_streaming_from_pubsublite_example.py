@@ -47,7 +47,7 @@ def spark_streaming_from_pubsublite(
         .start()
     )
 
-    # Wait at least 60 seconds to start receiving messages.
+    # Wait 120 seconds (must be >= 60 seconds) to start receiving messages.
     query.awaitTermination(120)
     query.stop()
     # [END pubsublite_spark_streaming_from_pubsublite]

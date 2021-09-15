@@ -1,8 +1,8 @@
 # Using Spark SQL Streaming with Pub/Sub Lite
 
-The samples in this directory show how to read messages from and write messages to Pub/Sub Lite from an [Apache Spark] cluster using the [Pub/Sub Lite Spark Connector].
+The samples in this directory show how to read messages from and write messages to Pub/Sub Lite from an [Apache Spark] cluster created with [Cloud Dataproc] using the [Pub/Sub Lite Spark Connector].
 
-Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag. Alternatively, you can get this JAR from this [public Cloud Storage location](gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar).
+Get the connector's uber jar from this [public Cloud Storage location](gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar). Alternatively, visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag. 
 
 ## Before you begin
 
@@ -41,7 +41,7 @@ Visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a
 
    gcloud pubsub lite-topics create $TOPIC_ID \
      --location=$PUBSUBLITE_LOCATION \
-     --partitions=1 \
+     --partitions=2 \
      --per-partition-bytes=30GiB
 
    gcloud pubsub lite-subscriptions create $SUBSCRIPTION_ID \
@@ -156,7 +156,7 @@ gcloud dataproc jobs submit pyspark spark_streaming_from_pubsublite_example.py \
     -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $SUBSCRIPTION_ID
 ```
 
-Here is an example output:
+Here is an example output (TODO: update attributes field output with the next release of the connector):
 
 ```none
 +--------------------+---------+------+---+----+--------------------+--------------------+----------+
@@ -169,6 +169,7 @@ Here is an example output:
 
 [Apache Spark]: https://spark.apache.org/
 [Pub/Sub Lite Spark Connector]: https://github.com/googleapis/java-pubsublite-spark
+[Cloud Dataproc]: https://cloud.google.com/dataproc/docs/
 [Cloud Console for Dataproc]: https://console.cloud.google.com/dataproc/
 
 [Cloud SDK]: https://cloud.google.com/sdk/docs/

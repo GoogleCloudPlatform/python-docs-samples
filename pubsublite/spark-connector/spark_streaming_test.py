@@ -39,6 +39,7 @@ BUCKET = os.environ["PUBSUBLITE_BUCKET_ID"]
 UUID = uuid.uuid4().hex
 TOPIC_ID = "spark-streaming-topic-" + UUID
 SUBSCRIPTION_ID = "spark-streaming-subscription-" + UUID
+PERMANENT_TOPIC_ID = "spark-streaming-topic"
 CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
 
 
@@ -51,16 +52,16 @@ def client() -> Generator[AdminClient, None, None]:
 def topic(client: AdminClient) -> Generator[Topic, None, None]:
     location = CloudZone(CloudRegion(CLOUD_REGION), ZONE_ID)
     topic_path = TopicPath(PROJECT_NUMBER, location, TOPIC_ID)
+
+    # A topic of 2 partitions, each of size 30 GiB, publish throughput
+    # capacity per partition to 4 MiB/s, and subscribe throughput
+    # capacity per partition to 8 MiB/s.
     topic = Topic(
         name=str(topic_path),
         partition_config=Topic.PartitionConfig(
-            # A topic must have at least one partition.
-            count=1,
+            count=2,
             capacity=Topic.PartitionConfig.Capacity(
-                # Set publish throughput capacity per partition to 4 MiB/s.
-                publish_mib_per_sec=4,
-                # Set subscribe throughput capacity per partition to 4 MiB/s.
-                subscribe_mib_per_sec=8,
+                publish_mib_per_sec=4, subscribe_mib_per_sec=8,
             ),
         ),
         retention_config=Topic.RetentionConfig(
@@ -82,15 +83,13 @@ def topic(client: AdminClient) -> Generator[Topic, None, None]:
 
 
 @pytest.fixture(scope="module")
-def subscription(
-    client: AdminClient, topic: Topic
-) -> Generator[Subscription, None, None]:
+def subscription(client: AdminClient) -> Generator[Subscription, None, None]:
     location = CloudZone(CloudRegion(CLOUD_REGION), ZONE_ID)
     subscription_path = SubscriptionPath(PROJECT_NUMBER, location, SUBSCRIPTION_ID)
 
     subscription = Subscription(
         name=str(subscription_path),
-        topic=topic.name,
+        topic=f"projects/{PROJECT_NUMBER}/locations/{location}/topics/{PERMANENT_TOPIC_ID}",
         delivery_config=Subscription.DeliveryConfig(
             delivery_requirement=Subscription.DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY,
         ),
@@ -156,15 +155,10 @@ def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
         .download_as_text()
     )
 
-    assert (
-        "INFO com.google.cloud.pubsublite.spark.PslStreamWriter: Committed 1 messages for epochId"
-        in output
-    )
+    assert "Committed 1 messages for epochId" in output
 
 
-def test_spark_streaming_from_pubsublite(
-    topic: Topic, subscription: Subscription
-) -> None:
+def test_spark_streaming_from_pubsublite(subscription: Subscription) -> None:
     from google.cloud.dataproc_v1.types import LoggingConfig
 
     # Create a Dataproc job client.
@@ -207,3 +201,12 @@ def test_spark_streaming_from_pubsublite(
     )
 
     assert "Batch: 0\n" in output
+    assert ("+--------------------+---------+------+----+------+"
+    + "--------------------+--------------------+----------+\n"
+    + "|        subscription|partition|offset| key|  data"
+    + "|   publish_timestamp|     event_timestamp|attributes|\n"
+    + "+--------------------+---------+------+----+------+"
+    + "--------------------+--------------------+----------+\n"
+    + "|projects/10126164...|        0|     0|[34]|353534"
+    + "|2021-09-15 21:55:...|2021-09-15 00:04:...|        []|\n"
+    in output)
