@@ -30,6 +30,7 @@ from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKEDeleteClusterOperator,
     GKEStartPodOperator,
 )
+from airflow.operators.bash_operator import BashOperator
 
 from airflow.utils.dates import days_ago
 
@@ -53,7 +54,7 @@ with models.DAG(
     # [END composer_gkeoperator_templateconfig_airflow_1]
     # [END composer_gkeoperator_affinity_airflow_1]
     # [END composer_gkeoperator_fullconfig_airflow_1]
-    CLUSTER = {"name": CLUSTER_NAME, "node_pools": [{"name": "pool-0", "initial_node_count": 1}, {"name": "pool-1", "initial_node_count": 1}]}
+    CLUSTER = {"name": CLUSTER_NAME, "initial_node_count": 1}
     # [END composer_gke_create_cluster_airflow_1]
     # [START composer_gke_create_cluster_airflow_1]
     create_cluster = GKECreateClusterOperator(
@@ -62,7 +63,13 @@ with models.DAG(
         location=GCP_LOCATION,
         body=CLUSTER,
     )
+
+    create_node_pools = BashOperator(
+        task_id='create_node_pools',
+        bash_command=f'gcloud container node-pools create pool-0 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {GCP_LOCATION} && gcloud container node-pools create pool-1 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {GCP_LOCATION}'
+    )
     # [END composer_gke_create_cluster_airflow_1]
+
 
 
     # [START composer_gkeoperator_minconfig_airflow_1]
@@ -232,9 +239,9 @@ with models.DAG(
     )
     # [END composer_gkeoperator_delete_cluster_airflow_1]
 
-    create_cluster >> kubernetes_min_pod >> delete_cluster
-    create_cluster >> kubernetes_full_pod >> delete_cluster
-    create_cluster >> kubernetes_affinity_ex >> delete_cluster
-    create_cluster >> kubenetes_template_ex >> delete_cluster
+    create_cluster >> create_node_pools >> kubernetes_min_pod >> delete_cluster
+    create_cluster >> create_node_pools >> kubernetes_full_pod >> delete_cluster
+    create_cluster >> create_node_pools >> kubernetes_affinity_ex >> delete_cluster
+    create_cluster >> create_node_pools >> kubenetes_template_ex >> delete_cluster
 
 # [END composer_gkeoperator_airflow_1]
