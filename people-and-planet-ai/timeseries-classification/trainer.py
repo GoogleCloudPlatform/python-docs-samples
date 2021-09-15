@@ -240,8 +240,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
-    parser.add_argument("--train-steps", type=int, required=True)
-    parser.add_argument("--eval-steps", type=int, required=True)
+    parser.add_argument("--train-epochs", type=int, required=True)
     parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument(
         "--model-dir",
@@ -261,8 +260,7 @@ if __name__ == "__main__":
     run(
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
-        train_steps=args.train_steps,
-        eval_steps=args.eval_steps,
+        train_epochs=args.train_epochs,
         batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
