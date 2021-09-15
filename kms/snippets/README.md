@@ -47,7 +47,7 @@ View the [contributing guidelines][contrib_guide], the [Python style guide][py_s
 [enable_billing]:https://cloud.google.com/apis/docs/getting-started#enabling_billing
 [client_library_python]: https://googlecloudplatform.github.io/google-cloud-python/
 [issues]: https://github.com/GoogleCloudPlatform/google-cloud-python/issues
-[contrib_guide]: https://github.com/googleapis/google-cloud-python/blob/master/CONTRIBUTING.rst
+[contrib_guide]: https://github.com/googleapis/google-cloud-python/blob/main/CONTRIBUTING.rst
 [py_style]: http://google.github.io/styleguide/pyguide.html
 [cloud_sdk]: https://cloud.google.com/sdk/docs
 [gcloud_shell]: https://cloud.google.com/shell/docs
