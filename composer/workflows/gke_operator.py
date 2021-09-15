@@ -30,8 +30,7 @@ from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKEDeleteClusterOperator,
     GKEStartPodOperator,
 )
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+
 from airflow.utils.dates import days_ago
 
 
