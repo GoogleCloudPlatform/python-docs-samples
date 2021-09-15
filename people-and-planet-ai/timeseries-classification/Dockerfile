@@ -23,6 +23,7 @@ WORKDIR /app
 # Copy the pipeline source files and the requirements file.
 COPY *.py ./
 COPY requirements.txt ./
+COPY constraints.txt ./
 
 # Install Python 3 and other required dependencies.
 RUN apt-get update \
@@ -33,7 +34,7 @@ RUN apt-get update \
     # Install the pipeline requirements and check that there are no conflicts.
     # Since the image already has all the dependencies installed,
     # there's no need to run with the --requirements_file option.
-    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir -r requirements.txt -c constraints.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
