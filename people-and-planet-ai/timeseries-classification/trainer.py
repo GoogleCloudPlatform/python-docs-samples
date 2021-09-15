@@ -19,7 +19,6 @@ from typing import Any, Dict, Tuple
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.layers.experimental import preprocessing
 
 
 INPUTS_SPEC = {
@@ -123,7 +122,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
     }
 
     def normalize(name: str) -> keras.layers.Layer:
-        layer = preprocessing.Normalization(name=f"{name}_normalized")
+        layer = keras.layers.Normalization(name=f"{name}_normalized")
         layer.adapt(train_dataset.map(lambda inputs, outputs: inputs[name]))
         return layer(input_layers[name])
 
