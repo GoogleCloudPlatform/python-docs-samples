@@ -243,7 +243,7 @@ if __name__ == "__main__":
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
     parser.add_argument("--train-epochs", type=int, required=True)
-    parser.add_argument("--eval-steps", type=int, default=1000)
+    parser.add_argument("--eval-steps", type=int, required=True)
     parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument(
         "--model-dir",
