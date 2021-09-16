@@ -21,6 +21,7 @@ def spark_streaming_from_pubsublite(
     # [START pubsublite_spark_streaming_from_pubsublite]
     from pyspark.sql import SparkSession
     from pyspark.sql.types import StringType
+    import uuid
 
     # TODO(developer):
     # project_number = 11223344556677
