@@ -131,8 +131,7 @@ with models.DAG(
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
         env_vars={
-            'EXAMPLE_VAR': '/example/value',
-            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
+            'EXAMPLE_VAR': '/example/value'})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
     kubernetes_affinity_ex = KubernetesPodOperator(
