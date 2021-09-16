@@ -26,7 +26,7 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.1"
+SCRIPT_VERSION = "1.2"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
@@ -36,7 +36,7 @@ EXPORT
   python3 composer_db_transfer.py export \
     --project [PROJECT NAME] \
     --environment [ENVIRONMENT NAME] \
-    --location [REGION]
+    --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE - TO BE CREATED]
 
   CSV files with exported database are stored as
@@ -60,7 +60,7 @@ IMPORT
   python3 composer_db_transfer.py import \
     --project [PROJECT NAME] \
     --environment [ENVIRONMENT NAME] \
-    --location [REGION]
+    --location [REGION] \
     --fernet-key-file [PATH TO FERNET KEY FILE FROM SOURCE ENVIRONMENT]
 
   CSV files that should be imported are expected to be stored as
@@ -71,6 +71,10 @@ IMPORT
   `fernet-key-file` parameter specifies path to the fernet key file of the
   source environment on the machine executing the script. It is created during
   export phase.
+
+  Additional --use-private-gke-endpoint option can be used to access
+  environment's GKE cluster through internal endpoint. It might be useful for
+  private IP environments.
 
 TROUBLESHOOTING
 
@@ -159,10 +163,11 @@ class DatabaseUtils:
         Returned expression transforms nullable column into either its value
         (if not null) or DatabaseUtils.null_string (if null).
         This is necessary to process exported columns as MySQL exports nulls as
-        opening double-quote and capital N ("N), wchich breaks CSV file structure.
-        Null can not be transformed into empty string here, because during import
-        from CSV PostgreSQL differentiates between quoted empty string (translated
-        to empty string) and unquoted empty string (translated to null).
+        opening double-quote and capital N ("N), wchich breaks CSV file
+        structure. Null can not be transformed into empty string here, because
+        during import from CSV PostgreSQL differentiates between quoted empty
+        string (translated to empty string) and unquoted empty string
+        (translated to null).
 
         Args:
           column: name of the column
@@ -2753,7 +2758,10 @@ class EnvironmentUtils:
         return json.loads(environment_json)
 
     @staticmethod
-    def get_gke_credentials(gke_id: str) -> None:
+    def get_gke_credentials(
+        gke_id: str,
+        use_private_gke_endpoint: bool,
+    ) -> None:
         """Gets credentials of a given GKE cluster."""
         items = gke_id.split("/")
         if (
@@ -2774,6 +2782,8 @@ class EnvironmentUtils:
             "--zone" if items[2] == "zones" else "--region",
             items[3],
         ]
+        if use_private_gke_endpoint:
+            shell_command.append("--internal-ip")
         Command.run_shell_command(shell_command)
 
     @staticmethod
@@ -2948,8 +2958,13 @@ class DatabasePorter:
 
     AIRFLOW_VERSION_RE = re.compile("composer-.*-airflow-([0-9]+).([0-9]+).([0-9]+).*")
 
-    def __init__(self: typing.Any, expected_airflow_database_version: str) -> None:
+    def __init__(
+        self: typing.Any,
+        expected_airflow_database_version: str,
+        use_private_gke_endpoint: bool,
+    ) -> None:
         self._expected_airflow_database_version = expected_airflow_database_version
+        self._use_private_gke_endpoint = use_private_gke_endpoint
 
     def _check_environment(self: typing.Any) -> None:
         """Gathers information about the Composer environment."""
@@ -3007,7 +3022,10 @@ class DatabasePorter:
         logger.info("*** Getting credentials to GKE cluster...")
         self._kubeconfig_file_name = f"kubeconfig-{self.unique_id}"
         os.environ["KUBECONFIG"] = self._kubeconfig_file_name
-        EnvironmentUtils.get_gke_credentials(self.gke_id)
+        EnvironmentUtils.get_gke_credentials(
+            self.gke_id,
+            self._use_private_gke_endpoint,
+        )
 
     def _remove_temporary_kubeconfig(self: typing.Any) -> None:
         """Removes temporary kubeconfig file."""
@@ -3051,49 +3069,74 @@ class DatabasePorter:
         ) = EnvironmentUtils.get_namespace_and_name_from_pod(pod_desc)
         self.worker_pod_desc = pod_desc
 
+    def _get_airflow_monitoring_container_description(
+        self: typing.Any,
+        monitoring_pod_description: typing.Dict[typing.Any, typing.Any],
+    ) -> typing.Dict[typing.Any, typing.Any]:
+        """Finds airflow-monitoring container in monitoring pod description."""
+        for container in monitoring_pod_description["spec"]["containers"]:
+            if container["name"] == "airflow-monitoring":
+                return container
+        raise Exception("airflow-monitoring container could not be found.")
+
+    def _get_environment_variable_from_container_description(
+        self: typing.Any,
+        variable_name: str,
+        container_description: typing.Dict[typing.Any, typing.Any],
+    ) -> str:
+        """Reads environment variable from monitoring"""
+        for variable in container_description["env"]:
+            if variable["name"] == variable_name:
+                logger.info(
+                    'Fetch environment variable: %s = "%s"',
+                    variable_name,
+                    variable["value"],
+                )
+                return variable["value"]
+        raise Exception(
+            f"Environment variable {variable} could not be found in the container."
+        )
+
     def _read_environment_variables_from_monitoring_pod(self: typing.Any) -> None:
         """Reads relevant environment variables from airflow-monitoring."""
         logger.info("*** Reading environment variables from airflow-monitoring pod...")
         logger.info("Finding existing monitoring pod...")
-        pod_desc = EnvironmentUtils.get_pod_with_label(
+        monitoring_pod_description = EnvironmentUtils.get_pod_with_label(
             self.pods_config, "airflow-monitoring"
         )
-        (
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-        ) = EnvironmentUtils.get_namespace_and_name_from_pod(pod_desc)
-        self.airflow_database_version = (
-            EnvironmentUtils.read_env_variable_from_container(
-                monitoring_pod_namespace,
-                monitoring_pod_name,
-                "airflow-monitoring",
-                "AIRFLOW_DATABASE_VERSION",
+        monitoring_container_description = (
+            self._get_airflow_monitoring_container_description(
+                monitoring_pod_description
             )
         )
-        self.sql_instance_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "SQL_INSTANCE_NAME",
-        ).split(":")[1]
-        self.sql_database = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "SQL_DATABASE",
+        self.airflow_database_version = (
+            self._get_environment_variable_from_container_description(
+                "AIRFLOW_DATABASE_VERSION",
+                monitoring_container_description,
+            )
         )
-        self.gcs_bucket_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "GCS_BUCKET",
+        self.sql_instance_name = (
+            self._get_environment_variable_from_container_description(
+                "SQL_INSTANCE_NAME",
+                monitoring_container_description,
+            ).split(":")[1]
+        )
+        self.sql_database = self._get_environment_variable_from_container_description(
+            "SQL_DATABASE",
+            monitoring_container_description,
+        )
+        self.gcs_bucket_name = (
+            self._get_environment_variable_from_container_description(
+                "GCS_BUCKET",
+                monitoring_container_description,
+            )
         )
         self.cp_bucket_name = self.gcs_bucket_name
-        self.tenant_project_name = EnvironmentUtils.read_env_variable_from_container(
-            monitoring_pod_namespace,
-            monitoring_pod_name,
-            "airflow-monitoring",
-            "TENANT_PROJECT",
+        self.tenant_project_name = (
+            self._get_environment_variable_from_container_description(
+                "TENANT_PROJECT",
+                monitoring_container_description,
+            )
         )
 
     def _read_fernet_key(self: typing.Any) -> None:
@@ -3179,6 +3222,7 @@ class DatabaseImporter(DatabasePorter):
     DATABASE_CREATION_JOB_IMAGE_VERSION = "1.10.14"
     DATABASE_CREATION_JOB_IMAGE_TAG = "cloud_composer_service_2021-03-07-RC1"
     TEMPORARY_DATABASE_NAME = "temporary-database"
+    SQL_PROXY_PORT = 3306
 
     def __init__(
         self: typing.Any,
@@ -3186,8 +3230,12 @@ class DatabaseImporter(DatabasePorter):
         environment_name: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
-        super().__init__(DatabaseImporter.EXPECTED_AIRFLOW_DATABASE_VERSION)
+        super().__init__(
+            DatabaseImporter.EXPECTED_AIRFLOW_DATABASE_VERSION,
+            use_private_gke_endpoint,
+        )
         self.project_name = project_name
         self.environment_name = environment_name
         self.location = location
@@ -3248,7 +3296,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_pod_name,
             self.worker_container_name,
             "psql postgres://root:${SQL_PASSWORD}"
-            f"@{self.sql_proxy}/postgres -p 3306 -t -c "
+            f"@{self.sql_proxy}/postgres -p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
             f"'drop database \"{database_name}\" WITH (FORCE);'",
             log_command=False,
             log_error=False,
@@ -3276,72 +3324,6 @@ class DatabaseImporter(DatabasePorter):
             self.tenant_project_name,
             DatabaseImporter.TEMPORARY_DATABASE_NAME,
         )
-
-    def _ar_multiregion_from_location(self: typing.Any, location: str) -> str:
-        if location in {"eu", "us", "asia"}:
-            return location
-        for prefix, multiregion in [
-            ("us-", "us"),
-            ("europe-", "eu"),
-            ("asia-", "asia"),
-            ("northamerica-", "us"),
-            ("southamerica-", "us"),
-            ("australia-", "asia"),
-        ]:
-            if location.startswith(prefix):
-                return multiregion
-        return "us"
-
-    def _get_image_for_db_creation_job(self: typing.Any) -> None:
-        """Gets suitable image to generate a new database with 1.10.14 schema."""
-        logger.info("Checking airflow-worker image in existing worker pod...")
-        ar_path = re.compile(
-            "([a-z0-9-]+)-docker.pkg.dev/.*(?:airflow-worker-scheduler-|composer-images-).*"
-        )
-        gcr_path = re.compile(
-            "([a-z.]*gcr.io)/.*(?:airflow-worker-scheduler-|composer-images-).*"
-        )
-        for container in self.worker_pod_desc["spec"]["containers"]:
-            container_image = container["image"]
-            logger.info("  Checking %s...", container_image)
-            if ar_path.match(container_image):
-                repository_location = ar_path.match(container_image).groups()[0]
-                repository_multiregion = self._ar_multiregion_from_location(
-                    repository_location
-                )
-                repository = f"{repository_multiregion}-docker.pkg.dev"
-                image_version = (
-                    DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION.replace(
-                        ".", "-"
-                    )
-                )
-                new_image = f"airflow-worker-scheduler-{image_version}"
-                image = (
-                    f"{repository}/cloud-airflow-releaser/{new_image}"
-                    f"/{new_image}:"
-                    f"{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
-                )
-                break
-            elif gcr_path.match(container_image):
-                repository = gcr_path.match(container_image).groups()[0]
-                new_image = (
-                    "airflow-worker-scheduler"
-                    f"-{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_VERSION}"
-                )
-                image = (
-                    f"{repository}/cloud-airflow-releaser/{new_image}"
-                    f":{DatabaseImporter.DATABASE_CREATION_JOB_IMAGE_TAG}"
-                )
-                break
-        else:
-            raise Exception(
-                "Could not find any Airflow worker container in worker pod."
-            )
-        logger.info(
-            "The following image will be used for database " "initialization: %s.",
-            image,
-        )
-        return image
 
     def _write_empty_af_1_10_14_psql_dump_to_a_local_file(self: typing.Any) -> None:
         """Writes an empty Airflow 1.10.14 database to a local file."""
@@ -3456,7 +3438,7 @@ class DatabaseImporter(DatabasePorter):
         command = (
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://"
             "${SQL_USER}:${SQL_PASSWORD}@"
-            f"{self.sql_proxy}:3306"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
             f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
             "export AIRFLOW__CORE__FERNET_KEY="
             f"{self.fernet_key},{self.fernet_key_from_source_environment} "
@@ -3480,7 +3462,8 @@ class DatabaseImporter(DatabasePorter):
                 key = columns[0]
                 command = (
                     "psql postgres://root:${SQL_PASSWORD}@"
-                    f"{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} -p 3306 -t -c "
+                    f"{self.sql_proxy}/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+                    f"-p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
                     f"\"SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('{table}', "
                     f"'{key}')), (SELECT (MAX({key}) + 1) FROM {table}), FALSE);\""
                 )
@@ -3492,15 +3475,54 @@ class DatabaseImporter(DatabasePorter):
                 )
                 logger.info(output)
 
+    def _update_airflow_db_connection(self: typing.Any) -> None:
+        """Updates airflow_db entry in connection table."""
+        export_db_connection_string = (
+            "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME}"
+        )
+
+        logger.info("Removing airflow_db connection from connections table...")
+        try:
+            EnvironmentUtils.execute_command_in_a_pod(
+                self.worker_pod_namespace,
+                self.worker_pod_name,
+                self.worker_container_name,
+                f"{export_db_connection_string} && "
+                "airflow connections delete airflow_db",
+            )
+        except Command.CommandExecutionError:
+            logger.info(
+                "airflow_db connection could not be deleted. "
+                "Proceeding anyways (it could not exist and this is not a "
+                "problem)..."
+            )
+
+        logger.info("Creating new airflow_db connection...")
+        EnvironmentUtils.execute_command_in_a_pod(
+            self.worker_pod_namespace,
+            self.worker_pod_name,
+            self.worker_container_name,
+            f"{export_db_connection_string} && "
+            "airflow connections add airflow_db "
+            "--conn-type postgres "
+            "--conn-login $SQL_USER "
+            "--conn-password $SQL_PASSWORD "
+            f"--conn-host {self.sql_proxy} "
+            f"--conn-port {DatabaseImporter.SQL_PROXY_PORT} "
+            f"--conn-schema {self.sql_database}",
+        )
+
     def _apply_migrations(self: typing.Any) -> None:
         """Applies database migrations (1.10.15->2.0.1) to the new database."""
         logger.info("*** Applying migrations...")
         command = (
-            "export "
-            "AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
-            f"{self.sql_proxy}:3306/{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
-            "&& airflow db upgrade"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} && airflow db upgrade"
         )
         output = EnvironmentUtils.execute_command_in_a_pod(
             self.worker_pod_namespace,
@@ -3548,7 +3570,7 @@ class DatabaseImporter(DatabasePorter):
             self.worker_pod_name,
             self.worker_container_name,
             "psql postgres://root:${SQL_PASSWORD}"
-            f"@{self.sql_proxy}/postgres -p 3306 -t -c "
+            f"@{self.sql_proxy}/postgres -p {DatabaseImporter.SQL_PROXY_PORT} -t -c "
             f'\'ALTER DATABASE "{DatabaseImporter.TEMPORARY_DATABASE_NAME}" '
             f'RENAME TO "{self.sql_database}";\'',
         )
@@ -3571,6 +3593,7 @@ class DatabaseImporter(DatabasePorter):
         self._fix_sequence_numbers_in_db()
         self._apply_migrations()
         self._rotate_fernet_key()
+        self._update_airflow_db_connection()
         self._delete_old_database()
         self._import_dags_plugins_and_data()
         self._switch_database_to_the_new_one()
@@ -3599,8 +3622,12 @@ python3 composer_db_transfer.py import ...
         environment_name: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
-        super().__init__(DatabaseExporter.EXPECTED_AIRFLOW_DATABASE_VERSION)
+        super().__init__(
+            DatabaseExporter.EXPECTED_AIRFLOW_DATABASE_VERSION,
+            use_private_gke_endpoint,
+        )
         self.project_name = project_name
         self.environment_name = environment_name
         self.location = location
@@ -3738,21 +3765,37 @@ class ComposerDatabaseMigration:
 
     @staticmethod
     def export_database(
-        project_name: str, environment_name: str, location: str, fernet_key_file: str
+        project_name: str,
+        environment_name: str,
+        location: str,
+        fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Exports Airflow database to the bucket in customer's project."""
         database_importer = DatabaseExporter(
-            project_name, environment_name, location, fernet_key_file
+            project_name,
+            environment_name,
+            location,
+            fernet_key_file,
+            use_private_gke_endpoint,
         )
         database_importer.export_database()
 
     @staticmethod
     def import_database(
-        project_name: str, environment_name: str, location: str, fernet_key_file: str
+        project_name: str,
+        environment_name: str,
+        location: str,
+        fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Imports Airflow database from the bucket in customer's project."""
         database_importer = DatabaseImporter(
-            project_name, environment_name, location, fernet_key_file
+            project_name,
+            environment_name,
+            location,
+            fernet_key_file,
+            use_private_gke_endpoint,
         )
         database_importer.import_database()
 
@@ -3763,16 +3806,25 @@ class ComposerDatabaseMigration:
         environment: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         """Triggers selected operation (import/export)."""
         logger.info("Database migration script for Cloud Composer")
         if operation == "export":
             ComposerDatabaseMigration.export_database(
-                project, environment, location, fernet_key_file
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
         elif operation == "import":
             ComposerDatabaseMigration.import_database(
-                project, environment, location, fernet_key_file
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
         else:
             logger.error("Operation %s is not supported.", operation)
@@ -3784,11 +3836,17 @@ class ComposerDatabaseMigration:
         environment: str,
         location: str,
         fernet_key_file: str,
+        use_private_gke_endpoint: bool,
     ) -> None:
         logger.info("Database transfer tool for Cloud Composer v.%s", SCRIPT_VERSION)
         try:
             ComposerDatabaseMigration.trigger_operation(
-                operation, project, environment, location, fernet_key_file
+                operation,
+                project,
+                environment,
+                location,
+                fernet_key_file,
+                use_private_gke_endpoint,
             )
             exit(0)
         except Exception as e:  # pylint: disable=broad-except
@@ -3816,6 +3874,9 @@ def parse_arguments() -> typing.Dict[typing.Any, typing.Any]:
     argument_parser.add_argument("--environment", type=str, required=True)
     argument_parser.add_argument("--location", type=str, required=True)
     argument_parser.add_argument("--fernet-key-file", type=str, required=True)
+    argument_parser.add_argument(
+        "--use-private-gke-endpoint", required=False, action="store_true"
+    )
     return argument_parser.parse_args()
 
 
@@ -3827,4 +3888,5 @@ if __name__ == "__main__":
         args.environment,
         args.location,
         args.fernet_key_file,
+        args.use_private_gke_endpoint,
     )
