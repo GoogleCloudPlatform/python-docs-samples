@@ -132,7 +132,7 @@ with models.DAG(
         # container to use. env_vars is templated.
         env_vars={
             'EXAMPLE_VAR': '/example/value',
-            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
+            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json '})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
     kubernetes_affinity_ex = KubernetesPodOperator(
