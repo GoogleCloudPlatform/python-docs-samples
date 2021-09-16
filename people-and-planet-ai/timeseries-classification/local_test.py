@@ -102,6 +102,7 @@ def test_e2e_local() -> None:
             tensorboard_dir=tensorboard_dir,
             checkpoint_dir=checkpoint_dir,
             train_epochs=10,
+            eval_steps=100,
             batch_size=32,
         )
         assert os.listdir(model_dir), "no model files found"
