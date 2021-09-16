@@ -1,1 +1,1 @@
-google-cloud-dialogflow==2.7.1
+google-cloud-dialogflow==2.8.0
