@@ -182,6 +182,7 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     train_epochs: int,
+    eval_steps: int,
     batch_size: int,
     model_dir: str,
     checkpoint_dir: str,
@@ -216,7 +217,8 @@ def run(
     model.fit(
         train_dataset,
         epochs=train_epochs,
-        validation_data=eval_dataset,
+        validation_data=eval_dataset.repeat(),
+        validation_steps=eval_steps,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
@@ -236,10 +238,12 @@ def run(
 if __name__ == "__main__":
     import argparse
 
+    # TODO: Have either: hardcoded default values if possible, or have everything required
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-data-dir", required=True)
     parser.add_argument("--eval-data-dir", required=True)
     parser.add_argument("--train-epochs", type=int, required=True)
+    parser.add_argument("--eval-steps", type=int, default=1000)
     parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument(
         "--model-dir",
@@ -260,6 +264,7 @@ if __name__ == "__main__":
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
         train_epochs=args.train_epochs,
+        eval_steps=args.eval_steps,
         batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
