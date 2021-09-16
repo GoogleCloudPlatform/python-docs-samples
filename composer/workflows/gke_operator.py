@@ -14,11 +14,9 @@
 
 
 # [START composer_gkeoperator]
-import os
 
 
 from airflow import models
-from airflow.kubernetes.secret import Secret
 from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKECreateClusterOperator,
     GKEDeleteClusterOperator,
