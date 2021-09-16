@@ -99,6 +99,7 @@ def subscription(client: AdminClient) -> Generator[Subscription, None, None]:
     try:
         response = client.get_subscription(subscription.name)
     except NotFound:
+        # This subscription will start receiving the first message in the topic.
         response = client.create_subscription(subscription, BacklogLocation.BEGINNING)
     yield response
     try:
@@ -136,12 +137,21 @@ def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
-            "args": [PROJECT_NUMBER, CLOUD_REGION + "-" + ZONE_ID, TOPIC_ID],
+            "args": [
+                f"--project_number={PROJECT_NUMBER}",
+                f"--location={CLOUD_REGION}-{ZONE_ID}",
+                f"--topic_id={TOPIC_ID}",
+            ],
         },
     }
 
     operation = job_client.submit_job_as_operation(
-        request={"project_id": PROJECT_ID, "region": CLOUD_REGION, "job": job}
+        request={
+            "project_id": PROJECT_ID,
+            "region": CLOUD_REGION,
+            "job": job,
+            "request_id": "write-" + UUID,
+        }
     )
     response = operation.result()
 
@@ -181,12 +191,21 @@ def test_spark_streaming_from_pubsublite(subscription: Subscription) -> None:
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
-            "args": [PROJECT_NUMBER, CLOUD_REGION + "-" + ZONE_ID, SUBSCRIPTION_ID],
+            "args": [
+                f"--project_number={PROJECT_NUMBER}",
+                f"--location={CLOUD_REGION}-{ZONE_ID}",
+                f"--subscription_id={SUBSCRIPTION_ID}",
+            ],
         },
     }
 
     operation = job_client.submit_job_as_operation(
-        request={"project_id": PROJECT_ID, "region": CLOUD_REGION, "job": job}
+        request={
+            "project_id": PROJECT_ID,
+            "region": CLOUD_REGION,
+            "job": job,
+            "request_id": "read-" + UUID,
+        }
     )
     response = operation.result()
 

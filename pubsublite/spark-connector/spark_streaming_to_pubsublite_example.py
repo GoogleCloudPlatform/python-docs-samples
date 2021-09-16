@@ -21,13 +21,18 @@ def spark_streaming_to_pubsublite(
     # [START pubsublite_spark_streaming_to_pubsublite]
     from pyspark.sql import SparkSession
     from pyspark.sql.types import BinaryType, StringType
+    import uuid
 
     # TODO(developer):
     # project_number = 11223344556677
     # location = "us-central1-a"
     # topic_id = "your-topic-id"
 
-    spark = SparkSession.builder.appName("write-app").master("yarn").getOrCreate()
+    spark = (
+        SparkSession.builder.appName("write-app")
+        .master("yarn")
+        .getOrCreate()
+    )
 
     # Create a RateStreamSource that generates consecutive numbers with timestamps:
     # |-- timestamp: timestamp (nullable = true)
@@ -49,7 +54,7 @@ def spark_streaming_to_pubsublite(
             "pubsublite.topic",
             f"projects/{project_number}/locations/{location}/topics/{topic_id}",
         )
-        .option("checkpointLocation", "/tmp/app")
+        .option("checkpointLocation", "/tmp/app" + uuid.uuid4().hex)
         .outputMode("append")
         .trigger(processingTime="1 second")
         .start()
@@ -65,9 +70,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("project_number", help="Google Cloud Project Number")
-    parser.add_argument("location", help="Your Cloud location, e.g. us-central1-a")
-    parser.add_argument("topic_id", help="Your Pub/Sub Lite topic ID")
+    parser.add_argument("--project_number", help="Google Cloud Project Number")
+    parser.add_argument("--location", help="Your Cloud location, e.g. us-central1-a")
+    parser.add_argument("--topic_id", help="Your Pub/Sub Lite topic ID")
 
     args = parser.parse_args()
 

@@ -27,7 +27,11 @@ def spark_streaming_from_pubsublite(
     # location = "us-central1-a"
     # subscription_id = "your-subscription-id"
 
-    spark = SparkSession.builder.appName("read-app").master("yarn").getOrCreate()
+    spark = (
+        SparkSession.builder.appName("read-app")
+        .master("yarn")
+        .getOrCreate()
+    )
 
     sdf = (
         spark.readStream.format("pubsublite")
@@ -57,9 +61,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("project_number", help="Google Cloud Project Number")
-    parser.add_argument("location", help="Your Cloud location, e.g. us-central1-a")
-    parser.add_argument("subscription_id", help="Your Pub/Sub Lite subscription ID")
+    parser.add_argument("--project_number", help="Google Cloud Project Number")
+    parser.add_argument("--location", help="Your Cloud location, e.g. us-central1-a")
+    parser.add_argument("--subscription_id", help="Your Pub/Sub Lite subscription ID")
 
     args = parser.parse_args()
 

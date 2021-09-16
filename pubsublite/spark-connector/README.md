@@ -2,7 +2,7 @@
 
 The samples in this directory show how to read messages from and write messages to Pub/Sub Lite from an [Apache Spark] cluster created with [Cloud Dataproc] using the [Pub/Sub Lite Spark Connector].
 
-Get the connector's uber jar from this [public Cloud Storage location](gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar). Alternatively, visit this Maven [link](https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming) to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag. 
+Get the connector's uber jar from this [public Cloud Storage location]. Alternatively, visit this [Maven link] to download the connector's uber jar. The uber jar has a "with-dependencies" suffix. You will need to include it on the driver and executor classpaths when submitting a Spark job, typically in the `--jars` flag. 
 
 ## Before you begin
 
@@ -30,7 +30,7 @@ Get the connector's uber jar from this [public Cloud Storage location](gs://spar
    gcloud init
    ```
 
-1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=pubsublite.googleapis.com,dataproc,storage_component): Pub/Sub Lite, Dataproc, Cloud Storage.
+1. [Enable the APIs]: Pub/Sub Lite, Dataproc, Cloud Storage.
 
 1. Create a Pub/Sub Lite [topic] and [subscription] in a supported [location].
 
@@ -129,7 +129,7 @@ gcloud dataproc jobs submit pyspark spark_streaming_to_pubsublite_example.py \
     --jars=gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
-    -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $TOPIC_ID
+    -- --project_number=$PROJECT_NUMBER --location=$PUBSUBLITE_LOCATION --topic_id=$TOPIC_ID
 ```
 
 Visit the job URL in the command output or the jobs panel in [Cloud Console for Dataproc] to monitor the job progress.
@@ -153,10 +153,10 @@ gcloud dataproc jobs submit pyspark spark_streaming_from_pubsublite_example.py \
     --jars=gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar \
     --driver-log-levels=root=INFO \
     --properties=spark.master=yarn \
-    -- $PROJECT_NUMBER $PUBSUBLITE_LOCATION $SUBSCRIPTION_ID
+    -- --project_number=$PROJECT_NUMBER --location=$PUBSUBLITE_LOCATION --subscription_id=$SUBSCRIPTION_ID
 ```
 
-Here is an example output (TODO: update attributes field output with the next release of the connector):
+Here is an example output: <!--TODO: update attributes field output with the next release of the connector-->
 
 ```none
 +--------------------+---------+------+---+----+--------------------+--------------------+----------+
@@ -170,16 +170,20 @@ Here is an example output (TODO: update attributes field output with the next re
 [Apache Spark]: https://spark.apache.org/
 [Pub/Sub Lite Spark Connector]: https://github.com/googleapis/java-pubsublite-spark
 [Cloud Dataproc]: https://cloud.google.com/dataproc/docs/
-[Cloud Console for Dataproc]: https://console.cloud.google.com/dataproc/
+[public Cloud Storage location]: gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar
+[Maven link]: https://search.maven.org/search?q=g:com.google.cloud%20a:pubsublite-spark-sql-streaming
 
 [Cloud SDK]: https://cloud.google.com/sdk/docs/
 [Cloud Shell]: https://console.cloud.google.com/cloudshell/editor/
 [*New Project* page]: https://console.cloud.google.com/projectcreate
 [Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project/
-
-[Install Python and virtualenv]: https://cloud.google.com/python/setup/
-[Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd
-[Dataproc Image Version 1.5]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-1.5
-[location]: https://cloud.google.com/pubsub/lite/docs/locations
+[Enable the APIs]: https://console.cloud.google.com/flows/enableapi?apiid=pubsublite.googleapis.com,dataproc,storage_component
 [topic]: https://cloud.google.com/pubsub/lite/docs/topics
 [subscription]: https://cloud.google.com/pubsub/lite/docs/subscriptions
+[location]: https://cloud.google.com/pubsub/lite/docs/locations
+
+[Install Python and virtualenv]: https://cloud.google.com/python/setup/
+[Cloud Console for Dataproc]: https://console.cloud.google.com/dataproc/
+
+[Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd
+[Dataproc Image Version 1.5]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-1.5
