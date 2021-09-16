@@ -38,8 +38,9 @@ with models.DAG(
     # [START composer_gkeoperator_templateconfig_airflow_1]
     # [START composer_gkeoperator_affinity_airflow_1]
     # [START composer_gkeoperator_fullconfig_airflow_1]
-    GCP_PROJECT_ID = "my-project-id"
-    GCP_LOCATION = "us-west1-a"
+    # TODO(developer): update with your values
+    PROJECT_ID = "my-project-id"
+    CLUSTER_ZONE = "us-west1-a"
     CLUSTER_NAME = "example-cluster"
     # [END composer_gkeoperator_minconfig_airflow_1]
     # [END composer_gkeoperator_templateconfig_airflow_1]
@@ -50,14 +51,14 @@ with models.DAG(
     # [START composer_gke_create_cluster_airflow_1]
     create_cluster = GKECreateClusterOperator(
         task_id="create_cluster",
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
         body=CLUSTER,
     )
 
     create_node_pools = BashOperator(
         task_id="create_node_pools",
-        bash_command=f"gcloud container node-pools create pool-0 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {GCP_LOCATION} && gcloud container node-pools create pool-1 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {GCP_LOCATION}",
+        bash_command=f"gcloud container node-pools create pool-0 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {CLUSTER_ZONE} && gcloud container node-pools create pool-1 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {CLUSTER_ZONE}",
     )
     # [END composer_gke_create_cluster_airflow_1]
 
@@ -67,8 +68,8 @@ with models.DAG(
         task_id="pod-ex-minimum",
         # Name of task you want to run, used to generate Pod ID.
         name="pod-ex-minimum",
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
         cluster_name=CLUSTER_NAME,
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
@@ -94,8 +95,8 @@ with models.DAG(
     kubenetes_template_ex = GKEStartPodOperator(
         task_id="ex-kube-templates",
         name="ex-kube-templates",
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
         cluster_name=CLUSTER_NAME,
         namespace="default",
         image="bash",
@@ -121,8 +122,8 @@ with models.DAG(
     # [START composer_gkeoperator_affinity_airflow_1]
     kubernetes_affinity_ex = GKEStartPodOperator(
         task_id="ex-pod-affinity",
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
         cluster_name=CLUSTER_NAME,
         name="ex-pod-affinity",
         namespace="default",
@@ -171,8 +172,8 @@ with models.DAG(
     kubernetes_full_pod = GKEStartPodOperator(
         task_id="ex-all-configs",
         name="pi",
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
         cluster_name=CLUSTER_NAME,
         namespace="default",
         image="perl",
@@ -229,8 +230,8 @@ with models.DAG(
     delete_cluster = GKEDeleteClusterOperator(
         task_id="delete_cluster",
         name=CLUSTER_NAME,
-        project_id=GCP_PROJECT_ID,
-        location=GCP_LOCATION,
+        project_id=PROJECT_ID,
+        location=CLUSTER_ZONE,
     )
     # [END composer_gkeoperator_delete_cluster_airflow_1]
 
