@@ -28,11 +28,7 @@ def spark_streaming_to_pubsublite(
     # location = "us-central1-a"
     # topic_id = "your-topic-id"
 
-    spark = (
-        SparkSession.builder.appName("write-app")
-        .master("yarn")
-        .getOrCreate()
-    )
+    spark = SparkSession.builder.appName("write-app").master("yarn").getOrCreate()
 
     # Create a RateStreamSource that generates consecutive numbers with timestamps:
     # |-- timestamp: timestamp (nullable = true)
@@ -54,6 +50,7 @@ def spark_streaming_to_pubsublite(
             "pubsublite.topic",
             f"projects/{project_number}/locations/{location}/topics/{topic_id}",
         )
+        # Required. Use a unique checkpoint location for each job.
         .option("checkpointLocation", "/tmp/app" + uuid.uuid4().hex)
         .outputMode("append")
         .trigger(processingTime="1 second")
