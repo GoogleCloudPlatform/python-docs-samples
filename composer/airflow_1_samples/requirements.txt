@@ -1,4 +1,4 @@
-apache-airflow[gcp]==1.10.14
+apache-airflow[gcp]==2.1.4
 kubernetes==18.20.0
 scipy==1.4.1; python_version > '3.0'
 scipy==1.2.3; python_version < '3.0'
