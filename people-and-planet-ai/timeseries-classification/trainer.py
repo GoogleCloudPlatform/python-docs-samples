@@ -182,7 +182,6 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     train_epochs: int,
-    eval_steps: int,
     batch_size: int,
     model_dir: str,
     checkpoint_dir: str,
@@ -196,9 +195,9 @@ def run(
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
-    total_batch_size = batch_size * distributed_strategy.num_replicas_in_sync
-    train_dataset = create_dataset(train_data_dir, total_batch_size)
-    eval_dataset = create_dataset(eval_data_dir, total_batch_size)
+    train_batch_size = batch_size * distributed_strategy.num_replicas_in_sync
+    train_dataset = create_dataset(train_data_dir, train_batch_size)
+    eval_dataset = create_dataset(eval_data_dir, batch_size)
 
     # Create and compile the model inside the distribution strategy scope.
     with distributed_strategy.scope():
@@ -217,8 +216,7 @@ def run(
     model.fit(
         train_dataset,
         epochs=train_epochs,
-        validation_data=eval_dataset.repeat(),
-        validation_steps=eval_steps,
+        validation_data=eval_dataset,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
@@ -264,7 +262,6 @@ if __name__ == "__main__":
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
         train_epochs=args.train_epochs,
-        eval_steps=args.eval_steps,
         batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
