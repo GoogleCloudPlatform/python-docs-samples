@@ -71,7 +71,7 @@ apache-airflow-providers-elasticsearch==2.0.2
 apache-airflow-providers-exasol==2.0.0
 apache-airflow-providers-facebook==2.0.0
 apache-airflow-providers-ftp==2.0.0
-apache-airflow-providers-google==4.0.0
+apache-airflow-providers-google==5.1.0
 apache-airflow-providers-grpc==2.0.0
 apache-airflow-providers-hashicorp==2.0.0
 apache-airflow-providers-http==2.0.0
