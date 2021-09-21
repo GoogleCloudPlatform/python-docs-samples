@@ -217,9 +217,8 @@ def run(
     model.fit(
         train_dataset,
         epochs=train_epochs,
-        validation_data=eval_dataset,
-        # validation_data=eval_dataset.repeat(),
-        # validation_steps=eval_steps,
+        validation_data=eval_dataset.repeat(),
+        validation_steps=eval_steps,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
