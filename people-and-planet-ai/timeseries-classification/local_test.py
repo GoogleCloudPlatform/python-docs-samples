@@ -22,18 +22,9 @@ import pytest
 import tensorflow as tf
 
 import create_datasets
+import data_utils
 import predict
 import trainer
-
-
-TEST_VALUE_DICT = {
-    "distance_from_port": [[182558.08203125], [181616.03125], [180523.0390625]],
-    "speed": [[3.275000035775], [3.2000000477], [3.0750000477]],
-    "course": [[81.87499809262499], [36.5999984741], [83.60000038145]],
-    "lat": [[-22.482420921325], [-22.4892024994], [-22.500276088725002]],
-    "lon": [[-40.124936103825], [-40.1333656311], [-40.146536827074996]],
-    "is_fishing": [[1.0]],
-}
 
 
 def test_validated_missing_field() -> None:
@@ -68,10 +59,14 @@ def test_validated_ok() -> None:
 
 
 def test_serialize_deserialize() -> None:
-    serialized = trainer.serialize(TEST_VALUE_DICT)
-    inputs, outputs = trainer.deserialize(serialized)
-    assert set(inputs.keys()) == set(trainer.INPUTS_SPEC.keys())
-    assert set(outputs.keys()) == set(trainer.OUTPUTS_SPEC.keys())
+    unlabeled_data = data_utils.read_data("test_data/56980685061237.npz")
+    labels = data_utils.read_labels("test_data/labels.csv")
+    data = data_utils.label_data(unlabeled_data, labels)
+    for training_point in data_utils.generate_training_points(data):
+        serialized = trainer.serialize(training_point)
+        inputs, outputs = trainer.deserialize(serialized)
+        assert set(inputs.keys()) == set(trainer.INPUTS_SPEC.keys())
+        assert set(outputs.keys()) == set(trainer.OUTPUTS_SPEC.keys())
 
 
 @mock.patch.object(trainer, "PADDING", 2)

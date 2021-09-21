@@ -82,7 +82,7 @@ def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
     labeled_data = data.assign(is_fishing=lambda _: np.nan)
     labeled_data.update(data_with_labels)
     return labeled_data.sort_values(["mmsi", "timestamp"]).drop(
-        columns=["mmsi", "timestamp"]
+        columns=["mmsi", "timestamp", "distance_from_shore"]
     )
 
 
@@ -97,12 +97,10 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
     for point_index in training_point_indices:
         # For the inputs, we grab the past data and the data point itself.
         inputs = (
-            data.drop(columns=["distance_from_shore", "is_fishing"])
+            data.drop(columns=["is_fishing"])
             .loc[point_index - padding : point_index]
             .to_dict("list")
         )
-        assert len(inputs) >= padding + 1, f"inputs: {len(inputs)} < {padding + 1}"
-
         # For the outputs, we only grab the label from the data point itself.
         outputs = (
             data[["is_fishing"]]
@@ -110,9 +108,9 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
             .astype("int8")
             .to_dict("list")
         )
-        assert len(outputs) == 1, f"outputs: {len(outputs)} != 1"
 
-        yield {
-            name: np.reshape(values, (len(values), 1))
-            for name, values in {**inputs, **outputs}.items()
-        }
+        if len(inputs) >= padding + 1 or len(outputs) >= 1:
+            yield {
+                name: np.reshape(values, (len(values), 1))
+                for name, values in {**inputs, **outputs}.items()
+            }
