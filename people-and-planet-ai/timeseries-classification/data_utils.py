@@ -101,7 +101,7 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
             .loc[point_index - padding : point_index]
             .to_dict("list")
         )
-        assert len(inputs) == padding + 1
+        assert len(inputs) == padding + 1, f"inputs: {len(inputs)} != {padding + 1}"
 
         # For the outputs, we only grab the label from the data point itself.
         outputs = (
@@ -110,7 +110,7 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
             .astype("int8")
             .to_dict("list")
         )
-        assert len(outputs) == 1
+        assert len(outputs) == 1, f"outputs: {len(outputs)} != 1"
 
         yield {
             name: np.reshape(values, (len(values), 1))
