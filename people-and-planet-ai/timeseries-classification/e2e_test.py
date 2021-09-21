@@ -236,6 +236,7 @@ def create_datasets(
 
     # Wait until the Dataflow job finishes.
     logging.info("Waiting for datasets to be created.")
+    status = None
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
         job = (
@@ -249,11 +250,12 @@ def create_datasets(
             .execute()
         )
 
-        if job["currentState"] in DATAFLOW_FINISHED_STATE:
+        status = job["currentState"]
+        if status in DATAFLOW_FINISHED_STATE:
             break
         time.sleep(POLL_INTERVAL_SEC)
 
-    logging.info("Datasets were created successfully.")
+    logging.info(f"Datasets job finished with status {status}")
     yield job_id
 
 
@@ -279,16 +281,18 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
     logging.info("Waiting for model to train.")
+    status = None
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         # https://googleapis.dev/python/aiplatform/latest/aiplatform_v1/job_service.html
         job = ai_client.get_custom_job(
             name=f"projects/{PROJECT}/locations/{REGION}/customJobs/{job_id}"
         )
-        if job.state.name in VERTEX_AI_FINISHED_STATE:
+        status = job.state.name
+        if status in VERTEX_AI_FINISHED_STATE:
             break
         time.sleep(POLL_INTERVAL_SEC)
 
-    logging.info("Model was trained successfully.")
+    logging.info(f"Model job finished with status {status}")
     yield job_id
 
 
