@@ -172,7 +172,7 @@ with models.DAG(
     # [START composer_gkeoperator_fullconfig]
     kubernetes_full_pod = GKEStartPodOperator(
         task_id="ex-all-configs",
-        name="pi",
+        name="full",
         project_id=PROJECT_ID,
         location=CLUSTER_ZONE,
         cluster_name=CLUSTER_NAME,
