@@ -182,6 +182,7 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     train_epochs: int,
+    eval_steps: int,
     batch_size: int,
     model_dir: str,
     checkpoint_dir: str,
@@ -195,9 +196,9 @@ def run(
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
-    train_batch_size = batch_size * distributed_strategy.num_replicas_in_sync
-    train_dataset = create_dataset(train_data_dir, train_batch_size)
-    eval_dataset = create_dataset(eval_data_dir, batch_size)
+    total_batch_size = batch_size * distributed_strategy.num_replicas_in_sync
+    train_dataset = create_dataset(train_data_dir, total_batch_size)
+    eval_dataset = create_dataset(eval_data_dir, total_batch_size)
 
     # Create and compile the model inside the distribution strategy scope.
     with distributed_strategy.scope():
@@ -217,6 +218,7 @@ def run(
         train_dataset,
         epochs=train_epochs,
         validation_data=eval_dataset,
+        validation_steps=eval_steps,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
@@ -238,22 +240,48 @@ if __name__ == "__main__":
 
     # TODO: Have either: hardcoded default values if possible, or have everything required
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train-data-dir", required=True)
-    parser.add_argument("--eval-data-dir", required=True)
-    parser.add_argument("--train-epochs", type=int, required=True)
-    parser.add_argument("--eval-steps", type=int, required=True)
-    parser.add_argument("--batch-size", type=int, required=True)
+    parser.add_argument(
+        "--train-data-dir",
+        required=True,
+        help="Cloud Storage directory containing training TFRecord files.",
+    )
+    parser.add_argument(
+        "--eval-data-dir",
+        required=True,
+        help="Cloud Storage directory containing evaluation TFRecord files.",
+    )
+    parser.add_argument(
+        "--train-epochs",
+        type=int,
+        required=True,
+        help="Number of times to go through the training dataset.",
+    )
+    parser.add_argument(
+        "--eval-steps",
+        type=int,
+        required=True,
+        help="Number of evaluation samples to take.",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        required=True,
+        help="Batch size for the training and evaluation datasets.",
+    )
     parser.add_argument(
         "--model-dir",
         default=os.environ.get("AIP_MODEL_DIR", "model"),
+        help="Directory to save the trained model.",
     )
     parser.add_argument(
         "--checkpoint-dir",
         default=os.environ.get("AIP_CHECKPOINT_DIR", "checkpoints"),
+        help="Directory to save model checkpoints during training.",
     )
     parser.add_argument(
         "--tensorboard-dir",
         default=os.environ.get("AIP_TENSORBOARD_LOG_DIR", "tensorboard"),
+        help="Directory to save TensorBoard logs.",
     )
     args = parser.parse_args()
 
@@ -262,6 +290,7 @@ if __name__ == "__main__":
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
         train_epochs=args.train_epochs,
+        eval_steps=args.eval_steps,
         batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
