@@ -55,11 +55,20 @@ with models.DAG(
         location=CLUSTER_ZONE,
         body=CLUSTER,
     )
-    # Using the BashOperator to create NodePools is a workaround. In Airflow 2, because of https://github.com/apache/airflow/pull/17820 this can be done as part of the operator configuration
+    # Using the BashOperator to create node pools is a workaround
+    # In Airflow 2, because of https://github.com/apache/airflow/pull/17820
+    # Node pool creation can be done using the GKECreateClusterOperator
 
     create_node_pools = BashOperator(
         task_id="create_node_pools",
-        bash_command=f"gcloud container node-pools create pool-0 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {CLUSTER_ZONE} && gcloud container node-pools create pool-1 --cluster {CLUSTER_NAME} --num-nodes 1 --zone {CLUSTER_ZONE}",
+        bash_command=f"gcloud container node-pools create pool-0 \
+                        --cluster {CLUSTER_NAME} \
+                        --num-nodes 1 \
+                        --zone {CLUSTER_ZONE} \
+                        && gcloud container node-pools create pool-1 \
+                        --cluster {CLUSTER_NAME} \
+                        --num-nodes 1 \
+                        --zone {CLUSTER_ZONE}",
     )
     # [END composer_gke_create_cluster_airflow_1]
 
