@@ -85,12 +85,11 @@ def translate_text_with_model(target, text, model="nmt"):
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
-    import six
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()
 
-    if isinstance(text, six.binary_type):
+    if isinstance(text, bytes):
         text = text.decode("utf-8")
 
     # Text can also be a sequence of strings, in which case this method
