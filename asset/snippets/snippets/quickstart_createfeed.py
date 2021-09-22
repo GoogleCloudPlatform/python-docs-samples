@@ -18,7 +18,7 @@
 import argparse
 
 
-def create_feed(project_id, feed_id, asset_names, topic):
+def create_feed(project_id, feed_id, asset_names, topic, content_type):
     # [START asset_quickstart_create_feed]
     from google.cloud import asset_v1
 
@@ -26,12 +26,14 @@ def create_feed(project_id, feed_id, asset_names, topic):
     # TODO feed_id = 'Feed ID you want to create'
     # TODO asset_names = 'List of asset names the feed listen to'
     # TODO topic = "Topic name of the feed"
+    # TODO content_type ="Content type of the feed"
 
     client = asset_v1.AssetServiceClient()
     parent = "projects/{}".format(project_id)
     feed = asset_v1.Feed()
     feed.asset_names.extend(asset_names)
     feed.feed_output_config.pubsub_destination.topic = topic
+    feed.content_type = content_type
     response = client.create_feed(
         request={"parent": parent, "feed_id": feed_id, "feed": feed}
     )
@@ -48,5 +50,6 @@ if __name__ == "__main__":
     parser.add_argument("feed_id", help="Feed ID you want to create")
     parser.add_argument("asset_names", help="List of asset names the feed listen to")
     parser.add_argument("topic", help="Topic name of the feed")
+    parser.add_argument("content_type", help="Content type of the feed")
     args = parser.parse_args()
-    create_feed(args.project_id, args.feed_id, args.asset_names, args.topic)
+    create_feed(args.project_id, args.feed_id, args.asset_names, args.topic, args.content_type)
