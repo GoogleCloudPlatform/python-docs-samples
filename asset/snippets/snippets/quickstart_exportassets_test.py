@@ -17,6 +17,7 @@
 import os
 import uuid
 
+from google.cloud import asset_v1
 from google.cloud import bigquery
 from google.cloud import storage
 import pytest
@@ -70,8 +71,15 @@ def test_export_assets(asset_bucket, dataset, capsys):
     out, _ = capsys.readouterr()
     assert dump_file_path in out
 
+    content_type = asset_v1.ContentType.RESOURCE
     dataset_id = "projects/{}/datasets/{}".format(PROJECT, dataset)
     quickstart_exportassets.export_assets_bigquery(
-        PROJECT, dataset_id, "assettable")
+        PROJECT, dataset_id, "assettable", content_type)
     out, _ = capsys.readouterr()
     assert dataset_id in out
+
+    content_type_r = asset_v1.ContentType.RELATIONSHIP
+    quickstart_exportassets.export_assets_bigquery(
+        PROJECT, dataset_id, "assettable", content_type_r)
+    out_r, _ = capsys.readouterr()
+    assert dataset_id in out_r

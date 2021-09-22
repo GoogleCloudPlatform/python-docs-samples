@@ -56,13 +56,15 @@ def another_topic():
 
 @pytest.fixture(scope="module")
 def test_feed(test_topic):
+    from google.cloud import asset_v1
+
     feed_id = f"feed-{uuid.uuid4().hex}"
     asset_name = f"assets-{uuid.uuid4().hex}"
 
     @backoff.on_exception(backoff.expo, InternalServerError, max_time=60)
     def create_feed():
         return quickstart_createfeed.create_feed(
-            PROJECT, feed_id, [asset_name], test_topic.name
+            PROJECT, feed_id, [asset_name], test_topic.name, asset_v1.ContentType.RESOURCE
         )
 
     feed = create_feed()
