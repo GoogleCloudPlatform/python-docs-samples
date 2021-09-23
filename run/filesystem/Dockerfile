@@ -42,4 +42,4 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # Pass the startup script as arguments to Tini
 CMD ["/app/run.sh"]
-# [START cloudrun_fs_dockerfile]
+# [END cloudrun_fs_dockerfile]
