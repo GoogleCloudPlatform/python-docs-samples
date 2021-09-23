@@ -32,7 +32,7 @@ def index(path):
     if (not path.startswith(mnt_dir)):
         return redirect(mnt_dir)
 
-    # Print mount path
+    # Add parent mount path link
     html = '<html><body>\n'
     if (path != mnt_dir):
         html += f'<a href=\"{mnt_dir}\">{mnt_dir}</a><br/><br/>\n'

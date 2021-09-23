@@ -50,7 +50,7 @@ def deployed_service():
             '--no-allow-unauthenticated',
             f'--vpc-connector={connector}',
             '--execution-environment=gen2',
-            f'--update-env-vars=IP_ADDRESS={ip_address},FILESHARE_NAME=vol1'
+            f'--update-env-vars=IP_ADDRESS={ip_address},FILE_SHARE_NAME=vol1'
         ],
         check=True,
     )

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_fs_dockerfile]
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
 FROM python:3.9-slim
@@ -22,9 +23,8 @@ RUN apt-get update -y && apt-get install -y \
     nfs-common \
     && apt-get clean
 
-# Create mount directory for service
+# Set failback mount directory
 ENV MNT_DIR /mnt/nfs/filestore
-RUN mkdir -p $MNT_DIR
 
 # Copy local code to the container image.
 ENV APP_HOME /app
@@ -34,8 +34,12 @@ COPY . ./
 # Install production dependencies.
 RUN pip install -r requirements.txt
 
+# Ensure the script is executable
+RUN chmod +x /app/run.sh
+
 # Set the init-process (PID1) as the default executable
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # Pass the startup script as arguments to Tini
 CMD ["/app/run.sh"]
+# [START cloudrun_fs_dockerfile]
