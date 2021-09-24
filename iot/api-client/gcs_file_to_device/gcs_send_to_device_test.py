@@ -30,8 +30,6 @@ import gcs_send_to_device as gcs_to_device
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))  # noqa
 import manager  # noqa
 
-
-gcs_bucket = os.environ["CLOUD_STORAGE_BUCKET"]
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
@@ -46,9 +44,38 @@ gcs_file_name = "my-config"
 
 
 @pytest.fixture(scope="module")
-def test_blob():
+def test_bucket_name():
+    bucket_name = "python-docs-samples-iot-api-client-{}".format(uuid.uuid4())
+
+    yield bucket_name 
+
+    bucket = storage.Client().bucket(bucket_name)
+    bucket.delete(force=True)
+
+
+@pytest.fixture(scope="module")
+def test_bucket(test_bucket_name):
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket = storage.Client().bucket(test_bucket_name)
+    bucket.create()
+
+    # Bucket must be public for `test_make_file_public`
+    policy = bucket.get_iam_policy(requested_policy_version=3)
+    policy.bindings.append(
+        {"role": "roles/storage.objectViewer", "members": {"allUsers"}}
+    )
+
+    bucket.set_iam_policy(policy)
+
+    yield bucket
+
+
+@pytest.fixture(scope="module")
+def test_blob(test_bucket):
     """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(gcs_bucket)
+    bucket = storage.Client().bucket(test_bucket)
     # Name of the blob
     blob = bucket.blob("iot_core_store_file_gcs")
     # Text in the blob
@@ -64,14 +91,11 @@ def test_blob():
 
 
 @mock.patch("google.cloud.storage.client.Client.create_bucket")
-def test_create_bucket(create_bucket_mock, capsys):
-    # Unlike other tests for sending a config, this one mocks out the creation
-    # because buckets are expensive, globally-namespaced objects.
-    create_bucket_mock.return_value = mock.sentinel.bucket
+def test_create_bucket(test_bucket_name, capsys):
+    gcs_to_device.create_bucket(test_bucket_name)
 
-    gcs_to_device.create_bucket(gcs_bucket)
-
-    create_bucket_mock.assert_called_with(gcs_bucket)
+    out, _ = capsys.readouterr()
+    assert f"Bucket {test_bucket_name} created" in out
 
 
 def test_upload_local_file(capsys):
@@ -80,14 +104,14 @@ def test_upload_local_file(capsys):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"This is a source file.")
 
-        gcs_to_device.upload_local_file(gcs_bucket, gcs_file_name, source_file.name)
+        gcs_to_device.upload_local_file(test_bucket, gcs_file_name, source_file.name)
 
     out, _ = capsys.readouterr()
     assert "File {} uploaded as {}.".format(source_file.name, gcs_file_name) in out
 
 
 def test_make_file_public(test_blob):
-    gcs_to_device.make_file_public(gcs_bucket, test_blob.name)
+    gcs_to_device.make_file_public(test_bucket, test_blob.name)
 
     r = requests.get(test_blob.public_url)
     # Test for the content of the file to verify that
@@ -106,7 +130,7 @@ def test_send_to_device(capsys):
     )
 
     gcs_to_device.send_to_device(
-        gcs_bucket,
+        test_bucket,
         gcs_file_name,
         destination_file_name,
         project_id,
