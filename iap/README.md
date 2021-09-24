@@ -30,7 +30,7 @@ These samples are used on the following documentation pages:
    install the `google-auth` and `requests` libraries into your application.
 2. Copy `make_iap_request.py` into the same folder as app.yaml .
 
-### Google Compute Engine or Google Container Engine
+### Google Compute Engine or Google Kubernetes Engine
 
 1. [Click here](https://console.cloud.google.com/flows/enableapi?apiid=iam.googleapis.com&showconfirmation=true) to visit Google Cloud Platform Console and enable the IAM API on your project.
 2. Create a VM with the IAM scope:
@@ -65,7 +65,7 @@ These samples are used on the following documentation pages:
 
 If you prefer to manage service account credentials manually, this method can
 also be used in the App Engine flexible environment, Compute Engine, and
-Container Engine. Note that this may be less secure, as anyone who obtains the
+Kubernetes Engine. Note that this may be less secure, as anyone who obtains the
 service account private key can impersonate that account!
 
 ## Using validate_jwt
