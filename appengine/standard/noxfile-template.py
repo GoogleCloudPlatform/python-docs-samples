@@ -84,7 +84,7 @@ def get_pytest_env_vars():
 ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["3.6", "3.7", "3.8", "3.9"]
+IGNORED_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
