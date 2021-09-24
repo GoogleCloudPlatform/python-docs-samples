@@ -25,20 +25,18 @@ model: Optional[keras.Model] = None
 
 
 def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
-    normalized_inputs = data_utils.with_fixed_time_steps(inputs)
+    data = data_utils.with_fixed_time_steps(inputs)
 
     # Our model always expects a batch prediction, so we create a batch with
     # a single prediction request.
     #   {input: [time_steps, 1]} --> {input: [1, time_steps, 1]}
     inputs_batch = {
-        name: np.reshape(values, (1, len(values), 1))
-        for name, values in normalized_inputs.to_dict("list").items()
+        name: np.reshape(data[name].to_numpy(), (1, len(data[name]), 1))
+        for name in trainer.INPUTS_SPEC.keys()
     }
 
     predictions = model.predict(inputs_batch)
-    return normalized_inputs[trainer.PADDING :].assign(
-        is_fishing=predictions["is_fishing"][0]
-    )
+    return data[trainer.PADDING :].assign(is_fishing=predictions["is_fishing"][0])
 
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
