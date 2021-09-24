@@ -57,6 +57,11 @@ def upload():
         content_type=uploaded_file.content_type
     )
 
+    # Make the blob public. This is not necessary if the
+    # entire bucket is public.
+    # See https://cloud.google.com/storage/docs/access-control/making-data-public.
+    blob.make_public()
+
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
 
