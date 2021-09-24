@@ -29,7 +29,7 @@ def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
 
     # Our model always expects a batch prediction, so we create a batch with
     # a single prediction request.
-    #   {input: [time_steps, 1]} --> {input: [1, time_steps, 1]}
+    #   {input: [time_steps]} --> {input: [1, time_steps, 1]}
     inputs_batch = {
         name: np.reshape(data[name].to_numpy(), (1, len(data[name]), 1))
         for name in trainer.INPUTS_SPEC.keys()
