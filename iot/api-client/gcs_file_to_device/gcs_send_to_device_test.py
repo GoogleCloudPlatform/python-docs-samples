@@ -20,7 +20,6 @@ import uuid
 
 from google.cloud import pubsub
 from google.cloud import storage
-import mock
 import pytest
 import requests
 
@@ -42,42 +41,36 @@ cloud_region = "us-central1"
 destination_file_name = "destination-file.bin"
 gcs_file_name = "my-config"
 
+storage_client = storage.Client()
+
 
 @pytest.fixture(scope="module")
 def test_bucket_name():
-    bucket_name = "python-docs-samples-iot-api-client-{}".format(uuid.uuid4())
+    bucket_name = "python-docs-samples-iot-{}".format(uuid.uuid4())
 
-    yield bucket_name 
+    yield bucket_name
 
-    bucket = storage.Client().bucket(bucket_name)
+    bucket = storage_client.bucket(bucket_name)
     bucket.delete(force=True)
 
 
 @pytest.fixture(scope="module")
 def test_bucket(test_bucket_name):
     """Yields a bucket that is deleted after the test completes."""
-    bucket = None
-    while bucket is None or bucket.exists():
-        bucket = storage.Client().bucket(test_bucket_name)
-    bucket.create()
+    bucket = storage_client.bucket(test_bucket_name)
 
-    # Bucket must be public for `test_make_file_public`
-    policy = bucket.get_iam_policy(requested_policy_version=3)
-    policy.bindings.append(
-        {"role": "roles/storage.objectViewer", "members": {"allUsers"}}
-    )
+    if not bucket.exists():
+        bucket = storage_client.create_bucket(test_bucket_name)
 
-    bucket.set_iam_policy(policy)
-
-    yield bucket
+    yield bucket.name
 
 
 @pytest.fixture(scope="module")
 def test_blob(test_bucket):
     """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(test_bucket)
+    bucket = storage_client.bucket(test_bucket)
     # Name of the blob
-    blob = bucket.blob("iot_core_store_file_gcs")
+    blob = bucket.blob("iot_core_store_file_gcs-{}".format(uuid.uuid4()))
     # Text in the blob
     blob.upload_from_string("This file on GCS will go to a device.")
 
@@ -90,7 +83,6 @@ def test_blob(test_bucket):
         pass
 
 
-@mock.patch("google.cloud.storage.client.Client.create_bucket")
 def test_create_bucket(test_bucket_name, capsys):
     gcs_to_device.create_bucket(test_bucket_name)
 
@@ -98,7 +90,7 @@ def test_create_bucket(test_bucket_name, capsys):
     assert f"Bucket {test_bucket_name} created" in out
 
 
-def test_upload_local_file(capsys):
+def test_upload_local_file(test_bucket, capsys):
     # Creates a temporary source file that gets uploaded
     # to GCS. All other tests use the blob in test_blob().
     with tempfile.NamedTemporaryFile() as source_file:
@@ -110,7 +102,7 @@ def test_upload_local_file(capsys):
     assert "File {} uploaded as {}.".format(source_file.name, gcs_file_name) in out
 
 
-def test_make_file_public(test_blob):
+def test_make_file_public(test_bucket, test_blob):
     gcs_to_device.make_file_public(test_bucket, test_blob.name)
 
     r = requests.get(test_blob.public_url)
@@ -119,7 +111,7 @@ def test_make_file_public(test_blob):
     assert r.text == "This file on GCS will go to a device."
 
 
-def test_send_to_device(capsys):
+def test_send_to_device(test_bucket, capsys):
     manager.create_iot_topic(project_id, topic_id)
     manager.open_registry(
         service_account_json, project_id, cloud_region, pubsub_topic, registry_id
