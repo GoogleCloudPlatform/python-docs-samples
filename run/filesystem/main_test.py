@@ -21,10 +21,12 @@ import main
 mnt_dir = os.environ.get("MNT_DIR", os.getcwd())
 filename = os.environ.get("FILENAME", "Dockerfile")
 
+
 @pytest.fixture
 def client():
     main.app.testing = True
     return main.app.test_client()
+
 
 def test_index(client):
     r = client.get("/")
@@ -37,13 +39,13 @@ def test_mnt_path(client):
 
     assert filename in r.data.decode()
     assert r.status_code == 200
-    
+
 
 def test_non_mnt_path(client):
     r = client.get("/not/the/right/path")
 
     assert r.status_code == 302
-    
+
 
 def test_file_access(client):
     full_path = os.path.join(mnt_dir, filename)

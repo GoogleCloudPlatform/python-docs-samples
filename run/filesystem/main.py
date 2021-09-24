@@ -16,13 +16,14 @@ import datetime
 import os
 import signal
 import sys
-from flask import Flask, abort, request, redirect
-from os.path import isfile, isdir, join
+from flask import abort, Flask, redirect
+from os.path import isdir, isfile, join
 
 app = Flask(__name__)
 
 mnt_dir = os.environ.get('MNT_DIR', '/mnt/nfs/filestore')
 filename = os.environ.get('FILENAME', 'test')
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -59,7 +60,7 @@ def index(path):
 def write_file(mnt_dir, filename):
     '''Write files to a directory with date created'''
     date = datetime.datetime.now()
-    file_date = date.strftime('%c').replace(' ','-')
+    file_date = date.strftime('%c').replace(' ', '-')
     f = open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a')
     f.write(f'This test file was created on {date}.')
     f.close()

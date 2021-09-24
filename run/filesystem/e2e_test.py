@@ -28,13 +28,14 @@ import pytest
 SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
+
 @pytest.fixture
 def deployed_service():
     # Deploy image to Cloud Run
     service_name = f'filesystem-{SUFFIX}'
     connector = os.environ['CONNECTOR']
     ip_address = os.environ['IP_ADDRESS']
-    
+
     subprocess.run(
         [
             'gcloud',
@@ -132,8 +133,7 @@ def test_end_to_end(service_url_auth_token):
     weekday = date.strftime('%a')
     month = date.strftime('%b')
     day = date.strftime('%d')
-    year = date.strftime('%Y')
-    assert f'{weekday}-{month}-{day}' in body.decode() # Date
+    assert f'{weekday}-{month}-{day}' in body.decode()  # Date
     hour = date.strftime('%H')
     minute = date.strftime('%M')
-    assert f'{hour}:{minute}' in body.decode() # Time
+    assert f'{hour}:{minute}' in body.decode()  # Time
