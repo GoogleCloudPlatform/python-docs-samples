@@ -100,6 +100,9 @@ export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 gcloud auth activate-service-account \
        --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
 
+# Install alpha components
+gcloud components install alpha
+
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
 # For Datalabeling samples to hit the testing endpoint
