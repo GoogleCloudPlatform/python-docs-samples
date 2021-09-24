@@ -109,7 +109,7 @@ def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarra
             .to_dict("list")
         )
 
-        if len(inputs) >= padding + 1 or len(outputs) >= 1:
+        if len(inputs) >= padding + 1 and len(outputs) >= 1:
             yield {
                 name: np.reshape(values, (len(values), 1))
                 for name, values in {**inputs, **outputs}.items()
