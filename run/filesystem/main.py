@@ -1,4 +1,4 @@
-# Copyright 2021 Google, LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@ import datetime
 import os
 import signal
 import sys
-from flask import abort, Flask, redirect
+
 from os.path import isdir, isfile, join
+
+from flask import abort, Flask, redirect
 
 app = Flask(__name__)
 
