@@ -46,7 +46,7 @@ You may want to refer to the [`Python Development Environment Setup Guide`][setu
     ["Wednesday","Wednesday Night Wars","Wednesday 13","Wednesday Addams","Wednesday Campanella","Wednesdayite","Wednesday Martin","Wednesday Campanella discography","Wednesday Night Hockey (American TV program)","Wednesday Morning, 3 A.M."]
     ```
 
-[prereq]: ../README.md#prerequisities
+[prereq]: ../README.md#prerequisites
 [setup]: https://cloud.google.com/python/setup
 [pip]: https://pip.pypa.io/
 [virtualenv]: https://virtualenv.pypa.io/

@@ -21,6 +21,9 @@ import requests
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
+# If you are using the stable API, set this value to False
+# For more info about Airflow APIs see https://cloud.google.com/composer/docs/access-airflow-api
+USE_EXPERIMENTAL_API = True
 
 
 def trigger_dag(data, context=None):
@@ -46,16 +49,22 @@ def trigger_dag(data, context=None):
     webserver_id = 'YOUR-TENANT-PROJECT'
     # The name of the DAG you wish to trigger
     dag_name = 'composer_sample_trigger_response_dag'
+
+    if USE_EXPERIMENTAL_API:
+        endpoint = f'api/experimental/dags/{dag_name}/dag_runs'
+        json_data = {'conf': data, 'replace_microseconds': 'false'}
+    else:
+        endpoint = f'api/v1/dags/{dag_name}/dagRuns'
+        json_data = {'conf': data}
     webserver_url = (
         'https://'
         + webserver_id
-        + '.appspot.com/api/experimental/dags/'
-        + dag_name
-        + '/dag_runs'
+        + '.appspot.com/'
+        + endpoint
     )
     # Make a POST request to IAP which then Triggers the DAG
     make_iap_request(
-        webserver_url, client_id, method='POST', json={"conf": data, "replace_microseconds": 'false'})
+        webserver_url, client_id, method='POST', json=json_data)
 
 
 # This code is copied from

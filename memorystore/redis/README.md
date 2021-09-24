@@ -1,4 +1,4 @@
-# Getting started with Googe Cloud Memorystore
+# Getting started with Google Cloud Memorystore
 Simple HTTP server example to demonstrate connecting to [Google Cloud Memorystore](https://cloud.google.com/memorystore/docs/redis).
 This sample uses the [redis-py client](https://github.com/andymccurdy/redis-py).
 
