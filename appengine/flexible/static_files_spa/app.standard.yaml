@@ -11,5 +11,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python
+runtime: python39
 entrypoint: gunicorn -b :$PORT main:app

@@ -18,7 +18,8 @@ import logging
 
 from flask import Flask, send_from_directory
 
-STATIC_DIR = os.getenv('STATIC_DIR') or 'static' # folder for static content relative to the current module
+# folder for static content relative to the current module
+STATIC_DIR = os.getenv('STATIC_DIR') or 'static'
 
 app = Flask(__name__)
 
@@ -26,13 +27,14 @@ app = Flask(__name__)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-  # NOTE: we don't use Flusk standard support for static files
-  # (static_folder option and send_static_file method)
-  # because they can't distinguish requests for static files (js/css) and client routes (like /products)
-  file_requested = os.path.join(app.root_path, STATIC_DIR, path)
-  if not os.path.isfile(file_requested):
-    path = "index.html"
-  return send_from_directory(STATIC_DIR, path)
+    # NOTE: we don't use Flusk standard support for static files
+    # (static_folder option and send_static_file method)
+    # because they can't distinguish requests for static files (js/css) 
+    # and client routes (like /products)
+    file_requested = os.path.join(app.root_path, STATIC_DIR, path)
+    if not os.path.isfile(file_requested):
+        path = "index.html"
+    return send_from_directory(STATIC_DIR, path)
 
 
 @app.errorhandler(500)
