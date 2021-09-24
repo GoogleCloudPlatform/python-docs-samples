@@ -22,6 +22,7 @@ from flask import abort, Flask, redirect
 
 app = Flask(__name__)
 
+# Set config for file system path and filename prefix
 mnt_dir = os.environ.get('MNT_DIR', '/mnt/nfs/filestore')
 filename = os.environ.get('FILENAME', 'test')
 
@@ -29,6 +30,10 @@ filename = os.environ.get('FILENAME', 'test')
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
+    """
+    Redirects to the file system path to interact with file system
+    Writes a new file on each request
+    """
     # Redirect to mount path
     path = '/' + path
     if (not path.startswith(mnt_dir)):
