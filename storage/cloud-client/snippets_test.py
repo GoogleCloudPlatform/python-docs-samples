@@ -27,6 +27,7 @@ import storage_bucket_delete_default_kms_key
 import storage_change_default_storage_class
 import storage_change_file_storage_class
 import storage_compose_file
+import storage_configure_retries
 import storage_copy_file
 import storage_copy_file_archived_generation
 import storage_cors_configuration
@@ -498,3 +499,13 @@ def test_list_blobs_archived_generation(test_blob, capsys):
     )
     out, _ = capsys.readouterr()
     assert str(test_blob.generation) in out
+
+
+def test_storage_configure_retries(test_blob, capsys):
+    storage_configure_retries.configure_retries(test_blob.bucket.name, test_blob.name)
+
+    # This simply checks if the retry configurations were set and printed as intended.
+    out, _ = capsys.readouterr()
+    assert "The following library method is customized to be retried" in out
+    assert "_should_retry" in out
+    assert "initial=1.0, maximum=60.0, multiplier=3.0, deadline=500.0" in out
