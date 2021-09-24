@@ -12,6 +12,7 @@
 /appengine/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
 /auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
@@ -39,6 +40,7 @@
 /eventarc/**/*.py                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /functions/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/functions/spanner/*.py                @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
