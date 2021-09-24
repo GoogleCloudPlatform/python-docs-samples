@@ -50,4 +50,5 @@ def set_project_ttl(project_id: str) -> None:
         )
     )
 
+
 # [END contactcenterinsights_set_project_ttl]

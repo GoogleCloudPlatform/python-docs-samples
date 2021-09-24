@@ -25,7 +25,7 @@ def create_issue_model(project_id: str) -> contact_center_insights_v1.IssueModel
     # Construct an issue model.
     issue_model = contact_center_insights_v1.IssueModel()
     issue_model.display_name = "my-model"
-    issue_model.input_data_config.filter = "medium=\"CHAT\""
+    issue_model.input_data_config.filter = 'medium="CHAT"'
 
     # Call the Insights client to create an issue model.
     insights_client = contact_center_insights_v1.ContactCenterInsightsClient()
