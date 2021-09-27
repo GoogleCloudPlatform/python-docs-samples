@@ -39,19 +39,13 @@ def deployed_service():
     subprocess.run(
         [
             'gcloud',
-            'alpha',
-            'run',
-            'deploy',
-            service_name,
-            '--source',
-            '.',
+            'builds',
+            'submit',
+            '--config',
+            'cloudbuild.yaml',
             '--project',
             PROJECT,
-            '--region=us-central1',
-            '--no-allow-unauthenticated',
-            f'--vpc-connector={connector}',
-            '--execution-environment=gen2',
-            f'--update-env-vars=IP_ADDRESS={ip_address},FILE_SHARE_NAME=vol1'
+            f'--substitutions=_SERVICE_NAME={service_name},_IP_ADDRESS={ip_address},_CONNECTOR={connector}'
         ],
         check=True,
     )

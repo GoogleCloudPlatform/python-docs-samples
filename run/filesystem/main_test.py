@@ -24,6 +24,7 @@ filename = os.environ.get("FILENAME", "Dockerfile")
 
 @pytest.fixture
 def client():
+    main.mnt_dir = os.getcwd()
     main.app.testing = True
     return main.app.test_client()
 
