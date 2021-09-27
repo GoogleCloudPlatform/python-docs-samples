@@ -27,7 +27,7 @@ assign_issues_by:
   - 'api: videointelligence'
   - 'api: vision'
   to:
-  - telpirion
+  - nicain
 - labels:
   - 'api: dataflow'
   to:
@@ -174,6 +174,7 @@ assign_issues:
   - kurtisvg
   - dinagraves
   - dandhlee
+  - nicain
 
 assign_prs:
   - busunkim96
@@ -182,3 +183,4 @@ assign_prs:
   - kurtisvg
   - dinagraves
   - dandhlee
+  - nicain
