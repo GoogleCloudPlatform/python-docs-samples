@@ -10,7 +10,7 @@ pictures.
 * **Training the model**: [AutoML] in [Vertex AI]
 * **Getting predictions**: [Vertex AI]
 
-## 🎣 [Global Fishing Watch -- _timeseries-classification_](timeseries-classification)
+## 🗺 [Global Fishing Watch -- _timeseries-classification_](timeseries-classification)
 
 This model is trained to categorize if a ship is fishing or not every hour from their
 [_Maritime Mobile Service Identitiy_ (MMSI)](https://en.wikipedia.org/wiki/Maritime_Mobile_Service_Identity)
