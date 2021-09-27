@@ -96,7 +96,7 @@ def test_e2e_local() -> None:
             model_dir=model_dir,
             tensorboard_dir=tensorboard_dir,
             checkpoint_dir=checkpoint_dir,
-            train_epochs=2,
+            train_steps=1000,
             eval_steps=100,
             batch_size=32,
         )

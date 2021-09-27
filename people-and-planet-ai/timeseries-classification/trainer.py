@@ -181,7 +181,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
-    train_epochs: int,
+    train_steps: int,
     eval_steps: int,
     batch_size: int,
     model_dir: str,
@@ -216,8 +216,7 @@ def run(
     logging.info("Training the model")
     model.fit(
         train_dataset.repeat(),
-        # epochs=train_epochs,
-        steps_per_epoch=1000,
+        steps_per_epoch=train_steps,
         validation_data=eval_dataset.repeat(),
         validation_steps=eval_steps,
         callbacks=[
@@ -252,7 +251,7 @@ if __name__ == "__main__":
         help="Cloud Storage directory containing evaluation TFRecord files.",
     )
     parser.add_argument(
-        "--train-epochs",
+        "--train-steps",
         type=int,
         required=True,
         help="Number of times to go through the training dataset.",
@@ -290,7 +289,7 @@ if __name__ == "__main__":
     run(
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
-        train_epochs=args.train_epochs,
+        train_steps=args.train_steps,
         eval_steps=args.eval_steps,
         batch_size=args.batch_size,
         model_dir=args.model_dir,

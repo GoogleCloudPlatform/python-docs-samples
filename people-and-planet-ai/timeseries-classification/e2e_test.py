@@ -268,7 +268,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
         json={
-            "train_epochs": 4,
+            "train_steps": 1000,
             "eval_steps": 100,
             "batch_size": 32,
         },
