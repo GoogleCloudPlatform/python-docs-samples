@@ -215,8 +215,9 @@ def run(
     # Train the model.
     logging.info("Training the model")
     model.fit(
-        train_dataset,
-        epochs=train_epochs,
+        train_dataset.repeat(),
+        # epochs=train_epochs,
+        steps_per_epoch=1000,
         validation_data=eval_dataset.repeat(),
         validation_steps=eval_steps,
         callbacks=[
