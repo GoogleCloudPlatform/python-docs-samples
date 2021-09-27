@@ -15,8 +15,10 @@
 # [START gae_flex_storage_app]
 import logging
 import os
+from typing import Union
 
 from flask import Flask, request
+import flask.typing
 from google.cloud import storage
 
 app = Flask(__name__)
@@ -26,7 +28,7 @@ CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @app.route('/')
-def index():
+def index() -> str:
     return """
 <form method="POST" action="/upload" enctype="multipart/form-data">
     <input type="file" name="file">
@@ -36,7 +38,7 @@ def index():
 
 
 @app.route('/upload', methods=['POST'])
-def upload():
+def upload() -> str:
     """Process the uploaded file and upload it to Google Cloud Storage."""
     uploaded_file = request.files.get('file')
 
@@ -67,7 +69,7 @@ def upload():
 
 
 @app.errorhandler(500)
-def server_error(e):
+def server_error(e: Union[flask.typing.GenericException, int]) -> str:
     logging.exception('An error occurred during a request.')
     return """
     An internal error occurred: <pre>{}</pre>

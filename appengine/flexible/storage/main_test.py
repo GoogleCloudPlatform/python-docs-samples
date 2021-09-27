@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import flask
 import pytest
 import requests
 from six import BytesIO
@@ -20,17 +21,17 @@ import main
 
 
 @pytest.fixture
-def client():
+def client() -> flask.testing.FlaskClient:
     main.app.testing = True
     return main.app.test_client()
 
 
-def test_index(client):
+def test_index(client: flask.testing.FlaskClient) -> None:
     r = client.get('/')
     assert r.status_code == 200
 
 
-def test_upload(client):
+def test_upload(client: flask.testing.FlaskClient) -> None:
     # Upload a simple file
     file_content = b"This is some test content."
 
