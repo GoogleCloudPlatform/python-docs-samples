@@ -16,7 +16,7 @@ import pytest
 
 import storage_get_public_access_prevention
 import storage_set_public_access_prevention_enforced
-import storage_set_public_access_prevention_unspecified
+import storage_set_public_access_prevention_inherited
 
 
 @pytest.mark.skip(reason="Unspecified PAP is changing to inherited")
@@ -44,13 +44,13 @@ def test_set_public_access_prevention_enforced(bucket, capsys):
     )
 
 
-def test_set_public_access_prevention_unspecified(bucket, capsys):
-    short_name = storage_set_public_access_prevention_unspecified
-    short_name.set_public_access_prevention_unspecified(
+def test_set_public_access_prevention_inherited(bucket, capsys):
+    short_name = storage_set_public_access_prevention_inherited
+    short_name.set_public_access_prevention_inherited(
         bucket.name
     )
     out, _ = capsys.readouterr()
     assert (
-        f"Public access prevention is 'unspecified' for {bucket.name}."
+        f"Public access prevention is 'inherited' for {bucket.name}."
         in out
     )

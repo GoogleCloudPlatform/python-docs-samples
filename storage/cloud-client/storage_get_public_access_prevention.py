@@ -21,7 +21,7 @@ from google.cloud import storage
 
 
 def get_public_access_prevention(bucket_name):
-    """Gets the public access prevention setting (either 'unspecified' or 'enforced') for a bucket."""
+    """Gets the public access prevention setting (either 'inherited' or 'enforced') for a bucket."""
     # The ID of your GCS bucket
     # bucket_name = "my-bucket"
 
