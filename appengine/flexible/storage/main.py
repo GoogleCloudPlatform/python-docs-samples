@@ -18,7 +18,6 @@ import os
 from typing import Union
 
 from flask import Flask, request
-import flask.typing
 from google.cloud import storage
 
 app = Flask(__name__)
@@ -69,7 +68,7 @@ def upload() -> str:
 
 
 @app.errorhandler(500)
-def server_error(e: Union[flask.typing.GenericException, int]) -> str:
+def server_error(e: Union[Exception, int]) -> str:
     logging.exception('An error occurred during a request.')
     return """
     An internal error occurred: <pre>{}</pre>

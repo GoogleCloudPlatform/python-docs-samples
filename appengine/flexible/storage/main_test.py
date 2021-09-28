@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import flask
+import flask.testing
 import pytest
 import requests
 from six import BytesIO
