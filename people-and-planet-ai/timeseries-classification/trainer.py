@@ -192,7 +192,8 @@ def run(
     # For this sample we are using a mirrored distribution strategy,
     # which consists of a single machine with multiple GPUs.
     #   https://blog.tensorflow.org/2020/12/getting-started-with-distributed-tensorflow-on-gcp.html
-    distributed_strategy = tf.distribute.MirroredStrategy()
+    # distributed_strategy = tf.distribute.MirroredStrategy()
+    distributed_strategy = tf.distribute.get_strategy()
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
@@ -215,10 +216,13 @@ def run(
     # Train the model.
     logging.info("Training the model")
     model.fit(
-        train_dataset.repeat(),
-        steps_per_epoch=train_steps,
-        validation_data=eval_dataset.repeat(),
-        validation_steps=eval_steps,
+        # train_dataset.repeat(),
+        # steps_per_epoch=train_steps,
+        # validation_data=eval_dataset.repeat(),
+        # validation_steps=eval_steps,
+        train_dataset,
+        epochs=10,
+        validation_data=eval_dataset,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
             keras.callbacks.ModelCheckpoint(
