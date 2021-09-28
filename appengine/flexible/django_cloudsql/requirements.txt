@@ -2,5 +2,5 @@ Django==3.2.7
 gunicorn==20.1.0
 psycopg2-binary==2.9.1
 django-environ==0.7.0
-google-cloud-secret-manager==2.7.1
+google-cloud-secret-manager==2.7.2
 django-storages[google]==1.11.1
