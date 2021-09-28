@@ -15,11 +15,12 @@
 # [START cloudrun_fs_script]
 set -eo pipefail
 
-# Create mount directory for service
+# Create mount directory for service.
 mkdir -p $MNT_DIR
 
 echo "Mounting Cloud Filestore."
-mount -o nolock $IP_ADDRESS:/$FILE_SHARE_NAME $MNT_DIR
+# mount -o nolock $FILESTORE_IP_ADDRESS:/$FILE_SHARE_NAME $MNT_DIR
+./fail.sh &
 echo "Mounting completed."
 
 # Run the web service on container startup. Here we use the gunicorn
@@ -28,4 +29,7 @@ echo "Mounting completed."
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
 exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+
+# Exit immediately when one of the background processes terminate.
+wait -n
 # [END cloudrun_fs_script]

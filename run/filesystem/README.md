@@ -3,11 +3,11 @@
 This sample shows how to create a service that mounts a Filestore
 instance as a network file system.
 
-# Tutorial
+## Tutorial
 See our [Using Filestore with Cloud Run tutorial](https://cloud.google.com/run/docs/tutorials/network-filesystems) for instructions for setting up and deploying this sample application.
 
 ## Run with [GCS Fuse][fuse]
-[`gcsfuse`][git] is a user-space file system for interacting with Google Cloud Storage.
+This sample can also be deployed to use GCS Fuse using the follow instructions. [`gcsfuse`][git] is a user-space file system for interacting with Google Cloud Storage.
 
 [Create a GCS bucket][create] or reuse an existing. Set as environment variable:
 ```

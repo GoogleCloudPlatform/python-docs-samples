@@ -25,7 +25,7 @@ import uuid
 import pytest
 
 # Unique suffix to create distinct service names
-SUFFIX = uuid.uuid4().hex[:10]
+SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
@@ -45,7 +45,7 @@ def deployed_service():
             'cloudbuild.yaml',
             '--project',
             PROJECT,
-            f'--substitutions=_SERVICE_NAME={service_name},_IP_ADDRESS={ip_address},_CONNECTOR={connector}'
+            f'--substitutions=_SERVICE_NAME={service_name},_FILESTORE_IP_ADDRESS={ip_address},_CONNECTOR={connector}'
         ],
         check=True,
     )

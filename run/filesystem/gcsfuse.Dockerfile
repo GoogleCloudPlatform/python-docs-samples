@@ -17,7 +17,8 @@
 FROM python:3.9-buster
 
 # Install system dependencies
-RUN apt-get update -y && apt-get install -y \
+RUN set -e; \
+    apt-get update -y && apt-get install -y \
     tini \
     lsb-release; \
     gcsFuseRepo=gcsfuse-`lsb_release -c -s`; \
@@ -47,4 +48,4 @@ RUN chmod +x /app/gcsfuse_run.sh
 ENTRYPOINT ["/usr/bin/tini", "--"] 
 
 # Pass the startup script as arguments to Tini
-CMD ["/app//gcsfuse_run.sh"]
+CMD ["/app/gcsfuse_run.sh"]

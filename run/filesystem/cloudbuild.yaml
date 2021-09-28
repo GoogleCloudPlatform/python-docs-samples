@@ -16,12 +16,11 @@ steps:
     args:
       - "-c"
       - |
-        gcloud components install alpha --quiet
         gcloud alpha run deploy ${_SERVICE_NAME} \
           --source . \
           --execution-environment gen2 \
           --vpc-connector ${_CONNECTOR} \
-          --update-env-vars IP_ADDRESS=${_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE} \
+          --update-env-vars FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE} \
           --region ${_DEPLOY_REGION} \
           --no-allow-unauthenticated
 
@@ -30,4 +29,4 @@ substitutions:
   _DEPLOY_REGION: us-central1
   _FILESHARE: vol1
   _CONNECTOR: my-run-connector
-  _IP_ADDRESS: 0.0.0.0
+  _FILESTORE_IP_ADDRESS: 0.0.0.0

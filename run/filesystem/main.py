@@ -45,7 +45,10 @@ def index(path):
         html += f'<a href=\"{mnt_dir}\">{mnt_dir}</a><br/><br/>\n'
     else:
         # Write a new test file
-        write_file(mnt_dir, filename)
+        try:
+            write_file(mnt_dir, filename)
+        except Exception:
+            abort(500, description='Error writing file.')
 
     # Return all files if path is a directory, else return the file
     if (isdir(path)):
@@ -67,9 +70,8 @@ def write_file(mnt_dir, filename):
     '''Write files to a directory with date created'''
     date = datetime.datetime.now()
     file_date = date.strftime('%c').replace(' ', '-')
-    f = open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a')
-    f.write(f'This test file was created on {date}.')
-    f.close()
+    with open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a') as f:
+        f.write(f'This test file was created on {date}.')
 
 
 def read_file(full_path):
