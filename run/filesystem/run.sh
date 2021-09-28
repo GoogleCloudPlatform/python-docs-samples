@@ -19,8 +19,7 @@ set -eo pipefail
 mkdir -p $MNT_DIR
 
 echo "Mounting Cloud Filestore."
-# mount -o nolock $FILESTORE_IP_ADDRESS:/$FILE_SHARE_NAME $MNT_DIR
-./fail.sh &
+mount -o nolock $FILESTORE_IP_ADDRESS:/$FILE_SHARE_NAME $MNT_DIR
 echo "Mounting completed."
 
 # Run the web service on container startup. Here we use the gunicorn
