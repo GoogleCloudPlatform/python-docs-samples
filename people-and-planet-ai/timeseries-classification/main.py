@@ -26,8 +26,7 @@ app = flask.Flask(__name__)
 DEFAULT_TRAIN_EVAL_SPLIT = [80, 20]
 
 # Default values for training in Vertex AI.
-DEFAULT_TRAIN_STEPS = 10000
-DEFAULT_EVAL_STEPS = 1000
+DEFAULT_TRAIN_EPOCHS = 100
 DEFAULT_BATCH_SIZE = 128
 DEFAULT_MACHINE_TYPE = "n1-standard-4"
 DEFAULT_GPU_TYPE = "NVIDIA_TESLA_T4"
@@ -105,8 +104,7 @@ def run_train_model() -> dict:
             "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
             "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
             "training_dir": args.get("training_dir", TRAINING_DIR),
-            "train_steps": args.get("train_steps", DEFAULT_TRAIN_STEPS),
-            "eval_steps": args.get("eval_steps", DEFAULT_EVAL_STEPS),
+            "train_epochs": args.get("train_epochs", DEFAULT_TRAIN_EPOCHS),
             "batch_size": args.get("batch_size", DEFAULT_BATCH_SIZE),
             "machine_type": args.get("machine_type", DEFAULT_MACHINE_TYPE),
             "gpu_type": args.get("gpu_type", DEFAULT_GPU_TYPE),

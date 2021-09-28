@@ -114,7 +114,6 @@ def container_image() -> str:
             f"--tag={container_image}",
             f"--project={PROJECT}",
             "--machine-type=e2-highcpu-8",
-            "--timeout=30m",
             "--quiet",
         ],
         check=True,
@@ -268,11 +267,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
-        json={
-            "train_steps": 1000,
-            "eval_steps": 100,
-            "batch_size": 32,
-        },
+        json={"train_epochs": 100},
     ).json()
     logging.info(f"train_model response: {response}")
 

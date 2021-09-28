@@ -181,8 +181,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
 def run(
     train_data_dir: str,
     eval_data_dir: str,
-    train_steps: int,
-    eval_steps: int,
+    train_epochs: int,
     batch_size: int,
     model_dir: str,
     checkpoint_dir: str,
@@ -216,12 +215,8 @@ def run(
     # Train the model.
     logging.info("Training the model")
     model.fit(
-        # train_dataset.repeat(),
-        # steps_per_epoch=train_steps,
-        # validation_data=eval_dataset.repeat(),
-        # validation_steps=eval_steps,
         train_dataset,
-        epochs=10,
+        epochs=train_epochs,
         validation_data=eval_dataset,
         callbacks=[
             keras.callbacks.TensorBoard(tensorboard_dir, update_freq="batch"),
@@ -255,16 +250,10 @@ if __name__ == "__main__":
         help="Cloud Storage directory containing evaluation TFRecord files.",
     )
     parser.add_argument(
-        "--train-steps",
+        "--train-epochs",
         type=int,
         required=True,
         help="Number of times to go through the training dataset.",
-    )
-    parser.add_argument(
-        "--eval-steps",
-        type=int,
-        required=True,
-        help="Number of evaluation samples to take.",
     )
     parser.add_argument(
         "--batch-size",
@@ -293,8 +282,7 @@ if __name__ == "__main__":
     run(
         train_data_dir=args.train_data_dir,
         eval_data_dir=args.eval_data_dir,
-        train_steps=args.train_steps,
-        eval_steps=args.eval_steps,
+        train_epochs=args.train_epochs,
         batch_size=args.batch_size,
         model_dir=args.model_dir,
         checkpoint_dir=args.checkpoint_dir,
