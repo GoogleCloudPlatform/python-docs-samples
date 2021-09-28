@@ -1,7 +1,7 @@
-google-cloud-bigquery==2.26.0
-google-cloud-bigquery-storage==2.7.0
+google-cloud-bigquery==2.27.1
+google-cloud-bigquery-storage==2.9.0
 google-auth-oauthlib==0.4.6
-grpcio==1.40.0
+grpcio==1.41.0
 ipython==7.16.1; python_version < '3.7'
 ipython==7.17.0; python_version >= '3.7'
 matplotlib==3.3.4; python_version < '3.7'
