@@ -110,7 +110,7 @@ def create_dataset(data_dir: str, batch_size: int) -> tf.data.Dataset:
         tf.data.TFRecordDataset(file_names, compression_type="GZIP")
         .map(deserialize, num_parallel_calls=tf.data.AUTOTUNE)
         .shuffle(batch_size * 128)
-        .batch(batch_size)
+        .batch(batch_size, drop_remainder=True)
         .prefetch(tf.data.AUTOTUNE)
     )
 
@@ -192,8 +192,8 @@ def run(
     # For this sample we are using a mirrored distribution strategy,
     # which consists of a single machine with multiple GPUs.
     #   https://blog.tensorflow.org/2020/12/getting-started-with-distributed-tensorflow-on-gcp.html
-    # distributed_strategy = tf.distribute.MirroredStrategy()
-    distributed_strategy = tf.distribute.get_strategy()
+    distributed_strategy = tf.distribute.MirroredStrategy()
+    # distributed_strategy = tf.distribute.get_strategy()
 
     # Create the training and evaluation datasets from the TFRecord files.
     logging.info("Creating datasets")
