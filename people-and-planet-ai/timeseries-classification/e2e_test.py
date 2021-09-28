@@ -114,6 +114,7 @@ def container_image() -> str:
             f"--tag={container_image}",
             f"--project={PROJECT}",
             "--machine-type=e2-highcpu-8",
+            "--timeout=30m",
             "--quiet",
         ],
         check=True,
