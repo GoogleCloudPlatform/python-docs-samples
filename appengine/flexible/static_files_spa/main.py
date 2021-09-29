@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START gae_flex_python_static_files_spa]
-import os
 import logging
-
+import os
 from flask import Flask, send_from_directory
 
 # folder for static content relative to the current module
@@ -26,27 +25,27 @@ app = Flask(__name__)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    # NOTE: we don't use Flusk standard support for static files
-    # (static_folder option and send_static_file method)
-    # because they can't distinguish requests for static files (js/css) 
-    # and client routes (like /products)
-    file_requested = os.path.join(app.root_path, STATIC_DIR, path)
-    if not os.path.isfile(file_requested):
-        path = "index.html"
-    return send_from_directory(STATIC_DIR, path)
+  # NOTE: we don't use Flusk standard support for static files
+  # (static_folder option and send_static_file method)
+  # because they can't distinguish requests for static files (js/css)
+  # and client routes (like /products)
+  file_requested = os.path.join(app.root_path, STATIC_DIR, path)
+  if not os.path.isfile(file_requested):
+    path = "index.html"
+  return send_from_directory(STATIC_DIR, path)
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+  logging.exception('An error occurred during a request.')
+  return """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
     """.format(e), 500
 
 
 if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+  # This is used when running locally. Gunicorn is used to run the
+  # application on Google App Engine. See entrypoint in app.yaml.
+  app.run(host='127.0.0.1', port=8080, debug=True)
 # [END gae_flex_python_static_files_spa]

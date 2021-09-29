@@ -16,14 +16,14 @@ import main
 
 
 def test_index():
-    main.app.testing = True
-    client = main.app.test_client()
+  main.app.testing = True
+  client = main.app.test_client()
 
-    r = client.get('/')
-    assert r.status_code == 200
+  r = client.get('/')
+  assert r.status_code == 200
 
-    r = client.get('/main.css')
-    assert r.status_code == 200
+  r = client.get('/main.css')
+  assert r.status_code == 200
 
-    r = client.get('/not_existing_route')
-    assert r.status_code == 200
+  r = client.get('/not_existing_route')
+  assert r.status_code == 200
