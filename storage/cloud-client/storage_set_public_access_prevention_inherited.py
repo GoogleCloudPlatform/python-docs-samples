@@ -16,13 +16,13 @@
 
 import sys
 
-# [START storage_set_public_access_prevention_inherited]
-
 """Sample that sets public access prevention to inherited.
 This sample is used on this page:
     https://cloud.google.com/storage/docs/using-public-access-prevention
 For more information, see README.md.
 """
+
+# [START storage_set_public_access_prevention_inherited]
 
 from google.cloud import storage
 from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_INHERITED
