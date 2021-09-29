@@ -97,6 +97,10 @@ IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
 INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
+
+# Error if a python version is missing
+nox.options.error_on_missing_interpreters = True
+
 #
 # Style Checks
 #
