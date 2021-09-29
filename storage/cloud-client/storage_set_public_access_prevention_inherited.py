@@ -22,7 +22,7 @@ from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_INHERITED
 
 
 def set_public_access_prevention_inherited(bucket_name):
-    """Sets the public access prevention status to unspecified, so that the bucket inherits its setting from its parent project."""
+    """Sets the public access prevention status to inherited, so that the bucket inherits its setting from its parent project."""
     # The ID of your GCS bucket
     # bucket_name = "my-bucket"
 
