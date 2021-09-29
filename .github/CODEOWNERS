@@ -61,6 +61,7 @@
 /people-and-planet-ai/**/*.py          @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
+/rosync/                               @nikkytub @GoogleCloudPlatform/python-samples-owners
 /run/**/*.py                           @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /run/django/**/*.py                    @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
 /scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
