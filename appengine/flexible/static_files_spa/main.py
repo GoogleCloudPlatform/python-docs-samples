@@ -25,7 +25,7 @@ app = Flask(__name__)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-  # NOTE: we don't use Flusk standard support for static files
+  # NOTE: we don't use Flask standard support for static files
   # (static_folder option and send_static_file method)
   # because they can't distinguish requests for static files (js/css)
   # and client routes (like /products)
