@@ -58,6 +58,7 @@
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
 /notebooks/**/*.py                     @alixhami @GoogleCloudPlatform/python-samples-owners
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
+/people-and-planet-ai/**/*.py          @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
 /run/**/*.py                           @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
