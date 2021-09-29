@@ -85,6 +85,7 @@ def test_print_bucket_acl_for_user(test_bucket, capsys):
     assert "OWNER" in out
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_add_bucket_owner(test_bucket):
     storage_add_bucket_owner.add_bucket_owner(test_bucket.name, TEST_EMAIL)
 
@@ -92,6 +93,7 @@ def test_add_bucket_owner(test_bucket):
     assert "OWNER" in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_remove_bucket_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
@@ -103,6 +105,7 @@ def test_remove_bucket_owner(test_bucket):
     assert "OWNER" not in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_add_bucket_default_owner(test_bucket):
     storage_add_bucket_default_owner.add_bucket_default_owner(
         test_bucket.name, TEST_EMAIL
@@ -113,6 +116,7 @@ def test_add_bucket_default_owner(test_bucket):
     assert "OWNER" in roles
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_remove_bucket_default_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
@@ -146,6 +150,7 @@ def test_print_blob_acl_for_user(test_blob, capsys):
     assert "OWNER" in out
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_add_blob_owner(test_blob):
     storage_add_file_owner.add_blob_owner(
         test_blob.bucket.name, test_blob.name, TEST_EMAIL)
@@ -154,6 +159,7 @@ def test_add_blob_owner(test_blob):
     assert "OWNER" in test_blob.acl.user(TEST_EMAIL).get_roles()
 
 
+@backoff.on_exception(backoff.expo, HttpError, max_time=60)
 def test_remove_blob_owner(test_blob):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
