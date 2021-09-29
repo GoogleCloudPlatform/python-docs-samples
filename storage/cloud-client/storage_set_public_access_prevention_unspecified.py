@@ -16,9 +16,9 @@
 
 import sys
 
-# [START storage_set_public_access_prevention_inherited]
+# [START storage_set_public_access_prevention_unspecified]
 from google.cloud import storage
-from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_INHERITED
+from google.cloud.storage.constants import PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
 
 
 def set_public_access_prevention_inherited(bucket_name):
@@ -30,14 +30,14 @@ def set_public_access_prevention_inherited(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
 
     bucket.iam_configuration.public_access_prevention = (
-        PUBLIC_ACCESS_PREVENTION_INHERITED
+        PUBLIC_ACCESS_PREVENTION_UNSPECIFIED
     )
     bucket.patch()
 
-    print(f"Public access prevention is 'inherited' for {bucket.name}.")
+    print(f"Public access prevention is 'unspecified' for {bucket.name}.")
 
 
-# [END storage_set_public_access_prevention_inherited]
+# [END storage_set_public_access_prevention_unspecified]
 
 if __name__ == "__main__":
-    set_public_access_prevention_inherited(bucket_name=sys.argv[1])
+    set_public_access_prevention_unspecified(bucket_name=sys.argv[1])
