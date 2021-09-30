@@ -15,7 +15,6 @@
 import datetime
 import logging
 import os
-import ssl
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
