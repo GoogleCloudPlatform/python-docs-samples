@@ -1,2 +1,2 @@
-google-cloud-vision==2.4.3
+google-cloud-vision==2.4.4
 google-cloud-storage==1.42.2
