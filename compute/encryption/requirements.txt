@@ -1,4 +1,4 @@
-cryptography==3.4.8
+cryptography==35.0.0
 requests==2.26.0
 google-api-python-client==2.23.0
 google-auth==2.0.0
