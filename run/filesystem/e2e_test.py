@@ -128,7 +128,7 @@ def test_end_to_end(service_url_auth_token):
     body = response.read()
     weekday = date.strftime('%a')
     month = date.strftime('%b')
-    day = date.strftime('%d')
+    day = date.strftime('%-d')
     assert f'{weekday}-{month}-{day}' in body.decode()  # Date
     hour = date.strftime('%H')
     minute = date.strftime('%M')
