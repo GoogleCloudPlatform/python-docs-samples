@@ -16,7 +16,6 @@ import datetime
 import os
 from os.path import isdir, isfile, join
 import signal
-import sys
 
 from flask import abort, Flask, redirect
 
