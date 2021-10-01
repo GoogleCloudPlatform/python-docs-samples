@@ -22,7 +22,7 @@ def test_get_public_access_prevention(bucket, capsys):
     short_name = storage_get_public_access_prevention
     short_name.get_public_access_prevention(bucket.name)
     out, _ = capsys.readouterr()
-    assert f"Public access prevention is unspecified for {bucket.name}." in out
+    assert f"Public access prevention is inherited for {bucket.name}." in out
 
 
 def test_set_public_access_prevention_enforced(bucket, capsys):
