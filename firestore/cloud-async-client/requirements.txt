@@ -1,1 +1,1 @@
-google-cloud-firestore==2.3.3
+google-cloud-firestore==2.3.4

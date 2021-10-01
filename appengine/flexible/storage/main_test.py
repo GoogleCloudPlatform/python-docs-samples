@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import uuid
+
+import flask
+import flask.testing
+from google.cloud import storage
 import pytest
 import requests
 from six import BytesIO
@@ -20,24 +26,34 @@ import main
 
 
 @pytest.fixture
-def client():
+def client() -> flask.testing.FlaskClient:
     main.app.testing = True
     return main.app.test_client()
 
 
-def test_index(client):
+def test_index(client: flask.testing.FlaskClient) -> None:
     r = client.get('/')
     assert r.status_code == 200
 
 
-def test_upload(client):
+@pytest.fixture(scope="module")
+def blob_name() -> str:
+    name = f"gae-flex-storage-{uuid.uuid4()}"
+    yield name
+
+    bucket = storage.Client().bucket(os.environ["CLOUD_STORAGE_BUCKET"])
+    blob = bucket.blob(name)
+    blob.delete()
+
+
+def test_upload(client: flask.testing.FlaskClient, blob_name: str) -> None:
     # Upload a simple file
     file_content = b"This is some test content."
 
     r = client.post(
         '/upload',
         data={
-            'file': (BytesIO(file_content), 'example.txt')
+            'file': (BytesIO(file_content), blob_name)
         }
     )
 
