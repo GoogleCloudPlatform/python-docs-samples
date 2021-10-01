@@ -126,10 +126,4 @@ def test_end_to_end(service_url_auth_token):
 
     date = datetime.datetime.utcnow()
     body = response.read()
-    weekday = date.strftime('%a')
-    month = date.strftime('%b')
-    day = date.strftime('%-d')
-    assert f'{weekday}-{month}-{day}' in body.decode()  # Date
-    hour = date.strftime('%H')
-    minute = date.strftime('%M')
-    assert f'{hour}:{minute}' in body.decode()  # Time
+    assert '{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}:{dt:%M}-{dt:%Y}'.format(dt=date) in body.decode()

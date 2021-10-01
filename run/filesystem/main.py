@@ -68,8 +68,8 @@ def index(path):
 
 def write_file(mnt_dir, filename):
     '''Write files to a directory with date created'''
-    date = datetime.datetime.now()
-    file_date = date.strftime('%c').replace(' ', '-')
+    date = datetime.datetime.utcnow()
+    file_date = '{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}:{dt:%M}-{dt:%Y}'.format(dt=date)
     with open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a') as f:
         f.write(f'This test file was created on {date}.')
 
@@ -83,8 +83,7 @@ def read_file(full_path):
 def shutdown_handler(signal, frame):
     '''SIGTERM handler'''
     print('Caught SIGTERM signal.', flush=True)
-    sys.exit()
-    # return
+    return
 
 
 # Register SIGTERM handler
