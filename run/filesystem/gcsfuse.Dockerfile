@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_fuse_dockerfile]
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
 FROM python:3.9-buster
@@ -49,3 +50,4 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # Pass the startup script as arguments to Tini
 CMD ["/app/gcsfuse_run.sh"]
+# [END cloudrun_fuse_dockerfile]

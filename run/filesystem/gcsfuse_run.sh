@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START cloudrun_fuse_script]
 set -eo pipefail
 
 # Create mount directory for service
@@ -30,3 +31,4 @@ exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app &
 
 # Exit immediately when one of the background processes terminate.
 wait -n
+# [END cloudrun_fuse_script]
