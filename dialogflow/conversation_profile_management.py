@@ -29,8 +29,8 @@ def list_conversation_profiles(project_id):
     project_path = client.common_project_path(project_id)
     response = client.list_conversation_profiles(parent=project_path)
     for conversation_profile in response:
-        print('Display Name: {}'.format(conversation_profile.display_name))
-        print('Name: {}'.format(conversation_profile.name))
+        print("Display Name: {}".format(conversation_profile.display_name))
+        print("Name: {}".format(conversation_profile.name))
     return response
 
 
@@ -39,10 +39,11 @@ def list_conversation_profiles(project_id):
 
 # [START dialogflow_create_conversation_profile_article_faq]
 def create_conversation_profile_article_faq(
-        project_id,
-        display_name,
-        article_suggestion_knowledge_base_id=None,
-        faq_knowledge_base_id=None):
+    project_id,
+    display_name,
+    article_suggestion_knowledge_base_id=None,
+    faq_knowledge_base_id=None,
+):
     """Creates a conversation profile with given values
 
     Args: project_id:  The GCP project linked with the conversation profile.
@@ -56,65 +57,58 @@ def create_conversation_profile_article_faq(
     project_path = client.common_project_path(project_id)
 
     conversation_profile = {
-        'display_name': display_name,
-        'human_agent_assistant_config': {
-            'human_agent_suggestion_config': {
-                'feature_configs': []
-            }
+        "display_name": display_name,
+        "human_agent_assistant_config": {
+            "human_agent_suggestion_config": {"feature_configs": []}
         },
-        'language_code': 'en-US'
+        "language_code": "en-US",
     }
 
     if article_suggestion_knowledge_base_id is not None:
         as_kb_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
-            project_id, article_suggestion_knowledge_base_id)
+            project_id, article_suggestion_knowledge_base_id
+        )
         feature_config = {
-            'suggestion_feature': {
-                'type_': 'ARTICLE_SUGGESTION'
+            "suggestion_feature": {"type_": "ARTICLE_SUGGESTION"},
+            "suggestion_trigger_settings": {
+                "no_small_talk": True,
+                "only_end_user": True,
             },
-            'suggestion_trigger_settings': {
-                'no_small_talk': True,
-                'only_end_user': True,
-            },
-            'query_config': {
-                'knowledge_base_query_source': {
-                    'knowledge_bases': [as_kb_path]
-                },
-                'max_results': 3
+            "query_config": {
+                "knowledge_base_query_source": {"knowledge_bases": [as_kb_path]},
+                "max_results": 3,
             },
         }
-        conversation_profile['human_agent_assistant_config'][
-            'human_agent_suggestion_config']['feature_configs'].append(
-                feature_config)
+        conversation_profile["human_agent_assistant_config"][
+            "human_agent_suggestion_config"
+        ]["feature_configs"].append(feature_config)
     if faq_knowledge_base_id is not None:
         faq_kb_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
-            project_id, faq_knowledge_base_id)
+            project_id, faq_knowledge_base_id
+        )
         feature_config = {
-            'suggestion_feature': {
-                'type_': 'FAQ'
+            "suggestion_feature": {"type_": "FAQ"},
+            "suggestion_trigger_settings": {
+                "no_small_talk": True,
+                "only_end_user": True,
             },
-            'suggestion_trigger_settings': {
-                'no_small_talk': True,
-                'only_end_user': True,
-            },
-            'query_config': {
-                'knowledge_base_query_source': {
-                    'knowledge_bases': [faq_kb_path]
-                },
-                'max_results': 3
+            "query_config": {
+                "knowledge_base_query_source": {"knowledge_bases": [faq_kb_path]},
+                "max_results": 3,
             },
         }
-        conversation_profile['human_agent_assistant_config'][
-            'human_agent_suggestion_config']['feature_configs'].append(
-                feature_config)
+        conversation_profile["human_agent_assistant_config"][
+            "human_agent_suggestion_config"
+        ]["feature_configs"].append(feature_config)
 
     response = client.create_conversation_profile(
-        parent=project_path, conversation_profile=conversation_profile)
+        parent=project_path, conversation_profile=conversation_profile
+    )
 
-    print('Conversation Profile created:')
-    print('Display Name: {}'.format(response.display_name))
+    print("Conversation Profile created:")
+    print("Display Name: {}".format(response.display_name))
     # Put Name is the last to make it easier to retrieve.
-    print('Name: {}'.format(response.name))
+    print("Name: {}".format(response.name))
     return response
 
 
@@ -122,9 +116,9 @@ def create_conversation_profile_article_faq(
 
 
 # [START dialogflow_create_conversation_profile_smart_reply]
-def create_conversation_profile_smart_reply(project_id, display_name,
-                                            smart_reply_allowlist_name,
-                                            smart_reply_model_name):
+def create_conversation_profile_smart_reply(
+    project_id, display_name, smart_reply_allowlist_name, smart_reply_model_name
+):
     """Creates a conversation profile with given values for smart reply
 
     Args: project_id:  The GCP project linked with the conversation profile.
@@ -137,43 +131,33 @@ def create_conversation_profile_smart_reply(project_id, display_name,
     project_path = client.common_project_path(project_id)
 
     conversation_profile = {
-        'display_name': display_name,
-        'human_agent_assistant_config': {
-            'human_agent_suggestion_config': {
-                'feature_configs': []
-            }
+        "display_name": display_name,
+        "human_agent_assistant_config": {
+            "human_agent_suggestion_config": {"feature_configs": []}
         },
-        'language_code': 'en-US'
+        "language_code": "en-US",
     }
     feature_config = {
-        'suggestion_feature': {
-            'type_': 'SMART_REPLY'
+        "suggestion_feature": {"type_": "SMART_REPLY"},
+        "suggestion_trigger_settings": {"no_small_talk": True, "only_end_user": True, },
+        "query_config": {
+            "document_query_source": {"documents": [smart_reply_allowlist_name]},
+            "max_results": 3,
         },
-        'suggestion_trigger_settings': {
-            'no_small_talk': True,
-            'only_end_user': True,
-        },
-        'query_config': {
-            'document_query_source': {
-                'documents': [smart_reply_allowlist_name]
-            },
-            'max_results': 3
-        },
-        'conversation_model_config': {
-            'model': smart_reply_model_name
-        }
+        "conversation_model_config": {"model": smart_reply_model_name},
     }
-    conversation_profile['human_agent_assistant_config'][
-        'human_agent_suggestion_config']['feature_configs'].append(
-            feature_config)
+    conversation_profile["human_agent_assistant_config"][
+        "human_agent_suggestion_config"
+    ]["feature_configs"].append(feature_config)
 
     response = client.create_conversation_profile(
-        parent=project_path, conversation_profile=conversation_profile)
+        parent=project_path, conversation_profile=conversation_profile
+    )
 
-    print('Conversation Profile created:')
-    print('Display Name: {}'.format(response.display_name))
+    print("Conversation Profile created:")
+    print("Display Name: {}".format(response.display_name))
     # Put Name is the last to make it easier to retrieve.
-    print('Name: {}'.format(response.name))
+    print("Name: {}".format(response.name))
     return response
 
 
@@ -189,13 +173,14 @@ def get_conversation_profile(project_id, conversation_profile_id):
 
     client = dialogflow.ConversationProfilesClient()
     conversation_profile_path = client.conversation_profile_path(
-        project_id, conversation_profile_id)
+        project_id, conversation_profile_id
+    )
 
     response = client.get_conversation_profile(name=conversation_profile_path)
 
-    print('Got conversation profile:')
-    print('Display Name: {}'.format(response.display_name))
-    print('Name: {}'.format(response.name))
+    print("Got conversation profile:")
+    print("Display Name: {}".format(response.display_name))
+    print("Name: {}".format(response.name))
     return response
 
 
@@ -211,11 +196,12 @@ def delete_conversation_profile(project_id, conversation_profile_id):
 
     client = dialogflow.ConversationProfilesClient()
     conversation_profile_path = client.conversation_profile_path(
-        project_id, conversation_profile_id)
+        project_id, conversation_profile_id
+    )
 
     client.delete_conversation_profile(name=conversation_profile_path)
 
-    print('Conversation Profile deleted.')
+    print("Conversation Profile deleted.")
 
 
 # [END dialogflow_delete_conversation_profile]

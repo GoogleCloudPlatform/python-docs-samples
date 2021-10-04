@@ -19,10 +19,10 @@ import conversation_management
 import conversation_profile_management
 import participant_management
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-SMART_REPLY_MODEL = os.getenv('SMART_REPLY_MODEL')
-SMART_REPLY_ALLOWLIST = os.getenv('SMART_REPLY_ALLOWLIST')
-CONVERSATION_PROFILE_DISPLAY_NAME = 'sample code profile for smart reply'
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+SMART_REPLY_MODEL = os.getenv("SMART_REPLY_MODEL")
+SMART_REPLY_ALLOWLIST = os.getenv("SMART_REPLY_ALLOWLIST")
+CONVERSATION_PROFILE_DISPLAY_NAME = "sample code profile for smart reply"
 
 
 def test_smart_reply(capsys):
@@ -34,64 +34,72 @@ def test_smart_reply(capsys):
         project_id=PROJECT_ID,
         display_name=CONVERSATION_PROFILE_DISPLAY_NAME,
         smart_reply_allowlist_name=SMART_REPLY_ALLOWLIST,
-        smart_reply_model_name=SMART_REPLY_MODEL)
+        smart_reply_model_name=SMART_REPLY_MODEL,
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
-    conversation_profile_id = out.split('conversationProfiles/')[1].rstrip()
+    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+    conversation_profile_id = out.split("conversationProfiles/")[1].rstrip()
 
     # Create conversation.
     conversation_management.create_conversation(
-        project_id=PROJECT_ID, conversation_profile_id=conversation_profile_id)
+        project_id=PROJECT_ID, conversation_profile_id=conversation_profile_id
+    )
 
     out, _ = capsys.readouterr()
-    conversation_id = out.split('conversations/')[1].rstrip()
+    conversation_id = out.split("conversations/")[1].rstrip()
 
     # Create end user participant.
-    participant_management.create_participant(project_id=PROJECT_ID,
-                                              conversation_id=conversation_id,
-                                              role='END_USER')
+    participant_management.create_participant(
+        project_id=PROJECT_ID, conversation_id=conversation_id, role="END_USER"
+    )
     out, _ = capsys.readouterr()
-    end_user_id = out.split('participants/')[1].rstrip()
+    end_user_id = out.split("participants/")[1].rstrip()
 
     # Create human agent participant.
-    participant_management.create_participant(project_id=PROJECT_ID,
-                                              conversation_id=conversation_id,
-                                              role='HUMAN_AGENT')
+    participant_management.create_participant(
+        project_id=PROJECT_ID, conversation_id=conversation_id, role="HUMAN_AGENT"
+    )
     out, _ = capsys.readouterr()
-    human_agent_id = out.split('participants/')[1].rstrip()
+    human_agent_id = out.split("participants/")[1].rstrip()
 
     # AnalyzeContent
     participant_management.analyze_content_text(
         project_id=PROJECT_ID,
         conversation_id=conversation_id,
         participant_id=human_agent_id,
-        text='Hi, how are you?')
+        text="Hi, how are you?",
+    )
     out, _ = capsys.readouterr()
-    assert 'What would you like to know?' in out
+    assert "What would you like to know?" in out
 
     response = participant_management.analyze_content_text(
         project_id=PROJECT_ID,
         conversation_id=conversation_id,
         participant_id=end_user_id,
-        text='I am doing well, just want to check')
+        text="I am doing well, just want to check",
+    )
     out, _ = capsys.readouterr()
-    assert 'Sounds good.' in out
+    assert "Sounds good." in out
     # Update AnswerRecord.
-    answer_record_id = response.human_agent_suggestion_results[
-        0].suggest_smart_replies_response.smart_reply_answers[
-            0].answer_record.split('answerRecords/')[1].rstrip()
+    answer_record_id = (
+        response.human_agent_suggestion_results[0]
+        .suggest_smart_replies_response.smart_reply_answers[0]
+        .answer_record.split("answerRecords/")[1]
+        .rstrip()
+    )
     answer_record_management.update_answer_record(
-        project_id=PROJECT_ID,
-        answer_record_id=answer_record_id,
-        is_clicked=True)
+        project_id=PROJECT_ID, answer_record_id=answer_record_id, is_clicked=True
+    )
     out, _ = capsys.readouterr()
-    assert 'Clicked: True' in out
+    assert "Clicked: True" in out
 
     # Complete conversation.
     conversation_management.complete_conversation(
-        project_id=PROJECT_ID, conversation_id=conversation_id)
+        project_id=PROJECT_ID, conversation_id=conversation_id
+    )
 
     # Delete conversation profile.
     conversation_profile_management.delete_conversation_profile(
-        project_id=PROJECT_ID, conversation_profile_id=conversation_profile_id)
+        project_id=PROJECT_ID, conversation_profile_id=conversation_profile_id
+    )
