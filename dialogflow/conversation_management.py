@@ -31,17 +31,17 @@ def create_conversation(project_id, conversation_profile_id):
     client = dialogflow.ConversationsClient()
     conversation_profile_client = dialogflow.ConversationProfilesClient()
     project_path = client.common_project_path(project_id)
-    conversation_profile_path = (
-        conversation_profile_client.conversation_profile_path(
-            project_id, conversation_profile_id))
-    conversation = {'conversation_profile': conversation_profile_path}
-    response = client.create_conversation(parent=project_path,
-                                          conversation=conversation)
+    conversation_profile_path = conversation_profile_client.conversation_profile_path(
+        project_id, conversation_profile_id
+    )
+    conversation = {"conversation_profile": conversation_profile_path}
+    response = client.create_conversation(
+        parent=project_path, conversation=conversation
+    )
 
-    print('Life Cycle State: {}'.format(response.lifecycle_state))
-    print('Conversation Profile Name: {}'.format(
-        response.conversation_profile))
-    print('Name: {}'.format(response.name))
+    print("Life Cycle State: {}".format(response.lifecycle_state))
+    print("Conversation Profile Name: {}".format(response.conversation_profile))
+    print("Name: {}".format(response.name))
     return response
 
 
@@ -61,10 +61,9 @@ def get_conversation(project_id, conversation_id):
 
     response = client.get_conversation(name=conversation_path)
 
-    print('Life Cycle State: {}'.format(response.lifecycle_state))
-    print('Conversation Profile Name: {}'.format(
-        response.conversation_profile))
-    print('Name: {}'.format(response.name))
+    print("Life Cycle State: {}".format(response.lifecycle_state))
+    print("Conversation Profile Name: {}".format(response.conversation_profile))
+    print("Name: {}".format(response.name))
     return response
 
 
@@ -82,11 +81,10 @@ def complete_conversation(project_id, conversation_id):
     client = dialogflow.ConversationsClient()
     conversation_path = client.conversation_path(project_id, conversation_id)
     conversation = client.complete_conversation(name=conversation_path)
-    print('Completed Conversation.')
-    print('Life Cycle State: {}'.format(conversation.lifecycle_state))
-    print('Conversation Profile Name: {}'.format(
-        conversation.conversation_profile))
-    print('Name: {}'.format(conversation.name))
+    print("Completed Conversation.")
+    print("Life Cycle State: {}".format(conversation.lifecycle_state))
+    print("Conversation Profile Name: {}".format(conversation.conversation_profile))
+    print("Name: {}".format(conversation.name))
     return conversation
 
 

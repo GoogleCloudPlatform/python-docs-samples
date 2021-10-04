@@ -35,18 +35,20 @@ def setup_teardown():
     client = dialogflow.KnowledgeBasesClient()
     project_path = client.common_project_path(PROJECT_ID)
     knowledge_base = dialogflow.KnowledgeBase(display_name=KNOWLEDGE_BASE_NAME)
-    response = client.create_knowledge_base(parent=project_path,
-                                            knowledge_base=knowledge_base)
-    pytest.KNOWLEDGE_BASE_ID = response.name.split(
-        "/knowledgeBases/")[1].split("\n")[0]
+    response = client.create_knowledge_base(
+        parent=project_path, knowledge_base=knowledge_base
+    )
+    pytest.KNOWLEDGE_BASE_ID = response.name.split("/knowledgeBases/")[1].split("\n")[0]
 
     yield
 
     # Delete the created knowledge base
-    knowledge_base_path = client.knowledge_base_path(PROJECT_ID,
-                                                     pytest.KNOWLEDGE_BASE_ID)
-    request = dialogflow.DeleteKnowledgeBaseRequest(name=knowledge_base_path,
-                                                    force=True)
+    knowledge_base_path = client.knowledge_base_path(
+        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID
+    )
+    request = dialogflow.DeleteKnowledgeBaseRequest(
+        name=knowledge_base_path, force=True
+    )
     client.delete_knowledge_base(request=request)
 
 

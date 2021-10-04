@@ -36,7 +36,7 @@ def create_intent(project_id):
 
     intent.display_name = "fake_intent"
 
-    intents = intents_client.create_intent(request={"parent": parent,  "intent": intent})
+    intents = intents_client.create_intent(request={"parent": parent, "intent": intent})
 
     return intents.name.split("/")[4]
 

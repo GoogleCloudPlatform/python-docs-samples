@@ -39,20 +39,21 @@ def create_knowledge_base(project_id, display_name):
         project_id: The GCP project linked with the agent.
         display_name: The display name of the Knowledge base."""
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.KnowledgeBasesClient()
     project_path = client.common_project_path(project_id)
 
-    knowledge_base = dialogflow.KnowledgeBase(
-        display_name=display_name)
+    knowledge_base = dialogflow.KnowledgeBase(display_name=display_name)
 
     response = client.create_knowledge_base(
-        parent=project_path,
-        knowledge_base=knowledge_base
+        parent=project_path, knowledge_base=knowledge_base
     )
 
-    print('Knowledge Base created:\n')
-    print('Display Name: {}\n'.format(response.display_name))
-    print('Knowledge ID: {}\n'.format(response.name))
+    print("Knowledge Base created:\n")
+    print("Display Name: {}\n".format(response.display_name))
+    print("Knowledge ID: {}\n".format(response.name))
+
+
 # [END dialogflow_create_knowledge_base]
 
 
@@ -64,16 +65,18 @@ def get_knowledge_base(project_id, knowledge_base_id):
         project_id: The GCP project linked with the agent.
         knowledge_base_id: Id of the Knowledge base."""
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.KnowledgeBasesClient()
-    knowledge_base_path = client.knowledge_base_path(
-        project_id, knowledge_base_id)
+    knowledge_base_path = client.knowledge_base_path(project_id, knowledge_base_id)
 
     response = client.get_knowledge_base(name=knowledge_base_path)
 
-    print('Got Knowledge Base:')
-    print(' - Display Name: {}'.format(response.display_name))
-    print(' - Knowledge ID: {}'.format(response.name))
+    print("Got Knowledge Base:")
+    print(" - Display Name: {}".format(response.display_name))
+    print(" - Knowledge ID: {}".format(response.name))
     return response
+
+
 # [END dialogflow_get_knowledge_base]
 
 
@@ -85,54 +88,57 @@ def delete_knowledge_base(project_id, knowledge_base_id):
         project_id: The GCP project linked with the agent.
         knowledge_base_id: Id of the Knowledge base."""
     from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.KnowledgeBasesClient()
-    knowledge_base_path = client.knowledge_base_path(
-        project_id, knowledge_base_id)
+    knowledge_base_path = client.knowledge_base_path(project_id, knowledge_base_id)
 
     client.delete_knowledge_base(name=knowledge_base_path)
 
-    print('Knowledge Base deleted.')
+    print("Knowledge Base deleted.")
+
+
 # [END dialogflow_delete_knowledge_base]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        '--project-id', help='Project/agent id.', required=True)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--project-id", help="Project/agent id.", required=True)
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
     list_parser = subparsers.add_parser(
-        'list', help='List all Knowledge bases that belong to the project.')
+        "list", help="List all Knowledge bases that belong to the project."
+    )
 
-    create_parser = subparsers.add_parser(
-        'create', help='Create a new Knowledge base.')
+    create_parser = subparsers.add_parser("create", help="Create a new Knowledge base.")
     create_parser.add_argument(
-        '--display-name',
-        help='A name of the Knowledge base, used for display purpose, '
-             'can not be used to identify the Knowledge base.',
-        default=str(''))
+        "--display-name",
+        help="A name of the Knowledge base, used for display purpose, "
+        "can not be used to identify the Knowledge base.",
+        default=str(""),
+    )
 
-    get_parser = subparsers.add_parser(
-        'get', help='Get a Knowledge base by its id.')
+    get_parser = subparsers.add_parser("get", help="Get a Knowledge base by its id.")
     get_parser.add_argument(
-        '--knowledge-base-id', help='The id of the Knowledge base.',
-        required=True)
+        "--knowledge-base-id", help="The id of the Knowledge base.", required=True
+    )
 
     delete_parser = subparsers.add_parser(
-        'delete', help='Delete a Knowledge base by its id.')
+        "delete", help="Delete a Knowledge base by its id."
+    )
     delete_parser.add_argument(
-        '--knowledge-base-id',
-        help='The id of the Knowledge base you want to delete.',
-        required=True)
+        "--knowledge-base-id",
+        help="The id of the Knowledge base you want to delete.",
+        required=True,
+    )
 
     args = parser.parse_args()
 
-    if args.command == 'create':
+    if args.command == "create":
         create_knowledge_base(args.project_id, args.display_name)
-    elif args.command == 'get':
+    elif args.command == "get":
         get_knowledge_base(args.project_id, args.knowledge_base_id)
-    elif args.command == 'delete':
+    elif args.command == "delete":
         delete_knowledge_base(args.project_id, args.knowledge_base_id)
