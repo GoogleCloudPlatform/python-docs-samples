@@ -158,12 +158,17 @@ def transcribe_file_with_diarization():
 
     audio = speech.RecognitionAudio(content=content)
 
+    diarization_config = speech.SpeakerDiarizationConfig(
+      enable_speaker_diarization=True,
+      min_speaker_count=2,
+      max_speaker_count=10,
+    )
+
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=8000,
         language_code="en-US",
-        enable_speaker_diarization=True,
-        diarization_speaker_count=2,
+        diarization_config=diarization_config,
     )
 
     print("Waiting for operation to complete...")
