@@ -30,19 +30,17 @@ def update_answer_record(project_id, answer_record_id, is_clicked):
         is_clicked: whether the answer record is clicked."""
 
     client = dialogflow.AnswerRecordsClient()
-    answer_record_path = client.answer_record_path(project_id,
-                                                   answer_record_id)
+    answer_record_path = client.answer_record_path(project_id, answer_record_id)
 
     response = client.update_answer_record(
         answer_record={
-            'name': answer_record_path,
-            'answer_feedback': {
-                'clicked': is_clicked
-            }
+            "name": answer_record_path,
+            "answer_feedback": {"clicked": is_clicked},
         },
-        update_mask={'paths': ['answer_feedback']})
-    print('AnswerRecord Name: {}'.format(response.name))
-    print('Clicked: {}'.format(response.answer_feedback.clicked))
+        update_mask={"paths": ["answer_feedback"]},
+    )
+    print("AnswerRecord Name: {}".format(response.name))
+    print("Clicked: {}".format(response.answer_feedback.clicked))
     return response
 
 
