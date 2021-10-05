@@ -4,7 +4,7 @@ Flask==2.0.1
 google-api-core==1.31.3
 google-auth==1.35.0
 googleapis-common-protos==1.53.0
-opencensus==0.7.13
+opencensus==0.8.0
 opencensus-context==0.1.2
 opencensus-ext-prometheus==0.2.1
 prometheus-client==0.11.0
