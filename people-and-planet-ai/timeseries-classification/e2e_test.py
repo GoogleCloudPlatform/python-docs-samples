@@ -268,7 +268,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
-        json={"train_epochs": 100},
+        json={"train_epochs": 10, "batch_size": 8},
     ).json()
     logging.info(f"train_model response: {response}")
 
