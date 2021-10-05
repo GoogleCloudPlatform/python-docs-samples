@@ -1,3 +1,5 @@
+# be sure to update the constraints file to match
+# see https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 apache-airflow==2.1.2
 apache-airflow-providers-apache-beam==3.0.0
 apache-airflow-providers-google==5.1.0
