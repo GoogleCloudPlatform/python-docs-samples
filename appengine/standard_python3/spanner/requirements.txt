@@ -1,2 +1,2 @@
-google-cloud-spanner==3.11.0
+google-cloud-spanner==3.11.1
 Flask==2.0.1
