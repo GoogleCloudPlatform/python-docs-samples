@@ -259,7 +259,7 @@ def create_datasets(
         time.sleep(POLL_INTERVAL_SEC)
 
     logging.info(f"Datasets job finished with status {status}")
-    assert status == DATAFLOW_SUCCESS_STATE
+    assert status == DATAFLOW_SUCCESS_STATE, f"job_url: {job_url}"
     yield job_id
 
 
@@ -268,7 +268,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
-        json={"train_epochs": 100},
+        json={"train_epochs": 10, "batch_size": 8},
     ).json()
     logging.info(f"train_model response: {response}")
 
@@ -295,7 +295,7 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
         time.sleep(POLL_INTERVAL_SEC)
 
     logging.info(f"Model job finished with status {status}")
-    assert status == VERTEX_AI_SUCCESS_STATE
+    assert status == VERTEX_AI_SUCCESS_STATE, f"job_url: {job_url}"
     yield job_id
 
 
