@@ -48,6 +48,7 @@ def numerical_risk_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
+    import concurrent.futures
 
     # Import the client library.
     import google.cloud.dlp
@@ -116,7 +117,7 @@ def numerical_risk_analysis(
 
     try:
         subscription.result(timeout=timeout)
-    except TimeoutError:
+    except concurrent.futures.TimeoutError:
         print(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."
@@ -156,6 +157,7 @@ def categorical_risk_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
+    import concurrent.futures
 
     # Import the client library.
     import google.cloud.dlp
@@ -237,7 +239,7 @@ def categorical_risk_analysis(
 
     try:
         subscription.result(timeout=timeout)
-    except TimeoutError:
+    except concurrent.futures.TimeoutError:
         print(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."
@@ -277,6 +279,7 @@ def k_anonymity_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
+    import concurrent.futures
 
     # Import the client library.
     import google.cloud.dlp
@@ -367,7 +370,7 @@ def k_anonymity_analysis(
 
     try:
         subscription.result(timeout=timeout)
-    except TimeoutError:
+    except concurrent.futures.TimeoutError:
         print(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."
@@ -409,6 +412,7 @@ def l_diversity_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
+    import concurrent.futures
 
     # Import the client library.
     import google.cloud.dlp
@@ -509,7 +513,7 @@ def l_diversity_analysis(
 
     try:
         subscription.result(timeout=timeout)
-    except TimeoutError:
+    except concurrent.futures.TimeoutError:
         print(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."
@@ -558,6 +562,7 @@ def k_map_estimate_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
+    import concurrent.futures
 
     # Import the client library.
     import google.cloud.dlp
@@ -659,7 +664,7 @@ def k_map_estimate_analysis(
 
     try:
         subscription.result(timeout=timeout)
-    except TimeoutError:
+    except concurrent.futures.TimeoutError:
         print(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."

@@ -36,8 +36,6 @@ BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
-TIMEOUT = 120  # 2 minutes
-
 
 # Create new custom topic/subscription
 # We observe sometimes all the tests in this file fail. In a
@@ -173,7 +171,6 @@ def test_numerical_risk_analysis(topic_id, subscription_id, bigquery_project, ca
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -192,7 +189,6 @@ def test_categorical_risk_analysis_on_string_field(
         UNIQUE_FIELD,
         topic_id,
         subscription_id,
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -211,7 +207,6 @@ def test_categorical_risk_analysis_on_number_field(
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -230,7 +225,6 @@ def test_k_anonymity_analysis_single_field(
         topic_id,
         subscription_id,
         [NUMERIC_FIELD],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -250,7 +244,6 @@ def test_k_anonymity_analysis_multiple_fields(
         topic_id,
         subscription_id,
         [NUMERIC_FIELD, REPEATED_FIELD],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -271,7 +264,6 @@ def test_l_diversity_analysis_single_field(
         subscription_id,
         UNIQUE_FIELD,
         [NUMERIC_FIELD],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -293,7 +285,6 @@ def test_l_diversity_analysis_multiple_field(
         subscription_id,
         UNIQUE_FIELD,
         [NUMERIC_FIELD, REPEATED_FIELD],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -315,7 +306,6 @@ def test_k_map_estimate_analysis_single_field(
         subscription_id,
         [NUMERIC_FIELD],
         ["AGE"],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -337,7 +327,6 @@ def test_k_map_estimate_analysis_multiple_field(
         subscription_id,
         [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
         ["AGE", "GENDER"],
-        timeout=TIMEOUT,
     )
 
     out, _ = capsys.readouterr()
@@ -360,5 +349,4 @@ def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
             subscription_id,
             [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
             ["AGE"],
-            timeout=TIMEOUT,
         )
