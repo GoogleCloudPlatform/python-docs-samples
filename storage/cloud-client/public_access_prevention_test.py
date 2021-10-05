@@ -16,41 +16,35 @@ import pytest
 
 import storage_get_public_access_prevention
 import storage_set_public_access_prevention_enforced
+import storage_set_public_access_prevention_inherited
 import storage_set_public_access_prevention_unspecified
 
 
-@pytest.mark.skip(reason="Unspecified PAP is changing to inherited")
+@pytest.mark.skip(reason="Inconsistent due to unspecified->inherited change")
 def test_get_public_access_prevention(bucket, capsys):
     short_name = storage_get_public_access_prevention
-    short_name.get_public_access_prevention(
-        bucket.name
-    )
+    short_name.get_public_access_prevention(bucket.name)
     out, _ = capsys.readouterr()
-    assert (
-        f"Public access prevention is unspecified for {bucket.name}."
-        in out
-    )
+    assert f"Public access prevention is inherited for {bucket.name}." in out
 
 
 def test_set_public_access_prevention_enforced(bucket, capsys):
     short_name = storage_set_public_access_prevention_enforced
-    short_name.set_public_access_prevention_enforced(
-        bucket.name
-    )
+    short_name.set_public_access_prevention_enforced(bucket.name)
     out, _ = capsys.readouterr()
-    assert (
-        f"Public access prevention is set to enforced for {bucket.name}."
-        in out
-    )
+    assert f"Public access prevention is set to enforced for {bucket.name}." in out
 
 
+@pytest.mark.skip(reason="Inconsistent due to unspecified->inherited change")
 def test_set_public_access_prevention_unspecified(bucket, capsys):
     short_name = storage_set_public_access_prevention_unspecified
-    short_name.set_public_access_prevention_unspecified(
-        bucket.name
-    )
+    short_name.set_public_access_prevention_unspecified(bucket.name)
     out, _ = capsys.readouterr()
-    assert (
-        f"Public access prevention is 'unspecified' for {bucket.name}."
-        in out
-    )
+    assert f"Public access prevention is 'unspecified' for {bucket.name}." in out
+
+
+def test_set_public_access_prevention_inherited(bucket, capsys):
+    short_name = storage_set_public_access_prevention_inherited
+    short_name.set_public_access_prevention_inherited(bucket.name)
+    out, _ = capsys.readouterr()
+    assert f"Public access prevention is 'inherited' for {bucket.name}." in out

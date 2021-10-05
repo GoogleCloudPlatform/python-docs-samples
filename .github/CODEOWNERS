@@ -9,9 +9,9 @@
 # explicitly taken by someone else.
 *                               @GoogleCloudPlatform/python-samples-owners
 
-/appengine/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
-/appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
-/appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/appengine/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
 /auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
@@ -37,9 +37,9 @@
 /dns/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
 /error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
-/eventarc/**/*.py                      @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/eventarc/**/*.py                      @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
-/functions/**/*.py                     @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
+/functions/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /functions/spanner/*.py                @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
 /iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
@@ -61,9 +61,9 @@
 /people-and-planet-ai/**/*.py          @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
-/run/**/*.py                           @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
-/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/cdpe-serverless @GoogleCloudPlatform/python-samples-owners
-/scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
+/run/**/*.py                           @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/scheduler/**/*.py                     @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
 /storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
