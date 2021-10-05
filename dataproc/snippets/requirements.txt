@@ -5,4 +5,4 @@ google-auth==2.2.1
 google-auth-httplib2==0.1.0
 google-cloud==0.34.0
 google-cloud-storage==1.42.3
-google-cloud-dataproc==2.5.0
+google-cloud-dataproc==3.0.0
