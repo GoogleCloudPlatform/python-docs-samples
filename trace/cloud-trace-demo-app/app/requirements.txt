@@ -1,6 +1,6 @@
 google-cloud-monitoring==2.5.1
 google-cloud-trace==0.24.0
-opencensus==0.7.13
+opencensus==0.8.0
 # Don't upgrade to 2.0.0 yet until opencensus-ext-flask is okay with it
 Flask==1.1.4
 opencensus-ext-stackdriver==0.8.0
