@@ -4,7 +4,7 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.9
+FROM python:3.10
 
 # Send stdout/stderr out, do not buffer.
 ENV PYTHONUNBUFFERED 1
