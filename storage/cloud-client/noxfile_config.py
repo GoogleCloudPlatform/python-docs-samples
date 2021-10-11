@@ -39,6 +39,9 @@ def get_service_account_email():
     if session == 'py-3.8':
         return ('py38-storage-test@'
                 'python-docs-samples-tests.iam.gserviceaccount.com')
+    if session == 'py-3.10':
+        return ('py310-storage-test@'
+                'python-docs-samples-tests-310.iam.gserviceaccount.com')
     return os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
 
 
@@ -57,6 +60,9 @@ def get_cloud_kms_key():
                 'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     if session == 'py-3.9':
         return ('projects/python-docs-samples-tests-py39/locations/us/'
+                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+    if session == 'py-3.10':
+        return ('projects/python-docs-samples-tests-310/locations/us/'
                 'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     return os.environ['CLOUD_KMS_KEY']
 
