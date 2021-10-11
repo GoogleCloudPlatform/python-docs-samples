@@ -15,6 +15,7 @@
 # [START gae_flex_storage_app]
 import logging
 import os
+from typing import Union
 
 from flask import Flask, request
 from google.cloud import storage
@@ -26,7 +27,7 @@ CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @app.route('/')
-def index():
+def index() -> str:
     return """
 <form method="POST" action="/upload" enctype="multipart/form-data">
     <input type="file" name="file">
@@ -36,7 +37,7 @@ def index():
 
 
 @app.route('/upload', methods=['POST'])
-def upload():
+def upload() -> str:
     """Process the uploaded file and upload it to Google Cloud Storage."""
     uploaded_file = request.files.get('file')
 
@@ -57,12 +58,17 @@ def upload():
         content_type=uploaded_file.content_type
     )
 
+    # Make the blob public. This is not necessary if the
+    # entire bucket is public.
+    # See https://cloud.google.com/storage/docs/access-control/making-data-public.
+    blob.make_public()
+
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
 
 
 @app.errorhandler(500)
-def server_error(e):
+def server_error(e: Union[Exception, int]) -> str:
     logging.exception('An error occurred during a request.')
     return """
     An internal error occurred: <pre>{}</pre>

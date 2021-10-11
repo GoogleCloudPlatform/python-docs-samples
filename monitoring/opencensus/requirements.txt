@@ -1,12 +1,12 @@
 Flask==2.0.1
 # Update this to a >2 once opencensus allows newer versions:
 # https://github.com/census-instrumentation/opencensus-python/pull/1066
-google-api-core==1.31.3
+google-api-core==2.1.0
 google-auth==1.35.0
 googleapis-common-protos==1.53.0
-opencensus==0.7.13
+opencensus==0.8.0
 opencensus-context==0.1.2
 opencensus-ext-prometheus==0.2.1
 prometheus-client==0.11.0
-prometheus-flask-exporter==0.18.2
+prometheus-flask-exporter==0.18.3
 requests==2.26.0
