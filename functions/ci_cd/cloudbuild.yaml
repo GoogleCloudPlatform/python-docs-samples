@@ -14,7 +14,7 @@
 
 # [START functions_ci_cd_cloud_build]
 steps:
-- name: 'docker.io/library/python:3.9'
+- name: 'docker.io/library/python:3.10'
   entrypoint: /bin/sh
   # Run pip install and pytest in the same build step
   # (pip packages won't be preserved in future steps!)
