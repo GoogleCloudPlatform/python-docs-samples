@@ -15,6 +15,7 @@
 import os
 import uuid
 
+import backoff
 from google.cloud import storage
 import pytest
 
@@ -25,8 +26,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_ID = "DO_NOT_DELETE_TEST_GLOSSARY"
 
 
-@pytest.fixture(scope="function")
-def bucket():
+def get_ephemeral_bucket():
     """Create a temporary bucket to store annotation output."""
     bucket_name = f"tmp-{uuid.uuid4().hex}"
     storage_client = storage.Client()
@@ -37,15 +37,30 @@ def bucket():
     bucket.delete(force=True)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+@pytest.fixture(scope="function")
+def bucket():
+    """Create a bucket feature for testing"""
+    return next(get_ephemeral_bucket())
+
+
+def on_backoff(invocation_dict):
+    """Backoff callback; create a testing bucket for each backoff run"""
+    invocation_dict['kwargs']['bucket'] = next(get_ephemeral_bucket())
+
+
+# If necessary, retry test function while backing off the timeout sequentially
+MAX_TIMEOUT = 500
+
+
+@backoff.on_exception(wait_gen=lambda : iter([100, 250, 300, MAX_TIMEOUT]), exception=Exception, max_tries=5, on_backoff=on_backoff)
 def test_batch_translate_text_with_glossary(capsys, bucket):
+
     translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
         "gs://cloud-samples-data/translation/text_with_glossary.txt",
         "gs://{}/translation/BATCH_TRANSLATION_GLOS_OUTPUT/".format(bucket.name),
         PROJECT_ID,
         GLOSSARY_ID,
-        320,
-    )
+        MAX_TIMEOUT)
 
     out, _ = capsys.readouterr()
     assert "Total Characters: 9" in out
