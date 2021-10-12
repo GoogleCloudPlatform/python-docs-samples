@@ -60,10 +60,8 @@ def init_connection_engine():
     if os.environ.get("DB_HOST"):
         if os.environ.get("DB_ROOT_CERT"):
             return init_tcp_sslcerts_connection_engine(db_config)
-        else:
-            return init_tcp_connection_engine(db_config)
-    else:
-        return init_unix_connection_engine(db_config)
+        return init_tcp_connection_engine(db_config)
+    return init_unix_connection_engine(db_config)
 
 
 def init_tcp_sslcerts_connection_engine(db_config):
@@ -83,8 +81,8 @@ def init_tcp_sslcerts_connection_engine(db_config):
     # otherwise use DB_PORT environment variable.
     host_args = db_host.split(":")
     if len(host_args) == 1:
-        db_hostname = db_host
-        db_port = os.environ["DB_PORT"]
+        db_hostname = host_args[0]
+        db_port = int(os.environ["DB_PORT"])
     elif len(host_args) == 2:
         db_hostname, db_port = host_args[0], int(host_args[1])
 
