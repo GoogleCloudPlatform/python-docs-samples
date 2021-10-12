@@ -16,6 +16,7 @@ import argparse
 import os
 
 
+
 # [START healthcare_create_fhir_store]
 def create_fhir_store(project_id, location, dataset_id, fhir_store_id, version):
     """Creates a new FHIR store within the parent dataset.
