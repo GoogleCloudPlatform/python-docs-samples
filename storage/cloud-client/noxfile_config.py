@@ -39,9 +39,12 @@ def get_service_account_email():
     if session == 'py-3.8':
         return ('py38-storage-test@'
                 'python-docs-samples-tests.iam.gserviceaccount.com')
+    if session == 'py-3.9':
+        return ('py39-storage-test@'
+                'python-docs-samples-tests.iam.gserviceaccount.com')
     if session == 'py-3.10':
         return ('py310-storage-test@'
-                'python-docs-samples-tests-310.iam.gserviceaccount.com')
+                'python-docs-samples-tests.iam.gserviceaccount.com')
     return os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
 
 
