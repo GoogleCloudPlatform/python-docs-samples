@@ -1,4 +1,5 @@
-selenium==3.141.0
-Flask==2.0.1
-pytest==6.2.4
+selenium==4.0.0; python_version > '3.6'
+selenium==3.141.0; python_version <= '3.6'
+Flask==2.0.2
+pytest==6.2.5
 pytest-flask==1.2.0
