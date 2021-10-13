@@ -1,1 +1,1 @@
-google-cloud-workflows==1.2.3
+google-cloud-workflows==1.3.0
