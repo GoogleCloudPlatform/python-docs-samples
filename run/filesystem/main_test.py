@@ -18,6 +18,7 @@ import pytest
 
 import main
 
+# Tests use the sample's directory as the mount point directory
 mnt_dir = os.environ.get("MNT_DIR", os.getcwd())
 filename = os.environ.get("FILENAME", "Dockerfile")
 
