@@ -1,4 +1,4 @@
-google-cloud-bigquery==2.27.1
+google-cloud-bigquery==2.28.1
 google-cloud-bigquery-storage==2.9.1
 pandas==1.1.5; python_version < '3.7'
 pandas==1.2.4; python_version > '3.6'
