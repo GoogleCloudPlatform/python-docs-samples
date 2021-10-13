@@ -44,7 +44,8 @@ def configure_retries(bucket_name, blob_name):
     modified_retry = modified_retry.with_delay(multiplier=3.0)
 
     # blob.delete() uses DEFAULT_RETRY_IF_GENERATION_SPECIFIED by default.
-    # Override with modified_retry so that the function retries even if the generation number is not specified.
+    # Override with modified_retry so the function retries even if the generation
+    # number is not specified.
     print(
         f"The following library method is customized to be retried according to the following configurations: {modified_retry}"
     )
