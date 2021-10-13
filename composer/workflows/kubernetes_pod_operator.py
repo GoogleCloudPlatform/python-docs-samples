@@ -135,6 +135,7 @@ with models.DAG(
             'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json '})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
+    # Pod affinity is not supported in Composer 2
     kubernetes_affinity_ex = KubernetesPodOperator(
         task_id='ex-pod-affinity',
         name='ex-pod-affinity',
@@ -147,6 +148,7 @@ with models.DAG(
         # label 'cloud.google.com/gke-nodepool' with value
         # 'nodepool-label-value' or 'nodepool-label-value2' is not found on any
         # nodes, it will fail to schedule.
+        # affinity is not supported in Composer 2
         affinity={
             'nodeAffinity': {
                 # requiredDuringSchedulingIgnoredDuringExecution means in order
@@ -231,6 +233,7 @@ with models.DAG(
         # Affinity determines which nodes the Pod can run on based on the
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+        # Pod affinity is not supported with Composer 2
         affinity={})
     # [END composer_kubernetespodoperator_fullconfig]
     # [END composer_kubernetespodoperator]
