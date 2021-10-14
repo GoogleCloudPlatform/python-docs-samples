@@ -96,8 +96,12 @@ export GOOGLE_CLOUD_PROJECT_NUMBER=
 export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
 
+# Cloud Run
 # For run/idp example, a Firebase IDP token
 export IDP_KEY=
+# For run/filesystem
+export IP_ADDRESS=
+export CONNECTOR=
 
 # Dialogflow examples.
 export SMART_REPLY_MODEL=
