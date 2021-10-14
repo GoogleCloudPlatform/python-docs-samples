@@ -35,7 +35,7 @@ def test_pandas_date_and_time():
         combined0,
     ) = pandas_date_and_time()
 
-    assert str(dates.dtype) == "date"
+    assert str(dates.dtype) == "dbdate"
     assert list(dates) == [datetime.date(2021, 9, 17), datetime.date(2021, 9, 18)]
 
     assert np.array_equal(
@@ -45,7 +45,7 @@ def test_pandas_date_and_time():
     assert np.array_equal(after, dates.astype("object") + do)
     assert np.array_equal(before, dates.astype("object") - do)
 
-    assert str(times.dtype) == "time"
+    assert str(times.dtype) == "dbtime"
     assert list(times) == [
         datetime.time(1, 2, 3, 456789),
         datetime.time(12, 0, 0, 600000),
