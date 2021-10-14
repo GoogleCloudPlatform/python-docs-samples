@@ -14,7 +14,7 @@
 
 
 def pandas_date_and_time():
-    # [START bigquery_date_create]
+    # [START bigquery_pandas_date_create]
 
     import datetime
     import pandas as pd
@@ -22,46 +22,45 @@ def pandas_date_and_time():
 
     dates = pd.Series([datetime.date(2021, 9, 17), "2021-9-18"], dtype="dbdate")
 
-    # [END bigquery_date_create]
-    # [START bigquery_date_as_datetime]
+    # [END bigquery_pandas_date_create]
+    # [START bigquery_pandas_date_as_datetime]
 
     datetimes = dates.astype("datetime64")
 
-    # [END bigquery_date_as_datetime]
-    # [START bigquery_date_sub]
+    # [END bigquery_pandas_date_as_datetime]
+    # [START bigquery_pandas_date_sub]
 
     dates2 = pd.Series(["2021-1-1", "2021-1-2"], dtype="dbdate")
     diffs = dates - dates2
 
-    # [END bigquery_date_sub]
-    # [START bigquery_date_do]
+    # [END bigquery_pandas_date_sub]
+    # [START bigquery_pandas_date_add_offset]
 
     do = pd.DateOffset(days=1)
     after = dates + do
     before = dates - do
 
-    # [END bigquery_date_do]
-    # [START bigquery_time_create]
+    # [END bigquery_pandas_date_add_offset]
+    # [START bigquery_pandas_time_create]
 
     times = pd.Series([datetime.time(1, 2, 3, 456789), "12:00:00.6"], dtype="dbtime")
 
-    # [END bigquery_time_create]
-    # [START bigquery_time_as_timedelta]
+    # [END bigquery_pandas_time_create]
+    # [START bigquery_pandas_time_as_timedelta]
 
     timedeltas = times.astype("timedelta64")
 
-    # [END bigquery_time_as_timedelta]
-    # [START bigquery_combine_date_time]
+    # [END bigquery_pandas_time_as_timedelta]
 
-    combined = datetimes + timedeltas
+    # Combine datetime64 and timedelta64 to confirm adding dates and times are
+    # equivalent.
+    combined0 = datetimes + timedeltas
 
-    # [END bigquery_combine_date_time]
-    combined0 = combined
-    # [START bigquery_combine2_date_time]
+    # [START bigquery_pandas_combine_date_time]
 
     combined = dates + times
 
-    # [END bigquery_combine2_date_time]
+    # [END bigquery_pandas_combine_date_time]
 
     return (
         dates,
