@@ -73,10 +73,23 @@ def detect_intent_stream(agent, session_id, audio_file_path, language_code):
     def request_generator():
         audio_input = session.AudioInput(config=input_audio_config)
         query_input = session.QueryInput(audio=audio_input, language_code=language_code)
+        voice_selection = audio_config.VoiceSelectionParams()
+        synthesize_speech_config = audio_config.SynthesizeSpeechConfig()
+        output_audio_config = audio_config.OutputAudioConfig()
+
+        # Sets the voice name and gender
+        voice_selection.name = "en-GB-Standard-A"
+        voice_selection.ssml_gender = audio_config.SsmlVoiceGender.SSML_VOICE_GENDER_FEMALE
+
+        synthesize_speech_config.voice = voice_selection
+
+        # Sets the audio encoding
+        output_audio_config.audio_encoding = audio_config.OutputAudioEncoding.OUTPUT_AUDIO_ENCODING_UNSPECIFIED
+        output_audio_config.synthesize_speech_config = synthesize_speech_config
 
         # The first request contains the configuration.
         yield session.StreamingDetectIntentRequest(
-            session=session_path, query_input=query_input
+            session=session_path, query_input=query_input, output_audio_config=output_audio_config
         )
 
         # Here we are reading small chunks of audio data from a local
