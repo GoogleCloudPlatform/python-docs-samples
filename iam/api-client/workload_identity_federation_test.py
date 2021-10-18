@@ -19,6 +19,7 @@ import workload_identity_federation
 
 def test_workload_identity_federation_aws(capsys: CaptureFixture) -> None:
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    # Replace the below variables with your AWS EC2 credentials.
     aws_access_key_id = "AKIA000000000EXAMPLE"
     aws_secret_access_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     workload_identity_federation.create_token_aws(project_id, "provider_id", "pool_id", aws_access_key_id,
