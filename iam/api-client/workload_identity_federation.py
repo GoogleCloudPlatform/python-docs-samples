@@ -1,27 +1,26 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#  Copyright 2021 Google LLC
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#       http://www.apache.org/licenses/LICENSE-2.0
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
 """Demonstrates how to obtain short-lived credentials with identity federation."""
 import os
-import urllib
 import json
+import urllib
+
 import boto3
-from botocore.awsrequest import AWSRequest
 from botocore.auth import SigV4Auth
+from botocore.awsrequest import AWSRequest
 
 
-def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access_key_id: str, aws_secret_access_key: str) -> None:
+def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access_key_id: str,
+                     aws_secret_access_key: str) -> None:
     # Prepare a GetCallerIdentity request.
     request = AWSRequest(
         method="POST",
@@ -56,8 +55,8 @@ def main():
     pool_id = "my-pool-id"
     provider_id = "my-provider-id"
 
-    aws_access_key_id=os.environ["aws_access_key_id"]
-    aws_secret_access_key=os.environ["aws_secret_access_key"]
+    aws_access_key_id = os.environ["aws_access_key_id"]
+    aws_secret_access_key = os.environ["aws_secret_access_key"]
 
     create_token_aws(project_id, pool_id, provider_id, aws_access_key_id, aws_secret_access_key)
 
