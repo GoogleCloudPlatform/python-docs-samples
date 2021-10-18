@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2021 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Demonstrates how to obtain short-lived credentials with identity federation.
-"""
-
+"""Demonstrates how to obtain short-lived credentials with identity federation."""
+import os
 import urllib
 import json
 import boto3
@@ -24,10 +21,7 @@ from botocore.awsrequest import AWSRequest
 from botocore.auth import SigV4Auth
 
 
-def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
-    # TODO(Developer): Make sure to set the env var:
-    #  "GOOGLE_APPLICATION_CREDENTIALS" before running the code.
-
+def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access_key_id: str, aws_secret_access_key: str) -> None:
     # Prepare a GetCallerIdentity request.
     request = AWSRequest(
         method="POST",
@@ -37,8 +31,13 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
             'x-goog-cloud-target-resource': f'//iam.googleapis.com/projects/{project_id}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}'
         })
 
+    # Set the session credentials.
+    # **NOTE: Please refrain from passing the variables as parameters.**
+    # Instead load them as env variables or for other ways, refer:
+    # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     # Sign the request.
-    SigV4Auth(boto3.Session().get_credentials(), "sts", "us-east-1").add_auth(request)
+    SigV4Auth(session.get_credentials(), "sts", "us-east-1").add_auth(request)
 
     # Create token from signed request.
     token = {
@@ -52,13 +51,16 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
 
 
 def main():
+    # TODO(Developer): Replace the below credentials.
     project_id = "my-project-id"
     pool_id = "my-pool-id"
     provider_id = "my-provider-id"
 
-    create_token_aws(project_id, pool_id, provider_id)
+    aws_access_key_id=os.environ["aws_access_key_id"]
+    aws_secret_access_key=os.environ["aws_secret_access_key"]
+
+    create_token_aws(project_id, pool_id, provider_id, aws_access_key_id, aws_secret_access_key)
 
 
 if __name__ == '__main__':
     main()
-
