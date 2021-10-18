@@ -10,8 +10,8 @@
 #  limitations under the License.
 
 """Demonstrates how to obtain short-lived credentials with identity federation."""
-import os
 import json
+import os
 import urllib
 
 import boto3
