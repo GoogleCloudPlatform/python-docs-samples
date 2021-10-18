@@ -123,6 +123,10 @@ def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
         "Default event-based hold is enabled for {}".format(bucket.name) in out
     )
 
+    # Changes to the bucket will be readable immediately after writing,
+    # but configuration changes may take time to propagate.
+    time.sleep(10)
+
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
     assert blob.event_based_hold is True
