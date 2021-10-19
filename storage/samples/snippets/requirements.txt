@@ -1,0 +1,3 @@
+google-cloud-pubsub==2.8.0
+google-cloud-storage==1.42.3
+google-api-python-client==2.25.0
