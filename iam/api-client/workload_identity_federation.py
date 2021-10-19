@@ -1,8 +1,11 @@
 #  Copyright 2021 Google LLC
+#
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
+#
 #       http://www.apache.org/licenses/LICENSE-2.0
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +35,7 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access
 
     # Set the session credentials.
     # **NOTE: Please refrain from passing the variables as parameters.**
-    # Instead load them as env variables or for other ways, refer:
+    # Instead load them as environment variables or for other ways, refer:
     # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
     session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     # Sign the request.
