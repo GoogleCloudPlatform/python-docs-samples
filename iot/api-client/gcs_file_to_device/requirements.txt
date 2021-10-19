@@ -6,4 +6,4 @@ google-cloud-pubsub==2.8.0
 google-cloud-storage==1.42.2
 cryptography==35.0.0
 paho-mqtt==1.5.1
-pyjwt==2.2.0
+pyjwt==2.3.0
