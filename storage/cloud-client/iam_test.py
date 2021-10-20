@@ -139,7 +139,7 @@ def test_remove_bucket_conditional_iam_binding(bucket):
 def test_set_bucket_public_iam(public_bucket):
     storage_set_bucket_public_iam.set_bucket_public_iam(public_bucket.name, ["domain:google.com"])
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
-    
+
     assert any(
         binding["role"] == "roles/storage.objectViewer"
         and "domain:google.com" in binding["members"]
