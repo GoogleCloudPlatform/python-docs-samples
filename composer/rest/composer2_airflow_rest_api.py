@@ -58,8 +58,6 @@ def trigger_dag(web_server_url, dag_id, data):
     web_server_url: The URL of the Airflow 2 web server.
     dag_id: The DAG ID.
     data: Additional configuration parameters for the DAG run (json).
-    method: The request method to use ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT',
-      'PATCH', 'DELETE')
   """
 
   endpoint = f'api/v1/dags/{dag_id}/dagRuns'
