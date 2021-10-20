@@ -137,12 +137,11 @@ def test_remove_bucket_conditional_iam_binding(bucket):
 
 
 def test_set_bucket_public_iam(public_bucket):
-    customer_id = "C02h8e9nw"  # Google Workspace customer ID for google.com
-    storage_set_bucket_public_iam.set_bucket_public_iam(public_bucket.name, [customer_id])
+    storage_set_bucket_public_iam.set_bucket_public_iam(public_bucket.name, ["domain:google.com"])
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
     
     assert any(
         binding["role"] == "roles/storage.objectViewer"
-        and customer_id in binding["members"]
+        and "domain:google.com" in binding["members"]
         for binding in policy.bindings
     )
