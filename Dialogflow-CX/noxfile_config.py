@@ -35,5 +35,6 @@ TEST_CONFIG_OVERRIDE = {
         "AGENT_ID": "53516802-3e2a-4016-80b6-a3df0d240240",
         "AGENT_ID_US_CENTRAL1": "edf8372c-c66a-4984-83ba-b85885e95e2a",
         "AUDIO_PATH": "resources/hello.wav",
+        "INTENT_ID": "164428bd-647a-4e30-ab0f-cc7f3e3b76f9",
     },
 }
