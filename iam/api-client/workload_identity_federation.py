@@ -14,7 +14,6 @@
 
 """Demonstrates how to obtain short-lived credentials with identity federation."""
 import json
-import os
 import urllib
 
 import boto3
@@ -22,8 +21,7 @@ from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 
 
-def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access_key_id: str,
-                     aws_secret_access_key: str) -> None:
+def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
     # Prepare a GetCallerIdentity request.
     request = AWSRequest(
         method="POST",
@@ -33,13 +31,11 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str, aws_access
             "x-goog-cloud-target-resource": f"//iam.googleapis.com/projects/{project_id}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}"
         })
 
-    # Set the session credentials.
-    # **NOTE: Please refrain from passing the variables as parameters.**
-    # Instead load them as environment variables or for other ways, refer:
+    # Set the session credentials and Sign the request.
+    # get_credentials loads the required credentials as environment variables.
+    # Refer:
     # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
-    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-    # Sign the request.
-    SigV4Auth(session.get_credentials(), "sts", "us-east-1").add_auth(request)
+    SigV4Auth(boto3.Session().get_credentials(), "sts", "us-east-1").add_auth(request)
 
     # Create token from signed request.
     token = {
@@ -57,12 +53,8 @@ def main():
     project_id = "my-project-id"
     pool_id = "my-pool-id"
     provider_id = "my-provider-id"
-    # Replace the below variables with your AWS EC2 credentials.
-    # For more info, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
-    aws_access_key_id = os.environ["aws_access_key_id"]
-    aws_secret_access_key = os.environ["aws_secret_access_key"]
 
-    create_token_aws(project_id, pool_id, provider_id, aws_access_key_id, aws_secret_access_key)
+    create_token_aws(project_id, pool_id, provider_id)
 
 
 if __name__ == "__main__":

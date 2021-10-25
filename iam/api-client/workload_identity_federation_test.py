@@ -22,10 +22,6 @@ import workload_identity_federation
 def test_workload_identity_federation_aws(capsys: CaptureFixture) -> None:
     import google.auth
     credentials, project_id = google.auth.default()
-    # Replace the below variables with your AWS EC2 credentials.
-    aws_access_key_id = "AKIA000000000EXAMPLE"
-    aws_secret_access_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    workload_identity_federation.create_token_aws(project_id, "provider_id", "pool_id", aws_access_key_id,
-                                                  aws_secret_access_key)
+    workload_identity_federation.create_token_aws(project_id, "provider_id", "pool_id")
     out, _ = capsys.readouterr()
     assert re.search("URL encoded token:", out)
