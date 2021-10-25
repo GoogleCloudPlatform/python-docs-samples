@@ -71,7 +71,8 @@ def trigger_dag(web_server_url, dag_id, data):
 
   if response.status_code == 403:
     raise Exception(
-      'You do not have a permission to access this resource:'
+      'You do not have a permission to perform this operation. '
+      'Check Airflow RBAC roles for your account.'
       f'{response.headers} / {response.text}')
   elif response.status_code != 200:
     raise Exception(
