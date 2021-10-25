@@ -13,9 +13,14 @@
 # limitations under the License.
 
 # [START translate_v3_translate_text]
+# [START translate_v3_translate_text_0]
+# Imports the Google Cloud Translation library
 from google.cloud import translate
+# [END translate_v3_translate_text_0]
 
 
+# [START translate_v3_translate_text_1]
+# Initialize Translation client
 def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
     """Translating Text."""
 
@@ -24,7 +29,10 @@ def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
     location = "global"
 
     parent = f"projects/{project_id}/locations/{location}"
+    # [END translate_v3_translate_text_1]
 
+    # [START translate_v3_translate_text_2]
+    # Translate text from English to French
     # Detail on supported types can be found here:
     # https://cloud.google.com/translate/docs/supported-formats
     response = client.translate_text(
@@ -40,6 +48,7 @@ def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
     # Display the translation for each input text provided
     for translation in response.translations:
         print("Translated text: {}".format(translation.translated_text))
+    # [END translate_v3_translate_text_2]
 
 
 # [END translate_v3_translate_text]
