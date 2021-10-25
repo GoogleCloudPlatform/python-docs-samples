@@ -16,8 +16,8 @@ import os
 import uuid
 
 import backoff
+from google.api_core.exceptions import GoogleAPIError
 from google.cloud import storage
-from googleapiclient.errors import HttpError
 import pytest
 
 import storage_add_bucket_default_owner
@@ -33,10 +33,7 @@ import storage_remove_file_owner
 
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account. Retrieve a service account email with storage admin permissions.
-TEST_EMAIL = (
-    "py38-storage-test"
-    "@python-docs-samples-tests.iam.gserviceaccount.com"
-)
+TEST_EMAIL = "py38-storage-test" "@python-docs-samples-tests.iam.gserviceaccount.com"
 
 
 @pytest.fixture(scope="module")
@@ -45,8 +42,8 @@ def test_bucket():
 
     # The new projects have uniform bucket-level access and our tests don't
     # pass with those buckets. We need to use the old main project for now.
-    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
-    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
+    original_value = os.environ["GOOGLE_CLOUD_PROJECT"]
+    os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["MAIN_GOOGLE_CLOUD_PROJECT"]
     bucket = None
     while bucket is None or bucket.exists():
         bucket_name = "acl-test-{}".format(uuid.uuid4())
@@ -55,7 +52,7 @@ def test_bucket():
     yield bucket
     bucket.delete(force=True)
     # Set the value back.
-    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
+    os.environ["GOOGLE_CLOUD_PROJECT"] = original_value
 
 
 @pytest.fixture
@@ -85,7 +82,7 @@ def test_print_bucket_acl_for_user(test_bucket, capsys):
     assert "OWNER" in out
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_add_bucket_owner(test_bucket):
     storage_add_bucket_owner.add_bucket_owner(test_bucket.name, TEST_EMAIL)
 
@@ -93,19 +90,18 @@ def test_add_bucket_owner(test_bucket):
     assert "OWNER" in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_remove_bucket_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    storage_remove_bucket_owner.remove_bucket_owner(
-        test_bucket.name, TEST_EMAIL)
+    storage_remove_bucket_owner.remove_bucket_owner(test_bucket.name, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert "OWNER" not in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_add_bucket_default_owner(test_bucket):
     storage_add_bucket_default_owner.add_bucket_default_owner(
         test_bucket.name, TEST_EMAIL
@@ -116,7 +112,7 @@ def test_add_bucket_default_owner(test_bucket):
     assert "OWNER" in roles
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_remove_bucket_default_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
@@ -131,13 +127,12 @@ def test_remove_bucket_default_owner(test_bucket):
 
 
 def test_print_blob_acl(test_blob, capsys):
-    storage_print_file_acl.print_blob_acl(
-        test_blob.bucket.name, test_blob.name)
+    storage_print_file_acl.print_blob_acl(test_blob.bucket.name, test_blob.name)
     out, _ = capsys.readouterr()
     assert out
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_print_blob_acl_for_user(test_blob, capsys):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
@@ -150,16 +145,17 @@ def test_print_blob_acl_for_user(test_blob, capsys):
     assert "OWNER" in out
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_add_blob_owner(test_blob):
     storage_add_file_owner.add_blob_owner(
-        test_blob.bucket.name, test_blob.name, TEST_EMAIL)
+        test_blob.bucket.name, test_blob.name, TEST_EMAIL
+    )
 
     test_blob.acl.reload()
     assert "OWNER" in test_blob.acl.user(TEST_EMAIL).get_roles()
 
 
-@backoff.on_exception(backoff.expo, HttpError, max_time=60)
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_remove_blob_owner(test_blob):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
