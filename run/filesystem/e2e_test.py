@@ -126,4 +126,4 @@ def test_end_to_end(service_url_auth_token):
 
     date = datetime.datetime.utcnow()
     body = response.read()
-    assert '{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}:{dt:%M}-{dt:%Y}'.format(dt=date) in body.decode()
+    assert '{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}'.format(dt=date) in body.decode()
