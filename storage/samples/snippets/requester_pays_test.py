@@ -25,6 +25,8 @@ import storage_get_requester_pays_status
 
 
 # We use a different bucket from other tests.
+# The service account for the test needs to have Billing Project Manager role
+# in order to make changes on buckets with requester pays enabled.
 BUCKET = os.environ["REQUESTER_PAYS_TEST_BUCKET"]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
