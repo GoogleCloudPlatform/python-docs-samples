@@ -849,8 +849,9 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
 
     bucket = storage_client.get_bucket(bucket_name)
 
-    # List objects with the given prefix.
-    blob_list = list(bucket.list_blobs(prefix=prefix))
+    # List objects with the given prefix, filtering out folders.
+    blob_list = [blob for blob in list(bucket.list_blobs(
+        prefix=prefix)) if not blob.name.endswith('/')]
     print('Output files:')
     for blob in blob_list:
         print(blob.name)
