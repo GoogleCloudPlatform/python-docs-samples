@@ -159,9 +159,15 @@ This is where you will be uploading your DAG along with the SQL scripts that wil
 
 To start off, go to the Cloud Shell and you will be using gcloud copy the repo locally in your shell
 
-``` gcloud source repos clone regulated-pipelines --project=arjuns-demos ```
+``` git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git```
 
 In the Cloud Shell, you will copy the DAG and SQL includes to the Composer DAG folder
+
+Change to the directory where the DAG and the SQL includes live
+
+```
+cd composer/blog/gcp-tech-blog
+```
 
 Here is the command to copy into your shell,
 
@@ -171,7 +177,7 @@ Firstly copying over the SQL includes :
 gcloud composer environments storage dags import \
     --environment composer-rp-demo \
     --location us-central1  \
-    --source ./regulated-pipelines/include/
+    --source ./regulated-industries-pipelines/include/
 ```
 
 Secondly copy over the DAG itself
@@ -180,14 +186,18 @@ Secondly copy over the DAG itself
 gcloud composer environments storage dags import \
     --environment composer-rp-demo \
     --location us-central1  \
-    --source ./regulated-pipelines/rp-dag-bqml-fraud.py
+    --source ./regulated-industries-pipelines/regulated_pipelines_blog_bqml_dag.py
 ```
 
-The DAG will begin to execute immediately, so navigate yourself back to the Airflow Web UI
+Currently the DAG is set to a weekly trigger, once uploaded you will need to go to the Airflow UI to trigger the DAG
 
 Composer > Airflow webserver
 
 You will see the following DAG appear ```ulb_bqml_xgboost_fraud_dag```
+
+![alt text](./media/ulb_fraud_dag_uploaded.png)
+
+You will need to click on the play button to trigger the data and you will see it running as below 
 
 ![alt text](./media/ulb_fraud_dag_running.png)
 
@@ -196,7 +206,6 @@ Once the DAG has fully completed executing all the tasks, click on to it see if 
 ![alt text](./media/ulb_fraud_dag_run_complete.png)
 
 Once the DAG has executed, you can navigate to BigQuery to see the results of your model saved
-
 
 
 ### 8. Output of Model and Classifications in BigQuery
@@ -222,7 +231,13 @@ Click on **COMPOSE NEW QUERY** on the top right hand corner in the BigQuery UI
 Then paste the following SQL Statement to query the dataset to get a view as to how many transactions were classified correctly :
 
 ```
-SELECT predicted_Class,Class, Count(*) As Total FROM `project_id.rp_demo_cmek.ulb_fraud_classifications` GROUP BY 1,2
+SELECT
+  predicted_Class,
+  Class,
+  COUNT(*) AS Total
+FROM
+  `your_project_id.rp_demo_cmek.ulb_fraud_classifications_table`
+GROUP BY 1,2
 ```
 
 This will output the following results :
