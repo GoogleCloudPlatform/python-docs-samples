@@ -1,4 +1,4 @@
 Pillow==8.4.0
 apache-beam[gcp]==2.31.0
 google-cloud-aiplatform==1.1.1
-google-cloud-bigquery==2.28.1 # Indirect dependency, but there is a version conflict that causes pip to hang unless we constraint this.
+google-cloud-bigquery==2.29.0 # Indirect dependency, but there is a version conflict that causes pip to hang unless we constraint this.
