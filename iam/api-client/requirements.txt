@@ -1,5 +1,5 @@
 google-api-python-client==2.25.0
 google-auth==2.0.0
 google-auth-httplib2==0.1.0
-boto3==1.18.48
-botocore==1.21.48
+boto3==1.19.4
+botocore==1.22.4
