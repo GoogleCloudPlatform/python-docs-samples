@@ -1,4 +1,4 @@
 google-api-core==2.2.0
-google-cloud-bigquery==2.28.1
+google-cloud-bigquery==2.29.0
 google-cloud-contact-center-insights==0.6.0
 protobuf==3.19.0
