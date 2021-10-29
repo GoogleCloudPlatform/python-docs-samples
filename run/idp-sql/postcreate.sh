@@ -20,7 +20,7 @@ export SERVICE_ACCOUNT="idp-sql-identity"
 
 # Update Cloud Run service to include Cloud SQL instance, Secret Manager secret,
 # and service account
-gcloud run services update ${K_SERVICE} \
+gcloud beta run services update ${K_SERVICE} \
     --platform managed \
     --region ${GOOGLE_CLOUD_REGION} \
     --service-account ${SERVICE_ACCOUNT}@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
