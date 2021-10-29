@@ -19,8 +19,8 @@ from airflow.utils.dates import days_ago
 
 ##Project Variables
 
-PROJECT = 'your_project_id'
-DATASETID = 'rp_demo_cmek'
+PROJECT = models.Variable.get("gcp_project_id")
+DATASETID = models.Variable.get("bigquery_dataset")
 
 ##Example args for the Dag to execute weekly 
 

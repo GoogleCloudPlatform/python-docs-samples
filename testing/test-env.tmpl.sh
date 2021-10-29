@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Environment variables for system tests.
-export GOOGLE_CLOUD_PROJECT=your-project-id
+export GOOGLE_CLOUD_PROJECT=arjuns-demos
 export GCP_PROJECT=$GOOGLE_CLOUD_PROJECT
 export FIRESTORE_PROJECT=
 

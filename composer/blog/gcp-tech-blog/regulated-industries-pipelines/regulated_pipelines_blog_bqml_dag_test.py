@@ -12,10 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from airflow import models
 import internal_unit_testing
 import pytest
 
+# user should substitute their project ID
+PROJECT_ID = "your-project-id"
+DATASET = "your-bq-output-dataset"
+
 @pytest.fixture(autouse=True, scope="function")
+# The fixture `airflow_database` lives in ./conftest.py.
+def set_variables(airflow_database):
+    models.Variable.set("gcp_project_id", PROJECT_ID)
+    models.Variable.set("bigquery_dataset", DATASET)
+    yield
+    models.Variable.delete("gcp_project_id")
+    models.Variable.delete("bigquery_dataset")
 
 def test_dag_import():
     from . import regulated_pipelines_bqml_dag
