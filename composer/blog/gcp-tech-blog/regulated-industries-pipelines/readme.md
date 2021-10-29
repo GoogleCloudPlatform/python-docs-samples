@@ -30,8 +30,8 @@ To create bindings between your environment's service account and the Kubernetes
 Once per project, add the **Cloud Composer v2 API Service Agent Extension** (roles/composer.ServiceAgentV2Ext) role to the Cloud Composer Service Agent account. Keep the existing **Composer API Service Agent** role on this service account, it must have both roles.
 
 ```
-gcloud projects add-iam-policy-binding **PROJECT_ID** \
-    --member serviceAccount:service-**PROJECT_NUMBER**@cloudcomposer-accounts.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding {PROJECT_ID} \
+    --member serviceAccount:service-{PROJECT_NUMBER}@cloudcomposer-accounts.iam.gserviceaccount.com \
     --role roles/composer.ServiceAgentV2Ext
 ```
 
@@ -81,32 +81,33 @@ Your BigQuery service account is not initially created when you create a project
 ```
 bq show --encryption_service_account --project_id=[PROJECT_ID]
 
-bq-PROJECT_NUMBER@bigquery-encryption.iam.gserviceaccount.com
+bq-{PROJECT_NUMBER}@bigquery-encryption.iam.gserviceaccount.com
 
 ```
 
 Assign the Cloud KMS CryptoKey Encrypter/Decrypter role to the BigQuery system service account that you copied to your clipboard. This account is of the form
 
-```​​bq-PROJECT_NUMBER@bigquery-encryption.iam.gserviceaccount.com```
+```​​bq-{PROJECT_NUMBER}@bigquery-encryption.iam.gserviceaccount.com```
 
 You can use the gcloud command-line tool to assign the role:
 
 ```
 gcloud kms keys add-iam-policy-binding \
---project=**KMS_PROJECT_ID** \
---member serviceAccount:bq-**PROJECT_NUMBER**@bigquery-encryption.iam.gserviceaccount.com \
+--project={KMS_PROJECT_ID} \
+--member serviceAccount:bq-{PROJECT_NUMBER}@bigquery-encryption.iam.gserviceaccount.com \
 --role roles/cloudkms.cryptoKeyEncrypterDecrypter \
---location=**KMS_KEY_LOCATION** \
---keyring=**KMS_KEY_RING** \
-**KMS_KEY**
+--location={KMS_KEY_LOCATION} \
+--keyring={KMS_KEY_RING} \
+{KMS_KEY}
+```
 
 Replace the following:
-**KMS_PROJECT_ID**: the ID of your Google Cloud project that is running Cloud KMS
-**PROJECT_NUMBER**: the project number (not project ID) of your Cloud project that is running BigQuery
-**KMS_KEY_LOCATION**: the location name of your Cloud KMS key, in this example we will be using **US**
-**KMS_KEY_RING**: the key ring name of your Cloud KMS key
-**KMS_KEY**: the key name of your Cloud KMS key
-```
+**{KMS_PROJECT_ID}**: the ID of your Google Cloud project that is running Cloud KMS
+**{PROJECT_NUMBER}**: the project number (not project ID) of your Cloud project that is running BigQuery
+**{KMS_KEY_LOCATION}**: the location name of your Cloud KMS key, in this example we will be using {US}
+**{KMS_KEY_RING}**: the key ring name of your Cloud KMS key
+**{KMS_KEY}**: the key name of your Cloud KMS key
+
 
 ### 4. Create a BigQuery dataset with CMEK
 
@@ -114,7 +115,7 @@ Create a BigQuery dataset with CMEK following the steps listed [here](https://cl
 
 ```
 bq --location=US mk \
---default_kms_key projects/**KMS_PROJECT_ID**/locations/**LOCATION**/keyRings/**KEY_RING**/cryptoKeys/**KEY** \
+--default_kms_key projects/{KMS_PROJECT_ID}/locations/{LOCATION}/keyRings/{KEY_RING}/cryptoKeys/{KEY} \
 --dataset rp_demo_cmek
 ```
 
@@ -135,11 +136,36 @@ Setting up CMEK for Composer
 
 If you would also like to setup CMEK for Composer, you can follow the steps listed [here](https://cloud.google.com/composer/docs/cmek)
  
-### 7. Upload DAG to Composer Bucket
+
+### 7. Setting up Airflow Variables 
 
 Go to the GCP console, in the hamburger menu go to Composer
 
-Under the column **DAGs folder** for the environment **composer-rp-demo**, click on to DAGs link to acccess the DAG bucket.
+Under the Airflow webserver, click on the link to take you to the UI
+
+In the Airflow UI, go to **Admin** > **Variables**
+
+Click on the **+** to create a new record
+
+Firstly, we will be creating the ```gcp_project_id``` variable
+
+Please enter in the **val** field your GCP Project ID and click on **Save**
+
+![alt text](./media/airflow_project_id_variable.png)
+
+Secondly, click on the **+** to create a new record
+
+We will now be creating the ```bigquery_dataset``` variable
+
+Please enter in the **val** field your BigQuery dataset which will be ```rp_demo_cmek``` and click on **Save**
+
+![alt text](./media/airflow_bigquery_dataset_variable.png)
+
+### 8. Upload DAG to Composer Bucket
+
+Go to the GCP console, in the hamburger menu go to Composer
+
+Under the column **DAGs folder** for the environment ```composer-rp-demo```, click on to DAGs link to acccess the DAG bucket.
 
 ![alt text](./media/dags_folder.png)
 
@@ -189,9 +215,9 @@ gcloud composer environments storage dags import \
     --source ./regulated-industries-pipelines/regulated_pipelines_blog_bqml_dag.py
 ```
 
-Currently the DAG is set to a weekly trigger, once uploaded you will need to go to the Airflow UI to trigger the DAG
+Currently the DAG is set to a weekly trigger, once uploaded you will need to go to the Airflow UI to trigger the DAG manually if you want it to run now
 
-Composer > Airflow webserver
+Navigate to **Composer** > **Airflow webserver**
 
 You will see the following DAG appear ```ulb_bqml_xgboost_fraud_dag```
 
@@ -208,7 +234,7 @@ Once the DAG has fully completed executing all the tasks, click on to it see if 
 Once the DAG has executed, you can navigate to BigQuery to see the results of your model saved
 
 
-### 8. Output of Model and Classifications in BigQuery
+### 9. Output of Model and Classifications in BigQuery
 
 Navigate over to BigQuery from the hamburger menu
 
@@ -236,7 +262,7 @@ SELECT
   Class,
   COUNT(*) AS Total
 FROM
-  `your_project_id.rp_demo_cmek.ulb_fraud_classifications_table`
+  `rp_demo_cmek.ulb_fraud_classifications_table`
 GROUP BY 1,2
 ```
 
