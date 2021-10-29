@@ -63,7 +63,7 @@ steps:
   args:
   - '-c'
   - |
-    ./test/retry.sh "gcloud beta run deploy ${_SERVICE} \
+    ./test/retry.sh "gcloud run deploy ${_SERVICE} \
       --project $PROJECT_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --allow-unauthenticated \

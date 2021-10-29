@@ -144,8 +144,23 @@ def deployed_service() -> str:
         .stdout.strip()
         .decode()
     )
+    auth_token = (
+        subprocess.run(
+            [
+                "gcloud",
+                "auth",
+                "print-identity-token",
+                "--project",
+                GOOGLE_CLOUD_PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
-    yield service_url
+    yield service_url, auth_token
 
     # Cleanup
 
@@ -199,7 +214,7 @@ def jwt_token() -> str:
 
 def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     token = jwt_token
-    service_url = deployed_service
+    service_url, auth_token = deployed_service
 
     adapter = HTTPAdapter(max_retries=retry_strategy)
 
@@ -207,7 +222,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     client.mount("https://", adapter)
 
     # Can successfully make a request
-    response = client.get(service_url, headers={"Authorization": f"Bearer {token}"})
+    response = client.get(service_url, headers={"Authorization": f"Bearer {auth_token}"})
     assert response.status_code == 200
 
     # Can make post with token
@@ -218,7 +233,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     assert "Vote successfully cast" in response.content.decode("UTF-8")
 
     # Confirm updated results
-    response = client.get(service_url)
+    response = client.get(service_url, headers={"Authorization": f"Bearer {auth_token}"})
     assert response.status_code == 200
     assert "🐶" in response.content.decode("UTF-8")
 
