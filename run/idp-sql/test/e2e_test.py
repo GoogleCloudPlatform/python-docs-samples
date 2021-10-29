@@ -207,7 +207,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     client.mount("https://", adapter)
 
     # Can successfully make a request
-    response = client.get(service_url)
+    response = client.get(service_url, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
 
     # Can make post with token
