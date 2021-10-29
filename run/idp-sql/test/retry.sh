@@ -67,6 +67,7 @@ do
         exit 1
     else
         echo "Attempt $attempt_num / $max_attempts failed!"
-        sleep $((attempt_num++))
+        sleep $((attempt_num*60))
+        $((attempt_num++))
     fi
 done
