@@ -17,8 +17,9 @@ import internal_unit_testing
 import pytest
 
 # user should substitute their project ID
-PROJECT_ID = "your-project-id"
-DATASET = "your-bq-output-dataset"
+PROJECT_ID = "you-project-id"
+DATASET = "your-dataset-id"
+
 
 @pytest.fixture(autouse=True, scope="function")
 # The fixture `airflow_database` lives in ./conftest.py.
@@ -29,7 +30,8 @@ def set_variables(airflow_database):
     models.Variable.delete("gcp_project_id")
     models.Variable.delete("bigquery_dataset")
 
-def test_dag_import():
-    from . import regulated_pipelines_bqml_dag
 
-    internal_unit_testing.assert_has_valid_dag(regulated_pipelines_bqml_dag)
+def test_dag_import():
+    from . import regulated_pipelines_blog_bqml_dag
+
+    internal_unit_testing.assert_has_valid_dag(regulated_pipelines_blog_bqml_dag)
