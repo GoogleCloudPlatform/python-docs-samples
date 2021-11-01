@@ -192,7 +192,11 @@ In the Cloud Shell, you will copy the DAG and SQL includes to the Composer DAG f
 Change to the directory where the DAG and the SQL includes live
 
 ```
+<<<<<<< HEAD
 cd composer/blog/gcp-tech-blog/regulated-industries-pipelines
+=======
+cd composer/blog/gcp-tech-blog
+>>>>>>> refs/remotes/origin/regulated_pipelines
 ```
 
 Here is the command to copy into your shell,
@@ -203,7 +207,11 @@ Firstly copying over the SQL includes :
 gcloud composer environments storage dags import \
     --environment composer-rp-demo \
     --location us-central1  \
+<<<<<<< HEAD
     --source ./dags/include/
+=======
+    --source ./regulated-industries-pipelines/include/
+>>>>>>> refs/remotes/origin/regulated_pipelines
 ```
 
 Secondly copy over the DAG itself
@@ -212,7 +220,11 @@ Secondly copy over the DAG itself
 gcloud composer environments storage dags import \
     --environment composer-rp-demo \
     --location us-central1  \
+<<<<<<< HEAD
     --source ./dags/regulated_pipelines_blog_bqml_dag.py
+=======
+    --source ./regulated-industries-pipelines/regulated_pipelines_blog_bqml_dag.py
+>>>>>>> refs/remotes/origin/regulated_pipelines
 ```
 
 Currently the DAG is set to a weekly trigger, once uploaded you will need to go to the Airflow UI to trigger the DAG manually if you want it to run now
