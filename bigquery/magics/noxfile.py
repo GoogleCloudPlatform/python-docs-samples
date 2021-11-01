@@ -87,7 +87,7 @@ def get_pytest_env_vars() -> Dict[str, str]:
 
 # DO NOT EDIT - automatically generated.
 # All versions used to test samples.
-ALL_VERSIONS = ["3.6", "3.7", "3.8", "3.9"]
+ALL_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
@@ -98,6 +98,10 @@ INSTALL_LIBRARY_FROM_SOURCE = os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", Fals
     "True",
     "true",
 )
+
+# Error if a python version is missing
+nox.options.error_on_missing_interpreters = True
+
 #
 # Style Checks
 #
