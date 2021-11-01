@@ -31,7 +31,7 @@ from requests.packages.urllib3.util.retry import Retry
 default_app = firebase_admin.initialize_app()
 
 # Unique suffix to create distinct service names
-SUFFIX = uuid.uuid4().hex[:10]
+SUFFIX = '0c6fc5c6e1'#uuid.uuid4().hex[:10] #idp-sql-
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 if not GOOGLE_CLOUD_PROJECT:
@@ -106,20 +106,20 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
 
-    subprocess.run(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--project",
-            GOOGLE_CLOUD_PROJECT,
-            "--config",
-            "./test/e2e_test_setup.yaml",
-            "--substitutions",
-        ]
-        + substitutions,
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "builds",
+    #         "submit",
+    #         "--project",
+    #         GOOGLE_CLOUD_PROJECT,
+    #         "--config",
+    #         "./test/e2e_test_setup.yaml",
+    #         "--substitutions",
+    #     ]
+    #     + substitutions,
+    #     check=True,
+    # )
 
     service_url = (
         subprocess.run(
@@ -144,6 +144,39 @@ def deployed_service() -> str:
         .stdout.strip()
         .decode()
     )
+
+    yield service_url
+
+    # Cleanup
+
+    substitutions = [
+        f"_SERVICE={SERVICE_NAME},"
+        f"_PLATFORM={PLATFORM},"
+        f"_REGION={REGION},"
+        f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
+    ]
+    if SAMPLE_VERSION:
+        substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
+
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "builds",
+    #         "submit",
+    #         "--project",
+    #         GOOGLE_CLOUD_PROJECT,
+    #         "--config",
+    #         "./test/e2e_test_cleanup.yaml",
+    #         "--substitutions",
+    #     ]
+    #     + substitutions,
+    #     check=True,
+    # )
+
+
+@pytest.fixture
+def jwt_token() -> str:
     auth_token = (
         subprocess.run(
             [
@@ -159,72 +192,42 @@ def deployed_service() -> str:
         .stdout.strip()
         .decode()
     )
-
-    yield service_url, auth_token
-
-    # Cleanup
-
-    substitutions = [
-        f"_SERVICE={SERVICE_NAME},"
-        f"_PLATFORM={PLATFORM},"
-        f"_REGION={REGION},"
-        f"_DB_NAME={POSTGRES_DATABASE},"
-        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
-    ]
-    if SAMPLE_VERSION:
-        substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
-
-    subprocess.run(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--project",
-            GOOGLE_CLOUD_PROJECT,
-            "--config",
-            "./test/e2e_test_cleanup.yaml",
-            "--substitutions",
-        ]
-        + substitutions,
-        check=True,
-    )
-
-
-@pytest.fixture
-def jwt_token() -> str:
+    print(auth_token)
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
-    adapter = HTTPAdapter(max_retries=retry_strategy)
+    print(custom_token)
+    # adapter = HTTPAdapter(max_retries=retry_strategy)
 
     client = requests.session()
-    client.mount("https://", adapter)
+    # client.mount("https://", adapter)
 
     resp = client.post(
-        f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key={IDP_KEY}",
-        data=json.dumps({"token": custom_token, "returnSecureToken": True}),
+        f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key={IDP_KEY}",
+        data=json.dumps({"token": auth_token, "returnSecureToken": True}),
     )
     response = resp.json()
     assert "error" not in response.keys()
     assert "idToken" in response.keys()
 
     id_token = response["idToken"]
-    yield id_token
+    yield id_token, auth_token
 
     # no cleanup required
 
 
 def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
-    token = jwt_token
-    service_url, auth_token = deployed_service
+    token, auth_token = jwt_token
+    service_url = deployed_service
 
     adapter = HTTPAdapter(max_retries=retry_strategy)
 
     client = requests.session()
     client.mount("https://", adapter)
-
+    print(auth_token)
+    print(token)
     # Can successfully make a request
     response = client.get(service_url, headers={"Authorization": f"Bearer {auth_token}"})
     assert response.status_code == 200
-
+ 
     # Can make post with token
     response = client.post(
         service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
