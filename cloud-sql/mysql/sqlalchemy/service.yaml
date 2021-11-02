@@ -1,0 +1,16 @@
+# [START cloud_sql_mysql_sqlalchemy_gke_quickstart_service]
+# The service provides a load-balancing proxy over the gke-cloud-sql-app
+# pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
+# create an external HTTP load balancer.
+apiVersion: v1
+kind: Service
+metadata:
+  name: gke-cloud-sql-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: gke-cloud-sql-app
+  ports:
+  - port: 80
+    targetPort: 8080
+# [END cloud_sql_mysql_sqlalchemy_gke_quickstart_service]
