@@ -157,7 +157,7 @@ def init_unix_connection_engine(db_config):
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
     db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-    cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
+    instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
 
     pool = sqlalchemy.create_engine(
 
@@ -172,7 +172,7 @@ def init_unix_connection_engine(db_config):
             query={
                 "unix_sock": "{}/{}/.s.PGSQL.5432".format(
                     db_socket_dir,  # e.g. "/cloudsql"
-                    cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+                    instance_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
             }
         ),
         **db_config

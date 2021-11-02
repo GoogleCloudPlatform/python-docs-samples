@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 """Demonstrates how to obtain short-lived credentials with identity federation."""
+# [START iam_workload_identity_aws_credential]
 import json
 import urllib
 
@@ -59,3 +60,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# [END iam_workload_identity_aws_credential]
