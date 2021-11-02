@@ -1,11 +1,21 @@
-# AutoML image classification
+# 🦏 Wildlife Insights -- _image-classification_
 
-1. 🎬 Watch the introduction video in Youtube!
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/master/people-and-planet-ai/image-classification/README.ipynb)
 
-   [![Watch the video in YouTube](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0 "Watch the video in YouTube")
+> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
 
-1. 📜 Read more about this sample in the [blog post](https://cloud.google.com/blog/topics/developers-practitioners/recovering-global-wildlife-populations-using-ml).
+This model is trained to recognize animal species from
+[camera trap](https://en.wikipedia.org/wiki/Camera_trap)
+pictures.
 
-1. 💻 Run the sample in an interactive notebook.
+* **Model**: [AutoML] Vision
+* **Creating datasets**: [Apache Beam] in [Dataflow]
+* **Training the model**: [AutoML] in [Vertex AI]
+* **Getting predictions**: [Vertex AI]
 
-   [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/master/people-and-planet-ai/image-classification/README.ipynb)
+[Apache Beam]: https://beam.apache.org
+[Dataflow]: https://cloud.google.com/dataflow
+[AutoML]: https://cloud.google.com/vertex-ai/docs/beginner/beginners-guide
+[Vertex AI]: https://cloud.google.com/vertex-ai
+
+> 📜 Read more about this sample in the [blog post](https://cloud.google.com/blog/topics/developers-practitioners/recovering-global-wildlife-populations-using-ml).

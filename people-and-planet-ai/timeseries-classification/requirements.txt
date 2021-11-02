@@ -1,0 +1,6 @@
+Flask==2.0.1
+apache-beam[gcp]==2.32.0
+google-cloud-aiplatform==1.4.2
+gunicorn==20.1.0
+pandas==1.3.4
+tensorflow==2.6.0

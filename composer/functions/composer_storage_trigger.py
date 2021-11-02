@@ -37,6 +37,8 @@ def trigger_dag(data, context=None):
 
     To call this function from a Python script, omit the ``context`` argument
     and pass in a non-null value for the ``data`` argument.
+
+    This function is currently only compatible with Composer v1 environments.
     """
 
     # Fill in with your Composer info here

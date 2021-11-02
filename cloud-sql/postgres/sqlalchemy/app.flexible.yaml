@@ -32,7 +32,7 @@ beta_settings:
 # something like https://cloud.google.com/secret-manager/docs/overview to help keep
 # secrets secret.
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
+  INSTANCE_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
   DB_USER: my-db-user
   DB_PASS: my-db-pass
   DB_NAME: my_db

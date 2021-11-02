@@ -10,7 +10,7 @@ Flask-Caching==1.10.1
 Flask-JWT-Extended==3.25.1
 Flask-Login==0.4.1
 Flask-OAuthlib==0.9.5
-Flask-OpenID==1.2.5
+Flask-OpenID==1.3.0
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==0.14.3
 Flask==1.1.4
@@ -71,7 +71,7 @@ apache-airflow-providers-elasticsearch==2.0.2
 apache-airflow-providers-exasol==2.0.0
 apache-airflow-providers-facebook==2.0.0
 apache-airflow-providers-ftp==2.0.0
-apache-airflow-providers-google==4.0.0
+apache-airflow-providers-google==5.1.0
 apache-airflow-providers-grpc==2.0.0
 apache-airflow-providers-hashicorp==2.0.0
 apache-airflow-providers-http==2.0.0
