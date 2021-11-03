@@ -56,7 +56,7 @@ def verify(attestation_file, bundle_file):
             cert_obj = x509.load_pem_x509_certificate(
                 str(cert).encode('utf-8'), backends.default_backend())
             try:
-                # Check if the data was signed by the private key assosicated
+                # Check if the data was signed by the private key associated
                 # with the public key in the certificate. The data should have
                 # been signed with PKCS1v15 padding.
                 cert_obj.public_key().verify(
