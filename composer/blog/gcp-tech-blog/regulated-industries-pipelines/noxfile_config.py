@@ -54,8 +54,5 @@ TEST_CONFIG_OVERRIDE = {
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {"AIRFLOW_HOME": _tmpdir.name},
-<<<<<<< HEAD
-}
-=======
 }
 >>>>>>> refs/remotes/origin/regulated_pipelines
