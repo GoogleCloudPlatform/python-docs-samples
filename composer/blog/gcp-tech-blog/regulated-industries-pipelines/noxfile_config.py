@@ -38,9 +38,6 @@ TEST_CONFIG_OVERRIDE = {
         "3.9",
 <<<<<<< HEAD
         "3.10",
-=======
-        "3.10"
->>>>>>> refs/remotes/origin/regulated_pipelines
     ],  # Composer w/ Airflow 2 only supports Python 3.8
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
