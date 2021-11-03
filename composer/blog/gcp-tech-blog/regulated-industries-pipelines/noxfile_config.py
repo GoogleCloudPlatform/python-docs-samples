@@ -55,4 +55,3 @@ TEST_CONFIG_OVERRIDE = {
     # secrets here. These values will override predefined values.
     "envs": {"AIRFLOW_HOME": _tmpdir.name},
 }
->>>>>>> refs/remotes/origin/regulated_pipelines
