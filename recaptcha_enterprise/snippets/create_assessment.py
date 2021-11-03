@@ -27,10 +27,6 @@ def create_assessment(
         recaptcha_action: Action name corresponding to the token.
     """
 
-    # TODO(developer): Replace these variables before running the sample.
-    # Specify a name for this assessment.
-    assessment_name = "assessment_name"
-
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
 
     # Set the properties of the event to be tracked.
@@ -40,7 +36,6 @@ def create_assessment(
 
     assessment = recaptchaenterprise_v1.Assessment()
     assessment.event = event
-    assessment.name = assessment_name
 
     project_name = f"projects/{project_id}"
 
