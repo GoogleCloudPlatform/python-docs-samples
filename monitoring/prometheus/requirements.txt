@@ -1,5 +1,5 @@
 Flask==2.0.1
-google-api-core==2.2.1
+google-api-core==2.2.2
 google-auth==2.0.0
 googleapis-common-protos==1.53.0
 prometheus-client==0.12.0
