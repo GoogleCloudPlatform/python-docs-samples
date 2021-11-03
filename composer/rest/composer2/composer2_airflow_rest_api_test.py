@@ -39,7 +39,7 @@ DAG_CONFIG = {"test": "value"}
 
 @pytest.fixture(scope="function")
 def successful_response():
-    response_mock = mock.Mock()
+    response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 200
     response_mock.text = '"state": "running"'
     with mock.patch(
