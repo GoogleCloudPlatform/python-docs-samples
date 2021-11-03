@@ -324,7 +324,7 @@ def create_from_snapshot(
     project_id: str, zone: str, instance_name: str, snapshot_link: str
 ):
     """
-    Create a new VM instance with Debian 10 operating system.
+    Create a new VM instance with boot disk created from a snapshot.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
@@ -350,7 +350,7 @@ def create_with_snapshotted_data_disk(
     project_id: str, zone: str, instance_name: str, snapshot_link: str
 ):
     """
-    Create a new VM instance with Debian 10 operating system.
+    Create a new VM instance with Debian 10 operating system and data disk created from snapshot.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
