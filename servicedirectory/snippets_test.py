@@ -43,7 +43,7 @@ def teardown_module():
             try:
                 client.delete_namespace(name=namespace_name)
             except exceptions.NotFound:
-                pass
+                print("Namespace already deleted")
             break
 
 
