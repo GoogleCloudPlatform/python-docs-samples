@@ -16,15 +16,14 @@ from airflow import models
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.utils.dates import days_ago
 
-# Project Variables
-
-PROJECT = models.Variable.get("gcp_project_id")
-DATASETID = models.Variable.get("bigquery_dataset")
 
 # Example args for the Dag to execute weekly
 with models.DAG(
     "rp_bqml_xgboost_fraud_dag", schedule_interval="@weekly", start_date=days_ago(1)
 ) as dag:
+    # Project Variables
+    PROJECT = models.Variable.get("gcp_project_id")
+    DATASETID = models.Variable.get("bigquery_dataset")
 
     # Task 1 - will create a test sample data set from the ulb fraud dataset using the FARM FINGER print method
     t1 = BigQueryInsertJobOperator(
