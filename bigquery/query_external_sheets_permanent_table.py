@@ -21,6 +21,12 @@ def query_external_sheets_permanent_table(dataset_id):
 
     # Create credentials with Drive & BigQuery API scopes.
     # Both APIs must be enabled for your project before running this code.
+    #
+    # If you are using credentials from gcloud, you must authorize the
+    # application first with the following command:
+    #
+    # gcloud auth application-default login \
+    #   --scopes=https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/cloud-platform
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/drive",
