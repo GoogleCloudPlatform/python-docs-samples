@@ -1,2 +1,2 @@
-google-cloud-private-ca==1.2.0
+google-cloud-private-ca==1.2.1
 google-cloud-kms==2.10.1
