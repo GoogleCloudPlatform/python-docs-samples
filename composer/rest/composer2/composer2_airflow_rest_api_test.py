@@ -42,7 +42,7 @@ def successful_response():
     response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 200
     response_mock.text = '"state": "running"'
-    response_mock.headers = {'Content-Type': 'text/html; charset=utf-8'}
+    response_mock.headers = {"Content-Type": "text/html; charset=utf-8"}
 
     with mock.patch(
         "composer2_airflow_rest_api.make_composer2_web_server_request",
@@ -57,7 +57,7 @@ def insufficient_permissions_response():
     response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 403
     response_mock.text = "Mocked insufficient permissions"
-    response_mock.headers = {'Content-Type': 'text/html; charset=utf-8'}
+    response_mock.headers = {"Content-Type": "text/html; charset=utf-8"}
     with mock.patch(
         "composer2_airflow_rest_api.make_composer2_web_server_request",
         autospec=True,
@@ -67,10 +67,14 @@ def insufficient_permissions_response():
 
 
 def test_trigger_dag_insufficient_permissions(insufficient_permissions_response):
-    with pytest.raises(requests.HTTPError, match="You do not have a permission to perform this operation."):
+    with pytest.raises(
+        requests.HTTPError,
+        match="You do not have a permission to perform this operation.",
+    ):
         composer2_airflow_rest_api.trigger_dag(
             COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", DAG_CONFIG
         )
+
 
 def test_trigger_dag_incorrect_environment():
     with pytest.raises(requests.HTTPError, match="404 Client Error: Not Found for url"):
@@ -79,6 +83,7 @@ def test_trigger_dag_incorrect_environment():
             "airflow_monitoring",
             DAG_CONFIG,
         )
+
 
 def test_trigger_dag(successful_response, capsys):
     print(

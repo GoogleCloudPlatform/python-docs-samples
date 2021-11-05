@@ -84,14 +84,18 @@ def trigger_dag(web_server_url, dag_id, data):
 if __name__ == "__main__":
 
     # TODO(developer): replace with your values
-    dag_id = "your-dag-id" # Replace with the ID of the DAG that you want to run.
-    dag_config = {"your-key": "your-value"} # Replace with configuration parameters for the DAG run.
+    dag_id = "your-dag-id"  # Replace with the ID of the DAG that you want to run.
+    dag_config = {
+        "your-key": "your-value"
+    }  # Replace with configuration parameters for the DAG run.
     # Replace web_server_url with the Airflow web server address. To obtain this
     # URL, run the following command for your environment:
     # gcloud composer environments describe example-environment \
     #  --location=your-composer-region \
     #  --format="value(config.airflowUri)"
-    web_server_url = "https://example-airflow-ui-url-dot-us-central1.composer.googleusercontent.com"
+    web_server_url = (
+        "https://example-airflow-ui-url-dot-us-central1.composer.googleusercontent.com"
+    )
 
     response_text = trigger_dag(
         web_server_url=web_server_url, dag_id=dag_id, data=dag_config
