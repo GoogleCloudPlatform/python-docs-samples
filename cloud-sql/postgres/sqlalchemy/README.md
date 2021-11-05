@@ -87,7 +87,7 @@ export DB_SOCKET_DIR=/path/to/the/new/directory
 Use these terminal commands to initialize other environment variables as well:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
+export INSTANCE_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='<DB_USER_NAME>'
 export DB_PASS='<DB_PASSWORD>'
 export DB_NAME='<DB_NAME>'
@@ -98,7 +98,7 @@ help keep secrets safe.
 
 Then use this command to launch the proxy in the background:
 ```bash
-./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
+./cloud_sql_proxy -dir=$DB_SOCKET_DIR --instances=$INSTANCE_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS &
 ```
 
 ### Testing the application
@@ -166,8 +166,8 @@ Take note of the URL output at the end of the deployment process.
 
 ```sh
 gcloud run services update run-sql \
-    --add-cloudsql-instances [CLOUD_SQL_CONNECTION_NAME] \
-    --set-env-vars CLOUD_SQL_CONNECTION_NAME=[CLOUD_SQL_CONNECTION_NAME],\
+    --add-cloudsql-instances [INSTANCE_CONNECTION_NAME] \
+    --set-env-vars INSTANCE_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME],\
       DB_USER=[MY_DB_USER],DB_PASS=[MY_DB_PASS],DB_NAME=[MY_DB]
 ```
 Replace environment variables with the correct values for your Cloud SQL
@@ -181,15 +181,15 @@ Secret Manager at runtime via an environment variable.
 
 Create secrets via the command line:
 ```sh
-echo -n $CLOUD_SQL_CONNECTION_NAME | \
-    gcloud secrets create [CLOUD_SQL_CONNECTION_NAME_SECRET] --data-file=-
+echo -n $INSTANCE_CONNECTION_NAME | \
+    gcloud secrets create [INSTANCE_CONNECTION_NAME_SECRET] --data-file=-
 ```
 
 Deploy the service to Cloud Run specifying the env var name and secret name:
 ```sh
 gcloud beta run deploy SERVICE --image gcr.io/[YOUR_PROJECT_ID]/run-sql \
-    --add-cloudsql-instances $CLOUD_SQL_CONNECTION_NAME \
-    --update-secrets CLOUD_SQL_CONNECTION_NAME=[CLOUD_SQL_CONNECTION_NAME_SECRET]:latest,\
+    --add-cloudsql-instances $INSTANCE_CONNECTION_NAME \
+    --update-secrets INSTANCE_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME_SECRET]:latest,\
       DB_USER=[DB_USER_SECRET]:latest, \
       DB_PASS=[DB_PASS_SECRET]:latest, \
       DB_NAME=[DB_NAME_SECRET]:latest
