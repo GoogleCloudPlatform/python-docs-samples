@@ -85,11 +85,8 @@ def test_trigger_dag_incorrect_environment() -> None:
         )
 
 
-def test_trigger_dag(successful_response: None, capsys) -> None:
-    print(
-        composer2_airflow_rest_api.trigger_dag(
-            COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", DAG_CONFIG
-        )
+def test_trigger_dag(successful_response: None) -> None:
+    out = composer2_airflow_rest_api.trigger_dag(
+        COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", DAG_CONFIG
     )
-    out, _ = capsys.readouterr()
     assert '"state": "running"' in out
