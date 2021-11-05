@@ -74,17 +74,13 @@ def test_trigger_dag_insufficient_permissions(insufficient_permissions_response)
         )
 
 def test_trigger_dag_incorrect_environment():
-    with pytest.raises(Exception) as e:
+    with pytest.raises(requests.HTTPError, match="404 Client Error: Not Found for url"):
         dag_config = DAG_CONFIG
-        print(
-            composer2_airflow_rest_api.trigger_dag(
-                "https://invalid-environment.composer.googleusercontent.com",
-                "airflow_monitoring",
-                dag_config,
-            )
+        composer2_airflow_rest_api.trigger_dag(
+            "https://invalid-environment.composer.googleusercontent.com",
+            "airflow_monitoring",
+            dag_config,
         )
-    assert "Bad request" in str(e)
-
 
 def test_trigger_dag(successful_response, capsys):
     dag_config = DAG_CONFIG
