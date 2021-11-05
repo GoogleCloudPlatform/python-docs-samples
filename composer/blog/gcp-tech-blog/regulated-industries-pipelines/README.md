@@ -17,7 +17,9 @@ We will not be covering VPC Security Contols in the example here, but you can ha
 - Create and edit datasets and tables in BigQuery
 - Setting up Cloud KMS
 
-### 1. Create Cloud Composer Environment
+### 1.A Create Cloud Composer 2 Environment
+
+*Please note CMEK is not currently supported on Composer 2.0, if you would like to use CMEK with Composer, please use Composer 1.0 - follow steps on 1.B*
 
 Create a Cloud Composer environment 2 following the steps listed [here](https://cloud.google.com/composer/docs/composer-2/create-environments) to setup a Composer Environment in your project or run the following command via [gcloud](https://cloud.google.com/sdk/gcloud)
 
@@ -35,7 +37,7 @@ gcloud projects add-iam-policy-binding {PROJECT_ID} \
     --role roles/composer.ServiceAgentV2Ext
 ```
 
-Now to create the Composer 2 environment with Airflow 2 copy the below command into your Cloud Shell
+Now to create the Composer 2 environment with Airflow 2, copy the below command into your Cloud Shell
 
 ```
 gcloud composer environments create composer-rp-demo  \
@@ -43,6 +45,21 @@ gcloud composer environments create composer-rp-demo  \
     --image-version "composer-2.0.0-preview.3-airflow-2.1.2"
 ```
 	This will take about 20 minutes to complete, follow the steps below in the meantime
+
+### 1.B Create Cloud Composer 1 Environment
+
+*Please note that CMEK is supported with Composer 1.0*
+
+Create a Cloud Composer environment following the steps listed [here](https://cloud.google.com/composer/docs/how-to/managing/creating) to setup a Composer Environment in your project or run the following command via [gcloud](https://cloud.google.com/sdk/gcloud)
+
+Now to create the Composer 1 environment with Airflow 2, copy the below command into your Cloud Shell
+
+```
+gcloud composer environments create composer-rp-demo  \
+    --location us-central1 \
+    --image-version "composer-1.17.3-airflow-2.1.2"
+```
+	This will take about 20 minutes to complete, follow the steps below in the meantime    
 
 ### 2. Setup Cloud KMS Key Ring and Key
 
@@ -134,8 +151,9 @@ Setting up CMEK for Composer
  
 ### 6. (Optional) Setting up CMEK for Composer
 
-If you would also like to setup CMEK for Composer, you can follow the steps listed [here](https://cloud.google.com/composer/docs/cmek)
- 
+If you would also like to setup CMEK for Composer, you will need to use Composer 1.0 as currently CMEK is not supported on Composer 2.0
+
+You can follow the steps listed [here](https://cloud.google.com/composer/docs/cmek)
 
 ### 7. Setting up Airflow Variables 
 
