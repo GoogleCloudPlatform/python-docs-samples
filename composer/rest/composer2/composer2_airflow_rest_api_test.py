@@ -29,6 +29,7 @@ import os
 from unittest import mock
 
 import pytest
+import requests
 
 import composer2_airflow_rest_api
 
@@ -61,7 +62,7 @@ def insufficient_permissions_response():
 
 
 def test_trigger_dag_insufficient_permissions(insufficient_permissions_response):
-    with pytest.raises(Exception) as e:
+    with pytest.raises(requests.HTTPError) as e:
         dag_config = DAG_CONFIG
         print(
             composer2_airflow_rest_api.trigger_dag(

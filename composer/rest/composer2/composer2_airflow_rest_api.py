@@ -18,11 +18,15 @@ Trigger a DAG in Cloud Composer 2 environment using the Airflow 2 stable REST AP
 """
 
 # [START composer_2_trigger_dag]
-
+import requests
 import google.auth
 from google.auth.transport.requests import AuthorizedSession
 
+# Following GCP best practices, these credentials should be
+# constructed at start-up time and used throughout
+# https://cloud.google.com/apis/docs/client-libraries-best-practices
 AUTH_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
+CREDENTIALS, _ = google.auth.default(scopes=[AUTH_SCOPE])
 
 
 def make_composer2_web_server_request(url, method="GET", **kwargs):
@@ -37,8 +41,7 @@ def make_composer2_web_server_request(url, method="GET", **kwargs):
                   If no timeout is provided, it is set to 90 by default.
     """
 
-    credentials, _ = google.auth.default(scopes=[AUTH_SCOPE])
-    authed_session = AuthorizedSession(credentials)
+    authed_session = AuthorizedSession(CREDENTIALS)
 
     # Set the default timeout, if missing
     if "timeout" not in kwargs:
@@ -67,16 +70,13 @@ def trigger_dag(web_server_url, dag_id, data):
     )
 
     if response.status_code == 403:
-        raise Exception(
+        raise requests.HTTPError(
             "You do not have a permission to perform this operation. "
             "Check Airflow RBAC roles for your account."
             f"{response.headers} / {response.text}"
         )
     elif response.status_code != 200:
-        raise Exception(
-            "Bad request:"
-            f"{response.status_code} / {response.headers} / {response.text}"
-        )
+        response.raise_for_status()
     else:
         return response.text
 
