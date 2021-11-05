@@ -51,7 +51,7 @@ def successful_response():
 
 @pytest.fixture(scope="function")
 def insufficient_permissions_response():
-    response_mock = mock.Mock()
+    response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 403
     response_mock.text = "Mocked insufficient permissions"
     with mock.patch(
