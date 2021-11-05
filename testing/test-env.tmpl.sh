@@ -26,6 +26,9 @@ export BIGTABLE_INSTANCE=
 export SPANNER_INSTANCE=
 export COMPOSER_LOCATION=us-central1
 export COMPOSER_ENVIRONMENT=
+export COMPOSER2_ENVIRONMENT=
+# Webserver for COMPOSER2_ENVIRONMENT
+export COMPOSER2_WEB_SERVER_URL=
 export CLOUD_KMS_KEY=
 
 export MYSQL_INSTANCE=
@@ -96,8 +99,12 @@ export GOOGLE_CLOUD_PROJECT_NUMBER=
 export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
 
+# Cloud Run
 # For run/idp example, a Firebase IDP token
 export IDP_KEY=
+# For run/filesystem
+export IP_ADDRESS=
+export CONNECTOR=
 
 # Dialogflow examples.
 export SMART_REPLY_MODEL=
