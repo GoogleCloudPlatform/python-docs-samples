@@ -42,8 +42,11 @@ def successful_response():
     response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 200
     response_mock.text = '"state": "running"'
+    response_mock.headers = {'Content-Type': 'text/html; charset=utf-8'}
+
     with mock.patch(
         "composer2_airflow_rest_api.make_composer2_web_server_request",
+        autospec=True,
         return_value=response_mock,
     ):
         yield
@@ -54,8 +57,10 @@ def insufficient_permissions_response():
     response_mock = mock.create_autospec(requests.Response, instance=True)
     response_mock.status_code = 403
     response_mock.text = "Mocked insufficient permissions"
+    response_mock.headers = {'Content-Type': 'text/html; charset=utf-8'}
     with mock.patch(
         "composer2_airflow_rest_api.make_composer2_web_server_request",
+        autospec=True,
         return_value=response_mock,
     ):
         yield
