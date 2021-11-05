@@ -68,25 +68,22 @@ def insufficient_permissions_response():
 
 def test_trigger_dag_insufficient_permissions(insufficient_permissions_response):
     with pytest.raises(requests.HTTPError, match="You do not have a permission to perform this operation."):
-        dag_config = DAG_CONFIG
         composer2_airflow_rest_api.trigger_dag(
-            COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", dag_config
+            COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", DAG_CONFIG
         )
 
 def test_trigger_dag_incorrect_environment():
     with pytest.raises(requests.HTTPError, match="404 Client Error: Not Found for url"):
-        dag_config = DAG_CONFIG
         composer2_airflow_rest_api.trigger_dag(
             "https://invalid-environment.composer.googleusercontent.com",
             "airflow_monitoring",
-            dag_config,
+            DAG_CONFIG,
         )
 
 def test_trigger_dag(successful_response, capsys):
-    dag_config = DAG_CONFIG
     print(
         composer2_airflow_rest_api.trigger_dag(
-            COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", dag_config
+            COMPOSER2_WEB_SERVER_URL, "airflow_monitoring", DAG_CONFIG
         )
     )
     out, _ = capsys.readouterr()
