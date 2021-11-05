@@ -18,9 +18,12 @@ Trigger a DAG in Cloud Composer 2 environment using the Airflow 2 stable REST AP
 """
 
 # [START composer_2_trigger_dag]
-import requests
+from typing import Any
+
 import google.auth
 from google.auth.transport.requests import AuthorizedSession
+import requests
+
 
 # Following GCP best practices, these credentials should be
 # constructed at start-up time and used throughout
@@ -29,7 +32,7 @@ AUTH_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
 CREDENTIALS, _ = google.auth.default(scopes=[AUTH_SCOPE])
 
 
-def make_composer2_web_server_request(url, method="GET", **kwargs):
+def make_composer2_web_server_request(url: str, method: str = "GET", **kwargs: Any) -> google.auth.transport.Response:
     """
     Make a request to Cloud Composer 2 environment's web server.
     Args:
@@ -50,7 +53,7 @@ def make_composer2_web_server_request(url, method="GET", **kwargs):
     return authed_session.request(method, url, **kwargs)
 
 
-def trigger_dag(web_server_url, dag_id, data):
+def trigger_dag(web_server_url: str, dag_id: str, data: dict) -> str:
     """
     Make a request to trigger a dag using the stable Airflow 2 REST API.
     https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html
