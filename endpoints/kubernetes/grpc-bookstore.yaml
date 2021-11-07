@@ -31,11 +31,14 @@ spec:
     app: esp-grpc-bookstore
   type: LoadBalancer
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: esp-grpc-bookstore
 spec:
+  selector:
+    matchLabels:
+      app: esp-grpc-bookstore
   replicas: 1
   template:
     metadata:

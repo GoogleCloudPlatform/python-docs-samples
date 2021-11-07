@@ -25,21 +25,21 @@ from googleapiclient.errors import HttpError
 import pytest
 
 # Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))  # noqa
 import manager  # noqa
 
 
-cloud_region = 'us-central1'
-device_id_template = 'test-device-{}'
-rsa_cert_path = 'resources/rsa_cert.pem'
-topic_id = 'test-device-events-{}'.format(uuid.uuid4())
-subscription_name = 'test-device-images-{}'.format(uuid.uuid4())
-project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
+cloud_region = "us-central1"
+device_id_template = "test-device-{}"
+rsa_cert_path = "resources/rsa_cert.pem"
+topic_id = "test-device-events-topic-{}".format(uuid.uuid4())
+subscription_name = "test-device-images-{}".format(uuid.uuid4())
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def test_topic():
     pubsub_client = pubsub.PublisherClient()
     try:
@@ -48,48 +48,51 @@ def test_topic():
         print("The topic already exists, detail: {}".format(str(e)))
         # Ignore the error, fetch the topic
         topic = pubsub_client.get_topic(
-            pubsub_client.topic_path(project_id, topic_id))
+            request={"topic": pubsub_client.topic_path(project_id, topic_id)}
+        )
 
     yield topic
 
     topic_path = pubsub_client.topic_path(project_id, topic_id)
     try:
-        pubsub_client.delete_topic(topic_path)
+        pubsub_client.delete_topic(request={"topic": topic_path})
     except NotFound as e:
         # We ignore this case.
         print("The topic doesn't exist: detail: {}".format(str(e)))
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def test_subscription(test_topic):
     subscriber = pubsub.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
     try:
         subscription = subscriber.create_subscription(
-            subscription_path, test_topic.name)
+            request={"name": subscription_path, "topic": test_topic.name}
+        )
     except AlreadyExists as e:
         print("The topic already exists, detail: {}".format(str(e)))
         # Ignore the error, fetch the subscription
-        subscription = subscriber.get_subscription(subscription_path)
+        subscription = subscriber.get_subscription(
+            request={"subscription": subscription_path}
+        )
 
     yield subscription
 
     try:
-        subscriber.delete_subscription(subscription_path)
+        subscriber.delete_subscription(request={"subscription": subscription_path})
     except NotFound as e:
         # We ignore this case.
         print("The subscription doesn't exist: detail: {}".format(str(e)))
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def test_registry_id(test_topic):
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create_registry():
         manager.open_registry(
-            service_account_json, project_id, cloud_region, test_topic.name,
-            registry_id)
+            service_account_json, project_id, cloud_region, test_topic.name, registry_id
+        )
 
     create_registry()
 
@@ -99,7 +102,8 @@ def test_registry_id(test_topic):
     def delete_registry():
         try:
             manager.delete_registry(
-                service_account_json, project_id, cloud_region, registry_id)
+                service_account_json, project_id, cloud_region, registry_id
+            )
         except NotFound as e:
             # We ignore this case.
             print("The registry doesn't exist: detail: {}".format(str(e)))
@@ -107,16 +111,21 @@ def test_registry_id(test_topic):
     delete_registry()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def test_device_id(test_registry_id):
-    device_id = device_id_template.format('RSA256')
+    device_id = device_id_template.format("RSA256")
 
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create_device():
         try:
             manager.create_rs256_device(
-                service_account_json, project_id, cloud_region, test_registry_id,
-                device_id, rsa_cert_path)
+                service_account_json,
+                project_id,
+                cloud_region,
+                test_registry_id,
+                device_id,
+                rsa_cert_path,
+            )
         except AlreadyExists as e:
             # We ignore this case.
             print("The device already exists: detail: {}".format(str(e)))
@@ -129,8 +138,12 @@ def test_device_id(test_registry_id):
     def delete_device():
         try:
             manager.delete_device(
-                service_account_json, project_id, cloud_region,
-                test_registry_id, device_id)
+                service_account_json,
+                project_id,
+                cloud_region,
+                test_registry_id,
+                device_id,
+            )
         except NotFound as e:
             # We ignore this case.
             print("The device doesn't exist: detail: {}".format(str(e)))
@@ -138,38 +151,63 @@ def test_device_id(test_registry_id):
     delete_device()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def device_and_gateways(test_registry_id):
-    device_id = device_id_template.format('noauthbind')
-    gateway_id = device_id_template.format('RS256')
-    bad_gateway_id = device_id_template.format('RS256-err')
+    device_id = device_id_template.format("noauthbind")
+    gateway_id = device_id_template.format("RS256")
+    bad_gateway_id = device_id_template.format("RS256-err")
 
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create_device():
         manager.create_device(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            device_id)
+            service_account_json, project_id, cloud_region, test_registry_id, device_id
+        )
+
     create_device()
 
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create_gateways():
         manager.create_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            None, gateway_id, rsa_cert_path, 'RS256')
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            None,
+            gateway_id,
+            rsa_cert_path,
+            "RS256",
+        )
         manager.create_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            None, bad_gateway_id, rsa_cert_path, 'RS256')
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            None,
+            bad_gateway_id,
+            rsa_cert_path,
+            "RS256",
+        )
 
     create_gateways()
 
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def bind_device_to_gateways():
         manager.bind_device_to_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            device_id, gateway_id)
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            device_id,
+            gateway_id,
+        )
         manager.bind_device_to_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            device_id, bad_gateway_id)
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            device_id,
+            bad_gateway_id,
+        )
 
     bind_device_to_gateways()
 
@@ -178,11 +216,21 @@ def device_and_gateways(test_registry_id):
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def unbind():
         manager.unbind_device_from_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            device_id, gateway_id)
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            device_id,
+            gateway_id,
+        )
         manager.unbind_device_from_gateway(
-            service_account_json, project_id, cloud_region, test_registry_id,
-            device_id, bad_gateway_id)
+            service_account_json,
+            project_id,
+            cloud_region,
+            test_registry_id,
+            device_id,
+            bad_gateway_id,
+        )
 
     unbind()
 
@@ -190,8 +238,12 @@ def device_and_gateways(test_registry_id):
     def delete_device():
         try:
             manager.delete_device(
-                service_account_json, project_id, cloud_region,
-                test_registry_id, device_id)
+                service_account_json,
+                project_id,
+                cloud_region,
+                test_registry_id,
+                device_id,
+            )
         except NotFound as e:
             # We ignore this case.
             print("The device doesn't exist: detail: {}".format(str(e)))
@@ -202,15 +254,23 @@ def device_and_gateways(test_registry_id):
     def delete_gateways():
         try:
             manager.delete_device(
-                service_account_json, project_id, cloud_region,
-                test_registry_id, gateway_id)
+                service_account_json,
+                project_id,
+                cloud_region,
+                test_registry_id,
+                gateway_id,
+            )
         except NotFound as e:
             # We ignore this case.
             print("The gateway doesn't exist: detail: {}".format(str(e)))
         try:
             manager.delete_device(
-                service_account_json, project_id, cloud_region,
-                test_registry_id, bad_gateway_id)
+                service_account_json,
+                project_id,
+                cloud_region,
+                test_registry_id,
+                bad_gateway_id,
+            )
         except NotFound as e:
             # We ignore this case.
             print("The gateway doesn't exist: detail: {}".format(str(e)))

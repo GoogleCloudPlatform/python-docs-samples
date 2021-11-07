@@ -1,1 +1,0 @@
-google-cloud-datacatalog==1.0.0

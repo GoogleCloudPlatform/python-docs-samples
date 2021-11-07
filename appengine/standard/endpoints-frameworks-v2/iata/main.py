@@ -15,16 +15,16 @@
 """This is a sample Airport Information service implemented using
 Google Cloud Endpoints Frameworks for Python."""
 
-# [START imports]
+# [START endpoints_iata_imports]
 import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
 
 from data import AIRPORTS
-# [END imports]
+# [END endpoints_iata_imports]
 
-# [START messages]
+# [START endpoints_iata_messages]
 IATA_RESOURCE = endpoints.ResourceContainer(
     iata=messages.StringField(1, required=True)
 )
@@ -43,10 +43,10 @@ IATA_AIRPORT_RESOURCE = endpoints.ResourceContainer(
 
 class AirportList(messages.Message):
     airports = messages.MessageField(Airport, 1, repeated=True)
-# [END messages]
+# [END endpoints_iata_messages]
 
 
-# [START iata_api]
+# [START endpoints_iata_api]
 @endpoints.api(name='iata', version='v1')
 class IataApi(remote.Service):
     @endpoints.method(
@@ -111,9 +111,9 @@ class IataApi(remote.Service):
             raise endpoints.BadRequestException()
         AIRPORTS[request.iata] = request.name
         return Airport(iata=request.iata, name=AIRPORTS[request.iata])
-# [END iata_api]
+# [END endpoints_iata_api]
 
 
-# [START api_server]
+# [START endpoints_iata_api_server]
 api = endpoints.api_server([IataApi])
-# [END api_server]
+# [END endpoints_iata_api_server]

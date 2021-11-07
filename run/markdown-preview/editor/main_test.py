@@ -40,15 +40,15 @@ def test_render_handler_errors(client):
     r = client.get("/render")
     assert r.status_code == 405
 
-    with pytest.raises(Exception) as e:
-        client.post("/render", data="**markdown**")
-    assert "Invalid JSON" in str(e.value)
+    r = client.post("/render", data="**markdown**")
+    assert r.status_code == 400
+    assert "Invalid JSON" in r.data.decode()
 
 
 def test_missing_upstream_url(client):
     del os.environ["EDITOR_UPSTREAM_RENDER_URL"]
-    with pytest.raises(Exception) as e:
-        client.post("/render",
+    r = client.post("/render",
                     data=json.dumps({"data": "**strong text**"}),
                     headers={"Content-Type": "application/json"})
-    assert "EDITOR_UPSTREAM_RENDER_URL missing" in str(e.value)
+    assert r.status_code == 500
+    assert "EDITOR_UPSTREAM_RENDER_URL missing" in r.data.decode()

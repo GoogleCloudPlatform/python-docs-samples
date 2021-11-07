@@ -13,32 +13,31 @@
 # limitations under the License.
 
 import argparse
-import json
 import os
-
-from googleapiclient import discovery
-
-
-# [START healthcare_get_client]
-def get_client():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
-    api_version = "v1"
-    service_name = "healthcare"
-
-    return discovery.build(service_name, api_version)
-
-
-# [END healthcare_get_client]
 
 
 # [START healthcare_create_dicom_store]
-def create_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
-    """Creates a new DICOM store within the parent dataset."""
-    client = get_client()
+def create_dicom_store(project_id, location, dataset_id, dicom_store_id):
+    """Creates a new DICOM store within the parent dataset.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
     request = (
@@ -58,11 +57,27 @@ def create_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
 
 
 # [START healthcare_delete_dicom_store]
-def delete_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
-    """Deletes the specified DICOM store."""
-    client = get_client()
+def delete_dicom_store(project_id, location, dataset_id, dicom_store_id):
+    """Deletes the specified DICOM store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -83,11 +98,30 @@ def delete_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
 
 
 # [START healthcare_get_dicom_store]
-def get_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
-    """Gets the specified DICOM store."""
-    client = get_client()
+def get_dicom_store(project_id, location, dataset_id, dicom_store_id):
+    """Gets the specified DICOM store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    # Imports Python's built-in "json" module
+    import json
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -102,11 +136,26 @@ def get_dicom_store(project_id, cloud_region, dataset_id, dicom_store_id):
 
 
 # [START healthcare_list_dicom_stores]
-def list_dicom_stores(project_id, cloud_region, dataset_id):
-    """Lists the DICOM stores in the given dataset."""
-    client = get_client()
+def list_dicom_stores(project_id, location, dataset_id):
+    """Lists the DICOM stores in the given dataset.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
 
     dicom_stores = (
@@ -129,13 +178,28 @@ def list_dicom_stores(project_id, cloud_region, dataset_id):
 
 
 # [START healthcare_patch_dicom_store]
-def patch_dicom_store(
-    project_id, cloud_region, dataset_id, dicom_store_id, pubsub_topic
-):
-    """Updates the DICOM store."""
-    client = get_client()
+def patch_dicom_store(project_id, location, dataset_id, dicom_store_id, pubsub_topic):
+    """Updates the DICOM store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
+    # pubsub_topic = 'my-topic'  # replace with an existing Pub/Sub topic
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -167,14 +231,29 @@ def patch_dicom_store(
 
 
 # [START healthcare_export_dicom_instance_gcs]
-def export_dicom_instance(
-    project_id, cloud_region, dataset_id, dicom_store_id, uri_prefix
-):
+def export_dicom_instance(project_id, location, dataset_id, dicom_store_id, uri_prefix):
     """Export data to a Google Cloud Storage bucket by copying
-    it from the DICOM store."""
-    client = get_client()
+    it from the DICOM store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
+    # uri_prefix = 'my-bucket'  # replace with a Cloud Storage bucket
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -199,14 +278,30 @@ def export_dicom_instance(
 
 # [START healthcare_import_dicom_instance]
 def import_dicom_instance(
-    project_id, cloud_region, dataset_id, dicom_store_id, content_uri
+    project_id, location, dataset_id, dicom_store_id, content_uri
 ):
-    """Import data into the DICOM store by copying it from the specified
+    """Imports data into the DICOM store by copying it from the specified
     source.
-    """
-    client = get_client()
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
+    # content_uri = 'my-bucket/*.dcm'  # replace with a Cloud Storage bucket and DCM files
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -232,11 +327,27 @@ def import_dicom_instance(
 
 
 # [START healthcare_dicom_store_get_iam_policy]
-def get_dicom_store_iam_policy(project_id, cloud_region, dataset_id, dicom_store_id):
-    """Gets the IAM policy for the specified dicom store."""
-    client = get_client()
+def get_dicom_store_iam_policy(project_id, location, dataset_id, dicom_store_id):
+    """Gets the IAM policy for the specified DICOM store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -258,26 +369,43 @@ def get_dicom_store_iam_policy(project_id, cloud_region, dataset_id, dicom_store
 
 # [START healthcare_dicom_store_set_iam_policy]
 def set_dicom_store_iam_policy(
-    project_id, cloud_region, dataset_id, dicom_store_id, member, role, etag=None
+    project_id, location, dataset_id, dicom_store_id, member, role, etag=None
 ):
-    """Sets the IAM policy for the specified dicom store.
+    """Sets the IAM policy for the specified DICOM store.
 
-        A single member will be assigned a single role. A member can be any of:
+    A single member will be assigned a single role. A member can be any of:
 
-        - allUsers, that is, anyone
-        - allAuthenticatedUsers, anyone authenticated with a Google account
-        - user:email, as in 'user:somebody@example.com'
-        - group:email, as in 'group:admins@example.com'
-        - domain:domainname, as in 'domain:example.com'
-        - serviceAccount:email,
-            as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
+    - allUsers, that is, anyone
+    - allAuthenticatedUsers, anyone authenticated with a Google account
+    - user:email, as in 'user:somebody@example.com'
+    - group:email, as in 'group:admins@example.com'
+    - domain:domainname, as in 'domain:example.com'
+    - serviceAccount:email,
+        as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
 
-        A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
-        or 'roles/editor'
-    """
-    client = get_client()
+    A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
+    or 'roles/editor'
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    before running the sample."""
+    # Imports the Google API Discovery Service.
+    from googleapiclient import discovery
+
+    api_version = "v1"
+    service_name = "healthcare"
+    # Returns an authorized API client by discovering the Healthcare API
+    # and using GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    client = discovery.build(service_name, api_version)
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the DICOM store's parent dataset ID
+    # dicom_store_id = 'my-dicom-store'  # replace with the DICOM store's ID
+    # member = 'myemail@example.com'  # replace with an authorized member
+    # role = 'roles/viewer'  # replace with a Healthcare API IAM role
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+        project_id, location, dataset_id
     )
     dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
 
@@ -316,7 +444,7 @@ def parse_command_line_args():
         help="GCP project name",
     )
 
-    parser.add_argument("--cloud_region", default="us-central1", help="GCP region")
+    parser.add_argument("--location", default="us-central1", help="GCP location")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
@@ -387,26 +515,26 @@ def run_command(args):
 
     elif args.command == "create-dicom-store":
         create_dicom_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.dicom_store_id
+            args.project_id, args.location, args.dataset_id, args.dicom_store_id
         )
 
     elif args.command == "delete-dicom-store":
         delete_dicom_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.dicom_store_id
+            args.project_id, args.location, args.dataset_id, args.dicom_store_id
         )
 
     elif args.command == "get-dicom-store":
         get_dicom_store(
-            args.project_id, args.cloud_region, args.dataset_id, args.dicom_store_id
+            args.project_id, args.location, args.dataset_id, args.dicom_store_id
         )
 
     elif args.command == "list-dicom-stores":
-        list_dicom_stores(args.project_id, args.cloud_region, args.dataset_id)
+        list_dicom_stores(args.project_id, args.location, args.dataset_id)
 
     elif args.command == "patch-dicom-store":
         patch_dicom_store(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.dicom_store_id,
             args.pubsub_topic,
@@ -415,7 +543,7 @@ def run_command(args):
     elif args.command == "export-dicom-store":
         export_dicom_instance(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.dicom_store_id,
             args.uri_prefix,
@@ -424,7 +552,7 @@ def run_command(args):
     elif args.command == "import-dicom-store":
         import_dicom_instance(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
             args.dicom_store_id,
             args.content_uri,
@@ -432,15 +560,15 @@ def run_command(args):
 
     elif args.command == "get_iam_policy":
         get_dicom_store_iam_policy(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id
+            args.project_id, args.location, args.dataset_id, args.dicom_store_id
         )
 
     elif args.command == "set_iam_policy":
         set_dicom_store_iam_policy(
             args.project_id,
-            args.cloud_region,
+            args.location,
             args.dataset_id,
-            args.fhir_store_id,
+            args.dicom_store_id,
             args.member,
             args.role,
         )

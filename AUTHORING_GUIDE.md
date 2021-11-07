@@ -1,7 +1,7 @@
 # Python Sample Authoring Guide
 
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
-we're opinioned and fussy. This guide is a reference for the format and
+we're opinionated and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 repo. The guidelines below are intended to ensure that all Python samples
@@ -15,6 +15,52 @@ interacting with Google Cloud libraries, APIs, or services.
 * **Idiomatic.** Each sample should follow widely accepted Python best
 practices as covered below.
 
+
+## FAQs
+
+### Are there any canonical samples?
+
+We recommend referencing the following samples and sample tests:
+
+ * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client)
+
+### Where should I put my samples?
+
+See [Folder Location](#folder-location). Samples live in this repository, **python-docs-samples**,
+or in a library repository.
+
+### Where are the client libraries?
+
+Python libraries repositories live in https://github.com/googleapis/ in repositories named **python-API**.
+Each repository contains _one_ library. For example, https://github.com/googleapis/python-bigquery
+contains the `google-cloud-bigquery` library.
+
+### Who reviews my PR?
+
+This is a work in progress - in **python-docs-samples**, your PR will
+automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
+You can assign a new person using the `blunderbuss:assign` label if your assignee is OOO or busy.
+You can (and probably should) also assign a teammate in addition to the auto-assigned
+owner to review your code for product-specific needs.
+
+In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
+from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
+
+Feel free to reach out to your assigned reviewer if it's been a few days and you haven't gotten a response!
+
+### How do I set up my environment?
+
+You should install the latest patch version of each minor version listed in [Python Versions](#python-versions).
+
+We recommend using the Python version management tool [Pyenv](https://github.com/pyenv/pyenv) if you are using MacOS or Linux.
+
+**Googlers:** See [the internal Python policies doc](https://g3doc.corp.google.com/company/teams/cloud-devrel/dpe/samples/python.md?cl=head).
+
+**Using MacOS?:** See [Setting up a Mac development environment with pyenv and pyenv-virtualenv](MAC_SETUP.md).
+
+Afterwards, see [Test Environment Setup](#test-environment-setup).
+
+
 ## Sample Guidelines
 
 This section covers guidelines for Python samples. Note that
@@ -23,10 +69,10 @@ This section covers guidelines for Python samples. Note that
 ### Folder Location
 
 Samples that primarily show the use of one client library should be placed in the
-client library repository. Other samples should be placed in this repository
+client library repository `googleapis/python-{api}`. Other samples should be placed in this repository
 `python-docs-samples`.
 
-**Library repositories:** Each sample should be in the top-level samples folder `samples`
+**Library repositories:** Each sample should be in a folder under the top-level samples folder `samples`
 in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/master/samples)
 for an example.
 
@@ -54,7 +100,7 @@ folder.
 If your sample is a quickstart — intended to demonstrate how to quickly get
 started with using a service or API — it should be in a _quickstart_ folder.
 
-### Python Version
+### Python Versions
 
 Samples should support Python 3.6, 3.7, and 3.8.
 
@@ -218,9 +264,16 @@ Argument types should be documented using Python type annotations as
 introduced in [PEP 484](https://www.python.org/dev/peps/pep-0484/). For example:
 
 ```py
-def hello_world(name: string):
+def hello_world(name: str) -> None:
     print(f"Hello {name}!")
 ```
+
+```py
+def adder(a: int, b: int) -> int:
+    return a+b
+```
+
+Type hinting is enforced using [`flake8-annotations`](https://pypi.org/project/flake8-annotations/), which is enabled by setting the `enforce_type_hints` variable to `True` in the appropriate `noxfile_config.py`. Type hinting is expected in all new samples, and will gradually be added to all compatible existing samples.
 
 If there is an `Args` section within the function's docstring, consider
 documenting the argument types there as well. For example:
@@ -234,6 +287,20 @@ Args:
 When documenting primitive types, be sure to note if they have a particular set
 of constraints. For example, `A base64-encoded string` or `Must be between 0
 and 10`.
+
+### `datetime.datetime` Objects
+
+Always create timezone aware datetime objects. For libraries that use protobuf,
+omitting the timezone may lead to unexpected behavior when the datetime
+is converted to a protobuf tiemstamp.
+
+```py
+import datetime
+
+now = datetime.datetime.now(tz=datetime.timezone.utc)
+```
+
+For more information see the [Python datetime documentation](https://docs.python.org/3/library/datetime.html#datetime.datetime.utcfromtimestamp).
 
 ### README File
 
@@ -262,6 +329,24 @@ If a sample has testing requirements that differ from its runtime requirements
 testing libraries), the testing requirements may be listed in a separate
 `requirements-test.txt` file instead of the main `requirements.txt` file.
 
+#### Developing samples for un-released changes
+
+Pip has [VCS support](https://pip.pypa.io/en/stable/cli/pip_install/#vcs-support). Use the branch name or commit hash instead of the package name.
+
+
+**pip install**:
+```
+pip install git+https://github.com/googleapis/python-firestore.git@ee518b741eb5d7167393c23baa1e29ace861b253
+```
+
+**requirements.txt**:
+```
+Flask==1.1.1
+PyMySQL==0.9.3
+git+https://github.com/googleapis/python-firestore.git@ee518b741eb5d7167393c23baa1e29ace861b253
+```
+
+
 ### Region Tags
 
 Sample code may be integrated into Google Cloud Documentation through the use
@@ -273,7 +358,7 @@ example, see
 
 The use of region tags is beyond the scope of this document, but if you’re
 using region tags they should start after the source code header
-(license/copyright information), imports, and global configuration such as
+(license/copyright information), but before imports and global configuration such as
 initializing constants.
 
 ### Exception Handling
@@ -448,6 +533,62 @@ def test_resource():
     ...
 ```
 
+### Use filters with list methods
+
+When writing a test for a `list` method, consider filtering the possible results.
+Listing all resources in the test project may take a considerable amount of time.
+The exact way to do this depends on the API.
+
+Some `list` methods take a `filter`/`filter_` parameter:
+
+```python
+from datetime import datetime
+
+from google.cloud import logging_v2
+
+client = logging_v2.LoggingServiceV2Client()
+resource_names = [f"projects/{project}"]
+   # We add timestamp for making the query faster.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    filter_date = now - datetime.timedelta(minutes=1)
+    filters = (
+        f"timestamp>=\"{filter_date.isoformat('T')}\" "
+        "resource.type=cloud_run_revision "
+        "AND severity=NOTICE "
+)
+
+entries = client.list_log_entries(resource_names, filter_=filters)
+
+```
+
+Others allow you to limit the result set with additional arguments
+to the request:
+
+```python
+from google.cloud import asset_v1p5beta1
+
+# TODO project_id = 'Your Google Cloud Project ID'
+# TODO asset_types = 'Your asset type list, e.g.,
+# ["storage.googleapis.com/Bucket","bigquery.googleapis.com/Table"]'
+# TODO page_size = 'Num of assets in one page, which must be between 1 and
+# 1000 (both inclusively)'
+
+project_resource = "projects/{}".format(project_id)
+content_type = asset_v1p5beta1.ContentType.RESOURCE
+client = asset_v1p5beta1.AssetServiceClient()
+
+# Call ListAssets v1p5beta1 to list assets.
+response = client.list_assets(
+    request={
+        "parent": project_resource,
+        "read_time": None,
+        "asset_types": asset_types,
+        "content_type": content_type,
+        "page_size": page_size,
+    }
+)
+```
+
 ### Test Environment Setup
 
 Because all tests are system tests that use live resources, running tests
@@ -458,11 +599,10 @@ Once you have your project created and configured, you'll need to set
 environment variables to identify the project and resources to be used
 by tests. See
 [testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
-for a list of all environment variables used by all tests. Not every
+for a list of all environment variables that must be set manually. Not every
 test needs all of these variables. All required environment variables
-should be listed in the README and `testing/test-env.tmpl.sh`. If you
-find one is missing, please add instructions for setting it as part of
-your PR.
+are listed in `testing/test-env.tmpl.sh`. If you need to add a new secret,
+follow instructions in [Secrets](#secrets).
 
 We suggest that you copy this file as follows:
 
@@ -486,11 +626,9 @@ This repository supports two ways to run tests locally.
 
     This is another way of running the tests. Setup is easier because
     you only need to instal Docker. The test execution will be bit
-    slower than the first one.
+    slower than the first one. This option is also useful if you need
+    to simulate the CI system.
 
-#### nox setup
-
-Please read the [MAC Setup Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/MAC_SETUP.md).
 
 ### Running tests with nox
 
@@ -499,11 +637,15 @@ Automated testing for samples is managed by
 including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
 
+Sample tests are run through [pytest](https://pytest.org). Do not use
+[unittest](https://docs.python.org/3/library/unittest.html).
+
 __Note:__
 
-**Library repositories:** If you are working on an existing project, a `noxfile.py` will already exist.
+**Library repositories:** If you are working on an existing project (meaning that a `samples` directory already exists), a `noxfile.py` will already exist within that `samples` directory.
+
 For new samples, create a new `noxfile.py` and paste the contents of
-[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py)
+[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py). Note - there may be a `noxfile.py` in the repo already in the root directory, but this is used for testing the libraries, not the samples, so you will still need to make a samples noxfile.
 
 **python-docs-samples:** As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
@@ -543,6 +685,20 @@ To run a specific test from a specific following:
 nox -s py-3.7 -- snippets_test.py:test_list_blobs
 ```
 
+#### `noxfile_config.py`
+
+The [`noxfile_config.py`](noxfile_config.py) allows for customization
+of some options:
+
+* Ignore specific Python versions.
+* Enforce type hints.
+* Specify a different Google Cloud Project.
+* Add additional environment variables. Also see [Environment Variables](#environment-variables).
+* Override the version of `pip` used by nox
+
+Options are documented inside the [noxfile_config.py](noxfile_config.py).
+
+
 ### Running tests with Docker
 
 __Note__: This is currently only available for samples in `python-docs-samples`.
@@ -570,6 +726,59 @@ On MacOS systems, you also need to install `coreutils` to use
 $ brew install coreutils
 ```
 
+### Environment Variables and Secrets
+
+This section explains how to set environment variables that are needed
+by tests.
+
+
+#### Environment Variables
+
+If a `noxfile_config.py` does not exist, copy [`noxfile_config.py`](noxfile_config.py)
+into the directory.
+
+Add the new environment variables to the `envs` dictionary.
+
+```py
+TEST_CONFIG_OVERRIDE = {
+    # You can opt out from the test for specific Python versions.
+    "ignored_versions": ["2.7"],
+    # Old samples are opted out of enforcing Python type hints
+    # All new samples should feature them
+    "enforce_type_hints": True,
+    # An envvar key for determining the project id to use. Change it
+    # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
+    # build specific Cloud project. You can also use your own string
+    # to use your own Cloud project.
+    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+    # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+    # A dictionary you want to inject into your test. Don't put any
+    # secrets here. These values will override predefined values.
+    "envs": {"DJANGO_SETTINGS_MODULE": "mysite.settings"},
+}
+```
+
+
+#### Secrets
+
+For setting up a local test environment, see [Test Environment Setup](#test-environment-setup).
+
+Secrets (e.g., project names, API keys, passwords) are kept in
+Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
+If you are unable to access the link, reach out to your assigned pull
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
+for assistance.
+
+1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)
+   in your pull request.
+2. Run [`scripts/decrypt-secrets.sh`](scripts/decrypt-secrets.sh)
+   to fetch the secrets. A new file `testing/test-env.sh` will appear.
+3. Add the new environment variable to `testing/test-env.sh`.
+4. Run [`scripts/encrypt-secrets.sh`](scripts/encrypt-secrets.sh)
+   to upload the secrets to secret manager.
+
+
+
 ### Google Cloud Storage Resources
 
 Certain samples require integration with Google Cloud Storage (GCS), most
@@ -578,11 +787,22 @@ samples, configure your GCS bucket name via the `CLOUD_STORAGE_BUCKET`
 environment variable.
 
 The resources required by tests can usually be found in the `./resources`
-folder inside the sample directory, as in [this
-example](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/automl/cloud-client/resources).
+folder inside the `samples/snippets` directory in client libraries, as in
+[this example](https://github.com/googleapis/python-automl/tree/master/samples/snippets/resources).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 
 ```console
-gsutil cp ./resources/* gs://$CLOUD_STORAGE_BUCKET/
+gsutil cp ./samples/snippets/resources/* gs://{$CLOUD_STORAGE_BUCKET}/
 ```
+
+## Debugging
+
+### Can I use a debugger for samples?
+
+Yes, you can use `pdb` or any Python debugger. For pdb, use `import pdb; pdb.set_trace()` (<3.7) or `breakpoint` (3.7+).
+See https://docs.python.org/3/library/pdb.html.
+
+### How do I do that in IntelliJ, VSCode, etc.?
+
+These IDEs just inject the breakpoint above into the code, so it should work.

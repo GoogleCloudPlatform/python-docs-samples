@@ -27,6 +27,7 @@ def company_and_job():
     general_search_sample.tear_down(company_name, job_name)
 
 
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_general_search_sample(company_and_job, capsys):
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():

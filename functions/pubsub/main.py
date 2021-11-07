@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_pubsub_setup]
+# [START functions_pubsub_publish]
 import base64
 import json
 import os
@@ -22,11 +22,9 @@ from google.cloud import pubsub_v1
 
 # Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
-PROJECT_ID = os.getenv('GCP_PROJECT')
-# [END functions_pubsub_setup]
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 
 
-# [START functions_pubsub_publish]
 # Publishes a message to a Cloud Pub/Sub topic.
 def publish(request):
     request_json = request.get_json(silent=True)
@@ -35,7 +33,7 @@ def publish(request):
     message = request_json.get("message")
 
     if not topic_name or not message:
-        return ('Missing "topic" and/or "subscription" parameter.', 500)
+        return ('Missing "topic" and/or "message" parameter.', 400)
 
     print(f'Publishing message to topic {topic_name}')
 

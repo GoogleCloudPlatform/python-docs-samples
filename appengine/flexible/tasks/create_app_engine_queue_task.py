@@ -15,7 +15,6 @@
 from __future__ import print_function
 
 import argparse
-import datetime
 
 
 def create_task(project, queue, location, payload=None, in_seconds=None):
@@ -24,6 +23,8 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     from google.cloud import tasks_v2
     from google.protobuf import timestamp_pb2
+    import datetime
+    import json
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
@@ -32,7 +33,8 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # project = 'my-project-id'
     # queue = 'my-appengine-queue'
     # location = 'us-central1'
-    # payload = 'hello'
+    # payload = 'hello' or {'param': 'value'} for application/json
+    # in_seconds = None
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
@@ -40,11 +42,16 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # Construct the request body.
     task = {
             'app_engine_http_request': {  # Specify the type of request.
-                'http_method': 'POST',
+                'http_method': tasks_v2.HttpMethod.POST,
                 'relative_uri': '/example_task_handler'
             }
     }
     if payload is not None:
+        if isinstance(payload, dict):
+            # Convert dict to JSON string
+            payload = json.dumps(payload)
+            # specify http content-type to application/json
+            task["app_engine_http_request"]["headers"] = {"Content-type": "application/json"}
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
 
@@ -63,7 +70,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         task['schedule_time'] = timestamp
 
     # Use the client to build and send the task.
-    response = client.create_task(parent, task)
+    response = client.create_task(parent=parent, task=task)
 
     print('Created task {}'.format(response.name))
     return response

@@ -17,7 +17,7 @@
 import datetime
 
 from airflow import models
-from airflow.contrib.operators import bigquery_operator
+from airflow.providers.google.cloud.operators import bigquery
 
 
 yesterday = datetime.datetime.combine(
@@ -38,21 +38,39 @@ with models.DAG(
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
     # [START composer_connections_default]
-    task_default = bigquery_operator.BigQueryOperator(
+    task_default = bigquery.BigQueryInsertJobOperator(
         task_id='task_default_connection',
-        sql='SELECT 1', use_legacy_sql=False)
+        configuration={
+            "query": {
+                "query": 'SELECT 1',
+                "useLegacySql": False
+            }
+        }
+    )
     # [END composer_connections_default]
     # [START composer_connections_explicit]
-    task_explicit = bigquery_operator.BigQueryOperator(
+    # Composer creates a 'google_cloud_default' connection by default.
+    task_explicit = bigquery.BigQueryInsertJobOperator(
         task_id='task_explicit_connection',
-        sql='SELECT 1', use_legacy_sql=False,
-        # Composer creates a 'google_cloud_default' connection by default.
-        bigquery_conn_id='google_cloud_default')
+        gcp_conn_id='google_cloud_default',
+        configuration={
+            "query": {
+                "query": 'SELECT 1',
+                "useLegacySql": False
+            }
+        }
+    )
     # [END composer_connections_explicit]
     # [START composer_connections_custom]
-    task_custom = bigquery_operator.BigQueryOperator(
+    # Set a gcp_conn_id to use a connection that you have created.
+    task_custom = bigquery.BigQueryInsertJobOperator(
         task_id='task_custom_connection',
-        sql='SELECT 1', use_legacy_sql=False,
-        # Set a connection ID to use a connection that you have created.
-        bigquery_conn_id='my_gcp_connection')
+        gcp_conn_id='my_gcp_connection',
+        configuration={
+            "query": {
+                "query": 'SELECT 1',
+                "useLegacySql": False
+            }
+        }
+    )
     # [END composer_connections_custom]

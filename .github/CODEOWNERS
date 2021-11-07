@@ -9,58 +9,69 @@
 # explicitly taken by someone else.
 *                               @GoogleCloudPlatform/python-samples-owners
 
-/appengine/**/*.py                     @engelke @GoogleCloudPlatform/python-samples-owners
-/auth/**/*.py                            @busunkim96 @GoogleCloudPlatform/python-samples-owners
-/automl/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/appengine/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
+/auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-owners
+/automl/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
+/billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-owners
 /bigquery_storage/**/*.py              @shollyman @GoogleCloudPlatform/python-samples-owners
-/bigtable/**/*.py                      @GoogleCloudPlatform/bigtable-dpe @GoogleCloudPlatform/python-samples-owners
+/bigtable/**/*.py                      @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /blog/**/*.py                          @GoogleCloudPlatform/python-samples-owners
+/channel/**/*.py                       @max-mathieu @GoogleCloudPlatform/python-samples-owners
 /cdn/**/*.py                           @mpwarres @elithrar @GoogleCloudPlatform/python-samples-owners
-/cloud-sql/**/*.py                     @GoogleCloudPlatform/cloud-sql-dpes @GoogleCloudPlatform/python-samples-owners
+/cloud-sql/**/*.py                     @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-owners
 /codelabs/**/*.py                      @GoogleCloudPlatform/python-samples-owners
-/composer/**/*.py                      @leahecole @GoogleCloudPlatform/python-samples-owners
-/compute/**/*.py                       @GoogleCloudPlatform/python-samples-owners
-/container_registry/**/*.py            @donmccasland @GoogleCloudPlatform/python-samples-owners
-/data-science-onramp/                  @coleleah @bradmiro @GoogleCloudPlatform/python-samples-owners
+/composer/**/*.py                      @leahecole @rachael-ds @rafalbiegacz @GoogleCloudPlatform/python-samples-owners
+/compute/**/*.py                       @m-strzelczyk @GoogleCloudPlatform/python-samples-owners
+/container_registry/**/*.py            @donmccasland @dinagraves @kelsk @GoogleCloudPlatform/python-samples-owners
+/data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datacatalog/**/*.py                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/**/*.py                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
 /datalabeling/**/*.py                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
-/dataproc/**/*.py                      @bradmiro @GoogleCloudPlatform/python-samples-owners
-/datastore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
-/dialogflow/**/*.py                    @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/dataproc/**/*.py                      @loferris @GoogleCloudPlatform/python-samples-owners
+/datastore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
 /dlp/**/*.py                           @GoogleCloudPlatform/python-samples-owners
-/dns/**/*.py                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
+/dns/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /endpoints/**/*.py                     @GoogleCloudPlatform/python-samples-owners
-/error_reporting/**/*.py               @GoogleCloudPlatform/python-samples-owners
-/firestore/**/*.py                     @GoogleCloudPlatform/firestore-dpe @GoogleCloudPlatform/python-samples-owners
-/functions/**/*.py                     @ace-n @GoogleCloudPlatform/python-samples-owners
+/error_reporting/**/*.py               @GoogleCloudPlatform/observability-devx @GoogleCloudPlatform/python-samples-owners
+/eventarc/**/*.py                      @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/firestore/**/*.py                     @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-owners
+/functions/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/functions/spanner/*.py                @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
 /healthcare/**/*.py                    @noerog @GoogleCloudPlatform/python-samples-owners
-/iam/**/*.py                           @melaniedejong @GoogleCloudPlatform/python-samples-owners
+/iam/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /iap/**/*.py                           @GoogleCloudPlatform/python-samples-owners
-/iot/**/*.py                           @gguuss @GoogleCloudPlatform/python-samples-owners
+/iot/**/*.py                           @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-owners
 /jobs/**/*.py                          @GoogleCloudPlatform/python-samples-owners
 /kms/**/*.py                           @GoogleCloudPlatform/python-samples-owners
 /kubernetes_engine/**/*.py             @GoogleCloudPlatform/python-samples-owners
-/language/**/*.py                      @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/logging/**/*.py                       @simonz130 @GoogleCloudPlatform/python-samples-owners
+/kubernetes_engine/django_tutorial/**/*.py @glasnt @GoogleCloudPlatform/python-samples-owners
+/language/**/*.py                      @telpirion @GoogleCloudPlatform/python-samples-owners
+/media/**/*.py                         @irataxy @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
 /ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
-/notebooks/**/*.py                     @alixhami @sirtorry @GoogleCloudPlatform/python-samples-owners
+/monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
+/monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
+/notebooks/**/*.py                     @alixhami @GoogleCloudPlatform/python-samples-owners
 /opencensus/**/*.py                    @GoogleCloudPlatform/python-samples-owners
-/profiler/**/*.py                      @jqll @GoogleCloudPlatform/python-samples-owners
+/people-and-planet-ai/**/*.py          @davidcavazos @GoogleCloudPlatform/python-samples-owners
+/profiler/**/*.py                      @kalyanac @GoogleCloudPlatform/python-samples-owners
 /pubsub/**/*.py                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
-/run/**/*.py                           @averikitsch @grant @GoogleCloudPlatform/python-samples-owners
-/scheduler/**/*.py                     @averikitsch @GoogleCloudPlatform/python-samples-owners
+/run/**/*.py                           @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/run/django/**/*.py                    @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
+/scheduler/**/*.py                     @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-owners
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
-/speech/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/storage/**/*.py                       @GoogleCloudPlatform/storage-dpe @GoogleCloudPlatform/python-samples-owners
-/tables/automl/**/*.py                 @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/speech/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
+/storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
+/tables/automl/**/*.py                 @telpirion @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
-/texttospeech/**/*.py                  @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/third_party/apache-airflow/**/*.py    @leahecole @GoogleCloudPlatform/python-samples-owners
-/trace/**/*.py                         @dukeng @ziweizhao @GoogleCloudPlatform/python-samples-owners
-/translate/**/*.py                     @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/video/**/*.py                         @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
-/vision/**/*.py                        @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
+/texttospeech/**/*.py                  @telpirion @GoogleCloudPlatform/python-samples-owners
+/trace/**/*.py                         @ymotongpoo @GoogleCloudPlatform/python-samples-owners
+/translate/**/*.py                     @telpirion @GoogleCloudPlatform/python-samples-owners
+/video/**/*.py                         @telpirion @GoogleCloudPlatform/python-samples-owners
+/vision/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
+/workflows/**/*.py                     @GoogleCloudPlatform/python-samples-owners

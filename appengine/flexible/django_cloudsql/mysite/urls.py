@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START gaeflex_py_django_local_static]
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.urls import include, path
 
-urlpatterns = [url(r'^', include('polls.urls')),
-               url(r'^admin/', admin.site.urls)]
-
-
-# This enables static files to be served from the Gunicorn server
-# In Production, serve static files from Google Cloud Storage or an alternative
-# CDN
-if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()
+urlpatterns = [
+    path("", include("polls.urls")),
+    path("admin/", admin.site.urls),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# [END gaeflex_py_django_local_static]

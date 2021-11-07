@@ -12,7 +12,7 @@ scaffolding for other frameworks and use cases.
 
 ## Run Locally
 
-Some samples have specific instructions. If there is a README in the sample folder, pleaese refer to it for any additional steps required to run the sample.
+Some samples have specific instructions. If there is a README in the sample folder, please refer to it for any additional steps required to run the sample.
 
 In general, the samples typically require:
 

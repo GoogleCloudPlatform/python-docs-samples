@@ -39,7 +39,7 @@ export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
 
 # Deploy to Cloud Run
-gcloud beta run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial --set-env-vars=BLURRED_BUCKET_NAME=<BLURRED_BUCKET_NAME>
+gcloud run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial --set-env-vars=BLURRED_BUCKET_NAME=<BLURRED_BUCKET_NAME>
 
 ```
 
@@ -48,7 +48,7 @@ gcloud beta run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pu
 Cloud Run services can be [configured with Environment Variables](https://cloud.google.com/run/docs/configuring/environment-variables).
 Required variables for this sample include:
 
-* `INPUT_BUCKET_NAME`: The Cloud Run service will be notified of images uploaded to this Cloud Storage bucket. The service will then retreive and process the image.
+* `INPUT_BUCKET_NAME`: The Cloud Run service will be notified of images uploaded to this Cloud Storage bucket. The service will then retrieve and process the image.
 * `BLURRED_BUCKET_NAME`: The Cloud Run service will write blurred images to this Cloud Storage bucket.
 
 ## Maintenance Note

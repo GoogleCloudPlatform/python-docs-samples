@@ -63,7 +63,7 @@ def heavy_computation():
     return reduce(lambda x, t: t * x, numbers)
 
 
-# [START functions_tips_global_scope]
+# [START cloudrun_tips_global_scope]
 # [START run_tips_global_scope]
 # Global (instance-wide) scope
 # This computation runs at instance cold-start
@@ -85,10 +85,11 @@ def scope_demo(request):
     return 'Per instance: {}, per function: {}'.format(
         instance_var, function_var)
 # [END run_tips_global_scope]
-# [END functions_tips_global_scope]
+# [END cloudrun_tips_global_scope]
 
 
 # [START functions_tips_lazy_globals]
+# [START cloudrun_tips_global_lazy]
 # [START run_tips_global_lazy]
 # Always initialized (at cold-start)
 non_lazy_global = file_wide_computation()
@@ -116,6 +117,7 @@ def lazy_globals(request):
 
     return 'Lazy: {}, non-lazy: {}.'.format(lazy_global, non_lazy_global)
 # [END run_tips_global_lazy]
+# [END cloudrun_tips_global_lazy]
 # [END functions_tips_lazy_globals]
 
 

@@ -14,7 +14,7 @@
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
-# You can copy this file into your directory, then it will be inported from
+# You can copy this file into your directory, then it will be imported from
 # the noxfile.py.
 
 # The source of truth:
@@ -38,5 +38,9 @@ TEST_CONFIG_OVERRIDE = {
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    'envs': {},
+    'envs': {
+        # Required for workload identity federation with AWS.
+        'AWS_ACCESS_KEY_ID': 'AKIA000000000EXAMPLE',
+        'AWS_SECRET_ACCESS_KEY': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    },
 }

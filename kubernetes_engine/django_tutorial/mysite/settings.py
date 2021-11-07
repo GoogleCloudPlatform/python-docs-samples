@@ -77,18 +77,20 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 # [START dbconfig]
+# [START gke_django_database_config]
 DATABASES = {
     'default': {
         # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
         # 'ENGINE': 'django.db.backends.mysql' instead of the following.
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'polls',
+        'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
+# [END gke_django_database_config]
 # [END dbconfig]
 
 # Internationalization
@@ -105,11 +107,15 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-# [START staticurl]
+# [START gke_django_static_config]
 STATIC_URL = '/static/'
-# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
-# [END staticurl]
+# STATIC_URL = 'https://storage.googleapis.com/[YOUR_GCS_BUCKET]/static/'
+# [END gke_django_static_config]
 
 STATIC_ROOT = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

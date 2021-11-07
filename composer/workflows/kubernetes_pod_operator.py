@@ -18,8 +18,8 @@
 import datetime
 
 from airflow import models
-from airflow.contrib.kubernetes import secret
-from airflow.contrib.operators import kubernetes_pod_operator
+from airflow.kubernetes.secret import Secret
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 
 
 # A Secret is an object that contains a small amount of sensitive data such as
@@ -29,7 +29,7 @@ from airflow.contrib.operators import kubernetes_pod_operator
 # exposure.
 
 # [START composer_kubernetespodoperator_secretobject]
-secret_env = secret.Secret(
+secret_env = Secret(
     # Expose the secret as environment variable.
     deploy_type='env',
     # The name of the environment variable, since deploy_type is `env` rather
@@ -39,14 +39,14 @@ secret_env = secret.Secret(
     secret='airflow-secrets',
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
-secret_volume = secret.Secret(
-    'volume',
+secret_volume = Secret(
+    deploy_type='volume',
     # Path where we mount the secret as volume
-    '/var/secrets/google',
+    deploy_target='/var/secrets/google',
     # Name of Kubernetes Secret
-    'service-account',
+    secret='service-account',
     # Key in the form of service account file name
-    'service-account.json')
+    key='service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
 
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -66,7 +66,7 @@ with models.DAG(
     # created upon environment creation.
 
     # [START composer_kubernetespodoperator_minconfig]
-    kubernetes_min_pod = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_min_pod = KubernetesPodOperator(
         # The ID specified for the task.
         task_id='pod-ex-minimum',
         # Name of task you want to run, used to generate Pod ID.
@@ -90,14 +90,14 @@ with models.DAG(
         image='gcr.io/gcp-runtimes/ubuntu_18_0_4')
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
-    kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubenetes_template_ex = KubernetesPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
         namespace='default',
         image='bash',
         # All parameters below are able to be templated with jinja -- cmds,
         # arguments, env_vars, and config_file. For more information visit:
-        # https://airflow.apache.org/code.html#default-variables
+        # https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
 
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
@@ -119,7 +119,7 @@ with models.DAG(
         config_file="{{ conf.get('core', 'kube_config') }}")
     # [END composer_kubernetespodoperator_templateconfig]
     # [START composer_kubernetespodoperator_secretconfig]
-    kubernetes_secret_vars_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_secret_vars_ex = KubernetesPodOperator(
         task_id='ex-kube-secrets',
         name='ex-kube-secrets',
         namespace='default',
@@ -132,10 +132,14 @@ with models.DAG(
         # container to use. env_vars is templated.
         env_vars={
             'EXAMPLE_VAR': '/example/value',
-            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
+            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json '})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
-    kubernetes_affinity_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    # Pod affinity with the KubernetesPodOperator
+    # is not supported with Composer 2
+    # instead, create a cluster and use the GKEStartPodOperator
+    # https://cloud.google.com/composer/docs/using-gke-operator
+    kubernetes_affinity_ex = KubernetesPodOperator(
         task_id='ex-pod-affinity',
         name='ex-pod-affinity',
         namespace='default',
@@ -177,7 +181,7 @@ with models.DAG(
         })
     # [END composer_kubernetespodaffinity]
     # [START composer_kubernetespodoperator_fullconfig]
-    kubernetes_full_pod = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_full_pod = KubernetesPodOperator(
         task_id='ex-all-configs',
         name='pi',
         namespace='default',
@@ -217,13 +221,13 @@ with models.DAG(
         # resources = pod.Resources() instead passing a dict
         # For more info see:
         # https://github.com/apache/airflow/pull/4551
-        resources={'limit_memory': 1, 'limit_cpu': 1},
+        resources={'limit_memory': "250M", 'limit_cpu': "100m"},
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.
         config_file='/home/airflow/composer_kube_config',
         # If true, the content of /airflow/xcom/return.json from container will
         # also be pushed to an XCom when the container ends.
-        xcom_push=False,
+        do_xcom_push=False,
         # List of Volume objects to pass to the Pod.
         volumes=[],
         # List of VolumeMount objects to pass to the Pod.
@@ -231,6 +235,10 @@ with models.DAG(
         # Affinity determines which nodes the Pod can run on based on the
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+        # Pod affinity with the KubernetesPodOperator
+        # is not supported with Composer 2
+        # instead, create a cluster and use the GKEStartPodOperator
+        # https://cloud.google.com/composer/docs/using-gke-operator
         affinity={})
     # [END composer_kubernetespodoperator_fullconfig]
     # [END composer_kubernetespodoperator]

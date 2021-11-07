@@ -27,11 +27,12 @@ import datasets  # noqa
 import fhir_stores  # noqa
 
 
-cloud_region = "us-central1"
+location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
+version = "R4"
 
 gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
@@ -40,12 +41,15 @@ resource_file = os.path.join(RESOURCES, source_file_name)
 import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 
+BACKOFF_MAX_TIME = 500
+
+
 @pytest.fixture(scope="module")
 def test_dataset():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
-            datasets.create_dataset(project_id, cloud_region, dataset_id)
+            datasets.create_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
             # likely the first request failed on the client side, but
@@ -60,10 +64,10 @@ def test_dataset():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+            datasets.delete_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
@@ -76,11 +80,11 @@ def test_dataset():
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
             fhir_stores.create_fhir_store(
-                project_id, cloud_region, dataset_id, fhir_store_id
+                project_id, location, dataset_id, fhir_store_id, version
             )
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
@@ -98,11 +102,11 @@ def test_fhir_store():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
-                project_id, cloud_region, dataset_id, fhir_store_id
+                project_id, location, dataset_id, fhir_store_id
             )
         except HttpError as err:
             # The API returns 404 when the FHIR store doesn't exist.
@@ -124,11 +128,11 @@ def crud_fhir_store_id():
     yield fhir_store_id
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
-                project_id, cloud_region, dataset_id, fhir_store_id
+                project_id, location, dataset_id, fhir_store_id
             )
         except HttpError as err:
             # The API returns 404 when the FHIR store doesn't exist.
@@ -147,7 +151,7 @@ def crud_fhir_store_id():
 
 @pytest.fixture(scope="module")
 def blob():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def create():
         try:
             storage_client = storage.Client()
@@ -169,7 +173,7 @@ def blob():
     yield
 
     # Clean up
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
             blob.delete()
@@ -185,13 +189,31 @@ def blob():
 
 
 def test_crud_fhir_store(test_dataset, capsys):
-    fhir_stores.create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _create():
+        fhir_stores.create_fhir_store(
+            project_id, location, dataset_id, fhir_store_id, version
+        )
 
-    fhir_stores.get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    _create()
 
-    fhir_stores.list_fhir_stores(project_id, cloud_region, dataset_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _get():
+        fhir_stores.get_fhir_store(project_id, location, dataset_id, fhir_store_id)
 
-    fhir_stores.delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    _get()
+
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _list():
+        fhir_stores.list_fhir_stores(project_id, location, dataset_id)
+
+    _list()
+
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def _delete():
+        fhir_stores.delete_fhir_store(project_id, location, dataset_id, fhir_store_id)
+
+    _delete()
 
     out, _ = capsys.readouterr()
 
@@ -203,9 +225,7 @@ def test_crud_fhir_store(test_dataset, capsys):
 
 
 def test_get_fhir_store_metadata(test_dataset, test_fhir_store, capsys):
-    fhir_stores.get_fhir_store_metadata(
-        project_id, cloud_region, dataset_id, fhir_store_id
-    )
+    fhir_stores.get_fhir_store_metadata(project_id, location, dataset_id, fhir_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -213,7 +233,7 @@ def test_get_fhir_store_metadata(test_dataset, test_fhir_store, capsys):
 
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
-    fhir_stores.patch_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+    fhir_stores.patch_fhir_store(project_id, location, dataset_id, fhir_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -222,7 +242,11 @@ def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
 
 def test_import_fhir_store_gcs(test_dataset, test_fhir_store, blob, capsys):
     fhir_stores.import_fhir_resources(
-        project_id, cloud_region, dataset_id, fhir_store_id, import_object,
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        import_object,
     )
 
     out, _ = capsys.readouterr()
@@ -231,7 +255,11 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, blob, capsys):
 
 def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     fhir_stores.export_fhir_store_gcs(
-        project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri,
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        gcs_uri,
     )
 
     out, _ = capsys.readouterr()
@@ -241,12 +269,12 @@ def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
 
 def test_get_set_fhir_store_iam_policy(test_dataset, test_fhir_store, capsys):
     get_response = fhir_stores.get_fhir_store_iam_policy(
-        project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, location, dataset_id, fhir_store_id
     )
 
     set_response = fhir_stores.set_fhir_store_iam_policy(
         project_id,
-        cloud_region,
+        location,
         dataset_id,
         fhir_store_id,
         "serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com",

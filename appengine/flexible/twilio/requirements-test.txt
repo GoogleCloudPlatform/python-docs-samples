@@ -1,2 +1,2 @@
-pytest==6.0.1
-responses==0.10.15
+pytest==6.2.4
+responses==0.15.0

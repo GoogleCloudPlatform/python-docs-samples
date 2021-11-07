@@ -90,8 +90,8 @@ To run this sample:
 
     $ python dicom_stores.py
 
-    usage: dicom_stores.py [-h] [--project_id PROJECT_ID]
-                           [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+    usage: dicom_stores.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
+                           [--dataset_id DATASET_ID]
                            [--dicom_store_id DICOM_STORE_ID]
                            [--pubsub_topic PUBSUB_TOPIC] [--uri_prefix URI_PREFIX]
                            [--content_uri CONTENT_URI]
@@ -107,8 +107,8 @@ To run this sample:
         get-dicom-store     Gets the specified DICOM store.
         list-dicom-stores   Lists the DICOM stores in the given dataset.
         patch-dicom-store   Updates the DICOM store.
-        get_iam_policy      Gets the IAM policy for the specified dicom store.
-        set_iam_policy      Sets the IAM policy for the specified dicom store. A
+        get_iam_policy      Gets the IAM policy for the specified DICOM store.
+        set_iam_policy      Sets the IAM policy for the specified DICOM store. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
                             allAuthenticatedUsers, anyone authenticated with a
@@ -122,15 +122,14 @@ To run this sample:
                             'roles/editor'
         export-dicom-store  Export data to a Google Cloud Storage bucket by
                             copying it from the DICOM store.
-        import-dicom-store  Import data into the DICOM store by copying it from
+        import-dicom-store  Imports data into the DICOM store by copying it from
                             the specified source.
 
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --cloud_region CLOUD_REGION
-                            GCP region
+      --location LOCATION   GCP location
       --dataset_id DATASET_ID
                             Name of dataset
       --dicom_store_id DICOM_STORE_ID
@@ -171,11 +170,10 @@ To run this sample:
 
     $ python dicomweb.py
 
-    usage: dicomweb.py [-h] [--base_url BASE_URL] [--project_id PROJECT_ID]
-                       [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
-                       [--dicom_store_id DICOM_STORE_ID] [--dcm_file DCM_FILE]
-                       [--study_uid STUDY_UID] [--series_uid SERIES_UID]
-                       [--instance_uid INSTANCE_UID]
+    usage: dicomweb.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
+                       [--dataset_id DATASET_ID] [--dicom_store_id DICOM_STORE_ID]
+                       [--dcm_file DCM_FILE] [--study_uid STUDY_UID]
+                       [--series_uid SERIES_UID] [--instance_uid INSTANCE_UID]
                        {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-search-studies,dicomweb-retrieve-instance,dicomweb-retrieve-rendered,dicomweb-delete-study}
                        ...
 
@@ -205,11 +203,9 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --base_url BASE_URL   Healthcare API URL
       --project_id PROJECT_ID
                             GCP project name
-      --cloud_region CLOUD_REGION
-                            GCP region
+      --location LOCATION   GCP location
       --dataset_id DATASET_ID
                             Name of dataset
       --dicom_store_id DICOM_STORE_ID

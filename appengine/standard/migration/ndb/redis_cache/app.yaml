@@ -1,0 +1,42 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This file specifies your Python application's runtime configuration
+# including URL routing, versions, static file uploads, etc. See
+# https://developers.google.com/appengine/docs/python/config/appconfig
+# for details.
+
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+# Handlers define how to route requests to your application.
+handlers:
+# This handler tells app engine how to route requests to a WSGI application.
+# The script value is in the format <path.to.module>.<wsgi_application>
+# where <wsgi_application> is a WSGI application object.
+- url: .*  # This regex directs all routes to main.app
+  script: main.app
+
+libraries:
+- name: setuptools
+  version: 36.6.0
+- name: grpcio
+  version: 1.0.0
+
+env_variables:
+  REDIS_CACHE_URL: 'redis://<REDIS_HOST>:<REDIS_PORT>'
+
+vpc_access_connector:
+  name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'

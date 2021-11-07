@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc.
+# Copyright 2020 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@
 # The bookshelf frontend replication controller ensures that at least 3
 # instances of the bookshelf app are running on the cluster.
 # For more info about Pods see:
-#   https://cloud.google.com/container-engine/docs/pods/
+#   https://kubernetes.io/docs/concepts/workloads/pods/
 # For more info about Deployments:
 #   https://kubernetes.io/docs/user-guide/deployments/
 
 # [START kubernetes_deployment]
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: polls
@@ -31,6 +31,9 @@ metadata:
     app: polls
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: polls
   template:
     metadata:
       labels:
@@ -46,6 +49,11 @@ spec:
         imagePullPolicy: Always
         env:
             # [START cloudsql_secrets]
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: database
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
@@ -84,7 +92,7 @@ spec:
           hostPath:
             path: /etc/ssl/certs
         - name: cloudsql
-          emptyDir:
+          emptyDir: {}
       # [END volumes]        
 # [END kubernetes_deployment]
 
@@ -92,12 +100,12 @@ spec:
 
 # [START service]
 # The polls service provides a load-balancing proxy over the polls app
-# pods. By specifying the type as a 'LoadBalancer', Container Engine will
+# pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
 # create an external HTTP load balancer.
 # For more information about Services see:
-#   https://cloud.google.com/container-engine/docs/services/
+#   https://kubernetes.io/docs/concepts/services-networking/service/
 # For more information about external HTTP load balancing see:
-#   https://cloud.google.com/container-engine/docs/load-balancer
+#   https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
 apiVersion: v1
 kind: Service
 metadata:

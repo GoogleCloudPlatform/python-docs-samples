@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import flask
 import pytest
 
@@ -47,18 +45,6 @@ def test_parse_multipart_files(app, capsys):
             out, _ = capsys.readouterr()
             assert res == 'Done!'
             assert out == 'Processed file: test.py\n'
-
-
-def test_get_signed_url(app, capsys):
-    json = {
-        'bucket': os.getenv('GOOGLE_CLOUD_PROJECT'),
-        'filename': 'test.txt',
-        'contentType': 'text/plain'
-    }
-
-    with app.test_request_context(method='POST', json=json):
-        url = main.get_signed_url(flask.request)
-        assert 'https://storage.googleapis.com/' in url
 
 
 def test_cors_enabled_function_preflight(app):

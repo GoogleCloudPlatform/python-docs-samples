@@ -26,6 +26,7 @@ def create_data():
     custom_attribute_sample.tear_down(company_name, job_name)
 
 
+@pytest.mark.flaky(min_passes=1, max_runs=3)
 def test_custom_attribute_sample(create_data, capsys):
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():

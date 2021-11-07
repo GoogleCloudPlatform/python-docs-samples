@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2016 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,15 +12,17 @@
 # limitations under the License.
 
 # [START datastore_admin_client_create]
-from google.cloud.datastore_admin_v1.gapic import datastore_admin_client
+from google.cloud.datastore_admin_v1 import DatastoreAdminClient
 
 
 def client_create():
     """Creates a new Datastore admin client."""
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     print("Admin client created\n")
     return client
+
+
 # [END datastore_admin_client_create]
 
 
@@ -32,13 +34,17 @@ def export_entities(project_id, output_url_prefix):
     """
     # project_id = "project-id"
     # output_url_prefix = "gs://bucket-name"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
-    op = client.export_entities(project_id, output_url_prefix)
-    response = op.result(timeout=200)
+    op = client.export_entities(
+        {"project_id": project_id, "output_url_prefix": output_url_prefix}
+    )
+    response = op.result(timeout=300)
 
     print("Entities were exported\n")
     return response
+
+
 # [END datastore_admin_entities_export]
 
 
@@ -47,13 +53,17 @@ def import_entities(project_id, input_url):
     """Imports entities into Datastore."""
     # project_id := "project-id"
     # input_url := "gs://bucket-name/overall-export-metadata-file"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
-    op = client.import_entities(project_id, input_url)
-    response = op.result(timeout=200)
+    op = client.import_entities(
+        {"project_id": project_id, "input_url": input_url}
+    )
+    response = op.result(timeout=300)
 
     print("Entities were imported\n")
     return response
+
+
 # [END datastore_admin_entities_import]
 
 
@@ -62,11 +72,13 @@ def get_index(project_id, index_id):
     """Gets an index."""
     # project_id := "my-project-id"
     # index_id := "my-index"
-    client = datastore_admin_client.DatastoreAdminClient()
-    index = client.get_index(project_id, index_id)
+    client = DatastoreAdminClient()
+    index = client.get_index({"project_id": project_id, "index_id": index_id})
 
     print("Got index: %v\n", index.index_id)
     return index
+
+
 # [END datastore_admin_index_get]
 
 
@@ -74,13 +86,15 @@ def get_index(project_id, index_id):
 def list_indexes(project_id):
     """Lists the indexes."""
     # project_id := "my-project-id"
-    client = datastore_admin_client.DatastoreAdminClient()
+    client = DatastoreAdminClient()
 
     indexes = []
-    for index in client.list_indexes(project_id):
+    for index in client.list_indexes({"project_id": project_id}):
         indexes.append(index)
         print("Got index: %v\n", index.index_id)
 
     print("Got list of indexes\n")
     return indexes
+
+
 # [END datastore_admin_index_list]

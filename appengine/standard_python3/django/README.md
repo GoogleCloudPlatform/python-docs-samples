@@ -7,7 +7,7 @@
 
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
 app on Google App Engine Standard Environment. It uses the 
-[Writing your first Django app](https://docs.djangoproject.com/en/2.1/intro/tutorial01/) as the 
+[Writing your first Django app](https://docs.djangoproject.com/en/3.2/intro/tutorial01/) as the 
 example app to deploy.
 
 

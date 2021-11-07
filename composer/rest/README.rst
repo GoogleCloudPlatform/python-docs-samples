@@ -61,14 +61,37 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
+Determine client ID associated with a Cloud Composer environment
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python get_client_id.py
+    usage: get_client_id.py [-h] project_id location composer_environment
+
+    Get the client ID associated with a Cloud Composer environment.
+
+    positional arguments:
+      project_id            Your Project ID.
+      location              Region of the Cloud Composer environment.
+      composer_environment  Name of the Cloud Composer environment.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+In case of any issue with `get_client_id.py`, you can also get the client ID using the following command, where `AIRFLOW_URL` would be the URL of your Airflow webserver (ex. `https://*****************-tp.appspot.com`_):
+
+.. code-block:: bash
+
+    $ curl -v AIRFLOW_URL 2>&1 >/dev/null | grep -o "client_id\=[A-Za-z0-9-]*\.apps\.googleusercontent\.com"
+
 Determine Cloud Storage path for DAGs
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=composer/rest/get_dag_prefix.py,composer/rest/README.rst
-
-
-
 
 To run this sample:
 
@@ -90,9 +113,5 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-
-
-
-
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/

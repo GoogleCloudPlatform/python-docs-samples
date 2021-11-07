@@ -1,0 +1,27 @@
+{
+  "name": "idp-sql",
+  "env": {
+    "DB_PASSWORD": {
+      "description": "postgreSQL password for root user"
+    },
+    "CLOUD_SQL_INSTANCE_NAME": {
+      "description": "Cloud SQL instance name",
+      "value": "idp-sql-instance"
+    },
+    "API_KEY": {
+      "description": "Identity Platform API key from Application Setup Details"
+    }
+  },
+  "hooks": {
+    "precreate": {
+      "commands": [
+        "./setup.sh"
+      ]
+    },
+    "postcreate": {
+      "commands": [
+        "./postcreate.sh"
+      ]
+    }
+  }
+}

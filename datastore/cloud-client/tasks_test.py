@@ -1,4 +1,4 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import backoff
 from google.cloud import datastore
@@ -19,19 +20,24 @@ import pytest
 
 import tasks
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.yield_fixture
 def client():
-    client = datastore.Client(PROJECT)
+    # We use namespace for isolating builds.
+    namespace = uuid.uuid4().hex
+    client = datastore.Client(PROJECT, namespace=namespace)
+
+    # Delete anything created during the tests in the past.
+    with client.batch():
+        client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
     yield client
 
-    # Delete anything created during the test.
+    # Delete anything created during the tests.
     with client.batch():
-        client.delete_multi(
-            [x.key for x in client.query(kind='Task').fetch()])
+        client.delete_multi([x.key for x in client.query(kind="Task").fetch()])
 
 
 @pytest.mark.flaky
@@ -41,25 +47,25 @@ def test_create_client():
 
 @pytest.mark.flaky
 def test_add_task(client):
-    task_key = tasks.add_task(client, 'Test task')
+    task_key = tasks.add_task(client, "Test task")
     task = client.get(task_key)
     assert task
-    assert task['description'] == 'Test task'
+    assert task["description"] == "Test task"
 
 
 @pytest.mark.flaky
 def test_mark_done(client):
-    task_key = tasks.add_task(client, 'Test task')
+    task_key = tasks.add_task(client, "Test task")
     tasks.mark_done(client, task_key.id)
     task = client.get(task_key)
     assert task
-    assert task['done']
+    assert task["done"]
 
 
 @pytest.mark.flaky
 def test_list_tasks(client):
-    task1_key = tasks.add_task(client, 'Test task 1')
-    task2_key = tasks.add_task(client, 'Test task 2')
+    task1_key = tasks.add_task(client, "Test task 1")
+    task2_key = tasks.add_task(client, "Test task 2")
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def _():
@@ -69,24 +75,24 @@ def test_list_tasks(client):
 
 @pytest.mark.flaky
 def test_delete_task(client):
-    task_key = tasks.add_task(client, 'Test task 1')
+    task_key = tasks.add_task(client, "Test task 1")
     tasks.delete_task(client, task_key.id)
     assert client.get(task_key) is None
 
 
 @pytest.mark.flaky
 def test_format_tasks(client):
-    task1_key = tasks.add_task(client, 'Test task 1')
-    tasks.add_task(client, 'Test task 2')
+    task1_key = tasks.add_task(client, "Test task 1")
+    tasks.add_task(client, "Test task 2")
     tasks.mark_done(client, task1_key.id)
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def run_sample():
         output = tasks.format_tasks(tasks.list_tasks(client))
 
-        assert 'Test task 1' in output
-        assert 'Test task 2' in output
-        assert 'done' in output
-        assert 'created' in output
+        assert "Test task 1" in output
+        assert "Test task 2" in output
+        assert "done" in output
+        assert "created" in output
 
     run_sample()

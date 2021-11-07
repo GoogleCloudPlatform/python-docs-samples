@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START gae_python38_cloudsql_psql_pooling]
+# [START gae_python3_cloudsql_psql_pooling]
 import os
 
 from flask import Flask
@@ -59,6 +60,7 @@ def main():
     cnxpool.putconn(cnx)
 
     return str(current_time)
+# [END gae_python3_cloudsql_psql_pooling]
 # [END gae_python38_cloudsql_psql_pooling]
 
 

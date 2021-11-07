@@ -23,53 +23,69 @@ import uuid
 
 import pytest
 
+# Unique suffix to create distinct service names
+SUFFIX = uuid.uuid4().hex[:10]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+IMAGE_NAME = f"gcr.io/{PROJECT}/hello-{SUFFIX}"
 
-@pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
-    project = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-    # Build and Deploy Cloud Run Services
+@pytest.fixture
+def container_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "--tag",
+            IMAGE_NAME,
             "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            PROJECT,
             "--quiet",
         ],
         check=True,
     )
 
-    # Get the URL for the service and the token
-    service = subprocess.run(
+    yield IMAGE_NAME
+
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture
+def deployed_service(container_image):
+    # Deploy image to Cloud Run
+    service_name = f"hello-{SUFFIX}"
+    subprocess.run(
         [
             "gcloud",
             "run",
+            "deploy",
+            service_name,
+            "--image",
+            container_image,
             "--project",
-            project,
-            "--platform=managed",
+            PROJECT,
             "--region=us-central1",
-            "services",
-            "describe",
-            f"hello-{suffix}",
-            "--format=value(status.url)",
+            "--platform=managed",
+            "--no-allow-unauthenticated",
         ],
-        stdout=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
+    )
 
-    token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
-
-    yield service, token
+    yield service_name
 
     subprocess.run(
         [
@@ -77,32 +93,69 @@ def services():
             "run",
             "services",
             "delete",
-            f"hello-{suffix}",
-            "--project",
-            project,
-            "--platform",
-            "managed",
-            "--region",
-            "us-central1",
+            service_name,
+            "--platform=managed",
+            "--region=us-central1",
             "--quiet",
+            "--project",
+            PROJECT,
         ],
         check=True,
     )
 
 
-def test_end_to_end(services):
-    service = services[0].decode()
-    token = services[1].decode()
+@pytest.fixture
+def service_url_auth_token(deployed_service):
+    # Get Cloud Run service URL and auth token
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+
+    yield service_url, auth_token
+
+    # no deletion needed
+
+
+def test_end_to_end(service_url_auth_token):
+    service_url, auth_token = service_url_auth_token
 
     # Broken
     with pytest.raises(Exception) as e:
-        req = request.Request(service, headers={"Authorization": f"Bearer {token}"})
+        req = request.Request(
+            service_url, headers={"Authorization": f"Bearer {auth_token}"}
+        )
         request.urlopen(req)
     assert "HTTP Error 500: Internal Server Error" in str(e.value)
 
     # Improved
     req = request.Request(
-        f"{service}/improved", headers={"Authorization": f"Bearer {token}"}
+        f"{service_url}/improved", headers={"Authorization": f"Bearer {auth_token}"}
     )
     response = request.urlopen(req)
     assert response.status == 200

@@ -15,18 +15,16 @@
 # [START composer_dataflow_dag]
 
 
-"""Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
-wordcount example, and deletes the cluster.
+"""Example Airflow DAG that creates a Cloud Dataflow workflow which takes a
+text file and adds the rows to a BigQuery table.
 
-This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
+This DAG relies on four Airflow variables
+https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
   created.
-* gce_region - Google Compute Engine region where Cloud Dataflow cluster should be
-  created.
-Learn more about the difference between the two here:
-https://cloud.google.com/compute/docs/regions-zones
+For more info on zones where Dataflow is available see:
+https://cloud.google.com/dataflow/docs/resources/locations
 * bucket_path - Google Cloud Storage bucket where you've stored the User Defined
 Function (.js), the input file (.txt), and the JSON schema (.json).
 """
@@ -34,13 +32,12 @@ Function (.js), the input file (.txt), and the JSON schema (.json).
 import datetime
 
 from airflow import models
-from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
+from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
 from airflow.utils.dates import days_ago
 
 bucket_path = models.Variable.get("bucket_path")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce_zone")
-gce_region = models.Variable.get("gce_region")
 
 
 default_args = {
@@ -48,8 +45,6 @@ default_args = {
     "start_date": days_ago(1),
     "dataflow_default_options": {
         "project": project_id,
-        # Set to your region
-        "region": gce_region,
         # Set to your zone
         "zone": gce_zone,
         # This is a subfolder for storing temporary files, like the staged pipeline job.
@@ -68,7 +63,7 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
 
-    start_template_job = DataflowTemplateOperator(
+    start_template_job = DataflowTemplatedJobStartOperator(
         # The task id of your job
         task_id="dataflow_operator_transform_csv_to_bq",
         # The name of the template that you're using.

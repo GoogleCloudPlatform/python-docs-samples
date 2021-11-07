@@ -1,2 +1,0 @@
-google-cloud-vision==1.0.0
-google-cloud-storage==1.29.0

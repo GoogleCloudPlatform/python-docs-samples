@@ -82,7 +82,6 @@ class SendChatHandler(webapp2.RequestHandler):
             # Send an email message instead...
             # [END send-chat-to-user]
             pass
-# [END send-chat-to-user]
 
 
 # [START chat]

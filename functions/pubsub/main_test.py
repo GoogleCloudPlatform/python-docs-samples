@@ -28,7 +28,7 @@ def test_functions_pubsub_publish_should_fail_without_params():
     request.get_json.return_value = {}
     response = main.publish(request)
 
-    assert 'Missing "topic" and/or "subscription" parameter.' in response
+    assert 'Missing "topic" and/or "message" parameter.' in response
 
 
 def test_functions_pubsub_publish_should_publish_message():

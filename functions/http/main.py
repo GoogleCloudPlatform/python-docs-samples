@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_http_signed_url]
-from datetime import datetime, timedelta
-# [END functions_http_signed_url]
-
 # [START functions_http_xml]
 import json
 # [END functions_http_xml]
@@ -24,11 +20,6 @@ import json
 import os
 import tempfile
 # [END functions_http_form_data]
-
-# [START functions_http_signed_url]
-from flask import abort
-from google.cloud import storage
-# [END functions_http_signed_url]
 
 # [START functions_http_form_data]
 from werkzeug.utils import secure_filename
@@ -100,35 +91,10 @@ def parse_multipart(request):
 # [END functions_http_form_data]
 
 
-# [START functions_http_signed_url]
-storage_client = storage.Client()
-
-
-def get_signed_url(request):
-    if request.method != 'POST':
-        return abort(405)
-
-    request_json = request.get_json()
-
-    # Get a reference to the destination file in GCS
-    bucket_name = request_json['bucket']
-    file_name = request_json['filename']
-    file = storage_client.bucket(bucket_name).blob(file_name)
-
-    # Create a temporary upload URL
-    expires_at_ms = datetime.now() + timedelta(seconds=30)
-    url = file.generate_signed_url(expires_at_ms,
-                                   content_type=request_json['contentType'])
-
-    return url
-# [END functions_http_signed_url]
-
-
 # [START functions_http_cors]
 def cors_enabled_function(request):
-    # For more information about CORS and CORS preflight requests, see
+    # For more information about CORS and CORS preflight requests, see:
     # https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
-    # for more information.
 
     # Set CORS headers for the preflight request
     if request.method == 'OPTIONS':

@@ -1,9 +1,10 @@
-# Copyright 2017, Google, Inc.
+# Copyright 2017 Google, LLC.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,31 +20,33 @@ from google.cloud import firestore
 
 
 def quickstart_new_instance():
-    # [START quickstart_new_instance]
+    # [START firestore_setup_client_create]
     from google.cloud import firestore
 
-    # Project ID is determined by the GCLOUD_PROJECT environment variable
-    db = firestore.Client()
-    # [END quickstart_new_instance]
+    # The `project` parameter is optional and represents which project the client
+    # will act on behalf of. If not supplied, the client falls back to the default
+    # project inferred from the environment.
+    db = firestore.Client(project='my-project-id')
+    # [END firestore_setup_client_create]
 
     return db
 
 
 def quickstart_add_data_one():
     db = firestore.Client()
-    # [START quickstart_add_data_one]
+    # [START firestore_setup_dataset_pt1]
     doc_ref = db.collection(u'users').document(u'alovelace')
     doc_ref.set({
         u'first': u'Ada',
         u'last': u'Lovelace',
         u'born': 1815
     })
-    # [END quickstart_add_data_one]
+    # [END firestore_setup_dataset_pt1]
 
 
 def quickstart_add_data_two():
     db = firestore.Client()
-    # [START quickstart_add_data_two]
+    # [START firestore_setup_dataset_pt2]
     doc_ref = db.collection(u'users').document(u'aturing')
     doc_ref.set({
         u'first': u'Alan',
@@ -51,11 +54,12 @@ def quickstart_add_data_two():
         u'last': u'Turing',
         u'born': 1912
     })
-    # [END quickstart_add_data_two]
+    # [END firestore_setup_dataset_pt2]
 
 
 def quickstart_get_collection():
     db = firestore.Client()
+    # [START firestore_setup_dataset_read]
     # [START quickstart_get_collection]
     users_ref = db.collection(u'users')
     docs = users_ref.stream()
@@ -63,11 +67,12 @@ def quickstart_get_collection():
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
     # [END quickstart_get_collection]
+    # [END firestore_setup_dataset_read]
 
 
 def add_from_dict():
     db = firestore.Client()
-    # [START add_from_dict]
+    # [START firestore_data_set_from_map]
     data = {
         u'name': u'Los Angeles',
         u'state': u'CA',
@@ -76,12 +81,12 @@ def add_from_dict():
 
     # Add a new doc in collection 'cities' with ID 'LA'
     db.collection(u'cities').document(u'LA').set(data)
-    # [END add_from_dict]
+    # [END firestore_data_set_from_map]
 
 
 def add_data_types():
     db = firestore.Client()
-    # [START add_data_types]
+    # [START firestore_data_set_from_map_nested]
     data = {
         u'stringExample': u'Hello, World!',
         u'booleanExample': True,
@@ -96,10 +101,11 @@ def add_data_types():
     }
 
     db.collection(u'data').document(u'one').set(data)
-    # [END add_data_types]
+    # [END firestore_data_set_from_map_nested]
 
 
 # [START custom_class_def]
+# [START firestore_data_custom_type_definition]
 class City(object):
     def __init__(self, name, state, country, capital=False, population=0,
                  regions=[]):
@@ -157,12 +163,14 @@ class City(object):
                 regions={self.regions}\
             )'
         )
+# [END firestore_data_custom_type_definition]
 # [END custom_class_def]
 
 
 def add_example_data():
     db = firestore.Client()
     # [START add_example_data]
+    # [START firestore_data_get_dataset]
     cities_ref = db.collection(u'cities')
     cities_ref.document(u'BJ').set(
         City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
@@ -178,48 +186,49 @@ def add_example_data():
     cities_ref.document(u'TOK').set(
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
+    # [END firestore_data_get_dataset]
     # [END add_example_data]
 
 
 def add_custom_class_with_id():
     db = firestore.Client()
-    # [START add_custom_class_with_id]
+    # [START firestore_data_set_from_custom_type]
     city = City(name=u'Los Angeles', state=u'CA', country=u'USA')
     db.collection(u'cities').document(u'LA').set(city.to_dict())
-    # [END add_custom_class_with_id]
+    # [END firestore_data_set_from_custom_type]
 
 
 def add_data_with_id():
     db = firestore.Client()
     data = {}
-    # [START add_data_with_id]
+    # [START firestore_data_set_id_specified]
     db.collection(u'cities').document(u'new-city-id').set(data)
-    # [END add_data_with_id]
+    # [END firestore_data_set_id_specified]
 
 
 def add_custom_class_generated_id():
     db = firestore.Client()
-    # [START add_custom_class_generated_id]
+    # [START firestore_data_set_id_random_collection]
     city = City(name=u'Tokyo', state=None, country=u'Japan')
     db.collection(u'cities').add(city.to_dict())
-    # [END add_custom_class_generated_id]
+    # [END firestore_data_set_id_random_collection]
 
 
 def add_new_doc():
     db = firestore.Client()
-    # [START add_new_doc]
+    # [START firestore_data_set_id_random_document_ref]
     new_city_ref = db.collection(u'cities').document()
 
     # later...
     new_city_ref.set({
         # ...
     })
-    # [END add_new_doc]
+    # [END firestore_data_set_id_random_document_ref]
 
 
 def get_check_exists():
     db = firestore.Client()
-    # [START get_check_exists]
+    # [START firestore_data_get_as_map]
     doc_ref = db.collection(u'cities').document(u'SF')
 
     doc = doc_ref.get()
@@ -227,38 +236,38 @@ def get_check_exists():
         print(f'Document data: {doc.to_dict()}')
     else:
         print(u'No such document!')
-    # [END get_check_exists]
+    # [END firestore_data_get_as_map]
 
 
 def get_custom_class():
     db = firestore.Client()
-    # [START get_custom_class]
+    # [START firestore_data_get_as_custom_type]
     doc_ref = db.collection(u'cities').document(u'BJ')
 
     doc = doc_ref.get()
     city = City.from_dict(doc.to_dict())
     print(city)
-    # [END get_custom_class]
+    # [END firestore_data_get_as_custom_type]
 
 
 def get_simple_query():
     db = firestore.Client()
-    # [START get_simple_query]
+    # [START firestore_data_query]
     # Note: Use of CollectionRef stream() is prefered to get()
     docs = db.collection(u'cities').where(u'capital', u'==', True).stream()
 
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
-    # [END get_simple_query]
+    # [END firestore_data_query]
 
 
 def array_contains_filter():
     db = firestore.Client()
-    # [START fs_array_contains_filter]
+    # [START firestore_query_filter_array_contains]
     cities_ref = db.collection(u'cities')
 
     query = cities_ref.where(u'regions', u'array_contains', u'west_coast')
-    # [END fs_array_contains_filter]
+    # [END firestore_query_filter_array_contains]
     docs = query.stream()
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
@@ -266,45 +275,45 @@ def array_contains_filter():
 
 def get_full_collection():
     db = firestore.Client()
-    # [START get_full_collection]
+    # [START firestore_data_get_all_documents]
     docs = db.collection(u'cities').stream()
 
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
-    # [END get_full_collection]
+    # [END firestore_data_get_all_documents]
 
 
 def structure_doc_ref():
     db = firestore.Client()
-    # [START structure_doc_ref]
+    # [START firestore_data_reference_document]
     a_lovelace_ref = db.collection(u'users').document(u'alovelace')
-    # [END structure_doc_ref]
+    # [END firestore_data_reference_document]
     print(a_lovelace_ref)
 
 
 def structure_collection_ref():
     db = firestore.Client()
-    # [START structure_collection_ref]
+    # [START firestore_data_reference_collection]
     users_ref = db.collection(u'users')
-    # [END structure_collection_ref]
+    # [END firestore_data_reference_collection]
     print(users_ref)
 
 
 def structure_doc_ref_alternate():
     db = firestore.Client()
-    # [START structure_doc_ref_alternate]
+    # [START firestore_data_reference_document_path]
     a_lovelace_ref = db.document(u'users/alovelace')
-    # [END structure_doc_ref_alternate]
+    # [END firestore_data_reference_document_path]
 
     return a_lovelace_ref
 
 
 def structure_subcollection_ref():
     db = firestore.Client()
-    # [START structure_subcollection_ref]
+    # [START firestore_data_reference_subcollection]
     room_a_ref = db.collection(u'rooms').document(u'roomA')
     message_ref = room_a_ref.collection(u'messages').document(u'message1')
-    # [END structure_subcollection_ref]
+    # [END firestore_data_reference_subcollection]
     print(message_ref)
 
 
@@ -314,12 +323,12 @@ def update_doc():
         City(u'Washington D.C.', None, u'USA', True, 680000,
              [u'east_coast']).to_dict())
 
-    # [START update_doc]
+    # [START firestore_data_set_field]
     city_ref = db.collection(u'cities').document(u'DC')
 
     # Set the capital field
     city_ref.update({u'capital': True})
-    # [END update_doc]
+    # [END firestore_data_set_field]
 
 
 def update_doc_array():
@@ -328,7 +337,7 @@ def update_doc_array():
         City(u'Washington D.C.', None, u'USA', True, 680000,
              [u'east_coast']).to_dict())
 
-    # [START fs_update_doc_array]
+    # [START firestore_data_set_array_operations]
     city_ref = db.collection(u'cities').document(u'DC')
 
     # Atomically add a new region to the 'regions' array field.
@@ -336,7 +345,7 @@ def update_doc_array():
 
     # // Atomically remove a region from the 'regions' array field.
     city_ref.update({u'regions': firestore.ArrayRemove([u'east_coast'])})
-    # [END fs_update_doc_array]
+    # [END firestore_data_set_array_operations]
     city = city_ref.get()
     print(f'Updated the regions field of the DC. {city.to_dict()}')
 
@@ -347,7 +356,7 @@ def update_multiple():
         City(u'Washington D.C.', None, u'USA', True, 680000,
              [u'east_coast']).to_dict())
 
-    # [START update_multiple]
+    # [START firestore_update_multiple]
     doc_ref = db.collection(u'cities').document(u'DC')
 
     doc_ref.update({
@@ -355,23 +364,23 @@ def update_multiple():
         u'country': u'USA',
         u'capital': True
     })
-    # [END update_multiple]
+    # [END firestore_update_multiple]
 
 
 def update_create_if_missing():
     db = firestore.Client()
-    # [START update_create_if_missing]
+    # [START firestore_data_set_doc_upsert]
     city_ref = db.collection(u'cities').document(u'BJ')
 
     city_ref.set({
         u'capital': True
     }, merge=True)
-    # [END update_create_if_missing]
+    # [END firestore_data_set_doc_upsert]
 
 
 def update_nested():
     db = firestore.Client()
-    # [START update_nested]
+    # [START firestore_data_set_nested_fields]
     # Create an initial document to update
     frank_ref = db.collection(u'users').document(u'frank')
     frank_ref.set({
@@ -389,22 +398,22 @@ def update_nested():
         u'age': 13,
         u'favorites.color': u'Red'
     })
-    # [END update_nested]
+    # [END firestore_data_set_nested_fields]
 
 
 def update_server_timestamp():
     db = firestore.Client()
-    # [START update_server_timestamp]
+    # [START firestore_data_set_server_timestamp]
     city_ref = db.collection(u'objects').document(u'some-id')
     city_ref.update({
         u'timestamp': firestore.SERVER_TIMESTAMP
     })
-    # [END update_server_timestamp]
+    # [END firestore_data_set_server_timestamp]
 
 
 def update_data_transaction():
     db = firestore.Client()
-    # [START update_data_transaction]
+    # [START firestore_transaction_document_update]
     transaction = db.transaction()
     city_ref = db.collection(u'cities').document(u'SF')
 
@@ -416,12 +425,12 @@ def update_data_transaction():
         })
 
     update_in_transaction(transaction, city_ref)
-    # [END update_data_transaction]
+    # [END firestore_transaction_document_update]
 
 
 def update_data_transaction_result():
     db = firestore.Client()
-    # [START update_data_transaction_result]
+    # [START firestore_transaction_document_update_conditional]
     transaction = db.transaction()
     city_ref = db.collection(u'cities').document(u'SF')
 
@@ -443,12 +452,12 @@ def update_data_transaction_result():
         print(u'Population updated')
     else:
         print(u'Sorry! Population is too big.')
-    # [END update_data_transaction_result]
+    # [END firestore_transaction_document_update_conditional]
 
 
 def update_data_batch():
     db = firestore.Client()
-    # [START update_data_batch]
+    # [START firestore_data_batch_writes]
     batch = db.batch()
 
     # Set the data for NYC
@@ -465,177 +474,177 @@ def update_data_batch():
 
     # Commit the batch
     batch.commit()
-    # [END update_data_batch]
+    # [END firestore_data_batch_writes]
 
 
 def compound_query_example():
     db = firestore.Client()
-    # [START compound_query_example]
+    # [START firestore_query_filter_eq_string]
     # Create a reference to the cities collection
     cities_ref = db.collection(u'cities')
 
     # Create a query against the collection
     query_ref = cities_ref.where(u'state', u'==', u'CA')
-    # [END compound_query_example]
+    # [END firestore_query_filter_eq_string]
 
     return query_ref
 
 
 def compound_query_simple():
     db = firestore.Client()
-    # [START compound_query_simple]
+    # [START firestore_query_filter_eq_boolean]
     cities_ref = db.collection(u'cities')
 
     query = cities_ref.where(u'capital', u'==', True)
-    # [END compound_query_simple]
+    # [END firestore_query_filter_eq_boolean]
 
     print(query)
 
 
 def compound_query_single_clause():
     db = firestore.Client()
-    # [START compound_query_single_clause]
+    # [START firestore_query_filter_single_examples]
     cities_ref = db.collection(u'cities')
 
     cities_ref.where(u'state', u'==', u'CA')
     cities_ref.where(u'population', u'<', 1000000)
     cities_ref.where(u'name', u'>=', u'San Francisco')
-    # [END compound_query_single_clause]
+    # [END firestore_query_filter_single_examples]
 
 
 def compound_query_valid_multi_clause():
     db = firestore.Client()
-    # [START compound_query_valid_multi_clause]
+    # [START firestore_query_filter_compound_multi_eq]
     cities_ref = db.collection(u'cities')
 
     denver_query = cities_ref.where(
         u'state', u'==', u'CO').where(u'name', u'==', u'Denver')
     large_us_cities_query = cities_ref.where(
         u'state', u'==', u'CA').where(u'population', u'>', 1000000)
-    # [END compound_query_valid_multi_clause]
+    # [END firestore_query_filter_compound_multi_eq]
     print(denver_query)
     print(large_us_cities_query)
 
 
 def compound_query_valid_single_field():
     db = firestore.Client()
-    # [START compound_query_valid_single_field]
+    # [START firestore_query_filter_range_valid]
     cities_ref = db.collection(u'cities')
     cities_ref.where(u'state', u'>=', u'CA').where(u'state', u'<=', u'IN')
-    # [END compound_query_valid_single_field]
+    # [END firestore_query_filter_range_valid]
 
 
 def compound_query_invalid_multi_field():
     db = firestore.Client()
-    # [START compound_query_invalid_multi_field]
+    # [START firestore_query_filter_range_invalid]
     cities_ref = db.collection(u'cities')
     cities_ref.where(
         u'state', u'>=', u'CA').where(u'population', u'>=', 1000000)
-    # [END compound_query_invalid_multi_field]
+    # [END firestore_query_filter_range_invalid]
 
 
 def order_simple_limit():
     db = firestore.Client()
-    # [START order_simple_limit]
+    # [START firestore_order_simple_limit]
     db.collection(u'cities').order_by(u'name').limit(3).stream()
-    # [END order_simple_limit]
+    # [END firestore_order_simple_limit]
 
 
 def order_simple_limit_desc():
     db = firestore.Client()
-    # [START order_simple_limit_desc]
+    # [START firestore_query_order_desc_limit]
     cities_ref = db.collection(u'cities')
     query = cities_ref.order_by(
         u'name', direction=firestore.Query.DESCENDING).limit(3)
     results = query.stream()
-    # [END order_simple_limit_desc]
+    # [END firestore_query_order_desc_limit]
     print(results)
 
 
 def order_multiple():
     db = firestore.Client()
-    # [START order_multiple]
+    # [START firestore_query_order_multi]
     cities_ref = db.collection(u'cities')
     cities_ref.order_by(u'state').order_by(
         u'population', direction=firestore.Query.DESCENDING)
-    # [END order_multiple]
+    # [END firestore_query_order_multi]
 
 
 def order_where_limit():
     db = firestore.Client()
-    # [START order_where_limit]
+    # [START firestore_query_order_limit_field_valid]
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(
         u'population', u'>', 2500000).order_by(u'population').limit(2)
     results = query.stream()
-    # [END order_where_limit]
+    # [END firestore_query_order_limit_field_valid]
     print(results)
 
 
 def order_limit_to_last():
     db = firestore.Client()
-    # [START fs_order_by_name_limit_query]
+    # [START firestore_query_order_limit]
     cities_ref = db.collection("cities")
     query = cities_ref.order_by("name").limit_to_last(2)
     results = query.get()
-    # [END fs_order_by_name_limit_query]
+    # [END firestore_query_order_limit]
     print(results)
 
 
 def order_where_valid():
     db = firestore.Client()
-    # [START order_where_valid]
+    # [START firestore_query_order_with_filter]
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(
         u'population', u'>', 2500000).order_by(u'population')
     results = query.stream()
-    # [END order_where_valid]
+    # [END firestore_query_order_with_filter]
     print(results)
 
 
 def order_where_invalid():
     db = firestore.Client()
-    # [START order_where_invalid]
+    # [START firestore_query_order_field_invalid]
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(u'population', u'>', 2500000).order_by(u'country')
     results = query.stream()
-    # [END order_where_invalid]
+    # [END firestore_query_order_field_invalid]
     print(results)
 
 
 def cursor_simple_start_at():
     db = firestore.Client()
-    # [START cursor_simple_start_at]
+    # [START firestore_query_cursor_start_at_field_value_single]
     cities_ref = db.collection(u'cities')
     query_start_at = cities_ref.order_by(u'population').start_at({
         u'population': 1000000
     })
-    # [END cursor_simple_start_at]
+    # [END firestore_query_cursor_start_at_field_value_single]
 
     return query_start_at
 
 
 def cursor_simple_end_at():
     db = firestore.Client()
-    # [START cursor_simple_end_at]
+    # [START firestore_query_cursor_end_at_field_value_single]
     cities_ref = db.collection(u'cities')
     query_end_at = cities_ref.order_by(u'population').end_at({
         u'population': 1000000
     })
-    # [END cursor_simple_end_at]
+    # [END firestore_query_cursor_end_at_field_value_single]
 
     return query_end_at
 
 
 def snapshot_cursors():
     db = firestore.Client()
-    # [START fs_start_at_snapshot_query_cursor]
+    # [START firestore_query_cursor_start_at_document]
     doc_ref = db.collection(u'cities').document(u'SF')
 
     snapshot = doc_ref.get()
     start_at_snapshot = db.collection(
         u'cities').order_by(u'population').start_at(snapshot)
-    # [END fs_start_at_snapshot_query_cursor]
+    # [END firestore_query_cursor_start_at_document]
     results = start_at_snapshot.limit(10).stream()
     for doc in results:
         print(f'{doc.id}')
@@ -645,7 +654,7 @@ def snapshot_cursors():
 
 def cursor_paginate():
     db = firestore.Client()
-    # [START cursor_paginate]
+    # [START firestore_query_cursor_pagination]
     cities_ref = db.collection(u'cities')
     first_query = cities_ref.order_by(u'population').limit(3)
 
@@ -668,14 +677,14 @@ def cursor_paginate():
     )
     # Use the query for pagination
     # ...
-    # [END cursor_paginate]
+    # [END firestore_query_cursor_pagination]
 
     return next_query
 
 
 def listen_document():
     db = firestore.Client()
-    # [START listen_document]
+    # [START firestore_listen_document]
 
     # Create an Event for notifying main thread.
     callback_done = threading.Event()
@@ -690,7 +699,7 @@ def listen_document():
 
     # Watch the document
     doc_watch = doc_ref.on_snapshot(on_snapshot)
-    # [END listen_document]
+    # [END firestore_listen_document]
 
     # Creating document
     data = {
@@ -703,15 +712,15 @@ def listen_document():
     doc_ref.set(data)
     # Wait for the callback.
     callback_done.wait(timeout=60)
-    # [START detach_listener]
+    # [START firestore_listen_detach]
     # Terminate watch on a document
     doc_watch.unsubscribe()
-    # [END detach_listener]
+    # [END firestore_listen_detach]
 
 
 def listen_multiple():
     db = firestore.Client()
-    # [START listen_multiple]
+    # [START firestore_listen_query_snapshots]
 
     # Create an Event for notifying main thread.
     callback_done = threading.Event()
@@ -729,7 +738,7 @@ def listen_multiple():
     # Watch the collection query
     query_watch = col_query.on_snapshot(on_snapshot)
 
-    # [END listen_multiple]
+    # [END firestore_listen_query_snapshots]
     # Creating document
     data = {
         u'name': u'San Francisco',
@@ -746,7 +755,7 @@ def listen_multiple():
 
 def listen_for_changes():
     db = firestore.Client()
-    # [START listen_for_changes]
+    # [START firestore_listen_query_changes]
 
     # Create an Event for notifying main thread.
     delete_done = threading.Event()
@@ -769,7 +778,7 @@ def listen_for_changes():
     # Watch the collection query
     query_watch = col_query.on_snapshot(on_snapshot)
 
-    # [END listen_for_changes]
+    # [END firestore_listen_query_changes]
     mtv_document = db.collection(u'cities').document(u'MTV')
     # Creating document
     mtv_document.set({
@@ -801,11 +810,10 @@ def listen_for_changes():
 
 def cursor_multiple_conditions():
     db = firestore.Client()
-    # [START cursor_multiple_conditions]
+    # [START firestore_query_cursor_start_at_field_value_multi]
     start_at_name = (
         db.collection(u'cities')
         .order_by(u'name')
-        .order_by(u'state')
         .start_at({
             u'name': u'Springfield'
         })
@@ -820,32 +828,32 @@ def cursor_multiple_conditions():
             u'state': u'Missouri'
         })
     )
-    # [END cursor_multiple_conditions]
+    # [END firestore_query_cursor_start_at_field_value_multi]
 
     return start_at_name, start_at_name_and_state
 
 
 def delete_single_doc():
     db = firestore.Client()
-    # [START delete_single_doc]
+    # [START firestore_data_delete_doc]
     db.collection(u'cities').document(u'DC').delete()
-    # [END delete_single_doc]
+    # [END firestore_data_delete_doc]
 
 
 def delete_field():
     db = firestore.Client()
-    # [START delete_field]
+    # [START firestore_data_delete_field]
     city_ref = db.collection(u'cities').document(u'BJ')
     city_ref.update({
         u'capital': firestore.DELETE_FIELD
     })
-    # [END delete_field]
+    # [END firestore_data_delete_field]
 
 
 def delete_full_collection():
     db = firestore.Client()
 
-    # [START delete_full_collection]
+    # [START firestore_data_delete_collection]
     def delete_collection(coll_ref, batch_size):
         docs = coll_ref.limit(batch_size).stream()
         deleted = 0
@@ -857,7 +865,7 @@ def delete_full_collection():
 
         if deleted >= batch_size:
             return delete_collection(coll_ref, batch_size)
-    # [END delete_full_collection]
+    # [END firestore_data_delete_collection]
 
     delete_collection(db.collection(u'cities'), 10)
     delete_collection(db.collection(u'data'), 10)
@@ -866,7 +874,7 @@ def delete_full_collection():
 
 
 def collection_group_query(db):
-    # [START fs_collection_group_query_data_setup]
+    # [START firestore_query_collection_group_dataset]
     cities = db.collection(u'cities')
 
     sf_landmarks = cities.document(u'SF').collection(u'landmarks')
@@ -914,62 +922,90 @@ def collection_group_query(db):
         u'name': u'Beijing Ancient Observatory',
         u'type': u'museum'
     })
-    # [END fs_collection_group_query_data_setup]
+    # [END firestore_query_collection_group_dataset]
 
-    # [START fs_collection_group_query]
+    # [START firestore_query_collection_group_filter_eq]
     museums = db.collection_group(u'landmarks')\
         .where(u'type', u'==', u'museum')
     docs = museums.stream()
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
-    # [END fs_collection_group_query]
+    # [END firestore_query_collection_group_filter_eq]
     return docs
 
 
 def array_contains_any_queries(db):
-    # [START fs_query_filter_array_contains_any]
+    # [START firestore_query_filter_array_contains_any]
     cities_ref = db.collection(u'cities')
 
     query = cities_ref.where(
         u'regions', u'array_contains_any', [u'west_coast', u'east_coast']
     )
     return query
-    # [END fs_query_filter_array_contains_any]
+    # [END firestore_query_filter_array_contains_any]
 
 
 def in_query_without_array(db):
-    # [START fs_query_filter_in]
+    # [START firestore_query_filter_in]
     cities_ref = db.collection(u'cities')
 
     query = cities_ref.where(u'country', u'in', [u'USA', u'Japan'])
     return query
-    # [END fs_query_filter_in]
+    # [END firestore_query_filter_in]
 
 
 def in_query_with_array(db):
-    # [START fs_query_filter_in_with_array]
+    # [START firestore_query_filter_in_with_array]
     cities_ref = db.collection(u'cities')
 
     query = cities_ref.where(
         u'regions', u'in', [[u'west_coast'], [u'east_coast']]
     )
     return query
-    # [END fs_query_filter_in_with_array]
+    # [END firestore_query_filter_in_with_array]
 
 
 def update_document_increment(db):
-    # [START fs_update_document_increment]
+    # [START firestore_data_set_numeric_increment]
     washington_ref = db.collection(u'cities').document(u'DC')
 
     washington_ref.update({"population": firestore.Increment(50)})
-    # [END fs_update_document_increment]
+    # [END firestore_data_set_numeric_increment]
 
 
 def list_document_subcollections():
     db = firestore.Client()
-    # [START fs_list_document_subcollections]
+    # [START firestore_data_get_sub_collections]
     collections = db.collection('cities').document('SF').collections()
     for collection in collections:
         for doc in collection.stream():
             print(f'{doc.id} => {doc.to_dict()}')
-    # [END fs_list_document_subcollections]
+    # [END firestore_data_get_sub_collections]
+
+
+def _setup_bundle():
+    from google.cloud import firestore
+    db = firestore.Client()
+    db.collection("stories").document("news-item").set({"title": "Wow!"})
+
+
+def create_and_build_bundle():
+    _setup_bundle()
+    # [START firestore_create_and_build_bundle]
+    from google.cloud import firestore
+    from google.cloud.firestore_bundle import FirestoreBundle
+
+    db = firestore.Client()
+    bundle = FirestoreBundle("latest-stories")
+
+    doc_snapshot = db.collection("stories").document("news-item").get()
+    query = db.collection("stories")._query()
+
+    # Build the bundle
+    # Note how `query` is named "latest-stories-query"
+    bundle_buffer: str = bundle.add_document(doc_snapshot).add_named_query(
+        "latest-stories-query", query,
+    ).build()
+    # [END firestore_create_and_build_bundle]
+
+    return bundle, bundle_buffer

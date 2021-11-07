@@ -27,7 +27,7 @@ import hl7v2_messages  # noqa
 import hl7v2_stores  # noqa
 
 
-cloud_region = "us-central1"
+location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
@@ -42,7 +42,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
-            datasets.create_dataset(project_id, cloud_region, dataset_id)
+            datasets.create_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
             # likely the first request failed on the client side, but
@@ -60,7 +60,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+            datasets.delete_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
@@ -77,7 +77,7 @@ def test_hl7v2_store():
     def create():
         try:
             hl7v2_stores.create_hl7v2_store(
-                project_id, cloud_region, dataset_id, hl7v2_store_id
+                project_id, location, dataset_id, hl7v2_store_id
             )
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
@@ -101,7 +101,7 @@ def test_hl7v2_store():
     def clean_up():
         try:
             hl7v2_stores.delete_hl7v2_store(
-                project_id, cloud_region, dataset_id, hl7v2_store_id
+                project_id, location, dataset_id, hl7v2_store_id
             )
         except HttpError as err:
             # The API returns 403 when the HL7v2 store doesn't exist.
@@ -119,13 +119,13 @@ def test_hl7v2_store():
 
 def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.create_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_file
     )
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
     def run_eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            project_id, cloud_region, dataset_id, hl7v2_store_id
+            project_id, location, dataset_id, hl7v2_store_id
         )
 
         assert len(hl7v2_messages_list) > 0
@@ -138,11 +138,11 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_message_id = run_eventually_consistent_test()
 
     hl7v2_messages.get_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
 
     hl7v2_messages.delete_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
 
     out, _ = capsys.readouterr()
@@ -155,13 +155,13 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
 
 def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.ingest_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_file
     )
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
     def run_eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            project_id, cloud_region, dataset_id, hl7v2_store_id
+            project_id, location, dataset_id, hl7v2_store_id
         )
 
         assert len(hl7v2_messages_list) > 0
@@ -174,11 +174,11 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_message_id = run_eventually_consistent_test()
 
     hl7v2_messages.get_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
 
     hl7v2_messages.delete_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
 
     out, _ = capsys.readouterr()
@@ -191,13 +191,13 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
 
 def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.create_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_file
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_file
     )
 
     @backoff.on_exception(backoff.expo, (AssertionError, HttpError), max_time=60)
     def run_eventually_consistent_test():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            project_id, cloud_region, dataset_id, hl7v2_store_id
+            project_id, location, dataset_id, hl7v2_store_id
         )
 
         assert len(hl7v2_messages_list) > 0
@@ -211,7 +211,7 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
 
     hl7v2_messages.patch_hl7v2_message(
         project_id,
-        cloud_region,
+        location,
         dataset_id,
         hl7v2_store_id,
         hl7v2_message_id,
@@ -220,7 +220,7 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     )
 
     hl7v2_messages.delete_hl7v2_message(
-        project_id, cloud_region, dataset_id, hl7v2_store_id, hl7v2_message_id
+        project_id, location, dataset_id, hl7v2_store_id, hl7v2_message_id
     )
 
     out, _ = capsys.readouterr()

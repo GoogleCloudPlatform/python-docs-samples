@@ -71,7 +71,7 @@ $(function(){
 
   }
 
-  // [START configureFirebaseLoginWidget]
+  // [START gae_python_firebase_login]
   // Firebase log-in widget
   function configureFirebaseLoginWidget() {
     var uiConfig = {

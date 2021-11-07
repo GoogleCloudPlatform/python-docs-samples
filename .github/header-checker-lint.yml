@@ -1,0 +1,29 @@
+allowedCopyrightHolders:
+  - "Google LLC"
+  - "Google, Inc"
+
+allowedLicenses:
+  - "Apache-2.0"
+  - "MIT"
+  - "BSD-3"
+
+ignoreFiles:
+  - "**/requirements.txt"
+  - "**/requirements-test.txt"
+  - "**/requirements-composer.txt"
+  - "**/__init__.py"
+  - "**/constraints.txt"
+  - "**/constraints-test.txt"
+  - "**/apt.txt"
+  
+
+sourceFileExtensions:
+  - "ts"
+  - "js"
+  - "java"
+  - "sh"
+  - "Dockerfile"
+  - "yaml"
+  - "py"
+  - "html"
+  - "txt"

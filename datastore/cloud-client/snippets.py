@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2016 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,13 +16,133 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-from google.cloud import datastore
 import google.cloud.exceptions
+from google.cloud import datastore  # noqa: I100
+
+
+def _preamble():
+    # [START datastore_incomplete_key]
+    # [START datastore_named_key]
+    # [START datastore_key_with_parent]
+    # [START datastore_key_with_multilevel_parent]
+    # [START datastore_basic_entity]
+    # [START datastore_entity_with_parent]
+    # [START datastore_properties]
+    # [START datastore_array_value]
+    # [START datastore_upsert]
+    # [START datastore_insert]
+    # [START datastore_update]
+    # [START datastore_lookup]
+    # [START datastore_delete]
+    # [START datastore_batch_upsert]
+    # [START datastore_batch_lookup]
+    # [START datastore_batch_delete]
+    # [START datastore_unindexed_property_query]
+    # [START datastore_basic_query]
+    # [START datastore_projection_query]
+    # [START datastore_ancestor_query]
+    # [START datastore_run_query]
+    # [START datastore_limit]
+    # [START datastore_cursor_paging]
+    # [START datastore_property_filter]
+    # [START datastore_composite_filter]
+    # [START datastore_key_filter]
+    # [START datastore_ascending_sort]
+    # [START datastore_descending_sort]
+    # [START datastore_multi_sort]
+    # [START datastore_keys_only_query]
+    # [START datastore_distinct_on_query]
+    # [START datastore_kindless_query]
+    # [START datastore_inequality_range]
+    # [START datastore_inequality_invalid]
+    # [START datastore_equal_and_inequality_range]
+    # [START datastore_inequality_sort]
+    # [START datastore_inequality_sort_invalid_not_same]
+    # [START datastore_inequality_sort_invalid_not_first]
+    # [START datastore_array_value_inequality_range]
+    # [START datastore_array_value_equality]
+    # [START datastore_exploding_properties]
+    # [START datastore_transactional_update]
+    # [START datastore_transactional_retry]
+    # [START datastore_transactional_get_or_create]
+    # [START datastore_transactional_single_entity_group_read_only]
+    # [START datastore_namespace_run_query]
+    # [START datastore_kind_run_query]
+    # [START datastore_property_run_query]
+    # [START datastore_property_by_kind_run_query]
+    # [START datastore_eventual_consistent_query]
+    # [START datastore_built_in_index_queries]
+    # [START datastore_merged_index_query]
+    # [START datastore_merged_index_tag_queries]
+    # [START datastore_owner_size_tag_query]
+    # [START datastore_size_coloration_query]
+    from google.cloud import datastore
+
+    # For help authenticating your client, visit
+    # https://cloud.google.com/docs/authentication/getting-started
+    client = datastore.Client()
+
+    # [END datastore_incomplete_key]
+    # [END datastore_named_key]
+    # [END datastore_key_with_parent]
+    # [END datastore_key_with_multilevel_parent]
+    # [END datastore_basic_entity]
+    # [END datastore_entity_with_parent]
+    # [END datastore_properties]
+    # [END datastore_array_value]
+    # [END datastore_upsert]
+    # [END datastore_insert]
+    # [END datastore_update]
+    # [END datastore_lookup]
+    # [END datastore_delete]
+    # [END datastore_batch_upsert]
+    # [END datastore_batch_lookup]
+    # [END datastore_batch_delete]
+    # [END datastore_unindexed_property_query]
+    # [END datastore_basic_query]
+    # [END datastore_projection_query]
+    # [END datastore_ancestor_query]
+    # [END datastore_run_query]
+    # [END datastore_limit]
+    # [END datastore_cursor_paging]
+    # [END datastore_property_filter]
+    # [END datastore_composite_filter]
+    # [END datastore_key_filter]
+    # [END datastore_ascending_sort]
+    # [END datastore_descending_sort]
+    # [END datastore_multi_sort]
+    # [END datastore_keys_only_query]
+    # [END datastore_distinct_on_query]
+    # [END datastore_kindless_query]
+    # [END datastore_inequality_range]
+    # [END datastore_inequality_invalid]
+    # [END datastore_equal_and_inequality_range]
+    # [END datastore_inequality_sort]
+    # [END datastore_inequality_sort_invalid_not_same]
+    # [END datastore_inequality_sort_invalid_not_first]
+    # [END datastore_array_value_inequality_range]
+    # [END datastore_array_value_equality]
+    # [END datastore_exploding_properties]
+    # [END datastore_transactional_update]
+    # [END datastore_transactional_retry]
+    # [END datastore_transactional_get_or_create]
+    # [END datastore_transactional_single_entity_group_read_only]
+    # [END datastore_namespace_run_query]
+    # [END datastore_kind_run_query]
+    # [END datastore_property_run_query]
+    # [END datastore_property_by_kind_run_query]
+    # [END datastore_eventual_consistent_query]
+    # [END datastore_built_in_index_queries]
+    # [END datastore_merged_index_query]
+    # [END datastore_merged_index_tag_queries]
+    # [END datastore_owner_size_tag_query]
+    # [END datastore_size_coloration_query]
+    assert client is not None
 
 
 def incomplete_key(client):
     # [START datastore_incomplete_key]
-    key = client.key('Task')
+    key = client.key("Task")
     # [END datastore_incomplete_key]
 
     return key
@@ -30,7 +150,7 @@ def incomplete_key(client):
 
 def named_key(client):
     # [START datastore_named_key]
-    key = client.key('Task', 'sample_task')
+    key = client.key("Task", "sample_task")
     # [END datastore_named_key]
 
     return key
@@ -38,10 +158,10 @@ def named_key(client):
 
 def key_with_parent(client):
     # [START datastore_key_with_parent]
-    key = client.key('TaskList', 'default', 'Task', 'sample_task')
+    key = client.key("TaskList", "default", "Task", "sample_task")
     # Alternatively
-    parent_key = client.key('TaskList', 'default')
-    key = client.key('Task', 'sample_task', parent=parent_key)
+    parent_key = client.key("TaskList", "default")
+    key = client.key("Task", "sample_task", parent=parent_key)
     # [END datastore_key_with_parent]
 
     return key
@@ -49,10 +169,7 @@ def key_with_parent(client):
 
 def key_with_multilevel_parent(client):
     # [START datastore_key_with_multilevel_parent]
-    key = client.key(
-        'User', 'alice',
-        'TaskList', 'default',
-        'Task', 'sample_task')
+    key = client.key("User", "alice", "TaskList", "default", "Task", "sample_task")
     # [END datastore_key_with_multilevel_parent]
 
     return key
@@ -60,13 +177,15 @@ def key_with_multilevel_parent(client):
 
 def basic_entity(client):
     # [START datastore_basic_entity]
-    task = datastore.Entity(client.key('Task'))
-    task.update({
-        'category': 'Personal',
-        'done': False,
-        'priority': 4,
-        'description': 'Learn Cloud Datastore'
-    })
+    task = datastore.Entity(client.key("Task"))
+    task.update(
+        {
+            "category": "Personal",
+            "done": False,
+            "priority": 4,
+            "description": "Learn Cloud Datastore",
+        }
+    )
     # [END datastore_basic_entity]
 
     return task
@@ -74,55 +193,47 @@ def basic_entity(client):
 
 def entity_with_parent(client):
     # [START datastore_entity_with_parent]
-    key_with_parent = client.key(
-        'TaskList', 'default', 'Task', 'sample_task')
+    key_with_parent = client.key("TaskList", "default", "Task", "sample_task")
 
     task = datastore.Entity(key=key_with_parent)
 
-    task.update({
-        'category': 'Personal',
-        'done': False,
-        'priority': 4,
-        'description': 'Learn Cloud Datastore'
-    })
+    task.update(
+        {
+            "category": "Personal",
+            "done": False,
+            "priority": 4,
+            "description": "Learn Cloud Datastore",
+        }
+    )
     # [END datastore_entity_with_parent]
 
     return task
 
 
 def properties(client):
-    key = client.key('Task')
     # [START datastore_properties]
-    task = datastore.Entity(
-        key,
-        exclude_from_indexes=['description'])
-    task.update({
-        'category': 'Personal',
-        'description': 'Learn Cloud Datastore',
-        'created': datetime.datetime.utcnow(),
-        'done': False,
-        'priority': 4,
-        'percent_complete': 10.5,
-    })
+    key = client.key("Task")
+    task = datastore.Entity(key, exclude_from_indexes=["description"])
+    task.update(
+        {
+            "category": "Personal",
+            "description": "Learn Cloud Datastore",
+            "created": datetime.datetime.utcnow(),
+            "done": False,
+            "priority": 4,
+            "percent_complete": 10.5,
+        }
+    )
     # [END datastore_properties]
 
     return task
 
 
 def array_value(client):
-    key = client.key('Task')
     # [START datastore_array_value]
+    key = client.key("Task")
     task = datastore.Entity(key)
-    task.update({
-        'tags': [
-            'fun',
-            'programming'
-        ],
-        'collaborators': [
-            'alice',
-            'bob'
-        ]
-    })
+    task.update({"tags": ["fun", "programming"], "collaborators": ["alice", "bob"]})
     # [END datastore_array_value]
 
     return task
@@ -130,16 +241,18 @@ def array_value(client):
 
 def upsert(client):
     # [START datastore_upsert]
-    complete_key = client.key('Task', 'sample_task')
+    complete_key = client.key("Task", "sample_task")
 
     task = datastore.Entity(key=complete_key)
 
-    task.update({
-        'category': 'Personal',
-        'done': False,
-        'priority': 4,
-        'description': 'Learn Cloud Datastore'
-    })
+    task.update(
+        {
+            "category": "Personal",
+            "done": False,
+            "priority": 4,
+            "description": "Learn Cloud Datastore",
+        }
+    )
 
     client.put(task)
     # [END datastore_upsert]
@@ -150,16 +263,18 @@ def upsert(client):
 def insert(client):
     # [START datastore_insert]
     with client.transaction():
-        incomplete_key = client.key('Task')
+        incomplete_key = client.key("Task")
 
         task = datastore.Entity(key=incomplete_key)
 
-        task.update({
-            'category': 'Personal',
-            'done': False,
-            'priority': 4,
-            'description': 'Learn Cloud Datastore'
-        })
+        task.update(
+            {
+                "category": "Personal",
+                "done": False,
+                "priority": 4,
+                "description": "Learn Cloud Datastore",
+            }
+        )
 
         client.put(task)
     # [END datastore_insert]
@@ -173,10 +288,10 @@ def update(client):
 
     # [START datastore_update]
     with client.transaction():
-        key = client.key('Task', 'sample_task')
+        key = client.key("Task", "sample_task")
         task = client.get(key)
 
-        task['done'] = True
+        task["done"] = True
 
         client.put(task)
     # [END datastore_update]
@@ -189,7 +304,7 @@ def lookup(client):
     upsert(client)
 
     # [START datastore_lookup]
-    key = client.key('Task', 'sample_task')
+    key = client.key("Task", "sample_task")
     task = client.get(key)
     # [END datastore_lookup]
 
@@ -201,7 +316,7 @@ def delete(client):
     upsert(client)
 
     # [START datastore_delete]
-    key = client.key('Task', 'sample_task')
+    key = client.key("Task", "sample_task")
     client.delete(key)
     # [END datastore_delete]
 
@@ -210,23 +325,27 @@ def delete(client):
 
 def batch_upsert(client):
     # [START datastore_batch_upsert]
-    task1 = datastore.Entity(client.key('Task', 1))
+    task1 = datastore.Entity(client.key("Task", 1))
 
-    task1.update({
-        'category': 'Personal',
-        'done': False,
-        'priority': 4,
-        'description': 'Learn Cloud Datastore'
-    })
+    task1.update(
+        {
+            "category": "Personal",
+            "done": False,
+            "priority": 4,
+            "description": "Learn Cloud Datastore",
+        }
+    )
 
-    task2 = datastore.Entity(client.key('Task', 2))
+    task2 = datastore.Entity(client.key("Task", 2))
 
-    task2.update({
-        'category': 'Work',
-        'done': False,
-        'priority': 8,
-        'description': 'Integrate Cloud Datastore'
-    })
+    task2.update(
+        {
+            "category": "Work",
+            "done": False,
+            "priority": 8,
+            "description": "Integrate Cloud Datastore",
+        }
+    )
 
     client.put_multi([task1, task2])
     # [END datastore_batch_upsert]
@@ -238,12 +357,8 @@ def batch_lookup(client):
     # Create the entities we will lookup.
     batch_upsert(client)
 
-    keys = [
-        client.key('Task', 1),
-        client.key('Task', 2)
-    ]
-
     # [START datastore_batch_lookup]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     tasks = client.get_multi(keys)
     # [END datastore_batch_lookup]
 
@@ -254,12 +369,8 @@ def batch_delete(client):
     # Create the entities we will delete.
     batch_upsert(client)
 
-    keys = [
-        client.key('Task', 1),
-        client.key('Task', 2)
-    ]
-
     # [START datastore_batch_delete]
+    keys = [client.key("Task", 1), client.key("Task", 2)]
     client.delete_multi(keys)
     # [END datastore_batch_delete]
 
@@ -271,8 +382,8 @@ def unindexed_property_query(client):
     upsert(client)
 
     # [START datastore_unindexed_property_query]
-    query = client.query(kind='Task')
-    query.add_filter('description', '=', 'Learn Cloud Datastore')
+    query = client.query(kind="Task")
+    query.add_filter("description", "=", "Learn Cloud Datastore")
     # [END datastore_unindexed_property_query]
 
     return list(query.fetch())
@@ -283,10 +394,10 @@ def basic_query(client):
     upsert(client)
 
     # [START datastore_basic_query]
-    query = client.query(kind='Task')
-    query.add_filter('done', '=', False)
-    query.add_filter('priority', '>=', 4)
-    query.order = ['-priority']
+    query = client.query(kind="Task")
+    query.add_filter("done", "=", False)
+    query.add_filter("priority", ">=", 4)
+    query.order = ["-priority"]
     # [END datastore_basic_query]
 
     return list(query.fetch())
@@ -294,47 +405,52 @@ def basic_query(client):
 
 def projection_query(client):
     # Create the entity that we're going to query.
-    task = datastore.Entity(client.key('Task'))
-    task.update({
-        'category': 'Personal',
-        'done': False,
-        'priority': 4,
-        'description': 'Learn Cloud Datastore',
-        'percent_complete': 0.5
-    })
+    task = datastore.Entity(client.key("Task"))
+    task.update(
+        {
+            "category": "Personal",
+            "done": False,
+            "priority": 4,
+            "description": "Learn Cloud Datastore",
+            "percent_complete": 0.5,
+        }
+    )
     client.put(task)
 
     # [START datastore_projection_query]
-    query = client.query(kind='Task')
-    query.projection = ['priority', 'percent_complete']
+    query = client.query(kind="Task")
+    query.projection = ["priority", "percent_complete"]
     # [END datastore_projection_query]
 
+    # This block intentionally doesn't include the top level import because
+    # it doesn't use a `datastore.Client` instance
     # [START datastore_run_query_projection]
     priorities = []
     percent_completes = []
 
     for task in query.fetch():
-        priorities.append(task['priority'])
-        percent_completes.append(task['percent_complete'])
+        priorities.append(task["priority"])
+        percent_completes.append(task["percent_complete"])
     # [END datastore_run_query_projection]
 
     return priorities, percent_completes
 
 
 def ancestor_query(client):
-    task = datastore.Entity(
-        client.key('TaskList', 'default', 'Task'))
-    task.update({
-        'category': 'Personal',
-        'description': 'Learn Cloud Datastore',
-    })
+    task = datastore.Entity(client.key("TaskList", "default", "Task"))
+    task.update(
+        {
+            "category": "Personal",
+            "description": "Learn Cloud Datastore",
+        }
+    )
     client.put(task)
 
     # [START datastore_ancestor_query]
     # Query filters are omitted in this example as any ancestor queries with a
     # non-key filter require a composite index.
-    ancestor = client.key('TaskList', 'default')
-    query = client.query(kind='Task', ancestor=ancestor)
+    ancestor = client.key("TaskList", "default")
+    query = client.query(kind="Task", ancestor=ancestor)
     # [END datastore_ancestor_query]
 
     return list(query.fetch())
@@ -362,7 +478,7 @@ def cursor_paging(client):
     # [START datastore_cursor_paging]
 
     def get_one_page_of_tasks(cursor=None):
-        query = client.query(kind='Task')
+        query = client.query(kind="Task")
         query_iter = query.fetch(start_cursor=cursor, limit=5)
         page = next(query_iter.pages)
 
@@ -370,6 +486,7 @@ def cursor_paging(client):
         next_cursor = query_iter.next_page_token
 
         return tasks, next_cursor
+
     # [END datastore_cursor_paging]
 
     page_one, cursor_one = get_one_page_of_tasks()
@@ -382,8 +499,8 @@ def property_filter(client):
     upsert(client)
 
     # [START datastore_property_filter]
-    query = client.query(kind='Task')
-    query.add_filter('done', '=', False)
+    query = client.query(kind="Task")
+    query.add_filter("done", "=", False)
     # [END datastore_property_filter]
 
     return list(query.fetch())
@@ -394,9 +511,9 @@ def composite_filter(client):
     upsert(client)
 
     # [START datastore_composite_filter]
-    query = client.query(kind='Task')
-    query.add_filter('done', '=', False)
-    query.add_filter('priority', '=', 4)
+    query = client.query(kind="Task")
+    query.add_filter("done", "=", False)
+    query.add_filter("priority", "=", 4)
     # [END datastore_composite_filter]
 
     return list(query.fetch())
@@ -407,10 +524,10 @@ def key_filter(client):
     upsert(client)
 
     # [START datastore_key_filter]
-    query = client.query(kind='Task')
-    first_key = client.key('Task', 'first_task')
+    query = client.query(kind="Task")
+    first_key = client.key("Task", "first_task")
     # key_filter(key, op) translates to add_filter('__key__', op, key).
-    query.key_filter(first_key, '>')
+    query.key_filter(first_key, ">")
     # [END datastore_key_filter]
 
     return list(query.fetch())
@@ -419,12 +536,12 @@ def key_filter(client):
 def ascending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task['created'] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.utcnow()
     client.put(task)
 
     # [START datastore_ascending_sort]
-    query = client.query(kind='Task')
-    query.order = ['created']
+    query = client.query(kind="Task")
+    query.order = ["created"]
     # [END datastore_ascending_sort]
 
     return list(query.fetch())
@@ -433,12 +550,12 @@ def ascending_sort(client):
 def descending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task['created'] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.utcnow()
     client.put(task)
 
     # [START datastore_descending_sort]
-    query = client.query(kind='Task')
-    query.order = ['-created']
+    query = client.query(kind="Task")
+    query.order = ["-created"]
     # [END datastore_descending_sort]
 
     return list(query.fetch())
@@ -447,15 +564,12 @@ def descending_sort(client):
 def multi_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task['created'] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.utcnow()
     client.put(task)
 
     # [START datastore_multi_sort]
-    query = client.query(kind='Task')
-    query.order = [
-        '-priority',
-        'created'
-    ]
+    query = client.query(kind="Task")
+    query.order = ["-priority", "created"]
     # [END datastore_multi_sort]
 
     return list(query.fetch())
@@ -480,9 +594,9 @@ def distinct_on_query(client):
     upsert(client)
 
     # [START datastore_distinct_on_query]
-    query = client.query(kind='Task')
-    query.distinct_on = ['category']
-    query.order = ['category', 'priority']
+    query = client.query(kind="Task")
+    query.distinct_on = ["category"]
+    query.order = ["category", "priority"]
     # [END datastore_distinct_on_query]
 
     return list(query.fetch())
@@ -492,11 +606,10 @@ def kindless_query(client):
     # Create the entity that we're going to query.
     upsert(client)
 
-    last_seen_key = client.key('Task', 'a')
-
     # [START datastore_kindless_query]
+    last_seen_key = client.key("Task", "a")
     query = client.query()
-    query.key_filter(last_seen_key, '>')
+    query.key_filter(last_seen_key, ">")
     # [END datastore_kindless_query]
 
     return list(query.fetch())
@@ -506,11 +619,9 @@ def inequality_range(client):
     # [START datastore_inequality_range]
     start_date = datetime.datetime(1990, 1, 1)
     end_date = datetime.datetime(2000, 1, 1)
-    query = client.query(kind='Task')
-    query.add_filter(
-        'created', '>', start_date)
-    query.add_filter(
-        'created', '<', end_date)
+    query = client.query(kind="Task")
+    query.add_filter("created", ">", start_date)
+    query.add_filter("created", "<", end_date)
     # [END datastore_inequality_range]
 
     return list(query.fetch())
@@ -520,17 +631,14 @@ def inequality_invalid(client):
     try:
         # [START datastore_inequality_invalid]
         start_date = datetime.datetime(1990, 1, 1)
-        query = client.query(kind='Task')
-        query.add_filter(
-            'created', '>', start_date)
-        query.add_filter(
-            'priority', '>', 3)
+        query = client.query(kind="Task")
+        query.add_filter("created", ">", start_date)
+        query.add_filter("priority", ">", 3)
         # [END datastore_inequality_invalid]
 
         return list(query.fetch())
 
-    except (google.cloud.exceptions.BadRequest,
-            google.cloud.exceptions.GrpcRendezvous):
+    except (google.cloud.exceptions.BadRequest, google.cloud.exceptions.GrpcRendezvous):
         pass
 
 
@@ -538,13 +646,11 @@ def equal_and_inequality_range(client):
     # [START datastore_equal_and_inequality_range]
     start_date = datetime.datetime(1990, 1, 1)
     end_date = datetime.datetime(2000, 12, 31, 23, 59, 59)
-    query = client.query(kind='Task')
-    query.add_filter('priority', '=', 4)
-    query.add_filter('done', '=', False)
-    query.add_filter(
-        'created', '>', start_date)
-    query.add_filter(
-        'created', '<', end_date)
+    query = client.query(kind="Task")
+    query.add_filter("priority", "=", 4)
+    query.add_filter("done", "=", False)
+    query.add_filter("created", ">", start_date)
+    query.add_filter("created", "<", end_date)
     # [END datastore_equal_and_inequality_range]
 
     return list(query.fetch())
@@ -552,9 +658,9 @@ def equal_and_inequality_range(client):
 
 def inequality_sort(client):
     # [START datastore_inequality_sort]
-    query = client.query(kind='Task')
-    query.add_filter('priority', '>', 3)
-    query.order = ['priority', 'created']
+    query = client.query(kind="Task")
+    query.add_filter("priority", ">", 3)
+    query.order = ["priority", "created"]
     # [END datastore_inequality_sort]
 
     return list(query.fetch())
@@ -563,38 +669,36 @@ def inequality_sort(client):
 def inequality_sort_invalid_not_same(client):
     try:
         # [START datastore_inequality_sort_invalid_not_same]
-        query = client.query(kind='Task')
-        query.add_filter('priority', '>', 3)
-        query.order = ['created']
+        query = client.query(kind="Task")
+        query.add_filter("priority", ">", 3)
+        query.order = ["created"]
         # [END datastore_inequality_sort_invalid_not_same]
 
         return list(query.fetch())
 
-    except (google.cloud.exceptions.BadRequest,
-            google.cloud.exceptions.GrpcRendezvous):
+    except (google.cloud.exceptions.BadRequest, google.cloud.exceptions.GrpcRendezvous):
         pass
 
 
 def inequality_sort_invalid_not_first(client):
     try:
         # [START datastore_inequality_sort_invalid_not_first]
-        query = client.query(kind='Task')
-        query.add_filter('priority', '>', 3)
-        query.order = ['created', 'priority']
+        query = client.query(kind="Task")
+        query.add_filter("priority", ">", 3)
+        query.order = ["created", "priority"]
         # [END datastore_inequality_sort_invalid_not_first]
 
         return list(query.fetch())
 
-    except (google.cloud.exceptions.BadRequest,
-            google.cloud.exceptions.GrpcRendezvous):
+    except (google.cloud.exceptions.BadRequest, google.cloud.exceptions.GrpcRendezvous):
         pass
 
 
 def array_value_inequality_range(client):
     # [START datastore_array_value_inequality_range]
-    query = client.query(kind='Task')
-    query.add_filter('tag', '>', 'learn')
-    query.add_filter('tag', '<', 'math')
+    query = client.query(kind="Task")
+    query.add_filter("tag", ">", "learn")
+    query.add_filter("tag", "<", "math")
     # [END datastore_array_value_inequality_range]
 
     return list(query.fetch())
@@ -602,9 +706,9 @@ def array_value_inequality_range(client):
 
 def array_value_equality(client):
     # [START datastore_array_value_equality]
-    query = client.query(kind='Task')
-    query.add_filter('tag', '=', 'fun')
-    query.add_filter('tag', '=', 'programming')
+    query = client.query(kind="Task")
+    query.add_filter("tag", "=", "fun")
+    query.add_filter("tag", "=", "programming")
     # [END datastore_array_value_equality]
 
     return list(query.fetch())
@@ -612,20 +716,14 @@ def array_value_equality(client):
 
 def exploding_properties(client):
     # [START datastore_exploding_properties]
-    task = datastore.Entity(client.key('Task'))
-    task.update({
-        'tags': [
-            'fun',
-            'programming',
-            'learn'
-        ],
-        'collaborators': [
-            'alice',
-            'bob',
-            'charlie'
-        ],
-        'created': datetime.datetime.utcnow()
-    })
+    task = datastore.Entity(client.key("Task"))
+    task.update(
+        {
+            "tags": ["fun", "programming", "learn"],
+            "collaborators": ["alice", "bob", "charlie"],
+            "created": datetime.datetime.utcnow(),
+        }
+    )
     # [END datastore_exploding_properties]
 
     return task
@@ -633,10 +731,10 @@ def exploding_properties(client):
 
 def transactional_update(client):
     # Create the entities we're going to manipulate
-    account1 = datastore.Entity(client.key('Account'))
-    account1['balance'] = 100
-    account2 = datastore.Entity(client.key('Account'))
-    account2['balance'] = 100
+    account1 = datastore.Entity(client.key("Account"))
+    account1["balance"] = 100
+    account2 = datastore.Entity(client.key("Account"))
+    account2["balance"] = 100
     client.put_multi([account1, account2])
 
     # [START datastore_transactional_update]
@@ -645,10 +743,11 @@ def transactional_update(client):
             from_account = client.get(from_key)
             to_account = client.get(to_key)
 
-            from_account['balance'] -= amount
-            to_account['balance'] += amount
+            from_account["balance"] -= amount
+            to_account["balance"] += amount
 
             client.put_multi([from_account, to_account])
+
     # [END datastore_transactional_update]
 
     # [START datastore_transactional_retry]
@@ -659,7 +758,7 @@ def transactional_update(client):
         except google.cloud.exceptions.Conflict:
             continue
     else:
-        print('Transaction failed.')
+        print("Transaction failed.")
     # [END datastore_transactional_retry]
 
     return account1.key, account2.key
@@ -668,15 +767,13 @@ def transactional_update(client):
 def transactional_get_or_create(client):
     # [START datastore_transactional_get_or_create]
     with client.transaction():
-        key = client.key('Task', datetime.datetime.utcnow().isoformat())
+        key = client.key("Task", datetime.datetime.utcnow().isoformat())
 
         task = client.get(key)
 
         if not task:
             task = datastore.Entity(key)
-            task.update({
-                'description': 'Example task'
-            })
+            task.update({"description": "Example task"})
             client.put(task)
 
         return task
@@ -684,18 +781,20 @@ def transactional_get_or_create(client):
 
 
 def transactional_single_entity_group_read_only(client):
-    client.put_multi([
-        datastore.Entity(key=client.key('TaskList', 'default')),
-        datastore.Entity(key=client.key('TaskList', 'default', 'Task', 1))
-    ])
+    client.put_multi(
+        [
+            datastore.Entity(key=client.key("TaskList", "default")),
+            datastore.Entity(key=client.key("TaskList", "default", "Task", 1)),
+        ]
+    )
 
     # [START datastore_transactional_single_entity_group_read_only]
     with client.transaction(read_only=True):
-        task_list_key = client.key('TaskList', 'default')
+        task_list_key = client.key("TaskList", "default")
 
         task_list = client.get(task_list_key)
 
-        query = client.query(kind='Task', ancestor=task_list_key)
+        query = client.query(kind="Task", ancestor=task_list_key)
         tasks_in_list = list(query.fetch())
 
         return task_list, tasks_in_list
@@ -704,23 +803,22 @@ def transactional_single_entity_group_read_only(client):
 
 def namespace_run_query(client):
     # Create an entity in another namespace.
-    task = datastore.Entity(
-        client.key('Task', 'sample-task', namespace='google'))
+    task = datastore.Entity(client.key("Task", "sample-task", namespace="google"))
     client.put(task)
 
     # [START datastore_namespace_run_query]
     # All namespaces
-    query = client.query(kind='__namespace__')
+    query = client.query(kind="__namespace__")
     query.keys_only()
 
     all_namespaces = [entity.key.id_or_name for entity in query.fetch()]
 
     # Filtered namespaces
-    start_namespace = client.key('__namespace__', 'g')
-    end_namespace = client.key('__namespace__', 'h')
-    query = client.query(kind='__namespace__')
-    query.key_filter(start_namespace, '>=')
-    query.key_filter(end_namespace, '<')
+    start_namespace = client.key("__namespace__", "g")
+    end_namespace = client.key("__namespace__", "h")
+    query = client.query(kind="__namespace__")
+    query.key_filter(start_namespace, ">=")
+    query.key_filter(end_namespace, "<")
 
     filtered_namespaces = [entity.key.id_or_name for entity in query.fetch()]
     # [END datastore_namespace_run_query]
@@ -733,7 +831,7 @@ def kind_run_query(client):
     upsert(client)
 
     # [START datastore_kind_run_query]
-    query = client.query(kind='__kind__')
+    query = client.query(kind="__kind__")
     query.keys_only()
 
     kinds = [entity.key.id_or_name for entity in query.fetch()]
@@ -747,7 +845,7 @@ def property_run_query(client):
     upsert(client)
 
     # [START datastore_property_run_query]
-    query = client.query(kind='__property__')
+    query = client.query(kind="__property__")
     query.keys_only()
 
     properties_by_kind = defaultdict(list)
@@ -767,14 +865,14 @@ def property_by_kind_run_query(client):
     upsert(client)
 
     # [START datastore_property_by_kind_run_query]
-    ancestor = client.key('__kind__', 'Task')
-    query = client.query(kind='__property__', ancestor=ancestor)
+    ancestor = client.key("__kind__", "Task")
+    query = client.query(kind="__property__", ancestor=ancestor)
 
     representations_by_property = {}
 
     for entity in query.fetch():
         property_name = entity.key.name
-        property_types = entity['property_representation']
+        property_types = entity["property_representation"]
 
         representations_by_property[property_name] = property_types
     # [END datastore_property_by_kind_run_query]
@@ -784,7 +882,7 @@ def property_by_kind_run_query(client):
 
 def eventual_consistent_query(client):
     # [START datastore_eventual_consistent_query]
-    query = client.query(kind='Task')
+    query = client.query(kind="Task")
     query.fetch(eventual=True)
     # [END datastore_eventual_consistent_query]
     pass
@@ -792,14 +890,16 @@ def eventual_consistent_query(client):
 
 def index_merge_queries(client):
     # Create a Photo entity to query
-    photo = datastore.Entity(client.key('Photo', 'sample_photo'))
+    photo = datastore.Entity(client.key("Photo", "sample_photo"))
 
-    photo.update({
-        'owner_id': 'user1234',
-        'size': 2,
-        'coloration': 2,
-        'tag': ['family', 'outside', 'camping']
-    })
+    photo.update(
+        {
+            "owner_id": "user1234",
+            "size": 2,
+            "coloration": 2,
+            "tag": ["family", "outside", "camping"],
+        }
+    )
 
     client.put(photo)
 
@@ -807,17 +907,11 @@ def index_merge_queries(client):
     queries = []
 
     # [START datastore_built_in_index_queries]
-    query_owner_id = client.query(
-        kind='Photo',
-        filters=[('owner_id', '=', 'user1234')])
+    query_owner_id = client.query(kind="Photo", filters=[("owner_id", "=", "user1234")])
 
-    query_size = client.query(
-        kind='Photo',
-        filters=[('size', '=', 2)])
+    query_size = client.query(kind="Photo", filters=[("size", "=", 2)])
 
-    query_coloration = client.query(
-        kind='Photo',
-        filters=[('coloration', '=', 2)])
+    query_coloration = client.query(kind="Photo", filters=[("coloration", "=", 2)])
     # [END datastore_built_in_index_queries]
 
     queries.append(query_owner_id)
@@ -826,30 +920,39 @@ def index_merge_queries(client):
 
     # [START datastore_merged_index_query]
     query_all_properties = client.query(
-        kind='Photo',
-        filters=[('owner_id', '=', 'user1234'),
-                 ('size', '=', 2),
-                 ('coloration', '=', 2),
-                 ('tag', '=', 'family')])
+        kind="Photo",
+        filters=[
+            ("owner_id", "=", "user1234"),
+            ("size", "=", 2),
+            ("coloration", "=", 2),
+            ("tag", "=", "family"),
+        ],
+    )
     # [END datastore_merged_index_query]
 
     queries.append(query_all_properties)
 
     # [START datastore_merged_index_tag_queries]
     query_tag = client.query(
-        kind='Photo',
-        filters=[('tag', '=', 'family'),
-                 ('tag', '=', 'outside'),
-                 ('tag', '=', 'camping')])
+        kind="Photo",
+        filters=[
+            ("tag", "=", "family"),
+            ("tag", "=", "outside"),
+            ("tag", "=", "camping"),
+        ],
+    )
 
     query_owner_size_color_tags = client.query(
-        kind='Photo',
-        filters=[('owner_id', '=', 'user1234'),
-                 ('size', '=', 2),
-                 ('coloration', '=', 2),
-                 ('tag', '=', 'family'),
-                 ('tag', '=', 'outside'),
-                 ('tag', '=', 'camping')])
+        kind="Photo",
+        filters=[
+            ("owner_id", "=", "user1234"),
+            ("size", "=", 2),
+            ("coloration", "=", 2),
+            ("tag", "=", "family"),
+            ("tag", "=", "outside"),
+            ("tag", "=", "camping"),
+        ],
+    )
     # [END datastore_merged_index_tag_queries]
 
     queries.append(query_tag)
@@ -857,19 +960,21 @@ def index_merge_queries(client):
 
     # [START datastore_owner_size_tag_query]
     query_owner_size_tag = client.query(
-        kind='Photo',
-        filters=[('owner_id', '=', 'username'),
-                 ('size', '=', 2),
-                 ('tag', '=', 'family')])
+        kind="Photo",
+        filters=[
+            ("owner_id", "=", "username"),
+            ("size", "=", 2),
+            ("tag", "=", "family"),
+        ],
+    )
     # [END datastore_owner_size_tag_query]
 
     queries.append(query_owner_size_tag)
 
     # [START datastore_size_coloration_query]
     query_size_coloration = client.query(
-        kind='Photo',
-        filters=[('size', '=', 2),
-                 ('coloration', '=', 1)])
+        kind="Photo", filters=[("size", "=", 2), ("coloration", "=", 1)]
+    )
     # [END datastore_size_coloration_query]
 
     queries.append(query_size_coloration)
@@ -885,18 +990,19 @@ def main(project_id):
     client = datastore.Client(project_id)
 
     for name, function in globals().iteritems():
-        if name in ('main', 'defaultdict') or not callable(function):
+        if name in ("main", "defaultdict") or not callable(function):
             continue
 
         print(name)
         pprint(function(client))
-        print('\n-----------------\n')
+        print("\n-----------------\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Demonstrates datastore API operations.')
-    parser.add_argument('project_id', help='Your cloud project ID.')
+        description="Demonstrates datastore API operations."
+    )
+    parser.add_argument("project_id", help="Your cloud project ID.")
 
     args = parser.parse_args()
 

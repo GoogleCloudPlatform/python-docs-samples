@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Sometimes renovate tries to update it to 16.10. I don't think it's
-# worthwhile because 16.04 is an LTS release. Maybe we should think
-# about upgrading to 18.04 (the next LTS) instead.
-FROM ubuntu:18.04
+# We want to use LTS ubuntu from our mirror because dockerhub has a
+# rate limit.
+# FROM mirror.gcr.io/library/ubuntu:18.04
+# However, now the above image is not working, we're using our own cache
+FROM gcr.io/cloud-devrel-kokoro-resources/ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -36,6 +37,7 @@ RUN apt-get update \
     curl \
     dirmngr \
     git \
+    gcc \
     gpg-agent \
     graphviz \
     libbz2-dev \
@@ -44,11 +46,14 @@ RUN apt-get update \
     libffi-dev \
     liblzma-dev \
     libmagickwand-dev \
+    libmemcached-dev \
+    libpython3-dev \
     libreadline-dev \
     libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
     portaudio19-dev \
+    pkg-config \
     redis-server \
     software-properties-common \
     ssh \
@@ -82,9 +87,21 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# Install Bazel for compiling Tink in Cloud SQL Client Side Encryption Samples
+# TODO: Delete this section once google/tink#483 is resolved
+RUN apt install -y curl gpgconf gpg \
+  && curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
+  && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
+  && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list \
+  && apt update &&  apt install -y bazel \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
     msodbcsql17 \
@@ -100,7 +117,7 @@ RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
     && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
     && /tmp/fetch_gpg_keys.sh \
-    && for PYTHON_VERSION in 2.7.18 3.6.10 3.7.7 3.8.3; do \
+    && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
         wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
         && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -128,7 +145,7 @@ RUN set -ex \
 # Install pip on Python 3.6 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 10.0.1
+ENV PYTHON_PIP_VERSION 20.2.4
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -139,8 +156,8 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for 3.8.0
-RUN python3.8 /tmp/get-pip.py
+# Ensure Pip for python3
+RUN python3 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
 
 # Install "virtualenv", since the vast majority of users of this image
@@ -148,7 +165,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 304.0.0
+ENV CLOUD_SDK_VERSION 360.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz

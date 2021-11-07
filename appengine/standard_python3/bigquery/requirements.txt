@@ -1,2 +1,2 @@
-google-cloud-bigquery==1.25.0
-Flask==1.1.2
+google-cloud-bigquery==2.29.0
+Flask==2.0.1

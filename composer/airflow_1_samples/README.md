@@ -1,0 +1,3 @@
+# Airflow 1 Legacy Samples
+
+The samples in this directory are all samples that are compatible with supported versions of Airflow 1.10.x in Composer. They will be supported as long as Airflow 1 is supported in Cloud Composer. To see the versions of Airflow currently supported in Cloud Composer, check out the [versions list](https://cloud.google.com/composer/docs/concepts/versioning/composer-versions). 

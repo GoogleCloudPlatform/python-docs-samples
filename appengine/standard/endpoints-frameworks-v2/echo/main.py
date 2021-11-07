@@ -15,15 +15,15 @@
 """This is a sample Hello World API implemented using Google Cloud
 Endpoints."""
 
-# [START imports]
+# [START endpoints_echo_api_imports]
 import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
-# [END imports]
+# [END endpoints_echo_api_imports]
 
 
-# [START messages]
+# [START endpoints_echo_api_messages]
 class EchoRequest(messages.Message):
     message = messages.StringField(1)
 
@@ -36,14 +36,14 @@ class EchoResponse(messages.Message):
 ECHO_RESOURCE = endpoints.ResourceContainer(
     EchoRequest,
     n=messages.IntegerField(2, default=1))
-# [END messages]
+# [END endpoints_echo_api_messages]
 
 
-# [START echo_api_class]
+# [START endpoints_echo_api_class]
 @endpoints.api(name='echo', version='v1')
 class EchoApi(remote.Service):
 
-    # [START echo_api_method]
+    # [START endpoints_echo_api_method]
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
         ECHO_RESOURCE,
@@ -55,7 +55,7 @@ class EchoApi(remote.Service):
     def echo(self, request):
         output_message = ' '.join([request.message] * request.n)
         return EchoResponse(message=output_message)
-    # [END echo_api_method]
+    # [END endpoints_echo_api_method]
 
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
@@ -101,9 +101,9 @@ class EchoApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException
         return EchoResponse(message=user.email())
-# [END echo_api_class]
+# [END endpoints_echo_api_class]
 
 
-# [START api_server]
+# [START endpoints_api_server]
 api = endpoints.api_server([EchoApi])
-# [END api_server]
+# [END endpoints_api_server]

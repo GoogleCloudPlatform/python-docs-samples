@@ -1,11 +1,13 @@
-# Python 3 Google Cloud Pub/Sub sample for Google App Engine Standard Environment
+# Python Google Cloud Pub/Sub sample for Google App Engine Standard Environment
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/standard/pubsub/README.md
 
-This demonstrates how to send and receive messages using [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) on [Google App Engine Standard Environment](https://cloud.google.com/appengine/docs/standard/).
+This demonstrates how to send and receive messages using [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) on [Google App Engine Standard Environment](https://cloud.google.com/appengine/docs/standard/) for
+Python 2.7 or for Python 3. See instructions below for deploying in either
+of those two environments.
 
 ## Setup
 
@@ -13,7 +15,10 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Enable the Cloud Pub/Sub API in the [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-1. Allow Cloud Pub/Sub to create authentication tokens in your project.
+1. Allow Cloud Pub/Sub to create authentication tokens in your project. Note
+that this command uses both your-project-id (the name you gave the project) and
+your-project-number (the numeric identifier automatically assigned to your
+project) in separate places.
 
         $ gcloud projects add-iam-policy-binding [your-project-id] \
             --member=serviceAccount:service-[your-project-number]@gcp-sa-pubsub.iam.gserviceaccount.com \
@@ -30,7 +35,7 @@ Before you can run or deploy the sample, you will need to do the following:
             --push-auth-service-account=[your-service-account] \
             --push-auth-token-audience=example.com
 
-1. Update the environment variables in ``app.yaml``.
+1. Update the environment variables in ``app.yaml`` for Python 3, or ``app27.yaml`` for Python 2.7.
 
 ## Running locally
 
@@ -78,8 +83,17 @@ The simulated push request fails because it does not have a Cloud Pub/Sub-genera
 
 Note: Not all the files in the current directory are needed to run your code on App Engine. Specifically, `main_test.py` and the `data` directory, which contains a mocked private key file and a mocked public certs file, are for testing purposes only. They SHOULD NOT be included when deploying your app. When your app is up and running, Cloud Pub/Sub's push servers create tokens using a private key, then the Google Auth Python library takes care of verifying and decoding the token using Google's public certs, to confirm that the push requests indeed come from Cloud Pub/Sub.
 
-In the current directory, deploy using `gcloud`:
+In the current directory, deploy using `gcloud`. For Python 2.7 you must first
+install the required libraries in the `lib` folder:
+
+    $ pip -t lib -r requirements.txt
+    $ gcloud app deploy app27.yaml
+
+For Python 3, you can simply run the deploy command:
 
     $ gcloud app deploy app.yaml
 
-You can now access the application at `https://[your-app-id].appspot.com`. You can use the form to submit messages, but it's non-deterministic which instance of your application will receive the notification. You can send multiple messages and refresh the page to see the received message.
+You can now access the application using the `gcloud app browse` command. You
+can use the form to submit messages, but it's non-deterministic which instance
+of your application will receive the notification. You can send multiple 
+messages and refresh the page to see the received message.

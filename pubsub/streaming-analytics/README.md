@@ -14,8 +14,8 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
    or via the `gcloud` command line tool.
 
    ```sh
-   export PROJECT_NAME=your-google-cloud-project-id
-   gcloud projects create $PROJECT_NAME
+   export PROJECT_ID=your-google-cloud-project-id
+   gcloud projects create $PROJECT_ID
    ```
 
 1. [Enable billing].
@@ -41,15 +41,16 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
    Alternatively, you can use `gcloud` through the command line.
 
    ```sh
-   export PROJECT_NAME=$(gcloud config get-value project)
-   export SA_NAME=samples
-   export IAM_ACCOUNT=$SA_NAME@$PROJECT_NAME.iam.gserviceaccount.com
+   export PROJECT_ID=$(gcloud config get-value project)
+   export SERVICE_ACCOUNT_NAME=samples
+   export IAM_ACCOUNT=$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com
 
    # Create the service account.
-   gcloud iam service-accounts create $SA_NAME --display-name $SA_NAME
+   gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
+     --display-name $SERVICE_ACCOUNT_NAME
 
    # Set the role to Project Owner (*).
-   gcloud projects add-iam-policy-binding $PROJECT_NAME \
+   gcloud projects add-iam-policy-binding $PROJECT_ID \
      --member serviceAccount:$IAM_ACCOUNT \
      --role roles/owner
 
@@ -77,16 +78,18 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
 1. Create a Cloud Storage bucket.
 
    ```bash
-   export BUCKET_NAME=your-gcs-bucket
+   export BUCKET_ID=your-gcs-bucket-id
 
-   gsutil mb gs://$BUCKET_NAME
+   gsutil mb gs://$BUCKET_ID
    ```
 
  1. Start a [Google Cloud Scheduler] job that publishes one message to a [Google Cloud Pub/Sub] topic every minute. This will create an [App Engine] app if one has never been created on the project.
 
     ```bash
+    export TOPIC_ID=your-topic-id
+
     # Create a Pub/Sub topic.
-    gcloud pubsub topics create cron-topic
+    gcloud pubsub topics create $TOPIC_ID
 
     # Create a Cloud Scheduler job
     gcloud scheduler jobs create pubsub publisher-job --schedule="* * * * *" \
@@ -134,23 +137,35 @@ The following instructions will help you prepare your development environment.
 
 * [PubSubToGCS.py](PubSubToGCS.py)
 
-The following example will run a streaming pipeline. It will read messages from a Pub/Sub topic, then window them into fixed-sized intervals, and write one file per window into a GCS location.
+The following example will run a streaming pipeline. The pipeline does the following:
+1. Reads messages from a Pub/Sub topic.
+1. Group messages into batches for every windows.
+  1. Adds window start and end time to each element/message.
+  1. Adds publish timestamp to each element/message.
+  1. Adds a random shard ID as key to each windowed element. *Sharding* lets you split the elements in the same window into multiple small batches. This way, multiple workers can each write a batch of elements into Cloud Storage. This results in one file per shard.
+  1. Groups the elements by their shard ID for every window.
+1. Writes the grouped elements to a file on Cloud Storage.
 
 + `--project`: sets the Google Cloud project ID to run the pipeline on
++ `--region`: sets the Dataflow [regional endpoint](https://cloud.google.com/dataflow/docs/concepts/regional-endpoints)
 + `--input_topic`: sets the input Pub/Sub topic to read messages from
 + `--output_path`: sets the output GCS path prefix to write files to
 + `--runner`: specifies the runner to run the pipeline, if not set to `DataflowRunner`, `DirectRunner` is used
 + `--window_size [optional]`: specifies the window size in minutes, defaults to 1.0
++ `--num_shards [optional]`: sets the number of shards when writing windowed elements to GCS, defaults to 5.
 + `--temp_location`: needed for executing the pipeline
 
 ```bash
 python PubSubToGCS.py \
-  --project=$PROJECT_NAME \
-  --input_topic=projects/$PROJECT_NAME/topics/$TOPIC_NAME \
-  --output_path=gs://$BUCKET_NAME/samples/output \
+  --project=$PROJECT_ID \
+  --region=us-central1 \
+  --input_topic=projects/$PROJECT_ID/topics/$TOPIC_ID \
+  --output_path=gs://$BUCKET_ID/samples/output \
   --runner=DataflowRunner \
-  --window_size=2 \
-  --temp_location=gs://$BUCKET_NAME/temp
+  --window_size=1 \
+  # If set, you will write up to `num_shards` files per window to GCS.
+  # --num_shards=2 \
+  --temp_location=gs://$BUCKET_ID/temp
 ```
 
 After the job has been submitted, you can check its status in the [GCP Console Dataflow page].
@@ -158,7 +173,7 @@ After the job has been submitted, you can check its status in the [GCP Console D
 You can also check the output to your GCS bucket using the command line below or in the [GCP Console Storage page]. You may need to wait a few minutes for the files to appear.
 
 ```bash
-gsutil ls gs://$BUCKET_NAME/samples/
+gsutil ls gs://$BUCKET_ID/samples/
 ```
 
 ## Cleanup
@@ -176,17 +191,17 @@ gsutil ls gs://$BUCKET_NAME/samples/
 1. Delete the topic. [Google Cloud Dataflow] will automatically delete the subscription associated with the streaming pipeline when the job is canceled.
 
    ```bash
-   gcloud pubsub topics delete cron-topic
+   gcloud pubsub topics delete $TOPIC_ID
    ```
 
 1. Lastly, to avoid incurring charges to your GCP account for the resources created in this tutorial:
 
     ```bash
     # Delete only the files created by this sample.
-    gsutil -m rm -rf "gs://$BUCKET_NAME/samples/output*"
+    gsutil -m rm -rf "gs://$BUCKET_ID/samples/output*"
 
     # [optional] Remove the Cloud Storage bucket.
-    gsutil rb gs://$BUCKET_NAME
+    gsutil rb gs://$BUCKET_ID
     ```
 
 [Apache Beam]: https://beam.apache.org/

@@ -38,11 +38,6 @@ def hello_rtdb(data, context):
     """
     trigger_resource = context.resource
 
-    if 'params' in data:
-        print('Path parameters:')
-        for param, value in data['params'].items():
-            print(f'  {param}: {value}')
-
     print('Function triggered by change to: %s' % trigger_resource)
     print('Admin?: %s' % data.get("admin", False))
     print('Delta:')
@@ -98,11 +93,16 @@ def make_upper_case(data, context):
 
     cur_value = data["value"]["fields"]["original"]["stringValue"]
     new_value = cur_value.upper()
-    print(f'Replacing value: {cur_value} --> {new_value}')
 
-    affected_doc.set({
-        u'original': new_value
-    })
+    if cur_value != new_value:
+        print(f'Replacing value: {cur_value} --> {new_value}')
+        affected_doc.set({
+            u'original': new_value
+        })
+    else:
+        # Value is already upper-case
+        # Don't perform a second write (which can trigger an infinite loop)
+        print('Value is already upper-case.')
 # [END functions_firebase_reactive]
 
 

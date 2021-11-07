@@ -1,1 +1,1 @@
-google-cloud-bigtable==1.4.0
+google-cloud-bigtable==2.4.0

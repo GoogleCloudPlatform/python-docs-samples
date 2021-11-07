@@ -1,0 +1,88 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+
+- id: 'Create a dedicated database'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
+        --instance ${_DB_INSTANCE} \
+        --project $PROJECT_ID"
+
+- id: 'Add a Secret to Secret Manager'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      sed -i "s/PROJECT_ID:REGION:INSTANCE/${_CLOUD_SQL_CONNECTION_NAME}/" postgres-secrets.json
+      sed -i "s/PASSWORD_SECRET/${_DB_PASSWORD}/" postgres-secrets.json
+      sed -i "s/\"DB_NAME\": \"postgres\"/\"DB_NAME\": \"${_DB_NAME}\"/" postgres-secrets.json
+      sed -i "s/\"DB_USER\": \"postgres\"/\"DB_USER\": \"${_DB_USER}\"/" postgres-secrets.json
+
+      ./test/retry.sh "gcloud secrets create ${_SERVICE}-secrets \
+        --project $PROJECT_ID \
+        --replication-policy="automatic" \
+        --data-file=postgres-secrets.json" \
+        "gcloud secrets describe ${_SERVICE}-secrets"
+
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} ."
+
+- id: 'Push Container Image'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-c'
+    - |
+      ./test/retry.sh "docker push gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}"
+
+- id: 'Deploy to Cloud Run'
+  name: 'gcr.io/cloud-builders/gcloud:latest'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - |
+    ./test/retry.sh "gcloud beta run deploy ${_SERVICE} \
+      --project $PROJECT_ID \
+      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
+      --allow-unauthenticated \
+      --region ${_REGION} \
+      --platform ${_PLATFORM} \
+      --add-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
+      --update-secrets CLOUD_SQL_CREDENTIALS_SECRET=${_SERVICE}-secrets:latest \
+      --update-env-vars TRAMPOLINE_CI=kokoro"
+
+images:
+- gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}
+
+substitutions:
+  _SERVICE: idp-sql
+  _VERSION: manual
+  _REGION: us-central1
+  _PLATFORM: managed
+  _DB_INSTANCE: idp-sql-instance
+  _CLOUD_SQL_CONNECTION_NAME: $PROJECT_ID:us-central1:idp-sql-instance
+  _DB_NAME: postgres
+  _DB_USER: postgres
+  _DB_PASSWORD: password1234

@@ -27,11 +27,15 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+    Note:
+        For more information on how Flask integrates with Cloud
+        Functions, see the `Writing HTTP functions` page.
+        <https://cloud.google.com/functions/docs/writing/http#http_frameworks>
     """
     return 'Hello World!'
 # [END functions_helloworld_get]
@@ -42,11 +46,11 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     request_json = request.get_json(silent=True)
     request_args = request.args
@@ -66,16 +70,27 @@ def hello_pubsub(event, context):
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
          event (dict):  The dictionary with data specific to this type of
-         event. The `data` field contains the PubsubMessage message. The
-         `attributes` field will contain custom attributes if there are any.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         metadata. The `event_id` field contains the Pub/Sub message ID. The
-         `timestamp` field contains the publish time.
+                        event. The `@type` field maps to
+                         `type.googleapis.com/google.pubsub.v1.PubsubMessage`.
+                        The `data` field maps to the PubsubMessage data
+                        in a base64-encoded string. The `attributes` field maps
+                        to the PubsubMessage attributes if any is present.
+         context (google.cloud.functions.Context): Metadata of triggering event
+                        including `event_id` which maps to the PubsubMessage
+                        messageId, `timestamp` which maps to the PubsubMessage
+                        publishTime, `event_type` which maps to
+                        `google.pubsub.topic.publish`, and `resource` which is
+                        a dictionary that describes the service API endpoint
+                        pubsub.googleapis.com, the triggering topic's name, and
+                        the triggering event type
+                        `type.googleapis.com/google.pubsub.v1.PubsubMessage`.
+    Returns:
+        None. The output is written to Cloud Logging.
     """
     import base64
 
-    print("""This Function was triggered by messageId {} published at {}
-    """.format(context.event_id, context.timestamp))
+    print("""This Function was triggered by messageId {} published at {} to {}
+    """.format(context.event_id, context.timestamp, context.resource["name"]))
 
     if 'data' in event:
         name = base64.b64decode(event['data']).decode('utf-8')
@@ -116,11 +131,11 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
@@ -141,16 +156,16 @@ def hello_content(request):
 # [END functions_http_content]
 
 
-# [START functions_http_methods]
+# [START functions_http_method]
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
     Returns:
         The response text, or any set of values that can be turned into a
-         Response object using `make_response`
-        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     from flask import abort
 
@@ -160,7 +175,7 @@ def hello_method(request):
         return abort(403)
     else:
         return abort(405)
-# [END functions_http_methods]
+# [END functions_http_method]
 
 
 def hello_error_1(request):

@@ -20,7 +20,7 @@ import cloudiot_pubsub_example_server as example_server
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-topic-{}'.format(int(time.time()))
 
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']

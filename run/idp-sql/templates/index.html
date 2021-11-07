@@ -1,0 +1,80 @@
+{#
+# Copyright 2021 Google LLC. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#}
+<!doctype html>
+<html lang=en xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>CATS v DOGS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first-->
+  <script src="https://www.gstatic.com/firebasejs/7.18/firebase-app.js"></script>
+  <!-- Add Firebase Auth service-->
+  <script src="https://www.gstatic.com/firebasejs/7.18/firebase-auth.js"></script>
+  <script src="/config.js"></script>
+  <script src="/firebase.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
+</head>
+<body class="yellow lighten-5">
+  <nav class="teal darken-3">
+    <div class="nav-wrapper container"><a class="brand-logo center" href="#!">CATS v DOGS</a>
+      <ul class="left" id="nav-mobile">
+        <button class="waves-effect waves-light btn" id="signInButton">Sign In with Google</button>
+      </ul>
+    </div>
+  </nav>
+  <div class="section" id="form">
+    <div class="center">
+      <h4>{{leader_message}}</h4>
+    </div>
+    <div class="row center">
+      <div class="col s6 m5 offset-m1">
+        <div class="{% if lead_team == 'CATS' %}card-panel teal lighten-4{% else %}card-panel{% endif %}"">
+          <i class="material-icons large">🐱</i>
+          <h3>{{cats_count}} votes</h3>
+          <button class="btn" id="voteCats">Vote for CATS</button>
+        </div>
+      </div>
+      <div class="col s6 m5">
+        <div class="{% if lead_team == 'DOGS' %}card-panel teal lighten-4{% else %}card-panel{% endif %}"">
+          <i class="material-icons large">🐶</i>
+          <h3>{{dogs_count}} votes</h3>
+          <button class="btn" id="voteDogs">Vote for DOGS</button>
+        </div>
+      </div>
+    </div>
+    <h4 class="header center">Recent Votes</h4>
+    <ul class="container collection center" >
+      {% for vote in recent_votes %}
+      <li class="collection-item avatar">
+        <i class="material-icons circle teal lighten-1">{% if vote.candidate == "CATS" %}🐱{% elif vote.candidate == "DOGS" %}🐶{%else%}❓{% endif %}</i>
+        <span class="title">A vote for </span><b>'{{vote.candidate}}'</b>
+        <p>was cast at {{vote.time_cast}}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <script>
+    document.getElementById("voteCats").addEventListener("click", function () {
+      vote("CATS");
+    });
+    document.getElementById("voteDogs").addEventListener("click", function () {
+      vote("DOGS");
+    });
+    document.getElementById('signInButton').addEventListener("click", toggle);
+  </script>
+</body>
+</html>

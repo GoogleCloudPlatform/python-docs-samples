@@ -16,63 +16,83 @@
 # This test builds and deploys the two secure services
 # to test that they interact properly together.
 
+import datetime
 import os
 import subprocess
 import time
-from urllib import request
 import uuid
 
-from google.cloud import logging_v2
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 import pytest
 
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
-@pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
-    project = os.environ["GOOGLE_CLOUD_PROJECT"]
+# Unique suffix to create distinct service names
+SUFFIX = uuid.uuid4().hex[:10]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+IMAGE_NAME = f"gcr.io/{PROJECT}/logging-{SUFFIX}"
 
-    # Build and Deploy Cloud Run Services
+
+@pytest.fixture
+def container_image():
+    # Build container image for Cloud Run deployment
     subprocess.run(
         [
             "gcloud",
             "builds",
             "submit",
+            "--tag",
+            IMAGE_NAME,
             "--project",
-            project,
-            "--substitutions",
-            f"_SUFFIX={suffix}",
-            "--config",
-            "e2e_test_setup.yaml",
+            PROJECT,
             "--quiet",
         ],
         check=True,
     )
+    yield IMAGE_NAME
 
-    # Get the URL for the service and the token
-    service = subprocess.run(
+    # Delete container image
+    subprocess.run(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            IMAGE_NAME,
+            "--quiet",
+            "--project",
+            PROJECT,
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture
+def deployed_service(container_image):
+    # Deploy image to Cloud Run
+    service_name = f"logging-{SUFFIX}"
+    subprocess.run(
         [
             "gcloud",
             "run",
+            "deploy",
+            service_name,
+            "--image",
+            container_image,
             "--project",
-            project,
-            "--platform=managed",
+            PROJECT,
             "--region=us-central1",
-            "services",
-            "describe",
-            f"logging-{suffix}",
-            "--format=value(status.url)",
+            "--platform=managed",
+            "--set-env-vars",
+            f"GOOGLE_CLOUD_PROJECT={PROJECT}" "--no-allow-unauthenticated",
         ],
-        stdout=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
+    )
 
-    id_token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
-
-    yield service, id_token, project, f"logging-{suffix}"
+    yield service_name
 
     subprocess.run(
         [
@@ -80,55 +100,105 @@ def services():
             "run",
             "services",
             "delete",
-            f"logging-{suffix}",
-            "--project",
-            project,
-            "--platform",
-            "managed",
-            "--region",
-            "us-central1",
+            service_name,
+            "--platform=managed",
+            "--region=us-central1",
             "--quiet",
+            "--project",
+            PROJECT,
         ],
         check=True,
     )
 
 
-def test_end_to_end(services):
-    service = services[0].decode()
-    id_token = services[1].decode()
-    project = services[2]
-    service_name = services[3]
+@pytest.fixture
+def service_url_auth_token(deployed_service):
+    # Get Cloud Run service URL and auth token
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+
+    yield service_url, auth_token
+
+
+def test_end_to_end(service_url_auth_token, deployed_service):
+    service_url, auth_token = service_url_auth_token
 
     # Test that the service is responding
-    req = request.Request(
-        service,
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(
+        service_url,
         headers={
-            "Authorization": f"Bearer {id_token}",
+            "Authorization": f"Bearer {auth_token}",
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
-    response = request.urlopen(req)
-    assert response.status == 200
-
-    body = response.read()
-    assert body.decode() == "Hello Logger!"
+    assert response.status_code == 200
+    assert "Hello Logger!" in response.content.decode("UTF-8")
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
-    client = logging_v2.LoggingServiceV2Client()
-    resource_names = [f"projects/{project}"]
+    client = LoggingServiceV2Client()
+    resource_names = [f"projects/{PROJECT}"]
+    # We add timestamp for making the query faster.
+    now = datetime.datetime.now(datetime.timezone.utc)
+    filter_date = now - datetime.timedelta(minutes=1)
     filters = (
+        f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_revision "
         "AND severity=NOTICE "
-        f"AND resource.labels.service_name={service_name} "
+        f"AND resource.labels.service_name={deployed_service} "
         "AND jsonPayload.component=arbitrary-property"
     )
 
     # Retry a maximum number of 10 times to find results in stackdriver
+    found = False
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
+            found = True
             # If there are any results, exit loop
             break
+        # When message found, exit loop
+        if found:
+            break
+        # Linear backoff
+        time.sleep(3 * x)
 
-    assert iterator.num_results
+    assert found

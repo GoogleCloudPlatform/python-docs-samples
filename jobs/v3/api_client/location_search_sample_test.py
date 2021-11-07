@@ -26,6 +26,7 @@ def company_name():
     location_search_sample.tear_down(company_name, job_name, job_name2)
 
 
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_location_search_sample(company_name, capsys):
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():

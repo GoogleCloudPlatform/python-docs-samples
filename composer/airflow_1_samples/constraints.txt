@@ -1,0 +1,2 @@
+pandas-gbq==0.14.1 # must be under 0.15.0 until https://github.com/apache/airflow/issues/15113 is addressed
+SQLAlchemy==1.3.23 # must be under 1.4 until at least Airflow 2.0 (check airflow setup.py for restrictions)

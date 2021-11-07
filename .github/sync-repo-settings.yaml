@@ -1,0 +1,63 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Whether or not rebase-merging is enabled on this repository.
+# Defaults to `true`
+rebaseMergeAllowed: true
+
+# Whether or not squash-merging is enabled on this repository.
+# Defaults to `true`
+squashMergeAllowed: true
+
+# Whether or not PRs are merged with a merge commit on this repository.
+# Defaults to `false`
+mergeCommitAllowed: false
+
+# Rules for master branch protection
+branchProtectionRules:
+# Identifies the protection rule pattern. Name of the branch to be protected.
+# Defaults to `master`
+- pattern: master
+  # Can admins overwrite branch protection.
+  # Defaults to `true`
+  isAdminEnforced: false
+  # Number of approving reviews required to update matching branches.
+  # Defaults to `1`
+  requiredApprovingReviewCount: 2
+  # Are reviews from code owners required to update matching branches.
+  # Defaults to `false`
+  requiresCodeOwnerReviews: true
+  # Require up to date branches
+  requiresStrictStatusChecks: true
+  # List of required status check contexts that must pass for commits to be accepted to matching branches.
+  requiredStatusCheckContexts:
+    - "Kokoro CI - Lint"
+    - "Kokoro CI - Python 2.7 (App Engine Standard Only)"
+    - "Kokoro CI - Python 3.6"
+    - "Kokoro CI - Python 3.7"
+    - "Kokoro CI - Python 3.8"
+    - "cla/google"
+    - "snippet-bot check"
+# List of explicit permissions to add (additive only)
+permissionRules:
+    # Team slug to add to repository permissions
+  - team: yoshi-admins
+    # Access level required, one of push|pull|admin
+    permission: admin
+  - team: yoshi-python-admins
+    permission: admin
+  - team: yoshi-python
+    permission: push
+  - team: python-samples-owners
+    permission: admin

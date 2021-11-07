@@ -37,6 +37,6 @@ or by using the helper script in the /scripts folder.
         --public-key path=rsa_cert.pem,type=rs256
 
 7. Connect a sample device using the sample app in the `mqtt_example` folder.
-8. Learn how to manage devices programatically with the sample app in the
+8. Learn how to manage devices programmatically with the sample app in the
 `manager` folder.
 

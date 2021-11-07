@@ -1,1 +1,0 @@
-google-cloud-tasks==1.5.0

@@ -86,23 +86,39 @@ To run this sample:
 
     $ python datasets.py
 
-    usage: datasets.py [-h] [--project_id PROJECT_ID]
-                       [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
-                       [--time_zone TIME_ZONE]
+    usage: datasets.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
+                       [--dataset_id DATASET_ID] [--time_zone TIME_ZONE]
                        [--destination_dataset_id DESTINATION_DATASET_ID]
-                       [--keeplist_tags KEEPLIST_TAGS] [--member MEMBER]
-                       [--role ROLE]
+                       [--member MEMBER] [--role ROLE]
                        {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,get_iam_policy,set_iam_policy,deidentify-dataset}
                        ...
 
     positional arguments:
       {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,get_iam_policy,set_iam_policy,deidentify-dataset}
-        create-dataset      Creates a dataset.
-        delete-dataset      Deletes a dataset.
-        get-dataset         Gets any metadata associated with a dataset.
-        list-datasets       Lists the datasets in the project.
-        patch-dataset       Updates dataset metadata.
-        get_iam_policy      Gets the IAM policy for the specified dataset.
+        create-dataset      Creates a dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        delete-dataset      Deletes a dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        get-dataset         Gets any metadata associated with a dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        list-datasets       Lists the datasets in the project. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        patch-dataset       Updates dataset metadata. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        get_iam_policy      Gets the IAM policy for the specified dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
         set_iam_policy      Sets the IAM policy for the specified dataset. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
@@ -114,16 +130,22 @@ To run this sample:
                             'serviceAccount:my-other-
                             app@appspot.gserviceaccount.com' A role can be any IAM
                             role, such as 'roles/viewer', 'roles/owner', or
-                            'roles/editor'
-        deidentify-dataset  Creates a new dataset containing de-identified data
-                            from the source dataset.
+                            'roles/editor' See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
+        deidentify-dataset  Uses a DICOM tag keeplist to create a new dataset
+                            containing de-identified DICOM data from the source
+                            dataset. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/master/healthcare/api-client/v1/datasets
+                            before running the sample.
 
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --cloud_region CLOUD_REGION
-                            GCP cloud region
+      --location LOCATION   GCP cloud region
       --dataset_id DATASET_ID
                             Name of dataset
       --time_zone TIME_ZONE
@@ -131,9 +153,6 @@ To run this sample:
       --destination_dataset_id DESTINATION_DATASET_ID
                             The name of the new dataset where the de-identified
                             data will be written
-      --keeplist_tags KEEPLIST_TAGS
-                            The data to keeplist, for example "PatientID" or
-                            "StudyInstanceUID"
       --member MEMBER       Member to add to IAM policy (e.g.
                             "domain:example.com")
       --role ROLE           IAM Role to give to member (e.g. "roles/viewer")

@@ -50,21 +50,26 @@ import paho.mqtt.client as mqtt
 def create_jwt(project_id, private_key_file, algorithm):
     """Create a JWT (https://jwt.io) to establish an MQTT connection."""
     token = {
-        'iat': datetime.datetime.utcnow(),
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-        'aud': project_id
+        "iat": datetime.datetime.utcnow(),
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        "aud": project_id,
     }
-    with open(private_key_file, 'r') as f:
+    with open(private_key_file, "r") as f:
         private_key = f.read()
-    print('Creating JWT using {} from private key file {}'.format(
-        algorithm, private_key_file))
+    print(
+        "Creating JWT using {} from private key file {}".format(
+            algorithm, private_key_file
+        )
+    )
     return jwt.encode(token, private_key, algorithm=algorithm)
+
+
 # [END create_jwt]
 
 
 def error_str(rc):
     """Convert a Paho error to a human readable string."""
-    return '{}: {}'.format(rc, mqtt.error_string(rc))
+    return "{}: {}".format(rc, mqtt.error_string(rc))
 
 
 class Device(object):
@@ -78,42 +83,45 @@ class Device(object):
         """Wait for the device to become connected."""
         # The wait() method takes an argument representing the
         # number of seconds to wait before the event times out.
-        print('Device is connecting...')
+        print("Device is connecting...")
         while not self.connected_event.wait(timeout):
-            raise RuntimeError('Could not connect to MQTT bridge.')
+            raise RuntimeError("Could not connect to MQTT bridge.")
+
     # [END wait_for_connection]
 
     def on_connect(self, unused_client, unused_userdata, unused_flags, rc):
         """Callback for when a device connects."""
         if rc != 0:
-            print('Error connecting:', error_str(rc))
+            print("Error connecting:", error_str(rc))
         else:
-            print('Connected successfully.')
+            print("Connected successfully.")
         self.connected_event.set()
 
     def on_disconnect(self, unused_client, unused_userdata, rc):
         """Callback for when a device disconnects."""
-        print('Disconnected:', error_str(rc))
+        print("Disconnected:", error_str(rc))
         self.connected_event.clear()
 
     def on_publish(self, unused_client, unused_userdata, unused_mid):
         """Callback when the device receives a PUBACK from the MQTT bridge."""
-        print('Published message acked.')
+        print("Published message acked.")
 
-    def on_subscribe(self, unused_client, unused_userdata, unused_mid,
-                     granted_qos):
+    def on_subscribe(self, unused_client, unused_userdata, unused_mid, granted_qos):
         """Callback when the device receives a SUBACK from the MQTT bridge."""
         if granted_qos[0] == 128:
-            print('Subscription failed.')
+            print("Subscription failed.")
         else:
-            print('Subscribed: ', granted_qos)
+            print("Subscribed: ", granted_qos)
 
     # [START on_message]
     def on_message(self, unused_client, unused_userdata, message):
         """Callback when the device receives a message on a subscription."""
         payload = str(message.payload)
-        print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
-            payload, message.topic, str(message.qos)))
+        print(
+            "Received message '{}' on topic '{}' with Qos {}".format(
+                payload, message.topic, str(message.qos)
+            )
+        )
 
         # The device will receive its latest config when it subscribes to the
         # config topic. If there is no configuration for the device, the device
@@ -122,16 +130,17 @@ class Device(object):
             return
 
         data = json.loads(payload)
-        print('Received new config.')
-        bucket_name = data['bucket_name']
-        print('Bucket name is: \'{}\''.format(bucket_name))
-        config_name = data['gcs_file_name']
-        print('Config name is: \'{}\''.format(config_name))
+        print("Received new config.")
+        bucket_name = data["bucket_name"]
+        print("Bucket name is: '{}'".format(bucket_name))
+        config_name = data["gcs_file_name"]
+        print("Config name is: '{}'".format(config_name))
         # Destination file name is a byte literal because it's a file
         # name.
-        destination_file_name = data[b'destination_file_name']
+        destination_file_name = data[b"destination_file_name"]
 
         download_blob(bucket_name, config_name, destination_file_name)
+
     # [END on_message]
 
 
@@ -143,50 +152,48 @@ def download_blob(bucket_name, config_name, destination_file_name):
 
     blob.download_to_filename(destination_file_name)
 
-    print('Config {} downloaded to {}.'.format(
-        config_name,
-        destination_file_name))
+    print("Config {} downloaded to {}.".format(config_name, destination_file_name))
 
 
 def parse_command_line_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description='Example Google Cloud IoT MQTT device connection code.')
+        description="Example Google Cloud IoT MQTT device connection code."
+    )
     parser.add_argument(
-        '--project_id',
+        "--project_id",
         default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
         required=True,
-        help='GCP cloud project name.')
+        help="GCP cloud project name.",
+    )
+    parser.add_argument("--registry_id", required=True, help="Cloud IoT registry id")
+    parser.add_argument("--device_id", required=True, help="Cloud IoT device id")
     parser.add_argument(
-        '--registry_id', required=True, help='Cloud IoT registry id')
+        "--private_key_file", required=True, help="Path to private key file."
+    )
     parser.add_argument(
-        '--device_id',
+        "--algorithm",
+        choices=("RS256", "ES256"),
         required=True,
-        help='Cloud IoT device id')
+        help="Which encryption algorithm to use to generate the JWT.",
+    )
     parser.add_argument(
-        '--private_key_file', required=True, help='Path to private key file.')
+        "--cloud_region", default="us-central1", help="GCP cloud region"
+    )
     parser.add_argument(
-        '--algorithm',
-        choices=('RS256', 'ES256'),
-        required=True,
-        help='Which encryption algorithm to use to generate the JWT.')
+        "--ca_certs",
+        default="roots.pem",
+        help="CA root certificate. Get from https://pki.google.com/roots.pem",
+    )
     parser.add_argument(
-        '--cloud_region', default='us-central1', help='GCP cloud region')
+        "--num_messages", type=int, default=100, help="Number of messages to publish."
+    )
     parser.add_argument(
-        '--ca_certs',
-        default='roots.pem',
-        help='CA root certificate. Get from https://pki.google.com/roots.pem')
-    parser.add_argument(
-        '--num_messages',
-        type=int,
-        default=100,
-        help='Number of messages to publish.')
-    parser.add_argument(
-        '--mqtt_bridge_hostname',
-        default='mqtt.googleapis.com',
-        help='MQTT bridge hostname.')
-    parser.add_argument(
-        '--mqtt_bridge_port', default=8883, help='MQTT bridge port.')
+        "--mqtt_bridge_hostname",
+        default="mqtt.googleapis.com",
+        help="MQTT bridge hostname.",
+    )
+    parser.add_argument("--mqtt_bridge_port", default=8883, help="MQTT bridge port.")
 
     return parser.parse_args()
 
@@ -196,17 +203,14 @@ def main():
 
     # Create the MQTT client and connect to Cloud IoT.
     client = mqtt.Client(
-        client_id='projects/{}/locations/{}/registries/{}/devices/{}'.format(
-            args.project_id,
-            args.cloud_region,
-            args.registry_id,
-            args.device_id))
+        client_id="projects/{}/locations/{}/registries/{}/devices/{}".format(
+            args.project_id, args.cloud_region, args.registry_id, args.device_id
+        )
+    )
     client.username_pw_set(
-        username='unused',
-        password=create_jwt(
-            args.project_id,
-            args.private_key_file,
-            args.algorithm))
+        username="unused",
+        password=create_jwt(args.project_id, args.private_key_file, args.algorithm),
+    )
     client.tls_set(ca_certs=args.ca_certs)
 
     device = Device()
@@ -222,10 +226,10 @@ def main():
     client.loop_start()
 
     # This is the topic that the device will publish telemetry events to.
-    mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
+    mqtt_telemetry_topic = "/devices/{}/events".format(args.device_id)
 
     # This is the topic that the device will receive configuration updates on.
-    mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
+    mqtt_config_topic = "/devices/{}/config".format(args.device_id)
 
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
@@ -235,18 +239,16 @@ def main():
 
     # Publish num_messages mesages to the MQTT bridge once per second.
     for i in range(1, args.num_messages + 1):
-        payload = '{}/{}-payload-{}'.format(
-            args.registry_id, args.device_id, i)
-        print('Publishing message {}/{}: \'{}\''.format(
-            i, args.num_messages, payload))
-        client.publish(mqtt_telemetry_topic, payload, qos=1)
+        payload = "{}/{}-payload-{}".format(args.registry_id, args.device_id, i)
+        print("Publishing message {}/{}: '{}'".format(i, args.num_messages, payload))
+        client.publish(request={"topic": mqtt_telemetry_topic, "messages": payload})
         # Send events every second.
         time.sleep(1)
 
     client.disconnect()
     client.loop_stop()
-    print('Finished loop successfully. Goodbye!')
+    print("Finished loop successfully. Goodbye!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

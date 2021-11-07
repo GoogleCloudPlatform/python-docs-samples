@@ -6,12 +6,18 @@
   "rebaseWhen": "never",
   "masterIssue": true,
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt"]
+    "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
   },
+  "ignorePaths" : ["composer/workflows/constraints.txt", "composer/blog/gcp-tech-blog/data-orchestration-with-composer/constraints.txt", "composer/airflow_1_samples/requirements.txt"],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
-      "updateTypes": ["minor", "major"]
+      "separateMinorPatch": true
+    },
+    {
+      "packagePatterns": ["pytest"],
+      "updateTypes": ["patch"],
+      "enabled": false
     }
   ]
 }
