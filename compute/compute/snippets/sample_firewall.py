@@ -48,9 +48,9 @@ def list_firewall_rules(project_id: str) -> Iterable:
 # [END compute_firewall_list]
 
 
-def print_firewall_rule(project_id: str, firewall_rule_name: str):
+def get_firewall_rule(project_id: str, firewall_rule_name: str) -> compute_v1.Firewall:
     firewall_client = compute_v1.FirewallsClient()
-    print(firewall_client.get(project=project_id, firewall=firewall_rule_name))
+    return firewall_client.get(project=project_id, firewall=firewall_rule_name)
 
 
 # [START compute_firewall_create]
@@ -72,14 +72,16 @@ def create_firewall_rule(
     firewall_rule.name = firewall_rule_name
     firewall_rule.direction = compute_v1.Firewall.Direction.INGRESS
 
-    tcp_80_443_allowed = compute_v1.Allowed()
-    tcp_80_443_allowed.I_p_protocol = "tcp"
-    tcp_80_443_allowed.ports = ["80", "443"]
+    allowed_ports = compute_v1.Allowed()
+    allowed_ports.I_p_protocol = "tcp"
+    allowed_ports.ports = ["80", "443"]
 
-    firewall_rule.allowed = [tcp_80_443_allowed]
+    firewall_rule.allowed = [allowed_ports]
     firewall_rule.source_ranges = ["0.0.0.0/0"]
     firewall_rule.network = network
     firewall_rule.description = "Allowing TCP traffic on port 80 and 443 from Internet."
+
+    firewall_rule.target_tags = ['web']
 
     # Note that the default value of priority for the firewall API is 1000.
     # If you check the value of `firewall_rule.priority` at this point it
@@ -164,11 +166,11 @@ if __name__ == "__main__":
         create_firewall_rule(default_project_id, rule_name)
         try:
             print("Rule created:")
-            print_firewall_rule(default_project_id, rule_name)
+            print(get_firewall_rule(default_project_id, rule_name))
             print("Updating rule priority to 10...")
             patch_firewall_priority(default_project_id, rule_name, 10)
             print("Rule updated: ")
-            print_firewall_rule(default_project_id, rule_name)
+            print(get_firewall_rule(default_project_id, rule_name))
             print(f"Deleting rule {rule_name}...")
         finally:
             delete_firewall_rule(default_project_id, rule_name)
