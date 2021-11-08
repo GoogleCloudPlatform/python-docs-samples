@@ -36,7 +36,9 @@ from get_secret_version import get_secret_version
 from iam_grant_access import iam_grant_access
 from iam_revoke_access import iam_revoke_access
 from list_secret_versions import list_secret_versions
+from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
+from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_etag import update_secret_with_etag
@@ -219,21 +221,54 @@ def test_iam_revoke_access(client, secret, iam_user):
 
 def test_list_secret_versions(capsys, secret_version, another_secret_version):
     project_id, secret_id, version_id, _ = secret_version
+    version_1 = get_secret_version(project_id, secret_id, version_id)
     _, _, another_version_id, _ = another_secret_version
+    version_2 = get_secret_version(project_id, secret_id, another_version_id)
     list_secret_versions(project_id, secret_id)
 
     out, _ = capsys.readouterr()
     assert secret_id in out
-    assert version_id in out
-    assert another_version_id in out
+    assert "Found secret version: {}".format(version_1.name) in out
+    assert "Found secret version: {}".format(version_2.name) in out
+
+
+def test_list_secret_versions_with_filter(capsys, secret_version, another_secret_version):
+    project_id, secret_id, version_id, _ = secret_version
+    enabled = get_secret_version(project_id, secret_id, version_id)
+    _, _, another_version_id, _ = another_secret_version
+    disabled = disable_secret_version(project_id, secret_id, another_version_id)
+    assert disabled.state == secretmanager.SecretVersion.State.DISABLED
+    list_secret_versions_with_filter(project_id, secret_id, "state:ENABLED")
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert "Found secret version: {}".format(enabled.name) in out
+    assert "Found secret version: {}".format(disabled.name) not in out
 
 
 def test_list_secrets(capsys, secret):
     project_id, secret_id, _ = secret
+    secret = get_secret(project_id, secret_id)
     list_secrets(project_id)
 
     out, _ = capsys.readouterr()
-    assert secret_id in out
+    assert "Found secret: {}".format(secret.name) in out
+
+
+def test_list_secrets_with_filter(capsys, secret):
+    project_id, secret_id, _ = secret
+    unlabeled = get_secret(project_id, secret_id)
+    list_secrets_with_filter(project_id, "labels.secretmanager:rocks")
+
+    out, _ = capsys.readouterr()
+    assert "Found secret: {}".format(unlabeled.name) not in out
+
+    labeled = update_secret(project_id, secret_id)
+    assert labeled.labels["secretmanager"] == "rocks"
+    list_secrets_with_filter(project_id, "labels.secretmanager:rocks")
+
+    out, _ = capsys.readouterr()
+    assert "Found secret: {}".format(labeled.name) in out
 
 
 def test_update_secret(secret):
