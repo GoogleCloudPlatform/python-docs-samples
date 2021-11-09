@@ -29,6 +29,7 @@ import os
 from unittest import mock
 
 import composer2_airflow_rest_api
+
 import pytest
 import requests
 
