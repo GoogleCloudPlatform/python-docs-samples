@@ -17,7 +17,17 @@
 """
 A sample script showing how to start and stop Google Compute Engine instances.
 """
+
+# [START compute_start_instance]
+# [START compute_start_enc_instance]
+# [START compute_stop_instance]
+# [START compute_reset_instance]
 from google.cloud import compute_v1
+
+# [END compute_reset_instance]
+# [END compute_stop_instance]
+# [END compute_start_enc_instance]
+# [END compute_start_instance]
 
 
 # [START compute_start_instance]
