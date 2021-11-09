@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime
 
 WORKDIR /pipeline
 
