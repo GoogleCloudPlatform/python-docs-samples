@@ -117,7 +117,7 @@ RUN set -ex \
     && export GNUPGHOME="$(mktemp -d)" \
     && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
     && /tmp/fetch_gpg_keys.sh \
-    && for PYTHON_VERSION in 2.7.18 3.6.13 3.7.10 3.8.8 3.9.2; do \
+    && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
         wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
         && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -165,7 +165,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 339.0.0
+ENV CLOUD_SDK_VERSION 360.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz

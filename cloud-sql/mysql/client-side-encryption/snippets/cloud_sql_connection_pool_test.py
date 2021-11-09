@@ -82,7 +82,7 @@ def test_init_unix_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
         db_pass=conn_vars["db_pass"],
-        cloud_sql_connection_name=conn_vars["instance_conn_name"],
+        instance_connection_name=conn_vars["instance_conn_name"],
         db_socket_dir=conn_vars["db_socket_dir"],
     )
 

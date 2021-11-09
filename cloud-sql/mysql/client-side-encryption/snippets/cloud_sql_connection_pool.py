@@ -47,7 +47,7 @@ def init_unix_connection_engine(
     db_user: str,
     db_pass: str,
     db_name: str,
-    cloud_sql_connection_name: str,
+    instance_connection_name: str,
     db_socket_dir: str,
 ) -> sqlalchemy.engine.base.Engine:
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
@@ -62,7 +62,7 @@ def init_unix_connection_engine(
             username=db_user,  # e.g. "my-database-user"
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
-            query={"unix_socket": f"{db_socket_dir}/{cloud_sql_connection_name}"},
+            query={"unix_socket": f"{db_socket_dir}/{instance_connection_name}"},
         ),
     )
     print("Created Unix socket connection pool")
@@ -74,7 +74,7 @@ def init_db(
     db_pass: str,
     db_name: str,
     table_name: str,
-    cloud_sql_connection_name: str = None,
+    instance_connection_name: str = None,
     db_socket_dir: str = None,
     db_host: str = None,
 ) -> sqlalchemy.engine.base.Engine:
@@ -83,7 +83,7 @@ def init_db(
         db = init_tcp_connection_engine(db_user, db_pass, db_name, db_host)
     else:
         db = init_unix_connection_engine(
-            db_user, db_pass, db_name, cloud_sql_connection_name, db_socket_dir
+            db_user, db_pass, db_name, instance_connection_name, db_socket_dir
         )
 
     # Create tables (if they don't already exist)
