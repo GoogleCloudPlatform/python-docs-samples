@@ -31,7 +31,7 @@ from unittest import mock
 import pytest
 import requests
 
-import composer2_airflow_rest_api #noqa: I100
+import composer2_airflow_rest_api  # noqa: I100
 
 COMPOSER2_WEB_SERVER_URL = os.environ["COMPOSER2_WEB_SERVER_URL"]
 DAG_CONFIG = {"test": "value"}
