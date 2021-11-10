@@ -56,7 +56,7 @@ versions.
 1.  The script does not perform any DAG modifications, does not validate that
     the DAGs are suitable to run in Airflow 2.0 and does not verify that
     suitable dependencies are installed in target environment. Airflow
-    [upgrade_check](https://airflow.apache.org/docs/apache-airflow/stable/upgrade-check.html)
+    [upgrade_check](https://airflow.apache.org/docs/apache-airflow/stable/upgrading-from-1-10/upgrade-check.html)
     can be used to troubleshoot DAG compatibility issues.
 
 1.  `dag_code` and `serialized_dag` tables are not synchronized directly.
