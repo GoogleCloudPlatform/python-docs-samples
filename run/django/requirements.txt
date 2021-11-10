@@ -1,5 +1,5 @@
 Django==3.2.9
-django-storages[google]==1.12
+django-storages[google]==1.12.3
 django-environ==0.8.1
 psycopg2-binary==2.9.1
 gunicorn==20.1.0
