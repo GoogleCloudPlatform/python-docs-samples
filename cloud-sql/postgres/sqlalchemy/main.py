@@ -244,7 +244,7 @@ def get_index_context():
 def save_vote():
     # Get the team and time the vote was cast.
     team = request.form['team']
-    time_cast = datetime.datetime.utcnow()
+    time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
         logger.warning(team)

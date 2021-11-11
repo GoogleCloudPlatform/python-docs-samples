@@ -34,6 +34,9 @@ from airflow.contrib.operators import dataproc_operator
 from airflow.utils import trigger_rule
 
 # Output file for Cloud Dataproc job.
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
 output_file = os.path.join(
     models.Variable.get('gcs_bucket'), 'wordcount',
     datetime.datetime.now().strftime('%Y%m%d-%H%M%S')) + os.sep
