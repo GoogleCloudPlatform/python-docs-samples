@@ -16,18 +16,19 @@ import os
 
 import create_job
 
-TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-TEST_LOCATION = os.getenv('LOCATION_ID', 'us-central1')
+TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+TEST_LOCATION = os.getenv("LOCATION_ID", "us-central1")
 
 
 def test_create_job(capsys):
     create_result = create_job.create_scheduler_job(
-        TEST_PROJECT_ID, TEST_LOCATION, 'my-service')
+        TEST_PROJECT_ID, TEST_LOCATION, "my-service"
+    )
     out, _ = capsys.readouterr()
-    assert 'Created job:' in out
+    assert "Created job:" in out
 
-    job_name = create_result.name.split('/')[-1]
+    job_name = create_result.name.split("/")[-1]
     create_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
 
     out, _ = capsys.readouterr()
-    assert 'Job deleted.' in out
+    assert "Job deleted." in out
