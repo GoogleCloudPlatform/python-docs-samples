@@ -38,9 +38,7 @@ def enable_certificate_authority(
     )
 
     # Create the Enable Certificate Authority Request.
-    request = privateca_v1.EnableCertificateAuthorityRequest(
-        name=ca_path,
-    )
+    request = privateca_v1.EnableCertificateAuthorityRequest(name=ca_path,)
 
     # Enable the Certificate Authority.
     operation = caServiceClient.enable_certificate_authority(request=request)
