@@ -118,40 +118,12 @@ def bigquery_project():
 
     rows_to_insert = [(u"Gary Smith", u"My email is gary@example.com")]
     harmful_rows_to_insert = [
-        (
-            u"Gandalf",
-            u"(123) 456-7890",
-            "4231 5555 6781 9876",
-            27,
-            "Male",
-            "US",
-        ),
-        (
-            u"Dumbledore",
-            u"(313) 337-1337",
-            "6291 8765 1095 7629",
-            27,
-            "Male",
-            "US",
-        ),
+        (u"Gandalf", u"(123) 456-7890", "4231 5555 6781 9876", 27, "Male", "US",),
+        (u"Dumbledore", u"(313) 337-1337", "6291 8765 1095 7629", 27, "Male", "US",),
         (u"Joe", u"(452) 123-1234", "3782 2288 1166 3030", 35, "Male", "US"),
         (u"James", u"(567) 890-1234", "8291 3627 8250 1234", 19, "Male", "US"),
-        (
-            u"Marie",
-            u"(452) 123-1234",
-            "8291 3627 8250 1234",
-            35,
-            "Female",
-            "US",
-        ),
-        (
-            u"Carrie",
-            u"(567) 890-1234",
-            "2253 5218 4251 4526",
-            35,
-            "Female",
-            "US",
-        ),
+        (u"Marie", u"(452) 123-1234", "8291 3627 8250 1234", 35, "Female", "US",),
+        (u"Carrie", u"(567) 890-1234", "2253 5218 4251 4526", 35, "Female", "US",),
     ]
 
     bigquery_client.insert_rows(table, rows_to_insert)

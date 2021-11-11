@@ -55,11 +55,7 @@ def inspect_string_with_exclusion_dict(
             "rules": [
                 {
                     "exclusion_rule": {
-                        "dictionary": {
-                            "word_list": {
-                                "words": exclusion_list
-                            },
-                        },
+                        "dictionary": {"word_list": {"words": exclusion_list}},
                         "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_FULL_MATCH,
                     }
                 }
@@ -93,6 +89,7 @@ def inspect_string_with_exclusion_dict(
             print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_string_with_exclusion_dict]
 
@@ -134,9 +131,7 @@ def inspect_string_with_exclusion_regex(
             "rules": [
                 {
                     "exclusion_rule": {
-                        "regex": {
-                            "pattern": exclusion_regex,
-                        },
+                        "regex": {"pattern": exclusion_regex},
                         "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_FULL_MATCH,
                     }
                 }
@@ -170,6 +165,7 @@ def inspect_string_with_exclusion_regex(
             print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_string_with_exclusion_regex]
 
@@ -211,11 +207,7 @@ def inspect_string_with_exclusion_dict_substring(
             "rules": [
                 {
                     "exclusion_rule": {
-                        "dictionary": {
-                            "word_list": {
-                                "words": exclusion_list
-                            },
-                        },
+                        "dictionary": {"word_list": {"words": exclusion_list}},
                         "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_PARTIAL_MATCH,
                     }
                 }
@@ -249,6 +241,7 @@ def inspect_string_with_exclusion_dict_substring(
             print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_string_with_exclusion_dict_substring]
 
@@ -293,11 +286,7 @@ def inspect_string_custom_excluding_substring(
             "rules": [
                 {
                     "exclusion_rule": {
-                        "dictionary": {
-                            "word_list": {
-                                "words": exclusion_list
-                            },
-                        },
+                        "dictionary": {"word_list": {"words": exclusion_list}},
                         "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_PARTIAL_MATCH,
                     }
                 }
@@ -332,13 +321,12 @@ def inspect_string_custom_excluding_substring(
     else:
         print("No findings.")
 
+
 # [END dlp_inspect_string_custom_excluding_substring]
 
 
 # [START dlp_inspect_string_custom_omit_overlap]
-def inspect_string_custom_omit_overlap(
-    project, content_string
-):
+def inspect_string_custom_omit_overlap(project, content_string):
     """Matches PERSON_NAME and a custom detector,
     but if they overlap only matches the custom detector
 
@@ -413,6 +401,7 @@ def inspect_string_custom_omit_overlap(
             print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_string_custom_omit_overlap]
 
@@ -489,13 +478,12 @@ def omit_name_if_also_email(
     else:
         print("No findings.")
 
+
 # [END dlp_omit_name_if_also_email]
 
 
 # [START dlp_inspect_string_without_overlap]
-def inspect_string_without_overlap(
-    project, content_string
-):
+def inspect_string_without_overlap(project, content_string):
     """Matches EMAIL_ADDRESS and DOMAIN_NAME, but DOMAIN_NAME is omitted
     if it overlaps with EMAIL_ADDRESS
 
@@ -575,6 +563,7 @@ def inspect_string_without_overlap(
     else:
         print("No findings.")
 
+
 # [END dlp_inspect_string_without_overlap]
 
 
@@ -647,13 +636,12 @@ def inspect_with_person_name_w_custom_hotword(
     else:
         print("No findings.")
 
+
 # [END inspect_with_person_name_w_custom_hotword]
 
 
 # [START dlp_inspect_string_multiple_rules]
-def inspect_string_multiple_rules(
-    project, content_string
-):
+def inspect_string_multiple_rules(project, content_string):
     """Uses the Data Loss Prevention API to modify likelihood for matches on
        PERSON_NAME combining multiple hotword and exclusion rules.
 
@@ -689,11 +677,7 @@ def inspect_string_multiple_rules(
 
     # Construct exclusion rules
     quasimodo_rule = {
-        "dictionary": {
-            "word_list": {
-                "words": ["quasimodo"]
-            },
-        },
+        "dictionary": {"word_list": {"words": ["quasimodo"]}},
         "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_PARTIAL_MATCH,
     }
     redacted_rule = {
@@ -740,6 +724,7 @@ def inspect_string_multiple_rules(
             print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_string_multiple_rules]
 

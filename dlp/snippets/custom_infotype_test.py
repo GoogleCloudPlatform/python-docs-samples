@@ -71,9 +71,7 @@ def test_inspect_string_custom_omit_overlap(capsys):
 
 
 def test_omit_name_if_also_email(capsys):
-    custom_infotype.omit_name_if_also_email(
-        GCLOUD_PROJECT, "alice@example.com"
-    )
+    custom_infotype.omit_name_if_also_email(GCLOUD_PROJECT, "alice@example.com")
 
     # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
     out, _ = capsys.readouterr()
@@ -111,9 +109,7 @@ def test_inspect_string_multiple_rules_patient(capsys):
 
 
 def test_inspect_string_multiple_rules_doctor(capsys):
-    custom_infotype.inspect_string_multiple_rules(
-        GCLOUD_PROJECT, "doctor: Jane Doe"
-    )
+    custom_infotype.inspect_string_multiple_rules(GCLOUD_PROJECT, "doctor: Jane Doe")
 
     out, _ = capsys.readouterr()
     assert "No findings" in out

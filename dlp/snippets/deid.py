@@ -290,12 +290,12 @@ def deidentify_with_fpe(
 
 # [START dlp_deidentify_deterministic]
 def deidentify_with_deterministic(
-        project,
-        input_str,
-        info_types,
-        surrogate_type=None,
-        key_name=None,
-        wrapped_key=None,
+    project,
+    input_str,
+    info_types,
+    surrogate_type=None,
+    key_name=None,
+    wrapped_key=None,
 ):
     """Deidentifies sensitive data in a string using deterministic encryption.
     Args:
@@ -338,7 +338,9 @@ def deidentify_with_deterministic(
 
     # Add surrogate type
     if surrogate_type:
-        crypto_replace_deterministic_config["surrogate_info_type"] = {"name": surrogate_type}
+        crypto_replace_deterministic_config["surrogate_info_type"] = {
+            "name": surrogate_type
+        }
 
     # Construct inspect configuration dictionary
     inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
@@ -371,6 +373,7 @@ def deidentify_with_deterministic(
 
     # Print results
     print(response.item.value)
+
 
 # [END dlp_deidentify_deterministic]
 
@@ -468,11 +471,7 @@ def reidentify_with_fpe(
 
 # [START dlp_reidentify_deterministic]
 def reidentify_with_deterministic(
-        project,
-        input_str,
-        surrogate_type=None,
-        key_name=None,
-        wrapped_key=None,
+    project, input_str, surrogate_type=None, key_name=None, wrapped_key=None,
 ):
     """Deidentifies sensitive data in a string using deterministic encryption.
     Args:
@@ -546,6 +545,7 @@ def reidentify_with_deterministic(
 
     # Print results
     print(response.item.value)
+
 
 # [END dlp_reidentify_deterministic]
 
