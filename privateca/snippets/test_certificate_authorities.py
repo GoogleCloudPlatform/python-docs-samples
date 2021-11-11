@@ -67,14 +67,8 @@ def test_enable_and_disable_certificate_authority(
 
     out, _ = capsys.readouterr()
 
-    assert re.search(
-        f"Enabled Certificate Authority: {CA_NAME}",
-        out,
-    )
-    assert re.search(
-        f"Disabled Certificate Authority: {CA_NAME}",
-        out,
-    )
+    assert re.search(f"Enabled Certificate Authority: {CA_NAME}", out,)
+    assert re.search(f"Disabled Certificate Authority: {CA_NAME}", out,)
 
 
 def test_delete_certificate_authority(capsys: typing.Any) -> None:
@@ -90,7 +84,4 @@ def test_delete_certificate_authority(capsys: typing.Any) -> None:
 
     out, _ = capsys.readouterr()
 
-    assert re.search(
-        f"Successfully deleted Certificate Authority: {CA_NAME}",
-        out,
-    )
+    assert re.search(f"Successfully deleted Certificate Authority: {CA_NAME}", out,)

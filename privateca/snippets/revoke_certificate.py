@@ -22,10 +22,7 @@ import google.cloud.security.privateca_v1 as privateca_v1
 
 
 def revoke_certificate(
-    project_id: str,
-    location: str,
-    ca_pool_name: str,
-    certificate_name: str,
+    project_id: str, location: str, ca_pool_name: str, certificate_name: str,
 ) -> None:
     """
     Revoke an issued certificate. Once revoked, the certificate will become invalid and will expire post its lifetime.
