@@ -61,4 +61,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     disable_secret_version_with_etag(
-        args.project_id, args.secret_id, args.version_id, args.etag)
+        args.project_id, args.secret_id, args.version_id, args.etag
+    )
