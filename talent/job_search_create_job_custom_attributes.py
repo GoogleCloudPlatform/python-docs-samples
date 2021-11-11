@@ -52,7 +52,7 @@ def create_job(project_id, tenant_id, company_id, requisition_id):
         requisition_id=requisition_id,
         description="This is a description of this job",
         language_code="en-us",
-        custom_attributes={"FOR_STUDENTS": custom_attribute}
+        custom_attributes={"FOR_STUDENTS": custom_attribute},
     )
 
     response = client.create_job(parent=parent, job=job)

@@ -26,7 +26,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 @pytest.fixture(scope="module")
 def test_tenant():
     client = talent.TenantServiceClient()
-    external_id = f'test_tenant_{uuid.uuid4().hex}'
+    external_id = f"test_tenant_{uuid.uuid4().hex}"
     parent = f"projects/{PROJECT_ID}"
     tenant = {"external_id": external_id}
     resp = client.create_tenant(parent=parent, tenant=tenant)
