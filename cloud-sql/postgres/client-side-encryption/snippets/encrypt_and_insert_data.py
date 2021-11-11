@@ -38,7 +38,7 @@ def main() -> None:
     # Set if connecting using Unix sockets:
     db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
 
-    cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
+    instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
     # e.g. "project-name:region:instance-name"
 
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
@@ -58,7 +58,7 @@ def main() -> None:
         db_pass,
         db_name,
         table_name,
-        cloud_sql_connection_name,
+        instance_connection_name,
         db_socket_dir,
         db_host,
     )
