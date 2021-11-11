@@ -115,7 +115,7 @@ def batch_update_jobs(
         description=description_one,
         application_info=application_info,
         addresses=addresses,
-        language_code=language_code_one
+        language_code=language_code_one,
     )
 
     uris_2 = [job_application_url_two]
@@ -129,7 +129,7 @@ def batch_update_jobs(
         description=description_two,
         application_info=application_info_2,
         addresses=addresses_2,
-        language_code=language_code_two
+        language_code=language_code_two,
     )
 
     jobs = [jobs_element, jobs_element_2]

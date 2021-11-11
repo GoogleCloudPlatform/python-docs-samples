@@ -35,9 +35,7 @@ def search_jobs(project_id, tenant_id):
     session_id = "Hashed session identifier"
     user_id = "Hashed user identifier"
     request_metadata = talent.RequestMetadata(
-        domain=domain,
-        session_id=session_id,
-        user_id=user_id
+        domain=domain, session_id=session_id, user_id=user_id
     )
     commute_method = talent.CommuteMethod.TRANSIT
     seconds = 1800
@@ -55,9 +53,7 @@ def search_jobs(project_id, tenant_id):
     # Iterate over all results
     results = []
     request = talent.SearchJobsRequest(
-        parent=parent,
-        request_metadata=request_metadata,
-        job_query=job_query,
+        parent=parent, request_metadata=request_metadata, job_query=job_query,
     )
     for response_item in client.search_jobs(request=request).matching_jobs:
         print(f"Job summary: {response_item.job_summary}")

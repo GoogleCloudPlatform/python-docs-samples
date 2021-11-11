@@ -35,11 +35,11 @@ def search_jobs(project_id, tenant_id):
     session_id = "Hashed session identifier"
     user_id = "Hashed user identifier"
     request_metadata = talent.RequestMetadata(
-        domain=domain,
-        session_id=session_id,
-        user_id=user_id
+        domain=domain, session_id=session_id, user_id=user_id
     )
-    importance_level = talent.SearchJobsRequest.CustomRankingInfo.ImportanceLevel.EXTREME
+    importance_level = (
+        talent.SearchJobsRequest.CustomRankingInfo.ImportanceLevel.EXTREME
+    )
     ranking_expression = "(someFieldLong + 25) * 0.25"
     custom_ranking_info = {
         "importance_level": importance_level,
@@ -53,7 +53,7 @@ def search_jobs(project_id, tenant_id):
         parent=parent,
         request_metadata=request_metadata,
         custom_ranking_info=custom_ranking_info,
-        order_by=order_by
+        order_by=order_by,
     )
     for response_item in client.search_jobs(request=request).matching_jobs:
         print(f"Job summary: {response_item.job_summary}")
