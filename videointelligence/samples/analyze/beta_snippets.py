@@ -876,14 +876,16 @@ if __name__ == "__main__":
     video_streaming_automl_classification_parser.add_argument("model_id")
 
     video_streaming_automl_object_tracking_parser = subparsers.add_parser(
-        "streaming-automl-object-tracking", help=streaming_automl_object_tracking.__doc__
+        "streaming-automl-object-tracking",
+        help=streaming_automl_object_tracking.__doc__,
     )
     video_streaming_automl_object_tracking_parser.add_argument("path")
     video_streaming_automl_object_tracking_parser.add_argument("project_id")
     video_streaming_automl_object_tracking_parser.add_argument("model_id")
 
     video_streaming_automl_action_recognition_parser = subparsers.add_parser(
-        "streaming-automl-action-recognition", help=streaming_automl_action_recognition.__doc__
+        "streaming-automl-action-recognition",
+        help=streaming_automl_action_recognition.__doc__,
     )
     video_streaming_automl_action_recognition_parser.add_argument("path")
     video_streaming_automl_action_recognition_parser.add_argument("project_id")
