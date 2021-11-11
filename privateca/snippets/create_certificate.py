@@ -54,8 +54,7 @@ def create_certificate(
 
     # Set the Public Key and its format.
     public_key = privateca_v1.PublicKey(
-        key=public_key_bytes,
-        format_=privateca_v1.PublicKey.KeyFormat.PEM,
+        key=public_key_bytes, format_=privateca_v1.PublicKey.KeyFormat.PEM,
     )
 
     subject_config = privateca_v1.CertificateConfig.SubjectConfig(
@@ -67,12 +66,10 @@ def create_certificate(
     x509_parameters = privateca_v1.X509Parameters(
         key_usage=privateca_v1.KeyUsage(
             base_key_usage=privateca_v1.KeyUsage.KeyUsageOptions(
-                digital_signature=True,
-                key_encipherment=True,
+                digital_signature=True, key_encipherment=True,
             ),
             extended_key_usage=privateca_v1.KeyUsage.ExtendedKeyUsageOptions(
-                server_auth=True,
-                client_auth=True,
+                server_auth=True, client_auth=True,
             ),
         ),
     )

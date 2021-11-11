@@ -39,9 +39,7 @@ def create_ca_pool(project_id: str, location: str, ca_pool_name: str) -> None:
 
     # Create the pool request.
     request = privateca_v1.CreateCaPoolRequest(
-        parent=location_path,
-        ca_pool_id=ca_pool_name,
-        ca_pool=ca_pool,
+        parent=location_path, ca_pool_id=ca_pool_name, ca_pool=ca_pool,
     )
 
     # Create the CA pool.
