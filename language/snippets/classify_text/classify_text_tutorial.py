@@ -42,7 +42,7 @@ def classify(text, verbose=True):
     document = language_v1.Document(
         content=text, type_=language_v1.Document.Type.PLAIN_TEXT
     )
-    response = language_client.classify_text(request={'document': document})
+    response = language_client.classify_text(request={"document": document})
     categories = response.categories
 
     result = {}
