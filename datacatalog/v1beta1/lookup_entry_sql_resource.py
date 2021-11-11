@@ -26,6 +26,7 @@
 def sample_lookup_entry(sql_name: str):
     # [START data_catalog_lookup_entry_sql_resource_v1beta1]
     from google.cloud import datacatalog_v1beta1
+
     """
     Lookup Entry using SQL resource
 

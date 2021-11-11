@@ -93,7 +93,7 @@ def entry(client, entry_group_name):
             type_=datacatalog_v1beta1.EntryType.DATA_STREAM,
             name="samples_test_entry",
             user_specified_system="sample_system",
-        )
+        ),
     )
 
     entry = client.create_entry(request)

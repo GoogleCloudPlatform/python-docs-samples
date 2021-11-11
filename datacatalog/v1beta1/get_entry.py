@@ -28,6 +28,7 @@ def sample_get_entry(
 ):
     # [START data_catalog_get_entry_v1beta1]
     from google.cloud import datacatalog_v1beta1
+
     """
     Get Entry
 
@@ -59,7 +60,9 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", type_=str, default="[Google Cloud Project ID]")
-    parser.add_argument("--location_id", type_=str, default="[Google Cloud Location ID]")
+    parser.add_argument(
+        "--location_id", type_=str, default="[Google Cloud Location ID]"
+    )
     parser.add_argument("--entry_group_id", type_=str, default="[Entry Group ID]")
     parser.add_argument("--entry_id", type_=str, default="[Entry ID]")
     args = parser.parse_args()

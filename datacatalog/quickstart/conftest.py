@@ -25,9 +25,7 @@ import pytest
 
 def temp_suffix():
     now = datetime.datetime.now()
-    return "{}_{}".format(
-        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
-    )
+    return "{}_{}".format(now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8])
 
 
 @pytest.fixture(scope="session")
@@ -42,7 +40,9 @@ def bigquery_client(credentials, project_id):
 
 @pytest.fixture(scope="session")
 def default_credentials():
-    return google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    return google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
 
 @pytest.fixture(scope="session")
