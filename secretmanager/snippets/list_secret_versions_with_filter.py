@@ -40,7 +40,9 @@ def list_secret_versions_with_filter(project_id, secret_id, filter_str="state:EN
     parent = client.secret_path(project_id, secret_id)
 
     # List all secret versions.
-    for version in client.list_secret_versions(request={"parent": parent, "filter": filter_str}):
+    for version in client.list_secret_versions(
+        request={"parent": parent, "filter": filter_str}
+    ):
         print("Found secret version: {}".format(version.name))
 
 

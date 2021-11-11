@@ -232,7 +232,9 @@ def test_list_secret_versions(capsys, secret_version, another_secret_version):
     assert "Found secret version: {}".format(version_2.name) in out
 
 
-def test_list_secret_versions_with_filter(capsys, secret_version, another_secret_version):
+def test_list_secret_versions_with_filter(
+    capsys, secret_version, another_secret_version
+):
     project_id, secret_id, version_id, _ = secret_version
     enabled = get_secret_version(project_id, secret_id, version_id)
     _, _, another_version_id, _ = another_secret_version
