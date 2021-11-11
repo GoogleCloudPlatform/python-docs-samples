@@ -48,8 +48,10 @@ class MicrophoneStream:
         self._audio_interface = pyaudio.PyAudio()
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
-            channels=1, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk,
+            channels=1,
+            rate=self._rate,
+            input=True,
+            frames_per_buffer=self._chunk,
             # Run the audio stream asynchronously to fill the buffer object.
             # This is necessary so that the input device's buffer doesn't
             # overflow while the calling thread makes network requests, etc.
@@ -97,7 +99,7 @@ class MicrophoneStream:
                 except queue.Empty:
                     break
 
-            yield b''.join(data)
+            yield b"".join(data)
 
 
 def listen_print_loop(responses):
@@ -106,45 +108,46 @@ def listen_print_loop(responses):
     The responses passed is a generator that will block until a response
     is provided by the server.
     """
-    translation = ''
+    translation = ""
     for response in responses:
         # Once the transcription settles, the response contains the
         # END_OF_SINGLE_UTTERANCE event.
-        if (response.speech_event_type ==
-                SpeechEventType.END_OF_SINGLE_UTTERANCE):
+        if response.speech_event_type == SpeechEventType.END_OF_SINGLE_UTTERANCE:
 
-            print(u'\nFinal translation: {0}'.format(translation))
+            print(u"\nFinal translation: {0}".format(translation))
             return 0
 
         result = response.result
         translation = result.text_translation_result.translation
 
-        print(u'\nPartial translation: {0}'.format(translation))
+        print(u"\nPartial translation: {0}".format(translation))
 
 
 def do_translation_loop():
-    print('Begin speaking...')
+    print("Begin speaking...")
 
     client = media.SpeechTranslationServiceClient()
 
     speech_config = media.TranslateSpeechConfig(
-        audio_encoding='linear16',
-        source_language_code='en-US',
-        target_language_code='es-ES')
+        audio_encoding="linear16",
+        source_language_code="en-US",
+        target_language_code="es-ES",
+    )
 
     config = media.StreamingTranslateSpeechConfig(
-        audio_config=speech_config, single_utterance=True)
+        audio_config=speech_config, single_utterance=True
+    )
 
     # The first request contains the configuration.
     # Note that audio_content is explicitly set to None.
-    first_request = media.StreamingTranslateSpeechRequest(
-        streaming_config=config)
+    first_request = media.StreamingTranslateSpeechRequest(streaming_config=config)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
-        mic_requests = (media.StreamingTranslateSpeechRequest(
-            audio_content=content)
-            for content in audio_generator)
+        mic_requests = (
+            media.StreamingTranslateSpeechRequest(audio_content=content)
+            for content in audio_generator
+        )
 
         requests = itertools.chain(iter([first_request]), mic_requests)
 
@@ -159,14 +162,14 @@ def do_translation_loop():
 def main():
     while True:
         print()
-        option = input('Press any key to translate or \'q\' to quit: ')
+        option = input("Press any key to translate or 'q' to quit: ")
 
-        if option.lower() == 'q':
+        if option.lower() == "q":
             break
 
         do_translation_loop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 # [END mediatranslation_translate_from_mic]
