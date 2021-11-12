@@ -50,7 +50,7 @@ def add_task(client: datastore.Client, description: str):
     # Apply new field values and save the Task entity to Datastore
     task.update(
         {
-            "created": datetime.datetime.utcnow(),
+            "created": datetime.datetime.now(tz=datetime.timezone.utc),
             "description": description,
             "done": False,
         }
