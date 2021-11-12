@@ -183,14 +183,10 @@ def create_finding(source_name):
     )
 
     request = CreateFindingRequest(
-        parent=source_name,
-        finding_id=finding_id,
-        finding=finding,
+        parent=source_name, finding_id=finding_id, finding=finding,
     )
     # Call The API.
-    created_finding = client.create_finding(
-        request=request
-    )
+    created_finding = client.create_finding(request=request)
     print(created_finding)
     # [END securitycenter_create_finding]
     return created_finding
@@ -241,11 +237,7 @@ def create_finding_with_source_properties(source_name):
     )
 
     created_finding = client.create_finding(
-        request={
-            "parent": source_name,
-            "finding_id": finding_id,
-            "finding": finding
-        }
+        request={"parent": source_name, "finding_id": finding_id, "finding": finding}
     )
     print(created_finding)
     # [END securitycenter_create_finding_with_source_properties]
@@ -283,10 +275,7 @@ def update_finding(source_name):
         event_time=event_time,
     )
     updated_finding = client.update_finding(
-        request={
-            "finding": finding,
-            "update_mask": field_mask,
-        }
+        request={"finding": finding, "update_mask": field_mask}
     )
 
     print(
@@ -304,6 +293,7 @@ def update_finding_state(source_name):
 
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
+
     # Create a client.
     client = securitycenter.SecurityCenterClient()
     # source_name is the resource path for a source that has been
@@ -554,11 +544,7 @@ def group_findings_at_time(source_name):
     read_time = datetime.utcnow() - timedelta(days=1)
 
     group_result_iterator = client.group_findings(
-        request={
-            "parent": source_name,
-            "group_by": "category",
-            "read_time": read_time,
-        }
+        request={"parent": source_name, "group_by": "category", "read_time": read_time}
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)

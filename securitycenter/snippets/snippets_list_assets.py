@@ -86,11 +86,7 @@ def list_assets_with_filters_and_read_time(organization_id):
 
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        request={
-            "parent": org_name,
-            "filter": project_filter,
-            "read_time": read_time,
-        }
+        request={"parent": org_name, "filter": project_filter, "read_time": read_time}
     )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
