@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2021 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ def random_failure(rate):
 
     random_failure = random.random()
     if (random_failure < rate):
-        raise Exception("Task failed.")  # Fail job - will trigger retry
+        raise Exception("Task failed.")
 
 
 # Start script
@@ -61,4 +61,4 @@ if __name__ == '__main__':
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
         print(json.dumps({'message': str(err), 'severity': 'ERROR'}))
-        sys.exit(1)
+        sys.exit(1)  # Trigger retry by exiting the process
