@@ -11,10 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
 import googleapiclient.discovery
 
 
 def create_transfer_client():
     return googleapiclient.discovery.build('storagetransfer', 'v1')
-# [END all]

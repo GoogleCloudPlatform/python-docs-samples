@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
 """Command-line sample that creates a one-time transfer from Amazon S3 to
 Google Cloud Storage.
 
@@ -31,7 +30,7 @@ import json
 import googleapiclient.discovery
 
 
-# [START main]
+# [START storagetransfer_transfer_from_aws_apiary]
 def main(description, project_id, start_date, start_time, source_bucket,
          access_key_id, secret_access_key, sink_bucket):
     """Create a one-time transfer from Amazon S3 to Google Cloud Storage."""
@@ -76,7 +75,7 @@ def main(description, project_id, start_date, start_time, source_bucket,
     result = storagetransfer.transferJobs().create(body=transfer_job).execute()
     print('Returned transferJob: {}'.format(
         json.dumps(result, indent=4)))
-# [END main]
+# [END storagetransfer_transfer_from_aws_apiary]
 
 
 if __name__ == '__main__':
@@ -108,4 +107,3 @@ if __name__ == '__main__':
         args.access_key_id,
         args.secret_access_key,
         args.sink_bucket)
-# [END all]

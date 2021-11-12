@@ -11,8 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
-
 """Command-line sample that creates a daily transfer from a standard
 GCS bucket to a Nearline GCS bucket for objects untouched for 30 days.
 
@@ -30,7 +28,7 @@ import json
 import googleapiclient.discovery
 
 
-# [START main]
+# [START storagetransfer_transfer_to_nearline_apiary]
 def main(description, project_id, start_date, start_time, source_bucket,
          sink_bucket):
     """Create a daily transfer from Standard to Nearline Storage class."""
@@ -72,7 +70,7 @@ def main(description, project_id, start_date, start_time, source_bucket,
     result = storagetransfer.transferJobs().create(body=transfer_job).execute()
     print('Returned transferJob: {}'.format(
         json.dumps(result, indent=4)))
-# [END main]
+# [END storagetransfer_transfer_to_nearline_apiary]
 
 
 if __name__ == '__main__':
@@ -97,4 +95,3 @@ if __name__ == '__main__':
         start_time,
         args.source_bucket,
         args.sink_bucket)
-# [END all]

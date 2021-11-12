@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
-
 """Command-line sample that checks the status of an in-process transfer.
 
 This sample is used on this page:
@@ -30,7 +28,7 @@ import json
 import googleapiclient.discovery
 
 
-# [START main]
+# [START storagetransfer_transfer_check_apiary]
 def main(project_id, job_name):
     """Review the transfer operations associated with a transfer job."""
     storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
@@ -45,7 +43,7 @@ def main(project_id, job_name):
         filter=filterString).execute()
     print('Result of transferOperations/list: {}'.format(
         json.dumps(result, indent=4, sort_keys=True)))
-# [END main]
+# [END storagetransfer_transfer_check_apiary]
 
 
 if __name__ == '__main__':
@@ -58,4 +56,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args.project_id, args.job_name)
-# [END all]
