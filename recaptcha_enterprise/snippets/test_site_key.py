@@ -59,7 +59,7 @@ def test_update_site_key(capsys: CaptureFixture, recaptcha_site_key: str) -> Non
     update_site_key(
         project_id=GOOGLE_CLOUD_PROJECT,
         recaptcha_site_key=recaptcha_site_key,
-        domain_name=DOMAIN_NAME
+        domain_name=DOMAIN_NAME,
     )
     out, _ = capsys.readouterr()
     assert re.search("reCAPTCHA Site key successfully updated ! ", out)
