@@ -1,27 +1,31 @@
-# Cloud Run Hello World Sample
-
-This sample shows how to deploy a Hello World application to Cloud Run.
-
-[![Run in Google Cloud][run_img]][run_link]
-
-[run_img]: https://storage.googleapis.com/cloudrun/button.svg
-[run_link]: https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&cloudshell_working_dir=run/helloworld
+# Cloud Run Sample
 
 ## Build
 
+* Set an environment variable with your GCP Project ID:
+
 ```
-docker build --tag helloworld:python .
+export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+```
+
+* Use a [Buildpack](https://github.com/GoogleCloudPlatform/buildpacks) to build the container:
+
+```sh
+gcloud builds submit --pack image=gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
 ```
 
 ## Run Locally
 
-```
-docker run --rm -p 9090:8080 -e PORT=8080 helloworld:python
+```sh
+docker run --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
+
+# With environment variables 
+docker run --rm -e FAIL_RATE=0.9 -e SLEEP_MS=1000 gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
 ```
 
 ## Test
 
-```
+```sh
 pytest
 ```
 
@@ -29,17 +33,4 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 
 ## Deploy
 
-```sh
-# Set an environment variable with your GCP Project ID
-export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
-
-# Submit a build using Google Cloud Build
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
-
-# Deploy to Cloud Run
-gcloud run deploy helloworld \
---image gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
-```
-
-
-For more details on how to work with this sample read the [Python Cloud Run Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run)
+~coming soon~

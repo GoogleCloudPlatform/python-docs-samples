@@ -13,47 +13,52 @@
 # limitations under the License.
 
 import json
-import time
 import os
 import random
+import sys
+import time
 
 # Retrieve Job-defined env vars
 TASK_NUM = os.getenv('TASK_NUM') or 0
-ATTEMPT_NUM = os.getenv('ATTEMPT_NUM')
+ATTEMPT_NUM = os.getenv('ATTEMPT_NUM') or 0
 # Retrieve User-defined env vars
 SLEEP_MS = os.getenv('SLEEP_MS')
 FAIL_RATE = os.getenv('FAIL_RATE')
 
+
 # Define main script
-def main():
+def main(sleep_ms=None, fail_rate=None):
     print(f"Starting Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM}...")
     # Simulate work
-    if (SLEEP_MS):
+    if (sleep_ms):
         # Wait for a specific amount of time
-        time.sleep(SLEEP_MS/1000)  # Convert to seconds
+        time.sleep(float(sleep_ms)/1000)  # Convert to seconds
 
     # Simulate errors
-    if (FAIL_RATE):
-        random_failure(FAIL_RATE)
+    if (fail_rate):
+        try:
+            random_failure(float(fail_rate))
+        except Exception:
+            raise Exception(f"Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM} failed.")
 
     print(f"Completed Task #{TASK_NUM}.")
 
 
-
 # Throw an error based on fail rate
 def random_failure(rate):
-    rate = float(rate)
-    if (rate == None or rate < 0 or rate > 1):
-        print(f"Invalid FAIL_RATE env var value: {FAIL_RATE}. Must be a float between 0 and 1 inclusive.")
+    if (rate is None or rate < 0 or rate > 1):
+        print(f"Invalid FAIL_RATE env var value: {rate}. Must be a float between 0 and 1 inclusive.")
         return
 
     random_failure = random.random()
-    if (random_failure < rate ):
-        msg = f"Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM} failed."
-        print(json.dumps({'message': msg, 'severity': 'ERROR'}))
-        raise Exception(msg)  # Fail job - will trigger retry
+    if (random_failure < rate):
+        raise Exception("Task failed.")  # Fail job - will trigger retry
 
 
 # Start script
 if __name__ == '__main__':
-    main()
+    try:
+        main(SLEEP_MS, FAIL_RATE)
+    except Exception as err:
+        print(json.dumps({'message': str(err), 'severity': 'ERROR'}))
+        sys.exit(1)
