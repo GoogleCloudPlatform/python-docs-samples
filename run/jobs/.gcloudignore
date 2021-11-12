@@ -4,3 +4,6 @@ README.md
 *.pyd
 __pycache__
 .pytest_cache
+venv/
+main_test.py
+requirements-test.txt
