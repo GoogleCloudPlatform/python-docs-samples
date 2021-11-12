@@ -61,4 +61,4 @@ if __name__ == '__main__':
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
         print(json.dumps({'message': str(err), 'severity': 'ERROR'}))
-        sys.exit(1)  # Trigger retry by exiting the process
+        sys.exit(1)  # Trigger Task retry by exiting the process
