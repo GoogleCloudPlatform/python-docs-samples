@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 """Demonstrates how to obtain short-lived credentials with identity federation."""
+# [START iam_workload_identity_aws_credential]
 import json
 import urllib
 
@@ -41,8 +42,11 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
     token = {
         "url": request.url,
         "method": request.method,
-        "headers": request.headers.items()
+        "headers": []
     }
+    for key, value in request.headers.items():
+        token["headers"].append({"key": key, "value": value})
+
     # The token lets workload identity federation verify the identity without revealing the AWS secret access key.
     print("Token:\n%s" % json.dumps(token, indent=2, sort_keys=True))
     print("URL encoded token:\n%s" % urllib.parse.quote(json.dumps(token)))
@@ -59,3 +63,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# [END iam_workload_identity_aws_credential]
