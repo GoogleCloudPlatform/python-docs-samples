@@ -22,7 +22,7 @@ Google Cloud Storage.
 
 import argparse
 
-# [START storage_transfer_create_one_time_aws_transfer]
+# [START storagetransfer_transfer_from_aws]
 from datetime import datetime
 
 from google.cloud import storage_transfer
@@ -86,7 +86,7 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
     print(f'Created transferJob: {result.name}')
 
 
-# [END storage_transfer_create_one_time_aws_transfer]
+# [END storagetransfer_transfer_from_aws]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)

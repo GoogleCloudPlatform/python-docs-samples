@@ -22,7 +22,7 @@ transfer job.
 
 import argparse
 
-# [START storage_transfer_check_latest_transfer_operation]
+# [START storagetransfer_get_latest_transfer_operation]
 from google.cloud import storage_transfer
 
 
@@ -51,7 +51,7 @@ def check_latest_transfer_operation(project_id: str, job_name: str):
         print(f"Transfer job {job_name} has not ran yet.")
 
 
-# [END storage_transfer_check_latest_transfer_operation]
+# [END storagetransfer_get_latest_transfer_operation]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)

@@ -22,7 +22,7 @@ Storage bucket to another.
 
 import argparse
 
-# [START storage_transfer_quickstart]
+# [START storagetransfer_quickstart]
 from datetime import datetime
 
 from google.cloud import storage_transfer
@@ -74,7 +74,7 @@ def create_one_time_transfer(project_id: str, source_bucket: str,
     print(f'Created transferJob: {result.name}')
 
 
-# [END storage_transfer_quickstart]
+# [END storagetransfer_quickstart]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)

@@ -22,7 +22,7 @@ Nearline GCS bucket for objects untouched for 30 days.
 
 import argparse
 
-# [START storage_transfer_nearline_daily_migration]
+# [START storagetransfer_transfer_to_nearline]
 from datetime import datetime
 
 from google.cloud import storage_transfer
@@ -81,7 +81,7 @@ def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
     print(f'Created transferJob: {result.name}')
 
 
-# [END storage_transfer_nearline_daily_migration]
+# [END storagetransfer_transfer_to_nearline]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
