@@ -40,7 +40,7 @@ def create_one_time_transfer(project_id: str, source_bucket: str,
     # Google Cloud Storage source bucket name
     # source_bucket = 'my-gcs-source-bucket'
 
-    # Google Cloud Storage destination bucket name
+    # Google Cloud Storage destination bucket name. Should be a Nearline bucket
     # sink_bucket = 'my-gcs-destination-bucket'
 
     now = datetime.now()

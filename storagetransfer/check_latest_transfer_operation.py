@@ -34,7 +34,7 @@ def check_latest_transfer_operation(project_id: str, job_name: str):
     # The ID of the Google Cloud Platform Project that owns the job
     # project_id = 'my-project-id'
 
-    # Google Cloud Storage source bucket name
+    # Storage Transfer Service job name
     # job_name = 'transferJobs/1234567890'
 
     transfer_job = client.get_transfer_job({
