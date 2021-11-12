@@ -157,7 +157,7 @@ def init_unix_connection_engine(db_config):
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
     db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-    cloud_sql_connection_name = os.environ["CLOUD_SQL_CONNECTION_NAME"]
+    instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
 
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
@@ -170,7 +170,7 @@ def init_unix_connection_engine(db_config):
             query={
                 "unix_socket": "{}/{}".format(
                     db_socket_dir,  # e.g. "/cloudsql"
-                    cloud_sql_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+                    instance_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
             }
         ),
         **db_config
@@ -237,7 +237,7 @@ def get_index_context():
 def save_vote():
     # Get the team and time the vote was cast.
     team = request.form["team"]
-    time_cast = datetime.datetime.utcnow()
+    time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
         logger.warning(team)

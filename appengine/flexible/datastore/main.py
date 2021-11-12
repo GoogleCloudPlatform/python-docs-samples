@@ -48,7 +48,7 @@ def index():
     entity = datastore.Entity(key=ds.key('visit'))
     entity.update({
         'user_ip': user_ip,
-        'timestamp': datetime.datetime.utcnow()
+        'timestamp': datetime.datetime.now(tz=datetime.timezone.utc)
     })
 
     ds.put(entity)
