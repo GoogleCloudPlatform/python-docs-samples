@@ -1,2 +1,2 @@
 future==0.18.2
-google-cloud-texttospeech==2.7.1
+google-cloud-texttospeech==2.8.0
