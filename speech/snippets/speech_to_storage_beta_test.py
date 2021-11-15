@@ -38,14 +38,16 @@ language_code = "en-US"
 
 
 def test_export_transcript_to_storage_beta(bucket, capsys):
-    transcript = speech_to_storage_beta.export_transcript_to_storage_beta(
+    results = speech_to_storage_beta.export_transcript_to_storage_beta(
         INPUT_STORAGE_URI,
         OUTPUT_STORAGE_URI,
         encoding,
         sample_rate_hertz,
         language_code,
+        BUCKET_NAME,
+        BUCKET_PREFIX,
     )
-    assert "I'm here" in transcript
+    assert len(results) > 0
 
 
 @pytest.fixture
