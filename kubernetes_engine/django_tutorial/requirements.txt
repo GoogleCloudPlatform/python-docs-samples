@@ -6,4 +6,4 @@ wheel==0.37.0
 gunicorn==20.0.4; python_version > '3.0'
 gunicorn==19.10.0; python_version < '3.0'
 # psycopg2==2.8.4 # uncomment if you prefer to build from source
-psycopg2-binary==2.9.1
+psycopg2-binary==2.9.2
