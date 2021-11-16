@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START composer_cicd_unittest_dockerfile]
 
 FROM python:3.9
 
@@ -32,3 +33,4 @@ ENV DAGS /dags
 WORKDIR $DAGS
 COPY . ./
 CMD ["pytest", "-s", "dags/example_dag_test.py"]
+# [END composer_cicd_unittest_dockerfile]
