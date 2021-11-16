@@ -51,9 +51,8 @@ def test_set_usage_export_bucket_default(capsys: typing.Any,
     assert(uel.bucket_name == '')
     assert(uel.report_name_prefix == '')
 
-
-def test_set_usage_export_bucket_custom(capsys: typing.Any,
-                                        temp_bucket: storage.Bucket) -> None:
+    # Testing setting a custom export bucket. Keeping this in one test function
+    # to avoid race conditions, as this is a global setting for the project.
     set_usage_export_bucket(project_id=PROJECT, bucket_name=temp_bucket.name,
                             report_name_prefix=TEST_PREFIX)
     time.sleep(5)  # To make sure the settings are properly updated

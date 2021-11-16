@@ -112,10 +112,10 @@ def disable_usage_export(project_id: str) -> None:
     """
     projects_client = compute_v1.ProjectsClient()
 
-    # Updating the setting with None will disable the
-    # usage report generation.
+    # Setting `usage_export_location_resource` to an
+    # empty object will disable the usage report generation.
     operation = projects_client.set_usage_export_bucket(
-        project=project_id, usage_export_location_resource=None)
+        project=project_id, usage_export_location_resource={})
 
     op_client = compute_v1.GlobalOperationsClient()
 
