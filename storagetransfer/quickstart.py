@@ -23,8 +23,6 @@ Storage bucket to another.
 import argparse
 
 # [START storagetransfer_quickstart]
-from datetime import datetime
-
 from google.cloud import storage_transfer
 
 
@@ -43,22 +41,10 @@ def create_one_time_transfer(project_id: str, source_bucket: str,
     # Google Cloud Storage destination bucket name. Should be a Nearline bucket
     # sink_bucket = 'my-gcs-destination-bucket'
 
-    now = datetime.now()
-    # Setting the same day, month, and year signifies a one-time transfer
-    one_time_schedule = {
-        'day': now.day,
-        'month': now.month,
-        'year': now.year
-    }
-
     transfer_job_request = storage_transfer.CreateTransferJobRequest({
         'transfer_job': {
             'project_id': project_id,
             'status': storage_transfer.TransferJob.Status.ENABLED,
-            'schedule': {
-                'schedule_start_date': one_time_schedule,
-                'schedule_end_date': one_time_schedule
-            },
             'transfer_spec': {
                 'gcs_data_source': {
                     'bucket_name': source_bucket,
@@ -70,8 +56,13 @@ def create_one_time_transfer(project_id: str, source_bucket: str,
         }
     })
 
-    result = client.create_transfer_job(transfer_job_request)
-    print(f'Created transferJob: {result.name}')
+    transfer_job = client.create_transfer_job(transfer_job_request)
+    client.run_transfer_job({
+        'job_name': transfer_job.name,
+        'project_id': project_id
+    })
+
+    print(f'Created and ran transfer job: {transfer_job.name}')
 
 
 # [END storagetransfer_quickstart]
