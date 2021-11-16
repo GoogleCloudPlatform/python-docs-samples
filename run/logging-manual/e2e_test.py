@@ -178,7 +178,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     resource_names = [f"projects/{PROJECT}"]
     # We add timestamp for making the query faster.
     now = datetime.datetime.now(datetime.timezone.utc)
-    filter_date = now - datetime.timedelta(minutes=1)
+    filter_date = now - datetime.timedelta(minutes=3)
     filters = (
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_revision "
