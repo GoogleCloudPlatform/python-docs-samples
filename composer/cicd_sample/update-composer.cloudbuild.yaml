@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#TODO(coleleah): update command
+# [START composer_cicd_dagsync_yaml]
 steps:
   #update the composer environment
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['composer', 'environments', 'update', '${_COMPOSER_NAME}', '--update-pypi-packages-from-file', 'requirements-composer.txt', '--location', '${_COMPOSER_REGION}']
     id: 'update-composer-env'
 timeout: 3600s #1 hour timeout accommodates the long running Composer upgrade operation
+# [END composer_cicd_dagsync_yaml]
