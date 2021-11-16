@@ -18,12 +18,14 @@ FROM python:3.9
 ENV PYTHONUNBUFFERED True
 
 COPY requirements.txt ./
-COPY requirements-composer.txt ./
 COPY requirements-test.txt ./
+COPY constraints.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Airflow requires the use of a constraints file for proper pip installation
+# See http://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html
+
+RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 RUN pip install --no-cache-dir -r requirements-test.txt
-RUN pip install --no-cache-dir -r requirements-composer.txt
 
 #copy dag code to container image
 ENV DAGS /dags
