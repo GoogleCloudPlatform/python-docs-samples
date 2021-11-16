@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import multiprocessing
 import os
 import re
 import time
@@ -19,18 +19,23 @@ import typing
 
 from _pytest.capture import CaptureFixture
 from flask import Flask, render_template, url_for
+from google.cloud import recaptchaenterprise_v1
+from google.cloud.recaptchaenterprise_v1 import Assessment
 import pytest
+
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-import create_assessment
-
-# TODO(developer): Replace these variables before running the sample.
+from annotate_assessment import annotate_assessment
+from create_assessment import create_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
 
+
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 DOMAIN_NAME = "localhost"
+# Switch the multi-processing style for Python > 3.7: https://github.com/pytest-dev/pytest-flask/issues/104
+multiprocessing.set_start_method("fork")
 
 
 @pytest.fixture(scope="session")
@@ -72,15 +77,27 @@ def recaptcha_site_key() -> str:
 
 
 @pytest.mark.usefixtures("live_server")
-def test_create_assessment(
+def test_assessment(
     capsys: CaptureFixture, recaptcha_site_key: str, browser: WebDriver
 ) -> None:
+    # Get token.
     token, action = get_token(recaptcha_site_key, browser)
-    assess_token(recaptcha_site_key, token=token, action=action)
-    out, _ = capsys.readouterr()
-    assert re.search("The reCAPTCHA score for this token is: ", out)
-    score = out.rsplit(":", maxsplit=1)[1].strip()
+    # Create assessment.
+    assessment_response = assess_token(recaptcha_site_key, token=token, action=action)
+    score = str(assessment_response.risk_analysis.score)
+    client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
+    # Parse the assessment_response.name which is of the format:
+    # {'project': 'my-project-id', 'assessment': 'assessment-id'}
+    assessment_name = client.parse_assessment_path(assessment_response.name).get(
+        "assessment"
+    )
+    assert assessment_name != ""
     set_score(browser, score)
+
+    # Annotate assessment.
+    annotate_assessment(project_id=GOOGLE_CLOUD_PROJECT, assessment_id=assessment_name)
+    out, _ = capsys.readouterr()
+    assert re.search("Annotated response sent successfully !", out)
 
 
 def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
@@ -100,8 +117,8 @@ def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
     return token, action
 
 
-def assess_token(recaptcha_site_key: str, token: str, action: str) -> None:
-    create_assessment.create_assessment(
+def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment:
+    return create_assessment(
         project_id=GOOGLE_CLOUD_PROJECT,
         recaptcha_site_key=recaptcha_site_key,
         token=token,
