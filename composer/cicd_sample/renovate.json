@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": ["main"],
+  "masterIssue": true,
+  "pip_requirements": {
+    "fileMatch": ["requirements-composer.txt"]
+  }
+}
