@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START composer_cicd_unittest_yaml]
 
 steps:
   # build the docker image
@@ -21,3 +22,4 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', 'gcr.io/${PROJECT_ID}/cicd:${SHORT_SHA}']
     id: 'test-dags'
+# [END composer_cicd_unittest_yaml]
