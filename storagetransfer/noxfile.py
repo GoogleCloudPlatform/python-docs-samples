@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -94,9 +94,11 @@ ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10"]
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG['ignored_versions']
 
-TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
+TESTED_VERSIONS = sorted(
+    [v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
-INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
+INSTALL_LIBRARY_FROM_SOURCE = bool(
+    os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
 
 # Error if a python version is missing
 nox.options.error_on_missing_interpreters = True
@@ -192,7 +194,8 @@ def _session_tests(session: nox.sessions.Session, post_install: Callable = None)
 
     if os.path.exists("requirements-test.txt"):
         if os.path.exists("constraints-test.txt"):
-            session.install("-r", "requirements-test.txt", "-c", "constraints-test.txt")
+            session.install("-r", "requirements-test.txt",
+                            "-c", "constraints-test.txt")
         else:
             session.install("-r", "requirements-test.txt")
 
