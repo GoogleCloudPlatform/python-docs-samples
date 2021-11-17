@@ -17,7 +17,7 @@ import os
 import googleapiclient.discovery
 
 import check_latest_transfer_operation
-import get_transfer_job_with_retries
+import get_transfer_job_with_retries_apiary
 
 
 def test_latest_transfer_operation(capsys):
@@ -80,7 +80,7 @@ def test_get_transfer_Job_with_retries(capsys):
 
     retries = 3
 
-    get_transfer_job_with_retries.get_transfer_job_with_retries(
+    get_transfer_job_with_retries_apiary.get_transfer_job_with_retries(
         project_id, job_name, retries
     )
     out, _ = capsys.readouterr()
