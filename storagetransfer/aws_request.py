@@ -51,7 +51,7 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
     # Google Cloud Storage destination bucket name
     # sink_bucket = 'my-gcs-destination-bucket'
 
-    now = datetime.now()
+    now = datetime.utcnow()
     # Setting the same day, month, and year signifies a one-time transfer
     one_time_schedule = {
         'day': now.day,

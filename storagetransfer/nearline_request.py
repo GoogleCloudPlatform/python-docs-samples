@@ -101,5 +101,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     create_daily_nearline_30_day_migration(
-        start_date=datetime.now(),
+        start_date=datetime.utcnow(),
         **vars(args))
