@@ -22,7 +22,7 @@ from google.cloud import compute_v1
 
 import pytest
 
-from samples.snippets.sample_start_stop import start_instance, start_instance_with_encryption_key, stop_instance
+from sample_start_stop import start_instance, start_instance_with_encryption_key, stop_instance
 
 PROJECT = google.auth.default()[1]
 
@@ -43,6 +43,7 @@ def _make_disk(raw_key: bytes = None):
     disk.auto_delete = True
     disk.boot = True
     disk.type_ = compute_v1.AttachedDisk.Type.PERSISTENT
+    disk.device_name = 'disk-1'
 
     if raw_key:
         disk.disk_encryption_key = compute_v1.CustomerEncryptionKey()
