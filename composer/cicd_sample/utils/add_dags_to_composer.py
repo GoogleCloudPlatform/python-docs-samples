@@ -26,23 +26,25 @@ def _create_dags_list(dags_directory):
 
 def upload_dags_to_composer(dags_directory, bucket_name):
     temp_dir, dags = _create_dags_list(dags_directory)
-    print(temp_dir, dags)
-    # Note - the GCS client library does not currently support batch requests on uploads
-    # if you have a large number of files, consider using
-    # the Python subprocess module to run gsutil -m cp -r on your dags
-    # See https://cloud.google.com/storage/docs/gsutil/commands/cp for more info
 
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
 
-    for dag in dags:
-        # Remove path to temp dir
-        dag = dag.replace(f"{temp_dir}/", "")
-        print(dag)
-        #Upload to your bucket
-        blob = bucket.blob(dag)
-        blob.upload_from_string(dag)
-        print(f"File {dag} uploaded to {bucket_name}/{dag}.")
+    if len(dags) > 0:
+        # Note - the GCS client library does not currently support batch requests on uploads
+        # if you have a large number of files, consider using
+        # the Python subprocess module to run gsutil -m cp -r on your dags
+        # See https://cloud.google.com/storage/docs/gsutil/commands/cp for more info
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+
+        for dag in dags:
+            # Remove path to temp dir
+            dag = dag.replace(f"{temp_dir}/", "")
+            #Upload to your bucket
+            blob = bucket.blob(dag)
+            blob.upload_from_string(dag)
+            print(f"File {dag} uploaded to {bucket_name}/{dag}.")
+    else:
+        print("No DAGs to upload.")
 
 if __name__ == "__main__":
     DAGS_DIRECTORY = "../dags/"
