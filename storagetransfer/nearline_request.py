@@ -26,7 +26,7 @@ import argparse
 from datetime import datetime
 
 from google.cloud import storage_transfer
-from google.protobuf import duration_pb2 as duration
+from google.protobuf.duration_pb2 import Duration
 
 
 def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
@@ -65,10 +65,9 @@ def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
                     'bucket_name': sink_bucket,
                 },
                 'object_conditions': {
-                    'min_time_elapsed_since_last_modification':
-                        duration.Duration(
-                            seconds=2592000  # 30 days
-                        )
+                    'min_time_elapsed_since_last_modification': Duration(
+                        seconds=2592000  # 30 days
+                    )
                 },
                 'transfer_options': {
                     'delete_objects_from_source_after_transfer': True
