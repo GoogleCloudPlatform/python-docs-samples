@@ -48,12 +48,12 @@ def get_transfer_job_with_retries(
     transfer_job = client.get_transfer_job({
         'project_id': project_id,
         'job_name': job_name,
-        'retry': Retry(maximum=max_retry_duration)
-    })
+    },
+        retry=Retry(maximum=max_retry_duration)
+    )
 
-    print(
-        f"Fetched transfer job: {transfer_job.name} with a max retry duration "
-        "of {max_retry_duration}s")
+    print(f"Fetched transfer job: {transfer_job.name} "
+          f"with a max retry duration of {max_retry_duration}s")
 
 
 # [END storagetransfer_create_retry_handler]
