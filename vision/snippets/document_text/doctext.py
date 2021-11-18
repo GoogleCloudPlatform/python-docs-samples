@@ -43,22 +43,31 @@ def draw_boxes(image, bounds, color):
     draw = ImageDraw.Draw(image)
 
     for bound in bounds:
-        draw.polygon([
-            bound.vertices[0].x, bound.vertices[0].y,
-            bound.vertices[1].x, bound.vertices[1].y,
-            bound.vertices[2].x, bound.vertices[2].y,
-            bound.vertices[3].x, bound.vertices[3].y], None, color)
+        draw.polygon(
+            [
+                bound.vertices[0].x,
+                bound.vertices[0].y,
+                bound.vertices[1].x,
+                bound.vertices[1].y,
+                bound.vertices[2].x,
+                bound.vertices[2].y,
+                bound.vertices[3].x,
+                bound.vertices[3].y,
+            ],
+            None,
+            color,
+        )
     return image
 
 
+# [START vision_document_text_tutorial_detect_bounds]
 def get_document_bounds(image_file, feature):
-    # [START vision_document_text_tutorial_detect_bounds]
     """Returns document bounds given an image."""
     client = vision.ImageAnnotatorClient()
 
     bounds = []
 
-    with io.open(image_file, 'rb') as image_file:
+    with io.open(image_file, "rb") as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -72,31 +81,31 @@ def get_document_bounds(image_file, feature):
             for paragraph in block.paragraphs:
                 for word in paragraph.words:
                     for symbol in word.symbols:
-                        if (feature == FeatureType.SYMBOL):
+                        if feature == FeatureType.SYMBOL:
                             bounds.append(symbol.bounding_box)
 
-                    if (feature == FeatureType.WORD):
+                    if feature == FeatureType.WORD:
                         bounds.append(word.bounding_box)
 
-                if (feature == FeatureType.PARA):
+                if feature == FeatureType.PARA:
                     bounds.append(paragraph.bounding_box)
 
-            if (feature == FeatureType.BLOCK):
+            if feature == FeatureType.BLOCK:
                 bounds.append(block.bounding_box)
 
     # The list `bounds` contains the coordinates of the bounding boxes.
-    # [END vision_document_text_tutorial_detect_bounds]
     return bounds
+# [END vision_document_text_tutorial_detect_bounds]
 
 
 def render_doc_text(filein, fileout):
     image = Image.open(filein)
     bounds = get_document_bounds(filein, FeatureType.BLOCK)
-    draw_boxes(image, bounds, 'blue')
+    draw_boxes(image, bounds, "blue")
     bounds = get_document_bounds(filein, FeatureType.PARA)
-    draw_boxes(image, bounds, 'red')
+    draw_boxes(image, bounds, "red")
     bounds = get_document_bounds(filein, FeatureType.WORD)
-    draw_boxes(image, bounds, 'yellow')
+    draw_boxes(image, bounds, "yellow")
 
     if fileout != 0:
         image.save(fileout)
@@ -104,11 +113,11 @@ def render_doc_text(filein, fileout):
         image.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # [START vision_document_text_tutorial_run_application]
     parser = argparse.ArgumentParser()
-    parser.add_argument('detect_file', help='The image for text detection.')
-    parser.add_argument('-out_file', help='Optional output file', default=0)
+    parser.add_argument("detect_file", help="The image for text detection.")
+    parser.add_argument("-out_file", help="Optional output file", default=0)
     args = parser.parse_args()
 
     render_doc_text(args.detect_file, args.out_file)
