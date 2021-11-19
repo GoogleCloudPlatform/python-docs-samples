@@ -222,15 +222,14 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
 
     client = requests.session()
     client.mount("https://", adapter)
-    print(auth_token)
-    print(token)
+
     # Can successfully make a request
-    response = client.get(service_url, headers={"Authorization": f"Bearer {auth_token}"})
+    response = client.get(service_url, headers={"Authorization": f"Bearer {auth_token}, Bearer {token}"})
     assert response.status_code == 200
  
     # Can make post with token
     response = client.post(
-        service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
+        service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {auth_token},Bearer {token}"}
     )
     assert response.status_code == 200
     assert "Vote successfully cast" in response.content.decode("UTF-8")
