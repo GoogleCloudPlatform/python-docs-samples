@@ -1,9 +1,27 @@
 # How to become a contributor and submit your own code
 
+Patches are always welcome! 
+
+If you're interested in contributing a new code sample or making large changes to existing samples,
+please open an issue for discussion first.
+
+## Contributing A Patch
+
+1. Submit an issue describing your proposed change to this repository.
+2. A repo owner will respond to your issue promptly. If you don't see a response within
+   a few days, please ping the owner assignd to your issue.
+3. If your proposed change is accepted, and you haven't already done so, sign a
+   Contributor License Agreement (see details above).
+4. Fork this repo, develop and test your code changes. Tests are required for all
+   samples. See the [Authoring Guide](AUTHORING_GUIDE.md) for details.
+5. Ensure that your code adheres to the existing style in the sample to which
+   you are contributing.
+6. Ensure that your code has an appropriate set of unit tests which all pass.
+7. Submit a pull request.
+
 ## Contributor License Agreements
 
-We'd love to accept your sample apps and patches! Before we can take them, we
-have to jump a couple of legal hurdles.
+Before we can take contributions, we have to jump a couple of legal hurdles.
 
 Please fill out either the individual or corporate Contributor License
 Agreement (CLA).
@@ -16,18 +34,6 @@ Agreement (CLA).
 Follow either of the two links above to access the appropriate CLA and
 instructions for how to sign and return it. Once we receive it, we'll
 be able to accept your pull requests.
-
-## Contributing A Patch
-
-1. Submit an issue describing your proposed change to the repo in question.
-1. The repo owner will respond to your issue promptly.
-1. If your proposed change is accepted, and you haven't already done so, sign a
-   Contributor License Agreement (see details above).
-1. Fork the desired repo, develop and test your code changes.
-1. Ensure that your code adheres to the existing style in the sample to which
-   you are contributing.
-1. Ensure that your code has an appropriate set of unit tests which all pass.
-1. Submit a pull request.
 
 ## Setting up a development environment
 

@@ -5,6 +5,9 @@
 # https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
 
 
+# Prefer GitHub teams over individuals to make it easier to find a suitable owner
+# when someone is OOO or leaves the team.
+
 # The python-samples-owners team is the default owner for anything not
 # explicitly taken by someone else.
 *                               @GoogleCloudPlatform/python-samples-owners
