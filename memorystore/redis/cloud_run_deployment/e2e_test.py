@@ -59,14 +59,15 @@ def redis_host():
 def container_image():
     # Build container image for Cloud Run deployment
     image_name = f"gcr.io/{PROJECT}/test-visit-count-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "cp",
             "cloud_run_deployment/Dockerfile",
             ".",
-        ], check=True
+        ]
     )
-    subprocess.run(
+
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -75,14 +76,15 @@ def container_image():
             image_name,
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
+
     yield image_name
 
-    subprocess.run(["rm", "Dockerfile"], check=True)
+    subprocess.check_call(["rm", "Dockerfile"])
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -92,7 +94,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
 
 
@@ -100,7 +102,7 @@ def container_image():
 def deployed_service(container_image, redis_host):
     # Deploy image to Cloud Run
     service_name = f"test-visit-count-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -117,12 +119,12 @@ def deployed_service(container_image, redis_host):
             f"REDISHOST={redis_host},REDISPORT=6379",
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
     yield service_name
 
     # Delete Cloud Run service
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -134,7 +136,7 @@ def deployed_service(container_image, redis_host):
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
 
 
