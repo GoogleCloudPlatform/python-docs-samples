@@ -12,12 +12,12 @@ please open an issue for discussion first.
    a few days, please ping the owner assignd to your issue.
 3. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
-5. Fork this repo, develop and test your code changes. Tests are required for all
+4. Fork this repo, develop and test your code changes. Tests are required for all
    samples. See the [Authoring Guide](AUTHORING_GUIDE.md) for details.
-6. Ensure that your code adheres to the existing style in the sample to which
+5. Ensure that your code adheres to the existing style in the sample to which
    you are contributing.
-7. Ensure that your code has an appropriate set of unit tests which all pass.
-8. Submit a pull request.
+6. Ensure that your code has an appropriate set of unit tests which all pass.
+7. Submit a pull request.
 
 ## Contributor License Agreements
 
