@@ -37,7 +37,7 @@ def upload_dags_to_composer(dags_directory, bucket_name):
         # See https://cloud.google.com/storage/docs/gsutil/commands/cp for more info
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
-
+        
         for dag in dags:
             # Remove path to temp dir
             dag = dag.replace(f"{temp_dir}/", "")
@@ -45,6 +45,7 @@ def upload_dags_to_composer(dags_directory, bucket_name):
             blob = bucket.blob(dag)
             blob.upload_from_string(dag)
             print(f"File {dag} uploaded to {bucket_name}/{dag}.")
+
     else:
         print("No DAGs to upload.")
 
