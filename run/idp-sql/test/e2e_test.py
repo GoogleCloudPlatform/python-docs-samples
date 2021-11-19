@@ -192,17 +192,17 @@ def jwt_token() -> str:
         .stdout.strip()
         .decode()
     )
-    print(auth_token)
+
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
-    print(custom_token)
-    # adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    adapter = HTTPAdapter(max_retries=retry_strategy)
 
     client = requests.session()
-    # client.mount("https://", adapter)
+    client.mount("https://", adapter)
 
     resp = client.post(
         f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key={IDP_KEY}",
-        data=json.dumps({"token": auth_token, "returnSecureToken": True}),
+        data=json.dumps({"token": custom_token, "returnSecureToken": True}),
     )
     response = resp.json()
     assert "error" not in response.keys()
