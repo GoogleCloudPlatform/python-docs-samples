@@ -46,7 +46,7 @@ owner to review your code for product-specific needs.
 In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
 from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
 
-Feel free to reach out to your assigned reviewer if it's been a few days and you haven't gotten a response!
+Please reach out to your assigned reviewer if it's been more than 2 days and you haven't gotten a response!
 
 ### How do I set up my environment?
 
@@ -102,7 +102,7 @@ started with using a service or API — it should be in a _quickstart_ folder.
 
 ### Python Versions
 
-Samples should support Python 3.6, 3.7, and 3.8.
+Samples should support Python 3.6, 3.7, 3.8, and 3.9.
 
 If the API or service your sample works with has specific Python version
 requirements different from those mentioned above, the sample should support
