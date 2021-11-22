@@ -31,8 +31,10 @@ WORKDIR $DAGS
 COPY . ./
 ARG dags_directory
 ARG dags_bucket
+
+ENV DAGS_DIRECTORY=${dags_directory}
+ENV DAGS_BUCKET=${dags_bucket}
 #TODO change to be templated
-# CMD ["python", "add_dags_to_composer.py", "--dags_directory=\"dags/\"", "--dags_bucket=\"leah-playground\""]
-CMD ["python", "add_dags_to_composer.py", "--dags_directory=dags_directory", "--dags_bucket=dags_bucket"]
+CMD python ../add_dags_to_composer.py --dags_directory=$DAGS_DIRECTORY --dags_bucket=$DAGS_BUCKET
 
 # [END composer_cicd_add_dags_to_environment_dockerfile]

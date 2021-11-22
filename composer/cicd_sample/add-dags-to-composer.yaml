@@ -17,7 +17,7 @@
 steps:
   # build the docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'add-dags-to-composer.Dockerfile', '--build-arg', 'dags_directory=\"dags/\"', '--build-arg', 'dags_bucket=\"leah-playground\"', '-t', 'gcr.io/${PROJECT_ID}/cicd/add-dags-to-composer:${SHORT_SHA}', '.'] # tag docker image with commit sha
+    args: ['build', '-f', 'add-dags-to-composer.Dockerfile', '--build-arg', 'dags_directory=dags/', '--build-arg', 'dags_bucket=leah-playground', '-t', 'gcr.io/${PROJECT_ID}/cicd/add-dags-to-composer:${SHORT_SHA}', '.'] # tag docker image with commit sha
     id: 'docker build'
   # run the dag tests
   - name: 'gcr.io/cloud-builders/docker'
