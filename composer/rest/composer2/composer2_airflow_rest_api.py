@@ -85,6 +85,7 @@ def trigger_dag(web_server_url: str, dag_id: str, data: dict) -> str:
         return response.text
 # [END composer_2_trigger_dag_for_import]
 
+
 if __name__ == "__main__":
 
     # TODO(developer): replace with your values
