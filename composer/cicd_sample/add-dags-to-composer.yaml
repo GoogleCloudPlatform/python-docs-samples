@@ -15,12 +15,14 @@
 #TODO(coleleah): update command with variable
 # [START composer_cicd_dagsync_yaml]
 steps:
-  # build the docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'add-dags-to-composer.Dockerfile', '--build-arg', 'dags_directory=dags/', '--build-arg', 'dags_bucket=leah-playground', '-t', 'gcr.io/${PROJECT_ID}/cicd/add-dags-to-composer:${SHORT_SHA}', '.'] # tag docker image with commit sha
-    id: 'docker build'
-  # run the dag tests
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', 'gcr.io/${PROJECT_ID}/cicd/add-dags-to-composer:${SHORT_SHA}']
-    id: 'test-dags'
+  # install dependencies
+  - name: python
+    entrypoint: pip
+    args: ["install", "-r", "utils/requirements.txt", "--user"]
+
+  # run
+  - name: python
+    entrypoint: python
+    args: ["utils/add_dags_to_composer.py", "--dags_directory=dags/", "--dags_bucket=leah-playground"]
+
 # [END composer_cicd_dagsync_yaml]
