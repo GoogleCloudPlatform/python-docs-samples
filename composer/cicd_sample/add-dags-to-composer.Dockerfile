@@ -21,7 +21,7 @@ ENV PYTHONUNBUFFERED True
 
 
 COPY utils/requirements.txt ./
-COPY utils/add_dags_to_composer_environment.py ./
+COPY utils/add_dags_to_composer.py ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
