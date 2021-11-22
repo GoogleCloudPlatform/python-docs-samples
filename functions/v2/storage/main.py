@@ -34,4 +34,6 @@ def hello_gcs(cloudevent):
     print(f"Metageneration: {metageneration}")
     print(f"Created: {timeCreated}")
     print(f"Updated: {updated}")
+
+
 # [END functions_helloworld_storage]
