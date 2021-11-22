@@ -35,7 +35,7 @@ MEMORYSTORE_REDIS_NAME = "static-test-instance"
 @pytest.fixture
 def redis_host():
     # Get the Redis instance's IP
-    redis_host = subprocess.run(
+    redis_host = subprocess.check_output(
         [
             "gcloud",
             "redis",
@@ -47,9 +47,7 @@ def redis_host():
             "--project",
             PROJECT,
         ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
+    ).strip().decode()
     yield redis_host
 
     # no deletion needs to happen, this is a "get" of a static instance
@@ -59,14 +57,14 @@ def redis_host():
 def container_image():
     # Build container image for Cloud Run deployment
     image_name = f"gcr.io/{PROJECT}/test-visit-count-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_output(
         [
             "cp",
             "cloud_run_deployment/Dockerfile",
             ".",
-        ], check=True
+        ],
     )
-    subprocess.run(
+    subprocess.check_output(
         [
             "gcloud",
             "builds",
@@ -75,14 +73,14 @@ def container_image():
             image_name,
             "--project",
             PROJECT,
-        ], check=True
+        ],
     )
     yield image_name
 
-    subprocess.run(["rm", "Dockerfile"], check=True)
+    subprocess.check_output(["rm", "Dockerfile"])
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_output(
         [
             "gcloud",
             "container",
@@ -92,7 +90,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ],
     )
 
 
@@ -100,7 +98,7 @@ def container_image():
 def deployed_service(container_image, redis_host):
     # Deploy image to Cloud Run
     service_name = f"test-visit-count-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_output(
         [
             "gcloud",
             "run",
@@ -117,12 +115,12 @@ def deployed_service(container_image, redis_host):
             f"REDISHOST={redis_host},REDISPORT=6379",
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
     yield service_name
 
     # Delete Cloud Run service
-    subprocess.run(
+    subprocess.check_output(
         [
             "gcloud",
             "run",
@@ -134,14 +132,14 @@ def deployed_service(container_image, redis_host):
             "--quiet",
             "--project",
             PROJECT,
-        ], check=True
+        ]
     )
 
 
 @pytest.fixture
 def service_url_auth_token(deployed_service):
     # Get Cloud Run service URL and auth token
-    service_url = subprocess.run(
+    service_url = subprocess.check_output(
         [
             "gcloud",
             "run",
@@ -154,14 +152,10 @@ def service_url_auth_token(deployed_service):
             "--project",
             PROJECT,
         ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
-    auth_token = subprocess.run(
+    ).strip().decode()
+    auth_token = subprocess.check_output(
         ["gcloud", "auth", "print-identity-token"],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
+    ).strip().decode()
 
     yield service_url, auth_token
 
