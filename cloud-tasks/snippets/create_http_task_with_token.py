@@ -16,13 +16,7 @@ from __future__ import print_function
 
 
 def create_http_task(
-    project,
-    queue,
-    location,
-    url,
-    service_account_email,
-    audience=None,
-    payload=None,
+    project, queue, location, url, service_account_email, audience=None, payload=None,
 ):
     # [START cloud_tasks_create_http_task_with_token]
     """Create a task for a given queue with an arbitrary payload."""
@@ -49,7 +43,10 @@ def create_http_task(
         "http_request": {  # Specify the type of request.
             "http_method": tasks_v2.HttpMethod.POST,
             "url": url,  # The full url path that the task will be sent to.
-            "oidc_token": {"service_account_email": service_account_email, "audience": audience},
+            "oidc_token": {
+                "service_account_email": service_account_email,
+                "audience": audience,
+            },
         }
     }
 
