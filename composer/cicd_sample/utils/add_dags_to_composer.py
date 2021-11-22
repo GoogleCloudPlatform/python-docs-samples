@@ -2,14 +2,12 @@
 # remove tests
 # gsutil cp what's left
 
-import os
+import argparse
 import tempfile
 from shutil import copytree, ignore_patterns
 import glob
 # Imports the Google Cloud client library
 from google.cloud import storage
-from google.api_core.exceptions import Forbidden
-
 
 
 def _create_dags_list(dags_directory):
