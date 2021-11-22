@@ -36,7 +36,7 @@ def deployed_service():
     connector = os.environ['CONNECTOR']
     ip_address = os.environ['IP_ADDRESS']
 
-    subprocess.run(
+    subprocess.check_call(
         [
             'gcloud',
             'builds',
@@ -46,13 +46,12 @@ def deployed_service():
             '--project',
             PROJECT,
             f'--substitutions=_SERVICE_NAME={service_name},_FILESTORE_IP_ADDRESS={ip_address},_CONNECTOR={connector}'
-        ],
-        check=True,
+        ]
     )
 
     yield service_name
 
-    subprocess.run(
+    subprocess.check_call(
         [
             'gcloud',
             'run',
@@ -64,8 +63,7 @@ def deployed_service():
             '--quiet',
             '--project',
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 

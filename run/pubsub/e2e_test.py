@@ -38,7 +38,7 @@ IMAGE_NAME = f"gcr.io/{PROJECT}/pubsub-test-{SUFFIX}"
 @pytest.fixture
 def container_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -48,13 +48,12 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -64,8 +63,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -73,7 +71,7 @@ def container_image():
 def deployed_service(container_image):
     # Deploy image to Cloud Run
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -86,13 +84,12 @@ def deployed_service(container_image):
             PROJECT,
             "--platform=managed",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield CLOUD_RUN_SERVICE
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -104,8 +101,7 @@ def deployed_service(container_image):
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
