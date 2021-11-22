@@ -50,10 +50,14 @@ def upload_dags_to_composer(dags_directory, bucket_name):
         print("No DAGs to upload.")
 
 if __name__ == "__main__":
-    DAGS_DIRECTORY = "../dags/"
-    BUCKET="your-bucket"
-    upload_dags_to_composer(DAGS_DIRECTORY, BUCKET)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--dags_directory', help='Relative path to the directory containing your DAGs')
+    parser.add_argument('--dags_bucket', help='Name of the DAGs bucket of your Composer environment without the gs:// prefix')
 
+    args = parser.parse_args()
 
+    upload_dags_to_composer(args.dags_directory, args.dags_bucket)
 
 
