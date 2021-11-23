@@ -73,7 +73,7 @@ client library repository `googleapis/python-{api}`. Other samples should be pla
 `python-docs-samples`.
 
 **Library repositories:** Each sample should be in a folder under the top-level samples folder `samples`
-in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/master/samples)
+in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/main/samples)
 for an example.
 
 **python-docs-samples:** Each sample should be in a folder under the top-level folder of
@@ -788,7 +788,7 @@ environment variable.
 
 The resources required by tests can usually be found in the `./resources`
 folder inside the `samples/snippets` directory in client libraries, as in
-[this example](https://github.com/googleapis/python-automl/tree/master/samples/snippets/resources).
+[this example](https://github.com/googleapis/python-automl/tree/main/samples/snippets/resources).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 
