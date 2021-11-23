@@ -1,4 +1,4 @@
-# Copyright 2015 Google LLC
+# Copyright 2021 Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,10 +14,10 @@
 # [BEGIN storagetransfer_create_transfer_client_apiary]
 """A sample for creating a Storage Transfer Service client."""
 
-import googleapiclient.discovery
+from google.cloud import storage_transfer
 
 
 def create_transfer_client():
-    return googleapiclient.discovery.build('storagetransfer', 'v1')
+    return storage_transfer.StorageTransferServiceClient()
 
 # [END storagetransfer_create_transfer_client_apiary]
