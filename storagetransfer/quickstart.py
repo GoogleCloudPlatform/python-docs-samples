@@ -70,15 +70,15 @@ def create_one_time_transfer(project_id: str, source_bucket: str,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project_id',
+        '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
         required=True)
     parser.add_argument(
-        '--source_bucket',
+        '--source-bucket',
         help='S3 source bucket name',
         required=True)
     parser.add_argument(
-        '--sink_bucket',
+        '--sink-bucket',
         help='Cloud Storage bucket name',
         required=True)
 

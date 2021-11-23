@@ -61,15 +61,15 @@ def get_transfer_job_with_retries(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project_id',
+        '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
         required=True)
     parser.add_argument(
-        '--job_name',
+        '--job-name',
         help='The transfer job to get',
         required=True)
     parser.add_argument(
-        '--max_retry_duration',
+        '--max-retry-duration',
         help='The maximum amount of time to delay in seconds',
         type=float,
         default=60)

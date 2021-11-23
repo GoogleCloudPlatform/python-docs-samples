@@ -91,23 +91,23 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project_id',
+        '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
         required=True)
     parser.add_argument(
-        '--source_bucket',
+        '--source-bucket',
         help='AWS S3 source bucket name',
         required=True)
     parser.add_argument(
-        '--aws_access_key_id',
+        '--aws-access-key-id',
         help='AWS access key ID',
         required=True)
     parser.add_argument(
-        '--aws_secret_access_key',
+        '--aws-secret-access-key',
         help='AWS secret access key',
         required=True)
     parser.add_argument(
-        '--sink_bucket',
+        '--sink-bucket',
         help='Google Cloud Storage destination bucket name',
         required=True)
 

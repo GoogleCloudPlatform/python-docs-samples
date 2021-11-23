@@ -56,11 +56,11 @@ def transfer_check(project_id: str, job_name: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project_id',
+        '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
         required=True)
     parser.add_argument(
-        '--job_name',
+        '--job-name',
         help='The transfer job to get',
         required=True)
 
