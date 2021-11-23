@@ -11,15 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""A dag that prevents memory leaks on scheduler and workers."""
-"""This DAG is unsupported for usage in Composer v2"""
 from datetime import timedelta
 import os
 
 import airflow
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
+
+
+"""A dag that prevents memory leaks on scheduler and workers."""
+"""This DAG is unsupported for usage in Composer v2"""
 
 dag = DAG(
     'clear_file_system_caches_dag_composer_v1',
