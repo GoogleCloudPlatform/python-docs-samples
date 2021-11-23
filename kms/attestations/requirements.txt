@@ -1,2 +1,2 @@
-cryptography==35.0.0
+cryptography==36.0.0
 pem==21.2.0
