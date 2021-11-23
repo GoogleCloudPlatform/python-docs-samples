@@ -1,5 +1,5 @@
 # Don't upgrade to 2.0.0 until opentelemtry-instrumentation-flask is okay with it
-Flask==1.1.4
+Flask==2.0.2
 opentelemetry-exporter-gcp-trace==1.0.0
 opentelemetry-propagator-gcp==1.0.0
 opentelemetry-instrumentation-flask==0.20b0
