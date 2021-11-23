@@ -58,6 +58,12 @@ def test_translate_standard():
 
     expected_text = "Hello"
 
+    # attempt to create glossary, fails if it already exists
+    languages = ["fr", "en"]
+    glossary_name = "bistro-glossary"
+    glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
+    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+
     text = translate_text("Bonjour", "fr", "en", PROJECT_ID, "bistro-glossary")
 
     assert text == expected_text
@@ -67,6 +73,12 @@ def test_translate_glossary():
 
     expected_text = "I eat goat cheese"
     input_text = "Je mange du chevre"
+
+    # attempt to create glossary, fails if it already exists
+    languages = ["fr", "en"]
+    glossary_name = "bistro-glossary"
+    glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
+    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
 
     text = translate_text(input_text, "fr", "en", PROJECT_ID, "bistro-glossary")
 
