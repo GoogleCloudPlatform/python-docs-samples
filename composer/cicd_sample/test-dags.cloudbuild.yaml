@@ -14,12 +14,18 @@
 # [START composer_cicd_unittest_yaml]
 
 steps:
-  # build the docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/${PROJECT_ID}/cicd:${SHORT_SHA}', '.'] # tag docker image with commit sha
-    id: 'docker build'
-  # run the dag tests
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', 'gcr.io/${PROJECT_ID}/cicd:${SHORT_SHA}']
-    id: 'test-dags'
+  # install dependencies
+  - name: python:3.9-slim
+    entrypoint: pip
+    args: ["install", "-r", "requirements.txt", "-c", "constraints.txt", "--user"]
+  
+  - name: python:3.9-slim
+    entrypoint: pip
+    args: ["install", "-r", "requirements-test.txt", "--user"]
+
+  # run
+  - name: python:3.9-slim
+    entrypoint: python
+    args: ["-m", "pytest", "-s", "dags/example_dag_test.py", "--junitxml=${SHORT_SHA}_test_log.xml"]
+
 # [END composer_cicd_unittest_yaml]
