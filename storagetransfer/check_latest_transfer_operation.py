@@ -43,10 +43,10 @@ def check_latest_transfer_operation(project_id: str, job_name: str):
     })
 
     if transfer_job.latest_operation_name:
-        transfer_operation = storage_transfer.TransferOperation(
-            name=transfer_job.latest_operation_name, project_id=project_id)
+        response = client._transport.operations_client.get_operation(
+            transfer_job.latest_operation_name)
 
-        print(transfer_operation)
+        print(f"Response from `get_operation`: {response}")
     else:
         print(f"Transfer job {job_name} has not ran yet.")
 
