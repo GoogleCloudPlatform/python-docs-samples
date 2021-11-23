@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Command-line sample that checks the status of an in-process transfer.
+"""Command-line sample that list operations for a transfer job.
 
 This sample is used on this page:
 
