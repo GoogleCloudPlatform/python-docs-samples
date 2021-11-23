@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """A dag that prevents memory leaks on scheduler and workers."""
+"""This DAG is unsupported for usage in Composer v2"""
 from datetime import timedelta
 import os
 
@@ -21,8 +22,8 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
-    'clear_file_system_caches_dag',
-    description='clear file system caches on scheduler and workers',
+    'clear_file_system_caches_dag_composer_v1',
+    description='clear file system caches on scheduler and workers in Composer v1',
     schedule_interval='*/30 * * * *',
     dagrun_timeout=timedelta(minutes=20),
     start_date=airflow.utils.dates.days_ago(1),
