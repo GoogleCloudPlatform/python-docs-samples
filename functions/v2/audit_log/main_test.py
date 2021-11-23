@@ -39,8 +39,10 @@ def test_functions_log_cloudevent_should_print_message(capsys):
 
     out, _ = capsys.readouterr()
     assert "Event type: google.cloud.audit.log.v1.written" in out
-    assert "Subject: storage.googleapis.com/projects/_/buckets/my-bucket/objects/test.txt" in out
+    assert (
+        "Subject: storage.googleapis.com/projects/_/buckets/my-bucket/objects/test.txt"
+        in out
+    )
     assert "API method: storage.objects.create" in out
     assert "Resource name: some-resource" in out
     assert "Principal: nobody@example.com" in out
-

@@ -33,4 +33,6 @@ def hello_auditlog(cloudevent):
         print(f"API method: {payload['methodName']}")
         print(f"Resource name: {payload['resourceName']}")
         print(f"Principal: {payload['authenticationInfo']['principalEmail']}")
+
+
 # [END functions_log_cloudevent]
