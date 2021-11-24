@@ -29,9 +29,9 @@ from google.cloud import storage_transfer
 from google.protobuf.duration_pb2 import Duration
 
 
-def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
-                                           sink_bucket: str,
-                                           start_date: datetime):
+def create_daily_nearline_30_day_migration(
+        project_id: str, description: str, source_bucket: str,
+        sink_bucket: str, start_date: datetime):
     """Create a daily migration from a GCS bucket to a Nearline GCS bucket
     for objects untouched for 30 days."""
 
@@ -39,6 +39,9 @@ def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
 
     # The ID of the Google Cloud Platform Project that owns the job
     # project_id = 'my-project-id'
+
+    # A useful description for your transfer job
+    # description = 'My transfer job'
 
     # Google Cloud Storage source bucket name
     # source_bucket = 'my-gcs-source-bucket'
@@ -49,6 +52,7 @@ def create_daily_nearline_30_day_migration(project_id: str, source_bucket: str,
     transfer_job_request = storage_transfer.CreateTransferJobRequest({
         'transfer_job': {
             'project_id': project_id,
+            'description': description,
             'status': storage_transfer.TransferJob.Status.ENABLED,
             'schedule': {
                 'schedule_start_date': {
@@ -87,6 +91,10 @@ if __name__ == "__main__":
     parser.add_argument(
         '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
+        required=True)
+    parser.add_argument(
+        '--description',
+        help='A useful description for your transfer job',
         required=True)
     parser.add_argument(
         '--source-bucket',
