@@ -102,6 +102,7 @@ def deployed_service(container_image, output_bucket):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
         ]

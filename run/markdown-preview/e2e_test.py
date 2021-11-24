@@ -129,6 +129,7 @@ def renderer_deployed_service(renderer_image):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
         ]
