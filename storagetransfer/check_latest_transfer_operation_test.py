@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import os
+import warnings
 
 import backoff
-
 from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
 from google.protobuf.duration_pb2 import Duration
-import googleapiclient.discovery
 from googleapiclient.errors import HttpError
+import pytest
 
 import check_latest_transfer_operation
 import check_latest_transfer_operation_apiary
@@ -28,8 +28,9 @@ import check_latest_transfer_operation_apiary
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_latest_transfer_operation(capsys):
+@pytest.fixture()
+def transfer_job():
+    # Create job
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
         "description": "Sample job",
@@ -57,44 +58,38 @@ def test_latest_transfer_operation(capsys):
     }
     result = client.create_transfer_job({"transfer_job": transfer_job})
 
+    yield result.name
+
+    # Remove job
+    try:
+        client.update_transfer_job({
+            "job_name": result.name,
+            "project_id": project_id,
+            "transfer_job": {
+                "status": storage_transfer.TransferJob.Status.DELETED
+            }
+        })
+    except Exception as e:
+        warnings.warn(f"Exception while cleaning up transfer job: {e}")
+
+
+@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
+def test_latest_transfer_operation(capsys, transfer_job: str):
     check_latest_transfer_operation.check_latest_transfer_operation(
-        project_id, result.name
+        project_id, transfer_job
     )
     out, _ = capsys.readouterr()
     # The latest operation field can take a while to populate, so to avoid a
     # flaky test we just check that the job exists and the field was checked
-    assert result.name in out
+    assert transfer_job in out
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
-def test_latest_transfer_operation_apiary(capsys):
-    storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
-    transfer_job = {
-        "description": "Sample job",
-        "status": "ENABLED",
-        "projectId": project_id,
-        "schedule": {
-            "scheduleStartDate": {"day": "01", "month": "01", "year": "2000"},
-            "startTimeOfDay": {"hours": "00", "minutes": "00", "seconds": "00"},
-        },
-        "transferSpec": {
-            "gcsDataSource": {
-                "bucketName": f"{project_id}-storagetransfer-source"},
-            "gcsDataSink": {"bucketName": f"{project_id}-storagetransfer-sink"},
-            "objectConditions": {
-                "minTimeElapsedSinceLastModification": "2592000s"  # 30 days
-            },
-            "transferOptions": {"deleteObjectsFromSourceAfterTransfer": "true"},
-        },
-    }
-
-    result = storagetransfer.transferJobs().create(body=transfer_job).execute()
-
-    job_name = result.get("name")
+def test_latest_transfer_operation_apiary(capsys, transfer_job: str):
     check_latest_transfer_operation_apiary.check_latest_transfer_operation(
-        project_id, job_name
+        project_id, transfer_job
     )
     out, _ = capsys.readouterr()
     # The latest operation field can take a while to populate, so to avoid a
     # flaky test we just check that the job exists and the field was checked
-    assert job_name in out
+    assert transfer_job in out

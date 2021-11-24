@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import os
+import warnings
 
 import backoff
-
 from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
 from google.protobuf.duration_pb2 import Duration
-import googleapiclient.discovery
 from googleapiclient.errors import HttpError
+import pytest
 
 import get_transfer_job_with_retries
 import get_transfer_job_with_retries_apiary
@@ -28,8 +28,9 @@ import get_transfer_job_with_retries_apiary
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_get_transfer_job_with_retries(capsys):
+@pytest.fixture()
+def transfer_job():
+    # Create job
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
         "description": "Sample job",
@@ -57,11 +58,27 @@ def test_get_transfer_job_with_retries(capsys):
     }
     result = client.create_transfer_job({"transfer_job": transfer_job})
 
-    job_name = result.name
+    yield result.name
+
+    # Remove job
+    try:
+        client.update_transfer_job({
+            "job_name": result.name,
+            "project_id": project_id,
+            "transfer_job": {
+                "status": storage_transfer.TransferJob.Status.DELETED
+            }
+        })
+    except Exception as e:
+        warnings.warn(f"Exception while cleaning up transfer job: {e}")
+
+
+@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
+def test_get_transfer_job_with_retries(capsys, transfer_job: str):
     max_retry_duration = 120
 
     get_transfer_job_with_retries.get_transfer_job_with_retries(
-        project_id, job_name, max_retry_duration
+        project_id, transfer_job, max_retry_duration
     )
     out, _ = capsys.readouterr()
     # This sample isn't really meant to do anything, just check that it ran
@@ -70,38 +87,11 @@ def test_get_transfer_job_with_retries(capsys):
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
-def test_get_transfer_job_with_retries_apiary(capsys):
-    storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
-    transfer_job = {
-        "description": "Sample job",
-        "status": "ENABLED",
-        "projectId": project_id,
-        "schedule": {
-            "scheduleStartDate": {
-                "day": "01", "month": "01", "year": "2000"},
-            "startTimeOfDay": {
-                "hours": "00", "minutes": "00", "seconds": "00"},
-        },
-        "transferSpec": {
-            "gcsDataSource": {
-                "bucketName": f"{project_id}-storagetransfer-source"},
-            "gcsDataSink": {
-                "bucketName": f"{project_id}-storagetransfer-sink"},
-            "objectConditions": {
-                "minTimeElapsedSinceLastModification": "2592000s"  # 30 days
-            },
-            "transferOptions": {
-                "deleteObjectsFromSourceAfterTransfer": "true"},
-        },
-    }
-
-    result = storagetransfer.transferJobs().create(body=transfer_job).execute()
-
-    job_name = result.get("name")
+def test_get_transfer_job_with_retries_apiary(capsys, transfer_job: str):
     retries = 3
 
     get_transfer_job_with_retries_apiary.get_transfer_job_with_retries(
-        project_id, job_name, retries
+        project_id, transfer_job, retries
     )
     out, _ = capsys.readouterr()
     # This sample isn't really meant to do anything, just check that it ran
