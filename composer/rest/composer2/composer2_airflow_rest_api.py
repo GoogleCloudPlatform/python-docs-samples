@@ -18,6 +18,7 @@ Trigger a DAG in Cloud Composer 2 environment using the Airflow 2 stable REST AP
 """
 
 # [START composer_2_trigger_dag]
+# [START composer_2_trigger_dag_for_import]
 from typing import Any
 
 import google.auth
@@ -82,6 +83,7 @@ def trigger_dag(web_server_url: str, dag_id: str, data: dict) -> str:
         response.raise_for_status()
     else:
         return response.text
+# [END composer_2_trigger_dag_for_import]
 
 
 if __name__ == "__main__":

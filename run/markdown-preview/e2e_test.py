@@ -34,7 +34,7 @@ RENDERER_IMAGE_NAME = f"gcr.io/{PROJECT}/renderer-{SUFFIX}"
 @pytest.fixture()
 def renderer_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -45,13 +45,12 @@ def renderer_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield RENDERER_IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -61,15 +60,14 @@ def renderer_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
 @pytest.fixture()
 def editor_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -80,13 +78,12 @@ def editor_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield EDITOR_IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -96,8 +93,7 @@ def editor_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -105,7 +101,7 @@ def editor_image():
 def renderer_deployed_service(renderer_image):
     # Deploy image to Cloud Run
     renderer_service_name = f"renderer-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -118,13 +114,12 @@ def renderer_deployed_service(renderer_image):
             "--region=us-central1",
             "--platform=managed",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield renderer_service_name
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -136,8 +131,7 @@ def renderer_deployed_service(renderer_image):
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 

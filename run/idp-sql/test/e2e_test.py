@@ -106,7 +106,7 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -117,8 +117,7 @@ def deployed_service() -> str:
             "./test/e2e_test_setup.yaml",
             "--substitutions",
         ]
-        + substitutions,
-        check=True,
+        + substitutions
     )
 
     service_url = (
@@ -159,7 +158,7 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -170,8 +169,7 @@ def deployed_service() -> str:
             "./test/e2e_test_cleanup.yaml",
             "--substitutions",
         ]
-        + substitutions,
-        check=True,
+        + substitutions
     )
 
 
