@@ -1,4 +1,4 @@
-# [START composer_cicd_add_dags_to_composer_utility ]
+# [START composer_cicd_add_dags_to_composer_utility]
 import argparse
 import tempfile
 from shutil import copytree, ignore_patterns
@@ -54,6 +54,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     upload_dags_to_composer(args.dags_directory, args.dags_bucket)
-# [END composer_cicd_add_dags_to_composer_utility ]
+# [END composer_cicd_add_dags_to_composer_utility]
 
 
