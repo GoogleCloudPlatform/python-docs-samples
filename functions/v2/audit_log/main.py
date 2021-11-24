@@ -17,12 +17,13 @@
 # CloudEvent function to be triggered by an Eventarc Cloud Audit Logging trigger
 # Note: this is NOT designed for second-party (Cloud Audit Logs -> Pub/Sub) triggers!
 def hello_auditlog(cloudevent):
-    # Print out details from the CloudEvent itself
+    # Print out the CloudEvent's (required) `type` property
+    # See https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#type
     print(f"Event type: {cloudevent['type']}")
 
-    # Print out the CloudEvent's `subject` property
+    # Print out the CloudEvent's (optional) `subject` property
     # See https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#subject
-    print(f"Subject: {cloudevent['subject']}")
+    print(f"Subject: {cloudevent.get('subject')}")
 
     # Print out details from the `protoPayload`
     # This field encapsulates a Cloud Audit Logging entry
