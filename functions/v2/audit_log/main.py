@@ -30,9 +30,9 @@ def hello_auditlog(cloudevent):
 
     payload = cloudevent.data.get("protoPayload")
     if payload:
-        print(f"API method: {payload['methodName']}")
-        print(f"Resource name: {payload['resourceName']}")
-        print(f"Principal: {payload['authenticationInfo']['principalEmail']}")
+        print(f"API method: {payload.get('methodName')}")
+        print(f"Resource name: {payload.get('resourceName')}")
+        print(f"Principal: {payload.get('authenticationInfo', dict()).get('principalEmail')}")
 
 
 # [END functions_log_cloudevent]
