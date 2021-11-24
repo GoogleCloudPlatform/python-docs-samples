@@ -14,9 +14,13 @@
 
 import os
 
+import backoff
+
+from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
 from google.protobuf.duration_pb2 import Duration
 import googleapiclient.discovery
+from googleapiclient.errors import HttpError
 
 import check_latest_transfer_operation
 import check_latest_transfer_operation_apiary
@@ -24,6 +28,7 @@ import check_latest_transfer_operation_apiary
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
+@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
 def test_latest_transfer_operation(capsys):
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
@@ -61,6 +66,7 @@ def test_latest_transfer_operation(capsys):
     assert result.name in out
 
 
+@backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
 def test_latest_transfer_operation_apiary(capsys):
     storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
     transfer_job = {

@@ -14,9 +14,13 @@
 
 import os
 
+import backoff
+
+from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
 from google.protobuf.duration_pb2 import Duration
 import googleapiclient.discovery
+from googleapiclient.errors import HttpError
 
 import get_transfer_job_with_retries
 import get_transfer_job_with_retries_apiary
@@ -24,6 +28,7 @@ import get_transfer_job_with_retries_apiary
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
+@backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
 def test_get_transfer_job_with_retries(capsys):
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
@@ -64,6 +69,7 @@ def test_get_transfer_job_with_retries(capsys):
     assert f"max retry duration of {max_retry_duration}s" in out
 
 
+@backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
 def test_get_transfer_job_with_retries_apiary(capsys):
     storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
     transfer_job = {
