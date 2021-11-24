@@ -23,7 +23,10 @@ def hello_auditlog(cloudevent):
 
     # Print out the CloudEvent's (optional) `subject` property
     # See https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#subject
-    print(f"Subject: {cloudevent.get('subject')}")
+    if 'subject' in cloudevent:
+        # CloudEvent objects don't support `get` operations.
+        # Use the `in` operator to verify `subject` is present.
+        print(f"Subject: {cloudevent['subject']}")
 
     # Print out details from the `protoPayload`
     # This field encapsulates a Cloud Audit Logging entry
