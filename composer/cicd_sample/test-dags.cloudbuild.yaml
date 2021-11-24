@@ -23,9 +23,9 @@ steps:
     entrypoint: pip
     args: ["install", "-r", "requirements-test.txt", "--user"]
 
-  # run
+  # run in python 3.9 due to pytest issues with python 3.10
   - name: python:3.9-slim
-    entrypoint: python
+    entrypoint: python3.9
     args: ["-m", "pytest", "-s", "dags/example_dag_test.py", "--junitxml=${SHORT_SHA}_test_log.xml"]
 
 # [END composer_cicd_unittest_yaml]
