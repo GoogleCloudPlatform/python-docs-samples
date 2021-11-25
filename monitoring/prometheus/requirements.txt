@@ -1,4 +1,4 @@
-Flask==2.0.1
+Flask==2.0.2
 google-api-core==2.2.2
 google-auth==2.3.3
 googleapis-common-protos==1.53.0
