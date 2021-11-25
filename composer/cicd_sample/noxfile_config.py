@@ -14,7 +14,7 @@
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
-# You can copy this file into your directory, then it will be inported from
+# You can copy this file into your directory, then it will be imported from
 # the noxfile.py.
 
 # The source of truth:
@@ -28,16 +28,9 @@ import tempfile
 
 _tmpdir = tempfile.TemporaryDirectory()
 
-
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": [
-        "2.7",
-        "3.6",
-        "3.7",
-        "3.9",
-        "3.10"
-    ],  # Composer w/ Airflow 2 only supports Python 3.8
+    'ignored_versions': ["2.7", "3.6", "3.7", "3.9", "3.10"],  # Composer w/ Airflow 2 only supports Python 3.8
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
