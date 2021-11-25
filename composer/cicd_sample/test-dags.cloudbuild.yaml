@@ -15,18 +15,18 @@
 
 steps:
   # install dependencies
-  - name: python:3.9-slim
+  - name: python:3.8-slim
     entrypoint: pip
     args: ["install", "-r", "requirements.txt", "-c", "constraints.txt", "--user"]
   
-  - name: python:3.9-slim
+  - name: python:3.8-slim
     entrypoint: pip
     args: ["install", "-r", "requirements-test.txt", "--user"]
 
-  # run in python 3.9 due to pytest issues with python 3.10
+  # run in python 3.8 due to pytest issues with python 3.10
   # TODO: refactor to call all tests not just one test command
-  - name: python:3.9-slim
-    entrypoint: python3.9
+  - name: python:3.8-slim
+    entrypoint: python3.8
     args: ["-m", "pytest", "-s", "dags/", "--junitxml=${SHORT_SHA}_test_log.xml"]
 
 # [END composer_cicd_unittest_yaml]
