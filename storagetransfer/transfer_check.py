@@ -47,8 +47,13 @@ def transfer_check(project_id: str, job_name: str):
 
     response = client._transport.operations_client.list_operations(
         "transferOperations", job_filter)
+    operations = [
+        storage_transfer.TransferOperation.deserialize(
+            item.metadata.value
+        ) for item in response
+    ]
 
-    print(f"Response from `list_operations`: {[item for item in response]}")
+    print(f"Transfer operations for {job_name}`:", operations)
 
 # [END storagetransfer_transfer_check]
 
