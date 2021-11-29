@@ -15,9 +15,9 @@
 import os
 from typing import Any, List, NoReturn
 
-import pytest
 from click.testing import CliRunner
 from mock import MagicMock, patch
+import pytest
 
 from check_status import cli
 
@@ -33,7 +33,7 @@ runner = CliRunner()
 
 
 @pytest.fixture(autouse=True)
-def mock_settings_env_vars():
+def mock_settings_env_vars() -> NoReturn:
     with patch.dict(os.environ, {"GITHUB_TOKEN": MOCK_GH_TOKEN}):
         yield
 
