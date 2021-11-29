@@ -56,6 +56,8 @@ def list_instances(project_id: str, zone: str) -> typing.Iterable[compute_v1.Ins
         print(f" - {instance.name} ({instance.machine_type})")
 
     return instance_list
+
+
 # [END compute_instances_list]
 
 
@@ -74,7 +76,9 @@ def list_all_instances(
     """
     instance_client = compute_v1.InstancesClient()
     # Use the `max_results` parameter to limit the number of results that the API returns per response page.
-    request = compute_v1.AggregatedListInstancesRequest(project=project_id, max_results=5)
+    request = compute_v1.AggregatedListInstancesRequest(
+        project=project_id, max_results=5
+    )
     agg_list = instance_client.aggregated_list(request=request)
     all_instances = {}
     print("Instances found:")
@@ -88,6 +92,8 @@ def list_all_instances(
             for instance in response.instances:
                 print(f" - {instance.name} ({instance.machine_type})")
     return all_instances
+
+
 # [END compute_instances_list_all]
 
 
@@ -133,7 +139,7 @@ def create_instance(
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     disk.boot = True
-    disk.type_ = compute_v1.AttachedDisk.Type.PERSISTENT
+    disk.type_ = "PERSISTENT"
 
     # Use the network interface provided in the network_name argument.
     network_interface = compute_v1.NetworkInterface()
@@ -166,6 +172,8 @@ def create_instance(
         print("Warning during creation:", operation.warnings, file=sys.stderr)
     print(f"Instance {instance_name} created.")
     return instance
+
+
 # [END compute_instances_create]
 
 
@@ -196,6 +204,8 @@ def delete_instance(project_id: str, zone: str, machine_name: str) -> None:
         print("Warning during deletion:", operation.warnings, file=sys.stderr)
     print(f"Instance {machine_name} deleted.")
     return
+
+
 # [END compute_instances_delete]
 
 
@@ -227,6 +237,8 @@ def wait_for_operation(
     else:
         client = compute_v1.GlobalOperationsClient()
     return client.wait(**kwargs)
+
+
 # [END compute_instances_operation_check]
 
 

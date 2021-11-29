@@ -19,12 +19,15 @@ import google.auth
 import google.cloud.storage as storage
 import pytest
 
-from sample_default_values import \
-    disable_usage_export, get_usage_export_bucket, set_usage_export_bucket
+from sample_default_values import (
+    disable_usage_export,
+    get_usage_export_bucket,
+    set_usage_export_bucket,
+)
 
 PROJECT = google.auth.default()[1]
 BUCKET_NAME = "test" + uuid.uuid4().hex[:10]
-TEST_PREFIX = 'some-prefix'
+TEST_PREFIX = "some-prefix"
 
 
 @pytest.fixture
@@ -35,35 +38,37 @@ def temp_bucket():
     bucket.delete(force=True)
 
 
-def test_set_usage_export_bucket_default(capsys: typing.Any,
-                                         temp_bucket: storage.Bucket) -> None:
+def test_set_usage_export_bucket_default(
+    capsys: typing.Any, temp_bucket: storage.Bucket
+) -> None:
     set_usage_export_bucket(project_id=PROJECT, bucket_name=temp_bucket.name)
     time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
-    assert(uel.bucket_name == temp_bucket.name)
-    assert(uel.report_name_prefix == 'usage_gce')
+    assert uel.bucket_name == temp_bucket.name
+    assert uel.report_name_prefix == "usage_gce"
     out, _ = capsys.readouterr()
-    assert('default prefix of `usage_gce`.' in out)
+    assert "default prefix of `usage_gce`." in out
 
     disable_usage_export(project_id=PROJECT)
     time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
-    assert(uel.bucket_name == '')
-    assert(uel.report_name_prefix == '')
+    assert uel.bucket_name == ""
+    assert uel.report_name_prefix == ""
 
     # Testing setting a custom export bucket. Keeping this in one test function
     # to avoid race conditions, as this is a global setting for the project.
-    set_usage_export_bucket(project_id=PROJECT, bucket_name=temp_bucket.name,
-                            report_name_prefix=TEST_PREFIX)
+    set_usage_export_bucket(
+        project_id=PROJECT, bucket_name=temp_bucket.name, report_name_prefix=TEST_PREFIX
+    )
     time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
-    assert(uel.bucket_name == temp_bucket.name)
-    assert(uel.report_name_prefix == TEST_PREFIX)
+    assert uel.bucket_name == temp_bucket.name
+    assert uel.report_name_prefix == TEST_PREFIX
     out, _ = capsys.readouterr()
-    assert('usage_gce' not in out)
+    assert "usage_gce" not in out
 
     disable_usage_export(project_id=PROJECT)
     time.sleep(5)  # To make sure the settings are properly updated
     uel = get_usage_export_bucket(project_id=PROJECT)
-    assert(uel.bucket_name == '')
-    assert(uel.report_name_prefix == '')
+    assert uel.bucket_name == ""
+    assert uel.report_name_prefix == ""

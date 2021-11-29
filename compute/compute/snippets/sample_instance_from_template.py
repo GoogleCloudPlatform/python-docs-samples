@@ -15,6 +15,7 @@
 # [START compute_instances_create_from_template]
 # [START compute_instances_create_from_template_with_overrides]
 from google.cloud import compute_v1
+
 # [END compute_instances_create_from_template_with_overrides]
 
 
@@ -116,7 +117,7 @@ def create_instance_from_template_with_overrides(
     new_disk.initialize_params.source_image = new_disk_source_image
     new_disk.auto_delete = True
     new_disk.boot = False
-    new_disk.type_ = compute_v1.AttachedDisk.Type.PERSISTENT
+    new_disk.type_ = "PERSISTENT"
 
     instance.disks.append(new_disk)
 
