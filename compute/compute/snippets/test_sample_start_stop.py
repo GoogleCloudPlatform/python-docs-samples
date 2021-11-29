@@ -22,14 +22,20 @@ from google.cloud import compute_v1
 
 import pytest
 
-from sample_start_stop import start_instance, start_instance_with_encryption_key, stop_instance
+from sample_start_stop import (
+    start_instance,
+    start_instance_with_encryption_key,
+    stop_instance,
+)
 
 PROJECT = google.auth.default()[1]
 
 INSTANCE_ZONE = "europe-central2-b"
 
 KEY = "".join(random.sample(string.ascii_letters, 32))
-KEY_B64 = base64.b64encode(KEY.encode())  # for example: b'VEdORldtY3NKellPdWRDcUF5YlNVREtJdm5qaFJYSFA='
+KEY_B64 = base64.b64encode(
+    KEY.encode()
+)  # for example: b'VEdORldtY3NKellPdWRDcUF5YlNVREtJdm5qaFJYSFA='
 
 
 def _make_disk(raw_key: bytes = None):
@@ -42,8 +48,8 @@ def _make_disk(raw_key: bytes = None):
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     disk.boot = True
-    disk.type_ = compute_v1.AttachedDisk.Type.PERSISTENT
-    disk.device_name = 'disk-1'
+    disk.type_ = "PERSISTENT"
+    disk.device_name = "disk-1"
 
     if raw_key:
         disk.disk_encryption_key = compute_v1.CustomerEncryptionKey()
@@ -54,7 +60,7 @@ def _make_disk(raw_key: bytes = None):
 
 def _make_request(disk: compute_v1.AttachedDisk):
     network_interface = compute_v1.NetworkInterface()
-    network_interface.name = 'default'
+    network_interface.name = "default"
     network_interface.access_configs = []
 
     # Collect information into the Instance object.
@@ -83,14 +89,18 @@ def _create_instance(request: compute_v1.InsertInstanceRequest):
             operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT
         )
 
-    return instance_client.get(project=PROJECT, zone=INSTANCE_ZONE, instance=request.instance_resource.name)
+    return instance_client.get(
+        project=PROJECT, zone=INSTANCE_ZONE, instance=request.instance_resource.name
+    )
 
 
 def _delete_instance(instance: compute_v1.Instance):
     instance_client = compute_v1.InstancesClient()
     operation_client = compute_v1.ZoneOperationsClient()
 
-    operation = instance_client.delete(project=PROJECT, zone=INSTANCE_ZONE, instance=instance.name)
+    operation = instance_client.delete(
+        project=PROJECT, zone=INSTANCE_ZONE, instance=instance.name
+    )
     while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=INSTANCE_ZONE, project=PROJECT
@@ -99,7 +109,9 @@ def _delete_instance(instance: compute_v1.Instance):
 
 def _get_status(instance: compute_v1.Instance) -> compute_v1.Instance.Status:
     instance_client = compute_v1.InstancesClient()
-    return instance_client.get(project=PROJECT, zone=INSTANCE_ZONE, instance=instance.name).status
+    return instance_client.get(
+        project=PROJECT, zone=INSTANCE_ZONE, instance=instance.name
+    ).status
 
 
 @pytest.fixture
@@ -127,31 +139,33 @@ def compute_encrypted_instance():
 
 
 def test_instance_operations(compute_instance):
-    assert _get_status(compute_instance) == compute_v1.Instance.Status.RUNNING
+    assert _get_status(compute_instance) == "RUNNING"
 
     stop_instance(PROJECT, INSTANCE_ZONE, compute_instance.name)
 
-    while _get_status(compute_instance) == compute_v1.Instance.Status.STOPPING:
+    while _get_status(compute_instance) == "STOPPING":
         # Since we can't configure timeout parameter for operation wait() (b/188037306)
         # We need to do some manual waiting for the stopping to finish...
         time.sleep(5)
 
-    assert _get_status(compute_instance) == compute_v1.Instance.Status.TERMINATED
+    assert _get_status(compute_instance) == "TERMINATED"
 
     start_instance(PROJECT, INSTANCE_ZONE, compute_instance.name)
-    assert _get_status(compute_instance) == compute_v1.Instance.Status.RUNNING
+    assert _get_status(compute_instance) == "RUNNING"
 
 
 def test_instance_encrypted(compute_encrypted_instance):
-    assert _get_status(compute_encrypted_instance) == compute_v1.Instance.Status.RUNNING
+    assert _get_status(compute_encrypted_instance) == "RUNNING"
 
     stop_instance(PROJECT, INSTANCE_ZONE, compute_encrypted_instance.name)
-    while _get_status(compute_encrypted_instance) == compute_v1.Instance.Status.STOPPING:
+    while _get_status(compute_encrypted_instance) == "STOPPING":
         # Since we can't configure timeout parameter for operation wait() (b/188037306)
         # We need to do some manual waiting for the stopping to finish...
         time.sleep(5)
 
-    assert _get_status(compute_encrypted_instance) == compute_v1.Instance.Status.TERMINATED
+    assert _get_status(compute_encrypted_instance) == "TERMINATED"
 
-    start_instance_with_encryption_key(PROJECT, INSTANCE_ZONE, compute_encrypted_instance.name, KEY_B64)
-    assert _get_status(compute_encrypted_instance) == compute_v1.Instance.Status.RUNNING
+    start_instance_with_encryption_key(
+        PROJECT, INSTANCE_ZONE, compute_encrypted_instance.name, KEY_B64
+    )
+    assert _get_status(compute_encrypted_instance) == "RUNNING"

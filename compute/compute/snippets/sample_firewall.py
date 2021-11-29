@@ -20,6 +20,7 @@ from typing import Iterable
 # [START compute_firewall_patch]
 # [START compute_firewall_delete]
 import google.cloud.compute_v1 as compute_v1
+
 # [END compute_firewall_delete]
 # [END compute_firewall_patch]
 # [END compute_firewall_create]
@@ -45,6 +46,8 @@ def list_firewall_rules(project_id: str) -> Iterable:
         print(f" - {firewall.name}: {firewall.description}")
 
     return firewalls_list
+
+
 # [END compute_firewall_list]
 
 
@@ -70,7 +73,7 @@ def create_firewall_rule(
     """
     firewall_rule = compute_v1.Firewall()
     firewall_rule.name = firewall_rule_name
-    firewall_rule.direction = compute_v1.Firewall.Direction.INGRESS
+    firewall_rule.direction = "INGRESS"
 
     allowed_ports = compute_v1.Allowed()
     allowed_ports.I_p_protocol = "tcp"
@@ -81,7 +84,7 @@ def create_firewall_rule(
     firewall_rule.network = network
     firewall_rule.description = "Allowing TCP traffic on port 80 and 443 from Internet."
 
-    firewall_rule.target_tags = ['web']
+    firewall_rule.target_tags = ["web"]
 
     # Note that the default value of priority for the firewall API is 1000.
     # If you check the value of `firewall_rule.priority` at this point it
@@ -98,6 +101,8 @@ def create_firewall_rule(
     op_client.wait(project=project_id, operation=op.name)
 
     return
+
+
 # [END compute_firewall_create]
 
 
@@ -124,6 +129,8 @@ def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: 
     operation_client = compute_v1.GlobalOperationsClient()
     operation_client.wait(project=project_id, operation=operation.name)
     return
+
+
 # [END compute_firewall_patch]
 
 
@@ -142,6 +149,8 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str):
     operation_client = compute_v1.GlobalOperationsClient()
     operation_client.wait(project=project_id, operation=operation.name)
     return
+
+
 # [END compute_firewall_delete]
 
 

@@ -17,6 +17,7 @@
 # [START compute_images_list_page]
 # [START compute_images_list]
 import google.cloud.compute_v1 as compute_v1
+
 # [END compute_images_list]
 # [END compute_images_list_page]
 
@@ -34,14 +35,17 @@ def print_images_list(project: str) -> None:
     """
     images_client = compute_v1.ImagesClient()
     # Listing only non-deprecated images to reduce the size of the reply.
-    images_list_request = compute_v1.ListImagesRequest(project=project, max_results=100,
-                                                       filter="deprecated.state != DEPRECATED")
+    images_list_request = compute_v1.ListImagesRequest(
+        project=project, max_results=100, filter="deprecated.state != DEPRECATED"
+    )
 
     # Although the `max_results` parameter is specified in the request, the iterable returned
     # by the `list()` method hides the pagination mechanic. The library makes multiple
     # requests to the API for you, so you can simply iterate over all the images.
     for img in images_client.list(request=images_list_request):
         print(f" -  {img.name}")
+
+
 # [END compute_images_list]
 
 
@@ -60,21 +64,26 @@ def print_images_list_by_page(project: str, page_size: int = 10) -> None:
     """
     images_client = compute_v1.ImagesClient()
     # Listing only non-deprecated images to reduce the size of the reply.
-    images_list_request = compute_v1.ListImagesRequest(project=project, max_results=page_size,
-                                                       filter="deprecated.state != DEPRECATED")
+    images_list_request = compute_v1.ListImagesRequest(
+        project=project, max_results=page_size, filter="deprecated.state != DEPRECATED"
+    )
 
     # Use the `pages` attribute of returned iterable to have more granular control of
     # iteration over paginated results from the API. Each time you want to access the
     # next page, the library retrieves that page from the API.
-    for page_num, page in enumerate(images_client.list(request=images_list_request).pages, start=1):
+    for page_num, page in enumerate(
+        images_client.list(request=images_list_request).pages, start=1
+    ):
         print(f"Page {page_num}: ")
         for img in page.items:
             print(f" - {img.name}")
+
+
 # [END compute_images_list_page]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("=================== Flat list of images ===================")
-    print_images_list('windows-sql-cloud')
+    print_images_list("windows-sql-cloud")
     print("================= Paginated list of images ================")
-    print_images_list_by_page('windows-sql-cloud', 5)
+    print_images_list_by_page("windows-sql-cloud", 5)

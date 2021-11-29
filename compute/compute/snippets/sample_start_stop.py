@@ -46,15 +46,17 @@ def start_instance(project_id: str, zone: str, instance_name: str):
     op = instance_client.start(project=project_id, zone=zone, instance=instance_name)
 
     while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(
-            operation=op.name, zone=zone, project=project_id
-        )
+        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
     return
+
+
 # [END compute_start_instance]
 
 
 # [START compute_start_enc_instance]
-def start_instance_with_encryption_key(project_id: str, zone: str, instance_name: str, key: bytes):
+def start_instance_with_encryption_key(
+    project_id: str, zone: str, instance_name: str, key: bytes
+):
     """
     Starts a stopped Google Compute Engine instance (with encrypted disks).
 
@@ -69,7 +71,9 @@ def start_instance_with_encryption_key(project_id: str, zone: str, instance_name
     instance_client = compute_v1.InstancesClient()
     op_client = compute_v1.ZoneOperationsClient()
 
-    instance_data = instance_client.get(project=project_id, zone=zone, instance=instance_name)
+    instance_data = instance_client.get(
+        project=project_id, zone=zone, instance=instance_name
+    )
 
     # Prepare the information about disk encryption
     disk_data = compute_v1.CustomerEncryptionKeyProtectedDisk()
@@ -81,14 +85,18 @@ def start_instance_with_encryption_key(project_id: str, zone: str, instance_name
     enc_data = compute_v1.InstancesStartWithEncryptionKeyRequest()
     enc_data.disks = [disk_data]
 
-    op = instance_client.start_with_encryption_key(project=project_id, zone=zone, instance=instance_name,
-                                                   instances_start_with_encryption_key_request_resource=enc_data)
+    op = instance_client.start_with_encryption_key(
+        project=project_id,
+        zone=zone,
+        instance=instance_name,
+        instances_start_with_encryption_key_request_resource=enc_data,
+    )
 
     while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(
-            operation=op.name, zone=zone, project=project_id
-        )
+        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
     return
+
+
 # [END compute_start_enc_instance]
 
 
@@ -108,10 +116,10 @@ def stop_instance(project_id: str, zone: str, instance_name: str):
     op = instance_client.stop(project=project_id, zone=zone, instance=instance_name)
 
     while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(
-            operation=op.name, zone=zone, project=project_id
-        )
+        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
     return
+
+
 # [END compute_stop_instance]
 
 
@@ -131,8 +139,8 @@ def reset_instance(project_id: str, zone: str, instance_name: str):
     op = instance_client.reset(project=project_id, zone=zone, instance=instance_name)
 
     while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(
-            operation=op.name, zone=zone, project=project_id
-        )
+        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
     return
+
+
 # [END compute_reset_instance]

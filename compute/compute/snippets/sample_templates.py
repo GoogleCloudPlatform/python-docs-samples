@@ -14,6 +14,7 @@
 
 # [START compute_template_list ]
 from typing import Iterable
+
 # [END compute_template_list ]
 
 # [START compute_template_create ]
@@ -23,6 +24,7 @@ from typing import Iterable
 # [START compute_template_create_with_subnet ]
 # [START compute_template_delete ]
 from google.cloud import compute_v1
+
 # [END compute_template_delete ]
 # [END compute_template_create_with_subnet ]
 # [END compute_template_create_from_instance ]
@@ -32,7 +34,9 @@ from google.cloud import compute_v1
 
 
 # [START compute_template_get ]
-def get_instance_template(project_id: str, template_name: str) -> compute_v1.InstanceTemplate:
+def get_instance_template(
+    project_id: str, template_name: str
+) -> compute_v1.InstanceTemplate:
     """
     Retrieve an instance template, which you can use to create virtual machine
     (VM) instances and managed instance groups (MIGs).
@@ -46,6 +50,8 @@ def get_instance_template(project_id: str, template_name: str) -> compute_v1.Ins
     """
     template_client = compute_v1.InstanceTemplatesClient()
     return template_client.get(project=project_id, instance_template=template_name)
+
+
 # [END compute_template_get ]
 
 
@@ -62,6 +68,8 @@ def list_instance_templates(project_id: str) -> Iterable[compute_v1.InstanceTemp
     """
     template_client = compute_v1.InstanceTemplatesClient()
     return template_client.list(project=project_id)
+
+
 # [END compute_template_list ]
 
 
@@ -98,10 +106,8 @@ def create_template(project_id: str, template_name: str) -> compute_v1.InstanceT
     # The template lets the instance use an external IP address.
     access_config = compute_v1.AccessConfig()
     access_config.name = "External NAT"
-    access_config.type_ = compute_v1.AccessConfig.Type.ONE_TO_ONE_NAT
-    access_config.network_tier = (
-        compute_v1.AccessConfig.NetworkTier.PREMIUM
-    )
+    access_config.type_ = "ONE_TO_ONE_NAT"
+    access_config.network_tier = "PREMIUM"
     network_interface.access_configs = [access_config]
 
     template = compute_v1.InstanceTemplate()
@@ -116,11 +122,15 @@ def create_template(project_id: str, template_name: str) -> compute_v1.InstanceT
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
+
+
 # [END compute_template_create ]
 
 
 # [START compute_template_create_from_instance ]
-def create_template_from_instance(project_id: str, instance: str, template_name: str) -> compute_v1.InstanceTemplate:
+def create_template_from_instance(
+    project_id: str, instance: str, template_name: str
+) -> compute_v1.InstanceTemplate:
     """
     Create a new instance template based on an existing instance.
     This new template specifies a different boot disk.
@@ -139,9 +149,7 @@ def create_template_from_instance(project_id: str, instance: str, template_name:
     # basing your template on.
     disk.device_name = "disk-1"
     # Replace the original boot disk image used in your instance with a Rocky Linux image.
-    disk.instantiate_from = (
-        compute_v1.DiskInstantiationConfig.InstantiateFrom.CUSTOM_IMAGE
-    )
+    disk.instantiate_from = "CUSTOM_IMAGE"
     disk.custom_image = "projects/rocky-linux-cloud/global/images/family/rocky-linux-8"
     # Override the auto_delete setting.
     disk.auto_delete = True
@@ -158,6 +166,8 @@ def create_template_from_instance(project_id: str, instance: str, template_name:
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
+
+
 # [END compute_template_create_from_instance ]
 
 
@@ -209,6 +219,8 @@ def create_template_with_subnet(
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
+
+
 # [END compute_template_create_with_subnet ]
 
 
@@ -226,4 +238,6 @@ def delete_instance_template(project_id: str, template_name: str):
     op = template_client.delete(project=project_id, instance_template=template_name)
     operation_client.wait(project=project_id, operation=op.name)
     return
+
+
 # [END compute_template_delete ]

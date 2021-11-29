@@ -22,14 +22,16 @@ with the Compute Engine API.
 # [START compute_usage_report_get]
 # [START compute_usage_report_disable]
 from google.cloud import compute_v1
+
 # [END compute_usage_report_disable]
 # [END compute_usage_report_get]
 # [END compute_usage_report_set]
 
 
 # [START compute_usage_report_set]
-def set_usage_export_bucket(project_id: str, bucket_name: str,
-                            report_name_prefix: str = "") -> None:
+def set_usage_export_bucket(
+    project_id: str, bucket_name: str, report_name_prefix: str = ""
+) -> None:
     """
     Set Compute Engine usage export bucket for the Cloud project.
     This sample presents how to interpret the default value for the
@@ -43,27 +45,28 @@ def set_usage_export_bucket(project_id: str, bucket_name: str,
             to showcase default values behaviour.
     """
     usage_export_location = compute_v1.UsageExportLocation(
-        bucket_name=bucket_name,
-        report_name_prefix=report_name_prefix
+        bucket_name=bucket_name, report_name_prefix=report_name_prefix
     )
 
     if not report_name_prefix:
         # Sending an empty value for report_name_prefix results in the
         # next usage report being generated with the default prefix value
         # "usage_gce". (ref: https://cloud.google.com/compute/docs/reference/rest/v1/projects/setUsageExportBucket)
-        print("Setting report_name_prefix to empty value causes the report "
-              "to have the default prefix of `usage_gce`.")
+        print(
+            "Setting report_name_prefix to empty value causes the report "
+            "to have the default prefix of `usage_gce`."
+        )
 
     projects_client = compute_v1.ProjectsClient()
     operation = projects_client.set_usage_export_bucket(
-        project=project_id, usage_export_location_resource=usage_export_location)
+        project=project_id, usage_export_location_resource=usage_export_location
+    )
 
     op_client = compute_v1.GlobalOperationsClient()
 
     while operation.status != compute_v1.Operation.Status.DONE:
-        operation = op_client.wait(
-            operation=operation.name, project=project_id
-        )
+        operation = op_client.wait(operation=operation.name, project=project_id)
+
 
 # [END compute_usage_report_set]
 
@@ -94,10 +97,14 @@ def get_usage_export_bucket(project_id: str) -> compute_v1.UsageExportLocation:
         # Although the server sent the empty string value, the next usage report
         # generated with these settings still has the default prefix value
         # "usage_gce". (see https://cloud.google.com/compute/docs/reference/rest/v1/projects/get)
-        print('Report name prefix not set, replacing with default value of '
-              '`usage_gce`.')
-        uel.report_name_prefix = 'usage_gce'
+        print(
+            "Report name prefix not set, replacing with default value of "
+            "`usage_gce`."
+        )
+        uel.report_name_prefix = "usage_gce"
     return uel
+
+
 # [END compute_usage_report_get]
 # [END compute_instances_verify_default_value]
 
@@ -115,12 +122,13 @@ def disable_usage_export(project_id: str) -> None:
     # Setting `usage_export_location_resource` to an
     # empty object will disable the usage report generation.
     operation = projects_client.set_usage_export_bucket(
-        project=project_id, usage_export_location_resource={})
+        project=project_id, usage_export_location_resource={}
+    )
 
     op_client = compute_v1.GlobalOperationsClient()
 
     while operation.status != compute_v1.Operation.Status.DONE:
-        operation = op_client.wait(
-            operation=operation.name, project=project_id
-        )
+        operation = op_client.wait(operation=operation.name, project=project_id)
+
+
 # [END compute_usage_report_disable]

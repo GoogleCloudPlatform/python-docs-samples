@@ -29,7 +29,7 @@ from sample_create_vm import (
 )
 
 PROJECT = google.auth.default()[1]
-REGION = 'us-central1'
+REGION = "us-central1"
 INSTANCE_ZONE = "us-central1-b"
 
 
@@ -117,11 +117,7 @@ class TestCreation:
 
     def test_create_from_public_image(self):
         instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_from_public_image(
-            PROJECT,
-            INSTANCE_ZONE,
-            instance_name,
-        )
+        instance = create_from_public_image(PROJECT, INSTANCE_ZONE, instance_name,)
         try:
             assert "debian-cloud" in instance.disks[0].initialize_params.source_image
             assert "debian-10" in instance.disks[0].initialize_params.source_image
@@ -182,6 +178,9 @@ class TestCreation:
         )
         try:
             assert instance.network_interfaces[0].name == "global/networks/default"
-            assert instance.network_interfaces[0].subnetwork == f"regions/{REGION}/subnetworks/default"
+            assert (
+                instance.network_interfaces[0].subnetwork
+                == f"regions/{REGION}/subnetworks/default"
+            )
         finally:
             delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
