@@ -37,7 +37,6 @@ steps:
     entrypoint: "gcloud"
     args:
       [
-        "beta",
         "run",
         "deploy",
         "${_SERVICE_NAME}",
@@ -54,6 +53,7 @@ steps:
 
   - id: "link revision on pull request"
     name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
+    secretEnv: ["GITHUB_TOKEN"]
     args:
       [
         "set",
@@ -75,4 +75,12 @@ substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
   _GITHUB_REPO: $(pull_request.pull_request.head.repo.full_name)
+
+options:
+  dynamicSubsitutions: true
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/github_token/versions/latest
+      env: "GITHUB_TOKEN"
 # [END cloudrun_deployment_preview_preview]
