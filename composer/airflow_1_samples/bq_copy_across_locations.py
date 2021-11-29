@@ -70,7 +70,7 @@ default_args = {
 # Set variables
 # --------------------------------------------------------------------------------
 
-# 'table_list_file_path': This variable will contain the location of the master
+# 'table_list_file_path': This variable will contain the location of the main
 # file.
 table_list_file_path = models.Variable.get('table_list_file_path')
 
@@ -140,7 +140,7 @@ with models.DAG(
         trigger_rule='all_success'
     )
 
-    # Get the table list from master file
+    # Get the table list from main file
     all_records = read_table_list(table_list_file_path)
 
     # Loop over each record in the 'all_records' python list to build up

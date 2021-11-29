@@ -18,7 +18,7 @@ with path '/service' consumes 1 core-second of CPU time, with the timeout of
 Google Compute Engine Autoscaler can scale a web frontend server based on CPU
 utilization.
 The original version of this file is available here:
-https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/compute/
+https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/compute/
     autoscaler/demo/tests/test_frontend.py
 """
 
