@@ -52,7 +52,7 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
     # sink_bucket = 'my-gcs-destination-bucket'
 
     now = datetime.utcnow()
-    # Setting the same day, month, and year signifies a one-time transfer
+    # Setting the one start date and the end date as the same time creates a one-time transfer
     one_time_schedule = {
         'day': now.day,
         'month': now.month,
