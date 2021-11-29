@@ -25,7 +25,6 @@ from github.GithubException import GithubException
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
-api = discovery.build("run", "v1")
 
 # cloud run tags much be lowercase
 TAG_PREFIX = "pr-"
@@ -80,6 +79,7 @@ def error(msg: str, context: str = None) -> None:
 
 def get_service(project_id: str, region: str, service_name: str) -> dict:
     """Get the Cloud Run service object"""
+    api = discovery.build("run", "v1")
     fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
     try:
         service = api.projects().locations().services().get(name=fqname).execute()
@@ -90,6 +90,7 @@ def get_service(project_id: str, region: str, service_name: str) -> dict:
 
 def update_service(project_id: str, region: str, service_name: str, body: dict) -> dict:
     """Update the Cloud Run service."""
+    api = discovery.build("run", "v1")
     fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
     try:
         result = (
