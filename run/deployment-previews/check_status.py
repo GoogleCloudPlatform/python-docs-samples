@@ -25,7 +25,6 @@ from github.GithubException import GithubException
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
-
 api = discovery.build("run", "v1")
 
 # cloud run tags much be lowercase

@@ -14,10 +14,10 @@
 
 from typing import Any, List, NoReturn
 
-from check_status import cli
 from click.testing import CliRunner
 from mock import MagicMock, patch
 
+from check_status import cli
 
 MOCK_SERVICE_NAME = "myservice"
 MOCK_GH_TOKEN = "aaaaa"
@@ -80,7 +80,7 @@ def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
         [
             "set",
             "--project-id",
-            "foo",
+            MOCK_PROJECT_ID,
             "--region",
             "us-central1",
             "--service",
