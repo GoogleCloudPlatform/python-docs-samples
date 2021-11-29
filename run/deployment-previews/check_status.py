@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 import subprocess
 import sys
@@ -59,12 +60,7 @@ _cloudrun_options = [
 _github_options = [
     click.option(
         "--repo-name", required=True, help="GitHub repo name (user/repo, or org/repo)"
-    ),
-    click.option(
-        "--ghtoken-secretname",
-        default="github_token",
-        help="Google Secret Manager secret name",
-    ),
+    )
 ]
 
 
@@ -118,20 +114,6 @@ def get_revision_tags(service: dict) -> List[str]:
     return revs
 
 
-def github_token(project_id: str, ghtoken_secretname: str) -> str:
-    """Retrieve GitHub developer token from Secret Manager"""
-    client = secretmanager.SecretManagerServiceClient()
-    name = f"projects/{project_id}/secrets/{ghtoken_secretname}/versions/latest"
-    try:
-        response = client.access_secret_version(name=name)
-    except NotFound as e:
-        error(e, context=f"finding secret {ghtoken_secretname}")
-
-    # The secret was encoded for you as part of the secret creation, so decode it now.
-    github_token = response.payload.data.decode("UTF-8").strip()
-    return github_token
-
-
 @click.group()
 def cli() -> None:
     """
@@ -155,7 +137,10 @@ def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name:
         click.echo("No revision tags found, nothing to clean up")
         sys.exit(0)
 
-    ghtoken = github_token(project_id, ghtoken_secretname)
+    ghtoken = os.environ.get("GITHUB_TOKEN", None)
+    
+    if not ghtoken: 
+        raise ValueError("GITHUB_TOKEN not defined.")
 
     try:
         repo = github.Github(ghtoken).get_repo(repo_name)
@@ -219,7 +204,6 @@ def set(
     region: str,
     service: str,
     repo_name: str,
-    ghtoken_secretname: str,
     commit_sha: str,
     pull_request: str,
 ) -> None:
@@ -229,12 +213,15 @@ def set(
     service_obj = get_service(project_id, region, service)
     revision_url = get_revision_url(service_obj, tag=make_tag(pull_request))
 
-    ghtoken = github_token(project_id, ghtoken_secretname)
+    ghtoken = os.environ.get("GITHUB_TOKEN", None)
+    
+    if not ghtoken: 
+        raise ValueError("GITHUB_TOKEN not defined.")
 
     try:
         repo = github.Github(ghtoken).get_repo(repo_name)
     except GithubException as e:
-        error(e.data["message"], context=f"finding repo {repo_name}")
+        error(e.data["message"], context=f"finding repo {repo_name}. Is it a private repo, and does your token have the correct permissions?")
 
     try:
         commit = repo.get_commit(sha=commit_sha)
