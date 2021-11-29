@@ -67,9 +67,11 @@ def test_create_dags_list_empty_directory(empty_directory):
 
 def test_create_dags_list(dags_directory):
     (temp_dir, dags) = add_dags_to_composer._create_dags_list(dags_directory)
-    assert len(dags) == 1
+    assert len(dags) == 2
     assert f"{temp_dir}/__init__.py" not in dags
     assert f"{temp_dir}/example_dag.py" in dags
+    assert f"{temp_dir}/example2_dag.py" in dags
+
 
 
 def test_upload_dags_to_composer_no_files(capsys, empty_directory, test_bucket):
