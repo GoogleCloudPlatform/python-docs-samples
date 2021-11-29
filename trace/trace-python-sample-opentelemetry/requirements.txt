@@ -1,3 +1,3 @@
-Flask==2.0.1
+Flask==2.0.2
 opentelemetry-exporter-gcp-trace==1.0.0
 opentelemetry-propagator-gcp==1.0.0
