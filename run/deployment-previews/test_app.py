@@ -141,6 +141,7 @@ def test_set_check_calls(github_mock: Any, discovery_mock: Any) -> NoReturn:
             "--dry-run",
         ],
     )
+    print(response.output)
     assert response.exit_code == 0
     assert "Dry-run" in response.output
 
