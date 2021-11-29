@@ -27,7 +27,7 @@ from google.cloud import storage
 def dags_directory():
     """Copies contents of dags/ folder to a temporary directory"""
     temp_dir = tempfile.mkdtemp()
-    copytree("../dags/", f"{temp_dir}/", dirs_exist_ok=True)
+    copytree("dags/", f"{temp_dir}/", dirs_exist_ok=True)
     yield temp_dir
 
 
