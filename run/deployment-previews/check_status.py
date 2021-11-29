@@ -24,7 +24,6 @@ import click
 import github
 from github.GithubException import GithubException
 from google.api_core.exceptions import NotFound
-from google.cloud import secretmanager
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
