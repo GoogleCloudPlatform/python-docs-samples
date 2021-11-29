@@ -28,6 +28,9 @@ from google.cloud import secretmanager
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
+
+api = discovery.build("run", "v1")
+
 # cloud run tags much be lowercase
 TAG_PREFIX = "pr-"
 
@@ -81,13 +84,22 @@ def error(msg: str, context: str = None) -> None:
 
 def get_service(project_id: str, region: str, service_name: str) -> dict:
     """Get the Cloud Run service object"""
-    api = discovery.build("run", "v1")
     fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
     try:
         service = api.projects().locations().services().get(name=fqname).execute()
     except HttpError as e:
         error(re.search('"(.*)"', str(e)).group(0), context="finding service")
     return service
+
+
+def update_service(project_id: str, region: str, service_name: str, body: dict) -> dict:
+    """Update the Cloud Run service."""
+    fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
+    try:
+     result = api.projects().locations().services().replaceService(name=fqname, body=body).execute()
+    except HttpError as e:
+        error(re.search('"(.*)"', str(e)).group(0), context="updating service")
+    return result
 
 
 def get_revision_url(service_obj: dict, tag: str) -> str:
@@ -103,9 +115,7 @@ def get_revision_url(service_obj: dict, tag: str) -> str:
 
 
 def get_revision_tags(service: dict) -> List[str]:
-    """
-    Get all tags associated to a service
-    """
+    """Get all tags associated to a service"""
     revs = []
 
     for revision in service["status"]["traffic"]:
@@ -116,9 +126,7 @@ def get_revision_tags(service: dict) -> List[str]:
 
 @click.group()
 def cli() -> None:
-    """
-    Tool for setting GitHub Status Checks to Cloud Run Revision URLs
-    """
+    """Tool for setting GitHub Status Checks to Cloud Run Revision URLs"""
     pass
 
 
@@ -126,10 +134,8 @@ def cli() -> None:
 @add_options(_default_options)
 @add_options(_cloudrun_options)
 @add_options(_github_options)
-def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name: str, ghtoken_secretname: str) -> None:
-    """
-    Cleanup any revision URLs against closed pull requests
-    """
+def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name: str) -> None:
+    """Cleanup any revision URLs against closed pull requests"""
     service_obj = get_service(project_id, region, service)
     revs = get_revision_tags(service_obj)
 
@@ -163,29 +169,15 @@ def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name:
                 tags_to_delete.append(tag)
 
     if tags_to_delete:
-        tags = ",".join(tags_to_delete)
-
-        # Fork out to the gcloud CLI to programatically delete tags from closed PRs
-        click.echo(f"Forking out to gcloud to remove tags: {tags}")
-        subprocess.run(
-            [
-                "gcloud",
-                "beta",
-                "run",
-                "services",
-                "update-traffic",
-                service,
-                "--platform",
-                "managed",
-                "--region",
-                region,
-                "--project",
-                project_id,
-                "--remove-tags",
-                tags,
-            ],
-            check=True,
-        )
+        # Edit the service by removing the tags from the traffic spec, then replace the service
+        # with this new configuration. 
+        for tag in tags_to_delete:
+            for traffic in service_obj["spec"]["traffic"]:
+                if "tag" in traffic.keys() and tag == traffic["tag"]:
+                    service_obj["spec"]["traffic"].remove(traffic)
+        
+        click.echo(f"Updating the service to remove tags: {','.join(tags_to_delete)}.")
+        update_service(project_id, region, service, service_obj)
 
     else:
         click.echo("Did not identify any tags to delete.")
@@ -207,9 +199,7 @@ def set(
     commit_sha: str,
     pull_request: str,
 ) -> None:
-    """
-    Set a status on a GitHub commit to a specific revision URL
-    """
+    """Set a status on a GitHub commit to a specific revision URL"""
     service_obj = get_service(project_id, region, service)
     revision_url = get_revision_url(service_obj, tag=make_tag(pull_request))
 
@@ -228,6 +218,7 @@ def set(
     except GithubException as e:
         error(e.data["message"], context=f"finding commit {commit_sha}")
 
+# [START_EXCLUDE]
     if dry_run:
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
@@ -237,19 +228,20 @@ def set(
                 f"on service {service_obj['metadata']['name']}"
             )
         )
+        return
+# [END_EXCLUDE]
 
-    else:
-        commit.create_status(
-            state="success",
-            target_url=revision_url,
-            context="Deployment Preview",
-            description="Your preview is now available.",
-        )
-        click.secho("Success: ", fg="green", bold=True, nl=False)
-        click.echo(
-            f"Status created on {repo_name}, commit {commit.sha[:7]}, "
-            f"linking to {revision_url} on service {service_obj['metadata']['name']}"
-        )
+    commit.create_status(
+        state="success",
+        target_url=revision_url,
+        context="Deployment Preview",
+        description="Your preview is now available.",
+    )
+    click.secho("Success: ", fg="green", bold=True, nl=False)
+    click.echo(
+        f"Status created on {repo_name}, commit {commit.sha[:7]}, "
+        f"linking to {revision_url} on service {service_obj['metadata']['name']}"
+    )
 
 
 # [END cloudrun_deployment_preview_setstatus]

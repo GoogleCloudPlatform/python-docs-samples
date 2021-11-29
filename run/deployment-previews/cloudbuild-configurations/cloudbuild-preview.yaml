@@ -37,7 +37,6 @@ steps:
     entrypoint: "gcloud"
     args:
       [
-        "beta",
         "run",
         "deploy",
         "${_SERVICE_NAME}",
