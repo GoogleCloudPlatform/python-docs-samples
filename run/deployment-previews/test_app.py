@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from typing import Any, List, NoReturn
 
+import pytest
 from click.testing import CliRunner
 from mock import MagicMock, patch
 
@@ -28,6 +30,12 @@ MOCK_PROJECT_ID = "foocorp"
 
 
 runner = CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def mock_settings_env_vars():
+    with patch.dict(os.environ, {"GITHUB_TOKEN": MOCK_GH_TOKEN}):
+        yield
 
 
 def test_help() -> NoReturn:
@@ -141,7 +149,6 @@ def test_set_check_calls(github_mock: Any, discovery_mock: Any) -> NoReturn:
             "--dry-run",
         ],
     )
-    print(response.output)
     assert response.exit_code == 0
     assert "Dry-run" in response.output
 
