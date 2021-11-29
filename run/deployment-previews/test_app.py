@@ -14,10 +14,9 @@
 
 from typing import Any, List, NoReturn
 
-from click.testing import CliRunner
-from mock import MagicMock, patch, PropertyMock
-
 from check_status import cli
+from click.testing import CliRunner
+from mock import MagicMock, patch
 
 
 MOCK_SERVICE_NAME = "myservice"
@@ -44,7 +43,12 @@ def test_set_no_project() -> NoReturn:
 
 
 def service_data(name: str, tags: List[str]) -> dict:
-    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100, }]
+    traffic = [
+        {
+            "revisionName": f"{name}-00001-aaa",
+            "percent": 100,
+        }
+    ]
     for t in tags:
         tag = f"pr-{t}"
         traffic.append(

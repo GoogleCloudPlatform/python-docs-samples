@@ -16,14 +16,12 @@
 
 import os
 import re
-import subprocess
 import sys
 from typing import Callable, List
 
 import click
 import github
 from github.GithubException import GithubException
-from google.api_core.exceptions import NotFound
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
@@ -95,7 +93,13 @@ def update_service(project_id: str, region: str, service_name: str, body: dict) 
     """Update the Cloud Run service."""
     fqname = f"projects/{project_id}/locations/{region}/services/{service_name}"
     try:
-     result = api.projects().locations().services().replaceService(name=fqname, body=body).execute()
+        result = (
+            api.projects()
+            .locations()
+            .services()
+            .replaceService(name=fqname, body=body)
+            .execute()
+        )
     except HttpError as e:
         error(re.search('"(.*)"', str(e)).group(0), context="updating service")
     return result
@@ -133,7 +137,9 @@ def cli() -> None:
 @add_options(_default_options)
 @add_options(_cloudrun_options)
 @add_options(_github_options)
-def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name: str) -> None:
+def cleanup(
+    dry_run: str, project_id: str, region: str, service: str, repo_name: str
+) -> None:
     """Cleanup any revision URLs against closed pull requests"""
     service_obj = get_service(project_id, region, service)
     revs = get_revision_tags(service_obj)
@@ -143,8 +149,8 @@ def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name:
         sys.exit(0)
 
     ghtoken = os.environ.get("GITHUB_TOKEN", None)
-    
-    if not ghtoken: 
+
+    if not ghtoken:
         raise ValueError("GITHUB_TOKEN not defined.")
 
     try:
@@ -169,12 +175,12 @@ def cleanup(dry_run: str, project_id: str, region: str, service: str, repo_name:
 
     if tags_to_delete:
         # Edit the service by removing the tags from the traffic spec, then replace the service
-        # with this new configuration. 
+        # with this new configuration.
         for tag in tags_to_delete:
             for traffic in service_obj["spec"]["traffic"]:
                 if "tag" in traffic.keys() and tag == traffic["tag"]:
                     service_obj["spec"]["traffic"].remove(traffic)
-        
+
         click.echo(f"Updating the service to remove tags: {','.join(tags_to_delete)}.")
         update_service(project_id, region, service, service_obj)
 
@@ -203,21 +209,24 @@ def set(
     revision_url = get_revision_url(service_obj, tag=make_tag(pull_request))
 
     ghtoken = os.environ.get("GITHUB_TOKEN", None)
-    
-    if not ghtoken: 
+
+    if not ghtoken:
         raise ValueError("GITHUB_TOKEN not defined.")
 
     try:
         repo = github.Github(ghtoken).get_repo(repo_name)
     except GithubException as e:
-        error(e.data["message"], context=f"finding repo {repo_name}. Is it a private repo, and does your token have the correct permissions?")
+        error(
+            e.data["message"],
+            context=f"finding repo {repo_name}. Is it a private repo, and does your token have the correct permissions?",
+        )
 
     try:
         commit = repo.get_commit(sha=commit_sha)
     except GithubException as e:
         error(e.data["message"], context=f"finding commit {commit_sha}")
 
-# [START_EXCLUDE]
+    # [START_EXCLUDE]
     if dry_run:
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
@@ -228,7 +237,7 @@ def set(
             )
         )
         return
-# [END_EXCLUDE]
+    # [END_EXCLUDE]
 
     commit.create_status(
         state="success",
