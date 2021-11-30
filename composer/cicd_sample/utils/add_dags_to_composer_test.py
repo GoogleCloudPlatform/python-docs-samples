@@ -81,7 +81,7 @@ def test_upload_dags_to_composer_no_files(capsys, empty_directory, test_bucket):
 
 
 def test_upload_dags_to_composer( test_bucket, capsys):
+    assert False, print(os.getcwd())
     add_dags_to_composer.upload_dags_to_composer("./cicd_sample/dags/", test_bucket)
     out, _ = capsys.readouterr()
     assert "uploaded" in out
-    assert False, print(os.getcwd())
