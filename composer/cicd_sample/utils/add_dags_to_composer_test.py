@@ -27,7 +27,6 @@ from google.cloud import storage
 def dags_directory():
     """Copies contents of dags/ folder to a temporary directory"""
     temp_dir = tempfile.mkdtemp()
-    print(os.getcwd())
     copytree("./cicd_sample/dags/", f"{temp_dir}/", dirs_exist_ok=True)
     yield temp_dir
 
@@ -85,3 +84,4 @@ def test_upload_dags_to_composer( test_bucket, capsys):
     add_dags_to_composer.upload_dags_to_composer("./cicd_sample/dags/", test_bucket)
     out, _ = capsys.readouterr()
     assert "uploaded" in out
+    assert False, print(os.getcwd())
