@@ -30,7 +30,7 @@ fi
 
 # Use SECRET_MANAGER_PROJECT if set, fallback to cloud-devrel-kokoro-resources.
 PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
-
+gcloud config list account --format "value(core.account)"
 gcloud secrets versions access latest --secret="python-docs-samples-test-env" \
        --project="${PROJECT_ID}" \
        > testing/test-env.sh
