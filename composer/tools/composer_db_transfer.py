@@ -26,7 +26,7 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.2"
+SCRIPT_VERSION = "1.3"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
@@ -3084,7 +3084,7 @@ class DatabasePorter:
         variable_name: str,
         container_description: typing.Dict[typing.Any, typing.Any],
     ) -> str:
-        """Reads environment variable from monitoring"""
+        """Reads environment variable from container description"""
         for variable in container_description["env"]:
             if variable["name"] == variable_name:
                 logger.info(
@@ -3093,7 +3093,7 @@ class DatabasePorter:
                     variable["value"],
                 )
                 return variable["value"]
-        raise Exception(
+        raise KeyError(
             f"Environment variable {variable} could not be found in the container."
         )
 
@@ -3138,6 +3138,13 @@ class DatabasePorter:
                 monitoring_container_description,
             )
         )
+        try:
+            self.sql_proxy = self._get_environment_variable_from_container_description(
+                "SQL_HOST",
+                monitoring_container_description,
+            )
+        except KeyError:
+            self.sql_proxy = None
 
     def _read_fernet_key(self: typing.Any) -> None:
         self.fernet_key = EnvironmentUtils.read_env_variable_from_container(
@@ -3172,15 +3179,23 @@ class DatabasePorter:
 
     def _check_cloud_sql_proxy(self: typing.Any) -> None:
         """Sets sql proxy."""
-        namespace = (
-            "composer-system" if self.composer_system_namespace_exists else "default"
-        )
-        self.sql_proxy = f"airflow-sqlproxy-service.{namespace}.svc.cluster.local"
-        logger.info(
-            "composer-system %s -> sql proxy: %s",
-            "exists" if self.composer_system_namespace_exists else "does not exist",
-            self.sql_proxy,
-        )
+        if self.sql_proxy is not None:
+            logger.info(
+                "sql proxy as provided by SQL_HOST: %s",
+                self.sql_proxy,
+            )
+        else:
+            namespace = (
+                "composer-system"
+                if self.composer_system_namespace_exists
+                else "default"
+            )
+            self.sql_proxy = f"airflow-sqlproxy-service.{namespace}.svc.cluster.local"
+            logger.info(
+                "composer-system %s -> sql proxy: %s",
+                "exists" if self.composer_system_namespace_exists else "does not exist",
+                self.sql_proxy,
+            )
 
     def _check_drs_and_select_db_storage_bucket(self: typing.Any) -> None:
         """Checks if the environment is DRS-compliant."""
