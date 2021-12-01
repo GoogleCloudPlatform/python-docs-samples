@@ -15,6 +15,7 @@ import time
 import typing
 import uuid
 
+from flaky import flaky
 import google.auth
 import google.cloud.storage as storage
 import pytest
@@ -38,6 +39,7 @@ def temp_bucket():
     bucket.delete(force=True)
 
 
+@flaky(max_runs=3)
 def test_set_usage_export_bucket_default(
     capsys: typing.Any, temp_bucket: storage.Bucket
 ) -> None:
