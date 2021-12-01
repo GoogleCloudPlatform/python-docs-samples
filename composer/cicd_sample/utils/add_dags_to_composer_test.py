@@ -20,9 +20,8 @@ import tempfile
 import uuid
 
 from google.cloud import storage
-import pytest
-
 import add_dags_to_composer
+import pytest
 
 
 DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
