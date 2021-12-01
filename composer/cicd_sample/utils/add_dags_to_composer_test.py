@@ -60,11 +60,11 @@ def test_bucket():
 
 def test_create_dags_list_invalid_directory():
     with pytest.raises(FileNotFoundError):
-        (temp_dir, dags) = add_dags_to_composer._create_dags_list("this-directory-does-not-exist/")
+        (temp_dir, dags) = add_dags_to_composer._create_dags_list("this-directory-does-not-exist/")  # noqa: E117
 
 
 def test_create_dags_list_empty_directory(empty_directory):
-        (temp_dir, dags) = add_dags_to_composer._create_dags_list(empty_directory)
+        (temp_dir, dags) = add_dags_to_composer._create_dags_list(empty_directory)  # noqa: E117
         assert len(dags) == 0
         assert len(os.listdir(temp_dir)) == 0
 
