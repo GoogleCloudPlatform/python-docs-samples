@@ -21,6 +21,7 @@ import os
 import uuid
 import warnings
 
+import boto3
 from google.cloud import storage, storage_transfer
 from google.cloud.storage_transfer import TransferJob
 
@@ -34,12 +35,12 @@ def project_id():
 
 @pytest.fixture(scope='module')
 def aws_access_key_id():
-    yield os.environ.get("GOOGLE_CLOUD_PROJECT")
+    yield os.environ.get("AWS_ACCESS_KEY_ID")
 
 
 @pytest.fixture(scope='module')
 def aws_secret_access_key():
-    yield os.environ.get("GOOGLE_CLOUD_PROJECT")
+    yield os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 
 @pytest.fixture(scope='module')
@@ -59,7 +60,7 @@ def sts_service_account(project_id):
 def job_description_unique(project_id: str):
     """
     Generate a unique job description. Attempts to find and delete a job with
-    this generated description after test(s) are ran.
+    this generated description after tests are ran.
     """
 
     # Create description
@@ -96,14 +97,20 @@ def job_description_unique(project_id: str):
 
 @pytest.fixture(scope='module')
 def aws_source_bucket(bucket_name: str):
-    # TODO:
-    # s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_1)
+    """
+    Creates an S3 bucket for testing. Empties and auto-deletes after
+    tests are ran.
+    """
 
-    # s3.createBucket(AMAZON_BUCKET);
+    s3_client = boto3.client('s3')
+    s3_resource = boto3.resource('s3')
 
-    pass
+    s3_client.create_bucket(Bucket=bucket_name)
 
-    # s3.deleteBucket(AMAZON_BUCKET);
+    yield bucket_name
+
+    s3_resource.Bucket(bucket_name).objects.all().delete()
+    s3_client.delete_bucket(Bucket=bucket_name)
 
 
 @pytest.fixture(scope='module')
