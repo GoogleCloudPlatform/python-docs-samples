@@ -79,9 +79,9 @@ for an example.
 **python-docs-samples:** Each sample should be in a folder under the top-level folder of
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 that corresponds to the Google Cloud service or API used by the sample.
-For example, a sample demonstrating how to work with BigTable should be
+For example, a sample demonstrating how to work with Composer should be
 in a subfolder under the
-[python-docs-samples/bigtable](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/bigtable)
+[python-docs-samples/composer](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/composer)
 folder.
 
 Conceptually related samples under a service or API should be grouped into
@@ -94,7 +94,7 @@ folder.
 If your sample is a set of discrete code snippets that each demonstrate a
 single operation, these should be grouped into a `snippets` folder. For
 example, see the snippets in the
-[bigtable/snippets/writes](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/bigtable/snippets/writes)
+[bigtable/snippets/writes](https://github.com/googleapis/python-bigtable/tree/main/samples/snippets/writes)
 folder.
 
 If your sample is a quickstart — intended to demonstrate how to quickly get
