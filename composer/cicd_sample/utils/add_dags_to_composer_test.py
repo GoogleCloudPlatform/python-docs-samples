@@ -16,18 +16,20 @@ from unittest import mock
 from shutil import copytree
 
 import os
+import pathlib
 import pytest
 import tempfile
 import uuid
 import add_dags_to_composer
 from google.cloud import storage
 
+DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
 
 @pytest.fixture(scope="function")
 def dags_directory():
     """Copies contents of dags/ folder to a temporary directory"""
     temp_dir = tempfile.mkdtemp()
-    copytree("../dags/", f"{temp_dir}/", dirs_exist_ok=True)
+    copytree(DAGS_DIR, f"{temp_dir}/", dirs_exist_ok=True)
     yield temp_dir
 
 
@@ -81,6 +83,6 @@ def test_upload_dags_to_composer_no_files(capsys, empty_directory, test_bucket):
 
 
 def test_upload_dags_to_composer(test_bucket, capsys):
-    add_dags_to_composer.upload_dags_to_composer("../dags/", test_bucket)
+    add_dags_to_composer.upload_dags_to_composer(DAGS_DIR, test_bucket)
     out, _ = capsys.readouterr()
     assert "uploaded" in out
