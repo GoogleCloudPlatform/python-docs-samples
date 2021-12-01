@@ -18,10 +18,10 @@ from shutil import copytree
 import tempfile
 import uuid
 
-import add_dags_to_composer
-
 from google.cloud import storage
 import pytest
+
+import add_dags_to_composer
 
 
 DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
