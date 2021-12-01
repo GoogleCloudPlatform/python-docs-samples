@@ -1,4 +1,4 @@
-Flask==2.0.1
+Flask==2.0.2
 SQLAlchemy==1.4.27
 python-tds==1.11.0
 sqlalchemy-pytds==0.3.3

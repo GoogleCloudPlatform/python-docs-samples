@@ -10,7 +10,7 @@ For more information, see the
 docs page.
 
 The following examples show how to run the
-[`Word_Count` template](https://github.com/GoogleCloudPlatform/DataflowTemplates/blob/master/src/main/java/com/google/cloud/teleport/templates/WordCount.java),
+[`Word_Count` template](https://github.com/GoogleCloudPlatform/DataflowTemplates/blob/main/src/main/java/com/google/cloud/teleport/templates/WordCount.java),
 but you can run any other template.
 
 For the `Word_Count` template, we require to pass an `output` Cloud Storage path prefix,
