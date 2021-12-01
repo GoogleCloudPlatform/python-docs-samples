@@ -20,7 +20,7 @@ import os
 def create_dicom_store(project_id, location, dataset_id, dicom_store_id):
     """Creates a new DICOM store within the parent dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -60,7 +60,7 @@ def create_dicom_store(project_id, location, dataset_id, dicom_store_id):
 def delete_dicom_store(project_id, location, dataset_id, dicom_store_id):
     """Deletes the specified DICOM store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -101,7 +101,7 @@ def delete_dicom_store(project_id, location, dataset_id, dicom_store_id):
 def get_dicom_store(project_id, location, dataset_id, dicom_store_id):
     """Gets the specified DICOM store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -139,7 +139,7 @@ def get_dicom_store(project_id, location, dataset_id, dicom_store_id):
 def list_dicom_stores(project_id, location, dataset_id):
     """Lists the DICOM stores in the given dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -181,7 +181,7 @@ def list_dicom_stores(project_id, location, dataset_id):
 def patch_dicom_store(project_id, location, dataset_id, dicom_store_id, pubsub_topic):
     """Updates the DICOM store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -235,7 +235,7 @@ def export_dicom_instance(project_id, location, dataset_id, dicom_store_id, uri_
     """Export data to a Google Cloud Storage bucket by copying
     it from the DICOM store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -283,7 +283,7 @@ def import_dicom_instance(
     """Imports data into the DICOM store by copying it from the specified
     source.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -330,7 +330,7 @@ def import_dicom_instance(
 def get_dicom_store_iam_policy(project_id, location, dataset_id, dicom_store_id):
     """Gets the IAM policy for the specified DICOM store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -386,7 +386,7 @@ def set_dicom_store_iam_policy(
     A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
     or 'roles/editor'
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery

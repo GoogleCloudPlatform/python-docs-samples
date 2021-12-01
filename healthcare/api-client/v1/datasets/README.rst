@@ -97,27 +97,27 @@ To run this sample:
       {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,get_iam_policy,set_iam_policy,deidentify-dataset}
         create-dataset      Creates a dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         delete-dataset      Deletes a dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         get-dataset         Gets any metadata associated with a dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         list-datasets       Lists the datasets in the project. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         patch-dataset       Updates dataset metadata. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         get_iam_policy      Gets the IAM policy for the specified dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         set_iam_policy      Sets the IAM policy for the specified dataset. A
                             single member will be assigned a single role. A member
@@ -132,13 +132,13 @@ To run this sample:
                             role, such as 'roles/viewer', 'roles/owner', or
                             'roles/editor' See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
         deidentify-dataset  Uses a DICOM tag keeplist to create a new dataset
                             containing de-identified DICOM data from the source
                             dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/datasets
+                            samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
 
     optional arguments:
