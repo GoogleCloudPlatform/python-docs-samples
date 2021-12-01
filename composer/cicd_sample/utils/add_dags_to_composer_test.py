@@ -28,7 +28,7 @@ DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
 
 
 @pytest.fixture(scope="function")
-def dags_directory():
+def dags_directory() -> str:
     """Copies contents of dags/ folder to a temporary directory"""
     temp_dir = tempfile.mkdtemp()
     copytree(DAGS_DIR, f"{temp_dir}/", dirs_exist_ok=True)
@@ -36,14 +36,14 @@ def dags_directory():
 
 
 @pytest.fixture(scope="function")
-def empty_directory():
+def empty_directory() -> str:
     temp_dir = tempfile.mkdtemp()
     yield temp_dir
 
 
 # test bucket used in lieu of an actual Composer environment bucket
 @pytest.fixture(scope="module")
-def test_bucket():
+def test_bucket() -> str:
     """Yields a bucket that is deleted after the test completes."""
     storage_client = storage.Client()
 
@@ -58,18 +58,18 @@ def test_bucket():
     bucket.delete(force=True)
 
 
-def test_create_dags_list_invalid_directory():
+def test_create_dags_list_invalid_directory() -> None:
     with pytest.raises(FileNotFoundError):
         (temp_dir, dags) = add_dags_to_composer._create_dags_list("this-directory-does-not-exist/")  # noqa: E117
 
 
-def test_create_dags_list_empty_directory(empty_directory):
+def test_create_dags_list_empty_directory(empty_directory: str) -> None:
         (temp_dir, dags) = add_dags_to_composer._create_dags_list(empty_directory)  # noqa: E117
         assert len(dags) == 0
         assert len(os.listdir(temp_dir)) == 0
 
 
-def test_create_dags_list(dags_directory):
+def test_create_dags_list(dags_directory: str) -> None:
     (temp_dir, dags) = add_dags_to_composer._create_dags_list(dags_directory)
     assert len(dags) == 2
     assert f"{temp_dir}/__init__.py" not in dags
@@ -77,13 +77,13 @@ def test_create_dags_list(dags_directory):
     assert f"{temp_dir}/example2_dag.py" in dags
 
 
-def test_upload_dags_to_composer_no_files(capsys, empty_directory, test_bucket):
+def test_upload_dags_to_composer_no_files(capsys: pytest.CaptureFixture, empty_directory: str, test_bucket: str) -> None:
     add_dags_to_composer.upload_dags_to_composer(empty_directory, test_bucket)
     out, _ = capsys.readouterr()
     assert "No DAGs to upload." in out
 
 
-def test_upload_dags_to_composer(test_bucket, capsys):
+def test_upload_dags_to_composer(test_bucket: str, capsys: pytest.CaptureFixture) -> None:
     add_dags_to_composer.upload_dags_to_composer(DAGS_DIR, test_bucket)
     out, _ = capsys.readouterr()
     assert "uploaded" in out
