@@ -28,9 +28,10 @@ from datetime import datetime
 from google.cloud import storage_transfer
 
 
-def create_one_time_aws_transfer(project_id: str, source_bucket: str,
-                                 aws_access_key_id: str,
-                                 aws_secret_access_key: str, sink_bucket: str):
+def create_one_time_aws_transfer(
+        project_id: str, description: str,
+        source_bucket: str, aws_access_key_id: str,
+        aws_secret_access_key: str, sink_bucket: str):
     """Creates a one-time transfer job from Amazon S3 to Google Cloud
     Storage."""
 
@@ -38,6 +39,9 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
 
     # The ID of the Google Cloud Platform Project that owns the job
     # project_id = 'my-project-id'
+
+    # A useful description for your transfer job
+    # description = 'My transfer job'
 
     # AWS S3 source bucket name
     # source_bucket = 'my-s3-source-bucket'
@@ -63,6 +67,7 @@ def create_one_time_aws_transfer(project_id: str, source_bucket: str,
     transfer_job_request = storage_transfer.CreateTransferJobRequest({
         'transfer_job': {
             'project_id': project_id,
+            'description': description,
             'status': storage_transfer.TransferJob.Status.ENABLED,
             'schedule': {
                 'schedule_start_date': one_time_schedule,
@@ -95,6 +100,10 @@ if __name__ == "__main__":
         '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
         required=True)
+    parser.add_argument(
+        '--description',
+        help='A useful description for your transfer job',
+        default='My transfer job')
     parser.add_argument(
         '--source-bucket',
         help='AWS S3 source bucket name',
