@@ -14,26 +14,22 @@
 
 from datetime import datetime
 import json
-import os
 import uuid
 import warnings
 
 import backoff
 from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
+from google.cloud.storage import Bucket
 from googleapiclient.errors import HttpError
 import pytest
 
 import nearline_request
 import nearline_request_apiary
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-source_bucket = f"{project_id}-storagetransfer-source"
-sink_bucket = f"{project_id}-storagetransfer-sink"
-
 
 @pytest.fixture()
-def job_description():
+def job_description(project_id: str):
     # Create description
     client = storage_transfer.StorageTransferServiceClient()
     description = f"Storage Transfer Service Samples Test - {uuid.uuid4().hex}"
@@ -70,12 +66,15 @@ def job_description():
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_nearline_request(capsys, job_description: str):
+def test_nearline_request(
+        capsys, project_id: str, source_bucket: Bucket,
+        destination_bucket: Bucket, job_description: str):
+
     nearline_request.create_daily_nearline_30_day_migration(
         project_id=project_id,
         description=job_description,
-        source_bucket=source_bucket,
-        sink_bucket=sink_bucket,
+        source_bucket=source_bucket.name,
+        sink_bucket=destination_bucket.name,
         start_date=datetime.utcnow()
     )
 
@@ -85,14 +84,17 @@ def test_nearline_request(capsys, job_description: str):
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
-def test_nearline_request_apiary(capsys, job_description: str):
+def test_nearline_request_apiary(
+        capsys, project_id: str, source_bucket: Bucket,
+        destination_bucket: Bucket, job_description: str):
+
     nearline_request_apiary.main(
         description=job_description,
         project_id=project_id,
         start_date=datetime.utcnow(),
         start_time=datetime.utcnow(),
-        source_bucket=source_bucket,
-        sink_bucket=sink_bucket
+        source_bucket=source_bucket.name,
+        sink_bucket=destination_bucket.name
     )
 
     out, _ = capsys.readouterr()

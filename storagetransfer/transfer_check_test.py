@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import warnings
 
 import backoff
 from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
+from google.cloud.storage import Bucket
 from google.protobuf.duration_pb2 import Duration
 from googleapiclient.errors import HttpError
 import pytest
@@ -25,11 +25,10 @@ import pytest
 import transfer_check
 import transfer_check_apiary
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-
 
 @pytest.fixture()
-def transfer_job():
+def transfer_job(
+        project_id: str, source_bucket: Bucket, destination_bucket: Bucket):
     # Create job
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
@@ -44,9 +43,9 @@ def transfer_job():
         },
         "transfer_spec": {
             "gcs_data_source": {
-                "bucket_name": f"{project_id}-storagetransfer-source"},
+                "bucket_name": source_bucket.name},
             "gcs_data_sink": {
-                "bucket_name": f"{project_id}-storagetransfer-sink"},
+                "bucket_name": destination_bucket.name},
             "object_conditions": {
                 'min_time_elapsed_since_last_modification': Duration(
                     seconds=2592000  # 30 days
@@ -78,7 +77,7 @@ def transfer_job():
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_transfer_check(capsys, transfer_job: str):
+def test_transfer_check(capsys, project_id: str, transfer_job: str):
     transfer_check.transfer_check(project_id, transfer_job)
 
     out, _ = capsys.readouterr()
@@ -90,7 +89,7 @@ def test_transfer_check(capsys, transfer_job: str):
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
-def test_transfer_check_apiary(capsys, transfer_job: str):
+def test_transfer_check_apiary(capsys, project_id: str, transfer_job: str):
     transfer_check_apiary.main(project_id, transfer_job)
 
     out, _ = capsys.readouterr()
