@@ -17,12 +17,13 @@ import argparse
 import glob
 from shutil import copytree, ignore_patterns
 import tempfile
+from typing import List, Tuple
 
 # Imports the Google Cloud client library
 from google.cloud import storage
 
 
-def _create_dags_list(dags_directory):
+def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
     temp_dir = tempfile.mkdtemp()
 
     # ignore non-DAG Python files
@@ -37,7 +38,7 @@ def _create_dags_list(dags_directory):
     return (temp_dir, dags)
 
 
-def upload_dags_to_composer(dags_directory, bucket_name):
+def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
     temp_dir, dags = _create_dags_list(dags_directory)
 
     if len(dags) > 0:
