@@ -96,6 +96,10 @@ fi
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 
+if [[ -f "${KOKORO_GFILE_DIR}/aws-secrets.sh" ]]; then
+    source "${KOKORO_GFILE_DIR}/aws-secrets.sh"
+fi
+
 # For cloud-run session, we activate the service account for gcloud sdk.
 gcloud auth activate-service-account \
        --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
