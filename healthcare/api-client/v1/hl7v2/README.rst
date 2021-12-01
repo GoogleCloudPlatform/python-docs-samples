@@ -101,27 +101,27 @@ To run this sample:
       {create-hl7v2-store,delete-hl7v2-store,get-hl7v2-store,list-hl7v2-stores,patch-hl7v2-store,get_iam_policy,set_iam_policy}
         create-hl7v2-store  Creates a new HL7v2 store within the parent dataset.
                             See https://github.com/GoogleCloudPlatform/python-
-                            docs-samples/tree/master/healthcare/api-
+                            docs-samples/tree/main/healthcare/api-
                             client/v1/hl7v2 before running the sample.
         delete-hl7v2-store  Deletes the specified HL7v2 store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         get-hl7v2-store     Gets the specified HL7v2 store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         list-hl7v2-stores   Lists the HL7v2 stores in the given dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         patch-hl7v2-store   Updates the HL7v2 store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         get_iam_policy      Gets the IAM policy for the specified HL7v2 store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         set_iam_policy      Sets the IAM policy for the specified HL7v2 store. A
                             single member will be assigned a single role. A member
@@ -136,7 +136,7 @@ To run this sample:
                             role, such as 'roles/viewer', 'roles/owner', or
                             'roles/editor'. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
 
     optional arguments:
@@ -187,16 +187,16 @@ To run this sample:
                             Creates an HL7v2 message and sends a notification to
                             the Cloud Pub/Sub topic. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         delete-hl7v2-message
                             Deletes an HL7v2 message. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         get-hl7v2-message   Gets an HL7v2 message. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         ingest-hl7v2-message
                             Ingests a new HL7v2 message from the hospital and
@@ -204,18 +204,18 @@ To run this sample:
                             Return is an HL7v2 ACK message if the message was
                             successfully stored. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         list-hl7v2-messages
                             Lists all the messages in the given HL7v2 store with
                             support for filtering. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
         patch-hl7v2-message
                             Updates the message. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/master/healthcare/api-client/v1/hl7v2
+                            samples/tree/main/healthcare/api-client/v1/hl7v2
                             before running the sample.
 
     optional arguments:
