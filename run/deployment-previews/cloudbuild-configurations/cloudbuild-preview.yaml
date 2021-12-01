@@ -77,7 +77,7 @@ substitutions:
   _GITHUB_REPO: $(pull_request.pull_request.head.repo.full_name)
 
 options:
-  dynamicSubsitutions: true
+  dynamicSubstitutions: true
 
 availableSecrets:
   secretManager:

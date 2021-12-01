@@ -104,6 +104,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: pubsublite'
+  to:
+  - anguillanneuf
+- labels:
   - 'api: run'
   to:
   - averikitsch
