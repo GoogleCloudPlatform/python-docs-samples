@@ -12,18 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest import mock
-from shutil import copytree
-
 import os
 import pathlib
-import pytest
+from shutil import copytree
+
 import tempfile
 import uuid
+
 import add_dags_to_composer
 from google.cloud import storage
+import pytest
+
 
 DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
+
 
 @pytest.fixture(scope="function")
 def dags_directory():
@@ -73,7 +75,6 @@ def test_create_dags_list(dags_directory):
     assert f"{temp_dir}/__init__.py" not in dags
     assert f"{temp_dir}/example_dag.py" in dags
     assert f"{temp_dir}/example2_dag.py" in dags
-
 
 
 def test_upload_dags_to_composer_no_files(capsys, empty_directory, test_bucket):

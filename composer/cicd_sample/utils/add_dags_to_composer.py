@@ -14,9 +14,10 @@
 
 # [START composer_cicd_add_dags_to_composer_utility]
 import argparse
-import tempfile
-from shutil import copytree, ignore_patterns
 import glob
+from shutil import copytree, ignore_patterns
+import tempfile
+
 # Imports the Google Cloud client library
 from google.cloud import storage
 
@@ -35,9 +36,9 @@ def _create_dags_list(dags_directory):
     dags = glob.glob(f"{temp_dir}/*.py")
     return (temp_dir, dags)
 
+
 def upload_dags_to_composer(dags_directory, bucket_name):
     temp_dir, dags = _create_dags_list(dags_directory)
-
 
     if len(dags) > 0:
         # Note - the GCS client library does not currently support batch requests on uploads
@@ -46,17 +47,18 @@ def upload_dags_to_composer(dags_directory, bucket_name):
         # See https://cloud.google.com/storage/docs/gsutil/commands/cp for more info
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
-        
+ 
         for dag in dags:
             # Remove path to temp dir
             dag = dag.replace(f"{temp_dir}/", "")
-            #Upload to your bucket
+            # Upload to your bucket
             blob = bucket.blob(dag)
             blob.upload_from_string(dag)
             print(f"File {dag} uploaded to {bucket_name}/{dag}.")
 
     else:
         print("No DAGs to upload.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -69,5 +71,3 @@ if __name__ == "__main__":
 
     upload_dags_to_composer(args.dags_directory, args.dags_bucket)
 # [END composer_cicd_add_dags_to_composer_utility]
-
-
