@@ -20,7 +20,7 @@ import os
 def create_dataset(project_id, location, dataset_id):
     """Creates a dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -56,7 +56,7 @@ def create_dataset(project_id, location, dataset_id):
 def delete_dataset(project_id, location, dataset_id):
     """Deletes a dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -89,7 +89,7 @@ def delete_dataset(project_id, location, dataset_id):
 def get_dataset(project_id, location, dataset_id):
     """Gets any metadata associated with a dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -124,7 +124,7 @@ def get_dataset(project_id, location, dataset_id):
 def list_datasets(project_id, location):
     """Lists the datasets in the project.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -166,7 +166,7 @@ def list_datasets(project_id, location):
 def patch_dataset(project_id, location, dataset_id, time_zone):
     """Updates dataset metadata.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -208,7 +208,7 @@ def deidentify_dataset(project_id, location, dataset_id, destination_dataset_id)
     """Uses a DICOM tag keeplist to create a new dataset containing
     de-identified DICOM data from the source dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -282,7 +282,7 @@ def deidentify_dataset(project_id, location, dataset_id, destination_dataset_id)
 def get_dataset_iam_policy(project_id, location, dataset_id):
     """Gets the IAM policy for the specified dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -330,7 +330,7 @@ def set_dataset_iam_policy(project_id, location, dataset_id, member, role, etag=
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/datasets
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/datasets
     before running the sample.
     """
     # Imports the Google API Discovery Service.
