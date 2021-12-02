@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [BEGIN storagetransfer_create_transfer_client_apiary]
+# [BEGIN storagetransfer_create_transfer_client]
 """A sample for creating a Storage Transfer Service client."""
 
 from google.cloud import storage_transfer
@@ -20,4 +20,4 @@ from google.cloud import storage_transfer
 def create_transfer_client():
     return storage_transfer.StorageTransferServiceClient()
 
-# [END storagetransfer_create_transfer_client_apiary]
+# [END storagetransfer_create_transfer_client]
