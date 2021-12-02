@@ -21,16 +21,16 @@ shopt -s globstar
 
 DIFF_FROM=""
 
-# `--only-diff-master` will only run tests on project changes on the
-# last common commit from the master branch.
-if [[ $* == *--only-diff-master* ]]; then
+# `--only-diff-main` will only run tests on project changes on the
+# last common commit from the main branch.
+if [[ $* == *--only-diff-main* ]]; then
     set +e
-    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+    git diff --quiet "origin/main..." .kokoro/tests .kokoro/docker \
 	.kokoro/trampoline_v2.sh
     CHANGED=$?
     set -e
     if [[ "${CHANGED}" -eq 0 ]]; then
-	DIFF_FROM="origin/master..."
+	DIFF_FROM="origin/main..."
     else
 	echo "Changes to test driver files detected. Running full tests."
     fi
