@@ -14,10 +14,13 @@
 
 import base64
 
+import functions_framework
+
 
 # [START functions_cloudevent_pubsub]
 # Triggered from a message on a Cloud Pub/Sub topic.
-def subscribe(cloudevent):
+@functions_framework.cloud_event
+def subscribe(cloud_event):
     # Print out the data from Pub/Sub, to prove that it worked
-    print(base64.b64decode(cloudevent.data["message"]["data"]))
+    print(base64.b64decode(cloud_event.data["message"]["data"]))
 # [END functions_cloudevent_pubsub]
