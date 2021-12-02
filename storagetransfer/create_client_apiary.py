@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [BEGIN storagetransfer_create_transfer_client_apiary]
+# [START storagetransfer_create_transfer_client_apiary]
 """A sample for creating a Storage Transfer Service client."""
 
 import googleapiclient.discovery
