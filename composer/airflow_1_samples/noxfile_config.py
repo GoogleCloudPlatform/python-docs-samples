@@ -18,7 +18,7 @@
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
 import tempfile
 
