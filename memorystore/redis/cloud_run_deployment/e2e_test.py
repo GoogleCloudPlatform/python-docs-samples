@@ -134,6 +134,7 @@ def deployed_service(container_image, redis_host):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
         ]

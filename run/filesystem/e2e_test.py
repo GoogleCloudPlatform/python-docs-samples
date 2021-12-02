@@ -61,6 +61,7 @@ def deployed_service():
             '--region=us-central1',
             '--platform=managed',
             '--quiet',
+            "--async",
             '--project',
             PROJECT,
         ]
