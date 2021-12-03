@@ -33,11 +33,6 @@ import pprint
 import googleapiclient.discovery
 
 
-def format_rfc3339(datetime_instance):
-    """Formats a datetime per RFC 3339."""
-    return datetime_instance.isoformat("T") + "Z"
-
-
 def get_start_time():
     """ Returns the start time for the 5-minute window to read the custom
     metric from within.
@@ -45,9 +40,9 @@ def get_start_time():
     arbitrarily to be an hour ago and 5 minutes
     """
     # Return an hour ago - 5 minutes
-    start_time = (datetime.datetime.utcnow() -
+    start_time = (datetime.datetime.now(tz=datetime.timezone.utc) -
                   datetime.timedelta(hours=1, minutes=5))
-    return format_rfc3339(start_time)
+    return start_time.isoformat()
 
 
 def get_end_time():
@@ -56,8 +51,8 @@ def get_end_time():
     :return: The start time to begin reading time series values, picked
     arbitrarily to be an hour ago, or 5 minutes from the start time.
     """
-    end_time = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
-    return format_rfc3339(end_time)
+    end_time = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(hours=1)
+    return end_time.isoformat()
 
 
 def list_monitored_resource_descriptors(client, project_resource):

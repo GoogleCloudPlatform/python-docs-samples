@@ -13,9 +13,8 @@
 # limitations under the License.
 
 # [START cloudrun_deployment_preview_dockerfile]
-# Use the Cloud SDK docker container, which includes Python 3.7
-# https://github.com/GoogleCloudPlatform/cloud-sdk-docker
-FROM gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+# Start from a Python base container
+FROM python:3.9-slim
 
 # Copy local code into the container image
 ENV APP_HOME /app

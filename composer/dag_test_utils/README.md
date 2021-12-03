@@ -25,6 +25,6 @@ def test_dag_import():
     internal_unit_testing.assert_has_valid_dag(module)
 ```
 
-For more examples, refer to the [`workflows`](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/workflows) directory.
+For more examples, refer to the [`workflows`](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/composer/workflows) directory.
 
 
