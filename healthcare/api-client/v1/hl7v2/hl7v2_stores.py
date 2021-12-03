@@ -19,7 +19,7 @@ import os
 # [START healthcare_create_hl7v2_store]
 def create_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     """Creates a new HL7v2 store within the parent dataset.
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -59,7 +59,7 @@ def create_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
 def delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     """Deletes the specified HL7v2 store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -100,7 +100,7 @@ def delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
 def get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     """Gets the specified HL7v2 store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -143,7 +143,7 @@ def get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
 def list_hl7v2_stores(project_id, location, dataset_id):
     """Lists the HL7v2 stores in the given dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -193,7 +193,7 @@ def list_hl7v2_stores(project_id, location, dataset_id):
 def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     """Updates the HL7v2 store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -239,7 +239,7 @@ def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
 def get_hl7v2_store_iam_policy(project_id, location, dataset_id, hl7v2_store_id):
     """Gets the IAM policy for the specified HL7v2 store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -292,7 +292,7 @@ def set_hl7v2_store_iam_policy(
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery

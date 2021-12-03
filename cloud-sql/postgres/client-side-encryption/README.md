@@ -23,7 +23,7 @@ Download a JSON key to use to authenticate your connection.
 
 1. **macOS / Windows only**: Configure gRPC Root Certificates: On some platforms you may need to
 accept the Google server certificates, see instructions for setting up
-[root certs](https://github.com/googleapis/google-cloud-cpp/blob/master/google/cloud/bigtable/examples/README.md#configure-grpc-root-certificates).
+[root certs](https://github.com/googleapis/google-cloud-cpp/blob/main/google/cloud/bigtable/examples/README.md#configure-grpc-root-certificates).
  
 
 ## Running locally
