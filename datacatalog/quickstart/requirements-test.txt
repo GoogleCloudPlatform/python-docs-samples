@@ -1,2 +1,2 @@
 pytest==6.2.5
-google-cloud-bigquery==2.30.1
+google-cloud-bigquery==2.31.0
