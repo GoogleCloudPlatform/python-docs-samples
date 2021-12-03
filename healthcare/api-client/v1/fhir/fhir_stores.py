@@ -20,7 +20,7 @@ import os
 def create_fhir_store(project_id, location, dataset_id, fhir_store_id, version):
     """Creates a new FHIR store within the parent dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -64,7 +64,7 @@ def create_fhir_store(project_id, location, dataset_id, fhir_store_id, version):
 def delete_fhir_store(project_id, location, dataset_id, fhir_store_id):
     """Deletes the specified FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -106,7 +106,7 @@ def delete_fhir_store(project_id, location, dataset_id, fhir_store_id):
 def get_fhir_store(project_id, location, dataset_id, fhir_store_id):
     """Gets the specified FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -146,7 +146,7 @@ def get_fhir_store_metadata(project_id, location, dataset_id, fhir_store_id):
     in the DSTU2 case for the store, which contains a description of functionality
     supported by the server.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -184,7 +184,7 @@ def get_fhir_store_metadata(project_id, location, dataset_id, fhir_store_id):
 def list_fhir_stores(project_id, location, dataset_id):
     """Lists the FHIR stores in the given dataset.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -226,7 +226,7 @@ def list_fhir_stores(project_id, location, dataset_id):
 def patch_fhir_store(project_id, location, dataset_id, fhir_store_id):
     """Updates the FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -272,7 +272,7 @@ def export_fhir_store_gcs(project_id, location, dataset_id, fhir_store_id, gcs_u
     """Export resources to a Google Cloud Storage bucket by copying
     them from the FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -318,7 +318,7 @@ def import_fhir_resources(project_id, location, dataset_id, fhir_store_id, gcs_u
     """Import resources into the FHIR store by copying them from the
     specified source.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -368,7 +368,7 @@ def import_fhir_resources(project_id, location, dataset_id, fhir_store_id, gcs_u
 def get_fhir_store_iam_policy(project_id, location, dataset_id, fhir_store_id):
     """Gets the IAM policy for the specified FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -427,7 +427,7 @@ def set_fhir_store_iam_policy(
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery

@@ -18,9 +18,9 @@ See our [Django on Kubernetes Engine](https://cloud.google.com/python/django/kub
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/CONTRIBUTING.md)
+* See [CONTRIBUTING.md](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/CONTRIBUTING.md)
 
 
 ## Licensing
 
-* See [LICENSE](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/LICENSE)
+* See [LICENSE](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/LICENSE)
