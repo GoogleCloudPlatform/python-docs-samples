@@ -17,6 +17,7 @@ import sys
 # [START functions_helloworld_http]
 # [START functions_http_content]
 from flask import escape
+import functions_framework
 
 # [END functions_helloworld_http]
 # [END functions_http_content]
