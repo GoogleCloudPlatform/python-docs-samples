@@ -126,7 +126,31 @@ def model_endpoint_id() -> str:
     client.delete_endpoint(name=endpoint_path).result()
 
 
-def test_create_images_database_table(bucket_name: str, bigquery_dataset: str) -> None:
+@pytest.fixture(scope="session")
+def cache_dependencies() -> None:
+    # The Dataflow staging procedure involves downloading all the requirements and
+    # rebuilding everything from scratch.
+    # Recent Apache Beam versions include dependencies that require a C++ and Rust compiler
+    # and compiling all the dependencies can take a long time.
+    # We download the pre-compiled dependencies and then set PIP_NO_DEPS to force
+    # pip to not rebuild any indirect dependencies.
+    subprocess.run(
+        [
+            "pip",
+            "download",
+            "--dest",
+            "/tmp/dataflow-requirements-cache",
+            "-r",
+            "requirements.txt",
+        ],
+        check=True,
+    )
+    os.environ["PIP_NO_DEPS"] = "True"
+
+
+def test_create_images_database_table(
+    bucket_name: str, bigquery_dataset: str, cache_dependencies: None
+) -> None:
     # The table is deleted when we delete the dataset.
     subprocess.run(
         [
@@ -146,7 +170,10 @@ def test_create_images_database_table(bucket_name: str, bigquery_dataset: str) -
 
 
 def test_train_model(
-    bucket_name: str, bigquery_dataset: str, bigquery_table: str
+    bucket_name: str,
+    bigquery_dataset: str,
+    bigquery_table: str,
+    cache_dependencies: None,
 ) -> None:
     subprocess.run(
         [
