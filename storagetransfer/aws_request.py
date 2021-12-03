@@ -56,7 +56,7 @@ def create_one_time_aws_transfer(
     # sink_bucket = 'my-gcs-destination-bucket'
 
     now = datetime.utcnow()
-    # Setting the one start date and the end date as
+    # Setting the start date and the end date as
     # the same time creates a one-time transfer
     one_time_schedule = {
         'day': now.day,
