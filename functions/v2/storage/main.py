@@ -15,7 +15,7 @@
 import functions_framework
 
 
-# [START functions_helloworld_storage]
+# [START functions_cloudevent_storage]
 # Triggered by a change in a storage bucket
 @functions_framework.cloud_event
 def hello_gcs(cloud_event):
@@ -39,4 +39,4 @@ def hello_gcs(cloud_event):
     print(f"Updated: {updated}")
 
 
-# [END functions_helloworld_storage]
+# [END functions_cloudevent_storage]
