@@ -157,6 +157,7 @@ def hello_content(request):
 
 
 # [START functions_http_method]
+@functions_framework.http
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
