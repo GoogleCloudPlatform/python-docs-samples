@@ -48,7 +48,7 @@ runIfSuccessful() {
 # Define max retries
 max_attempts=3;
 attempt_num=1;
-
+seconds="${WAIT:=2}"
 arg1="$1"
 arg2="$2"
 
@@ -67,6 +67,7 @@ do
         exit 1
     else
         echo "Attempt $attempt_num / $max_attempts failed!"
-        sleep $((attempt_num++))
+        sleep $(( seconds*attempt_num ))
+        $((attempt_num++))
     fi
 done
