@@ -97,7 +97,6 @@ def services():
         [
             "gcloud", "functions", "delete", f"helloworld-{suffix}",
             "--project", project,
-            "--async",
             "--region=us-central1",
             "--quiet",
          ],
