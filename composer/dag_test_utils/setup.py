@@ -25,7 +25,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name="cloud_composer_dag_test_utils",
     version="1.0.0",
-    url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/composer/dag_test_utils",
+    url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/composer/dag_test_utils",
     author="Google LLC",
     description="Utility used to unit test example Apache Airflow DAGs for Google Cloud Composer. This is not an officially supported Google product.",
     long_description=long_description,

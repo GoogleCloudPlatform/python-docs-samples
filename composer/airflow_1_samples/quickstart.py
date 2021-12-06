@@ -18,6 +18,9 @@ import datetime
 import airflow
 from airflow.operators import bash_operator
 
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_args = {

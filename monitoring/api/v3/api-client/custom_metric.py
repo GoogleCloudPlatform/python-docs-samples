@@ -40,22 +40,15 @@ import time
 import googleapiclient.discovery
 
 
-def format_rfc3339(datetime_instance=None):
-    """Formats a datetime per RFC 3339.
-    :param datetime_instance: Datetime instanec to format, defaults to utcnow
-    """
-    return datetime_instance.isoformat("T") + "Z"
-
-
 def get_start_time():
-    # Return now- 5 minutes
-    start_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
-    return format_rfc3339(start_time)
+    # Return now - 5 minutes
+    start_time = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(minutes=5)
+    return start_time.isoformat()
 
 
-def get_now_rfc3339():
+def get_now():
     # Return now
-    return format_rfc3339(datetime.datetime.utcnow())
+    return datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
 
 
 def create_custom_metric(client, project_id,
@@ -116,7 +109,7 @@ def write_timeseries_value(client, project_resource,
     """Write the custom metric obtained by get_custom_data_point at a point in
     time."""
     # Specify a new data point for the time series.
-    now = get_now_rfc3339()
+    now = get_now()
     timeseries_data = {
         "metric": {
             "type": custom_metric_type,
@@ -162,7 +155,8 @@ def read_timeseries(client, project_resource, custom_metric_type):
         filter='metric.type="{0}"'.format(custom_metric_type),
         pageSize=3,
         interval_startTime=get_start_time(),
-        interval_endTime=get_now_rfc3339())
+        interval_endTime=get_now(),
+    )
     response = request.execute()
     return response
 

@@ -106,7 +106,7 @@ def raw_labels_dir(bucket_name: str) -> str:
 def container_image() -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -116,15 +116,14 @@ def container_image() -> str:
             "--machine-type=e2-highcpu-8",
             "--timeout=15m",
             "--quiet",
-        ],
-        check=True,
+        ]
     )
 
     logging.info(f"container_image: {container_image}")
     yield container_image
 
     # https://cloud.google.com/sdk/gcloud/reference/container/images/delete
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -134,8 +133,7 @@ def container_image() -> str:
             f"--project={PROJECT}",
             "--force-delete-tags",
             "--quiet",
-        ],
-        check=True,
+        ]
     )
 
 
@@ -143,7 +141,7 @@ def container_image() -> str:
 def service_url(bucket_name: str, container_image: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/run/deploy
     service_name = f"{NAME.replace('/', '-')}-{UUID}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -161,8 +159,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--set-env-vars=REGION={REGION}",
             f"--set-env-vars=CONTAINER_IMAGE={container_image}",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     # https://cloud.google.com/sdk/gcloud/reference/run/services/describe
@@ -189,7 +186,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
     yield service_url
 
     # https://cloud.google.com/sdk/gcloud/reference/run/services/delete
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -200,8 +197,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--quiet",
-        ],
-        check=True,
+        ]
     )
 
 
