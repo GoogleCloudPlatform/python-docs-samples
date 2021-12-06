@@ -79,6 +79,9 @@ def test_create_dags_list(dags_directory: str) -> None:
     assert f"{temp_dir}/__init__.py" not in dags
     assert f"{temp_dir}/example_dag.py" in dags
     assert f"{temp_dir}/example2_dag.py" in dags
+    assert f"{temp_dir}/example_dag_test.py" not in dags
+    assert f"{temp_dir}/example2_dag_test.py" not in dags
+
 
 
 def test_upload_dags_to_composer_no_files(
