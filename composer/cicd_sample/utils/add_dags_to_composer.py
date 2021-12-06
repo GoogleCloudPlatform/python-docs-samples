@@ -63,10 +63,15 @@ def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--dags_directory', help='Relative path to the directory containing your DAGs')
-    parser.add_argument('--dags_bucket', help='Name of the DAGs bucket of your Composer environment without the gs:// prefix')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "--dags_directory", help="Relative path to the directory containing your DAGs"
+    )
+    parser.add_argument(
+        "--dags_bucket",
+        help="Name of the DAGs bucket of your Composer environment without the gs:// prefix",
+    )
 
     args = parser.parse_args()
 

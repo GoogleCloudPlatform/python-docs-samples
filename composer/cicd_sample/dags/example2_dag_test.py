@@ -24,6 +24,7 @@ def initalize_airflow_database():
 
 
 def test_dag_import():
-    models.Variable.set('gcp_project', 'python-docs-samples-tests')
+    models.Variable.set("gcp_project", "python-docs-samples-tests")
     from . import example2_dag
+
     internal_unit_testing.assert_has_valid_dag(example2_dag)

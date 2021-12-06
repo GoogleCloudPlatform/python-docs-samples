@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#TODO(coleleah): update command with variable
 # [START composer_cicd_dagsync_yaml]
 steps:
   # install dependencies

@@ -35,18 +35,32 @@ with models.DAG(
     schedule_interval=None,
 ) as dag:
     generate_uuid = PythonOperator(
-        task_id='generate_uuid',
-        python_callable=lambda: str(uuid.uuid4())
+        task_id="generate_uuid", python_callable=lambda: str(uuid.uuid4())
     )
-    create_bucket = GCSCreateBucketOperator(task_id="create_bucket", bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}", project_id=PROJECT_ID)
-    list_objects = GCSListObjectsOperator(task_id="list_objects", bucket="{{ task_instance.xcom_pull('generate_uuid') }}")
+    create_bucket = GCSCreateBucketOperator(
+        task_id="create_bucket",
+        bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
+        project_id=PROJECT_ID,
+    )
+    list_objects = GCSListObjectsOperator(
+        task_id="list_objects", bucket="{{ task_instance.xcom_pull('generate_uuid') }}"
+    )
     list_buckets_result = BashOperator(
         task_id="list_buckets_result",
         bash_command="echo \"{{ task_instance.xcom_pull('list_objects') }}\"",
     )
-    delete_bucket = GCSDeleteBucketOperator(task_id="delete_bucket", bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}")
+    delete_bucket = GCSDeleteBucketOperator(
+        task_id="delete_bucket",
+        bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
+    )
 
-    generate_uuid >> create_bucket >> list_objects >> list_buckets_result >> delete_bucket
+    (
+        generate_uuid
+        >> create_bucket
+        >> list_objects
+        >> list_buckets_result
+        >> delete_bucket
+    )
 
 
 if __name__ == "__main__":
