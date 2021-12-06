@@ -15,14 +15,14 @@
 from typing import Iterable
 
 # [START compute_images_get]
-# [START compute_images_list]
+# [START compute_images_get_list]
 from google.cloud import compute_v1
 
-# [END compute_images_list]
+# [END compute_images_get_list]
 # [END compute_images_get]
 
 
-# [START compute_images_list]
+# [START compute_images_get_list]
 def list_images(project_id: str) -> Iterable[compute_v1.Image]:
     """
     Retrieve a list of images available in given project.
@@ -37,7 +37,7 @@ def list_images(project_id: str) -> Iterable[compute_v1.Image]:
     return image_client.list(project=project_id)
 
 
-# [END compute_images_list]
+# [END compute_images_get_list]
 
 
 # [START compute_images_get]
