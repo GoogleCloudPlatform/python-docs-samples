@@ -20,14 +20,6 @@ import pytest
 PROJECT_ID = "your-project-id"
 
 
-@pytest.fixture(autouse=True, scope="function")
-# The fixture `airflow_database` lives in composer/conftest.py.
-def set_variables(airflow_database):
-    models.Variable.set("gcp_project", PROJECT_ID)
-    yield
-    models.Variable.delete("gcp_project")
-
-
 def test_dag_import():
     from . import example2_dag
 

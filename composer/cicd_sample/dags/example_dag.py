@@ -11,58 +11,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import datetime
 
-import uuid
+import airflow
+from airflow.operators import bash
 
-from airflow import models
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
+YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
-from airflow.providers.google.cloud.operators.gcs import GCSCreateBucketOperator
-from airflow.providers.google.cloud.operators.gcs import GCSDeleteBucketOperator
-from airflow.providers.google.cloud.operators.gcs import GCSListObjectsOperator
+default_args = {
+    "owner": "Composer Example",
+    "depends_on_past": False,
+    "email": [""],
+    "email_on_failure": False,
+    "email_on_retry": False,
+    "retries": 1,
+    "retry_delay": datetime.timedelta(minutes=5),
+    "start_date": YESTERDAY,
+}
 
-from airflow.utils.dates import days_ago
-from airflow.utils.state import State
-
-# Assumes existence of Airflow Variable set to name of GCP Project
-PROJECT_ID = models.Variable.get("gcp_project")
-
-
-with models.DAG(
-    "example_gcs",
-    start_date=days_ago(1),
-    schedule_interval=None,
+with airflow.DAG(
+    "composer_sample_dag",
+    "catchup=False",
+    default_args=default_args,
+    schedule_interval=datetime.timedelta(days=1),
 ) as dag:
-    generate_uuid = PythonOperator(
-        task_id="generate_uuid", python_callable=lambda: str(uuid.uuid4())
-    )
-    create_bucket = GCSCreateBucketOperator(
-        task_id="create_bucket",
-        bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
-        project_id=PROJECT_ID,
-    )
-    list_objects = GCSListObjectsOperator(
-        task_id="list_objects", bucket="{{ task_instance.xcom_pull('generate_uuid') }}"
-    )
-    list_buckets_result = BashOperator(
-        task_id="list_buckets_result",
-        bash_command="echo \"{{ task_instance.xcom_pull('list_objects') }}\"",
-    )
-    delete_bucket = GCSDeleteBucketOperator(
-        task_id="delete_bucket",
-        bucket_name="{{ task_instance.xcom_pull('generate_uuid') }}",
-    )
 
-    (
-        generate_uuid
-        >> create_bucket
-        >> list_objects
-        >> list_buckets_result
-        >> delete_bucket
+    # Print the dag_run id from the Airflow logs
+    print_dag_run_conf = bash.BashOperator(
+        task_id="print_dag_run_conf", bash_command="echo {{ dag_run.id }}"
     )
-
-
 if __name__ == "__main__":
     dag.clear(dag_run_state=State.NONE)
     dag.run()
