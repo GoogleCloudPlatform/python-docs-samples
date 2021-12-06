@@ -160,7 +160,7 @@ if __name__ == "__main__":
     TABLE = sys.argv[2]
 
     # Create a SparkSession, viewable via the Spark UI
-    spark = SparkSession.builder.appName("data_cleaning").getOrCreate()
+    spark = SparkSession.builder.appName("data_processing").getOrCreate()
 
     # Load data into dataframe if table exists
     try:
