@@ -9,6 +9,18 @@
 Make sure you have followed the
 [Dataflow setup instructions](../../README.md).
 
+* Enable the Cloud Autoscaling API.
+
+    <button>
+        <a href="https://console.cloud.google.com/flows/enableapi?apiid=autoscaling.googleapis.com">
+            Click here to enable the API
+        </a>
+    </button>
+
+    Dataflow Prime uses the Cloud Autoscaling API to dynamically adjust memory.
+
+    > ℹ️ For more information on Dataflow Prime, see the [Using Dataflow Prime](https://cloud.google.com/dataflow/docs/guides/enable-dataflow-prime#enable-prime) page in the documentation.
+
 ## Building the Docker image
 
 We use
