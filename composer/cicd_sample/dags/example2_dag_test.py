@@ -13,18 +13,22 @@
 # limitations under the License.
 
 from airflow import models
-import airflow.utils.db
 import internal_unit_testing
 import pytest
 
+# user should substitute their project ID
+PROJECT_ID = "your-project-id"
 
-@pytest.fixture(autouse=True, scope="module")
-def initalize_airflow_database():
-    airflow.utils.db.initdb()
+
+@pytest.fixture(autouse=True, scope="function")
+# The fixture `airflow_database` lives in composer/conftest.py.
+def set_variables(airflow_database):
+    models.Variable.set("gcp_project", PROJECT_ID)
+    yield
+    models.Variable.delete("gcp_project")
 
 
 def test_dag_import():
-    models.Variable.set("gcp_project", "python-docs-samples-tests")
     from . import example2_dag
 
     internal_unit_testing.assert_has_valid_dag(example2_dag)
