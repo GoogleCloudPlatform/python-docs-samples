@@ -17,6 +17,7 @@ import sys
 # [START functions_helloworld_http]
 # [START functions_http_content]
 from flask import escape
+import functions_framework
 
 # [END functions_helloworld_http]
 # [END functions_http_content]
@@ -157,6 +158,7 @@ def hello_content(request):
 
 
 # [START functions_http_method]
+@functions_framework.http
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:

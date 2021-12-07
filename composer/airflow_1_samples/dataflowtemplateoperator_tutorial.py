@@ -53,7 +53,7 @@ default_args = {
         # Set to your zone
         "zone": gce_zone,
         # This is a subfolder for storing temporary files, like the staged pipeline job.
-        "temp_location": bucket_path + "/tmp/",
+        "tempLocation": bucket_path + "/tmp/",
     },
 }
 
