@@ -54,6 +54,9 @@ The following instructions help you prepare your Google Cloud project.
 
    > ℹ️ For more information on authentication, see the
    > [Authentication overview](https://googleapis.dev/python/google-api-core/latest/auth.html) page.
+   >
+   > To learn more about the permissions needed for Dataflow, see the
+   > [Dataflow security and permissions](https://cloud.google.com/dataflow/docs/concepts/security-and-permissions) page.
 
 ## Setting up a Python development environment
 
