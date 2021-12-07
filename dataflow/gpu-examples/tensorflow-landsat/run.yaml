@@ -27,8 +27,8 @@
 
 substitutions:
   _OUTPUT_PATH: please run with --substitutions _OUTPUT_PATH=gs://$BUCKET/samples/dataflow/landsat/outputs/
+  _JOB_NAME: please run with --substitutions _JOB_NAME=unique-dataflow-job-name
   _IMAGE: samples/dataflow/landsat-gpu:latest
-  _JOB_NAME: ''
   _TEMP_LOCATION: ''
   _REGION: us-central1
   _GPU_TYPE: nvidia-tesla-t4
@@ -40,15 +40,16 @@ steps:
   args:
   - /pipeline/main.py
   - --output-path-prefix=$_OUTPUT_PATH
+  - --gpu-type=$_GPU_TYPE
+  - --gpu-count=$_GPU_COUNT
   - --runner=DataflowRunner
   - --project=$PROJECT_ID
   - --region=$_REGION
-  - --job_name=$_JOB_NAME
   - --temp_location=$_TEMP_LOCATION
-  - --worker_machine_type=custom-1-13312-ext
+  - --job_name=$_JOB_NAME
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
   - --dataflow_service_options=enable_prime
-  - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
+  - --resource_hints=min_ram=32GB
   - --experiment=no_use_multiple_sdk_containers
   - --disk_size_gb=50
 

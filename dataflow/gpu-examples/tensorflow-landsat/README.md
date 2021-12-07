@@ -11,15 +11,24 @@ Make sure you have followed the
 
 * Enable the Cloud Autoscaling API.
 
-    <button>
-        <a href="https://console.cloud.google.com/flows/enableapi?apiid=autoscaling.googleapis.com">
-            Click here to enable the API
-        </a>
-    </button>
+    <button><a href="https://console.cloud.google.com/flows/enableapi?apiid=autoscaling.googleapis.com">
+        Click here to enable the API
+    </a></button>
 
     Dataflow Prime uses the Cloud Autoscaling API to dynamically adjust memory.
 
     > ℹ️ For more information on Dataflow Prime, see the [Using Dataflow Prime](https://cloud.google.com/dataflow/docs/guides/enable-dataflow-prime#enable-prime) page in the documentation.
+
+* Create a new Cloud Storage bucket or use an existing one for the output image files.
+
+    <button><a href="https://console.cloud.google.com/storage/create-bucket">
+        Click here to create a bucket
+    </a></button>
+
+    ```sh
+    # Export an environment variable with your bucket name without the gs:// prefix.
+    export BUCKET="your-cloud-storage-bucket"
+    ```
 
 ## Building the Docker image
 
@@ -40,12 +49,13 @@ We use Cloud Build to run the [Dataflow](https://cloud.google.com/dataflow) job.
 > with the same Python version as the workers and all the dependencies installed.
 
 ```sh
+export JOB_NAME="tensorflow-landsat-$(date +%F-%H%M%S)"
 export OUTPUT_PATH="gs://$BUCKET/samples/dataflow/landsat/output-images/"
 export REGION="us-central1"
 export GPU_TYPE="nvidia-tesla-t4"
 
 gcloud builds submit \
     --config run.yaml \
-    --substitutions _OUTPUT_PATH=$OUTPUT_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
+    --substitutions _JOB_NAME=$JOB_NAME,_OUTPUT_PATH=$OUTPUT_PATH,_REGION=$REGION,_GPU_TYPE=$GPU_TYPE \
     --no-source
 ```
