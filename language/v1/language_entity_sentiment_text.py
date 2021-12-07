@@ -40,7 +40,7 @@ def sample_analyze_entity_sentiment(text_content):
     # text_content = 'Grapes are good. Bananas are bad.'
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = language_v1.Document.Type.PLAIN_TEXT
+    type_ = language_v1.types.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
