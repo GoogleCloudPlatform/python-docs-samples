@@ -19,11 +19,9 @@ The following instructions help you prepare your Google Cloud project.
 
 1. Create a new Google Cloud project and save the project ID in an environment variable.
 
-   <button>
-      <a href="https://console.cloud.google.com/projectcreate">
-         Click here to create a new project
-      </a>
-   </button>
+   <button><a href="https://console.cloud.google.com/projectcreate">
+      Click here to create a new project
+   </a></button>
 
    ```sh
    # Save your project ID in an environment variable for ease of use later on.
@@ -40,11 +38,9 @@ The following instructions help you prepare your Google Cloud project.
 
 1. Enable the Dataflow API.
 
-   <button>
-      <a href="https://console.cloud.google.com/flows/enableapi?apiid=dataflow">
-         Click here to enable the API
-      </a>
-   </button>
+   <button><a href="https://console.cloud.google.com/flows/enableapi?apiid=dataflow">
+      Click here to enable the API
+   </a></button>
 
 1. Authenticate to your Google Cloud project.
 
