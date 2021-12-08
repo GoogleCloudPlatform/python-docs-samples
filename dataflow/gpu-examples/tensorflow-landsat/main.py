@@ -277,7 +277,7 @@ def run(
         | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         | "Reshuffle" >> beam.Reshuffle()
         | "Load RGB band values" >> beam.MapTuple(load_values)
-        | "Preprocess pixels (GPU)" >> beam.MapTuple(
+        | "Preprocess pixels GPU" >> beam.MapTuple(
             preprocess_pixels, min_value, max_value, gamma
         ).with_resource_hints(accelerator=gpu_hint)
         | "Convert to image" >> beam.MapTuple(
