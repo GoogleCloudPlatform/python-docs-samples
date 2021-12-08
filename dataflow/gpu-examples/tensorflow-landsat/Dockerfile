@@ -37,11 +37,11 @@ RUN apt-get update \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.8_sdk:2.35.0_rc2 /opt/apache/beam /opt/apache/beam
-ENTRYPOINT [ "/opt/apache/beam/boot" ]
+# COPY --from=apache/beam_python3.8_sdk:2.35.0_rc2 /opt/apache/beam /opt/apache/beam
+# ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 # Workaround for b/199755022
 # PR #15692 should fix it, probably by Beam 2.35 (?)
 #   https://github.com/apache/beam/pull/15692
-# COPY --from=gcr.io/cloud-dataflow/v1beta3/python38-fnapi:2.34.0 /opt/google/dataflow /opt/google/dataflow
-# ENTRYPOINT ["/opt/google/dataflow/boot"]
+COPY --from=gcr.io/cloud-dataflow/v1beta3/python38-fnapi:2.34.0 /opt/google/dataflow /opt/google/dataflow
+ENTRYPOINT ["/opt/google/dataflow/boot"]
