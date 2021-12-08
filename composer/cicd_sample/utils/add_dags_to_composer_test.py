@@ -21,7 +21,7 @@ import uuid
 from google.cloud import storage
 import pytest
 
-import add_dags_to_composer
+import add_dags_to_composer  # noqa: I100 - lint is incorrectly saying this is out of order
 
 
 DAGS_DIR = pathlib.Path(__file__).parent.parent / "dags/"
