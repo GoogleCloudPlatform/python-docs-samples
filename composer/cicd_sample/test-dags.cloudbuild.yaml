@@ -28,6 +28,6 @@ steps:
   # that is the first seven characters of COMMIT_SHA
   - name: python:3.8-slim
     entrypoint: python3.8
-    args: ["-m", "pytest", "-s", "dags/", "--junitxml=${SHORT_SHA}_test_log.xml"]
+    args: ["-m", "pytest", "-s", "dags/"]
 
 # [END composer_cicd_unittest_yaml]
