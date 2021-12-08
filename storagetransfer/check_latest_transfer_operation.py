@@ -48,7 +48,7 @@ def check_latest_transfer_operation(project_id: str, job_name: str):
         operation = storage_transfer.TransferOperation.deserialize(
             response.metadata.value)
 
-        print(f"Latest transfer operation for {job_name}`:", operation)
+        print(f"Latest transfer operation for {job_name}`: {operation}")
     else:
         print(f"Transfer job {job_name} has not ran yet.")
 

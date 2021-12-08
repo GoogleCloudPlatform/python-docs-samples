@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import warnings
-
 import backoff
 from google.api_core.exceptions import RetryError
 from google.cloud import storage_transfer
@@ -60,16 +58,13 @@ def transfer_job(
     yield result.name
 
     # Remove job
-    try:
-        client.update_transfer_job({
-            "job_name": result.name,
-            "project_id": project_id,
-            "transfer_job": {
-                "status": storage_transfer.TransferJob.Status.DELETED
-            }
-        })
-    except Exception as e:
-        warnings.warn(f"Exception while cleaning up transfer job: {e}")
+    client.update_transfer_job({
+        "job_name": result.name,
+        "project_id": project_id,
+        "transfer_job": {
+            "status": storage_transfer.TransferJob.Status.DELETED
+        }
+    })
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)

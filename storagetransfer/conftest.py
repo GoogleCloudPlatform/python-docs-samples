@@ -19,7 +19,6 @@ Useful utilities for STS samples tests.
 import json
 import os
 import uuid
-import warnings
 
 import boto3
 from google.cloud import storage, storage_transfer
@@ -70,29 +69,26 @@ def job_description_unique(project_id: str):
     yield description
 
     # Remove job based on description as the job's name isn't predetermined
-    try:
-        transfer_job_to_delete: TransferJob = None
+    transfer_job_to_delete: TransferJob = None
 
-        transfer_jobs = client.list_transfer_jobs({
-            'filter': json.dumps({"projectId": project_id})
+    transfer_jobs = client.list_transfer_jobs({
+        'filter': json.dumps({"projectId": project_id})
+    })
+
+    for transfer_job in transfer_jobs:
+        if transfer_job.description == description:
+            transfer_job_to_delete = transfer_job
+            break
+
+    if transfer_job_to_delete and \
+            transfer_job_to_delete.status != TransferJob.Status.DELETED:
+        client.update_transfer_job({
+            "job_name": transfer_job_to_delete.name,
+            "project_id": project_id,
+            "transfer_job": {
+                "status": storage_transfer.TransferJob.Status.DELETED
+            }
         })
-
-        for transfer_job in transfer_jobs:
-            if transfer_job.description == description:
-                transfer_job_to_delete = transfer_job
-                break
-
-        if transfer_job_to_delete and \
-                transfer_job_to_delete.status != TransferJob.Status.DELETED:
-            client.update_transfer_job({
-                "job_name": transfer_job_to_delete.name,
-                "project_id": project_id,
-                "transfer_job": {
-                    "status": storage_transfer.TransferJob.Status.DELETED
-                }
-            })
-    except Exception as e:
-        warnings.warn(f"Exception while cleaning up transfer job: {e}")
 
 
 @pytest.fixture(scope='module')
