@@ -96,7 +96,8 @@ fi
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 
-# Import secrets for AWS APIs
+# Import secrets for AWS integration testing. This can be used for products
+# such as Storage Transfer Service.
 if [[ -f "${KOKORO_GFILE_DIR}/aws-secrets.sh" ]]; then
     source "${KOKORO_GFILE_DIR}/aws-secrets.sh"
 fi
