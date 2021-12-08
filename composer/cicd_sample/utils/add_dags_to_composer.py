@@ -66,7 +66,8 @@ if __name__ == "__main__":
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        "--dags_directory", help="Relative path to the source directory containing your DAGs"
+        "--dags_directory",
+        help="Relative path to the source directory containing your DAGs",
     )
     parser.add_argument(
         "--dags_bucket",
