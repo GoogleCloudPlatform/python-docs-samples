@@ -33,7 +33,8 @@ def test_create_client(job_filter: str):
     client = create_client.create_transfer_client()
 
     # a simple test to prove a usable client has been created.
-    # The output isn't relevant - just that a valid API call can be made
+    # The output isn't relevant - just that a valid API call can be made.
+    # We expect an error to be raised if this operation fails.
     client.list_transfer_jobs({'filter': job_filter, 'page_size': 1})
 
 
@@ -42,7 +43,8 @@ def test_create_client_apiary(job_filter: str):
     client = create_client_apiary.create_transfer_client()
 
     # a simple test to prove a usable client has been created.
-    # The output isn't relevant - just that a valid API call can be made
+    # The output isn't relevant - just that a valid API call can be made.
+    # We expect an error to be raised if this operation fails.
     client.transferJobs().list(
         filter=job_filter,
         pageSize=1).execute()
