@@ -3,7 +3,7 @@
 product:
   name: Storage Transfer Service
   short_name: Storage Transfer Service
-  url: https://cloud.google.com/storage-transfer-service/docs
+  url: https://cloud.google.com/storage-transfer-service/
   description: >
     `Storage Transfer Service`_: secure, low-cost
     services for transferring data from cloud or on-premises sources.
