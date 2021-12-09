@@ -24,7 +24,7 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # google-python-cloud-debugger doesn't support Python 3.9.
     # https://github.com/GoogleCloudPlatform/cloud-debug-python/issues/22
-    "ignored_versions": ["2.7", "3.9", "3.10"],
+    "ignored_versions": ["2.7", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
