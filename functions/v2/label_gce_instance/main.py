@@ -42,7 +42,7 @@ def label_gce_instance(cloudevent):
     if not creator or not instance_params or len(instance_params) != 7:
         # This is not something retries will fix, so don't throw an Exception
         # (Thrown exceptions trigger retries *if* you enable retries in GCF.)
-        print('ERROR: Invalid event structure')
+        print('ERROR: Invalid `principalEmail` and/or CloudEvent `subject`.')
         return
 
     instance_project = instance_params[2]
