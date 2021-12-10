@@ -14,8 +14,9 @@
 
 import os
 import re
-import time
 import uuid
+
+import backoff
 
 from cloudevents.http import CloudEvent
 
@@ -59,17 +60,19 @@ def test_functions_label_gce_instance_should_set_label():
     # Call function
     main.label_gce_instance(event)
 
-    # Wait for consistency
-    time.sleep(5)
+    # Run assertions, with exponential backoff
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def run_assertions():
+        # Get labeled instance
+        expected_label = re.sub('\\W', '_', example_email)
+        labels = instances_client.get(
+            project=PROJECT,
+            zone=ZONE,
+            instance=INSTANCE
+        ).labels
 
-    # Get labeled instance
-    expected_label = re.sub('\\W', '_', example_email)
-    labels = instances_client.get(
-        project=PROJECT,
-        zone=ZONE,
-        instance=INSTANCE
-    ).labels
+        # Check that instance was labelled
+        assert 'creator' in labels
+        assert labels.get('creator') == expected_label
 
-    # Check that instance was labelled
-    assert 'creator' in labels
-    assert labels.get('creator') == expected_label
+    run_assertions()
