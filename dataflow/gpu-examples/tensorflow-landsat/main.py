@@ -307,6 +307,15 @@ if __name__ == "__main__":
         "They must be in the format: "
         "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes")
     parser.add_argument(
+        "--gpu-type",
+        default=DEFAULT_GPU_TYPE,
+        help="GPU type to use.")
+    parser.add_argument(
+        "--gpu-count",
+        type=int,
+        default=DEFAULT_GPU_COUNT,
+        help="GPU count to use.")
+    parser.add_argument(
         "--rgb-band-names",
         nargs=3,
         default=DEFAULT_RGB_BAND_NAMES,
@@ -326,15 +335,6 @@ if __name__ == "__main__":
         type=float,
         default=DEFAULT_GAMMA,
         help="Gamma correction factor.")
-    parser.add_argument(
-        "--gpu-type",
-        default=DEFAULT_GPU_TYPE,
-        help="GPU type hint to use.")
-    parser.add_argument(
-        "--gpu-count",
-        type=int,
-        default=DEFAULT_GPU_COUNT,
-        help="GPU count hint to use.")
     args, beam_args = parser.parse_known_args()
 
     run(scenes=args.scenes or DEFAULT_SCENES,
