@@ -380,11 +380,11 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
         project_id,
         location,
         concat1_uri,
-        0,
-        8.1,
+        '0s',
+        '8.1s',
         concat2_uri,
-        3.5,
-        15,
+        '3.5s',
+        '15s',
         output_uri_for_concat,
     )
     out, _ = capsys.readouterr()
