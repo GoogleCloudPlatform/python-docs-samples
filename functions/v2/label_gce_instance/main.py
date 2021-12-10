@@ -22,28 +22,32 @@ from google.cloud.compute_v1.types import compute
 instances_client = compute_v1.InstancesClient()
 
 
-# CloudEvent function that labels newly-created GCE instances with the entity
-# (person or service account) that created them.
+# CloudEvent function that labels newly-created GCE instances
+# with the entity (user or service account) that created them.
 #
 # @param {object} cloudevent A CloudEvent containing the Cloud Audit Log entry.
 # @param {object} cloudevent.data.protoPayload The Cloud Audit Log entry.
 def label_gce_instance(cloudevent):
     # Extract parameters from the CloudEvent + Cloud Audit Log data
-    payload = cloudevent.data.get('protoPayload')
+    payload = cloudevent.data.get('protoPayload', dict())
     auth_info = payload.get('authenticationInfo', dict())
     creator = auth_info.get('principalEmail')
 
     # Get relevant VM instance details from the cloudevent's `subject` property
     # Example value:
-    #   compute.googleapis.com/projects/<PROJECT>/zones/<ZONE>/instances/<INSTANCE>
-    params = cloudevent['subject'].split('/')
-    params_project = params[2]
-    params_zone = params[4]
-    params_instance = params[6]
+    #   compute.googleapis.com/projects/<PROJECT_ID>/zones/<ZONE_ID>/instances/<INSTANCE_NAME>
+    instance_params = cloudevent['subject'].split('/')
 
     # Validate data
-    if not creator or not params or len(params) != 7:
-        raise ValueError('Invalid event structure')
+    if not creator or not instance_params or len(instance_params) != 7:
+        # This is not something retries will fix, so don't throw an Exception
+        # (Thrown exceptions trigger retries *if* you enable retries in GCF.)
+        print('ERROR: Invalid event structure')
+        return
+
+    instance_project = instance_params[2]
+    instance_zone = instance_params[4]
+    instance_name = instance_params[6]
 
     # Format the 'creator' parameter to match GCE label validation requirements
     creator = re.sub('\\W', '_', creator.lower())
@@ -51,16 +55,16 @@ def label_gce_instance(cloudevent):
     # Get the newly-created VM instance's label fingerprint
     # This is required by the Compute Engine API to prevent duplicate labels
     instance = instances_client.get(
-        project=params_project,
-        zone=params_zone,
-        instance=params_instance
+        project=instance_project,
+        zone=instance_zone,
+        instance=instance_name
     )
 
-    # Label the instance with its creator
+    # Construct API call to label the VM instance with its creator
     request_init = {
-        'project': params_project,
-        'zone': params_zone,
-        'instance': params_instance
+        'project': instance_project,
+        'zone': instance_zone,
+        'instance': instance_name
     }
     request_init['instances_set_labels_request_resource'] = \
         compute.InstancesSetLabelsRequest(
@@ -69,7 +73,17 @@ def label_gce_instance(cloudevent):
         )
     request = compute.SetLabelsInstanceRequest(request_init)
 
-    instances_client.set_labels(request)
+    # Perform instance-labeling API call
+    try:
+        instances_client.set_labels(request)
+        print(f'Labelled VM instance {instance_name} with creator: {creator}')
+    except Exception as e:
+        # Swallowing the exception means failed invocations WON'T be retried
+        print('Label operation failed', e)
+
+        # Uncomment the line below to retry failed invocations.
+        # (You'll also have to enable retries in Cloud Functions itself.)
+        # raise e
 
     return
 # [END functions_label_gce_instance]
