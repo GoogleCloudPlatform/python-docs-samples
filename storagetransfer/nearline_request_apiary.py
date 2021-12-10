@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,9 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
-"""Command-line sample that creates a one-time transfer from Amazon S3 to
-Google Cloud Storage.
+"""Command-line sample that creates a daily transfer from a standard
+GCS bucket to a Nearline GCS bucket for objects untouched for 30 days.
 
 This sample is used on this page:
 
@@ -31,10 +28,10 @@ import json
 import googleapiclient.discovery
 
 
-# [START main]
+# [START storagetransfer_transfer_to_nearline_apiary]
 def main(description, project_id, start_date, start_time, source_bucket,
-         access_key_id, secret_access_key, sink_bucket):
-    """Create a one-time transfer from Amazon S3 to Google Cloud Storage."""
+         sink_bucket):
+    """Create a daily transfer from Standard to Nearline Storage class."""
     storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
 
     # Edit this template with desired parameters.
@@ -48,11 +45,6 @@ def main(description, project_id, start_date, start_time, source_bucket,
                 'month': start_date.month,
                 'year': start_date.year
             },
-            'scheduleEndDate': {
-                'day': start_date.day,
-                'month': start_date.month,
-                'year': start_date.year
-            },
             'startTimeOfDay': {
                 'hours': start_time.hour,
                 'minutes': start_time.minute,
@@ -60,15 +52,17 @@ def main(description, project_id, start_date, start_time, source_bucket,
             }
         },
         'transferSpec': {
-            'awsS3DataSource': {
-                'bucketName': source_bucket,
-                'awsAccessKey': {
-                    'accessKeyId': access_key_id,
-                    'secretAccessKey': secret_access_key
-                }
+            'gcsDataSource': {
+                'bucketName': source_bucket
             },
             'gcsDataSink': {
                 'bucketName': sink_bucket
+            },
+            'objectConditions': {
+                'minTimeElapsedSinceLastModification': '2592000s'  # 30 days
+            },
+            'transferOptions': {
+                'deleteObjectsFromSourceAfterTransfer': 'true'
             }
         }
     }
@@ -76,7 +70,7 @@ def main(description, project_id, start_date, start_time, source_bucket,
     result = storagetransfer.transferJobs().create(body=transfer_job).execute()
     print('Returned transferJob: {}'.format(
         json.dumps(result, indent=4)))
-# [END main]
+# [END storagetransfer_transfer_to_nearline_apiary]
 
 
 if __name__ == '__main__':
@@ -87,13 +81,8 @@ if __name__ == '__main__':
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
     parser.add_argument('start_date', help='Date YYYY/MM/DD.')
     parser.add_argument('start_time', help='UTC Time (24hr) HH:MM:SS.')
-    parser.add_argument('source_bucket', help='AWS source bucket name.')
-    parser.add_argument('access_key_id', help='Your AWS access key id.')
-    parser.add_argument(
-        'secret_access_key',
-        help='Your AWS secret access key.'
-    )
-    parser.add_argument('sink_bucket', help='GCS sink bucket name.')
+    parser.add_argument('source_bucket', help='Standard GCS bucket name.')
+    parser.add_argument('sink_bucket', help='Nearline GCS bucket name.')
 
     args = parser.parse_args()
     start_date = datetime.datetime.strptime(args.start_date, '%Y/%m/%d')
@@ -105,7 +94,4 @@ if __name__ == '__main__':
         start_date,
         start_time,
         args.source_bucket,
-        args.access_key_id,
-        args.secret_access_key,
         args.sink_bucket)
-# [END all]

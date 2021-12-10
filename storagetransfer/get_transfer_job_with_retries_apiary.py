@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env python
 
 # Copyright 2021 Google LLC
 
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storagetransfer_create_retry_handler]
+# [START storagetransfer_create_retry_handler_apiary]
 
 """Command-line sample that gets a transfer job using retries
 """
@@ -36,4 +36,4 @@ def get_transfer_job_with_retries(project_id, job_name, retries):
         + transferJob.get("name")
         + " using {} retries".format(retries)
     )
-# [END storagetransfer_create_retry_handler]
+# [END storagetransfer_create_retry_handler_apiary]
