@@ -18,15 +18,14 @@
 
 Example usage:
     python create_job_with_concatenated_inputs.py --project_id <project-id> --location <location> \
-      --input1_uri <uri> --start_time_offset1 <sec> --end_time_offset1 <sec> \
-      --input2_uri <uri> --start_time_offset2 <sec> --end_time_offset2 <sec> \
+      --input1_uri <uri> --start_time_input1 <sec> --end_time_input1 <sec> \
+      --input2_uri <uri> --start_time_input2 <sec> --end_time_input2 <sec> \
       --output_uri <uri>
 """
 
 # [START transcoder_create_job_with_concatenated_inputs]
 
 import argparse
-import math
 
 from google.cloud.video import transcoder_v1
 from google.cloud.video.transcoder_v1.services.transcoder_service import (
@@ -39,11 +38,11 @@ def create_job_with_concatenated_inputs(
     project_id,
     location,
     input1_uri,
-    start_time_offset1,
-    end_time_offset1,
+    start_time_input1,
+    end_time_input1,
     input2_uri,
-    start_time_offset2,
-    end_time_offset2,
+    start_time_input2,
+    end_time_input2,
     output_uri,
 ):
     """Creates a job based on an ad-hoc job configuration that concatenates two input videos.
@@ -52,30 +51,26 @@ def create_job_with_concatenated_inputs(
         project_id: The GCP project ID.
         location: The location to start the job in.
         input1_uri: Uri of the first video in the Cloud Storage bucket.
-        start_time_offset1: Start time, in fractional seconds, relative to the
-          first input video timeline.
-        end_time_offset1: End time, in fractional seconds, relative to the first
-          input video timeline.
+        start_time_input1: Start time, in fractional seconds ending in 's'
+          (e.g., '0s'), relative to the first input video timeline.
+        end_time_input1: End time, in fractional seconds ending in 's'
+          (e.g., '8.1s'), relative to the first input video timeline.
         input2_uri: Uri of the second video in the Cloud Storage bucket.
-        start_time_offset2: Start time, in fractional seconds, relative to the
-          second input video timeline.
-        end_time_offset2: End time, in fractional seconds, relative to the
-          second input video timeline.
+        start_time_input2: Start time, in fractional seconds ending in 's'
+          (e.g., '3.5s'), relative to the second input video timeline.
+        end_time_input2: End time, in fractional seconds ending in 's'
+          (e.g., '15s'), relative to the second input video timeline.
         output_uri: Uri of the video output folder in the Cloud Storage bucket."""
 
-    frac, whole = math.modf(float(start_time_offset1))
-    start_time_offset1_nano = int(round(frac, 4) * 1000000000)
-    start_time_offset1_sec = int(whole)
-    frac, whole = math.modf(float(end_time_offset1))
-    end_time_offset1_nano = int(round(frac, 4) * 1000000000)
-    end_time_offset1_sec = int(whole)
+    s1 = duration.Duration()
+    s1.FromJsonString(start_time_input1)
+    e1 = duration.Duration()
+    e1.FromJsonString(end_time_input1)
 
-    frac, whole = math.modf(float(start_time_offset2))
-    start_time_offset2_nano = int(round(frac, 4) * 1000000000)
-    start_time_offset2_sec = int(whole)
-    frac, whole = math.modf(float(end_time_offset2))
-    end_time_offset2_nano = int(round(frac, 4) * 1000000000)
-    end_time_offset2_sec = int(whole)
+    s2 = duration.Duration()
+    s2.FromJsonString(start_time_input2)
+    e2 = duration.Duration()
+    e2.FromJsonString(end_time_input2)
 
     client = TranscoderServiceClient()
 
@@ -97,26 +92,14 @@ def create_job_with_concatenated_inputs(
             transcoder_v1.types.EditAtom(
                 key="atom1",
                 inputs=["input1"],
-                start_time_offset=duration.Duration(
-                    seconds=start_time_offset1_sec,
-                    nanos=start_time_offset1_nano,
-                ),
-                end_time_offset=duration.Duration(
-                    seconds=end_time_offset1_sec,
-                    nanos=end_time_offset1_nano,
-                ),
+                start_time_offset=s1,
+                end_time_offset=e1,
             ),
             transcoder_v1.types.EditAtom(
                 key="atom2",
                 inputs=["input2"],
-                start_time_offset=duration.Duration(
-                    seconds=start_time_offset2_sec,
-                    nanos=start_time_offset2_nano,
-                ),
-                end_time_offset=duration.Duration(
-                    seconds=end_time_offset2_sec,
-                    nanos=end_time_offset2_nano,
-                ),
+                start_time_offset=s2,
+                end_time_offset=e2,
             ),
         ],
         elementary_streams=[
@@ -167,17 +150,17 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--start_time_offset1",
-        help="Start time, in fractional seconds, relative to the first input "
-        + "video timeline. Use this field to trim content from the beginning "
-        + "of the first video.",
+        "--start_time_input1",
+        help="Start time, in fractional seconds ending in 's' (e.g., '1.1s'), "
+        + "relative to the first input video timeline. Use this field to trim "
+        + "content from the beginning of the first video.",
         required=True,
     )
     parser.add_argument(
-        "--end_time_offset1",
-        help="End time, in fractional seconds, relative to the first input "
-        + "video timeline. Use this field to trim content from the end of the "
-        + "first video.",
+        "--end_time_input1",
+        help="End time, in fractional seconds ending in 's' (e.g., '9.5s'), "
+        + "relative to the first input video timeline. Use this field to trim "
+        + "content from the end of the first video.",
         required=True,
     )
     parser.add_argument(
@@ -186,17 +169,17 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--start_time_offset2",
-        help="Start time, in fractional seconds, relative to the second "
-        + "input video timeline. Use this field to trim content from the "
-        + "beginning of the second video.",
+        "--start_time_input2",
+        help="Start time, in fractional seconds ending in 's' (e.g., '1.1s'), "
+        + "relative to the second input video timeline. Use this field to trim "
+        + "content from the beginning of the second video.",
         required=True,
     )
     parser.add_argument(
-        "--end_time_offset2",
-        help="End time, in fractional seconds, relative to the second input "
-        + "video timeline. Use this field to trim content from the end of the "
-        + "second video.",
+        "--end_time_input2",
+        help="End time, in fractional seconds ending in 's' (e.g., '9.5s'), "
+        + "relative to the second input video timeline. Use this field to trim "
+        + "content from the end of the second video.",
         required=True,
     )
     parser.add_argument(
@@ -210,10 +193,10 @@ if __name__ == "__main__":
         args.project_id,
         args.location,
         args.input1_uri,
-        args.start_time_offset1,
-        args.end_time_offset1,
+        args.start_time_input1,
+        args.end_time_input1,
         args.input2_uri,
-        args.start_time_offset2,
-        args.end_time_offset2,
+        args.start_time_input2,
+        args.end_time_input2,
         args.output_uri,
     )
