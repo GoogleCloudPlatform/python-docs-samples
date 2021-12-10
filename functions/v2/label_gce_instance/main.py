@@ -16,6 +16,7 @@
 # [START functions_label_gce_instance]
 import re
 
+from google.api_core.exceptions import GoogleAPIError
 from google.cloud import compute_v1
 from google.cloud.compute_v1.types import compute
 
@@ -77,7 +78,7 @@ def label_gce_instance(cloudevent):
     try:
         instances_client.set_labels(request)
         print(f'Labelled VM instance {instance_name} with creator: {creator}')
-    except Exception as e:
+    except GoogleAPIError as e:
         # Swallowing the exception means failed invocations WON'T be retried
         print('Label operation failed', e)
 

@@ -25,9 +25,9 @@ from google.cloud import compute_v1
 import main
 
 
-PROJECT = os.getenv('GCLOUD_PROJECT')
-ZONE = os.getenv('FUNCTIONS_COMPUTE_ZONE')
-INSTANCE = os.getenv('FUNCTIONS_COMPUTE_INSTANCE')
+INSTANCE_PROJECT = os.getenv('GCLOUD_PROJECT')
+INSTANCE_ZONE = os.getenv('FUNCTIONS_COMPUTE_ZONE')
+INSTANCE_NAME = os.getenv('FUNCTIONS_COMPUTE_INSTANCE')
 
 instances_client = compute_v1.InstancesClient()
 
@@ -35,9 +35,9 @@ instances_client = compute_v1.InstancesClient()
 def test_functions_label_gce_instance_should_set_label():
     example_subject = 'compute.googleapis.com/'
 
-    example_subject += f'projects/{PROJECT}/'
-    example_subject += f'zones/{ZONE}/'
-    example_subject += f'instances/{INSTANCE}'
+    example_subject += f'projects/{INSTANCE_PROJECT}/'
+    example_subject += f'zones/{INSTANCE_ZONE}/'
+    example_subject += f'instances/{INSTANCE_NAME}'
 
     example_email = f'{uuid.uuid4().hex}@example.com'
 
@@ -66,9 +66,9 @@ def test_functions_label_gce_instance_should_set_label():
         # Get labeled instance
         expected_label = re.sub('\\W', '_', example_email)
         labels = instances_client.get(
-            project=PROJECT,
-            zone=ZONE,
-            instance=INSTANCE
+            project=INSTANCE_PROJECT,
+            zone=INSTANCE_ZONE,
+            instance=INSTANCE_NAME
         ).labels
 
         # Check that instance was labelled
