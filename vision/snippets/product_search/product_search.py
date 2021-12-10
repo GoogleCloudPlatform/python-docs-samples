@@ -34,8 +34,14 @@ from google.cloud import vision
 
 # [START vision_product_search_get_similar_products]
 def get_similar_products_file(
-        project_id, location, product_set_id, product_category,
-        file_path, filter):
+        project_id,
+        location,
+        product_set_id,
+        product_category,
+        file_path,
+        filter,
+        max_results
+):
     """Search similar products to image.
     Args:
         project_id: Id of the project.
@@ -44,10 +50,11 @@ def get_similar_products_file(
         product_category: Category of the product.
         file_path: Local file path of the image to be searched.
         filter: Condition to be applied on the labels.
-        Example for filter: (color = red OR color = blue) AND style = kids
-        It will search on all products with the following labels:
-        color:red AND style:kids
-        color:blue AND style:kids
+                Example for filter: (color = red OR color = blue) AND style = kids
+                It will search on all products with the following labels:
+                color:red AND style:kids
+                color:blue AND style:kids
+        max_results: The maximum number of results (matches) to return. If omitted, all results are returned.
     """
     # product_search_client is needed only for its helper methods.
     product_search_client = vision.ProductSearchClient()
@@ -73,7 +80,10 @@ def get_similar_products_file(
 
     # Search products similar to the image.
     response = image_annotator_client.product_search(
-        image, image_context=image_context)
+        image,
+        image_context=image_context,
+        max_results=max_results
+    )
 
     index_time = response.product_search_results.index_time
     print('Product set index time: ')
@@ -173,6 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--product_set_id')
     parser.add_argument('--product_category')
     parser.add_argument('--filter', default='')
+    parser.add_argument('--max_results', default='')
 
     get_similar_products_file_parser = subparsers.add_parser(
         'get_similar_products_file', help=get_similar_products_file.__doc__)
@@ -187,8 +198,8 @@ if __name__ == '__main__':
     if args.command == 'get_similar_products_file':
         get_similar_products_file(
             args.project_id, args.location, args.product_set_id,
-            args.product_category, args.file_path, args.filter)
+            args.product_category, args.file_path, args.filter, args.max_results)
     elif args.command == 'get_similar_products_uri':
         get_similar_products_uri(
             args.project_id, args.location, args.product_set_id,
-            args.product_category, args.image_uri, args.filter)
+            args.product_category, args.image_uri, args.filter, args.max_results)

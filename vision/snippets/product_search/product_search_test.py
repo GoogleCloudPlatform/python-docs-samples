@@ -30,13 +30,14 @@ PRODUCT_ID_2 = 'indexed_product_id_for_testing_2'
 FILE_PATH_1 = 'resources/shoes_1.jpg'
 IMAGE_URI_1 = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'
 FILTER = 'style=womens'
+MAX_RESULTS = 6
 
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_get_similar_products_file(capsys):
     get_similar_products_file(
         PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1,
-        '')
+        '', MAX_RESULTS)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 in out
@@ -54,7 +55,7 @@ def test_get_similar_products_uri(capsys):
 def test_get_similar_products_file_with_filter(capsys):
     get_similar_products_file(
         PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1,
-        FILTER)
+        FILTER, MAX_RESULTS)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 not in out
