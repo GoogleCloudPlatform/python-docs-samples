@@ -21,7 +21,10 @@ from google.cloud import storage
 
 
 def create_bucket_class_location(bucket_name):
-    """Create a new bucket in specific location with storage class"""
+    """
+    Create a new bucket in the US region with the coldline storage
+    class
+    """
     # bucket_name = "your-new-bucket-name"
 
     storage_client = storage.Client()
