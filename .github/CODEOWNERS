@@ -71,6 +71,7 @@
 /spanner/**/*.py                       @larkee @GoogleCloudPlatform/python-samples-owners
 /speech/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
 /storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
+/storagetransfer/**/*.py               @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-owners
 /tables/automl/**/*.py                 @telpirion @GoogleCloudPlatform/python-samples-owners
 /tasks/**/*.py                         @averikitsch @GoogleCloudPlatform/python-samples-owners
 /texttospeech/**/*.py                  @telpirion @GoogleCloudPlatform/python-samples-owners
