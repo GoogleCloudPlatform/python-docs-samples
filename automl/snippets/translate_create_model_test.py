@@ -26,6 +26,10 @@ def test_translate_create_model(capsys):
             PROJECT_ID, DATASET_ID, "translate_test_create_model"
         )
         out, _ = capsys.readouterr()
+        # After setting DATASET_ID, change line below to
+        # assert "Training started..." in out
         assert "Dataset does not exist." in out
     except Exception as e:
+        # After setting DATASET_ID, change line below to
+        # assert "Training started..." in e.message
         assert "Dataset does not exist." in e.message
