@@ -27,7 +27,6 @@ def create_model(project_id, dataset_id, display_name):
 
     # A resource that represents Google Cloud Platform location.
     project_location = f"projects/{project_id}/locations/us-central1"
-    # Leave model unset to use the default base model provided by Google
     translation_model_metadata = automl.TranslationModelMetadata()
     model = automl.Model(
         display_name=display_name,
