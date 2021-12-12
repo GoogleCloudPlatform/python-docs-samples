@@ -1,1 +1,1 @@
-See https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/CONTRIBUTING.md
+See https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/CONTRIBUTING.md
