@@ -21,11 +21,10 @@
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
 
+
 def process_document_splitter_sample(
-        project_id: str,
-        location: str,
-        processor_id: str,
-        file_path: str):
+    project_id: str, location: str, processor_id: str, file_path: str
+):
     from google.cloud import documentai_v1beta3 as documentai
 
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
@@ -61,26 +60,29 @@ def process_document_splitter_sample(
     # form elements, and entities please see other processors like the OCR, form,
     # and specalized processors.
     document = result.document
-    print(f'Found {len(document.entities)} subdocuments:')
+    print(f"Found {len(document.entities)} subdocuments:")
     for entity in document.entities:
-        conf_percent = '{:.1%}'.format(entity.confidence)
+        conf_percent = "{:.1%}".format(entity.confidence)
         pages_range = page_refs_to_string(entity.page_anchor.page_refs)
         # Print subdocument type information, if available
         try:
             doctype = entity.type
-            print(f'{conf_percent} confident that {pages_range} a "{doctype}" subdocument.')
+            print(
+                f'{conf_percent} confident that {pages_range} a "{doctype}" subdocument.'
+            )
         except AttributeError:
-            print(f'{conf_percent} confident that {pages_range} a subdocument.')
+            print(f"{conf_percent} confident that {pages_range} a subdocument.")
 
 
 def page_refs_to_string(page_refs: dict) -> str:
-    ''' Converts a page ref to a string describing the page or page range.'''
+    """ Converts a page ref to a string describing the page or page range."""
     if len(page_refs) == 1:
         num = str(int(page_refs[0].page) + 1)
-        return f'page {num} is'
+        return f"page {num} is"
     else:
         start = str(int(page_refs[0].page) + 1)
         end = str(int(page_refs[1].page) + 1)
-        return f'pages {start} to {end} are'
+        return f"pages {start} to {end} are"
+
 
 # [END documentai_process_splitter_document]

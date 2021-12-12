@@ -21,6 +21,7 @@
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
 
+
 def process_document_specialized_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ):
@@ -62,7 +63,7 @@ def process_document_specialized_sample(
     # Please see the OCR and other samples for how to parse other data in the
     # response.
     document = result.document
-    print(f'Found {len(document.entities)} entities:')
+    print(f"Found {len(document.entities)} entities:")
     for entity in document.entities:
         # Fields detected. For a full list of fields for each processor see
         # the processor documentation:
@@ -71,7 +72,8 @@ def process_document_specialized_sample(
         # some other value formats in addition to text are availible
         # e.g. dates: `entity.normalized_value.date_value.year`
         text_value = entity.text_anchor.content
-        conf_percent = '{:.1%}'.format(entity.confidence)
-        print(f'    * {repr(key)}: {repr(text_value)}({conf_percent} confident)')
+        conf_percent = "{:.1%}".format(entity.confidence)
+        print(f"    * {repr(key)}: {repr(text_value)}({conf_percent} confident)")
+
 
 # [END documentai_process_specialized_document]

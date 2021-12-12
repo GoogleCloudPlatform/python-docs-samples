@@ -21,6 +21,7 @@
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
 
+
 def process_document_form_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ):
@@ -69,9 +70,9 @@ def process_document_form_sample(
         for table in page.tables:
             num_collumns = len(table.header_rows[0].cells)
             num_rows = len(table.body_rows)
-            print(f'Table with {num_collumns} columns and {num_rows} rows:')
+            print(f"Table with {num_collumns} columns and {num_rows} rows:")
             print_table_info(table, text)
-        print(f'Found {len(page.form_fields)} form fields:')
+        print(f"Found {len(page.form_fields)} form fields:")
         for field in page.form_fields:
             name = layout_to_text(field.field_name, text)
             value = layout_to_text(field.field_value, text)
@@ -80,17 +81,17 @@ def process_document_form_sample(
 
 def print_table_info(table: dict, text: str) -> None:
     # Print header row
-    header_row_text = ''
+    header_row_text = ""
     for header_cell in table.header_rows[0].cells:
         header_cell_text = layout_to_text(header_cell.layout, text)
-        header_row_text += f'{repr(header_cell_text.strip())} | '
-    print(f'Collumns: {header_row_text[:-3]}')
+        header_row_text += f"{repr(header_cell_text.strip())} | "
+    print(f"Collumns: {header_row_text[:-3]}")
     # Print first body row
-    body_row_text = ''
+    body_row_text = ""
     for body_cell in table.body_rows[0].cells:
         body_cell_text = layout_to_text(body_cell.layout, text)
-        body_row_text += f'{repr(body_cell_text.strip())} | '
-    print(f'First row data: {body_row_text[:-3]}\n')
+        body_row_text += f"{repr(body_cell_text.strip())} | "
+    print(f"First row data: {body_row_text[:-3]}\n")
 
 
 def layout_to_text(layout: dict, text: str) -> str:
