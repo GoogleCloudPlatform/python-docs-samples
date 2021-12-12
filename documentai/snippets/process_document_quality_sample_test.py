@@ -36,7 +36,7 @@ def test_process_documents(capsys):
     expected_strings = [
         "Page 1 has a quality score of",
         "defect_blurry score of 9",
-        "defect_noisy"
+        "defect_noisy",
     ]
     for expected_string in expected_strings:
         assert expected_string in out
