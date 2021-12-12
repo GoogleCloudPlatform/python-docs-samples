@@ -21,6 +21,7 @@
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
 
+
 def process_document_ocr_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ) -> None:
@@ -78,7 +79,7 @@ def print_detected_langauges(detected_languages: dict) -> None:
     print("    Detected languages:")
     for lang in detected_languages:
         code = lang.language_code
-        conf_percent = '{:.1%}'.format(lang.confidence)
+        conf_percent = "{:.1%}".format(lang.confidence)
         print(f"        {code} ({conf_percent} confidence)")
 
 
