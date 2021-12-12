@@ -21,6 +21,7 @@
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
 
+
 def process_document_quality_sample(
     project_id: str, location: str, processor_id: str, file_path: str
 ):
@@ -60,17 +61,18 @@ def process_document_quality_sample(
     # response.
     document = result.document
     for entity in document.entities:
-        conf_percent = '{:.1%}'.format(entity.confidence)
-        page_num = ''
+        conf_percent = "{:.1%}".format(entity.confidence)
+        page_num = ""
         try:
             page_num = str(int(entity.page_anchor.page_refs.page) + 1)
         except AttributeError:
             page_num = "1"
 
-        print(f'Page {page_num} has a quality score of {conf_percent}:')
+        print(f"Page {page_num} has a quality score of {conf_percent}:")
 
         for prop in entity.properties:
-            conf_percent = '{:.1%}'.format(prop.confidence)
-            print(f'    * {prop.type_} score of {conf_percent}')
+            conf_percent = "{:.1%}".format(prop.confidence)
+            print(f"    * {prop.type_} score of {conf_percent}")
+
 
 # [END documentai_process_quality_document]
