@@ -46,7 +46,7 @@ def firewall_rule():
     firewall_rule.target_tags = ["web"]
 
     firewall_client = compute_v1.FirewallsClient()
-    op = firewall_client.insert(project=PROJECT, firewall_resource=firewall_rule)
+    op = firewall_client.insert_unary(project=PROJECT, firewall_resource=firewall_rule)
 
     op_client = compute_v1.GlobalOperationsClient()
     op_client.wait(project=PROJECT, operation=op.name)
@@ -54,7 +54,7 @@ def firewall_rule():
     yield firewall_client.get(project=PROJECT, firewall=firewall_rule.name)
 
     try:
-        op = firewall_client.delete(project=PROJECT, firewall=firewall_rule.name)
+        op = firewall_client.delete_unary(project=PROJECT, firewall=firewall_rule.name)
         op_client.wait(project=PROJECT, operation=op.name)
     except google.api_core.exceptions.BadRequest as err:
         if err.code == 400 and "is not ready" in err.message:

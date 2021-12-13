@@ -118,7 +118,9 @@ def create_template(project_id: str, template_name: str) -> compute_v1.InstanceT
 
     template_client = compute_v1.InstanceTemplatesClient()
     operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert(project=project_id, instance_template_resource=template)
+    op = template_client.insert_unary(
+        project=project_id, instance_template_resource=template
+    )
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
@@ -162,7 +164,9 @@ def create_template_from_instance(
 
     template_client = compute_v1.InstanceTemplatesClient()
     operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert(project=project_id, instance_template_resource=template)
+    op = template_client.insert_unary(
+        project=project_id, instance_template_resource=template
+    )
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
@@ -215,7 +219,9 @@ def create_template_with_subnet(
 
     template_client = compute_v1.InstanceTemplatesClient()
     operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert(project=project_id, instance_template_resource=template)
+    op = template_client.insert_unary(
+        project=project_id, instance_template_resource=template
+    )
     operation_client.wait(project=project_id, operation=op.name)
 
     return template_client.get(project=project_id, instance_template=template_name)
@@ -235,7 +241,9 @@ def delete_instance_template(project_id: str, template_name: str):
     """
     template_client = compute_v1.InstanceTemplatesClient()
     operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.delete(project=project_id, instance_template=template_name)
+    op = template_client.delete_unary(
+        project=project_id, instance_template=template_name
+    )
     operation_client.wait(project=project_id, operation=op.name)
     return
 

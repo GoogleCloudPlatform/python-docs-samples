@@ -51,14 +51,16 @@ def instance_template():
 
     template_client = compute_v1.InstanceTemplatesClient()
     operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert(project=PROJECT, instance_template_resource=template)
+    op = template_client.insert_unary(
+        project=PROJECT, instance_template_resource=template
+    )
     operation_client.wait(project=PROJECT, operation=op.name)
 
     template = template_client.get(project=PROJECT, instance_template=template.name)
 
     yield template
 
-    op = template_client.delete(project=PROJECT, instance_template=template.name)
+    op = template_client.delete_unary(project=PROJECT, instance_template=template.name)
     operation_client.wait(project=PROJECT, operation=op.name)
 
 
