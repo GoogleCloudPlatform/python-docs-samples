@@ -95,7 +95,9 @@ def create_firewall_rule(
     # firewall_rule.priority = 0
 
     firewall_client = compute_v1.FirewallsClient()
-    op = firewall_client.insert(project=project_id, firewall_resource=firewall_rule)
+    op = firewall_client.insert_unary(
+        project=project_id, firewall_resource=firewall_rule
+    )
 
     op_client = compute_v1.GlobalOperationsClient()
     op_client.wait(project=project_id, operation=op.name)
@@ -122,7 +124,7 @@ def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: 
     # The patch operation doesn't require the full definition of a Firewall object. It will only update
     # the values that were set in it, in this case it will only change the priority.
     firewall_client = compute_v1.FirewallsClient()
-    operation = firewall_client.patch(
+    operation = firewall_client.patch_unary(
         project=project_id, firewall=firewall_rule_name, firewall_resource=firewall_rule
     )
 
@@ -144,7 +146,9 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str):
         firewall_rule_name: name of the firewall rule you want to delete.
     """
     firewall_client = compute_v1.FirewallsClient()
-    operation = firewall_client.delete(project=project_id, firewall=firewall_rule_name)
+    operation = firewall_client.delete_unary(
+        project=project_id, firewall=firewall_rule_name
+    )
 
     operation_client = compute_v1.GlobalOperationsClient()
     operation_client.wait(project=project_id, operation=operation.name)

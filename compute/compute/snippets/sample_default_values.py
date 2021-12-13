@@ -58,7 +58,7 @@ def set_usage_export_bucket(
         )
 
     projects_client = compute_v1.ProjectsClient()
-    operation = projects_client.set_usage_export_bucket(
+    operation = projects_client.set_usage_export_bucket_unary(
         project=project_id, usage_export_location_resource=usage_export_location
     )
 
@@ -121,7 +121,7 @@ def disable_usage_export(project_id: str) -> None:
 
     # Setting `usage_export_location_resource` to an
     # empty object will disable the usage report generation.
-    operation = projects_client.set_usage_export_bucket(
+    operation = projects_client.set_usage_export_bucket_unary(
         project=project_id, usage_export_location_resource={}
     )
 

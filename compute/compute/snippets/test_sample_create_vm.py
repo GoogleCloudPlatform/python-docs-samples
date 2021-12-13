@@ -46,7 +46,9 @@ def src_disk(request):
     disk = compute_v1.Disk()
     disk.source_image = get_active_debian().self_link
     disk.name = "test-disk-" + uuid.uuid4().hex[:10]
-    op = disk_client.insert(project=PROJECT, zone=INSTANCE_ZONE, disk_resource=disk)
+    op = disk_client.insert_unary(
+        project=PROJECT, zone=INSTANCE_ZONE, disk_resource=disk
+    )
 
     wait_for_operation(op, PROJECT)
     try:
@@ -54,7 +56,9 @@ def src_disk(request):
         request.cls.disk = disk
         yield disk
     finally:
-        op = disk_client.delete(project=PROJECT, zone=INSTANCE_ZONE, disk=disk.name)
+        op = disk_client.delete_unary(
+            project=PROJECT, zone=INSTANCE_ZONE, disk=disk.name
+        )
         wait_for_operation(op, PROJECT)
 
 
@@ -64,7 +68,7 @@ def snapshot(request, src_disk):
     snapshot = compute_v1.Snapshot()
     snapshot.name = "test-snap-" + uuid.uuid4().hex[:10]
     disk_client = compute_v1.DisksClient()
-    op = disk_client.create_snapshot(
+    op = disk_client.create_snapshot_unary(
         project=PROJECT,
         zone=INSTANCE_ZONE,
         disk=src_disk.name,
@@ -79,7 +83,7 @@ def snapshot(request, src_disk):
 
         yield snapshot
     finally:
-        op = snapshot_client.delete(project=PROJECT, snapshot=snapshot.name)
+        op = snapshot_client.delete_unary(project=PROJECT, snapshot=snapshot.name)
         wait_for_operation(op, PROJECT)
 
 
@@ -89,7 +93,7 @@ def image(request, src_disk):
     image = compute_v1.Image()
     image.source_disk = src_disk.self_link
     image.name = "test-image-" + uuid.uuid4().hex[:10]
-    op = image_client.insert(project=PROJECT, image_resource=image)
+    op = image_client.insert_unary(project=PROJECT, image_resource=image)
 
     wait_for_operation(op, PROJECT)
     try:
@@ -97,7 +101,7 @@ def image(request, src_disk):
         request.cls.image = image
         yield image
     finally:
-        op = image_client.delete(project=PROJECT, image=image.name)
+        op = image_client.delete_unary(project=PROJECT, image=image.name)
         wait_for_operation(op, PROJECT)
 
 

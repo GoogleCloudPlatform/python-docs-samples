@@ -214,7 +214,7 @@ def create_with_disks(
     # Wait for the create operation to complete.
     print(f"Creating the {instance_name} instance in {zone}...")
 
-    operation = instance_client.insert(request=request)
+    operation = instance_client.insert_unary(request=request)
     while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=zone, project=project_id

@@ -48,7 +48,7 @@ def create_instance_from_template(
     instance_insert_request.source_instance_template = instance_template_url
     instance_insert_request.instance_resource.name = instance_name
 
-    op = instance_client.insert(instance_insert_request)
+    op = instance_client.insert_unary(instance_insert_request)
     operation_client.wait(project=project_id, zone=zone, operation=op.name)
 
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
@@ -127,7 +127,7 @@ def create_instance_from_template_with_overrides(
     instance_insert_request.instance_resource = instance
     instance_insert_request.source_instance_template = instance_template.self_link
 
-    op = instance_client.insert(instance_insert_request)
+    op = instance_client.insert_unary(instance_insert_request)
     operation_client.wait(project=project_id, zone=zone, operation=op.name)
 
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
