@@ -1,1 +1,1 @@
-google-cloud-vision==2.6.2
+google-cloud-vision==2.6.3
