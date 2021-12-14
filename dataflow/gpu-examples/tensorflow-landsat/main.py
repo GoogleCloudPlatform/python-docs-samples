@@ -66,6 +66,9 @@ DEFAULT_MIN_BAND_VALUE = 0.0
 DEFAULT_MAX_BAND_VALUE = 12000.0
 DEFAULT_GAMMA = 0.5
 
+# For more information on the available GPU types per location,
+# see the "GPU availability" section in the documentation.
+#   https://cloud.google.com/dataflow/docs/resources/locations#gpu_availability
 DEFAULT_GPU_TYPE = "nvidia-tesla-t4"
 DEFAULT_GPU_COUNT = 1
 
@@ -275,6 +278,9 @@ def run(
             ),
         )
         | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
+        # We reshuffle to prevent fusion and allow all I/O operations to happen in parallel.
+        # For more information, see the "Preventing fusion" section in the documentation:
+        #   https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#preventing-fusion
         | "Reshuffle" >> beam.Reshuffle()
         | "Load RGB band values" >> beam.MapTuple(load_values)
         | "Preprocess pixels GPU" >> beam.MapTuple(

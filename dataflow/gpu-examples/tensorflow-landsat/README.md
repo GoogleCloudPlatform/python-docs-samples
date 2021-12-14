@@ -47,6 +47,10 @@ gcloud builds submit --config build.yaml
 
 We use Cloud Build to run the [Dataflow](https://cloud.google.com/dataflow) job.
 
+For more information on the available GPU types per location, see the
+[GPU availability](https://cloud.google.com/dataflow/docs/resources/locations#gpu_availability)
+section in the documentation.
+
 > ℹ️ We launch the job using the worker image to make sure the job launches
 > with the same Python version as the workers and all the dependencies installed.
 
