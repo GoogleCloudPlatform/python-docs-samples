@@ -41,7 +41,11 @@ def translate_document(project_id: str, file_path: str):
         }
     )
 
-    # To view translated document, write `response.document_translation.byte_stream_outputs` to file.
+    # To output the translated document, uncomment the code below.
+    # f = open('/tmp/output', 'wb')
+    # f.write(response.document_translation.byte_stream_outputs)
+    # f.close()
+
     # If not provided in the TranslationRequest, the translated file will only be returned through a byte-stream
     # and its output mime type will be the same as the input file's mime type
     print("Response: Detected Language Code - {}".format(response.document_translation.detected_language_code))
