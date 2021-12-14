@@ -51,7 +51,7 @@ def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
 
         for dag in dags:
             # Remove path to temp dir
-            dag = dag.replace(f"{temp_dir}/", "")
+            dag = dag.replace(f"{temp_dir}/", "dags/")
             # Upload to your bucket
             blob = bucket.blob(dag)
             blob.upload_from_string(dag)
