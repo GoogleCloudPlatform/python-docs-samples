@@ -27,6 +27,8 @@ def update_dataset_access(dataset_id: str, entity_id: str):
     # of the entity, such as a view's table reference.
     entity_id = "user-or-group-to-add@example.com"
 
+    from google.cloud.bigquery.enums import EntityTypes
+
     # TODO(developer): Set entity_type to the type of entity you are granting access to.
     # Common types include:
     #
@@ -37,7 +39,7 @@ def update_dataset_access(dataset_id: str, entity_id: str):
     #
     # For a complete reference, see the REST API reference documentation:
     # https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets#Dataset.FIELDS.access
-    entity_type = "groupByEmail"
+    entity_type = EntityTypes.GROUP_BY_EMAIL
 
     # TODO(developer): Set role to a one of the "Basic roles for datasets"
     # described here:

@@ -24,6 +24,7 @@ def run_authorized_view_tutorial(override_values={}):
     # Create a source dataset
     # [START bigquery_avt_create_source_dataset]
     from google.cloud import bigquery
+    from google.cloud.bigquery.enums import EntityTypes
 
     client = bigquery.Client()
     source_dataset_id = "github_source_data"
@@ -106,7 +107,7 @@ def run_authorized_view_tutorial(override_values={}):
     # analyst_group_email = 'data_analysts@example.com'
     access_entries = shared_dataset.access_entries
     access_entries.append(
-        bigquery.AccessEntry("READER", "groupByEmail", analyst_group_email)
+        bigquery.AccessEntry("READER", EntityTypes.GROUP_BY_EMAIL, analyst_group_email)
     )
     shared_dataset.access_entries = access_entries
     shared_dataset = client.update_dataset(
@@ -118,7 +119,7 @@ def run_authorized_view_tutorial(override_values={}):
     # [START bigquery_avt_source_dataset_access]
     access_entries = source_dataset.access_entries
     access_entries.append(
-        bigquery.AccessEntry(None, "view", view.reference.to_api_repr())
+        bigquery.AccessEntry(None, EntityTypes.VIEW, view.reference.to_api_repr())
     )
     source_dataset.access_entries = access_entries
     source_dataset = client.update_dataset(
