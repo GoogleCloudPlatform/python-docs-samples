@@ -21,6 +21,7 @@ line to create, list and delete an instance in a given project in a given zone.
 
 # [START compute_instances_create]
 # [START compute_instances_delete]
+import re
 import sys
 
 # [START compute_instances_list]
@@ -149,8 +150,10 @@ def create_instance(
     instance = compute_v1.Instance()
     instance.name = instance_name
     instance.disks = [disk]
-    full_machine_type_name = f"zones/{zone}/machineTypes/{machine_type}"
-    instance.machine_type = full_machine_type_name
+    if re.match(r"^zones/[a-z\d\-]+/machineTypes/[a-z\d\-]+$", machine_type):
+        instance.machine_type = machine_type
+    else:
+        instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
     instance.network_interfaces = [network_interface]
 
     # Prepare the request to insert an instance.

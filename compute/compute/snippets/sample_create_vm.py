@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import re
 import sys
 from typing import List
 
@@ -194,8 +194,10 @@ def create_with_disks(
     instance = compute_v1.Instance()
     instance.name = instance_name
     instance.disks = disks
-    full_machine_type_name = f"zones/{zone}/machineTypes/{machine_type}"
-    instance.machine_type = full_machine_type_name
+    if re.match(r"^zones/[a-z\d\-]+/machineTypes/[a-z\d\-]+$", machine_type):
+        instance.machine_type = machine_type
+    else:
+        instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
     instance.network_interfaces = [network_interface]
 
     # Shielded Instance settings
