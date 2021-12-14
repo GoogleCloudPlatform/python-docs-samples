@@ -150,7 +150,7 @@ def incomplete_key(client):
 
 def named_key(client):
     # [START datastore_named_key]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     # [END datastore_named_key]
 
     return key
@@ -158,10 +158,10 @@ def named_key(client):
 
 def key_with_parent(client):
     # [START datastore_key_with_parent]
-    key = client.key("TaskList", "default", "Task", "sample_task")
+    key = client.key("TaskList", "default", "Task", "sampleTask")
     # Alternatively
     parent_key = client.key("TaskList", "default")
-    key = client.key("Task", "sample_task", parent=parent_key)
+    key = client.key("Task", "sampleTask", parent=parent_key)
     # [END datastore_key_with_parent]
 
     return key
@@ -169,7 +169,7 @@ def key_with_parent(client):
 
 def key_with_multilevel_parent(client):
     # [START datastore_key_with_multilevel_parent]
-    key = client.key("User", "alice", "TaskList", "default", "Task", "sample_task")
+    key = client.key("User", "alice", "TaskList", "default", "Task", "sampleTask")
     # [END datastore_key_with_multilevel_parent]
 
     return key
@@ -193,7 +193,7 @@ def basic_entity(client):
 
 def entity_with_parent(client):
     # [START datastore_entity_with_parent]
-    key_with_parent = client.key("TaskList", "default", "Task", "sample_task")
+    key_with_parent = client.key("TaskList", "default", "Task", "sampleTask")
 
     task = datastore.Entity(key=key_with_parent)
 
@@ -241,7 +241,7 @@ def array_value(client):
 
 def upsert(client):
     # [START datastore_upsert]
-    complete_key = client.key("Task", "sample_task")
+    complete_key = client.key("Task", "sampleTask")
 
     task = datastore.Entity(key=complete_key)
 
