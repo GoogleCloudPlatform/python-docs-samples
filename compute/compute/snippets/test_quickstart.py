@@ -18,7 +18,7 @@ import uuid
 
 import google.auth
 
-from samples.snippets.quickstart import main
+from quickstart import main
 
 PROJECT = google.auth.default()[1]
 INSTANCE_NAME = "i" + uuid.uuid4().hex[:10]
