@@ -34,7 +34,7 @@ steps:
         ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
           "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --async --quiet"
 
-        WAIT=20 ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+        WAIT=30 ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
           "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
         ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \

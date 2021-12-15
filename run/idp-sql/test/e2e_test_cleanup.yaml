@@ -29,7 +29,7 @@ steps:
       ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
         "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
 
-      WAIT=20 ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+      WAIT=30 ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
         "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
 substitutions:
