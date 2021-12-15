@@ -22,6 +22,7 @@ from google.cloud.compute_v1.types import compute
 
 instances_client = compute_v1.InstancesClient()
 
+
 # CloudEvent function that labels newly-created GCE instances
 # with the entity (user or service account) that created them.
 #
