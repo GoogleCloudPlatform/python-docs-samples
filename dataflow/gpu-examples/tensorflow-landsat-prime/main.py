@@ -66,6 +66,12 @@ DEFAULT_MIN_BAND_VALUE = 0.0
 DEFAULT_MAX_BAND_VALUE = 12000.0
 DEFAULT_GAMMA = 0.5
 
+# For more information on the available GPU types per location,
+# see the "GPU availability" section in the documentation.
+#   https://cloud.google.com/dataflow/docs/resources/locations#gpu_availability
+DEFAULT_GPU_TYPE = "nvidia-tesla-t4"
+DEFAULT_GPU_COUNT = 1
+
 DEFAULT_SCENES = [
     "LC08_L1TP_001067_20200727_20200807_01_T1",  # Brazil-Bolivia boundary
     "LC08_L1TP_019024_20190621_20190704_01_T1",  # Nottaway river delta, Quebec
@@ -142,7 +148,8 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [
+        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -239,6 +246,8 @@ def run(
     scenes: List[str],
     output_path_prefix: str,
     vis_params: Dict[str, Any],
+    gpu_type: str = DEFAULT_GPU_TYPE,
+    gpu_count: int = DEFAULT_GPU_COUNT,
     beam_args: Optional[List[str]] = None,
 ) -> None:
     """Load multiple Landsat scenes and render them as JPEG files.
@@ -249,33 +258,37 @@ def run(
         vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
         beam_args: Optional list of arguments for Beam pipeline options.
     """
-    rgb_band_names = vis_params["rgb_band_names"]
-    min_value = vis_params["min"]
-    max_value = vis_params["max"]
-    gamma = vis_params["gamma"]
+    rgb_band_names = vis_params.get("rgb_band_names", DEFAULT_RGB_BAND_NAMES)
+    min_value = vis_params.get("min", DEFAULT_MIN_BAND_VALUE)
+    max_value = vis_params.get("max", DEFAULT_MAX_BAND_VALUE)
+    gamma = vis_params.get("gamma", DEFAULT_GAMMA)
 
+    gpu_hint = f"type:{gpu_type};count:{gpu_count};install-nvidia-driver"
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     pipeline = beam.Pipeline(options=beam_options)
     (
         pipeline
         | "Create scene IDs" >> beam.Create(scenes)
-        | "Check GPU availability"
-        >> beam.Map(
+        | "Check GPU availability" >> beam.Map(
             lambda x, unused_side_input: x,
             unused_side_input=beam.pvalue.AsSingleton(
-                pipeline | beam.Create([None]) | beam.Map(check_gpus)
+                pipeline
+                | beam.Create([None])
+                | beam.Map(check_gpus).with_resource_hints(accelerator=gpu_hint)
             ),
         )
         | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
+        # We reshuffle to prevent fusion and allow all I/O operations to happen in parallel.
+        # For more information, see the "Preventing fusion" section in the documentation:
+        #   https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#preventing-fusion
+        | "Reshuffle" >> beam.Reshuffle()
         | "Load RGB band values" >> beam.MapTuple(load_values)
-        | "Preprocess pixels"
-        >> beam.MapTuple(preprocess_pixels, min_value, max_value, gamma)
-        | "Convert to image"
-        >> beam.MapTuple(
+        | "Preprocess pixels GPU" >> beam.MapTuple(
+            preprocess_pixels, min_value, max_value, gamma
+        ).with_resource_hints(accelerator=gpu_hint)
+        | "Convert to image" >> beam.MapTuple(
             lambda scene, rgb_pixels: (
-                scene,
-                Image.fromarray(rgb_pixels.numpy(), mode="RGB"),
-            )
+                scene, Image.fromarray(rgb_pixels.numpy(), mode="RGB"))
         )
         | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
     )
@@ -290,8 +303,7 @@ if __name__ == "__main__":
         "--output-path-prefix",
         required=True,
         help="Path prefix for output image files. "
-        "This can be a Google Cloud Storage path.",
-    )
+        "This can be a Google Cloud Storage path.")
     parser.add_argument(
         "--scene",
         dest="scenes",
@@ -299,36 +311,46 @@ if __name__ == "__main__":
         help="One or more Landsat scene IDs to process, for example "
         "LC08_L1TP_109078_20200411_20200422_01_T1. "
         "They must be in the format: "
-        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes",
-    )
+        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes")
+    parser.add_argument(
+        "--gpu-type",
+        default=DEFAULT_GPU_TYPE,
+        help="GPU type to use.")
+    parser.add_argument(
+        "--gpu-count",
+        type=int,
+        default=DEFAULT_GPU_COUNT,
+        help="GPU count to use.")
     parser.add_argument(
         "--rgb-band-names",
         nargs=3,
         default=DEFAULT_RGB_BAND_NAMES,
-        help="List of three band names to be mapped to the RGB channels.",
-    )
+        help="List of three band names to be mapped to the RGB channels.")
     parser.add_argument(
         "--min",
         type=float,
         default=DEFAULT_MIN_BAND_VALUE,
-        help="Minimum value of the band value range.",
-    )
+        help="Minimum value of the band value range.")
     parser.add_argument(
         "--max",
         type=float,
         default=DEFAULT_MAX_BAND_VALUE,
-        help="Maximum value of the band value range.",
-    )
+        help="Maximum value of the band value range.")
     parser.add_argument(
-        "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
-    )
+        "--gamma",
+        type=float,
+        default=DEFAULT_GAMMA,
+        help="Gamma correction factor.")
     args, beam_args = parser.parse_known_args()
 
-    scenes = args.scenes or DEFAULT_SCENES
-    vis_params = {
-        "rgb_band_names": args.rgb_band_names,
-        "min": args.min,
-        "max": args.max,
-        "gamma": args.gamma,
-    }
-    run(scenes, args.output_path_prefix, vis_params, beam_args)
+    run(scenes=args.scenes or DEFAULT_SCENES,
+        output_path_prefix=args.output_path_prefix,
+        vis_params={
+            "rgb_band_names": args.rgb_band_names,
+            "min": args.min,
+            "max": args.max,
+            "gamma": args.gamma,
+        },
+        gpu_type=args.gpu_type,
+        gpu_count=args.gpu_count,
+        beam_args=beam_args)
