@@ -22,7 +22,6 @@ from google.cloud.compute_v1.types import compute
 
 instances_client = compute_v1.InstancesClient()
 
-
 # CloudEvent function that labels newly-created GCE instances
 # with the entity (user or service account) that created them.
 #
@@ -76,7 +75,7 @@ def label_gce_instance(cloudevent):
 
     # Perform instance-labeling API call
     try:
-        instances_client.set_labels(request)
+        instances_client.set_labels_unary(request)
         print(f'Labelled VM instance {instance_name} with creator: {creator}')
     except GoogleAPIError as e:
         # Swallowing the exception means failed invocations WON'T be retried
