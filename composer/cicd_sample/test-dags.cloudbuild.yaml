@@ -24,8 +24,6 @@ steps:
     args: ["install", "-r", "requirements-test.txt", "--user"]
 
   # run in python 3.8 which is latest version in Cloud Composer
-  # SHORT_SHA is a default Cloud Build substitution
-  # that is the first seven characters of COMMIT_SHA
   - name: python:3.8-slim
     entrypoint: python3.8
     args: ["-m", "pytest", "-s", "dags/"]
