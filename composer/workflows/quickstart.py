@@ -38,7 +38,7 @@ with models.DAG(
         'composer_quickstart',
         'catchup=False',
         default_args=default_args,
-        schedule_interval=datetime.timedelta(days=1)):
+        schedule_interval=datetime.timedelta(days=1)) as dag:
 
     # Print the dag_run id from the Airflow logs
     print_dag_run_conf = bash.BashOperator(
