@@ -52,7 +52,7 @@ apache-airflow-providers-apache-cassandra==2.0.0
 apache-airflow-providers-apache-druid==2.0.0
 apache-airflow-providers-apache-hdfs==2.0.0
 apache-airflow-providers-apache-hive==2.0.0
-apache-airflow-providers-apache-kylin==2.0.0
+apache-airflow-providers-apache-kylin==2.0.1
 apache-airflow-providers-apache-livy==2.0.0
 apache-airflow-providers-apache-pig==2.0.0
 apache-airflow-providers-apache-pinot==2.0.0
