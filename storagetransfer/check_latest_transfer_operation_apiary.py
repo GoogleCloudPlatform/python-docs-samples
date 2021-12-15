@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env python
 
 # Copyright 2021 Google LLC
 
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storagetransfer_get_latest_transfer_operation]
+# [START storagetransfer_get_latest_transfer_operation_apiary]
 
 """Command-line sample that checks the latest operation of a transfer.
 This sample is used on this page:
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     check_latest_transfer_operation(args.project_id, args.job_name)
-# [END storagetransfer_get_latest_transfer_operation]
+# [END storagetransfer_get_latest_transfer_operation_apiary]
