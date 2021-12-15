@@ -57,7 +57,7 @@ apache-airflow-providers-apache-livy==2.0.0
 apache-airflow-providers-apache-pig==2.0.1
 apache-airflow-providers-apache-pinot==2.0.0
 apache-airflow-providers-apache-spark==2.0.0
-apache-airflow-providers-apache-sqoop==2.0.0
+apache-airflow-providers-apache-sqoop==2.0.2
 apache-airflow-providers-asana==1.0.0
 apache-airflow-providers-celery==2.0.0
 apache-airflow-providers-cloudant==2.0.0
