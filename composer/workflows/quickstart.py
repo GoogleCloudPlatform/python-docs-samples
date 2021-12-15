@@ -15,7 +15,7 @@
 # [START composer_quickstart]
 import datetime
 
-import airflow
+from airflow import models
 from airflow.operators import bash
 
 # If you are running Airflow in more than one time zone
@@ -34,11 +34,11 @@ default_args = {
     'start_date': YESTERDAY,
 }
 
-with airflow.DAG(
-        'composer_sample_dag',
+with models.DAG(
+        'composer_quickstart',
         'catchup=False',
         default_args=default_args,
-        schedule_interval=datetime.timedelta(days=1)) as dag:
+        schedule_interval=datetime.timedelta(days=1)):
 
     # Print the dag_run id from the Airflow logs
     print_dag_run_conf = bash.BashOperator(
