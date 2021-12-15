@@ -288,7 +288,7 @@ def update(client):
 
     # [START datastore_update]
     with client.transaction():
-        key = client.key("Task", "sample_task")
+        key = client.key("Task", "sampleTask")
         task = client.get(key)
 
         task["done"] = True
@@ -304,7 +304,7 @@ def lookup(client):
     upsert(client)
 
     # [START datastore_lookup]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     task = client.get(key)
     # [END datastore_lookup]
 
@@ -316,7 +316,7 @@ def delete(client):
     upsert(client)
 
     # [START datastore_delete]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     client.delete(key)
     # [END datastore_delete]
 
