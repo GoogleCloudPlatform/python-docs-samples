@@ -1,0 +1,4 @@
+pytest==6.2.3
+requests==2.26.0
+google-api-core==2.2.2
+google-resumable-media==2.1.0
