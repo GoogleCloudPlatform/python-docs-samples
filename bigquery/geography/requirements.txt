@@ -11,7 +11,7 @@ Fiona==1.8.20
 geojson==2.5.0
 geopandas==0.9.0; python_version < '3.7'
 geopandas==0.10.2; python_version >= '3.7'
-google-api-core==2.3.0
+google-api-core==2.3.2
 google-auth==2.3.3
 google-cloud-bigquery==2.31.0
 google-cloud-bigquery-storage==2.10.1
@@ -21,7 +21,7 @@ google-resumable-media==2.1.0
 googleapis-common-protos==1.54.0
 grpcio==1.42.0
 idna==3.3
-importlib-metadata==4.8.2
+importlib-metadata==4.8.3
 libcst==0.3.23
 munch==2.5.0
 mypy-extensions==0.4.3
