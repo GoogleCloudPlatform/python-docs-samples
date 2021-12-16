@@ -95,7 +95,7 @@ apache-airflow-providers-plexus==2.0.0
 apache-airflow-providers-postgres==2.0.0
 apache-airflow-providers-presto==2.0.0
 apache-airflow-providers-qubole==2.0.0
-apache-airflow-providers-redis==2.0.0
+apache-airflow-providers-redis==2.0.1
 apache-airflow-providers-salesforce==3.0.0
 apache-airflow-providers-samba==2.0.0
 apache-airflow-providers-segment==2.0.0
