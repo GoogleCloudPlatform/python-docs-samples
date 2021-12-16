@@ -12,10 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 from .. import copy_table_cmek
 
 
 def test_copy_table_cmek(capsys, random_table_id, table_with_data_id, kms_key_name):
+    pytest.skip("b/210907595: copy fails for shakespeare table")
 
     copy_table_cmek.copy_table_cmek(random_table_id, table_with_data_id, kms_key_name)
     out, err = capsys.readouterr()
