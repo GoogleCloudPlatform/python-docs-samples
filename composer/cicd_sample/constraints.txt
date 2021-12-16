@@ -77,7 +77,7 @@ apache-airflow-providers-hashicorp==2.0.0
 apache-airflow-providers-http==2.0.0
 apache-airflow-providers-imap==2.0.0
 apache-airflow-providers-jdbc==2.0.0
-apache-airflow-providers-jenkins==2.0.0
+apache-airflow-providers-jenkins==2.0.3
 apache-airflow-providers-jira==2.0.0
 apache-airflow-providers-microsoft-azure==3.0.0
 apache-airflow-providers-microsoft-mssql==2.0.0
