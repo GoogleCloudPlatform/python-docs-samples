@@ -68,7 +68,7 @@ apache-airflow-providers-dingding==2.0.0
 apache-airflow-providers-discord==2.0.0
 apache-airflow-providers-docker==2.0.0
 apache-airflow-providers-elasticsearch==2.0.2
-apache-airflow-providers-exasol==2.0.0
+apache-airflow-providers-exasol==2.0.1
 apache-airflow-providers-facebook==2.0.0
 apache-airflow-providers-ftp==2.0.0
 apache-airflow-providers-google==4.0.0
