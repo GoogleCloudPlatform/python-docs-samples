@@ -37,6 +37,7 @@ import storage_delete_file
 import storage_delete_file_archived_generation
 import storage_disable_bucket_lifecycle_management
 import storage_disable_versioning
+import storage_download_byte_range
 import storage_download_file
 import storage_download_into_memory
 import storage_download_public_file
@@ -209,6 +210,14 @@ def test_upload_blob_with_kms(test_bucket):
         bucket = storage.Client().bucket(test_bucket.name)
         kms_blob = bucket.get_blob("test_upload_blob_encrypted")
         assert kms_blob.kms_key_name.startswith(KMS_KEY)
+
+
+def test_download_byte_range(test_blob):
+    with tempfile.NamedTemporaryFile() as dest_file:
+        storage_download_byte_range.download_byte_range(
+            test_blob.bucket.name, test_blob.name, 0, 4, dest_file.name
+        )
+        assert dest_file.read() == b'Hello'
 
 
 def test_download_blob(test_blob):
