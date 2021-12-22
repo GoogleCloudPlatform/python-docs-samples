@@ -16,7 +16,7 @@
 
 import sys
 
-# [START storage_download_file]
+# [START storage_file_download_into_memory]
 from google.cloud import storage
 
 
@@ -46,7 +46,7 @@ def download_blob_into_memory(bucket_name, blob_name):
     )
 
 
-# [END storage_download_file]
+# [END storage_file_download_into_memory]
 
 if __name__ == "__main__":
     download_blob_into_memory(
