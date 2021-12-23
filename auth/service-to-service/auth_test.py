@@ -66,7 +66,7 @@ def services():
             "--trigger-http",
             "--no-allow-unauthenticated",
             "--entry-point=get_authorized",
-            "--ingress-settings=internal-only"
+            "--ingress-settings=internal-only",
             f"--set-env-vars=URL={service_url.decode()}"
         ],
         check=True
