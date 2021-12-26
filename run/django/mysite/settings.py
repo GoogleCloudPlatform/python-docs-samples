@@ -22,9 +22,7 @@ from google.cloud import secretmanager
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # [START cloudrun_django_secret_config]
-# SECURITY WARNING: don't run with debug turned on in production!
-# Change this to "False" when you are ready for production
-env = environ.Env(DEBUG=(bool, True))
+env = environ.Env(DEBUG=(bool, False))
 env_file = os.path.join(BASE_DIR, ".env")
 
 # Attempt to load the Project ID into the environment, safely failing on error.
@@ -63,7 +61,9 @@ else:
 # [END cloudrun_django_secret_config]
 SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = env("DEBUG")
+# SECURITY WARNING: don't run with debug turned on in production!
+# Change this to "False" when you are ready for production
+DEBUG = True
 
 # SECURITY WARNING: It's recommended that you change this setting when
 # running in production. The URL will be known once you first deploy
