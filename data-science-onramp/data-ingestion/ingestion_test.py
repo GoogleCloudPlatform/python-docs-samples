@@ -77,7 +77,9 @@ def setup_and_teardown_cluster():
     try:
         # Create cluster using cluster client
         cluster_client = dataproc.ClusterControllerClient(
-            client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+            client_options={
+                "api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"
+            }
         )
 
         operation = cluster_client.create_cluster(
@@ -93,7 +95,6 @@ def setup_and_teardown_cluster():
         )
         operation.result()
         raise e
-
 
     yield
 
