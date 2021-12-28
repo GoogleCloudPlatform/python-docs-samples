@@ -20,6 +20,7 @@ import os
 import re
 import uuid
 
+from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
@@ -73,25 +74,37 @@ DATAPROC_JOB = {  # Dataproc job configuration
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
-    # Create cluster using cluster client
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
-    )
+    try:
+        # Create cluster using cluster client
+        cluster_client = dataproc.ClusterControllerClient(
+            client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
+        )
 
-    operation = cluster_client.create_cluster(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
-    )
+        operation = cluster_client.create_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
+        )
 
-    # Wait for cluster to provision
-    operation.result()
+        # Wait for cluster to provision
+        operation.result()
+    except InternalServerError as e:
+        # Clean up leftovers if there is an error creating the fixture
+        operation = cluster_client.delete_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+        )
+        operation.result()
+        raise e
+
 
     yield
 
-    # Delete cluster
-    operation = cluster_client.delete_cluster(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
-    )
-    operation.result()
+    try:
+        # Delete cluster
+        operation = cluster_client.delete_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+        )
+        operation.result()
+    except NotFound:
+        print("Cluster already deleted")
 
 
 @pytest.fixture(autouse=True)
