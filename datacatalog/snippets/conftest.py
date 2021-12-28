@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import datetime
 import uuid
 
@@ -21,9 +20,6 @@ import google.auth
 from google.cloud import datacatalog_v1
 
 import pytest
-
-datacatalog = datacatalog_v1.DataCatalogClient()
-
 
 LOCATION = "us-central1"
 
@@ -62,7 +58,7 @@ def valid_member_id(client, project_id, random_existing_tag_template_id):
     )
 
     # Retrieve Template's current IAM Policy.
-    policy = datacatalog.get_iam_policy(resource=template_name)
+    policy = client.get_iam_policy(resource=template_name)
     yield policy.bindings[0].members[0]
 
 
@@ -127,3 +123,25 @@ def random_existing_tag_template_id(client, project_id, resources_to_delete):
     )
     yield random_tag_template_id
     resources_to_delete["templates"].append(random_tag_template.name)
+
+
+@pytest.fixture(scope="session")
+def policy_tag_manager_client(credentials):
+    return datacatalog_v1.PolicyTagManagerClient(credentials=credentials)
+
+
+@pytest.fixture
+def random_taxonomy_display_name(policy_tag_manager_client, project_id):
+    now = datetime.datetime.now()
+    random_display_name = f'example_taxonomy' \
+                          f'_{now.strftime("%Y%m%d%H%M%S")}' \
+                          f'_{uuid.uuid4().hex[:8]}'
+    yield random_display_name
+    parent = datacatalog_v1.PolicyTagManagerClient.common_location_path(
+        project_id, 'us'
+    )
+    taxonomies = policy_tag_manager_client.list_taxonomies(parent=parent)
+    taxonomy = next(
+        (t for t in taxonomies if t.display_name == random_display_name), None)
+    if taxonomy:
+        policy_tag_manager_client.delete_taxonomy(name=taxonomy.name)
