@@ -17,7 +17,6 @@ import os
 import re
 import uuid
 
-from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
@@ -119,24 +118,16 @@ def setup_and_teardown_cluster():
 
         # Wait for cluster to provision
         operation.result()
-    except InternalServerError as e:
-        # Clean up leftovers if there is an error creating the fixture
-        operation = cluster_client.delete_cluster(
-            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
-        )
-        operation.result()
-        raise e
-
-    yield
-
-    try:
-        # Delete cluster
-        operation = cluster_client.delete_cluster(
-            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
-        )
-        operation.result()
-    except NotFound:
-        print("Cluster already deleted")
+        yield
+    finally:
+        try:
+            # Delete cluster
+            operation = cluster_client.delete_cluster(
+                project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
 
 
 @pytest.fixture(autouse=True)
