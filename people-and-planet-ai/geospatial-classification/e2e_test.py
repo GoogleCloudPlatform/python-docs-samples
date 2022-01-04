@@ -30,8 +30,6 @@ import requests
 import ee
 import google.auth
 
-credentials, project = google.auth.default()
-ee.Initialize(credentials, project=project)
 
 PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
 
@@ -69,7 +67,10 @@ BANDS = [
     "B11",
     "B12",
 ]
-LABEL = "label"
+LABEL = "is_powered_on"
+
+credentials, project = google.auth.default()
+ee.Initialize(credentials, project=project)
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -142,7 +143,7 @@ def create_label_fc(path):
     num_examples = dataframe.shape[0]
     data_dict = dataframe.to_dict()
     feats = []
-    properties = ["timestamp", "label"]
+    properties = ["timestamp", "is_powered_on"]
     for idx in np.arange(num_examples):
         feat_dict = {}
         geometry = ee.Geometry.Point([data_dict["lon"][idx], data_dict["lat"][idx]])
@@ -309,12 +310,12 @@ def train_model(bucket_name):
     job = aiplatform.CustomTrainingJob(
         display_name="climate_script_colab",
         script_path="task.py",
-        container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-5:latest",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-7:latest",
     )
 
     model = job.run(args=[f"--bucket={bucket_name}"])
-    resource_name = job.resource_name
-    logging.info(f"train_model resource_name: {resource_name}")
+
+    logging.info(f"train_model resource_name: {job.resource_name}")
 
     # Wait until the model training job finishes.
     status = None

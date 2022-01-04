@@ -12,6 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+"""This training script trains binary classifier on Sentinel-2 satellite images.
+The model is a fully convolutional neural network that predicts whether a power 
+plant is turned on or off.
+
+A Sentinel-2 image consists of 13 bands. Each band contains the data for a
+specific range of the electromagnetic spectrum.
+
+A JPEG image consists of three channels: Red, Green, and Blue. For Sentinel-2
+images, these correspond to Band 4 (red), Band 3 (green), and Band 2 (blue).
+These bands contain the raw pixel data directly from the satellite sensors. 
+For more information on the Sentinel-2 dataset:
+https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2#description
+"""
+
 import tensorflow as tf
 import argparse
 
@@ -30,7 +45,7 @@ BANDS = [
     "B11",
     "B12",
 ]
-LABEL = "label"
+LABEL = "is_powered_on"
 
 
 def get_args():
