@@ -451,6 +451,8 @@ All temporary resources should be explicitly deleted when testing is
 complete. Use pytest's fixture for cleaning up these resouces instead
 of doing it in test itself.
 
+We recommend using `finally` to ensure that resource deletion occurs even if there is an error on creation, like in [this example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/0169e1c7f0ab387832bd32d2f5ca8e2ddfe419b1/data-science-onramp/data-ingestion/ingestion_test.py#L75-L100)
+
 ### Console Output
 
 If the sample prints output to the console, the test should capture stdout to
