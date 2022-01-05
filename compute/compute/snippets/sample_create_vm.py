@@ -20,11 +20,11 @@ from typing import List
 # [START compute_instances_create_from_snapshot]
 # [START compute_instances_create_from_image_plus_empty_disk]
 # [START compute_instances_create_from_custom_image]
-# [START compute_instances_create_from_image ]
+# [START compute_instances_create_from_image]
 from google.cloud import compute_v1
 
 
-# [END compute_instances_create_from_image ]
+# [END compute_instances_create_from_image]
 # [END compute_instances_create_from_custom_image]
 # [END compute_instances_create_from_image_plus_empty_disk]
 # [END compute_instances_create_from_snapshot]
