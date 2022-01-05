@@ -203,7 +203,6 @@ def container_image():
             "submit",
             "serving_app",
             f"--tag={container_image}",
-            f"--project={PROJECT}",
             "--machine-type=e2-highcpu-8",
             "--timeout=15m",
             "--quiet",
@@ -245,10 +244,6 @@ def service_url(bucket_name, container_image):
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=1G",
-            f"--set-env-vars=PROJECT={PROJECT}",
-            f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
-            f"--set-env-vars=REGION={REGION}",
-            f"--set-env-vars=CONTAINER_IMAGE={container_image}",
             "--no-allow-unauthenticated",
         ]
     )
