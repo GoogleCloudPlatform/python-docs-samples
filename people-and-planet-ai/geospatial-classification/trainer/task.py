@@ -46,6 +46,7 @@ BANDS = [
     "B12",
 ]
 LABEL = "is_powered_on"
+BATCH_SIZE = 64
 
 
 def get_args():
@@ -92,23 +93,19 @@ def create_datasets(bucket):
     eval_data_dir = f"gs://{bucket}/geospatial_validation.tfrecord.gz"
     features_dict = create_features_dict()
 
-    training_dataset = tf.data.TFRecordDataset(train_data_dir, compression_type="GZIP")
-    training_dataset = training_dataset.map(
-        lambda example_proto: parse_tfrecord(example_proto, features_dict)
+    training_dataset = (
+        tf.data.TFRecordDataset(train_data_dir, compression_type="GZIP")
+        .map(lambda example_proto: parse_tfrecord(example_proto, features_dict))
+        .map(lambda inputs: get_feature_and_label_vectors(inputs, features_dict))
+        .batch(64)
     )
-    training_dataset = training_dataset.map(
-        lambda inputs: get_feature_and_label_vectors(inputs, features_dict)
-    )
-    training_dataset = training_dataset.batch(64)
 
-    validation_dataset = tf.data.TFRecordDataset(eval_data_dir, compression_type="GZIP")
-    validation_dataset = validation_dataset.map(
-        lambda example_proto: parse_tfrecord(example_proto, features_dict)
+    validation_dataset = (
+        tf.data.TFRecordDataset(eval_data_dir, compression_type="GZIP")
+        .map(lambda example_proto: parse_tfrecord(example_proto, features_dict))
+        .map(lambda inputs: get_feature_and_label_vectors(inputs, features_dict))
+        .batch(64)
     )
-    validation_dataset = validation_dataset.map(
-        lambda inputs: get_feature_and_label_vectors(inputs, features_dict)
-    )
-    validation_dataset = validation_dataset.batch(64)
 
     return training_dataset, validation_dataset
 
