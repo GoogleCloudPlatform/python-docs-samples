@@ -1,5 +1,4 @@
-attrs==21.2.0
-cachetools==4.2.4
+attrs==21.4.0
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.9
@@ -19,9 +18,8 @@ google-cloud-core==2.2.1
 google-crc32c==1.3.0
 google-resumable-media==2.1.0
 googleapis-common-protos==1.54.0
-grpcio==1.42.0
+grpcio==1.43.0
 idna==3.3
-importlib-metadata==4.8.3
 libcst==0.3.23
 munch==2.5.0
 mypy-extensions==0.4.3
@@ -40,11 +38,10 @@ pyproj==3.1.0; python_version > "3.6"
 python-dateutil==2.8.2
 pytz==2021.3
 PyYAML==6.0
-requests==2.26.0
+requests==2.27.0
 rsa==4.8
 Shapely==1.8.0
 six==1.16.0
 typing-extensions==4.0.1
 typing-inspect==0.7.1
 urllib3==1.26.7
-zipp==3.6.0
