@@ -309,7 +309,7 @@ def train_model(bucket_name):
     aiplatform.init(project=PROJECT, staging_bucket=bucket_name)
     job = aiplatform.CustomTrainingJob(
         display_name="climate_script_colab",
-        script_path="task.py",
+        script_path="trainer/task.py",
         container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-7:latest",
     )
 
@@ -350,13 +350,7 @@ def get_prediction_data(feature, start, end):
         ]
     )
 
-    # download FeatureCollection as JSON
-    url = fc.getDownloadURL("geojson")
-    bytes = requests.get(url).content
-    values = bytes.decode("utf-8")
-    json_values = json.loads(values)
-    return json_values["features"][0]["properties"]
-
+    return fc.getInfo()['features'][0]['properties']
 
 def test_predict(bucket_name, test_data, train_model, service_url, identity_token):
 
