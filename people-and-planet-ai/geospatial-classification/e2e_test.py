@@ -18,18 +18,15 @@ import platform
 import subprocess
 import time
 import uuid
-import json
 from datetime import datetime, timedelta
-import pandas as pd
-import numpy as np
 
 from google.cloud import aiplatform
 from google.cloud import storage
-import pytest
-import requests
-
+import pandas as pd
 import ee
 import google.auth
+import pytest
+import requests
 
 
 PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
@@ -139,7 +136,10 @@ def test_data(bucket_name):
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         train_status = ee.data.getOperation(training_task.name)["metadata"]["state"]
         val_status = ee.data.getOperation(validation_task.name)["metadata"]["state"]
-        if train_status in EARTH_ENGINE_FINISHED_STATE and val_status in EARTH_ENGINE_FINISHED_STATE:
+        if (
+            train_status in EARTH_ENGINE_FINISHED_STATE
+            and val_status in EARTH_ENGINE_FINISHED_STATE
+        ):
             break
         time.sleep(POLL_INTERVAL_SEC)
 
@@ -286,7 +286,7 @@ def train_model(bucket_name):
         container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-7:latest",
     )
 
-    model = job.run(args=[f"--bucket={bucket_name}"])
+    job.run(args=[f"--bucket={bucket_name}"])
 
     logging.info(f"train_model resource_name: {job.resource_name}")
 

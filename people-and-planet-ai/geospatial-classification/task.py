@@ -27,8 +27,9 @@ For more information on the Sentinel-2 dataset:
 https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2#description
 """
 
-import tensorflow as tf
 import argparse
+
+import tensorflow as tf
 
 BANDS = [
     "B1",
