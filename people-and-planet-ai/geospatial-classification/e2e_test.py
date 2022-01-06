@@ -75,7 +75,7 @@ TRAIN_VALIDATION_SPLIT = 0.7
 PATCH_SIZE = 16
 
 credentials, project = google.auth.default()
-ee.Initialize(credentials, project=project)
+ee.Initialize(credentials, project=PROJECT)
 
 logging.getLogger().setLevel(logging.INFO)
 
