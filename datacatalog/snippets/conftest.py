@@ -133,15 +133,18 @@ def policy_tag_manager_client(credentials):
 @pytest.fixture
 def random_taxonomy_display_name(policy_tag_manager_client, project_id):
     now = datetime.datetime.now()
-    random_display_name = f'example_taxonomy' \
-                          f'_{now.strftime("%Y%m%d%H%M%S")}' \
-                          f'_{uuid.uuid4().hex[:8]}'
+    random_display_name = (
+        f"example_taxonomy"
+        f'_{now.strftime("%Y%m%d%H%M%S")}'
+        f"_{uuid.uuid4().hex[:8]}"
+    )
     yield random_display_name
     parent = datacatalog_v1.PolicyTagManagerClient.common_location_path(
-        project_id, 'us'
+        project_id, "us"
     )
     taxonomies = policy_tag_manager_client.list_taxonomies(parent=parent)
     taxonomy = next(
-        (t for t in taxonomies if t.display_name == random_display_name), None)
+        (t for t in taxonomies if t.display_name == random_display_name), None
+    )
     if taxonomy:
         policy_tag_manager_client.delete_taxonomy(name=taxonomy.name)

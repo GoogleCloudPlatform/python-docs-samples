@@ -20,11 +20,9 @@ def create_taxonomy(
     # TODO(developer): Set project_id to the ID of the project the
     #  taxonomy will belong to.
     project_id: str = "your-project-id",
-
     # TODO(developer): Specify the geographic location where the
     #  taxonomy should reside.
     location_id: str = "us",
-
     # TODO(developer): Set the display name of the taxonomy.
     display_name: str = "example-taxonomy",
 ):
@@ -41,10 +39,11 @@ def create_taxonomy(
     # TODO(developer): Construct a full Taxonomy object to send to the API.
     taxonomy = datacatalog_v1.Taxonomy()
     taxonomy.display_name = display_name
-    taxonomy.description = 'This Taxonomy represents ...'
+    taxonomy.description = "This Taxonomy represents ..."
 
     # Send the taxonomy to the API for creation.
     taxonomy = client.create_taxonomy(parent=parent, taxonomy=taxonomy)
-    print(f'Created taxonomy {taxonomy.name}')
+    print(f"Created taxonomy {taxonomy.name}")
+
 
 # [END data_catalog_ptm_create_taxonomy]
