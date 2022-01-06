@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_cloudevent_pubsub]
 import base64
 
 import functions_framework
 
 
-# [START functions_cloudevent_pubsub]
 # Triggered from a message on a Cloud Pub/Sub topic.
 @functions_framework.cloud_event
 def subscribe(cloud_event):
