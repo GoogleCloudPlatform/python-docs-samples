@@ -168,14 +168,14 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 
-# [END datascienceonramp_sparksession]
+    # [END datascienceonramp_sparksession]
 
-# [START datascienceonramp_removecolumn]
+    # [START datascienceonramp_removecolumn]
     # remove unused column
     df = df.drop("gender")
-# [END datascienceonramp_removecolumn]
+    # [END datascienceonramp_removecolumn]
 
-# [START datascienceonramp_sparksingleudfs]
+    # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "start_station_name": UserDefinedFunction(station_name_udf, StringType()),
