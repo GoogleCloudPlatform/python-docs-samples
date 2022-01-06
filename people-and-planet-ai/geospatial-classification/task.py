@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 
 """This training script trains binary classifier on Sentinel-2 satellite images.
-The model is a fully convolutional neural network that predicts whether a power 
+The model is a fully convolutional neural network that predicts whether a power
 plant is turned on or off.
 
 A Sentinel-2 image consists of 13 bands. Each band contains the data for a
@@ -22,9 +22,9 @@ specific range of the electromagnetic spectrum.
 
 A JPEG image consists of three channels: Red, Green, and Blue. For Sentinel-2
 images, these correspond to Band 4 (red), Band 3 (green), and Band 2 (blue).
-These bands contain the raw pixel data directly from the satellite sensors. 
+These bands contain the raw pixel data directly from the satellite sensors.
 For more information on the Sentinel-2 dataset:
-https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2#description
+https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
 """
 
 import argparse
