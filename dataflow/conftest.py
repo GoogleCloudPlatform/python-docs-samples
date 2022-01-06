@@ -60,7 +60,7 @@ class Utils:
         is_done: Callable[[], bool],
         timeout_sec: int = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
-    ) -> Tuple[bool, Any]:
+    ) -> bool:
         for _ in range(0, timeout_sec, poll_interval_sec):
             if is_done():
                 return True
