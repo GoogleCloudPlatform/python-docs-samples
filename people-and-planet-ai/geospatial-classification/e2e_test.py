@@ -19,6 +19,7 @@ import subprocess
 import time
 import uuid
 import json
+from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 
@@ -69,6 +70,13 @@ BANDS = [
 ]
 LABEL = "is_powered_on"
 
+IMAGE_COLLECTION = "COPERNICUS/S2"
+SCALE = 10
+
+TRAIN_VALIDATION_SPLIT = 0.7
+
+PATCH_SIZE = 16
+
 credentials, project = google.auth.default()
 ee.Initialize(credentials, project=project)
 
@@ -90,14 +98,20 @@ def bucket_name():
 
 @pytest.fixture(scope="session")
 def test_data(bucket_name):
-    label_fc = create_label_fc("labeled_geospatial_data.csv")
-    label_fc = label_fc.map(format_date)
-    data = label_fc.map(get_neighboring_patch).flatten()
-    data = data.randomColumn()
-    data = data.filter(ee.Filter.gte("random", 0.03))
+    labels_dataframe = pd.read_csv("labeled_geospatial_data.csv")
+    train_dataframe = labels_dataframe.sample(
+        frac=TRAIN_VALIDATION_SPLIT, random_state=200
+    )  # random state is a seed value
+    validation_dataframe = labels_dataframe.drop(train_dataframe.index).sample(frac=1.0)
+
+    train_features = [labeled_feature(row) for row in train_dataframe.itertuples()]
+
+    validation_features = [
+        labeled_feature(row) for row in validation_dataframe.itertuples()
+    ]
 
     training_task = ee.batch.Export.table.toCloudStorage(
-        collection=data,
+        collection=ee.FeatureCollection(train_features),
         description="Training image export: test",
         bucket=bucket_name,
         fileNamePrefix="geospatial_training",
@@ -108,8 +122,8 @@ def test_data(bucket_name):
     training_task.start()
 
     validation_task = ee.batch.Export.table.toCloudStorage(
-        collection=data,
-        description="Validation image export: test",
+        collection=ee.FeatureCollection(validation_features),
+        description="Validation image export",
         bucket=bucket_name,
         fileNamePrefix="geospatial_validation",
         selectors=BANDS + [LABEL],
@@ -125,7 +139,7 @@ def test_data(bucket_name):
     for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
         train_status = ee.data.getOperation(training_task.name)["metadata"]["state"]
         val_status = ee.data.getOperation(validation_task.name)["metadata"]["state"]
-        if train_status and val_status in EARTH_ENGINE_FINISHED_STATE:
+        if train_status in EARTH_ENGINE_FINISHED_STATE and val_status in EARTH_ENGINE_FINISHED_STATE:
             break
         time.sleep(POLL_INTERVAL_SEC)
 
@@ -136,59 +150,23 @@ def test_data(bucket_name):
     yield training_task.name
 
 
-def create_label_fc(path):
-    """Creates a FeatureCollection from the label dataframe."""
-
-    dataframe = pd.read_csv(path)
-    num_examples = dataframe.shape[0]
-    data_dict = dataframe.to_dict()
-    feats = []
-    properties = ["timestamp", "is_powered_on"]
-    for idx in np.arange(num_examples):
-        feat_dict = {}
-        geometry = ee.Geometry.Point([data_dict["lon"][idx], data_dict["lat"][idx]])
-        for feature in properties:
-            feat_dict[feature] = data_dict[feature][idx]
-        feat = ee.Feature(geometry, feat_dict)
-        feats.append(feat)
-    return ee.FeatureCollection(feats)
-
-
-def format_date(feature):
-    """Creates start date and end date properties."""
-
-    # Extract start and end dates
-    timestamp = ee.String(feature.get("timestamp")).split(" ").get(0)
-    year = ee.Number.parse(ee.String(timestamp).split("-").get(0))
-    month = ee.Number.parse(ee.String(timestamp).split("-").get(1))
-    day = ee.Number.parse(ee.String(timestamp).split("-").get(2))
-    start = ee.Date.fromYMD(year, month, day)
-    end = start.advance(1, "day")
-
-    # Create new feature
-    feature = feature.set({"start": start, "end": end})
-
-    return feature
-
-
-def get_neighboring_patch(feature):
-    """Gets image pixel values for patch."""
-
-    # filter ImageCollection at start/end dates.
+def labeled_feature(row):
+    start = datetime.fromisoformat(row.timestamp)
+    end = start + timedelta(days=1)
     image = (
-        ee.ImageCollection("COPERNICUS/S2")
-        .filterDate(feature.get("start"), feature.get("end"))
+        ee.ImageCollection(IMAGE_COLLECTION)
+        .filterDate(start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d"))
         .select(BANDS)
-        .median()
+        .mosaic()
     )
-
-    # extract pixel values at the lat/lon with a 16x16 padding
-    return ee.FeatureCollection(
-        [
-            image.neighborhoodToArray(ee.Kernel.square(16))
-            .sampleRegions(collection=ee.FeatureCollection([feature]), scale=10)
-            .first()
-        ]
+    point = ee.Feature(
+        ee.Geometry.Point([row.lon, row.lat]),
+        {LABEL: row.is_powered_on},
+    )
+    return (
+        image.neighborhoodToArray(ee.Kernel.square(PATCH_SIZE))
+        .sampleRegions(ee.FeatureCollection([point]), scale=SCALE)
+        .first()
     )
 
 
@@ -304,7 +282,7 @@ def train_model(bucket_name):
     aiplatform.init(project=PROJECT, staging_bucket=bucket_name)
     job = aiplatform.CustomTrainingJob(
         display_name="climate_script_colab",
-        script_path="trainer/task.py",
+        script_path="task.py",
         container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-7:latest",
     )
 
@@ -324,35 +302,33 @@ def train_model(bucket_name):
 
     logging.info(f"Model job finished with status {status}")
     assert status == VERTEX_AI_SUCCESS_STATE
-    yield resource_name
+    yield job.resource_name
 
 
-def get_prediction_data(feature, start, end):
+def get_prediction_data(lon, lat, start, end):
     """Extracts Sentinel image as json at specific lat/lon and timestamp."""
 
+    location = ee.Feature(ee.Geometry.Point([lon, lat]))
     image = (
-        ee.ImageCollection("COPERNICUS/S2")
+        ee.ImageCollection(IMAGE_COLLECTION)
         .filterDate(start, end)
         .select(BANDS)
         .mosaic()
     )
 
-    fc = ee.FeatureCollection(
-        [
-            image.neighborhoodToArray(ee.Kernel.square(16))
-            .sampleRegions(collection=ee.FeatureCollection([feature]), scale=10)
-            .first()
-        ]
+    feature = image.neighborhoodToArray(ee.Kernel.square(PATCH_SIZE)).sampleRegions(
+        collection=ee.FeatureCollection([location]), scale=SCALE
     )
 
-    return fc.getInfo()['features'][0]['properties']
+    return feature.getInfo()["features"][0]["properties"]
+
 
 def test_predict(bucket_name, test_data, train_model, service_url, identity_token):
 
     # Test point
-    plant_location = ee.Feature(ee.Geometry.Point([-84.80529, 39.11613]))
-    prediction_data = get_prediction_data(plant_location, "2021-10-01", "2021-10-31")
-    logging.info(f"plant location: {plant_location})")
+    prediction_data = get_prediction_data(
+        -84.80529, 39.11613, "2021-10-01", "2021-10-31"
+    )
 
     # Make prediction
     response = requests.post(
