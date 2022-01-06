@@ -61,10 +61,7 @@ def test_tensorflow_landsat(
 ) -> None:
     # Wait until the job finishes.
     timeout = 30 * 60  # 30 minutes
-    status = utils.dataflow_jobs_wait(
-        job_name=utils.hyphen_name(NAME), timeout_sec=timeout
-    )
-    assert status == "JOB_STATE_DONE", f"Dataflow pipeline finished in {status} status"
+    utils.dataflow_jobs_wait(job_name=utils.hyphen_name(NAME), timeout_sec=timeout)
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()

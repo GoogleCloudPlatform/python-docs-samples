@@ -21,7 +21,7 @@ import re
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional, Set, Tuple
 import uuid
 
 import pytest
@@ -54,6 +54,17 @@ class Utils:
     @staticmethod
     def underscore_name(name: str) -> str:
         return UNDERSCORE_NAME_RE.sub("_", Utils.hyphen_name(name))
+
+    @staticmethod
+    def wait_until(
+        is_done: Callable[[], bool],
+        timeout_sec: int = TIMEOUT_SEC,
+        poll_interval_sec: int = POLL_INTERVAL_SEC,
+    ) -> Tuple[bool, Any]:
+        for _ in range(0, timeout_sec, poll_interval_sec):
+            if is_done():
+                return True
+        return False
 
     @staticmethod
     def storage_bucket(name: str) -> str:
@@ -95,6 +106,20 @@ class Utils:
             dataset.full_dataset_id.replace(":", "."), delete_contents=True
         )
         logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
+
+    @staticmethod
+    def bigquery_table_exists(
+        dataset_name: str, table_name: str, project: str = PROJECT
+    ) -> bool:
+        from google.cloud import bigquery
+        from google.cloud.exceptions import NotFound
+
+        bigquery_client = bigquery.Client()
+        try:
+            bigquery_client.get_table(f"{project}.{dataset_name}.{table_name}")
+            return True
+        except NotFound:
+            return False
 
     @staticmethod
     def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
@@ -269,6 +294,14 @@ class Utils:
             logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
+    def dataflow_job_url(
+        job_id: str,
+        project: str = PROJECT,
+        region: str = REGION,
+    ) -> str:
+        return f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}"
+
+    @staticmethod
     def dataflow_jobs_list(
         project: str = PROJECT, page_size: int = 30
     ) -> Iterable[dict]:
@@ -337,7 +370,7 @@ class Utils:
         job_name: Optional[str] = None,
         project: str = PROJECT,
         region: str = REGION,
-        until_status: str = "JOB_STATE_DONE",
+        target_states: Set[str] = {"JOB_STATE_DONE"},
         list_page_size: int = 100,
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
@@ -346,19 +379,17 @@ class Utils:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
 
-        # Wait until we reach the desired status, or the job finished in some way.
-        target_status = {
-            until_status,
+        finish_states = {
             "JOB_STATE_DONE",
             "JOB_STATE_FAILED",
             "JOB_STATE_CANCELLED",
             "JOB_STATE_DRAINED",
         }
         logging.info(
-            f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
+            f"Waiting for Dataflow job until {target_states}: job_id={job_id}, job_name={job_name}"
         )
-        status = None
-        for _ in range(0, timeout_sec, poll_interval_sec):
+
+        def job_is_done() -> bool:
             try:
                 job = Utils.dataflow_jobs_get(
                     job_id=job_id,
@@ -366,31 +397,21 @@ class Utils:
                     project=project,
                     list_page_size=list_page_size,
                 )
-                status = job["currentState"]
-                if status in target_status:
-                    logging.info(
-                        f"Job status {status} in {target_status}, done waiting"
-                    )
-                    return status
-                elif status == "JOB_STATE_FAILED":
+                state = job["currentState"]
+                if state in target_states:
+                    logging.info(f"Dataflow job found with state {state}")
+                    return True
+                elif state in finish_states:
                     raise RuntimeError(
-                        "Dataflow job failed:\n"
-                        f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}"
+                        f"Dataflow job finished with state {state}, but we were expecting {target_states}\n"
+                        + Utils.dataflow_job_url(job_id, project, region)
                     )
-                logging.info(
-                    f"Job status {status} not in {target_status}, retrying in {poll_interval_sec} seconds"
-                )
+                return False
             except Exception as e:
                 logging.exception(e)
-            time.sleep(poll_interval_sec)
-        if status is None:
-            raise RuntimeError(
-                f"Dataflow job not found: timeout_sec={timeout_sec}, target_status={target_status}, job_id={job_id}, job_name={job_name}"
-            )
-        else:
-            raise RuntimeError(
-                f"Dataflow job finished in status {status} but expected {target_status}: job_id={job_id}, job_name={job_name}"
-            )
+            return False
+
+        Utils.wait_until(job_is_done, timeout_sec, poll_interval_sec)
 
     @staticmethod
     def dataflow_jobs_cancel(
