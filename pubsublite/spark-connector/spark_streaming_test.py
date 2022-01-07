@@ -21,6 +21,7 @@ import uuid
 
 from google.api_core.exceptions import NotFound
 from google.cloud import dataproc_v1, storage
+from google.cloud.dataproc_v1.types import LoggingConfig
 from google.cloud.pubsublite import AdminClient, Subscription, Topic
 from google.cloud.pubsublite.types import (
     BacklogLocation,
@@ -31,16 +32,16 @@ from google.cloud.pubsublite.types import (
 )
 import pytest
 
+# A random alphanumeric string of length 32
+UUID = uuid.uuid4().hex
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-CLOUD_REGION = "us-west1"
+CLOUD_REGION = "us-central1"
 ZONE_ID = "a"
-CLUSTER_ID = os.environ["PUBSUBLITE_CLUSTER_ID"]
 BUCKET = os.environ["PUBSUBLITE_BUCKET_ID"]
-UUID = uuid.uuid4().hex
+CLUSTER_ID = os.environ["PUBSUBLITE_CLUSTER_ID"] + "-" + UUID
 TOPIC_ID = "spark-streaming-topic-" + UUID
 SUBSCRIPTION_ID = "spark-streaming-subscription-" + UUID
-PERMANENT_TOPIC_ID = "spark-streaming-topic"
 CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
 
 
@@ -62,7 +63,8 @@ def topic(client: AdminClient) -> Generator[Topic, None, None]:
         partition_config=Topic.PartitionConfig(
             count=2,
             capacity=Topic.PartitionConfig.Capacity(
-                publish_mib_per_sec=4, subscribe_mib_per_sec=8,
+                publish_mib_per_sec=4,
+                subscribe_mib_per_sec=8,
             ),
         ),
         retention_config=Topic.RetentionConfig(
@@ -84,13 +86,15 @@ def topic(client: AdminClient) -> Generator[Topic, None, None]:
 
 
 @pytest.fixture(scope="module")
-def subscription(client: AdminClient) -> Generator[Subscription, None, None]:
+def subscription(
+    client: AdminClient, topic: Topic
+) -> Generator[Subscription, None, None]:
     location = CloudZone(CloudRegion(CLOUD_REGION), ZONE_ID)
     subscription_path = SubscriptionPath(PROJECT_NUMBER, location, SUBSCRIPTION_ID)
 
     subscription = Subscription(
         name=str(subscription_path),
-        topic=f"projects/{PROJECT_NUMBER}/locations/{location}/topics/{PERMANENT_TOPIC_ID}",
+        topic=topic.name,
         delivery_config=Subscription.DeliveryConfig(
             delivery_requirement=Subscription.DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY,
         ),
@@ -101,11 +105,53 @@ def subscription(client: AdminClient) -> Generator[Subscription, None, None]:
     except NotFound:
         # This subscription will start receiving the first message in the topic.
         response = client.create_subscription(subscription, BacklogLocation.BEGINNING)
+
     yield response
+
     try:
         client.delete_subscription(response.name)
     except NotFound as e:
         print(e.message)
+
+
+@pytest.fixture(scope="module")
+def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
+    cluster_client = dataproc_v1.ClusterControllerClient(
+        client_options={"api_endpoint": f"{CLOUD_REGION}-dataproc.googleapis.com:443"}
+    )
+
+    cluster = {
+        "project_id": PROJECT_ID,
+        "cluster_name": CLUSTER_ID,
+        "config": {
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2"},
+            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
+            "config_bucket": BUCKET,
+            "temp_bucket": BUCKET,
+            "software_config": {"image_version": "1.5-debian10"},
+            "gce_cluster_config": {
+                "service_account_scopes": [
+                    "https://www.googleapis.com/auth/cloud-platform",
+                ],
+            },
+        },
+    }
+
+    # Create the cluster.
+    operation = cluster_client.create_cluster(
+        request={"project_id": PROJECT_ID, "region": CLOUD_REGION, "cluster": cluster}
+    )
+    result = operation.result()
+
+    yield result
+
+    cluster_client.delete_cluster(
+        request={
+            "project_id": PROJECT_ID,
+            "region": CLOUD_REGION,
+            "cluster_name": result.cluster_name,
+        }
+    )
 
 
 def pyfile(source_file: str) -> str:
@@ -117,19 +163,20 @@ def pyfile(source_file: str) -> str:
     return "gs://" + blob.bucket.name + "/" + blob.name
 
 
-def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
-    from google.cloud.dataproc_v1.types import LoggingConfig
-
+def test_spark_streaming_to_pubsublite(
+    topic: Topic, dataproc_cluster: dataproc_v1.Cluster
+) -> None:
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
-        client_options={
-            "api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)
-        }
+        client_options={"api_endpoint": f"{CLOUD_REGION}-dataproc.googleapis.com:443"}
     )
 
     # Create the job config.
     job = {
-        "placement": {"cluster_name": CLUSTER_ID},
+        # Use the topic prefix and the first four alphanumeric
+        # characters of the UUID as job ID
+        "reference": {"job_id": topic.name.split("/")[-1][:-28]},
+        "placement": {"cluster_name": dataproc_cluster.cluster_name},
         "pyspark_job": {
             "main_python_file_uri": pyfile("spark_streaming_to_pubsublite_example.py"),
             "jar_file_uris": [
@@ -169,9 +216,9 @@ def test_spark_streaming_to_pubsublite(topic: Topic) -> None:
     assert "Committed 1 messages for epochId" in output
 
 
-def test_spark_streaming_from_pubsublite(subscription: Subscription) -> None:
-    from google.cloud.dataproc_v1.types import LoggingConfig
-
+def test_spark_streaming_from_pubsublite(
+    subscription: Subscription, dataproc_cluster: dataproc_v1.Cluster
+) -> None:
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
         client_options={
@@ -181,7 +228,10 @@ def test_spark_streaming_from_pubsublite(subscription: Subscription) -> None:
 
     # Create the job config.
     job = {
-        "placement": {"cluster_name": CLUSTER_ID},
+        # Use the subscription prefix and the first four alphanumeric
+        # characters of the UUID as job ID
+        "reference": {"job_id": subscription.name.split("/")[-1][:-28]},
+        "placement": {"cluster_name": dataproc_cluster.cluster_name},
         "pyspark_job": {
             "main_python_file_uri": pyfile(
                 "spark_streaming_from_pubsublite_example.py"
@@ -221,14 +271,3 @@ def test_spark_streaming_from_pubsublite(subscription: Subscription) -> None:
     )
 
     assert "Batch: 0\n" in output
-    assert (
-        "+--------------------+---------+------+----+------+"
-        + "--------------------+--------------------+----------+\n"
-        + "|        subscription|partition|offset| key|  data"
-        + "|   publish_timestamp|     event_timestamp|attributes|\n"
-        + "+--------------------+---------+------+----+------+"
-        + "--------------------+--------------------+----------+\n"
-        + "|projects/10126164...|        0|     0|[34]|353534"
-        + "|2021-09-15 21:55:...|2021-09-15 00:04:...|        []|\n"
-        in output
-    )
