@@ -47,16 +47,16 @@ test_overlay_image_file_name = "overlay.jpg"
 test_concat1_file_name = "ForBiggerEscapes.mp4"
 test_concat2_file_name = "ForBiggerJoyrides.mp4"
 
-input_uri = "gs://" + bucket_name + "/" + test_video_file_name
-overlay_image_uri = "gs://" + bucket_name + "/" + test_overlay_image_file_name
-concat1_uri = "gs://" + bucket_name + "/" + test_concat1_file_name
-concat2_uri = "gs://" + bucket_name + "/" + test_concat2_file_name
-output_uri_for_preset = "gs://" + bucket_name + "/test-output-preset/"
-output_uri_for_template = "gs://" + bucket_name + "/test-output-template/"
-output_uri_for_adhoc = "gs://" + bucket_name + "/test-output-adhoc/"
-output_uri_for_static_overlay = "gs://" + bucket_name + "/test-output-static-overlay/"
+input_uri = f"gs://{input_bucket_name}{test_video_file_name}"
+overlay_image_uri = f"gs://{input_bucket_name}{test_overlay_image_file_name}"
+concat1_uri = f"gs://{input_bucket_name}{test_concat1_file_name}"
+concat2_uri = f"gs://{input_bucket_name}{test_concat2_file_name}"
+output_uri_for_preset = f"gs://{output_bucket_name}/test-output-preset/"
+output_uri_for_template = f"gs://{output_bucket_name}/test-output-template/"
+output_uri_for_adhoc = f"gs://{output_bucket_name}/test-output-adhoc/"
+output_uri_for_static_overlay = f"gs://{output_bucket_name}/test-output-static-overlay/"
 output_uri_for_animated_overlay = (
-    "gs://" + bucket_name + "/test-output-animated-overlay/"
+    f"gs://{output_bucket_name}/test-output-animated-overlay/"
 )
 small_spritesheet_file_prefix = "small-sprite-sheet"
 large_spritesheet_file_prefix = "large-sprite-sheet"
@@ -64,13 +64,13 @@ spritesheet_file_suffix = "0000000000.jpeg"
 
 output_dir_for_set_number_spritesheet = "test-output-set-number-spritesheet/"
 output_uri_for_set_number_spritesheet = (
-    "gs://" + bucket_name + "/" + output_dir_for_set_number_spritesheet
+    f"gs://{output_bucket_name}/{output_dir_for_set_number_spritesheet}"
 )
 output_dir_for_periodic_spritesheet = "test-output-periodic-spritesheet/"
 output_uri_for_periodic_spritesheet = (
-    "gs://" + bucket_name + "/" + output_dir_for_periodic_spritesheet
+    f"gs://{output_bucket_name}/{output_dir_for_periodic_spritesheet}"
 )
-output_uri_for_concat = "gs://" + bucket_name + "/test-output-concat/"
+output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
 
 preset = "preset/web-hd"
 job_succeeded_state = "ProcessingState.SUCCEEDED"
