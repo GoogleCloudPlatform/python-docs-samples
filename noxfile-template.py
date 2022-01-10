@@ -182,7 +182,7 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
 def _session_tests(session: nox.sessions.Session, post_install: Callable = None) -> None:
     # check for presence of tests
-    test_list = glob.glob("_test.py")
+    test_list = glob.glob("*_test.py")
     if len(test_list) == 0:
         print("No tests found, skipping directory.")
     else:
