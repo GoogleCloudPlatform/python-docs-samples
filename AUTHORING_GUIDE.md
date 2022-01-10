@@ -451,6 +451,38 @@ All temporary resources should be explicitly deleted when testing is
 complete. Use pytest's fixture for cleaning up these resouces instead
 of doing it in test itself.
 
+We recommend using `finally` to ensure that resource deletion occurs even if there is an error on creation. For example, this fixture creates a Dataproc cluster and tears it down regardless of errors during creation.
+
+```python
+@pytest.fixture(scope="function")
+def setup_and_teardown_cluster():
+    try:
+        # Create cluster using cluster client
+        cluster_client = dataproc.ClusterControllerClient(
+            client_options={
+                "api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"
+            }
+        )
+
+        operation = cluster_client.create_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
+        )
+
+        # Wait for cluster to provision
+        operation.result()
+
+        yield
+    finally:
+        try:
+            # Delete cluster
+            operation = cluster_client.delete_cluster(
+                project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
+```
+
 ### Console Output
 
 If the sample prints output to the console, the test should capture stdout to
