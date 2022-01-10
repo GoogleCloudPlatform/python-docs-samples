@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
-import time
 
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
