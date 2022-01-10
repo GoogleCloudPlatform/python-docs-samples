@@ -96,7 +96,7 @@ def test_flex_template_streaming_beam(
     utils.dataflow_jobs_cancel(job_id, drain=True)
 
     # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
+    query = f"SELECT * FROM {bigquery_dataset}.{bigquery_table}"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0
     for row in rows:

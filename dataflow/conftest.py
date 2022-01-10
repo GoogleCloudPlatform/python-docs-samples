@@ -95,16 +95,13 @@ class Utils:
 
         bigquery_client = bigquery.Client()
 
-        dataset = bigquery_client.create_dataset(
-            bigquery.Dataset(f"{project}.{Utils.underscore_name(name)}")
-        )
+        dataset_name = Utils.underscore_name(name)
+        dataset = bigquery_client.create_dataset(bigquery.Dataset(f"{project}.{dataset_name}"))
 
         logging.info(f"Created bigquery_dataset: {dataset.full_dataset_id}")
-        yield dataset.full_dataset_id
+        yield dataset_name
 
-        bigquery_client.delete_dataset(
-            dataset.full_dataset_id.replace(":", "."), delete_contents=True
-        )
+        bigquery_client.delete_dataset(f"{project}.{dataset_name}", delete_contents=True)
         logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
 
     @staticmethod
