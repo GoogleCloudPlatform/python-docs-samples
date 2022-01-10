@@ -63,6 +63,7 @@ class Utils:
     ) -> bool:
         for _ in range(0, timeout_sec, poll_interval_sec):
             if is_done():
+                time.sleep(poll_interval_sec)
                 return True
         return False
 
@@ -96,12 +97,16 @@ class Utils:
         bigquery_client = bigquery.Client()
 
         dataset_name = Utils.underscore_name(name)
-        dataset = bigquery_client.create_dataset(bigquery.Dataset(f"{project}.{dataset_name}"))
+        dataset = bigquery_client.create_dataset(
+            bigquery.Dataset(f"{project}.{dataset_name}")
+        )
 
         logging.info(f"Created bigquery_dataset: {dataset.full_dataset_id}")
         yield dataset_name
 
-        bigquery_client.delete_dataset(f"{project}.{dataset_name}", delete_contents=True)
+        bigquery_client.delete_dataset(
+            f"{project}.{dataset_name}", delete_contents=True
+        )
         logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
 
     @staticmethod
