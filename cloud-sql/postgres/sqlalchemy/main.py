@@ -164,6 +164,8 @@ def init_unix_connection_engine(db_config):
         # Equivalent URL:
         # postgresql+pg8000://<db_user>:<db_pass>@/<db_name>
         #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
+        # Note: Some drivers require the `unix_sock` query parameter to use a different key.
+        # For example, 'psycopg2' uses the path set to `host` in order to connect successfully.
         sqlalchemy.engine.url.URL.create(
             drivername="postgresql+pg8000",
             username=db_user,  # e.g. "my-database-user"
@@ -244,7 +246,7 @@ def get_index_context():
 def save_vote():
     # Get the team and time the vote was cast.
     team = request.form['team']
-    time_cast = datetime.datetime.utcnow()
+    time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
         logger.warning(team)

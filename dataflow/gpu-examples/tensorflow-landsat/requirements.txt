@@ -1,4 +1,5 @@
-Pillow==8.4.0
+pillow==9.0.0; python_version > '3.6'
+pillow==8.4.0; python_version <='3.6'
 apache-beam[gcp]==2.31.0
-rasterio==1.2.9
-tensorflow==2.6.0
+rasterio==1.2.10
+tensorflow==2.7.0

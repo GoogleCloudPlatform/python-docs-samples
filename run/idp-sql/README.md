@@ -5,7 +5,7 @@ application and connects to a Cloud SQL postgreSQL database for data storage.
 
 Use it with the [End user Authentication for Cloud Run](http://cloud.google.com/run/docs/tutorials/identity-platform).
 
-For more details on how to work with this sample read the [Google Cloud Run Python Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run).
+For more details on how to work with this sample read the [Google Cloud Run Python Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run).
 
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
 
@@ -59,9 +59,9 @@ The proxy can be used with a TCP connection or a Unix Domain Socket. On Linux or
 Mac OS you can use either option, but on Windows the proxy currently requires a TCP
 connection.
 
-[Instructions to launch proxy with Unix Domain Socket](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/cloud-sql/postgres/sqlalchemy#launch-proxy-with-unix-domain-socket)
+[Instructions to launch proxy with Unix Domain Socket](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/cloud-sql/postgres/sqlalchemy#launch-proxy-with-unix-domain-socket)
 
-[Instructions to launch proxy with TCP](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/cloud-sql/postgres/sqlalchemy#launch-proxy-with-tcp)
+[Instructions to launch proxy with TCP](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/cloud-sql/postgres/sqlalchemy#launch-proxy-with-tcp)
 
 
 ## Testing
