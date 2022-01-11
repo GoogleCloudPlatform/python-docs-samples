@@ -20,7 +20,7 @@ steps:
   args:
     - '-c'
     - |
-      ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
+      WAIT=30 ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
         --instance ${_DB_INSTANCE} \
         --project $PROJECT_ID"
 
