@@ -85,11 +85,7 @@ with models.DAG(
         # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
         # The namespace to run within Kubernetes, default namespace is
-        # `default`. There is the potential for the resource starvation of
-        # Airflow workers and scheduler within the Cloud Composer environment,
-        # the recommended solution is to increase the amount of nodes in order
-        # to satisfy the computing requirements. Alternatively, launching pods
-        # into a custom namespace will stop fighting over resources.
+        # `default`. 
         namespace="default",
         # Docker image specified. Defaults to hub.docker.com, but any fully
         # qualified URLs will point to a custom repository. Supports private
