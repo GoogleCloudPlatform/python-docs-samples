@@ -149,7 +149,7 @@ class Utils:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
         cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_topic: {topic.name}")
 
     @staticmethod
@@ -183,7 +183,7 @@ class Utils:
             subscription.name,
         ]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_subscription: {subscription.name}")
 
     @staticmethod
@@ -234,7 +234,7 @@ class Utils:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
         cmd = ["gcloud", "auth", "configure-docker"]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
 
         if substitutions:
             cmd_substitutions = [
@@ -256,7 +256,7 @@ class Utils:
                         source,
                     ]
                     logging.info(f"{cmd}")
-                    subprocess.run(cmd, check=True)
+                    subprocess.check_call(cmd)
                     logging.info(f"Cloud build finished successfully: {config}")
                     yield f.read()
             except Exception as e:
@@ -274,7 +274,7 @@ class Utils:
                 source,
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
             logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
@@ -292,7 +292,7 @@ class Utils:
                 "--quiet",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
             logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
@@ -439,7 +439,7 @@ class Utils:
                 f"--region={region}",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
 
             # After draining the job, we must wait until the job has actually finished.
             Utils.dataflow_jobs_wait(job_id, project=project, region=region)
@@ -456,7 +456,7 @@ class Utils:
                 f"--region={region}",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
 
         logging.info(f"Cancelled Dataflow job: {job_id}")
 
@@ -482,7 +482,7 @@ class Utils:
             f"--metadata-file={metadata_file}",
         ]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
 
         logging.info(f"dataflow_flex_template_build: {template_gcs_path}")
         yield template_gcs_path
@@ -520,26 +520,8 @@ class Utils:
         ]
         logging.info(f"{cmd}")
 
-        try:
-            # The `capture_output` option was added in Python 3.7, so we must
-            # pass the `stdout` and `stderr` options explicitly to support 3.6.
-            # https://docs.python.org/3/library/subprocess.html#subprocess.run
-            p = subprocess.run(
-                cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-            stdout = p.stdout.decode("utf-8")
-            stderr = p.stderr.decode("utf-8")
-            logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
-        except subprocess.CalledProcessError as e:
-            logging.info(e, file=sys.stderr)
-            stdout = e.stdout.decode("utf-8")
-            stderr = e.stderr.decode("utf-8")
-        finally:
-            logging.info("--- stderr ---")
-            logging.info(stderr)
-            logging.info("--- stdout ---")
-            logging.info(stdout)
-            logging.info("--- end ---")
+        stdout = subprocess.check_output(cmd).decode("utf-8")
+        logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
         return yaml.safe_load(stdout)["job"]["id"]
 
 
@@ -547,5 +529,5 @@ class Utils:
 def utils() -> Utils:
     logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Test unique identifier: {UUID}")
-    subprocess.run(["gcloud", "version"])
+    subprocess.check_call(["gcloud", "version"])
     return Utils()
