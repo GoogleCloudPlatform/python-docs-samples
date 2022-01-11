@@ -19,9 +19,8 @@ import os
 import platform
 import re
 import subprocess
-import sys
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Set, Tuple
+from typing import Any, Callable, Dict, Iterable, Optional, Set
 import uuid
 
 import pytest
