@@ -22,8 +22,8 @@ import uuid
 
 import ee
 from google.cloud import aiplatform
-from google.cloud import storage
 import google.auth
+from google.cloud import storage
 import pandas as pd
 import pytest
 import requests
@@ -74,7 +74,7 @@ TRAIN_VALIDATION_SPLIT = 0.7
 
 PATCH_SIZE = 16
 
-credentials, project = google.auth.default()
+credentials, _ = google.auth.default()
 ee.Initialize(credentials, project=PROJECT)
 
 logging.getLogger().setLevel(logging.INFO)
