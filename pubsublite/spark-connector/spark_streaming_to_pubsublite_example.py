@@ -28,7 +28,7 @@ def spark_streaming_to_pubsublite(
     # location = "us-central1-a"
     # topic_id = "your-topic-id"
 
-    spark = SparkSession.builder.appName("write-app").master("yarn").getOrCreate()
+    spark = SparkSession.builder.appName("write-app").getOrCreate()
 
     # Create a RateStreamSource that generates consecutive numbers with timestamps:
     # |-- timestamp: timestamp (nullable = true)
