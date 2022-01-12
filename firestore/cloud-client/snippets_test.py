@@ -330,3 +330,11 @@ def test_list_document_subcollections():
 def test_create_and_build_bundle():
     bundle, buffer = snippets.create_and_build_bundle()
     assert "latest-stories-query" in bundle.named_queries
+
+
+def test_query_with_tombstones():
+    assert 1 == snippets.query_with_tombstones()
+
+
+def test_queryout_with_tombstones():
+    assert 1 == snippets.query_without_tombstones()

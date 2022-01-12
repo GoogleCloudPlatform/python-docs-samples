@@ -1009,3 +1009,59 @@ def create_and_build_bundle():
     # [END firestore_create_and_build_bundle]
 
     return bundle, bundle_buffer
+
+
+def _setup_tombstone(db):
+  now = datatime.datetime.now(tz=datetime.timezone.utc)
+  db.collection("WorkItems").document("tombstone").set({"created": now})
+  db.collection("CompletionStats").document("all stats").set(
+      {"created": now - datetime.timedelta(days=1)})
+
+
+def query_with_tombstones():
+  docs_found = 0
+  def finish_work(doc):
+    docs_found += 1
+
+  db = firestore.Client()
+  _setup_tombstone(db)
+
+  # [START firestore_query_with_tombstones]
+  docs = db.collection('WorkItems').order_by('created').limit(100)
+  delete_batch = db.batch()
+  for doc in docs.stream():
+    finish_work(doc)
+    delete_batch.delete(doc.reference)
+  delete_batch.commit()
+  # [END firestore_query_with_tombstones]
+
+  return docs_found
+
+
+def query_without_tombstones():
+  docs_found = 0
+  def finish_work(doc):
+    docs_found += 1
+
+  db = firestore.Client()
+  _setup_tombstone(db)
+
+  # [START firestore_query_without_tombstones]
+  completed_items = db.collection('CompletionStats').document('all stats').get()
+  docs = db.collection('WorkItems').start_at(
+      {'created': completed_items.get('last_completed')}).order_by(
+          'created').limit(100)
+  delete_batch = db.batch()
+  last_completed = None
+  for doc in docs.stream():
+    finish_work(doc)
+    delete_batch.delete(doc.reference)
+    last_completed = doc.get('created')
+
+  if last_completed:
+    delete_batch.update(completed_items.reference,
+                        {'last_completed': last_completed})
+    delete_batch.commit()
+  # [END firestore_query_without_tombstones]
+
+  return docs_found
