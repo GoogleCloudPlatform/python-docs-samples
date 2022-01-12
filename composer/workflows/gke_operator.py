@@ -76,7 +76,7 @@ with models.DAG(
         # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
         # The namespace to run within Kubernetes, default namespace is
-        # `default`. 
+        # `default`.
         namespace="default",
         # Docker image specified. Defaults to hub.docker.com, but any fully
         # qualified URLs will point to a custom repository. Supports private
