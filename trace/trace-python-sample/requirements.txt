@@ -1,4 +1,5 @@
-google-cloud-trace==1.5.1
+# opencensus-ext-stackdriver 0.8.0 depends on google-cloud-trace<1.0.0 and >=0.20.0
+google-cloud-trace==0.24.0
 opencensus==0.8.0
 opencensus-ext-stackdriver==0.8.0
 Flask==2.0.2
