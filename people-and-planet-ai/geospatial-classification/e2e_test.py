@@ -74,7 +74,8 @@ TRAIN_VALIDATION_SPLIT = 0.7
 
 PATCH_SIZE = 16
 
-credentials, _ = google.auth.default()
+#credentials, _ = google.auth.default()
+credentials, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 ee.Initialize(credentials, project=PROJECT)
 
 logging.getLogger().setLevel(logging.INFO)
