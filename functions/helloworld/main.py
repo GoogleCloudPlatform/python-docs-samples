@@ -17,12 +17,17 @@ import sys
 # [START functions_helloworld_http]
 # [START functions_http_content]
 from flask import escape
-
+# [START functions_http_method]
+# [START functions_helloworld_get]
+import functions_framework
 # [END functions_helloworld_http]
 # [END functions_http_content]
+# [END functions_http_method]
+# [END functions_helloworld_get]
 
 
 # [START functions_helloworld_get]
+@functions_framework.http
 def hello_get(request):
     """HTTP Cloud Function.
     Args:
@@ -42,6 +47,7 @@ def hello_get(request):
 
 
 # [START functions_helloworld_http]
+@functions_framework.http
 def hello_http(request):
     """HTTP Cloud Function.
     Args:
@@ -104,7 +110,6 @@ def hello_pubsub(event, context):
 def hello_gcs(event, context):
     """Background Cloud Function to be triggered by Cloud Storage.
        This generic function logs relevant data when a file is changed.
-
     Args:
         event (dict):  The dictionary with data specific to this type of event.
                        The `data` field contains a description of the event in
@@ -126,6 +131,7 @@ def hello_gcs(event, context):
 
 
 # [START functions_http_content]
+@functions_framework.http
 def hello_content(request):
     """ Responds to an HTTP request using data from the request body parsed
     according to the "content-type" header.
@@ -157,6 +163,7 @@ def hello_content(request):
 
 
 # [START functions_http_method]
+@functions_framework.http
 def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:

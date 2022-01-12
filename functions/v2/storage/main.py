@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_cloudevent_storage]
 import functions_framework
 
 
-# [START functions_helloworld_storage]
 # Triggered by a change in a storage bucket
 @functions_framework.cloud_event
 def hello_gcs(cloud_event):
@@ -39,4 +39,4 @@ def hello_gcs(cloud_event):
     print(f"Updated: {updated}")
 
 
-# [END functions_helloworld_storage]
+# [END functions_cloudevent_storage]

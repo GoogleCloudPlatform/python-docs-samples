@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START cloudrun_fuse_script]
+#!/usr/bin/env bash
 set -eo pipefail
 
 # Create mount directory for service
