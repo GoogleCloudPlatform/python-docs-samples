@@ -32,6 +32,7 @@ REGION = "us-central1"
 
 TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
 POLL_INTERVAL_SEC = 60  # 1 minute in seconds
+LIST_PAGE_SIZE = 100
 
 HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
 UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
@@ -62,8 +63,8 @@ class Utils:
     ) -> bool:
         for _ in range(0, timeout_sec, poll_interval_sec):
             if is_done():
-                time.sleep(poll_interval_sec)
                 return True
+            time.sleep(poll_interval_sec)
         return False
 
     @staticmethod
@@ -328,51 +329,42 @@ class Utils:
                 yield job
 
     @staticmethod
-    def dataflow_jobs_get(
-        job_id: Optional[str] = None,
-        job_name: Optional[str] = None,
-        project: str = PROJECT,
-        list_page_size: int = 30,
-    ) -> Optional[Dict[str, Any]]:
+    def dataflow_job_id(
+        job_name: str, project: str, list_page_size: int = LIST_PAGE_SIZE
+    ) -> str:
+        for job in Utils.dataflow_jobs_list(project, list_page_size):
+            if job["name"] == job_name:
+                logging.info(f"Found Dataflow job: {job}")
+                return job["id"]
+        raise ValueError(f"Dataflow job not found: job_name={job_name}")
+
+    @staticmethod
+    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> Dict[str, Any]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
 
-        if job_id:
-            # For more info see:
-            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
-            request = (
-                dataflow.projects()
-                .jobs()
-                .get(
-                    projectId=project,
-                    jobId=job_id,
-                    view="JOB_VIEW_SUMMARY",
-                )
+        # For more info see:
+        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
+        request = (
+            dataflow.projects()
+            .jobs()
+            .get(
+                projectId=project,
+                jobId=job_id,
+                view="JOB_VIEW_SUMMARY",
             )
-            # If the job is not found, this throws an HttpError exception.
-            job = request.execute()
-            logging.info(f"Found Dataflow job: {job}")
-            return job
-
-        elif job_name:
-            for job in Utils.dataflow_jobs_list(project, list_page_size):
-                if job["name"] == job_name:
-                    logging.info(f"Found Dataflow job: {job}")
-                    return job
-            raise ValueError(f"Dataflow job not found: job_name={job_name}")
-
-        else:
-            raise ValueError("must specify either `job_id` or `job_name`")
+        )
+        # If the job is not found, this throws an HttpError exception.
+        return request.execute()
 
     @staticmethod
     def dataflow_jobs_wait(
-        job_id: Optional[str] = None,
-        job_name: Optional[str] = None,
+        job_id: str,
         project: str = PROJECT,
         region: str = REGION,
         target_states: Set[str] = {"JOB_STATE_DONE"},
-        list_page_size: int = 100,
+        list_page_size: int = LIST_PAGE_SIZE,
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> Optional[str]:
@@ -387,17 +379,13 @@ class Utils:
             "JOB_STATE_DRAINED",
         }
         logging.info(
-            f"Waiting for Dataflow job until {target_states}: job_id={job_id}, job_name={job_name}"
+            f"Waiting for Dataflow job {job_id} until {target_states}\n"
+            + Utils.dataflow_job_url(job_id, project, region)
         )
 
         def job_is_done() -> bool:
             try:
-                job = Utils.dataflow_jobs_get(
-                    job_id=job_id,
-                    job_name=job_name,
-                    project=project,
-                    list_page_size=list_page_size,
-                )
+                job = Utils.dataflow_jobs_get(job_id, project, list_page_size)
                 state = job["currentState"]
                 if state in target_states:
                     logging.info(f"Dataflow job found with state {state}")
