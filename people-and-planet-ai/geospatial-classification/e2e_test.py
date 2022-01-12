@@ -172,7 +172,7 @@ def labeled_feature(row):
 
 
 @pytest.fixture(scope="session")
-def container_image():
+def container_image(bucket_name):
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     subprocess.check_call(
@@ -182,6 +182,7 @@ def container_image():
             "submit",
             "serving_app",
             f"--tag={container_image}",
+            f"--gcs-source-staging-dir=gs://{bucket_name}",
             "--machine-type=e2-highcpu-8",
             "--timeout=15m",
             "--quiet",
