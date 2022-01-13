@@ -48,19 +48,20 @@ def create_job_with_concatenated_inputs(
     """Creates a job based on an ad-hoc job configuration that concatenates two input videos.
 
     Args:
-        project_id: The GCP project ID.
-        location: The location to start the job in.
-        input1_uri: Uri of the first video in the Cloud Storage bucket.
-        start_time_input1: Start time, in fractional seconds ending in 's'
+        project_id (str): The GCP project ID.
+        location (str): The location to start the job in.
+        input1_uri (str): Uri of the first video in the Cloud Storage bucket.
+        start_time_input1 (str): Start time, in fractional seconds ending in 's'
           (e.g., '0s'), relative to the first input video timeline.
-        end_time_input1: End time, in fractional seconds ending in 's'
+        end_time_input1 (str): End time, in fractional seconds ending in 's'
           (e.g., '8.1s'), relative to the first input video timeline.
-        input2_uri: Uri of the second video in the Cloud Storage bucket.
-        start_time_input2: Start time, in fractional seconds ending in 's'
+        input2_uri (str): Uri of the second video in the Cloud Storage bucket.
+        start_time_input2 (str): Start time, in fractional seconds ending in 's'
           (e.g., '3.5s'), relative to the second input video timeline.
-        end_time_input2: End time, in fractional seconds ending in 's'
+        end_time_input2 (str): End time, in fractional seconds ending in 's'
           (e.g., '15s'), relative to the second input video timeline.
-        output_uri: Uri of the video output folder in the Cloud Storage bucket."""
+        output_uri (str): Uri of the video output folder in the Cloud Storage
+          bucket."""
 
     s1 = duration.Duration()
     s1.FromJsonString(start_time_input1)
