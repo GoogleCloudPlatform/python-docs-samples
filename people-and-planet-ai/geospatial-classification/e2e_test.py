@@ -181,6 +181,7 @@ def container_image(bucket_name):
             "submit",
             "serving_app",
             f"--tag={container_image}",
+            f"--project={PROJECT}",
             #f"--gcs-source-staging-dir=gs://{bucket_name}/build",
             "--machine-type=e2-highcpu-8",
             "--timeout=15m",
