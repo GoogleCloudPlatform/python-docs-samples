@@ -13,12 +13,10 @@
 # limitations under the License.
 
 # [START cloudrun_manual_logging]
-# [START run_manual_logging]
 import json
 import os
 
 # [END cloudrun_manual_logging]
-# [END run_manual_logging]
 
 from flask import Flask, request
 
@@ -34,7 +32,6 @@ def index():
     PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     # [START cloudrun_manual_logging]
-    # [START run_manual_logging]
     # Uncomment and populate this variable in your code:
     # PROJECT = 'The project ID of your Cloud Run service';
 
@@ -64,7 +61,6 @@ def index():
     )
 
     print(json.dumps(entry))
-    # [END run_manual_logging]
     # [END cloudrun_manual_logging]
 
     return "Hello Logger!"
