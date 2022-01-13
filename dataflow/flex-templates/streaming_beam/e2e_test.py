@@ -87,7 +87,9 @@ def test_flex_template_streaming_beam(
     )
 
     # Wait until the BigQuery table is created and then cancel the Dataflow job.
-    utils.wait_until(utils.bigquery_table_exists(bigquery_dataset, bigquery_table))
+    utils.wait_until(
+        lambda: utils.bigquery_table_exists(bigquery_dataset, bigquery_table)
+    )
     utils.dataflow_jobs_cancel(job_id, drain=True)
 
     # Check for the output data in BigQuery.

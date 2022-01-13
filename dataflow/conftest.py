@@ -330,7 +330,7 @@ class Utils:
 
     @staticmethod
     def dataflow_job_id(
-        job_name: str, project: str, list_page_size: int = LIST_PAGE_SIZE
+        job_name: str, project: str = PROJECT, list_page_size: int = LIST_PAGE_SIZE
     ) -> str:
         for job in Utils.dataflow_jobs_list(project, list_page_size):
             if job["name"] == job_name:
