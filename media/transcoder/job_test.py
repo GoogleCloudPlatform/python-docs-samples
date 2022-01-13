@@ -384,7 +384,9 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
     out, _ = capsys.readouterr()
     assert job_name in out
 
-    time.sleep(30)
+    time.sleep(
+        30
+    )  # Transcoding jobs need time to complete. Once the job completes, check the job state.
 
     _assert_job_state_succeeded(capsys, job_id)
 
