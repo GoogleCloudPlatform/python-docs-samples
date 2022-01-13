@@ -87,12 +87,6 @@ def test_bucket():
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(output_bucket_name)
 
-    blob = bucket.blob(test_concat1_file_name)
-    blob.upload_from_filename(test_concat1_file)
-
-    blob = bucket.blob(test_concat2_file_name)
-    blob.upload_from_filename(test_concat2_file)
-
     yield bucket
     bucket.delete(force=True)
 
