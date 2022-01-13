@@ -182,7 +182,6 @@ def container_image(bucket_name):
             "serving_app",
             f"--tag={container_image}",
             f"--project={PROJECT}",
-            #f"--gcs-source-staging-dir=gs://{bucket_name}/build",
             "--machine-type=e2-highcpu-8",
             "--timeout=15m",
             "--quiet",
@@ -285,10 +284,10 @@ def train_model(bucket_name):
     job = aiplatform.CustomTrainingJob(
         display_name="climate_script_colab",
         script_path="task.py",
-        container_uri="us-docker.pkg.dev/vertex-ai/training/tf-cpu.2-7:latest",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/tf-gpu.2-7:latest",
     )
 
-    job.run(args=[f"--bucket={bucket_name}"])
+    job.run(accelerator_type='NVIDIA_TESLA_K80', accelerator_count=1, args=[f"--bucket={bucket_name}"])
 
     logging.info(f"train_model resource_name: {job.resource_name}")
 
