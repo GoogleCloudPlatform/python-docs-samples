@@ -21,8 +21,8 @@ import time
 import uuid
 
 import ee
-from google.cloud import aiplatform
 import google.auth
+from google.cloud import aiplatform
 from google.cloud import storage
 import pandas as pd
 import pytest
@@ -74,7 +74,6 @@ TRAIN_VALIDATION_SPLIT = 0.7
 
 PATCH_SIZE = 16
 
-#credentials, _ = google.auth.default()
 credentials, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 ee.Initialize(credentials, project=PROJECT)
 
