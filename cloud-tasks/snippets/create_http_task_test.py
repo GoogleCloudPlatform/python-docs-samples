@@ -46,3 +46,15 @@ def test_create_http_task(test_queue):
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url
     )
     assert TEST_QUEUE_NAME in result.name
+
+    result = create_http_task.create_http_task(
+        TEST_PROJECT_ID,
+        TEST_QUEUE_NAME,
+        TEST_LOCATION,
+        url,
+        payload="hello",
+        in_seconds=180,
+        task_name=uuid.uuid4().hex,
+        deadline=900,
+    )
+    assert TEST_QUEUE_NAME in result.name

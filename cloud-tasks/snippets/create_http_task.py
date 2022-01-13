@@ -18,13 +18,20 @@ import argparse
 
 
 def create_http_task(
-    project, queue, location, url, payload=None, in_seconds=None, task_name=None
+    project,
+    queue,
+    location,
+    url,
+    payload=None,
+    in_seconds=None,
+    task_name=None,
+    deadline=None,
 ):
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
-    from google.protobuf import timestamp_pb2
+    from google.protobuf import timestamp_pb2, duration_pb2
     import datetime
     import json
 
@@ -39,6 +46,7 @@ def create_http_task(
     # payload = 'hello' or {'param': 'value'} for application/json
     # in_seconds = 180
     # task_name = 'my-unique-task'
+    # deadline = 900
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
@@ -77,6 +85,11 @@ def create_http_task(
     if task_name is not None:
         # Add the name to tasks.
         task["name"] = client.task_path(project, location, queue, task_name)
+
+    if deadline is not None:
+        # Add dispatch deadline for requests sent to the worker.
+        duration = duration_pb2.Duration()
+        task["dispatch_deadline"] = duration.FromSeconds(deadline)
 
     # Use the client to build and send the task.
     response = client.create_task(request={"parent": parent, "task": task})
