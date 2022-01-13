@@ -44,7 +44,7 @@ def index():
     # Add log correlation to nest all log messages.
     # This is only relevant in HTTP-based contexts, and is ignored elsewhere.
     # (In particular, non-HTTP-based Cloud Functions.)
-    request_is_defined = 'request' in globals() or 'request' in locals()
+    request_is_defined = "request" in globals() or "request" in locals()
     if request_is_defined and request:
         trace_header = request.headers.get("X-Cloud-Trace-Context")
 
