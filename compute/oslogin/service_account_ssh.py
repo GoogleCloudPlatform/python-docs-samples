@@ -76,6 +76,7 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
         'key': public_key,
         'expirationTimeUsec': expiration,
     }
+    print(f'Creating key {account} and {body}')
     oslogin.users().importSshPublicKey(parent=account, body=body).execute()
     return private_key_file
 # [END create_key]
