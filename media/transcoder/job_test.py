@@ -75,11 +75,6 @@ output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
 
 preset = "preset/web-hd"
 job_succeeded_state = "ProcessingState.SUCCEEDED"
-test_data = os.path.join(os.path.dirname(__file__), "..", "testdata")
-test_file = os.path.join(test_data, test_video_file_name)
-test_overlay_file = os.path.join(test_data, test_overlay_image_file_name)
-test_concat1_file = os.path.join(test_data, test_concat1_file_name)
-test_concat2_file = os.path.join(test_data, test_concat2_file_name)
 
 
 @pytest.fixture(scope="module")
