@@ -41,7 +41,8 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 template_id = f"my-python-test-template-{uuid.uuid4()}"
 
-bucket_name = f"python-samples-transcoder-{uuid.uuid4()}"
+input_bucket_name = "cloud-samples-data/media/"
+output_bucket_name = f"python-samples-transcoder-{uuid.uuid4()}"
 test_video_file_name = "ChromeCast.mp4"
 test_overlay_image_file_name = "overlay.jpg"
 test_concat1_file_name = "ForBiggerEscapes.mp4"
@@ -84,13 +85,7 @@ test_concat2_file = os.path.join(test_data, test_concat2_file_name)
 @pytest.fixture(scope="module")
 def test_bucket():
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-
-    blob = bucket.blob(test_video_file_name)
-    blob.upload_from_filename(test_file)
-
-    blob = bucket.blob(test_overlay_image_file_name)
-    blob.upload_from_filename(test_overlay_file)
+    bucket = storage_client.create_bucket(output_bucket_name)
 
     blob = bucket.blob(test_concat1_file_name)
     blob.upload_from_filename(test_concat1_file)
@@ -380,11 +375,11 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
         project_id,
         location,
         concat1_uri,
-        '0s',
-        '8.1s',
+        "0s",
+        "8.1s",
         concat2_uri,
-        '3.5s',
-        '15s',
+        "3.5s",
+        "15s",
         output_uri_for_concat,
     )
     out, _ = capsys.readouterr()
