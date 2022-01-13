@@ -26,6 +26,7 @@ import create_job_from_preset
 import create_job_from_template
 import create_job_template
 import create_job_with_animated_overlay
+import create_job_with_concatenated_inputs
 import create_job_with_periodic_images_spritesheet
 import create_job_with_set_number_images_spritesheet
 import create_job_with_static_overlay
@@ -40,17 +41,23 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 template_id = f"my-python-test-template-{uuid.uuid4()}"
 
-bucket_name = f"python-samples-transcoder-{uuid.uuid4()}"
+input_bucket_name = "cloud-samples-data/media/"
+output_bucket_name = f"python-samples-transcoder-{uuid.uuid4()}"
 test_video_file_name = "ChromeCast.mp4"
 test_overlay_image_file_name = "overlay.jpg"
-input_uri = "gs://" + bucket_name + "/" + test_video_file_name
-overlay_image_uri = "gs://" + bucket_name + "/" + test_overlay_image_file_name
-output_uri_for_preset = "gs://" + bucket_name + "/test-output-preset/"
-output_uri_for_template = "gs://" + bucket_name + "/test-output-template/"
-output_uri_for_adhoc = "gs://" + bucket_name + "/test-output-adhoc/"
-output_uri_for_static_overlay = "gs://" + bucket_name + "/test-output-static-overlay/"
+test_concat1_file_name = "ForBiggerEscapes.mp4"
+test_concat2_file_name = "ForBiggerJoyrides.mp4"
+
+input_uri = f"gs://{input_bucket_name}{test_video_file_name}"
+overlay_image_uri = f"gs://{input_bucket_name}{test_overlay_image_file_name}"
+concat1_uri = f"gs://{input_bucket_name}{test_concat1_file_name}"
+concat2_uri = f"gs://{input_bucket_name}{test_concat2_file_name}"
+output_uri_for_preset = f"gs://{output_bucket_name}/test-output-preset/"
+output_uri_for_template = f"gs://{output_bucket_name}/test-output-template/"
+output_uri_for_adhoc = f"gs://{output_bucket_name}/test-output-adhoc/"
+output_uri_for_static_overlay = f"gs://{output_bucket_name}/test-output-static-overlay/"
 output_uri_for_animated_overlay = (
-    "gs://" + bucket_name + "/test-output-animated-overlay/"
+    f"gs://{output_bucket_name}/test-output-animated-overlay/"
 )
 small_spritesheet_file_prefix = "small-sprite-sheet"
 large_spritesheet_file_prefix = "large-sprite-sheet"
@@ -58,29 +65,22 @@ spritesheet_file_suffix = "0000000000.jpeg"
 
 output_dir_for_set_number_spritesheet = "test-output-set-number-spritesheet/"
 output_uri_for_set_number_spritesheet = (
-    "gs://" + bucket_name + "/" + output_dir_for_set_number_spritesheet
+    f"gs://{output_bucket_name}/{output_dir_for_set_number_spritesheet}"
 )
 output_dir_for_periodic_spritesheet = "test-output-periodic-spritesheet/"
 output_uri_for_periodic_spritesheet = (
-    "gs://" + bucket_name + "/" + output_dir_for_periodic_spritesheet
+    f"gs://{output_bucket_name}/{output_dir_for_periodic_spritesheet}"
 )
+output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
+
 preset = "preset/web-hd"
 job_succeeded_state = "ProcessingState.SUCCEEDED"
-test_data = os.path.join(os.path.dirname(__file__), "..", "testdata")
-test_file = os.path.join(test_data, test_video_file_name)
-test_overlay_file = os.path.join(test_data, test_overlay_image_file_name)
 
 
 @pytest.fixture(scope="module")
 def test_bucket():
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-
-    blob = bucket.blob(test_video_file_name)
-    blob.upload_from_filename(test_file)
-
-    blob = bucket.blob(test_overlay_image_file_name)
-    blob.upload_from_filename(test_overlay_file)
+    bucket = storage_client.create_bucket(output_bucket_name)
 
     yield bucket
     bucket.delete(force=True)
@@ -349,6 +349,44 @@ def test_create_job_with_periodic_spritesheet(capsys, test_bucket):
         + large_spritesheet_file_prefix
         + spritesheet_file_suffix,
     )
+
+    list_jobs.list_jobs(project_id, location)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    delete_job.delete_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert "Deleted job" in out
+
+
+def test_create_job_with_concatenated_inputs(capsys, test_bucket):
+    create_job_with_concatenated_inputs.create_job_with_concatenated_inputs(
+        project_id,
+        location,
+        concat1_uri,
+        "0s",
+        "8.1s",
+        concat2_uri,
+        "3.5s",
+        "15s",
+        output_uri_for_concat,
+    )
+    out, _ = capsys.readouterr()
+    job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
+    assert job_name_prefix in out
+
+    str_slice = out.split("/")
+    job_id = str_slice[len(str_slice) - 1].rstrip("\n")
+    job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
+    assert job_name in out
+
+    get_job.get_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    time.sleep(30)
+
+    _assert_job_state_succeeded(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
