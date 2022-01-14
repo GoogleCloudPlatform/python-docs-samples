@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import subprocess
+
+import pytest
 
 import main
 
@@ -48,8 +49,7 @@ def test_run_script():
     assert "Completed" in output
 
     my_env = {"FAIL_RATE": "0.99999999"}
-    with pytest.raises(subprocess.CalledProcessError, 
-        match=r".*non-zero.*"):
+    with pytest.raises(subprocess.CalledProcessError, match=r".*non-zero.*"):
         subprocess.run(
             ["python", "main.py"],
             env=my_env,
