@@ -48,12 +48,11 @@ def test_run_script():
     assert "Completed" in output
 
     my_env = {"FAIL_RATE": "0.99999999"}
-    try:
+    with pytest.raises(subprocess.CalledProcessError, 
+        match=r".*non-zero.*"):
         subprocess.run(
             ["python", "main.py"],
             env=my_env,
             stderr=subprocess.PIPE,
             check=True,
         )
-    except subprocess.CalledProcessError as err:
-        assert "non-zero" in str(err)
