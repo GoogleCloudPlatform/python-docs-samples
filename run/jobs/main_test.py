@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 import subprocess
 
 import main
@@ -20,45 +21,39 @@ import main
 def test_main(capsys):
     main.main()
     out, _ = capsys.readouterr()
-    expected = 'Completed Task #0.'
+    expected = "Completed Task #0."
     assert expected in out
 
 
 def test_env_vars():
-    try:
-        main.main(fail_rate='0.999999')
-    except Exception as err:
-        expected = 'failed'
-        assert expected in str(err)
+    with pytest.raises(Exception, match=r".*failed.*"):
+        main.main(fail_rate="0.999999")
 
 
 def test_bad_env_vars():
-    try:
-        main.main(fail_rate='2')
-    except Exception as err:
-        expected = 'Invalid'
-        assert expected in str(err)
+    with pytest.raises(Exception, match=r".*Invalid.*"):
+        main.main(fail_rate="2")
 
 
 def test_run_script():
     output = (
         subprocess.run(
-            ['python', 'main.py'],
+            ["python", "main.py"],
             stdout=subprocess.PIPE,
             check=True,
         )
         .stdout.strip()
         .decode()
     )
-    assert 'Completed' in output
+    assert "Completed" in output
 
-    my_env = {'FAIL_RATE': '0.99999999'}
+    my_env = {"FAIL_RATE": "0.99999999"}
     try:
         subprocess.run(
-            ['python', 'main.py'],
+            ["python", "main.py"],
             env=my_env,
             stderr=subprocess.PIPE,
             check=True,
         )
     except subprocess.CalledProcessError as err:
-        assert 'non-zero' in str(err)
+        assert "non-zero" in str(err)
