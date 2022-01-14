@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_manual_logging]
 import json
 import os
+
+# [END cloudrun_manual_logging]
 
 from flask import Flask, request
 
@@ -29,7 +32,6 @@ def index():
     PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     # [START cloudrun_manual_logging]
-    # [START run_manual_logging]
     # Uncomment and populate this variable in your code:
     # PROJECT = 'The project ID of your Cloud Run service';
 
@@ -37,13 +39,17 @@ def index():
     global_log_fields = {}
 
     # Add log correlation to nest all log messages.
-    trace_header = request.headers.get("X-Cloud-Trace-Context")
+    # This is only relevant in HTTP-based contexts, and is ignored elsewhere.
+    # (In particular, non-HTTP-based Cloud Functions.)
+    request_is_defined = "request" in globals() or "request" in locals()
+    if request_is_defined and request:
+        trace_header = request.headers.get("X-Cloud-Trace-Context")
 
-    if trace_header and PROJECT:
-        trace = trace_header.split("/")
-        global_log_fields[
-            "logging.googleapis.com/trace"
-        ] = f"projects/{PROJECT}/traces/{trace[0]}"
+        if trace_header and PROJECT:
+            trace = trace_header.split("/")
+            global_log_fields[
+                "logging.googleapis.com/trace"
+            ] = f"projects/{PROJECT}/traces/{trace[0]}"
 
     # Complete a structured log entry.
     entry = dict(
@@ -55,7 +61,6 @@ def index():
     )
 
     print(json.dumps(entry))
-    # [END run_manual_logging]
     # [END cloudrun_manual_logging]
 
     return "Hello Logger!"
