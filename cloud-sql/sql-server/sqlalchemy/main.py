@@ -15,7 +15,6 @@
 import datetime
 import logging
 import os
-import ssl
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
@@ -66,7 +65,7 @@ def init_connection_engine():
         # [END cloud_sql_sqlserver_sqlalchemy_lifetime]
         # [END cloud_sql_server_sqlalchemy_lifetime]
     }
- 
+
     if os.environ.get("DB_ROOT_CERT"):
         return init_tcp_sslcerts_connection_engine(db_config)
     return init_tcp_connection_engine(db_config)
@@ -81,7 +80,6 @@ def init_tcp_sslcerts_connection_engine(db_config):
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
     db_host = os.environ["DB_HOST"]
-    db_root_cert = os.environ["DB_ROOT_CERT"]
 
     # Extract port from db_host if present,
     # otherwise use DB_PORT environment variable.
@@ -105,7 +103,7 @@ def init_tcp_sslcerts_connection_engine(db_config):
             query={
                 "driver": "ODBC Driver 17 for SQL Server",
                 "Encrypt": "yes",
-                "Trusted_Connection": "no"               
+                "Trusted_Connection": "no"
             },
         ),
         **db_config
