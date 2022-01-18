@@ -72,7 +72,7 @@ def get_cloud_kms_key():
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7"],
+    'ignored_versions': ["2.7", "3.6"],
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
