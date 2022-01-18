@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import os
 import tempfile
 import time
@@ -23,6 +24,7 @@ import pytest
 import requests
 
 import storage_add_bucket_label
+import storage_async_upload
 import storage_batch_request
 import storage_bucket_delete_default_kms_key
 import storage_change_default_storage_class
@@ -211,6 +213,12 @@ def test_upload_blob_with_kms(test_bucket):
         bucket = storage.Client().bucket(test_bucket.name)
         kms_blob = bucket.get_blob("test_upload_blob_encrypted")
         assert kms_blob.kms_key_name.startswith(KMS_KEY)
+
+
+def test_async_upload(bucket, capsys):
+    asyncio.run(storage_async_upload.async_upload_blob(bucket.name))
+    out, _ = capsys.readouterr()
+    assert f"Uploaded 3 files to bucket {bucket.name}" in out
 
 
 def test_download_byte_range(test_blob):
