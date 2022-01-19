@@ -105,7 +105,7 @@ def start_instance_with_encryption_key(
 # [START compute_stop_instance]
 def stop_instance(project_id: str, zone: str, instance_name: str):
     """
-    Stops a stopped Google Compute Engine instance.
+    Stops a running Google Compute Engine instance.
 
     Args:
         project_id: project ID or project number of the Cloud project your instance belongs to.
