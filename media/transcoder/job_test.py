@@ -75,6 +75,7 @@ output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
 
 preset = "preset/web-hd"
 job_succeeded_state = "ProcessingState.SUCCEEDED"
+job_running_state = "ProcessingState.RUNNING"
 
 
 @pytest.fixture(scope="module")
@@ -105,7 +106,7 @@ def test_create_job_from_preset(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -144,7 +145,7 @@ def test_create_job_from_template(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -178,7 +179,7 @@ def test_create_job_from_ad_hoc(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -399,7 +400,8 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
     assert "Deleted job" in out
 
 
-# Retrying up to 10 mins.
+# Retrying up to 10 mins. This function checks if the job completed
+# successfully.
 @backoff.on_exception(backoff.expo, AssertionError, max_time=600)
 def _assert_job_state_succeeded(capsys, job_id):
     try:
@@ -409,6 +411,20 @@ def _assert_job_state_succeeded(capsys, job_id):
 
     out, _ = capsys.readouterr()
     assert job_succeeded_state in out
+
+
+# Retrying up to 10 mins. This function checks if the job is running or has
+# completed. Both of these conditions signal the API is functioning. The test
+# can list or delete a job that is running or completed with no ill effects.
+@backoff.on_exception(backoff.expo, AssertionError, max_time=600)
+def _assert_job_state_succeeded_or_running(capsys, job_id):
+    try:
+        get_job_state.get_job_state(project_id, location, job_id)
+    except HttpError as err:
+        raise AssertionError(f"Could not get job state: {err.resp.status}")
+
+    out, _ = capsys.readouterr()
+    assert (job_succeeded_state in out) or (job_running_state in out)
 
 
 def _assert_file_in_bucket(capsys, test_bucket, directory_and_filename):
