@@ -400,7 +400,8 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
     assert "Deleted job" in out
 
 
-# Retrying up to 10 mins.
+# Retrying up to 10 mins. This function checks if the job completed
+# successfully.
 @backoff.on_exception(backoff.expo, AssertionError, max_time=600)
 def _assert_job_state_succeeded(capsys, job_id):
     try:
@@ -412,7 +413,9 @@ def _assert_job_state_succeeded(capsys, job_id):
     assert job_succeeded_state in out
 
 
-# Retrying up to 10 mins.
+# Retrying up to 10 mins. This function checks if the job is running or has
+# completed. Both of these conditions signal the API is functioning. The test
+# can list or delete a job that is running or completed with no ill effects.
 @backoff.on_exception(backoff.expo, AssertionError, max_time=600)
 def _assert_job_state_succeeded_or_running(capsys, job_id):
     try:
