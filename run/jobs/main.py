@@ -19,24 +19,21 @@ import sys
 import time
 
 # Retrieve Job-defined env vars
-TASK_NUM = os.getenv('TASK_NUM') or 0
-ATTEMPT_NUM = os.getenv('ATTEMPT_NUM') or 0
+TASK_NUM = os.getenv("TASK_NUM", 0)
+ATTEMPT_NUM = os.getenv("ATTEMPT_NUM", 0)
 # Retrieve User-defined env vars
-SLEEP_MS = os.getenv('SLEEP_MS') or 0
-FAIL_RATE = os.getenv('FAIL_RATE') or 0
+SLEEP_MS = os.getenv("SLEEP_MS", 0)
+FAIL_RATE = os.getenv("FAIL_RATE", 0)
 
 
 # Define main script
 def main(sleep_ms=0, fail_rate=0):
     print(f"Starting Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM}...")
     # Simulate work by waiting for a specific amount of time
-    time.sleep(float(sleep_ms)/1000)  # Convert to seconds
+    time.sleep(float(sleep_ms) / 1000)  # Convert to seconds
 
     # Simulate errors
-    try:
-        random_failure(float(fail_rate))
-    except Exception:
-        raise Exception(f"Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM} failed.")
+    random_failure(float(fail_rate))
 
     print(f"Completed Task #{TASK_NUM}.")
 
@@ -44,7 +41,10 @@ def main(sleep_ms=0, fail_rate=0):
 # Throw an error based on fail rate
 def random_failure(rate):
     if rate < 0 or rate > 1:
-        print(f"Invalid FAIL_RATE env var value: {rate}. Must be a float between 0 and 1 inclusive.")
+        # Return without retrying the Job Task
+        print(
+            f"Invalid FAIL_RATE env var value: {rate}. Must be a float between 0 and 1 inclusive."
+        )
         return
 
     random_failure = random.random()
@@ -53,9 +53,10 @@ def random_failure(rate):
 
 
 # Start script
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
-        print(json.dumps({'message': str(err), 'severity': 'ERROR'}))
-        sys.exit(1)  # Trigger Task retry by exiting the process
+        message = f"Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM} failed: {str(err)}"
+        print(json.dumps({"message": message, "severity": "ERROR"}))
+        sys.exit(1)  # Retry Job Task by exiting the process

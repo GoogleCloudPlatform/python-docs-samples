@@ -31,9 +31,10 @@ def test_env_vars():
         main.main(fail_rate="0.999999")
 
 
-def test_bad_env_vars():
-    with pytest.raises(Exception, match=r".*Invalid.*"):
-        main.main(fail_rate="2")
+def test_bad_env_vars(capsys):
+    main.main(fail_rate="2") # Does not fail, so retry is not triggered
+    out, _ = capsys.readouterr()
+    assert "Invalid FAIL_RATE env var value" in out
 
 
 def test_run_script():
