@@ -32,7 +32,7 @@ def test_env_vars():
 
 
 def test_bad_env_vars(capsys):
-    main.main(fail_rate="2") # Does not fail, so retry is not triggered
+    main.main(fail_rate="2")  # Does not fail, so retry is not triggered
     out, _ = capsys.readouterr()
     assert "Invalid FAIL_RATE env var value" in out
 
@@ -40,7 +40,7 @@ def test_bad_env_vars(capsys):
 def test_run_script():
     output = (
         subprocess.run(
-            ["python", "main.py"],
+            ["python3", "main.py"],
             stdout=subprocess.PIPE,
             check=True,
         )
@@ -52,7 +52,7 @@ def test_run_script():
     my_env = {"FAIL_RATE": "0.99999999"}
     with pytest.raises(subprocess.CalledProcessError, match=r".*non-zero.*"):
         subprocess.run(
-            ["python", "main.py"],
+            ["python3", "main.py"],
             env=my_env,
             stderr=subprocess.PIPE,
             check=True,
