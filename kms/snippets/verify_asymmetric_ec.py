@@ -55,7 +55,7 @@ def verify_asymmetric_ec(project_id, location_id, key_ring_id, key_id, version_i
     # Get the public key.
     public_key = client.get_public_key(request={'name': key_version_name})
 
-    # Extract and parse the public key as a PEM-encoded RSA key.
+    # Extract and parse the public key as a PEM-encoded EC key.
     pem = public_key.pem.encode('utf-8')
     ec_key = serialization.load_pem_public_key(pem, default_backend())
     hash_ = hashlib.sha256(message_bytes).digest()
