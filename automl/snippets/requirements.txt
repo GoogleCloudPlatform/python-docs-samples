@@ -1,3 +1,4 @@
 google-cloud-translate==3.6.1
-google-cloud-storage==2.0.0
+google-cloud-storage==2.0.0; python_version == '3.6'
+google-cloud-storage==2.1.0; python_version > '3.6'
 google-cloud-automl==2.6.0
