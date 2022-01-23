@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import re
 import time
 import typing
 import uuid
@@ -28,6 +29,7 @@ import google.auth
 from create_certificate import create_certificate
 from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
+from filter_certificates import filter_certificates
 from revoke_certificate import revoke_certificate
 
 
@@ -74,6 +76,11 @@ def test_create_and_revoke_certificate_authority(
         public_key_bytes,
     )
 
+    FILTER_CONDITION = (
+        f"certificate_description.subject_description.subject.common_name={COMMON_NAME}"
+    )
+    filter_certificates(PROJECT, LOCATION, CA_POOL_NAME, FILTER_CONDITION)
+
     revoke_certificate(
         PROJECT, LOCATION, CA_POOL_NAME, CERT_NAME,
     )
@@ -81,6 +88,10 @@ def test_create_and_revoke_certificate_authority(
     disable_certificate_authority(PROJECT, LOCATION, CA_POOL_NAME, CA_NAME)
 
     out, _ = capsys.readouterr()
-
     assert "Certificate creation result:" in out
+    assert "Available certificates:" in out
+    assert re.search(
+        f"- projects/.*/locations/{LOCATION}/caPools/{CA_POOL_NAME}/certificates/{CERT_NAME}",
+        out,
+    )
     assert "Certificate revoke result:" in out

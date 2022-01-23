@@ -56,3 +56,16 @@ def certificate_authority(ca_pool):
     yield ca_pool, CA_NAME
 
     delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
+
+
+@pytest.fixture
+def deleted_certificate_authority(ca_pool):
+    CA_NAME = generate_name()
+
+    create_certificate_authority(
+        PROJECT, LOCATION, ca_pool, CA_NAME, COMMON_NAME, ORGANIZATION, CA_DURATION
+    )
+
+    delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
+
+    yield ca_pool, CA_NAME
