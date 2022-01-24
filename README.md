@@ -1,4 +1,4 @@
-# Google Cloud Platform Python Samples
+# Google Cloud Platform Python Samples ARE SO MUCH FUN
 
 Python samples for [Google Cloud Platform products][cloud].
 
