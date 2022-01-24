@@ -36,7 +36,7 @@ import pytest
 UUID = uuid.uuid4().hex
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-CLOUD_REGION = "us-central1"
+CLOUD_REGION = "us-west1"
 ZONE_ID = "a"
 BUCKET = os.environ["PUBSUBLITE_BUCKET_ID"]
 CLUSTER_ID = os.environ["PUBSUBLITE_CLUSTER_ID"] + "-" + UUID
