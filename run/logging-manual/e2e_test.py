@@ -152,7 +152,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
         total=3,
         status_forcelist=[400, 401, 403, 500, 502, 503, 504],
         allowed_methods=["GET", "POST"],
-        backoff_factor=3
+        backoff_factor=3,
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
 
@@ -187,7 +187,9 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     # Retry a maximum number of 10 times to find results in stackdriver
     found = False
     for x in range(10):
-        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
+        iterator = client.list_log_entries(
+            {"resource_names": resource_names, "filter": filters}
+        )
         for entry in iterator:
             found = True
             # If there are any results, exit loop
