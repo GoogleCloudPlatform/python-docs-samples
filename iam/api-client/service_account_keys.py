@@ -50,7 +50,11 @@ def create_key(service_account_email):
         name='projects/-/serviceAccounts/' + service_account_email, body={}
         ).execute()
 
-    print('Created key: ' + key['name'])
+    # The privateKeyData field contains the base64-encoded service account key
+    # in JSON format. Save this key to a secure location. You cannot download it
+    # again later.
+    json_key_file = base64.b64decode(key['privateKeyData']).decode('utf-8')
+    print('Created json key')
 # [END iam_create_key]
 
 
