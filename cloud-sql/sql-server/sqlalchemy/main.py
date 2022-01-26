@@ -66,7 +66,51 @@ def init_connection_engine():
         # [END cloud_sql_server_sqlalchemy_lifetime]
     }
 
+    if os.environ.get("DB_ROOT_CERT"):
+        return init_tcp_sslcerts_connection_engine(db_config)
     return init_tcp_connection_engine(db_config)
+
+
+def init_tcp_sslcerts_connection_engine(db_config):
+    # [START cloud_sql_postgres_sqlalchemy_create_tcp_sslcerts]
+    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
+    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
+    # secrets secret.
+    db_user = os.environ["DB_USER"]
+    db_pass = os.environ["DB_PASS"]
+    db_name = os.environ["DB_NAME"]
+    db_host = os.environ["DB_HOST"]
+
+    # Extract port from db_host if present,
+    # otherwise use DB_PORT environment variable.
+    host_args = db_host.split(":")
+    if len(host_args) == 1:
+        db_hostname = host_args[0]
+        db_port = int(os.environ["DB_PORT"])
+    elif len(host_args) == 2:
+        db_hostname, db_port = host_args[0], int(host_args[1])
+
+    pool = sqlalchemy.create_engine(
+        # Equivalent URL:
+        # mssql+pyodbc://<db_user>:<db_pass>@/<host>:<port>/<db_name>?driver=ODBC+Driver+17+for+SQL+Server
+        sqlalchemy.engine.url.URL.create(
+            "mssql+pyodbc",
+            username=db_user,
+            password=db_pass,
+            database=db_name,
+            host=db_hostname,
+            port=db_port,
+            query={
+                "driver": "ODBC Driver 17 for SQL Server",
+                "Encrypt": "yes",
+                "Trusted_Connection": "no"
+            },
+        ),
+        **db_config
+    )
+    # [END cloud_sql_postgres_sqlalchemy_create_tcp_sslcerts]
+    pool.dialect.description_encoding = None
+    return pool
 
 
 def init_tcp_connection_engine(db_config):
