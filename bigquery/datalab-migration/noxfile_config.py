@@ -23,7 +23,8 @@
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # Skipping for Python 3.9 due to pyarrow compilation failure.
-    "ignored_versions": ["2.7", "3.9"],
+    # Skipping 3.6 to avoid needing a vulnerable version of Ipython
+    "ignored_versions": ["2.7", , "3.6", "3.9"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
