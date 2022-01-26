@@ -100,14 +100,64 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
 
 
 @snippet
-def logger_usage(client, to_delete):
+def client_setup(client2, to_delete):
+    """Client setup."""
+
+    # [START usage_client_setup]
+    import google.cloud.logging
+
+    # if project not given, it will be inferred from the environment
+    client = google.cloud.logging.Client(project="my-project")
+    # [END usage_client_setup]
+    to_delete.append(client)
+
+    # [START usage_http_client_setup]
+    http_client = google.cloud.logging.Client(_use_grpc=False)
+    # [END usage_http_client_setup]
+    to_delete.append(http_client)
+
+
+@snippet
+def logger_usage(client_true, to_delete):
     """Logger usage."""
-    log_name = "logger_usage_%d" % (_millis())
+    import google.cloud.logging
 
     # [START logger_create]
-    logger = client.logger(log_name)
+    client = google.cloud.logging.Client(project="my-project")
+    logger = client.logger(name="log_id")
+    # logger will bind to logName "projects/my_project/logs/log_id"
     # [END logger_create]
+    client = client_true
+
+    log_id = "logger_usage_%d" % (_millis())
+    # [START logger_custom_labels]
+    custom_labels = {"my-key": "my-value"}
+    label_logger = client.logger(log_id, labels=custom_labels)
+    # [END logger_custom_labels]
+    to_delete.append(label_logger)
+    # [START logger_custom_resource]
+    from google.cloud.logging_v2.resource import Resource
+
+    resource = Resource(type="global", labels={})
+    global_logger = client.logger(log_id, resource=resource)
+    # [END logger_custom_resource]
+    to_delete.append(global_logger)
+
+    logger = client_true.logger(log_id)
     to_delete.append(logger)
+
+    # [START logger_log_basic]
+    logger.log("A simple entry")  # API call
+    # [END logger_log_basic]
+
+    # [START logger_log_fields]
+    logger.log(
+        "an entry with fields set",
+        severity="ERROR",
+        insert_id="0123",
+        labels={"my-label": "my-value"},
+    )  # API call
+    # [END logger_log_fields]
 
     # [START logger_log_text]
     logger.log_text("A simple entry")  # API call
@@ -134,6 +184,20 @@ def logger_usage(client, to_delete):
         {"message": "My first entry", "weather": "partly cloudy"}, resource=res
     )
     # [END logger_log_resource_text]
+
+    # [START logger_log_batch]
+    batch = logger.batch()
+    batch.log("first log")
+    batch.log("second log")
+    batch.commit()
+    # [END logger_log_batch]
+
+    # [START logger_log_batch_context]
+    with logger.batch() as batch:
+        batch.log("first log")
+        # do work
+        batch.log("last log")
+    # [END logger_log_batch_context]
 
     # [START logger_list_entries]
     from google.cloud.logging import DESCENDING
@@ -357,17 +421,48 @@ def logging_handler(client):
 
     # [START create_cloud_handler]
     from google.cloud.logging.handlers import CloudLoggingHandler
+    from google.cloud.logging_v2.handlers import setup_logging
 
     handler = CloudLoggingHandler(client)
-    cloud_logger = logging.getLogger("cloudLogger")
-    cloud_logger.setLevel(logging.INFO)
-    cloud_logger.addHandler(handler)
-    cloud_logger.error("bad news")
+    setup_logging(handler)
     # [END create_cloud_handler]
 
     # [START create_named_handler]
     handler = CloudLoggingHandler(client, name="mycustomlog")
     # [END create_named_handler]
+
+
+@snippet
+def logging_json(client):
+    # [START logging_json_dumps]
+    import logging
+    import json
+
+    data_dict = {"hello": "world"}
+    logging.info(json.dumps(data_dict))
+    # [END logging_json_dumps]
+
+    # [START logging_extra_json_fields]
+    import logging
+
+    data_dict = {"hello": "world"}
+    logging.info("message field", extra={"json_fields": data_dict})
+    # [END logging_extra_json_fields]
+
+
+@snippet
+def using_extras(client):
+    import logging
+
+    # [START logging_extras]
+    my_labels = {"foo": "bar"}
+    my_http = {"requestUrl": "localhost"}
+    my_trace = "01234"
+
+    logging.info(
+        "hello", extra={"labels": my_labels, "http_request": my_http, "trace": my_trace}
+    )
+    # [END logging_extras]
 
 
 @snippet
