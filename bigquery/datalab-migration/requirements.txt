@@ -2,5 +2,5 @@ grpcio==1.43.0
 google-cloud-bigquery[pandas,pyarrow]==2.32.0
 google-cloud-bigquery-storage==2.11.0
 datalab==1.2.0
-ipython==8.0.1; python_version > '3.7'
+ipython==8.0.1
 pyarrow==6.0.1
