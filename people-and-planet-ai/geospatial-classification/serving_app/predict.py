@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, List
-
 import numpy as np
 import tensorflow as tf
 
 
-def run(data: Dict[str, Any], model_dir: str) -> dict:
+def run(data: dict, model_dir: str) -> dict:
     model = tf.keras.models.load_model(model_dir)
     prediction_values = np.array(list(data.values()))
     transposed = np.transpose(prediction_values, (1, 2, 0))
