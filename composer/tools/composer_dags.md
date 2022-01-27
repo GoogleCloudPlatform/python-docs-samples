@@ -23,7 +23,7 @@ Purpose of the script it to provide a tool to pause or unpause all the DAGs
 
 1.  Supported environment versions: all Composer versions 
 
-1.  The script depends on Python 3.6 (or newer), gcloud and kubectl. Make sure
+1.  The script depends on [Python](https://www.python.org/downloads/) 3.6 (or newer), [gcloud](https://cloud.google.com/sdk/docs/install) and [kubectl](https://kubernetes.io/docs/tasks/tools/). Make sure
     you have all those tools installed.
 
 1.  Make sure that your Composer environment is healthy. Refer to
