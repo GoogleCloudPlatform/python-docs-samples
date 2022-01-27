@@ -55,7 +55,8 @@ def spark_streaming_from_pubsublite(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--project_number", help="Google Cloud Project Number")
     parser.add_argument("--location", help="Your Cloud location, e.g. us-central1-a")

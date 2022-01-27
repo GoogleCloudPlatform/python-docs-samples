@@ -18,7 +18,7 @@
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
 import tempfile
 
@@ -31,7 +31,7 @@ _tmpdir = tempfile.TemporaryDirectory()
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # Skipping for Python 3.9 due to numpy compilation failure.
-    "ignored_versions": ["2.7", "3.9"],
+    "ignored_versions": ["2.7", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,

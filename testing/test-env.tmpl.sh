@@ -26,6 +26,9 @@ export BIGTABLE_INSTANCE=
 export SPANNER_INSTANCE=
 export COMPOSER_LOCATION=us-central1
 export COMPOSER_ENVIRONMENT=
+export COMPOSER2_ENVIRONMENT=
+# Webserver for COMPOSER2_ENVIRONMENT
+export COMPOSER2_WEB_SERVER_URL=
 export CLOUD_KMS_KEY=
 
 export MYSQL_INSTANCE=
@@ -88,16 +91,17 @@ export OBJECT_DETECTION_DATASET_ID=
 # and centralized models remove duplicate work across all languages.
 export OBJECT_DETECTION_MODEL_ID=
 
-# Transcoder API
-export GOOGLE_CLOUD_PROJECT_NUMBER=
-
 # For git operations in the test driver(testing/run_tests.sh).
 # These are optional, but for avoiding flakes in Kokoro builds.
 export GITHUB_ACCESS_TOKEN=
 export GITHUB_USERNAME=
 
+# Cloud Run
 # For run/idp example, a Firebase IDP token
 export IDP_KEY=
+# For run/filesystem
+export IP_ADDRESS=
+export CONNECTOR=
 
 # Dialogflow examples.
 export SMART_REPLY_MODEL=

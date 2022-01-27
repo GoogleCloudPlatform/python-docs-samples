@@ -104,6 +104,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: pubsublite'
+  to:
+  - anguillanneuf
+- labels:
   - 'api: run'
   to:
   - averikitsch
@@ -175,6 +179,7 @@ assign_issues:
   - dinagraves
   - dandhlee
   - nicain
+  - loferris
 
 assign_prs:
   - busunkim96
@@ -184,3 +189,4 @@ assign_prs:
   - dinagraves
   - dandhlee
   - nicain
+  - loferris

@@ -37,12 +37,14 @@ def trigger_dag(data, context=None):
 
     To call this function from a Python script, omit the ``context`` argument
     and pass in a non-null value for the ``data`` argument.
+
+    This function is currently only compatible with Composer v1 environments.
     """
 
     # Fill in with your Composer info here
     # Navigate to your webserver's login page and get this from the URL
     # Or use the script found at
-    # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/composer/rest/get_client_id.py
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/composer/rest/get_client_id.py
     client_id = 'YOUR-CLIENT-ID'
     # This should be part of your webserver's URL:
     # {tenant-project-id}.appspot.com
@@ -68,7 +70,7 @@ def trigger_dag(data, context=None):
 
 
 # This code is copied from
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/iap/make_iap_request.py
 # START COPIED IAP CODE
 def make_iap_request(url, client_id, method='GET', **kwargs):
     """Makes a request to an application protected by Identity-Aware Proxy.

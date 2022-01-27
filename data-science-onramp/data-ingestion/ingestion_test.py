@@ -73,25 +73,31 @@ DATAPROC_JOB = {  # Dataproc job configuration
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown_cluster():
-    # Create cluster using cluster client
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"}
-    )
+    try:
+        # Create cluster using cluster client
+        cluster_client = dataproc.ClusterControllerClient(
+            client_options={
+                "api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"
+            }
+        )
 
-    operation = cluster_client.create_cluster(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
-    )
+        operation = cluster_client.create_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
+        )
 
-    # Wait for cluster to provision
-    operation.result()
+        # Wait for cluster to provision
+        operation.result()
 
-    yield
-
-    # Delete cluster
-    operation = cluster_client.delete_cluster(
-        project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
-    )
-    operation.result()
+        yield
+    finally:
+        try:
+            # Delete cluster
+            operation = cluster_client.delete_cluster(
+                project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
 
 
 @pytest.fixture(autouse=True)

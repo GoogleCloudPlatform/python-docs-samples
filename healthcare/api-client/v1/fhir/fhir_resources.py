@@ -21,7 +21,7 @@ import os
 def create_patient(project_id, location, dataset_id, fhir_store_id):
     """Creates a new Patient resource in a FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -89,7 +89,7 @@ def create_encounter(
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -171,7 +171,7 @@ def create_observation(
     Creates a new Observation resource in a FHIR store based on
     an Encounter.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -259,7 +259,7 @@ def delete_resource(
     resource was successfully deleted, search for or get the resource and
     see if it exists.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -316,7 +316,7 @@ def get_resource(
 ):
     """Gets a FHIR resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -381,7 +381,7 @@ def list_resource_history(
 ):
     """Gets the history of a resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -451,7 +451,7 @@ def get_resource_history(
 ):
     """Gets a version resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -517,7 +517,7 @@ def delete_resource_purge(
 ):
     """Deletes versions of a resource (excluding current version).
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -584,7 +584,7 @@ def update_resource(
 ):
     """Updates an existing resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -655,7 +655,7 @@ def patch_resource(
 ):
     """Updates part of an existing resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -727,7 +727,7 @@ def search_resources_get(
     """
     Uses the searchResources GET method to search for resources in the given FHIR store.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -789,7 +789,7 @@ def search_resources_post(project_id, location, dataset_id, fhir_store_id):
     information to search for. In this sample, the search criteria is
     'family:exact=Smith' on a Patient resource.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -857,7 +857,7 @@ def get_patient_everything(
 ):
     """Gets all the resources in the patient compartment.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -920,7 +920,7 @@ def execute_bundle(
 ):
     """Executes the operations in the given bundle.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/fhir
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
