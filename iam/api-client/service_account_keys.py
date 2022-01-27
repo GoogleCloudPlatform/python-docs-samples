@@ -23,6 +23,7 @@ https://cloud.google.com/iam/docs/creating-managing-service-account-keys.
 
 import argparse
 # [START iam_create_key]
+import base64
 # [START iam_list_keys]
 # [START iam_delete_key]
 import os
