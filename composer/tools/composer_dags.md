@@ -2,7 +2,7 @@
 
 This document describes usage of composer_dags.py script.
 
-Purpose of the script it to provide a tool to pause or unpause all the DAGs 
+The purpose of the script is to provide a tool to pause or unpause all the DAGs 
 (except airflow_monitoring) of a Composer environment.
 
 ## Prerequisites
