@@ -14,6 +14,7 @@
 
 import io
 import os
+from urllib.parse import urlparse
 
 import environ
 from google.cloud import secretmanager
@@ -59,10 +60,22 @@ SECRET_KEY = env("SECRET_KEY")
 # Change this to "False" when you are ready for production
 DEBUG = env("DEBUG")
 
-# SECURITY WARNING: App Engine's security features ensure that it is safe to
-# have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
-# app not on App Engine, make sure to set an appropriate host here.
-ALLOWED_HOSTS = ["*"]
+
+# [START gaestd_py_django_csrf]
+# SECURITY WARNING: It's recommended that you use this when
+# running in production. The URL will be known once you first deploy
+# to App Engine. This code takes the URL and converts it to both these settings formats.
+APPENGINE_URL = env("APPENGINE_URL", default=None)
+if APPENGINE_URL:
+    # Ensure the HTTPS is in the URL before it's used.
+    APPENGINE_URL = urlparse(APPENGINE_URL, "https").geturl()
+    
+    ALLOWED_HOSTS = [APPENGINE_URL]
+    CSRF_TRUSTED_ORIGINS = [urlparse(APPENGINE_URL).netloc]
+    SECURE_SSL_REDIRECT = True
+else:
+    ALLOWED_HOSTS = ["*"]
+# [END gaestd_py_django_csrf]
 
 # Application definition
 
