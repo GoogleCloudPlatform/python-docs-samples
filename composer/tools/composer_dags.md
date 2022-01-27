@@ -34,7 +34,7 @@ Purpose of the script it to provide a tool to pause or unpause all the DAGs
 
 ## Limitations
 
-1.  The script currenlty does not have any error handling mechanism in case of
+1.  The script currently does not have any error handling mechanism in case of
     failure in running gcloud commands.
 
 1.  The script does not perform any DAG validation after the operation.
