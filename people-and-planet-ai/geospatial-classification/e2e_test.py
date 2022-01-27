@@ -18,6 +18,7 @@ import os
 import platform
 import subprocess
 import time
+from typing import NamedTuple
 import uuid
 
 import ee
@@ -74,14 +75,16 @@ TRAIN_VALIDATION_SPLIT = 0.7
 
 PATCH_SIZE = 16
 
-credentials, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
+credentials, _ = google.auth.default(
+    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+)
 ee.Initialize(credentials, project=PROJECT)
 
 logging.getLogger().setLevel(logging.INFO)
 
 
 @pytest.fixture(scope="session")
-def bucket_name():
+def bucket_name() -> str:
     storage_client = storage.Client()
 
     bucket_name = f"{NAME.replace('/', '-')}-{UUID}"
@@ -94,7 +97,7 @@ def bucket_name():
 
 
 @pytest.fixture(scope="session")
-def test_data(bucket_name):
+def test_data(bucket_name: str) -> str:
     labels_dataframe = pd.read_csv("labeled_geospatial_data.csv")
     train_dataframe = labels_dataframe.sample(
         frac=TRAIN_VALIDATION_SPLIT, random_state=200
@@ -150,7 +153,7 @@ def test_data(bucket_name):
     yield training_task.name
 
 
-def labeled_feature(row):
+def labeled_feature(row: NamedTuple) -> ee.FeatureCollection:
     start = datetime.fromisoformat(row.timestamp)
     end = start + timedelta(days=1)
     image = (
@@ -171,7 +174,7 @@ def labeled_feature(row):
 
 
 @pytest.fixture(scope="session")
-def container_image(bucket_name):
+def container_image(bucket_name: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     subprocess.check_call(
@@ -207,7 +210,7 @@ def container_image(bucket_name):
 
 
 @pytest.fixture(scope="session")
-def service_url(bucket_name, container_image):
+def service_url(bucket_name: str, container_image: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/run/deploy
     service_name = f"{NAME.replace('/', '-')}-{UUID}"
     subprocess.check_call(
@@ -267,7 +270,7 @@ def service_url(bucket_name, container_image):
 
 
 @pytest.fixture(scope="session")
-def identity_token():
+def identity_token() -> str:
     yield (
         subprocess.run(
             ["gcloud", "auth", "print-identity-token", f"--project={PROJECT}"],
@@ -279,7 +282,7 @@ def identity_token():
 
 
 @pytest.fixture(scope="session")
-def train_model(bucket_name):
+def train_model(bucket_name: str) -> str:
     aiplatform.init(project=PROJECT, staging_bucket=bucket_name)
     job = aiplatform.CustomTrainingJob(
         display_name="climate_script_colab",
@@ -287,7 +290,11 @@ def train_model(bucket_name):
         container_uri="us-docker.pkg.dev/vertex-ai/training/tf-gpu.2-7:latest",
     )
 
-    job.run(accelerator_type='NVIDIA_TESLA_K80', accelerator_count=1, args=[f"--bucket={bucket_name}"])
+    job.run(
+        accelerator_type="NVIDIA_TESLA_K80",
+        accelerator_count=1,
+        args=[f"--bucket={bucket_name}"],
+    )
 
     logging.info(f"train_model resource_name: {job.resource_name}")
 
@@ -306,7 +313,7 @@ def train_model(bucket_name):
     yield job.resource_name
 
 
-def get_prediction_data(lon, lat, start, end):
+def get_prediction_data(lon: float, lat: float, start: str, end: str) -> dict:
     """Extracts Sentinel image as json at specific lat/lon and timestamp."""
 
     location = ee.Feature(ee.Geometry.Point([lon, lat]))
@@ -324,7 +331,13 @@ def get_prediction_data(lon, lat, start, end):
     return feature.getInfo()["features"][0]["properties"]
 
 
-def test_predict(bucket_name, test_data, train_model, service_url, identity_token):
+def test_predict(
+    bucket_name: str,
+    test_data: str,
+    train_model: str,
+    service_url: str,
+    identity_token: str,
+) -> None:
 
     # Test point
     prediction_data = get_prediction_data(

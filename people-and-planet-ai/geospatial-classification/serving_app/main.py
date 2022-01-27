@@ -21,7 +21,7 @@ app = flask.Flask(__name__)
 
 
 @app.route("/ping", methods=["POST"])
-def run_root():
+def run_root() -> str:
     args = flask.request.get_json() or {}
     return {
         "response": "Your request was successful! 🎉",
@@ -30,7 +30,7 @@ def run_root():
 
 
 @app.route("/predict", methods=["POST"])
-def run_predict():
+def run_predict() -> dict:
     import predict
 
     try:

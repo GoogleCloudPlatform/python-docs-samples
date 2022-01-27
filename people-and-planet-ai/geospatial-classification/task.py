@@ -50,7 +50,7 @@ LABEL = "is_powered_on"
 BATCH_SIZE = 64
 
 
-def get_args():
+def get_args() -> dict:
     """Parses args."""
 
     parser = argparse.ArgumentParser()
@@ -59,13 +59,13 @@ def get_args():
     return args
 
 
-def parse_tfrecord(example_proto, features_dict):
+def parse_tfrecord(example_proto: bytes, features_dict: dict) -> dict:
     """Parses a single tf.train.Example."""
 
     return tf.io.parse_single_example(example_proto, features_dict)
 
 
-def create_features_dict():
+def create_features_dict() -> dict:
     """Creates dict of features."""
 
     features_dict = {
@@ -77,7 +77,7 @@ def create_features_dict():
     return features_dict
 
 
-def get_feature_and_label_vectors(inputs, features_dict):
+def get_feature_and_label_vectors(inputs: dict, features_dict: dict) -> tf.Tensor, int:
     """Formats data."""
 
     label_value = tf.cast(inputs.pop(LABEL), tf.int32)
@@ -87,7 +87,7 @@ def get_feature_and_label_vectors(inputs, features_dict):
     return features_vec, label_value
 
 
-def create_datasets(bucket):
+def create_datasets(bucket: str) -> tf.data.Dataset, tf.data.Dataset:
     """Creates training and validation datasets."""
 
     train_data_dir = f"gs://{bucket}/geospatial_training.tfrecord.gz"
@@ -111,7 +111,7 @@ def create_datasets(bucket):
     return training_dataset, validation_dataset
 
 
-def create_model(training_dataset):
+def create_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
     """Creates model."""
 
     feature_ds = training_dataset.map(lambda x, y: x)
@@ -133,7 +133,7 @@ def create_model(training_dataset):
     return model
 
 
-def main():
+def main() -> None:
     args = get_args()
     training_dataset, validation_dataset = create_datasets(args.bucket)
     model = create_model(training_dataset)
