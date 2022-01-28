@@ -97,7 +97,6 @@ class TestDatastoreSnippets:
         task = snippets.insert(client)
         client.entities_to_delete.append(task)
         assert task
-        assert task.key.name == "sampleTask"
 
     def test_lookup(self, client):
         task = snippets.lookup(client)
