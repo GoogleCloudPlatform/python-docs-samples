@@ -21,7 +21,7 @@ from google.cloud import storage
 from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
     ProductServiceClient
 
-project_number = os.getenv('PROJECT_NUMBER')
+project_number = os.getenv('GOOGLE_CLOUD_PROJECT_NUMBER')
 bucket_name = os.getenv('BUCKET_NAME')
 
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branches/default_branch".format(
