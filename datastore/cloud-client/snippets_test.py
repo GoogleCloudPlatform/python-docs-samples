@@ -50,18 +50,30 @@ class TestDatastoreSnippets:
         assert snippets.incomplete_key(client)
 
     def test_named_key(self, client):
-        assert snippets.named_key(client)
+        key = snippets.named_key(client)
+        assert key
+        assert key.name == "sampleTask"
 
     def test_key_with_parent(self, client):
-        assert snippets.key_with_parent(client)
+        key = snippets.key_with_parent(client)
+        assert key
+        assert key.name == "sampleTask"
+        assert key.parent.name == "default"
 
     def test_key_with_multilevel_parent(self, client):
-        assert snippets.key_with_multilevel_parent(client)
+        key = snippets.key_with_multilevel_parent(client)
+        assert key
+        assert key.name == "sampleTask"
+        assert key.parent.name == "default"
+        assert key.parent.parent.name == "alice"
 
     def test_basic_entity(self, client):
         assert snippets.basic_entity(client)
 
     def test_entity_with_parent(self, client):
+        task = snippets.entity_with_parent(client)
+        assert task
+        assert task.key.name == "sampleTask"
         assert snippets.entity_with_parent(client)
 
     def test_properties(self, client):
@@ -74,6 +86,7 @@ class TestDatastoreSnippets:
         task = snippets.upsert(client)
         client.entities_to_delete.append(task)
         assert task
+        assert task.key.name == "sampleTask"
 
     def test_insert(self, client):
         task = snippets.insert(client)
@@ -84,11 +97,13 @@ class TestDatastoreSnippets:
         task = snippets.insert(client)
         client.entities_to_delete.append(task)
         assert task
+        assert task.key.name == "sampleTask"
 
     def test_lookup(self, client):
         task = snippets.lookup(client)
         client.entities_to_delete.append(task)
         assert task
+        assert task.key.name == "sampleTask"
 
     def test_delete(self, client):
         snippets.delete(client)

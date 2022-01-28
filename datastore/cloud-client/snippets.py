@@ -767,7 +767,9 @@ def transactional_update(client):
 def transactional_get_or_create(client):
     # [START datastore_transactional_get_or_create]
     with client.transaction():
-        key = client.key("Task", datetime.datetime.now(tz=datetime.timezone.utc).isoformat())
+        key = client.key(
+            "Task", datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+        )
 
         task = client.get(key)
 
