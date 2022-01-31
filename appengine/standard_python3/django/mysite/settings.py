@@ -69,7 +69,7 @@ APPENGINE_URL = env("APPENGINE_URL", default=None)
 if APPENGINE_URL:
     # Ensure the HTTPS is in the URL before it's used.
     APPENGINE_URL = urlparse(APPENGINE_URL, "https").geturl()
-    
+
     ALLOWED_HOSTS = [APPENGINE_URL]
     CSRF_TRUSTED_ORIGINS = [urlparse(APPENGINE_URL).netloc]
     SECURE_SSL_REDIRECT = True
