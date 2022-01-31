@@ -48,6 +48,6 @@ def test_tensorflow_minimal(
             f"--region={utils.region}",
             f"--temp_location=gs://{bucket_name}",
             f"--sdk_container_image={container_image}",
-            f"--experiment=use_runner_v2",
+            "--experiment=use_runner_v2",
         ]
     )
