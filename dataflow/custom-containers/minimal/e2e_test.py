@@ -14,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import subprocess
+
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
     # try to import it for the autocomplete when writing the tests.
     from conftest import Utils
 except ModuleNotFoundError:
     Utils = None
-import subprocess
 import pytest
 
 NAME = "dataflow/custom-containers/minimal"

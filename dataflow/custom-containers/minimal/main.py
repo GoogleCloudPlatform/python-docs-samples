@@ -20,7 +20,7 @@ import platform
 import apache_beam as beam
 
 
-def run():
+def run() -> None:
     with beam.Pipeline() as pipeline:
         (
             pipeline
