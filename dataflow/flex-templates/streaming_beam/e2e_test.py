@@ -22,6 +22,8 @@ import pytest
 
 NAME = "dataflow/flex-templates/streaming-beam"
 
+BIGQUERY_TABLE = "output_table"
+
 
 @pytest.fixture(scope="session")
 def bucket_name(utils: Utils) -> str:
@@ -66,34 +68,35 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
     yield from utils.dataflow_flex_template_build(bucket_name, flex_template_image)
 
 
-def test_flex_template_streaming_beam(
+@pytest.fixture(scope="session")
+def dataflow_job_id(
     utils: Utils,
     bucket_name: str,
-    pubsub_publisher: str,
-    pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
-) -> None:
-
-    bigquery_table = "output_table"
-    job_id = utils.dataflow_flex_template_run(
+    pubsub_subscription: str,
+) -> str:
+    yield from utils.dataflow_flex_template_run(
         job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
             "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.{bigquery_table}",
+            "output_table": f"{bigquery_dataset}.{BIGQUERY_TABLE}",
         },
     )
 
-    # Wait until the BigQuery table is created and then cancel the Dataflow job.
+
+def test_flex_template_streaming_beam(
+    utils: Utils, bigquery_dataset: str, dataflow_job_id: str
+) -> None:
+    # Wait until the BigQuery table is created.
     utils.wait_until(
-        lambda: utils.bigquery_table_exists(bigquery_dataset, bigquery_table)
+        lambda: utils.bigquery_table_exists(bigquery_dataset, BIGQUERY_TABLE)
     )
-    utils.dataflow_jobs_cancel(job_id, drain=True)
 
     # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset}.{bigquery_table}"
+    query = f"SELECT * FROM {bigquery_dataset}.{BIGQUERY_TABLE}"
     rows = list(utils.bigquery_query(query))
     assert len(rows) > 0
     for row in rows:

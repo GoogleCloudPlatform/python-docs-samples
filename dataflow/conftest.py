@@ -514,8 +514,11 @@ class Utils:
 
         stdout = subprocess.check_output(cmd).decode("utf-8")
         logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
-        return yaml.safe_load(stdout)["job"]["id"]
+        job_id = yaml.safe_load(stdout)["job"]["id"]
+        logging.info(f"Dataflow Flex Template job id: {job_id}")
+        yield job_id
 
+        Utils.dataflow_jobs_cancel(job_id)
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
