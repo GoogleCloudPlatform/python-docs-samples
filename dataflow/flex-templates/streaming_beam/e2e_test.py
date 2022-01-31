@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
+import time
 
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
@@ -90,7 +91,14 @@ def dataflow_job_id(
 def test_flex_template_streaming_beam(
     utils: Utils, bigquery_dataset: str, dataflow_job_id: str
 ) -> None:
-    # Wait until the BigQuery table is created.
+    # Wait until the dataflow job is running.
+    utils.dataflow_jobs_wait(dataflow_job_id, target_states={"JOB_STATE_RUNNING"})
+
+    # Then wait 2 minutes for some data to get processed and cancel the job.
+    time.sleep(2 * 60)
+    utils.dataflow_jobs_cancel(dataflow_job_id, drain=True)
+
+    # Wait until the BigQuery table exists.
     utils.wait_until(
         lambda: utils.bigquery_table_exists(bigquery_dataset, BIGQUERY_TABLE)
     )
