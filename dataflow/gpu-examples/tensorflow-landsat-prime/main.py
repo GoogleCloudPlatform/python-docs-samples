@@ -148,7 +148,8 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [
+        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -268,33 +269,26 @@ def run(
     (
         pipeline
         | "Create scene IDs" >> beam.Create(scenes)
-        | "Check GPU availability"
-        >> beam.Map(
+        | "Check GPU availability" >> beam.Map(
             lambda x, unused_side_input: x,
             unused_side_input=beam.pvalue.AsSingleton(
                 pipeline
                 | beam.Create([None])
-                # We want to make sure the GPU check happens on machines with GPUs.
                 | beam.Map(check_gpus).with_resource_hints(accelerator=gpu_hint)
             ),
         )
+        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         # We reshuffle to prevent fusion and allow all I/O operations to happen in parallel.
         # For more information, see the "Preventing fusion" section in the documentation:
         #   https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#preventing-fusion
         | "Reshuffle" >> beam.Reshuffle()
-        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         | "Load RGB band values" >> beam.MapTuple(load_values)
-        # We want to make process the images on machines with GPUs.
-        | "Preprocess pixels GPU"
-        >> beam.MapTuple(
+        | "Preprocess pixels GPU" >> beam.MapTuple(
             preprocess_pixels, min_value, max_value, gamma
         ).with_resource_hints(accelerator=gpu_hint)
-        | "Convert to image"
-        >> beam.MapTuple(
+        | "Convert to image" >> beam.MapTuple(
             lambda scene, rgb_pixels: (
-                scene,
-                Image.fromarray(rgb_pixels.numpy(), mode="RGB"),
-            )
+                scene, Image.fromarray(rgb_pixels.numpy(), mode="RGB"))
         )
         | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
     )
@@ -309,8 +303,7 @@ if __name__ == "__main__":
         "--output-path-prefix",
         required=True,
         help="Path prefix for output image files. "
-        "This can be a Google Cloud Storage path.",
-    )
+        "This can be a Google Cloud Storage path.")
     parser.add_argument(
         "--scene",
         dest="scenes",
@@ -318,37 +311,39 @@ if __name__ == "__main__":
         help="One or more Landsat scene IDs to process, for example "
         "LC08_L1TP_109078_20200411_20200422_01_T1. "
         "They must be in the format: "
-        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes",
-    )
-    parser.add_argument("--gpu-type", default=DEFAULT_GPU_TYPE, help="GPU type to use.")
+        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes")
     parser.add_argument(
-        "--gpu-count", type=int, default=DEFAULT_GPU_COUNT, help="GPU count to use."
-    )
+        "--gpu-type",
+        default=DEFAULT_GPU_TYPE,
+        help="GPU type to use.")
+    parser.add_argument(
+        "--gpu-count",
+        type=int,
+        default=DEFAULT_GPU_COUNT,
+        help="GPU count to use.")
     parser.add_argument(
         "--rgb-band-names",
         nargs=3,
         default=DEFAULT_RGB_BAND_NAMES,
-        help="List of three band names to be mapped to the RGB channels.",
-    )
+        help="List of three band names to be mapped to the RGB channels.")
     parser.add_argument(
         "--min",
         type=float,
         default=DEFAULT_MIN_BAND_VALUE,
-        help="Minimum value of the band value range.",
-    )
+        help="Minimum value of the band value range.")
     parser.add_argument(
         "--max",
         type=float,
         default=DEFAULT_MAX_BAND_VALUE,
-        help="Maximum value of the band value range.",
-    )
+        help="Maximum value of the band value range.")
     parser.add_argument(
-        "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
-    )
+        "--gamma",
+        type=float,
+        default=DEFAULT_GAMMA,
+        help="Gamma correction factor.")
     args, beam_args = parser.parse_known_args()
 
-    run(
-        scenes=args.scenes or DEFAULT_SCENES,
+    run(scenes=args.scenes or DEFAULT_SCENES,
         output_path_prefix=args.output_path_prefix,
         vis_params={
             "rgb_band_names": args.rgb_band_names,
@@ -358,5 +353,4 @@ if __name__ == "__main__":
         },
         gpu_type=args.gpu_type,
         gpu_count=args.gpu_count,
-        beam_args=beam_args,
-    )
+        beam_args=beam_args)

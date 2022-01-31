@@ -54,15 +54,6 @@ section in the documentation.
 > ℹ️ We launch the job using the worker image to make sure the job launches
 > with the same Python version as the workers and all the dependencies installed.
 
-When launching the Dataflow job, we pass `--dataflow_service_options=enable_prime` to use Dataflow Prime.
-Since each satellite image can be several GBs in size, we pass `--resource_hints=min_ram=32GB` to make sure each worker is allocated at least 32 GB of memory.
-For more information, refer to the [`run.yaml`](run.yaml) file.
-
-With Dataflow Prime, if we want a transform to run on a worker machine with a certain type of accelerator like a GPU, we use the `.with_resource_hints(accelerator=gpu_hint)` method on that transform.
-Dataflow Prime makes sure those transforms run in a worker pool with that kind of accelerator, while other transforms are allowed to run in worker machines without them.
-This allows Dataflow Prime to optimize the resource usage of the pipeline.
-For more information, look at the [`main.py`](main.py) file.
-
 ```sh
 export JOB_NAME="tensorflow-landsat-$(date +%F-%H%M%S)"
 export OUTPUT_PATH="gs://$BUCKET/samples/dataflow/landsat/output-images/"
