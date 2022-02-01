@@ -124,12 +124,12 @@ class Utils:
             return False
 
     @staticmethod
-    def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
+    def bigquery_query(query: str, region: str = REGION) -> Iterable[Dict[str, Any]]:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
         logging.info(f"Bigquery query: {query}")
-        for row in bigquery_client.query(query):
+        for row in bigquery_client.query(query, location=region):
             yield dict(row)
 
     @staticmethod
