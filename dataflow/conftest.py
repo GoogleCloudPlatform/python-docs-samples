@@ -434,7 +434,17 @@ class Utils:
             subprocess.check_call(cmd)
 
             # After draining the job, we must wait until the job has actually finished.
-            Utils.dataflow_jobs_wait(job_id, project=project, region=region)
+            Utils.dataflow_jobs_wait(
+                job_id,
+                target_states={
+                    "JOB_STATE_DONE",
+                    "JOB_STATE_FAILED",
+                    "JOB_STATE_CANCELLED",
+                    "JOB_STATE_DRAINED",
+                },
+                project=project,
+                region=region,
+            )
 
         else:
             # https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/cancel
