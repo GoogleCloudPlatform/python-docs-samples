@@ -13,13 +13,15 @@
 # limitations under the License.
 
 # [START compute_certificate_create]
+from pathlib import Path
 from pprint import pprint
+from typing import Union
 
 from googleapiclient import discovery
 
 
 def create_certificate(
-    project_id: str, certificate_file: str, private_key_file: str, certificate_name: str
+    project_id: str, certificate_file: Union[str, Path], private_key_file: Union[str, Path], certificate_name: str
 ) -> None:
     """
     Create a global SSL self-signed certificate within your Google Cloud project.

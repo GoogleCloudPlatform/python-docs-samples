@@ -17,6 +17,7 @@ import time
 import uuid
 
 from googleapiclient import discovery
+import pytest
 from pytest import fixture
 
 from create_certificate import create_certificate
@@ -65,7 +66,7 @@ def test_global_register(api_service, autodelete_certificate_name):
         if certificate["name"] == autodelete_certificate_name:
             break
     else:
-        assert not "Certificate wasn't created."
+        pytest.fail("Certificate wasn't created.")
 
 
 def test_regional_register(api_service, autodelete_regional_certificate_name):
@@ -84,4 +85,4 @@ def test_regional_register(api_service, autodelete_regional_certificate_name):
         if certificate["name"] == certificate_name:
             break
     else:
-        assert not "Certificate wasn't created."
+        pytest.fail("Certificate wasn't created.")
