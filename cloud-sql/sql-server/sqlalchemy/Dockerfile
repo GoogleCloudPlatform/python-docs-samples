@@ -45,7 +45,8 @@ COPY . ./
 COPY ./certs /app/certs
 
 # Use server certificate for encrypted connection.
-COPY ./certs/server-ca.pem /usr/local/share/ca-certificates/server-ca.crt
+COPY Dockerfile ./certs/server-ca.pem* /usr/local/share/ca-certificates/
+RUN mv /usr/local/share/ca-certificates/server-ca.pem /usr/local/share/ca-certificates/server-ca.crt; exit 0
 RUN update-ca-certificates
 
 # Run the web service on container startup. Here we use the gunicorn
