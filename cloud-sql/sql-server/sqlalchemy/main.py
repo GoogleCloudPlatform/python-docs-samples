@@ -67,7 +67,7 @@ def init_connection_engine():
     }
 
     if os.environ.get("DB_ROOT_CERT"):
-        return init_tcp_sslcerts_connection_engine(db_config)  
+        return init_tcp_sslcerts_connection_engine(db_config)
     if os.environ.get("CLOUD_SQL_AUTH_PROXY_IP_ADDRESS_TYPE") == "PRIVATE":
         return init_tcp_private_ip_ssl_connection_engine(db_config)
     return init_tcp_connection_engine(db_config)
@@ -111,7 +111,7 @@ def init_tcp_private_ip_ssl_connection_engine(db_config):
         **db_config
     )
     # [END cloud_sql_sqlserver_sqlalchemy_create_tcp_private_ip_ssl]
-    
+
     return pool
 
 
