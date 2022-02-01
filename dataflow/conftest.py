@@ -390,7 +390,7 @@ class Utils:
 
         def job_is_done() -> bool:
             try:
-                job = Utils.dataflow_jobs_get(job_id, project, list_page_size)
+                job = Utils.dataflow_jobs_get(job_id, project)
                 state = job["currentState"]
                 if state in target_states:
                     logging.info(f"Dataflow job found with state {state}")
@@ -516,9 +516,11 @@ class Utils:
         logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
         job_id = yaml.safe_load(stdout)["job"]["id"]
         logging.info(f"Dataflow Flex Template job id: {job_id}")
+        logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
         Utils.dataflow_jobs_cancel(job_id)
+
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
