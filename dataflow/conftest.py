@@ -19,9 +19,8 @@ import os
 import platform
 import re
 import subprocess
-import sys
 import time
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional, Set
 import uuid
 
 import pytest
@@ -33,6 +32,7 @@ REGION = "us-central1"
 
 TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
 POLL_INTERVAL_SEC = 60  # 1 minute in seconds
+LIST_PAGE_SIZE = 100
 
 HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
 UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
@@ -54,6 +54,18 @@ class Utils:
     @staticmethod
     def underscore_name(name: str) -> str:
         return UNDERSCORE_NAME_RE.sub("_", Utils.hyphen_name(name))
+
+    @staticmethod
+    def wait_until(
+        is_done: Callable[[], bool],
+        timeout_sec: int = TIMEOUT_SEC,
+        poll_interval_sec: int = POLL_INTERVAL_SEC,
+    ) -> bool:
+        for _ in range(0, timeout_sec, poll_interval_sec):
+            if is_done():
+                return True
+            time.sleep(poll_interval_sec)
+        return False
 
     @staticmethod
     def storage_bucket(name: str) -> str:
@@ -84,25 +96,40 @@ class Utils:
 
         bigquery_client = bigquery.Client()
 
+        dataset_name = Utils.underscore_name(name)
         dataset = bigquery_client.create_dataset(
-            bigquery.Dataset(f"{project}.{Utils.underscore_name(name)}")
+            bigquery.Dataset(f"{project}.{dataset_name}")
         )
 
         logging.info(f"Created bigquery_dataset: {dataset.full_dataset_id}")
-        yield dataset.full_dataset_id
+        yield dataset_name
 
         bigquery_client.delete_dataset(
-            dataset.full_dataset_id.replace(":", "."), delete_contents=True
+            f"{project}.{dataset_name}", delete_contents=True
         )
         logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
 
     @staticmethod
-    def bigquery_query(query: str) -> Iterable[Dict[str, Any]]:
+    def bigquery_table_exists(
+        dataset_name: str, table_name: str, project: str = PROJECT
+    ) -> bool:
+        from google.cloud import bigquery
+        from google.cloud.exceptions import NotFound
+
+        bigquery_client = bigquery.Client()
+        try:
+            bigquery_client.get_table(f"{project}.{dataset_name}.{table_name}")
+            return True
+        except NotFound:
+            return False
+
+    @staticmethod
+    def bigquery_query(query: str, region: str = REGION) -> Iterable[Dict[str, Any]]:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
         logging.info(f"Bigquery query: {query}")
-        for row in bigquery_client.query(query):
+        for row in bigquery_client.query(query, location=region):
             yield dict(row)
 
     @staticmethod
@@ -122,7 +149,7 @@ class Utils:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
         cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_topic: {topic.name}")
 
     @staticmethod
@@ -156,7 +183,7 @@ class Utils:
             subscription.name,
         ]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_subscription: {subscription.name}")
 
     @staticmethod
@@ -207,7 +234,7 @@ class Utils:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
         cmd = ["gcloud", "auth", "configure-docker"]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
 
         if substitutions:
             cmd_substitutions = [
@@ -229,7 +256,7 @@ class Utils:
                         source,
                     ]
                     logging.info(f"{cmd}")
-                    subprocess.run(cmd, check=True)
+                    subprocess.check_call(cmd)
                     logging.info(f"Cloud build finished successfully: {config}")
                     yield f.read()
             except Exception as e:
@@ -247,7 +274,7 @@ class Utils:
                 source,
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
             logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
@@ -265,8 +292,16 @@ class Utils:
                 "--quiet",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
             logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
+
+    @staticmethod
+    def dataflow_job_url(
+        job_id: str,
+        project: str = PROJECT,
+        region: str = REGION,
+    ) -> str:
+        return f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}"
 
     @staticmethod
     def dataflow_jobs_list(
@@ -294,51 +329,43 @@ class Utils:
                 yield job
 
     @staticmethod
-    def dataflow_jobs_get(
-        job_id: Optional[str] = None,
-        job_name: Optional[str] = None,
-        project: str = PROJECT,
-        list_page_size: int = 30,
-    ) -> Optional[Dict[str, Any]]:
+    def dataflow_job_id(
+        job_name: str, project: str = PROJECT, list_page_size: int = LIST_PAGE_SIZE
+    ) -> str:
+        for job in Utils.dataflow_jobs_list(project, list_page_size):
+            if job["name"] == job_name:
+                logging.info(f"Found Dataflow job: {job}")
+                return job["id"]
+        raise ValueError(f"Dataflow job not found: job_name={job_name}")
+
+    @staticmethod
+    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> Dict[str, Any]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
 
-        if job_id:
-            # For more info see:
-            #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
-            request = (
-                dataflow.projects()
-                .jobs()
-                .get(
-                    projectId=project,
-                    jobId=job_id,
-                    view="JOB_VIEW_SUMMARY",
-                )
+        # For more info see:
+        #   https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/get
+        request = (
+            dataflow.projects()
+            .jobs()
+            .get(
+                projectId=project,
+                jobId=job_id,
+                view="JOB_VIEW_SUMMARY",
             )
-            # If the job is not found, this throws an HttpError exception.
-            job = request.execute()
-            logging.info(f"Found Dataflow job: {job}")
-            return job
-
-        elif job_name:
-            for job in Utils.dataflow_jobs_list(project, list_page_size):
-                if job["name"] == job_name:
-                    logging.info(f"Found Dataflow job: {job}")
-                    return job
-            raise ValueError(f"Dataflow job not found: job_name={job_name}")
-
-        else:
-            raise ValueError("must specify either `job_id` or `job_name`")
+        )
+        # If the job is not found, this throws an HttpError exception.
+        return request.execute()
 
     @staticmethod
     def dataflow_jobs_wait(
-        job_id: Optional[str] = None,
-        job_name: Optional[str] = None,
+        job_id: str = None,
+        job_name: str = None,
         project: str = PROJECT,
         region: str = REGION,
-        until_status: str = "JOB_STATE_DONE",
-        list_page_size: int = 100,
+        target_states: Set[str] = {"JOB_STATE_DONE"},
+        list_page_size: int = LIST_PAGE_SIZE,
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> Optional[str]:
@@ -346,51 +373,39 @@ class Utils:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
 
-        # Wait until we reach the desired status, or the job finished in some way.
-        target_status = {
-            until_status,
+        assert job_id or job_name, "required to pass either a job_id or a job_name"
+        if not job_id:
+            job_id = Utils.dataflow_job_id(job_name, project, list_page_size)
+
+        finish_states = {
             "JOB_STATE_DONE",
             "JOB_STATE_FAILED",
             "JOB_STATE_CANCELLED",
             "JOB_STATE_DRAINED",
         }
         logging.info(
-            f"Waiting for Dataflow job until {target_status}: job_id={job_id}, job_name={job_name}"
+            f"Waiting for Dataflow job {job_id} until {target_states}\n"
+            + Utils.dataflow_job_url(job_id, project, region)
         )
-        status = None
-        for _ in range(0, timeout_sec, poll_interval_sec):
+
+        def job_is_done() -> bool:
             try:
-                job = Utils.dataflow_jobs_get(
-                    job_id=job_id,
-                    job_name=job_name,
-                    project=project,
-                    list_page_size=list_page_size,
-                )
-                status = job["currentState"]
-                if status in target_status:
-                    logging.info(
-                        f"Job status {status} in {target_status}, done waiting"
-                    )
-                    return status
-                elif status == "JOB_STATE_FAILED":
+                job = Utils.dataflow_jobs_get(job_id, project)
+                state = job["currentState"]
+                if state in target_states:
+                    logging.info(f"Dataflow job found with state {state}")
+                    return True
+                elif state in finish_states:
                     raise RuntimeError(
-                        "Dataflow job failed:\n"
-                        f"https://console.cloud.google.com/dataflow/jobs/{region}/{job_id}?project={project}"
+                        f"Dataflow job finished with state {state}, but we were expecting {target_states}\n"
+                        + Utils.dataflow_job_url(job_id, project, region)
                     )
-                logging.info(
-                    f"Job status {status} not in {target_status}, retrying in {poll_interval_sec} seconds"
-                )
+                return False
             except Exception as e:
                 logging.exception(e)
-            time.sleep(poll_interval_sec)
-        if status is None:
-            raise RuntimeError(
-                f"Dataflow job not found: timeout_sec={timeout_sec}, target_status={target_status}, job_id={job_id}, job_name={job_name}"
-            )
-        else:
-            raise RuntimeError(
-                f"Dataflow job finished in status {status} but expected {target_status}: job_id={job_id}, job_name={job_name}"
-            )
+            return False
+
+        Utils.wait_until(job_is_done, timeout_sec, poll_interval_sec)
 
     @staticmethod
     def dataflow_jobs_cancel(
@@ -416,10 +431,20 @@ class Utils:
                 f"--region={region}",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
 
             # After draining the job, we must wait until the job has actually finished.
-            Utils.dataflow_jobs_wait(job_id, project=project, region=region)
+            Utils.dataflow_jobs_wait(
+                job_id,
+                target_states={
+                    "JOB_STATE_DONE",
+                    "JOB_STATE_FAILED",
+                    "JOB_STATE_CANCELLED",
+                    "JOB_STATE_DRAINED",
+                },
+                project=project,
+                region=region,
+            )
 
         else:
             # https://cloud.google.com/sdk/gcloud/reference/dataflow/jobs/cancel
@@ -433,7 +458,7 @@ class Utils:
                 f"--region={region}",
             ]
             logging.info(f"{cmd}")
-            subprocess.run(cmd, check=True)
+            subprocess.check_call(cmd)
 
         logging.info(f"Cancelled Dataflow job: {job_id}")
 
@@ -459,7 +484,7 @@ class Utils:
             f"--metadata-file={metadata_file}",
         ]
         logging.info(f"{cmd}")
-        subprocess.run(cmd, check=True)
+        subprocess.check_call(cmd)
 
         logging.info(f"dataflow_flex_template_build: {template_gcs_path}")
         yield template_gcs_path
@@ -497,32 +522,19 @@ class Utils:
         ]
         logging.info(f"{cmd}")
 
-        try:
-            # The `capture_output` option was added in Python 3.7, so we must
-            # pass the `stdout` and `stderr` options explicitly to support 3.6.
-            # https://docs.python.org/3/library/subprocess.html#subprocess.run
-            p = subprocess.run(
-                cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-            stdout = p.stdout.decode("utf-8")
-            stderr = p.stderr.decode("utf-8")
-            logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
-        except subprocess.CalledProcessError as e:
-            logging.info(e, file=sys.stderr)
-            stdout = e.stdout.decode("utf-8")
-            stderr = e.stderr.decode("utf-8")
-        finally:
-            logging.info("--- stderr ---")
-            logging.info(stderr)
-            logging.info("--- stdout ---")
-            logging.info(stdout)
-            logging.info("--- end ---")
-        return yaml.safe_load(stdout)["job"]["id"]
+        stdout = subprocess.check_output(cmd).decode("utf-8")
+        logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
+        job_id = yaml.safe_load(stdout)["job"]["id"]
+        logging.info(f"Dataflow Flex Template job id: {job_id}")
+        logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
+        yield job_id
+
+        Utils.dataflow_jobs_cancel(job_id)
 
 
 @pytest.fixture(scope="session")
 def utils() -> Utils:
     logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Test unique identifier: {UUID}")
-    subprocess.run(["gcloud", "version"])
+    subprocess.check_call(["gcloud", "version"])
     return Utils()
