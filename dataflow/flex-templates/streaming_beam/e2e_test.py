@@ -88,24 +88,7 @@ def dataflow_job_id(
     )
 
 
-def test_flex_template_streaming_beam(
-    utils: Utils, bigquery_dataset: str, dataflow_job_id: str
-) -> None:
-    # Wait until the dataflow job is running.
+def test_flex_template_streaming_beam(utils: Utils, dataflow_job_id: str) -> None:
+    # Wait until the dataflow job starts running successfully.
+    # The job is cancelled as part of the fixture teardown to avoid leaking resources.
     utils.dataflow_jobs_wait(dataflow_job_id, target_states={"JOB_STATE_RUNNING"})
-
-    # Then wait 2 minutes for some data to get processed and cancel the job.
-    time.sleep(2 * 60)
-    utils.dataflow_jobs_cancel(dataflow_job_id, drain=True)
-
-    # Wait until the BigQuery table exists.
-    utils.wait_until(
-        lambda: utils.bigquery_table_exists(bigquery_dataset, BIGQUERY_TABLE)
-    )
-
-    # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset}.{BIGQUERY_TABLE}"
-    rows = list(utils.bigquery_query(query))
-    assert len(rows) > 0
-    for row in rows:
-        assert "score" in row
