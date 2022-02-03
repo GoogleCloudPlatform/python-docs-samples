@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import json
-import time
 
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
@@ -22,6 +21,8 @@ except ModuleNotFoundError:
 import pytest
 
 NAME = "dataflow/flex-templates/streaming-beam"
+
+BIGQUERY_TABLE = "output_table"
 
 
 @pytest.fixture(scope="session")
@@ -67,37 +68,26 @@ def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str)
     yield from utils.dataflow_flex_template_build(bucket_name, flex_template_image)
 
 
-def test_flex_template_streaming_beam(
+@pytest.fixture(scope="session")
+def dataflow_job_id(
     utils: Utils,
     bucket_name: str,
-    pubsub_publisher: str,
-    pubsub_subscription: str,
     flex_template_path: str,
     bigquery_dataset: str,
-) -> None:
-
-    bigquery_table = "output_table"
-    job_id = utils.dataflow_flex_template_run(
+    pubsub_subscription: str,
+) -> str:
+    yield from utils.dataflow_flex_template_run(
         job_name=NAME,
         template_path=flex_template_path,
         bucket_name=bucket_name,
         parameters={
             "input_subscription": pubsub_subscription,
-            "output_table": f"{bigquery_dataset}.{bigquery_table}",
+            "output_table": f"{bigquery_dataset}.{BIGQUERY_TABLE}",
         },
     )
 
-    # Since this is a streaming job, it will never finish running.
-    # First, lets wait until the job is running.
-    utils.dataflow_jobs_wait(job_id, until_status="JOB_STATE_RUNNING")
 
-    # Then, wait 3 minutes for data to arrive, get processed, and cancel it.
-    time.sleep(3 * 60)
-    utils.dataflow_jobs_cancel(job_id, drain=True)
-
-    # Check for the output data in BigQuery.
-    query = f"SELECT * FROM {bigquery_dataset.replace(':', '.')}.{bigquery_table}"
-    rows = list(utils.bigquery_query(query))
-    assert len(rows) > 0
-    for row in rows:
-        assert "score" in row
+def test_flex_template_streaming_beam(utils: Utils, dataflow_job_id: str) -> None:
+    # Wait until the dataflow job starts running successfully.
+    # The job is cancelled as part of the fixture teardown to avoid leaking resources.
+    utils.dataflow_jobs_wait(dataflow_job_id, target_states={"JOB_STATE_RUNNING"})
