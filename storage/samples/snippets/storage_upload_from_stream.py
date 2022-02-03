@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -14,42 +14,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-
-# [START storage_file_upload_from_memory]
+# [START storage_stream_file_upload]
 from google.cloud import storage
 
 
-def upload_blob_from_memory(bucket_name, contents, destination_blob_name):
-    """Uploads a file to the bucket."""
-
+def upload_blob_from_stream(bucket_name, file_obj, destination_blob_name):
+    """Uploads bytes from a stream or other file-like object to a blob."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
 
-    # The contents to upload to the file
-    # contents = "these are my contents"
+    # The stream or file (file-like object) from which to read
+    # import io
+    # file_obj = io.StringIO()
+    # file_obj.write("This is test data.")
 
-    # The ID of your GCS object
+    # The desired name of the uploaded GCS object (blob)
     # destination_blob_name = "storage-object-name"
 
+    # Construct a client-side representation of the blob.
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
 
-    blob.upload_from_string(contents)
+    # Rewind the stream to the beginning. This step can be omitted if the input
+    # stream will always be at a correct position.
+    file_obj.seek(0)
+
+    # Upload data from the stream to your bucket.
+    blob.upload_from_file(file_obj)
 
     print(
-        "{} with contents {} uploaded to {}.".format(
-            destination_blob_name, contents, bucket_name
+        "Stream data uploaded to {} in bucket {}.".format(
+            destination_blob_name, bucket_name
         )
     )
 
-# [END storage_file_upload_from_memory]
-
-
-if __name__ == "__main__":
-    upload_blob_from_memory(
-        bucket_name=sys.argv[1],
-        contents=sys.argv[2],
-        destination_blob_name=sys.argv[3],
-    )
+# [END storage_stream_file_upload]
