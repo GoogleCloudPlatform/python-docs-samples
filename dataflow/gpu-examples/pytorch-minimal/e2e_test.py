@@ -56,4 +56,5 @@ def run_dataflow_job(utils: Utils, bucket_name: str, build_image: str) -> str:
 
 def test_pytorch_minimal(utils: Utils, run_dataflow_job: str) -> None:
     # Wait until the job finishes.
-    utils.dataflow_jobs_wait(job_name=utils.hyphen_name(NAME))
+    job_id = utils.dataflow_job_id(utils.hyphen_name(NAME))
+    utils.dataflow_jobs_wait(job_id)
