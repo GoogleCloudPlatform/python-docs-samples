@@ -27,8 +27,10 @@ import create_job_from_template
 import create_job_template
 import create_job_with_animated_overlay
 import create_job_with_concatenated_inputs
+import create_job_with_embedded_captions
 import create_job_with_periodic_images_spritesheet
 import create_job_with_set_number_images_spritesheet
+import create_job_with_standalone_captions
 import create_job_with_static_overlay
 import delete_job
 import delete_job_template
@@ -47,11 +49,13 @@ test_video_file_name = "ChromeCast.mp4"
 test_overlay_image_file_name = "overlay.jpg"
 test_concat1_file_name = "ForBiggerEscapes.mp4"
 test_concat2_file_name = "ForBiggerJoyrides.mp4"
+test_captions_file_name = "caption.srt"
 
 input_uri = f"gs://{input_bucket_name}{test_video_file_name}"
 overlay_image_uri = f"gs://{input_bucket_name}{test_overlay_image_file_name}"
 concat1_uri = f"gs://{input_bucket_name}{test_concat1_file_name}"
 concat2_uri = f"gs://{input_bucket_name}{test_concat2_file_name}"
+captions_uri = f"gs://{input_bucket_name}{test_captions_file_name}"
 output_uri_for_preset = f"gs://{output_bucket_name}/test-output-preset/"
 output_uri_for_template = f"gs://{output_bucket_name}/test-output-template/"
 output_uri_for_adhoc = f"gs://{output_bucket_name}/test-output-adhoc/"
@@ -59,6 +63,9 @@ output_uri_for_static_overlay = f"gs://{output_bucket_name}/test-output-static-o
 output_uri_for_animated_overlay = (
     f"gs://{output_bucket_name}/test-output-animated-overlay/"
 )
+output_uri_for_embedded_captions = f"gs://{output_bucket_name}/test-output-embedded-captions/"
+output_uri_for_standalone_captions = f"gs://{output_bucket_name}/test-output-standalone-captions/"
+
 small_spritesheet_file_prefix = "small-sprite-sheet"
 large_spritesheet_file_prefix = "large-sprite-sheet"
 spritesheet_file_suffix = "0000000000.jpeg"
@@ -75,6 +82,7 @@ output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
 
 preset = "preset/web-hd"
 job_succeeded_state = "ProcessingState.SUCCEEDED"
+job_running_state = "ProcessingState.RUNNING"
 
 
 @pytest.fixture(scope="module")
@@ -105,7 +113,7 @@ def test_create_job_from_preset(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -144,7 +152,7 @@ def test_create_job_from_template(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -178,7 +186,7 @@ def test_create_job_from_ad_hoc(capsys, test_bucket):
 
     time.sleep(30)
 
-    _assert_job_state_succeeded(capsys, job_id)
+    _assert_job_state_succeeded_or_running(capsys, job_id)
 
     list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
@@ -259,7 +267,10 @@ def test_create_job_with_animated_overlay(capsys, test_bucket):
 
 def test_create_job_with_set_number_spritesheet(capsys, test_bucket):
     create_job_with_set_number_images_spritesheet.create_job_with_set_number_images_spritesheet(
-        project_id, location, input_uri, output_uri_for_set_number_spritesheet,
+        project_id,
+        location,
+        input_uri,
+        output_uri_for_set_number_spritesheet,
     )
     out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
@@ -307,7 +318,10 @@ def test_create_job_with_set_number_spritesheet(capsys, test_bucket):
 
 def test_create_job_with_periodic_spritesheet(capsys, test_bucket):
     create_job_with_periodic_images_spritesheet.create_job_with_periodic_images_spritesheet(
-        project_id, location, input_uri, output_uri_for_periodic_spritesheet,
+        project_id,
+        location,
+        input_uri,
+        output_uri_for_periodic_spritesheet,
     )
     out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
@@ -393,7 +407,80 @@ def test_create_job_with_concatenated_inputs(capsys, test_bucket):
     assert "Deleted job" in out
 
 
-# Retrying up to 10 mins.
+def test_create_job_with_embedded_captions(capsys, test_bucket):
+    create_job_with_embedded_captions.create_job_with_embedded_captions(
+        project_id,
+        location,
+        input_uri,
+        captions_uri,
+        output_uri_for_embedded_captions,
+    )
+    out, _ = capsys.readouterr()
+    job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
+    assert job_name_prefix in out
+
+    str_slice = out.split("/")
+    job_id = str_slice[len(str_slice) - 1].rstrip("\n")
+    job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
+    assert job_name in out
+
+    get_job.get_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    time.sleep(
+        30
+    )  # Transcoding jobs need time to complete. Once the job completes, check the job state.
+
+    _assert_job_state_succeeded(capsys, job_id)
+
+    list_jobs.list_jobs(project_id, location)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    delete_job.delete_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert "Deleted job" in out
+
+
+def test_create_job_with_standalone_captions(capsys, test_bucket):
+    create_job_with_standalone_captions.create_job_with_standalone_captions(
+        project_id,
+        location,
+        input_uri,
+        captions_uri,
+        output_uri_for_standalone_captions,
+    )
+    out, _ = capsys.readouterr()
+    job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
+    assert job_name_prefix in out
+
+    str_slice = out.split("/")
+    job_id = str_slice[len(str_slice) - 1].rstrip("\n")
+    job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
+    assert job_name in out
+
+    get_job.get_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    time.sleep(
+        30
+    )  # Transcoding jobs need time to complete. Once the job completes, check the job state.
+
+    _assert_job_state_succeeded(capsys, job_id)
+
+    list_jobs.list_jobs(project_id, location)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    delete_job.delete_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert "Deleted job" in out
+
+
+# Retrying up to 10 mins. This function checks if the job completed
+# successfully.
 @backoff.on_exception(backoff.expo, AssertionError, max_time=600)
 def _assert_job_state_succeeded(capsys, job_id):
     try:
@@ -403,6 +490,20 @@ def _assert_job_state_succeeded(capsys, job_id):
 
     out, _ = capsys.readouterr()
     assert job_succeeded_state in out
+
+
+# Retrying up to 10 mins. This function checks if the job is running or has
+# completed. Both of these conditions signal the API is functioning. The test
+# can list or delete a job that is running or completed with no ill effects.
+@backoff.on_exception(backoff.expo, AssertionError, max_time=600)
+def _assert_job_state_succeeded_or_running(capsys, job_id):
+    try:
+        get_job_state.get_job_state(project_id, location, job_id)
+    except HttpError as err:
+        raise AssertionError(f"Could not get job state: {err.resp.status}")
+
+    out, _ = capsys.readouterr()
+    assert (job_succeeded_state in out) or (job_running_state in out)
 
 
 def _assert_file_in_bucket(capsys, test_bucket, directory_and_filename):
