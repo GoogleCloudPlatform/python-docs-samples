@@ -640,7 +640,7 @@ We suggest that you copy this file as follows:
 
 ```sh
 $ cp testing/test-env.tmpl.sh testing/test-env.sh
-$ editor testing/test-env.sh  # change the value of `GCLOUD_PROJECT`.
+$ editor testing/test-env.sh  # change the value of `GOOGLE_CLOUD_PROJECT`.
 ```
 
 You can easily `source` this file for exporting the environment variables.
