@@ -28,4 +28,6 @@ def update_intent(project_id, agent_id, intent_id, location, displayName):
     update_mask = field_mask_pb2.FieldMask(paths=["display_name"])
     response = intents_client.update_intent(intent=intent, update_mask=update_mask)
     return response
+
+
 # [END dialogflow_cx_update_intent]
