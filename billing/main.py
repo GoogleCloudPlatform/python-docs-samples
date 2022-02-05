@@ -14,10 +14,14 @@
 
 import base64
 import json
-import os
-from googleapiclient import discovery
-PROJECT_ID = os.getenv('GCP_PROJECT')
-PROJECT_NAME = f'projects/{PROJECT_ID}'
+
+import google.auth
+from google.cloud import billing
+
+
+PROJECT_ID = google.auth.default()[1]
+cloud_billing_client = billing.CloudBillingClient()
+
 def stop_billing(data, context):
     pubsub_data = base64.b64decode(data['data']).decode('utf-8')
     pubsub_json = json.loads(pubsub_data)
@@ -27,51 +31,49 @@ def stop_billing(data, context):
         print(f'No action necessary. (Current cost: {cost_amount})')
         return
 
-    if PROJECT_ID is None:
-        print('No project specified with environment variable')
-        return
-
-    billing = discovery.build(
-        'cloudbilling',
-        'v1',
-        cache_discovery=False,
-    )
-
-    projects = billing.projects()
-
-    billing_enabled = __is_billing_enabled(PROJECT_NAME, projects)
+    project_name = cloud_billing_client.common_project_path(PROJECT_ID)
+    billing_enabled = _is_billing_enabled(project_name)
 
     if billing_enabled:
-        __disable_billing_for_project(PROJECT_NAME, projects)
+        _disable_billing_for_project(project_name)
     else:
         print('Billing already disabled')
 
 
-def __is_billing_enabled(project_name, projects):
+def _is_billing_enabled(project_name: str) -> bool:
+    """Determine whether billing is enabled for a project
+
+    Args:
+        project_name (str): Name of project to check if billing is enabled
+    
+    Returns:
+        bool: Whether project has billing enabled or not
     """
-    Determine whether billing is enabled for a project
-    @param {string} project_name Name of project to check if billing is enabled
-    @return {bool} Whether project has billing enabled or not
-    """
-    try:
-        res = projects.getBillingInfo(name=project_name).execute()
-        return res['billingEnabled']
-    except KeyError:
-        # If billingEnabled isn't part of the return, billing is not enabled
-        return False
-    except Exception:
-        print('Unable to determine if billing is enabled on specified project, assuming billing is enabled')
-        return True
+    request = billing.GetProjectBillingInfoRequest(
+        name=project_name
+    )
+    project_billing_info = cloud_billing_client.get_project_billing_info(
+        request
+    )
+    
+    return project_billing_info.billing_enabled
 
 
-def __disable_billing_for_project(project_name, projects):
+def _disable_billing_for_project(project_name: str):
+    """Disable billing for a project by removing its billing account
+
+    Args:
+        project_name (str): Name of project disable billing on
     """
-    Disable billing for a project by removing its billing account
-    @param {string} project_name Name of project disable billing on
-    """
-    body = {'billingAccountName': ''}  # Disable billing
-    try:
-        res = projects.updateBillingInfo(name=project_name, body=body).execute()
-        print(f'Billing disabled: {json.dumps(res)}')
-    except Exception:
-        print('Failed to disable billing, possibly check permissions')
+    request = billing.UpdateProjectBillingInfoRequest(
+        name=project_name,
+        project_billing_info=billing.ProjectBillingInfo(
+            billing_account_name=""  # Disable billing
+        )
+    )
+    project_biling_info = cloud_billing_client.update_project_billing_info(
+        request
+    )
+    print(f'Billing disabled: {project_biling_info}')
+
+
