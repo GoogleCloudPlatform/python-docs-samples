@@ -22,13 +22,14 @@ from google.cloud import billing
 PROJECT_ID = google.auth.default()[1]
 cloud_billing_client = billing.CloudBillingClient()
 
+
 def stop_billing(data, context):
-    pubsub_data = base64.b64decode(data['data']).decode('utf-8')
+    pubsub_data = base64.b64decode(data["data"]).decode("utf-8")
     pubsub_json = json.loads(pubsub_data)
-    cost_amount = pubsub_json['costAmount']
-    budget_amount = pubsub_json['budgetAmount']
+    cost_amount = pubsub_json["costAmount"]
+    budget_amount = pubsub_json["budgetAmount"]
     if cost_amount <= budget_amount:
-        print(f'No action necessary. (Current cost: {cost_amount})')
+        print(f"No action necessary. (Current cost: {cost_amount})")
         return
 
     project_name = cloud_billing_client.common_project_path(PROJECT_ID)
@@ -37,7 +38,7 @@ def stop_billing(data, context):
     if billing_enabled:
         _disable_billing_for_project(project_name)
     else:
-        print('Billing already disabled')
+        print("Billing already disabled")
 
 
 def _is_billing_enabled(project_name: str) -> bool:
@@ -45,17 +46,13 @@ def _is_billing_enabled(project_name: str) -> bool:
 
     Args:
         project_name (str): Name of project to check if billing is enabled
-    
+
     Returns:
         bool: Whether project has billing enabled or not
     """
-    request = billing.GetProjectBillingInfoRequest(
-        name=project_name
-    )
-    project_billing_info = cloud_billing_client.get_project_billing_info(
-        request
-    )
-    
+    request = billing.GetProjectBillingInfoRequest(name=project_name)
+    project_billing_info = cloud_billing_client.get_project_billing_info(request)
+
     return project_billing_info.billing_enabled
 
 
@@ -69,11 +66,7 @@ def _disable_billing_for_project(project_name: str):
         name=project_name,
         project_billing_info=billing.ProjectBillingInfo(
             billing_account_name=""  # Disable billing
-        )
+        ),
     )
-    project_biling_info = cloud_billing_client.update_project_billing_info(
-        request
-    )
-    print(f'Billing disabled: {project_biling_info}')
-
-
+    project_biling_info = cloud_billing_client.update_project_billing_info(request)
+    print(f"Billing disabled: {project_biling_info}")
