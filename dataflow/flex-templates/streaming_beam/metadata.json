@@ -16,7 +16,7 @@
       "helpText": "Name of the BigQuery output table name.",
       "isOptional": true,
       "regexes": [
-        "[^:]+:[^.]+[.].+"
+        "([^:]+:)?[^.]+[.].+"
       ]
     }
   ]
