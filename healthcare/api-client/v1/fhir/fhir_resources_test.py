@@ -38,7 +38,7 @@ version = "R4"
 resource_type = "Patient"
 
 
-BACKOFF_MAX_TIME = 500
+BACKOFF_MAX_TIME = 750
 
 
 @pytest.fixture(scope="module")
@@ -161,14 +161,20 @@ def test_patient():
 
 
 def test_create_patient(test_dataset, test_fhir_store, capsys):
-    # Manually create a new Patient here to test that creating a Patient
-    # works.
-    fhir_resources.create_patient(
-        project_id,
-        location,
-        dataset_id,
-        fhir_store_id,
-    )
+    # We see HttpErrors with "dataset not initialized" message.
+    # I think retry will mitigate the flake.
+    # Googlers see b/189121491 .
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def create():
+        # Manually create a new Patient here to test that creating a Patient
+        # works.
+        fhir_resources.create_patient(
+            project_id,
+            location,
+            dataset_id,
+            fhir_store_id,
+        )
+    create()
 
     out, _ = capsys.readouterr()
 
@@ -269,14 +275,20 @@ def test_execute_bundle(test_dataset, test_fhir_store, capsys):
 
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.delete_resource(
-        project_id,
-        location,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
-    )
+    # We see HttpErrors with "dataset not initialized" message.
+    # I think retry will mitigate the flake.
+    # Googlers see b/189121491 .
+    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
+    def delete():
+        fhir_resources.delete_resource(
+            project_id,
+            location,
+            dataset_id,
+            fhir_store_id,
+            resource_type,
+            test_patient,
+        )
+    delete()
 
     out, _ = capsys.readouterr()
 
