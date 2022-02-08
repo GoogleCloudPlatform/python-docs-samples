@@ -40,7 +40,7 @@ def project() -> str:
     request = billing.UpdateProjectBillingInfoRequest(
         name=project_name,
         project_billing_info=billing.ProjectBillingInfo(
-            
+
             billing_account_name=project_billing_info.billing_account_name
         ),
     )
