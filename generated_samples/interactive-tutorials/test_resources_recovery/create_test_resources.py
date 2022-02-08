@@ -35,10 +35,10 @@ events_source_file = "../resources/user_events.json"
 
 product_dataset = "products"
 product_table = "products"
-product_schema = "resources/product_schema.json"
+product_schema = "../resources/product_schema.json"
 events_dataset = "user_events"
 events_table = "events"
-events_schema = "resources/events_schema.json"
+events_schema = "../resources/events_schema.json"
 
 object_name = re.search('resources/(.*?)$', product_resource_file).group(1)
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branches/default_branch".format(
