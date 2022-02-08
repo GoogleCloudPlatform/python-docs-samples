@@ -277,11 +277,11 @@ def run(
                 | beam.Map(check_gpus).with_resource_hints(accelerator=gpu_hint)
             ),
         )
-        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         # We reshuffle to prevent fusion and allow all I/O operations to happen in parallel.
         # For more information, see the "Preventing fusion" section in the documentation:
         #   https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#preventing-fusion
         | "Reshuffle" >> beam.Reshuffle()
+        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         | "Load RGB band values" >> beam.MapTuple(load_values)
         | "Preprocess pixels GPU" >> beam.MapTuple(
             preprocess_pixels, min_value, max_value, gamma
