@@ -1,1 +1,1 @@
-google-cloud-bigquery-reservation==1.5.0
+google-cloud-bigquery-reservation==1.6.0
