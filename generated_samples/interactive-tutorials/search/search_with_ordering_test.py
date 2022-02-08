@@ -21,9 +21,7 @@ from search_with_ordering import search
 
 
 def test_search_with_ordering_pass():
-    output = str(
-        subprocess.check_output("python search_with_ordering.py", shell=True)
-    )
+    output = str(subprocess.check_output("python search_with_ordering.py", shell=True))
 
     assert re.match(".*search request.*", output)
     assert re.match(".*search response.*", output)

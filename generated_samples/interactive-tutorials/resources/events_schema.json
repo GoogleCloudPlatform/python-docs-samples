@@ -1,0 +1,73 @@
+[
+    {
+      "fields":[
+        {
+          "mode": "NULLABLE",
+          "name": "currencyCode",
+          "type": "STRING"
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "revenue",
+          "type": "FLOAT"
+        }
+      ],
+      "mode": "NULLABLE",
+      "name": "purchaseTransaction",
+      "type": "RECORD"
+    },
+    {
+      "fields":[
+        {
+          "mode": "NULLABLE",
+          "name": "quantity",
+          "type": "INTEGER"
+        },
+        {
+          "fields":[
+            {
+              "mode": "NULLABLE",
+              "name": "id",
+              "type": "STRING"
+            }
+          ],
+          "mode": "NULLABLE",
+          "name": "product",
+          "type": "RECORD"
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "productDetails",
+      "type": "RECORD"
+    },
+    {
+      "mode": "REQUIRED",
+      "name": "eventTime",
+      "type": "STRING"
+    },
+    {
+      "mode": "REQUIRED",
+      "name": "visitorId",
+      "type": "STRING"
+    },
+    {
+      "mode": "REQUIRED",
+      "name": "eventType",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "searchQuery",
+      "type": "STRING"
+    },
+    {
+      "mode": "NULLABLE",
+      "name": "cartId",
+      "type": "STRING"
+    },
+    {
+      "mode": "REPEATED",
+      "name": "pageCategories",
+      "type": "STRING"
+    }
+  ]

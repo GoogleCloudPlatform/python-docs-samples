@@ -13,6 +13,8 @@
 # limitations under the License.
 
 import os
+import shlex
+import subprocess
 
 from google.api_core.exceptions import PermissionDenied
 from google.cloud.storage.bucket import Bucket
@@ -21,8 +23,13 @@ from google.cloud import storage
 from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
     ProductServiceClient
 
-project_number = os.getenv('GOOGLE_CLOUD_PROJECT_NUMBER')
-bucket_name = os.getenv('BUCKET_NAME')
+project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
+product_bucket_name = os.environ['BUCKET_NAME']
+events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
+project_id = os.environ["GOOGLE_CLOUD_PROJECT_ID"]
+
+product_dataset = "products"
+events_dataset = "user_events"
 
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branches/default_branch".format(
     project_number)
@@ -30,7 +37,7 @@ default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branch
 storage_client = storage.Client()
 
 
-def delete_bucket():
+def delete_bucket(bucket_name):
     """Delete bucket"""
     try:
         bucket = storage_client.get_bucket(bucket_name)
@@ -52,6 +59,7 @@ def delete_object_from_bucket(bucket: Bucket):
 
 def delete_all_products():
     """Delete all products in the catalog"""
+    print("Deleting all products, please wait")
     product_client = ProductServiceClient()
     list_request = ListProductsRequest()
     list_request.parent = default_catalog
@@ -69,5 +77,14 @@ def delete_all_products():
     print(f"{delete_count} products were deleted from {default_catalog}")
 
 
-delete_bucket()
+def delete_bq_dataset_with_tables(dataset):
+    """Delete a BigQuery dataset with all tables"""
+    delete_dataset_command = "bq rm -r -d -f {}".format(dataset)
+    output = subprocess.check_output(shlex.split(delete_dataset_command))
+    print(output)
+
+delete_bucket(product_bucket_name)
+delete_bucket(events_bucket_name)
 delete_all_products()
+delete_bq_dataset_with_tables(product_dataset)
+delete_bq_dataset_with_tables(events_dataset)
