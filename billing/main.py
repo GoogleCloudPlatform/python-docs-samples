@@ -23,7 +23,7 @@ PROJECT_ID = google.auth.default()[1]
 cloud_billing_client = billing.CloudBillingClient()
 
 
-def stop_billing(data, context):
+def stop_billing(data: dict, context):
     pubsub_data = base64.b64decode(data["data"]).decode("utf-8")
     pubsub_json = json.loads(pubsub_data)
     cost_amount = pubsub_json["costAmount"]
@@ -56,7 +56,7 @@ def _is_billing_enabled(project_name: str) -> bool:
     return project_billing_info.billing_enabled
 
 
-def _disable_billing_for_project(project_name: str):
+def _disable_billing_for_project(project_name: str) -> None:
     """Disable billing for a project by removing its billing account
 
     Args:

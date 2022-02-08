@@ -12,28 +12,74 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
+import json
+
 import google.auth
-import pytest
 from google.cloud import billing
+import pytest
 
-
-from main import _is_billing_enabled
-from main import _disable_billing_for_project
+from main import stop_billing
 
 
 PROJECT_ID = google.auth.default()[1]
-cloud_billing_client = billing.CloudBillingClient()
-
-project_path = cloud_billing_client.common_project_path(PROJECT_ID)
 
 
-def test__is_billing_enabled():
-    # Test project will always have billing enabled
-    assert _is_billing_enabled(project_path) == True
+@pytest.fixture
+def project() -> str:
+    # This test assumes billing is enabled on the project
+    project_name = f"projects/{PROJECT_ID}"
+
+    cloud_billing_client = billing.CloudBillingClient()
+    request = billing.GetProjectBillingInfoRequest(name=project_name)
+    project_billing_info = cloud_billing_client.get_project_billing_info(request)
+
+    yield PROJECT_ID
+
+    # Re-enable billing in teardown
+    request = billing.UpdateProjectBillingInfoRequest(
+        name=project_name,
+        project_billing_info=billing.ProjectBillingInfo(
+            
+            billing_account_name=project_billing_info.billing_account_name
+        ),
+    )
+    cloud_billing_client.update_project_billing_info(request)
 
 
-def test__disable_billing_for_project():
-    # Disabling billing on a live CI project might
-    # undesirable side effects on project resources.
-    # Figure out a way to test this in non-destructive maner
-    pytest.fail()
+def test_stop_billing_under_budget(capsys, project: str):
+    billing_data = {
+        "costAmount": 10,
+        "budgetAmount": 100.1,
+    }
+
+    encoded_data = base64.b64encode(json.dumps(billing_data).encode("utf-8")).decode(
+        "utf-8"
+    )
+
+    pubsub_message = {"data": encoded_data}
+    stop_billing(pubsub_message, None)
+    stdout, _ = capsys.readouterr()
+
+    assert "No action necessary" in stdout
+
+
+def test_stop_billing_over_budget(capsys, project: str):
+    billing_data = {
+        "costAmount": 120,
+        "budgetAmount": 100.1,
+    }
+
+    encoded_data = base64.b64encode(json.dumps(billing_data).encode("utf-8")).decode(
+        "utf-8"
+    )
+
+    pubsub_message = {"data": encoded_data}
+    stop_billing(pubsub_message, None)
+    stdout, _ = capsys.readouterr()
+    assert "Billing disabled" in stdout
+
+    # Stop billing again.
+    stop_billing(pubsub_message, None)
+    stdout, _ = capsys.readouterr()
+    assert "Billing already disabled" in stdout
