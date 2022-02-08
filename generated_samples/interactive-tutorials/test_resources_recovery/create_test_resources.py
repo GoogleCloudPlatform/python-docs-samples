@@ -14,6 +14,8 @@
 
 import os
 import re
+import shlex
+import subprocess
 import time
 
 from google.cloud.storage.bucket import Bucket
@@ -23,14 +25,26 @@ from google.cloud.retail import GcsSource, ImportErrorsConfig, \
     ImportProductsRequest, ProductInputConfig
 from google.cloud.retail_v2 import ProductServiceClient
 
-project_number = os.getenv('GOOGLE_CLOUD_PROJECT_NUMBER')
-bucket_name = os.getenv('BUCKET_NAME')
-storage_client = storage.Client()
-resource_file = "resources/products.json"
-object_name = re.search('resources/(.*?)$', resource_file).group(1)
+project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
+products_bucket_name = os.environ['BUCKET_NAME']
+events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
+project_id = os.environ["GOOGLE_CLOUD_PROJECT_ID"]
+
+product_resource_file = "../resources/products.json"
+events_source_file = "../resources/user_events.json"
+
+product_dataset = "products"
+product_table = "products"
+product_schema = "resources/product_schema.json"
+events_dataset = "user_events"
+events_table = "events"
+events_schema = "resources/events_schema.json"
+
+object_name = re.search('resources/(.*?)$', product_resource_file).group(1)
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branches/default_branch".format(
     project_number)
 
+storage_client = storage.Client()
 
 def create_bucket(bucket_name: str) -> Bucket:
     """Create a new bucket in Cloud Storage"""
@@ -65,14 +79,14 @@ def check_if_bucket_exists(new_bucket_name):
 def upload_data_to_bucket(bucket: Bucket):
     """Upload data to a GCS bucket"""
     blob = bucket.blob(object_name)
-    blob.upload_from_filename(resource_file)
-    print("Data from {} has being uploaded to {}".format(resource_file,
+    blob.upload_from_filename(product_resource_file)
+    print("Data from {} has being uploaded to {}".format(product_resource_file,
                                                          bucket.name))
 
 
 def get_import_products_gcs_request():
     """Get import products from gcs request"""
-    gcs_bucket = "gs://{}".format(bucket_name)
+    gcs_bucket = "gs://{}".format(products_bucket_name)
     gcs_errors_bucket = "{}/error".format(gcs_bucket)
 
     gcs_source = GcsSource()
@@ -121,7 +135,78 @@ def import_products_from_gcs():
         "Wait 2 -5 minutes till products become indexed in the catalog,\
 after that they will be available for search")
 
+def create_bq_dataset(dataset_name):
+    """Create a BigQuery dataset"""
+    print("Creating dataset {}".format(dataset_name))
+    if dataset_name not in list_bq_datasets():
+        create_dataset_command = 'bq --location=US mk -d --default_table_expiration 3600 --description "This is my dataset." {}:{}'.format(
+            project_id, dataset_name)
+        output = subprocess.check_output(shlex.split(create_dataset_command))
+        print(output)
+        print("dataset is created")
+    else:
+        print("dataset {} already exists".format(dataset_name))
 
-created_bucket = create_bucket(bucket_name)
-upload_data_to_bucket(created_bucket)
+
+def list_bq_datasets():
+    """List BigQuery datasets in the project"""
+    list_dataset_command = "bq ls --project_id {}".format(project_id)
+    list_output = subprocess.check_output(shlex.split(list_dataset_command))
+    datasets = re.split(r'\W+', str(list_output))
+    return datasets
+
+
+def create_bq_table(dataset, table_name, schema):
+    """Create a BigQuery table"""
+    print("Creating BigQuery table {}".format(table_name))
+    if table_name not in list_bq_tables(dataset):
+        create_table_command = "bq mk --table {}:{}.{} {}".format(
+            project_id,
+            dataset,
+            table_name, schema)
+        output = subprocess.check_output(shlex.split(create_table_command))
+        print(output)
+        print("table is created")
+    else:
+        print("table {} already exists".format(table_name))
+
+
+def list_bq_tables(dataset):
+    """List BigQuery tables in the dataset"""
+    list_tables_command = "bq ls {}:{}".format(project_id, dataset)
+    tables = subprocess.check_output(shlex.split(list_tables_command))
+    return str(tables)
+
+
+def upload_data_to_bq_table(dataset, table_name, source, schema):
+    """Upload data to the table from specified source file"""
+    print("Uploading data form {} to the table {}.{}".format(source, dataset,
+                                                             table_name))
+    upload_data_command = "bq load --source_format=NEWLINE_DELIMITED_JSON {}:{}.{} {} {}".format(
+        project_id, dataset, table_name, source, schema)
+    output = subprocess.check_output(shlex.split(upload_data_command))
+    print(output)
+
+
+# Create a GCS bucket with products.json file
+created_products_bucket = create_bucket(products_bucket_name)
+upload_data_to_bucket(created_products_bucket)
+
+# Create a GCS bucket with user_events.json file
+created_events_bucket = create_bucket(events_bucket_name)
+upload_data_to_bucket(created_events_bucket)
+
+# Import prodcuts from the GCS bucket to the Retail catalog
 import_products_from_gcs()
+
+# Create a BigQuery table with products
+create_bq_dataset(product_dataset)
+create_bq_table(product_dataset, product_table, product_schema)
+upload_data_to_bq_table(product_dataset, product_table,
+                        product_resource_file, product_schema)
+
+# Create a BigQuery table with user events
+create_bq_dataset(events_dataset)
+create_bq_table(events_dataset, events_table, events_schema)
+upload_data_to_bq_table(events_dataset, events_table, events_source_file,
+                        events_schema)
