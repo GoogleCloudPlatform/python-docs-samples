@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
+# [START compute_oslogin_physical_sk_script]
 import argparse
 import os
 import subprocess
@@ -96,3 +96,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.user_key, args.ip_address, args.dryrun, args.directory)
+# [END compute_oslogin_physical_sk_script]
