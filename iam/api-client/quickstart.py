@@ -15,8 +15,6 @@
 # limitations under the License.
 
 # [START iam_quickstart]
-import os
-
 import google.auth
 import googleapiclient.discovery
 
