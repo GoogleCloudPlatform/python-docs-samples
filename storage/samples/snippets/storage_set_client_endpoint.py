@@ -19,27 +19,23 @@ import sys
 """Sample that creates a new bucket in a specified region
 """
 
-# [START storage_create_bucket_location]
+# [START storage_set_client_endpoint]
 
 from google.cloud import storage
 
 
-def create_bucket_location(bucket_name, bucket_location):
-    """Creates bucket in specified region."""
-    # The ID of your GCS bucket
-    # bucket_name = "my-bucket"
-    # bucket_location = 'us-west1' # region
-    # bucket_location = 'nam4' # dual-region
-    # bucket_location = 'us' #multi-region
+def set_client_endpoint(api_endpoint):
+    """Initiates client with specified endpoint."""
+    # api_endpoint = 'https://storage.googleapis.com'
 
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-    bucket.create(location=bucket_location)
+    storage_client = storage.Client(client_options={'api_endpoint': api_endpoint})
 
-    print(f"{bucket.name} created in {bucket.location}.")
+    print(f"client initiated with endpoint: {storage_client._connection.API_BASE_URL}")
+
+    return storage_client
 
 
-# [END storage_create_bucket_location]
+# [END storage_set_client_endpoint]
 
 if __name__ == "__main__":
-    create_bucket_location(bucket_name=sys.argv[1], bucket_location=sys.argv[2])
+    set_client_endpoint(api_endpoint=sys.argv[1])

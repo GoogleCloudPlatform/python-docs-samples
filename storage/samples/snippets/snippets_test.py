@@ -67,6 +67,7 @@ import storage_remove_bucket_label
 import storage_remove_cors_configuration
 import storage_rename_file
 import storage_set_bucket_default_kms_key
+import storage_set_client_endpoint
 import storage_set_metadata
 import storage_upload_file
 import storage_upload_from_memory
@@ -589,3 +590,10 @@ def test_batch_request(test_bucket):
 
     assert blob1.metadata.get("your-metadata-key") == "your-metadata-value"
     assert blob2.metadata.get("your-metadata-key") == "your-metadata-value"
+
+
+def test_storage_set_client_endpoint(capsys):
+    storage_set_client_endpoint.set_client_endpoint('https://storage.googleapis.com')
+    out, _ = capsys.readouterr()
+
+    assert "client initiated with endpoint: https://storage.googleapis.com" in out
