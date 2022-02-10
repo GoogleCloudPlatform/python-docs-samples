@@ -85,7 +85,9 @@ def test_create_instance_from_template_override(
 ):
     image_client = compute_v1.ImagesClient()
 
-    image = image_client.get_from_family(project="centos-cloud", family="centos-8")
+    image = image_client.get_from_family(
+        project="ubuntu-os-cloud", family="ubuntu-2004-lts"
+    )
     instance = create_instance_from_template_with_overrides(
         PROJECT,
         INSTANCE_ZONE,
