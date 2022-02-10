@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2022 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 import datetime
 import os
 import subprocess
-import time
 import uuid
 
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
