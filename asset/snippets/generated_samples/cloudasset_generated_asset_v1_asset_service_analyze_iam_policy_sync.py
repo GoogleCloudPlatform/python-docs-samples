@@ -42,7 +42,7 @@ def sample_analyze_iam_policy():
     # Make the request
     response = client.analyze_iam_policy(request=request)
 
-    # Handle response
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicy_sync]

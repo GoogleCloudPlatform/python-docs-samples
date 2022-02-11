@@ -39,7 +39,7 @@ def sample_batch_get_assets_history():
     # Make the request
     response = client.batch_get_assets_history(request=request)
 
-    # Handle response
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1_AssetService_BatchGetAssetsHistory_sync]

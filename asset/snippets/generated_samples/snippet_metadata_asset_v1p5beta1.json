@@ -14,12 +14,12 @@
       "regionTag": "cloudasset_generated_asset_v1p5beta1_AssetService_ListAssets_async",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -34,11 +34,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -56,12 +58,12 @@
       "regionTag": "cloudasset_generated_asset_v1p5beta1_AssetService_ListAssets_sync",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -76,11 +78,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]

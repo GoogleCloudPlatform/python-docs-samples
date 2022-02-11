@@ -14,12 +14,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicyLongrunning_async",
       "segments": [
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
@@ -34,11 +34,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 52,
           "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 54,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -56,12 +58,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicyLongrunning_sync",
       "segments": [
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
@@ -76,11 +78,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 52,
           "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 54,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -540,12 +544,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_ExportAssets_async",
       "segments": [
         {
-          "end": 50,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 50,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
@@ -560,11 +564,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 49,
           "start": 43,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 51,
+          "end": 53,
+          "start": 50,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -582,12 +588,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_ExportAssets_sync",
       "segments": [
         {
-          "end": 50,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 50,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
@@ -602,11 +608,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 49,
           "start": 43,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 51,
+          "end": 53,
+          "start": 50,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -714,12 +722,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_ListAssets_async",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -734,11 +742,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -756,12 +766,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_ListAssets_sync",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -776,11 +786,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -888,12 +900,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllIamPolicies_async",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -908,11 +920,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -930,12 +944,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllIamPolicies_sync",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -950,11 +964,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -973,12 +989,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllResources_async",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -993,11 +1009,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -1015,12 +1033,12 @@
       "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllResources_sync",
       "segments": [
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 43,
+          "end": 45,
           "start": 27,
           "type": "SHORT"
         },
@@ -1035,11 +1053,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 41,
           "start": 39,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 44,
+          "end": 46,
+          "start": 42,
           "type": "RESPONSE_HANDLING"
         }
       ]
