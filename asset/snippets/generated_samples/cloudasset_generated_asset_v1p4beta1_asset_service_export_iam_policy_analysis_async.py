@@ -49,6 +49,8 @@ async def sample_export_iam_policy_analysis():
     print("Waiting for operation to complete...")
 
     response = await operation.result()
+
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1p4beta1_AssetService_ExportIamPolicyAnalysis_async]

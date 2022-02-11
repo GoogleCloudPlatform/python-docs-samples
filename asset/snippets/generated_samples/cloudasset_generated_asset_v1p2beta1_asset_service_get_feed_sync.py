@@ -39,7 +39,7 @@ def sample_get_feed():
     # Make the request
     response = client.get_feed(request=request)
 
-    # Handle response
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1p2beta1_AssetService_GetFeed_sync]

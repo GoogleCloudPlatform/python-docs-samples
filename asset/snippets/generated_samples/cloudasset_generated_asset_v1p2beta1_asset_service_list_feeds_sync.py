@@ -39,7 +39,7 @@ def sample_list_feeds():
     # Make the request
     response = client.list_feeds(request=request)
 
-    # Handle response
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1p2beta1_AssetService_ListFeeds_sync]

@@ -103,12 +103,12 @@
       "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_ExportIamPolicyAnalysis_async",
       "segments": [
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
@@ -123,11 +123,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 52,
           "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 54,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ]
@@ -145,12 +147,12 @@
       "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_ExportIamPolicyAnalysis_sync",
       "segments": [
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 53,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
@@ -165,11 +167,13 @@
           "type": "REQUEST_INITIALIZATION"
         },
         {
+          "end": 52,
           "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 54,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ]

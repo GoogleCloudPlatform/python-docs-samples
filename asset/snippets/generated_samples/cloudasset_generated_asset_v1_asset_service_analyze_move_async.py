@@ -40,7 +40,7 @@ async def sample_analyze_move():
     # Make the request
     response = await client.analyze_move(request=request)
 
-    # Handle response
+    # Handle the response
     print(response)
 
 # [END cloudasset_generated_asset_v1_AssetService_AnalyzeMove_async]

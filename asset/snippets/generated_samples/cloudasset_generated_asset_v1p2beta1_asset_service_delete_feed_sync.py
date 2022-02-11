@@ -37,7 +37,7 @@ def sample_delete_feed():
     )
 
     # Make the request
-    response = client.delete_feed(request=request)
+    client.delete_feed(request=request)
 
 
 # [END cloudasset_generated_asset_v1p2beta1_AssetService_DeleteFeed_sync]
