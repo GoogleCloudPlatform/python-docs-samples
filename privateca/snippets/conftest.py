@@ -20,8 +20,10 @@ import pytest
 
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
+from create_certificate_template import create_certificate_template
 from delete_ca_pool import delete_ca_pool
 from delete_certificate_authority import delete_certificate_authority
+from delete_certificate_template import delete_certificate_template
 
 PROJECT = google.auth.default()[1]
 LOCATION = "europe-west1"
@@ -69,3 +71,14 @@ def deleted_certificate_authority(ca_pool):
     delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
 
     yield ca_pool, CA_NAME
+
+
+@pytest.fixture
+def certificate_template():
+    TEMPLATE_NAME = generate_name()
+
+    create_certificate_template(PROJECT, LOCATION, TEMPLATE_NAME)
+
+    yield TEMPLATE_NAME
+
+    delete_certificate_template(PROJECT, LOCATION, TEMPLATE_NAME)
