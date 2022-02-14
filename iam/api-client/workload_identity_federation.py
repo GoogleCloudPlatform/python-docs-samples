@@ -22,14 +22,14 @@ from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 
 
-def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
+def create_token_aws(project_number: str, pool_id: str, provider_id: str) -> None:
     # Prepare a GetCallerIdentity request.
     request = AWSRequest(
         method="POST",
         url="https://sts.amazonaws.com/?Action=GetCallerIdentity&Version=2011-06-15",
         headers={
             "Host": "sts.amazonaws.com",
-            "x-goog-cloud-target-resource": f"//iam.googleapis.com/projects/{project_id}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}"
+            "x-goog-cloud-target-resource": f"//iam.googleapis.com/projects/{project_number}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}"
         })
 
     # Set the session credentials and Sign the request.
@@ -54,11 +54,12 @@ def create_token_aws(project_id: str, pool_id: str, provider_id: str) -> None:
 
 def main():
     # TODO(Developer): Replace the below credentials.
-    project_id = "my-project-id"
+    # project_number: Google Project number (not the project id)
+    project_number = "my-project-number"
     pool_id = "my-pool-id"
     provider_id = "my-provider-id"
 
-    create_token_aws(project_id, pool_id, provider_id)
+    create_token_aws(project_number, pool_id, provider_id)
 
 
 if __name__ == "__main__":
