@@ -24,7 +24,9 @@ from delete_ca_pool import delete_ca_pool
 from delete_certificate_authority import delete_certificate_authority
 from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
+from monitor_certificate_authority import create_ca_monitor_policy
 from undelete_certificate_authority import undelete_certificate_authority
+from update_certificate_authority import update_ca_label
 
 
 PROJECT = google.auth.default()[1]
@@ -84,3 +86,23 @@ def test_undelete_certificate_authority(
     out, _ = capsys.readouterr()
     assert re.search(f"Successfully undeleted Certificate Authority: {CA_NAME}", out,)
     assert re.search(f"Successfully deleted Certificate Authority: {CA_NAME}", out,)
+
+
+def test_update_certificate_authority(
+    certificate_authority, capsys: typing.Any
+) -> None:
+    CA_POOL_NAME, CA_NAME = certificate_authority
+
+    update_ca_label(PROJECT, LOCATION, CA_POOL_NAME, CA_NAME)
+
+    out, _ = capsys.readouterr()
+
+    assert "Successfully updated the labels !" in out
+
+
+def test_create_monitor_ca_policy(capsys: typing.Any) -> None:
+    create_ca_monitor_policy(PROJECT)
+
+    out, _ = capsys.readouterr()
+
+    assert "Monitoring policy successfully created!" in out

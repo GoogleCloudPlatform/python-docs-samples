@@ -21,6 +21,7 @@ import google.auth
 from create_ca_pool import create_ca_pool
 from delete_ca_pool import delete_ca_pool
 from list_ca_pools import list_ca_pools
+from update_ca_pool_issuance_policy import update_ca_pool_issuance_policy
 
 PROJECT = google.auth.default()[1]
 LOCATION = "europe-west1"
@@ -72,3 +73,13 @@ def test_delete_ca_pool(capsys: typing.Any) -> None:
     out, _ = capsys.readouterr()
 
     assert re.search(f"Deleted CA Pool: {CA_POOL_NAME}", out)
+
+
+def test_update_ca_pool_issuance_policy(ca_pool, capsys: typing.Any) -> None:
+    CA_POOL_NAME = ca_pool
+
+    update_ca_pool_issuance_policy(PROJECT, LOCATION, CA_POOL_NAME)
+
+    out, _ = capsys.readouterr()
+
+    assert "CA Pool Issuance policy has been updated successfully!" in out
