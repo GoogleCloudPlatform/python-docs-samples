@@ -33,11 +33,7 @@ from google.protobuf import duration_pb2 as duration
 
 
 def create_job_with_standalone_captions(
-    project_id,
-    location,
-    input_video_uri,
-    input_captions_uri,
-    output_uri,
+    project_id, location, input_video_uri, input_captions_uri, output_uri,
 ):
     """Creates a job based on an ad-hoc job configuration that can use captions from a standalone file.
 
@@ -58,19 +54,12 @@ def create_job_with_standalone_captions(
     job.output_uri = output_uri
     job.config = transcoder_v1.types.JobConfig(
         inputs=[
-            transcoder_v1.types.Input(
-                key="input0",
-                uri=input_video_uri,
-            ),
-            transcoder_v1.types.Input(
-                key="caption-input0",
-                uri=input_captions_uri,
-            ),
+            transcoder_v1.types.Input(key="input0", uri=input_video_uri,),
+            transcoder_v1.types.Input(key="caption-input0", uri=input_captions_uri,),
         ],
         edit_list=[
             transcoder_v1.types.EditAtom(
-                key="atom0",
-                inputs=["input0", "caption-input0"],
+                key="atom0", inputs=["input0", "caption-input0"],
             ),
         ],
         elementary_streams=[
@@ -136,9 +125,7 @@ def create_job_with_standalone_captions(
                 container="vtt",
                 elementary_streams=["vtt-stream0"],
                 segment_settings=transcoder_v1.types.SegmentSettings(
-                    segment_duration=duration.Duration(
-                        seconds=6,
-                    ),
+                    segment_duration=duration.Duration(seconds=6,),
                     individual_segments=True,
                 ),
             ),
@@ -162,9 +149,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location",
-        help="The location to start this job in.",
-        default="us-central1",
+        "--location", help="The location to start this job in.", default="us-central1",
     )
     parser.add_argument(
         "--input_video_uri",
