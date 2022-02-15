@@ -24,7 +24,7 @@ except ModuleNotFoundError:
     Utils = None
 import pytest
 
-NAME = "dataflow/custom-containers/minimal"
+NAME = "dataflow/custom-containers/miniconda"
 
 
 @pytest.fixture(scope="session")
