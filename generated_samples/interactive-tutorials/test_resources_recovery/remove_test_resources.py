@@ -24,15 +24,14 @@ from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
     ProductServiceClient
 
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 product_bucket_name = os.environ['BUCKET_NAME']
 events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
-project_id = os.environ["GOOGLE_CLOUD_PROJECT_ID"]
 
 product_dataset = "products"
 events_dataset = "user_events"
 
-default_catalog = "projects/{0}/locations/global/catalogs/default_catalog/branches/default_branch".format(
-    project_number)
+default_catalog = f"projects/{project_number}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 storage_client = storage.Client()
 
