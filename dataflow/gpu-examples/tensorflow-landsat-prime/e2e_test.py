@@ -20,10 +20,12 @@ try:
     from conftest import Utils
 except ModuleNotFoundError:
     Utils = None
+from threading import TIMEOUT_MAX
 from google.cloud import storage
 import pytest
 
 NAME = "dataflow/gpu-examples/tensorflow-landsat"
+TIMEOUT_SEC = 30 * 60  # 30 minutes
 
 
 @pytest.fixture(scope="session")
@@ -61,7 +63,7 @@ def test_tensorflow_landsat(
 ) -> None:
     # Wait until the job finishes.
     job_id = utils.dataflow_job_id(utils.hyphen_name(NAME))
-    utils.dataflow_jobs_wait(job_id, timeout_sec=30 * 60)
+    utils.dataflow_jobs_wait(job_id, timeout_sec=TIMEOUT_SEC)
 
     # Check that output files were created and are not empty.
     storage_client = storage.Client()
