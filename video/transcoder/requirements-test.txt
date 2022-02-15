@@ -1,3 +1,4 @@
 backoff==1.11.1
 google-cloud-storage==1.43.0
 pytest==6.2.4
+proto-plus>=1.20.1
