@@ -34,7 +34,7 @@ steps:
       --tasks 2 \
       --set-env-vars=SLEEP_MS=100 \
       --max-retries 0 \
-      --wait-for-completion"
+      --wait"
 
 substitutions:
   _SERVICE: logger-job
