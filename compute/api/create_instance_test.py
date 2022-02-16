@@ -28,13 +28,13 @@ def test_main(capsys):
     main(
         PROJECT,
         BUCKET,
-        'us-central1-f',
+        'europe-north1-b',
         instance_name,
         wait=False)
 
     out, _ = capsys.readouterr()
 
     assert "Instances in project" in out
-    assert "zone us-central1-f" in out
+    assert "zone europe-north1-b" in out
     assert instance_name in out
     assert "Deleting instance" in out
