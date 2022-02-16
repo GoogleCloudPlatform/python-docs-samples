@@ -54,7 +54,7 @@ def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
             dag = dag.replace(f"{temp_dir}/", "dags/")
             # Upload to your bucket
             blob = bucket.blob(dag)
-            blob.upload_from_string(dag)
+            blob.upload_from_file(dag)
             print(f"File {dag} uploaded to {bucket_name}/{dag}.")
 
     else:
