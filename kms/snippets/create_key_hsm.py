@@ -13,7 +13,7 @@
 
 
 # [START kms_create_key_hsm]
-def create_key_hsm(project_id, location_id, key_ring_id, id):
+def create_key_hsm(project_id, location_id, key_ring_id, key_id):
     """
     Creates a new key in Cloud KMS backed by Cloud HSM.
 
@@ -21,7 +21,7 @@ def create_key_hsm(project_id, location_id, key_ring_id, id):
         project_id (string): Google Cloud project ID (e.g. 'my-project').
         location_id (string): Cloud KMS location (e.g. 'us-east1').
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
-        id (string): ID of the key to create (e.g. 'my-hsm-key').
+        key_id (string): ID of the key to create (e.g. 'my-hsm-key').
 
     Returns:
         CryptoKey: Cloud KMS key.
@@ -56,7 +56,8 @@ def create_key_hsm(project_id, location_id, key_ring_id, id):
     }
 
     # Call the API.
-    created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': id, 'crypto_key': key})
+    created_key = client.create_crypto_key(
+        request={'parent': key_ring_name, 'crypto_key_id': key_id, 'crypto_key': key})
     print('Created hsm key: {}'.format(created_key.name))
     return created_key
 # [END kms_create_key_hsm]
