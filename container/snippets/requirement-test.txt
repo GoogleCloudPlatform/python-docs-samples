@@ -1,0 +1,4 @@
+
+backoff==1.11.1
+pytest==7.0.0
+google-api-core=2.5.0
