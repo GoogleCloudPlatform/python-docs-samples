@@ -13,14 +13,14 @@
 
 
 # [START kms_create_key_ring]
-def create_key_ring(project_id, location_id, id):
+def create_key_ring(project_id, location_id, key_ring_id):
     """
     Creates a new key ring in Cloud KMS
 
     Args:
         project_id (string): Google Cloud project ID (e.g. 'my-project').
         location_id (string): Cloud KMS location (e.g. 'us-east1').
-        id (string): ID of the key ring to create (e.g. 'my-key-ring').
+        key_ring_id (string): ID of the key ring to create (e.g. 'my-key-ring').
 
     Returns:
         KeyRing: Cloud KMS key ring.
@@ -40,7 +40,8 @@ def create_key_ring(project_id, location_id, id):
     key_ring = {}
 
     # Call the API.
-    created_key_ring = client.create_key_ring(request={'parent': location_name, 'key_ring_id': id, 'key_ring': key_ring})
+    created_key_ring = client.create_key_ring(
+        request={'parent': location_name, 'key_ring_id': key_ring_id, 'key_ring': key_ring})
     print('Created key ring: {}'.format(created_key_ring.name))
     return created_key_ring
 # [END kms_create_key_ring]

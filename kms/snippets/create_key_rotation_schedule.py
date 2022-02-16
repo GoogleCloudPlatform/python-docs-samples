@@ -13,7 +13,7 @@
 
 
 # [START kms_create_key_rotation_schedule]
-def create_key_rotation_schedule(project_id, location_id, key_ring_id, id):
+def create_key_rotation_schedule(project_id, location_id, key_ring_id, key_id):
     """
     Creates a new key in Cloud KMS that automatically rotates.
 
@@ -21,7 +21,7 @@ def create_key_rotation_schedule(project_id, location_id, key_ring_id, id):
         project_id (string): Google Cloud project ID (e.g. 'my-project').
         location_id (string): Cloud KMS location (e.g. 'us-east1').
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
-        id (string): ID of the key to create (e.g. 'my-rotating-key').
+        key_id (string): ID of the key to create (e.g. 'my-rotating-key').
 
     Returns:
         CryptoKey: Cloud KMS key.
@@ -51,17 +51,18 @@ def create_key_rotation_schedule(project_id, location_id, key_ring_id, id):
 
         # Rotate the key every 30 days.
         'rotation_period': {
-            'seconds': 60*60*24*30
+            'seconds': 60 * 60 * 24 * 30
         },
 
         # Start the first rotation in 24 hours.
         'next_rotation_time': {
-            'seconds': int(time.time()) + 60*60*24
+            'seconds': int(time.time()) + 60 * 60 * 24
         }
     }
 
     # Call the API.
-    created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': id, 'crypto_key': key})
+    created_key = client.create_crypto_key(
+        request={'parent': key_ring_name, 'crypto_key_id': key_id, 'crypto_key': key})
     print('Created labeled key: {}'.format(created_key.name))
     return created_key
 # [END kms_create_key_rotation_schedule]
