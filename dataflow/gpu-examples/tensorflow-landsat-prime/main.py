@@ -175,7 +175,11 @@ def save_to_gcs(
 
 
 def load_as_rgb(
-    scene: str, band_paths: List[str], min_value: float, max_value: float, gamma: float
+    scene: str,
+    band_paths: List[str],
+    min_value: float = DEFAULT_MIN_BAND_VALUE,
+    max_value: float = DEFAULT_MAX_BAND_VALUE,
+    gamma: float = DEFAULT_GAMMA,
 ) -> Tuple[str, np.ndarray]:
     """Loads a scene's bands data and converts it into a pixel-ready format
     for an RGB image.
