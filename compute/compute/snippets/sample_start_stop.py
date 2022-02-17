@@ -130,7 +130,7 @@ def stop_instance(project_id: str, zone: str, instance_name: str):
 # [START compute_reset_instance]
 def reset_instance(project_id: str, zone: str, instance_name: str):
     """
-    Resets a stopped Google Compute Engine instance (with unencrypted disks).
+    Resets a running Google Compute Engine instance (with unencrypted disks).
 
     Args:
         project_id: project ID or project number of the Cloud project your instance belongs to.
