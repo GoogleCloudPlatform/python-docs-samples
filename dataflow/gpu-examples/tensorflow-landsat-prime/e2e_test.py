@@ -23,7 +23,7 @@ except ModuleNotFoundError:
 from google.cloud import storage
 import pytest
 
-NAME = "dataflow/gpu-examples/tensorflow-landsat"
+NAME = "dataflow/gpu-examples/tensorflow-landsat-prime"
 
 
 @pytest.fixture(scope="session")
