@@ -30,14 +30,15 @@ steps:
   - |
     gcloud components update --quiet
     
-    ./retry.sh "gcloud alpha run jobs create ${_SERVICE} \
+    gcloud alpha run jobs create ${_SERVICE} \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --project ${PROJECT_ID} \
       --region ${_REGION} \
-      --tasks 2 \
+      --tasks 10 \
       --set-env-vars=SLEEP_MS=100 \
-      --max-retries 0 \
-      --wait"
+      --max-retries 0
+    
+    gcloud alpha run jobs run ${_SERVICE} --wait
 
 substitutions:
   _SERVICE: logger-job
