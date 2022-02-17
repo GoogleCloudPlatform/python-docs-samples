@@ -183,7 +183,7 @@ if __name__ == '__main__':
         'bucket_name', help='Your Google Cloud Storage bucket name.')
     parser.add_argument(
         '--zone',
-        default='europe-north1-b',
+        default='us-central1-f',
         help='Compute Engine zone to deploy to.')
     parser.add_argument(
         '--name', default='demo-instance', help='New instance name.')
