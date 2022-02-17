@@ -473,18 +473,19 @@ def reidentify_with_fpe(
 def reidentify_with_deterministic(
     project, input_str, surrogate_type=None, key_name=None, wrapped_key=None,
 ):
-    """Deidentifies sensitive data in a string using deterministic encryption.
+    """Re-identifies content that was previously de-identified through deterministic encryption.
     Args:
-        project: The Google Cloud project id to use as a parent resource.
-        input_str: The string to deidentify (will be treated as text).
-        surrogate_type: The name of the surrogate custom info type to used
+        project: The Google Cloud project ID to use as a parent resource.
+        input_str: The string to be re-identified. Provide the entire token. Example:
+            EMAIL_ADDRESS_TOKEN(52):AVAx2eIEnIQP5jbNEr2j9wLOAd5m4kpSBR/0jjjGdAOmryzZbE/q
+        surrogate_type: The name of the surrogate custom infoType used
             during the encryption process.
-        key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
+        key_name: The name of the Cloud KMS key used to encrypt ("wrap") the
             AES-256 key. Example:
             keyName = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
             keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
-        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
-            should be encrypted using the Cloud KMS key specified by key_name.
+        wrapped_key: The encrypted ("wrapped") AES-256 key previously used to encrypt the content.
+            This key must have been encrypted using the Cloud KMS key specified by key_name.
     Returns:
         None; the response from the API is printed to the terminal.
     """

@@ -20,7 +20,7 @@ import argparse
 import os
 
 
-# [START dlp_create_template]
+# [START dlp_create_inspect_template]
 def create_inspect_template(
     project,
     info_types,
@@ -87,7 +87,7 @@ def create_inspect_template(
     print("Successfully created template {}".format(response.name))
 
 
-# [END dlp_create_template]
+# [END dlp_create_inspect_template]
 
 
 # [START dlp_list_templates]
@@ -134,7 +134,7 @@ def list_inspect_templates(project):
 # [END dlp_list_templates]
 
 
-# [START dlp_delete_template]
+# [START dlp_delete_inspect_template]
 def delete_inspect_template(project, template_id):
     """Deletes a Data Loss Prevention API template.
     Args:
@@ -162,7 +162,7 @@ def delete_inspect_template(project, template_id):
     print("Template {} successfully deleted.".format(template_resource))
 
 
-# [END dlp_delete_template]
+# [END dlp_delete_inspect_template]
 
 
 if __name__ == "__main__":
