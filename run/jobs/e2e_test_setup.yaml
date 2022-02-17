@@ -38,7 +38,10 @@ steps:
       --set-env-vars=SLEEP_MS=100 \
       --max-retries 0
     
-    gcloud alpha run jobs run ${_SERVICE} --wait
+    gcloud alpha run jobs run ${_SERVICE} \
+      --project ${PROJECT_ID} \
+      --region ${_REGION} \
+      --wait
 
 substitutions:
   _SERVICE: logger-job
