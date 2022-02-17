@@ -38,7 +38,7 @@ from airflow.utils import trigger_rule
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
 # for best practices
 output_file = os.path.join(
-    models.Variable.get('gcs_bucket'), 'wordcount',
+    '{{ var.value.gcs_bucket }}', 'wordcount',
     datetime.datetime.now().strftime('%Y%m%d-%H%M%S')) + os.sep
 # Path to Hadoop wordcount example available on every Dataproc cluster.
 WORDCOUNT_JAR = (
@@ -49,7 +49,7 @@ input_file = 'gs://pub/shakespeare/rose.txt'
 wordcount_args = ['wordcount', input_file, output_file]
 
 HADOOP_JOB = {
-    "reference": {"project_id": models.Variable.get('gcp_project')},
+    "reference": {"project_id": '{{ var.value.gcp_project }}'},
     "placement": {"cluster_name": 'composer-hadoop-tutorial-cluster-{{ ds_nodash }}'},
     "hadoop_job": {
         "main_jar_file_uri": WORDCOUNT_JAR,
@@ -83,8 +83,8 @@ default_dag_args = {
     # If a task fails, retry it once after waiting at least 5 minutes
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': models.Variable.get('gcp_project'),
-    'location': models.Variable.get('gce_region'),
+    'project_id': '{{ var.value.gcp_project }}',
+    'location': '{{ var.value.gce_region }}',
 
 }
 
@@ -104,7 +104,8 @@ with models.DAG(
         # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         cluster_config=CLUSTER_CONFIG,
-        region=models.Variable.get('gce_region'))
+        region='{{ var.value.gce_region }}'
+    )
 
     # Run the Hadoop wordcount example installed on the Cloud Dataproc cluster
     # master node.
@@ -116,7 +117,7 @@ with models.DAG(
     delete_dataproc_cluster = dataproc.DataprocDeleteClusterOperator(
         task_id='delete_dataproc_cluster',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
-        region=models.Variable.get('gce_region'),
+        region='{{ var.value.gce_region }}',
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
