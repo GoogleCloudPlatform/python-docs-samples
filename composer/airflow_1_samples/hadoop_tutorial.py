@@ -38,7 +38,7 @@ from airflow.utils import trigger_rule
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
 # for best practices
 output_file = os.path.join(
-    models.Variable.get('gcs_bucket'), 'wordcount',
+    '{{ var.value.gcs_bucket }}', 'wordcount',
     datetime.datetime.now().strftime('%Y%m%d-%H%M%S')) + os.sep
 # Path to Hadoop wordcount example available on every Dataproc cluster.
 WORDCOUNT_JAR = (
@@ -63,7 +63,7 @@ default_dag_args = {
     # If a task fails, retry it once after waiting at least 5 minutes
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': models.Variable.get('gcp_project')
+    'project_id': '{{ var.value.gcp_project }}'
 }
 
 # [START composer_hadoop_schedule_airflow_1]
@@ -81,7 +81,7 @@ with models.DAG(
         # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
-        region=models.Variable.get('gce_region'),
+        region='{{ var.value.gce_region }}',
         master_machine_type='n1-standard-2',
         worker_machine_type='n1-standard-2')
 
