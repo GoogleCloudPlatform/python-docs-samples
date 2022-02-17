@@ -81,7 +81,7 @@ with models.DAG(
         # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
-        zone=models.Variable.get('gce_zone'),
+        region=models.Variable.get('gce_region'),
         master_machine_type='n1-standard-2',
         worker_machine_type='n1-standard-2')
 
