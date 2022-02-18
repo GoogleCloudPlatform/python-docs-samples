@@ -32,7 +32,7 @@ from google.cloud.retail import (
 )
 from google.protobuf.field_mask_pb2 import FieldMask
 
-# Read the project number from the environment variable
+# Read the project ID from the environment variable
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
