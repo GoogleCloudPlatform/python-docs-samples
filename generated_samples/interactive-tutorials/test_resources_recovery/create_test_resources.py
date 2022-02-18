@@ -24,7 +24,6 @@ from google.cloud.retail import GcsSource, ImportErrorsConfig, \
 from google.cloud.retail import ProductServiceClient
 from google.cloud.storage.bucket import Bucket
 
-project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 products_bucket_name = os.environ['BUCKET_NAME']
 events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -40,7 +39,7 @@ events_table = "events"
 events_schema = "../resources/events_schema.json"
 
 object_name = re.search('resources/(.*?)$', product_resource_file).group(1)
-default_catalog = f"projects/{project_number}/locations/global/catalogs/default_catalog/branches/default_branch"
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 storage_client = storage.Client()
 
