@@ -28,4 +28,5 @@ def test_import_products_gcs():
         output,
     )
 
-    assert re.match(".*number of successfully imported products.*2.*", output)
+    assert re.match(".*number of successfully imported products.*?2.*", output)
+    assert re.match(".*number of failures during the importing.*?0.*", output)

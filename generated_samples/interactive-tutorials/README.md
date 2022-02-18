@@ -124,7 +124,7 @@ The bucket name must be unique. For convenience, you can name it `<YOUR_PROJECT_
 1. To create the bucket and upload the JSON file, run the following command in the Terminal:
 
     ```bash
-    python product/setup/create_gcs_bucket.py
+    python product/setup_product/create_gcs_bucket.py
     ```
 
     Now you can see the bucket is created in the [Cloud Storage](https://console.cloud.google.com/storage/browser), and the files are uploaded.

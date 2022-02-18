@@ -28,12 +28,11 @@ from google.cloud.retail import (
 
 
 # Read the project number from the environment variable
-project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 bucket_name = os.environ["BUCKET_NAME"]
 
 # You can change the branch here. The "default_branch" is set to point to the branch "0"
-default_catalog = f"projects/{project_number}/locations/global/catalogs/default_catalog/branches/default_branch"
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 gcs_bucket = f"gs://{bucket_name}"
 gcs_errors_bucket = f"{gcs_bucket}/error"

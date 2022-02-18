@@ -23,10 +23,9 @@ from google.cloud import storage
 from google.cloud.retail_v2 import CreateProductRequest, DeleteProductRequest, \
     FulfillmentInfo, GetProductRequest, PriceInfo, Product, ProductServiceClient
 
-project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-default_catalog = f"projects/{project_number}/locations/global/catalogs/default_catalog"
-default_branch_name = f"projects/{project_number}/locations/global/catalogs/default_catalog/branches/default_branch"
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
+default_branch_name = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 
 def generate_product() -> Product:
@@ -100,7 +99,7 @@ def try_to_delete_product_if_exists(product_name: str):
 def create_bucket(bucket_name: str):
     """Create a new bucket in Cloud Storage"""
     print("Creating new bucket:" + bucket_name)
-    buckets_in_your_project = str(list_buckets())
+    buckets_in_your_project = list_buckets()
     if bucket_name in buckets_in_your_project:
         print("Bucket {} already exists".format(bucket_name))
     else:
@@ -118,9 +117,9 @@ def create_bucket(bucket_name: str):
 
 def delete_bucket(bucket_name: str):
     """Delete a bucket from Cloud Storage"""
+    print(f"Deleting bucket name: {bucket_name}")
     storage_client = storage.Client()
-    print("Deleting bucket name:" + bucket_name)
-    buckets_in_your_project = str(list_buckets())
+    buckets_in_your_project = list_buckets()
     if bucket_name in buckets_in_your_project:
         blobs = storage_client.list_blobs(bucket_name)
         for blob in blobs:
@@ -138,7 +137,7 @@ def list_buckets():
     storage_client = storage.Client()
     buckets = storage_client.list_buckets()
     for bucket in buckets:
-        bucket_list.append(str(bucket))
+        bucket_list.append(bucket.name)
     return bucket_list
 
 
@@ -194,6 +193,13 @@ def create_bq_table(dataset, table_name, schema_file_path):
         print("table is created")
 
 
+def delete_bq_table(dataset, table_name):
+    full_table_id = f"{project_id}.{dataset}.{table_name}"
+    bq = bigquery.Client()
+    bq.delete_table(full_table_id, not_found_ok=True)
+    print("Table '{}' is deleted.".format(full_table_id))
+
+
 def upload_data_to_bq_table(dataset, table_name, source, schema_file_path):
     """Upload data to the table from specified source file"""
     full_table_id = f"{project_id}.{dataset}.{table_name}"
@@ -201,8 +207,11 @@ def upload_data_to_bq_table(dataset, table_name, source, schema_file_path):
     print(f"Uploading data from {source} to the table {full_table_id}")
     with open(schema_file_path, "rb") as schema:
         schema_dict = json.load(schema)
-    job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON, schema=schema_dict)
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
+        schema=schema_dict)
     with open(source, "rb") as source_file:
-        job = bq.load_table_from_file(source_file, full_table_id, job_config=job_config)
+        job = bq.load_table_from_file(source_file, full_table_id,
+                                      job_config=job_config)
     job.result()  # Waits for the job to complete.
     print("data was uploaded")

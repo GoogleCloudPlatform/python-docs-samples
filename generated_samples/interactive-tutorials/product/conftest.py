@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import pytest
+import test_utils.prefixer
 
-from setup_cleanup import delete_bucket
+prefixer = test_utils.prefixer.Prefixer(
+    "python-retail", "samples/interactive-tutorials/product"
+)
 
 
-def delete_bucket_by_name(name: str):
-    if name is None:
-        bucket_name = os.environ["BUCKET_NAME"]
-        delete_bucket(bucket_name)
-    else:
-        delete_bucket(name)
+@pytest.fixture(scope="session")
+def table_id_prefix() -> str:
+    return prefixer.create_prefix()
