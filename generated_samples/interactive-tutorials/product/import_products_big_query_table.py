@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -103,8 +103,7 @@ def main(project_id, dataset_id, table_id):
 
     import_products_from_big_query()
 
-
-# [END retail_import_products_from_big_query]
+    # [END retail_import_products_from_big_query]
 
 
 if __name__ == "__main__":

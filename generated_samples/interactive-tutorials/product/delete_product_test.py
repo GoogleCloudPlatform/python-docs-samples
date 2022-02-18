@@ -12,25 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Call Retail API to search for a products in a catalog using only search query.
-#
 import re
 import subprocess
 
-from search_with_ordering import search
 
+def test_delete_product():
+    output = str(subprocess.check_output("python delete_product.py", shell=True))
 
-def test_search_with_ordering_pass():
-    output = str(subprocess.check_output("python search_with_ordering.py", shell=True))
-
-    assert re.match(".*search request.*", output)
-    assert re.match(".*search response.*", output)
-    # check the response contains some products
-    assert re.match(".*results.*id.*", output)
-
-
-def test_search_with_ordering():
-    response = search()
-
-    assert len(response.results) == 10
-    assert response.results[0].product.price_info.price == 39
+    assert re.match(".*delete product request.*", output)
+    assert re.match(
+        '.*name: "projects/.+/locations/global/catalogs/default_catalog/branches/0/products/.*',
+        output,
+    )
+    assert re.match(
+        ".*deleting product projects/.+/locations/global/catalogs/default_catalog/branches/0/products/.*",
+        output,
+    )
+    assert re.match(".*product was deleted.*", output)

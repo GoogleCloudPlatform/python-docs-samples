@@ -23,3 +23,8 @@ prefixer = test_utils.prefixer.Prefixer(
 @pytest.fixture(scope="session")
 def table_id_prefix() -> str:
     return prefixer.create_prefix()
+
+
+@pytest.fixture(scope="session")
+def bucket_name_prefix() -> str:
+    return prefixer.create_prefix()

@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,4 +37,3 @@ def test_search_with_filtering():
     assert re.match(".*Tee.*", product_title)
     assert re.match(".*Black.*", product_title)
     assert "Black" in response.results[0].product.color_info.color_families
-    assert response.total_size == 16

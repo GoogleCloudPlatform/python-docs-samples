@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ from google.api_core.exceptions import NotFound
 
 from google.cloud import bigquery
 from google.cloud import storage
-from google.cloud.retail_v2 import CreateProductRequest, DeleteProductRequest, \
+from google.cloud.retail import CreateProductRequest, DeleteProductRequest, \
     FulfillmentInfo, GetProductRequest, PriceInfo, Product, ProductServiceClient
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
