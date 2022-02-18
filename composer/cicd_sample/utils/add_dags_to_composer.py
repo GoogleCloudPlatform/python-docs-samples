@@ -15,6 +15,7 @@
 # [START composer_cicd_add_dags_to_composer_utility]
 import argparse
 import glob
+import os
 from shutil import copytree, ignore_patterns
 import tempfile
 from typing import List, Tuple
@@ -51,10 +52,16 @@ def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
 
         for dag in dags:
             # Remove path to temp dir
-            dag = dag.replace(f"{temp_dir}/", "dags/")
+            # if/else is a relative directory workaround for our tests
+            current_directory = os.listdir()
+            if "dags" in current_directory:
+                dag = dag.replace(f"{temp_dir}/", "dags/")
+            else:
+                dag = dag.replace(f"{temp_dir}/", "../dags/")
+
             # Upload to your bucket
             blob = bucket.blob(dag)
-            blob.upload_from_string(dag)
+            blob.upload_from_filename(dag)
             print(f"File {dag} uploaded to {bucket_name}/{dag}.")
 
     else:
