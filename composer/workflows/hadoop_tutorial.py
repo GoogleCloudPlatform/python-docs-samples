@@ -84,7 +84,7 @@ default_dag_args = {
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
     'project_id': '{{ var.value.gcp_project }}',
-    'location': '{{ var.value.gce_region }}',
+    'region': '{{ var.value.gce_region }}',
 
 }
 
