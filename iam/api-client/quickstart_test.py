@@ -17,7 +17,7 @@
 import os
 import uuid
 
-from google.oauth2 import service_account
+import google.auth
 from googleapiclient import errors
 import googleapiclient.discovery
 import pytest
@@ -30,20 +30,19 @@ GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 def retry_if_conflict(exception):
-    return (isinstance(exception, errors.HttpError)
-            and 'There were concurrent policy changes' in str(exception))
+    return isinstance(
+        exception, errors.HttpError
+    ) and "There were concurrent policy changes" in str(exception)
 
 
 @pytest.fixture(scope="module")
 def test_member():
     # section to create service account to test policy updates.
     # we use the first portion of uuid4 because full version is too long.
-    name = f'test-{uuid.uuid4().hex[:25]}'
+    name = f"test-{uuid.uuid4().hex[:25]}"
     email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
     member = "serviceAccount:" + email
-    create_service_account(
-        GCLOUD_PROJECT, name, "Py Test Account"
-    )
+    create_service_account(GCLOUD_PROJECT, name, "Py Test Account")
 
     yield member
 
@@ -54,47 +53,52 @@ def test_member():
 def create_service_account(project_id, name, display_name):
     """Creates a service account."""
 
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+    credentials, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
-    service = googleapiclient.discovery.build(
-        'iam', 'v1', credentials=credentials)
+    service = googleapiclient.discovery.build("iam", "v1", credentials=credentials)
 
-    my_service_account = service.projects().serviceAccounts().create(
-        name='projects/' + project_id,
-        body={
-            'accountId': name,
-            'serviceAccount': {
-                'displayName': display_name
-            }
-        }).execute()
+    my_service_account = (
+        service.projects()
+        .serviceAccounts()
+        .create(
+            name="projects/" + project_id,
+            body={"accountId": name, "serviceAccount": {"displayName": display_name}},
+        )
+        .execute()
+    )
 
-    print('Created service account: ' + my_service_account['email'])
+    print("Created service account: " + my_service_account["email"])
     return my_service_account
 
 
 def delete_service_account(email):
     """Deletes a service account."""
 
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+    credentials, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
-    service = googleapiclient.discovery.build(
-        'iam', 'v1', credentials=credentials)
+    service = googleapiclient.discovery.build("iam", "v1", credentials=credentials)
 
     service.projects().serviceAccounts().delete(
-        name='projects/-/serviceAccounts/' + email).execute()
+        name="projects/-/serviceAccounts/" + email
+    ).execute()
 
-    print('Deleted service account: ' + email)
+    print("Deleted service account: " + email)
 
 
 def test_quickstart(test_member, capsys):
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_conflict)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=5,
+        retry_on_exception=retry_if_conflict,
+    )
     def test_call():
         quickstart.quickstart(GCLOUD_PROJECT, test_member)
         out, _ = capsys.readouterr()
         assert test_member in out
+
     test_call()
