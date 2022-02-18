@@ -50,7 +50,6 @@ The overall workflow of the pipeline is the following:
 
 import argparse
 import logging
-import multiprocessing
 import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
@@ -212,24 +211,23 @@ def load_as_rgb(
         f"{scene}: load_as_image({band_paths}, min={min_value}, max={max_value}, gamma={gamma})"
     )
 
-    # Read the GeoTIFF files in parallel.
-    with multiprocessing.Pool(len(band_paths)) as pool:
-        band_values = pool.map(read_band, band_paths)
+    # Read the GeoTIFF files.
+    band_values = [read_band(band_path) for band_path in band_paths]
 
     # We get the band values into the shape (width, height, band).
-    values = np.stack(band_values, axis=-1)
+    pixels = np.stack(band_values, axis=-1)
 
     # Rescale to values from 0.0 to 1.0 and clamp them into that range.
-    values -= min_value
-    values /= max_value
-    values = tf.clip_by_value(values, 0.0, 1.0)
+    pixels -= min_value
+    pixels /= max_value
+    pixels = tf.clip_by_value(pixels, 0.0, 1.0)
 
     # Apply gamma correction.
-    values **= 1.0 / gamma
+    pixels **= 1.0 / gamma
 
     # Return the pixel values as uint8 in the range from 0 to 255,
     # which is what PIL.Image expects.
-    return scene, tf.cast(values * 255.0, dtype=tf.uint8).numpy()
+    return scene, tf.cast(pixels * 255.0, dtype=tf.uint8).numpy()
 
 
 def run(
