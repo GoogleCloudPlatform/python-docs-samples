@@ -90,6 +90,7 @@ with models.DAG(
     run_dataproc_hadoop = dataproc_operator.DataProcHadoopOperator(
         task_id='run_dataproc_hadoop',
         main_jar=WORDCOUNT_JAR,
+        region='{{ var.value.gce_region }}',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         arguments=wordcount_args)
 
@@ -97,6 +98,8 @@ with models.DAG(
     delete_dataproc_cluster = dataproc_operator.DataprocClusterDeleteOperator(
         task_id='delete_dataproc_cluster',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
+        region='{{ var.value.gce_region }}',
+
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
