@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@ import os
 import shlex
 import subprocess
 
-from google.api_core.exceptions import PermissionDenied
-from google.cloud.storage.bucket import Bucket
-
+from google.api_core.exceptions import NotFound, PermissionDenied
 from google.cloud import storage
 from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
     ProductServiceClient
+from google.cloud.storage.bucket import Bucket
+
 
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -40,7 +40,7 @@ def delete_bucket(bucket_name):
     """Delete bucket"""
     try:
         bucket = storage_client.get_bucket(bucket_name)
-    except:
+    except NotFound:
         print("Bucket {} does not exists".format(bucket_name))
     else:
         delete_object_from_bucket(bucket)
@@ -81,6 +81,7 @@ def delete_bq_dataset_with_tables(dataset):
     delete_dataset_command = "bq rm -r -d -f {}".format(dataset)
     output = subprocess.check_output(shlex.split(delete_dataset_command))
     print(output)
+
 
 delete_bucket(product_bucket_name)
 delete_bucket(events_bucket_name)

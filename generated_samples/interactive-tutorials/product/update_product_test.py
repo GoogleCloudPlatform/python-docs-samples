@@ -12,25 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Call Retail API to search for a products in a catalog using only search query.
-#
 import re
 import subprocess
 
-from search_with_ordering import search
 
+def test_add_fulfillment():
+    output = str(subprocess.check_output("python update_product.py", shell=True))
 
-def test_search_with_ordering_pass():
-    output = str(subprocess.check_output("python search_with_ordering.py", shell=True))
-
-    assert re.match(".*search request.*", output)
-    assert re.match(".*search response.*", output)
-    # check the response contains some products
-    assert re.match(".*results.*id.*", output)
-
-
-def test_search_with_ordering():
-    response = search()
-
-    assert len(response.results) == 10
-    assert response.results[0].product.price_info.price == 39
+    assert re.match(".*product is created.*", output)
+    assert re.match(".*updated product.*", output)
+    assert re.match(".*updated product.*?title.*?Updated Nest Mini.*", output)
+    assert re.match(".*updated product.*?brands.*?Updated Google.*", output)
+    assert re.match(".*updated product.*?price.*?20.*", output)
+    assert re.match(".*product.*was deleted.*", output)

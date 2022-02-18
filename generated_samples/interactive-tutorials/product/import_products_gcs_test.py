@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 import subprocess
 
 from setup_product.setup_cleanup import create_bucket, delete_bucket, upload_blob
 
 
-def test_import_products_gcs():
-    bucket_name = os.environ["BUCKET_NAME"]
-    create_bucket(bucket_name)
-    upload_blob(bucket_name, "../resources/products.json")
+def test_import_products_gcs(bucket_name_prefix):
+    # gcs buckets have a limit of 63 characters. Get the last 60 characters
+    bucket_name = bucket_name_prefix[63:]
 
-    output = str(subprocess.check_output("python import_products_gcs.py", shell=True))
+    try:
+        create_bucket(bucket_name)
+        upload_blob(bucket_name, "../resources/products.json")
 
-    delete_bucket(bucket_name)
+        output = str(
+            subprocess.check_output(
+                f"python import_products_gcs.py {bucket_name}", shell=True
+            )
+        )
+    finally:
+        delete_bucket(bucket_name)
 
     assert re.match(".*import products from google cloud source request.*", output)
     assert re.match('.*input_uris: "gs://.*/products.json".*', output)

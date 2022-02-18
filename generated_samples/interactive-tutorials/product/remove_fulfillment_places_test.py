@@ -12,28 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Call Retail API to search for a products in a catalog using only search query.
-#
 import re
 import subprocess
 
-from search_with_pagination import search
 
-
-def test_search_with_pagination_pass():
+def test_add_fulfillment():
     output = str(
-        subprocess.check_output("python search_with_pagination.py", shell=True)
+        subprocess.check_output("python remove_fulfillment_places.py", shell=True)
     )
 
-    assert re.match(".*search request.*", output)
-    assert re.match(".*search response.*", output)
-    # check the response contains some products
-    assert re.match(".*results.*id.*", output)
-
-
-def test_search_with_pagination():
-    response = search()
-
-    product_title = response.results[0].product.title
-    assert re.match(".*Hoodie", product_title)
-    assert len(response.results) == 6
+    assert re.match(".*product is created.*", output)
+    assert re.match(".*remove fulfillment request.*", output)
+    assert re.match(".*remove fulfillment places.*", output)
+    assert re.match(
+        '.*get product response.*?fulfillment_info.*type_: "pickup-in-store".*?place_ids: "store1".*',
+        output,
+    )

@@ -1,4 +1,4 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+# Copyright 2022 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ import shlex
 import subprocess
 import time
 
-from google.cloud.storage.bucket import Bucket
-
 from google.cloud import storage
 from google.cloud.retail import GcsSource, ImportErrorsConfig, \
     ImportProductsRequest, ProductInputConfig
-from google.cloud.retail_v2 import ProductServiceClient
+from google.cloud.retail import ProductServiceClient
+from google.cloud.storage.bucket import Bucket
 
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 products_bucket_name = os.environ['BUCKET_NAME']
@@ -44,6 +43,7 @@ object_name = re.search('resources/(.*?)$', product_resource_file).group(1)
 default_catalog = f"projects/{project_number}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 storage_client = storage.Client()
+
 
 def create_bucket(bucket_name: str) -> Bucket:
     """Create a new bucket in Cloud Storage"""
@@ -133,6 +133,7 @@ def import_products_from_gcs():
     print(
         "Wait 2 -5 minutes till products become indexed in the catalog,\
 after that they will be available for search")
+
 
 def create_bq_dataset(dataset_name):
     """Create a BigQuery dataset"""
