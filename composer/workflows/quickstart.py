@@ -36,7 +36,7 @@ default_args = {
 
 with models.DAG(
         'composer_quickstart',
-        'catchup=False',
+        catchup=False,
         default_args=default_args,
         schedule_interval=datetime.timedelta(days=1)) as dag:
 

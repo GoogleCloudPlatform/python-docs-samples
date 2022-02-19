@@ -3,5 +3,5 @@ SQLAlchemy==1.4.27
 python-tds==1.11.0
 sqlalchemy-pytds==0.3.4
 pyodbc==4.0.32
-pyopenssl==21.0.0
+pyopenssl==22.0.0
 
