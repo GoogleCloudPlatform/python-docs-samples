@@ -1,2 +1,2 @@
-google-cloud-aiplatform==1.9.0
+google-cloud-aiplatform==1.10.0
 google-cloud-storage==1.44.0
