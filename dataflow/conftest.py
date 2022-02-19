@@ -360,22 +360,16 @@ class Utils:
 
     @staticmethod
     def dataflow_jobs_wait(
-        job_id: str = None,
-        job_name: str = None,
+        job_id: str,
         project: str = PROJECT,
         region: str = REGION,
         target_states: Set[str] = {"JOB_STATE_DONE"},
-        list_page_size: int = LIST_PAGE_SIZE,
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> Optional[str]:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
-
-        assert job_id or job_name, "required to pass either a job_id or a job_name"
-        if not job_id:
-            job_id = Utils.dataflow_job_id(job_name, project, list_page_size)
 
         finish_states = {
             "JOB_STATE_DONE",
