@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.8-slim
+import logging
+import platform
 
-# Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.8_sdk:2.36.0 /opt/apache/beam /opt/apache/beam
-ENTRYPOINT [ "/opt/apache/beam/boot" ]
+import apache_beam as beam
 
-# Install the requirements.
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip check
 
-# Copy the pipeline source files.
-COPY main.py ./
+def run() -> None:
+    with beam.Pipeline() as pipeline:
+        (
+            pipeline
+            | "Create data" >> beam.Create(["Hello", "World!", platform.platform()])
+            | "Print" >> beam.Map(logging.info)
+        )
+
+
+if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.INFO)
+    run()
