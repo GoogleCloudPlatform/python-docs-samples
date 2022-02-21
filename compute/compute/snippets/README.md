@@ -19,7 +19,7 @@ Create a new virtual environment and install the required libraries.
 ```bash
 virtualenv --python python3 name-of-your-virtualenv
 source name-of-your-virtualenv/bin/activate
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 ```
 
 ### Run the demo
