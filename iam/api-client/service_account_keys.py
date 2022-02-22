@@ -23,7 +23,6 @@ https://cloud.google.com/iam/docs/creating-managing-service-account-keys.
 
 import argparse
 # [START iam_create_key]
-# import base64
 # [START iam_list_keys]
 # [START iam_delete_key]
 import os
@@ -55,6 +54,7 @@ def create_key(service_account_email):
     # in JSON format.
     # TODO(Developer): Save the below key {json_key_file} to a secure location.
     #  You cannot download it again later.
+    # import base64
     # json_key_file = base64.b64decode(key['privateKeyData']).decode('utf-8')
 
     if not key['disabled']:
