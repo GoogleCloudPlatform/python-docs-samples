@@ -61,8 +61,7 @@ def setup_job():
             "--project",
             PROJECT,
             "--substitutions",
-            "_SERVICE=" + SERVICE,
-            "_VERSION=" + SUFFIX,
+            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX,
         ]
     )
 
