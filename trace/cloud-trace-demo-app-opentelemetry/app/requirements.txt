@@ -1,6 +1,6 @@
 # Don't upgrade to 2.0.0 until opentelemtry-instrumentation-flask is okay with it
 Flask==1.1.4
-markupsafe==2.0.1
+markupsafe==2.1.0
 opentelemetry-exporter-gcp-trace==1.1.0
 opentelemetry-propagator-gcp==1.1.0
 opentelemetry-instrumentation-flask==0.20b0
