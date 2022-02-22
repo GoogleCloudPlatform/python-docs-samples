@@ -55,7 +55,7 @@
 /language/**/*.py                      @telpirion @GoogleCloudPlatform/python-samples-owners
 /media/**/*.py                         @irataxy @GoogleCloudPlatform/python-samples-owners
 /memorystore/**/*.py                   @GoogleCloudPlatform/python-samples-owners
-/ml_engine/**/*.py                     @alecglassford @GoogleCloudPlatform/python-samples-owners
+/ml_engine/**/*.py                     @ivanmkc @GoogleCloudPlatform/python-samples-owners
 /monitoring/**/*.py                    @GoogleCloudPlatform/python-samples-owners
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-owners
