@@ -1,4 +1,4 @@
-# Cloud Run Sample
+# Cloud Run Jobs Sample
 
 ## Build
 
@@ -31,6 +31,18 @@ pytest
 
 _Note: you may need to install `pytest` using `pip install pytest`._
 
-## Deploy
+## Create a Job
 
-~coming soon~
+```
+gcloud alpha run jobs create job-quickstart \
+  --image=gcr.io/$PROJECT_ID/logger-job \
+  --tasks 50 \
+  --set-env-vars=SLEEP_MS=10000 \
+  --set-env-vars=FAIL_RATE=0.5 \
+  --max-retries 10
+```
+
+## Run the Job
+```
+gcloud alpha run jobs run job-quickstart
+```
