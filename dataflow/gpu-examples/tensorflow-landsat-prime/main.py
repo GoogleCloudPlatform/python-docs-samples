@@ -148,8 +148,7 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     g = m.groupdict()
     scene_dir = f"gs://gcp-public-data-landsat/{g['sensor']}/{g['collection']}/{g['wrs_path']}/{g['wrs_row']}/{scene}"
 
-    band_paths = [
-        f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
+    band_paths = [f"{scene_dir}/{scene}_{band_name}.TIF" for band_name in band_names]
 
     for band_path in band_paths:
         if not tf.io.gfile.exists(band_path):
@@ -158,76 +157,8 @@ def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
     return scene, band_paths
 
 
-def load_values(scene: str, band_paths: List[str]) -> Tuple[str, np.ndarray]:
-    """Loads a scene's bands data as a numpy array.
-
-    Args:
-        scene: Landsat 8 scene ID.
-        band_paths: A list of the [Red, Green, Blue] band paths.
-
-    Returns:
-        A (scene, values) pair.
-
-        The values are stored in a three-dimensional float32 array with shape:
-            (band, width, height)
-    """
-
-    def read_band(band_path: str) -> np.array:
-        # Use rasterio to read the GeoTIFF values from the band files.
-        with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
-            return data.read(1)
-
-    logging.info(f"{scene}: load_values({band_paths})")
-    values = [read_band(band_path) for band_path in band_paths]
-    return scene, np.array(values, np.float32)
-
-
-def preprocess_pixels(
-    scene: str,
-    values: np.ndarray,
-    min_value: float = 0.0,
-    max_value: float = 1.0,
-    gamma: float = 1.0,
-) -> Tuple[str, tf.Tensor]:
-    """Prepares the band data into a pixel-ready format for an RGB image.
-
-    The input band values come in the shape (band, width, height) with
-    unbounded positive numbers depending on the sensor's exposure.
-    The values are reshaped into (width, height, band), the values are clamped
-    to integers between 0 and 255, and a gamma correction value is applied.
-
-    Args:
-        scene: Landsat 8 scene ID.
-        values: Band values in the shape (band, width, height).
-        min_value: Minimum band value.
-        max_value: Maximum band value.
-        gamma: Gamma correction value.
-
-    Returns:
-        A (scene, pixels) pair. The pixels are Image-ready values.
-    """
-    logging.info(
-        f"{scene}: preprocess_pixels({values.shape}:{values.dtype}, min={min_value}, max={max_value}, gamma={gamma})"
-    )
-
-    # Reshape (band, width, height) into (width, height, band).
-    pixels = tf.transpose(values, (1, 2, 0))
-
-    # Rescale to values from 0.0 to 1.0 and clamp them into that range.
-    pixels -= min_value
-    pixels /= max_value
-    pixels = tf.clip_by_value(pixels, 0.0, 1.0)
-
-    # Apply gamma correction.
-    pixels **= 1.0 / gamma
-
-    # Return the pixel values as int8 in the range from 0 to 255,
-    # which is what PIL.Image expects.
-    return scene, tf.cast(pixels * 255.0, dtype=tf.uint8)
-
-
 def save_to_gcs(
-    scene: str, image: Image.Image, output_path_prefix: str, format: str = "JPEG"
+    scene: str, pixels: np.ndarray, output_path_prefix: str, format: str = "JPEG"
 ) -> None:
     """Saves a PIL.Image as a JPEG file in the desired path.
 
@@ -239,7 +170,64 @@ def save_to_gcs(
     """
     filename = os.path.join(output_path_prefix, scene + "." + format.lower())
     with tf.io.gfile.GFile(filename, "w") as f:
-        image.save(f, format)
+        Image.fromarray(pixels, mode="RGB").save(f, format)
+
+
+def load_as_rgb(
+    scene: str,
+    band_paths: List[str],
+    min_value: float = DEFAULT_MIN_BAND_VALUE,
+    max_value: float = DEFAULT_MAX_BAND_VALUE,
+    gamma: float = DEFAULT_GAMMA,
+) -> Tuple[str, np.ndarray]:
+    """Loads a scene's bands data and converts it into a pixel-ready format
+    for an RGB image.
+
+    The input band values come in the shape (band, width, height) with
+    unbounded positive numbers depending on the sensor's exposure.
+    The values are reshaped into (width, height, band), the values are clamped
+    to integers between 0 and 255, and a gamma correction value is applied.
+
+    Args:
+        scene: Landsat 8 scene ID.
+        band_paths: A list of the [Red, Green, Blue] band paths.
+        min_value: Minimum band value.
+        max_value: Maximum band value.
+        gamma: Gamma correction value.
+
+    Returns:
+        A (scene, pixels) pair.
+
+        The pixel values are stored in a three-dimensional uint8 array with shape:
+            (width, height, rgb_channels)
+    """
+
+    def read_band(band_path: str) -> np.ndarray:
+        # Use rasterio to read the GeoTIFF values from the band files.
+        with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
+            return data.read(1).astype(np.float32)
+
+    logging.info(
+        f"{scene}: load_as_image({band_paths}, min={min_value}, max={max_value}, gamma={gamma})"
+    )
+
+    # Read the GeoTIFF files.
+    band_values = [read_band(band_path) for band_path in band_paths]
+
+    # We get the band values into the shape (width, height, band).
+    pixels = np.stack(band_values, axis=-1)
+
+    # Rescale to values from 0.0 to 1.0 and clamp them into that range.
+    pixels -= min_value
+    pixels /= max_value
+    pixels = tf.clip_by_value(pixels, 0.0, 1.0)
+
+    # Apply gamma correction.
+    pixels **= 1.0 / gamma
+
+    # Return the pixel values as uint8 in the range from 0 to 255,
+    # which is what PIL.Image expects.
+    return scene, tf.cast(pixels * 255.0, dtype=tf.uint8).numpy()
 
 
 def run(
@@ -269,7 +257,8 @@ def run(
     (
         pipeline
         | "Create scene IDs" >> beam.Create(scenes)
-        | "Check GPU availability" >> beam.Map(
+        | "Check GPU availability"
+        >> beam.Map(
             lambda x, unused_side_input: x,
             unused_side_input=beam.pvalue.AsSingleton(
                 pipeline
@@ -277,18 +266,14 @@ def run(
                 | beam.Map(check_gpus).with_resource_hints(accelerator=gpu_hint)
             ),
         )
+        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
         # We reshuffle to prevent fusion and allow all I/O operations to happen in parallel.
         # For more information, see the "Preventing fusion" section in the documentation:
         #   https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#preventing-fusion
         | "Reshuffle" >> beam.Reshuffle()
-        | "Get RGB band paths" >> beam.Map(get_band_paths, rgb_band_names)
-        | "Load RGB band values" >> beam.MapTuple(load_values)
-        | "Preprocess pixels GPU" >> beam.MapTuple(
-            preprocess_pixels, min_value, max_value, gamma
-        ).with_resource_hints(accelerator=gpu_hint)
-        | "Convert to image" >> beam.MapTuple(
-            lambda scene, rgb_pixels: (
-                scene, Image.fromarray(rgb_pixels.numpy(), mode="RGB"))
+        | "Load bands as RGB"
+        >> beam.MapTuple(load_as_rgb, min_value, max_value, gamma).with_resource_hints(
+            accelerator=gpu_hint
         )
         | "Save to Cloud Storage" >> beam.MapTuple(save_to_gcs, output_path_prefix)
     )
@@ -303,7 +288,8 @@ if __name__ == "__main__":
         "--output-path-prefix",
         required=True,
         help="Path prefix for output image files. "
-        "This can be a Google Cloud Storage path.")
+        "This can be a Google Cloud Storage path.",
+    )
     parser.add_argument(
         "--scene",
         dest="scenes",
@@ -311,39 +297,37 @@ if __name__ == "__main__":
         help="One or more Landsat scene IDs to process, for example "
         "LC08_L1TP_109078_20200411_20200422_01_T1. "
         "They must be in the format: "
-        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes")
+        "https://www.usgs.gov/faqs/what-naming-convention-landsat-collections-level-1-scenes",
+    )
+    parser.add_argument("--gpu-type", default=DEFAULT_GPU_TYPE, help="GPU type to use.")
     parser.add_argument(
-        "--gpu-type",
-        default=DEFAULT_GPU_TYPE,
-        help="GPU type to use.")
-    parser.add_argument(
-        "--gpu-count",
-        type=int,
-        default=DEFAULT_GPU_COUNT,
-        help="GPU count to use.")
+        "--gpu-count", type=int, default=DEFAULT_GPU_COUNT, help="GPU count to use."
+    )
     parser.add_argument(
         "--rgb-band-names",
         nargs=3,
         default=DEFAULT_RGB_BAND_NAMES,
-        help="List of three band names to be mapped to the RGB channels.")
+        help="List of three band names to be mapped to the RGB channels.",
+    )
     parser.add_argument(
         "--min",
         type=float,
         default=DEFAULT_MIN_BAND_VALUE,
-        help="Minimum value of the band value range.")
+        help="Minimum value of the band value range.",
+    )
     parser.add_argument(
         "--max",
         type=float,
         default=DEFAULT_MAX_BAND_VALUE,
-        help="Maximum value of the band value range.")
+        help="Maximum value of the band value range.",
+    )
     parser.add_argument(
-        "--gamma",
-        type=float,
-        default=DEFAULT_GAMMA,
-        help="Gamma correction factor.")
+        "--gamma", type=float, default=DEFAULT_GAMMA, help="Gamma correction factor."
+    )
     args, beam_args = parser.parse_known_args()
 
-    run(scenes=args.scenes or DEFAULT_SCENES,
+    run(
+        scenes=args.scenes or DEFAULT_SCENES,
         output_path_prefix=args.output_path_prefix,
         vis_params={
             "rgb_band_names": args.rgb_band_names,
@@ -353,4 +337,5 @@ if __name__ == "__main__":
         },
         gpu_type=args.gpu_type,
         gpu_count=args.gpu_count,
-        beam_args=beam_args)
+        beam_args=beam_args,
+    )
