@@ -16,9 +16,9 @@ import os
 import uuid
 
 import backoff
+from google.api_core import retry
 import pytest
 from requests.exceptions import HTTPError
-from google.api_core import retry
 
 import fhir_stores  # noqa
 import fhir_resources  # noqa
