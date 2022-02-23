@@ -25,7 +25,7 @@ from sample_instance_from_template import (
 
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "us-central1-b"
+INSTANCE_ZONE = "europe-north1-c"
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def instance_template():
     template = compute_v1.InstanceTemplate()
     template.name = "test-template-" + uuid.uuid4().hex[:10]
     template.properties.disks = [disk]
-    template.properties.machine_type = "e2-standard-4"
+    template.properties.machine_type = "n1-standard-4"
     template.properties.network_interfaces = [network_interface]
 
     template_client = compute_v1.InstanceTemplatesClient()
