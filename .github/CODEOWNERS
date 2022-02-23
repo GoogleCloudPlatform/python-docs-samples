@@ -16,7 +16,7 @@
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-owners
-/auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-owners
+/auth/**/*.py                          @busunkim96 @arithmetic1728 @GoogleCloudPlatform/python-samples-owners
 /automl/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-owners
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-owners
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-owners
