@@ -18,6 +18,7 @@ import uuid
 import backoff
 import pytest
 from requests.exceptions import HTTPError
+from google.api_core import retry
 
 import fhir_stores  # noqa
 import fhir_resources  # noqa
@@ -31,7 +32,7 @@ service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
-
+client = fhir_stores.get_client(service_account_json)
 
 BACKOFF_MAX_TIME = 750
 
@@ -41,13 +42,36 @@ def fatal_code(e):
     return 400 <= e.response.status_code < 500
 
 
+class OperationNotComplete(Exception):
+    """Operation is not yet complete"""
+
+    pass
+
+
+@retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
+def wait_for_operation(operation_name: str):
+    operation = (
+        client.projects()
+        .locations()
+        .datasets()
+        .operations()
+        .get(name=operation_name)
+        .execute()
+    )
+    if not operation["done"]:
+        raise OperationNotComplete()
+
+
 @pytest.fixture(scope="module")
 def test_dataset():
-    dataset = fhir_stores.create_dataset(
+    operation = fhir_stores.create_dataset(
         service_account_json, project_id, cloud_region, dataset_id
     )
 
-    yield dataset
+    # Wait for the dataset to be created
+    wait_for_operation(operation["name"])
+
+    yield
 
     # Clean up
     fhir_stores.delete_dataset(
@@ -57,14 +81,9 @@ def test_dataset():
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    # We see HttpErrors with "dataset not initialized" message.
-    # I think retry will mitigate the flake.
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME)
-    def create_fhir_store():
-        return fhir_stores.create_fhir_store(
-            service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
-        )
-    fhir_store = create_fhir_store()
+    fhir_store = fhir_stores.create_fhir_store(
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+    )
 
     yield fhir_store
 
@@ -103,22 +122,14 @@ def test_patient():
 
 
 def test_create_patient(test_dataset, test_fhir_store, capsys):
-    # We see HttpErrors with "dataset not initialized" message.
-    # I think retry will mitigate the flake.
-    # Googlers see b/189121491 .
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME)
-    def create():
-        # Manually create a new Patient here to test that creating a Patient
-        # works.
-        fhir_resources.create_patient(
-            service_account_json,
-            base_url,
-            project_id,
-            cloud_region,
-            dataset_id,
-            fhir_store_id,
-        )
-    create()
+    fhir_resources.create_patient(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+    )
 
     out, _ = capsys.readouterr()
 
@@ -265,8 +276,9 @@ def test_conditional_delete_resource(
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
-
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code
+    )
     def create_encounter():
         encounter_response = fhir_resources.create_encounter(
             service_account_json,
@@ -277,12 +289,13 @@ def test_conditional_delete_resource(
             fhir_store_id,
             test_patient,
         )
-
         return encounter_response.json()["id"]
 
     encounter_resource_id = create_encounter()
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code
+    )
     def create_observation():
         fhir_resources.create_observation(
             service_account_json,
@@ -297,7 +310,9 @@ def test_conditional_delete_resource(
 
     create_observation()
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code)
+    @backoff.on_exception(
+        backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME, giveup=fatal_code
+    )
     def conditional_delete_resource():
         fhir_resources.conditional_delete_resource(
             service_account_json,
@@ -309,31 +324,22 @@ def test_conditional_delete_resource(
         )
 
     conditional_delete_resource()
-
     out, _ = capsys.readouterr()
-
     print(out)
-
     assert "Conditionally deleted" in out
 
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    # We see HttpErrors with "dataset not initialized" message.
-    # I think retry will mitigate the flake.
-    # Googlers see b/189121491 .
-    @backoff.on_exception(backoff.expo, HTTPError, max_time=BACKOFF_MAX_TIME)
-    def delete():
-        fhir_resources.delete_resource(
-            service_account_json,
-            base_url,
-            project_id,
-            cloud_region,
-            dataset_id,
-            fhir_store_id,
-            resource_type,
-            test_patient,
-        )
-    delete()
+    fhir_resources.delete_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        test_patient,
+    )
 
     out, _ = capsys.readouterr()
 
