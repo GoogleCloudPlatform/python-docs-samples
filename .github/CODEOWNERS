@@ -11,12 +11,15 @@
 # python-samples-owners is in charge of infrastructure (Kokoro, noxfiles, etc.) in this repository
 # python-samples-reviewers reviews Python sample code for adherence to sample guidelines
 *                                      @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/python-samples-reviewers
+/.github/                              @GoogleCloudPlatform/python-samples-owners
+/.kokoro/                              @GoogleCloudPlatform/python-samples-owners
+/*                                     @GoogleCloudPlatform/python-samples-owners
 
 /appengine/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
-/auth/**/*.py                          @busunkim96 @arithmetic1728 @silvolu @GoogleCloudPlatform/python-samples-reviewers
+/auth/**/*.py                          @busunkim96 @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
 /automl/**/*.py                        @telpirion @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-reviewers
