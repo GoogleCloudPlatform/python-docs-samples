@@ -50,7 +50,7 @@ def create_job_with_periodic_images_spritesheet(
     job.output_uri = output_uri
     job.config = transcoder_v1.types.JobConfig(
         # Create an ad-hoc job. For more information, see https://cloud.google.com/transcoder/docs/how-to/jobs#create_jobs_ad_hoc.
-        # See all options for the job config at https://cloud.google.com/transcoder/docs/reference/rest/v1beta1/JobConfig.
+        # See all options for the job config at https://cloud.google.com/transcoder/docs/reference/rest/v1/JobConfig.
         elementary_streams=[
             # This section defines the output video stream.
             transcoder_v1.types.ElementaryStream(
