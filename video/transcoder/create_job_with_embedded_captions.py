@@ -81,31 +81,14 @@ def create_job_with_embedded_captions(
             ),
             transcoder_v1.types.ElementaryStream(
                 key="cea-stream0",
-                # The following doesn't work because "mapping" is a reserved
-                # argument name in GCP python client libraries (see
-                # https://github.com/googleapis/proto-plus-python/blob/main/proto/message.py#L447):
-                #
-                # text_stream=transcoder_v1.types.TextStream(
-                #   codec="cea608",
-                #   mapping=[
-                #     transcoder_v1.types.TextStream.TextMapping(
-                #       atom_key="atom0",
-                #       input_key="caption-input0",
-                #       input_track=0,
-                #     ),
-                #   ],
-                # ),
-                # Use a python dictionary as a workaround:
-                text_stream={
-                    "codec": "cea608",
-                    "mapping": [
-                        {
-                            "atom_key": "atom0",
-                            "input_key": "caption-input0",
-                            "input_track": 0,
-                        }
+                text_stream=transcoder_v1.types.TextStream(
+                    codec="cea608",
+                    mapping_=[
+                        transcoder_v1.types.TextStream.TextMapping(
+                            atom_key="atom0", input_key="caption-input0", input_track=0,
+                        ),
                     ],
-                },
+                ),
             ),
         ],
         mux_streams=[
