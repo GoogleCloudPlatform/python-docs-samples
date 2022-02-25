@@ -1,4 +1,27 @@
-# Google Retail API: Python Code Samples
+#Retail Search Interactive Tutorials
+
+##Run tutorials in Cloud Shell
+
+To advance with the interactive tutorials, use Retail Search step-by-step manuals on the right side of the Cloud Shell IDE: 
+![Interactive tutorials](images/tutorial1.png)
+
+The interactive tutorial should open by default. If it didn’t, click on the Tutorial symbol in the menu bar to open the step-by-step manual:
+![Toggle tutorial](images/tutorials2.png)
+
+For more details about the Cloud Shell environment, refer to the [Cloud Shell documentation](https://cloud.google.com/shell/docs).
+
+## Interactive tutorial flow
+
+Interactive guides are intended to help you understand the features provided by Google Cloud Retail Search and test the Retail API in action.
+
+To proceed with the tutorial, choose a language you’ll be deploying your project in:
+![Select a programming language](images/tutorials3.png)
+
+
+To begin with the tutorial workflow, click the Start button:
+![Begin with the tutorial](images/tutorials4.png)
+
+Then, you can use Next and Previous buttons to navigate the tutorial pages.
 
 ## Get started with the Google Cloud Retail API
 
