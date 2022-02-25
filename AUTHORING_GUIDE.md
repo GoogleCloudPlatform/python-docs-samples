@@ -38,13 +38,13 @@ contains the `google-cloud-bigquery` library.
 ### Who reviews my PR?
 
 This is a work in progress - in **python-docs-samples**, your PR will
-automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
+automatically be assigned to one of the reviewers in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers).
 You can assign a new person using the `blunderbuss:assign` label if your assignee is OOO or busy.
 You can (and probably should) also assign a teammate in addition to the auto-assigned
 owner to review your code for product-specific needs.
 
-In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
-from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
+In **library repositories** GitHub should automatically assign a reviewer
+from python-samples-reviewers. If no reviewer is automatically assigned, contact [@googleapis/python-samples-reviewers](https://github.com/orgs/googleapis/teams/python-samples-reviewers).
 
 Please reach out to your assigned reviewer if it's been more than 2 days and you haven't gotten a response!
 
@@ -798,7 +798,7 @@ For setting up a local test environment, see [Test Environment Setup](#test-envi
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
 If you are unable to access the link, reach out to your assigned pull
-request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers)
 for assistance.
 
 1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)
