@@ -16,13 +16,13 @@
 # [START retail_purge_user_event]
 # Import user events into a catalog from inline source using Retail API
 #
-import os
+import google.auth
 
 from google.cloud.retail import PurgeUserEventsRequest, UserEventServiceClient
 
 from setup_events.setup_cleanup import write_user_event
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
     project_id
