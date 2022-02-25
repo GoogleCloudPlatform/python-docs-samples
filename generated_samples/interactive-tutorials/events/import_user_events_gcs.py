@@ -17,66 +17,66 @@ import os
 
 
 def main(bucket_name):
-    # [START retail_import_products_from_gcs]
+    # [START retail_import_user_events_from_gcs]
+    # Import user events into a catalog from GCS using Retail API
 
-    import os
     import time
 
     from google.cloud.retail import (
         GcsSource,
         ImportErrorsConfig,
-        ImportProductsRequest,
-        ProductInputConfig,
-        ProductServiceClient,
+        ImportUserEventsRequest,
+        UserEventInputConfig,
+        UserEventServiceClient,
     )
 
-    # Read the project id from the environment variable
-    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    # Read the project number from the environment variable
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+    # Read bucket name from the environment variable
+    bucket_name = os.getenv("EVENTS_BUCKET_NAME")
 
     # TODO: Developer set the bucket_name
-    # bucket_name = os.environ["BUCKET_NAME"]
+    # bucket_name = 'user_events_bucket'
 
-    # You can change the branch here. The "default_branch" is set to point to the branch "0"
-    default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
+    default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
+        project_id
+    )
 
-    gcs_bucket = f"gs://{bucket_name}"
-    gcs_errors_bucket = f"{gcs_bucket}/error"
-    gcs_products_object = "products.json"
+    gcs_bucket = "gs://{}".format(bucket_name)
+    gcs_errors_bucket = "{}/error".format(gcs_bucket)
+    gcs_events_object = "user_events.json"
 
     # TO CHECK ERROR HANDLING USE THE JSON WITH INVALID PRODUCT
-    # gcs_products_object = "products_some_invalid.json"
+    # gcs_events_object = "user_events_some_invalid.json"
 
-    def get_import_products_gcs_request(gcs_object_name: str):
+    # get import user events from gcs request
+    def get_import_events_gcs_request(gcs_object_name: str):
         # TO CHECK ERROR HANDLING PASTE THE INVALID CATALOG NAME HERE:
         # default_catalog = "invalid_catalog_name"
         gcs_source = GcsSource()
         gcs_source.input_uris = [f"{gcs_bucket}/{gcs_object_name}"]
 
-        input_config = ProductInputConfig()
+        input_config = UserEventInputConfig()
         input_config.gcs_source = gcs_source
-        print("GRS source:")
-        print(gcs_source.input_uris)
 
         errors_config = ImportErrorsConfig()
         errors_config.gcs_prefix = gcs_errors_bucket
 
-        import_request = ImportProductsRequest()
+        import_request = ImportUserEventsRequest()
         import_request.parent = default_catalog
-        import_request.reconciliation_mode = (
-            ImportProductsRequest.ReconciliationMode.INCREMENTAL
-        )
         import_request.input_config = input_config
         import_request.errors_config = errors_config
 
-        print("---import products from google cloud source request---")
+        print("---import user events from google cloud source request---")
         print(import_request)
 
         return import_request
 
-    # call the Retail API to import products
-    def import_products_from_gcs():
-        import_gcs_request = get_import_products_gcs_request(gcs_products_object)
-        gcs_operation = ProductServiceClient().import_products(import_gcs_request)
+    # call the Retail API to import user events
+    def import_user_events_from_gcs():
+        import_gcs_request = get_import_events_gcs_request(gcs_events_object)
+        gcs_operation = UserEventServiceClient().import_user_events(import_gcs_request)
 
         print("---the operation was started:----")
         print(gcs_operation.operation.name)
@@ -84,10 +84,11 @@ def main(bucket_name):
         while not gcs_operation.done():
             print("---please wait till operation is done---")
             time.sleep(30)
-        print("---import products operation is done---")
+
+        print("---import user events operation is done---")
 
         if gcs_operation.metadata is not None:
-            print("---number of successfully imported products---")
+            print("---number of successfully imported events---")
             print(gcs_operation.metadata.success_count)
             print("---number of failures during the importing---")
             print(gcs_operation.metadata.failure_count)
@@ -100,18 +101,15 @@ def main(bucket_name):
         else:
             print("---operation.result is empty---")
 
-        # The imported products needs to be indexed in the catalog before they become available for search.
-        print(
-            "Wait 2-5 minutes till products become indexed in the catalog, after that they will be available for search"
-        )
+    import_user_events_from_gcs()
 
-    import_products_from_gcs()
 
-    # [END retail_import_products_from_gcs]
-
+# [END retail_import_user_events_from_gcs]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("bucket_name", nargs="?", default=os.environ["BUCKET_NAME"])
+    parser.add_argument(
+        "bucket_name", nargs="?", default=os.environ["EVENTS_BUCKET_NAME"]
+    )
     args = parser.parse_args()
     main(args.bucket_name)
