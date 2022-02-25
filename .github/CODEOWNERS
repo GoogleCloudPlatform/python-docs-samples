@@ -60,5 +60,5 @@
 /storage/**/*.py                       @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*.py               @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*.py                         @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
-/translate/**/*.py                     @telpirion @GoogleCloudPlatform/python-samples-reviewers
+/translate/**/*.py                     @nicain @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*.py                     @GoogleCloudPlatform/python-samples-reviewers
