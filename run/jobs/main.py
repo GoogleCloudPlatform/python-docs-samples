@@ -18,12 +18,14 @@ import random
 import sys
 import time
 
+# [START cloudrun_jobs_env_vars]
 # Retrieve Job-defined env vars
 TASK_NUM = os.getenv("TASK_NUM", 0)
 ATTEMPT_NUM = os.getenv("ATTEMPT_NUM", 0)
 # Retrieve User-defined env vars
 SLEEP_MS = os.getenv("SLEEP_MS", 0)
 FAIL_RATE = os.getenv("FAIL_RATE", 0)
+# [END cloudrun_jobs_env_vars]
 
 
 # Define main script
@@ -59,4 +61,6 @@ if __name__ == "__main__":
     except Exception as err:
         message = f"Task #{TASK_NUM}, Attempt #{ATTEMPT_NUM} failed: {str(err)}"
         print(json.dumps({"message": message, "severity": "ERROR"}))
+        # [START cloudrun_jobs_exit_process]
         sys.exit(1)  # Retry Job Task by exiting the process
+        # [END cloudrun_jobs_exit_process]
