@@ -10,8 +10,8 @@
           "shortName": "GetDefaultBranch"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_get_default_branch_async.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_GetDefaultBranch_async",
+      "file": "retail_v2_generated_catalog_service_get_default_branch_async.py",
+      "regionTag": "retail_v2_generated_CatalogService_GetDefaultBranch_async",
       "segments": [
         {
           "end": 43,
@@ -54,8 +54,8 @@
           "shortName": "GetDefaultBranch"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_get_default_branch_sync.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_GetDefaultBranch_sync",
+      "file": "retail_v2_generated_catalog_service_get_default_branch_sync.py",
+      "regionTag": "retail_v2_generated_CatalogService_GetDefaultBranch_sync",
       "segments": [
         {
           "end": 43,
@@ -99,8 +99,8 @@
           "shortName": "ListCatalogs"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_list_catalogs_async.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_ListCatalogs_async",
+      "file": "retail_v2_generated_catalog_service_list_catalogs_async.py",
+      "regionTag": "retail_v2_generated_CatalogService_ListCatalogs_async",
       "segments": [
         {
           "end": 45,
@@ -143,8 +143,8 @@
           "shortName": "ListCatalogs"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_list_catalogs_sync.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_ListCatalogs_sync",
+      "file": "retail_v2_generated_catalog_service_list_catalogs_sync.py",
+      "regionTag": "retail_v2_generated_CatalogService_ListCatalogs_sync",
       "segments": [
         {
           "end": 45,
@@ -188,8 +188,8 @@
           "shortName": "SetDefaultBranch"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_set_default_branch_async.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_SetDefaultBranch_async",
+      "file": "retail_v2_generated_catalog_service_set_default_branch_async.py",
+      "regionTag": "retail_v2_generated_CatalogService_SetDefaultBranch_async",
       "segments": [
         {
           "end": 41,
@@ -230,8 +230,8 @@
           "shortName": "SetDefaultBranch"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_set_default_branch_sync.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_SetDefaultBranch_sync",
+      "file": "retail_v2_generated_catalog_service_set_default_branch_sync.py",
+      "regionTag": "retail_v2_generated_CatalogService_SetDefaultBranch_sync",
       "segments": [
         {
           "end": 41,
@@ -273,8 +273,8 @@
           "shortName": "UpdateCatalog"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_update_catalog_async.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_UpdateCatalog_async",
+      "file": "retail_v2_generated_catalog_service_update_catalog_async.py",
+      "regionTag": "retail_v2_generated_CatalogService_UpdateCatalog_async",
       "segments": [
         {
           "end": 48,
@@ -317,8 +317,8 @@
           "shortName": "UpdateCatalog"
         }
       },
-      "file": "retail_generated_retail_v2_catalog_service_update_catalog_sync.py",
-      "regionTag": "retail_generated_retail_v2_CatalogService_UpdateCatalog_sync",
+      "file": "retail_v2_generated_catalog_service_update_catalog_sync.py",
+      "regionTag": "retail_v2_generated_CatalogService_UpdateCatalog_sync",
       "segments": [
         {
           "end": 48,
@@ -362,8 +362,8 @@
           "shortName": "CompleteQuery"
         }
       },
-      "file": "retail_generated_retail_v2_completion_service_complete_query_async.py",
-      "regionTag": "retail_generated_retail_v2_CompletionService_CompleteQuery_async",
+      "file": "retail_v2_generated_completion_service_complete_query_async.py",
+      "regionTag": "retail_v2_generated_CompletionService_CompleteQuery_async",
       "segments": [
         {
           "end": 45,
@@ -406,8 +406,8 @@
           "shortName": "CompleteQuery"
         }
       },
-      "file": "retail_generated_retail_v2_completion_service_complete_query_sync.py",
-      "regionTag": "retail_generated_retail_v2_CompletionService_CompleteQuery_sync",
+      "file": "retail_v2_generated_completion_service_complete_query_sync.py",
+      "regionTag": "retail_v2_generated_CompletionService_CompleteQuery_sync",
       "segments": [
         {
           "end": 45,
@@ -451,8 +451,8 @@
           "shortName": "ImportCompletionData"
         }
       },
-      "file": "retail_generated_retail_v2_completion_service_import_completion_data_async.py",
-      "regionTag": "retail_generated_retail_v2_CompletionService_ImportCompletionData_async",
+      "file": "retail_v2_generated_completion_service_import_completion_data_async.py",
+      "regionTag": "retail_v2_generated_CompletionService_ImportCompletionData_async",
       "segments": [
         {
           "end": 53,
@@ -495,8 +495,8 @@
           "shortName": "ImportCompletionData"
         }
       },
-      "file": "retail_generated_retail_v2_completion_service_import_completion_data_sync.py",
-      "regionTag": "retail_generated_retail_v2_CompletionService_ImportCompletionData_sync",
+      "file": "retail_v2_generated_completion_service_import_completion_data_sync.py",
+      "regionTag": "retail_v2_generated_CompletionService_ImportCompletionData_sync",
       "segments": [
         {
           "end": 53,
@@ -540,8 +540,8 @@
           "shortName": "Predict"
         }
       },
-      "file": "retail_generated_retail_v2_prediction_service_predict_async.py",
-      "regionTag": "retail_generated_retail_v2_PredictionService_Predict_async",
+      "file": "retail_v2_generated_prediction_service_predict_async.py",
+      "regionTag": "retail_v2_generated_PredictionService_Predict_async",
       "segments": [
         {
           "end": 49,
@@ -584,8 +584,8 @@
           "shortName": "Predict"
         }
       },
-      "file": "retail_generated_retail_v2_prediction_service_predict_sync.py",
-      "regionTag": "retail_generated_retail_v2_PredictionService_Predict_sync",
+      "file": "retail_v2_generated_prediction_service_predict_sync.py",
+      "regionTag": "retail_v2_generated_PredictionService_Predict_sync",
       "segments": [
         {
           "end": 49,
@@ -629,8 +629,8 @@
           "shortName": "AddFulfillmentPlaces"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_add_fulfillment_places_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_AddFulfillmentPlaces_async",
+      "file": "retail_v2_generated_product_service_add_fulfillment_places_async.py",
+      "regionTag": "retail_v2_generated_ProductService_AddFulfillmentPlaces_async",
       "segments": [
         {
           "end": 50,
@@ -673,8 +673,8 @@
           "shortName": "AddFulfillmentPlaces"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_add_fulfillment_places_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_AddFulfillmentPlaces_sync",
+      "file": "retail_v2_generated_product_service_add_fulfillment_places_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_AddFulfillmentPlaces_sync",
       "segments": [
         {
           "end": 50,
@@ -718,8 +718,8 @@
           "shortName": "CreateProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_create_product_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_CreateProduct_async",
+      "file": "retail_v2_generated_product_service_create_product_async.py",
+      "regionTag": "retail_v2_generated_ProductService_CreateProduct_async",
       "segments": [
         {
           "end": 49,
@@ -762,8 +762,8 @@
           "shortName": "CreateProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_create_product_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_CreateProduct_sync",
+      "file": "retail_v2_generated_product_service_create_product_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_CreateProduct_sync",
       "segments": [
         {
           "end": 49,
@@ -807,8 +807,8 @@
           "shortName": "DeleteProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_delete_product_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_DeleteProduct_async",
+      "file": "retail_v2_generated_product_service_delete_product_async.py",
+      "regionTag": "retail_v2_generated_ProductService_DeleteProduct_async",
       "segments": [
         {
           "end": 42,
@@ -849,8 +849,8 @@
           "shortName": "DeleteProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_delete_product_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_DeleteProduct_sync",
+      "file": "retail_v2_generated_product_service_delete_product_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_DeleteProduct_sync",
       "segments": [
         {
           "end": 42,
@@ -892,8 +892,8 @@
           "shortName": "GetProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_get_product_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_GetProduct_async",
+      "file": "retail_v2_generated_product_service_get_product_async.py",
+      "regionTag": "retail_v2_generated_ProductService_GetProduct_async",
       "segments": [
         {
           "end": 44,
@@ -936,8 +936,8 @@
           "shortName": "GetProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_get_product_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_GetProduct_sync",
+      "file": "retail_v2_generated_product_service_get_product_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_GetProduct_sync",
       "segments": [
         {
           "end": 44,
@@ -981,8 +981,8 @@
           "shortName": "ImportProducts"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_import_products_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_ImportProducts_async",
+      "file": "retail_v2_generated_product_service_import_products_async.py",
+      "regionTag": "retail_v2_generated_ProductService_ImportProducts_async",
       "segments": [
         {
           "end": 52,
@@ -1025,8 +1025,8 @@
           "shortName": "ImportProducts"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_import_products_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_ImportProducts_sync",
+      "file": "retail_v2_generated_product_service_import_products_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_ImportProducts_sync",
       "segments": [
         {
           "end": 52,
@@ -1070,8 +1070,8 @@
           "shortName": "ListProducts"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_list_products_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_ListProducts_async",
+      "file": "retail_v2_generated_product_service_list_products_async.py",
+      "regionTag": "retail_v2_generated_ProductService_ListProducts_async",
       "segments": [
         {
           "end": 45,
@@ -1114,8 +1114,8 @@
           "shortName": "ListProducts"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_list_products_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_ListProducts_sync",
+      "file": "retail_v2_generated_product_service_list_products_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_ListProducts_sync",
       "segments": [
         {
           "end": 45,
@@ -1159,8 +1159,8 @@
           "shortName": "RemoveFulfillmentPlaces"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_remove_fulfillment_places_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_RemoveFulfillmentPlaces_async",
+      "file": "retail_v2_generated_product_service_remove_fulfillment_places_async.py",
+      "regionTag": "retail_v2_generated_ProductService_RemoveFulfillmentPlaces_async",
       "segments": [
         {
           "end": 50,
@@ -1203,8 +1203,8 @@
           "shortName": "RemoveFulfillmentPlaces"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_remove_fulfillment_places_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_RemoveFulfillmentPlaces_sync",
+      "file": "retail_v2_generated_product_service_remove_fulfillment_places_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_RemoveFulfillmentPlaces_sync",
       "segments": [
         {
           "end": 50,
@@ -1248,8 +1248,8 @@
           "shortName": "SetInventory"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_set_inventory_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_SetInventory_async",
+      "file": "retail_v2_generated_product_service_set_inventory_async.py",
+      "regionTag": "retail_v2_generated_ProductService_SetInventory_async",
       "segments": [
         {
           "end": 51,
@@ -1292,8 +1292,8 @@
           "shortName": "SetInventory"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_set_inventory_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_SetInventory_sync",
+      "file": "retail_v2_generated_product_service_set_inventory_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_SetInventory_sync",
       "segments": [
         {
           "end": 51,
@@ -1337,8 +1337,8 @@
           "shortName": "UpdateProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_update_product_async.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_UpdateProduct_async",
+      "file": "retail_v2_generated_product_service_update_product_async.py",
+      "regionTag": "retail_v2_generated_ProductService_UpdateProduct_async",
       "segments": [
         {
           "end": 47,
@@ -1381,8 +1381,8 @@
           "shortName": "UpdateProduct"
         }
       },
-      "file": "retail_generated_retail_v2_product_service_update_product_sync.py",
-      "regionTag": "retail_generated_retail_v2_ProductService_UpdateProduct_sync",
+      "file": "retail_v2_generated_product_service_update_product_sync.py",
+      "regionTag": "retail_v2_generated_ProductService_UpdateProduct_sync",
       "segments": [
         {
           "end": 47,
@@ -1426,8 +1426,8 @@
           "shortName": "Search"
         }
       },
-      "file": "retail_generated_retail_v2_search_service_search_async.py",
-      "regionTag": "retail_generated_retail_v2_SearchService_Search_async",
+      "file": "retail_v2_generated_search_service_search_async.py",
+      "regionTag": "retail_v2_generated_SearchService_Search_async",
       "segments": [
         {
           "end": 46,
@@ -1470,8 +1470,8 @@
           "shortName": "Search"
         }
       },
-      "file": "retail_generated_retail_v2_search_service_search_sync.py",
-      "regionTag": "retail_generated_retail_v2_SearchService_Search_sync",
+      "file": "retail_v2_generated_search_service_search_sync.py",
+      "regionTag": "retail_v2_generated_SearchService_Search_sync",
       "segments": [
         {
           "end": 46,
@@ -1515,8 +1515,8 @@
           "shortName": "CollectUserEvent"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_collect_user_event_async.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_CollectUserEvent_async",
+      "file": "retail_v2_generated_user_event_service_collect_user_event_async.py",
+      "regionTag": "retail_v2_generated_UserEventService_CollectUserEvent_async",
       "segments": [
         {
           "end": 45,
@@ -1559,8 +1559,8 @@
           "shortName": "CollectUserEvent"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_collect_user_event_sync.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_CollectUserEvent_sync",
+      "file": "retail_v2_generated_user_event_service_collect_user_event_sync.py",
+      "regionTag": "retail_v2_generated_UserEventService_CollectUserEvent_sync",
       "segments": [
         {
           "end": 45,
@@ -1604,8 +1604,8 @@
           "shortName": "ImportUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_import_user_events_async.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_ImportUserEvents_async",
+      "file": "retail_v2_generated_user_event_service_import_user_events_async.py",
+      "regionTag": "retail_v2_generated_UserEventService_ImportUserEvents_async",
       "segments": [
         {
           "end": 53,
@@ -1648,8 +1648,8 @@
           "shortName": "ImportUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_import_user_events_sync.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_ImportUserEvents_sync",
+      "file": "retail_v2_generated_user_event_service_import_user_events_sync.py",
+      "regionTag": "retail_v2_generated_UserEventService_ImportUserEvents_sync",
       "segments": [
         {
           "end": 53,
@@ -1693,8 +1693,8 @@
           "shortName": "PurgeUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_purge_user_events_async.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_PurgeUserEvents_async",
+      "file": "retail_v2_generated_user_event_service_purge_user_events_async.py",
+      "regionTag": "retail_v2_generated_UserEventService_PurgeUserEvents_async",
       "segments": [
         {
           "end": 49,
@@ -1737,8 +1737,8 @@
           "shortName": "PurgeUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_purge_user_events_sync.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_PurgeUserEvents_sync",
+      "file": "retail_v2_generated_user_event_service_purge_user_events_sync.py",
+      "regionTag": "retail_v2_generated_UserEventService_PurgeUserEvents_sync",
       "segments": [
         {
           "end": 49,
@@ -1782,8 +1782,8 @@
           "shortName": "RejoinUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_rejoin_user_events_async.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_RejoinUserEvents_async",
+      "file": "retail_v2_generated_user_event_service_rejoin_user_events_async.py",
+      "regionTag": "retail_v2_generated_UserEventService_RejoinUserEvents_async",
       "segments": [
         {
           "end": 48,
@@ -1826,8 +1826,8 @@
           "shortName": "RejoinUserEvents"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_rejoin_user_events_sync.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_RejoinUserEvents_sync",
+      "file": "retail_v2_generated_user_event_service_rejoin_user_events_sync.py",
+      "regionTag": "retail_v2_generated_UserEventService_RejoinUserEvents_sync",
       "segments": [
         {
           "end": 48,
@@ -1871,8 +1871,8 @@
           "shortName": "WriteUserEvent"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_write_user_event_async.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_WriteUserEvent_async",
+      "file": "retail_v2_generated_user_event_service_write_user_event_async.py",
+      "regionTag": "retail_v2_generated_UserEventService_WriteUserEvent_async",
       "segments": [
         {
           "end": 49,
@@ -1915,8 +1915,8 @@
           "shortName": "WriteUserEvent"
         }
       },
-      "file": "retail_generated_retail_v2_user_event_service_write_user_event_sync.py",
-      "regionTag": "retail_generated_retail_v2_UserEventService_WriteUserEvent_sync",
+      "file": "retail_v2_generated_user_event_service_write_user_event_sync.py",
+      "regionTag": "retail_v2_generated_UserEventService_WriteUserEvent_sync",
       "segments": [
         {
           "end": 49,
