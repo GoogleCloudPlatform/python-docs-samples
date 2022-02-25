@@ -14,11 +14,11 @@
 
 # [START retail_search_product_with_facet_spec]
 #
-import os
 
+import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 
 # get search service request:

@@ -13,17 +13,17 @@
 # limitations under the License.
 
 import json
-import os
 import re
 
 from google.api_core.exceptions import NotFound
+import google.auth
 
 from google.cloud import bigquery
 from google.cloud import storage
 from google.cloud.retail import CreateProductRequest, DeleteProductRequest, \
     FulfillmentInfo, GetProductRequest, PriceInfo, Product, ProductServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
 default_branch_name = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 

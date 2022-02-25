@@ -16,10 +16,10 @@
 # [START retail_update_product]
 # Update product in a catalog using Retail API
 #
-import os
 import random
 import string
 
+import google.auth
 from google.cloud.retail import (
     PriceInfo,
     Product,
@@ -34,7 +34,7 @@ from setup_product.setup_cleanup import create_product, delete_product
 # from google.protobuf.field_mask_pb2 import FieldMask
 
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 default_branch_name = (
     "projects/"
     + project_id

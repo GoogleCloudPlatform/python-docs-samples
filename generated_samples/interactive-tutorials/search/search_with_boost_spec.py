@@ -16,11 +16,11 @@
 # Call Retail API to search for a products in a catalog, rerank the
 # results boosting or burying the products that match defined condition.
 #
-import os
 
+import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 
 # get search service request:

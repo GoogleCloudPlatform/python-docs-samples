@@ -17,13 +17,14 @@ import shlex
 import subprocess
 
 from google.api_core.exceptions import NotFound, PermissionDenied
+import google.auth
 from google.cloud import storage
 from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
     ProductServiceClient
 from google.cloud.storage.bucket import Bucket
 
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 product_bucket_name = os.environ['BUCKET_NAME']
 events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
 

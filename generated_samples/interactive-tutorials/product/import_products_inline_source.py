@@ -15,11 +15,11 @@
 # [START retail_import_products_from_inline_source]
 # Import products into a catalog from inline source using Retail API
 #
-import os
 import random
 import string
 import time
 
+import google.auth
 from google.cloud.retail import (
     ColorInfo,
     FulfillmentInfo,
@@ -32,8 +32,7 @@ from google.cloud.retail import (
 )
 from google.protobuf.field_mask_pb2 import FieldMask
 
-# Read the project ID from the environment variable
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 

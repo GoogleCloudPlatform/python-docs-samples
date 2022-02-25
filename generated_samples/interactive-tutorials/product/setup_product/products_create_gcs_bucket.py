@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import datetime
-import os
+
+import google.auth
 
 from setup_cleanup import create_bucket, upload_blob
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 timestamp_ = datetime.datetime.now().timestamp().__round__()
 bucket_name = "{}_products_{}".format(project_id, timestamp_)
 
