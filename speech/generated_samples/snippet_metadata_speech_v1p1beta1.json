@@ -10,8 +10,8 @@
           "shortName": "CreateCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_create_custom_class_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_CreateCustomClass_async",
+      "file": "speech_v1p1beta1_generated_adaptation_create_custom_class_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_CreateCustomClass_async",
       "segments": [
         {
           "end": 45,
@@ -54,8 +54,8 @@
           "shortName": "CreateCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_create_custom_class_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_CreateCustomClass_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_create_custom_class_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_CreateCustomClass_sync",
       "segments": [
         {
           "end": 45,
@@ -99,8 +99,8 @@
           "shortName": "CreatePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_create_phrase_set_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_CreatePhraseSet_async",
+      "file": "speech_v1p1beta1_generated_adaptation_create_phrase_set_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_CreatePhraseSet_async",
       "segments": [
         {
           "end": 45,
@@ -143,8 +143,8 @@
           "shortName": "CreatePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_create_phrase_set_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_CreatePhraseSet_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_create_phrase_set_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_CreatePhraseSet_sync",
       "segments": [
         {
           "end": 45,
@@ -188,8 +188,8 @@
           "shortName": "DeleteCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_delete_custom_class_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_DeleteCustomClass_async",
+      "file": "speech_v1p1beta1_generated_adaptation_delete_custom_class_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_DeleteCustomClass_async",
       "segments": [
         {
           "end": 42,
@@ -230,8 +230,8 @@
           "shortName": "DeleteCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_delete_custom_class_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_DeleteCustomClass_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_delete_custom_class_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_DeleteCustomClass_sync",
       "segments": [
         {
           "end": 42,
@@ -273,8 +273,8 @@
           "shortName": "DeletePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_delete_phrase_set_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_DeletePhraseSet_async",
+      "file": "speech_v1p1beta1_generated_adaptation_delete_phrase_set_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_DeletePhraseSet_async",
       "segments": [
         {
           "end": 42,
@@ -315,8 +315,8 @@
           "shortName": "DeletePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_delete_phrase_set_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_DeletePhraseSet_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_delete_phrase_set_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_DeletePhraseSet_sync",
       "segments": [
         {
           "end": 42,
@@ -358,8 +358,8 @@
           "shortName": "GetCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_get_custom_class_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_GetCustomClass_async",
+      "file": "speech_v1p1beta1_generated_adaptation_get_custom_class_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_GetCustomClass_async",
       "segments": [
         {
           "end": 44,
@@ -402,8 +402,8 @@
           "shortName": "GetCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_get_custom_class_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_GetCustomClass_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_get_custom_class_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_GetCustomClass_sync",
       "segments": [
         {
           "end": 44,
@@ -447,8 +447,8 @@
           "shortName": "GetPhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_get_phrase_set_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_GetPhraseSet_async",
+      "file": "speech_v1p1beta1_generated_adaptation_get_phrase_set_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_GetPhraseSet_async",
       "segments": [
         {
           "end": 44,
@@ -491,8 +491,8 @@
           "shortName": "GetPhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_get_phrase_set_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_GetPhraseSet_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_get_phrase_set_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_GetPhraseSet_sync",
       "segments": [
         {
           "end": 44,
@@ -536,8 +536,8 @@
           "shortName": "ListCustomClasses"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_list_custom_classes_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_ListCustomClasses_async",
+      "file": "speech_v1p1beta1_generated_adaptation_list_custom_classes_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_ListCustomClasses_async",
       "segments": [
         {
           "end": 45,
@@ -580,8 +580,8 @@
           "shortName": "ListCustomClasses"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_list_custom_classes_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_ListCustomClasses_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_list_custom_classes_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_ListCustomClasses_sync",
       "segments": [
         {
           "end": 45,
@@ -625,8 +625,8 @@
           "shortName": "ListPhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_list_phrase_set_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_ListPhraseSet_async",
+      "file": "speech_v1p1beta1_generated_adaptation_list_phrase_set_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_ListPhraseSet_async",
       "segments": [
         {
           "end": 45,
@@ -669,8 +669,8 @@
           "shortName": "ListPhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_list_phrase_set_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_ListPhraseSet_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_list_phrase_set_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_ListPhraseSet_sync",
       "segments": [
         {
           "end": 45,
@@ -714,8 +714,8 @@
           "shortName": "UpdateCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_update_custom_class_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_UpdateCustomClass_async",
+      "file": "speech_v1p1beta1_generated_adaptation_update_custom_class_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_UpdateCustomClass_async",
       "segments": [
         {
           "end": 43,
@@ -758,8 +758,8 @@
           "shortName": "UpdateCustomClass"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_update_custom_class_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_UpdateCustomClass_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_update_custom_class_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_UpdateCustomClass_sync",
       "segments": [
         {
           "end": 43,
@@ -803,8 +803,8 @@
           "shortName": "UpdatePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_update_phrase_set_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_UpdatePhraseSet_async",
+      "file": "speech_v1p1beta1_generated_adaptation_update_phrase_set_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_UpdatePhraseSet_async",
       "segments": [
         {
           "end": 43,
@@ -847,8 +847,8 @@
           "shortName": "UpdatePhraseSet"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_adaptation_update_phrase_set_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Adaptation_UpdatePhraseSet_sync",
+      "file": "speech_v1p1beta1_generated_adaptation_update_phrase_set_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Adaptation_UpdatePhraseSet_sync",
       "segments": [
         {
           "end": 43,
@@ -892,8 +892,8 @@
           "shortName": "LongRunningRecognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_long_running_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_LongRunningRecognize_async",
+      "file": "speech_v1p1beta1_generated_speech_long_running_recognize_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_LongRunningRecognize_async",
       "segments": [
         {
           "end": 55,
@@ -936,8 +936,8 @@
           "shortName": "LongRunningRecognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_long_running_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_LongRunningRecognize_sync",
+      "file": "speech_v1p1beta1_generated_speech_long_running_recognize_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_LongRunningRecognize_sync",
       "segments": [
         {
           "end": 55,
@@ -981,8 +981,8 @@
           "shortName": "Recognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_Recognize_async",
+      "file": "speech_v1p1beta1_generated_speech_recognize_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_Recognize_async",
       "segments": [
         {
           "end": 51,
@@ -1025,8 +1025,8 @@
           "shortName": "Recognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_Recognize_sync",
+      "file": "speech_v1p1beta1_generated_speech_recognize_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_Recognize_sync",
       "segments": [
         {
           "end": 51,
@@ -1070,8 +1070,8 @@
           "shortName": "StreamingRecognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_streaming_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_StreamingRecognize_async",
+      "file": "speech_v1p1beta1_generated_speech_streaming_recognize_async.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_StreamingRecognize_async",
       "segments": [
         {
           "end": 58,
@@ -1114,8 +1114,8 @@
           "shortName": "StreamingRecognize"
         }
       },
-      "file": "speech_generated_speech_v1p1beta1_speech_streaming_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1p1beta1_Speech_StreamingRecognize_sync",
+      "file": "speech_v1p1beta1_generated_speech_streaming_recognize_sync.py",
+      "regionTag": "speech_v1p1beta1_generated_Speech_StreamingRecognize_sync",
       "segments": [
         {
           "end": 58,
