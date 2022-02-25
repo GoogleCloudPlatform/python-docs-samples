@@ -10,8 +10,8 @@
           "shortName": "LongRunningRecognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_long_running_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1_Speech_LongRunningRecognize_async",
+      "file": "speech_v1_generated_speech_long_running_recognize_async.py",
+      "regionTag": "speech_v1_generated_Speech_LongRunningRecognize_async",
       "segments": [
         {
           "end": 55,
@@ -54,8 +54,8 @@
           "shortName": "LongRunningRecognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_long_running_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1_Speech_LongRunningRecognize_sync",
+      "file": "speech_v1_generated_speech_long_running_recognize_sync.py",
+      "regionTag": "speech_v1_generated_Speech_LongRunningRecognize_sync",
       "segments": [
         {
           "end": 55,
@@ -99,8 +99,8 @@
           "shortName": "Recognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1_Speech_Recognize_async",
+      "file": "speech_v1_generated_speech_recognize_async.py",
+      "regionTag": "speech_v1_generated_Speech_Recognize_async",
       "segments": [
         {
           "end": 51,
@@ -143,8 +143,8 @@
           "shortName": "Recognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1_Speech_Recognize_sync",
+      "file": "speech_v1_generated_speech_recognize_sync.py",
+      "regionTag": "speech_v1_generated_Speech_Recognize_sync",
       "segments": [
         {
           "end": 51,
@@ -188,8 +188,8 @@
           "shortName": "StreamingRecognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_streaming_recognize_async.py",
-      "regionTag": "speech_generated_speech_v1_Speech_StreamingRecognize_async",
+      "file": "speech_v1_generated_speech_streaming_recognize_async.py",
+      "regionTag": "speech_v1_generated_Speech_StreamingRecognize_async",
       "segments": [
         {
           "end": 58,
@@ -232,8 +232,8 @@
           "shortName": "StreamingRecognize"
         }
       },
-      "file": "speech_generated_speech_v1_speech_streaming_recognize_sync.py",
-      "regionTag": "speech_generated_speech_v1_Speech_StreamingRecognize_sync",
+      "file": "speech_v1_generated_speech_streaming_recognize_sync.py",
+      "regionTag": "speech_v1_generated_Speech_StreamingRecognize_sync",
       "segments": [
         {
           "end": 58,
