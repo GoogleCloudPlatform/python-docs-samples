@@ -21,6 +21,7 @@ def main(bucket_name):
     # Import user events into a catalog from GCS using Retail API
 
     import time
+    import google.auth
 
     from google.cloud.retail import (
         GcsSource,
@@ -31,7 +32,7 @@ def main(bucket_name):
     )
 
     # Read the project number from the environment variable
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    project_id = google.auth.default()[1]
 
     # Read bucket name from the environment variable
     bucket_name = os.getenv("EVENTS_BUCKET_NAME")

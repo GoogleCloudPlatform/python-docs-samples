@@ -17,10 +17,11 @@
 # Import user events into a catalog from inline source using Retail API
 #
 import datetime
-import os
 import random
 import string
 import time
+
+import google.auth
 
 from google.cloud.retail import (
     ImportUserEventsRequest,
@@ -29,9 +30,10 @@ from google.cloud.retail import (
     UserEventInputConfig,
     UserEventServiceClient,
 )
+
 from google.protobuf.timestamp_pb2 import Timestamp
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
     project_id

@@ -15,9 +15,11 @@
 import datetime
 import os
 
+import google.auth
+
 from setup_cleanup import create_bucket, upload_blob
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 timestamp_ = datetime.datetime.now().timestamp().__round__()
 bucket_name = os.environ["EVENTS_BUCKET_NAME"]
 

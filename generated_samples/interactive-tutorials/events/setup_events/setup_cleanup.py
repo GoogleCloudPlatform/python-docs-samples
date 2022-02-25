@@ -15,21 +15,22 @@
 
 import datetime
 import json
-import os
 import re
 import shlex
 import subprocess
 
 from google.api_core.exceptions import NotFound
+import google.auth
 
 from google.cloud import bigquery
 from google.cloud import storage
 from google.cloud.retail import ProductDetail, PurgeUserEventsRequest, \
     UserEvent, UserEventServiceClient, WriteUserEventRequest
 from google.cloud.retail_v2 import Product
+
 from google.protobuf.timestamp_pb2 import Timestamp
 
-project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+project_id = google.auth.default()[1]
 default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
     project_id)
 
