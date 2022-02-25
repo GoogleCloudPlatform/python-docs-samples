@@ -10,8 +10,8 @@
           "shortName": "AnalyzeIamPolicyLongrunning"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_iam_policy_longrunning_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicyLongrunning_async",
+      "file": "cloudasset_v1_generated_asset_service_analyze_iam_policy_longrunning_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeIamPolicyLongrunning_async",
       "segments": [
         {
           "end": 55,
@@ -54,8 +54,8 @@
           "shortName": "AnalyzeIamPolicyLongrunning"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_iam_policy_longrunning_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicyLongrunning_sync",
+      "file": "cloudasset_v1_generated_asset_service_analyze_iam_policy_longrunning_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeIamPolicyLongrunning_sync",
       "segments": [
         {
           "end": 55,
@@ -99,8 +99,8 @@
           "shortName": "AnalyzeIamPolicy"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_iam_policy_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicy_async",
+      "file": "cloudasset_v1_generated_asset_service_analyze_iam_policy_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeIamPolicy_async",
       "segments": [
         {
           "end": 47,
@@ -143,8 +143,8 @@
           "shortName": "AnalyzeIamPolicy"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_iam_policy_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeIamPolicy_sync",
+      "file": "cloudasset_v1_generated_asset_service_analyze_iam_policy_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeIamPolicy_sync",
       "segments": [
         {
           "end": 47,
@@ -188,8 +188,8 @@
           "shortName": "AnalyzeMove"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_move_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeMove_async",
+      "file": "cloudasset_v1_generated_asset_service_analyze_move_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeMove_async",
       "segments": [
         {
           "end": 45,
@@ -232,8 +232,8 @@
           "shortName": "AnalyzeMove"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_analyze_move_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_AnalyzeMove_sync",
+      "file": "cloudasset_v1_generated_asset_service_analyze_move_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_AnalyzeMove_sync",
       "segments": [
         {
           "end": 45,
@@ -277,8 +277,8 @@
           "shortName": "BatchGetAssetsHistory"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_batch_get_assets_history_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_BatchGetAssetsHistory_async",
+      "file": "cloudasset_v1_generated_asset_service_batch_get_assets_history_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_BatchGetAssetsHistory_async",
       "segments": [
         {
           "end": 44,
@@ -321,8 +321,8 @@
           "shortName": "BatchGetAssetsHistory"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_batch_get_assets_history_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_BatchGetAssetsHistory_sync",
+      "file": "cloudasset_v1_generated_asset_service_batch_get_assets_history_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_BatchGetAssetsHistory_sync",
       "segments": [
         {
           "end": 44,
@@ -366,8 +366,8 @@
           "shortName": "CreateFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_create_feed_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_CreateFeed_async",
+      "file": "cloudasset_v1_generated_asset_service_create_feed_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_CreateFeed_async",
       "segments": [
         {
           "end": 49,
@@ -410,8 +410,8 @@
           "shortName": "CreateFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_create_feed_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_CreateFeed_sync",
+      "file": "cloudasset_v1_generated_asset_service_create_feed_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_CreateFeed_sync",
       "segments": [
         {
           "end": 49,
@@ -455,8 +455,8 @@
           "shortName": "DeleteFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_delete_feed_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_DeleteFeed_async",
+      "file": "cloudasset_v1_generated_asset_service_delete_feed_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_DeleteFeed_async",
       "segments": [
         {
           "end": 42,
@@ -497,8 +497,8 @@
           "shortName": "DeleteFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_delete_feed_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_DeleteFeed_sync",
+      "file": "cloudasset_v1_generated_asset_service_delete_feed_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_DeleteFeed_sync",
       "segments": [
         {
           "end": 42,
@@ -540,8 +540,8 @@
           "shortName": "ExportAssets"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_export_assets_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ExportAssets_async",
+      "file": "cloudasset_v1_generated_asset_service_export_assets_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ExportAssets_async",
       "segments": [
         {
           "end": 52,
@@ -584,8 +584,8 @@
           "shortName": "ExportAssets"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_export_assets_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ExportAssets_sync",
+      "file": "cloudasset_v1_generated_asset_service_export_assets_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ExportAssets_sync",
       "segments": [
         {
           "end": 52,
@@ -629,8 +629,8 @@
           "shortName": "GetFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_get_feed_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_GetFeed_async",
+      "file": "cloudasset_v1_generated_asset_service_get_feed_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_GetFeed_async",
       "segments": [
         {
           "end": 44,
@@ -673,8 +673,8 @@
           "shortName": "GetFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_get_feed_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_GetFeed_sync",
+      "file": "cloudasset_v1_generated_asset_service_get_feed_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_GetFeed_sync",
       "segments": [
         {
           "end": 44,
@@ -718,8 +718,8 @@
           "shortName": "ListAssets"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_list_assets_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ListAssets_async",
+      "file": "cloudasset_v1_generated_asset_service_list_assets_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ListAssets_async",
       "segments": [
         {
           "end": 45,
@@ -762,8 +762,8 @@
           "shortName": "ListAssets"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_list_assets_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ListAssets_sync",
+      "file": "cloudasset_v1_generated_asset_service_list_assets_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ListAssets_sync",
       "segments": [
         {
           "end": 45,
@@ -807,8 +807,8 @@
           "shortName": "ListFeeds"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_list_feeds_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ListFeeds_async",
+      "file": "cloudasset_v1_generated_asset_service_list_feeds_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ListFeeds_async",
       "segments": [
         {
           "end": 44,
@@ -851,8 +851,8 @@
           "shortName": "ListFeeds"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_list_feeds_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_ListFeeds_sync",
+      "file": "cloudasset_v1_generated_asset_service_list_feeds_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_ListFeeds_sync",
       "segments": [
         {
           "end": 44,
@@ -896,8 +896,8 @@
           "shortName": "SearchAllIamPolicies"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_search_all_iam_policies_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllIamPolicies_async",
+      "file": "cloudasset_v1_generated_asset_service_search_all_iam_policies_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_SearchAllIamPolicies_async",
       "segments": [
         {
           "end": 45,
@@ -940,8 +940,8 @@
           "shortName": "SearchAllIamPolicies"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_search_all_iam_policies_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllIamPolicies_sync",
+      "file": "cloudasset_v1_generated_asset_service_search_all_iam_policies_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_SearchAllIamPolicies_sync",
       "segments": [
         {
           "end": 45,
@@ -985,8 +985,8 @@
           "shortName": "SearchAllResources"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_search_all_resources_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllResources_async",
+      "file": "cloudasset_v1_generated_asset_service_search_all_resources_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_SearchAllResources_async",
       "segments": [
         {
           "end": 45,
@@ -1029,8 +1029,8 @@
           "shortName": "SearchAllResources"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_search_all_resources_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_SearchAllResources_sync",
+      "file": "cloudasset_v1_generated_asset_service_search_all_resources_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_SearchAllResources_sync",
       "segments": [
         {
           "end": 45,
@@ -1074,8 +1074,8 @@
           "shortName": "UpdateFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_update_feed_async.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_UpdateFeed_async",
+      "file": "cloudasset_v1_generated_asset_service_update_feed_async.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_UpdateFeed_async",
       "segments": [
         {
           "end": 47,
@@ -1118,8 +1118,8 @@
           "shortName": "UpdateFeed"
         }
       },
-      "file": "cloudasset_generated_asset_v1_asset_service_update_feed_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1_AssetService_UpdateFeed_sync",
+      "file": "cloudasset_v1_generated_asset_service_update_feed_sync.py",
+      "regionTag": "cloudasset_v1_generated_AssetService_UpdateFeed_sync",
       "segments": [
         {
           "end": 47,
