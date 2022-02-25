@@ -10,8 +10,8 @@
           "shortName": "CreateReadSession"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_create_read_session_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_CreateReadSession_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_create_read_session_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_CreateReadSession_async",
       "segments": [
         {
           "end": 44,
@@ -54,8 +54,8 @@
           "shortName": "CreateReadSession"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_create_read_session_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_CreateReadSession_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_create_read_session_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_CreateReadSession_sync",
       "segments": [
         {
           "end": 44,
@@ -99,8 +99,8 @@
           "shortName": "ReadRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_read_rows_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_ReadRows_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_read_rows_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_ReadRows_async",
       "segments": [
         {
           "end": 45,
@@ -143,8 +143,8 @@
           "shortName": "ReadRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_read_rows_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_ReadRows_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_read_rows_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_ReadRows_sync",
       "segments": [
         {
           "end": 45,
@@ -188,8 +188,8 @@
           "shortName": "SplitReadStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_split_read_stream_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_SplitReadStream_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_split_read_stream_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_SplitReadStream_async",
       "segments": [
         {
           "end": 44,
@@ -232,8 +232,8 @@
           "shortName": "SplitReadStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_read_split_read_stream_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryRead_SplitReadStream_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_read_split_read_stream_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryRead_SplitReadStream_sync",
       "segments": [
         {
           "end": 44,
@@ -277,8 +277,8 @@
           "shortName": "AppendRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_append_rows_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_AppendRows_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_append_rows_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_AppendRows_async",
       "segments": [
         {
           "end": 55,
@@ -321,8 +321,8 @@
           "shortName": "AppendRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_append_rows_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_AppendRows_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_append_rows_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_AppendRows_sync",
       "segments": [
         {
           "end": 55,
@@ -366,8 +366,8 @@
           "shortName": "BatchCommitWriteStreams"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_batch_commit_write_streams_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_BatchCommitWriteStreams_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_batch_commit_write_streams_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_BatchCommitWriteStreams_async",
       "segments": [
         {
           "end": 45,
@@ -410,8 +410,8 @@
           "shortName": "BatchCommitWriteStreams"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_batch_commit_write_streams_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_BatchCommitWriteStreams_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_batch_commit_write_streams_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_BatchCommitWriteStreams_sync",
       "segments": [
         {
           "end": 45,
@@ -455,8 +455,8 @@
           "shortName": "CreateWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_create_write_stream_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_CreateWriteStream_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_create_write_stream_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_CreateWriteStream_async",
       "segments": [
         {
           "end": 44,
@@ -499,8 +499,8 @@
           "shortName": "CreateWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_create_write_stream_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_CreateWriteStream_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_create_write_stream_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_CreateWriteStream_sync",
       "segments": [
         {
           "end": 44,
@@ -544,8 +544,8 @@
           "shortName": "FinalizeWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_finalize_write_stream_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_FinalizeWriteStream_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_finalize_write_stream_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_FinalizeWriteStream_async",
       "segments": [
         {
           "end": 44,
@@ -588,8 +588,8 @@
           "shortName": "FinalizeWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_finalize_write_stream_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_FinalizeWriteStream_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_finalize_write_stream_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_FinalizeWriteStream_sync",
       "segments": [
         {
           "end": 44,
@@ -633,8 +633,8 @@
           "shortName": "FlushRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_flush_rows_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_FlushRows_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_flush_rows_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_FlushRows_async",
       "segments": [
         {
           "end": 44,
@@ -677,8 +677,8 @@
           "shortName": "FlushRows"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_flush_rows_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_FlushRows_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_flush_rows_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_FlushRows_sync",
       "segments": [
         {
           "end": 44,
@@ -722,8 +722,8 @@
           "shortName": "GetWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_get_write_stream_async.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_GetWriteStream_async",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_get_write_stream_async.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_GetWriteStream_async",
       "segments": [
         {
           "end": 44,
@@ -766,8 +766,8 @@
           "shortName": "GetWriteStream"
         }
       },
-      "file": "bigquerystorage_generated_bigquery_storage_v1beta2_big_query_write_get_write_stream_sync.py",
-      "regionTag": "bigquerystorage_generated_bigquery_storage_v1beta2_BigQueryWrite_GetWriteStream_sync",
+      "file": "bigquerystorage_v1beta2_generated_big_query_write_get_write_stream_sync.py",
+      "regionTag": "bigquerystorage_v1beta2_generated_BigQueryWrite_GetWriteStream_sync",
       "segments": [
         {
           "end": 44,
