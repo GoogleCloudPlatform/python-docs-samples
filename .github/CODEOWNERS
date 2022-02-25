@@ -8,9 +8,12 @@
 # Prefer GitHub teams over individuals to make it easier to find a suitable owner
 # when someone is OOO or leaves the team.
 
-# The python-samples-owners team is the default owner for anything not
-# explicitly taken by someone else.
-*                               @GoogleCloudPlatform/python-samples-owners
+# python-samples-owners is in charge of infrastructure (Kokoro, noxfiles, etc.) in this repository
+# python-samples-reviewers reviews Python sample code for adherence to sample guidelines
+*                                      @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/python-samples-reviewers
+/.github/                              @GoogleCloudPlatform/python-samples-owners
+/.kokoro/                              @GoogleCloudPlatform/python-samples-owners
+/*                                     @GoogleCloudPlatform/python-samples-owners
 
 /appengine/**/*.py                     @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-owners
