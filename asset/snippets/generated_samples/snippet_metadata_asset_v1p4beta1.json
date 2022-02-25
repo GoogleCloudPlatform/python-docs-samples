@@ -10,8 +10,8 @@
           "shortName": "AnalyzeIamPolicy"
         }
       },
-      "file": "cloudasset_generated_asset_v1p4beta1_asset_service_analyze_iam_policy_async.py",
-      "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_AnalyzeIamPolicy_async",
+      "file": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_async.py",
+      "regionTag": "cloudasset_v1p4beta1_generated_AssetService_AnalyzeIamPolicy_async",
       "segments": [
         {
           "end": 47,
@@ -54,8 +54,8 @@
           "shortName": "AnalyzeIamPolicy"
         }
       },
-      "file": "cloudasset_generated_asset_v1p4beta1_asset_service_analyze_iam_policy_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_AnalyzeIamPolicy_sync",
+      "file": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_sync.py",
+      "regionTag": "cloudasset_v1p4beta1_generated_AssetService_AnalyzeIamPolicy_sync",
       "segments": [
         {
           "end": 47,
@@ -99,8 +99,8 @@
           "shortName": "ExportIamPolicyAnalysis"
         }
       },
-      "file": "cloudasset_generated_asset_v1p4beta1_asset_service_export_iam_policy_analysis_async.py",
-      "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_ExportIamPolicyAnalysis_async",
+      "file": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_async.py",
+      "regionTag": "cloudasset_v1p4beta1_generated_AssetService_ExportIamPolicyAnalysis_async",
       "segments": [
         {
           "end": 55,
@@ -143,8 +143,8 @@
           "shortName": "ExportIamPolicyAnalysis"
         }
       },
-      "file": "cloudasset_generated_asset_v1p4beta1_asset_service_export_iam_policy_analysis_sync.py",
-      "regionTag": "cloudasset_generated_asset_v1p4beta1_AssetService_ExportIamPolicyAnalysis_sync",
+      "file": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_sync.py",
+      "regionTag": "cloudasset_v1p4beta1_generated_AssetService_ExportIamPolicyAnalysis_sync",
       "segments": [
         {
           "end": 55,
