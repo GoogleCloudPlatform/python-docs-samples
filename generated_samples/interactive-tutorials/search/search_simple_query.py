@@ -15,11 +15,11 @@
 # [START retail_search_for_products_with_query_parameter]
 # Call Retail API to search for a products in a catalog using only search query.
 #
-import os
 
+import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 
 # get search service request:

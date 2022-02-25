@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import argparse
-import os
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+import google.auth
+
+project_id = google.auth.default()[1]
 
 
 def main(project_id, dataset_id, table_id):

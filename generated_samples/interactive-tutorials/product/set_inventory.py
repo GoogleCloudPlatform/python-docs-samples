@@ -14,11 +14,11 @@
 
 # [START retail_set_inventory]
 import datetime
-import os
 import random
 import string
 import time
 
+import google.auth
 from google.cloud.retail import (
     FulfillmentInfo,
     PriceInfo,
@@ -30,7 +30,7 @@ from google.protobuf.field_mask_pb2 import FieldMask
 
 from setup_product.setup_cleanup import create_product, delete_product, get_product
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 product_id = "".join(random.sample(string.ascii_lowercase, 8))
 product_name = (
     "projects/"

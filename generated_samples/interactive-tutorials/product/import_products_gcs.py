@@ -19,9 +19,9 @@ import os
 def main(bucket_name):
     # [START retail_import_products_from_gcs]
 
-    import os
     import time
 
+    import google.auth
     from google.cloud.retail import (
         GcsSource,
         ImportErrorsConfig,
@@ -30,8 +30,7 @@ def main(bucket_name):
         ProductServiceClient,
     )
 
-    # Read the project id from the environment variable
-    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    project_id = google.auth.default()[1]
 
     # TODO: Developer set the bucket_name
     # bucket_name = os.environ["BUCKET_NAME"]

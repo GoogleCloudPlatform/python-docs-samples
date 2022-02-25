@@ -18,6 +18,7 @@ import shlex
 import subprocess
 import time
 
+import google.auth
 from google.cloud import storage
 from google.cloud.retail import GcsSource, ImportErrorsConfig, \
     ImportProductsRequest, ProductInputConfig
@@ -26,7 +27,7 @@ from google.cloud.storage.bucket import Bucket
 
 products_bucket_name = os.environ['BUCKET_NAME']
 events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 product_resource_file = "../resources/products.json"
 events_source_file = "../resources/user_events.json"

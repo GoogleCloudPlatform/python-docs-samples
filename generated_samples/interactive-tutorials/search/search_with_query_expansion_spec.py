@@ -16,11 +16,12 @@
 # Call Retail API to search for a products in a catalog,
 # enabling the query expansion feature to let the Google Retail Search build an automatic query expansion.
 #
-import os
 
+import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+project_id = google.auth.default()[1]
 
 
 # get search service request:

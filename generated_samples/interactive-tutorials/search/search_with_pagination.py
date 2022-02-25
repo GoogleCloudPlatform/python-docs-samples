@@ -17,11 +17,11 @@
 # limit the number of the products per page and go to the next page using "next_page_token"
 # or jump to chosen page using "offset".
 #
-import os
 
+import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+project_id = google.auth.default()[1]
 
 
 # get search service request:

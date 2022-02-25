@@ -16,17 +16,17 @@
 # [START retail_create_product]
 # Create product in a catalog using Retail API
 #
-import os
 import random
 import string
 
+import google.auth
 from google.cloud.retail import CreateProductRequest, Product, ProductServiceClient
 from google.cloud.retail import PriceInfo
 from google.cloud.retail_v2.types import product
 
 from setup_product.setup_cleanup import delete_product
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 default_branch_name = (
     "projects/"
     + project_id

@@ -16,15 +16,15 @@
 # [START retail_delete_product]
 # Delete product from a catalog using Retail API
 #
-import os
 import random
 import string
 
+import google.auth
 from google.cloud.retail import DeleteProductRequest, ProductServiceClient
 
 from setup_product.setup_cleanup import create_product
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 default_branch_name = (
     "projects/"
     + project_id

@@ -16,15 +16,15 @@
 # [START retail_get_product]
 # Get product from a catalog using Retail API
 #
-import os
 import random
 import string
 
+import google.auth
 from google.cloud.retail import GetProductRequest, ProductServiceClient
 
 from setup_product.setup_cleanup import create_product, delete_product
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+project_id = google.auth.default()[1]
 product_id = "".join(random.sample(string.ascii_lowercase, 8))
 
 
