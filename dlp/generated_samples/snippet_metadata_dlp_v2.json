@@ -10,8 +10,8 @@
           "shortName": "ActivateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_activate_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ActivateJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_activate_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ActivateJobTrigger_async",
       "segments": [
         {
           "end": 44,
@@ -54,8 +54,8 @@
           "shortName": "ActivateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_activate_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ActivateJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_activate_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ActivateJobTrigger_sync",
       "segments": [
         {
           "end": 44,
@@ -99,8 +99,8 @@
           "shortName": "CancelDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_cancel_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CancelDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_cancel_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CancelDlpJob_async",
       "segments": [
         {
           "end": 42,
@@ -141,8 +141,8 @@
           "shortName": "CancelDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_cancel_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CancelDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_cancel_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CancelDlpJob_sync",
       "segments": [
         {
           "end": 42,
@@ -184,8 +184,8 @@
           "shortName": "CreateDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_deidentify_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateDeidentifyTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_create_deidentify_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDeidentifyTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -228,8 +228,8 @@
           "shortName": "CreateDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_deidentify_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateDeidentifyTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_create_deidentify_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDeidentifyTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -273,8 +273,8 @@
           "shortName": "CreateDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_create_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDlpJob_async",
       "segments": [
         {
           "end": 44,
@@ -317,8 +317,8 @@
           "shortName": "CreateDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_create_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDlpJob_sync",
       "segments": [
         {
           "end": 44,
@@ -362,8 +362,8 @@
           "shortName": "CreateInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_inspect_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateInspectTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_create_inspect_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateInspectTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -406,8 +406,8 @@
           "shortName": "CreateInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_inspect_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateInspectTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_create_inspect_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateInspectTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -451,8 +451,8 @@
           "shortName": "CreateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_create_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateJobTrigger_async",
       "segments": [
         {
           "end": 48,
@@ -495,8 +495,8 @@
           "shortName": "CreateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_create_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateJobTrigger_sync",
       "segments": [
         {
           "end": 48,
@@ -540,8 +540,8 @@
           "shortName": "CreateStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_stored_info_type_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateStoredInfoType_async",
+      "file": "dlp_v2_generated_dlp_service_create_stored_info_type_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateStoredInfoType_async",
       "segments": [
         {
           "end": 44,
@@ -584,8 +584,8 @@
           "shortName": "CreateStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_create_stored_info_type_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_CreateStoredInfoType_sync",
+      "file": "dlp_v2_generated_dlp_service_create_stored_info_type_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_CreateStoredInfoType_sync",
       "segments": [
         {
           "end": 44,
@@ -629,8 +629,8 @@
           "shortName": "DeidentifyContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_deidentify_content_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeidentifyContent_async",
+      "file": "dlp_v2_generated_dlp_service_deidentify_content_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeidentifyContent_async",
       "segments": [
         {
           "end": 43,
@@ -673,8 +673,8 @@
           "shortName": "DeidentifyContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_deidentify_content_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeidentifyContent_sync",
+      "file": "dlp_v2_generated_dlp_service_deidentify_content_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeidentifyContent_sync",
       "segments": [
         {
           "end": 43,
@@ -718,8 +718,8 @@
           "shortName": "DeleteDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_deidentify_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteDeidentifyTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_delete_deidentify_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDeidentifyTemplate_async",
       "segments": [
         {
           "end": 42,
@@ -760,8 +760,8 @@
           "shortName": "DeleteDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_deidentify_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteDeidentifyTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_delete_deidentify_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDeidentifyTemplate_sync",
       "segments": [
         {
           "end": 42,
@@ -803,8 +803,8 @@
           "shortName": "DeleteDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_delete_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDlpJob_async",
       "segments": [
         {
           "end": 42,
@@ -845,8 +845,8 @@
           "shortName": "DeleteDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_delete_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDlpJob_sync",
       "segments": [
         {
           "end": 42,
@@ -888,8 +888,8 @@
           "shortName": "DeleteInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_inspect_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteInspectTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_delete_inspect_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteInspectTemplate_async",
       "segments": [
         {
           "end": 42,
@@ -930,8 +930,8 @@
           "shortName": "DeleteInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_inspect_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteInspectTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_delete_inspect_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteInspectTemplate_sync",
       "segments": [
         {
           "end": 42,
@@ -973,8 +973,8 @@
           "shortName": "DeleteJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_delete_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteJobTrigger_async",
       "segments": [
         {
           "end": 42,
@@ -1015,8 +1015,8 @@
           "shortName": "DeleteJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_delete_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteJobTrigger_sync",
       "segments": [
         {
           "end": 42,
@@ -1058,8 +1058,8 @@
           "shortName": "DeleteStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_stored_info_type_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteStoredInfoType_async",
+      "file": "dlp_v2_generated_dlp_service_delete_stored_info_type_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteStoredInfoType_async",
       "segments": [
         {
           "end": 42,
@@ -1100,8 +1100,8 @@
           "shortName": "DeleteStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_delete_stored_info_type_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_DeleteStoredInfoType_sync",
+      "file": "dlp_v2_generated_dlp_service_delete_stored_info_type_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteStoredInfoType_sync",
       "segments": [
         {
           "end": 42,
@@ -1143,8 +1143,8 @@
           "shortName": "FinishDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_finish_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_FinishDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_finish_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_FinishDlpJob_async",
       "segments": [
         {
           "end": 42,
@@ -1185,8 +1185,8 @@
           "shortName": "FinishDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_finish_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_FinishDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_finish_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_FinishDlpJob_sync",
       "segments": [
         {
           "end": 42,
@@ -1228,8 +1228,8 @@
           "shortName": "GetDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_deidentify_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetDeidentifyTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_get_deidentify_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetDeidentifyTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -1272,8 +1272,8 @@
           "shortName": "GetDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_deidentify_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetDeidentifyTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_get_deidentify_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetDeidentifyTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -1317,8 +1317,8 @@
           "shortName": "GetDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_get_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetDlpJob_async",
       "segments": [
         {
           "end": 44,
@@ -1361,8 +1361,8 @@
           "shortName": "GetDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_get_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetDlpJob_sync",
       "segments": [
         {
           "end": 44,
@@ -1406,8 +1406,8 @@
           "shortName": "GetInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_inspect_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetInspectTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_get_inspect_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetInspectTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -1450,8 +1450,8 @@
           "shortName": "GetInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_inspect_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetInspectTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_get_inspect_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetInspectTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -1495,8 +1495,8 @@
           "shortName": "GetJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_get_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetJobTrigger_async",
       "segments": [
         {
           "end": 44,
@@ -1539,8 +1539,8 @@
           "shortName": "GetJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_get_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetJobTrigger_sync",
       "segments": [
         {
           "end": 44,
@@ -1584,8 +1584,8 @@
           "shortName": "GetStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_stored_info_type_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetStoredInfoType_async",
+      "file": "dlp_v2_generated_dlp_service_get_stored_info_type_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetStoredInfoType_async",
       "segments": [
         {
           "end": 44,
@@ -1628,8 +1628,8 @@
           "shortName": "GetStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_get_stored_info_type_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_GetStoredInfoType_sync",
+      "file": "dlp_v2_generated_dlp_service_get_stored_info_type_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_GetStoredInfoType_sync",
       "segments": [
         {
           "end": 44,
@@ -1673,8 +1673,8 @@
           "shortName": "HybridInspectDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_hybrid_inspect_dlp_job_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_HybridInspectDlpJob_async",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectDlpJob_async",
       "segments": [
         {
           "end": 44,
@@ -1717,8 +1717,8 @@
           "shortName": "HybridInspectDlpJob"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_hybrid_inspect_dlp_job_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_HybridInspectDlpJob_sync",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectDlpJob_sync",
       "segments": [
         {
           "end": 44,
@@ -1762,8 +1762,8 @@
           "shortName": "HybridInspectJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_hybrid_inspect_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_HybridInspectJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectJobTrigger_async",
       "segments": [
         {
           "end": 44,
@@ -1806,8 +1806,8 @@
           "shortName": "HybridInspectJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_hybrid_inspect_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_HybridInspectJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectJobTrigger_sync",
       "segments": [
         {
           "end": 44,
@@ -1851,8 +1851,8 @@
           "shortName": "InspectContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_inspect_content_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_InspectContent_async",
+      "file": "dlp_v2_generated_dlp_service_inspect_content_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_InspectContent_async",
       "segments": [
         {
           "end": 43,
@@ -1895,8 +1895,8 @@
           "shortName": "InspectContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_inspect_content_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_InspectContent_sync",
+      "file": "dlp_v2_generated_dlp_service_inspect_content_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_InspectContent_sync",
       "segments": [
         {
           "end": 43,
@@ -1940,8 +1940,8 @@
           "shortName": "ListDeidentifyTemplates"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_deidentify_templates_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListDeidentifyTemplates_async",
+      "file": "dlp_v2_generated_dlp_service_list_deidentify_templates_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListDeidentifyTemplates_async",
       "segments": [
         {
           "end": 45,
@@ -1984,8 +1984,8 @@
           "shortName": "ListDeidentifyTemplates"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_deidentify_templates_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListDeidentifyTemplates_sync",
+      "file": "dlp_v2_generated_dlp_service_list_deidentify_templates_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListDeidentifyTemplates_sync",
       "segments": [
         {
           "end": 45,
@@ -2029,8 +2029,8 @@
           "shortName": "ListDlpJobs"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_dlp_jobs_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListDlpJobs_async",
+      "file": "dlp_v2_generated_dlp_service_list_dlp_jobs_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListDlpJobs_async",
       "segments": [
         {
           "end": 45,
@@ -2073,8 +2073,8 @@
           "shortName": "ListDlpJobs"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_dlp_jobs_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListDlpJobs_sync",
+      "file": "dlp_v2_generated_dlp_service_list_dlp_jobs_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListDlpJobs_sync",
       "segments": [
         {
           "end": 45,
@@ -2118,8 +2118,8 @@
           "shortName": "ListInfoTypes"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_info_types_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListInfoTypes_async",
+      "file": "dlp_v2_generated_dlp_service_list_info_types_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListInfoTypes_async",
       "segments": [
         {
           "end": 43,
@@ -2162,8 +2162,8 @@
           "shortName": "ListInfoTypes"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_info_types_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListInfoTypes_sync",
+      "file": "dlp_v2_generated_dlp_service_list_info_types_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListInfoTypes_sync",
       "segments": [
         {
           "end": 43,
@@ -2207,8 +2207,8 @@
           "shortName": "ListInspectTemplates"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_inspect_templates_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListInspectTemplates_async",
+      "file": "dlp_v2_generated_dlp_service_list_inspect_templates_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListInspectTemplates_async",
       "segments": [
         {
           "end": 45,
@@ -2251,8 +2251,8 @@
           "shortName": "ListInspectTemplates"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_inspect_templates_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListInspectTemplates_sync",
+      "file": "dlp_v2_generated_dlp_service_list_inspect_templates_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListInspectTemplates_sync",
       "segments": [
         {
           "end": 45,
@@ -2296,8 +2296,8 @@
           "shortName": "ListJobTriggers"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_job_triggers_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListJobTriggers_async",
+      "file": "dlp_v2_generated_dlp_service_list_job_triggers_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListJobTriggers_async",
       "segments": [
         {
           "end": 45,
@@ -2340,8 +2340,8 @@
           "shortName": "ListJobTriggers"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_job_triggers_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListJobTriggers_sync",
+      "file": "dlp_v2_generated_dlp_service_list_job_triggers_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListJobTriggers_sync",
       "segments": [
         {
           "end": 45,
@@ -2385,8 +2385,8 @@
           "shortName": "ListStoredInfoTypes"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_stored_info_types_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListStoredInfoTypes_async",
+      "file": "dlp_v2_generated_dlp_service_list_stored_info_types_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListStoredInfoTypes_async",
       "segments": [
         {
           "end": 45,
@@ -2429,8 +2429,8 @@
           "shortName": "ListStoredInfoTypes"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_list_stored_info_types_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ListStoredInfoTypes_sync",
+      "file": "dlp_v2_generated_dlp_service_list_stored_info_types_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ListStoredInfoTypes_sync",
       "segments": [
         {
           "end": 45,
@@ -2474,8 +2474,8 @@
           "shortName": "RedactImage"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_redact_image_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_RedactImage_async",
+      "file": "dlp_v2_generated_dlp_service_redact_image_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_RedactImage_async",
       "segments": [
         {
           "end": 43,
@@ -2518,8 +2518,8 @@
           "shortName": "RedactImage"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_redact_image_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_RedactImage_sync",
+      "file": "dlp_v2_generated_dlp_service_redact_image_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_RedactImage_sync",
       "segments": [
         {
           "end": 43,
@@ -2563,8 +2563,8 @@
           "shortName": "ReidentifyContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_reidentify_content_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ReidentifyContent_async",
+      "file": "dlp_v2_generated_dlp_service_reidentify_content_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_ReidentifyContent_async",
       "segments": [
         {
           "end": 44,
@@ -2607,8 +2607,8 @@
           "shortName": "ReidentifyContent"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_reidentify_content_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_ReidentifyContent_sync",
+      "file": "dlp_v2_generated_dlp_service_reidentify_content_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_ReidentifyContent_sync",
       "segments": [
         {
           "end": 44,
@@ -2652,8 +2652,8 @@
           "shortName": "UpdateDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_deidentify_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateDeidentifyTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_update_deidentify_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateDeidentifyTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -2696,8 +2696,8 @@
           "shortName": "UpdateDeidentifyTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_deidentify_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateDeidentifyTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_update_deidentify_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateDeidentifyTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -2741,8 +2741,8 @@
           "shortName": "UpdateInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_inspect_template_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateInspectTemplate_async",
+      "file": "dlp_v2_generated_dlp_service_update_inspect_template_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateInspectTemplate_async",
       "segments": [
         {
           "end": 44,
@@ -2785,8 +2785,8 @@
           "shortName": "UpdateInspectTemplate"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_inspect_template_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateInspectTemplate_sync",
+      "file": "dlp_v2_generated_dlp_service_update_inspect_template_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateInspectTemplate_sync",
       "segments": [
         {
           "end": 44,
@@ -2830,8 +2830,8 @@
           "shortName": "UpdateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_job_trigger_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateJobTrigger_async",
+      "file": "dlp_v2_generated_dlp_service_update_job_trigger_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateJobTrigger_async",
       "segments": [
         {
           "end": 44,
@@ -2874,8 +2874,8 @@
           "shortName": "UpdateJobTrigger"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_job_trigger_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateJobTrigger_sync",
+      "file": "dlp_v2_generated_dlp_service_update_job_trigger_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateJobTrigger_sync",
       "segments": [
         {
           "end": 44,
@@ -2919,8 +2919,8 @@
           "shortName": "UpdateStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_stored_info_type_async.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateStoredInfoType_async",
+      "file": "dlp_v2_generated_dlp_service_update_stored_info_type_async.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateStoredInfoType_async",
       "segments": [
         {
           "end": 44,
@@ -2963,8 +2963,8 @@
           "shortName": "UpdateStoredInfoType"
         }
       },
-      "file": "dlp_generated_dlp_v2_dlp_service_update_stored_info_type_sync.py",
-      "regionTag": "dlp_generated_dlp_v2_DlpService_UpdateStoredInfoType_sync",
+      "file": "dlp_v2_generated_dlp_service_update_stored_info_type_sync.py",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateStoredInfoType_sync",
       "segments": [
         {
           "end": 44,
