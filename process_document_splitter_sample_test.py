@@ -33,6 +33,9 @@ def test_process_documents(capsys):
     )
     out, _ = capsys.readouterr()
 
+    # Remove newlines and quotes from output for easier comparison
+    out = out.replace(' "" ', " ").replace("\n", "")
+
     expected_strings = [
         "Found 8 subdocuments",
         "confident that pages 1 to 2 are a subdocument",
