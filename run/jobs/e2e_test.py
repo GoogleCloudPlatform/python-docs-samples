@@ -92,7 +92,6 @@ def test_end_to_end(setup_job):
                 found = True
                 # If there are any results, exit loop
                 break
-        
         if found:
             break
         # Linear backoff
