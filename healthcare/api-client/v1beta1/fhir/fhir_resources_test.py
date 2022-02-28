@@ -72,6 +72,7 @@ def wait_for_operation(operation_name: str):
             operation
         )
 
+
 @pytest.fixture(scope="module")
 def test_dataset():
     operation = fhir_stores.create_dataset(
