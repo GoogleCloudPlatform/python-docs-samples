@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +22,13 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.6", "3.8", "3.9", "3.10"],
+    # > ℹ️ We're opting out of all Python versions except 3.8.
+    # > The Python version used is defined by the Dockerfile, so it's redundant
+    # > to run multiple tests since they would all be running the same Dockerfile.
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
-    "enforce_type_hints": False,
+    "enforce_type_hints": True,
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
