@@ -64,8 +64,19 @@ def wait_for_operation(operation_name: str):
         .get(name=operation_name)
         .execute()
     )
-    if not operation["done"]:
-        raise OperationNotComplete()
+
+    try:
+        if not operation["done"]:
+            raise OperationNotComplete()
+    except KeyError:
+        # NOTE(busunkim): An operation should always have the 'done' field,
+        # but periodic logs indicate it is sometimes missing.
+        # This code prints out the full operation response for debugging purposes.
+        # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/7433#issuecomment-1053561512
+        raise Exception(
+            "Operation missing key 'done':",
+            operation
+        )
 
 
 @pytest.fixture(scope="module")
