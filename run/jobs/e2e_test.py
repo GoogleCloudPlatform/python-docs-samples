@@ -19,6 +19,7 @@
 import datetime
 import os
 import subprocess
+import time
 import uuid
 
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
@@ -80,15 +81,21 @@ def test_end_to_end(setup_job):
         "-protoPayload.serviceName=\"run.googleapis.com\""
     )
 
-    # Retry a maximum number of 10 times to find results in stackdriver
+    # Retry a maximum number of 5 times to find results in Cloud Logging
     found = False
-    iterator = client.list_log_entries(
-        {"resource_names": resource_names, "filter": filters}
-    )
-    for entry in iterator:
-        if "Task" in entry.text_payload:
-            found = True
-            # If there are any results, exit loop
+    for x in range(5):
+        iterator = client.list_log_entries(
+            {"resource_names": resource_names, "filter": filters}
+        )
+        for entry in iterator:
+            if "Task" in entry.text_payload:
+                found = True
+                # If there are any results, exit loop
+                break
+        
+        if found:
             break
+        # Linear backoff
+        time.sleep(3 * x)
 
     assert found
