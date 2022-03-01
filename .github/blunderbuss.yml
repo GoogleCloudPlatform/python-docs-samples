@@ -146,7 +146,6 @@ assign_issues_by:
   - 'api: auth'
   to:
   - arithmetic1728
-  - silvolu
 
 assign_prs_by:
 - labels:
@@ -168,7 +167,6 @@ assign_prs_by:
   - 'api: auth'
   to:
   - arithmetic1728
-  - silvolu
 
 
 assign_issues:
