@@ -35,7 +35,7 @@ def mock_flow():
 
 
 def test_auth_query_console(mock_flow, capsys):
-    main(PROJECT, launch_browser=False)
+    main(PROJECT)
     out, _ = capsys.readouterr()
     # Fun fact: William P. Wood was the 1st director of the US Secret Service.
     assert "William" in out
