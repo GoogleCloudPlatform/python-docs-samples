@@ -58,8 +58,9 @@ def wait_for_operation(operation_name: str):
         .get(name=operation_name)
         .execute()
     )
-    if not operation["done"]:
-        raise OperationNotComplete()
+
+    if not operation.get("done", False):
+        raise OperationNotComplete(operation)
 
 
 @pytest.fixture(scope="module")
