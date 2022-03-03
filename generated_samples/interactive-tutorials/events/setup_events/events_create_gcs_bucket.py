@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import datetime
-import os
 
 import google.auth
 
@@ -21,7 +20,7 @@ from setup_cleanup import create_bucket, upload_blob
 
 project_id = google.auth.default()[1]
 timestamp_ = datetime.datetime.now().timestamp().__round__()
-bucket_name = os.environ["EVENTS_BUCKET_NAME"]
+bucket_name = "{}_events_{}".format(project_id, timestamp_)
 
 create_bucket(bucket_name)
 upload_blob(bucket_name, "../resources/user_events.json")
