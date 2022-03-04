@@ -21,7 +21,7 @@ from googleapiclient import discovery
 
 
 def create_certificate(
-    project_id: str, certificate_file: Union[str, Path], private_key_file: Union[str, Path], certificate_name: str
+    project_id: str, certificate_file: Union[str, Path], private_key_file: Union[str, Path], certificate_name: str, description: str = "Certificate created from a code sample."
 ) -> None:
     """
     Create a global SSL self-signed certificate within your Google Cloud project.
@@ -31,6 +31,7 @@ def create_certificate(
         certificate_file: path to the file with the certificate you want to create in your project.
         private_key_file: path to the private key you used to sign the certificate with.
         certificate_name: name for the certificate once it's created in your project.
+        description: description of the certificate.
     """
     service = discovery.build("compute", "v1")
 
@@ -46,7 +47,7 @@ def create_certificate(
     # certificate resource
     ssl_certificate_body = {
         "name": certificate_name,
-        "description": "Certificate created from a code sample.",
+        "description": description,
         "certificate": _temp_cert,
         "privateKey": _temp_key,
     }
