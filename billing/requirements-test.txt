@@ -1,2 +1,1 @@
 pytest==6.2.4
-functions-framework==3.0.0	
