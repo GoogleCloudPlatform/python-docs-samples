@@ -19,20 +19,19 @@ from unittest import mock
 import google.auth
 from google.cloud import billing
 
-from main import stop_billing, _is_billing_enabled
+from main import _is_billing_enabled, stop_billing
 
 
 PROJECT_ID = google.auth.default()[1]
 
 # NOTE(busunkim): These tests use mocks instead of disabling/enabling
 # the test project because a service account cannot be
-# granted sufficient permissions to add a biling account to the project. 
-# 
+# granted sufficient permissions to add a biling account to the project.
 # https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_an_existing_project
 
 
 def test__is_billing_enabled():
-    assert _is_billing_enabled(f"projects/{PROJECT_ID}") == True
+    assert _is_billing_enabled(f"projects/{PROJECT_ID}")
 
 
 def test_stop_billing_under_budget(capsys):
