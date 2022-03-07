@@ -14,10 +14,10 @@
 
 import base64
 import json
+from unittest import mock
 
 import google.auth
 from google.cloud import billing
-import pytest
 
 from main import stop_billing
 
@@ -25,28 +25,7 @@ from main import stop_billing
 PROJECT_ID = google.auth.default()[1]
 
 
-@pytest.fixture
-def project() -> str:
-    # This test assumes billing is enabled on the project
-    project_name = f"projects/{PROJECT_ID}"
-
-    cloud_billing_client = billing.CloudBillingClient()
-    request = billing.GetProjectBillingInfoRequest(name=project_name)
-    project_billing_info = cloud_billing_client.get_project_billing_info(request)
-
-    yield PROJECT_ID
-
-    # Re-enable billing in teardown
-    request = billing.UpdateProjectBillingInfoRequest(
-        name=project_name,
-        project_billing_info=billing.ProjectBillingInfo(
-            billing_account_name=project_billing_info.billing_account_name
-        ),
-    )
-    cloud_billing_client.update_project_billing_info(request)
-
-
-def test_stop_billing_under_budget(capsys, project: str):
+def test_stop_billing_under_budget(capsys):
     billing_data = {
         "costAmount": 10,
         "budgetAmount": 100.1,
@@ -63,7 +42,7 @@ def test_stop_billing_under_budget(capsys, project: str):
     assert "No action necessary" in stdout
 
 
-def test_stop_billing_over_budget(capsys, project: str):
+def test_stop_billing_over_budget(capsys):
     billing_data = {
         "costAmount": 120,
         "budgetAmount": 100.1,
@@ -74,11 +53,46 @@ def test_stop_billing_over_budget(capsys, project: str):
     )
 
     pubsub_message = {"data": encoded_data}
-    stop_billing(pubsub_message, None)
+
+    # NOTE(busunkim): The service account doesn't have sufficient permissions
+    # to disable billing on projects. Mock the call that disables billing on
+    # the project.
+    with mock.patch(
+        "google.cloud.billing.CloudBillingClient.update_project_billing_info",
+        autospec=True,
+    ) as update_billing:
+        stop_billing(pubsub_message, None)
+        update_billing.assert_called_once()
+        assert update_billing.call_args.args[1].name == f"projects/{PROJECT_ID}"
+        assert (
+            update_billing.call_args.args[1].project_billing_info.billing_account_name
+            == ""
+        )
     stdout, _ = capsys.readouterr()
     assert "Billing disabled" in stdout
 
-    # Stop billing again.
-    stop_billing(pubsub_message, None)
+
+def test_stop_billing_already_disabled(capsys, project: str):
+    billing_data = {
+        "costAmount": 120,
+        "budgetAmount": 100.1,
+    }
+
+    encoded_data = base64.b64encode(json.dumps(billing_data).encode("utf-8")).decode(
+        "utf-8"
+    )
+
+    pubsub_message = {"data": encoded_data}
+
+    # NOTE(busunkim): The service account doesn't have sufficient permissions
+    # to disable billing on projects. Here we use a mock to test the case where
+    # billing is alredy disabled.
+    with mock.patch(
+        "google.cloud.billing.CloudBillingClient.get_project_billing_info",
+        autospec=True,
+        return_value=billing.ProjectBillingInfo(billing_enabled=False),
+    ):
+        stop_billing(pubsub_message, None)
+
     stdout, _ = capsys.readouterr()
     assert "Billing already disabled" in stdout
