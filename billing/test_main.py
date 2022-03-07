@@ -19,10 +19,20 @@ from unittest import mock
 import google.auth
 from google.cloud import billing
 
-from main import stop_billing
+from main import stop_billing, _is_billing_enabled
 
 
 PROJECT_ID = google.auth.default()[1]
+
+# NOTE(busunkim): These tests use mocks instead of disabling/enabling
+# the test project because a service account cannot be
+# granted sufficient permissions to add a biling account to the project. 
+# 
+# https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_an_existing_project
+
+
+def test__is_billing_enabled():
+    assert _is_billing_enabled(f"projects/{PROJECT_ID}") == True
 
 
 def test_stop_billing_under_budget(capsys):
@@ -54,9 +64,6 @@ def test_stop_billing_over_budget(capsys):
 
     pubsub_message = {"data": encoded_data}
 
-    # NOTE(busunkim): The service account doesn't have sufficient permissions
-    # to disable billing on projects. Mock the call that disables billing on
-    # the project.
     with mock.patch(
         "google.cloud.billing.CloudBillingClient.update_project_billing_info",
         autospec=True,
@@ -72,7 +79,7 @@ def test_stop_billing_over_budget(capsys):
     assert "Billing disabled" in stdout
 
 
-def test_stop_billing_already_disabled(capsys, project: str):
+def test_stop_billing_already_disabled(capsys):
     billing_data = {
         "costAmount": 120,
         "budgetAmount": 100.1,
@@ -84,9 +91,6 @@ def test_stop_billing_already_disabled(capsys, project: str):
 
     pubsub_message = {"data": encoded_data}
 
-    # NOTE(busunkim): The service account doesn't have sufficient permissions
-    # to disable billing on projects. Here we use a mock to test the case where
-    # billing is alredy disabled.
     with mock.patch(
         "google.cloud.billing.CloudBillingClient.get_project_billing_info",
         autospec=True,
