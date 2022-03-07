@@ -69,9 +69,10 @@ def test_stop_billing_over_budget(capsys):
     ) as update_billing:
         stop_billing(pubsub_message, None)
         update_billing.assert_called_once()
-        assert update_billing.call_args.args[1].name == f"projects/{PROJECT_ID}"
+
+        assert update_billing.call_args[0][1].name == f"projects/{PROJECT_ID}"
         assert (
-            update_billing.call_args.args[1].project_billing_info.billing_account_name
+            update_billing.call_args[0][1].project_billing_info.billing_account_name
             == ""
         )
     stdout, _ = capsys.readouterr()
