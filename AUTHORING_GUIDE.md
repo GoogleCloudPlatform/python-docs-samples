@@ -395,7 +395,7 @@ example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/ap
 * Avoid infinite loops.
 * Retry RPCs
 * You can enable running tests in parallel by adding `pytest-parallel` or `pytest-xdist`
-  to your `requirements.txt` file.
+  to your `requirements-test.txt` file.
 
 ### Arrange, Act, Assert
 
