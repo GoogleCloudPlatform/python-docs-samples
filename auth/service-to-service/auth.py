@@ -32,16 +32,13 @@ def make_authorized_get_request(service_url, audience):
     """
 
     # [END functions_bearer_token]
-    """
     # Cloud Run uses your service's hostname as the `audience` value
     # audience = 'https://my-cloud-run-service.run.app/'
-    """
-    # [START functions_bearer_token]
     # [END cloudrun_service_to_service_auth]
-    """
+    
+    # [START functions_bearer_token]
     # Cloud Functions uses your function's URL as the `audience` value
     # audience = https://project-region-projectid.cloudfunctions.net/myFunction
-    """
     # [START cloudrun_service_to_service_auth]
 
     req = urllib.request.Request(service_url)
