@@ -1,6 +1,6 @@
 numpy==1.21.4; python_version > "3.6"
 tensorflow==2.8.0
-earthengine-api==0.1.300
+earthengine-api==0.1.301
 pytest==7.0.1
 pytest-xdist==2.5.0
 google-cloud-aiplatform==1.11.0
