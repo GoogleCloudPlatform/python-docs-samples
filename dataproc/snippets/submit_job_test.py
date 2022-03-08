@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.exceptions import NotFound
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
@@ -36,25 +37,34 @@ CLUSTER = {
 
 @pytest.fixture(autouse=True)
 def setup_teardown():
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
-    )
+    try:
+        cluster_client = dataproc.ClusterControllerClient(
+            client_options={
+                "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
+            }
+        )
 
-    # Create the cluster.
-    operation = cluster_client.create_cluster(
-        request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
-    )
-    operation.result()
+        # Create the cluster.
+        operation = cluster_client.create_cluster(
+            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+        )
+        operation.result()
 
-    yield
+        yield
 
-    cluster_client.delete_cluster(
-        request={
-            "project_id": PROJECT_ID,
-            "region": REGION,
-            "cluster_name": CLUSTER_NAME,
-        }
-    )
+    finally:
+        try:
+            operation = cluster_client.delete_cluster(
+                request={
+                    "project_id": PROJECT_ID,
+                    "region": REGION,
+                    "cluster_name": CLUSTER_NAME,
+                }
+            )
+            operation.result()
+
+        except NotFound:
+            print("Cluster already deleted")
 
 
 def test_submit_job(capsys):

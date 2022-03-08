@@ -19,6 +19,7 @@
 import os
 import uuid
 
+from google.api_core.exceptions import NotFound
 from google.cloud.dataproc_v1.services.cluster_controller.client import (
     ClusterControllerClient,
 )
@@ -41,31 +42,36 @@ CLUSTER = {
 }
 
 
-@pytest.fixture(autouse=True)
-def setup_teardown(cluster_client):
-    # Create the cluster.
-    operation = cluster_client.create_cluster(
-        request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
-    )
-    operation.result()
-
-    yield
-
-    cluster_client.delete_cluster(
-        request={
-            "project_id": PROJECT_ID,
-            "region": REGION,
-            "cluster_name": CLUSTER_NAME,
-        }
-    )
-
-
 @pytest.fixture
 def cluster_client():
     cluster_client = ClusterControllerClient(
         client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
     )
     return cluster_client
+
+
+@pytest.fixture(autouse=True)
+def setup_teardown(cluster_client):
+    try:
+        # Create the cluster.
+        operation = cluster_client.create_cluster(
+            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+        )
+        operation.result()
+
+        yield
+    finally:
+        try:
+            operation = cluster_client.delete_cluster(
+                request={
+                    "project_id": PROJECT_ID,
+                    "region": REGION,
+                    "cluster_name": CLUSTER_NAME,
+                }
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
 
 
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
