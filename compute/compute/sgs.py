@@ -45,9 +45,9 @@ HEADER = """\
 # directory and apply your changes there.
 """
 
-DEFAULT_OUTPUT_PATH = Path("sgs_test_fixtures/output")
-INGREDIENTS_PATH = Path("sgs_test_fixtures/ingredients")
-RECIPES_PATH = Path("sgs_test_fixtures/recipes")
+DEFAULT_OUTPUT_PATH = Path("snippets")
+INGREDIENTS_PATH = Path("ingredients")
+RECIPES_PATH = Path("recipes")
 
 
 @dataclass
@@ -133,7 +133,10 @@ def load_ingredient(path: Path) -> Ingredient:
             ingredient_name = INGREDIENTS_START.match(line).group(1)
             in_ingredient = True
     else:
-        warnings.warn(f"The ingredient in {path} has no closing tag.", SyntaxWarning)
+        if in_ingredient:
+            warnings.warn(
+                f"The ingredient in {path} has no closing tag.", SyntaxWarning
+            )
     return Ingredient(
         name=ingredient_name,
         text="".join(ingredient_lines),
@@ -164,7 +167,7 @@ def load_recipes(path: Path) -> dict:
         if ipath.is_dir():
             recipes.update(load_recipes(ipath))
         elif ipath.is_file():
-            recipes[ipath] = load_recipe(ipath)
+            recipes[ipath.absolute()] = load_recipe(ipath)
     return recipes
 
 
@@ -254,10 +257,9 @@ def save_rendered_recipe(
     output_dir: Path = DEFAULT_OUTPUT_PATH,
     recipes_path: Path = RECIPES_PATH,
 ) -> Path:
-    output_dir.mkdir(exist_ok=True)
-
+    output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / recipe_path.relative_to(recipes_path)
-    output_path.parent.mkdir(exist_ok=True)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open(mode="w") as out_file:
         out_file.write(rendered_recipe)
@@ -282,7 +284,12 @@ def generate(
 
     for path, recipe in recipes.items():
         rendered = render_recipe(recipe, ingredients)
-        out = save_rendered_recipe(path, rendered, output_dir=Path(args.output_dir))
+        out = save_rendered_recipe(
+            path.absolute(),
+            rendered,
+            recipes_path=recipes_path.absolute(),
+            output_dir=Path(args.output_dir),
+        )
         updated_paths.add(str(out))
 
     print("Generated files:")

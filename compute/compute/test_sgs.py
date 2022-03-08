@@ -16,7 +16,7 @@ import glob
 from pathlib import Path
 import tempfile
 
-import sgs
+from . import sgs
 
 FIXTURE_INGREDIENTS = Path("sgs_test_fixtures/ingredients")
 FIXTURE_RECIPES = Path("sgs_test_fixtures/recipes")
@@ -26,7 +26,7 @@ FIXTURE_OUTPUT = Path("sgs_test_fixtures/output")
 def test_sgs_generate():
     with tempfile.TemporaryDirectory() as tmp_dir:
         args = Namespace(output_dir=tmp_dir)
-        sgs.generate(args, FIXTURE_INGREDIENTS, FIXTURE_RECIPES)
+        sgs.generate(args, FIXTURE_INGREDIENTS.absolute(), FIXTURE_RECIPES.absolute())
         for test_file in map(Path, glob.glob(f"{tmp_dir}/**")):
             match_file = FIXTURE_OUTPUT / test_file.relative_to(tmp_dir)
             assert test_file.read_bytes() == match_file.read_bytes()
