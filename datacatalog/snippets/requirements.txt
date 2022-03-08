@@ -1,1 +1,1 @@
-google-cloud-datacatalog==3.7.0
+google-cloud-datacatalog==3.7.1
