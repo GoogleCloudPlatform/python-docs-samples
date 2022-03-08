@@ -1,8 +1,8 @@
 cryptography==36.0.1
-google-api-python-client==2.38.0
+google-api-python-client==2.39.0
 google-auth-httplib2==0.1.0
 google-auth==2.5.0
-google-cloud-iot==2.4.0
+google-cloud-iot==2.4.1
 google-cloud-pubsub==2.9.0
 pyjwt==2.3.0
 requests==2.27.1
