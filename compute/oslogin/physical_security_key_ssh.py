@@ -58,7 +58,7 @@ def main(user_key, ip_address, dryrun, directory=None):
     security_keys = profile.get("securityKeys")
 
     if "posixAccounts" not in profile:
-        print("You need to have at least one OS Login enabled VM in your project.")
+        print("You don't have a POSIX account configured.")
         return
 
     username = profile.get("posixAccounts")[0].get("username")
