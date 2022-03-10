@@ -70,7 +70,7 @@ def remove_fulfillment_places(product_name: str, timestamp, store_id):
 
 
 create_product(product_id)
-print("------remove fulfilment places with current date: {}-----".format(current_date))
+print(f"------remove fulfilment places with current date: {current_date}-----")
 remove_fulfillment_places(product_name, current_date, "store0")
 get_product(product_name)
 delete_product(product_name)

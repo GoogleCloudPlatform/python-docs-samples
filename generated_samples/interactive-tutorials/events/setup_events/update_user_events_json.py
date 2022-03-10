@@ -21,4 +21,4 @@ def update_events_timestamp(json_file):
     # Write the file out again
     with open(json_file, 'w') as file:
         file.write(filedata)
-    print("The {} is updated".format(json_file))
+    print(f"The {json_file} is updated")

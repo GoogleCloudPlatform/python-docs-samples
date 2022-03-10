@@ -35,9 +35,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 
 project_id = google.auth.default()[1]
 
-default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
-    project_id
-)
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
 
 
 # get user events for import

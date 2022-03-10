@@ -64,7 +64,7 @@ try:
     sys.path.append(".")
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
-    print("No user noxfile_config found: detail: {}".format(e))
+    print(f"No user noxfile_config found: detail: {e}")
     TEST_CONFIG_OVERRIDE = {}
 
 # Update the TEST_CONFIG with the user supplied values.
@@ -222,9 +222,7 @@ def py(session: nox.sessions.Session) -> None:
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        session.skip(
-            "SKIPPED: {} tests are disabled for this sample.".format(session.python)
-        )
+        session.skip(f"SKIPPED: {session.python} tests are disabled for this sample.")
 
 
 #

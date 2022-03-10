@@ -24,9 +24,8 @@ from setup_events.setup_cleanup import write_user_event
 
 project_id = google.auth.default()[1]
 
-default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
-    project_id
-)
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
+
 visitor_id = "test_visitor_id"
 
 
@@ -34,7 +33,7 @@ visitor_id = "test_visitor_id"
 def get_purge_user_event_request():
     purge_user_event_request = PurgeUserEventsRequest()
     # TO CHECK ERROR HANDLING SET INVALID FILTER HERE:
-    purge_user_event_request.filter = 'visitorId="{}"'.format(visitor_id)
+    purge_user_event_request.filter = f'visitorId="{visitor_id}"'
     purge_user_event_request.parent = default_catalog
     purge_user_event_request.force = True
     print("---purge user events request---")

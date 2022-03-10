@@ -24,16 +24,15 @@ from setup_events.setup_cleanup import purge_user_event, write_user_event
 
 project_id = google.auth.default()[1]
 
-default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
-    project_id
-)
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
+
 visitor_id = "test_visitor_id"
 
 
 # get rejoin user event request
 def get_rejoin_user_event_request():
     # TO CHECK THE ERROR HANDLING TRY TO PASS INVALID CATALOG:
-    # default_catalog = "projects/{0}/locations/global/catalogs/invalid_catalog".format(project_number)
+    # default_catalog = f"projects/{project_id}/locations/global/catalogs/invalid_catalog"
     rejoin_user_event_request = RejoinUserEventsRequest()
     rejoin_user_event_request.parent = default_catalog
     rejoin_user_event_request.user_event_rejoin_scope = (
