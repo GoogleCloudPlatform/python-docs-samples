@@ -180,17 +180,19 @@ def create_bq_table(dataset, table_name, schema_file_path):
     """Create a BigQuery table"""
     full_table_id = f"{project_id}.{dataset}.{table_name}"
     bq = bigquery.Client()
-    print(f"Creating BigQuery table {full_table_id}")
+    print(f"Check if BQ table {full_table_id} exists")
     try:
         bq.get_table(full_table_id)
-        print(f"table {full_table_id} already exists")
+        print(f"table {full_table_id} exists and will be deleted")
+        delete_bq_table(dataset, table_name)
     except NotFound:
-        # Construct a Table object to send to the API.
-        with open(schema_file_path, "rb") as schema:
-            schema_dict = json.load(schema)
-            table = bigquery.Table(full_table_id, schema=schema_dict)
-        bq.create_table(table)
-        print("table is created")
+        print(f"table {full_table_id} does not exist")
+    # Construct a Table object to send to the API.
+    with open(schema_file_path, "rb") as schema:
+        schema_dict = json.load(schema)
+        table = bigquery.Table(full_table_id, schema=schema_dict)
+    bq.create_table(table)
+    print(f"table {full_table_id} is created")
 
 
 def delete_bq_table(dataset, table_name):

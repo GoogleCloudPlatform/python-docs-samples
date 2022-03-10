@@ -30,10 +30,6 @@ from google.cloud.retail_v2.types import product
 
 from setup_product.setup_cleanup import create_product, delete_product
 
-# from google.protobuf.field_mask_pb2 import FieldMask
-# from google.protobuf.field_mask_pb2 import FieldMask
-
-
 project_id = google.auth.default()[1]
 default_branch_name = (
     "projects/"
