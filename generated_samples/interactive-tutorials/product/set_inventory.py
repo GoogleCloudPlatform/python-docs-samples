@@ -44,7 +44,7 @@ product_name = (
 def get_product_with_inventory_info(product_name: str) -> Product:
     price_info = PriceInfo()
     price_info.price = 15.0
-    price_info.original_price = 20.0
+    price_info.original_price = 60.0
     price_info.cost = 8.0
     price_info.currency_code = "USD"
 
@@ -65,8 +65,6 @@ def get_product_with_inventory_info(product_name: str) -> Product:
 def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
     # The request timestamp
     request_time = datetime.datetime.now()
-    # The out-of-order request timestamp
-    # request_time = datetime.datetime.now() - datetime.timedelta(days=1)
     set_mask = FieldMask(
         paths=["price_info", "availability", "fulfillment_info", "available_quantity"]
     )
@@ -90,8 +88,8 @@ def set_inventory(product_name: str):
 
     # This is a long running operation and its result is not immediately present with get operations,
     # thus we simulate wait with sleep method.
-    print("---set inventory, wait 60 seconds:---")
-    time.sleep(60)
+    print("---set inventory, wait 90 seconds:---")
+    time.sleep(90)
 
 
 create_product(product_id)
