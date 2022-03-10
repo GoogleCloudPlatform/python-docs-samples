@@ -40,12 +40,10 @@ def main(bucket_name):
     # TODO: Developer set the bucket_name
     # bucket_name = 'user_events_bucket'
 
-    default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
-        project_id
-    )
+    default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
 
-    gcs_bucket = "gs://{}".format(bucket_name)
-    gcs_errors_bucket = "{}/error".format(gcs_bucket)
+    gcs_bucket = f"gs://{bucket_name}"
+    gcs_errors_bucket = f"{gcs_bucket}/error"
     gcs_events_object = "user_events.json"
 
     # TO CHECK ERROR HANDLING USE THE JSON WITH INVALID PRODUCT

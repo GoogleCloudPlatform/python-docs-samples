@@ -31,8 +31,7 @@ from google.cloud.retail_v2 import Product
 from google.protobuf.timestamp_pb2 import Timestamp
 
 project_id = google.auth.default()[1]
-default_catalog = "projects/{0}/locations/global/catalogs/default_catalog".format(
-    project_id)
+default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
 
 
 # get user event
@@ -71,7 +70,7 @@ def write_user_event(visitor_id):
 # purge user event
 def purge_user_event(visitor_id):
     purge_user_event_request = PurgeUserEventsRequest()
-    purge_user_event_request.filter = 'visitorId="{}"'.format(visitor_id)
+    purge_user_event_request.filter = f'visitorId="{visitor_id}"'
     purge_user_event_request.parent = default_catalog
     purge_user_event_request.force = True
     purge_operation = UserEventServiceClient().purge_user_events(
@@ -93,17 +92,14 @@ def create_bucket(bucket_name: str):
     print("Creating new bucket:" + bucket_name)
     buckets_in_your_project = list_buckets()
     if bucket_name in buckets_in_your_project:
-        print("Bucket {} already exists".format(bucket_name))
+        print(f"Bucket {bucket_name} already exists")
     else:
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
         bucket.storage_class = "STANDARD"
         new_bucket = storage_client.create_bucket(bucket, location="us")
         print(
-            "Created bucket {} in {} with storage class {}".format(
-                new_bucket.name, new_bucket.location, new_bucket.storage_class
-            )
-        )
+            f"Created bucket {new_bucket.name} in {new_bucket.location} with storage class {new_bucket.storage_class}")
         return new_bucket
 
 
@@ -118,9 +114,9 @@ def delete_bucket(bucket_name: str):
             blob.delete()
         bucket = storage_client.get_bucket(bucket_name)
         bucket.delete()
-        print("Bucket {} is deleted".format(bucket.name))
+        print(f"Bucket {bucket.name} is deleted")
     else:
-        print("Bucket {} is not found".format(bucket_name))
+        print(f"Bucket {bucket_name} is not found")
 
 
 def list_buckets():
@@ -137,17 +133,14 @@ def upload_blob(bucket_name, source_file_name):
     """Uploads a file to the bucket."""
     # The path to your file to upload
     # source_file_name = "local/path/to/file"
-    print("Uploading data form {} to the bucket {}".format(source_file_name,
-                                                           bucket_name))
+    print(f"Uploading data from {source_file_name} to the bucket {bucket_name}")
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     object_name = re.search('resources/(.*?)$', source_file_name).group(1)
     blob = bucket.blob(object_name)
     blob.upload_from_filename(source_file_name)
     print(
-        "File {} uploaded to {}.".format(
-            source_file_name, object_name
-        )
+        f"File {source_file_name} uploaded to {object_name}."
     )
 
 
@@ -190,7 +183,7 @@ def delete_bq_table(dataset, table_name):
     full_table_id = f"{project_id}.{dataset}.{table_name}"
     bq = bigquery.Client()
     bq.delete_table(full_table_id, not_found_ok=True)
-    print("Table '{}' is deleted.".format(full_table_id))
+    print(f"Table '{full_table_id}' is deleted.")
 
 
 def upload_data_to_bq_table(dataset, table_name, source, schema_file_path):

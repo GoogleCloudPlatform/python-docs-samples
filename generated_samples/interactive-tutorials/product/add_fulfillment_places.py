@@ -70,7 +70,7 @@ def add_fulfillment_places(product_name: str, timestamp, place_id):
 
 
 create_product(product_id)
-print("------add fulfilment places with current date: {}-----".format(current_date))
+print(f"------add fulfilment places with current date: {current_date}-----")
 add_fulfillment_places(product_name, current_date, "store2")
 get_product(product_name)
 delete_product(product_name)

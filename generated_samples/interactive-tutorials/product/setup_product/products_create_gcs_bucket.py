@@ -20,10 +20,10 @@ from setup_cleanup import create_bucket, upload_blob
 
 project_id = google.auth.default()[1]
 timestamp_ = datetime.datetime.now().timestamp().__round__()
-bucket_name = "{}_products_{}".format(project_id, timestamp_)
+bucket_name = f"{project_id}_products_{timestamp_}"
 
 create_bucket(bucket_name)
 upload_blob(bucket_name, "../resources/products.json")
 upload_blob(bucket_name, "../resources/products_some_invalid.json")
 
-print("\nThe gcs bucket {} was created".format(bucket_name))
+print(f"\nThe gcs bucket {bucket_name} was created")

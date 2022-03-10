@@ -41,11 +41,11 @@ def delete_bucket(bucket_name):
     try:
         bucket = storage_client.get_bucket(bucket_name)
     except NotFound:
-        print("Bucket {} does not exists".format(bucket_name))
+        print(f"Bucket {bucket_name} does not exists")
     else:
         delete_object_from_bucket(bucket)
         bucket.delete()
-        print("bucket {} is deleted".format(bucket_name))
+        print(f"bucket {bucket_name} is deleted")
 
 
 def delete_object_from_bucket(bucket: Bucket):
@@ -53,7 +53,7 @@ def delete_object_from_bucket(bucket: Bucket):
     blobs = bucket.list_blobs()
     for blob in blobs:
         blob.delete()
-    print("all objects are deleted from GCS bucket {}".format(bucket.name))
+    print(f"all objects are deleted from GCS bucket {bucket.name}")
 
 
 def delete_all_products():
@@ -78,7 +78,7 @@ def delete_all_products():
 
 def delete_bq_dataset_with_tables(dataset):
     """Delete a BigQuery dataset with all tables"""
-    delete_dataset_command = "bq rm -r -d -f {}".format(dataset)
+    delete_dataset_command = f"bq rm -r -d -f {dataset}"
     output = subprocess.check_output(shlex.split(delete_dataset_command))
     print(output)
 

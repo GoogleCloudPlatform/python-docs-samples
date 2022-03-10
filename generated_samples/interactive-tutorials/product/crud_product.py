@@ -38,7 +38,7 @@ default_branch_name = (
     + "/locations/global/catalogs/default_catalog/branches/default_branch"
 )
 product_id = "".join(random.sample(string.ascii_lowercase, 8))
-product_name = "{}/products/{}".format(default_branch_name, product_id)
+product_name = f"{default_branch_name}/products/{product_id}"
 
 
 # generate product for create
