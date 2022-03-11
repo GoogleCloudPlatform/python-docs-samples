@@ -1,0 +1,6 @@
+runtime: python39
+app_engine_apis: true
+
+inbound_services:
+- mail
+- mail_bounce
