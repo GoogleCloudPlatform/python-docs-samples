@@ -25,8 +25,7 @@ import check_latest_transfer_operation_apiary
 
 
 @pytest.fixture()
-def transfer_job(
-    project_id: str, source_bucket: Bucket, destination_bucket: Bucket):
+def transfer_job(project_id: str, source_bucket: Bucket, destination_bucket: Bucket):
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
         "description": "Sample job",
@@ -65,13 +64,13 @@ def transfer_job(
     # Remove job
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def remove_job():
-        client.update_transfer_job({
-            "job_name": result.name,
-            "project_id": project_id,
-            "transfer_job": {
-                "status": storage_transfer.TransferJob.Status.DELETED
+        client.update_transfer_job(
+            {
+                "job_name": result.name,
+                "project_id": project_id,
+                "transfer_job": {"status": storage_transfer.TransferJob.Status.DELETED},
             }
-        })
+        )
 
     remove_job()
 
