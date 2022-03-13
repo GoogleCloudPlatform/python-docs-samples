@@ -19,6 +19,8 @@ specified payload to an existing secret.
 
 import argparse
 
+import google_crc32c
+
 
 # [START secretmanager_add_secret_version]
 def add_secret_version(project_id, secret_id, payload):
@@ -39,9 +41,17 @@ def add_secret_version(project_id, secret_id, payload):
     # pass in bytes instead of a str for the payload argument.
     payload = payload.encode("UTF-8")
 
+    # Calculate payload checksum. Passing a checksum in add-version request
+    # is optional.
+    crc32c = google_crc32c.Checksum()
+    crc32c.update(payload)
+
     # Add the secret version.
     response = client.add_secret_version(
-        request={"parent": parent, "payload": {"data": payload}}
+        request={
+            "parent": parent,
+            "payload": {"data": payload, "data_crc32c": int(crc32c.hexdigest(), 16)},
+        }
     )
 
     # Print the new secret version name.
