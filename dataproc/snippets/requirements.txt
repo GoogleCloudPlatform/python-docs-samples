@@ -4,5 +4,5 @@ grpcio==1.44.0
 google-auth==2.6.0
 google-auth-httplib2==0.1.0
 google-cloud==0.34.0
-google-cloud-storage==2.1.0
+google-cloud-storage==2.2.0
 google-cloud-dataproc==4.0.1
