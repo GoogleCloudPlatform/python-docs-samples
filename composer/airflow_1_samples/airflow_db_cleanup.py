@@ -186,7 +186,8 @@ try:
         "age_check_column": ImportError.timestamp,
         "keep_last": False,
         "keep_last_filters": None,
-        "keep_last_group_by": None
+        "keep_last_group_by": None,
+        "do_not_delete_by_dag_id": True
     })
 
 except Exception as e:
@@ -204,13 +205,15 @@ if (airflow_executor == "CeleryExecutor"):
             "age_check_column": Task.date_done,
             "keep_last": False,
             "keep_last_filters": None,
-            "keep_last_group_by": None
+            "keep_last_group_by": None,
+            "do_not_delete_by_dag_id": True
         }, {
             "airflow_db_model": TaskSet,
             "age_check_column": TaskSet.date_done,
             "keep_last": False,
             "keep_last_filters": None,
-            "keep_last_group_by": None
+            "keep_last_group_by": None,
+            "do_not_delete_by_dag_id": True
         }))
 
     except Exception as e:
@@ -358,10 +361,16 @@ def cleanup_function(**context):
 
         if ENABLE_DELETE:
             logging.info("Performing Delete...")
-            # using bulk delete
-            query.delete(synchronize_session=False)
-            session.commit()
-            logging.info("Finished Performing Delete")
+            if ("do_not_delete_by_dag_id" in context["params"] and 
+                    context["params"].get("do_not_delete_by_dag_id")):
+                query.filter(age_check_column <= max_date,).delete(synchronize_session=False)
+                session.commit()
+            else:
+                dags = session.query(airflow_db_model.dag_id).distinct();
+                list_dags = [str(list(dag)[0]) for dag in dags]
+                for dag in list_dags:
+                    query.filter(age_check_column <= max_date,).filter(airflow_db_model.dag_id==dag).delete(synchronize_session=False)
+                    session.commit()
         else:
             logging.warn("You've opted to skip deleting the db entries. "
                          "Set ENABLE_DELETE to True to delete entries!!!")
