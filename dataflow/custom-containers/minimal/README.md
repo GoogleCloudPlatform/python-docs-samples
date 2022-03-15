@@ -32,12 +32,12 @@ gcloud builds submit . --tag=$IMAGE
 
 ## Running the Dataflow job
 
-** ⚠️ Make sure you launch the pipeline using the same Python version as the
-container image.**
+We use Cloud Build to run the [Dataflow](https://cloud.google.com/dataflow) job.
 
-> We can launch the pipeline from the same container, for an example on
-> how to do that with Cloud Build, see the
-> [`tensorflow-minimal`](../../gpu-examples/tensorflow-minimal) example
+The [`run.yaml`](run.yaml) file contains the command we use to launch the Dataflow job.
+
+> ℹ️ We launch the job using the worker image to make sure the job launches
+> with the same Python version as the workers and all the dependencies installed.
 
 ```sh
 # Choose the location where you want to run your Dataflow job.
@@ -45,10 +45,11 @@ container image.**
 #   https://cloud.google.com/dataflow/docs/resources/locations
 export REGION="us-central1"
 
-python main.py \
-    --runner DataflowRunner \
-    --project $PROJECT \
-    --region $REGION \
-    --temp_location gs://$BUCKET/samples/dataflow-slim \
-    --sdk_container_image=$IMAGE
+export JOB_NAME="dataflow-slim-$(date +"%F-%H%M%S")"
+export TEMP_LOCATION="gs://$BUCKET/samples/dataflow-slim"
+
+gcloud builds submit \
+    --config run.yaml \
+    --substitutions "_JOB_NAME=$JOB_NAME,_REGION=$REGION,_TEMP_LOCATION=$TEMP_LOCATION" \
+    --no-source
 ```

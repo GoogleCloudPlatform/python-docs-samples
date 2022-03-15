@@ -28,6 +28,8 @@ RUN conda create -y -n env python=3.9 \
 # -- Main image
 FROM ubuntu:latest
 
+WORKDIR /pipeline
+
 # Set the entrypoint to Apache Beam SDK worker launcher.
 COPY --from=apache/beam_python3.9_sdk:2.37.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
