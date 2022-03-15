@@ -361,7 +361,7 @@ def cleanup_function(**context):
 
         if ENABLE_DELETE:
             logging.info("Performing Delete...")
-            if (context["params"].get("do_not_delete_by_dag_id")):
+            if context["params"].get("do_not_delete_by_dag_id"):
                 query.filter(age_check_column <= max_date,).delete(synchronize_session=False)
                 session.commit()
             else:
