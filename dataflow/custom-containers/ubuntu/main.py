@@ -16,12 +16,15 @@
 
 import logging
 import platform
+from typing import List, Optional
 
 import apache_beam as beam
+from apache_beam.options.pipeline_options import PipelineOptions
 
 
-def run() -> None:
-    with beam.Pipeline() as pipeline:
+def run(beam_args: Optional[List[str]] = None) -> None:
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
+    with beam.Pipeline(options=beam_options) as pipeline:
         (
             pipeline
             | "Create data" >> beam.Create(["Hello", "World!", platform.platform()])
