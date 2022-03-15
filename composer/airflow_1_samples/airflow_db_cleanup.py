@@ -365,10 +365,10 @@ def cleanup_function(**context):
                 query.filter(age_check_column <= max_date,).delete(synchronize_session=False)
                 session.commit()
             else:
-                dags = session.query(airflow_db_model.dag_id).distinct();
+                dags = session.query(airflow_db_model.dag_id).distinct()
                 list_dags = [str(list(dag)[0]) for dag in dags]
                 for dag in list_dags:
-                    query.filter(age_check_column <= max_date,).filter(airflow_db_model.dag_id==dag).delete(synchronize_session=False)
+                    query.filter(age_check_column <= max_date,).filter(airflow_db_model.dag_id == dag).delete(synchronize_session=False)
                     session.commit()
         else:
             logging.warn("You've opted to skip deleting the db entries. "
