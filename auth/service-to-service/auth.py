@@ -16,33 +16,39 @@
 Demonstrates how to send authenticated service-to-service requests, eg
 for Cloud Run or Cloud Functions"""
 
-# [START google_auth_idtoken_serverless]
 # [START functions_bearer_token]
 # [START cloudrun_service_to_service_auth]
-# [START run_service_to_service_auth]
 import urllib
 
 import google.auth.transport.requests
 import google.oauth2.id_token
 
 
-def make_authorized_get_request(service_url):
+def make_authorized_get_request(service_url, audience):
     """
     make_authorized_get_request makes a GET request to the specified HTTP endpoint
-    in service_url (must be a complete URL) by authenticating with the
-    ID token obtained from the google-auth client library.
+    by authenticating with the ID token obtained from the google-auth client library
+    using the specified audience value.
     """
+
+    # [END functions_bearer_token]
+    # Cloud Run uses your service's hostname as the `audience` value
+    # audience = 'https://my-cloud-run-service.run.app/'
+    # [END cloudrun_service_to_service_auth]
+
+    # [START functions_bearer_token]
+    # Cloud Functions uses your function's URL as the `audience` value
+    # audience = https://project-region-projectid.cloudfunctions.net/myFunction
+    # [START cloudrun_service_to_service_auth]
 
     req = urllib.request.Request(service_url)
 
     auth_req = google.auth.transport.requests.Request()
-    id_token = google.oauth2.id_token.fetch_id_token(auth_req, service_url)
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, audience)
 
     req.add_header("Authorization", f"Bearer {id_token}")
     response = urllib.request.urlopen(req)
 
     return response.read()
-# [END run_service_to_service_auth]
 # [END cloudrun_service_to_service_auth]
 # [END functions_bearer_token]
-# [END google_auth_idtoken_serverless]
