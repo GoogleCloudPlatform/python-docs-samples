@@ -17,8 +17,8 @@
 # Change the working directory
 current_path=$(pwd)
 temp_path="${current_path%cloudshell_open*}"
-full_path=temp_path"cloudshell_open/python-retail/samples/interactive-tutorials/product"
-
+full_path=$temp_path"cloudshell_open/python-retail/samples/interactive-tutorials/product"
+cd $full_path
 # Create a GCS bucket and upload the product data to the bucket
 output=$(python setup_product/products_create_gcs_bucket.py)
 
