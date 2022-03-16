@@ -29,9 +29,10 @@ substitutions:
   _JOB_NAME: ''
   _TEMP_LOCATION: ''
   _REGION: us-central1
+  _IMAGE: samples/dataflow-miniconda:latest
 
 steps:
-- name: gcr.io/$PROJECT_ID/samples/dataflow-miniconda:latest
+- name: gcr.io/$PROJECT_ID/$_IMAGE
   entrypoint: python
   args:
   - /pipeline/main.py
@@ -40,7 +41,7 @@ steps:
   - --region=$_REGION
   - --job_name=$_JOB_NAME
   - --temp_location=$_TEMP_LOCATION
-  - --sdk_container_image=gcr.io/$PROJECT_ID/samples/dataflow-miniconda:latest
+  - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
 
 options:
   logging: CLOUD_LOGGING_ONLY

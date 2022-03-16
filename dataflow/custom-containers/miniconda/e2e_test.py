@@ -40,6 +40,7 @@ def run_dataflow_job(utils: Utils, bucket_name: str, container_image: str) -> st
     yield from utils.cloud_build_submit(
         config="run.yaml",
         substitutions={
+            "_IMAGE": container_image,
             "_JOB_NAME": utils.hyphen_name(NAME),
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
             "_REGION": utils.region,
