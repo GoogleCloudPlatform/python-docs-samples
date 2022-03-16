@@ -41,7 +41,6 @@ def run_dataflow_job(utils: Utils, bucket_name: str, container_image: str) -> st
         config="run.yaml",
         substitutions={
             "_JOB_NAME": utils.hyphen_name(NAME),
-            "_IMAGE": f"{NAME}:{utils.uuid}",
             "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
             "_REGION": utils.region,
         },
@@ -49,7 +48,7 @@ def run_dataflow_job(utils: Utils, bucket_name: str, container_image: str) -> st
     )
 
 
-def test_tensorflow_minimal(utils: Utils, run_dataflow_job: str) -> None:
+def test_custom_container_minimal(utils: Utils, run_dataflow_job: str) -> None:
     # Wait until the job finishes.
     job_id = utils.dataflow_job_id(utils.hyphen_name(NAME))
     utils.dataflow_jobs_wait(job_id)
