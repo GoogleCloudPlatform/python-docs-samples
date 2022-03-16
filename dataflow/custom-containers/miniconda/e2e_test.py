@@ -32,7 +32,7 @@ def bucket_name(utils: Utils) -> str:
 
 @pytest.fixture(scope="session")
 def container_image(utils: Utils) -> str:
-    yield from utils.cloud_build_submit(image_name=NAME)
+    yield from utils.cloud_build_submit(NAME)
 
 
 @pytest.fixture(scope="session")
