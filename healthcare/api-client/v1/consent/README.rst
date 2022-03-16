@@ -8,9 +8,6 @@ Cloud Healthcare API Python Samples
 
 
 This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`_ implements healthcare-native protocols and formats to accelerate ingestion, storage, analysis, and integration of healthcare data with cloud-based applications.
-- See the `migration guide`_ for information about migrating to Python client library v0.25.1.
-
-.. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
 
 
 
@@ -19,7 +16,7 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
 
-To run the sample, you need to have `Healthcare Dataset Administrator` role.
+To run the sample, you need to have `Healthcare Consent Store Administrator` role.
 
 
 
