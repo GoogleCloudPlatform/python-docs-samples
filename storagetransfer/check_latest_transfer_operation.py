@@ -43,7 +43,7 @@ def check_latest_transfer_operation(project_id: str, job_name: str):
     })
 
     if transfer_job.latest_operation_name:
-        response = client._transport.operations_client.get_operation(
+        response = client.transport.operations_client.get_operation(
             transfer_job.latest_operation_name)
         operation = storage_transfer.TransferOperation.deserialize(
             response.metadata.value)

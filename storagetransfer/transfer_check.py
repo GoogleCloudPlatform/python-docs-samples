@@ -45,7 +45,7 @@ def transfer_check(project_id: str, job_name: str):
         'job_names': [job_name]
     })
 
-    response = client._transport.operations_client.list_operations(
+    response = client.transport.operations_client.list_operations(
         "transferOperations", job_filter)
     operations = [
         storage_transfer.TransferOperation.deserialize(
