@@ -1,5 +1,4 @@
 pytest==7.1.0
 pytest-parallel==0.1.1
 flaky==3.7.0
-google-cloud-storage==2.2.0; python_version == '3.6'
-google-cloud-storage==2.2.0; python_version >= '3.7'
+google-cloud-storage==2.2.1
