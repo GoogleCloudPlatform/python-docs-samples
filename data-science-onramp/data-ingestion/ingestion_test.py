@@ -16,11 +16,13 @@ The job uploads a subset of the data to BigQuery.
 Then, data is pulled from BigQuery and checks are made to see if the data is dirty.
 """
 
+
 import os
 import re
 import uuid
 
-from google.api_core.exceptions import NotFound
+import backoff
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -71,7 +73,11 @@ DATAPROC_JOB = {  # Dataproc job configuration
 }
 
 
+# backoff used to retry in the event of subnet not being ready
+# see https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#simultaneous_resource_mutation_or_creation_operations
+# for more info
 @pytest.fixture(autouse=True)
+@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
 def setup_and_teardown_cluster():
     try:
         # Create cluster using cluster client
