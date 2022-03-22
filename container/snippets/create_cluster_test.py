@@ -37,21 +37,23 @@ def setup_and_tear_down() -> None:
     # run the tests here
     yield
 
-    # delete the cluster
-    client = gke.ClusterManagerClient()
-    cluster_location = client.common_location_path(PROJECT_ID, ZONE)
-    cluster_name = f"{cluster_location}/clusters/{CLUSTER_NAME}"
-    op = client.delete_cluster({"name": cluster_name})
-    op_id = f"{cluster_location}/operations/{op.name}"
+    try:
+        # delete the cluster
+        client = gke.ClusterManagerClient()
+        cluster_location = client.common_location_path(PROJECT_ID, ZONE)
+        cluster_name = f"{cluster_location}/clusters/{CLUSTER_NAME}"
+        op = client.delete_cluster({"name": cluster_name})
+        op_id = f"{cluster_location}/operations/{op.name}"
 
-    # schedule a retry to ensure the cluster is deleted
-    @backoff.on_predicate(
-        backoff.expo, lambda x: x != gke.Operation.Status.DONE, max_tries=20
-    )
-    def wait_for_delete() -> gke.Operation.Status:
-        return client.get_operation({"name": op_id}).status
+    finally:
+        # schedule a retry to ensure the cluster is deleted
+        @backoff.on_predicate(
+            backoff.expo, lambda x: x != gke.Operation.Status.DONE, max_tries=20
+        )
+        def wait_for_delete() -> gke.Operation.Status:
+            return client.get_operation({"name": op_id}).status
 
-    wait_for_delete()
+        wait_for_delete()
 
 
 def test_create_clusters(capsys: object) -> None:
