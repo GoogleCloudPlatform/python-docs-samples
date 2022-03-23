@@ -20,12 +20,14 @@
 
 
 # [START compute_stop_instance]
+import time
+
 from google.cloud import compute_v1
 
 
-def stop_instance(project_id: str, zone: str, instance_name: str):
+def stop_instance(project_id: str, zone: str, instance_name: str) -> None:
     """
-    Stops a stopped Google Compute Engine instance.
+    Stops a running Google Compute Engine instance.
     Args:
         project_id: project ID or project number of the Cloud project your instance belongs to.
         zone: name of the zone your instance belongs to.
@@ -38,8 +40,11 @@ def stop_instance(project_id: str, zone: str, instance_name: str):
         project=project_id, zone=zone, instance=instance_name
     )
 
+    start = time.time()
     while op.status != compute_v1.Operation.Status.DONE:
         op = op_client.wait(operation=op.name, zone=zone, project=project_id)
+        if time.time() - start >= 300:  # 5 minutes
+            raise TimeoutError()
     return
 
 

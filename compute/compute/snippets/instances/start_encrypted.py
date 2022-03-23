@@ -20,6 +20,8 @@
 
 
 # [START compute_start_enc_instance]
+import time
+
 from google.cloud import compute_v1
 
 
@@ -60,8 +62,11 @@ def start_instance_with_encryption_key(
         instances_start_with_encryption_key_request_resource=enc_data,
     )
 
+    start = time.time()
     while op.status != compute_v1.Operation.Status.DONE:
         op = op_client.wait(operation=op.name, zone=zone, project=project_id)
+        if time.time() - start >= 300:  # 5 minutes
+            raise TimeoutError()
     return
 
 

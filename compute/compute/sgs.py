@@ -151,6 +151,8 @@ def load_ingredients(path: Path) -> dict:
         if ipath.is_dir():
             ingredients.update(load_ingredients(ipath))
         elif ipath.is_file():
+            if "__pycache__" in str(ipath.absolute()):
+                continue
             ingredient = load_ingredient(ipath)
             ingredients[ingredient.name] = ingredient
     return ingredients

@@ -34,7 +34,7 @@ def list_firewall_rules(project_id: str) -> Iterable[compute_v1.Firewall]:
         project_id: project ID or project number of the Cloud project you want to use.
 
     Returns:
-    A flat list of all firewall rules defined for given project.
+        A flat list of all firewall rules defined for given project.
     """
     firewall_client = compute_v1.FirewallsClient()
     firewalls_list = firewall_client.list(project=project_id)

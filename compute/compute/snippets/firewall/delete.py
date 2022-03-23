@@ -23,9 +23,9 @@
 from google.cloud import compute_v1
 
 
-def delete_firewall_rule(project_id: str, firewall_rule_name: str):
+def delete_firewall_rule(project_id: str, firewall_rule_name: str) -> None:
     """
-    Deleted a firewall rule from the project.
+    Deletes a firewall rule from the project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.

@@ -22,12 +22,23 @@
 # [START compute_instances_create_from_image_plus_snapshot_disk]
 import re
 import sys
+import time
 from typing import List
 
 from google.cloud import compute_v1
 
 
 def get_image_from_family(project: str, family: str) -> compute_v1.Image:
+    """
+    Retrieve the newest image that is part of a given family in a project.
+
+    Args:
+        project: project ID or project number of the Cloud project you want to get image from.
+        family: name of the image family you want to get image from.
+
+    Returns:
+        An Image object.
+    """
     image_client = compute_v1.ImagesClient()
     # List of public operating system (OS) images: https://cloud.google.com/compute/docs/images/os-details
     newest_image = image_client.get_from_family(project=project, family=family)
@@ -35,7 +46,11 @@ def get_image_from_family(project: str, family: str) -> compute_v1.Image:
 
 
 def disk_from_image(
-    disk_type: str, disk_size_gb: int, boot: bool, source_image: str
+    disk_type: str,
+    disk_size_gb: int,
+    boot: bool,
+    source_image: str,
+    auto_delete: bool = False,
 ) -> compute_v1.AttachedDisk:
     """
     Create an AttachedDisk object to be used in VM instance creation. Uses an image as the
@@ -50,6 +65,7 @@ def disk_from_image(
         source_image: source image to use when creating this disk. You must have read access to this disk. This can be one
             of the publicly available images or an image from one of your projects.
             This value uses the following format: "projects/{project_name}/global/images/{image_name}"
+        auto_delete: boolean flag indicating whether this disk should be deleted with the VM that uses it
 
     Returns:
         AttachedDisk object configured to be created using the specified image.
@@ -62,13 +78,17 @@ def disk_from_image(
     boot_disk.initialize_params = initialize_params
     # Remember to set auto_delete to True if you want the disk to be deleted when you delete
     # your VM instance.
-    boot_disk.auto_delete = True
+    boot_disk.auto_delete = auto_delete
     boot_disk.boot = boot
     return boot_disk
 
 
 def disk_from_snapshot(
-    disk_type: str, disk_size_gb: int, boot: bool, disk_snapshot: str
+    disk_type: str,
+    disk_size_gb: int,
+    boot: bool,
+    source_snapshot: str,
+    auto_delete: bool = False,
 ) -> compute_v1.AttachedDisk():
     """
     Create an AttachedDisk object to be used in VM instance creation. Uses a disk snapshot as the
@@ -80,21 +100,22 @@ def disk_from_snapshot(
             For example: "zones/us-west3-b/diskTypes/pd-ssd"
         disk_size_gb: size of the new disk in gigabytes
         boot: boolean flag indicating whether this disk should be used as a boot disk of an instance
-        disk_snapshot: disk snapshot to use when creating this disk. You must have read access to this disk.
+        source_snapshot: disk snapshot to use when creating this disk. You must have read access to this disk.
             This value uses the following format: "projects/{project_name}/global/snapshots/{snapshot_name}"
+        auto_delete: boolean flag indicating whether this disk should be deleted with the VM that uses it
 
     Returns:
         AttachedDisk object configured to be created using the specified snapshot.
     """
     disk = compute_v1.AttachedDisk()
     initialize_params = compute_v1.AttachedDiskInitializeParams()
-    initialize_params.source_snapshot = disk_snapshot
+    initialize_params.source_snapshot = source_snapshot
     initialize_params.disk_type = disk_type
     initialize_params.disk_size_gb = disk_size_gb
     disk.initialize_params = initialize_params
     # Remember to set auto_delete to True if you want the disk to be deleted when you delete
     # your VM instance.
-    disk.auto_delete = True
+    disk.auto_delete = auto_delete
     disk.boot = boot
     return disk
 
@@ -107,6 +128,10 @@ def create_instance(
     machine_type: str = "n1-standard-1",
     network_link: str = "global/networks/default",
     subnetwork_link: str = None,
+    internal_ip: str = None,
+    external_access: bool = False,
+    external_ipv4: str = None,
+    accelerators: List[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
     custom_hostname: str = None,
     delete_protection: bool = False,
@@ -118,17 +143,27 @@ def create_instance(
         project_id: project ID or project number of the Cloud project you want to use.
         zone: name of the zone to create the instance in. For example: "us-west3-b"
         instance_name: name of the new virtual machine (VM) instance.
+        disks: a list of compute_v1.AttachedDisk objects describing the disks
+            you want to attach to your new instance.
         machine_type: machine type of the VM being created. This value uses the
             following format: "zones/{zone}/machineTypes/{type_name}".
             For example: "zones/europe-west3-c/machineTypes/f1-micro"
-        disks: a list of compute_v1.AttachedDisk objects describing the disks
-            you want to attach to your new instance.
         network_link: name of the network you want the new instance to use.
             For example: "global/networks/default" represents the network
             named "default", which is created automatically for each project.
         subnetwork_link: name of the subnetwork you want the new instance to use.
             This value uses the following format:
             "regions/{region}/subnetworks/{subnetwork_name}"
+        internal_ip: internal IP address you want to assign to the new instance.
+            By default, a free address from the pool of available internal IP addresses of
+            used subnet will be used.
+        external_access: boolean flag indicating if the instance should have an external IPv4
+            address assigned.
+        external_ipv4: external IPv4 address to be assigned to this instance. If you specify
+            an external IP address, it must live in the same region as the zone of the instance.
+            This setting requires `external_access` to be set to True to work.
+        accelerators: a list of AcceleratorConfig objects describing the accelerators that will
+            be attached to the new instance.
         preemptible: boolean value indicating if the new instance should be preemptible
             or not.
         custom_hostname: Custom hostname of the new VM instance.
@@ -147,6 +182,18 @@ def create_instance(
     if subnetwork_link:
         network_interface.subnetwork = subnetwork_link
 
+    if internal_ip:
+        network_interface.network_i_p = internal_ip
+
+    if external_access:
+        access = compute_v1.AccessConfig()
+        access.type_ = compute_v1.AccessConfig.Type.ONE_TO_ONE_NAT.name
+        access.name = "External NAT"
+        access.network_tier = access.NetworkTier.PREMIUM.name
+        if external_ipv4:
+            access.nat_i_p = external_ipv4
+        network_interface.access_configs = [access]
+
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
     instance.name = instance_name
@@ -155,6 +202,9 @@ def create_instance(
         instance.machine_type = machine_type
     else:
         instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
+
+    if accelerators:
+        instance.guest_accelerators = accelerators
 
     instance.network_interfaces = [network_interface]
 
@@ -171,13 +221,6 @@ def create_instance(
         # Set the delete protection bit
         instance.deletion_protection = True
 
-    # Shielded Instance settings
-    # Values presented here are the defaults.
-    # instance.shielded_instance_config = compute_v1.ShieldedInstanceConfig()
-    # instance.shielded_instance_config.enable_secure_boot = False
-    # instance.shielded_instance_config.enable_vtpm = True
-    # instance.shielded_instance_config.enable_integrity_monitoring = True
-
     # Prepare the request to insert an instance.
     request = compute_v1.InsertInstanceRequest()
     request.zone = zone
@@ -188,12 +231,16 @@ def create_instance(
     print(f"Creating the {instance_name} instance in {zone}...")
 
     operation = instance_client.insert_unary(request=request)
+    start = time.time()
     while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=zone, project=project_id
         )
+        if time.time() - start >= 300:  # 5 minutes
+            raise TimeoutError()
     if operation.error:
         print("Error during creation:", operation.error, file=sys.stderr)
+        raise RuntimeError(operation.error)
     if operation.warnings:
         print("Warning during creation:", operation.warnings, file=sys.stderr)
     print(f"Instance {instance_name} created.")

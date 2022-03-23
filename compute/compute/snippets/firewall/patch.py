@@ -23,7 +23,9 @@
 from google.cloud import compute_v1
 
 
-def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: int):
+def patch_firewall_priority(
+    project_id: str, firewall_rule_name: str, priority: int
+) -> None:
     """
     Modifies the priority of a given firewall rule.
 

@@ -25,13 +25,13 @@ from google.cloud import compute_v1
 
 def set_delete_protection(
     project_id: str, zone: str, instance_name: str, delete_protection: bool
-):
+) -> None:
     """
     Updates the delete protection setting of given instance.
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
         zone: name of the zone you want to use. For example: “us-west3-b”
-        instance_name: name of the virtual machine to update.
+        instance_name: name of the instance to update.
         delete_protection: boolean value indicating if the virtual machine should be
             protected against deletion or not.
     """

@@ -37,6 +37,9 @@ def create_firewall_rule(
             * https://www.googleapis.com/compute/v1/projects/{project_id}/global/networks/{network}
             * projects/{project_id}/global/networks/{network}
             * global/networks/{network}
+
+    Returns:
+        A Firewall object.
     """
     firewall_rule = compute_v1.Firewall()
     firewall_rule.name = firewall_rule_name
@@ -58,7 +61,7 @@ def create_firewall_rule(
     # will be equal to 0, however it is not treated as "set" by the library and thus
     # the default will be applied to the new rule. If you want to create a rule that
     # has priority == 0, you need to explicitly set it so:
-
+    # TODO: Uncomment to set the priority to 0
     # firewall_rule.priority = 0
 
     firewall_client = compute_v1.FirewallsClient()
@@ -72,9 +75,9 @@ def create_firewall_rule(
     return firewall_client.get(project=project_id, firewall=firewall_rule_name)
 
 
-def delete_firewall_rule(project_id: str, firewall_rule_name: str):
+def delete_firewall_rule(project_id: str, firewall_rule_name: str) -> None:
     """
-    Deleted a firewall rule from the project.
+    Deletes a firewall rule from the project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
@@ -91,6 +94,16 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str):
 
 
 def get_firewall_rule(project_id: str, firewall_rule_name: str) -> compute_v1.Firewall:
+    """
+    Retrieve a Firewall from a project.
+
+    Args:
+        project_id: project ID or project number of the Cloud project you want to use.
+        firewall_rule_name: name of the firewall rule you want to retrieve.
+
+    Returns:
+        A Firewall object.
+    """
     firewall_client = compute_v1.FirewallsClient()
     return firewall_client.get(project=project_id, firewall=firewall_rule_name)
 
@@ -104,7 +117,7 @@ def list_firewall_rules(project_id: str) -> Iterable[compute_v1.Firewall]:
         project_id: project ID or project number of the Cloud project you want to use.
 
     Returns:
-    A flat list of all firewall rules defined for given project.
+        A flat list of all firewall rules defined for given project.
     """
     firewall_client = compute_v1.FirewallsClient()
     firewalls_list = firewall_client.list(project=project_id)
@@ -115,7 +128,9 @@ def list_firewall_rules(project_id: str) -> Iterable[compute_v1.Firewall]:
     return firewalls_list
 
 
-def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: int):
+def patch_firewall_priority(
+    project_id: str, firewall_rule_name: str, priority: int
+) -> None:
     """
     Modifies the priority of a given firewall rule.
 

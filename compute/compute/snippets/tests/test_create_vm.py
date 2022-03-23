@@ -152,10 +152,10 @@ class TestCreation:
         instance = create_with_additional_disk(PROJECT, INSTANCE_ZONE, instance_name)
         try:
             assert any(
-                disk.initialize_params.disk_size_gb == 11 for disk in instance.disks
+                disk.initialize_params.disk_size_gb == 20 for disk in instance.disks
             )
             assert any(
-                disk.initialize_params.disk_size_gb == 10 for disk in instance.disks
+                disk.initialize_params.disk_size_gb == 25 for disk in instance.disks
             )
             assert len(instance.disks) == 2
         finally:

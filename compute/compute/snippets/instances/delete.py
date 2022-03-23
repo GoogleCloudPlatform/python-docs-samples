@@ -21,6 +21,7 @@
 
 # [START compute_instances_delete]
 import sys
+import time
 
 from google.cloud import compute_v1
 
@@ -41,12 +42,16 @@ def delete_instance(project_id: str, zone: str, machine_name: str) -> None:
     operation = instance_client.delete_unary(
         project=project_id, zone=zone, instance=machine_name
     )
+    start = time.time()
     while operation.status != compute_v1.Operation.Status.DONE:
         operation = operation_client.wait(
             operation=operation.name, zone=zone, project=project_id
         )
+        if time.time() - start >= 300:  # 5 minutes
+            raise TimeoutError()
     if operation.error:
         print("Error during deletion:", operation.error, file=sys.stderr)
+        return
     if operation.warnings:
         print("Warning during deletion:", operation.warnings, file=sys.stderr)
     print(f"Instance {machine_name} deleted.")

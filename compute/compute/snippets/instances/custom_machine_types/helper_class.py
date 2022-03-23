@@ -55,6 +55,8 @@ class CustomMachineType:
         ],
     )
 
+    # The limits for various CPU types are described on:
+    # https://cloud.google.com/compute/docs/general-purpose-machines
     LIMITS = {
         CPUSeries.E2: TypeLimits(frozenset(range(2, 33, 2)), 512, 8192, False, 0),
         CPUSeries.E2_MICRO: TypeLimits(frozenset(), 1024, 2048, False, 0),
@@ -81,10 +83,12 @@ class CustomMachineType:
         self.zone = zone
         self.cpu_series = cpu_series
         self.limits = self.LIMITS[self.cpu_series]
+        # Shared machine types (e2-small, e2-medium and e2-micro) always have
+        # 2 vCPUs: https://cloud.google.com/compute/docs/general-purpose-machines#e2_limitations
         self.core_count = 2 if self.is_shared() else core_count
         self.memory_mb = memory_mb
-
-        self._check()
+        self._checked = False
+        self._check_parameters()
         self.extra_memory_used = self._check_extra_memory()
 
     def is_shared(self):
@@ -95,10 +99,14 @@ class CustomMachineType:
         )
 
     def _check_extra_memory(self) -> bool:
-        # Assuming this runs after _check() and the total memory requested is correct
-        return self.memory_mb > self.core_count * self.limits.max_mem_per_core
+        if self._checked:
+            return self.memory_mb > self.core_count * self.limits.max_mem_per_core
+        else:
+            raise RuntimeError(
+                "You need to call _check_parameters() before calling _check_extra_memory()"
+            )
 
-    def _check(self):
+    def _check_parameters(self):
         """
         Check whether the requested parameters are allowed. Find more information about limitations of custom machine
         types at: https://cloud.google.com/compute/docs/general-purpose-machines#custom_machine_types
@@ -133,6 +141,8 @@ class CustomMachineType:
                 raise RuntimeError(
                     f"Requested memory is too large.. Maximum memory allowed for {self.cpu_series.name} is {self.limits.max_mem_per_core} MB per core."
                 )
+
+        self._checked = True
 
     def __str__(self) -> str:
         """

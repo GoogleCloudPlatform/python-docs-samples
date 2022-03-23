@@ -46,6 +46,13 @@ def add_extended_memory_to_instance(
         project=project_id, zone=zone, instance=instance_name
     )
 
+    if not (
+        "n1-" in instance.machine_type
+        or "n2-" in instance.machine_type
+        or "n2d-" in instance.machine_type
+    ):
+        raise RuntimeError("Extra memory is available only for N1, N2 and N2D CPUs.")
+
     # Make sure that the machine is turned off
     if instance.status not in (
         instance.Status.TERMINATED.name,
@@ -55,6 +62,7 @@ def add_extended_memory_to_instance(
             project=project_id, zone=zone, instance=instance_name
         )
         operation_client.wait(project=project_id, zone=zone, operation=op.name)
+        start = time.time()
         while instance.status not in (
             instance.Status.TERMINATED.name,
             instance.Status.STOPPED.name,
@@ -64,10 +72,13 @@ def add_extended_memory_to_instance(
                 project=project_id, zone=zone, instance=instance_name
             )
             time.sleep(2)
+            if time.time() - start >= 300:  # 5 minutes
+                raise TimeoutError()
 
     # Modify the machine definition, remember that extended memory is available only for N1, N2 and N2D CPUs
     start, end = instance.machine_type.rsplit("-", maxsplit=1)
     instance.machine_type = start + f"-{new_memory}-ext"
+    # TODO: If you prefer to use the CustomMachineType helper class, uncomment this code and comment the 2 lines above
     # Using CustomMachineType helper
     # cmt = CustomMachineType.from_str(instance.machine_type)
     # cmt.memory_mb = new_memory

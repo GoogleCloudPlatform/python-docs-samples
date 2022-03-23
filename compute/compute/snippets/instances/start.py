@@ -20,10 +20,12 @@
 
 
 # [START compute_start_instance]
+import time
+
 from google.cloud import compute_v1
 
 
-def start_instance(project_id: str, zone: str, instance_name: str):
+def start_instance(project_id: str, zone: str, instance_name: str) -> None:
     """
     Starts a stopped Google Compute Engine instance (with unencrypted disks).
     Args:
@@ -38,8 +40,11 @@ def start_instance(project_id: str, zone: str, instance_name: str):
         project=project_id, zone=zone, instance=instance_name
     )
 
+    start = time.time()
     while op.status != compute_v1.Operation.Status.DONE:
         op = op_client.wait(operation=op.name, zone=zone, project=project_id)
+        if time.time() - start >= 300:  # 5 minutes
+            raise TimeoutError()
     return
 
 
