@@ -1,23 +1,38 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START composer_dataproc_dag]
 
 """Example Airflow DAG that kicks off a batches job which will run a linear regression Spark ML job
 This DAG relies on an Airflow variable
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
-* project_id - Google Cloud Project ID to use for the Cloud Dataproc Template.
-* bucket_path - Google Cloud Storage bucket where you've stored the natality_spark_ml file
-
+* project_id - Google Cloud Project ID to use for the Cloud Dataproc Serverless.
+* sparkml_file_location - Google Cloud Storage bucket where you've stored the natality_spark_ml file
+* phs_cluster - Google Dataproc Cluster, a single node cluster that you have started and is running
+TODO: Add the tutorial link once it is published.
 """
 
 import datetime
-from airflow import models
 from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator
 from airflow.utils.dates import days_ago
 
 project_id = '{{ var.value.project_id }}'
-bucket_name = models.Variable.get("bucket_path")
-sparkml_file_location = bucket_name+"natality_sparkml.py"  # the location where the Spark ML python file is stored.
-# Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
+sparkml_file_location = "gs//bucket_name/natality_sparkml.py"  #for e.g.  "gs//my-bucket/natality_sparkml.py"
+# TODO: Add the location where your Spark ML python file is stored.
 phs_cluster = "projects/project-ID/regions/region-name/clusters/cluster-name"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
+#TODO:  Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
 spark_bigquery_jar_file = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 
 default_args = {
@@ -33,7 +48,7 @@ with models.DAG(
 ) as dag:
 
     create_batch = DataprocCreateBatchOperator(
-        task_id="batch-via-dag",
+        task_id="batch-create",
         project_id=project_id,
         region="us-central1",
         batch={
@@ -49,5 +64,5 @@ with models.DAG(
                  },
             },
         },
-        batch_id="batch-via-dag",
+        batch_id="batch-create-phs",
 )
