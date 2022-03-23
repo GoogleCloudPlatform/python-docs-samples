@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_dataproc_dag]
 
 """Example Airflow DAG that get a specific Serverless Dataproc Batch that exists in a project
 This DAG relies on an Airflow variable
