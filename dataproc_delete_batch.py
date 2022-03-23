@@ -1,10 +1,23 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-"""Example Airflow DAG that kicks off a batches job which will run a linear regression Spark ML job
+# [START composer_dataproc_dag]
+
+"""Example Airflow DAG that will delete a Serverless Batch that exists
 This DAG relies on an Airflow variable
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
-* project_id - Google Cloud Project ID to use for the Cloud Dataproc Template.
-* bucket_path - Google Cloud Storage bucket where you've stored the natality_spark_ml file
-
+* project_id - Google Cloud Project ID to use for the Cloud Dataproc Serverless
 """
 
 import datetime
