@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_dataproc_dag]
 
 """Example Airflow DAG that will delete a Serverless Batch that exists
 This DAG relies on an Airflow variable
