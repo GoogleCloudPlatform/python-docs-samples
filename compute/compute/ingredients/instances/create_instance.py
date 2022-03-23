@@ -33,6 +33,10 @@ def create_instance(
     machine_type: str = "n1-standard-1",
     network_link: str = "global/networks/default",
     subnetwork_link: str = None,
+    internal_ip: str = None,
+    external_access: bool = False,
+    external_ipv4: str = None,
+    accelerators: List[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
     custom_hostname: str = None,
     delete_protection: bool = False,
@@ -55,6 +59,16 @@ def create_instance(
         subnetwork_link: name of the subnetwork you want the new instance to use.
             This value uses the following format:
             "regions/{region}/subnetworks/{subnetwork_name}"
+        internal_ip: internal IP address you want to assign to the new instance.
+            By default, a free address from the pool of available internal IP addresses of
+            used subnet will be used.
+        external_access: boolean flag indicating if the instance should have an external IPv4
+            address assigned.
+        external_ipv4: external IPv4 address to be assigned to this instance. If you specify
+            an external IP address, it must live in the same region as the zone of the instance.
+            This setting requires `external_access` to be set to True to work.
+        accelerators: a list of AcceleratorConfig objects describing the accelerators that will
+            be attached to the new instance.
         preemptible: boolean value indicating if the new instance should be preemptible
             or not.
         custom_hostname: Custom hostname of the new VM instance.
@@ -73,6 +87,18 @@ def create_instance(
     if subnetwork_link:
         network_interface.subnetwork = subnetwork_link
 
+    if internal_ip:
+        network_interface.network_i_p = internal_ip
+
+    if external_access:
+        access = compute_v1.AccessConfig()
+        access.type_ = compute_v1.AccessConfig.Type.ONE_TO_ONE_NAT.name
+        access.name = "External NAT"
+        access.network_tier = access.NetworkTier.PREMIUM.name
+        if external_ipv4:
+            access.nat_i_p = external_ipv4
+        network_interface.access_configs = [access]
+
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
     instance.name = instance_name
@@ -81,6 +107,9 @@ def create_instance(
         instance.machine_type = machine_type
     else:
         instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
+
+    if accelerators:
+        instance.guest_accelerators = accelerators
 
     instance.network_interfaces = [network_interface]
 

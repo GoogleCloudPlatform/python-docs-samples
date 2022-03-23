@@ -19,7 +19,7 @@ import pytest
 
 # Turning off F401 check because flake8 doesn't recognize using
 # PyTest fixture as parameter as usage.
-from .test_sample_start_stop import compute_instance  # noqa: F401
+from .test_instance_start_stop import compute_instance  # noqa: F401
 
 from ..instance_templates.create import create_template
 from ..instance_templates.create_from_instance import \

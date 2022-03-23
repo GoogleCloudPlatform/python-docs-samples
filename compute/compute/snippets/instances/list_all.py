@@ -29,7 +29,7 @@ def list_all_instances(
     project_id: str,
 ) -> Dict[str, Iterable[compute_v1.Instance]]:
     """
-    Return a dictionary of all instances present in a project, grouped by their zone.
+    Returns a dictionary of all instances present in a project, grouped by their zone.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
@@ -38,9 +38,9 @@ def list_all_instances(
         iterable collections of Instance objects as values.
     """
     instance_client = compute_v1.InstancesClient()
-    # Use the `max_results` parameter to limit the number of results that the API returns per response page.
     request = compute_v1.AggregatedListInstancesRequest()
     request.project = project_id
+    # Use the `max_results` parameter to limit the number of results that the API returns per response page.
     request.max_results = 50
 
     agg_list = instance_client.aggregated_list(request=request)

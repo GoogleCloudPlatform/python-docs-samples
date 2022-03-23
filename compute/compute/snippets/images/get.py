@@ -27,6 +27,16 @@ from google.cloud import compute_v1
 
 
 def get_image_from_family(project: str, family: str) -> compute_v1.Image:
+    """
+    Retrieve the newest image that is part of a given family in a project.
+
+    Args:
+        project: project ID or project number of the Cloud project you want to get image from.
+        family: name of the image family you want to get image from.
+
+    Returns:
+        An Image object.
+    """
     image_client = compute_v1.ImagesClient()
     # List of public operating system (OS) images: https://cloud.google.com/compute/docs/images/os-details
     newest_image = image_client.get_from_family(project=project, family=family)

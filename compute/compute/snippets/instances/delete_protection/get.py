@@ -31,7 +31,7 @@ def get_delete_protection(project_id: str, zone: str, instance_name: str) -> boo
         zone: name of the zone you want to use. For example: “us-west3-b”
         instance_name: name of the virtual machine to check.
     Returns:
-        The state of the delete protection setting.
+        The boolean value of the delete protection setting.
     """
     instance_client = compute_v1.InstancesClient()
     instance = instance_client.get(
