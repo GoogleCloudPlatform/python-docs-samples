@@ -8,4 +8,3 @@ scipy==1.4.1; python_version > '3.0'
 scipy==1.2.3; python_version < '3.0'
 numpy==1.19.5; python_version > '3.0'
 numpy==1.16.6; python_version < '3.0'
-markupsafe==2.0.1
