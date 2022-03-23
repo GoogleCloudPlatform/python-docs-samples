@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_dataproc_dag]
-
 """Example Airflow DAG that kicks off a batches job which will run a linear regression Spark ML job
 This DAG relies on an Airflow variable
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
