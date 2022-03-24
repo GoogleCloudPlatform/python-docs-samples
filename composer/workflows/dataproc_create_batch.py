@@ -27,7 +27,8 @@ import datetime
 
 from airflow import models
 from airflow.providers.google.cloud.operators.dataproc import (
-    DataprocCreateBatchOperator,
+    DataprocCreateBatchOperator, DataprocDeleteBatchOperator, DataprocGetBatchOperator, DataprocListBatchesOperator
+
 )
 from airflow.utils.dates import days_ago
 
@@ -41,7 +42,7 @@ DOCKER_IMAGE = "{{var.value.image_name}}"
 SPARK_ML_FILE_LOCATION = "gs://{{var.value.bucket_name }}/natality_sparkml.py"
 # for e.g.  "gs//my-bucket/natality_sparkml.py"
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
-PHS_CLUSTER = \
+PHS_CLUSTER_PATH = \
     "projects/{{ var.value.project_id }}/regions/{{ var.value.dataproc_region}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
 SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
@@ -59,15 +60,14 @@ default_args = {
     "region": REGION,
 
 }
-
 with models.DAG(
-    "dataproc_create_batch_operator",  # The id you will see in the DAG airflow page
+    "dataproc_batch_operators",  # The id you will see in the DAG airflow page
     default_args=default_args,  # The interval with which to schedule the DAG
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
 
     create_batch = DataprocCreateBatchOperator(
-        task_id="batch-create",
+        task_id="batch_create",
         batch={
             "pyspark_batch": {
                 "main_python_file_uri": SPARK_ML_FILE_LOCATION,
@@ -76,20 +76,37 @@ with models.DAG(
             "environment_config": {
                 "peripherals_config": {
                     "spark_history_server_config": {
-                        "dataproc_cluster": PHS_CLUSTER,
+                        "dataproc_cluster": PHS_CLUSTER_PATH,
                     },
                 },
             },
         },
-        batch_id="batch-create-phs",
+        batch_id="batch_create_phs",
     )
+    # [START composer_dataproc_list_batch]
+    list_batches = DataprocListBatchesOperator(
+        task_id="list_all_batches",
+    )
+    # [END composer_dataproc_list_batch]
 
+    # [START composer_dataproc_get_batch]
+    get_batch = DataprocGetBatchOperator(
+        task_id="get_batch",
+        batch_id="batch_create_phs",
+    )
+    # [END composer_dataproc_get_batch]
+    # [START composer_dataproc_delete_batch]
+    delete_batch = DataprocDeleteBatchOperator(
+        task_id="delete_batch",
+        batch_id="batch_create_phs",
+    )
+    # [END composer_dataproc_delete_batch]
+    create_batch >> list_batches >> get_batch >> delete_batch
     # [END composer_dataproc_create_batch]
 
     # [START composer_dataproc_create_metastore_batch]
-
     create_batch_with_metastore = DataprocCreateBatchOperator(
-        task_id="dataproc-metastore",
+        task_id="dataproc_metastore",
         batch={
             "pyspark_batch": {
                 "main_python_file_uri": SPARK_ML_FILE_LOCATION,
@@ -99,18 +116,29 @@ with models.DAG(
                 "peripherals_config": {
                     "metastore_service": METASTORE_SERVICE_LOCATION,
                     "spark_history_server_config": {
-                        "dataproc_cluster": PHS_CLUSTER,
+                        "dataproc_cluster": PHS_CLUSTER_PATH,
                     },
                  },
             },
         },
-        batch_id="dataproc-metastore",
+        batch_id="dataproc_metastore",
+    )
+    get_batch_metastore = DataprocGetBatchOperator(
+        task_id="get_batch_metatstore",
+        batch_id="dataproc_metastore",
+    )
+    delete_batch_metastore = DataprocDeleteBatchOperator(
+        task_id="delete_batch_metastore",
+        batch_id="dataproc_metastore",
     )
 
+    create_batch_with_metastore >> get_batch_metastore >> delete_batch_metastore
+
     # [END composer_dataproc_create_metastore_batch]
+
     # [START composer_dataproc_create_custom_container]
     create_batch_with_custom_container = DataprocCreateBatchOperator(
-        task_id="dataproc-custom-container",
+        task_id="dataproc_custom_container",
         batch={
             "pyspark_batch": {
                 "main_python_file_uri": SPARK_ML_FILE_LOCATION,
@@ -119,7 +147,7 @@ with models.DAG(
             "environment_config": {
                 "peripherals_config": {
                      "spark_history_server_config": {
-                        "dataproc_cluster": PHS_CLUSTER,
+                        "dataproc_cluster": PHS_CLUSTER_PATH,
                      },
                  },
             },
@@ -127,6 +155,15 @@ with models.DAG(
                     "container_image": CUSTOM_CONTAINER,
                 },
         },
-        batch_id="batch-custom-container",
+        batch_id="batch_custom_container",
     )
+    get_batch_custom = DataprocGetBatchOperator(
+        task_id="get_batch_custom",
+        batch_id="batch_custom_container",
+    )
+    delete_batch_custom = DataprocDeleteBatchOperator(
+        task_id="delete_batch_custom",
+        batch_id="batch_custom_container",
+    )
+    create_batch_with_custom_container >> get_batch_custom >> delete_batch_custom
     # [END composer_dataproc_create_custom_container]
