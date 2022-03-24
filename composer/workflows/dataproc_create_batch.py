@@ -124,4 +124,4 @@ with models.DAG(
         },
         batch_id="batch-custom-container",
     )
-    # [END composer_dataproc_create_custom_container_batch]
+    # [END composer_dataproc_create_custom_container]
