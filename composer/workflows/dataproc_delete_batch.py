@@ -27,39 +27,35 @@ from airflow.providers.google.cloud.operators.dataproc import (
 )
 from airflow.utils.dates import days_ago
 
-project_id = "{{ var.value.project_id }}"
+PROJECT_ID = "{{ var.value.project_id }}"
+REGION = "{{ var.value.region_name}}"
 
 default_args = {
     # Tell airflow to start one day ago, so that it runs as soon as you upload it
     "start_date": days_ago(1),
-    "project_id": project_id,
+    "project_id": PROJECT_ID,
+    "region": REGION,
 }
 
 with models.DAG(
-    "dataproc_create_batch_operator",  # The id you will see in the DAG airflow page
+    "dataproc_list_get_delete_batch_operator",  # The id you will see in the DAG airflow page
     default_args=default_args,  # The interval with which to schedule the DAG
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
     # [START composer_dataproc_list_batch]
     list_batches = DataprocListBatchesOperator(
         task_id="all-batches",
-        project_id=project_id,
-        region="us-central1",
     )
     # [END composer_dataproc_list_batch]
     # [START composer_dataproc_get_batch]
     get_batch = DataprocGetBatchOperator(
         task_id="get_batch",
-        project_id=project_id,
-        region="us-central1",
         batch_id="my-batch",
     )
     # [END composer_dataproc_get_batch]
     # [START composer_dataproc_delete_batch]
     delete_batch = DataprocDeleteBatchOperator(
-        task_id="my-batch",
-        project_id=project_id,
-        region="us-central1",
+        task_id="delete-batch",
         batch_id="my-batch",
     )
 
