@@ -31,22 +31,33 @@ from airflow.providers.google.cloud.operators.dataproc import (
 )
 from airflow.utils.dates import days_ago
 
-project_id = "{{ var.value.project_id }}"
-sparkml_file_location = "gs//bucket_name/natality_sparkml.py"  # for e.g.  "gs//my-bucket/natality_sparkml.py"
-# TODO: Add the location where your Spark ML python file is stored.
+PROJECT_ID = "{{ var.value.project_id }}"
+REGION = "{{ var.value.region_name}}"
+BUCKET = "{{ var.value.bucket_name }}"
+PHS_CLUSTER = "{{ var.value.phs_cluster }}"
+METASTORE_CLUSTER = "{{var.value.metastore_cluster}}"
+DOCKER_IMAGE = "{{var.value.image_name}}"
+
+SPARK_ML_FILE_LOCATION = "gs://{{var.value.bucket_name }}/natality_sparkml.py"
+# for e.g.  "gs//my-bucket/natality_sparkml.py"
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
-phs_cluster = "projects/project-ID/regions/region-name/clusters/cluster-name"
+PHS_CLUSTER = \
+    "projects/{{ var.value.project_id }}/regions/{{ var.value.dataproc_region}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
-spark_bigquery_jar_file = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-metastore_service_location = "projects/project-id/locations/region-name/services/cluster-name"
+SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+# Start a Dataproc MetaStore Cluster
+METASTORE_SERVICE_LOCATION = \
+    "projects/{{var.value.project_id}}/locations/{{var.value.region_name}}/services/{{var.value.metastore_cluster }}"
 # for e.g. projects/my-project/locations/my-region/services/my-cluster
-custom_container = "us.gcr.io/PROJECT-ID/image-name"
+CUSTOM_CONTAINER = "us.gcr.io/{{var.value.project_id}}/{{ var.value.image_name}}"
 # for e.g. "us.gcr.io/my-project/quickstart-image",
 
 default_args = {
     # Tell airflow to start one day ago, so that it runs as soon as you upload it
     "start_date": days_ago(1),
-    "project_id": project_id,
+    "project_id": PROJECT_ID,
+    "region": REGION,
+
 }
 
 with models.DAG(
@@ -57,17 +68,15 @@ with models.DAG(
 
     create_batch = DataprocCreateBatchOperator(
         task_id="batch-create",
-        project_id=project_id,
-        region="us-central1",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": sparkml_file_location,
-                "jar_file_uris": [spark_bigquery_jar_file],
+                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
                 "peripherals_config": {
                     "spark_history_server_config": {
-                        "dataproc_cluster": phs_cluster,
+                        "dataproc_cluster": PHS_CLUSTER,
                     },
                 },
             },
@@ -81,18 +90,16 @@ with models.DAG(
 
     create_batch_with_metastore = DataprocCreateBatchOperator(
         task_id="dataproc-metastore",
-        project_id=project_id,
-        region="us-central1",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": sparkml_file_location,
-                "jar_file_uris": [spark_bigquery_jar_file],
+                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
                 "peripherals_config": {
-                    "metastore_service": metastore_service_location,
+                    "metastore_service": METASTORE_SERVICE_LOCATION,
                     "spark_history_server_config": {
-                        "dataproc_cluster": phs_cluster,
+                        "dataproc_cluster": PHS_CLUSTER,
                     },
                  },
             },
@@ -104,22 +111,20 @@ with models.DAG(
     # [START composer_dataproc_create_custom_container]
     create_batch_with_custom_container = DataprocCreateBatchOperator(
         task_id="dataproc-custom-container",
-        project_id=project_id,
-        region="us-central1",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": sparkml_file_location,
-                "jar_file_uris": [spark_bigquery_jar_file],
+                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
                 "peripherals_config": {
                      "spark_history_server_config": {
-                        "dataproc_cluster": phs_cluster,
+                        "dataproc_cluster": PHS_CLUSTER,
                      },
                  },
             },
             "runtime_config": {
-                    "container_image": custom_container,
+                    "container_image": CUSTOM_CONTAINER,
                 },
         },
         batch_id="batch-custom-container",
