@@ -42,7 +42,7 @@ with models.DAG(
 ) as dag:
     # [START composer_dataproc_list_batch]
     list_batches = DataprocListBatchesOperator(
-        task_id="my-batch",
+        task_id="all-batches",
         project_id=project_id,
         region="us-central1",
     )
