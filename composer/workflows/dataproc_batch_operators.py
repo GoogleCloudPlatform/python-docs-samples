@@ -43,7 +43,7 @@ SPARK_ML_FILE_LOCATION = "gs://{{var.value.bucket_name }}/natality_sparkml.py"
 # for e.g.  "gs//my-bucket/natality_sparkml.py"
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
 PHS_CLUSTER_PATH = \
-    "projects/{{ var.value.project_id }}/regions/{{ var.value.dataproc_region}}/clusters/{{ var.value.phs_cluster }}"
+    "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
 SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 # Start a Dataproc MetaStore Cluster
@@ -81,24 +81,24 @@ with models.DAG(
                 },
             },
         },
-        batch_id="batch_create_phs",
+        batch_id="batch-create-phs",
     )
     # [START composer_dataproc_list_batch]
     list_batches = DataprocListBatchesOperator(
-        task_id="list_all_batches",
+        task_id="list-all-batches",
     )
     # [END composer_dataproc_list_batch]
 
     # [START composer_dataproc_get_batch]
     get_batch = DataprocGetBatchOperator(
         task_id="get_batch",
-        batch_id="batch_create_phs",
+        batch_id="batch-create-phs",
     )
     # [END composer_dataproc_get_batch]
     # [START composer_dataproc_delete_batch]
     delete_batch = DataprocDeleteBatchOperator(
         task_id="delete_batch",
-        batch_id="batch_create_phs",
+        batch_id="batch-create-phs",
     )
     # [END composer_dataproc_delete_batch]
     create_batch >> list_batches >> get_batch >> delete_batch
@@ -121,15 +121,15 @@ with models.DAG(
                  },
             },
         },
-        batch_id="dataproc_metastore",
+        batch_id="dataproc-metastore",
     )
     get_batch_metastore = DataprocGetBatchOperator(
         task_id="get_batch_metatstore",
-        batch_id="dataproc_metastore",
+        batch_id="dataproc-metastore",
     )
     delete_batch_metastore = DataprocDeleteBatchOperator(
         task_id="delete_batch_metastore",
-        batch_id="dataproc_metastore",
+        batch_id="dataproc-metastore",
     )
 
     create_batch_with_metastore >> get_batch_metastore >> delete_batch_metastore
@@ -155,15 +155,15 @@ with models.DAG(
                     "container_image": CUSTOM_CONTAINER,
                 },
         },
-        batch_id="batch_custom_container",
+        batch_id="batch-custom-container",
     )
     get_batch_custom = DataprocGetBatchOperator(
         task_id="get_batch_custom",
-        batch_id="batch_custom_container",
+        batch_id="batch-custom-container",
     )
     delete_batch_custom = DataprocDeleteBatchOperator(
         task_id="delete_batch_custom",
-        batch_id="batch_custom_container",
+        batch_id="batch-custom-container",
     )
     create_batch_with_custom_container >> get_batch_custom >> delete_batch_custom
     # [END composer_dataproc_create_custom_container]
