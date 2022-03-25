@@ -76,7 +76,7 @@ def test_list_source(organization_id):
 
 
 def test_create_finding(source_name):
-    created_finding = snippets_findings.create_finding(source_name)
+    created_finding = snippets_findings.create_finding(source_name, "samplefindingid")
     assert len(created_finding.name) > 0
 
 

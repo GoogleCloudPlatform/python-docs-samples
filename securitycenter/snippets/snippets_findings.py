@@ -147,11 +147,11 @@ def list_source(organization_id):
     return i
 
 
-def create_finding(source_name):
+def create_finding(source_name, finding_id):
     """Creates a new finding."""
     # [START securitycenter_create_finding]
     from google.cloud import securitycenter
-    from google.cloud.securitycenter_v1 import CreateFindingRequest, Finding
+    from google.cloud.securitycenter_v1 import Finding
     import datetime
 
     # Create a new client.
@@ -167,9 +167,6 @@ def create_finding(source_name):
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
 
-    # Controlled by caller.
-    finding_id = "samplefindingid"
-
     # The resource this finding applies to.  The CSCC UI can link
     # the findings for a resource to the corresponding Asset of a resource
     # if there are matches.
@@ -182,11 +179,10 @@ def create_finding(source_name):
         event_time=event_time,
     )
 
-    request = CreateFindingRequest(
-        parent=source_name, finding_id=finding_id, finding=finding,
-    )
     # Call The API.
-    created_finding = client.create_finding(request=request)
+    created_finding = client.create_finding(
+        request={"parent": source_name, "finding_id": finding_id, "finding": finding}
+    )
     print(created_finding)
     # [END securitycenter_create_finding]
     return created_finding
