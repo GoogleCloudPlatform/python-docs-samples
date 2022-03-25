@@ -22,6 +22,6 @@ def test_dag_import():
     environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import dataproc_create_batch as module
+    from . import dataproc_batch_operators as module
 
     internal_unit_testing.assert_has_valid_dag(module)
