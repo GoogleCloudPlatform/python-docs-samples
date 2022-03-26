@@ -20,7 +20,7 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT empty_disk>
-def empty_disk(disk_type: str, disk_size_gb: int, boot: bool = False, auto_delete: bool = False) -> compute_v1.AttachedDisk():
+def empty_disk(disk_type: str, disk_size_gb: int, boot: bool = False, auto_delete: bool = True) -> compute_v1.AttachedDisk():
     """
     Create an AttachedDisk object to be used in VM instance creation. The created disk contains
     no data and requires formatting before it can be used.
@@ -43,7 +43,7 @@ def empty_disk(disk_type: str, disk_size_gb: int, boot: bool = False, auto_delet
     disk.initialize_params = initialize_params
     # Remember to set auto_delete to True if you want the disk to be deleted when you delete
     # your VM instance.
-    disk.auto_delete = True
-    disk.boot = False
+    disk.auto_delete = auto_delete
+    disk.boot = boot
     return disk
 # </INGREDIENT>

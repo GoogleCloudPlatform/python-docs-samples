@@ -12,31 +12,26 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+import sys
+from typing import NoReturn, Iterable
 
 from google.cloud import compute_v1
 
-# <INGREDIENT create_from_public_image>
-def create_from_public_image(project_id: str, zone: str, instance_name: str) -> compute_v1.Instance:
+
+# <INGREDIENT get_disk>
+def get_disk(project_id: str, zone: str, disk_name: str) -> compute_v1.Disk:
     """
-    Create a new VM instance with Debian 10 operating system.
+    Gets a disk from a project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        zone: name of the zone to create the instance in. For example: "us-west3-b"
-        instance_name: name of the new virtual machine (VM) instance.
-
-    Returns:
-        Instance object.
+        zone: name of the zone where the disk exists.
+        disk_name: name of the disk you want to retrieve.
     """
-    newest_debian = get_image_from_family(
-        project="debian-cloud", family="debian-10"
-    )
-    disk_type = f"zones/{zone}/diskTypes/pd-standard"
-    disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link, True)]
-    instance = create_instance(project_id, zone, instance_name, disks)
-    return instance
+    disk_client = compute_v1.DisksClient()
+    return disk_client.get(project=project_id, zone=zone, disk=disk_name)
 # </INGREDIENT>

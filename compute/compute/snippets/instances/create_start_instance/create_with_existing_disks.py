@@ -19,105 +19,26 @@
 # directory and apply your changes there.
 
 
-# [START compute_instances_create_from_image_plus_snapshot_disk]
+# [START compute_instances_create_with_existing_disks]
 import re
 import sys
 import time
-from typing import List
+from typing import Iterable, List, NoReturn
 
 from google.cloud import compute_v1
 
 
-def get_image_from_family(project: str, family: str) -> compute_v1.Image:
+def get_disk(project_id: str, zone: str, disk_name: str) -> compute_v1.Disk:
     """
-    Retrieve the newest image that is part of a given family in a project.
+    Deletes a disk from a project.
 
     Args:
-        project: project ID or project number of the Cloud project you want to get image from.
-        family: name of the image family you want to get image from.
-
-    Returns:
-        An Image object.
+        project_id: project ID or project number of the Cloud project you want to use.
+        zone: name of the zone in which is the disk you want to delete.
+        disk_name: name of the disk you want to retrieve.
     """
-    image_client = compute_v1.ImagesClient()
-    # List of public operating system (OS) images: https://cloud.google.com/compute/docs/images/os-details
-    newest_image = image_client.get_from_family(project=project, family=family)
-    return newest_image
-
-
-def disk_from_image(
-    disk_type: str,
-    disk_size_gb: int,
-    boot: bool,
-    source_image: str,
-    auto_delete: bool = True,
-) -> compute_v1.AttachedDisk:
-    """
-    Create an AttachedDisk object to be used in VM instance creation. Uses an image as the
-    source for the new disk.
-
-    Args:
-         disk_type: the type of disk you want to create. This value uses the following format:
-            "zones/{zone}/diskTypes/(pd-standard|pd-ssd|pd-balanced|pd-extreme)".
-            For example: "zones/us-west3-b/diskTypes/pd-ssd"
-        disk_size_gb: size of the new disk in gigabytes
-        boot: boolean flag indicating whether this disk should be used as a boot disk of an instance
-        source_image: source image to use when creating this disk. You must have read access to this disk. This can be one
-            of the publicly available images or an image from one of your projects.
-            This value uses the following format: "projects/{project_name}/global/images/{image_name}"
-        auto_delete: boolean flag indicating whether this disk should be deleted with the VM that uses it
-
-    Returns:
-        AttachedDisk object configured to be created using the specified image.
-    """
-    boot_disk = compute_v1.AttachedDisk()
-    initialize_params = compute_v1.AttachedDiskInitializeParams()
-    initialize_params.source_image = source_image
-    initialize_params.disk_size_gb = disk_size_gb
-    initialize_params.disk_type = disk_type
-    boot_disk.initialize_params = initialize_params
-    # Remember to set auto_delete to True if you want the disk to be deleted when you delete
-    # your VM instance.
-    boot_disk.auto_delete = auto_delete
-    boot_disk.boot = boot
-    return boot_disk
-
-
-def disk_from_snapshot(
-    disk_type: str,
-    disk_size_gb: int,
-    boot: bool,
-    source_snapshot: str,
-    auto_delete: bool = True,
-) -> compute_v1.AttachedDisk():
-    """
-    Create an AttachedDisk object to be used in VM instance creation. Uses a disk snapshot as the
-    source for the new disk.
-
-    Args:
-         disk_type: the type of disk you want to create. This value uses the following format:
-            "zones/{zone}/diskTypes/(pd-standard|pd-ssd|pd-balanced|pd-extreme)".
-            For example: "zones/us-west3-b/diskTypes/pd-ssd"
-        disk_size_gb: size of the new disk in gigabytes
-        boot: boolean flag indicating whether this disk should be used as a boot disk of an instance
-        source_snapshot: disk snapshot to use when creating this disk. You must have read access to this disk.
-            This value uses the following format: "projects/{project_name}/global/snapshots/{snapshot_name}"
-        auto_delete: boolean flag indicating whether this disk should be deleted with the VM that uses it
-
-    Returns:
-        AttachedDisk object configured to be created using the specified snapshot.
-    """
-    disk = compute_v1.AttachedDisk()
-    initialize_params = compute_v1.AttachedDiskInitializeParams()
-    initialize_params.source_snapshot = source_snapshot
-    initialize_params.disk_type = disk_type
-    initialize_params.disk_size_gb = disk_size_gb
-    disk.initialize_params = initialize_params
-    # Remember to set auto_delete to True if you want the disk to be deleted when you delete
-    # your VM instance.
-    disk.auto_delete = auto_delete
-    disk.boot = boot
-    return disk
+    disk_client = compute_v1.DisksClient()
+    return disk_client.get(project=project_id, zone=zone, disk=disk_name)
 
 
 def create_instance(
@@ -247,30 +168,33 @@ def create_instance(
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 
 
-def create_with_snapshotted_data_disk(
-    project_id: str, zone: str, instance_name: str, snapshot_link: str
-):
+def create_with_existing_disks(
+    project_id: str, zone: str, instance_name: str, disk_names: List[str]
+) -> compute_v1.Instance:
     """
-    Create a new VM instance with Debian 10 operating system and data disk created from snapshot.
+    Create a new VM instance using selected disks. The first disk in disk_names will
+    be used as boot disk.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
         zone: name of the zone to create the instance in. For example: "us-west3-b"
         instance_name: name of the new virtual machine (VM) instance.
-        snapshot_link: link to the snapshot you want to use as the source of your
-            data disk in the form of: "projects/{project_name}/global/snapshots/{snapshot_name}"
+        disk_names: list of disk names to be attached to the new virtual machine.
+            First disk in this list will be used as the boot device.
 
     Returns:
         Instance object.
     """
-    newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
-    disk_type = f"zones/{zone}/diskTypes/pd-standard"
-    disks = [
-        disk_from_image(disk_type, 10, True, newest_debian.self_link),
-        disk_from_snapshot(disk_type, 11, False, snapshot_link),
-    ]
-    instance = create_instance(project_id, zone, instance_name, disks)
+    assert len(disk_names) >= 1
+    disks = [get_disk(project_id, zone, disk_name) for disk_name in disk_names]
+    attached_disks = []
+    for disk in disks:
+        adisk = compute_v1.AttachedDisk()
+        adisk.source = disk.self_link
+        attached_disks.append(adisk)
+    attached_disks[0].boot = True
+    instance = create_instance(project_id, zone, instance_name, attached_disks)
     return instance
 
 
-# [END compute_instances_create_from_image_plus_snapshot_disk]
+# [END compute_instances_create_with_existing_disks]

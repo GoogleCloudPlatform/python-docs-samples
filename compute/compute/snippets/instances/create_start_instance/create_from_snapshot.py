@@ -33,7 +33,7 @@ def disk_from_snapshot(
     disk_size_gb: int,
     boot: bool,
     source_snapshot: str,
-    auto_delete: bool = False,
+    auto_delete: bool = True,
 ) -> compute_v1.AttachedDisk():
     """
     Create an AttachedDisk object to be used in VM instance creation. Uses a disk snapshot as the
@@ -189,7 +189,7 @@ def create_instance(
     if operation.warnings:
         print("Warning during creation:", operation.warnings, file=sys.stderr)
     print(f"Instance {instance_name} created.")
-    return instance
+    return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 
 
 def create_from_snapshot(
