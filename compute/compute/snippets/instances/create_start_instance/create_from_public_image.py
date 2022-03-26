@@ -50,7 +50,7 @@ def disk_from_image(
     disk_size_gb: int,
     boot: bool,
     source_image: str,
-    auto_delete: bool = False,
+    auto_delete: bool = True,
 ) -> compute_v1.AttachedDisk:
     """
     Create an AttachedDisk object to be used in VM instance creation. Uses an image as the
@@ -207,7 +207,7 @@ def create_instance(
     if operation.warnings:
         print("Warning during creation:", operation.warnings, file=sys.stderr)
     print(f"Instance {instance_name} created.")
-    return instance
+    return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 
 
 def create_from_public_image(
@@ -226,7 +226,7 @@ def create_from_public_image(
     """
     newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
-    disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
+    disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link, True)]
     instance = create_instance(project_id, zone, instance_name, disks)
     return instance
 

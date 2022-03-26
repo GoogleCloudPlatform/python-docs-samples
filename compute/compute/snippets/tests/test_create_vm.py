@@ -17,6 +17,10 @@ import google.auth
 from google.cloud import compute_v1
 import pytest
 
+from ..disks.create_empty_disk import create_empty_disk
+from ..disks.create_from_image import create_disk_from_image
+from ..disks.delete import delete_disk
+
 from ..instances.create_start_instance.create_from_custom_image import (
     create_from_custom_image,
 )
@@ -27,6 +31,7 @@ from ..instances.create_start_instance.create_from_snapshot import create_from_s
 from ..instances.create_start_instance.create_with_additional_disk import (
     create_with_additional_disk,
 )
+from ..instances.create_start_instance.create_with_existing_disks import create_with_existing_disks
 from ..instances.create_start_instance.create_with_snapshotted_data_disk import (
     create_with_snapshotted_data_disk,
 )
@@ -108,89 +113,132 @@ def image(src_disk):
         wait_for_operation(op, PROJECT)
 
 
-class TestCreation:
-    def test_create_from_custom_image(self, image):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_from_custom_image(
-            PROJECT, INSTANCE_ZONE, instance_name, image.self_link
-        )
-        try:
-            assert (
-                instance.disks[0].initialize_params.source_image == image.self_link
-            )
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+@pytest.fixture()
+def boot_disk():
+    debian_image = get_active_debian()
+    disk_name = "test-disk-" + uuid.uuid4().hex[:10]
+    disk = create_disk_from_image(PROJECT, INSTANCE_ZONE, disk_name,
+                                  f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard",
+                                  13, debian_image.self_link)
+    yield disk
+    delete_disk(PROJECT, INSTANCE_ZONE, disk_name)
 
-    def test_create_from_public_image(self):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_from_public_image(
-            PROJECT,
-            INSTANCE_ZONE,
-            instance_name,
-        )
-        try:
-            assert "debian-cloud" in instance.disks[0].initialize_params.source_image
-            assert "debian-10" in instance.disks[0].initialize_params.source_image
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
 
-    def test_create_from_snapshot(self, snapshot):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_from_snapshot(
-            PROJECT, INSTANCE_ZONE, instance_name, snapshot.self_link
-        )
-        try:
-            assert (
-                instance.disks[0].initialize_params.source_snapshot
-                == snapshot.self_link
-            )
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+@pytest.fixture()
+def empty_disk():
+    disk_name = "test-disk-" + uuid.uuid4().hex[:10]
+    disk = create_empty_disk(PROJECT, INSTANCE_ZONE, disk_name,
+                             f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard",
+                             14)
 
-    def test_create_with_additional_disk(self):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_with_additional_disk(PROJECT, INSTANCE_ZONE, instance_name)
-        try:
-            assert any(
-                disk.initialize_params.disk_size_gb == 20 for disk in instance.disks
-            )
-            assert any(
-                disk.initialize_params.disk_size_gb == 25 for disk in instance.disks
-            )
-            assert len(instance.disks) == 2
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+    yield disk
+    delete_disk(PROJECT, INSTANCE_ZONE, disk_name)
 
-    def test_create_with_snapshotted_data_disk(self, snapshot):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_with_snapshotted_data_disk(
-            PROJECT, INSTANCE_ZONE, instance_name, snapshot.self_link
-        )
-        try:
-            assert any(
-                disk.initialize_params.disk_size_gb == 11 for disk in instance.disks
-            )
-            assert any(
-                disk.initialize_params.disk_size_gb == 10 for disk in instance.disks
-            )
-            assert len(instance.disks) == 2
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
 
-    def test_create_with_subnet(self):
-        instance_name = "i" + uuid.uuid4().hex[:10]
-        instance = create_with_subnet(
-            PROJECT,
-            INSTANCE_ZONE,
-            instance_name,
-            "global/networks/default",
-            f"regions/{REGION}/subnetworks/default",
+def test_create_from_custom_image(image):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_from_custom_image(
+        PROJECT, INSTANCE_ZONE, instance_name, image.self_link
+    )
+    try:
+        assert (
+            instance.disks[0].disk_size_gb == 10
         )
-        try:
-            assert instance.network_interfaces[0].name == "global/networks/default"
-            assert (
-                instance.network_interfaces[0].subnetwork
-                == f"regions/{REGION}/subnetworks/default"
-            )
-        finally:
-            delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_from_public_image():
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_from_public_image(
+        PROJECT,
+        INSTANCE_ZONE,
+        instance_name,
+    )
+    try:
+        assert instance.disks[0].disk_size_gb == 10
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_from_snapshot(snapshot):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_from_snapshot(
+        PROJECT, INSTANCE_ZONE, instance_name, snapshot.self_link
+    )
+    try:
+        assert (
+            instance.disks[0].disk_size_gb == 20
+        )
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_additional_disk():
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_with_additional_disk(PROJECT, INSTANCE_ZONE, instance_name)
+    try:
+        assert any(
+            disk.disk_size_gb == 20 for disk in instance.disks
+        )
+        assert any(
+            disk.disk_size_gb == 25 for disk in instance.disks
+        )
+        assert len(instance.disks) == 2
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_snapshotted_data_disk(snapshot):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_with_snapshotted_data_disk(
+        PROJECT, INSTANCE_ZONE, instance_name, snapshot.self_link
+    )
+    try:
+        assert any(
+            disk.disk_size_gb == 11 for disk in instance.disks
+        )
+        assert any(
+            disk.disk_size_gb == 10 for disk in instance.disks
+        )
+        assert len(instance.disks) == 2
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_subnet():
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_with_subnet(
+        PROJECT,
+        INSTANCE_ZONE,
+        instance_name,
+        "global/networks/default",
+        f"regions/{REGION}/subnetworks/default",
+    )
+    try:
+        assert instance.network_interfaces[0].network.endswith("global/networks/default")
+        assert (
+            instance.network_interfaces[0].subnetwork.endswith(f"regions/{REGION}/subnetworks/default")
+        )
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_existing_disks(boot_disk, empty_disk):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_with_existing_disks(PROJECT, INSTANCE_ZONE, instance_name,
+                                          [boot_disk.name, empty_disk.name])
+
+    try:
+        print(instance.disks)
+        for disk in instance.disks:
+            print(disk, dir(disk), type(disk), disk.disk_size_gb)
+        assert any(
+            disk.disk_size_gb == 13 for disk in instance.disks
+        )
+        assert any(
+            disk.disk_size_gb == 14 for disk in instance.disks
+        )
+        assert len(instance.disks) == 2
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)

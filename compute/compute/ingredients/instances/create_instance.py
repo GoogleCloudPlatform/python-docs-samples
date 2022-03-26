@@ -149,5 +149,5 @@ def create_instance(
     if operation.warnings:
         print("Warning during creation:", operation.warnings, file=sys.stderr)
     print(f"Instance {instance_name} created.")
-    return instance
+    return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 # </INGREDIENT>
