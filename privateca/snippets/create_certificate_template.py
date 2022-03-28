@@ -20,7 +20,9 @@ from google.type import expr_pb2
 
 
 def create_certificate_template(
-    project_id: str, location: str, certificate_template_id: str,
+    project_id: str,
+    location: str,
+    certificate_template_id: str,
 ) -> None:
     """
     Create a Certificate template. These templates can be reused for common
@@ -39,13 +41,16 @@ def create_certificate_template(
     x509_parameters = privateca_v1.X509Parameters(
         key_usage=privateca_v1.KeyUsage(
             base_key_usage=privateca_v1.KeyUsage.KeyUsageOptions(
-                digital_signature=True, key_encipherment=True,
+                digital_signature=True,
+                key_encipherment=True,
             ),
             extended_key_usage=privateca_v1.KeyUsage.ExtendedKeyUsageOptions(
                 server_auth=True,
             ),
         ),
-        ca_options=privateca_v1.X509Parameters.CaOptions(is_ca=False,),
+        ca_options=privateca_v1.X509Parameters.CaOptions(
+            is_ca=False,
+        ),
     )
 
     # CEL expression that is evaluated against the Subject and

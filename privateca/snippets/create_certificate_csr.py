@@ -50,7 +50,8 @@ def create_certificate_csr(
     # Create certificate with CSR.
     # The pem_csr contains the public key and the domain details required.
     certificate = privateca_v1.Certificate(
-        pem_csr=pem_csr, lifetime=duration_pb2.Duration(seconds=certificate_lifetime),
+        pem_csr=pem_csr,
+        lifetime=duration_pb2.Duration(seconds=certificate_lifetime),
     )
 
     # Create the Certificate Request.

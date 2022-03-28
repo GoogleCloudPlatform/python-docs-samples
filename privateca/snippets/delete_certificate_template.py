@@ -19,7 +19,9 @@ import google.cloud.security.privateca_v1 as privateca_v1
 
 
 def delete_certificate_template(
-    project_id: str, location: str, certificate_template_id: str,
+    project_id: str,
+    location: str,
+    certificate_template_id: str,
 ) -> None:
     """
     Delete the certificate template present in the given project and location.
@@ -35,7 +37,9 @@ def delete_certificate_template(
     # Request to delete a certificate template.
     request = privateca_v1.DeleteCertificateTemplateRequest(
         name=caServiceClient.certificate_template_path(
-            project_id, location, certificate_template_id,
+            project_id,
+            location,
+            certificate_template_id,
         )
     )
     operation = caServiceClient.delete_certificate_template(request=request)

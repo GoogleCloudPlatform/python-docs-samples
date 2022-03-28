@@ -70,8 +70,14 @@ def test_enable_and_disable_certificate_authority(
 
     out, _ = capsys.readouterr()
 
-    assert re.search(f"Enabled Certificate Authority: {CA_NAME}", out,)
-    assert re.search(f"Disabled Certificate Authority: {CA_NAME}", out,)
+    assert re.search(
+        f"Enabled Certificate Authority: {CA_NAME}",
+        out,
+    )
+    assert re.search(
+        f"Disabled Certificate Authority: {CA_NAME}",
+        out,
+    )
 
 
 def test_undelete_certificate_authority(
@@ -84,8 +90,14 @@ def test_undelete_certificate_authority(
     delete_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
 
     out, _ = capsys.readouterr()
-    assert re.search(f"Successfully undeleted Certificate Authority: {CA_NAME}", out,)
-    assert re.search(f"Successfully deleted Certificate Authority: {CA_NAME}", out,)
+    assert re.search(
+        f"Successfully undeleted Certificate Authority: {CA_NAME}",
+        out,
+    )
+    assert re.search(
+        f"Successfully deleted Certificate Authority: {CA_NAME}",
+        out,
+    )
 
 
 def test_update_certificate_authority(

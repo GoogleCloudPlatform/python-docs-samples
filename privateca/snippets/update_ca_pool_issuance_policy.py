@@ -21,7 +21,9 @@ from google.type import expr_pb2
 
 
 def update_ca_pool_issuance_policy(
-    project_id: str, location: str, ca_pool_name: str,
+    project_id: str,
+    location: str,
+    ca_pool_name: str,
 ) -> None:
     """
     Update the issuance policy for a CA Pool. All certificates issued from this CA Pool should
@@ -52,7 +54,10 @@ def update_ca_pool_issuance_policy(
         ),
     )
 
-    ca_pool = privateca_v1.CaPool(name=ca_pool_path, issuance_policy=issuance_policy,)
+    ca_pool = privateca_v1.CaPool(
+        name=ca_pool_path,
+        issuance_policy=issuance_policy,
+    )
 
     # 1. Set the CA pool with updated values.
     # 2. Set the update mask to specify which properties of the CA Pool should be updated.
