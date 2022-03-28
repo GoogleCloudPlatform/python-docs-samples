@@ -63,7 +63,9 @@ def batch_process_documents(
     # Location can be 'us' or 'eu'
     name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
     request = documentai.types.document_processor_service.BatchProcessRequest(
-        name=name, input_documents=input_config, document_output_config=output_config,
+        name=name,
+        input_documents=input_config,
+        document_output_config=output_config,
     )
 
     operation = client.batch_process_documents(request)

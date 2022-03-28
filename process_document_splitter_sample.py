@@ -75,7 +75,7 @@ def process_document_splitter_sample(
 
 
 def page_refs_to_string(page_refs: dict) -> str:
-    """ Converts a page ref to a string describing the page or page range."""
+    """Converts a page ref to a string describing the page or page range."""
     if len(page_refs) == 1:
         num = str(int(page_refs[0].page) + 1)
         return f"page {num} is"
