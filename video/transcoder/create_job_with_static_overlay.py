@@ -81,7 +81,8 @@ def create_job_with_static_overlay(
                 image=transcoder_v1.types.Overlay.Image(
                     uri=overlay_image_uri,
                     resolution=transcoder_v1.types.Overlay.NormalizedCoordinate(
-                        x=1, y=0.5,
+                        x=1,
+                        y=0.5,
                     ),
                     alpha=1,
                 ),
@@ -89,14 +90,19 @@ def create_job_with_static_overlay(
                     transcoder_v1.types.Overlay.Animation(
                         animation_static=transcoder_v1.types.Overlay.AnimationStatic(
                             xy=transcoder_v1.types.Overlay.NormalizedCoordinate(
-                                x=0, y=0,
+                                x=0,
+                                y=0,
                             ),
-                            start_time_offset=duration.Duration(seconds=0,),
+                            start_time_offset=duration.Duration(
+                                seconds=0,
+                            ),
                         ),
                     ),
                     transcoder_v1.types.Overlay.Animation(
                         animation_end=transcoder_v1.types.Overlay.AnimationEnd(
-                            start_time_offset=duration.Duration(seconds=10,),
+                            start_time_offset=duration.Duration(
+                                seconds=10,
+                            ),
                         ),
                     ),
                 ],
@@ -114,7 +120,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input_uri",

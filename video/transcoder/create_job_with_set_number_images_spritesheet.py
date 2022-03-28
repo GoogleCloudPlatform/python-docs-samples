@@ -113,7 +113,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input_uri",
@@ -127,5 +129,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     create_job_with_set_number_images_spritesheet(
-        args.project_id, args.location, args.input_uri, args.output_uri,
+        args.project_id,
+        args.location,
+        args.input_uri,
+        args.output_uri,
     )
