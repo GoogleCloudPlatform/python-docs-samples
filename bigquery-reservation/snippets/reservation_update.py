@@ -59,7 +59,8 @@ def update_reservation(
         project_id, location, reservation_id
     )
     reservation = reservation_types.Reservation(
-        name=reservation_name, slot_capacity=slot_capacity,
+        name=reservation_name,
+        slot_capacity=slot_capacity,
     )
     field_mask = field_mask_pb2.FieldMask(paths=["slot_capacity"])
     reservation = reservation_client.update_reservation(
