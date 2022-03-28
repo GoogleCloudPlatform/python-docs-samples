@@ -58,7 +58,9 @@ def create_reservation(
 
     reservation = reservation_types.Reservation(slot_capacity=slot_capacity)
     reservation = reservation_client.create_reservation(
-        parent=parent, reservation=reservation, reservation_id=reservation_id,
+        parent=parent,
+        reservation=reservation,
+        reservation_id=reservation_id,
     )
 
     print(f"Created reservation: {reservation.name}")
