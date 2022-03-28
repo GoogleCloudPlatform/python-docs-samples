@@ -114,13 +114,13 @@ def listen_print_loop(responses):
         # END_OF_SINGLE_UTTERANCE event.
         if response.speech_event_type == SpeechEventType.END_OF_SINGLE_UTTERANCE:
 
-            print(u"\nFinal translation: {0}".format(translation))
+            print("\nFinal translation: {0}".format(translation))
             return 0
 
         result = response.result
         translation = result.text_translation_result.translation
 
-        print(u"\nPartial translation: {0}".format(translation))
+        print("\nPartial translation: {0}".format(translation))
 
 
 def do_translation_loop():
