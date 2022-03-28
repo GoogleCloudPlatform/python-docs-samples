@@ -22,7 +22,7 @@ from google.api_core.client_options import ClientOptions
 
 # [START datalabeling_create_instruction_beta]
 def create_instruction(project_id, data_type, instruction_gcs_uri):
-    """ Creates a data labeling PDF instruction for the given Google Cloud
+    """Creates a data labeling PDF instruction for the given Google Cloud
     project. The PDF file should be uploaded to the project in
     Google Cloud Storage.
     """
