@@ -59,7 +59,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input_uri",

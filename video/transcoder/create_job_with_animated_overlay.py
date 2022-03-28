@@ -81,7 +81,8 @@ def create_job_with_animated_overlay(
                 image=transcoder_v1.types.Overlay.Image(
                     uri=overlay_image_uri,
                     resolution=transcoder_v1.types.Overlay.NormalizedCoordinate(
-                        x=0, y=0,
+                        x=0,
+                        y=0,
                     ),
                     alpha=1,
                 ),
@@ -90,20 +91,30 @@ def create_job_with_animated_overlay(
                         animation_fade=transcoder_v1.types.Overlay.AnimationFade(
                             fade_type=transcoder_v1.types.Overlay.FadeType.FADE_IN,
                             xy=transcoder_v1.types.Overlay.NormalizedCoordinate(
-                                x=0.5, y=0.5,
+                                x=0.5,
+                                y=0.5,
                             ),
-                            start_time_offset=duration.Duration(seconds=5,),
-                            end_time_offset=duration.Duration(seconds=10,),
+                            start_time_offset=duration.Duration(
+                                seconds=5,
+                            ),
+                            end_time_offset=duration.Duration(
+                                seconds=10,
+                            ),
                         ),
                     ),
                     transcoder_v1.types.Overlay.Animation(
                         animation_fade=transcoder_v1.types.Overlay.AnimationFade(
                             fade_type=transcoder_v1.types.Overlay.FadeType.FADE_OUT,
                             xy=transcoder_v1.types.Overlay.NormalizedCoordinate(
-                                x=0.5, y=0.5,
+                                x=0.5,
+                                y=0.5,
                             ),
-                            start_time_offset=duration.Duration(seconds=12,),
-                            end_time_offset=duration.Duration(seconds=15,),
+                            start_time_offset=duration.Duration(
+                                seconds=12,
+                            ),
+                            end_time_offset=duration.Duration(
+                                seconds=15,
+                            ),
                         ),
                     ),
                 ],
@@ -121,7 +132,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input_uri",

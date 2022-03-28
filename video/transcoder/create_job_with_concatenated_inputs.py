@@ -80,8 +80,14 @@ def create_job_with_concatenated_inputs(
     job.output_uri = output_uri
     job.config = transcoder_v1.types.JobConfig(
         inputs=[
-            transcoder_v1.types.Input(key="input1", uri=input1_uri,),
-            transcoder_v1.types.Input(key="input2", uri=input2_uri,),
+            transcoder_v1.types.Input(
+                key="input1",
+                uri=input1_uri,
+            ),
+            transcoder_v1.types.Input(
+                key="input2",
+                uri=input2_uri,
+            ),
         ],
         edit_list=[
             transcoder_v1.types.EditAtom(
@@ -135,7 +141,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input1_uri",

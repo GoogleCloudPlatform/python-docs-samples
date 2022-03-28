@@ -88,14 +88,18 @@ def create_job_with_periodic_images_spritesheet(
                 file_prefix="small-sprite-sheet",
                 sprite_width_pixels=64,
                 sprite_height_pixels=32,
-                interval=duration.Duration(seconds=7,),
+                interval=duration.Duration(
+                    seconds=7,
+                ),
             ),
             # Generate a sprite sheet with 128x72px images. An image is taken every 7 seconds from the video.
             transcoder_v1.types.SpriteSheet(
                 file_prefix="large-sprite-sheet",
                 sprite_width_pixels=128,
                 sprite_height_pixels=72,
-                interval=duration.Duration(seconds=7,),
+                interval=duration.Duration(
+                    seconds=7,
+                ),
             ),
         ],
     )
@@ -110,7 +114,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
-        "--location", help="The location to start this job in.", default="us-central1",
+        "--location",
+        help="The location to start this job in.",
+        default="us-central1",
     )
     parser.add_argument(
         "--input_uri",
@@ -124,5 +130,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     create_job_with_periodic_images_spritesheet(
-        args.project_id, args.location, args.input_uri, args.output_uri,
+        args.project_id,
+        args.location,
+        args.input_uri,
+        args.output_uri,
     )
