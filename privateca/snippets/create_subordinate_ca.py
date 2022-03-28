@@ -62,10 +62,13 @@ def create_subordinate_ca(
     x509_parameters = privateca_v1.X509Parameters(
         key_usage=privateca_v1.KeyUsage(
             base_key_usage=privateca_v1.KeyUsage.KeyUsageOptions(
-                crl_sign=True, cert_sign=True,
+                crl_sign=True,
+                cert_sign=True,
             )
         ),
-        ca_options=privateca_v1.X509Parameters.CaOptions(is_ca=True,),
+        ca_options=privateca_v1.X509Parameters.CaOptions(
+            is_ca=True,
+        ),
     )
 
     # Set certificate authority settings.
@@ -73,7 +76,8 @@ def create_subordinate_ca(
         type_=privateca_v1.CertificateAuthority.Type.SUBORDINATE,
         key_spec=key_version_spec,
         config=privateca_v1.CertificateConfig(
-            subject_config=subject_config, x509_config=x509_parameters,
+            subject_config=subject_config,
+            x509_config=x509_parameters,
         ),
         # Set the CA validity duration.
         lifetime=duration_pb2.Duration(seconds=ca_duration),

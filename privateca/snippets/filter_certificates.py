@@ -36,7 +36,8 @@ def filter_certificates(
 
     # Create the certificate request and set the filter condition.
     request = privateca_v1.ListCertificatesRequest(
-        parent=ca_pool_path, filter=filter_condition,
+        parent=ca_pool_path,
+        filter=filter_condition,
     )
 
     # Retrieve and print the certificate names.

@@ -19,7 +19,11 @@
 import google.cloud.security.privateca_v1 as privateca_v1
 
 
-def list_certificates(project_id: str, location: str, ca_pool_name: str,) -> None:
+def list_certificates(
+    project_id: str,
+    location: str,
+    ca_pool_name: str,
+) -> None:
     """
     List Certificates present in the given CA pool.
 

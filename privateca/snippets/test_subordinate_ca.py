@@ -96,7 +96,10 @@ def test_subordinate_certificate_authority(
     )
 
     revoke_certificate(
-        PROJECT, LOCATION, CA_POOL_NAME, CSR_CERT_NAME,
+        PROJECT,
+        LOCATION,
+        CA_POOL_NAME,
+        CSR_CERT_NAME,
     )
 
     out, _ = capsys.readouterr()

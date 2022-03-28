@@ -20,7 +20,10 @@ from google.protobuf import field_mask_pb2
 
 
 def update_ca_label(
-    project_id: str, location: str, ca_pool_name: str, ca_name: str,
+    project_id: str,
+    location: str,
+    ca_pool_name: str,
+    ca_name: str,
 ) -> None:
     """
     Update the labels in a certificate authority.
@@ -39,7 +42,8 @@ def update_ca_label(
         project_id, location, ca_pool_name, ca_name
     )
     certificate_authority = privateca_v1.CertificateAuthority(
-        name=ca_parent, labels={"env": "test"},
+        name=ca_parent,
+        labels={"env": "test"},
     )
 
     # Create a request to update the CA.
