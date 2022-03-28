@@ -20,7 +20,9 @@ from google.protobuf import field_mask_pb2
 
 
 def update_certificate_template(
-    project_id: str, location: str, certificate_template_id: str,
+    project_id: str,
+    location: str,
+    certificate_template_id: str,
 ) -> None:
     """
     Update an existing certificate template.
@@ -34,14 +36,17 @@ def update_certificate_template(
     caServiceClient = privateca_v1.CertificateAuthorityServiceClient()
 
     certificate_name = caServiceClient.certificate_template_path(
-        project_id, location, certificate_template_id,
+        project_id,
+        location,
+        certificate_template_id,
     )
 
     # Set the parent name and the properties to be updated.
     certificate_template = privateca_v1.CertificateTemplate(
         name=certificate_name,
         identity_constraints=privateca_v1.CertificateIdentityConstraints(
-            allow_subject_passthrough=False, allow_subject_alt_names_passthrough=True,
+            allow_subject_passthrough=False,
+            allow_subject_alt_names_passthrough=True,
         ),
     )
 
@@ -56,7 +61,8 @@ def update_certificate_template(
     # Set the new template.
     # Set the mask to specify which properties of the template should be updated.
     request = privateca_v1.UpdateCertificateTemplateRequest(
-        certificate_template=certificate_template, update_mask=field_mask,
+        certificate_template=certificate_template,
+        update_mask=field_mask,
     )
     operation = caServiceClient.update_certificate_template(request=request)
     result = operation.result()

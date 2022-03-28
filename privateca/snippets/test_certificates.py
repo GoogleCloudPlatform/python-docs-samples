@@ -82,7 +82,10 @@ def test_create_and_revoke_certificate_authority(
     filter_certificates(PROJECT, LOCATION, CA_POOL_NAME, FILTER_CONDITION)
 
     revoke_certificate(
-        PROJECT, LOCATION, CA_POOL_NAME, CERT_NAME,
+        PROJECT,
+        LOCATION,
+        CA_POOL_NAME,
+        CERT_NAME,
     )
 
     disable_certificate_authority(PROJECT, LOCATION, CA_POOL_NAME, CA_NAME)
