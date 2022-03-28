@@ -19,7 +19,7 @@ from list_site_keys import list_site_keys
 
 
 def migrate_site_key(project_id: str, recaptcha_site_key: str) -> None:
-    """ Migrate a key from reCAPTCHA (non-Enterprise) to reCAPTCHA Enterprise.
+    """Migrate a key from reCAPTCHA (non-Enterprise) to reCAPTCHA Enterprise.
         If you created the key using Admin console: https://www.google.com/recaptcha/admin/site,
         then use this API to migrate to reCAPTCHA Enterprise.
         For more info, see: https://cloud.google.com/recaptcha-enterprise/docs/migrate-recaptcha

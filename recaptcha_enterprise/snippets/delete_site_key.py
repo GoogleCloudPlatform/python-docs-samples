@@ -17,7 +17,7 @@ from google.cloud import recaptchaenterprise_v1
 
 
 def delete_site_key(project_id: str, recaptcha_site_key: str) -> None:
-    """ Delete the given reCAPTCHA site key present under the project ID.
+    """Delete the given reCAPTCHA site key present under the project ID.
 
     Args:
     project_id : GCloud Project ID.

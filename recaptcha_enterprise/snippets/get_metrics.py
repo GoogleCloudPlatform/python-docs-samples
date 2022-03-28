@@ -17,7 +17,7 @@ from google.cloud import recaptchaenterprise_v1
 
 
 def get_metrics(project_id: str, recaptcha_site_key: str) -> None:
-    """ Get metrics specific to a recaptcha site key.
+    """Get metrics specific to a recaptcha site key.
         E.g: score bucket count for a key or number of
         times the checkbox key failed/ passed etc.,
     Args:

@@ -17,7 +17,7 @@ from google.cloud import recaptchaenterprise_v1
 
 
 def annotate_assessment(project_id: str, assessment_id: str) -> None:
-    """ Pre-requisite: Create an assessment before annotating.
+    """Pre-requisite: Create an assessment before annotating.
         Annotate an assessment to provide feedback on the correctness of recaptcha prediction.
     Args:
         project_id: Google Cloud Project ID

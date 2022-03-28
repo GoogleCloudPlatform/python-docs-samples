@@ -21,7 +21,7 @@ from google.cloud.recaptchaenterprise_v1.services.recaptcha_enterprise_service.p
 
 
 def list_site_keys(project_id: str) -> ListKeysPager:
-    """ List all keys present under the given project ID.
+    """List all keys present under the given project ID.
 
     Args:
     project_id: GCloud Project ID.

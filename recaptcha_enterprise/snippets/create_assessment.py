@@ -21,7 +21,7 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 def create_assessment(
     project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
 ) -> Assessment:
-    """ Create an assessment to analyze the risk of a UI action.
+    """Create an assessment to analyze the risk of a UI action.
     Args:
         project_id: GCloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
