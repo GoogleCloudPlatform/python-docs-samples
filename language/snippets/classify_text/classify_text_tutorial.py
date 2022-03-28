@@ -35,7 +35,7 @@ import six
 
 # [START language_classify_text_tutorial_classify]
 def classify(text, verbose=True):
-    """Classify the input text into categories. """
+    """Classify the input text into categories."""
 
     language_client = language_v1.LanguageServiceClient()
 
@@ -56,9 +56,9 @@ def classify(text, verbose=True):
     if verbose:
         print(text)
         for category in categories:
-            print(u"=" * 20)
-            print(u"{:<16}: {}".format("category", category.name))
-            print(u"{:<16}: {}".format("confidence", category.confidence))
+            print("=" * 20)
+            print("{:<16}: {}".format("category", category.name))
+            print("{:<16}: {}".format("confidence", category.confidence))
 
     return result
 

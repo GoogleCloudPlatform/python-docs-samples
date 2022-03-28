@@ -48,7 +48,7 @@ def test_analyze_sentiment(capsys):
 def test_analyze_syntax(capsys):
     result = analyze.analyze_syntax(
         textwrap.dedent(
-            u"""\
+            """\
         Keep away from people who try to belittle your ambitions. Small people
         always do that, but the really great make you feel that you, too, can
         become great.
@@ -71,7 +71,7 @@ def test_analyze_syntax_utf8():
     bits. The offsets we get should be the index of the first byte of the
     character.
     """
-    test_string = u"a \u00e3 \u0201 \U0001f636 b"
+    test_string = "a \u00e3 \u0201 \U0001f636 b"
     byte_array = test_string.encode("utf8")
     result = analyze.analyze_syntax(test_string, encoding="UTF8")
     tokens = result["tokens"]
@@ -82,19 +82,19 @@ def test_analyze_syntax_utf8():
         byte_array[offset : offset + 1].decode("utf8") == tokens[0]["text"]["content"]
     )
 
-    assert tokens[1]["text"]["content"] == u"\u00e3"
+    assert tokens[1]["text"]["content"] == "\u00e3"
     offset = tokens[1]["text"].get("beginOffset", 0)
     assert (
         byte_array[offset : offset + 2].decode("utf8") == tokens[1]["text"]["content"]
     )
 
-    assert tokens[2]["text"]["content"] == u"\u0201"
+    assert tokens[2]["text"]["content"] == "\u0201"
     offset = tokens[2]["text"].get("beginOffset", 0)
     assert (
         byte_array[offset : offset + 2].decode("utf8") == tokens[2]["text"]["content"]
     )
 
-    assert tokens[3]["text"]["content"] == u"\U0001f636"
+    assert tokens[3]["text"]["content"] == "\U0001f636"
     offset = tokens[3]["text"].get("beginOffset", 0)
     assert (
         byte_array[offset : offset + 4].decode("utf8") == tokens[3]["text"]["content"]
@@ -102,7 +102,7 @@ def test_analyze_syntax_utf8():
 
     # This demonstrates that the offset takes into account the variable-length
     # characters before the target token.
-    assert tokens[4]["text"]["content"] == u"b"
+    assert tokens[4]["text"]["content"] == "b"
     offset = tokens[4]["text"].get("beginOffset", 0)
     # 'b' is only one byte long
     assert (
@@ -117,7 +117,7 @@ def test_analyze_syntax_utf16():
     bits. The returned offsets will be the index of the first 2-byte character
     of the token.
     """
-    test_string = u"a \u00e3 \u0201 \U0001f636 b"
+    test_string = "a \u00e3 \u0201 \U0001f636 b"
     byte_array = test_string.encode("utf16")
     # Remove the byte order marker, which the offsets don't account for
     byte_array = byte_array[2:]
@@ -133,7 +133,7 @@ def test_analyze_syntax_utf16():
         byte_array[offset : offset + 2].decode("utf16") == tokens[0]["text"]["content"]
     )
 
-    assert tokens[1]["text"]["content"] == u"\u00e3"
+    assert tokens[1]["text"]["content"] == "\u00e3"
     offset = 2 * tokens[1]["text"].get("beginOffset", 0)
     # A UTF16 character with a low codepoint is 16 bits (2 bytes) long, so
     # slice out 2 bytes starting from the offset. Then interpret the bytes as
@@ -142,7 +142,7 @@ def test_analyze_syntax_utf16():
         byte_array[offset : offset + 2].decode("utf16") == tokens[1]["text"]["content"]
     )
 
-    assert tokens[2]["text"]["content"] == u"\u0201"
+    assert tokens[2]["text"]["content"] == "\u0201"
     offset = 2 * tokens[2]["text"].get("beginOffset", 0)
     # A UTF16 character with a low codepoint is 16 bits (2 bytes) long, so
     # slice out 2 bytes starting from the offset. Then interpret the bytes as
@@ -151,7 +151,7 @@ def test_analyze_syntax_utf16():
         byte_array[offset : offset + 2].decode("utf16") == tokens[2]["text"]["content"]
     )
 
-    assert tokens[3]["text"]["content"] == u"\U0001f636"
+    assert tokens[3]["text"]["content"] == "\U0001f636"
     offset = 2 * tokens[3]["text"].get("beginOffset", 0)
     # A UTF16 character with a high codepoint is 32 bits (4 bytes) long, so
     # slice out 4 bytes starting from the offset. Then interpret those bytes as
@@ -162,7 +162,7 @@ def test_analyze_syntax_utf16():
 
     # This demonstrates that the offset takes into account the variable-length
     # characters before the target token.
-    assert tokens[4]["text"]["content"] == u"b"
+    assert tokens[4]["text"]["content"] == "b"
     offset = 2 * tokens[4]["text"].get("beginOffset", 0)
     # Even though 'b' is only one byte long, utf16 still encodes it using 16
     # bits
@@ -192,7 +192,7 @@ def test_annotate_text_utf32():
     unicode object with the raw offset returned by the api (ie without
     multiplying it by 4, as it is below).
     """
-    test_string = u"a \u00e3 \u0201 \U0001f636 b"
+    test_string = "a \u00e3 \u0201 \U0001f636 b"
     byte_array = test_string.encode("utf32")
     # Remove the byte order marker, which the offsets don't account for
     byte_array = byte_array[4:]
@@ -208,7 +208,7 @@ def test_annotate_text_utf32():
         byte_array[offset : offset + 4].decode("utf32") == tokens[0]["text"]["content"]
     )
 
-    assert tokens[1]["text"]["content"] == u"\u00e3"
+    assert tokens[1]["text"]["content"] == "\u00e3"
     offset = 4 * tokens[1]["text"].get("beginOffset", 0)
     # A UTF32 character with a low codepoint is 32 bits (4 bytes) long, so
     # slice out 4 bytes starting from the offset. Then interpret the bytes as
@@ -217,7 +217,7 @@ def test_annotate_text_utf32():
         byte_array[offset : offset + 4].decode("utf32") == tokens[1]["text"]["content"]
     )
 
-    assert tokens[2]["text"]["content"] == u"\u0201"
+    assert tokens[2]["text"]["content"] == "\u0201"
     offset = 4 * tokens[2]["text"].get("beginOffset", 0)
     # A UTF32 character with a low codepoint is 32 bits (4 bytes) long, so
     # slice out 4 bytes starting from the offset. Then interpret the bytes as
@@ -226,7 +226,7 @@ def test_annotate_text_utf32():
         byte_array[offset : offset + 4].decode("utf32") == tokens[2]["text"]["content"]
     )
 
-    assert tokens[3]["text"]["content"] == u"\U0001f636"
+    assert tokens[3]["text"]["content"] == "\U0001f636"
     offset = 4 * tokens[3]["text"].get("beginOffset", 0)
     # A UTF32 character with a high codepoint is 32 bits (4 bytes) long, so
     # slice out 4 bytes starting from the offset. Then interpret those bytes as
@@ -237,7 +237,7 @@ def test_annotate_text_utf32():
 
     # This demonstrates that the offset takes into account the variable-length
     # characters before the target token.
-    assert tokens[4]["text"]["content"] == u"b"
+    assert tokens[4]["text"]["content"] == "b"
     offset = 4 * tokens[4]["text"].get("beginOffset", 0)
     # Even though 'b' is only one byte long, utf32 still encodes it using 32
     # bits
@@ -252,7 +252,7 @@ def test_annotate_text_utf32_directly_index_into_unicode():
     See the explanation for test_annotate_text_utf32. Essentially, indexing
     into a utf32 array is equivalent to indexing into a python unicode object.
     """
-    test_string = u"a \u00e3 \u0201 \U0001f636 b"
+    test_string = "a \u00e3 \u0201 \U0001f636 b"
     result = analyze.analyze_syntax(test_string, encoding="UTF32")
     tokens = result["tokens"]
 
@@ -260,11 +260,11 @@ def test_annotate_text_utf32_directly_index_into_unicode():
     offset = tokens[0]["text"].get("beginOffset", 0)
     assert test_string[offset] == tokens[0]["text"]["content"]
 
-    assert tokens[1]["text"]["content"] == u"\u00e3"
+    assert tokens[1]["text"]["content"] == "\u00e3"
     offset = tokens[1]["text"].get("beginOffset", 0)
     assert test_string[offset] == tokens[1]["text"]["content"]
 
-    assert tokens[2]["text"]["content"] == u"\u0201"
+    assert tokens[2]["text"]["content"] == "\u0201"
     offset = tokens[2]["text"].get("beginOffset", 0)
     assert test_string[offset] == tokens[2]["text"]["content"]
 

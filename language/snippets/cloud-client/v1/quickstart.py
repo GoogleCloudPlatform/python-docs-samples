@@ -29,7 +29,7 @@ def run_quickstart():
     # [END language_python_migration_client]
 
     # The text to analyze
-    text = u"Hello, world!"
+    text = "Hello, world!"
     document = language_v1.Document(
         content=text, type_=language_v1.Document.Type.PLAIN_TEXT
     )
