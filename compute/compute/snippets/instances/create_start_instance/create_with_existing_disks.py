@@ -30,11 +30,11 @@ from google.cloud import compute_v1
 
 def get_disk(project_id: str, zone: str, disk_name: str) -> compute_v1.Disk:
     """
-    Deletes a disk from a project.
+    Gets a disk from a project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        zone: name of the zone in which is the disk you want to delete.
+        zone: name of the zone where the disk exists.
         disk_name: name of the disk you want to retrieve.
     """
     disk_client = compute_v1.DisksClient()

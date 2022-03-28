@@ -16,6 +16,8 @@ import glob
 from pathlib import Path
 import tempfile
 
+import pytest
+
 from . import sgs
 
 FIXTURE_INGREDIENTS = Path("sgs_test_fixtures/ingredients")
@@ -30,3 +32,26 @@ def test_sgs_generate():
         for test_file in map(Path, glob.glob(f"{tmp_dir}/**")):
             match_file = FIXTURE_OUTPUT / test_file.relative_to(tmp_dir)
             assert test_file.read_bytes() == match_file.read_bytes()
+
+
+def test_snippets_freshness():
+    """
+    Make sure that the snippets/ folder is up-to-date and matches
+    ingredients/ and recipes/. This test will generate SGS output
+    in a temporary directory and compare it to the content of
+    snippets/ folder.
+    """
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        args = Namespace(output_dir=tmp_dir)
+        sgs.generate(args, Path("ingredients/").absolute(), Path("recipes/").absolute())
+        print(list(map(Path, glob.glob(f"{tmp_dir}/**"))))
+        for test_file in map(Path, glob.glob(f"{tmp_dir}/**", recursive=True)):
+            match_file = Path("snippets/") / test_file.relative_to(tmp_dir)
+            if test_file.is_file():
+                if test_file.read_bytes() != match_file.read_bytes():
+                    pytest.fail(
+                        f"This test fails because file {match_file} seems to be outdated. Please run "
+                        f"`python sgs.py generate` to update your snippets."
+                    )
+            elif test_file.is_dir():
+                assert match_file.is_dir()

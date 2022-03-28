@@ -90,6 +90,7 @@ IGNORED_OUTPUT_FILES = (
     re.compile(r".*requirements-test\.txt$"),
     re.compile(r".*?/tests/.*"),
     re.compile(r".*?/__pycache__/.*"),
+    re.compile(r".*?sponge_log.xml.*"),
 )
 
 
