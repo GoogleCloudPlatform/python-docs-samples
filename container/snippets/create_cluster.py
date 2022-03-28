@@ -97,7 +97,8 @@ def create_cluster(project_id: str, location: str, cluster_name: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
     parser.add_argument("zone", help="GKE Cluster zone")
