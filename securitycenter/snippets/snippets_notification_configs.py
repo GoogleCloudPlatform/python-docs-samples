@@ -57,8 +57,10 @@ def delete_notification_config(organization_id, notification_config_id):
     # TODO: organization_id = "your-org-id"
     # TODO: notification_config_id = "your-config-id"
 
-    notification_config_name = "organizations/{org_id}/notificationConfigs/{config_id}".format(
-        org_id=organization_id, config_id=notification_config_id
+    notification_config_name = (
+        "organizations/{org_id}/notificationConfigs/{config_id}".format(
+            org_id=organization_id, config_id=notification_config_id
+        )
     )
 
     client.delete_notification_config(request={"name": notification_config_name})
@@ -77,8 +79,10 @@ def get_notification_config(organization_id, notification_config_id):
     # TODO: organization_id = "your-org-id"
     # TODO: notification_config_id = "your-config-id"
 
-    notification_config_name = "organizations/{org_id}/notificationConfigs/{config_id}".format(
-        org_id=organization_id, config_id=notification_config_id
+    notification_config_name = (
+        "organizations/{org_id}/notificationConfigs/{config_id}".format(
+            org_id=organization_id, config_id=notification_config_id
+        )
     )
 
     notification_config = client.get_notification_config(
@@ -121,8 +125,10 @@ def update_notification_config(organization_id, notification_config_id, pubsub_t
     # If updating a pubsub_topic, ensure this ServiceAccount has the
     # "pubsub.topics.setIamPolicy" permission on the new topic.
 
-    notification_config_name = "organizations/{org_id}/notificationConfigs/{config_id}".format(
-        org_id=organization_id, config_id=notification_config_id
+    notification_config_name = (
+        "organizations/{org_id}/notificationConfigs/{config_id}".format(
+            org_id=organization_id, config_id=notification_config_id
+        )
     )
 
     updated_description = "New updated description"

@@ -24,7 +24,7 @@ import snippets_security_marks
 
 @pytest.fixture(scope="module")
 def organization_id():
-    """Gets Organization ID from the environment variable """
+    """Gets Organization ID from the environment variable"""
     return os.environ["GCLOUD_ORGANIZATION"]
 
 
