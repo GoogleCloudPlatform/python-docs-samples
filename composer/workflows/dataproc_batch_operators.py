@@ -40,7 +40,7 @@ METASTORE_CLUSTER = "{{var.value.metastore_cluster}}"
 DOCKER_IMAGE = "{{var.value.image_name}}"
 
 PYTHON_FILE_LOCATION = "gs://{{var.value.bucket_name }}/spark-job.py"
-# for e.g.  "gs//my-bucket/spark-job.py" as shown in https://cloud.google.com/dataproc/docs/tutorials/bigquery-sparkml#run_a_linear_regression
+# for e.g.  "gs//my-bucket/spark-job.py"
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
 PHS_CLUSTER_PATH = \
     "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
