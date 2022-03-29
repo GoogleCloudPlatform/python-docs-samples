@@ -408,7 +408,8 @@ def inspect_string_custom_omit_overlap(project, content_string):
 
 # [START dlp_omit_name_if_also_email]
 def omit_name_if_also_email(
-    project, content_string,
+    project,
+    content_string,
 ):
     """Matches PERSON_NAME and EMAIL_ADDRESS, but not both.
 
@@ -731,7 +732,8 @@ def inspect_string_multiple_rules(project, content_string):
 
 # [START dlp_inspect_with_medical_record_number_custom_regex_detector]
 def inspect_with_medical_record_number_custom_regex_detector(
-    project, content_string,
+    project,
+    content_string,
 ):
     """Uses the Data Loss Prevention API to analyze string with medical record
        number custom regex detector
@@ -793,7 +795,8 @@ def inspect_with_medical_record_number_custom_regex_detector(
 
 # [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
 def inspect_with_medical_record_number_w_custom_hotwords(
-    project, content_string,
+    project,
+    content_string,
 ):
     """Uses the Data Loss Prevention API to analyze string with medical record
        number custom regex detector, with custom hotwords rules to boost finding

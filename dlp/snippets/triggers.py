@@ -245,7 +245,9 @@ if __name__ == "__main__":
         help="The maximum number of findings to report; 0 = no maximum.",
     )
     parser_create.add_argument(
-        "--auto_populate_timespan", type=bool, help="Limit scan to new content only.",
+        "--auto_populate_timespan",
+        type=bool,
+        help="Limit scan to new content only.",
     )
 
     parser_list = subparsers.add_parser("list", help="List all triggers.")

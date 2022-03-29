@@ -30,7 +30,12 @@ import os
 
 
 def redact_image(
-    project, filename, output_filename, info_types, min_likelihood=None, mime_type=None,
+    project,
+    filename,
+    output_filename,
+    info_types,
+    min_likelihood=None,
+    mime_type=None,
 ):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
@@ -122,7 +127,9 @@ def redact_image(
 
 
 def redact_image_all_text(
-    project, filename, output_filename,
+    project,
+    filename,
+    output_filename,
 ):
     """Uses the Data Loss Prevention API to redact all text in an image.
 
@@ -184,7 +191,8 @@ if __name__ == "__main__":
     )
     common_args_parser.add_argument("filename", help="The path to the file to inspect.")
     common_args_parser.add_argument(
-        "output_filename", help="The path to which the redacted image will be written.",
+        "output_filename",
+        help="The path to which the redacted image will be written.",
     )
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -246,5 +254,7 @@ if __name__ == "__main__":
         )
     elif args.content == "all_text":
         redact_image_all_text(
-            args.project, args.filename, args.output_filename,
+            args.project,
+            args.filename,
+            args.output_filename,
         )

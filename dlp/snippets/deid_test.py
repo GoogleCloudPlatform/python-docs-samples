@@ -81,7 +81,10 @@ def test_deidentify_with_mask_masking_character_specified(capsys):
 
 def test_deidentify_with_mask_masking_number_specified(capsys):
     deid.deidentify_with_mask(
-        GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"], number_to_mask=7,
+        GCLOUD_PROJECT,
+        HARMFUL_STRING,
+        ["US_SOCIAL_SECURITY_NUMBER"],
+        number_to_mask=7,
     )
 
     out, _ = capsys.readouterr()
@@ -278,7 +281,9 @@ def test_reidentify_free_text_with_fpe_using_surrogate(capsys):
 def test_deidentify_with_replace_infotype(capsys):
     url_to_redact = "https://cloud.google.com"
     deid.deidentify_with_replace_infotype(
-        GCLOUD_PROJECT, "My favorite site is " + url_to_redact, ["URL"],
+        GCLOUD_PROJECT,
+        "My favorite site is " + url_to_redact,
+        ["URL"],
     )
 
     out, _ = capsys.readouterr()

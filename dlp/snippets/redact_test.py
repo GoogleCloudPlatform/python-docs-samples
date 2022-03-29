@@ -36,7 +36,10 @@ def test_redact_image_file(tempdir, capsys):
     output_filepath = os.path.join(tempdir, "redacted.png")
 
     redact.redact_image(
-        GCLOUD_PROJECT, test_filepath, output_filepath, ["FIRST_NAME", "EMAIL_ADDRESS"],
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
     )
 
     out, _ = capsys.readouterr()
@@ -48,7 +51,9 @@ def test_redact_image_all_text(tempdir, capsys):
     output_filepath = os.path.join(tempdir, "redacted.png")
 
     redact.redact_image_all_text(
-        GCLOUD_PROJECT, test_filepath, output_filepath,
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
     )
 
     out, _ = capsys.readouterr()

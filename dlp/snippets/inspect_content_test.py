@@ -159,7 +159,7 @@ def bigquery_project():
     except google.api_core.exceptions.Conflict:
         table = bigquery_client.get_table(table)
 
-    rows_to_insert = [(u"Gary Smith", u"My email is gary@example.com")]
+    rows_to_insert = [("Gary Smith", "My email is gary@example.com")]
 
     bigquery_client.insert_rows(table, rows_to_insert)
 

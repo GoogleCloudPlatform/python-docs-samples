@@ -85,7 +85,9 @@ def deidentify_with_mask(
 
 # [START dlp_deidentify_redact]
 def deidentify_with_redact(
-    project, input_str, info_types,
+    project,
+    input_str,
+    info_types,
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by redacting matched input values.
@@ -135,7 +137,10 @@ def deidentify_with_redact(
 
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
-    project, input_str, info_types, replacement_str="REPLACEMENT_STR",
+    project,
+    input_str,
+    info_types,
+    replacement_str="REPLACEMENT_STR",
 ):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing matched input values with a value you specify.
@@ -471,7 +476,11 @@ def reidentify_with_fpe(
 
 # [START dlp_reidentify_deterministic]
 def reidentify_with_deterministic(
-    project, input_str, surrogate_type=None, key_name=None, wrapped_key=None,
+    project,
+    input_str,
+    surrogate_type=None,
+    key_name=None,
+    wrapped_key=None,
 ):
     """Re-identifies content that was previously de-identified through deterministic encryption.
     Args:
@@ -949,7 +958,8 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     mask_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     mask_parser.add_argument("item", help="The string to deidentify.")
     mask_parser.add_argument(
@@ -982,7 +992,8 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     replace_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     replace_parser.add_argument("item", help="The string to deidentify.")
     replace_parser.add_argument(
@@ -1004,7 +1015,8 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     fpe_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     fpe_parser.add_argument(
         "item",
@@ -1046,7 +1058,8 @@ if __name__ == "__main__":
         "Encryption (FPE).",
     )
     reid_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     reid_parser.add_argument(
         "item",
@@ -1086,7 +1099,8 @@ if __name__ == "__main__":
         help="Deidentify dates in a CSV file by pseudorandomly shifting them.",
     )
     date_shift_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     date_shift_parser.add_argument(
         "input_csv_file",
@@ -1149,7 +1163,8 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     replace_with_infotype_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource.",
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
     replace_with_infotype_parser.add_argument(
         "item",
@@ -1207,5 +1222,7 @@ if __name__ == "__main__":
         )
     elif args.content == "replace_with_infotype":
         deidentify_with_replace_infotype(
-            args.project, item=args.item, info_types=args.info_types,
+            args.project,
+            item=args.item,
+            info_types=args.info_types,
         )
