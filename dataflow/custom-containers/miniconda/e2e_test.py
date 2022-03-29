@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import subprocess
-
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
     # try to import it for the autocomplete when writing the tests.
@@ -34,21 +32,24 @@ def bucket_name(utils: Utils) -> str:
 
 @pytest.fixture(scope="session")
 def container_image(utils: Utils) -> str:
-    yield from utils.cloud_build_submit(image_name=NAME)
+    yield from utils.cloud_build_submit(NAME)
 
 
-def test_tensorflow_minimal(
-    utils: Utils, bucket_name: str, container_image: str
-) -> None:
-    subprocess.check_call(
-        [
-            "python",
-            "main.py",
-            "--runner=DataflowRunner",
-            f"--project={utils.project}",
-            f"--region={utils.region}",
-            f"--temp_location=gs://{bucket_name}",
-            f"--sdk_container_image={container_image}",
-            "--experiment=use_runner_v2",
-        ]
+@pytest.fixture(scope="session")
+def run_dataflow_job(utils: Utils, bucket_name: str, container_image: str) -> str:
+    yield from utils.cloud_build_submit(
+        config="run.yaml",
+        substitutions={
+            "_IMAGE": container_image,
+            "_JOB_NAME": utils.hyphen_name(NAME),
+            "_TEMP_LOCATION": f"gs://{bucket_name}/temp",
+            "_REGION": utils.region,
+        },
+        source="--no-source",
     )
+
+
+def test_custom_container_miniconda(utils: Utils, run_dataflow_job: str) -> None:
+    # Wait until the job finishes.
+    job_id = utils.dataflow_job_id(utils.hyphen_name(NAME))
+    utils.dataflow_jobs_wait(job_id)
