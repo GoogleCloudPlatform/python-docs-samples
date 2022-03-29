@@ -32,7 +32,9 @@ def sample_flush_rows():
     client = bigquery_storage_v1.BigQueryWriteClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.FlushRowsRequest(write_stream="write_stream_value",)
+    request = bigquery_storage_v1.FlushRowsRequest(
+        write_stream="write_stream_value",
+    )
 
     # Make the request
     response = client.flush_rows(request=request)

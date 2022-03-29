@@ -32,7 +32,9 @@ def sample_append_rows():
     client = bigquery_storage_v1.BigQueryWriteClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.AppendRowsRequest(write_stream="write_stream_value",)
+    request = bigquery_storage_v1.AppendRowsRequest(
+        write_stream="write_stream_value",
+    )
 
     # This method expects an iterator which contains
     # 'bigquery_storage_v1.AppendRowsRequest' objects

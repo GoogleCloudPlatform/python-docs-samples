@@ -116,7 +116,10 @@ def test_append_rows_proto2(
         ),
     ) in row_items
     assert (("int64_list", [1, 2, 3]), ("row_num", 13)) in row_items
-    assert (("row_num", 14), ("struct_col", {"sub_int_col": 7}),) in row_items
+    assert (
+        ("row_num", 14),
+        ("struct_col", {"sub_int_col": 7}),
+    ) in row_items
     assert (
         ("row_num", 15),
         (

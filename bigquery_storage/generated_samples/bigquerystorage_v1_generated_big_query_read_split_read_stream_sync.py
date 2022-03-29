@@ -32,7 +32,9 @@ def sample_split_read_stream():
     client = bigquery_storage_v1.BigQueryReadClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.SplitReadStreamRequest(name="name_value",)
+    request = bigquery_storage_v1.SplitReadStreamRequest(
+        name="name_value",
+    )
 
     # Make the request
     response = client.split_read_stream(request=request)

@@ -32,7 +32,9 @@ async def sample_read_rows():
     client = bigquery_storage_v1.BigQueryReadAsyncClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.ReadRowsRequest(read_stream="read_stream_value",)
+    request = bigquery_storage_v1.ReadRowsRequest(
+        read_stream="read_stream_value",
+    )
 
     # Make the request
     stream = await client.read_rows(request=request)

@@ -32,7 +32,9 @@ def sample_create_write_stream():
     client = bigquery_storage_v1beta2.BigQueryWriteClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1beta2.CreateWriteStreamRequest(parent="parent_value",)
+    request = bigquery_storage_v1beta2.CreateWriteStreamRequest(
+        parent="parent_value",
+    )
 
     # Make the request
     response = client.create_write_stream(request=request)

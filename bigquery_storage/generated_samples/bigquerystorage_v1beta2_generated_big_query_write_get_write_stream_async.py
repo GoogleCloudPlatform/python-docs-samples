@@ -32,7 +32,9 @@ async def sample_get_write_stream():
     client = bigquery_storage_v1beta2.BigQueryWriteAsyncClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1beta2.GetWriteStreamRequest(name="name_value",)
+    request = bigquery_storage_v1beta2.GetWriteStreamRequest(
+        name="name_value",
+    )
 
     # Make the request
     response = await client.get_write_stream(request=request)

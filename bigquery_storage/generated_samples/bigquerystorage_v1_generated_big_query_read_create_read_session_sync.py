@@ -32,7 +32,9 @@ def sample_create_read_session():
     client = bigquery_storage_v1.BigQueryReadClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.CreateReadSessionRequest(parent="parent_value",)
+    request = bigquery_storage_v1.CreateReadSessionRequest(
+        parent="parent_value",
+    )
 
     # Make the request
     response = client.create_read_session(request=request)

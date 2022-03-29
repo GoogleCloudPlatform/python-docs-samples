@@ -32,7 +32,9 @@ def sample_finalize_write_stream():
     client = bigquery_storage_v1.BigQueryWriteClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1.FinalizeWriteStreamRequest(name="name_value",)
+    request = bigquery_storage_v1.FinalizeWriteStreamRequest(
+        name="name_value",
+    )
 
     # Make the request
     response = client.finalize_write_stream(request=request)

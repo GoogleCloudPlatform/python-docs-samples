@@ -376,7 +376,9 @@ _SAMPLEDATA = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[_SAMPLEDATA_SAMPLESTRUCT,],
+    nested_types=[
+        _SAMPLEDATA_SAMPLESTRUCT,
+    ],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,

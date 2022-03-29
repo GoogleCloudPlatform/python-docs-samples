@@ -32,7 +32,9 @@ async def sample_split_read_stream():
     client = bigquery_storage_v1beta2.BigQueryReadAsyncClient()
 
     # Initialize request argument(s)
-    request = bigquery_storage_v1beta2.SplitReadStreamRequest(name="name_value",)
+    request = bigquery_storage_v1beta2.SplitReadStreamRequest(
+        name="name_value",
+    )
 
     # Make the request
     response = await client.split_read_stream(request=request)
