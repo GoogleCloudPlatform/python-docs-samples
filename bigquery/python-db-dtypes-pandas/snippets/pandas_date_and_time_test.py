@@ -39,7 +39,8 @@ def test_pandas_date_and_time():
     assert list(dates) == [datetime.date(2021, 9, 17), datetime.date(2021, 9, 18)]
 
     assert np.array_equal(
-        diffs, dates.astype("datetime64") - dates2.astype("datetime64"),
+        diffs,
+        dates.astype("datetime64") - dates2.astype("datetime64"),
     )
 
     assert np.array_equal(after, dates.astype("object") + do)
