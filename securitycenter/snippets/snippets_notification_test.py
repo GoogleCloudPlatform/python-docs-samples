@@ -38,8 +38,10 @@ UPDATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
 def cleanup_notification_config(notification_config_id):
     client = securitycenter.SecurityCenterClient()
 
-    notification_config_name = "organizations/{org_id}/notificationConfigs/{config_id}".format(
-        org_id=ORG_ID, config_id=notification_config_id
+    notification_config_name = (
+        "organizations/{org_id}/notificationConfigs/{config_id}".format(
+            org_id=ORG_ID, config_id=notification_config_id
+        )
     )
     client.delete_notification_config(request={"name": notification_config_name})
 
@@ -107,8 +109,10 @@ def deleted_notification_config():
 
 
 def test_create_notification_config():
-    created_notification_config = snippets_notification_configs.create_notification_config(
-        ORG_ID, CREATE_CONFIG_ID, PUBSUB_TOPIC
+    created_notification_config = (
+        snippets_notification_configs.create_notification_config(
+            ORG_ID, CREATE_CONFIG_ID, PUBSUB_TOPIC
+        )
     )
     assert created_notification_config is not None
 

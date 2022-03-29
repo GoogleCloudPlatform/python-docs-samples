@@ -111,7 +111,7 @@ def delete_and_update_marks(asset_name):
 
 
 def add_to_finding(finding_name):
-    """Adds security marks to a finding. """
+    """Adds security marks to a finding."""
     # [START securitycenter_add_finding_security_marks]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
@@ -142,7 +142,7 @@ def add_to_finding(finding_name):
 
 
 def list_assets_with_query_marks(organization_id, asset_name):
-    """Lists assets with a filter on security marks. """
+    """Lists assets with a filter on security marks."""
     add_to_asset(asset_name)
     i = -1
     # [START securitycenter_list_assets_with_security_marks]

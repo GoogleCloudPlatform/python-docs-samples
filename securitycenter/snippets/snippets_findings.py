@@ -18,7 +18,7 @@
 
 
 def create_source(organization_id):
-    """Create a new findings source. """
+    """Create a new findings source."""
     # [START securitycenter_create_source]
     from google.cloud import securitycenter
 
@@ -189,7 +189,7 @@ def create_finding(source_name, finding_id):
 
 
 def create_finding_with_source_properties(source_name):
-    """Demonstrate creating a new finding with source properties. """
+    """Demonstrate creating a new finding with source properties."""
     # [START securitycenter_create_finding_with_source_properties]
     import datetime
 

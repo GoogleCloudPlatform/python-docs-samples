@@ -131,7 +131,7 @@ def list_point_in_time_changes(organization_id):
 
 
 def group_assets(organization_id):
-    """Demonstrates grouping all assets by type. """
+    """Demonstrates grouping all assets by type."""
     i = 0
     # [START securitycenter_group_all_assets]
     from google.cloud import securitycenter
@@ -154,7 +154,7 @@ def group_assets(organization_id):
 
 
 def group_filtered_assets(organization_id):
-    """Demonstrates grouping assets by type with a filter. """
+    """Demonstrates grouping assets by type with a filter."""
     i = 0
     # [START securitycenter_group_all_assets_with_filter]
     from google.cloud import securitycenter
