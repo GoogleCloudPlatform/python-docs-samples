@@ -15,7 +15,9 @@
 from .. import client_query_w_struct_params
 
 
-def test_client_query_w_struct_params(capsys,):
+def test_client_query_w_struct_params(
+    capsys,
+):
 
     client_query_w_struct_params.client_query_w_struct_params()
     out, err = capsys.readouterr()

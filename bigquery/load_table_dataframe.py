@@ -30,7 +30,7 @@ def load_table_dataframe(table_id):
 
     records = [
         {
-            "title": u"The Meaning of Life",
+            "title": "The Meaning of Life",
             "release_year": 1983,
             "length_minutes": 112.5,
             "release_date": pytz.timezone("Europe/Paris")
@@ -40,7 +40,7 @@ def load_table_dataframe(table_id):
             "dvd_release": datetime.datetime(2002, 1, 22, 7, 0, 0),
         },
         {
-            "title": u"Monty Python and the Holy Grail",
+            "title": "Monty Python and the Holy Grail",
             "release_year": 1975,
             "length_minutes": 91.5,
             "release_date": pytz.timezone("Europe/London")
@@ -49,7 +49,7 @@ def load_table_dataframe(table_id):
             "dvd_release": datetime.datetime(2002, 7, 16, 9, 0, 0),
         },
         {
-            "title": u"Life of Brian",
+            "title": "Life of Brian",
             "release_year": 1979,
             "length_minutes": 94.25,
             "release_date": pytz.timezone("America/New_York")
@@ -58,7 +58,7 @@ def load_table_dataframe(table_id):
             "dvd_release": datetime.datetime(2008, 1, 14, 8, 0, 0),
         },
         {
-            "title": u"And Now for Something Completely Different",
+            "title": "And Now for Something Completely Different",
             "release_year": 1971,
             "length_minutes": 88.0,
             "release_date": pytz.timezone("Europe/London")
@@ -81,7 +81,7 @@ def load_table_dataframe(table_id):
         # Optionally, set a named index, which can also be written to the
         # BigQuery table.
         index=pandas.Index(
-            [u"Q24980", u"Q25043", u"Q24953", u"Q16403"], name="wikidata_id"
+            ["Q24980", "Q25043", "Q24953", "Q16403"], name="wikidata_id"
         ),
     )
     job_config = bigquery.LoadJobConfig(

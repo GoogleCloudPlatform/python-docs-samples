@@ -19,7 +19,9 @@ from .. import query_to_arrow
 pyarrow = pytest.importorskip("pyarrow")
 
 
-def test_query_to_arrow(capsys,):
+def test_query_to_arrow(
+    capsys,
+):
 
     arrow_table = query_to_arrow.query_to_arrow()
     out, err = capsys.readouterr()

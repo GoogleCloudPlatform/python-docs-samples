@@ -15,7 +15,9 @@
 from .. import client_query
 
 
-def test_client_query(capsys,):
+def test_client_query(
+    capsys,
+):
 
     client_query.client_query()
     out, err = capsys.readouterr()

@@ -23,7 +23,9 @@ def load_table_uri_parquet(table_id):
     # TODO(developer): Set table_id to the ID of the table to create.
     # table_id = "your-project.your_dataset.your_table_name"
 
-    job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.PARQUET,)
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.PARQUET,
+    )
     uri = "gs://cloud-samples-data/bigquery/us-states/us-states.parquet"
 
     load_job = client.load_table_from_uri(

@@ -17,7 +17,9 @@ import re
 from .. import client_query_legacy_sql
 
 
-def test_client_query_legacy_sql(capsys,):
+def test_client_query_legacy_sql(
+    capsys,
+):
 
     client_query_legacy_sql.client_query_legacy_sql()
     out, err = capsys.readouterr()

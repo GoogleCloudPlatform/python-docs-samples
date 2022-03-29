@@ -15,7 +15,9 @@
 from .. import query_pagination
 
 
-def test_query_pagination(capsys,):
+def test_query_pagination(
+    capsys,
+):
 
     query_pagination.query_pagination()
     out, _ = capsys.readouterr()

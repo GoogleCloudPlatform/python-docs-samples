@@ -15,7 +15,9 @@
 from .. import query_external_gcs_temporary_table
 
 
-def test_query_external_gcs_temporary_table(capsys,):
+def test_query_external_gcs_temporary_table(
+    capsys,
+):
 
     query_external_gcs_temporary_table.query_external_gcs_temporary_table()
     out, err = capsys.readouterr()

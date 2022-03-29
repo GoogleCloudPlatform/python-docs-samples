@@ -15,7 +15,9 @@
 from .. import query_script
 
 
-def test_query_script(capsys,):
+def test_query_script(
+    capsys,
+):
 
     query_script.query_script()
     out, _ = capsys.readouterr()

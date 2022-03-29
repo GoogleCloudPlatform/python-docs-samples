@@ -16,8 +16,10 @@ import create_table_external_hive_partitioned
 
 
 def test_create_table_external_hive_partitioned(capsys, random_table_id):
-    table = create_table_external_hive_partitioned.create_table_external_hive_partitioned(
-        random_table_id
+    table = (
+        create_table_external_hive_partitioned.create_table_external_hive_partitioned(
+            random_table_id
+        )
     )
 
     out, _ = capsys.readouterr()

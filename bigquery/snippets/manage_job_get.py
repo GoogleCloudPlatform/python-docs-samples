@@ -17,7 +17,9 @@ from google.cloud import bigquery
 
 
 def get_job(
-    client: bigquery.Client, location: str = "us", job_id: str = "abcd-efgh-ijkl-mnop",
+    client: bigquery.Client,
+    location: str = "us",
+    job_id: str = "abcd-efgh-ijkl-mnop",
 ):
     job = client.get_job(job_id, location=location)
 

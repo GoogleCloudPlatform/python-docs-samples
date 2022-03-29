@@ -17,7 +17,9 @@ from google.cloud import bigquery
 
 
 def cancel_job(
-    client: bigquery.Client, location: str = "us", job_id: str = "abcd-efgh-ijkl-mnop",
+    client: bigquery.Client,
+    location: str = "us",
+    job_id: str = "abcd-efgh-ijkl-mnop",
 ):
     job = client.cancel_job(job_id, location=location)
     print(f"{job.location}:{job.job_id} cancelled")

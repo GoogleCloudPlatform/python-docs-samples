@@ -50,10 +50,10 @@ def test_load_table_dataframe(capsys, client, random_table_id):
     df = client.list_rows(table).to_dataframe()
     df.sort_values("release_year", inplace=True)
     assert df["title"].tolist() == [
-        u"And Now for Something Completely Different",
-        u"Monty Python and the Holy Grail",
-        u"Life of Brian",
-        u"The Meaning of Life",
+        "And Now for Something Completely Different",
+        "Monty Python and the Holy Grail",
+        "Life of Brian",
+        "The Meaning of Life",
     ]
     assert df["release_year"].tolist() == [1971, 1975, 1979, 1983]
     assert df["length_minutes"].tolist() == [88.0, 91.5, 94.25, 112.5]
@@ -69,4 +69,4 @@ def test_load_table_dataframe(capsys, client, random_table_id):
         pandas.Timestamp("2008-01-14T08:00:00+00:00"),
         pandas.Timestamp("2002-01-22T07:00:00+00:00"),
     ]
-    assert df["wikidata_id"].tolist() == [u"Q16403", u"Q25043", u"Q24953", u"Q24980"]
+    assert df["wikidata_id"].tolist() == ["Q16403", "Q25043", "Q24953", "Q24980"]

@@ -17,7 +17,9 @@ import re
 from .. import query_no_cache
 
 
-def test_query_no_cache(capsys,):
+def test_query_no_cache(
+    capsys,
+):
 
     query_no_cache.query_no_cache()
     out, err = capsys.readouterr()
