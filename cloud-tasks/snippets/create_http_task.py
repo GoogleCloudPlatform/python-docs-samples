@@ -106,7 +106,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--project", help="Project of the queue to add the task to.", required=True,
+        "--project",
+        help="Project of the queue to add the task to.",
+        required=True,
     )
 
     parser.add_argument(
@@ -116,7 +118,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--location", help="Location of the queue to add the task to.", required=True,
+        "--location",
+        help="Location of the queue to add the task to.",
+        required=True,
     )
 
     parser.add_argument(
