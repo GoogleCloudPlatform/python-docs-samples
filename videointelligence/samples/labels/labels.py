@@ -37,7 +37,7 @@ from google.cloud import videointelligence
 
 
 def analyze_labels(path):
-    """ Detects labels given a GCS path. """
+    """Detects labels given a GCS path."""
     # [START video_label_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.LABEL_DETECTION]

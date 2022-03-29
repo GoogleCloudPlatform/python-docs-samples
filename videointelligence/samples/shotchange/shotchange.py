@@ -36,7 +36,7 @@ from google.cloud import videointelligence
 
 
 def analyze_shots(path):
-    """ Detects camera shot changes. """
+    """Detects camera shot changes."""
     # [START video_shot_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.SHOT_CHANGE_DETECTION]

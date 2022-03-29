@@ -280,7 +280,7 @@ def detect_labels_streaming(path):
             confidence = annotation.frames[0].confidence
             # description is in Unicode
             print(
-                u"{}s: {} (confidence: {})".format(time_offset, description, confidence)
+                "{}s: {} (confidence: {})".format(time_offset, description, confidence)
             )
     # [END video_streaming_label_detection_beta]
 
@@ -420,7 +420,7 @@ def track_objects_streaming(path):
 
             # description is in Unicode
             print("{}s".format(time_offset))
-            print(u"\tEntity description: {}".format(description))
+            print("\tEntity description: {}".format(description))
             print("\tTrack Id: {}".format(track_id))
             if annotation.entity.entity_id:
                 print("\tEntity id: {}".format(annotation.entity.entity_id))
@@ -728,7 +728,7 @@ def streaming_automl_object_tracking(path, project_id, model_id):
 
             # description is in Unicode
             print("{}s".format(time_offset))
-            print(u"\tEntity description: {}".format(description))
+            print("\tEntity description: {}".format(description))
             print("\tTrack Id: {}".format(track_id))
             if annotation.entity.entity_id:
                 print("\tEntity id: {}".format(annotation.entity.entity_id))

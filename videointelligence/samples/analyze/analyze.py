@@ -39,7 +39,7 @@ from google.cloud import videointelligence
 
 def analyze_explicit_content(path):
     # [START video_analyze_explicit_content]
-    """ Detects explicit content from the GCS path to a video. """
+    """Detects explicit content from the GCS path to a video."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.EXPLICIT_CONTENT_DETECTION]
 
@@ -62,7 +62,7 @@ def analyze_explicit_content(path):
 
 def analyze_labels(path):
     # [START video_analyze_labels_gcs]
-    """ Detects labels given a GCS path. """
+    """Detects labels given a GCS path."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.LABEL_DETECTION]
 
@@ -231,7 +231,7 @@ def analyze_labels_file(path):
 
 def analyze_shots(path):
     # [START video_analyze_shots]
-    """ Detects camera shot changes. """
+    """Detects camera shot changes."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.SHOT_CHANGE_DETECTION]
     operation = video_client.annotate_video(
