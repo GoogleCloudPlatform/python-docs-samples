@@ -27,7 +27,7 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
         request={"features": features, "input_uri": input_uri}
     )
 
-    print(u"Waiting for operation to complete...")
+    print("Waiting for operation to complete...")
     response = operation.result()
 
     # Get the first response, since we sent only one video.
@@ -39,9 +39,9 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
 
         # Opaque entity ID. Some IDs may be available in [Google Knowledge Graph
         # Search API](https://developers.google.com/knowledge-graph/).
-        print(u"Entity Id : {}".format(entity.entity_id))
+        print("Entity Id : {}".format(entity.entity_id))
 
-        print(u"Description : {}".format(entity.description))
+        print("Description : {}".format(entity.description))
 
         # All logo tracks where the recognized logo appears. Each track corresponds
         # to one logo instance appearing in consecutive frames.
@@ -49,51 +49,51 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
 
             # Video segment of a track.
             print(
-                u"\n\tStart Time Offset : {}.{}".format(
+                "\n\tStart Time Offset : {}.{}".format(
                     track.segment.start_time_offset.seconds,
                     track.segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
-                u"\tEnd Time Offset : {}.{}".format(
+                "\tEnd Time Offset : {}.{}".format(
                     track.segment.end_time_offset.seconds,
                     track.segment.end_time_offset.microseconds * 1000,
                 )
             )
-            print(u"\tConfidence : {}".format(track.confidence))
+            print("\tConfidence : {}".format(track.confidence))
 
             # The object with timestamp and attributes per frame in the track.
             for timestamped_object in track.timestamped_objects:
                 # Normalized Bounding box in a frame, where the object is located.
                 normalized_bounding_box = timestamped_object.normalized_bounding_box
-                print(u"\n\t\tLeft : {}".format(normalized_bounding_box.left))
-                print(u"\t\tTop : {}".format(normalized_bounding_box.top))
-                print(u"\t\tRight : {}".format(normalized_bounding_box.right))
-                print(u"\t\tBottom : {}".format(normalized_bounding_box.bottom))
+                print("\n\t\tLeft : {}".format(normalized_bounding_box.left))
+                print("\t\tTop : {}".format(normalized_bounding_box.top))
+                print("\t\tRight : {}".format(normalized_bounding_box.right))
+                print("\t\tBottom : {}".format(normalized_bounding_box.bottom))
 
                 # Optional. The attributes of the object in the bounding box.
                 for attribute in timestamped_object.attributes:
-                    print(u"\n\t\t\tName : {}".format(attribute.name))
-                    print(u"\t\t\tConfidence : {}".format(attribute.confidence))
-                    print(u"\t\t\tValue : {}".format(attribute.value))
+                    print("\n\t\t\tName : {}".format(attribute.name))
+                    print("\t\t\tConfidence : {}".format(attribute.confidence))
+                    print("\t\t\tValue : {}".format(attribute.value))
 
             # Optional. Attributes in the track level.
             for track_attribute in track.attributes:
-                print(u"\n\t\tName : {}".format(track_attribute.name))
-                print(u"\t\tConfidence : {}".format(track_attribute.confidence))
-                print(u"\t\tValue : {}".format(track_attribute.value))
+                print("\n\t\tName : {}".format(track_attribute.name))
+                print("\t\tConfidence : {}".format(track_attribute.confidence))
+                print("\t\tValue : {}".format(track_attribute.value))
 
         # All video segments where the recognized logo appears. There might be
         # multiple instances of the same logo class appearing in one VideoSegment.
         for segment in logo_recognition_annotation.segments:
             print(
-                u"\n\tStart Time Offset : {}.{}".format(
+                "\n\tStart Time Offset : {}.{}".format(
                     segment.start_time_offset.seconds,
                     segment.start_time_offset.microseconds * 1000,
                 )
             )
             print(
-                u"\tEnd Time Offset : {}.{}".format(
+                "\tEnd Time Offset : {}.{}".format(
                     segment.end_time_offset.seconds,
                     segment.end_time_offset.microseconds * 1000,
                 )
