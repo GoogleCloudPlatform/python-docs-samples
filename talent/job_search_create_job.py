@@ -19,7 +19,11 @@ import six
 
 
 def create_job(
-    project_id, tenant_id, company_id, requisition_id, job_application_url,
+    project_id,
+    tenant_id,
+    company_id,
+    requisition_id,
+    job_application_url,
 ):
     """Create Job"""
 
