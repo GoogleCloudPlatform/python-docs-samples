@@ -39,8 +39,8 @@ PHS_CLUSTER = "{{ var.value.phs_cluster }}"
 METASTORE_CLUSTER = "{{var.value.metastore_cluster}}"
 DOCKER_IMAGE = "{{var.value.image_name}}"
 
-SPARK_ML_FILE_LOCATION = "gs://{{var.value.bucket_name }}/natality_sparkml.py"
-# for e.g.  "gs//my-bucket/natality_sparkml.py"
+PYTHON_FILE_LOCATION = "gs://{{var.value.bucket_name }}/spark-job.py"
+# for e.g.  "gs//my-bucket/spark-job.py" as shown in https://cloud.google.com/dataproc/docs/tutorials/bigquery-sparkml#run_a_linear_regression
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
 PHS_CLUSTER_PATH = \
     "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
@@ -70,7 +70,7 @@ with models.DAG(
         task_id="batch_create",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "main_python_file_uri": PYTHON_FILE_LOCATION,
                 "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
@@ -109,7 +109,7 @@ with models.DAG(
         task_id="dataproc_metastore",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "main_python_file_uri": PYTHON_FILE_LOCATION,
                 "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
@@ -141,7 +141,7 @@ with models.DAG(
         task_id="dataproc_custom_container",
         batch={
             "pyspark_batch": {
-                "main_python_file_uri": SPARK_ML_FILE_LOCATION,
+                "main_python_file_uri": PYTHON_FILE_LOCATION,
                 "jar_file_uris": [SPARK_BIGQUERY_JAR_FILE],
             },
             "environment_config": {
