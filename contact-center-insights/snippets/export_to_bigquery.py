@@ -24,8 +24,10 @@ def export_to_bigquery(
 ) -> None:
     # Construct an export request.
     request = contact_center_insights_v1.ExportInsightsDataRequest()
-    request.parent = contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
-        project_id, "us-central1"
+    request.parent = (
+        contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
+            project_id, "us-central1"
+        )
     )
     request.big_query_destination.project_id = bigquery_project_id
     request.big_query_destination.dataset = bigquery_dataset_id

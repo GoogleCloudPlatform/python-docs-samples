@@ -24,8 +24,10 @@ def create_conversation_with_ttl(
     audio_uri: str = "gs://cloud-samples-data/ccai/voice_6912.txt",
 ) -> contact_center_insights_v1.Conversation:
     # Construct a parent resource.
-    parent = contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
-        project_id, "us-central1"
+    parent = (
+        contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
+            project_id, "us-central1"
+        )
     )
 
     # Construct a conversation.

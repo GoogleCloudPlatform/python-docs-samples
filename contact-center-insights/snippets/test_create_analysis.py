@@ -35,8 +35,10 @@ def conversation_resource(project_id):
     # Create a conversation.
     insights_client = contact_center_insights_v1.ContactCenterInsightsClient()
 
-    parent = contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
-        project_id, "us-central1"
+    parent = (
+        contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
+            project_id, "us-central1"
+        )
     )
 
     conversation = contact_center_insights_v1.Conversation()

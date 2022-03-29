@@ -58,8 +58,10 @@ def pubsub_topics(project_id):
 def disable_pubsub_notifications(project_id):
     yield
     settings = contact_center_insights_v1.Settings()
-    settings.name = contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
-        project_id, "us-central1"
+    settings.name = (
+        contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
+            project_id, "us-central1"
+        )
     )
     settings.pubsub_notification_settings = {}
     update_mask = field_mask_pb2.FieldMask()

@@ -40,8 +40,10 @@ def count_conversations(project_id, insights_client):
     # See https://cloud.google.com/contact-center/insights/docs/topic-model.
     list_request = contact_center_insights_v1.ListConversationsRequest()
     list_request.page_size = 1000
-    list_request.parent = contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
-        project_id, "us-central1"
+    list_request.parent = (
+        contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
+            project_id, "us-central1"
+        )
     )
     conversations = insights_client.list_conversations(request=list_request)
     conversation_count = len(list(conversations))

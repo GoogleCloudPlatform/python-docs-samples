@@ -20,8 +20,10 @@ def create_phrase_matcher_any_of(
     project_id: str,
 ) -> contact_center_insights_v1.PhraseMatcher:
     # Construct a parent resource.
-    parent = contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
-        project_id, "us-central1"
+    parent = (
+        contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
+            project_id, "us-central1"
+        )
     )
 
     # Construct a phrase matcher that matches any of its rule groups.

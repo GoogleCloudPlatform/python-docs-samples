@@ -22,8 +22,10 @@ from google.protobuf import duration_pb2
 def set_project_ttl(project_id: str) -> None:
     # Construct a settings resource.
     settings = contact_center_insights_v1.Settings()
-    settings.name = contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
-        project_id, "us-central1"
+    settings.name = (
+        contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
+            project_id, "us-central1"
+        )
     )
 
     conversation_ttl = duration_pb2.Duration()

@@ -32,8 +32,10 @@ def project_id():
 def clear_project_ttl(project_id):
     yield
     settings = contact_center_insights_v1.Settings()
-    settings.name = contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
-        project_id, "us-central1"
+    settings.name = (
+        contact_center_insights_v1.ContactCenterInsightsClient.settings_path(
+            project_id, "us-central1"
+        )
     )
     settings.conversation_ttl = None
     update_mask = field_mask_pb2.FieldMask()
