@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_dataset(dataset_id):
+def create_dataset(dataset_id: str) -> None:
 
     # [START bigquery_create_dataset]
     from google.cloud import bigquery

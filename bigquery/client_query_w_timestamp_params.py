@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_w_timestamp_params():
+def client_query_w_timestamp_params() -> None:
 
     # [START bigquery_query_params_timestamps]
     import datetime

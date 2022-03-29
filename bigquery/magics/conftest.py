@@ -12,14 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+from typing import Iterator
+
 import pytest
+
+if typing.TYPE_CHECKING:
+    from IPython.core.interactiveshell import TerminalInteractiveShell
 
 interactiveshell = pytest.importorskip("IPython.terminal.interactiveshell")
 tools = pytest.importorskip("IPython.testing.tools")
 
 
 @pytest.fixture(scope="session")
-def ipython():
+def ipython() -> "TerminalInteractiveShell":
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
     shell = interactiveshell.TerminalInteractiveShell.instance(config=config)
@@ -27,7 +33,9 @@ def ipython():
 
 
 @pytest.fixture(autouse=True)
-def ipython_interactive(ipython):
+def ipython_interactive(
+    ipython: "TerminalInteractiveShell",
+) -> Iterator["TerminalInteractiveShell"]:
     """Activate IPython's builtin hooks
 
     for the duration of the test scope.

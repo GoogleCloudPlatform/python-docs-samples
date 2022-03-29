@@ -14,8 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict, Optional
 
-def run_quickstart(override_values={}):
+
+def run_quickstart(override_values: Optional[Dict[str, str]] = None) -> None:
+
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_quickstart]
     # Imports the Google Cloud client library
     from google.cloud import bigquery

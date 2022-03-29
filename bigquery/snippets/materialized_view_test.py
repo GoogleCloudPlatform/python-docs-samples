@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+from typing import Iterator
 import uuid
 
 from google.api_core import exceptions
@@ -22,18 +23,20 @@ import pytest
 import materialized_view
 
 
-def temp_suffix():
+def temp_suffix() -> str:
     now = datetime.datetime.now()
     return f"{now.strftime('%Y%m%d%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
 
 @pytest.fixture(autouse=True)
-def bigquery_client_patch(monkeypatch, bigquery_client):
+def bigquery_client_patch(
+    monkeypatch: pytest.MonkeyPatch, bigquery_client: bigquery.Client
+) -> None:
     monkeypatch.setattr(bigquery, "Client", lambda: bigquery_client)
 
 
 @pytest.fixture(scope="module")
-def dataset_id(bigquery_client):
+def dataset_id(bigquery_client: bigquery.Client) -> Iterator[str]:
     dataset_id = f"mvdataset_{temp_suffix()}"
     bigquery_client.create_dataset(dataset_id)
     yield dataset_id
@@ -41,7 +44,9 @@ def dataset_id(bigquery_client):
 
 
 @pytest.fixture(scope="module")
-def base_table_id(bigquery_client, project_id, dataset_id):
+def base_table_id(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id: str
+) -> Iterator[str]:
     base_table_id = f"{project_id}.{dataset_id}.base_{temp_suffix()}"
     # Schema from materialized views guide:
     # https://cloud.google.com/bigquery/docs/materialized-views#create
@@ -56,13 +61,20 @@ def base_table_id(bigquery_client, project_id, dataset_id):
 
 
 @pytest.fixture(scope="module")
-def view_id(bigquery_client, project_id, dataset_id):
+def view_id(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id: str
+) -> Iterator[str]:
     view_id = f"{project_id}.{dataset_id}.mview_{temp_suffix()}"
     yield view_id
     bigquery_client.delete_table(view_id, not_found_ok=True)
 
 
-def test_materialized_view(capsys, bigquery_client, base_table_id, view_id):
+def test_materialized_view(
+    capsys: pytest.CaptureFixture[str],
+    bigquery_client: bigquery.Client,
+    base_table_id: str,
+    view_id: str,
+) -> None:
     override_values = {
         "base_table_id": base_table_id,
         "view_id": view_id,

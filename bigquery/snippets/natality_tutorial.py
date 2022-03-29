@@ -14,8 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict, Optional
 
-def run_natality_tutorial(override_values={}):
+
+def run_natality_tutorial(override_values: Optional[Dict[str, str]] = None) -> None:
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_query_natality_tutorial]
     """Create a Google BigQuery linear regression input table.
 

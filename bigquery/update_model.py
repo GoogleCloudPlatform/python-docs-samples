@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def update_model(model_id):
+def update_model(model_id: str) -> None:
     """Sample ID: go/samples-tracker/1533"""
 
     # [START bigquery_update_model_description]

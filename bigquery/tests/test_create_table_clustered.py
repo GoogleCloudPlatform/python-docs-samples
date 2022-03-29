@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import create_table_clustered
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_create_table_clustered(capsys, random_table_id):
+
+def test_create_table_clustered(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
     table = create_table_clustered.create_table_clustered(random_table_id)
     out, _ = capsys.readouterr()
     assert "Created clustered table {}".format(random_table_id) in out

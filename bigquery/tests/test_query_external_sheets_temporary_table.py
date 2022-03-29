@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import query_external_sheets_temporary_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_external_sheets_temporary_table(capsys):
+
+def test_query_external_sheets_temporary_table(
+    capsys: "pytest.CaptureFixture[str]",
+) -> None:
 
     query_external_sheets_temporary_table.query_external_sheets_temporary_table()
     out, err = capsys.readouterr()

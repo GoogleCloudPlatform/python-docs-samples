@@ -12,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
-from google.cloud import bigquery_v2
+
+if typing.TYPE_CHECKING:
+    import pytest
 
 
-def test_create_routine(capsys, random_routine_id):
+def test_create_routine(
+    capsys: "pytest.CaptureFixture[str]", random_routine_id: str
+) -> None:
     from .. import create_routine
 
     create_routine.create_routine(random_routine_id)
@@ -24,7 +30,11 @@ def test_create_routine(capsys, random_routine_id):
     assert "Created routine {}".format(random_routine_id) in out
 
 
-def test_create_routine_ddl(capsys, random_routine_id, client):
+def test_create_routine_ddl(
+    capsys: "pytest.CaptureFixture[str]",
+    random_routine_id: str,
+    client: bigquery.Client,
+) -> None:
     from .. import create_routine_ddl
 
     create_routine_ddl.create_routine_ddl(random_routine_id)
@@ -37,22 +47,22 @@ def test_create_routine_ddl(capsys, random_routine_id, client):
     expected_arguments = [
         bigquery.RoutineArgument(
             name="arr",
-            data_type=bigquery_v2.types.StandardSqlDataType(
-                type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.ARRAY,
-                array_element_type=bigquery_v2.types.StandardSqlDataType(
-                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.STRUCT,
-                    struct_type=bigquery_v2.types.StandardSqlStructType(
+            data_type=bigquery.StandardSqlDataType(
+                type_kind=bigquery.StandardSqlTypeNames.ARRAY,
+                array_element_type=bigquery.StandardSqlDataType(
+                    type_kind=bigquery.StandardSqlTypeNames.STRUCT,
+                    struct_type=bigquery.StandardSqlStructType(
                         fields=[
-                            bigquery_v2.types.StandardSqlField(
+                            bigquery.StandardSqlField(
                                 name="name",
-                                type=bigquery_v2.types.StandardSqlDataType(
-                                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.STRING
+                                type=bigquery.StandardSqlDataType(
+                                    type_kind=bigquery.StandardSqlTypeNames.STRING
                                 ),
                             ),
-                            bigquery_v2.types.StandardSqlField(
+                            bigquery.StandardSqlField(
                                 name="val",
-                                type=bigquery_v2.types.StandardSqlDataType(
-                                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.INT64
+                                type=bigquery.StandardSqlDataType(
+                                    type_kind=bigquery.StandardSqlTypeNames.INT64
                                 ),
                             ),
                         ]
@@ -64,7 +74,9 @@ def test_create_routine_ddl(capsys, random_routine_id, client):
     assert routine.arguments == expected_arguments
 
 
-def test_list_routines(capsys, dataset_id, routine_id):
+def test_list_routines(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str, routine_id: str
+) -> None:
     from .. import list_routines
 
     list_routines.list_routines(dataset_id)
@@ -73,7 +85,7 @@ def test_list_routines(capsys, dataset_id, routine_id):
     assert routine_id in out
 
 
-def test_get_routine(capsys, routine_id):
+def test_get_routine(capsys: "pytest.CaptureFixture[str]", routine_id: str) -> None:
     from .. import get_routine
 
     get_routine.get_routine(routine_id)
@@ -82,10 +94,10 @@ def test_get_routine(capsys, routine_id):
     assert "Type: 'SCALAR_FUNCTION'" in out
     assert "Language: 'SQL'" in out
     assert "Name: 'x'" in out
-    assert "Type: 'type_kind: INT64\n'" in out
+    assert "type_kind=<StandardSqlTypeNames.INT64: 'INT64'>" in out
 
 
-def test_delete_routine(capsys, routine_id):
+def test_delete_routine(capsys: "pytest.CaptureFixture[str]", routine_id: str) -> None:
     from .. import delete_routine
 
     delete_routine.delete_routine(routine_id)
@@ -93,7 +105,7 @@ def test_delete_routine(capsys, routine_id):
     assert "Deleted routine {}.".format(routine_id) in out
 
 
-def test_update_routine(routine_id):
+def test_update_routine(routine_id: str) -> None:
     from .. import update_routine
 
     routine = update_routine.update_routine(routine_id)

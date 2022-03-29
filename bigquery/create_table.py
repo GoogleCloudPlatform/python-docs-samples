@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_table(table_id):
+def create_table(table_id: str) -> None:
 
     # [START bigquery_create_table]
     from google.cloud import bigquery

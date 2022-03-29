@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import create_dataset
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_create_dataset(capsys, random_dataset_id):
+
+def test_create_dataset(
+    capsys: "pytest.CaptureFixture[str]", random_dataset_id: str
+) -> None:
 
     create_dataset.create_dataset(random_dataset_id)
     out, err = capsys.readouterr()

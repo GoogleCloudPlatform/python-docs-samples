@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import delete_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_delete_table(capsys, table_id):
+
+def test_delete_table(capsys: "pytest.CaptureFixture[str]", table_id: str) -> None:
 
     delete_table.delete_table(table_id)
     out, err = capsys.readouterr()

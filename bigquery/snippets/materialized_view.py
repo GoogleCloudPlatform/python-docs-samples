@@ -12,8 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+from typing import Dict, Optional
 
-def create_materialized_view(override_values={}):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def create_materialized_view(
+    override_values: Optional[Dict[str, str]] = None
+) -> "bigquery.Table":
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_create_materialized_view]
     from google.cloud import bigquery
 
@@ -41,7 +52,12 @@ def create_materialized_view(override_values={}):
     return view
 
 
-def update_materialized_view(override_values={}):
+def update_materialized_view(
+    override_values: Optional[Dict[str, str]] = None
+) -> "bigquery.Table":
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_update_materialized_view]
     import datetime
     from google.cloud import bigquery
@@ -69,7 +85,10 @@ def update_materialized_view(override_values={}):
     return view
 
 
-def delete_materialized_view(override_values={}):
+def delete_materialized_view(override_values: Optional[Dict[str, str]] = None) -> None:
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_delete_materialized_view]
     from google.cloud import bigquery
 

@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def delete_dataset_labels(dataset_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def delete_dataset_labels(dataset_id: str) -> "bigquery.Dataset":
 
     # [START bigquery_delete_label_dataset]
 

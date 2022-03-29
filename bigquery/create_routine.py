@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def create_routine(routine_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def create_routine(routine_id: str) -> "bigquery.Routine":
 
     # [START bigquery_create_routine]
     from google.cloud import bigquery
-    from google.cloud import bigquery_v2
 
     # Construct a BigQuery client object.
     client = bigquery.Client()
@@ -33,8 +37,8 @@ def create_routine(routine_id):
         arguments=[
             bigquery.RoutineArgument(
                 name="x",
-                data_type=bigquery_v2.types.StandardSqlDataType(
-                    type_kind=bigquery_v2.types.StandardSqlDataType.TypeKind.INT64
+                data_type=bigquery.StandardSqlDataType(
+                    type_kind=bigquery.StandardSqlTypeNames.INT64
                 ),
             )
         ],

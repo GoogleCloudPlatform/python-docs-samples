@@ -12,11 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 import revoke_dataset_access
 import update_dataset_access
 
+if typing.TYPE_CHECKING:
+    import pytest
+    from google.cloud import bigquery
 
-def test_dataset_access_permissions(capsys, dataset_id, entity_id, bigquery_client):
+
+def test_dataset_access_permissions(
+    capsys: "pytest.CaptureFixture[str]",
+    dataset_id: str,
+    entity_id: str,
+    bigquery_client: "bigquery.Client",
+) -> None:
     original_dataset = bigquery_client.get_dataset(dataset_id)
     update_dataset_access.update_dataset_access(dataset_id, entity_id)
     full_dataset_id = "{}.{}".format(

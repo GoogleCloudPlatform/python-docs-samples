@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Iterator
+
 from google.cloud import bigquery
 import pytest
 import test_utils.prefixer
@@ -21,7 +23,7 @@ prefixer = test_utils.prefixer.Prefixer("python-bigquery", "samples/snippets")
 
 
 @pytest.fixture(scope="session", autouse=True)
-def cleanup_datasets(bigquery_client: bigquery.Client):
+def cleanup_datasets(bigquery_client: bigquery.Client) -> None:
     for dataset in bigquery_client.list_datasets():
         if prefixer.should_cleanup(dataset.dataset_id):
             bigquery_client.delete_dataset(
@@ -30,18 +32,18 @@ def cleanup_datasets(bigquery_client: bigquery.Client):
 
 
 @pytest.fixture(scope="session")
-def bigquery_client():
+def bigquery_client() -> bigquery.Client:
     bigquery_client = bigquery.Client()
     return bigquery_client
 
 
 @pytest.fixture(scope="session")
-def project_id(bigquery_client):
+def project_id(bigquery_client: bigquery.Client) -> str:
     return bigquery_client.project
 
 
 @pytest.fixture(scope="session")
-def dataset_id(bigquery_client: bigquery.Client, project_id: str):
+def dataset_id(bigquery_client: bigquery.Client, project_id: str) -> Iterator[str]:
     dataset_id = prefixer.create_prefix()
     full_dataset_id = f"{project_id}.{dataset_id}"
     dataset = bigquery.Dataset(full_dataset_id)
@@ -51,12 +53,15 @@ def dataset_id(bigquery_client: bigquery.Client, project_id: str):
 
 
 @pytest.fixture(scope="session")
-def entity_id(bigquery_client: bigquery.Client, dataset_id: str):
+def entity_id(bigquery_client: bigquery.Client, dataset_id: str) -> str:
     return "cloud-developer-relations@google.com"
 
 
 @pytest.fixture(scope="session")
-def dataset_id_us_east1(bigquery_client: bigquery.Client, project_id: str):
+def dataset_id_us_east1(
+    bigquery_client: bigquery.Client,
+    project_id: str,
+) -> Iterator[str]:
     dataset_id = prefixer.create_prefix()
     full_dataset_id = f"{project_id}.{dataset_id}"
     dataset = bigquery.Dataset(full_dataset_id)
@@ -69,7 +74,7 @@ def dataset_id_us_east1(bigquery_client: bigquery.Client, project_id: str):
 @pytest.fixture(scope="session")
 def table_id_us_east1(
     bigquery_client: bigquery.Client, project_id: str, dataset_id_us_east1: str
-):
+) -> Iterator[str]:
     table_id = prefixer.create_prefix()
     full_table_id = f"{project_id}.{dataset_id_us_east1}.{table_id}"
     table = bigquery.Table(
@@ -81,7 +86,9 @@ def table_id_us_east1(
 
 
 @pytest.fixture
-def random_table_id(bigquery_client: bigquery.Client, project_id: str, dataset_id: str):
+def random_table_id(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id: str
+) -> Iterator[str]:
     """Create a new table ID each time, so random_table_id can be used as
     target for load jobs.
     """
@@ -92,5 +99,7 @@ def random_table_id(bigquery_client: bigquery.Client, project_id: str, dataset_i
 
 
 @pytest.fixture
-def bigquery_client_patch(monkeypatch, bigquery_client):
+def bigquery_client_patch(
+    monkeypatch: pytest.MonkeyPatch, bigquery_client: bigquery.Client
+) -> None:
     monkeypatch.setattr(bigquery, "Client", lambda: bigquery_client)

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def list_datasets_by_label():
+def list_datasets_by_label() -> None:
 
     # [START bigquery_list_datasets_by_label]
 

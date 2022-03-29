@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def create_job():
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def create_job() -> "bigquery.QueryJob":
 
     # [START bigquery_create_job]
     from google.cloud import bigquery

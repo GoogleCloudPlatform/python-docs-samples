@@ -13,13 +13,15 @@
 # limitations under the License.
 
 import re
+import typing
 
 from .. import query_no_cache
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_no_cache(
-    capsys,
-):
+
+def test_query_no_cache(capsys: "pytest.CaptureFixture[str]") -> None:
 
     query_no_cache.query_no_cache()
     out, err = capsys.readouterr()

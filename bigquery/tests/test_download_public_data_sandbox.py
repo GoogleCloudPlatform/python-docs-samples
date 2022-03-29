@@ -21,7 +21,9 @@ from .. import download_public_data_sandbox
 pytest.importorskip("google.cloud.bigquery_storage_v1")
 
 
-def test_download_public_data_sandbox(caplog, capsys):
+def test_download_public_data_sandbox(
+    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
+) -> None:
     # Enable debug-level logging to verify the BigQuery Storage API is used.
     caplog.set_level(logging.DEBUG)
 

@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
 from .. import dataset_exists
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_dataset_exists(capsys, random_dataset_id, client):
+
+def test_dataset_exists(
+    capsys: "pytest.CaptureFixture[str]",
+    random_dataset_id: str,
+    client: bigquery.Client,
+) -> None:
 
     dataset_exists.dataset_exists(random_dataset_id)
     out, err = capsys.readouterr()

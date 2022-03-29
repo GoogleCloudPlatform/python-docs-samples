@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from typing import Iterator, Union
 
 import google.auth
 import mock
@@ -23,9 +24,11 @@ from user_credentials import main
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
+MockType = Union[mock.mock.MagicMock, mock.mock.AsyncMock]
+
 
 @pytest.fixture
-def mock_flow():
+def mock_flow() -> Iterator[MockType]:
     flow_patch = mock.patch("google_auth_oauthlib.flow.InstalledAppFlow", autospec=True)
 
     with flow_patch as flow_mock:
@@ -34,7 +37,9 @@ def mock_flow():
         yield flow_mock
 
 
-def test_auth_query_console(mock_flow, capsys):
+def test_auth_query_console(
+    mock_flow: MockType, capsys: pytest.CaptureFixture[str]
+) -> None:
     main(PROJECT)
     out, _ = capsys.readouterr()
     # Fun fact: William P. Wood was the 1st director of the US Secret Service.

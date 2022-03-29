@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def load_table_file(file_path, table_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def load_table_file(file_path: str, table_id: str) -> "bigquery.Table":
 
     # [START bigquery_load_from_file]
     from google.cloud import bigquery

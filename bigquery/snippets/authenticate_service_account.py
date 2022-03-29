@@ -13,9 +13,13 @@
 # limitations under the License.
 
 import os
+import typing
+
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
 
 
-def main():
+def main() -> "bigquery.Client":
     key_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 
     # [START bigquery_client_json_credentials]

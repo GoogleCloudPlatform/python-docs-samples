@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import update_dataset_default_table_expiration
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_update_dataset_default_table_expiration(capsys, dataset_id):
+
+def test_update_dataset_default_table_expiration(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str
+) -> None:
 
     one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
 

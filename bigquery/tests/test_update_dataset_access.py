@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import update_dataset_access
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_update_dataset_access(capsys, dataset_id):
+
+def test_update_dataset_access(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str
+) -> None:
 
     update_dataset_access.update_dataset_access(dataset_id)
     out, err = capsys.readouterr()

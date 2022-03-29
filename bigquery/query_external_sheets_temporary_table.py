@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_external_sheets_temporary_table():
+def query_external_sheets_temporary_table() -> None:
 
     # [START bigquery_query_external_sheets_temp]
     # [START bigquery_auth_drive_scope]
@@ -53,8 +53,10 @@ def query_external_sheets_temporary_table():
         bigquery.SchemaField("name", "STRING"),
         bigquery.SchemaField("post_abbr", "STRING"),
     ]
-    external_config.options.skip_leading_rows = 1  # Optionally skip header row.
-    external_config.options.range = (
+    options = external_config.google_sheets_options
+    assert options is not None
+    options.skip_leading_rows = 1  # Optionally skip header row.
+    options.range = (
         "us-states!A20:B49"  # Optionally set range of the sheet to query from.
     )
     table_id = "us_states"

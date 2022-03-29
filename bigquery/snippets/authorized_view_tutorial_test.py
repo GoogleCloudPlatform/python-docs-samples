@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Iterator, List
 import uuid
 
 from google.cloud import bigquery
@@ -21,19 +22,21 @@ import authorized_view_tutorial
 
 
 @pytest.fixture(scope="module")
-def client():
+def client() -> bigquery.Client:
     return bigquery.Client()
 
 
 @pytest.fixture
-def datasets_to_delete(client):
-    doomed = []
+def datasets_to_delete(client: bigquery.Client) -> Iterator[List[str]]:
+    doomed: List[str] = []
     yield doomed
     for item in doomed:
         client.delete_dataset(item, delete_contents=True, not_found_ok=True)
 
 
-def test_authorized_view_tutorial(client, datasets_to_delete):
+def test_authorized_view_tutorial(
+    client: bigquery.Client, datasets_to_delete: List[str]
+) -> None:
     override_values = {
         "source_dataset_id": "github_source_data_{}".format(
             str(uuid.uuid4()).replace("-", "_")

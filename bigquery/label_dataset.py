@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def label_dataset(dataset_id):
+def label_dataset(dataset_id: str) -> None:
 
     # [START bigquery_label_dataset]
 

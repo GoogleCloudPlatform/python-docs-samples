@@ -15,6 +15,6 @@
 from . import insert_geojson
 
 
-def test_insert_geojson(table_id):
+def test_insert_geojson(table_id: str) -> None:
     errors = insert_geojson.insert_geojson(override_values={"table_id": table_id})
     assert not errors

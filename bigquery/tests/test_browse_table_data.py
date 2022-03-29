@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import browse_table_data
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_browse_table_data(capsys, table_with_data_id):
+
+def test_browse_table_data(
+    capsys: "pytest.CaptureFixture[str]", table_with_data_id: str
+) -> None:
 
     browse_table_data.browse_table_data(table_with_data_id)
     out, err = capsys.readouterr()

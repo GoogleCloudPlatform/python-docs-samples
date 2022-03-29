@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_w_array_params():
+def client_query_w_array_params() -> None:
 
     # [START bigquery_query_params_arrays]
     from google.cloud import bigquery

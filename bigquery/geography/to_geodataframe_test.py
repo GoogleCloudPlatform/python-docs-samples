@@ -17,7 +17,7 @@ import pytest
 from .to_geodataframe import get_austin_service_requests_as_geography
 
 
-def test_get_austin_service_requests_as_geography():
+def test_get_austin_service_requests_as_geography() -> None:
     geopandas = pytest.importorskip("geopandas")
     df = get_austin_service_requests_as_geography()
     assert isinstance(df, geopandas.GeoDataFrame)

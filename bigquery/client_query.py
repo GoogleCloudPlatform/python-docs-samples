@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query():
+def client_query() -> None:
 
     # [START bigquery_query]
 

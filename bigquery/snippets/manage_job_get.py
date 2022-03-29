@@ -20,7 +20,7 @@ def get_job(
     client: bigquery.Client,
     location: str = "us",
     job_id: str = "abcd-efgh-ijkl-mnop",
-):
+) -> None:
     job = client.get_job(job_id, location=location)
 
     # All job classes have "location" and "job_id" string properties.

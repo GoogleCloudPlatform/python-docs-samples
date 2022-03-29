@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Sequence
 
-def copy_table_multiple_source(dest_table_id, table_ids):
+
+def copy_table_multiple_source(dest_table_id: str, table_ids: Sequence[str]) -> None:
 
     # [START bigquery_copy_table_multiple_source]
 

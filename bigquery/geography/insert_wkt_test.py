@@ -15,6 +15,6 @@
 from . import insert_wkt
 
 
-def test_insert_wkt(table_id):
+def test_insert_wkt(table_id: str) -> None:
     errors = insert_wkt.insert_wkt(override_values={"table_id": table_id})
     assert not errors

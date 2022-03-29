@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def get_routine(routine_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def get_routine(routine_id: str) -> "bigquery.Routine":
 
     # [START bigquery_get_routine]
 

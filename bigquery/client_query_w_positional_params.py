@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_w_positional_params():
+def client_query_w_positional_params() -> None:
 
     # [START bigquery_query_params_positional]
     from google.cloud import bigquery

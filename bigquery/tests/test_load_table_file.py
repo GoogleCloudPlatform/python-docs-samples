@@ -13,14 +13,19 @@
 # limitations under the License.
 
 import os
+import typing
 
 from google.cloud import bigquery
 
 from .. import load_table_file
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_load_table_file(capsys, random_table_id, client):
 
+def test_load_table_file(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str, client: bigquery.Client
+) -> None:
     samples_test_dir = os.path.abspath(os.path.dirname(__file__))
     file_path = os.path.join(
         samples_test_dir, "..", "..", "tests", "data", "people.csv"

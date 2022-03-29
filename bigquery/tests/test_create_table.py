@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import create_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_create_table(capsys, random_table_id):
+
+def test_create_table(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
     create_table.create_table(random_table_id)
     out, err = capsys.readouterr()
     assert "Created table {}".format(random_table_id) in out

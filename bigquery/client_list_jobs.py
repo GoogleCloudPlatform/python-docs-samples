@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_list_jobs():
+def client_list_jobs() -> None:
 
     # [START bigquery_list_jobs]
 

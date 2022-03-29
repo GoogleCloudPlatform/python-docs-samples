@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import load_table_uri_truncate_parquet
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_load_table_uri_truncate_parquet(capsys, random_table_id):
+
+def test_load_table_uri_truncate_parquet(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
     load_table_uri_truncate_parquet.load_table_uri_truncate_parquet(random_table_id)
     out, _ = capsys.readouterr()
     assert "Loaded 50 rows." in out

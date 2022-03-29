@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def get_dataset_labels(dataset_id):
+def get_dataset_labels(dataset_id: str) -> None:
 
     # [START bigquery_get_dataset_labels]
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def table_insert_rows(table_id):
+def table_insert_rows(table_id: str) -> None:
 
     # [START bigquery_table_insert_rows]
     from google.cloud import bigquery

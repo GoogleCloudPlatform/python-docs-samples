@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def create_table_clustered(table_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def create_table_clustered(table_id: str) -> "bigquery.Table":
 
     # [START bigquery_create_table_clustered]
     from google.cloud import bigquery

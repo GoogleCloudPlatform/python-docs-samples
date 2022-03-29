@@ -12,10 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import list_datasets
 
+if typing.TYPE_CHECKING:
+    import pytest
+    from google.cloud import bigquery
 
-def test_list_datasets(capsys, dataset_id, client):
+
+def test_list_datasets(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str, client: "bigquery.Client"
+) -> None:
     list_datasets.list_datasets()
     out, err = capsys.readouterr()
     assert "Datasets in project {}:".format(client.project) in out

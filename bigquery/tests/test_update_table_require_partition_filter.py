@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
 from .. import update_table_require_partition_filter
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_update_table_require_partition_filter(capsys, random_table_id, client):
+
+def test_update_table_require_partition_filter(
+    capsys: "pytest.CaptureFixture[str]",
+    random_table_id: str,
+    client: bigquery.Client,
+) -> None:
 
     # Make a partitioned table.
     schema = [bigquery.SchemaField("transaction_timestamp", "TIMESTAMP")]

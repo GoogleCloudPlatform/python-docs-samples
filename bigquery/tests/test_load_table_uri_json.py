@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import load_table_uri_json
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_load_table_uri_json(capsys, random_table_id):
+
+def test_load_table_uri_json(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
 
     load_table_uri_json.load_table_uri_json(random_table_id)
     out, _ = capsys.readouterr()

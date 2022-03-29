@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_pagination():
+def query_pagination() -> None:
 
     # [START bigquery_query_pagination]
 

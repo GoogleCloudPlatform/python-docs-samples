@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_destination_table_clustered(table_id):
+def client_query_destination_table_clustered(table_id: str) -> None:
 
     # [START bigquery_query_clustered_table]
     from google.cloud import bigquery

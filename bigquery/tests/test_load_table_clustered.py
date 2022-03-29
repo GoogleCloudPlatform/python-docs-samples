@@ -12,10 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import load_table_clustered
 
+if typing.TYPE_CHECKING:
+    import pytest
+    from google.cloud import bigquery
 
-def test_load_table_clustered(capsys, random_table_id, client):
+
+def test_load_table_clustered(
+    capsys: "pytest.CaptureFixture[str]",
+    random_table_id: str,
+    client: "bigquery.Client",
+) -> None:
 
     table = load_table_clustered.load_table_clustered(random_table_id)
 

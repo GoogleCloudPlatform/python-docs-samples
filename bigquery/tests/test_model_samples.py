@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import delete_model
 from .. import get_model
 from .. import list_models
 from .. import update_model
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_model_samples(capsys, dataset_id, model_id):
+
+def test_model_samples(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str, model_id: str
+) -> None:
     """Since creating a model is a long operation, test all model samples in
     the same test, following a typical end-to-end flow.
     """

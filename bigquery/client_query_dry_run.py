@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def client_query_dry_run():
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def client_query_dry_run() -> "bigquery.QueryJob":
 
     # [START bigquery_query_dry_run]
     from google.cloud import bigquery

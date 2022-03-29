@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def load_table_uri_firestore(table_id):
+def load_table_uri_firestore(table_id: str) -> None:
     orig_table_id = table_id
     # [START bigquery_load_table_gcs_firestore]
     # TODO(developer): Set table_id to the ID of the table to create.

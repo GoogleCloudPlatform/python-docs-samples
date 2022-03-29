@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def get_table(table_id):
+def get_table(table_id: str) -> None:
 
     # [START bigquery_get_table]
 

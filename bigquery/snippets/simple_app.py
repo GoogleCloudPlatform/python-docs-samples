@@ -22,7 +22,7 @@ from google.cloud import bigquery
 # [END bigquery_simple_app_deps]
 
 
-def query_stackoverflow():
+def query_stackoverflow() -> None:
     # [START bigquery_simple_app_client]
     client = bigquery.Client()
     # [END bigquery_simple_app_client]

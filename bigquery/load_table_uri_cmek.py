@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def load_table_uri_cmek(table_id, kms_key_name):
+def load_table_uri_cmek(table_id: str, kms_key_name: str) -> None:
 
     # [START bigquery_load_table_gcs_json_cmek]
     from google.cloud import bigquery

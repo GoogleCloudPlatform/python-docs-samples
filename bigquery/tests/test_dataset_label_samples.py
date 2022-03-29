@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import delete_dataset_labels
 from .. import get_dataset_labels
 from .. import label_dataset
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_dataset_label_samples(capsys, dataset_id):
+
+def test_dataset_label_samples(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str
+) -> None:
 
     label_dataset.label_dataset(dataset_id)
     out, err = capsys.readouterr()

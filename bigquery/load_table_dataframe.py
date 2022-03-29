@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def load_table_dataframe(table_id):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def load_table_dataframe(table_id: str) -> "bigquery.Table":
 
     # [START bigquery_load_table_dataframe]
     import datetime

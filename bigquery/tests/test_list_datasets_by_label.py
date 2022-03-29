@@ -12,10 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import list_datasets_by_label
 
+if typing.TYPE_CHECKING:
+    import pytest
+    from google.cloud import bigquery
 
-def test_list_datasets_by_label(capsys, dataset_id, client):
+
+def test_list_datasets_by_label(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str, client: "bigquery.Client"
+) -> None:
     dataset = client.get_dataset(dataset_id)
     dataset.labels = {"color": "green"}
     dataset = client.update_dataset(dataset, ["labels"])

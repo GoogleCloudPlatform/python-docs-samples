@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def list_models(dataset_id):
+def list_models(dataset_id: str) -> None:
     """Sample ID: go/samples-tracker/1512"""
 
     # [START bigquery_list_models]

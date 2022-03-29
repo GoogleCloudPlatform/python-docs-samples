@@ -11,7 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import typing
+from typing import Iterator
+
 import pytest
+
+if typing.TYPE_CHECKING:
+    from IPython.terminal.interactiveshell import TerminalInteractiveShell
 
 IPython = pytest.importorskip("IPython")
 interactiveshell = pytest.importorskip("IPython.terminal.interactiveshell")
@@ -23,7 +30,7 @@ matplotlib = pytest.importorskip("matplotlib")
 
 
 @pytest.fixture(scope="session")
-def ipython():
+def ipython() -> "TerminalInteractiveShell":
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
     shell = interactiveshell.TerminalInteractiveShell.instance(config=config)
@@ -31,7 +38,9 @@ def ipython():
 
 
 @pytest.fixture()
-def ipython_interactive(request, ipython):
+def ipython_interactive(
+    request: pytest.FixtureRequest, ipython: "TerminalInteractiveShell"
+) -> Iterator["TerminalInteractiveShell"]:
     """Activate IPython's builtin hooks
 
     for the duration of the test scope.
@@ -40,7 +49,7 @@ def ipython_interactive(request, ipython):
         yield ipython
 
 
-def _strip_region_tags(sample_text):
+def _strip_region_tags(sample_text: str) -> str:
     """Remove blank lines and region tags from sample text"""
     magic_lines = [
         line for line in sample_text.split("\n") if len(line) > 0 and "# [" not in line
@@ -48,7 +57,7 @@ def _strip_region_tags(sample_text):
     return "\n".join(magic_lines)
 
 
-def test_jupyter_tutorial(ipython):
+def test_jupyter_tutorial(ipython: "TerminalInteractiveShell") -> None:
     matplotlib.use("agg")
     ip = IPython.get_ipython()
     ip.extension_manager.load_extension("google.cloud.bigquery")

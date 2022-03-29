@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def delete_table(table_id):
+def delete_table(table_id: str) -> None:
 
     # [START bigquery_delete_table]
 

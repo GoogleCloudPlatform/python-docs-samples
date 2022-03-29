@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import delete_dataset
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_delete_dataset(capsys, dataset_id):
+
+def test_delete_dataset(capsys: "pytest.CaptureFixture[str]", dataset_id: str) -> None:
 
     delete_dataset.delete_dataset(dataset_id)
     out, err = capsys.readouterr()

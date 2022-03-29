@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import client_query_destination_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_query_destination_table(capsys, table_id):
+
+def test_client_query_destination_table(
+    capsys: "pytest.CaptureFixture[str]", table_id: str
+) -> None:
 
     client_query_destination_table.client_query_destination_table(table_id)
     out, err = capsys.readouterr()

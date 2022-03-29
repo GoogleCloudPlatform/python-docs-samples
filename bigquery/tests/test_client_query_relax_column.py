@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
 from .. import client_query_relax_column
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_query_relax_column(capsys, random_table_id, client):
+
+def test_client_query_relax_column(
+    capsys: "pytest.CaptureFixture[str]",
+    random_table_id: str,
+    client: bigquery.Client,
+) -> None:
 
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),

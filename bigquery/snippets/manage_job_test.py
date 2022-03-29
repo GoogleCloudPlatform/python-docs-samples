@@ -19,7 +19,7 @@ import manage_job_cancel
 import manage_job_get
 
 
-def test_manage_job(capsys: pytest.CaptureFixture):
+def test_manage_job(capsys: pytest.CaptureFixture[str]) -> None:
     client = bigquery.Client()
     sql = """
         SELECT corpus

@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import client_query_batch
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_query_batch(
-    capsys,
-):
+
+def test_client_query_batch(capsys: "pytest.CaptureFixture[str]") -> None:
 
     job = client_query_batch.client_query_batch()
     out, err = capsys.readouterr()

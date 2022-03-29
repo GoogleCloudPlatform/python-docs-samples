@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def load_table_uri_avro(table_id):
+def load_table_uri_avro(table_id: str) -> None:
 
     # [START bigquery_load_table_gcs_avro]
     from google.cloud import bigquery

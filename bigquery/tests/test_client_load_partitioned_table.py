@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import client_load_partitioned_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_load_partitioned_table(capsys, random_table_id):
+
+def test_client_load_partitioned_table(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
 
     client_load_partitioned_table.client_load_partitioned_table(random_table_id)
     out, err = capsys.readouterr()

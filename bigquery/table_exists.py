@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def table_exists(table_id):
+def table_exists(table_id: str) -> None:
 
     # [START bigquery_table_exists]
     from google.cloud import bigquery

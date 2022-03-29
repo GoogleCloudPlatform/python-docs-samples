@@ -17,7 +17,7 @@ import pandas
 from . import query_params_scalars
 
 
-def test_query_with_parameters():
+def test_query_with_parameters() -> None:
     df = query_params_scalars.query_with_parameters()
     assert isinstance(df, pandas.DataFrame)
     assert len(df) == 10

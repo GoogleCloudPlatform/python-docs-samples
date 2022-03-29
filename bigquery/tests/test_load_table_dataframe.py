@@ -12,16 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 import pytest
 
 from .. import load_table_dataframe
+
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
 
 
 pandas = pytest.importorskip("pandas")
 pyarrow = pytest.importorskip("pyarrow")
 
 
-def test_load_table_dataframe(capsys, client, random_table_id):
+def test_load_table_dataframe(
+    capsys: pytest.CaptureFixture[str],
+    client: "bigquery.Client",
+    random_table_id: str,
+) -> None:
 
     table = load_table_dataframe.load_table_dataframe(random_table_id)
     out, _ = capsys.readouterr()
@@ -44,7 +53,7 @@ def test_load_table_dataframe(capsys, client, random_table_id):
         "INTEGER",
         "FLOAT",
         "TIMESTAMP",
-        "TIMESTAMP",
+        "DATETIME",
     ]
 
     df = client.list_rows(table).to_dataframe()
@@ -64,9 +73,9 @@ def test_load_table_dataframe(capsys, client, random_table_id):
         pandas.Timestamp("1983-05-09T11:00:00+00:00"),
     ]
     assert df["dvd_release"].tolist() == [
-        pandas.Timestamp("2003-10-22T10:00:00+00:00"),
-        pandas.Timestamp("2002-07-16T09:00:00+00:00"),
-        pandas.Timestamp("2008-01-14T08:00:00+00:00"),
-        pandas.Timestamp("2002-01-22T07:00:00+00:00"),
+        pandas.Timestamp("2003-10-22T10:00:00"),
+        pandas.Timestamp("2002-07-16T09:00:00"),
+        pandas.Timestamp("2008-01-14T08:00:00"),
+        pandas.Timestamp("2002-01-22T07:00:00"),
     ]
     assert df["wikidata_id"].tolist() == ["Q16403", "Q25043", "Q24953", "Q24980"]

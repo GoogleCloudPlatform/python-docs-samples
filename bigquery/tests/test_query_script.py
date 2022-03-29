@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import query_script
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_script(
-    capsys,
-):
+
+def test_query_script(capsys: "pytest.CaptureFixture[str]") -> None:
 
     query_script.query_script()
     out, _ = capsys.readouterr()

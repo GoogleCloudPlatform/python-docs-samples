@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import load_table_uri_cmek
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_load_table_uri_cmek(capsys, random_table_id, kms_key_name):
+
+def test_load_table_uri_cmek(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str, kms_key_name: str
+) -> None:
 
     load_table_uri_cmek.load_table_uri_cmek(random_table_id, kms_key_name)
     out, _ = capsys.readouterr()

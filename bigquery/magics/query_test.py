@@ -17,7 +17,7 @@ import pandas
 from . import query
 
 
-def test_query():
+def test_query() -> None:
     df = query.query()
     assert isinstance(df, pandas.DataFrame)
     assert len(df) == 3

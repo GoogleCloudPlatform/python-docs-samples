@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_external_sheets_permanent_table(dataset_id):
+def query_external_sheets_permanent_table(dataset_id: str) -> None:
 
     # [START bigquery_query_external_sheets_perm]
     from google.cloud import bigquery
@@ -56,8 +56,10 @@ def query_external_sheets_permanent_table(dataset_id):
         "/d/1i_QCL-7HcSyUZmIbP9E6lO_T5u3HnpLe7dnpHaijg_E/edit?usp=sharing"
     )
     external_config.source_uris = [sheet_url]
-    external_config.options.skip_leading_rows = 1  # Optionally skip header row.
-    external_config.options.range = (
+    options = external_config.google_sheets_options
+    assert options is not None
+    options.skip_leading_rows = 1  # Optionally skip header row.
+    options.range = (
         "us-states!A20:B49"  # Optionally set range of the sheet to query from.
     )
     table.external_data_configuration = external_config

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def dataset_exists(dataset_id):
+def dataset_exists(dataset_id: str) -> None:
 
     # [START bigquery_dataset_exists]
     from google.cloud import bigquery

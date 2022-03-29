@@ -13,30 +13,31 @@
 # limitations under the License.
 
 import datetime
+from typing import Iterator
 import uuid
 
 from google.cloud import bigquery
 import pytest
 
 
-def temp_suffix():
+def temp_suffix() -> str:
     now = datetime.datetime.now()
     return f"{now.strftime('%Y%m%d%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
 
 @pytest.fixture(scope="session")
-def bigquery_client():
+def bigquery_client() -> bigquery.Client:
     bigquery_client = bigquery.Client()
     return bigquery_client
 
 
 @pytest.fixture(scope="session")
-def project_id(bigquery_client):
+def project_id(bigquery_client: bigquery.Client) -> str:
     return bigquery_client.project
 
 
 @pytest.fixture
-def dataset_id(bigquery_client):
+def dataset_id(bigquery_client: bigquery.Client) -> Iterator[str]:
     dataset_id = f"geography_{temp_suffix()}"
     bigquery_client.create_dataset(dataset_id)
     yield dataset_id
@@ -44,7 +45,9 @@ def dataset_id(bigquery_client):
 
 
 @pytest.fixture
-def table_id(bigquery_client, project_id, dataset_id):
+def table_id(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id: str
+) -> Iterator[str]:
     table_id = f"{project_id}.{dataset_id}.geography_{temp_suffix()}"
     table = bigquery.Table(table_id)
     table.schema = [

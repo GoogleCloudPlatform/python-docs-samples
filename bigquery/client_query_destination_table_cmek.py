@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_destination_table_cmek(table_id, kms_key_name):
+def client_query_destination_table_cmek(table_id: str, kms_key_name: str) -> None:
 
     # [START bigquery_query_destination_table_cmek]
     from google.cloud import bigquery

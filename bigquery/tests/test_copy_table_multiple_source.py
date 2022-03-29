@@ -13,12 +13,22 @@
 # limitations under the License.
 
 import io
+import typing
+
 from google.cloud import bigquery
 
 from .. import copy_table_multiple_source
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_copy_table_multiple_source(capsys, random_table_id, random_dataset_id, client):
+
+def test_copy_table_multiple_source(
+    capsys: "pytest.CaptureFixture[str]",
+    random_table_id: str,
+    random_dataset_id: str,
+    client: bigquery.Client,
+) -> None:
 
     dataset = bigquery.Dataset(random_dataset_id)
     dataset.location = "US"

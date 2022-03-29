@@ -12,8 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+from typing import Dict, Optional, Tuple
 
-def create_view(override_values={}):
+try:
+    from typing import TypedDict
+except ImportError:
+    from typing_extensions import TypedDict
+
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+class OverridesDict(TypedDict, total=False):
+    analyst_group_email: str
+    view_dataset_id: str
+    view_id: str
+    view_reference: Dict[str, str]
+    source_dataset_id: str
+    source_id: str
+
+
+def create_view(override_values: Optional[Dict[str, str]] = None) -> "bigquery.Table":
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_create_view]
     from google.cloud import bigquery
 
@@ -43,7 +66,10 @@ def create_view(override_values={}):
     return view
 
 
-def get_view(override_values={}):
+def get_view(override_values: Optional[Dict[str, str]] = None) -> "bigquery.Table":
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_get_view]
     from google.cloud import bigquery
 
@@ -65,7 +91,10 @@ def get_view(override_values={}):
     return view
 
 
-def update_view(override_values={}):
+def update_view(override_values: Optional[Dict[str, str]] = None) -> "bigquery.Table":
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_update_view_query]
     from google.cloud import bigquery
 
@@ -95,7 +124,13 @@ def update_view(override_values={}):
     return view
 
 
-def grant_access(override_values={}):
+def grant_access(
+    override_values: Optional[OverridesDict] = None,
+) -> Tuple["bigquery.Dataset", "bigquery.Dataset"]:
+
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_grant_view_access]
     from google.cloud import bigquery
 

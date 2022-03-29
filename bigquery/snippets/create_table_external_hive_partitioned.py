@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def create_table_external_hive_partitioned(table_id: str):
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+
+
+def create_table_external_hive_partitioned(table_id: str) -> "bigquery.Table":
     original_table_id = table_id
     # [START bigquery_create_table_external_hivepartitioned]
     # Demonstrates creating an external table with hive partitioning.

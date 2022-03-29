@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_legacy_sql():
+def client_query_legacy_sql() -> None:
 
     # [START bigquery_query_legacy]
     from google.cloud import bigquery

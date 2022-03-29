@@ -12,11 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import client_list_jobs
 from .. import create_job
 
+if typing.TYPE_CHECKING:
+    from google.cloud import bigquery
+    import pytest
 
-def test_client_list_jobs(capsys, client):
+
+def test_client_list_jobs(
+    capsys: "pytest.CaptureFixture[str]", client: "bigquery.Client"
+) -> None:
 
     job = create_job.create_job()
     client.cancel_job(job.job_id)

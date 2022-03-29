@@ -12,12 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
-client = bigquery.Client()
+if typing.TYPE_CHECKING:
+    import pandas
 
 
-def get_austin_service_requests_as_geography():
+client: bigquery.Client = bigquery.Client()
+
+
+def get_austin_service_requests_as_geography() -> "pandas.DataFrame":
     # [START bigquery_query_results_geodataframe]
 
     sql = """

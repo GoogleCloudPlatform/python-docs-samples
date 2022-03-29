@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def client_query_w_struct_params():
+def client_query_w_struct_params() -> None:
 
     # [START bigquery_query_params_structs]
     from google.cloud import bigquery

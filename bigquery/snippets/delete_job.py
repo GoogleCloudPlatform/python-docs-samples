@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def delete_job_metadata(job_id: str, location: str):
+def delete_job_metadata(job_id: str, location: str) -> None:
     orig_job_id = job_id
     orig_location = location
     # [START bigquery_delete_job]

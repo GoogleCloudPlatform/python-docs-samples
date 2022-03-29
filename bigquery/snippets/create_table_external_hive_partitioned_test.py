@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 import create_table_external_hive_partitioned
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_create_table_external_hive_partitioned(capsys, random_table_id):
+
+def test_create_table_external_hive_partitioned(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
     table = (
         create_table_external_hive_partitioned.create_table_external_hive_partitioned(
             random_table_id

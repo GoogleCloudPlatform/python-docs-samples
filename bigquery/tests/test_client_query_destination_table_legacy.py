@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import client_query_destination_table_legacy
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_query_destination_table_legacy(capsys, random_table_id):
+
+def test_client_query_destination_table_legacy(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str
+) -> None:
 
     client_query_destination_table_legacy.client_query_destination_table_legacy(
         random_table_id

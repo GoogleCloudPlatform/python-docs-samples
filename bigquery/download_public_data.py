@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def download_public_data():
+def download_public_data() -> None:
 
     # [START bigquery_pandas_public_data]
 

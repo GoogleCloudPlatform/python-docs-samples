@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import query_pagination
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_pagination(
-    capsys,
-):
+
+def test_query_pagination(capsys: "pytest.CaptureFixture[str]") -> None:
 
     query_pagination.query_pagination()
     out, _ = capsys.readouterr()

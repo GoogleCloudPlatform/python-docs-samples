@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Iterator, List
 import uuid
 
 from google.cloud import bigquery
@@ -26,19 +27,23 @@ DATASET_ID = "my_new_dataset"
 
 
 @pytest.fixture(scope="module")
-def client():
+def client() -> bigquery.Client:
     return bigquery.Client()
 
 
 @pytest.fixture
-def datasets_to_delete(client):
-    doomed = []
+def datasets_to_delete(client: bigquery.Client) -> Iterator[List[str]]:
+    doomed: List[str] = []
     yield doomed
     for item in doomed:
         client.delete_dataset(item, delete_contents=True)
 
 
-def test_quickstart(capsys, client, datasets_to_delete):
+def test_quickstart(
+    capsys: "pytest.CaptureFixture[str]",
+    client: bigquery.Client,
+    datasets_to_delete: List[str],
+) -> None:
 
     override_values = {
         "dataset_id": "my_new_dataset_{}".format(str(uuid.uuid4()).replace("-", "_")),

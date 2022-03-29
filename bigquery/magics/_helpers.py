@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def strip_region_tags(sample_text):
+def strip_region_tags(sample_text: str) -> str:
     """Remove blank lines and region tags from sample text"""
     magic_lines = [
         line for line in sample_text.split("\n") if len(line) > 0 and "# [" not in line

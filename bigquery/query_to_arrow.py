@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
 
-def query_to_arrow():
+if typing.TYPE_CHECKING:
+    import pyarrow
+
+
+def query_to_arrow() -> "pyarrow.Table":
 
     # [START bigquery_query_to_arrow]
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def download_public_data_sandbox():
+def download_public_data_sandbox() -> None:
 
     # [START bigquery_pandas_public_data_sandbox]
 

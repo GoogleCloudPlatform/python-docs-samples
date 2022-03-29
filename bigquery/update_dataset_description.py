@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def update_dataset_description(dataset_id):
+def update_dataset_description(dataset_id: str) -> None:
 
     # [START bigquery_update_dataset_description]
 

@@ -12,14 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
 import delete_job
 
+if typing.TYPE_CHECKING:
+    import pytest
+
 
 def test_delete_job_metadata(
-    capsys, bigquery_client: bigquery.Client, table_id_us_east1: str
-):
+    capsys: "pytest.CaptureFixture[str]",
+    bigquery_client: bigquery.Client,
+    table_id_us_east1: str,
+) -> None:
     query_job: bigquery.QueryJob = bigquery_client.query(
         f"SELECT COUNT(*) FROM `{table_id_us_east1}`",
         location="us-east1",

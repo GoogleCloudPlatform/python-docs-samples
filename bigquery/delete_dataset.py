@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def delete_dataset(dataset_id):
+def delete_dataset(dataset_id: str) -> None:
 
     # [START bigquery_delete_dataset]
 

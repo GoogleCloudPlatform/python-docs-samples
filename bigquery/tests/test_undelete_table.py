@@ -12,10 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import undelete_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_undelete_table(capsys, table_with_schema_id, random_table_id):
+
+def test_undelete_table(
+    capsys: "pytest.CaptureFixture[str]",
+    table_with_schema_id: str,
+    random_table_id: str,
+) -> None:
     undelete_table.undelete_table(table_with_schema_id, random_table_id)
     out, _ = capsys.readouterr()
     assert (

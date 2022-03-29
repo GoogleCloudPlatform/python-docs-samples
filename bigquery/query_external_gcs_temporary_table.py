@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_external_gcs_temporary_table():
+def query_external_gcs_temporary_table() -> None:
 
     # [START bigquery_query_external_gcs_temp]
     from google.cloud import bigquery
@@ -30,7 +30,9 @@ def query_external_gcs_temporary_table():
         bigquery.SchemaField("name", "STRING"),
         bigquery.SchemaField("post_abbr", "STRING"),
     ]
-    external_config.options.skip_leading_rows = 1
+    assert external_config.csv_options is not None
+    external_config.csv_options.skip_leading_rows = 1
+
     table_id = "us_states"
     job_config = bigquery.QueryJobConfig(table_definitions={table_id: external_config})
 

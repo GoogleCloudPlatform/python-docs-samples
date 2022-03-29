@@ -13,13 +13,15 @@
 # limitations under the License.
 
 import re
+import typing
 
 from .. import client_query_legacy_sql
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_client_query_legacy_sql(
-    capsys,
-):
+
+def test_client_query_legacy_sql(capsys: "pytest.CaptureFixture[str]") -> None:
 
     client_query_legacy_sql.client_query_legacy_sql()
     out, err = capsys.readouterr()

@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 import simple_app
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_stackoverflow(capsys):
+
+def test_query_stackoverflow(capsys: "pytest.CaptureFixture[str]") -> None:
     simple_app.query_stackoverflow()
     out, _ = capsys.readouterr()
     assert "views" in out

@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import update_dataset_default_partition_expiration
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_update_dataset_default_partition_expiration(capsys, dataset_id):
+
+def test_update_dataset_default_partition_expiration(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str
+) -> None:
 
     ninety_days_ms = 90 * 24 * 60 * 60 * 1000  # in milliseconds
 

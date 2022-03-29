@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import add_empty_column
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_add_empty_column(capsys, table_id):
+
+def test_add_empty_column(capsys: "pytest.CaptureFixture[str]", table_id: str) -> None:
 
     add_empty_column.add_empty_column(table_id)
     out, err = capsys.readouterr()

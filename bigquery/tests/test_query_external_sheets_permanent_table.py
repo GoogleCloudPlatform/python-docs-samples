@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from .. import query_external_sheets_permanent_table
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_query_external_sheets_permanent_table(capsys, dataset_id):
+
+def test_query_external_sheets_permanent_table(
+    capsys: "pytest.CaptureFixture[str]", dataset_id: str
+) -> None:
 
     query_external_sheets_permanent_table.query_external_sheets_permanent_table(
         dataset_id

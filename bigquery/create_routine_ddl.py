@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_routine_ddl(routine_id):
+def create_routine_ddl(routine_id: str) -> None:
 
     # [START bigquery_create_routine_ddl]
 

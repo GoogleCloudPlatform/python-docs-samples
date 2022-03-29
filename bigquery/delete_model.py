@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def delete_model(model_id):
+def delete_model(model_id: str) -> None:
     """Sample ID: go/samples-tracker/1534"""
 
     # [START bigquery_delete_model]

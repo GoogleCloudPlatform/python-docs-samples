@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 from google.cloud import bigquery
 
 from .. import table_exists
 
+if typing.TYPE_CHECKING:
+    import pytest
 
-def test_table_exists(capsys, random_table_id, client):
+
+def test_table_exists(
+    capsys: "pytest.CaptureFixture[str]", random_table_id: str, client: bigquery.Client
+) -> None:
 
     table_exists.table_exists(random_table_id)
     out, err = capsys.readouterr()

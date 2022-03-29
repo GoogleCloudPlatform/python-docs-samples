@@ -17,7 +17,12 @@ import pytest
 from .. import copy_table_cmek
 
 
-def test_copy_table_cmek(capsys, random_table_id, table_with_data_id, kms_key_name):
+def test_copy_table_cmek(
+    capsys: "pytest.CaptureFixture[str]",
+    random_table_id: str,
+    table_with_data_id: str,
+    kms_key_name: str,
+) -> None:
     pytest.skip("b/210907595: copy fails for shakespeare table")
 
     copy_table_cmek.copy_table_cmek(random_table_id, table_with_data_id, kms_key_name)

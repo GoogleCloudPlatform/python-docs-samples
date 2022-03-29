@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import typing
+
 import IPython
 
 from . import _helpers
 
+if typing.TYPE_CHECKING:
+    import pandas
 
-def query_with_parameters():
+
+def query_with_parameters() -> "pandas.DataFrame":
     ip = IPython.get_ipython()
     ip.extension_manager.load_extension("google.cloud.bigquery")
 

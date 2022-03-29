@@ -12,8 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict, Mapping, Optional, Sequence
 
-def insert_geojson(override_values={}):
+
+def insert_geojson(
+    override_values: Optional[Mapping[str, str]] = None
+) -> Sequence[Dict[str, object]]:
+
+    if override_values is None:
+        override_values = {}
+
     # [START bigquery_insert_geojson]
     import geojson
     from google.cloud import bigquery

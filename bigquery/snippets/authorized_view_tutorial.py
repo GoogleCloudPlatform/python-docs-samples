@@ -14,11 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict, Optional
 
-def run_authorized_view_tutorial(override_values={}):
+
+def run_authorized_view_tutorial(
+    override_values: Optional[Dict[str, str]] = None
+) -> None:
     # Note to user: This is a group email for testing purposes. Replace with
     # your own group email address when running this code.
     analyst_group_email = "example-analyst-group@google.com"
+
+    if override_values is None:
+        override_values = {}
 
     # [START bigquery_authorized_view_tutorial]
     # Create a source dataset

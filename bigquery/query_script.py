@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_script():
+def query_script() -> None:
     # [START bigquery_query_script]
 
     from google.cloud import bigquery

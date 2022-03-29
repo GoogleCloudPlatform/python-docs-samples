@@ -15,7 +15,7 @@
 from google.api_core import datetime_helpers
 
 
-def undelete_table(table_id, recovered_table_id):
+def undelete_table(table_id: str, recovered_table_id: str) -> None:
     # [START bigquery_undelete_table]
     import time
 
@@ -39,7 +39,7 @@ def undelete_table(table_id, recovered_table_id):
     # Due to very short lifecycle of the table, ensure we're not picking a time
     # prior to the table creation due to time drift between backend and client.
     table = client.get_table(table_id)
-    created_epoch = datetime_helpers.to_milliseconds(table.created)
+    created_epoch: int = datetime_helpers.to_milliseconds(table.created)  # type: ignore
     if created_epoch > snapshot_epoch:
         snapshot_epoch = created_epoch
     # [END_EXCLUDE]
