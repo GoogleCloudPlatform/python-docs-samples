@@ -176,12 +176,11 @@ def update_mute_rule(mute_config_name: str) -> None:
 # [END securitycenter_update_mute_config]
 
 
-# [START securitycenter_set_mute_unmute]
-def set_mute_unmute_finding(finding_path: str) -> None:
+# [START securitycenter_set_mute]
+def set_mute_finding(finding_path: str) -> None:
     """
-      Mute/unmute an individual finding.
+      Mute an individual finding.
       If a finding is already muted, muting it again has no effect.
-      Similarly, unmuting a finding that isn't muted has no effect.
       Various mute states are: MUTE_UNSPECIFIED/MUTE/UNMUTE.
     Args:
         finding_path: The relative resource name of the finding. See:
@@ -203,7 +202,36 @@ def set_mute_unmute_finding(finding_path: str) -> None:
     print(f"Mute value for the finding: {finding.mute.name}")
 
 
-# [END securitycenter_set_mute_unmute]
+# [END securitycenter_set_mute]
+
+
+# [START securitycenter_set_unmute]
+def set_unmute_finding(finding_path: str) -> None:
+    """
+      Unmute an individual finding.
+      Unmuting a finding that isn't muted has no effect.
+      Various mute states are: MUTE_UNSPECIFIED/MUTE/UNMUTE.
+    Args:
+        finding_path: The relative resource name of the finding. See:
+        https://cloud.google.com/apis/design/resource_names#relative_resource_name
+        Use any one of the following formats:
+        - organizations/{organization_id}/sources/{source_id}/finding/{finding_id},
+        - folders/{folder_id}/sources/{source_id}/finding/{finding_id},
+        - projects/{project_id}/sources/{source_id}/finding/{finding_id}.
+    """
+    from google.cloud import securitycenter
+
+    client = securitycenter.SecurityCenterClient()
+
+    request = securitycenter.SetMuteRequest()
+    request.name = finding_path
+    request.mute = securitycenter.Finding.Mute.UNMUTED
+
+    finding = client.set_mute(request)
+    print(f"Mute value for the finding: {finding.mute.name}")
+
+
+# [END securitycenter_set_unmute]
 
 
 # [START securitycenter_bulk_mute]

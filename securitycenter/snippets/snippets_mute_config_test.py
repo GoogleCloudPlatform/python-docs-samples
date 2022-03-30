@@ -107,9 +107,16 @@ def test_update_mute_rule(capsys: CaptureFixture, mute_rule):
 
 def test_set_mute_finding(capsys: CaptureFixture, finding):
     finding_path = finding.get("finding1")
-    snippets_mute_config.set_mute_unmute_finding(finding_path)
+    snippets_mute_config.set_mute_finding(finding_path)
     out, _ = capsys.readouterr()
     assert re.search("Mute value for the finding: MUTED", out)
+
+
+def test_set_unmute_finding(capsys: CaptureFixture, finding):
+    finding_path = finding.get("finding1")
+    snippets_mute_config.set_unmute_finding(finding_path)
+    out, _ = capsys.readouterr()
+    assert re.search("Mute value for the finding: UNMUTED", out)
 
 
 def test_bulk_mute_findings(capsys: CaptureFixture, finding):
