@@ -2,4 +2,4 @@ google-cloud-dlp==3.6.2
 google-cloud-storage==2.2.1
 google-cloud-pubsub==2.11.0
 google-cloud-datastore==2.5.1
-google-cloud-bigquery==2.34.2
+google-cloud-bigquery==3.0.1
