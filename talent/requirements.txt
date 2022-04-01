@@ -1,1 +1,1 @@
-google.cloud.talent==2.5.1
+google-cloud-talent==2.5.2
