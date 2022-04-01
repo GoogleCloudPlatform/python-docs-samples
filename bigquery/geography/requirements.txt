@@ -2,7 +2,7 @@ attrs==21.4.0
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.12
-click==8.1.1
+click==8.1.2
 click-plugins==1.1.1
 cligj==0.7.2
 dataclasses==0.8; python_version < '3.7'
