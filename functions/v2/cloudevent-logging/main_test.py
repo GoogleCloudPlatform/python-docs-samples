@@ -16,6 +16,7 @@ from cloudevents.http import CloudEvent
 
 import main
 
+
 def test_functions_log_cloudevent_should_print_message(capsys):
 
     # Build a CloudEvent log entry
