@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# 
+#
 # [START functions_structured_logging]
 import google.cloud.logging
 from google.cloud.logging.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
+
 
 def structured_logging(request):
     logging_client = google.cloud.logging.Client()
