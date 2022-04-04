@@ -1,4 +1,4 @@
-Flask==2.0.2
+Flask==2.1.0
 apache-beam[gcp]==2.35.0
 google-cloud-aiplatform==1.11.0
 gunicorn==20.1.0
