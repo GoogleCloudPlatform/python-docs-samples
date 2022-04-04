@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# 
+#
 # [START functions_structured_logging_event]
+import functions_framework
 import google.cloud.logging
 from google.cloud.logging.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 
-import functions_framework
 
 @functions_framework.cloud_event
 def structured_logging_event(cloud_event):
