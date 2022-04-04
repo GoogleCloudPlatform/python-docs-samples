@@ -36,7 +36,7 @@ def get():
     blob.upload_from_string(text_to_store)
     response_text += 'Stored text in a blob.\n\n'
 
-    stored_contents = blob.download_as_string()
+    stored_contents = blob.download_as_bytes()
     if stored_contents == text_to_store:
         response_text += 'Downloaded text matches uploaded text.\n\n'
     else:
