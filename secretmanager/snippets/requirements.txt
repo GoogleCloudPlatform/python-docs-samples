@@ -1,2 +1,2 @@
-google-cloud-secret-manager==2.9.2
+google-cloud-secret-manager==2.10.0
 google-crc32c==1.3.0
