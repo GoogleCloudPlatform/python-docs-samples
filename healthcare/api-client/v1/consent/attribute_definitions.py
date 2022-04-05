@@ -78,7 +78,7 @@ def create_resource_attribute_definition(
 # [END healthcare_create_resource_attribute_definition]
 
 
-# [START healthcare_create_resource_attribute_definition]
+# [START healthcare_create_request_attribute_definition]
 def create_request_attribute_definition(
     project_id: str,
     location: str,
@@ -141,7 +141,7 @@ def create_request_attribute_definition(
     return response
 
 
-# [END healthcare_create_resource_attribute_definition]
+# [END healthcare_create_request_attribute_definition]
 
 
 # [START healthcare_get_attribute_definition]
