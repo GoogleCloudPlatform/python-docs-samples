@@ -40,6 +40,8 @@ with models.DAG(
     # [START composer_gkeoperator_fullconfig]
     # TODO(developer): update with your values
     PROJECT_ID = "my-project-id"
+    # It is recommended to use regional clusters for increased reliability
+    # though passing a zone in the location parameter is also valid
     CLUSTER_REGION = "us-west1"
     CLUSTER_NAME = "example-cluster"
     # [END composer_gkeoperator_minconfig]
