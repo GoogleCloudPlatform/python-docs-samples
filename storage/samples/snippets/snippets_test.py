@@ -36,6 +36,7 @@ import storage_copy_file
 import storage_copy_file_archived_generation
 import storage_cors_configuration
 import storage_create_bucket_class_location
+import storage_create_bucket_dual_region
 import storage_define_bucket_website_configuration
 import storage_delete_file
 import storage_delete_file_archived_generation
@@ -431,6 +432,16 @@ def test_create_bucket_class_location(test_bucket_create):
 
     assert bucket.location == "US"
     assert bucket.storage_class == "COLDLINE"
+
+
+def test_create_bucket_dual_region(test_bucket_create, capsys):
+    region_1 = "US-EAST1"
+    region_2 = "US-WEST1"
+    storage_create_bucket_dual_region.create_bucket_dual_region(
+        test_bucket_create.name, region_1, region_2
+    )
+    out, _ = capsys.readouterr()
+    assert f"Bucket {test_bucket_create.name} created in {region_1}+{region_2}" in out
 
 
 def test_bucket_delete_default_kms_key(test_bucket, capsys):
