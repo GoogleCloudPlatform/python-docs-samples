@@ -24,7 +24,7 @@ import google.auth.transport.requests
 import google.oauth2.id_token
 
 
-def make_authorized_get_request(service_url, audience):
+def make_authorized_get_request(endpoint, audience):
     """
     make_authorized_get_request makes a GET request to the specified HTTP endpoint
     by authenticating with the ID token obtained from the google-auth client library
@@ -41,7 +41,7 @@ def make_authorized_get_request(service_url, audience):
     # audience = https://project-region-projectid.cloudfunctions.net/myFunction
     # [START cloudrun_service_to_service_auth]
 
-    req = urllib.request.Request(service_url)
+    req = urllib.request.Request(endpoint)
 
     auth_req = google.auth.transport.requests.Request()
     id_token = google.oauth2.id_token.fetch_id_token(auth_req, audience)
