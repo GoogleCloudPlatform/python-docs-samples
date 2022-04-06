@@ -3,5 +3,5 @@ google-api-core==2.7.1
 google-auth==2.5.0
 googleapis-common-protos==1.56.0
 prometheus-client==0.13.1
-prometheus-flask-exporter==0.19.0
+prometheus-flask-exporter==0.20.0
 requests==2.27.1
