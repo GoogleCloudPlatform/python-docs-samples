@@ -58,18 +58,6 @@ After the project is created, set your PROJECT_ID to a ```project``` variable:
 
 1. Ensure that the Retail API is enabled for your project in the [API & Services page](https://console.cloud.google.com/apis/api/retail.googleapis.com/).
 
-1.  Log in with your user credentials to run a code sample from the Cloud Shell:
-
-    ```bash
-    gcloud auth login
-    ```
-
-1.  Type `Y` and press **Enter**. Click the link in the Terminal. A browser window
-    should appear asking you to log in using your Gmail account.
-
-1.  Provide the Google Auth Library with access to your credentials and paste
-    the code from the browser to the Terminal.
-
 ## Prepare your work environment
 
 To prepare the work environment you should perform the following steps:
@@ -167,7 +155,7 @@ The bucket name must be unique. For convenience, you can name it `<YOUR_PROJECT_
 1. Go to the **product** directory and run the following command in the Terminal:
 
     ```bash
-    python setup_product/products_create_gcs_bucket.py
+    python product/setup_product/products_create_gcs_bucket.py
     ```
 
     Now you can see the bucket is created in the [Cloud Storage](https://console.cloud.google.com/storage/browser), and the files are uploaded.
@@ -189,7 +177,7 @@ The bucket name must be unique. For convenience, you can name it `<YOUR_PROJECT_
 To import the prepared products to a catalog, open python-retail/samples/interactive-tutorials/product/import_products_gcs.py file and run the following command in the Terminal:
 
 ```bash
-python import_products_gcs.py
+python product/import_products_gcs.py
 ```
 
 ## Run your code sample

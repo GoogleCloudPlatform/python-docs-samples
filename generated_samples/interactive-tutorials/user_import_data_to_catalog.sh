@@ -31,6 +31,6 @@ export BUCKET_NAME=$bucket_name
 # Import products to the Retail catalog
 python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/import_products_gcs.py
 
-echo =====================================
+echo "====================================="
 echo "Your Retail catalog is ready to use!"
-echo =====================================
+echo "====================================="
