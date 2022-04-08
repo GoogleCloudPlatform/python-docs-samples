@@ -95,6 +95,6 @@ def test_end_to_end(setup_job):
         if found:
             break
         # Exponential backoff
-        time.sleep(x ** 3)
+        time.sleep(x * 5)
 
     assert found
