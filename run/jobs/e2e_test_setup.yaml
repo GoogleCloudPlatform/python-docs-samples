@@ -34,7 +34,7 @@ steps:
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --project ${PROJECT_ID} \
       --region ${_REGION} \
-      --tasks 2 \
+      --tasks 5 \
       --set-env-vars=SLEEP_MS=5000 \
       --max-retries 0 \
       --wait
