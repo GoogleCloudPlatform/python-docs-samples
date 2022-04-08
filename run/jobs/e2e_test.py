@@ -95,6 +95,6 @@ def test_end_to_end(setup_job):
         if found:
             break
         # Linear backoff
-        time.sleep(3 * x)
+        time.sleep(x ** 3)
 
     assert found

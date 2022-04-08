@@ -16,13 +16,13 @@ steps:
     args:
       - "-c"
       - |
-        gcloud alpha run deploy ${_SERVICE_NAME} \
+        ./test/retry.sh "gcloud alpha run deploy ${_SERVICE_NAME} \
           --source . \
           --execution-environment gen2 \
           --vpc-connector ${_CONNECTOR} \
           --update-env-vars FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE} \
           --region ${_DEPLOY_REGION} \
-          --no-allow-unauthenticated
+          --no-allow-unauthenticated"
 
 substitutions:
   _SERVICE_NAME: filesystem
