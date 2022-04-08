@@ -1,0 +1,6 @@
+pandas
+google-cloud-bigquery[pandas]
+google-cloud-storage
+gcsfs
+sklearn
+jupyter #needed to run the converison but not the actual converted script
