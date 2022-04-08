@@ -16,7 +16,7 @@ steps:
     args:
       - "-c"
       - |
-        ./test/retry.sh "gcloud alpha run deploy ${_SERVICE_NAME} \
+        ./retry.sh "gcloud alpha run deploy ${_SERVICE_NAME} \
           --source . \
           --execution-environment gen2 \
           --vpc-connector ${_CONNECTOR} \
