@@ -35,7 +35,7 @@ steps:
       --project ${PROJECT_ID} \
       --region ${_REGION} \
       --tasks 2 \
-      --set-env-vars=SLEEP_MS=10 \
+      --set-env-vars=SLEEP_MS=5000 \
       --max-retries 0 \
       --wait
 
