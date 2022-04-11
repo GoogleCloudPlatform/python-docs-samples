@@ -21,6 +21,8 @@ For more information, see the README.md under /compute.
 
 # [START all]
 
+import datetime
+import sys
 import time
 
 import requests
@@ -63,10 +65,11 @@ def wait_for_maintenance(callback):
 
 
 def maintenance_callback(event):
+    now = datetime.datetime.now().time().strftime('%H:%M:%S.%f')
     if event:
-        print('Undergoing host maintenance: {}'.format(event))
+        print(now + ' Undergoing host maintenance: {}'.format(event), flush=True)
     else:
-        print('Finished host maintenance')
+        print(now + ' Finished host maintenance', flush=True)
 
 
 def main():
@@ -74,5 +77,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try: 
+        main()
+    except KeyboardInterrupt:
+        print('Stopped')
+        sys.exit(0)
+
 # [END all]
