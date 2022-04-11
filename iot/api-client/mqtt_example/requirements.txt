@@ -4,6 +4,6 @@ google-auth-httplib2==0.1.0
 google-auth==2.6.2
 google-cloud-pubsub==2.9.0
 google-cloud-iot==2.4.1
-grpc-google-iam-v1==0.12.3
+grpc-google-iam-v1==0.12.4
 pyjwt==2.3.0
 paho-mqtt==1.5.1
