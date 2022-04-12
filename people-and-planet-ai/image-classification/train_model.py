@@ -19,7 +19,7 @@ import io
 import logging
 import random
 import time
-from typing import Callable, Iterable, Optional, TypeVar
+from typing import Callable, Dict, Iterable, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -104,8 +104,8 @@ def run(
 
 
 def get_image(
-    image_info: dict[str, str], cloud_storage_path: str
-) -> Iterable[tuple[str, str]]:
+    image_info: Dict[str, str], cloud_storage_path: str
+) -> Iterable[Tuple[str, str]]:
     """Makes sure an image exists in Cloud Storage.
 
     Checks if the image file_name exists in Cloud Storage.
@@ -142,7 +142,7 @@ def get_image(
 
 
 def write_dataset_csv_file(
-    dataset_csv_filename: str, images: Iterable[tuple[str, str]]
+    dataset_csv_filename: str, images: Iterable[Tuple[str, str]]
 ) -> str:
     """Writes the dataset image file names and categories in a CSV file.
 
@@ -168,7 +168,7 @@ def write_dataset_csv_file(
 
 def create_dataset(
     dataset_csv_filename: str, project: str, region: str, dataset_name: str
-) -> tuple[str, str]:
+) -> Tuple[str, str]:
     """Creates an dataset for AI Platform.
 
     For more information:
