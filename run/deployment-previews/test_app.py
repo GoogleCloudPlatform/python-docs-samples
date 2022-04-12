@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from typing import Any, List, NoReturn, TypeVar
+from typing import List, NoReturn, TypeVar
 
 from click.testing import CliRunner
 from mock import MagicMock, patch
