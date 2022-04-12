@@ -24,18 +24,22 @@ from google.cloud import optimization_v1
 # model_solution_gcs_path = 'gs://YOUR_PROJECT/YOUR_BUCKET/YOUR_SOLUCTION_PATH'
 
 
-def call_async_api(project_id: str, request_model_gcs_path: str, model_solution_gcs_path_prefix: str) -> None:
+def call_async_api(
+    project_id: str, request_model_gcs_path: str, model_solution_gcs_path_prefix: str
+) -> None:
     """Call the async api for fleet routing."""
     # Use the default credentials for the environment to authenticate the client.
     fleet_routing_client = optimization_v1.FleetRoutingClient()
     request_file_name = "resources/async_request.json"
 
-    with open(request_file_name, 'r') as f:
-        fleet_routing_request = optimization_v1.BatchOptimizeToursRequest.from_json(f.read())
+    with open(request_file_name, "r") as f:
+        fleet_routing_request = optimization_v1.BatchOptimizeToursRequest.from_json(
+            f.read()
+        )
         fleet_routing_request.parent = f"projects/{project_id}"
         for idx, mc in enumerate(fleet_routing_request.model_configs):
             mc.input_config.gcs_source.uri = request_model_gcs_path
-            model_solution_gcs_path = f'{model_solution_gcs_path_prefix}_{idx}'
+            model_solution_gcs_path = f"{model_solution_gcs_path_prefix}_{idx}"
             mc.output_config.gcs_destination.uri = model_solution_gcs_path
 
         # The timeout argument for the gRPC call is independent from the `timeout`
