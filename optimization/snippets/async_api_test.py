@@ -23,8 +23,8 @@ from samples.snippets import async_api
 # TODO(developer): Replace the variables in the file before use.
 # A sample request model can be found at resources/async_request_model.json.
 TEST_UUID = uuid.uuid4()
-BUCKET = f'optimization-ai-{TEST_UUID}'
-OUTPUT_PREFIX = f'code_snippets_test_output_{TEST_UUID}'
+BUCKET = f"optimization-ai-{TEST_UUID}"
+OUTPUT_PREFIX = f"code_snippets_test_output_{TEST_UUID}"
 INPUT_URI = "gs://cloud-samples-data/optimization-ai/async_request_model.json"
 BATCH_OUTPUT_URI_PREFIX = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 

@@ -27,7 +27,7 @@ def call_sync_api(project_id: str) -> None:
     request_file_name = "resources/sync_request.json"
     fleet_routing_client = optimization_v1.FleetRoutingClient()
 
-    with open(request_file_name, 'r') as f:
+    with open(request_file_name, "r") as f:
         # The request must include the `parent` field with the value set to
         # 'projects/{YOUR_GCP_PROJECT_ID}'.
         fleet_routing_request = optimization_v1.OptimizeToursRequest.from_json(f.read())
@@ -36,10 +36,12 @@ def call_sync_api(project_id: str) -> None:
         # Fleet Routing will return a response by the earliest of the `timeout`
         # field in the request payload and the gRPC timeout specified below.
         fleet_routing_response = fleet_routing_client.optimize_tours(
-            fleet_routing_request, timeout=100)
+            fleet_routing_request, timeout=100
+        )
         print(fleet_routing_response)
         # If you want to format the response to JSON, you can do the following:
         # from google.protobuf.json_format import MessageToJson
         # json_obj = MessageToJson(fleet_routing_response._pb)
+
 
 # [END cloudoptimization_sync_api]

@@ -29,4 +29,6 @@ def get_operation(operation_full_id: str) -> None:
     print("Name: {}".format(response.name))
     print("Operation details:")
     print(response)
+
+
 # [END cloudoptimization_get_operation]
