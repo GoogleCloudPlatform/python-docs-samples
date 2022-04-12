@@ -19,7 +19,7 @@ import io
 import logging
 import random
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Tuple
+from typing import Callable, Iterable, Optional, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -27,6 +27,8 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import trainingjob
 from PIL import Image, ImageFile
 import requests
+
+a = TypeVar("a")
 
 
 def run(
@@ -102,8 +104,8 @@ def run(
 
 
 def get_image(
-    image_info: Dict[str, str], cloud_storage_path: str
-) -> Iterable[Tuple[str, str]]:
+    image_info: dict[str, str], cloud_storage_path: str
+) -> Iterable[tuple[str, str]]:
     """Makes sure an image exists in Cloud Storage.
 
     Checks if the image file_name exists in Cloud Storage.
@@ -140,7 +142,7 @@ def get_image(
 
 
 def write_dataset_csv_file(
-    dataset_csv_filename: str, images: Iterable[Tuple[str, str]]
+    dataset_csv_filename: str, images: Iterable[tuple[str, str]]
 ) -> str:
     """Writes the dataset image file names and categories in a CSV file.
 
@@ -166,7 +168,7 @@ def write_dataset_csv_file(
 
 def create_dataset(
     dataset_csv_filename: str, project: str, region: str, dataset_name: str
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """Creates an dataset for AI Platform.
 
     For more information:
@@ -288,7 +290,7 @@ def url_get(url: str) -> bytes:
     return with_retries(lambda: requests.get(url).content)
 
 
-def with_retries(f: Callable[[], Any], max_attempts: int = 3) -> Any:
+def with_retries(f: Callable[[], a], max_attempts: int = 3) -> a:
     """Runs a function with retries, using exponential backoff.
 
     For more information:
@@ -307,7 +309,7 @@ def with_retries(f: Callable[[], Any], max_attempts: int = 3) -> Any:
         except Exception as e:
             if n < max_attempts:
                 logging.warning(f"Got an error, {n+1} of {max_attempts} attempts: {e}")
-                time.sleep(2 ** n + random.random())  # 2^n seconds + random jitter
+                time.sleep(2**n + random.random())  # 2^n seconds + random jitter
             else:
                 raise e
 
