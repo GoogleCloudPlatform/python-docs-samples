@@ -15,7 +15,7 @@
 from functools import reduce
 import logging
 import os
-from typing import Dict, Self, Tuple, TypeVar
+from typing import Dict, Tuple, TypeVar
 
 import tensorflow as tf
 from tensorflow import keras
@@ -130,7 +130,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
 
     def direction(course_name: str) -> keras.layers.Layer:
         class Direction(keras.layers.Layer):
-            def call(self: Self, course: tf.Tensor) -> tf.Tensor:
+            def call(self: a, course: tf.Tensor) -> tf.Tensor:
                 x = tf.cos(course)
                 y = tf.sin(course)
                 return tf.concat([x, y], axis=-1)
@@ -142,7 +142,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         # We transform each (lat, lon) pair into a 3D point in the unit sphere.
         #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
         class GeoPoint(keras.layers.Layer):
-            def call(self: Self, latlon: Tuple[tf.Tensor, tf.Tensor]) -> tf.Tensor:
+            def call(self: a, latlon: Tuple[tf.Tensor, tf.Tensor]) -> tf.Tensor:
                 lat, lon = latlon
                 x = tf.cos(lon) * tf.sin(lat)
                 y = tf.sin(lon) * tf.sin(lat)
