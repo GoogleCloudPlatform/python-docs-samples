@@ -21,16 +21,19 @@ UUID = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 LOCATION = "us-central1"
 
+# TODO: use these for export_points.csv
+# [-123.26143117162316, 39.130692612214816, -117.63643117162316, 37.05582768877082]
+
 
 try:
-    # Running in the testing infrastructure
+    # For Colab and service accounts we use the default credentials.
     credentials, _ = google.auth.default(
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
     ee.Initialize(credentials, project=PROJECT)
 except:
-    # Running locally, you should manually authenticate to Earth Engine:
-    #   ee.Authenticate()
+    # When running locally EE doesn't like the default credentials.
+    # ee.Authenticate()
     ee.Initialize()
 
 

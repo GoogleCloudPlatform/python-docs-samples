@@ -1,6 +1,6 @@
 import csv
 import io
-from typing import Any, Iterable, List, Optional, Tuple
+from typing import List, Optional, Tuple, TypeVar
 import random
 import requests
 
@@ -9,6 +9,8 @@ from apache_beam.options.pipeline_options import PipelineOptions
 import ee
 import numpy as np
 import tensorflow as tf
+
+a = TypeVar("a")
 
 INPUT_BANDS = [
     "B1",
@@ -60,22 +62,10 @@ def get_sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     )
 
 
-def get_coordinates(feature: ee.Feature) -> ee.Feature:
-    coords = feature.geometry().coordinates()
-    return ee.Feature(None, {"lon": coords.get(0), "lat": coords.get(1)})
-
-
-def get_points(url: str) -> Iterable[ee.Geometry]:
-    points_csv = requests.get(url).text
-    for coords in csv.DictReader(io.StringIO(points_csv)):
-        lon = float(coords["lon"])
-        lat = float(coords["lat"])
-        yield ee.Geometry.Point([lon, lat])
-
-
 def get_patch(
-    point: ee.Geometry, image: ee.Image, patch_size: int, scale: int = 10
+    coords: Tuple[float, float], image: ee.Image, patch_size: int, scale: int
 ) -> np.ndarray:
+    point = ee.Geometry.Point(coords)
     url = image.getDownloadUrl(
         {
             "region": point.buffer(scale * patch_size / 2, 1).bounds(1),
@@ -102,70 +92,78 @@ def serialize(patch: np.ndarray) -> bytes:
 def run(
     training_file: str,
     validation_file: str,
-    points_per_class: int,
     patch_size: int,
-    regions_file: str = "data/regions-small.csv",
+    points_file: str = "data/points.csv",
     training_validation_ratio: Tuple[int, int] = (80, 20),
-    beam_args: Optional[List[str]] = None,
+    beam_options: Optional[PipelineOptions] = None,
 ) -> None:
-    with open(regions_file) as f:
-        polygons = [
-            ee.Geometry.Rectangle([float(x) for x in row.values()])
-            for row in csv.DictReader(f)
-        ]
-    region = ee.Geometry.MultiPolygon(polygons)
+    with open(points_file) as f:
+        points = [(float(row["lon"]), float(row["lat"])) for row in csv.DictReader(f)]
 
     # The land cover map we have is from year 2020, so that's what we use here.
     sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
     landcover_image = get_landcover_image()
     image = sentinel2_image.addBands(landcover_image)
 
-    points_url = (
-        landcover_image.stratifiedSample(
-            points_per_class, "landcover", region, scale=10, geometries=True
-        )
-        .map(get_coordinates)
-        .randomColumn("random")
-        .sort("random")
-        .getDownloadURL(selectors=["lon", "lat"])
-    )
-
-    def split_dataset(element: Any, num_partitions: int) -> int:
+    def split_dataset(element: a, num_partitions: int) -> int:
         return random.choices([0, 1], weights=training_validation_ratio)[0]
 
-    beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
-        training_examples, validation_examples = (
+        training_data, validation_data = (
             pipeline
-            | "Create URL" >> beam.Create([points_url])
-            | "Get points" >> beam.FlatMap(get_points)
-            | "Reshuffle" >> beam.Reshuffle()
-            | "Get patch" >> beam.Map(lambda point: get_patch(point, image, patch_size))
+            | "Create points" >> beam.Create(points)
+            | "Get patch" >> beam.Map(get_patch, image, patch_size, scale=10)
             | "Serialize" >> beam.Map(serialize)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
 
-        training_examples | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
+        training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
             training_file, file_name_suffix=".tfrecord.gz"
         )
-        validation_examples | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
+        validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
             validation_file, file_name_suffix=".tfrecord.gz"
         )
 
 
 if __name__ == "__main__":
     import argparse
+    import google.auth
+    import logging
+
+    logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--training-file", required=True)
     parser.add_argument("--validation-file", required=True)
-    parser.add_argument("--points-per-class", default=10, type=int)
     parser.add_argument("--patch-size", default=8, type=int)
-    parser.add_argument("--regions-file", default="data/regions-small.csv")
+    parser.add_argument("--points-file", default="data/points.csv")
     parser.add_argument(
         "--training-validation-ratio", default=(90, 10), type=int, nargs=2
     )
     args, beam_args = parser.parse_known_args()
 
-    ee.Initialize()
-    run(**vars(args), beam_args=beam_args)
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
+    project = beam_options.get_all_options().get("project")
+
+    try:
+        # When running locally, as a one-time set up you need to run:
+        # ee.Authenticate()
+        ee.Initialize()
+    except ee.EEException:
+        import google.auth
+
+        # For Colab and service accounts we use the default credentials.
+        credentials, _ = google.auth.default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+        assert project, "You must pass --project to authenticate to Earth Engine"
+        ee.Initialize(credentials, project=project)
+
+    run(
+        training_file=args.training_file,
+        validation_file=args.validation_file,
+        patch_size=args.patch_size,
+        points_file=args.points_file,
+        training_validation_ratio=args.training_validation_ratio,
+        beam_options=beam_options,
+    )
