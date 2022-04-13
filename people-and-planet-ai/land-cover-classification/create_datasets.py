@@ -1,6 +1,6 @@
 import csv
 import io
-from typing import List, Optional, Tuple, TypeVar
+from typing import Optional, Tuple
 import random
 import requests
 
@@ -10,7 +10,6 @@ import ee
 import numpy as np
 import tensorflow as tf
 
-a = TypeVar("a")
 
 INPUT_BANDS = [
     "B1",
@@ -105,24 +104,25 @@ def run(
     landcover_image = get_landcover_image()
     image = sentinel2_image.addBands(landcover_image)
 
-    def split_dataset(element: a, num_partitions: int) -> int:
+    def split_dataset(element: bytes, num_partitions: int) -> int:
         return random.choices([0, 1], weights=training_validation_ratio)[0]
 
-    with beam.Pipeline(options=beam_options) as pipeline:
-        training_data, validation_data = (
-            pipeline
-            | "Create points" >> beam.Create(points)
-            | "Get patch" >> beam.Map(get_patch, image, patch_size, scale=10)
-            | "Serialize" >> beam.Map(serialize)
-            | "Split dataset" >> beam.Partition(split_dataset, 2)
-        )
+    pipeline = beam.Pipeline(options=beam_options)
+    training_data, validation_data = (
+        pipeline
+        | "Create points" >> beam.Create(points)
+        | "Get patch" >> beam.Map(get_patch, image, patch_size, scale=10)
+        | "Serialize" >> beam.Map(serialize)
+        | "Split dataset" >> beam.Partition(split_dataset, 2)
+    )
 
-        training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
-            training_file, file_name_suffix=".tfrecord.gz"
-        )
-        validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
-            validation_file, file_name_suffix=".tfrecord.gz"
-        )
+    training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
+        training_file, file_name_suffix=".tfrecord.gz"
+    )
+    validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
+        validation_file, file_name_suffix=".tfrecord.gz"
+    )
+    pipeline.run()
 
 
 if __name__ == "__main__":
