@@ -61,9 +61,12 @@ def get_sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     )
 
 
-def get_patch(
-    coords: Tuple[float, float], image: ee.Image, patch_size: int, scale: int
-) -> np.ndarray:
+def get_patch(coords: Tuple[float, float], patch_size: int, scale: int) -> np.ndarray:
+    # The land cover map we have is from year 2020, so that's what we use here.
+    sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
+    landcover_image = get_landcover_image()
+    image = sentinel2_image.addBands(landcover_image)
+
     point = ee.Geometry.Point(coords)
     url = image.getDownloadUrl(
         {
@@ -99,11 +102,6 @@ def run(
     with open(points_file) as f:
         points = [(float(row["lon"]), float(row["lat"])) for row in csv.DictReader(f)]
 
-    # The land cover map we have is from year 2020, so that's what we use here.
-    sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
-    landcover_image = get_landcover_image()
-    image = sentinel2_image.addBands(landcover_image)
-
     def split_dataset(element: bytes, num_partitions: int) -> int:
         return random.choices([0, 1], weights=training_validation_ratio)[0]
 
@@ -111,7 +109,7 @@ def run(
     training_data, validation_data = (
         pipeline
         | "Create points" >> beam.Create(points)
-        | "Get patch" >> beam.Map(get_patch, image, patch_size, scale=10)
+        | "Get patch" >> beam.Map(get_patch, patch_size, scale=10)
         | "Serialize" >> beam.Map(serialize)
         | "Split dataset" >> beam.Partition(split_dataset, 2)
     )
