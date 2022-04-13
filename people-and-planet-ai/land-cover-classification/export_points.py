@@ -18,6 +18,10 @@ def run(
         ]
     region = ee.Geometry.MultiPolygon(polygons)
 
+    def get_coordinates(point: ee.Feature) -> ee.Feature:
+        coords = point.geometry().coordinates()
+        return ee.Feature(None, {"lon": coords.get(0), "lat": coords.get(1)})
+
     points = (
         create_datasets.get_landcover_image()
         .stratifiedSample(
@@ -25,6 +29,7 @@ def run(
         )
         .randomColumn("random")
         .sort("random")
+        .map(get_coordinates)
     )
 
     # To look at your active tasks:
