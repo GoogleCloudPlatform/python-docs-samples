@@ -1,6 +1,6 @@
 import csv
 import io
-from typing import Iterable, Optional, Tuple
+from typing import Optional, Tuple
 import random
 import requests
 
@@ -30,36 +30,30 @@ INPUT_BANDS = [
 OUTPUT_BANDS = ["landcover"]
 
 
-class GetPatchFromEarthEngine(beam.DoFn):
-    def __init__(self, patch_size: int, scale: int) -> None:
-        self.patch_size = patch_size
-        self.scale = scale
-
-    def setup(self) -> None:
-        try:
-            credentials, project = google.auth.default(
-                scopes=["https://www.googleapis.com/auth/cloud-platform"]
-            )
-            ee.Initialize(credentials, project=project)
-        except:
-            ee.Initialize()
-
-    def process(self, coords: Tuple[float, float]) -> Iterable[np.ndarray]:
-        sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
-        landcover_image = get_landcover_image()
-        image = sentinel2_image.addBands(landcover_image)
-
-        point = ee.Geometry.Point(coords)
-        url = image.getDownloadUrl(
-            {
-                "region": point.buffer(self.scale * self.patch_size / 2, 1).bounds(1),
-                "dimensions": [self.patch_size, self.patch_size],
-                "format": "NPY",
-                "bands": INPUT_BANDS + OUTPUT_BANDS,
-            }
+def get_patch(coords: Tuple[float, float], patch_size: int, scale: int) -> np.ndarray:
+    try:
+        credentials, project = google.auth.default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
         )
-        np_bytes = requests.get(url).content
-        yield np.load(io.BytesIO(np_bytes))
+        ee.Initialize(credentials, project=project)
+    except:
+        ee.Initialize()
+
+    sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
+    landcover_image = get_landcover_image()
+    image = sentinel2_image.addBands(landcover_image)
+
+    point = ee.Geometry.Point(coords)
+    url = image.getDownloadUrl(
+        {
+            "region": point.buffer(scale * patch_size / 2, 1).bounds(1),
+            "dimensions": [patch_size, patch_size],
+            "format": "NPY",
+            "bands": INPUT_BANDS + OUTPUT_BANDS,
+        }
+    )
+    np_bytes = requests.get(url).content
+    return np.load(io.BytesIO(np_bytes))
 
 
 def get_landcover_image() -> ee.Image:
@@ -121,7 +115,7 @@ def run(
     training_data, validation_data = (
         pipeline
         | "Create points" >> beam.Create(points)
-        | "Get patch" >> beam.ParDo(GetPatchFromEarthEngine(patch_size, scale=10))
+        | "Get patch" >> beam.Map(get_patch, patch_size, scale=10)
         | "Serialize" >> beam.Map(serialize)
         | "Split dataset" >> beam.Partition(split_dataset, 2)
     )
