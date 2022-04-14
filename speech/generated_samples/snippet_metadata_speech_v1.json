@@ -1,16 +1,65 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.speech.v1",
+        "version": "v1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-speech"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechAsyncClient",
+          "shortName": "SpeechAsyncClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechAsyncClient.long_running_recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.LongRunningRecognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "LongRunningRecognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.speech_v1.types.LongRunningRecognizeRequest"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.speech_v1.types.RecognitionConfig"
+          },
+          {
+            "name": "audio",
+            "type": "google.cloud.speech_v1.types.RecognitionAudio"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "long_running_recognize"
       },
+      "description": "Sample for LongRunningRecognize",
       "file": "speech_v1_generated_speech_long_running_recognize_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_LongRunningRecognize_async",
       "segments": [
         {
@@ -43,18 +92,58 @@
           "start": 53,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_long_running_recognize_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechClient",
+          "shortName": "SpeechClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechClient.long_running_recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.LongRunningRecognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "LongRunningRecognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.speech_v1.types.LongRunningRecognizeRequest"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.speech_v1.types.RecognitionConfig"
+          },
+          {
+            "name": "audio",
+            "type": "google.cloud.speech_v1.types.RecognitionAudio"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "long_running_recognize"
       },
+      "description": "Sample for LongRunningRecognize",
       "file": "speech_v1_generated_speech_long_running_recognize_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_LongRunningRecognize_sync",
       "segments": [
         {
@@ -87,19 +176,59 @@
           "start": 53,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_long_running_recognize_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechAsyncClient",
+          "shortName": "SpeechAsyncClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechAsyncClient.recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.Recognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "Recognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.speech_v1.types.RecognizeRequest"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.speech_v1.types.RecognitionConfig"
+          },
+          {
+            "name": "audio",
+            "type": "google.cloud.speech_v1.types.RecognitionAudio"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.speech_v1.types.RecognizeResponse",
+        "shortName": "recognize"
       },
+      "description": "Sample for Recognize",
       "file": "speech_v1_generated_speech_recognize_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_Recognize_async",
       "segments": [
         {
@@ -132,18 +261,58 @@
           "start": 49,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_recognize_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechClient",
+          "shortName": "SpeechClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechClient.recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.Recognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "Recognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.speech_v1.types.RecognizeRequest"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.speech_v1.types.RecognitionConfig"
+          },
+          {
+            "name": "audio",
+            "type": "google.cloud.speech_v1.types.RecognitionAudio"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.speech_v1.types.RecognizeResponse",
+        "shortName": "recognize"
       },
+      "description": "Sample for Recognize",
       "file": "speech_v1_generated_speech_recognize_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_Recognize_sync",
       "segments": [
         {
@@ -176,19 +345,51 @@
           "start": 49,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_recognize_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechAsyncClient",
+          "shortName": "SpeechAsyncClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechAsyncClient.streaming_recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.StreamingRecognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "StreamingRecognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "requests",
+            "type": "Iterator[google.cloud.speech_v1.types.StreamingRecognizeRequest]"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "Iterable[google.cloud.speech_v1.types.StreamingRecognizeResponse]",
+        "shortName": "streaming_recognize"
       },
+      "description": "Sample for StreamingRecognize",
       "file": "speech_v1_generated_speech_streaming_recognize_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_StreamingRecognize_async",
       "segments": [
         {
@@ -221,18 +422,50 @@
           "start": 55,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_streaming_recognize_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.speech_v1.SpeechClient",
+          "shortName": "SpeechClient"
+        },
+        "fullName": "google.cloud.speech_v1.SpeechClient.streaming_recognize",
         "method": {
+          "fullName": "google.cloud.speech.v1.Speech.StreamingRecognize",
           "service": {
+            "fullName": "google.cloud.speech.v1.Speech",
             "shortName": "Speech"
           },
           "shortName": "StreamingRecognize"
-        }
+        },
+        "parameters": [
+          {
+            "name": "requests",
+            "type": "Iterator[google.cloud.speech_v1.types.StreamingRecognizeRequest]"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "Iterable[google.cloud.speech_v1.types.StreamingRecognizeResponse]",
+        "shortName": "streaming_recognize"
       },
+      "description": "Sample for StreamingRecognize",
       "file": "speech_v1_generated_speech_streaming_recognize_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "speech_v1_generated_Speech_StreamingRecognize_sync",
       "segments": [
         {
@@ -265,7 +498,8 @@
           "start": 55,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "speech_v1_generated_speech_streaming_recognize_sync.py"
     }
   ]
 }
