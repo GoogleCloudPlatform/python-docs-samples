@@ -1,16 +1,77 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.translation.v3beta1",
+        "version": "v3beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-translate"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.batch_translate_document",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.BatchTranslateDocument",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "BatchTranslateDocument"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.BatchTranslateDocumentRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "source_language_code",
+            "type": "str"
+          },
+          {
+            "name": "target_language_codes",
+            "type": "Sequence[str]"
+          },
+          {
+            "name": "input_configs",
+            "type": "Sequence[google.cloud.translate_v3beta1.types.BatchDocumentInputConfig]"
+          },
+          {
+            "name": "output_config",
+            "type": "google.cloud.translate_v3beta1.types.BatchDocumentOutputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "batch_translate_document"
       },
+      "description": "Sample for BatchTranslateDocument",
       "file": "translate_v3beta1_generated_translation_service_batch_translate_document_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_BatchTranslateDocument_async",
       "segments": [
         {
@@ -43,18 +104,70 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_batch_translate_document_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.batch_translate_document",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.BatchTranslateDocument",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "BatchTranslateDocument"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.BatchTranslateDocumentRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "source_language_code",
+            "type": "str"
+          },
+          {
+            "name": "target_language_codes",
+            "type": "Sequence[str]"
+          },
+          {
+            "name": "input_configs",
+            "type": "Sequence[google.cloud.translate_v3beta1.types.BatchDocumentInputConfig]"
+          },
+          {
+            "name": "output_config",
+            "type": "google.cloud.translate_v3beta1.types.BatchDocumentOutputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "batch_translate_document"
       },
+      "description": "Sample for BatchTranslateDocument",
       "file": "translate_v3beta1_generated_translation_service_batch_translate_document_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_BatchTranslateDocument_sync",
       "segments": [
         {
@@ -87,19 +200,51 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_batch_translate_document_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.batch_translate_text",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.BatchTranslateText",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "BatchTranslateText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.BatchTranslateTextRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "batch_translate_text"
       },
+      "description": "Sample for BatchTranslateText",
       "file": "translate_v3beta1_generated_translation_service_batch_translate_text_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_BatchTranslateText_async",
       "segments": [
         {
@@ -132,18 +277,50 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_batch_translate_text_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.batch_translate_text",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.BatchTranslateText",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "BatchTranslateText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.BatchTranslateTextRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "batch_translate_text"
       },
+      "description": "Sample for BatchTranslateText",
       "file": "translate_v3beta1_generated_translation_service_batch_translate_text_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_BatchTranslateText_sync",
       "segments": [
         {
@@ -176,19 +353,59 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_batch_translate_text_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.create_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.CreateGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "CreateGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.CreateGlossaryRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "glossary",
+            "type": "google.cloud.translate_v3beta1.types.Glossary"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "create_glossary"
       },
+      "description": "Sample for CreateGlossary",
       "file": "translate_v3beta1_generated_translation_service_create_glossary_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_CreateGlossary_async",
       "segments": [
         {
@@ -221,18 +438,58 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_create_glossary_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.create_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.CreateGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "CreateGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.CreateGlossaryRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "glossary",
+            "type": "google.cloud.translate_v3beta1.types.Glossary"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "create_glossary"
       },
+      "description": "Sample for CreateGlossary",
       "file": "translate_v3beta1_generated_translation_service_create_glossary_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_CreateGlossary_sync",
       "segments": [
         {
@@ -265,19 +522,55 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_create_glossary_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.delete_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.DeleteGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "DeleteGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.DeleteGlossaryRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "delete_glossary"
       },
+      "description": "Sample for DeleteGlossary",
       "file": "translate_v3beta1_generated_translation_service_delete_glossary_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_DeleteGlossary_async",
       "segments": [
         {
@@ -310,18 +603,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_delete_glossary_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.delete_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.DeleteGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "DeleteGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.DeleteGlossaryRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "delete_glossary"
       },
+      "description": "Sample for DeleteGlossary",
       "file": "translate_v3beta1_generated_translation_service_delete_glossary_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_DeleteGlossary_sync",
       "segments": [
         {
@@ -354,19 +683,63 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_delete_glossary_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.detect_language",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.DetectLanguage",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "DetectLanguage"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.DetectLanguageRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "model",
+            "type": "str"
+          },
+          {
+            "name": "mime_type",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.DetectLanguageResponse",
+        "shortName": "detect_language"
       },
+      "description": "Sample for DetectLanguage",
       "file": "translate_v3beta1_generated_translation_service_detect_language_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_DetectLanguage_async",
       "segments": [
         {
@@ -399,18 +772,62 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_detect_language_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.detect_language",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.DetectLanguage",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "DetectLanguage"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.DetectLanguageRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "model",
+            "type": "str"
+          },
+          {
+            "name": "mime_type",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.DetectLanguageResponse",
+        "shortName": "detect_language"
       },
+      "description": "Sample for DetectLanguage",
       "file": "translate_v3beta1_generated_translation_service_detect_language_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_DetectLanguage_sync",
       "segments": [
         {
@@ -443,19 +860,55 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_detect_language_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.get_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.GetGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "GetGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.GetGlossaryRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.Glossary",
+        "shortName": "get_glossary"
       },
+      "description": "Sample for GetGlossary",
       "file": "translate_v3beta1_generated_translation_service_get_glossary_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_GetGlossary_async",
       "segments": [
         {
@@ -488,18 +941,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_get_glossary_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.get_glossary",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.GetGlossary",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "GetGlossary"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.GetGlossaryRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.Glossary",
+        "shortName": "get_glossary"
       },
+      "description": "Sample for GetGlossary",
       "file": "translate_v3beta1_generated_translation_service_get_glossary_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_GetGlossary_sync",
       "segments": [
         {
@@ -532,19 +1021,63 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_get_glossary_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.get_supported_languages",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.GetSupportedLanguages",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "GetSupportedLanguages"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.GetSupportedLanguagesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "display_language_code",
+            "type": "str"
+          },
+          {
+            "name": "model",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.SupportedLanguages",
+        "shortName": "get_supported_languages"
       },
+      "description": "Sample for GetSupportedLanguages",
       "file": "translate_v3beta1_generated_translation_service_get_supported_languages_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_GetSupportedLanguages_async",
       "segments": [
         {
@@ -577,18 +1110,62 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_get_supported_languages_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.get_supported_languages",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.GetSupportedLanguages",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "GetSupportedLanguages"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.GetSupportedLanguagesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "display_language_code",
+            "type": "str"
+          },
+          {
+            "name": "model",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.SupportedLanguages",
+        "shortName": "get_supported_languages"
       },
+      "description": "Sample for GetSupportedLanguages",
       "file": "translate_v3beta1_generated_translation_service_get_supported_languages_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_GetSupportedLanguages_sync",
       "segments": [
         {
@@ -621,19 +1198,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_get_supported_languages_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.list_glossaries",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.ListGlossaries",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "ListGlossaries"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.ListGlossariesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.services.translation_service.pagers.ListGlossariesAsyncPager",
+        "shortName": "list_glossaries"
       },
+      "description": "Sample for ListGlossaries",
       "file": "translate_v3beta1_generated_translation_service_list_glossaries_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_ListGlossaries_async",
       "segments": [
         {
@@ -666,18 +1283,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_list_glossaries_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.list_glossaries",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.ListGlossaries",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "ListGlossaries"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.ListGlossariesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.services.translation_service.pagers.ListGlossariesPager",
+        "shortName": "list_glossaries"
       },
+      "description": "Sample for ListGlossaries",
       "file": "translate_v3beta1_generated_translation_service_list_glossaries_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_ListGlossaries_sync",
       "segments": [
         {
@@ -710,19 +1367,51 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_list_glossaries_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.translate_document",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.TranslateDocument",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "TranslateDocument"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.TranslateDocumentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.TranslateDocumentResponse",
+        "shortName": "translate_document"
       },
+      "description": "Sample for TranslateDocument",
       "file": "translate_v3beta1_generated_translation_service_translate_document_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_TranslateDocument_async",
       "segments": [
         {
@@ -755,18 +1444,50 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_translate_document_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.translate_document",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.TranslateDocument",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "TranslateDocument"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.TranslateDocumentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.TranslateDocumentResponse",
+        "shortName": "translate_document"
       },
+      "description": "Sample for TranslateDocument",
       "file": "translate_v3beta1_generated_translation_service_translate_document_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_TranslateDocument_sync",
       "segments": [
         {
@@ -799,19 +1520,51 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_translate_document_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient",
+          "shortName": "TranslationServiceAsyncClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceAsyncClient.translate_text",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.TranslateText",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "TranslateText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.TranslateTextRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.TranslateTextResponse",
+        "shortName": "translate_text"
       },
+      "description": "Sample for TranslateText",
       "file": "translate_v3beta1_generated_translation_service_translate_text_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_TranslateText_async",
       "segments": [
         {
@@ -844,18 +1597,50 @@
           "start": 44,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_translate_text_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient",
+          "shortName": "TranslationServiceClient"
+        },
+        "fullName": "google.cloud.translate_v3beta1.TranslationServiceClient.translate_text",
         "method": {
+          "fullName": "google.cloud.translation.v3beta1.TranslationService.TranslateText",
           "service": {
+            "fullName": "google.cloud.translation.v3beta1.TranslationService",
             "shortName": "TranslationService"
           },
           "shortName": "TranslateText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.translate_v3beta1.types.TranslateTextRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.translate_v3beta1.types.TranslateTextResponse",
+        "shortName": "translate_text"
       },
+      "description": "Sample for TranslateText",
       "file": "translate_v3beta1_generated_translation_service_translate_text_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "translate_v3beta1_generated_TranslationService_TranslateText_sync",
       "segments": [
         {
@@ -888,7 +1673,8 @@
           "start": 44,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "translate_v3beta1_generated_translation_service_translate_text_sync.py"
     }
   ]
 }
