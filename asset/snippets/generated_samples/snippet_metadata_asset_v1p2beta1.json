@@ -1,16 +1,61 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.asset.v1p2beta1",
+        "version": "v1p2beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-asset"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient.create_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.CreateFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "CreateFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.CreateFeedRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "create_feed"
       },
+      "description": "Sample for CreateFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_create_feed_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_CreateFeed_async",
       "segments": [
         {
@@ -43,18 +88,54 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_create_feed_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient.create_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.CreateFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "CreateFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.CreateFeedRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "create_feed"
       },
+      "description": "Sample for CreateFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_create_feed_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_CreateFeed_sync",
       "segments": [
         {
@@ -87,19 +168,54 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_create_feed_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient.delete_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.DeleteFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "DeleteFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.DeleteFeedRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_feed"
       },
+      "description": "Sample for DeleteFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_delete_feed_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_DeleteFeed_async",
       "segments": [
         {
@@ -130,18 +246,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_delete_feed_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient.delete_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.DeleteFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "DeleteFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.DeleteFeedRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_feed"
       },
+      "description": "Sample for DeleteFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_delete_feed_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_DeleteFeed_sync",
       "segments": [
         {
@@ -172,19 +323,55 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_delete_feed_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient.get_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.GetFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "GetFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.GetFeedRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "get_feed"
       },
+      "description": "Sample for GetFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_get_feed_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_GetFeed_async",
       "segments": [
         {
@@ -217,18 +404,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_get_feed_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient.get_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.GetFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "GetFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.GetFeedRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "get_feed"
       },
+      "description": "Sample for GetFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_get_feed_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_GetFeed_sync",
       "segments": [
         {
@@ -261,19 +484,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_get_feed_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient.list_feeds",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.ListFeeds",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ListFeeds"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.ListFeedsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.ListFeedsResponse",
+        "shortName": "list_feeds"
       },
+      "description": "Sample for ListFeeds",
       "file": "cloudasset_v1p2beta1_generated_asset_service_list_feeds_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_ListFeeds_async",
       "segments": [
         {
@@ -306,18 +565,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_list_feeds_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient.list_feeds",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.ListFeeds",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ListFeeds"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.ListFeedsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.ListFeedsResponse",
+        "shortName": "list_feeds"
       },
+      "description": "Sample for ListFeeds",
       "file": "cloudasset_v1p2beta1_generated_asset_service_list_feeds_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_ListFeeds_sync",
       "segments": [
         {
@@ -350,19 +645,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_list_feeds_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceAsyncClient.update_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.UpdateFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "UpdateFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.UpdateFeedRequest"
+          },
+          {
+            "name": "feed",
+            "type": "google.cloud.asset_v1p2beta1.types.Feed"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "update_feed"
       },
+      "description": "Sample for UpdateFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_update_feed_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_UpdateFeed_async",
       "segments": [
         {
@@ -395,18 +726,54 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_update_feed_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p2beta1.AssetServiceClient.update_feed",
         "method": {
+          "fullName": "google.cloud.asset.v1p2beta1.AssetService.UpdateFeed",
           "service": {
+            "fullName": "google.cloud.asset.v1p2beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "UpdateFeed"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p2beta1.types.UpdateFeedRequest"
+          },
+          {
+            "name": "feed",
+            "type": "google.cloud.asset_v1p2beta1.types.Feed"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p2beta1.types.Feed",
+        "shortName": "update_feed"
       },
+      "description": "Sample for UpdateFeed",
       "file": "cloudasset_v1p2beta1_generated_asset_service_update_feed_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p2beta1_generated_AssetService_UpdateFeed_sync",
       "segments": [
         {
@@ -439,7 +806,8 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p2beta1_generated_asset_service_update_feed_sync.py"
     }
   ]
 }

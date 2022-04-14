@@ -1,16 +1,57 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.asset.v1p5beta1",
+        "version": "v1p5beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-asset"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p5beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p5beta1.AssetServiceAsyncClient.list_assets",
         "method": {
+          "fullName": "google.cloud.asset.v1p5beta1.AssetService.ListAssets",
           "service": {
+            "fullName": "google.cloud.asset.v1p5beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ListAssets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p5beta1.types.ListAssetsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p5beta1.services.asset_service.pagers.ListAssetsAsyncPager",
+        "shortName": "list_assets"
       },
+      "description": "Sample for ListAssets",
       "file": "cloudasset_v1p5beta1_generated_asset_service_list_assets_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p5beta1_generated_AssetService_ListAssets_async",
       "segments": [
         {
@@ -43,18 +84,50 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p5beta1_generated_asset_service_list_assets_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p5beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p5beta1.AssetServiceClient.list_assets",
         "method": {
+          "fullName": "google.cloud.asset.v1p5beta1.AssetService.ListAssets",
           "service": {
+            "fullName": "google.cloud.asset.v1p5beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ListAssets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p5beta1.types.ListAssetsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p5beta1.services.asset_service.pagers.ListAssetsPager",
+        "shortName": "list_assets"
       },
+      "description": "Sample for ListAssets",
       "file": "cloudasset_v1p5beta1_generated_asset_service_list_assets_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p5beta1_generated_AssetService_ListAssets_sync",
       "segments": [
         {
@@ -87,7 +160,8 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p5beta1_generated_asset_service_list_assets_sync.py"
     }
   ]
 }

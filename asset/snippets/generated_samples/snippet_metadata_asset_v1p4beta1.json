@@ -1,16 +1,57 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.asset.v1p4beta1",
+        "version": "v1p4beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-asset"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p4beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p4beta1.AssetServiceAsyncClient.analyze_iam_policy",
         "method": {
+          "fullName": "google.cloud.asset.v1p4beta1.AssetService.AnalyzeIamPolicy",
           "service": {
+            "fullName": "google.cloud.asset.v1p4beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "AnalyzeIamPolicy"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p4beta1.types.AnalyzeIamPolicyRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p4beta1.types.AnalyzeIamPolicyResponse",
+        "shortName": "analyze_iam_policy"
       },
+      "description": "Sample for AnalyzeIamPolicy",
       "file": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p4beta1_generated_AssetService_AnalyzeIamPolicy_async",
       "segments": [
         {
@@ -43,18 +84,50 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p4beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p4beta1.AssetServiceClient.analyze_iam_policy",
         "method": {
+          "fullName": "google.cloud.asset.v1p4beta1.AssetService.AnalyzeIamPolicy",
           "service": {
+            "fullName": "google.cloud.asset.v1p4beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "AnalyzeIamPolicy"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p4beta1.types.AnalyzeIamPolicyRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p4beta1.types.AnalyzeIamPolicyResponse",
+        "shortName": "analyze_iam_policy"
       },
+      "description": "Sample for AnalyzeIamPolicy",
       "file": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p4beta1_generated_AssetService_AnalyzeIamPolicy_sync",
       "segments": [
         {
@@ -87,19 +160,51 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p4beta1_generated_asset_service_analyze_iam_policy_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p4beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p4beta1.AssetServiceAsyncClient.export_iam_policy_analysis",
         "method": {
+          "fullName": "google.cloud.asset.v1p4beta1.AssetService.ExportIamPolicyAnalysis",
           "service": {
+            "fullName": "google.cloud.asset.v1p4beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ExportIamPolicyAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p4beta1.types.ExportIamPolicyAnalysisRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "export_iam_policy_analysis"
       },
+      "description": "Sample for ExportIamPolicyAnalysis",
       "file": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p4beta1_generated_AssetService_ExportIamPolicyAnalysis_async",
       "segments": [
         {
@@ -132,18 +237,50 @@
           "start": 53,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p4beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p4beta1.AssetServiceClient.export_iam_policy_analysis",
         "method": {
+          "fullName": "google.cloud.asset.v1p4beta1.AssetService.ExportIamPolicyAnalysis",
           "service": {
+            "fullName": "google.cloud.asset.v1p4beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "ExportIamPolicyAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p4beta1.types.ExportIamPolicyAnalysisRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "export_iam_policy_analysis"
       },
+      "description": "Sample for ExportIamPolicyAnalysis",
       "file": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p4beta1_generated_AssetService_ExportIamPolicyAnalysis_sync",
       "segments": [
         {
@@ -176,7 +313,8 @@
           "start": 53,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p4beta1_generated_asset_service_export_iam_policy_analysis_sync.py"
     }
   ]
 }

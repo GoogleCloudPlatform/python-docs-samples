@@ -1,16 +1,65 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.asset.v1p1beta1",
+        "version": "v1p1beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-asset"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p1beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p1beta1.AssetServiceAsyncClient.search_all_iam_policies",
         "method": {
+          "fullName": "google.cloud.asset.v1p1beta1.AssetService.SearchAllIamPolicies",
           "service": {
+            "fullName": "google.cloud.asset.v1p1beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "SearchAllIamPolicies"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p1beta1.types.SearchAllIamPoliciesRequest"
+          },
+          {
+            "name": "scope",
+            "type": "str"
+          },
+          {
+            "name": "query",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p1beta1.services.asset_service.pagers.SearchAllIamPoliciesAsyncPager",
+        "shortName": "search_all_iam_policies"
       },
+      "description": "Sample for SearchAllIamPolicies",
       "file": "cloudasset_v1p1beta1_generated_asset_service_search_all_iam_policies_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p1beta1_generated_AssetService_SearchAllIamPolicies_async",
       "segments": [
         {
@@ -43,18 +92,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p1beta1_generated_asset_service_search_all_iam_policies_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p1beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p1beta1.AssetServiceClient.search_all_iam_policies",
         "method": {
+          "fullName": "google.cloud.asset.v1p1beta1.AssetService.SearchAllIamPolicies",
           "service": {
+            "fullName": "google.cloud.asset.v1p1beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "SearchAllIamPolicies"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p1beta1.types.SearchAllIamPoliciesRequest"
+          },
+          {
+            "name": "scope",
+            "type": "str"
+          },
+          {
+            "name": "query",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p1beta1.services.asset_service.pagers.SearchAllIamPoliciesPager",
+        "shortName": "search_all_iam_policies"
       },
+      "description": "Sample for SearchAllIamPolicies",
       "file": "cloudasset_v1p1beta1_generated_asset_service_search_all_iam_policies_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p1beta1_generated_AssetService_SearchAllIamPolicies_sync",
       "segments": [
         {
@@ -87,19 +176,63 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p1beta1_generated_asset_service_search_all_iam_policies_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.asset_v1p1beta1.AssetServiceAsyncClient",
+          "shortName": "AssetServiceAsyncClient"
+        },
+        "fullName": "google.cloud.asset_v1p1beta1.AssetServiceAsyncClient.search_all_resources",
         "method": {
+          "fullName": "google.cloud.asset.v1p1beta1.AssetService.SearchAllResources",
           "service": {
+            "fullName": "google.cloud.asset.v1p1beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "SearchAllResources"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p1beta1.types.SearchAllResourcesRequest"
+          },
+          {
+            "name": "scope",
+            "type": "str"
+          },
+          {
+            "name": "query",
+            "type": "str"
+          },
+          {
+            "name": "asset_types",
+            "type": "Sequence[str]"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p1beta1.services.asset_service.pagers.SearchAllResourcesAsyncPager",
+        "shortName": "search_all_resources"
       },
+      "description": "Sample for SearchAllResources",
       "file": "cloudasset_v1p1beta1_generated_asset_service_search_all_resources_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p1beta1_generated_AssetService_SearchAllResources_async",
       "segments": [
         {
@@ -132,18 +265,62 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p1beta1_generated_asset_service_search_all_resources_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.asset_v1p1beta1.AssetServiceClient",
+          "shortName": "AssetServiceClient"
+        },
+        "fullName": "google.cloud.asset_v1p1beta1.AssetServiceClient.search_all_resources",
         "method": {
+          "fullName": "google.cloud.asset.v1p1beta1.AssetService.SearchAllResources",
           "service": {
+            "fullName": "google.cloud.asset.v1p1beta1.AssetService",
             "shortName": "AssetService"
           },
           "shortName": "SearchAllResources"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.asset_v1p1beta1.types.SearchAllResourcesRequest"
+          },
+          {
+            "name": "scope",
+            "type": "str"
+          },
+          {
+            "name": "query",
+            "type": "str"
+          },
+          {
+            "name": "asset_types",
+            "type": "Sequence[str]"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.asset_v1p1beta1.services.asset_service.pagers.SearchAllResourcesPager",
+        "shortName": "search_all_resources"
       },
+      "description": "Sample for SearchAllResources",
       "file": "cloudasset_v1p1beta1_generated_asset_service_search_all_resources_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "cloudasset_v1p1beta1_generated_AssetService_SearchAllResources_sync",
       "segments": [
         {
@@ -176,7 +353,8 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "cloudasset_v1p1beta1_generated_asset_service_search_all_resources_sync.py"
     }
   ]
 }
