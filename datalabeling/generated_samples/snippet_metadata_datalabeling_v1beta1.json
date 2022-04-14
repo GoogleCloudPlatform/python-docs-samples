@@ -1,16 +1,65 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.datalabeling.v1beta1",
+        "version": "v1beta1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-datalabeling"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.create_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateAnnotationSpecSetRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "annotation_spec_set",
+            "type": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet",
+        "shortName": "create_annotation_spec_set"
       },
+      "description": "Sample for CreateAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_annotation_spec_set_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateAnnotationSpecSet_async",
       "segments": [
         {
@@ -43,18 +92,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_annotation_spec_set_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.create_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateAnnotationSpecSetRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "annotation_spec_set",
+            "type": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet",
+        "shortName": "create_annotation_spec_set"
       },
+      "description": "Sample for CreateAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_annotation_spec_set_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateAnnotationSpecSet_sync",
       "segments": [
         {
@@ -87,19 +176,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_annotation_spec_set_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.create_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateDatasetRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "dataset",
+            "type": "google.cloud.datalabeling_v1beta1.types.Dataset"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Dataset",
+        "shortName": "create_dataset"
       },
+      "description": "Sample for CreateDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_dataset_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateDataset_async",
       "segments": [
         {
@@ -132,18 +261,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_dataset_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.create_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateDatasetRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "dataset",
+            "type": "google.cloud.datalabeling_v1beta1.types.Dataset"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Dataset",
+        "shortName": "create_dataset"
       },
+      "description": "Sample for CreateDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_dataset_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateDataset_sync",
       "segments": [
         {
@@ -176,19 +345,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_dataset_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.create_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateEvaluationJobRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "job",
+            "type": "google.cloud.datalabeling_v1beta1.types.EvaluationJob"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "create_evaluation_job"
       },
+      "description": "Sample for CreateEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateEvaluationJob_async",
       "segments": [
         {
@@ -221,18 +430,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.create_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateEvaluationJobRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "job",
+            "type": "google.cloud.datalabeling_v1beta1.types.EvaluationJob"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "create_evaluation_job"
       },
+      "description": "Sample for CreateEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateEvaluationJob_sync",
       "segments": [
         {
@@ -265,19 +514,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_evaluation_job_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.create_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateInstructionRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "instruction",
+            "type": "google.cloud.datalabeling_v1beta1.types.Instruction"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "create_instruction"
       },
+      "description": "Sample for CreateInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_instruction_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateInstruction_async",
       "segments": [
         {
@@ -310,18 +599,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_instruction_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.create_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.CreateInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "CreateInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.CreateInstructionRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "instruction",
+            "type": "google.cloud.datalabeling_v1beta1.types.Instruction"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "create_instruction"
       },
+      "description": "Sample for CreateInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_create_instruction_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_CreateInstruction_sync",
       "segments": [
         {
@@ -354,19 +683,50 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_create_instruction_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.delete_annotated_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteAnnotatedDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteAnnotatedDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteAnnotatedDatasetRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_annotated_dataset"
       },
+      "description": "Sample for DeleteAnnotatedDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotated_dataset_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteAnnotatedDataset_async",
       "segments": [
         {
@@ -397,18 +757,49 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotated_dataset_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.delete_annotated_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteAnnotatedDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteAnnotatedDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteAnnotatedDatasetRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_annotated_dataset"
       },
+      "description": "Sample for DeleteAnnotatedDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotated_dataset_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteAnnotatedDataset_sync",
       "segments": [
         {
@@ -439,19 +830,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotated_dataset_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.delete_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteAnnotationSpecSetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_annotation_spec_set"
       },
+      "description": "Sample for DeleteAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotation_spec_set_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteAnnotationSpecSet_async",
       "segments": [
         {
@@ -482,18 +908,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotation_spec_set_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.delete_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteAnnotationSpecSetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_annotation_spec_set"
       },
+      "description": "Sample for DeleteAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotation_spec_set_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteAnnotationSpecSet_sync",
       "segments": [
         {
@@ -524,19 +985,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_annotation_spec_set_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.delete_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_dataset"
       },
+      "description": "Sample for DeleteDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_dataset_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteDataset_async",
       "segments": [
         {
@@ -567,18 +1063,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_dataset_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.delete_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_dataset"
       },
+      "description": "Sample for DeleteDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_dataset_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteDataset_sync",
       "segments": [
         {
@@ -609,19 +1140,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_dataset_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.delete_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_evaluation_job"
       },
+      "description": "Sample for DeleteEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteEvaluationJob_async",
       "segments": [
         {
@@ -652,18 +1218,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.delete_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_evaluation_job"
       },
+      "description": "Sample for DeleteEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteEvaluationJob_sync",
       "segments": [
         {
@@ -694,19 +1295,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_evaluation_job_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.delete_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteInstructionRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_instruction"
       },
+      "description": "Sample for DeleteInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_instruction_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteInstruction_async",
       "segments": [
         {
@@ -737,18 +1373,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_instruction_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.delete_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.DeleteInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "DeleteInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.DeleteInstructionRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_instruction"
       },
+      "description": "Sample for DeleteInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_delete_instruction_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_DeleteInstruction_sync",
       "segments": [
         {
@@ -779,19 +1450,67 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_delete_instruction_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.export_data",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ExportData",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ExportData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ExportDataRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "annotated_dataset",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "output_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.OutputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "export_data"
       },
+      "description": "Sample for ExportData",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_export_data_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ExportData_async",
       "segments": [
         {
@@ -824,18 +1543,66 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_export_data_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.export_data",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ExportData",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ExportData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ExportDataRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "annotated_dataset",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "output_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.OutputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "export_data"
       },
+      "description": "Sample for ExportData",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_export_data_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ExportData_sync",
       "segments": [
         {
@@ -868,19 +1635,55 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_export_data_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_annotated_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetAnnotatedDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetAnnotatedDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetAnnotatedDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotatedDataset",
+        "shortName": "get_annotated_dataset"
       },
+      "description": "Sample for GetAnnotatedDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_annotated_dataset_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetAnnotatedDataset_async",
       "segments": [
         {
@@ -913,18 +1716,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_annotated_dataset_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_annotated_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetAnnotatedDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetAnnotatedDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetAnnotatedDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotatedDataset",
+        "shortName": "get_annotated_dataset"
       },
+      "description": "Sample for GetAnnotatedDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_annotated_dataset_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetAnnotatedDataset_sync",
       "segments": [
         {
@@ -957,19 +1796,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_annotated_dataset_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetAnnotationSpecSetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet",
+        "shortName": "get_annotation_spec_set"
       },
+      "description": "Sample for GetAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_annotation_spec_set_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetAnnotationSpecSet_async",
       "segments": [
         {
@@ -1002,18 +1877,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_annotation_spec_set_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_annotation_spec_set",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetAnnotationSpecSet",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetAnnotationSpecSet"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetAnnotationSpecSetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.AnnotationSpecSet",
+        "shortName": "get_annotation_spec_set"
       },
+      "description": "Sample for GetAnnotationSpecSet",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_annotation_spec_set_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetAnnotationSpecSet_sync",
       "segments": [
         {
@@ -1046,19 +1957,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_annotation_spec_set_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_data_item",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetDataItem",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetDataItem"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetDataItemRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.DataItem",
+        "shortName": "get_data_item"
       },
+      "description": "Sample for GetDataItem",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_data_item_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetDataItem_async",
       "segments": [
         {
@@ -1091,18 +2038,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_data_item_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_data_item",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetDataItem",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetDataItem"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetDataItemRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.DataItem",
+        "shortName": "get_data_item"
       },
+      "description": "Sample for GetDataItem",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_data_item_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetDataItem_sync",
       "segments": [
         {
@@ -1135,19 +2118,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_data_item_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Dataset",
+        "shortName": "get_dataset"
       },
+      "description": "Sample for GetDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_dataset_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetDataset_async",
       "segments": [
         {
@@ -1180,18 +2199,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_dataset_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_dataset",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetDataset",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetDataset"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetDatasetRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Dataset",
+        "shortName": "get_dataset"
       },
+      "description": "Sample for GetDataset",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_dataset_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetDataset_sync",
       "segments": [
         {
@@ -1224,19 +2279,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_dataset_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "get_evaluation_job"
       },
+      "description": "Sample for GetEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetEvaluationJob_async",
       "segments": [
         {
@@ -1269,18 +2360,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "get_evaluation_job"
       },
+      "description": "Sample for GetEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetEvaluationJob_sync",
       "segments": [
         {
@@ -1313,19 +2440,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_job_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_evaluation",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetEvaluation",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetEvaluation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetEvaluationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Evaluation",
+        "shortName": "get_evaluation"
       },
+      "description": "Sample for GetEvaluation",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetEvaluation_async",
       "segments": [
         {
@@ -1358,18 +2521,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_evaluation",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetEvaluation",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetEvaluation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetEvaluationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Evaluation",
+        "shortName": "get_evaluation"
       },
+      "description": "Sample for GetEvaluation",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetEvaluation_sync",
       "segments": [
         {
@@ -1402,19 +2601,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_evaluation_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_example",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetExample",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetExample"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetExampleRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Example",
+        "shortName": "get_example"
       },
+      "description": "Sample for GetExample",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_example_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetExample_async",
       "segments": [
         {
@@ -1447,18 +2686,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_example_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_example",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetExample",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetExample"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetExampleRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Example",
+        "shortName": "get_example"
       },
+      "description": "Sample for GetExample",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_example_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetExample_sync",
       "segments": [
         {
@@ -1491,19 +2770,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_example_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.get_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetInstructionRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Instruction",
+        "shortName": "get_instruction"
       },
+      "description": "Sample for GetInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_instruction_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetInstruction_async",
       "segments": [
         {
@@ -1536,18 +2851,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_instruction_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.get_instruction",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.GetInstruction",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "GetInstruction"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.GetInstructionRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.Instruction",
+        "shortName": "get_instruction"
       },
+      "description": "Sample for GetInstruction",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_get_instruction_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_GetInstruction_sync",
       "segments": [
         {
@@ -1580,19 +2931,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_get_instruction_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.import_data",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ImportData",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ImportData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ImportDataRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "input_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.InputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "import_data"
       },
+      "description": "Sample for ImportData",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_import_data_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ImportData_async",
       "segments": [
         {
@@ -1625,18 +3016,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_import_data_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.import_data",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ImportData",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ImportData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ImportDataRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "input_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.InputConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "import_data"
       },
+      "description": "Sample for ImportData",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_import_data_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ImportData_sync",
       "segments": [
         {
@@ -1669,19 +3100,63 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_import_data_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.label_image",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelImage",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelImage"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelImageRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelImageRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "label_image"
       },
+      "description": "Sample for LabelImage",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_image_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelImage_async",
       "segments": [
         {
@@ -1714,18 +3189,62 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_image_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.label_image",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelImage",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelImage"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelImageRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelImageRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "label_image"
       },
+      "description": "Sample for LabelImage",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_image_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelImage_sync",
       "segments": [
         {
@@ -1758,19 +3277,63 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_image_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.label_text",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelText",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelTextRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelTextRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "label_text"
       },
+      "description": "Sample for LabelText",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_text_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelText_async",
       "segments": [
         {
@@ -1803,18 +3366,62 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_text_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.label_text",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelText",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelText"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelTextRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelTextRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "label_text"
       },
+      "description": "Sample for LabelText",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_text_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelText_sync",
       "segments": [
         {
@@ -1847,19 +3454,63 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_text_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.label_video",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelVideo",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelVideo"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelVideoRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelVideoRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "label_video"
       },
+      "description": "Sample for LabelVideo",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_video_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelVideo_async",
       "segments": [
         {
@@ -1892,18 +3543,62 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_video_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.label_video",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.LabelVideo",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "LabelVideo"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelVideoRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "basic_config",
+            "type": "google.cloud.datalabeling_v1beta1.types.HumanAnnotationConfig"
+          },
+          {
+            "name": "feature",
+            "type": "google.cloud.datalabeling_v1beta1.types.LabelVideoRequest.Feature"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "label_video"
       },
+      "description": "Sample for LabelVideo",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_label_video_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_LabelVideo_sync",
       "segments": [
         {
@@ -1936,19 +3631,59 @@
           "start": 56,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_label_video_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_annotated_datasets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListAnnotatedDatasets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListAnnotatedDatasets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListAnnotatedDatasetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListAnnotatedDatasetsAsyncPager",
+        "shortName": "list_annotated_datasets"
       },
+      "description": "Sample for ListAnnotatedDatasets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_annotated_datasets_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListAnnotatedDatasets_async",
       "segments": [
         {
@@ -1981,18 +3716,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_annotated_datasets_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_annotated_datasets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListAnnotatedDatasets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListAnnotatedDatasets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListAnnotatedDatasetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListAnnotatedDatasetsPager",
+        "shortName": "list_annotated_datasets"
       },
+      "description": "Sample for ListAnnotatedDatasets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_annotated_datasets_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListAnnotatedDatasets_sync",
       "segments": [
         {
@@ -2025,19 +3800,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_annotated_datasets_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_annotation_spec_sets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListAnnotationSpecSets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListAnnotationSpecSets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListAnnotationSpecSetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListAnnotationSpecSetsAsyncPager",
+        "shortName": "list_annotation_spec_sets"
       },
+      "description": "Sample for ListAnnotationSpecSets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_annotation_spec_sets_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListAnnotationSpecSets_async",
       "segments": [
         {
@@ -2070,18 +3885,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_annotation_spec_sets_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_annotation_spec_sets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListAnnotationSpecSets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListAnnotationSpecSets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListAnnotationSpecSetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListAnnotationSpecSetsPager",
+        "shortName": "list_annotation_spec_sets"
       },
+      "description": "Sample for ListAnnotationSpecSets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_annotation_spec_sets_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListAnnotationSpecSets_sync",
       "segments": [
         {
@@ -2114,19 +3969,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_annotation_spec_sets_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_data_items",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListDataItems",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListDataItems"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListDataItemsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListDataItemsAsyncPager",
+        "shortName": "list_data_items"
       },
+      "description": "Sample for ListDataItems",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_data_items_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListDataItems_async",
       "segments": [
         {
@@ -2159,18 +4054,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_data_items_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_data_items",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListDataItems",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListDataItems"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListDataItemsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListDataItemsPager",
+        "shortName": "list_data_items"
       },
+      "description": "Sample for ListDataItems",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_data_items_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListDataItems_sync",
       "segments": [
         {
@@ -2203,19 +4138,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_data_items_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_datasets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListDatasets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListDatasets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListDatasetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListDatasetsAsyncPager",
+        "shortName": "list_datasets"
       },
+      "description": "Sample for ListDatasets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_datasets_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListDatasets_async",
       "segments": [
         {
@@ -2248,18 +4223,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_datasets_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_datasets",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListDatasets",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListDatasets"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListDatasetsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListDatasetsPager",
+        "shortName": "list_datasets"
       },
+      "description": "Sample for ListDatasets",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_datasets_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListDatasets_sync",
       "segments": [
         {
@@ -2292,19 +4307,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_datasets_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_evaluation_jobs",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListEvaluationJobs",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListEvaluationJobs"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListEvaluationJobsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListEvaluationJobsAsyncPager",
+        "shortName": "list_evaluation_jobs"
       },
+      "description": "Sample for ListEvaluationJobs",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_evaluation_jobs_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListEvaluationJobs_async",
       "segments": [
         {
@@ -2337,18 +4392,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_evaluation_jobs_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_evaluation_jobs",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListEvaluationJobs",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListEvaluationJobs"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListEvaluationJobsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListEvaluationJobsPager",
+        "shortName": "list_evaluation_jobs"
       },
+      "description": "Sample for ListEvaluationJobs",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_evaluation_jobs_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListEvaluationJobs_sync",
       "segments": [
         {
@@ -2381,19 +4476,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_evaluation_jobs_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_examples",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListExamples",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListExamples"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListExamplesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListExamplesAsyncPager",
+        "shortName": "list_examples"
       },
+      "description": "Sample for ListExamples",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_examples_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListExamples_async",
       "segments": [
         {
@@ -2426,18 +4561,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_examples_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_examples",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListExamples",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListExamples"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListExamplesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListExamplesPager",
+        "shortName": "list_examples"
       },
+      "description": "Sample for ListExamples",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_examples_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListExamples_sync",
       "segments": [
         {
@@ -2470,19 +4645,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_examples_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.list_instructions",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListInstructions",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListInstructions"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListInstructionsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListInstructionsAsyncPager",
+        "shortName": "list_instructions"
       },
+      "description": "Sample for ListInstructions",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_instructions_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListInstructions_async",
       "segments": [
         {
@@ -2515,18 +4730,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_instructions_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.list_instructions",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ListInstructions",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ListInstructions"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ListInstructionsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.ListInstructionsPager",
+        "shortName": "list_instructions"
       },
+      "description": "Sample for ListInstructions",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_list_instructions_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ListInstructions_sync",
       "segments": [
         {
@@ -2559,19 +4814,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_list_instructions_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.pause_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.PauseEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "PauseEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.PauseEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "pause_evaluation_job"
       },
+      "description": "Sample for PauseEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_pause_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_PauseEvaluationJob_async",
       "segments": [
         {
@@ -2602,18 +4892,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_pause_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.pause_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.PauseEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "PauseEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.PauseEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "pause_evaluation_job"
       },
+      "description": "Sample for PauseEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_pause_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_PauseEvaluationJob_sync",
       "segments": [
         {
@@ -2644,19 +4969,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_pause_evaluation_job_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.resume_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ResumeEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ResumeEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ResumeEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "resume_evaluation_job"
       },
+      "description": "Sample for ResumeEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_resume_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ResumeEvaluationJob_async",
       "segments": [
         {
@@ -2687,18 +5047,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_resume_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.resume_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.ResumeEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "ResumeEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.ResumeEvaluationJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "resume_evaluation_job"
       },
+      "description": "Sample for ResumeEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_resume_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_ResumeEvaluationJob_sync",
       "segments": [
         {
@@ -2729,19 +5124,59 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_resume_evaluation_job_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.search_evaluations",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.SearchEvaluations",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "SearchEvaluations"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.SearchEvaluationsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.SearchEvaluationsAsyncPager",
+        "shortName": "search_evaluations"
       },
+      "description": "Sample for SearchEvaluations",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_search_evaluations_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_SearchEvaluations_async",
       "segments": [
         {
@@ -2774,18 +5209,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_search_evaluations_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.search_evaluations",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.SearchEvaluations",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "SearchEvaluations"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.SearchEvaluationsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "filter",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.SearchEvaluationsPager",
+        "shortName": "search_evaluations"
       },
+      "description": "Sample for SearchEvaluations",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_search_evaluations_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_SearchEvaluations_sync",
       "segments": [
         {
@@ -2818,19 +5293,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_search_evaluations_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.search_example_comparisons",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.SearchExampleComparisons",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "SearchExampleComparisons"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.SearchExampleComparisonsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.SearchExampleComparisonsAsyncPager",
+        "shortName": "search_example_comparisons"
       },
+      "description": "Sample for SearchExampleComparisons",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_search_example_comparisons_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_SearchExampleComparisons_async",
       "segments": [
         {
@@ -2863,18 +5374,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_search_example_comparisons_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.search_example_comparisons",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.SearchExampleComparisons",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "SearchExampleComparisons"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.SearchExampleComparisonsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.services.data_labeling_service.pagers.SearchExampleComparisonsPager",
+        "shortName": "search_example_comparisons"
       },
+      "description": "Sample for SearchExampleComparisons",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_search_example_comparisons_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_SearchExampleComparisons_sync",
       "segments": [
         {
@@ -2907,19 +5454,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_search_example_comparisons_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient",
+          "shortName": "DataLabelingServiceAsyncClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceAsyncClient.update_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.UpdateEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "UpdateEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.UpdateEvaluationJobRequest"
+          },
+          {
+            "name": "evaluation_job",
+            "type": "google.cloud.datalabeling_v1beta1.types.EvaluationJob"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "update_evaluation_job"
       },
+      "description": "Sample for UpdateEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_update_evaluation_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_UpdateEvaluationJob_async",
       "segments": [
         {
@@ -2952,18 +5539,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_update_evaluation_job_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient",
+          "shortName": "DataLabelingServiceClient"
+        },
+        "fullName": "google.cloud.datalabeling_v1beta1.DataLabelingServiceClient.update_evaluation_job",
         "method": {
+          "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService.UpdateEvaluationJob",
           "service": {
+            "fullName": "google.cloud.datalabeling.v1beta1.DataLabelingService",
             "shortName": "DataLabelingService"
           },
           "shortName": "UpdateEvaluationJob"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.datalabeling_v1beta1.types.UpdateEvaluationJobRequest"
+          },
+          {
+            "name": "evaluation_job",
+            "type": "google.cloud.datalabeling_v1beta1.types.EvaluationJob"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.datalabeling_v1beta1.types.EvaluationJob",
+        "shortName": "update_evaluation_job"
       },
+      "description": "Sample for UpdateEvaluationJob",
       "file": "datalabeling_v1beta1_generated_data_labeling_service_update_evaluation_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "datalabeling_v1beta1_generated_DataLabelingService_UpdateEvaluationJob_sync",
       "segments": [
         {
@@ -2996,7 +5623,8 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "datalabeling_v1beta1_generated_data_labeling_service_update_evaluation_job_sync.py"
     }
   ]
 }
