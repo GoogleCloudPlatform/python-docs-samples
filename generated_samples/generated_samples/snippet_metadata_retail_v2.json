@@ -1,16 +1,61 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.retail.v2",
+        "version": "v2"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-retail"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient",
+          "shortName": "CatalogServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient.get_default_branch",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.GetDefaultBranch",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "GetDefaultBranch"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.GetDefaultBranchRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.GetDefaultBranchResponse",
+        "shortName": "get_default_branch"
       },
+      "description": "Sample for GetDefaultBranch",
       "file": "retail_v2_generated_catalog_service_get_default_branch_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_GetDefaultBranch_async",
       "segments": [
         {
@@ -43,18 +88,54 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_get_default_branch_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceClient",
+          "shortName": "CatalogServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceClient.get_default_branch",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.GetDefaultBranch",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "GetDefaultBranch"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.GetDefaultBranchRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.GetDefaultBranchResponse",
+        "shortName": "get_default_branch"
       },
+      "description": "Sample for GetDefaultBranch",
       "file": "retail_v2_generated_catalog_service_get_default_branch_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_GetDefaultBranch_sync",
       "segments": [
         {
@@ -87,19 +168,55 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_get_default_branch_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient",
+          "shortName": "CatalogServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient.list_catalogs",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.ListCatalogs",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "ListCatalogs"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ListCatalogsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.catalog_service.pagers.ListCatalogsAsyncPager",
+        "shortName": "list_catalogs"
       },
+      "description": "Sample for ListCatalogs",
       "file": "retail_v2_generated_catalog_service_list_catalogs_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_ListCatalogs_async",
       "segments": [
         {
@@ -132,18 +249,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_list_catalogs_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceClient",
+          "shortName": "CatalogServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceClient.list_catalogs",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.ListCatalogs",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "ListCatalogs"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ListCatalogsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.catalog_service.pagers.ListCatalogsPager",
+        "shortName": "list_catalogs"
       },
+      "description": "Sample for ListCatalogs",
       "file": "retail_v2_generated_catalog_service_list_catalogs_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_ListCatalogs_sync",
       "segments": [
         {
@@ -176,19 +329,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_list_catalogs_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient",
+          "shortName": "CatalogServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient.set_default_branch",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.SetDefaultBranch",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "SetDefaultBranch"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SetDefaultBranchRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "set_default_branch"
       },
+      "description": "Sample for SetDefaultBranch",
       "file": "retail_v2_generated_catalog_service_set_default_branch_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_SetDefaultBranch_async",
       "segments": [
         {
@@ -219,18 +407,53 @@
           "end": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_set_default_branch_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceClient",
+          "shortName": "CatalogServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceClient.set_default_branch",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.SetDefaultBranch",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "SetDefaultBranch"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SetDefaultBranchRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "set_default_branch"
       },
+      "description": "Sample for SetDefaultBranch",
       "file": "retail_v2_generated_catalog_service_set_default_branch_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_SetDefaultBranch_sync",
       "segments": [
         {
@@ -261,19 +484,59 @@
           "end": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_set_default_branch_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient",
+          "shortName": "CatalogServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceAsyncClient.update_catalog",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.UpdateCatalog",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "UpdateCatalog"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.UpdateCatalogRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "google.cloud.retail_v2.types.Catalog"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Catalog",
+        "shortName": "update_catalog"
       },
+      "description": "Sample for UpdateCatalog",
       "file": "retail_v2_generated_catalog_service_update_catalog_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_UpdateCatalog_async",
       "segments": [
         {
@@ -306,18 +569,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_update_catalog_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CatalogServiceClient",
+          "shortName": "CatalogServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CatalogServiceClient.update_catalog",
         "method": {
+          "fullName": "google.cloud.retail.v2.CatalogService.UpdateCatalog",
           "service": {
+            "fullName": "google.cloud.retail.v2.CatalogService",
             "shortName": "CatalogService"
           },
           "shortName": "UpdateCatalog"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.UpdateCatalogRequest"
+          },
+          {
+            "name": "catalog",
+            "type": "google.cloud.retail_v2.types.Catalog"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Catalog",
+        "shortName": "update_catalog"
       },
+      "description": "Sample for UpdateCatalog",
       "file": "retail_v2_generated_catalog_service_update_catalog_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CatalogService_UpdateCatalog_sync",
       "segments": [
         {
@@ -350,19 +653,51 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_catalog_service_update_catalog_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CompletionServiceAsyncClient",
+          "shortName": "CompletionServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CompletionServiceAsyncClient.complete_query",
         "method": {
+          "fullName": "google.cloud.retail.v2.CompletionService.CompleteQuery",
           "service": {
+            "fullName": "google.cloud.retail.v2.CompletionService",
             "shortName": "CompletionService"
           },
           "shortName": "CompleteQuery"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CompleteQueryRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.CompleteQueryResponse",
+        "shortName": "complete_query"
       },
+      "description": "Sample for CompleteQuery",
       "file": "retail_v2_generated_completion_service_complete_query_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CompletionService_CompleteQuery_async",
       "segments": [
         {
@@ -395,18 +730,50 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_completion_service_complete_query_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CompletionServiceClient",
+          "shortName": "CompletionServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CompletionServiceClient.complete_query",
         "method": {
+          "fullName": "google.cloud.retail.v2.CompletionService.CompleteQuery",
           "service": {
+            "fullName": "google.cloud.retail.v2.CompletionService",
             "shortName": "CompletionService"
           },
           "shortName": "CompleteQuery"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CompleteQueryRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.CompleteQueryResponse",
+        "shortName": "complete_query"
       },
+      "description": "Sample for CompleteQuery",
       "file": "retail_v2_generated_completion_service_complete_query_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CompletionService_CompleteQuery_sync",
       "segments": [
         {
@@ -439,19 +806,51 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_completion_service_complete_query_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.CompletionServiceAsyncClient",
+          "shortName": "CompletionServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.CompletionServiceAsyncClient.import_completion_data",
         "method": {
+          "fullName": "google.cloud.retail.v2.CompletionService.ImportCompletionData",
           "service": {
+            "fullName": "google.cloud.retail.v2.CompletionService",
             "shortName": "CompletionService"
           },
           "shortName": "ImportCompletionData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportCompletionDataRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "import_completion_data"
       },
+      "description": "Sample for ImportCompletionData",
       "file": "retail_v2_generated_completion_service_import_completion_data_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CompletionService_ImportCompletionData_async",
       "segments": [
         {
@@ -484,18 +883,50 @@
           "start": 51,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_completion_service_import_completion_data_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.CompletionServiceClient",
+          "shortName": "CompletionServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.CompletionServiceClient.import_completion_data",
         "method": {
+          "fullName": "google.cloud.retail.v2.CompletionService.ImportCompletionData",
           "service": {
+            "fullName": "google.cloud.retail.v2.CompletionService",
             "shortName": "CompletionService"
           },
           "shortName": "ImportCompletionData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportCompletionDataRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "import_completion_data"
       },
+      "description": "Sample for ImportCompletionData",
       "file": "retail_v2_generated_completion_service_import_completion_data_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_CompletionService_ImportCompletionData_sync",
       "segments": [
         {
@@ -528,19 +959,51 @@
           "start": 51,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_completion_service_import_completion_data_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.PredictionServiceAsyncClient",
+          "shortName": "PredictionServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.PredictionServiceAsyncClient.predict",
         "method": {
+          "fullName": "google.cloud.retail.v2.PredictionService.Predict",
           "service": {
+            "fullName": "google.cloud.retail.v2.PredictionService",
             "shortName": "PredictionService"
           },
           "shortName": "Predict"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.PredictRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.PredictResponse",
+        "shortName": "predict"
       },
+      "description": "Sample for Predict",
       "file": "retail_v2_generated_prediction_service_predict_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_PredictionService_Predict_async",
       "segments": [
         {
@@ -573,18 +1036,50 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_prediction_service_predict_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.PredictionServiceClient",
+          "shortName": "PredictionServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.PredictionServiceClient.predict",
         "method": {
+          "fullName": "google.cloud.retail.v2.PredictionService.Predict",
           "service": {
+            "fullName": "google.cloud.retail.v2.PredictionService",
             "shortName": "PredictionService"
           },
           "shortName": "Predict"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.PredictRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.PredictResponse",
+        "shortName": "predict"
       },
+      "description": "Sample for Predict",
       "file": "retail_v2_generated_prediction_service_predict_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_PredictionService_Predict_sync",
       "segments": [
         {
@@ -617,19 +1112,55 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_prediction_service_predict_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.add_fulfillment_places",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.AddFulfillmentPlaces",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "AddFulfillmentPlaces"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.AddFulfillmentPlacesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "add_fulfillment_places"
       },
+      "description": "Sample for AddFulfillmentPlaces",
       "file": "retail_v2_generated_product_service_add_fulfillment_places_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_AddFulfillmentPlaces_async",
       "segments": [
         {
@@ -662,18 +1193,54 @@
           "start": 48,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_add_fulfillment_places_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.add_fulfillment_places",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.AddFulfillmentPlaces",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "AddFulfillmentPlaces"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.AddFulfillmentPlacesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "add_fulfillment_places"
       },
+      "description": "Sample for AddFulfillmentPlaces",
       "file": "retail_v2_generated_product_service_add_fulfillment_places_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_AddFulfillmentPlaces_sync",
       "segments": [
         {
@@ -706,19 +1273,55 @@
           "start": 48,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_add_fulfillment_places_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.add_local_inventories",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.AddLocalInventories",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "AddLocalInventories"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.AddLocalInventoriesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "add_local_inventories"
       },
+      "description": "Sample for AddLocalInventories",
       "file": "retail_v2_generated_product_service_add_local_inventories_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_AddLocalInventories_async",
       "segments": [
         {
@@ -751,18 +1354,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_add_local_inventories_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.add_local_inventories",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.AddLocalInventories",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "AddLocalInventories"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.AddLocalInventoriesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "add_local_inventories"
       },
+      "description": "Sample for AddLocalInventories",
       "file": "retail_v2_generated_product_service_add_local_inventories_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_AddLocalInventories_sync",
       "segments": [
         {
@@ -795,19 +1434,63 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_add_local_inventories_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.create_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.CreateProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "CreateProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CreateProductRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "product",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "product_id",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "create_product"
       },
+      "description": "Sample for CreateProduct",
       "file": "retail_v2_generated_product_service_create_product_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_CreateProduct_async",
       "segments": [
         {
@@ -840,18 +1523,62 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_create_product_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.create_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.CreateProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "CreateProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CreateProductRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "product",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "product_id",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "create_product"
       },
+      "description": "Sample for CreateProduct",
       "file": "retail_v2_generated_product_service_create_product_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_CreateProduct_sync",
       "segments": [
         {
@@ -884,19 +1611,54 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_create_product_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.delete_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.DeleteProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "DeleteProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.DeleteProductRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_product"
       },
+      "description": "Sample for DeleteProduct",
       "file": "retail_v2_generated_product_service_delete_product_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_DeleteProduct_async",
       "segments": [
         {
@@ -927,18 +1689,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_delete_product_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.delete_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.DeleteProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "DeleteProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.DeleteProductRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_product"
       },
+      "description": "Sample for DeleteProduct",
       "file": "retail_v2_generated_product_service_delete_product_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_DeleteProduct_sync",
       "segments": [
         {
@@ -969,19 +1766,55 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_delete_product_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.get_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.GetProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "GetProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.GetProductRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "get_product"
       },
+      "description": "Sample for GetProduct",
       "file": "retail_v2_generated_product_service_get_product_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_GetProduct_async",
       "segments": [
         {
@@ -1014,18 +1847,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_get_product_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.get_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.GetProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "GetProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.GetProductRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "get_product"
       },
+      "description": "Sample for GetProduct",
       "file": "retail_v2_generated_product_service_get_product_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_GetProduct_sync",
       "segments": [
         {
@@ -1058,19 +1927,51 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_get_product_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.import_products",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.ImportProducts",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "ImportProducts"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportProductsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "import_products"
       },
+      "description": "Sample for ImportProducts",
       "file": "retail_v2_generated_product_service_import_products_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_ImportProducts_async",
       "segments": [
         {
@@ -1103,18 +2004,50 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_import_products_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.import_products",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.ImportProducts",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "ImportProducts"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportProductsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "import_products"
       },
+      "description": "Sample for ImportProducts",
       "file": "retail_v2_generated_product_service_import_products_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_ImportProducts_sync",
       "segments": [
         {
@@ -1147,19 +2080,55 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_import_products_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.list_products",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.ListProducts",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "ListProducts"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ListProductsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.product_service.pagers.ListProductsAsyncPager",
+        "shortName": "list_products"
       },
+      "description": "Sample for ListProducts",
       "file": "retail_v2_generated_product_service_list_products_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_ListProducts_async",
       "segments": [
         {
@@ -1192,18 +2161,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_list_products_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.list_products",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.ListProducts",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "ListProducts"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ListProductsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.product_service.pagers.ListProductsPager",
+        "shortName": "list_products"
       },
+      "description": "Sample for ListProducts",
       "file": "retail_v2_generated_product_service_list_products_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_ListProducts_sync",
       "segments": [
         {
@@ -1236,19 +2241,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_list_products_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.remove_fulfillment_places",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.RemoveFulfillmentPlaces",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "RemoveFulfillmentPlaces"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RemoveFulfillmentPlacesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "remove_fulfillment_places"
       },
+      "description": "Sample for RemoveFulfillmentPlaces",
       "file": "retail_v2_generated_product_service_remove_fulfillment_places_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_RemoveFulfillmentPlaces_async",
       "segments": [
         {
@@ -1281,18 +2322,54 @@
           "start": 48,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_remove_fulfillment_places_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.remove_fulfillment_places",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.RemoveFulfillmentPlaces",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "RemoveFulfillmentPlaces"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RemoveFulfillmentPlacesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "remove_fulfillment_places"
       },
+      "description": "Sample for RemoveFulfillmentPlaces",
       "file": "retail_v2_generated_product_service_remove_fulfillment_places_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_RemoveFulfillmentPlaces_sync",
       "segments": [
         {
@@ -1325,19 +2402,55 @@
           "start": 48,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_remove_fulfillment_places_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.remove_local_inventories",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.RemoveLocalInventories",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "RemoveLocalInventories"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RemoveLocalInventoriesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "remove_local_inventories"
       },
+      "description": "Sample for RemoveLocalInventories",
       "file": "retail_v2_generated_product_service_remove_local_inventories_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_RemoveLocalInventories_async",
       "segments": [
         {
@@ -1370,18 +2483,54 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_remove_local_inventories_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.remove_local_inventories",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.RemoveLocalInventories",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "RemoveLocalInventories"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RemoveLocalInventoriesRequest"
+          },
+          {
+            "name": "product",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "remove_local_inventories"
       },
+      "description": "Sample for RemoveLocalInventories",
       "file": "retail_v2_generated_product_service_remove_local_inventories_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_RemoveLocalInventories_sync",
       "segments": [
         {
@@ -1414,19 +2563,59 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_remove_local_inventories_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.set_inventory",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.SetInventory",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "SetInventory"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SetInventoryRequest"
+          },
+          {
+            "name": "inventory",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "set_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "set_inventory"
       },
+      "description": "Sample for SetInventory",
       "file": "retail_v2_generated_product_service_set_inventory_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_SetInventory_async",
       "segments": [
         {
@@ -1459,18 +2648,58 @@
           "start": 49,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_set_inventory_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.set_inventory",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.SetInventory",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "SetInventory"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SetInventoryRequest"
+          },
+          {
+            "name": "inventory",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "set_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "set_inventory"
       },
+      "description": "Sample for SetInventory",
       "file": "retail_v2_generated_product_service_set_inventory_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_SetInventory_sync",
       "segments": [
         {
@@ -1503,19 +2732,59 @@
           "start": 49,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_set_inventory_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient",
+          "shortName": "ProductServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceAsyncClient.update_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.UpdateProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "UpdateProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.UpdateProductRequest"
+          },
+          {
+            "name": "product",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "update_product"
       },
+      "description": "Sample for UpdateProduct",
       "file": "retail_v2_generated_product_service_update_product_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_UpdateProduct_async",
       "segments": [
         {
@@ -1548,18 +2817,58 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_update_product_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.ProductServiceClient",
+          "shortName": "ProductServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.ProductServiceClient.update_product",
         "method": {
+          "fullName": "google.cloud.retail.v2.ProductService.UpdateProduct",
           "service": {
+            "fullName": "google.cloud.retail.v2.ProductService",
             "shortName": "ProductService"
           },
           "shortName": "UpdateProduct"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.UpdateProductRequest"
+          },
+          {
+            "name": "product",
+            "type": "google.cloud.retail_v2.types.Product"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.Product",
+        "shortName": "update_product"
       },
+      "description": "Sample for UpdateProduct",
       "file": "retail_v2_generated_product_service_update_product_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_ProductService_UpdateProduct_sync",
       "segments": [
         {
@@ -1592,19 +2901,51 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_product_service_update_product_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.SearchServiceAsyncClient",
+          "shortName": "SearchServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.SearchServiceAsyncClient.search",
         "method": {
+          "fullName": "google.cloud.retail.v2.SearchService.Search",
           "service": {
+            "fullName": "google.cloud.retail.v2.SearchService",
             "shortName": "SearchService"
           },
           "shortName": "Search"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SearchRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.search_service.pagers.SearchAsyncPager",
+        "shortName": "search"
       },
+      "description": "Sample for Search",
       "file": "retail_v2_generated_search_service_search_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_SearchService_Search_async",
       "segments": [
         {
@@ -1637,18 +2978,50 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_search_service_search_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.SearchServiceClient",
+          "shortName": "SearchServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.SearchServiceClient.search",
         "method": {
+          "fullName": "google.cloud.retail.v2.SearchService.Search",
           "service": {
+            "fullName": "google.cloud.retail.v2.SearchService",
             "shortName": "SearchService"
           },
           "shortName": "Search"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.SearchRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.services.search_service.pagers.SearchPager",
+        "shortName": "search"
       },
+      "description": "Sample for Search",
       "file": "retail_v2_generated_search_service_search_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_SearchService_Search_sync",
       "segments": [
         {
@@ -1681,19 +3054,51 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_search_service_search_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient",
+          "shortName": "UserEventServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient.collect_user_event",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.CollectUserEvent",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "CollectUserEvent"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CollectUserEventRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api.httpbody_pb2.HttpBody",
+        "shortName": "collect_user_event"
       },
+      "description": "Sample for CollectUserEvent",
       "file": "retail_v2_generated_user_event_service_collect_user_event_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_CollectUserEvent_async",
       "segments": [
         {
@@ -1726,18 +3131,50 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_collect_user_event_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceClient",
+          "shortName": "UserEventServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceClient.collect_user_event",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.CollectUserEvent",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "CollectUserEvent"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.CollectUserEventRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api.httpbody_pb2.HttpBody",
+        "shortName": "collect_user_event"
       },
+      "description": "Sample for CollectUserEvent",
       "file": "retail_v2_generated_user_event_service_collect_user_event_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_CollectUserEvent_sync",
       "segments": [
         {
@@ -1770,19 +3207,51 @@
           "start": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_collect_user_event_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient",
+          "shortName": "UserEventServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient.import_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.ImportUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "ImportUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "import_user_events"
       },
+      "description": "Sample for ImportUserEvents",
       "file": "retail_v2_generated_user_event_service_import_user_events_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_ImportUserEvents_async",
       "segments": [
         {
@@ -1815,18 +3284,50 @@
           "start": 51,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_import_user_events_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceClient",
+          "shortName": "UserEventServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceClient.import_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.ImportUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "ImportUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.ImportUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "import_user_events"
       },
+      "description": "Sample for ImportUserEvents",
       "file": "retail_v2_generated_user_event_service_import_user_events_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_ImportUserEvents_sync",
       "segments": [
         {
@@ -1859,19 +3360,51 @@
           "start": 51,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_import_user_events_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient",
+          "shortName": "UserEventServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient.purge_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.PurgeUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "PurgeUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.PurgeUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "purge_user_events"
       },
+      "description": "Sample for PurgeUserEvents",
       "file": "retail_v2_generated_user_event_service_purge_user_events_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_PurgeUserEvents_async",
       "segments": [
         {
@@ -1904,18 +3437,50 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_purge_user_events_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceClient",
+          "shortName": "UserEventServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceClient.purge_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.PurgeUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "PurgeUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.PurgeUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "purge_user_events"
       },
+      "description": "Sample for PurgeUserEvents",
       "file": "retail_v2_generated_user_event_service_purge_user_events_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_PurgeUserEvents_sync",
       "segments": [
         {
@@ -1948,19 +3513,51 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_purge_user_events_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient",
+          "shortName": "UserEventServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient.rejoin_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.RejoinUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "RejoinUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RejoinUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "rejoin_user_events"
       },
+      "description": "Sample for RejoinUserEvents",
       "file": "retail_v2_generated_user_event_service_rejoin_user_events_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_RejoinUserEvents_async",
       "segments": [
         {
@@ -1993,18 +3590,50 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_rejoin_user_events_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceClient",
+          "shortName": "UserEventServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceClient.rejoin_user_events",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.RejoinUserEvents",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "RejoinUserEvents"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.RejoinUserEventsRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "rejoin_user_events"
       },
+      "description": "Sample for RejoinUserEvents",
       "file": "retail_v2_generated_user_event_service_rejoin_user_events_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_RejoinUserEvents_sync",
       "segments": [
         {
@@ -2037,19 +3666,51 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_rejoin_user_events_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient",
+          "shortName": "UserEventServiceAsyncClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceAsyncClient.write_user_event",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.WriteUserEvent",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "WriteUserEvent"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.WriteUserEventRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.UserEvent",
+        "shortName": "write_user_event"
       },
+      "description": "Sample for WriteUserEvent",
       "file": "retail_v2_generated_user_event_service_write_user_event_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_WriteUserEvent_async",
       "segments": [
         {
@@ -2082,18 +3743,50 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_write_user_event_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.retail_v2.UserEventServiceClient",
+          "shortName": "UserEventServiceClient"
+        },
+        "fullName": "google.cloud.retail_v2.UserEventServiceClient.write_user_event",
         "method": {
+          "fullName": "google.cloud.retail.v2.UserEventService.WriteUserEvent",
           "service": {
+            "fullName": "google.cloud.retail.v2.UserEventService",
             "shortName": "UserEventService"
           },
           "shortName": "WriteUserEvent"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.retail_v2.types.WriteUserEventRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.retail_v2.types.UserEvent",
+        "shortName": "write_user_event"
       },
+      "description": "Sample for WriteUserEvent",
       "file": "retail_v2_generated_user_event_service_write_user_event_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "retail_v2_generated_UserEventService_WriteUserEvent_sync",
       "segments": [
         {
@@ -2126,7 +3819,8 @@
           "start": 47,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "retail_v2_generated_user_event_service_write_user_event_sync.py"
     }
   ]
 }
