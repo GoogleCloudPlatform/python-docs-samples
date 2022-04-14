@@ -20,7 +20,9 @@ OUTPUT_BANDS = ["landcover"]
 NUM_CLASSIFICATIONS = 9
 
 
-def read_dataset(filename: str, patch_size: int, batch_size: int) -> tf.data.Dataset:
+def read_dataset(
+    file_pattern: str, patch_size: int, batch_size: int
+) -> tf.data.Dataset:
     """Reads a compressed TFRecord dataset and preprocesses it into a machine
     learning friendly format."""
     input_shape = (patch_size, patch_size)
@@ -29,23 +31,29 @@ def read_dataset(filename: str, patch_size: int, batch_size: int) -> tf.data.Dat
         for band_name in INPUT_BANDS + OUTPUT_BANDS
     }
     return (
-        tf.data.TFRecordDataset(filename, compression_type="GZIP")
+        tf.data.Dataset.list_files(file_pattern)
+        .interleave(
+            lambda filename: tf.data.TFRecordDataset(filename, compression_type="GZIP"),
+            cycle_length=tf.data.AUTOTUNE,
+            num_parallel_calls=tf.data.AUTOTUNE,
+            deterministic=False,
+        )
+        .batch(batch_size)
         .map(
-            lambda example: tf.io.parse_single_example(example, features_dict),
+            lambda batch: tf.io.parse_example(batch, features_dict),
             num_parallel_calls=tf.data.AUTOTUNE,
         )
         .map(preprocess, num_parallel_calls=tf.data.AUTOTUNE)
         .cache()
-        .batch(batch_size)
         .prefetch(tf.data.AUTOTUNE)
     )
 
 
-def preprocess(values: Dict[str, tf.Tensor]) -> Tuple[tf.Tensor, tf.Tensor]:
+def preprocess(patch: Dict[str, tf.Tensor]) -> Tuple[tf.Tensor, tf.Tensor]:
     """Splits inputs and outputs into a tuple and converts the output
     classifications into one-hot encodings."""
-    inputs = tf.stack([values[band] for band in INPUT_BANDS], axis=-1)
-    outputs = tf.one_hot(tf.cast(values["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
+    inputs = tf.stack([patch[band] for band in INPUT_BANDS], axis=-1)
+    outputs = tf.one_hot(tf.cast(patch["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
     return (inputs, outputs)
 
 
@@ -74,16 +82,16 @@ def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
 
 
 def run(
-    training_file: str,
-    validation_file: str,
+    training_file_pattern: str,
+    validation_file_pattern: str,
     save_model_to: str,
     patch_size: int,
     epochs: int,
     batch_size: int = 256,
 ) -> None:
     """Creates, trains and saves a new model."""
-    training_dataset = read_dataset(training_file, patch_size, batch_size)
-    validation_dataset = read_dataset(validation_file, patch_size, batch_size)
+    training_dataset = read_dataset(training_file_pattern, patch_size, batch_size)
+    validation_dataset = read_dataset(validation_file_pattern, patch_size, batch_size)
 
     model = new_model(training_dataset)
     model.fit(
