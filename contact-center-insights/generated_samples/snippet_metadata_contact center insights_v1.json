@@ -1,16 +1,61 @@
 {
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.cloud.contactcenterinsights.v1",
+        "version": "v1"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-contact-center-insights"
+  },
   "snippets": [
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.calculate_issue_model_stats",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CalculateIssueModelStats",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CalculateIssueModelStats"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CalculateIssueModelStatsRequest"
+          },
+          {
+            "name": "issue_model",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.CalculateIssueModelStatsResponse",
+        "shortName": "calculate_issue_model_stats"
       },
+      "description": "Sample for CalculateIssueModelStats",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_calculate_issue_model_stats_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CalculateIssueModelStats_async",
       "segments": [
         {
@@ -43,18 +88,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_calculate_issue_model_stats_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.calculate_issue_model_stats",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CalculateIssueModelStats",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CalculateIssueModelStats"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CalculateIssueModelStatsRequest"
+          },
+          {
+            "name": "issue_model",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.CalculateIssueModelStatsResponse",
+        "shortName": "calculate_issue_model_stats"
       },
+      "description": "Sample for CalculateIssueModelStats",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_calculate_issue_model_stats_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CalculateIssueModelStats_sync",
       "segments": [
         {
@@ -87,19 +168,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_calculate_issue_model_stats_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.calculate_stats",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CalculateStats",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CalculateStats"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CalculateStatsRequest"
+          },
+          {
+            "name": "location",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.CalculateStatsResponse",
+        "shortName": "calculate_stats"
       },
+      "description": "Sample for CalculateStats",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_calculate_stats_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CalculateStats_async",
       "segments": [
         {
@@ -132,18 +249,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_calculate_stats_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.calculate_stats",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CalculateStats",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CalculateStats"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CalculateStatsRequest"
+          },
+          {
+            "name": "location",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.CalculateStatsResponse",
+        "shortName": "calculate_stats"
       },
+      "description": "Sample for CalculateStats",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_calculate_stats_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CalculateStats_sync",
       "segments": [
         {
@@ -176,19 +329,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_calculate_stats_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.create_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateAnalysisRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "analysis",
+            "type": "google.cloud.contact_center_insights_v1.types.Analysis"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "create_analysis"
       },
+      "description": "Sample for CreateAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_analysis_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateAnalysis_async",
       "segments": [
         {
@@ -221,18 +414,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_analysis_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.create_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateAnalysisRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "analysis",
+            "type": "google.cloud.contact_center_insights_v1.types.Analysis"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "create_analysis"
       },
+      "description": "Sample for CreateAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_analysis_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateAnalysis_sync",
       "segments": [
         {
@@ -265,19 +498,63 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_analysis_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.create_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateConversationRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "conversation",
+            "type": "google.cloud.contact_center_insights_v1.types.Conversation"
+          },
+          {
+            "name": "conversation_id",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "create_conversation"
       },
+      "description": "Sample for CreateConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_conversation_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateConversation_async",
       "segments": [
         {
@@ -310,18 +587,62 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_conversation_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.create_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateConversationRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "conversation",
+            "type": "google.cloud.contact_center_insights_v1.types.Conversation"
+          },
+          {
+            "name": "conversation_id",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "create_conversation"
       },
+      "description": "Sample for CreateConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_conversation_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateConversation_sync",
       "segments": [
         {
@@ -354,19 +675,59 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_conversation_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.create_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateIssueModelRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "issue_model",
+            "type": "google.cloud.contact_center_insights_v1.types.IssueModel"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "create_issue_model"
       },
+      "description": "Sample for CreateIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateIssueModel_async",
       "segments": [
         {
@@ -399,18 +760,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.create_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateIssueModelRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "issue_model",
+            "type": "google.cloud.contact_center_insights_v1.types.IssueModel"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "create_issue_model"
       },
+      "description": "Sample for CreateIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateIssueModel_sync",
       "segments": [
         {
@@ -443,19 +844,59 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.create_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreatePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreatePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreatePhraseMatcherRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "phrase_matcher",
+            "type": "google.cloud.contact_center_insights_v1.types.PhraseMatcher"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "create_phrase_matcher"
       },
+      "description": "Sample for CreatePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_phrase_matcher_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreatePhraseMatcher_async",
       "segments": [
         {
@@ -488,18 +929,58 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_phrase_matcher_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.create_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreatePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreatePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreatePhraseMatcherRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "phrase_matcher",
+            "type": "google.cloud.contact_center_insights_v1.types.PhraseMatcher"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "create_phrase_matcher"
       },
+      "description": "Sample for CreatePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_phrase_matcher_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreatePhraseMatcher_sync",
       "segments": [
         {
@@ -532,19 +1013,59 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_phrase_matcher_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.create_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateViewRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "view",
+            "type": "google.cloud.contact_center_insights_v1.types.View"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "create_view"
       },
+      "description": "Sample for CreateView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_view_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateView_async",
       "segments": [
         {
@@ -577,18 +1098,58 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_view_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.create_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.CreateView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "CreateView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.CreateViewRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "view",
+            "type": "google.cloud.contact_center_insights_v1.types.View"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "create_view"
       },
+      "description": "Sample for CreateView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_create_view_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_CreateView_sync",
       "segments": [
         {
@@ -621,19 +1182,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_create_view_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.delete_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteAnalysisRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_analysis"
       },
+      "description": "Sample for DeleteAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_analysis_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteAnalysis_async",
       "segments": [
         {
@@ -664,18 +1260,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_analysis_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.delete_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteAnalysisRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_analysis"
       },
+      "description": "Sample for DeleteAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_analysis_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteAnalysis_sync",
       "segments": [
         {
@@ -706,19 +1337,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_analysis_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.delete_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteConversationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_conversation"
       },
+      "description": "Sample for DeleteConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_conversation_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteConversation_async",
       "segments": [
         {
@@ -749,18 +1415,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_conversation_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.delete_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteConversationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_conversation"
       },
+      "description": "Sample for DeleteConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_conversation_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteConversation_sync",
       "segments": [
         {
@@ -791,19 +1492,55 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_conversation_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.delete_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "delete_issue_model"
       },
+      "description": "Sample for DeleteIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteIssueModel_async",
       "segments": [
         {
@@ -836,18 +1573,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.delete_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "delete_issue_model"
       },
+      "description": "Sample for DeleteIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteIssueModel_sync",
       "segments": [
         {
@@ -880,19 +1653,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.delete_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeletePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeletePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeletePhraseMatcherRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_phrase_matcher"
       },
+      "description": "Sample for DeletePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_phrase_matcher_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeletePhraseMatcher_async",
       "segments": [
         {
@@ -923,18 +1731,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_phrase_matcher_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.delete_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeletePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeletePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeletePhraseMatcherRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_phrase_matcher"
       },
+      "description": "Sample for DeletePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_phrase_matcher_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeletePhraseMatcher_sync",
       "segments": [
         {
@@ -965,19 +1808,54 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_phrase_matcher_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.delete_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteViewRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_view"
       },
+      "description": "Sample for DeleteView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_view_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteView_async",
       "segments": [
         {
@@ -1008,18 +1886,53 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_view_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.delete_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeleteView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeleteView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeleteViewRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_view"
       },
+      "description": "Sample for DeleteView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_delete_view_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeleteView_sync",
       "segments": [
         {
@@ -1050,19 +1963,55 @@
           "end": 43,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_delete_view_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.deploy_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeployIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeployIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeployIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "deploy_issue_model"
       },
+      "description": "Sample for DeployIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_deploy_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeployIssueModel_async",
       "segments": [
         {
@@ -1095,18 +2044,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_deploy_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.deploy_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.DeployIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "DeployIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.DeployIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "deploy_issue_model"
       },
+      "description": "Sample for DeployIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_deploy_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_DeployIssueModel_sync",
       "segments": [
         {
@@ -1139,19 +2124,55 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_deploy_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.export_insights_data",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ExportInsightsData",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ExportInsightsData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ExportInsightsDataRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "export_insights_data"
       },
+      "description": "Sample for ExportInsightsData",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_export_insights_data_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ExportInsightsData_async",
       "segments": [
         {
@@ -1184,18 +2205,54 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_export_insights_data_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.export_insights_data",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ExportInsightsData",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ExportInsightsData"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ExportInsightsDataRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "export_insights_data"
       },
+      "description": "Sample for ExportInsightsData",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_export_insights_data_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ExportInsightsData_sync",
       "segments": [
         {
@@ -1228,19 +2285,55 @@
           "start": 50,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_export_insights_data_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetAnalysisRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Analysis",
+        "shortName": "get_analysis"
       },
+      "description": "Sample for GetAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_analysis_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetAnalysis_async",
       "segments": [
         {
@@ -1273,18 +2366,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_analysis_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_analysis",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetAnalysis",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetAnalysis"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetAnalysisRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Analysis",
+        "shortName": "get_analysis"
       },
+      "description": "Sample for GetAnalysis",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_analysis_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetAnalysis_sync",
       "segments": [
         {
@@ -1317,19 +2446,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_analysis_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetConversationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "get_conversation"
       },
+      "description": "Sample for GetConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_conversation_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetConversation_async",
       "segments": [
         {
@@ -1362,18 +2527,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_conversation_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetConversationRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "get_conversation"
       },
+      "description": "Sample for GetConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_conversation_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetConversation_sync",
       "segments": [
         {
@@ -1406,19 +2607,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_conversation_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.IssueModel",
+        "shortName": "get_issue_model"
       },
+      "description": "Sample for GetIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetIssueModel_async",
       "segments": [
         {
@@ -1451,18 +2688,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.IssueModel",
+        "shortName": "get_issue_model"
       },
+      "description": "Sample for GetIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetIssueModel_sync",
       "segments": [
         {
@@ -1495,19 +2768,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_issue",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetIssue",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetIssue"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetIssueRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Issue",
+        "shortName": "get_issue"
       },
+      "description": "Sample for GetIssue",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetIssue_async",
       "segments": [
         {
@@ -1540,18 +2849,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_issue",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetIssue",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetIssue"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetIssueRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Issue",
+        "shortName": "get_issue"
       },
+      "description": "Sample for GetIssue",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetIssue_sync",
       "segments": [
         {
@@ -1584,19 +2929,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_issue_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetPhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetPhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetPhraseMatcherRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "get_phrase_matcher"
       },
+      "description": "Sample for GetPhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_phrase_matcher_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetPhraseMatcher_async",
       "segments": [
         {
@@ -1629,18 +3010,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_phrase_matcher_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetPhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetPhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetPhraseMatcherRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "get_phrase_matcher"
       },
+      "description": "Sample for GetPhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_phrase_matcher_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetPhraseMatcher_sync",
       "segments": [
         {
@@ -1673,19 +3090,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_phrase_matcher_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_settings",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetSettings",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetSettings"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetSettingsRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Settings",
+        "shortName": "get_settings"
       },
+      "description": "Sample for GetSettings",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_settings_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetSettings_async",
       "segments": [
         {
@@ -1718,18 +3171,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_settings_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_settings",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetSettings",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetSettings"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetSettingsRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Settings",
+        "shortName": "get_settings"
       },
+      "description": "Sample for GetSettings",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_settings_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetSettings_sync",
       "segments": [
         {
@@ -1762,19 +3251,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_settings_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.get_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetViewRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "get_view"
       },
+      "description": "Sample for GetView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_view_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetView_async",
       "segments": [
         {
@@ -1807,18 +3332,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_view_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.get_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.GetView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "GetView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.GetViewRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "get_view"
       },
+      "description": "Sample for GetView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_get_view_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_GetView_sync",
       "segments": [
         {
@@ -1851,19 +3412,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_get_view_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_analyses",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListAnalyses",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListAnalyses"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListAnalysesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListAnalysesAsyncPager",
+        "shortName": "list_analyses"
       },
+      "description": "Sample for ListAnalyses",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_analyses_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListAnalyses_async",
       "segments": [
         {
@@ -1896,18 +3493,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_analyses_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_analyses",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListAnalyses",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListAnalyses"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListAnalysesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListAnalysesPager",
+        "shortName": "list_analyses"
       },
+      "description": "Sample for ListAnalyses",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_analyses_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListAnalyses_sync",
       "segments": [
         {
@@ -1940,19 +3573,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_analyses_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_conversations",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListConversations",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListConversations"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListConversationsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListConversationsAsyncPager",
+        "shortName": "list_conversations"
       },
+      "description": "Sample for ListConversations",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_conversations_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListConversations_async",
       "segments": [
         {
@@ -1985,18 +3654,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_conversations_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_conversations",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListConversations",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListConversations"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListConversationsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListConversationsPager",
+        "shortName": "list_conversations"
       },
+      "description": "Sample for ListConversations",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_conversations_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListConversations_sync",
       "segments": [
         {
@@ -2029,19 +3734,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_conversations_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_issue_models",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListIssueModels",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListIssueModels"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListIssueModelsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.ListIssueModelsResponse",
+        "shortName": "list_issue_models"
       },
+      "description": "Sample for ListIssueModels",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_issue_models_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListIssueModels_async",
       "segments": [
         {
@@ -2074,18 +3815,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_issue_models_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_issue_models",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListIssueModels",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListIssueModels"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListIssueModelsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.ListIssueModelsResponse",
+        "shortName": "list_issue_models"
       },
+      "description": "Sample for ListIssueModels",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_issue_models_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListIssueModels_sync",
       "segments": [
         {
@@ -2118,19 +3895,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_issue_models_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_issues",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListIssues",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListIssues"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListIssuesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.ListIssuesResponse",
+        "shortName": "list_issues"
       },
+      "description": "Sample for ListIssues",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_issues_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListIssues_async",
       "segments": [
         {
@@ -2163,18 +3976,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_issues_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_issues",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListIssues",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListIssues"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListIssuesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.ListIssuesResponse",
+        "shortName": "list_issues"
       },
+      "description": "Sample for ListIssues",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_issues_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListIssues_sync",
       "segments": [
         {
@@ -2207,19 +4056,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_issues_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_phrase_matchers",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListPhraseMatchers",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListPhraseMatchers"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListPhraseMatchersRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListPhraseMatchersAsyncPager",
+        "shortName": "list_phrase_matchers"
       },
+      "description": "Sample for ListPhraseMatchers",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_phrase_matchers_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListPhraseMatchers_async",
       "segments": [
         {
@@ -2252,18 +4137,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_phrase_matchers_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_phrase_matchers",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListPhraseMatchers",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListPhraseMatchers"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListPhraseMatchersRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListPhraseMatchersPager",
+        "shortName": "list_phrase_matchers"
       },
+      "description": "Sample for ListPhraseMatchers",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_phrase_matchers_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListPhraseMatchers_sync",
       "segments": [
         {
@@ -2296,19 +4217,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_phrase_matchers_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.list_views",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListViews",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListViews"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListViewsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListViewsAsyncPager",
+        "shortName": "list_views"
       },
+      "description": "Sample for ListViews",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_views_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListViews_async",
       "segments": [
         {
@@ -2341,18 +4298,54 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_views_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.list_views",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.ListViews",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "ListViews"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.ListViewsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.services.contact_center_insights.pagers.ListViewsPager",
+        "shortName": "list_views"
       },
+      "description": "Sample for ListViews",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_list_views_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_ListViews_sync",
       "segments": [
         {
@@ -2385,19 +4378,55 @@
           "start": 42,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_list_views_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.undeploy_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UndeployIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UndeployIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UndeployIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation_async.AsyncOperation",
+        "shortName": "undeploy_issue_model"
       },
+      "description": "Sample for UndeployIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_undeploy_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UndeployIssueModel_async",
       "segments": [
         {
@@ -2430,18 +4459,54 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_undeploy_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.undeploy_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UndeployIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UndeployIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UndeployIssueModelRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.api_core.operation.Operation",
+        "shortName": "undeploy_issue_model"
       },
+      "description": "Sample for UndeployIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_undeploy_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UndeployIssueModel_sync",
       "segments": [
         {
@@ -2474,19 +4539,59 @@
           "start": 46,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_undeploy_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateConversationRequest"
+          },
+          {
+            "name": "conversation",
+            "type": "google.cloud.contact_center_insights_v1.types.Conversation"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "update_conversation"
       },
+      "description": "Sample for UpdateConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_conversation_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateConversation_async",
       "segments": [
         {
@@ -2519,18 +4624,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_conversation_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_conversation",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateConversation",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateConversation"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateConversationRequest"
+          },
+          {
+            "name": "conversation",
+            "type": "google.cloud.contact_center_insights_v1.types.Conversation"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Conversation",
+        "shortName": "update_conversation"
       },
+      "description": "Sample for UpdateConversation",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_conversation_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateConversation_sync",
       "segments": [
         {
@@ -2563,19 +4708,59 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_conversation_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateIssueModelRequest"
+          },
+          {
+            "name": "issue_model",
+            "type": "google.cloud.contact_center_insights_v1.types.IssueModel"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.IssueModel",
+        "shortName": "update_issue_model"
       },
+      "description": "Sample for UpdateIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_model_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateIssueModel_async",
       "segments": [
         {
@@ -2608,18 +4793,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_model_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_issue_model",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateIssueModel",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateIssueModel"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateIssueModelRequest"
+          },
+          {
+            "name": "issue_model",
+            "type": "google.cloud.contact_center_insights_v1.types.IssueModel"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.IssueModel",
+        "shortName": "update_issue_model"
       },
+      "description": "Sample for UpdateIssueModel",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_model_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateIssueModel_sync",
       "segments": [
         {
@@ -2652,19 +4877,59 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_model_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_issue",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateIssue",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateIssue"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateIssueRequest"
+          },
+          {
+            "name": "issue",
+            "type": "google.cloud.contact_center_insights_v1.types.Issue"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Issue",
+        "shortName": "update_issue"
       },
+      "description": "Sample for UpdateIssue",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateIssue_async",
       "segments": [
         {
@@ -2697,18 +4962,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_issue",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateIssue",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateIssue"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateIssueRequest"
+          },
+          {
+            "name": "issue",
+            "type": "google.cloud.contact_center_insights_v1.types.Issue"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Issue",
+        "shortName": "update_issue"
       },
+      "description": "Sample for UpdateIssue",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateIssue_sync",
       "segments": [
         {
@@ -2741,19 +5046,59 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_issue_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdatePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdatePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdatePhraseMatcherRequest"
+          },
+          {
+            "name": "phrase_matcher",
+            "type": "google.cloud.contact_center_insights_v1.types.PhraseMatcher"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "update_phrase_matcher"
       },
+      "description": "Sample for UpdatePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_phrase_matcher_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdatePhraseMatcher_async",
       "segments": [
         {
@@ -2786,18 +5131,58 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_phrase_matcher_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_phrase_matcher",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdatePhraseMatcher",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdatePhraseMatcher"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdatePhraseMatcherRequest"
+          },
+          {
+            "name": "phrase_matcher",
+            "type": "google.cloud.contact_center_insights_v1.types.PhraseMatcher"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.PhraseMatcher",
+        "shortName": "update_phrase_matcher"
       },
+      "description": "Sample for UpdatePhraseMatcher",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_phrase_matcher_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdatePhraseMatcher_sync",
       "segments": [
         {
@@ -2830,19 +5215,59 @@
           "start": 45,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_phrase_matcher_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_settings",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateSettings",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateSettings"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateSettingsRequest"
+          },
+          {
+            "name": "settings",
+            "type": "google.cloud.contact_center_insights_v1.types.Settings"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Settings",
+        "shortName": "update_settings"
       },
+      "description": "Sample for UpdateSettings",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_settings_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateSettings_async",
       "segments": [
         {
@@ -2875,18 +5300,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_settings_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_settings",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateSettings",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateSettings"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateSettingsRequest"
+          },
+          {
+            "name": "settings",
+            "type": "google.cloud.contact_center_insights_v1.types.Settings"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.Settings",
+        "shortName": "update_settings"
       },
+      "description": "Sample for UpdateSettings",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_settings_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateSettings_sync",
       "segments": [
         {
@@ -2919,19 +5384,59 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_settings_sync.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
         "async": true,
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient",
+          "shortName": "ContactCenterInsightsAsyncClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsAsyncClient.update_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateViewRequest"
+          },
+          {
+            "name": "view",
+            "type": "google.cloud.contact_center_insights_v1.types.View"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "update_view"
       },
+      "description": "Sample for UpdateView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_view_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateView_async",
       "segments": [
         {
@@ -2964,18 +5469,58 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_view_async.py"
     },
     {
+      "canonical": true,
       "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient",
+          "shortName": "ContactCenterInsightsClient"
+        },
+        "fullName": "google.cloud.contact_center_insights_v1.ContactCenterInsightsClient.update_view",
         "method": {
+          "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights.UpdateView",
           "service": {
+            "fullName": "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
             "shortName": "ContactCenterInsights"
           },
           "shortName": "UpdateView"
-        }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.contact_center_insights_v1.types.UpdateViewRequest"
+          },
+          {
+            "name": "view",
+            "type": "google.cloud.contact_center_insights_v1.types.View"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.contact_center_insights_v1.types.View",
+        "shortName": "update_view"
       },
+      "description": "Sample for UpdateView",
       "file": "contactcenterinsights_v1_generated_contact_center_insights_update_view_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
       "regionTag": "contactcenterinsights_v1_generated_ContactCenterInsights_UpdateView_sync",
       "segments": [
         {
@@ -3008,7 +5553,8 @@
           "start": 41,
           "type": "RESPONSE_HANDLING"
         }
-      ]
+      ],
+      "title": "contactcenterinsights_v1_generated_contact_center_insights_update_view_sync.py"
     }
   ]
 }
