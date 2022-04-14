@@ -161,6 +161,8 @@ def write_dataset_csv_file(
     Returns:
         The unchanged dataset_csv_filename.
     """
+    import apache_beam as beam
+
     logging.info(f"Writing dataset CSV file: {dataset_csv_filename}")
     with beam.io.gcp.gcsio.GcsIO().open(dataset_csv_filename, "w") as f:
         for category, image_gcs_path in images:
