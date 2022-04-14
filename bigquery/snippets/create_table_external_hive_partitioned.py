@@ -50,7 +50,7 @@ def create_table_external_hive_partitioned(table_id: str) -> "bigquery.Table":
     external_config.autodetect = True
 
     # Configure partitioning options.
-    hive_partitioning_opts = bigquery.external_config.HivePartitioningOptions()
+    hive_partitioning_opts = bigquery.HivePartitioningOptions()
 
     # The layout of the files in here is compatible with the layout requirements for hive partitioning,
     # so we can add an optional Hive partitioning configuration to leverage the object paths for deriving
