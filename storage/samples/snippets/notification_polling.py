@@ -38,7 +38,7 @@ below:
    $ gsutil notification create -f json -t testtopic gs://testbucket
 
 5. Create a subscription for your new topic:
-   $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
+   $ gcloud pubsub subscriptions create testsubscription --topic=testtopic
 
 6. Run this program:
    $ python notification_polling.py my-project-id testsubscription
