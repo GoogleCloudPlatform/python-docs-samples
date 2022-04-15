@@ -19,15 +19,35 @@ import pytest
 
 
 @pytest.fixture(scope="session")
-def project_id() -> str:
-    return os.environ["GOOGLE_CLOUD_PROJECT"]
-
-
-@pytest.fixture(scope="session")
 def connection_client() -> connection_service.ConnectionServiceClient:
     return connection_service.ConnectionServiceClient()
 
 
 @pytest.fixture(scope="session")
+def project_id() -> str:
+    return os.environ["GOOGLE_CLOUD_PROJECT"]
+
+
+@pytest.fixture(scope="session")
 def location() -> str:
     return "US"
+
+
+@pytest.fixture(scope="session")
+def database() -> str:
+    return os.environ["MYSQL_DATABASE"]
+
+
+@pytest.fixture(scope="session")
+def cloud_sql_conn_name() -> str:
+    return os.environ["MYSQL_INSTANCE"]
+
+
+@pytest.fixture(scope="session")
+def mysql_username() -> str:
+    return os.environ["MYSQL_USER"]
+
+
+@pytest.fixture(scope="session")
+def mysql_password() -> str:
+    return os.environ["MYSQL_PASSWORD"]
