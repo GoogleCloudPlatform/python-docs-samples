@@ -75,8 +75,8 @@ def test_end_to_end(setup_job):
     filter_date = now - datetime.timedelta(minutes=3)
     filters = (
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
-        "resource.type=cloud_run_revision "
-        f"AND resource.labels.service_name={SERVICE} "
+        "resource.type=cloud_run_job "
+        f"AND resource.labels.job_name={SERVICE} "
         "resource.labels.location = \"us-central1\" "
         "-protoPayload.serviceName=\"run.googleapis.com\""
     )
