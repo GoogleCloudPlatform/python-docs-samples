@@ -1,5 +1,5 @@
 Flask==2.1.0
-google-api-core==2.7.1
+google-api-core==2.7.2
 google-auth==2.6.2
 googleapis-common-protos==1.56.0
 opencensus==0.8.0
