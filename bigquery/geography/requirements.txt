@@ -11,7 +11,7 @@ Fiona==1.8.21
 geojson==2.5.0
 geopandas==0.10.2
 google-api-core==2.7.2
-google-auth==2.6.4
+google-auth==2.6.5
 google-cloud-bigquery==3.0.1
 google-cloud-bigquery-storage==2.13.1
 google-cloud-core==2.3.0
