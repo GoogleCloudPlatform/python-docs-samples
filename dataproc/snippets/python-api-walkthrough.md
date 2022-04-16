@@ -107,8 +107,8 @@ an explanation of how the code works.
 
          python submit_job_to_cluster.py \
          --project_id={{project-id}} \
-         --cluster_name=$CLUSTER \
          --region=$REGION \
+         --cluster_name=$CLUSTER \
          --gcs_bucket=$BUCKET
 
 ## Job Output
