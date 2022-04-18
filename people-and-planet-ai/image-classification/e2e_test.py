@@ -119,7 +119,7 @@ def model_endpoint_id() -> str:
             "NOTE: The permanent model from the testing infrastructure was not "
             "found (probably deleted), but we can still keep going."
         )
-        deployed_model_id = "123"
+        deployed_model_id = "0"
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
@@ -129,9 +129,13 @@ def model_endpoint_id() -> str:
     )
 
     endpoint_path = client.endpoint_path(PROJECT, REGION, endpoint_id)
-    client.undeploy_model(
-        endpoint=endpoint_path, deployed_model_id=deployed_model_id
-    ).result()
+    try:
+        client.undeploy_model(
+            endpoint=endpoint_path, deployed_model_id=deployed_model_id
+        ).result()
+    except google.api_core.exceptions.NotFound as err:
+        if deployed_model_id != "0":
+            raise err
     client.delete_endpoint(name=endpoint_path).result()
 
 
