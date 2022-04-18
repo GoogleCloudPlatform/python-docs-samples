@@ -33,9 +33,9 @@ def root():
 def static_file(path):
     """serves static files required by index.html"""
     mimetype = ''
-    if path.split('.')[1] == 'css':
+    if '.' in path and path.split('.')[1] == 'css':
         mimetype = 'text/css'
-    if path.split('.')[1] == 'js':
+    if '.' in path and path.split('.')[1] == 'js':
         mimetype = 'application/javascript'
     return app.send_static_file(path), 200, {'Content-Type': mimetype}
 
