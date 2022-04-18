@@ -17,6 +17,7 @@ import os
 import subprocess
 import uuid
 
+import google
 from google.cloud import aiplatform
 from google.cloud import bigquery
 from google.cloud import storage
@@ -108,9 +109,13 @@ def bigquery_table(bigquery_dataset: str) -> str:
 def model_endpoint_id() -> str:
     print(f"model_path: {repr(MODEL_PATH)}")
     endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, MODEL_ENDPOINT)
-    deployed_model_id = deploy_model.deploy_model(
-        PROJECT, REGION, MODEL_PATH, MODEL_ENDPOINT, endpoint_id
-    )
+
+    try:
+        deployed_model_id = deploy_model.deploy_model(
+            PROJECT, REGION, MODEL_PATH, MODEL_ENDPOINT, endpoint_id
+        )
+    except google.api_core.exceptions.NotFound:
+        print("The permanent model from the testing infrastructure was not found.")
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
