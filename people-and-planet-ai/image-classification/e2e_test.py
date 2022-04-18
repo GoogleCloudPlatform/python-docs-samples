@@ -119,7 +119,7 @@ def model_endpoint_id() -> str:
             "NOTE: The permanent model from the testing infrastructure was not "
             "found (probably deleted), but we can still keep going."
         )
-        deployed_model_id = "model_not_found"
+        deployed_model_id = "123"
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
