@@ -110,6 +110,7 @@ def model_endpoint_id() -> str:
     print(f"model_path: {repr(MODEL_PATH)}")
     endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, MODEL_ENDPOINT)
 
+    deployed_model_id = None
     try:
         deployed_model_id = deploy_model.deploy_model(
             PROJECT, REGION, MODEL_PATH, MODEL_ENDPOINT, endpoint_id
