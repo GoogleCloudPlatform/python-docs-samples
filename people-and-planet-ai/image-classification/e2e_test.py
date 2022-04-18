@@ -110,7 +110,6 @@ def model_endpoint_id() -> str:
     print(f"model_path: {repr(MODEL_PATH)}")
     endpoint_id = deploy_model.create_model_endpoint(PROJECT, REGION, MODEL_ENDPOINT)
 
-    deployed_model_id = None
     try:
         deployed_model_id = deploy_model.deploy_model(
             PROJECT, REGION, MODEL_PATH, MODEL_ENDPOINT, endpoint_id
@@ -120,6 +119,7 @@ def model_endpoint_id() -> str:
             "NOTE: The permanent model from the testing infrastructure was not "
             "found (probably deleted), but we can still keep going."
         )
+        deployed_model_id = "model_not_found"
 
     print(f"model_endpoint_id: {repr(endpoint_id)}")
     yield endpoint_id
