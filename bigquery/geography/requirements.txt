@@ -40,6 +40,6 @@ requests==2.27.1
 rsa==4.8
 Shapely==1.8.1.post1
 six==1.16.0
-typing-extensions==4.1.1
+typing-extensions==4.2.0
 typing-inspect==0.7.1
 urllib3==1.26.9
