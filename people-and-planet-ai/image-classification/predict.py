@@ -21,6 +21,8 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import predict
 import requests
 
+from train_model import with_retries
+
 
 def run(
     project: str, region: str, model_endpoint_id: str, image_file: str
@@ -43,7 +45,7 @@ def run(
     )
 
     base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
-    image_bytes = requests.get(f"{base_url}/{image_file}").content
+    image_bytes = with_retries(lambda: requests.get(f"{base_url}/{image_file}").content)
 
     response = client.predict(
         endpoint=client.endpoint_path(

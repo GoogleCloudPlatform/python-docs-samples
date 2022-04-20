@@ -75,7 +75,7 @@ def root():
         # Record and fetch the recent times a logged-in user has accessed
         # the site. This is currently shared amongst all users, but will be
         # individualized in a following step.
-        store_time(datetime.datetime.now())
+        store_time(datetime.datetime.now(tz=datetime.timezone.utc))
         times = fetch_times(10)
 
     return render_template(

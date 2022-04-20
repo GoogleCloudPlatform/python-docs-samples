@@ -12,13 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, List, NoReturn
+import os
+from typing import List, NoReturn, TypeVar
 
 from click.testing import CliRunner
-from mock import MagicMock, patch, PropertyMock
+from mock import MagicMock, patch
+import pytest
 
 from check_status import cli
 
+a = TypeVar("a")
 
 MOCK_SERVICE_NAME = "myservice"
 MOCK_GH_TOKEN = "aaaaa"
@@ -29,6 +32,12 @@ MOCK_PROJECT_ID = "foocorp"
 
 
 runner = CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def mock_settings_env_vars() -> NoReturn:
+    with patch.dict(os.environ, {"GITHUB_TOKEN": MOCK_GH_TOKEN}):
+        yield
 
 
 def test_help() -> NoReturn:
@@ -44,7 +53,12 @@ def test_set_no_project() -> NoReturn:
 
 
 def service_data(name: str, tags: List[str]) -> dict:
-    traffic = [{"revisionName": f"{name}-00001-aaa", "percent": 100, }]
+    traffic = [
+        {
+            "revisionName": f"{name}-00001-aaa",
+            "percent": 100,
+        }
+    ]
     for t in tags:
         tag = f"pr-{t}"
         traffic.append(
@@ -58,7 +72,7 @@ def service_data(name: str, tags: List[str]) -> dict:
 
 
 @patch("check_status.discovery")
-def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
+def test_set_wrongtag(discovery_mock: a) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)
@@ -76,7 +90,7 @@ def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
         [
             "set",
             "--project-id",
-            "foo",
+            MOCK_PROJECT_ID,
             "--region",
             "us-central1",
             "--service",
@@ -97,9 +111,8 @@ def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
 
 
 @patch("check_status.discovery")
-@patch("check_status.secretmanager")
 @patch("check_status.github")
-def test_set_check_calls(github_mock: Any, sm_mock: Any, discovery_mock: Any) -> NoReturn:
+def test_set_check_calls(github_mock: a, discovery_mock: a) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)
@@ -109,12 +122,6 @@ def test_set_check_calls(github_mock: Any, sm_mock: Any, discovery_mock: Any) ->
         return_value=service_data(MOCK_SERVICE_NAME, [MOCK_PR_NUMBER])
     )
     discovery_mock.build = MagicMock(return_value=service_mock)
-
-    sm_mock = MagicMock()
-    sm_mock.SecretManagerServiceClient = MagicMock(return_value=sm_mock)
-    sm_mock.access_secret_version = MagicMock(return_value=sm_mock)
-    sm_mock.payload = PropertyMock(return_value="TEST")
-    sm_mock.decode = PropertyMock(return_value=b"foobar")
 
     gh_mock = MagicMock()
     gh_mock.get_repo = MagicMock(return_value=gh_mock)

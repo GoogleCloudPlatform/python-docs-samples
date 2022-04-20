@@ -49,6 +49,9 @@ secret_volume = Secret(
     key='service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
 
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
 # If a Pod fails to launch, or has an error occur in the container, Airflow
@@ -132,9 +135,13 @@ with models.DAG(
         # container to use. env_vars is templated.
         env_vars={
             'EXAMPLE_VAR': '/example/value',
-            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json'})
+            'GOOGLE_APPLICATION_CREDENTIALS': '/var/secrets/google/service-account.json '})
     # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
+    # Pod affinity with the KubernetesPodOperator
+    # is not supported with Composer 2
+    # instead, create a cluster and use the GKEStartPodOperator
+    # https://cloud.google.com/composer/docs/using-gke-operator
     kubernetes_affinity_ex = KubernetesPodOperator(
         task_id='ex-pod-affinity',
         name='ex-pod-affinity',
@@ -231,6 +238,10 @@ with models.DAG(
         # Affinity determines which nodes the Pod can run on based on the
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+        # Pod affinity with the KubernetesPodOperator
+        # is not supported with Composer 2
+        # instead, create a cluster and use the GKEStartPodOperator
+        # https://cloud.google.com/composer/docs/using-gke-operator
         affinity={})
     # [END composer_kubernetespodoperator_fullconfig]
     # [END composer_kubernetespodoperator]

@@ -28,7 +28,7 @@ def execute_workflow(
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
-    # location = 'us- central1'
+    # location = 'us-central1'
     # workflow = 'myFirstWorkflow'
 
     if not project:

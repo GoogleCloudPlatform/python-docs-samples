@@ -14,6 +14,8 @@ ignoreFiles:
   - "**/__init__.py"
   - "**/constraints.txt"
   - "**/constraints-test.txt"
+  - "**/apt.txt"
+  
 
 sourceFileExtensions:
   - "ts"

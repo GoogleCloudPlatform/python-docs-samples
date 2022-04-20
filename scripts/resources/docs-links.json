@@ -179,9 +179,9 @@
   "/appengine/docs/python/mail/mailgun": [
     "appengine/mailgun/main.py"
   ], 
-  "/python/django/container-engine": [
-    "container_engine/django_tutorial/mysite/settings.py", 
-    "container_engine/django_tutorial/polls.yaml"
+  "/python/django/kubernetes-engine": [
+    "kubernetes_engine/django_tutorial/mysite/settings.py", 
+    "kubernetes_engine/django_tutorial/polls.yaml"
   ], 
   "/bigquery/exporting-data-from-bigquery": [
     "bigquery/api/export_data_to_cloud_storage.py"

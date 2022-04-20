@@ -150,7 +150,7 @@ def incomplete_key(client):
 
 def named_key(client):
     # [START datastore_named_key]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     # [END datastore_named_key]
 
     return key
@@ -158,10 +158,10 @@ def named_key(client):
 
 def key_with_parent(client):
     # [START datastore_key_with_parent]
-    key = client.key("TaskList", "default", "Task", "sample_task")
+    key = client.key("TaskList", "default", "Task", "sampleTask")
     # Alternatively
     parent_key = client.key("TaskList", "default")
-    key = client.key("Task", "sample_task", parent=parent_key)
+    key = client.key("Task", "sampleTask", parent=parent_key)
     # [END datastore_key_with_parent]
 
     return key
@@ -169,7 +169,7 @@ def key_with_parent(client):
 
 def key_with_multilevel_parent(client):
     # [START datastore_key_with_multilevel_parent]
-    key = client.key("User", "alice", "TaskList", "default", "Task", "sample_task")
+    key = client.key("User", "alice", "TaskList", "default", "Task", "sampleTask")
     # [END datastore_key_with_multilevel_parent]
 
     return key
@@ -193,7 +193,7 @@ def basic_entity(client):
 
 def entity_with_parent(client):
     # [START datastore_entity_with_parent]
-    key_with_parent = client.key("TaskList", "default", "Task", "sample_task")
+    key_with_parent = client.key("TaskList", "default", "Task", "sampleTask")
 
     task = datastore.Entity(key=key_with_parent)
 
@@ -218,7 +218,7 @@ def properties(client):
         {
             "category": "Personal",
             "description": "Learn Cloud Datastore",
-            "created": datetime.datetime.utcnow(),
+            "created": datetime.datetime.now(tz=datetime.timezone.utc),
             "done": False,
             "priority": 4,
             "percent_complete": 10.5,
@@ -241,7 +241,7 @@ def array_value(client):
 
 def upsert(client):
     # [START datastore_upsert]
-    complete_key = client.key("Task", "sample_task")
+    complete_key = client.key("Task", "sampleTask")
 
     task = datastore.Entity(key=complete_key)
 
@@ -288,7 +288,7 @@ def update(client):
 
     # [START datastore_update]
     with client.transaction():
-        key = client.key("Task", "sample_task")
+        key = client.key("Task", "sampleTask")
         task = client.get(key)
 
         task["done"] = True
@@ -304,7 +304,7 @@ def lookup(client):
     upsert(client)
 
     # [START datastore_lookup]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     task = client.get(key)
     # [END datastore_lookup]
 
@@ -316,7 +316,7 @@ def delete(client):
     upsert(client)
 
     # [START datastore_delete]
-    key = client.key("Task", "sample_task")
+    key = client.key("Task", "sampleTask")
     client.delete(key)
     # [END datastore_delete]
 
@@ -536,7 +536,7 @@ def key_filter(client):
 def ascending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_ascending_sort]
@@ -550,7 +550,7 @@ def ascending_sort(client):
 def descending_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_descending_sort]
@@ -564,7 +564,7 @@ def descending_sort(client):
 def multi_sort(client):
     # Create the entity that we're going to query.
     task = upsert(client)
-    task["created"] = datetime.datetime.utcnow()
+    task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
 
     # [START datastore_multi_sort]
@@ -721,7 +721,7 @@ def exploding_properties(client):
         {
             "tags": ["fun", "programming", "learn"],
             "collaborators": ["alice", "bob", "charlie"],
-            "created": datetime.datetime.utcnow(),
+            "created": datetime.datetime.now(tz=datetime.timezone.utc),
         }
     )
     # [END datastore_exploding_properties]
@@ -767,7 +767,9 @@ def transactional_update(client):
 def transactional_get_or_create(client):
     # [START datastore_transactional_get_or_create]
     with client.transaction():
-        key = client.key("Task", datetime.datetime.utcnow().isoformat())
+        key = client.key(
+            "Task", datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+        )
 
         task = client.get(key)
 

@@ -21,16 +21,16 @@ shopt -s globstar
 
 DIFF_FROM=""
 
-# `--only-diff-master` will only run tests on project changes on the
-# last common commit from the master branch.
-if [[ $* == *--only-diff-master* ]]; then
+# `--only-diff-main` will only run tests on project changes on the
+# last common commit from the main branch.
+if [[ $* == *--only-diff-main* ]]; then
     set +e
-    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+    git diff --quiet "origin/main..." .kokoro/tests .kokoro/docker \
 	.kokoro/trampoline_v2.sh
     CHANGED=$?
     set -e
     if [[ "${CHANGED}" -eq 0 ]]; then
-	DIFF_FROM="origin/master..."
+	DIFF_FROM="origin/main..."
     else
 	echo "Changes to test driver files detected. Running full tests."
     fi
@@ -95,6 +95,12 @@ fi
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
+
+# Import secrets for AWS integration testing. This can be used for products
+# such as Storage Transfer Service.
+if [[ -f "${KOKORO_GFILE_DIR}/aws-secrets.sh" ]]; then
+    source "${KOKORO_GFILE_DIR}/aws-secrets.sh"
+fi
 
 # For cloud-run session, we activate the service account for gcloud sdk.
 gcloud auth activate-service-account \

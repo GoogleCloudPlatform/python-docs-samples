@@ -1,7 +1,7 @@
 # Python Sample Authoring Guide
 
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
-we're opinioned and fussy. This guide is a reference for the format and
+we're opinionated and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 repo. The guidelines below are intended to ensure that all Python samples
@@ -22,7 +22,7 @@ practices as covered below.
 
 We recommend referencing the following samples and sample tests:
 
- * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client)
+ * [Storage client samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/storage/cloud-client)
 
 ### Where should I put my samples?
 
@@ -38,15 +38,15 @@ contains the `google-cloud-bigquery` library.
 ### Who reviews my PR?
 
 This is a work in progress - in **python-docs-samples**, your PR will
-automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
+automatically be assigned to one of the reviewers in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers).
 You can assign a new person using the `blunderbuss:assign` label if your assignee is OOO or busy.
 You can (and probably should) also assign a teammate in addition to the auto-assigned
 owner to review your code for product-specific needs.
 
-In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
-from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
+In **library repositories** GitHub should automatically assign a reviewer
+from python-samples-reviewers. If no reviewer is automatically assigned, contact [@googleapis/python-samples-reviewers](https://github.com/orgs/googleapis/teams/python-samples-reviewers).
 
-Feel free to reach out to your assigned reviewer if it's been a few days and you haven't gotten a response!
+Please reach out to your assigned reviewer if it's been more than 2 days and you haven't gotten a response!
 
 ### How do I set up my environment?
 
@@ -73,28 +73,28 @@ client library repository `googleapis/python-{api}`. Other samples should be pla
 `python-docs-samples`.
 
 **Library repositories:** Each sample should be in a folder under the top-level samples folder `samples`
-in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/master/samples)
+in the client library repository. See the [Text-to-Speech samples](https://github.com/googleapis/python-texttospeech/tree/main/samples)
 for an example.
 
 **python-docs-samples:** Each sample should be in a folder under the top-level folder of
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 that corresponds to the Google Cloud service or API used by the sample.
-For example, a sample demonstrating how to work with BigTable should be
+For example, a sample demonstrating how to work with Composer should be
 in a subfolder under the
-[python-docs-samples/bigtable](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/bigtable)
+[python-docs-samples/composer](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/composer)
 folder.
 
 Conceptually related samples under a service or API should be grouped into
 a subfolder. For example, App Engine Standard samples are under the
-[appengine/standard](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/standard)
+[appengine/standard](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/standard)
 folder, and App Engine Flex samples are under the
-[appengine/flexible](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible)
+[appengine/flexible](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible)
 folder.
 
 If your sample is a set of discrete code snippets that each demonstrate a
 single operation, these should be grouped into a `snippets` folder. For
 example, see the snippets in the
-[bigtable/snippets/writes](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/bigtable/snippets/writes)
+[bigtable/snippets/writes](https://github.com/googleapis/python-bigtable/tree/main/samples/snippets/writes)
 folder.
 
 If your sample is a quickstart — intended to demonstrate how to quickly get
@@ -102,7 +102,7 @@ started with using a service or API — it should be in a _quickstart_ folder.
 
 ### Python Versions
 
-Samples should support Python 3.6, 3.7, and 3.8.
+Samples should support Python 3.6, 3.7, 3.8, and 3.9.
 
 If the API or service your sample works with has specific Python version
 requirements different from those mentioned above, the sample should support
@@ -112,9 +112,9 @@ those requirements.
 
 Source code files should always begin with an Apache 2.0 license header. See
 the instructions in the repo license file on [how to apply the Apache license
-to your work](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/LICENSE#L178-L201).
+to your work](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/LICENSE#L178-L201).
 For example, see the license header for the [Datastore client quickstart
-sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/datastore/cloud-client/quickstart.py#L1-L15).
+sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/datastore/cloud-client/quickstart.py#L1-L15).
 
 ### Shebang
 
@@ -366,6 +366,20 @@ When documenting primitive types, be sure to note if they have a particular set
 of constraints. For example, `A base64-encoded string` or `Must be between 0
 and 10`.
 
+### `datetime.datetime` Objects
+
+Always create timezone aware datetime objects. For libraries that use protobuf,
+omitting the timezone may lead to unexpected behavior when the datetime
+is converted to a protobuf timestamp.
+
+```py
+import datetime
+
+now = datetime.datetime.now(tz=datetime.timezone.utc)
+```
+
+For more information see the [Python datetime documentation](https://docs.python.org/3/library/datetime.html#datetime.datetime.utcfromtimestamp).
+
 ### README File
 
 Each sample should have a `README.md` file that provides instructions for how
@@ -417,7 +431,7 @@ Sample code may be integrated into Google Cloud Documentation through the use
 of region tags, which are comments added to the source code to identify code
 blocks that correspond to specific topics covered in the documentation. For
 example, see
-[this sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/cloud-sql/mysql/sqlalchemy/main.py)
+[this sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/cloud-sql/mysql/sqlalchemy/main.py)
 — the region tags are the comments that begin with `[START` or `[END`.
 
 The use of region tags is beyond the scope of this document, but if you’re
@@ -451,13 +465,15 @@ payload.
 * Samples that use App Engine Standard should use the [App Engine
 testbed](https://cloud.google.com/appengine/docs/standard/python/refdocs/google.appengine.ext.testbed)
 for system testing, as shown in [this
-example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard/localtesting/datastore_test.py).
+example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/appengine/standard/localtesting/datastore_test.py).
 * All tests should be independent of one another and order-independent.
 * We use parallel processing for tests, so tests should be capable of running in parallel with one another.
 * Use pytest's fixture for resource setup and teardown, instead of
   having them in the test itself.
 * Avoid infinite loops.
 * Retry RPCs
+* You can enable running tests in parallel by adding `pytest-parallel` or `pytest-xdist`
+  to your `requirements-test.txt` file.
 
 ### Arrange, Act, Assert
 
@@ -514,6 +530,38 @@ encrypted_disk_name = f'test-disk-{uuid.uuid4().hex[:5]}'
 All temporary resources should be explicitly deleted when testing is
 complete. Use pytest's fixture for cleaning up these resouces instead
 of doing it in test itself.
+
+We recommend using `finally` to ensure that resource deletion occurs even if there is an error on creation. For example, this fixture creates a Dataproc cluster and tears it down regardless of errors during creation.
+
+```python
+@pytest.fixture(scope="function")
+def setup_and_teardown_cluster():
+    try:
+        # Create cluster using cluster client
+        cluster_client = dataproc.ClusterControllerClient(
+            client_options={
+                "api_endpoint": f"{CLUSTER_REGION}-dataproc.googleapis.com:443"
+            }
+        )
+
+        operation = cluster_client.create_cluster(
+            project_id=PROJECT_ID, region=CLUSTER_REGION, cluster=CLUSTER_CONFIG
+        )
+
+        # Wait for cluster to provision
+        operation.result()
+
+        yield
+    finally:
+        try:
+            # Delete cluster
+            operation = cluster_client.delete_cluster(
+                project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
+```
 
 ### Console Output
 
@@ -662,7 +710,7 @@ requires a Google Cloud project with billing enabled, as covered under
 Once you have your project created and configured, you'll need to set
 environment variables to identify the project and resources to be used
 by tests. See
-[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/testing/test-env.tmpl.sh)
+[testing/test-env.tmpl.sh](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/testing/test-env.tmpl.sh)
 for a list of all environment variables that must be set manually. Not every
 test needs all of these variables. All required environment variables
 are listed in `testing/test-env.tmpl.sh`. If you need to add a new secret,
@@ -672,7 +720,7 @@ We suggest that you copy this file as follows:
 
 ```sh
 $ cp testing/test-env.tmpl.sh testing/test-env.sh
-$ editor testing/test-env.sh  # change the value of `GCLOUD_PROJECT`.
+$ editor testing/test-env.sh  # change the value of `GOOGLE_CLOUD_PROJECT`.
 ```
 
 You can easily `source` this file for exporting the environment variables.
@@ -706,9 +754,10 @@ Sample tests are run through [pytest](https://pytest.org). Do not use
 
 __Note:__
 
-**Library repositories:** If you are working on an existing project, a `noxfile.py` will already exist.
+**Library repositories:** If you are working on an existing project (meaning that a `samples` directory already exists), a `noxfile.py` will already exist within that `samples` directory.
+
 For new samples, create a new `noxfile.py` and paste the contents of
-[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile-template.py)
+[noxfile-template.py](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile-template.py). Note - there may be a `noxfile.py` in the repo already in the root directory, but this is used for testing the libraries, not the samples, so you will still need to make a samples noxfile.
 
 **python-docs-samples:** As a temporary workaround, each project currently uses first
 `noxfile-template.py` found in a parent folder above the current sample. In
@@ -829,7 +878,7 @@ For setting up a local test environment, see [Test Environment Setup](#test-envi
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
 If you are unable to access the link, reach out to your assigned pull
-request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers)
 for assistance.
 
 1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)
@@ -851,7 +900,7 @@ environment variable.
 
 The resources required by tests can usually be found in the `./resources`
 folder inside the `samples/snippets` directory in client libraries, as in
-[this example](https://github.com/googleapis/python-automl/tree/master/samples/snippets/resources).
+[this example](https://github.com/googleapis/python-automl/tree/main/samples/snippets/resources).
 You can upload those resources to your own GCS bucket to run the tests with
 [gsutil](https://cloud.google.com/storage/docs/gsutil). For example:
 

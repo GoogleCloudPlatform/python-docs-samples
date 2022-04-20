@@ -22,7 +22,7 @@ def test_functions_pubsub_subscribe_should_print_message(capsys):
 
     event.data = {
         "message": {
-            "data": base64.b64encode(b"Hello, world!"),
+            "data": base64.b64encode(b"world"),
         }
     }
 

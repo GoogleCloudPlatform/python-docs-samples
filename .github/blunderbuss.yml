@@ -15,36 +15,22 @@
 assign_issues_by:
 - labels:
   - 'api: appengine'
+  - 'api: eventarc'
+  - 'api: functions'
+  - 'api: run'
   to:
-  - engelke
+  - GoogleCloudPlatform/aap-dpes
 - labels:
-  - 'api: automl'
-  - 'api: dialogflow'
-  - 'api: language'
-  - 'api: speech'
-  - 'api: texttospeech'
-  - 'api: translate'
-  - 'api: videointelligence'
-  - 'api: vision'
+  - 'api: auth'
   to:
-  - telpirion
-- labels:
-  - 'api: dataflow'
-  to:
-  - davidcavazos
+  - arithmetic1728
 - labels:
   - 'api: bigquery'
-  - 'api: datacatalog'
   to:
   - shollyman
 - labels:
-  - 'api: bigtable'
-  - 'api: datastore'
-  - 'api: firestore'
-  to:
-  - GoogleCloudPlatform/cloud-native-db-dpes
-- labels:
   - 'api: billingbudgets'
+  - 'api: cloudbilling'
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
@@ -52,99 +38,74 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
+  - 'api: composer'
+  to:
+  - leahecole
+  - rachael-ds
+  - rafalbiegacz
+- labels:
   - 'api: compute'
   to:
   - m-strzelczyk
-- labels:
-  - 'api: containeranalysis'
-  to:
-  - donmccasland
-  - dinagraves
-  - kelsk
-- labels:
-  - 'api: datalabeling'
-  - 'api: iot'
-  to:
-  - sgreenberg
-- labels:
-  - 'api: dataproc'
-  to:
-  - loferris
-- labels:
-  - 'api: dns'
-  to:
-  - michaelawyu
-- labels:
-  - 'api: functions'
-  to:
-  - ace-n
-- labels:
-  - 'api: healthcare'
-  to:
-  - noerog
-- labels:
-  - 'api: logging'
-  - 'api: clouderrorreporting'
-  to:
-  - Daniel-Sanche
-- labels:
-  - 'api: ml'
-  to:
-  - alecglassford
-- labels:
-  - 'api: notebooks'
-  to:
-  - alecglassford
-- labels:
-  - 'api: cloudprofiler'
-  to:
-  - kalyanac
-- labels:
-  - 'api: pubsub'
-  to:
-  - anguillanneuf
-- labels:
-  - 'api: run'
-  to:
-  - averikitsch
-- labels:
-  - 'api: cloudscheduler'
-  - 'api: cloudtasks'
-  - 'api: tasks'
-  to:
-  - averikitsch
-- labels:
-  - 'api: spanner'
-  to:
-  - larkee
-- labels:
-  - 'api: storage'
-  to:
-  - cojenco
-  - andrewsg
-- labels:
-  - 'api: cloudtrace'
-  - 'api: trace'
-  to:
-  - dukeng
-  - ziweizhao
-- labels:
-  - 'api: cloudiot'
-  to:
-  - fjanosi-google
-  - joeklemm
 - labels:
   - 'api: datascienceonramp'
   to:
   - leahecole
   - bradmiro
 - labels:
+  - 'api: dataflow'
+  to:
+  - davidcavazos
+- labels:
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: healthcare'
+  to:
+  - noerog
+- labels:
+  - 'api: iot'
+  - 'api: cloudiot'
+  to:
+  - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: ml'
+  to:
+  - ivanmkc
+- labels:
+  - 'api: notebooks'
+  to:
+  - alixhami
+- labels:
+  - 'api: pubsub'
+  - 'api: pubsublite'
+  to:
+  - anguillanneuf
+- labels:
+  - 'api: spanner'
+  to:
+  - GoogleCloudPlatform/api-spanner-python
+- labels:
+  - 'api: storage'
+  to:
+  - GoogleCloudPlatform/cloud-storage-dpes
+- labels:
+  - 'api: cloudtrace'
+  - 'api: trace'
+  to:
+  - ymotongpoo
+- labels:
+  - 'api: translate'
+  to:
+  - nicain
+
+assign_prs_by:
+- labels:
   - 'api: auth'
   to:
   - arithmetic1728
-  - silvolu
-
-assign_prs_by:
 - labels:
   - 'api: bigtable'
   - 'api: datastore'
@@ -153,32 +114,13 @@ assign_prs_by:
   - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
   - 'api: cloudiot'
+  - 'api: iot'
   to:
-  - fjanosi-google
-  - joeklemm
-- labels:
-  - 'api: cloudsql'
-  to:
-  - GoogleCloudPlatform/infra-db-dpes
-- labels:
-  - 'api: auth'
-  to:
-  - arithmetic1728
-  - silvolu
+  - GoogleCloudPlatform/api-iot
 
 
 assign_issues:
-  - busunkim96
-  - leahecole
-  - engelke
-  - kurtisvg
-  - dinagraves
-  - dandhlee
+  - GoogleCloudPlatform/python-samples-owners
 
 assign_prs:
-  - busunkim96
-  - leahecole
-  - engelke
-  - kurtisvg
-  - dinagraves
-  - dandhlee
+  - GoogleCloudPlatform/python-samples-owners

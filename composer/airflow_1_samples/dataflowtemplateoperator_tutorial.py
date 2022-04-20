@@ -23,7 +23,6 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * project_id - Google Cloud Project ID to use for the Cloud Dataflow cluster.
 * gce_zone - Google Compute Engine zone where Cloud Dataflow cluster should be
   created.
-* gce_region - Google Compute Engine region where Cloud Dataflow cluster should be
   created.
 Learn more about the difference between the two here:
 https://cloud.google.com/compute/docs/regions-zones
@@ -40,7 +39,6 @@ from airflow.utils.dates import days_ago
 bucket_path = models.Variable.get("bucket_path")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce_zone")
-gce_region = models.Variable.get("gce_region")
 
 
 default_args = {
@@ -48,12 +46,10 @@ default_args = {
     "start_date": days_ago(1),
     "dataflow_default_options": {
         "project": project_id,
-        # Set to your region
-        "region": gce_region,
         # Set to your zone
         "zone": gce_zone,
         # This is a subfolder for storing temporary files, like the staged pipeline job.
-        "temp_location": bucket_path + "/tmp/",
+        "tempLocation": bucket_path + "/tmp/",
     },
 }
 

@@ -15,9 +15,12 @@
 # [START composer_quickstart]
 import datetime
 
-import airflow
+from airflow import models
 from airflow.operators import bash
 
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_args = {
@@ -31,9 +34,9 @@ default_args = {
     'start_date': YESTERDAY,
 }
 
-with airflow.DAG(
-        'composer_sample_dag',
-        'catchup=False',
+with models.DAG(
+        'composer_quickstart',
+        catchup=False,
         default_args=default_args,
         schedule_interval=datetime.timedelta(days=1)) as dag:
 

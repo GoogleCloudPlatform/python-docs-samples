@@ -1,9 +1,11 @@
 # Don't upgrade to 2.0.0 until opentelemtry-instrumentation-flask is okay with it
 Flask==1.1.4
-opentelemetry-exporter-gcp-trace==1.0.0
-opentelemetry-propagator-gcp==1.0.0
+itsdangerous==1.1.0
+markupsafe==1.1.1
+opentelemetry-exporter-gcp-trace==1.2.0
+opentelemetry-propagator-gcp==1.2.0
 opentelemetry-instrumentation-flask==0.20b0
-grpcio==1.39.0
+grpcio==1.45.0
 httpretty==1.1.4
-google-cloud-monitoring==2.2.1
-google-cloud-trace==0.24.0
+google-cloud-monitoring==2.9.1
+google-cloud-trace==1.6.1

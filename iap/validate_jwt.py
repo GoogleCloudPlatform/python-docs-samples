@@ -16,7 +16,7 @@
 
 This code should be used by applications in Google Compute Engine-based
 environments (such as Google App Engine flexible environment, Google
-Compute Engine, Google Container Engine, Google App Engine) to provide
+Compute Engine, Google Kubernetes Engine, Google App Engine) to provide
 an extra layer of assurance that a request was authorized by IAP.
 """
 # [START iap_validate_jwt]

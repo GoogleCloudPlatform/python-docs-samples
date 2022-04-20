@@ -62,7 +62,7 @@ This command creates a `locales/messages.pot` file in the `locales`
 directory which contains all the string found in your Python code and
 Jinja2 templates.
 
-Since the babel configration file `main.mapping` contains a reference
+Since the babel configuration file `main.mapping` contains a reference
 to `jinja2.ext.babel_extract` helper function which is provided by
 jinja2 distribution bundled with the App Engine SDK, you need to add a
 PYTHONPATH environment variable pointing to the jinja2 directory in

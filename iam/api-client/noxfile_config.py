@@ -18,7 +18,7 @@
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
@@ -38,5 +38,9 @@ TEST_CONFIG_OVERRIDE = {
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    'envs': {},
+    'envs': {
+        # Required for workload identity federation with AWS.
+        'AWS_ACCESS_KEY_ID': 'AKIA000000000EXAMPLE',
+        'AWS_SECRET_ACCESS_KEY': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    },
 }

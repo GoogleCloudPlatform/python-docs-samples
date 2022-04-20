@@ -23,7 +23,7 @@ def create_hl7v2_message(
     """Creates an HL7v2 message and sends a notification to the
     Cloud Pub/Sub topic.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -74,7 +74,7 @@ def delete_hl7v2_message(
 ):
     """Deletes an HL7v2 message.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -119,7 +119,7 @@ def get_hl7v2_message(
 ):
     """Gets an HL7v2 message.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -172,7 +172,7 @@ def ingest_hl7v2_message(
     to the Cloud Pub/Sub topic. Return is an HL7v2 ACK message if the message
     was successfully stored.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -222,7 +222,7 @@ def list_hl7v2_messages(project_id, location, dataset_id, hl7v2_store_id):
     """Lists all the messages in the given HL7v2 store with support for
     filtering.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
@@ -277,7 +277,7 @@ def patch_hl7v2_message(
 ):
     """Updates the message.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/hl7v2
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/hl7v2
     before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery

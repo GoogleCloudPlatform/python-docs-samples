@@ -21,7 +21,7 @@ import os
 def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dcm_file):
     """Handles the POST requests specified in the DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -77,7 +77,7 @@ def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dc
 def dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id):
     """Handles the GET requests specified in DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -135,7 +135,7 @@ def dicomweb_retrieve_study(
 ):
     """Handles the GET requests specified in the DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -194,7 +194,7 @@ def dicomweb_retrieve_study(
 def dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id):
     """Handles the GET requests specified in the DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -263,7 +263,7 @@ def dicomweb_retrieve_instance(
 ):
     """Handles the GET requests specified in the DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -338,7 +338,7 @@ def dicomweb_retrieve_rendered(
 ):
     """Handles the GET requests specified in the DICOMweb standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
@@ -406,7 +406,7 @@ def dicomweb_delete_study(project_id, location, dataset_id, dicom_store_id, stud
     """Handles DELETE requests equivalent to the GET requests specified in
     the WADO-RS standard.
 
-    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/healthcare/api-client/v1/dicom
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
     # Imports Python's built-in "os" module
     import os
