@@ -92,7 +92,7 @@ def deployed_service() -> str:
             "--project",
             GOOGLE_CLOUD_PROJECT,
             "--config",
-            "./test/e2e_test_setup.yaml",
+            "./e2e_test_setup.yaml",
             "--substitutions",
         ]
         + substitutions
@@ -124,7 +124,7 @@ def deployed_service() -> str:
             "--project",
             GOOGLE_CLOUD_PROJECT,
             "--config",
-            "./test/e2e_test_cleanup.yaml",
+            "./e2e_test_cleanup.yaml",
             "--substitutions",
         ]
         + substitutions
