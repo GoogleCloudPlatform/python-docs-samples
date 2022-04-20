@@ -16,7 +16,6 @@ import csv
 import io
 import random
 from typing import List, Optional, Tuple
-import urllib3
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -24,6 +23,7 @@ import ee
 import google.auth
 import numpy as np
 import tensorflow as tf
+import urllib3
 
 
 INPUT_BANDS = [
@@ -82,7 +82,7 @@ def get_patch(
     )
     # TODO: create the PoolManager in `setup` of a DoFn.
     http = urllib3.PoolManager(retries=retry_strategy)
-    np_bytes = http.request("GET", url)
+    np_bytes = http.request("GET", url).data
     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 

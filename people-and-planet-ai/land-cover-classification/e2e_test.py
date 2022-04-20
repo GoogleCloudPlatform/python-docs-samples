@@ -17,9 +17,8 @@ import logging
 import os
 import platform
 import sys
-from typing import Dict
+from unittest.mock import Mock, patch
 import uuid
-from unittest.mock import patch, Mock
 
 from apache_beam.testing.test_pipeline import TestPipeline
 import ee
@@ -63,11 +62,11 @@ sys.modules["google.colab"] = Mock()
 # as undefined methods, so we'll use a custom implementation for testing.
 class PatchedIPython:
     @staticmethod
-    def system(cmd):
+    def system(cmd: str) -> None:
         print(f"!{cmd}")
 
 
-def get_ipython():
+def get_ipython() -> PatchedIPython:
     return PatchedIPython()
 
 
@@ -170,7 +169,7 @@ def run(
         "DATAFLOW_CREATE_DATASETS_JOB_NAME": DATAFLOW_CREATE_DATASETS_JOB_NAME,
     }
     print("+" + "-" * 60)
-    print(f"|  Environment variables")
+    print("|  Environment variables")
     print("+" + "-" * 60)
     for name, value in env.items():
         print(f"{name} = {value}")
