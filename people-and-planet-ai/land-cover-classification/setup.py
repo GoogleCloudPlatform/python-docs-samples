@@ -7,7 +7,6 @@ setup(
     install_requires=[
         "apache-beam[gcp]==2.37.0",
         "earthengine-api==0.1.305",
-        "folium==0.12.1.post1",
         "google-cloud-aiplatform==1.12.0",
         "python-snappy==0.6.1",
         "tensorflow==2.8.0",

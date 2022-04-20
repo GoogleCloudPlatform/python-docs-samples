@@ -1,0 +1,8 @@
+# Files generated from testing.
+*.egg-info/
+*.gif
+*.tfrecord.gz
+README.py
+beam-temp*
+local-model/
+predictions/

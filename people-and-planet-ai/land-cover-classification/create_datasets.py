@@ -36,13 +36,13 @@ def get_patch(
     patch_size: int,
     scale: int,
 ) -> np.ndarray:
-    try:
-        credentials, project = google.auth.default(
-            scopes=["https://www.googleapis.com/auth/cloud-platform"]
-        )
-        ee.Initialize(credentials, project=project)
-    except:
-        ee.Initialize()
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(credentials, project=project)
 
     sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
     landcover_image = get_landcover_image()
@@ -58,7 +58,7 @@ def get_patch(
         }
     )
     np_bytes = requests.get(url).content
-    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+    return np.load(io.BytesIO(np_bytes), allow_pickle=False)
 
 
 def get_landcover_image() -> ee.Image:
