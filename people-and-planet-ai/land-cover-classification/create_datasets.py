@@ -2,7 +2,7 @@ import csv
 import io
 from typing import List, Optional, Tuple
 import random
-import requests
+import urllib3
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -57,8 +57,17 @@ def get_patch(
             "bands": bands,
         }
     )
-    np_bytes = requests.get(url).content
-    return np.load(io.BytesIO(np_bytes), allow_pickle=False)
+
+    # There is an Earth Engine quota that if exceeded will return us:
+    #   Status code 429: Too Many Requests
+    # For more information, see https://developers.google.com/earth-engine/guides/usage
+    retry_strategy = urllib3.Retry(
+        total=20,
+        status_forcelist=[429],
+        backoff_factor=0.1,
+    )
+    np_bytes = urllib3.request("GET", url, retries=retry_strategy)
+    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
 def get_landcover_image() -> ee.Image:
@@ -138,6 +147,7 @@ def run(
 if __name__ == "__main__":
     import argparse
     import logging
+    import os
 
     logging.getLogger().setLevel(logging.INFO)
 
@@ -150,6 +160,11 @@ if __name__ == "__main__":
         "--training-validation-ratio", default=(90, 10), type=int, nargs=2
     )
     args, beam_args = parser.parse_known_args()
+
+    # ℹ️ Assignment expressions were introduced in Python 3.8.
+    #   https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions
+    if job_name := os.environ.get("CREATE_DATASETS_JOB_NAME"):
+        beam_args.append(f"--job_name={job_name}")
 
     run(
         training_file=args.training_file,
