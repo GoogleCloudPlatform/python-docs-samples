@@ -1,4 +1,4 @@
-ipython==8.2.0
+ipython==7.32.0
 nbconvert==6.4.5
 pytest-xdist==2.5.0
 pytest==7.1.1
