@@ -196,7 +196,7 @@ audio_config = texttospeech.AudioConfig(
 ### Creating Request Objects for GAPICs
 
 GAPIC libraries are generated from [protos](https://github.com/googleapis/googleapis)
-that define the API surface via a [generator](https://github.com/googleapis/gapic-generator-python)).
+that define the API surface via a [generator](https://github.com/googleapis/gapic-generator-python).
 GAPIC libraries have library type `GAPIC_AUTO` in `.repo-metadata.json`
 located in the root of the repository. Some `GAPIC_COMBO` libraries will
 also expose [`proto-plus`](https://github.com/googleapis/proto-plus-python/) types.
