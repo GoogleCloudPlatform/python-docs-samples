@@ -1,7 +1,21 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import csv
 import io
-from typing import List, Optional, Tuple
 import random
+from typing import List, Optional, Tuple
 import urllib3
 
 import apache_beam as beam
@@ -66,7 +80,9 @@ def get_patch(
         status_forcelist=[429],
         backoff_factor=0.1,
     )
-    np_bytes = urllib3.request("GET", url, retries=retry_strategy)
+    # TODO: create the PoolManager in `setup` of a DoFn.
+    http = urllib3.PoolManager(retries=retry_strategy)
+    np_bytes = http.request("GET", url)
     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
@@ -161,9 +177,8 @@ if __name__ == "__main__":
     )
     args, beam_args = parser.parse_known_args()
 
-    # ℹ️ Assignment expressions were introduced in Python 3.8.
-    #   https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions
-    if job_name := os.environ.get("CREATE_DATASETS_JOB_NAME"):
+    job_name = os.environ.get("CREATE_DATASETS_JOB_NAME")
+    if job_name:
         beam_args.append(f"--job_name={job_name}")
 
     run(
