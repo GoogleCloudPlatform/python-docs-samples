@@ -20,11 +20,8 @@ import uuid
 from google.api_core import client_options
 import google.api_core.exceptions
 import google.auth
-from google.cloud import bigquery
-from google.cloud import bigquery_datatransfer
-from google.cloud import pubsub_v1
+from google.cloud import bigquery, bigquery_datatransfer, pubsub_v1
 import pytest
-
 
 RESOURCE_PREFIX = "python_bigquery_datatransfer_samples_snippets"
 RESOURCE_DATE_FORMAT = "%Y%m%d%H%M%S"
