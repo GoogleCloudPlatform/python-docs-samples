@@ -21,7 +21,6 @@ import pytest
 
 import delete_queue
 
-
 TEST_PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
 TEST_QUEUE_NAME = f"my-queue-{uuid.uuid4().hex}"
