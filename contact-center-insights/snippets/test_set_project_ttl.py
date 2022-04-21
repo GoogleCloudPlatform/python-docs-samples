@@ -13,10 +13,8 @@
 # limitations under the License.
 #
 import google.auth
-
 from google.cloud import contact_center_insights_v1
 from google.protobuf import field_mask_pb2
-
 import pytest
 
 import set_project_ttl

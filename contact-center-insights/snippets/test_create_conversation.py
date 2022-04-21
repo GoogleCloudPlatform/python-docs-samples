@@ -13,9 +13,7 @@
 # limitations under the License.
 #
 import google.auth
-
 from google.cloud import contact_center_insights_v1
-
 import pytest
 
 import create_conversation

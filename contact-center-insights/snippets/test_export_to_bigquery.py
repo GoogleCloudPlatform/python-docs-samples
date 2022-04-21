@@ -15,9 +15,7 @@
 import uuid
 
 import google.auth
-
 from google.cloud import bigquery
-
 import pytest
 
 import export_to_bigquery
