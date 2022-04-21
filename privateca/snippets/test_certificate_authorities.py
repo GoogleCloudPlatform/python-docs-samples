@@ -28,7 +28,6 @@ from monitor_certificate_authority import create_ca_monitor_policy
 from undelete_certificate_authority import undelete_certificate_authority
 from update_certificate_authority import update_ca_label
 
-
 PROJECT = google.auth.default()[1]
 LOCATION = "europe-west1"
 COMMON_NAME = "COMMON_NAME"

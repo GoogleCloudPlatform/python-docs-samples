@@ -15,7 +15,6 @@
 import uuid
 
 import google.auth
-
 import pytest
 
 from create_ca_pool import create_ca_pool

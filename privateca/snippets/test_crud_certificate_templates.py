@@ -23,7 +23,6 @@ from delete_certificate_template import delete_certificate_template
 from list_certificate_templates import list_certificate_templates
 from update_certificate_template import update_certificate_template
 
-
 PROJECT = google.auth.default()[1]
 LOCATION = "europe-west1"
 COMMON_NAME = "COMMON_NAME"
