@@ -22,7 +22,6 @@ from flask import Flask, render_template, url_for
 from google.cloud import recaptchaenterprise_v1
 from google.cloud.recaptchaenterprise_v1 import Assessment
 import pytest
-
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 
@@ -30,7 +29,6 @@ from annotate_assessment import annotate_assessment
 from create_assessment import create_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
-
 
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 DOMAIN_NAME = "localhost"

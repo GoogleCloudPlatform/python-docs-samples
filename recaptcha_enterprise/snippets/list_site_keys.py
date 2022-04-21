@@ -14,7 +14,6 @@
 
 # [START recaptcha_enterprise_list_site_keys]
 from google.cloud import recaptchaenterprise_v1
-
 from google.cloud.recaptchaenterprise_v1.services.recaptcha_enterprise_service.pagers import (
     ListKeysPager,
 )
