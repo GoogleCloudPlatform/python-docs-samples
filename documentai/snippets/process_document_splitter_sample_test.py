@@ -17,7 +17,6 @@ import os
 
 from samples.snippets import process_document_splitter_sample
 
-
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "ed55eeb2b276066f"
