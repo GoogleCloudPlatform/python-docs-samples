@@ -28,7 +28,6 @@ import pytest
 
 import inspect_content
 
-
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")

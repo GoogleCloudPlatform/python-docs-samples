@@ -16,7 +16,6 @@ import os
 
 import quickstart
 
-
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 

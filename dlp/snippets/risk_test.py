@@ -21,7 +21,6 @@ import pytest
 
 import risk
 
-
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 TABLE_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")

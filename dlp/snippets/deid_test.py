@@ -17,7 +17,6 @@ import shutil
 import tempfile
 
 import google.cloud.dlp_v2
-
 import pytest
 
 import deid

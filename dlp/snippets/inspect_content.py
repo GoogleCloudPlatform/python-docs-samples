@@ -466,14 +466,14 @@ def inspect_gcs_file(
     """
 
     # Import the client library.
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
     import google.cloud.dlp
 
     # This sample additionally uses Cloud Pub/Sub to receive results from
     # potentially long-running operations.
     import google.cloud.pubsub
-
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -626,14 +626,14 @@ def inspect_datastore(
     """
 
     # Import the client library.
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
     import google.cloud.dlp
 
     # This sample additionally uses Cloud Pub/Sub to receive results from
     # potentially long-running operations.
     import google.cloud.pubsub
-
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -796,14 +796,14 @@ def inspect_bigquery(
     """
 
     # Import the client library.
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
     import google.cloud.dlp
 
     # This sample additionally uses Cloud Pub/Sub to receive results from
     # potentially long-running operations.
     import google.cloud.pubsub
-
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()

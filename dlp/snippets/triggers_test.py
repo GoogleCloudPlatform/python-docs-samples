@@ -17,7 +17,6 @@ import uuid
 
 import google.api_core.exceptions
 import google.cloud.storage
-
 import pytest
 
 import triggers

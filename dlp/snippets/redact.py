@@ -25,7 +25,6 @@ import mimetypes
 # [END dlp_redact_image]
 import os
 
-
 # [START dlp_redact_image]
 
 
