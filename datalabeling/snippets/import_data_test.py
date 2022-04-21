@@ -24,7 +24,6 @@ import pytest
 import import_data
 import testing_lib
 
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 INPUT_GCS_URI = "gs://cloud-samples-data/datalabeling/image/image_dataset.csv"
 

@@ -17,15 +17,13 @@ import time
 
 import backoff
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import DeadlineExceeded
-from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import DeadlineExceeded, FailedPrecondition
 from google.cloud import datalabeling_v1beta1 as datalabeling
 
 import create_annotation_spec_set as annotation_spec_set_sample
 import create_instruction as instruction_sample
 import import_data as import_sample
 import manage_dataset as dataset_sample
-
 
 RETRY_DEADLINE = 60
 

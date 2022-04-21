@@ -17,13 +17,11 @@
 import os
 
 import backoff
-from google.api_core.exceptions import RetryError
-from google.api_core.exceptions import ServerError
+from google.api_core.exceptions import RetryError, ServerError
 import pytest
 
 import manage_dataset
 import testing_lib
-
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
