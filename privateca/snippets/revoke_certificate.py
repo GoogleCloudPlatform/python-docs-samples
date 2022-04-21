@@ -16,6 +16,7 @@
 
 import sys
 
+# isort: split
 # [START privateca_revoke_certificate]
 
 import google.cloud.security.privateca_v1 as privateca_v1
