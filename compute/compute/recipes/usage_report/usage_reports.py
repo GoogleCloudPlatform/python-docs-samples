@@ -28,6 +28,9 @@ with the Compute Engine API and how to configure usage reports using the API.
 
 
 # <REGION compute_usage_report_set>
+
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT set_usage_export_bucket />
 
 # </REGION compute_usage_report_set>
@@ -40,6 +43,9 @@ with the Compute Engine API and how to configure usage reports using the API.
 
 
 # <REGION compute_usage_report_disable>
+
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT disable_usage_export />
 
 # </REGION compute_usage_report_disable>

@@ -31,16 +31,12 @@ def reset_instance(project_id: str, zone: str, instance_name: str) -> None:
         instance_name: name of the instance your want to reset.
     """
     instance_client = compute_v1.InstancesClient()
-    op_client = compute_v1.ZoneOperationsClient()
 
-    op = instance_client.reset_unary(
+    operation = instance_client.reset(
         project=project_id, zone=zone, instance=instance_name
     )
 
-    start = time.time()
-    while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
-        if time.time() - start >= 300:  # 5 minutes
-            raise TimeoutError()
+    wait_for_extended_operation(operation, "instance reset")
+
     return
 # </INGREDIENT>

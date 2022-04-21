@@ -16,7 +16,6 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import sys
 
 
 from google.cloud import compute_v1
@@ -43,17 +42,9 @@ def create_snapshot(project_id: str, zone: str, disk_name: str, snapshot_name: s
     snapshot.name = snapshot_name
 
     snapshot_client = compute_v1.SnapshotsClient()
-    operation = snapshot_client.insert_unary(project=project_id, snapshot_resource=snapshot)
-    op_client = compute_v1.GlobalOperationsClient()
-    operation = op_client.wait(project=project_id, operation=operation.name)
+    operation = snapshot_client.insert(project=project_id, snapshot_resource=snapshot)
 
-    if operation.error:
-        print("Error during snapshot creation:", operation.error, file=sys.stderr)
-        raise RuntimeError(operation.error)
-    if operation.warnings:
-        print("Warnings during snapshot creation:\n", file=sys.stderr)
-        for warning in operation.warnings:
-            print(f" - {warning.code}: {warning.message}", file=sys.stderr)
+    wait_for_extended_operation(operation, "snapshot creation")
 
     return snapshot_client.get(project=project_id, snapshot=snapshot_name)
 

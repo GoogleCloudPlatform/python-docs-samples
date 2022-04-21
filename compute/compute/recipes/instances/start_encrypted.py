@@ -16,6 +16,8 @@
 # <REGION compute_start_enc_instance>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT start_instance_with_encryption_key />
 # </REGION compute_start_enc_instance>

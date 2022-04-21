@@ -16,5 +16,7 @@
 # <REGION compute_template_create_with_subnet>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_template_with_subnet />
 # </REGION compute_template_create_with_subnet>

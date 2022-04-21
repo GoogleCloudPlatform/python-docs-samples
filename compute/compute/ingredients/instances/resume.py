@@ -31,22 +31,17 @@ def resume_instance(project_id: str, zone: str, instance_name: str) -> None:
         instance_name: name of the instance your want to resume.
     """
     instance_client = compute_v1.InstancesClient()
-    op_client = compute_v1.ZoneOperationsClient()
 
     instance = instance_client.get(project=project_id, zone=zone, instance=instance_name)
     if instance.status != compute_v1.Instance.Status.SUSPENDED.name:
         raise RuntimeError(f"Only suspended instances can be resumed. "
                            f"Instance {instance_name} is in {instance.status} state.")
 
-    op = instance_client.resume_unary(
+    operation = instance_client.resume(
         project=project_id, zone=zone, instance=instance_name
     )
 
-    start = time.time()
-    while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
-        if time.time() - start >= 300:  # 5 minutes
-            raise TimeoutError()
+    wait_for_extended_operation(operation, "instance resumption")
     return
 # </INGREDIENT>
 

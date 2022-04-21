@@ -16,5 +16,7 @@
 # <REGION compute_instances_create_from_template>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_instance_from_template />
 # </REGION compute_instances_create_from_template>

@@ -16,6 +16,7 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+import sys
 
 from google.cloud import compute_v1
 
@@ -64,11 +65,11 @@ def create_template(project_id: str, template_name: str) -> compute_v1.InstanceT
     template.properties.network_interfaces = [network_interface]
 
     template_client = compute_v1.InstanceTemplatesClient()
-    operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert_unary(
+    operation = template_client.insert(
         project=project_id, instance_template_resource=template
     )
-    operation_client.wait(project=project_id, operation=op.name)
+
+    wait_for_extended_operation(operation, "instance template creation")
 
     return template_client.get(project=project_id, instance_template=template_name)
 # </INGREDIENT>

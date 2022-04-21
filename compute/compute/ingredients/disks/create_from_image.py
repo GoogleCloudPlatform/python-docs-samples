@@ -51,17 +51,9 @@ def create_disk_from_image(
     disk.source_image = source_image
 
     disk_client = compute_v1.DisksClient()
-    operation = disk_client.insert_unary(project=project_id, zone=zone, disk_resource=disk)
-    operation_client = compute_v1.ZoneOperationsClient()
-    operation = operation_client.wait(project=project_id, zone=zone, operation=operation.name)
+    operation = disk_client.insert(project=project_id, zone=zone, disk_resource=disk)
 
-    if operation.error:
-        print("Error during disk creation:", operation.error, file=sys.stderr)
-        raise RuntimeError(operation.error)
-    if operation.warnings:
-        print("Warnings during disk creation:\n", file=sys.stderr)
-        for warning in operation.warnings:
-            print(f" - {warning.code}: {warning.message}", file=sys.stderr)
+    wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk.name)
 # </INGREDIENT>

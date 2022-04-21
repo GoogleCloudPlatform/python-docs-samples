@@ -16,6 +16,8 @@
 # <REGION compute_firewall_create>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_firewall_rule />
 
 # </REGION compute_firewall_create>

@@ -16,6 +16,7 @@
 # <REGION compute_reset_instance>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
 
 # <INGREDIENT reset_instance />
 # </REGION compute_reset_instance>

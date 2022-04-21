@@ -16,5 +16,7 @@
 # <REGION compute_template_delete>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT delete_instance_template />
 # </REGION compute_template_delete>

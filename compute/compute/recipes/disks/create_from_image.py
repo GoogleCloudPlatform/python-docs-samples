@@ -16,6 +16,8 @@
 # <REGION compute_disk_create_from_image>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_disk_from_image />
 
 # </REGION compute_disk_create_from_image>

@@ -53,7 +53,6 @@ def create_instance_from_template_with_overrides(
     Returns:
         Instance object.
     """
-    operation_client = compute_v1.ZoneOperationsClient()
     instance_client = compute_v1.InstancesClient()
     instance_template_client = compute_v1.InstanceTemplatesClient()
 
@@ -90,8 +89,8 @@ def create_instance_from_template_with_overrides(
     instance_insert_request.instance_resource = instance
     instance_insert_request.source_instance_template = instance_template.self_link
 
-    op = instance_client.insert_unary(instance_insert_request)
-    operation_client.wait(project=project_id, zone=zone, operation=op.name)
+    operation = instance_client.insert(instance_insert_request)
+    wait_for_extended_operation(operation, "instance creation")
 
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 # </INGREDIENT>

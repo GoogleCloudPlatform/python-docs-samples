@@ -19,6 +19,8 @@
 
 # <INGREDIENT get_disk />
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT create_instance />
 

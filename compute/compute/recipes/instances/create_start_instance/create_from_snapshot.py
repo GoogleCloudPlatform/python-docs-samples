@@ -18,6 +18,8 @@
 
 # <INGREDIENT disk_from_snapshot />
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT create_instance />
 

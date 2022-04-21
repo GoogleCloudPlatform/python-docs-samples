@@ -16,5 +16,7 @@
 # <REGION compute_delete_protection_set>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT set_delete_protection />
 # </REGION compute_delete_protection_set>

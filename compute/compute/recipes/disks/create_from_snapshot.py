@@ -16,6 +16,8 @@
 # <REGION compute_disk_create_from_snapshot>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_disk_from_snapshot />
 
 # </REGION compute_disk_create_from_snapshot>

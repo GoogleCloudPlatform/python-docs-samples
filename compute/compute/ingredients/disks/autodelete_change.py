@@ -46,16 +46,8 @@ def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_nam
 
     disk.auto_delete = autodelete
 
-    operation = instance_client.update_unary(project=project_id, zone=zone, instance=instance_name, instance_resource=instance)
-    operation_client = compute_v1.ZoneOperationsClient()
-    operation = operation_client.wait(project=project_id, zone=zone, operation=operation.name)
+    operation = instance_client.update(project=project_id, zone=zone, instance=instance_name, instance_resource=instance)
 
-    if operation.error:
-        print("Error during instance update:", operation.error, file=sys.stderr)
-        raise RuntimeError(operation.error)
-    if operation.warnings:
-        print("Warnings during instance update:\n", file=sys.stderr)
-        for warning in operation.warnings:
-            print(f" - {warning.code}: {warning.message}", file=sys.stderr)
+    wait_for_extended_operation(operation, "disk update")
     return
 # </INGREDIENT>

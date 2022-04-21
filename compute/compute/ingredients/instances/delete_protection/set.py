@@ -33,7 +33,6 @@ def set_delete_protection(
             protected against deletion or not.
     """
     instance_client = compute_v1.InstancesClient()
-    operation_client = compute_v1.ZoneOperationsClient()
 
     request = compute_v1.SetDeletionProtectionInstanceRequest()
     request.project = project_id
@@ -41,7 +40,7 @@ def set_delete_protection(
     request.resource = instance_name
     request.deletion_protection = delete_protection
 
-    operation = instance_client.set_deletion_protection_unary(request)
-    operation_client.wait(project=project_id, zone=zone, operation=operation.name)
+    operation = instance_client.set_deletion_protection(request)
+    wait_for_extended_operation(operation, "changing delete protection setting")
     return
 # </INGREDIENT>

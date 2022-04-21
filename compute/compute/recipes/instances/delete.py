@@ -16,6 +16,8 @@
 # <REGION compute_instances_delete>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT delete_instance />
 # </REGION compute_instances_delete>

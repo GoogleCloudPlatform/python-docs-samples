@@ -63,11 +63,10 @@ def create_template_with_subnet(
     template.properties.network_interfaces = [network_interface]
 
     template_client = compute_v1.InstanceTemplatesClient()
-    operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.insert_unary(
+    operation = template_client.insert(
         project=project_id, instance_template_resource=template
     )
-    operation_client.wait(project=project_id, operation=op.name)
+    wait_for_extended_operation(operation, "instance template creation")
 
     return template_client.get(project=project_id, instance_template=template_name)
 # </INGREDIENT>

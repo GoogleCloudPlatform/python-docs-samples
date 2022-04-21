@@ -30,10 +30,9 @@ def delete_instance_template(project_id: str, template_name: str):
         template_name: name of the template to delete.
     """
     template_client = compute_v1.InstanceTemplatesClient()
-    operation_client = compute_v1.GlobalOperationsClient()
-    op = template_client.delete_unary(
+    operation = template_client.delete(
         project=project_id, instance_template=template_name
     )
-    operation_client.wait(project=project_id, operation=op.name)
+    wait_for_extended_operation(operation, "instance template deletion")
     return
 # </INGREDIENT>

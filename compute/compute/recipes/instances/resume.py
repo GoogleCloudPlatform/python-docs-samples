@@ -16,6 +16,8 @@
 # <REGION compute_resume_instance>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT resume_instance />
 # </REGION compute_resume_instance>

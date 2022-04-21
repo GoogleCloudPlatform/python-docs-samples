@@ -16,5 +16,7 @@
 # <REGION compute_instances_create_from_template_with_overrides>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_instance_from_template_with_overrides />
 # </REGION compute_instances_create_from_template_with_overrides>

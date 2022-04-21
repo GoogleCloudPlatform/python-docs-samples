@@ -24,6 +24,8 @@
 
 # <INGREDIENT disk_from_image />
 
+# <INGREDIENT wait_for_extended_operation />
+
 
 # <INGREDIENT create_instance />
 

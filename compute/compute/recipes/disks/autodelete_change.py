@@ -16,6 +16,8 @@
 # <REGION compute_disk_autodelete_change>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT set_disk_autodelete />
 
 # </REGION compute_disk_autodelete_change>
