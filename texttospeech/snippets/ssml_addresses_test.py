@@ -13,8 +13,7 @@
 # limitations under the License.
 import os
 
-from ssml_addresses import ssml_to_audio
-from ssml_addresses import text_to_ssml
+from ssml_addresses import ssml_to_audio, text_to_ssml
 
 
 def test_text_to_ssml(capsys):
