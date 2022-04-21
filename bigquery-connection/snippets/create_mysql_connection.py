@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START bigqueryconnection_connection_create]
+# [START bigqueryconnection_create_connection]
 from google.cloud import bigquery_connection_v1 as bq_connection
 
 """This sample shows how to create a BigQuery connection with a Cloud SQL for MySQL database"""
@@ -61,4 +61,4 @@ def create_mysql_connection(
     print(f"Created connection successfully: {response.name}")
 
 
-# [END bigqueryconnection_connection_create]
+# [END bigqueryconnection_create_connection]
