@@ -14,7 +14,6 @@
 
 import csv
 import io
-import random
 from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import apache_beam as beam
@@ -140,6 +139,8 @@ def get_landcover_image() -> ee.Image:
 def sample_random_points(
     region: Dict[str, float], points_per_region: int = 100
 ) -> Iterable[Dict[str, float]]:
+    import random
+
     for _ in range(points_per_region):
         yield {
             "lat": random.uniform(region["south"], region["north"]),
@@ -168,6 +169,8 @@ def run(
     beam_options: Optional[PipelineOptions] = None,
 ) -> None:
     def split_dataset(element: bytes, num_partitions: int) -> int:
+        import random
+
         return random.choices([0, 1], weights=training_validation_ratio)[0]
 
     with open(regions_file) as f:
