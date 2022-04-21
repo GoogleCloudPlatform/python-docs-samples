@@ -17,9 +17,7 @@ import os
 import uuid
 
 import backoff
-
 from google.cloud import container_v1 as gke
-
 import pytest
 
 import create_cluster as gke_create

@@ -17,10 +17,8 @@ import os
 import uuid
 
 import backoff
-
 from google.api_core import exceptions as googleEx
 from google.cloud import container_v1 as gke
-
 import pytest
 
 import delete_cluster as gke_delete
