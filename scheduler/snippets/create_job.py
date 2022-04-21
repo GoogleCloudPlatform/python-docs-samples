@@ -52,8 +52,8 @@ def create_scheduler_job(project_id, location_id, service_id):
 def delete_scheduler_job(project_id, location_id, job_id):
     """Delete a job via the Cloud Scheduler API"""
     # [START cloud_scheduler_delete_job]
-    from google.cloud import scheduler
     from google.api_core.exceptions import GoogleAPICallError
+    from google.cloud import scheduler
 
     # Create a client.
     client = scheduler.CloudSchedulerClient()
