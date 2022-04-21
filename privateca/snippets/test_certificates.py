@@ -20,10 +20,7 @@ import uuid
 
 from cryptography.hazmat.backends.openssl.backend import backend
 from cryptography.hazmat.primitives.asymmetric import rsa
-
-from cryptography.hazmat.primitives.serialization import Encoding
-from cryptography.hazmat.primitives.serialization import PublicFormat
-
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 import google.auth
 
 from create_certificate import create_certificate
@@ -31,7 +28,6 @@ from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
 from filter_certificates import filter_certificates
 from revoke_certificate import revoke_certificate
-
 
 PROJECT = google.auth.default()[1]
 LOCATION = "europe-west1"
