@@ -16,6 +16,8 @@
 # <REGION compute_disk_create_empty_disk>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_empty_disk />
 
 # </REGION compute_disk_create_empty_disk>

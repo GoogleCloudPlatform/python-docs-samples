@@ -49,13 +49,10 @@ def set_usage_export_bucket(
         )
 
     projects_client = compute_v1.ProjectsClient()
-    operation = projects_client.set_usage_export_bucket_unary(
+    operation = projects_client.set_usage_export_bucket(
         project=project_id, usage_export_location_resource=usage_export_location
     )
 
-    op_client = compute_v1.GlobalOperationsClient()
-
-    while operation.status != compute_v1.Operation.Status.DONE:
-        operation = op_client.wait(operation=operation.name, project=project_id)
+    wait_for_extended_operation(operation, "setting GCE usage bucket")
 # </INGREDIENT>
 

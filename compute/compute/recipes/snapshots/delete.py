@@ -16,6 +16,8 @@
 # <REGION compute_snapshot_delete>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT delete_snapshot />
 
 # </REGION compute_snapshot_delete>

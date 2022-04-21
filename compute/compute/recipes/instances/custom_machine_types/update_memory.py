@@ -16,5 +16,7 @@
 # <REGION compute_custom_machine_type_update_memory>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT add_extended_memory_to_instance />
 # </REGION compute_custom_machine_type_update_memory>

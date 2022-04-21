@@ -230,9 +230,6 @@ def test_create_with_existing_disks(boot_disk, empty_disk):
                                           [boot_disk.name, empty_disk.name])
 
     try:
-        print(instance.disks)
-        for disk in instance.disks:
-            print(disk, dir(disk), type(disk), disk.disk_size_gb)
         assert any(
             disk.disk_size_gb == 13 for disk in instance.disks
         )

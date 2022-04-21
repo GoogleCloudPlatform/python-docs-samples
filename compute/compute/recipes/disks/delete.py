@@ -16,6 +16,8 @@
 # <REGION compute_disk_delete>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT delete_disk />
 
 # </REGION compute_disk_delete>

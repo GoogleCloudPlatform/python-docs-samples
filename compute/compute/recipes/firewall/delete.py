@@ -16,6 +16,8 @@
 # <REGION compute_firewall_delete>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT delete_firewall_rule />
 
 # </REGION compute_firewall_delete>

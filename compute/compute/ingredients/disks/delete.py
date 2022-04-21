@@ -33,16 +33,7 @@ def delete_disk(project_id: str, zone: str, disk_name: str) -> NoReturn:
         disk_name: name of the disk you want to delete.
     """
     disk_client = compute_v1.DisksClient()
-    operation = disk_client.delete_unary(project=project_id, zone=zone, disk=disk_name)
-    operation_client = compute_v1.ZoneOperationsClient()
-    operation = operation_client.wait(project=project_id, zone=zone, operation=operation.name)
-
-    if operation.error:
-        print("Error during disk delete operation:", operation.error, file=sys.stderr)
-        raise RuntimeError(operation.error)
-    if operation.warnings:
-        print("Warnings during disk delete operation:\n", file=sys.stderr)
-        for warning in operation.warnings:
-            print(f" - {warning.code}: {warning.message}", file=sys.stderr)
+    operation = disk_client.delete(project=project_id, zone=zone, disk=disk_name)
+    wait_for_extended_operation(operation, "disk deletion")
     return
 # </INGREDIENT>

@@ -18,10 +18,9 @@
 # flake8: noqa
 
 import re
-import sys
-from google.cloud import compute_v1
-import time
 from typing import List
+
+from google.cloud import compute_v1
 
 
 # <INGREDIENT create_instance>
@@ -79,7 +78,6 @@ def create_instance(
         Instance object.
     """
     instance_client = compute_v1.InstancesClient()
-    operation_client = compute_v1.ZoneOperationsClient()
 
     # Use the network interface provided in the network_link argument.
     network_interface = compute_v1.NetworkInterface()
@@ -135,19 +133,10 @@ def create_instance(
     # Wait for the create operation to complete.
     print(f"Creating the {instance_name} instance in {zone}...")
 
-    operation = instance_client.insert_unary(request=request)
-    start = time.time()
-    while operation.status != compute_v1.Operation.Status.DONE:
-        operation = operation_client.wait(
-            operation=operation.name, zone=zone, project=project_id
-        )
-        if time.time() - start >= 300:  # 5 minutes
-            raise TimeoutError()
-    if operation.error:
-        print("Error during creation:", operation.error, file=sys.stderr)
-        raise RuntimeError(operation.error)
-    if operation.warnings:
-        print("Warning during creation:", operation.warnings, file=sys.stderr)
+    operation = instance_client.insert(request=request)
+
+    wait_for_extended_operation(operation, "instance creation")
+
     print(f"Instance {instance_name} created.")
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 # </INGREDIENT>

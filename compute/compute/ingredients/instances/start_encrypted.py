@@ -36,7 +36,6 @@ def start_instance_with_encryption_key(
             https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#specifications
     """
     instance_client = compute_v1.InstancesClient()
-    op_client = compute_v1.ZoneOperationsClient()
 
     instance_data = instance_client.get(
         project=project_id, zone=zone, instance=instance_name
@@ -52,17 +51,13 @@ def start_instance_with_encryption_key(
     enc_data = compute_v1.InstancesStartWithEncryptionKeyRequest()
     enc_data.disks = [disk_data]
 
-    op = instance_client.start_with_encryption_key_unary(
+    operation = instance_client.start_with_encryption_key(
         project=project_id,
         zone=zone,
         instance=instance_name,
         instances_start_with_encryption_key_request_resource=enc_data,
     )
 
-    start = time.time()
-    while op.status != compute_v1.Operation.Status.DONE:
-        op = op_client.wait(operation=op.name, zone=zone, project=project_id)
-        if time.time() - start >= 300:  # 5 minutes
-            raise TimeoutError()
+    wait_for_extended_operation(operation, "instance start (with encrypted disk)")
     return
 # </INGREDIENT>

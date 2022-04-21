@@ -16,6 +16,8 @@
 # <REGION compute_snapshot_create>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT create_snapshot />
 
 # </REGION compute_snapshot_create>

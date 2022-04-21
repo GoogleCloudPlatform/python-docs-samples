@@ -38,7 +38,6 @@ def add_extended_memory_to_instance(
         Instance object.
     """
     instance_client = compute_v1.InstancesClient()
-    operation_client = compute_v1.ZoneOperationsClient()
     instance = instance_client.get(
         project=project_id, zone=zone, instance=instance_name
     )
@@ -51,10 +50,10 @@ def add_extended_memory_to_instance(
         instance.Status.TERMINATED.name,
         instance.Status.STOPPED.name,
     ):
-        op = instance_client.stop_unary(
+        operation = instance_client.stop(
             project=project_id, zone=zone, instance=instance_name
         )
-        operation_client.wait(project=project_id, zone=zone, operation=op.name)
+        wait_for_extended_operation(operation, "instance stopping")
         start = time.time()
         while instance.status not in (
             instance.Status.TERMINATED.name,
@@ -77,13 +76,13 @@ def add_extended_memory_to_instance(
     # cmt.memory_mb = new_memory
     # cmt.extra_memory_used = True
     # instance.machine_type = str(cmt)
-    op = instance_client.update_unary(
+    operation = instance_client.update(
         project=project_id,
         zone=zone,
         instance=instance_name,
         instance_resource=instance,
     )
-    operation_client.wait(project=project_id, zone=zone, operation=op.name)
+    wait_for_extended_operation(operation, "instance update")
 
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
 # </INGREDIENT>

@@ -16,5 +16,7 @@
 # <REGION compute_firewall_patch>
 # <IMPORTS/>
 
+# <INGREDIENT wait_for_extended_operation />
+
 # <INGREDIENT patch_firewall_priority />
 # </REGION compute_firewall_patch>

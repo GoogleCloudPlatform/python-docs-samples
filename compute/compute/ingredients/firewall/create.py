@@ -16,6 +16,7 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+
 from google.cloud import compute_v1
 
 
@@ -61,12 +62,11 @@ def create_firewall_rule(
     # firewall_rule.priority = 0
 
     firewall_client = compute_v1.FirewallsClient()
-    op = firewall_client.insert_unary(
+    operation = firewall_client.insert(
         project=project_id, firewall_resource=firewall_rule
     )
 
-    op_client = compute_v1.GlobalOperationsClient()
-    op_client.wait(project=project_id, operation=op.name)
+    wait_for_extended_operation(operation, "firewall rule creation")
 
     return firewall_client.get(project=project_id, firewall=firewall_rule_name)
 # </INGREDIENT>
