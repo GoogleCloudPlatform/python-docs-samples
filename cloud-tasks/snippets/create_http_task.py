@@ -30,10 +30,11 @@ def create_http_task(
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    from google.cloud import tasks_v2
-    from google.protobuf import timestamp_pb2, duration_pb2
     import datetime
     import json
+
+    from google.cloud import tasks_v2
+    from google.protobuf import duration_pb2, timestamp_pb2
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
