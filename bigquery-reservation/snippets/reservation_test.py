@@ -17,10 +17,7 @@ from google.cloud.bigquery_reservation_v1.services import reservation_service
 import pytest
 import test_utils.prefixer
 
-from . import reservation_create
-from . import reservation_delete
-from . import reservation_update
-
+from . import reservation_create, reservation_delete, reservation_update
 
 # Reservation IDs are limited to 64 characters.
 reservation_prefixer = test_utils.prefixer.Prefixer(
