@@ -21,6 +21,7 @@
 
 import sys
 
+# isort: split
 # [START language_sentiment_text]
 
 from google.cloud import language_v1

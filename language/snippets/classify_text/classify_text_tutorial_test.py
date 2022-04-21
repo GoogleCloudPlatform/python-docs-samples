@@ -17,7 +17,6 @@ import pytest
 
 import classify_text_tutorial
 
-
 OUTPUT = "index.json"
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 QUERY_TEXT = """Google Home enables users to speak voice commands to interact

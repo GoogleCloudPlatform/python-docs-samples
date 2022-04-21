@@ -22,7 +22,6 @@ def run_quickstart():
     from google.cloud import language_v1
 
     # [END language_python_migration_imports]
-
     # Instantiates a client
     # [START language_python_migration_client]
     client = language_v1.LanguageServiceClient()
