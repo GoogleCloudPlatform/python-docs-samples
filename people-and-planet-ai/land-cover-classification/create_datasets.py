@@ -15,7 +15,7 @@
 import csv
 import io
 import random
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -26,6 +26,7 @@ import tensorflow as tf
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
+a = TypeVar("a")
 
 # https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
 INPUT_BANDS = [
@@ -61,13 +62,13 @@ EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 # https://beam.apache.org/documentation/transforms/python/elementwise/pardo/
 class GetPatchFromEarthEngine(beam.DoFn):
-    def __init__(self, bands: List[str], patch_size: int, scale: int) -> None:
+    def __init__(self: a, bands: List[str], patch_size: int, scale: int) -> None:
         self.bands = bands
         self.patch_size = patch_size
         self.scale = scale
         self.http: Optional[requests.Session] = None
 
-    def setup(self) -> None:
+    def setup(self: a) -> None:
         # Add a retry strategy for our HTTP requests for Earth Engine.
         retry_strategy = Retry(
             total=MAX_RETRIES,
@@ -77,7 +78,7 @@ class GetPatchFromEarthEngine(beam.DoFn):
         self.http = requests.Session()
         self.http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
-    def process(self, coords: Dict[str, float]) -> Iterable[np.ndarray]:
+    def process(self: a, coords: Dict[str, float]) -> Iterable[np.ndarray]:
         credentials, project = google.auth.default(
             scopes=[
                 "https://www.googleapis.com/auth/cloud-platform",
@@ -102,7 +103,7 @@ class GetPatchFromEarthEngine(beam.DoFn):
         np_bytes = self.http.get(url).content
         yield np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
-    def teardown(self):
+    def teardown(self: a) -> None:
         return self.http.close()
 
 
