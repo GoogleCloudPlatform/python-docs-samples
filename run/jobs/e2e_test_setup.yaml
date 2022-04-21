@@ -28,16 +28,20 @@ steps:
   args:
   - '-c'
   - |
-    gcloud components update --quiet
+    gcloud components install alpha --quiet
     
     gcloud alpha run jobs create ${_SERVICE} \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --project ${PROJECT_ID} \
       --region ${_REGION} \
-      --tasks 2 \
-      --set-env-vars=SLEEP_MS=10 \
-      --max-retries 0 \
-      --wait
+      --tasks 10 \
+      --set-env-vars=SLEEP_MS=100 \
+      --max-retries 0
+
+    ./retry.sh "gcloud alpha run jobs execute ${_SERVICE} \
+      --project ${PROJECT_ID} \
+      --region ${_REGION} \
+      --wait"
 
 substitutions:
   _SERVICE: logger-job
