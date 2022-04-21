@@ -18,16 +18,13 @@ import re
 import uuid
 
 from _pytest.capture import CaptureFixture
-
 from google.cloud import securitycenter
 from google.cloud.securitycenter_v1.services.security_center.pagers import (
     ListFindingsPager,
 )
-
 import pytest
 
 import snippets_mute_config
-
 
 # TODO(developer): Replace these variables before running the sample.
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -55,7 +52,6 @@ def mute_rule():
 @pytest.fixture
 def finding(capsys: CaptureFixture):
     import snippets_findings
-
     from snippets_findings import create_finding
 
     snippets_findings.create_source(ORGANIZATION_ID)
