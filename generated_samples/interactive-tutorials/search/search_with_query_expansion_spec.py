@@ -20,7 +20,6 @@
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
-
 project_id = google.auth.default()[1]
 
 

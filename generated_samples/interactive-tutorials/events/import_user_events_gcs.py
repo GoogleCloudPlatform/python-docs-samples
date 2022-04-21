@@ -21,8 +21,8 @@ def main(bucket_name):
     # Import user events into a catalog from GCS using Retail API
 
     import time
-    import google.auth
 
+    import google.auth
     from google.cloud.retail import (
         GcsSource,
         ImportErrorsConfig,

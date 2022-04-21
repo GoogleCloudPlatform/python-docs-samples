@@ -22,10 +22,10 @@ import google.auth
 from google.cloud.retail import (
     FulfillmentInfo,
     PriceInfo,
+    Product,
     ProductServiceClient,
     SetInventoryRequest,
 )
-from google.cloud.retail import Product
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from setup_product.setup_cleanup import create_product, delete_product, get_product

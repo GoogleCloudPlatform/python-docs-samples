@@ -14,13 +14,13 @@
 
 from __future__ import print_function
 
+import glob
 import os
 from pathlib import Path
 import sys
 from typing import Callable, Dict, List, Optional
 
 import nox
-
 
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
@@ -29,6 +29,7 @@ import nox
 # WARNING - WARNING - WARNING - WARNING - WARNING
 
 BLACK_VERSION = "black==22.3.0"
+ISORT_VERSION = "isort==5.10.1"
 
 # Copy `noxfile_config.py` to your directory and modify it instead.
 
@@ -64,7 +65,7 @@ try:
     sys.path.append(".")
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
-    print(f"No user noxfile_config found: detail: {e}")
+    print("No user noxfile_config found: detail: {}".format(e))
     TEST_CONFIG_OVERRIDE = {}
 
 # Update the TEST_CONFIG with the user supplied values.
@@ -109,6 +110,7 @@ nox.options.error_on_missing_interpreters = True
 
 def _determine_local_import_names(start_dir: str) -> List[str]:
     """Determines all import names that should be considered "local".
+
     This is used when running the linter to insure that import order is
     properly checked.
     """
@@ -166,9 +168,30 @@ def lint(session: nox.sessions.Session) -> None:
 
 @nox.session
 def blacken(session: nox.sessions.Session) -> None:
+    """Run black. Format code to uniform standard."""
     session.install(BLACK_VERSION)
     python_files = [path for path in os.listdir(".") if path.endswith(".py")]
 
+    session.run("black", *python_files)
+
+
+#
+# format = isort + black
+#
+
+
+@nox.session
+def format(session: nox.sessions.Session) -> None:
+    """
+    Run isort to sort imports. Then run black
+    to format code to uniform standard.
+    """
+    session.install(BLACK_VERSION, ISORT_VERSION)
+    python_files = [path for path in os.listdir(".") if path.endswith(".py")]
+
+    # Use the --fss option to sort imports using strict alphabetical order.
+    # See https://pycqa.github.io/isort/docs/configuration/options.html#force-sort-within-sections
+    session.run("isort", "--fss", *python_files)
     session.run("black", *python_files)
 
 
@@ -183,21 +206,34 @@ PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 def _session_tests(
     session: nox.sessions.Session, post_install: Callable = None
 ) -> None:
+    # check for presence of tests
+    test_list = glob.glob("*_test.py") + glob.glob("test_*.py")
+    test_list.extend(glob.glob("tests"))
+
+    if len(test_list) == 0:
+        print("No tests found, skipping directory.")
+        return
+
     if TEST_CONFIG["pip_version_override"]:
         pip_version = TEST_CONFIG["pip_version_override"]
         session.install(f"pip=={pip_version}")
     """Runs py.test for a particular project."""
+    concurrent_args = []
     if os.path.exists("requirements.txt"):
         if os.path.exists("constraints.txt"):
             session.install("-r", "requirements.txt", "-c", "constraints.txt")
         else:
             session.install("-r", "requirements.txt")
+        with open("requirements.txt") as rfile:
+            packages = rfile.read()
 
     if os.path.exists("requirements-test.txt"):
         if os.path.exists("constraints-test.txt"):
             session.install("-r", "requirements-test.txt", "-c", "constraints-test.txt")
         else:
             session.install("-r", "requirements-test.txt")
+        with open("requirements-test.txt") as rtfile:
+            packages += rtfile.read()
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
@@ -205,9 +241,14 @@ def _session_tests(
     if post_install:
         post_install(session)
 
+    if "pytest-parallel" in packages:
+        concurrent_args.extend(["--workers", "auto", "--tests-per-worker", "auto"])
+    elif "pytest-xdist" in packages:
+        concurrent_args.extend(["-n", "auto"])
+
     session.run(
         "pytest",
-        *(PYTEST_COMMON_ARGS + session.posargs),
+        *(PYTEST_COMMON_ARGS + session.posargs + concurrent_args),
         # Pytest will return 5 when no tests are collected. This can happen
         # on travis where slow and flaky tests are excluded.
         # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
@@ -222,7 +263,9 @@ def py(session: nox.sessions.Session) -> None:
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        session.skip(f"SKIPPED: {session.python} tests are disabled for this sample.")
+        session.skip(
+            "SKIPPED: {} tests are disabled for this sample.".format(session.python)
+        )
 
 
 #

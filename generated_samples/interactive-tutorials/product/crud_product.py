@@ -24,11 +24,11 @@ from google.cloud.retail import (
     CreateProductRequest,
     DeleteProductRequest,
     GetProductRequest,
+    PriceInfo,
     Product,
     ProductServiceClient,
     UpdateProductRequest,
 )
-from google.cloud.retail import PriceInfo
 from google.cloud.retail_v2.types import product
 
 project_id = google.auth.default()[1]
