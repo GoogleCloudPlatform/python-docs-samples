@@ -45,6 +45,8 @@ def read_dataset(
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
         for band_name in INPUT_BANDS + OUTPUT_BANDS
     }
+    # For more information on how to optimize your tf.data.Dataset, refer to:
+    #   https://www.tensorflow.org/guide/data_performance
     return (
         tf.data.Dataset.list_files(file_pattern)
         .interleave(

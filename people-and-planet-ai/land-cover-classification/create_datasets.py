@@ -15,7 +15,7 @@
 import csv
 import io
 import random
-from typing import List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -23,9 +23,11 @@ import ee
 import google.auth
 import numpy as np
 import tensorflow as tf
-import urllib3
+import requests
+from requests.adapters import HTTPAdapter, Retry
 
 
+# https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
 INPUT_BANDS = [
     "B1",
     "B2",
@@ -41,62 +43,67 @@ INPUT_BANDS = [
     "B11",
     "B12",
 ]
+
+# https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
 OUTPUT_BANDS = ["landcover"]
 
-
-def get_patch(
-    coords: Tuple[float, float],
-    bands: List[str],
-    patch_size: int,
-    scale: int,
-) -> np.ndarray:
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(credentials, project=project)
-
-    sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
-    landcover_image = get_landcover_image()
-    image = sentinel2_image.addBands(landcover_image)
-
-    point = ee.Geometry.Point(coords)
-    url = image.getDownloadUrl(
-        {
-            "region": point.buffer(scale * patch_size / 2, 1).bounds(1),
-            "dimensions": [patch_size, patch_size],
-            "format": "NPY",
-            "bands": bands,
-        }
-    )
-
-    # There is an Earth Engine quota that if exceeded will return us:
-    #   Status code 429: Too Many Requests
-    # For more information, see https://developers.google.com/earth-engine/guides/usage
-    retry_strategy = urllib3.Retry(
-        total=20,
-        status_forcelist=[429],
-        backoff_factor=0.1,
-    )
-    # TODO: create the PoolManager in `setup` of a DoFn.
-    http = urllib3.PoolManager(retries=retry_strategy)
-    np_bytes = http.request("GET", url).data
-    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+# There is an Earth Engine quota that if exceeded will
+# return us "status code 429: Too Many Requests"
+# If we get that status code, we can safely retry the request.
+# We use exponential backoff as a retry strategy:
+#   https://en.wikipedia.org/wiki/Exponential_backoff
+# For more information on Earth Engine request quotas, see
+#   https://developers.google.com/earth-engine/guides/usage
+MAX_RETRIES = 10
+RETRY_STATUS = [429]
+EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 
-def get_landcover_image() -> ee.Image:
-    # Remap the ESA classifications into the Dynamic World classifications
-    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
-    return (
-        ee.ImageCollection("ESA/WorldCover/v100")
-        .first()
-        .select("Map")
-        .remap(fromValues, toValues)
-        .rename("landcover")
-    )
+# https://beam.apache.org/documentation/transforms/python/elementwise/pardo/
+class GetPatchFromEarthEngine(beam.DoFn):
+    def __init__(self, bands: List[str], patch_size: int, scale: int) -> None:
+        self.bands = bands
+        self.patch_size = patch_size
+        self.scale = scale
+        self.http: Optional[requests.Session] = None
+
+    def setup(self) -> None:
+        # Add a retry strategy for our HTTP requests for Earth Engine.
+        retry_strategy = Retry(
+            total=MAX_RETRIES,
+            status_forcelist=[429],
+            backoff_factor=EXPONENTIAL_BACKOFF_IN_SECONDS,
+        )
+        self.http = requests.Session()
+        self.http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+
+    def process(self, coords: Dict[str, float]) -> Iterable[np.ndarray]:
+        credentials, project = google.auth.default(
+            scopes=[
+                "https://www.googleapis.com/auth/cloud-platform",
+                "https://www.googleapis.com/auth/earthengine",
+            ]
+        )
+        ee.Initialize(credentials, project=project)
+
+        sentinel2_image = get_sentinel2_image("2020-1-1", "2021-1-1")
+        landcover_image = get_landcover_image()
+        image = sentinel2_image.addBands(landcover_image)
+
+        point = ee.Geometry.Point([coords["lon"], coords["lat"]])
+        url = image.getDownloadURL(
+            {
+                "region": point.buffer(self.scale * self.patch_size / 2, 1).bounds(1),
+                "dimensions": [self.patch_size, self.patch_size],
+                "format": "NPY",
+                "bands": self.bands,
+            }
+        )
+        np_bytes = self.http.get(url).content
+        yield np.load(io.BytesIO(np_bytes), allow_pickle=True)
+
+    def teardown(self):
+        return self.http.close()
 
 
 def get_sentinel2_image(start_date: str, end_date: str) -> ee.Image:
@@ -116,6 +123,29 @@ def get_sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     )
 
 
+def get_landcover_image() -> ee.Image:
+    # Remap the ESA classifications into the Dynamic World classifications
+    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
+    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
+    return (
+        ee.ImageCollection("ESA/WorldCover/v100")
+        .first()
+        .select("Map")
+        .remap(fromValues, toValues)
+        .rename("landcover")
+    )
+
+
+def sample_random_points(
+    region: Dict[str, float], points_per_region: int = 100
+) -> Iterable[Dict[str, float]]:
+    for _ in range(points_per_region):
+        yield {
+            "lat": random.uniform(region["south"], region["north"]),
+            "lon": random.uniform(region["west"], region["east"]),
+        }
+
+
 def serialize(patch: np.ndarray) -> bytes:
     features = {
         name: tf.train.Feature(
@@ -130,23 +160,31 @@ def serialize(patch: np.ndarray) -> bytes:
 def run(
     training_file: str,
     validation_file: str,
-    patch_size: int,
-    points_file: str = "data/points.csv",
-    training_validation_ratio: Tuple[int, int] = (80, 20),
+    regions_file: str = "data/regions.csv",
+    points_per_region: int = 500,
+    patch_size: int = 64,
+    training_validation_ratio: Tuple[int, int] = (90, 10),
     beam_options: Optional[PipelineOptions] = None,
 ) -> None:
-    with open(points_file) as f:
-        points = [(float(row["lon"]), float(row["lat"])) for row in csv.DictReader(f)]
-
     def split_dataset(element: bytes, num_partitions: int) -> int:
         return random.choices([0, 1], weights=training_validation_ratio)[0]
+
+    with open(regions_file) as f:
+        csv_reader = csv.DictReader(f)
+        regions = [
+            {key: float(value) for key, value in row.items()} for row in csv_reader
+        ]
 
     pipeline = beam.Pipeline(options=beam_options)
     training_data, validation_data = (
         pipeline
-        | "Create points" >> beam.Create(points)
+        | "Create regions" >> beam.Create(regions)
+        | "Sample random points"
+        >> beam.FlatMap(sample_random_points, points_per_region)
         | "Get patch"
-        >> beam.Map(get_patch, INPUT_BANDS + OUTPUT_BANDS, patch_size, scale=10)
+        >> beam.ParDo(
+            GetPatchFromEarthEngine(INPUT_BANDS + OUTPUT_BANDS, patch_size, scale=10)
+        )
         | "Serialize" >> beam.Map(serialize)
         | "Split dataset" >> beam.Partition(split_dataset, 2)
     )
@@ -167,11 +205,12 @@ if __name__ == "__main__":
 
     logging.getLogger().setLevel(logging.INFO)
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("--training-file", required=True)
     parser.add_argument("--validation-file", required=True)
-    parser.add_argument("--patch-size", default=8, type=int)
-    parser.add_argument("--points-file", default="data/points.csv")
+    parser.add_argument("--regions-file", default="data/regions.csv")
+    parser.add_argument("--points-per-region", default=500, type=int)
+    parser.add_argument("--patch-size", default=64, type=int)
     parser.add_argument(
         "--training-validation-ratio", default=(90, 10), type=int, nargs=2
     )
@@ -181,11 +220,4 @@ if __name__ == "__main__":
     if job_name:
         beam_args.append(f"--job_name={job_name}")
 
-    run(
-        training_file=args.training_file,
-        validation_file=args.validation_file,
-        patch_size=args.patch_size,
-        points_file=args.points_file,
-        training_validation_ratio=args.training_validation_ratio,
-        beam_options=PipelineOptions(beam_args, save_main_session=True),
-    )
+    run(**vars(args), beam_options=PipelineOptions(beam_args, save_main_session=True))

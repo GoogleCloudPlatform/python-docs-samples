@@ -51,8 +51,7 @@ PY_FILE = "README.py"
 KERNEL_SIZE = 1
 TRAINING_PATCH_SIZE = 1
 PREDICTION_PATCH_SIZE = 2
-
-DATAFLOW_CREATE_DATASETS_JOB_NAME = f"{NAME.replace('/', '-')}-{UUID}"
+CREATE_DATASETS_JOB_NAME = f"{NAME.replace('/', '-')}-{UUID}"
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -166,7 +165,7 @@ def run(
         "KERNEL_SIZE": str(kernel_size),
         "TRAINING_PATCH_SIZE": str(training_patch_size),
         "PREDICTION_PATCH_SIZE": str(prediction_patch_size),
-        "DATAFLOW_CREATE_DATASETS_JOB_NAME": DATAFLOW_CREATE_DATASETS_JOB_NAME,
+        "CREATE_DATASETS_JOB_NAME": CREATE_DATASETS_JOB_NAME,
     }
     print("+" + "-" * 60)
     print("|  Environment variables")
