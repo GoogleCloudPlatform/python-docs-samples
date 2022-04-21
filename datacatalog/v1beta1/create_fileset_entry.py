@@ -19,14 +19,11 @@ def create_fileset_entry(client, entry_group_name, entry_id):
 
     # TODO(developer): Construct a Data Catalog client object.
     # client = datacatalog_v1beta1.DataCatalogClient()
-
     # TODO(developer): Set entry_group_name to the Name of the entry group
     #  the entry will belong.
     # entry_group_name = "your_entry_group_name"
-
     # TODO(developer): Set entry_id to the ID of the entry to create.
     # entry_id = "your_entry_id"
-
     # Construct a full Entry object to send to the API.
     entry = datacatalog_v1beta1.types.Entry()
     entry.display_name = "My Fileset"

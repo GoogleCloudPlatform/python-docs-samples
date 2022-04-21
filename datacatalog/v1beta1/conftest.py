@@ -18,7 +18,6 @@ import uuid
 
 import google.auth
 from google.cloud import datacatalog_v1beta1
-
 import pytest
 
 

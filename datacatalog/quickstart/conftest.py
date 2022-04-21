@@ -17,9 +17,7 @@ import datetime
 import uuid
 
 import google.auth
-from google.cloud import bigquery
-from google.cloud import datacatalog_v1
-
+from google.cloud import bigquery, datacatalog_v1
 import pytest
 
 

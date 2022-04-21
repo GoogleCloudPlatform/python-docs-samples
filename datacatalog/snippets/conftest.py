@@ -18,7 +18,6 @@ import uuid
 from google.api_core.exceptions import NotFound, PermissionDenied
 import google.auth
 from google.cloud import datacatalog_v1
-
 import pytest
 
 LOCATION = "us-central1"
