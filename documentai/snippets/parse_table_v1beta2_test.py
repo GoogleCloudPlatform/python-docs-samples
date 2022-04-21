@@ -16,7 +16,6 @@ import os
 
 from samples.snippets import parse_table_v1beta2
 
-
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 INPUT_URI = "gs://cloud-samples-data/documentai/invoice.pdf"
 
