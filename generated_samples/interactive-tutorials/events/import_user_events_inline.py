@@ -22,7 +22,6 @@ import string
 import time
 
 import google.auth
-
 from google.cloud.retail import (
     ImportUserEventsRequest,
     UserEvent,
@@ -30,7 +29,6 @@ from google.cloud.retail import (
     UserEventInputConfig,
     UserEventServiceClient,
 )
-
 from google.protobuf.timestamp_pb2 import Timestamp
 
 project_id = google.auth.default()[1]

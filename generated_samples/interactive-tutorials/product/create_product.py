@@ -20,8 +20,12 @@ import random
 import string
 
 import google.auth
-from google.cloud.retail import CreateProductRequest, Product, ProductServiceClient
-from google.cloud.retail import PriceInfo
+from google.cloud.retail import (
+    CreateProductRequest,
+    PriceInfo,
+    Product,
+    ProductServiceClient,
+)
 from google.cloud.retail_v2.types import product
 
 from setup_product.setup_cleanup import delete_product
