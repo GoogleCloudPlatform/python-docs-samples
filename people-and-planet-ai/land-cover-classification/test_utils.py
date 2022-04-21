@@ -18,6 +18,10 @@ class PatchedIPython:
     def system(cmd: str) -> None:
         print(f"!{cmd}")
 
+    @staticmethod
+    def run_line_magic(cmd: str, args: str) -> None:
+        print(f"%{cmd} {args}")
+
 
 def get_ipython() -> PatchedIPython:
     return PatchedIPython()
