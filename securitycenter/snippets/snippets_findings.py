@@ -150,9 +150,10 @@ def list_source(organization_id):
 def create_finding(source_name, finding_id):
     """Creates a new finding."""
     # [START securitycenter_create_finding]
+    import datetime
+
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
-    import datetime
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
@@ -414,8 +415,9 @@ def list_filtered_findings(source_name):
 
 def list_findings_at_time(source_name):
     # [START securitycenter_list_findings_at_time]
+    from datetime import datetime, timedelta
+
     from google.cloud import securitycenter
-    from datetime import timedelta, datetime
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
@@ -524,6 +526,7 @@ def group_findings_at_time(source_name):
     i = -1
     # [START securitycenter_group_findings_at_time]
     from datetime import datetime, timedelta
+
     from google.cloud import securitycenter
 
     # Create a client.
