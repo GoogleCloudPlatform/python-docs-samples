@@ -22,9 +22,9 @@ from apache_beam.options.pipeline_options import PipelineOptions
 import ee
 import google.auth
 import numpy as np
-import tensorflow as tf
 import requests
 from requests.adapters import HTTPAdapter, Retry
+import tensorflow as tf
 
 a = TypeVar("a")
 
