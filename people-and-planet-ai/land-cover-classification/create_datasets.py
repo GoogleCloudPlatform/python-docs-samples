@@ -181,6 +181,7 @@ def run(
         | "Create regions" >> beam.Create(regions)
         | "Sample random points"
         >> beam.FlatMap(sample_random_points, points_per_region)
+        | "Reshuffle" >> beam.Reshuffle()
         | "Get patch"
         >> beam.ParDo(
             GetPatchFromEarthEngine(INPUT_BANDS + OUTPUT_BANDS, patch_size, scale=10)
