@@ -16,4 +16,4 @@ samples:
     file: snippets.py
     show_help: true
 
-folder: cme
+folder: media-cdn

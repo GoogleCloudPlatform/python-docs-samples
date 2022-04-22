@@ -204,7 +204,7 @@ if __name__ == '__main__':
     sign_cookie_parser.add_argument(
             'expiration_time',
             type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
-            help='Expiration time expessed as seconds since the epoch.')
+            help='Expiration time expressed as seconds since the epoch.')
 
     args = parser.parse_args()
 
