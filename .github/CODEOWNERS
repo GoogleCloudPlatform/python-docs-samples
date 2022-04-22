@@ -19,7 +19,7 @@
 /appengine/standard/django/**/*.py     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/flexible/django_cloudsql/**/*.py  @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*.py     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
-/auth/**/*.py                          @busunkim96 @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
+/auth/**/*.py                          @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/**/*.py                      @shollyman @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*.py                       @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
 /blog/**/*.py                          @GoogleCloudPlatform/python-samples-reviewers
