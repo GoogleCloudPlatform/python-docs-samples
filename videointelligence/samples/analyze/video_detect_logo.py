@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
 
+# isort: split
 # [START video_detect_logo]
+import io
 
 from google.cloud import videointelligence
 

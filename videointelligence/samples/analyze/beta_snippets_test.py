@@ -25,7 +25,6 @@ import pytest
 
 import beta_snippets
 
-
 POSSIBLE_TEXTS = [
     "Google",
     "SUR",

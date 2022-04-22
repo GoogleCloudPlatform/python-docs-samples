@@ -17,7 +17,6 @@
 import time
 
 from google.api_core.exceptions import ServiceUnavailable
-
 import pytest
 
 import analyze
