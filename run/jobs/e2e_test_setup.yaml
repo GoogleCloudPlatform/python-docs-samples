@@ -28,6 +28,7 @@ steps:
   args:
   - '-c'
   - |
+    # TODO: b/230113499 update gcloud version when available
     gcloud components install alpha --quiet
     
     gcloud alpha run jobs create ${_SERVICE} \
