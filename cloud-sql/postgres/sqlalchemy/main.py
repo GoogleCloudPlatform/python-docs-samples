@@ -15,10 +15,12 @@
 import datetime
 import logging
 import os
-import ssl
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
+from connect_connector import create_connector_pool
+from connect_tcp import create_tcp_pool
+from connect_unix import create_unix_socket_pool
 
 
 app = Flask(__name__)
@@ -26,176 +28,26 @@ app = Flask(__name__)
 logger = logging.getLogger()
 
 
-def init_connection_engine():
-    db_config = {
-        # [START cloud_sql_postgres_sqlalchemy_limit]
-        # Pool size is the maximum number of permanent connections to keep.
-        "pool_size": 5,
-        # Temporarily exceeds the set pool_size if no connections are available.
-        "max_overflow": 2,
-        # The total number of concurrent connections for your application will be
-        # a total of pool_size and max_overflow.
-        # [END cloud_sql_postgres_sqlalchemy_limit]
+def init_connection_pool():
+    # use a TCP socket when INSTANCE_HOST (e.g. 127.0.0.1) is defined
+    if os.environ.get("INSTANCE_HOST"):
+        return create_tcp_pool()
 
-        # [START cloud_sql_postgres_sqlalchemy_backoff]
-        # SQLAlchemy automatically uses delays between failed connection attempts,
-        # but provides no arguments for configuration.
-        # [END cloud_sql_postgres_sqlalchemy_backoff]
+    # use a Unix socket when INSTANCE_UNIX_SOCKET (e.g. /cloudsql/project:region:instance) is defined
+    if os.environ.get("INSTANCE_UNIX_SOCKET"):
+        return create_unix_socket_pool()
 
-        # [START cloud_sql_postgres_sqlalchemy_timeout]
-        # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
-        # new connection from the pool. After the specified amount of time, an
-        # exception will be thrown.
-        "pool_timeout": 30,  # 30 seconds
-        # [END cloud_sql_postgres_sqlalchemy_timeout]
+    # use the connector when INSTANCE_CONNECTION_NAME (e.g. project:region:instance) is defined
+    if os.environ.get("INSTANCE_CONNECTION_NAME"):
+        return create_connector_pool()
 
-        # [START cloud_sql_postgres_sqlalchemy_lifetime]
-        # 'pool_recycle' is the maximum number of seconds a connection can persist.
-        # Connections that live longer than the specified amount of time will be
-        # reestablished
-        "pool_recycle": 1800,  # 30 minutes
-        # [END cloud_sql_postgres_sqlalchemy_lifetime]
-    }
-
-    if os.environ.get("DB_HOST"):
-        if os.environ.get("DB_ROOT_CERT"):
-            return init_tcp_sslcerts_connection_engine(db_config)
-        return init_tcp_connection_engine(db_config)
-    return init_unix_connection_engine(db_config)
-
-
-def init_tcp_sslcerts_connection_engine(db_config):
-    # [START cloud_sql_postgres_sqlalchemy_create_tcp_sslcerts]
-    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
-    # secrets secret.
-    db_user = os.environ["DB_USER"]
-    db_pass = os.environ["DB_PASS"]
-    db_name = os.environ["DB_NAME"]
-    db_host = os.environ["DB_HOST"]
-    db_root_cert = os.environ["DB_ROOT_CERT"]
-    db_cert = os.environ["DB_CERT"]
-    db_key = os.environ["DB_KEY"]
-
-    # Extract port from db_host if present,
-    # otherwise use DB_PORT environment variable.
-    host_args = db_host.split(":")
-    if len(host_args) == 1:
-        db_hostname = host_args[0]
-        db_port = int(os.environ["DB_PORT"])
-    elif len(host_args) == 2:
-        db_hostname, db_port = host_args[0], int(host_args[1])
-
-    ssl_context = ssl.SSLContext()
-    ssl_context.verify_mode = ssl.CERT_REQUIRED
-    ssl_context.load_verify_locations(db_root_cert)
-    ssl_context.load_cert_chain(db_cert, db_key)
-    ssl_args = {"ssl_context" : ssl_context}
-
-    pool = sqlalchemy.create_engine(
-        # Equivalent URL:
-        # postgresql+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        sqlalchemy.engine.url.URL.create(
-            drivername="postgresql+pg8000",
-            username=db_user,  # e.g. "my-database-user"
-            password=db_pass,  # e.g. "my-database-password"
-            host=db_hostname,  # e.g. "127.0.0.1"
-            port=db_port,  # e.g. 5432
-            database=db_name  # e.g. "my-database-name"
-        ),
-        connect_args=ssl_args,
-        **db_config
+    raise ValueError(
+        "Missing database connection type. Please define one of INSTANCE_HOST, INSTANCE_UNIX_SOCKET, or INSTANCE_CONNECTION_NAME"
     )
-    # [END cloud_sql_postgres_sqlalchemy_create_tcp_sslcerts]
-    pool.dialect.description_encoding = None
-    return pool
 
 
-def init_tcp_connection_engine(db_config):
-    # [START cloud_sql_postgres_sqlalchemy_create_tcp]
-    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
-    # secrets secret.
-    db_user = os.environ["DB_USER"]
-    db_pass = os.environ["DB_PASS"]
-    db_name = os.environ["DB_NAME"]
-    db_host = os.environ["DB_HOST"]
-
-    # Extract port from db_host if present,
-    # otherwise use DB_PORT environment variable.
-    host_args = db_host.split(":")
-    if len(host_args) == 1:
-        db_hostname = db_host
-        db_port = os.environ["DB_PORT"]
-    elif len(host_args) == 2:
-        db_hostname, db_port = host_args[0], int(host_args[1])
-
-    pool = sqlalchemy.create_engine(
-        # Equivalent URL:
-        # postgresql+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        sqlalchemy.engine.url.URL.create(
-            drivername="postgresql+pg8000",
-            username=db_user,  # e.g. "my-database-user"
-            password=db_pass,  # e.g. "my-database-password"
-            host=db_hostname,  # e.g. "127.0.0.1"
-            port=db_port,  # e.g. 5432
-            database=db_name  # e.g. "my-database-name"
-        ),
-        **db_config
-    )
-    # [END cloud_sql_postgres_sqlalchemy_create_tcp]
-    pool.dialect.description_encoding = None
-    return pool
-
-
-def init_unix_connection_engine(db_config):
-    # [START cloud_sql_postgres_sqlalchemy_create_socket]
-    # Remember - storing secrets in plaintext is potentially unsafe. Consider using
-    # something like https://cloud.google.com/secret-manager/docs/overview to help keep
-    # secrets secret.
-    db_user = os.environ["DB_USER"]
-    db_pass = os.environ["DB_PASS"]
-    db_name = os.environ["DB_NAME"]
-    db_socket_dir = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-    instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]
-
-    pool = sqlalchemy.create_engine(
-
-        # Equivalent URL:
-        # postgresql+pg8000://<db_user>:<db_pass>@/<db_name>
-        #                         ?unix_sock=<socket_path>/<cloud_sql_instance_name>/.s.PGSQL.5432
-        # Note: Some drivers require the `unix_sock` query parameter to use a different key.
-        # For example, 'psycopg2' uses the path set to `host` in order to connect successfully.
-        sqlalchemy.engine.url.URL.create(
-            drivername="postgresql+pg8000",
-            username=db_user,  # e.g. "my-database-user"
-            password=db_pass,  # e.g. "my-database-password"
-            database=db_name,  # e.g. "my-database-name"
-            query={
-                "unix_sock": "{}/{}/.s.PGSQL.5432".format(
-                    db_socket_dir,  # e.g. "/cloudsql"
-                    instance_connection_name)  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
-            }
-        ),
-        **db_config
-    )
-    # [END cloud_sql_postgres_sqlalchemy_create_socket]
-    pool.dialect.description_encoding = None
-    return pool
-
-
-# This global variable is declared with a value of `None`, instead of calling
-# `init_connection_engine()` immediately, to simplify testing. In general, it
-# is safe to initialize your database connection pool when your script starts
-# -- there is no need to wait for the first request.
-db = None
-
-
-@app.before_first_request
-def create_tables():
-    global db
-    db = init_connection_engine()
-    # Create tables (if they don't already exist)
+# Create 'votes' table in database (if doesn't already exist)
+def create_table(db):
     with db.connect() as conn:
         conn.execute(
             "CREATE TABLE IF NOT EXISTS votes "
@@ -204,30 +56,52 @@ def create_tables():
         )
 
 
-@app.route('/', methods=['GET'])
-def index():
-    context = get_index_context()
-    return render_template('index.html', **context)
+# initialize connection pool to database and create 'votes' table on startup
+db = init_connection_pool()
+create_table(db)
 
 
+@app.route("/", methods=["GET", "POST"])
+@app.route("/votes", methods=["GET", "POST"])
+def votes(cloud_function_request=False):
+    # Cloud Function requires request param
+    if cloud_function_request:
+        http_request = cloud_function_request
+    # Cloud Run, App Engine, etc. use built-in flask.request
+    else:
+        http_request = request
+
+    if http_request.method == "GET":
+        context = get_index_context()
+        return render_template("index.html", **context)
+
+    elif http_request.method == "POST":
+        team = http_request.form["team"]
+        return save_vote(team)
+
+    else:
+        return Response(
+            response="Invalid http request. Method not allowed, must be 'GET' or 'POST'",
+            status=400,
+        )
+
+
+# get_index_context gets data required for rendering HTML application
 def get_index_context():
     votes = []
 
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT candidate, time_cast FROM votes "
-            "ORDER BY time_cast DESC LIMIT 5"
+            "SELECT candidate, time_cast FROM votes " "ORDER BY time_cast DESC LIMIT 5"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
-            votes.append({
-                'candidate': row[0],
-                'time_cast': row[1]
-            })
+            votes.append({"candidate": row[0], "time_cast": row[1]})
 
         stmt = sqlalchemy.text(
-            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate")
+            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
+        )
         # Count number of votes for tabs
         tab_result = conn.execute(stmt, candidate="TABS").fetchone()
         tab_count = tab_result[0]
@@ -236,30 +110,27 @@ def get_index_context():
         space_count = space_result[0]
 
     return {
-        'space_count': space_count,
-        'recent_votes': votes,
-        'tab_count': tab_count,
+        "space_count": space_count,
+        "recent_votes": votes,
+        "tab_count": tab_count,
     }
 
 
-@app.route('/', methods=['POST'])
-def save_vote():
-    # Get the team and time the vote was cast.
-    team = request.form['team']
+# save_vote saves a vote to the database that was retrieved from form data
+def save_vote(team: str) -> Response:
     time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
-        logger.warning(team)
+        logger.warning(f"'Team' property should be 'TABS' or 'SPACES', got {team}")
         return Response(
-            response="Invalid team specified.",
-            status=400
+            response="Invalid team specified. Should be one of 'TABS' or 'SPACES'",
+            status=400,
         )
 
     # [START cloud_sql_postgres_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)"
-        " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
     )
     try:
         # Using a with statement ensures that the connection is always released
@@ -274,17 +145,16 @@ def save_vote():
         return Response(
             status=500,
             response="Unable to successfully cast vote! Please check the "
-                     "application logs for more details."
+            "application logs for more details.",
         )
         # [END_EXCLUDE]
     # [END cloud_sql_postgres_sqlalchemy_connection]
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(
-            team, time_cast)
+        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
     )
 
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)
