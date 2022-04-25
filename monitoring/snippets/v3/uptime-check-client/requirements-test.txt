@@ -1,2 +1,2 @@
 backoff==1.11.1
-pytest==7.1.1
+pytest==7.1.2
