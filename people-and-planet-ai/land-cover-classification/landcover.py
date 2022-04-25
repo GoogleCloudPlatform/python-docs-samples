@@ -238,6 +238,7 @@ if __name__ == "__main__":
 
     args, beam_args = parser.parse_known_args()
 
+    print(args)
     if args.command == "create-datasets":
         run(
             training_file=args.training_file,
@@ -248,3 +249,5 @@ if __name__ == "__main__":
             validation_ratio=args.validation_ratio,
             beam_options=PipelineOptions(beam_args, save_main_session=True),
         )
+    else:
+        raise ValueError(f"unrecognized command: {args.command}")
