@@ -34,7 +34,7 @@ db_config = {
 import os
 import sqlalchemy
 
-# connect_unix_socket initializes a Unix socket connection pool for
+# create_unix_socket_pool initializes a Unix socket connection pool for
 # a Cloud SQL instance of Postgres.
 def create_unix_socket_pool():
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
