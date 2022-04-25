@@ -223,10 +223,10 @@ if __name__ == "__main__":
 
     logging.getLogger().setLevel(logging.INFO)
 
-    parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="command", required=True)
 
-    create_datasets = commands.add_parser("create-datasets")
+    create_datasets = commands.add_parser("create-datasets", allow_abbrev=False)
     create_datasets.add_argument("--training-file", required=True)
     create_datasets.add_argument("--validation-file", required=True)
     create_datasets.add_argument("--regions-file", default="data/regions.csv")
