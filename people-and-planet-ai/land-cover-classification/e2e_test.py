@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from asyncio import subprocess
 import importlib
 import logging
 import os
@@ -48,10 +49,6 @@ LOCATION = "us-central1"
 
 IPYNB_FILE = "README.ipynb"
 PY_FILE = "README.py"
-KERNEL_SIZE = 1
-TRAINING_PATCH_SIZE = 1
-PREDICTION_PATCH_SIZE = 2
-CREATE_DATASETS_JOB_NAME = f"{NAME.replace('/', '-')}-{UUID}"
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -67,10 +64,6 @@ class PatchedIPython:
 
 def get_ipython() -> PatchedIPython:
     return PatchedIPython()
-
-
-# TODO: use these for export_points.csv
-# [-123.26143117162316, 39.130692612214816, -117.63643117162316, 37.05582768877082]
 
 
 logging.getLogger().setLevel(logging.INFO)
@@ -107,17 +100,32 @@ def run_notebook(bucket_name: str) -> None:
         project=PROJECT,
         bucket=bucket_name,
         location=LOCATION,
-        kernel_size=KERNEL_SIZE,
-        training_patch_size=TRAINING_PATCH_SIZE,
-        prediction_patch_size=PREDICTION_PATCH_SIZE,
     )
 
 
-def test_land_cover_create_datasets_dataflow(run_notebook: None) -> None:
-    # TODO:
-    # - fixture: job_id from job name (wait until finish successfully)
-    # - check that files exist
-    pass
+def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
+    training_file = f"gs://{bucket_name}/land-cover/training-data"
+    validation_file = f"gs://{bucket_name}/land-cover/validation-data"
+    points_per_region = 500
+    training_patch_size = 8
+    cmd = [
+        f"python",
+        f"create_datasets.py",
+        f"--training-file={training_file}",
+        f"--validation-file={validation_file}",
+        f"--regions-file=data/regions.csv",
+        f"--points-per-region={points_per_region}",
+        f"--patch-size={training_patch_size}",
+        f"--runner=DataflowRunner",
+        f"--project={PROJECT}",
+        f"--region={LOCATION}",
+        f"--job_name={NAME.replace('/', '-')}-{UUID}",
+        f"--temp_location=gs://{bucket_name}/land-cover/temp",
+        f"--setup_file=./setup.py",
+    ]
+    subprocess.check_call(cmd)
+
+    # TODO: check the names and shapes on the training and validation files
 
 
 # TODO: Not implemented
@@ -144,9 +152,6 @@ def run(
     project: str,
     bucket: str,
     location: str,
-    kernel_size: int,
-    training_patch_size: int,
-    prediction_patch_size: int,
 ) -> None:
     # Convert the notebook file into a Python source file.
     with open(ipynb_file) as f:
@@ -162,10 +167,6 @@ def run(
         "GOOGLE_CLOUD_PROJECT": project,
         "CLOUD_STORAGE_BUCKET": bucket,
         "CLOUD_LOCATION": location,
-        "KERNEL_SIZE": str(kernel_size),
-        "TRAINING_PATCH_SIZE": str(training_patch_size),
-        "PREDICTION_PATCH_SIZE": str(prediction_patch_size),
-        "CREATE_DATASETS_JOB_NAME": CREATE_DATASETS_JOB_NAME,
     }
     print("+" + "-" * 60)
     print("|  Environment variables")
@@ -201,11 +202,6 @@ if __name__ == "__main__":
     parser.add_argument("--ipynb-file", default=IPYNB_FILE)
     parser.add_argument("--py-file", default=PY_FILE)
     parser.add_argument("--location", default=LOCATION)
-    parser.add_argument("--kernel-size", default=KERNEL_SIZE, type=int)
-    parser.add_argument("--training-patch-size", default=TRAINING_PATCH_SIZE, type=int)
-    parser.add_argument(
-        "--prediction-patch-size", default=PREDICTION_PATCH_SIZE, type=int
-    )
     args = parser.parse_args()
 
     # For local testing, make sure you've run `ee.Authenticate()`.
