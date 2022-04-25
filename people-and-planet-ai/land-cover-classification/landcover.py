@@ -53,18 +53,6 @@ RETRY_STATUS = [429]
 EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 
-def ee_auth() -> None:
-    import google.auth
-
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(credentials, project=project)
-
-
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     # https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
@@ -136,7 +124,16 @@ def get_patch(
 
 
 def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarray:
-    ee_auth()
+    import google.auth
+
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(credentials, project=project)
+
     inputs = sentinel2_image("2020-1-1", "2021-1-1")
     outputs = landcover_image()
     image = inputs.addBands(outputs)
@@ -144,7 +141,16 @@ def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarr
 
 
 def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.ndarray:
-    ee_auth()
+    import google.auth
+
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(credentials, project=project)
+
     image = sentinel2_image("2020-1-1", "2021-1-1")
     return get_patch(image, lat, lon, patch_size, scale=10)
 
@@ -176,7 +182,7 @@ def serialize(patch: np.ndarray, names: List[str]) -> bytes:
 def run(
     training_file: str,
     validation_file: str,
-    regions_file: str = "data/regions.csv",
+    regions_file: str = "data/training-regions.csv",
     points_per_region: int = 500,
     patch_size: int = 64,
     validation_ratio: float = 0.1,
@@ -229,12 +235,12 @@ if __name__ == "__main__":
     create_datasets = commands.add_parser("create-datasets", allow_abbrev=False)
     create_datasets.add_argument("--training-file", required=True)
     create_datasets.add_argument("--validation-file", required=True)
-    create_datasets.add_argument("--regions-file", default="data/regions.csv")
+    create_datasets.add_argument("--regions-file", default="data/training-regions.csv")
     create_datasets.add_argument("--points-per-region", default=10, type=int)
     create_datasets.add_argument("--patch-size", default=16, type=int)
     create_datasets.add_argument("--validation-ratio", default=0.1, type=float)
 
-    batch_predict = commands.add_parser("batch-predict")
+    batch_predict = commands.add_parser("batch-predict", allow_abbrev=False)
 
     args, beam_args = parser.parse_known_args()
 
