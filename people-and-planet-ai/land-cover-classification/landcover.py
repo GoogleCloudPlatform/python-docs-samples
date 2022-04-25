@@ -125,6 +125,7 @@ def get_patch(
 
 def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarray:
     import google.auth
+    import ee
 
     credentials, project = google.auth.default(
         scopes=[
@@ -142,6 +143,7 @@ def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarr
 
 def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.ndarray:
     import google.auth
+    import ee
 
     credentials, project = google.auth.default(
         scopes=[
@@ -244,7 +246,6 @@ if __name__ == "__main__":
 
     args, beam_args = parser.parse_known_args()
 
-    print(args)
     if args.command == "create-datasets":
         run(
             training_file=args.training_file,
