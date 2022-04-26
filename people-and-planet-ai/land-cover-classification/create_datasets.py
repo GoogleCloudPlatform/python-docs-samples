@@ -13,30 +13,21 @@
 # limitations under the License.
 
 import csv
+import io
 import random
-from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
+import google.auth
 import numpy as np
+import requests
+from requests.adapters import HTTPAdapter, Retry
 
-from get_patch import GetPatch
 import train_model
 
 a = TypeVar("a")
-
-
-# There is an Earth Engine quota that if exceeded will
-# return us "status code 429: Too Many Requests"
-# If we get that status code, we can safely retry the request.
-# We use exponential backoff as a retry strategy:
-#   https://en.wikipedia.org/wiki/Exponential_backoff
-# For more information on Earth Engine request quotas, see
-#   https://developers.google.com/earth-engine/guides/usage
-MAX_RETRIES = 10
-RETRY_STATUS = [429]
-EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 
 def get_image() -> ee.Image:
@@ -68,6 +59,60 @@ def get_image() -> ee.Image:
     )
 
     return sentinel2.addBands(landcover)
+
+
+def get_patch(
+    lat: float,
+    lon: float,
+    get_image: Callable[[], ee.Image] = lambda: ee.Image(),
+    bands: Optional[List[str]] = None,
+    patch_size: int = 16,
+    scale: int = 10,
+    max_retries: int = 10,
+    retry_exp_backoff: float = 0.5,
+) -> np.ndarray:
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(
+        credentials,
+        project=project,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
+
+    # There is an Earth Engine quota that if exceeded will
+    # return us "status code 429: Too Many Requests"
+    # If we get that status code, we can safely retry the request.
+    # We use exponential backoff as a retry strategy:
+    #   https://en.wikipedia.org/wiki/Exponential_backoff
+    # For more information on Earth Engine request quotas, see
+    #   https://developers.google.com/earth-engine/guides/usage
+    http = requests.Session()
+    retry_strategy = Retry(
+        total=max_retries,
+        status_forcelist=[429],
+        backoff_factor=retry_exp_backoff,
+    )
+    http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+
+    image = get_image()
+    point = ee.Geometry.Point([lon, lat])
+    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
+    url = image.getDownloadURL(
+        {
+            "region": region,
+            "dimensions": [patch_size, patch_size],
+            "format": "NPY",
+            "bands": bands or image.bandNames().getInfo(),
+        }
+    )
+
+    # Fetch the data from Earth Engine and return it as a numpy array.
+    np_bytes = http.get(url).content
+    yield np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
 def sample_random_points(
@@ -122,9 +167,8 @@ def run(
             | "Sample random points"
             >> beam.FlatMap(sample_random_points, points_per_region)
             | "Reshuffle" >> beam.Reshuffle()
-            # | "Get patch" >> beam.MapTuple(get_training_patch, patch_size, bands)
             | "Get patch"
-            >> beam.ParDo(GetPatch(get_image, bands, patch_size, scale=10))
+            >> beam.MapTuple(get_patch, get_image, bands, patch_size, scale=10)
             | "Serialize" >> beam.Map(serialize)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
