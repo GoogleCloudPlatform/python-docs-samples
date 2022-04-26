@@ -1,2 +1,2 @@
-backoff==1.11.1
+backoff==2.0.0
 pytest==7.1.2
