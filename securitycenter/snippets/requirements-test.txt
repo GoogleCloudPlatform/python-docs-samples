@@ -1,1 +1,2 @@
-pytest
+pytest==6.2.5
+google-cloud-bigquery==2.34.2
