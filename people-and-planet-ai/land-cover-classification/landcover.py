@@ -248,7 +248,7 @@ if __name__ == "__main__":
             points_per_region=args.points_per_region,
             patch_size=args.patch_size,
             validation_ratio=args.validation_ratio,
-            beam_options=PipelineOptions(beam_args, save_main_session=True),
+            beam_args=beam_args,
         )
     else:
         raise ValueError(f"unrecognized command: {args.command}")
