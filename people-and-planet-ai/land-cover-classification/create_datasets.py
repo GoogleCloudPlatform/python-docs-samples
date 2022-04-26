@@ -27,6 +27,8 @@ a = TypeVar("a")
 
 
 def get_image() -> ee.Image:
+    import ee
+
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
         CLOUD_BIT = 10
         CIRRUS_CLOUD_BIT = 11
