@@ -154,6 +154,8 @@ def run(
     beam_args: Optional[List[str]] = None,
 ) -> None:
     def split_dataset(element: a, num_partitions: int) -> int:
+        import random
+
         weights = [1 - validation_ratio, validation_ratio]
         return random.choices([0, 1], weights)[0]
 
