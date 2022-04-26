@@ -13,12 +13,10 @@
 # limitations under the License.
 
 import csv
-import random
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar
+from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
-import ee
 import numpy as np
 
 import train_model
@@ -54,20 +52,21 @@ def get_patch(
         opt_url="https://earthengine-highvolume.googleapis.com",
     )
 
-    # There is an Earth Engine quota that if exceeded will
-    # return us "status code 429: Too Many Requests"
-    # If we get that status code, we can safely retry the request.
-    # We use exponential backoff as a retry strategy:
-    #   https://en.wikipedia.org/wiki/Exponential_backoff
-    # For more information on Earth Engine request quotas, see
-    #   https://developers.google.com/earth-engine/guides/usage
-    http = requests.Session()
-    retry_strategy = Retry(
-        total=max_retries,
-        status_forcelist=[429],
-        backoff_factor=retry_exp_backoff,
-    )
-    http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+    # # There is an Earth Engine quota that if exceeded will
+    # # return us "status code 429: Too Many Requests"
+    # # If we get that status code, we can safely retry the request.
+    # # We use exponential backoff as a retry strategy:
+    # #   https://en.wikipedia.org/wiki/Exponential_backoff
+    # # For more information on Earth Engine request quotas, see
+    # #   https://developers.google.com/earth-engine/guides/usage
+    # # ee.ee_exception.EEException
+    # http = requests.Session()
+    # retry_strategy = Retry(
+    #     total=max_retries,
+    #     status_forcelist=[429],
+    #     backoff_factor=retry_exp_backoff,
+    # )
+    # http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
         CLOUD_BIT = 10
@@ -109,7 +108,14 @@ def get_patch(
     )
 
     # Fetch the data from Earth Engine and return it as a numpy array.
-    np_bytes = http.get(url).content
+    # np_bytes = http.get(url).content
+    import backoff
+
+    @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
+    def get_with_retries(url: str) -> bytes:
+        return requests.get(url).content
+
+    np_bytes = get_with_retries(url)
     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
