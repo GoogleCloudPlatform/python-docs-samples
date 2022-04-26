@@ -14,13 +14,15 @@
 
 import logging
 import os
-from flask import Flask
-import pg8000
-import pytest
+
 from flask.testing import FlaskClient
+
+import pytest
+
 import main
 
 logger = logging.getLogger()
+
 
 # load proper environment variables
 def setup_test_env():
@@ -29,11 +31,11 @@ def setup_test_env():
     os.environ["DB_NAME"] = os.environ["POSTGRES_DATABASE"]
     os.environ["DB_PORT"] = os.environ["POSTGRES_PORT"]
     os.environ["INSTANCE_UNIX_SOCKET"] = os.environ["POSTGRES_UNIX_SOCKET"]
-    os.environ["INSTANCE_HOST"] = os.environ["POSTGRES_HOST"]
+    os.environ["INSTANCE_HOST"] = os.environ["POSTGRES_INSTANCE_HOST"]
     os.environ["INSTANCE_CONNECTION_NAME"] = os.environ["POSTGRES_INSTANCE"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def client() -> FlaskClient:
     setup_test_env()
     main.app.testing = True
