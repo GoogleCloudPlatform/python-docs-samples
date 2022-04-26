@@ -26,9 +26,10 @@ def connect_unix_socket():
     db_config = {
         # Pool size is the maximum number of permanent connections to keep.
         "pool_size": 5,
-        
+
         # Temporarily exceeds the set pool_size if no connections are available.
         "max_overflow": 2,
+
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
 

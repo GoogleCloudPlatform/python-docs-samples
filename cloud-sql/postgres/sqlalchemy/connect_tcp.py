@@ -46,7 +46,7 @@ def connect_tcp_socket():
         # exception will be thrown.
         "pool_timeout": 30,  # 30 seconds
         # [END cloud_sql_postgres_sqlalchemy_timeout]
-        
+
         # [START cloud_sql_postgres_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
