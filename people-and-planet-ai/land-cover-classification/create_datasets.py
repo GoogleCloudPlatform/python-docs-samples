@@ -112,7 +112,7 @@ def get_patch(
 
     # Fetch the data from Earth Engine and return it as a numpy array.
     np_bytes = http.get(url).content
-    yield np.load(io.BytesIO(np_bytes), allow_pickle=True)
+    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
 def sample_random_points(
