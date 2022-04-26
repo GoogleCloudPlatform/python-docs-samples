@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import io
-from typing import Callable, Iterable, List, Optional, Tuple
+from typing import Callable, Iterable, List, Tuple
 
 import apache_beam as beam
 import ee
 import google.auth
 import numpy as np
 import requests
-from urllib3 import HTTPAdapter, Retry
+from requests.adapters import HTTPAdapter, Retry
 
 
 class GetPatch(beam.DoFn):

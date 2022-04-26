@@ -149,7 +149,6 @@ if __name__ == "__main__":
     parser.add_argument("--points-per-region", default=10, type=int)
     parser.add_argument("--patch-size", default=16, type=int)
     parser.add_argument("--validation-ratio", default=0.1, type=float)
-
     args, beam_args = parser.parse_known_args()
 
     run(
