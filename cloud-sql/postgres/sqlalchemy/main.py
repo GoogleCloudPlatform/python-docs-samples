@@ -90,15 +90,14 @@ def votes(cloud_function_request=False):
         context = get_index_context()
         return render_template("index.html", **context)
 
-    elif http_request.method == "POST":
+    if http_request.method == "POST":
         team = http_request.form["team"]
         return save_vote(team)
 
-    else:
-        return Response(
-            response="Invalid http request. Method not allowed, must be 'GET' or 'POST'",
-            status=400,
-        )
+    return Response(
+        response="Invalid http request. Method not allowed, must be 'GET' or 'POST'",
+        status=400,
+    )
 
 
 # get_index_context gets data required for rendering HTML application
