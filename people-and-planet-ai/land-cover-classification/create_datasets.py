@@ -13,17 +13,13 @@
 # limitations under the License.
 
 import csv
-import io
 import random
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
-import google.auth
 import numpy as np
-import requests
-from requests.adapters import HTTPAdapter, Retry
 
 import train_model
 
@@ -71,6 +67,12 @@ def get_patch(
     max_retries: int = 10,
     retry_exp_backoff: float = 0.5,
 ) -> np.ndarray:
+    import ee
+    import google.auth
+    import io
+    import requests
+    from requests.adapters import HTTPAdapter, Retry
+
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/cloud-platform",
