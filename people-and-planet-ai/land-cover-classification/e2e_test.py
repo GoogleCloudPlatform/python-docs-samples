@@ -109,19 +109,19 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     points_per_region = 500
     training_patch_size = 8
     cmd = [
-        f"python",
-        f"create_datasets.py",
+        "python",
+        "create_datasets.py",
         f"--training-file={training_file}",
         f"--validation-file={validation_file}",
-        f"--regions-file=data/regions.csv",
+        "--regions-file=data/regions.csv",
         f"--points-per-region={points_per_region}",
         f"--patch-size={training_patch_size}",
-        f"--runner=DataflowRunner",
+        "--runner=DataflowRunner",
         f"--project={PROJECT}",
         f"--region={LOCATION}",
         f"--job_name={NAME.replace('/', '-')}-{UUID}",
         f"--temp_location=gs://{bucket_name}/land-cover/temp",
-        f"--setup_file=./setup.py",
+        "--setup_file=./setup.py",
     ]
     subprocess.check_call(cmd)
 
