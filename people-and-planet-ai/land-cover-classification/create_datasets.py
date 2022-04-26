@@ -26,43 +26,9 @@ import train_model
 a = TypeVar("a")
 
 
-def get_image() -> ee.Image:
-    import ee
-
-    def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
-        CLOUD_BIT = 10
-        CIRRUS_CLOUD_BIT = 11
-        bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
-        mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
-        return image.updateMask(mask)
-
-    sentinel2 = (
-        ee.ImageCollection("COPERNICUS/S2")
-        .filterDate("2020-1-1", "2021-1-1")
-        .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
-        .map(mask_sentinel2_clouds)
-        .median()
-    )
-
-    # Remap the ESA classifications into the Dynamic World classifications
-    # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
-    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
-    landcover = (
-        ee.ImageCollection("ESA/WorldCover/v100")
-        .first()
-        .select("Map")
-        .remap(fromValues, toValues)
-        .rename("landcover")
-    )
-
-    return sentinel2.addBands(landcover)
-
-
 def get_patch(
     lat: float,
     lon: float,
-    get_image: Callable[[], ee.Image] = lambda: ee.Image(),
     bands: Optional[List[str]] = None,
     patch_size: int = 16,
     scale: int = 10,
@@ -103,7 +69,34 @@ def get_patch(
     )
     http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
-    image = get_image()
+    def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
+        CLOUD_BIT = 10
+        CIRRUS_CLOUD_BIT = 11
+        bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
+        mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
+        return image.updateMask(mask)
+
+    sentinel2 = (
+        ee.ImageCollection("COPERNICUS/S2")
+        .filterDate("2020-1-1", "2021-1-1")
+        .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
+        .map(mask_sentinel2_clouds)
+        .median()
+    )
+
+    # Remap the ESA classifications into the Dynamic World classifications
+    # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
+    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
+    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
+    landcover = (
+        ee.ImageCollection("ESA/WorldCover/v100")
+        .first()
+        .select("Map")
+        .remap(fromValues, toValues)
+        .rename("landcover")
+    )
+
+    image = sentinel2.addBands(landcover)
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
     url = image.getDownloadURL(
@@ -174,8 +167,7 @@ def run(
             | "Sample random points"
             >> beam.FlatMap(sample_random_points, points_per_region)
             | "Reshuffle" >> beam.Reshuffle()
-            | "Get patch"
-            >> beam.MapTuple(get_patch, get_image, bands, patch_size, scale=10)
+            | "Get patch" >> beam.MapTuple(get_patch, bands, patch_size, scale=10)
             | "Serialize" >> beam.Map(serialize)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
