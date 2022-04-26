@@ -16,7 +16,7 @@ from typing import Dict, Tuple
 
 import tensorflow as tf
 
-INPUT_BANDS = [
+SENTINEL2_BANDS = [
     "B1",
     "B2",
     "B3",
@@ -31,8 +31,10 @@ INPUT_BANDS = [
     "B11",
     "B12",
 ]
-OUTPUT_BANDS = ["landcover"]
-NUM_CLASSIFICATIONS = 9
+
+# Define the input and output names for the model.
+INPUT_NAMES = SENTINEL2_BANDS
+OUTPUT_NAMES = ["landcover"]
 
 
 def read_dataset(
@@ -43,7 +45,7 @@ def read_dataset(
     input_shape = (patch_size, patch_size)
     features_dict = {
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
-        for band_name in INPUT_BANDS + OUTPUT_BANDS
+        for band_name in INPUT_NAMES + OUTPUT_NAMES
     }
     # For more information on how to optimize your tf.data.Dataset, refer to:
     #   https://www.tensorflow.org/guide/data_performance

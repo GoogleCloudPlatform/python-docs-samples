@@ -12,11 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import csv
+import io
+import random
 from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
 
+import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
+import google.auth
 import numpy as np
+import requests
+from requests.adapters import HTTPAdapter, Retry
+
+import train_model
 
 a = TypeVar("a")
 
@@ -94,10 +103,6 @@ def get_patch(
     scale: int,
     bands: Optional[List[str]] = None,
 ) -> np.ndarray:
-    import io
-    import requests
-    from requests.adapters import HTTPAdapter, Retry
-
     # Prepare to download the patch of pixels as a numpy array.
     point = ee.Geometry.Point([lon, lat])
     url = image.getDownloadURL(
@@ -124,9 +129,6 @@ def get_patch(
 
 
 def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarray:
-    import google.auth
-    import ee
-
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/cloud-platform",
@@ -142,9 +144,6 @@ def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarr
 
 
 def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.ndarray:
-    import google.auth
-    import ee
-
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/cloud-platform",
@@ -158,10 +157,8 @@ def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.nd
 
 
 def sample_random_points(
-    region: Dict[str, float], points_per_region: int = 100
+    region: Dict[str, float], points_per_region: int = 10
 ) -> Iterable[Tuple[float, float]]:
-    import random
-
     for _ in range(points_per_region):
         lat = random.uniform(region["south"], region["north"])
         lon = random.uniform(region["west"], region["east"])
@@ -188,14 +185,9 @@ def run(
     points_per_region: int = 500,
     patch_size: int = 64,
     validation_ratio: float = 0.1,
-    beam_options: Optional[PipelineOptions] = None,
+    beam_args: Optional[List[str]] = None,
 ) -> None:
-    import apache_beam as beam
-    import csv
-
     def split_dataset(element: a, num_partitions: int) -> int:
-        import random
-
         weights = [1 - validation_ratio, validation_ratio]
         return random.choices([0, 1], weights)[0]
 
@@ -205,6 +197,8 @@ def run(
             {key: float(value) for key, value in row.items()} for row in csv_reader
         ]
 
+    input_and_output_names = train_model.INPUT_NAMES + train_model.OUTPUT_NAMES
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, validation_data = (
             pipeline
@@ -213,7 +207,7 @@ def run(
             >> beam.FlatMap(sample_random_points, points_per_region)
             | "Reshuffle" >> beam.Reshuffle()
             | "Get patch" >> beam.MapTuple(get_training_patch, patch_size)
-            | "Serialize" >> beam.Map(serialize, INPUT_NAMES + OUTPUT_NAMES)
+            | "Serialize" >> beam.Map(serialize, input_and_output_names)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
 
