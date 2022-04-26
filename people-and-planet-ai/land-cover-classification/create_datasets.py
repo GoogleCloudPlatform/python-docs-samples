@@ -109,13 +109,14 @@ def get_patch(
 
     # Fetch the data from Earth Engine and return it as a numpy array.
     # np_bytes = http.get(url).content
-    import backoff
+    # import backoff
 
-    @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
-    def get_with_retries(url: str) -> bytes:
-        return requests.get(url).content
+    # @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
+    # def get_with_retries(url: str) -> bytes:
+    #     return requests.get(url).content
 
-    np_bytes = get_with_retries(url)
+    # np_bytes = get_with_retries(url)
+    np_bytes = requests.get(url).content
     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
