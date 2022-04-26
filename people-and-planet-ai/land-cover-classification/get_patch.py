@@ -81,4 +81,4 @@ class GetPatch(beam.DoFn):
 
         # Fetch the data from Earth Engine and return it as a numpy array.
         np_bytes = self.http.get(url).content
-        return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+        yield np.load(io.BytesIO(np_bytes), allow_pickle=True)

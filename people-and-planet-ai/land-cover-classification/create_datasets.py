@@ -123,7 +123,8 @@ def run(
             >> beam.FlatMap(sample_random_points, points_per_region)
             | "Reshuffle" >> beam.Reshuffle()
             # | "Get patch" >> beam.MapTuple(get_training_patch, patch_size, bands)
-            | "Get patch" >> GetPatch(get_image, bands, patch_size, scale=10)
+            | "Get patch"
+            >> beam.ParDo(GetPatch(get_image, bands, patch_size, scale=10))
             | "Serialize" >> beam.Map(serialize)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
