@@ -64,7 +64,7 @@ def migrate_db(db):
 db = None
 
 
-# get_db lazily instantiates a database connection pool. Users of Cloud Run or
+# init_db lazily instantiates a database connection pool. Users of Cloud Run or
 # Cloud Functions may wish to skip this lazy instantiation and connect as soon
 # as the function is loaded. This is primarily to help testing.
 @app.before_first_request
