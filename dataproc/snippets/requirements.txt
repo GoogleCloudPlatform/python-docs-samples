@@ -1,5 +1,5 @@
 
-backoff==1.11.1
+backoff==2.0.0
 grpcio==1.44.0
 google-auth==2.6.6
 google-auth-httplib2==0.1.0
