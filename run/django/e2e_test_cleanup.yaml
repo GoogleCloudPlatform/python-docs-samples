@@ -19,25 +19,25 @@ steps:
     args:
       - "-ec"
       - |
-        ./test/retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
+        ./retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
 
-        ./test/retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
+        ./retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
           "gcloud secrets delete ${_SECRET_PASSWORD_NAME} --quiet --project $PROJECT_ID"
 
-        ./test/retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
+        ./retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
           "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
 
-        ./test/retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
+        ./retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
           "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
 
-        ./test/retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
+        ./retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
           "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --async --quiet"
 
-        WAIT=30 ./test/retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
+        WAIT=30 ./retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
           "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
-        ./test/retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
+        ./retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
           "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
 substitutions:
