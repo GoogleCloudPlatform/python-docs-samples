@@ -199,7 +199,7 @@ def run(
             {key: float(value) for key, value in row.items()} for row in csv_reader
         ]
 
-    input_and_output_names = train_model.INPUT_NAMES + train_model.OUTPUT_NAMES
+    input_and_output_names = train_model.INPUT_BANDS + train_model.OUTPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, validation_data = (

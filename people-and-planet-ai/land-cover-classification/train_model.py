@@ -33,8 +33,9 @@ SENTINEL2_BANDS = [
 ]
 
 # Define the input and output names for the model.
-INPUT_NAMES = SENTINEL2_BANDS
-OUTPUT_NAMES = ["landcover"]
+INPUT_BANDS = SENTINEL2_BANDS
+OUTPUT_BANDS = ["landcover"]
+
 NUM_CLASSIFICATIONS = 9
 
 
@@ -46,7 +47,7 @@ def read_dataset(
     input_shape = (patch_size, patch_size)
     features_dict = {
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
-        for band_name in INPUT_NAMES + OUTPUT_NAMES
+        for band_name in INPUT_BANDS + OUTPUT_BANDS
     }
     # For more information on how to optimize your tf.data.Dataset, refer to:
     #   https://www.tensorflow.org/guide/data_performance
@@ -72,7 +73,7 @@ def read_dataset(
 def preprocess(patch: Dict[str, tf.Tensor]) -> Tuple[tf.Tensor, tf.Tensor]:
     """Splits inputs and outputs into a tuple and converts the output
     classifications into one-hot encodings."""
-    inputs = tf.stack([patch[band] for band in INPUT_NAMES], axis=-1)
+    inputs = tf.stack([patch[band] for band in INPUT_BANDS], axis=-1)
     outputs = tf.one_hot(tf.cast(patch["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
     return (inputs, outputs)
 
@@ -84,7 +85,7 @@ def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
 
     model = tf.keras.Sequential(
         [
-            tf.keras.Input(shape=(None, None, len(INPUT_NAMES))),
+            tf.keras.Input(shape=(None, None, len(INPUT_BANDS))),
             normalization,
             tf.keras.layers.Conv2D(filters=32, kernel_size=5, activation="relu"),
             tf.keras.layers.Conv2DTranspose(
