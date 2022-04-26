@@ -142,30 +142,22 @@ if __name__ == "__main__":
 
     logging.getLogger().setLevel(logging.INFO)
 
-    parser = argparse.ArgumentParser()
-    commands = parser.add_subparsers(dest="command", required=True)
-
-    create_datasets = commands.add_parser("create-datasets", allow_abbrev=False)
-    create_datasets.add_argument("--training-file", required=True)
-    create_datasets.add_argument("--validation-file", required=True)
-    create_datasets.add_argument("--regions-file", default="data/training-regions.csv")
-    create_datasets.add_argument("--points-per-region", default=10, type=int)
-    create_datasets.add_argument("--patch-size", default=16, type=int)
-    create_datasets.add_argument("--validation-ratio", default=0.1, type=float)
-
-    batch_predict = commands.add_parser("batch-predict", allow_abbrev=False)
+    parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser.add_argument("--training-file", required=True)
+    parser.add_argument("--validation-file", required=True)
+    parser.add_argument("--regions-file", default="data/training-regions.csv")
+    parser.add_argument("--points-per-region", default=10, type=int)
+    parser.add_argument("--patch-size", default=16, type=int)
+    parser.add_argument("--validation-ratio", default=0.1, type=float)
 
     args, beam_args = parser.parse_known_args()
 
-    if args.command == "create-datasets":
-        run(
-            training_file=args.training_file,
-            validation_file=args.validation_file,
-            regions_file=args.regions_file,
-            points_per_region=args.points_per_region,
-            patch_size=args.patch_size,
-            validation_ratio=args.validation_ratio,
-            beam_args=beam_args,
-        )
-    else:
-        raise ValueError(f"unrecognized command: {args.command}")
+    run(
+        training_file=args.training_file,
+        validation_file=args.validation_file,
+        regions_file=args.regions_file,
+        points_per_region=args.points_per_region,
+        patch_size=args.patch_size,
+        validation_ratio=args.validation_ratio,
+        beam_args=beam_args,
+    )
