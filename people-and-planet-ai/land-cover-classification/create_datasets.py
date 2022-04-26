@@ -72,6 +72,7 @@ def get_patch(
     import ee
     import google.auth
     import io
+    import numpy as np
     import requests
     from requests.adapters import HTTPAdapter, Retry
 
