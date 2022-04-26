@@ -1,4 +1,4 @@
-backoff==1.11.1
+backoff==2.0.0
 pytest==7.0.1
 google-cloud-storage==2.0.0; python_version < '3.7'
 google-cloud-storage==2.1.0; python_version > '3.6'
