@@ -159,6 +159,8 @@ def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.nd
 def sample_random_points(
     region: Dict[str, float], points_per_region: int = 10
 ) -> Iterable[Tuple[float, float]]:
+    import random
+
     for _ in range(points_per_region):
         lat = random.uniform(region["south"], region["north"])
         lon = random.uniform(region["west"], region["east"])
