@@ -62,6 +62,20 @@ RETRY_STATUS = [429]
 EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 
+def ee_init() -> None:
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(
+        credentials,
+        project=project,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
+
+
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     # https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
@@ -129,14 +143,7 @@ def get_patch(
 
 
 def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarray:
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(credentials, project=project)
-
+    ee_init()
     inputs = sentinel2_image("2020-1-1", "2021-1-1")
     outputs = landcover_image()
     image = inputs.addBands(outputs)
@@ -144,14 +151,7 @@ def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarr
 
 
 def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.ndarray:
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(credentials, project=project)
-
+    ee_init()
     image = sentinel2_image("2020-1-1", "2021-1-1")
     return get_patch(image, lat, lon, patch_size, scale=10)
 
