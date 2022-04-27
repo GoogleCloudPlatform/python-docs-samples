@@ -230,7 +230,7 @@ To deploy the service to [Cloud Functions](https://cloud.google.com/functions/do
 
 ```sh
 gcloud functions deploy votes --runtime python39 --trigger-http --allow-unauthenticated \
---set-env-vars INSTANCE_UNIX_SOCKET=$INSTANCE_UNIX_SOCKET \
+--set-env-vars INSTANCE_UNIX_SOCKET=/cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME> \
 --set-env-vars DB_USER=$DB_USER \
 --set-env-vars DB_PASS=$DB_PASS \
  --set-env-vars DB_NAME=$DB_NAME
