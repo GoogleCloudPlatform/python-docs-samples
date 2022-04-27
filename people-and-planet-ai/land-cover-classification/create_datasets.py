@@ -26,6 +26,20 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 
+def ee_init() -> None:
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(
+        credentials,
+        project=project,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
+
+
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
         CLOUD_BIT = 10
@@ -67,18 +81,6 @@ def get_patch(
     max_retries: int = 10,
     retry_exp_backoff: float = 0.5,
 ) -> np.ndarray:
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(
-        credentials,
-        project=project,
-        opt_url="https://earthengine-highvolume.googleapis.com",
-    )
-
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
     url = image.getDownloadURL(
@@ -122,6 +124,7 @@ def get_patch(
 def get_training_patch(
     lat: float, lon: float, bands: List[str] = [], patch_size: int = 64
 ) -> np.ndarray:
+    ee_init()
     image = sentinel2_image("2020-1-1", "2021-1-1").addBands(landcover_image())
     return get_patch(image, lat, lon, bands, patch_size, scale=10)
 
