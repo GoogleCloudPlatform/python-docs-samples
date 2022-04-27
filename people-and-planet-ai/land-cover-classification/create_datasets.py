@@ -20,9 +20,6 @@ from apache_beam.options.pipeline_options import PipelineOptions
 import numpy as np
 
 
-a = TypeVar("a")
-
-
 def get_patch(
     lat: float,
     lon: float,
@@ -154,7 +151,7 @@ def run(
 ) -> None:
     import train_model
 
-    def split_dataset(element: a, num_partitions: int) -> int:
+    def split_dataset(element: bytes, num_partitions: int) -> int:
         import random
 
         weights = [1 - validation_ratio, validation_ratio]
