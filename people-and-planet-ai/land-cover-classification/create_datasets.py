@@ -36,7 +36,7 @@ def ee_init() -> None:
     ee.Initialize(
         credentials,
         project=project,
-        # opt_url="https://earthengine-highvolume.googleapis.com",
+        opt_url="https://earthengine-highvolume.googleapis.com",
     )
 
 
