@@ -27,17 +27,18 @@ from requests.adapters import HTTPAdapter, Retry
 
 
 def ee_init() -> None:
-    credentials, project = google.auth.default(
-        scopes=[
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/earthengine",
-        ]
-    )
-    ee.Initialize(
-        credentials,
-        project=project,
-        opt_url="https://earthengine-highvolume.googleapis.com",
-    )
+    # credentials, project = google.auth.default(
+    #     scopes=[
+    #         "https://www.googleapis.com/auth/cloud-platform",
+    #         "https://www.googleapis.com/auth/earthengine",
+    #     ]
+    # )
+    # ee.Initialize(
+    #     credentials,
+    #     project=project,
+    #     opt_url="https://earthengine-highvolume.googleapis.com",
+    # )
+    ee.Initialize()
 
 
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
@@ -78,7 +79,7 @@ def get_patch(
     bands: List[str],
     patch_size: int,
     scale: int,
-    max_retries: int = 10,
+    max_retries: int = 20,
     retry_exp_backoff: float = 0.5,
 ) -> np.ndarray:
     point = ee.Geometry.Point([lon, lat])
@@ -140,11 +141,11 @@ def serialize(patch: np.ndarray) -> bytes:
 
 
 def run(
-    training_file: str,
-    validation_file: str,
     regions_file: str = "data/training-regions.csv",
-    points_per_region: int = 500,
-    patch_size: int = 64,
+    training_prefix: str = "datasets/training",
+    validation_prefix: str = "datasets/validation",
+    points_per_region: int = 5,
+    patch_size: int = 16,
     validation_ratio: float = 0.1,
     beam_args: Optional[List[str]] = None,
 ) -> None:
@@ -175,10 +176,10 @@ def run(
         )
 
         training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
-            training_file, file_name_suffix=".tfrecord.gz"
+            training_prefix, file_name_suffix=".tfrecord.gz"
         )
         validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
-            validation_file, file_name_suffix=".tfrecord.gz"
+            validation_prefix, file_name_suffix=".tfrecord.gz"
         )
 
 
@@ -189,20 +190,12 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument("--training-file", required=True)
-    parser.add_argument("--validation-file", required=True)
-    parser.add_argument("--regions-file", default="data/training-regions.csv")
-    parser.add_argument("--points-per-region", default=10, type=int)
+    parser.add_argument("--regions-file", default="./data/training-regions.csv")
+    parser.add_argument("--training-prefix", default="./datasets/training")
+    parser.add_argument("--validation-prefix", default="./datasets/validation")
+    parser.add_argument("--points-per-region", default=5, type=int)
     parser.add_argument("--patch-size", default=16, type=int)
     parser.add_argument("--validation-ratio", default=0.1, type=float)
     args, beam_args = parser.parse_known_args()
 
-    run(
-        training_file=args.training_file,
-        validation_file=args.validation_file,
-        regions_file=args.regions_file,
-        points_per_region=args.points_per_region,
-        patch_size=args.patch_size,
-        validation_ratio=args.validation_ratio,
-        beam_args=beam_args,
-    )
+    run(**vars(args), beam_args=beam_args)

@@ -3,6 +3,6 @@
 *.gif
 *.tfrecord.gz
 README.py
-beam-temp*
-local-model/
+datasets/
+model/
 predictions/

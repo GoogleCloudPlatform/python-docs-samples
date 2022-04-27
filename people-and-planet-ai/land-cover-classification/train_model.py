@@ -103,16 +103,16 @@ def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
 
 
 def run(
-    training_file_pattern: str,
-    validation_file_pattern: str,
-    save_model_to: str,
+    training_data: str,
+    validation_data: str,
+    model_path: str,
     patch_size: int,
     epochs: int,
     batch_size: int = 256,
 ) -> None:
     """Creates, trains and saves a new model."""
-    training_dataset = read_dataset(training_file_pattern, patch_size, batch_size)
-    validation_dataset = read_dataset(validation_file_pattern, patch_size, batch_size)
+    training_dataset = read_dataset(training_data, patch_size, batch_size)
+    validation_dataset = read_dataset(validation_data, patch_size, batch_size)
 
     model = new_model(training_dataset)
     model.fit(
@@ -120,4 +120,19 @@ def run(
         validation_data=validation_dataset,
         epochs=epochs,
     )
-    model.save(save_model_to)
+    model.save(model_path)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--training-data", default="datasets/training*.tfrecord.gz")
+    parser.add_argument("--validation-data", default="datasets/validation*.tfrecord.gz")
+    parser.add_argument("--model-path", default="model")
+    parser.add_argument("--patch-size", default=16, type=int)
+    parser.add_argument("--epochs", default=50, type=int)
+    parser.add_argument("--batch-size", default=256, type=int)
+    args = parser.parse_args()
+
+    run(**vars(args))
