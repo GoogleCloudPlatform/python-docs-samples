@@ -98,36 +98,19 @@ def get_patch(
     # # We use exponential backoff as a retry strategy:
     # #   https://en.wikipedia.org/wiki/Exponential_backoff
     # # For more information on Earth Engine request quotas, see
-    # #   https://developers.google.com/earth-engine/guides/usage
-    # # ee.ee_exception.EEException
-    # http = requests.Session()
+    # #   https://developers.google.com/earth-engine/cloud/highvolume
+    # session = requests.Session()
     # retry_strategy = Retry(
     #     total=max_retries,
     #     status_forcelist=[429],
     #     backoff_factor=retry_exp_backoff,
     # )
-    # http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+    # session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
-    # Fetch the data from Earth Engine and return it as a numpy array.
-    # np_bytes = http.get(url).content
-    # import backoff
-
-    # @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
-    # def get_with_retries(url: str) -> bytes:
-    #     return requests.get(url).content
-
-    # np_bytes = get_with_retries(url)
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(response.content)
-        raise RuntimeError(f"Status code {response.status_code}\n{response.text}")
-    np_bytes = response.content
-    # np_bytes = requests.get(url).content
-    try:
-        return np.load(io.BytesIO(np_bytes), allow_pickle=True)
-    except Exception as e:
-        logging.error(np_bytes, e)
-        raise e
+    session = requests
+    response = session.get(url)
+    response.raise_for_status()
+    return np.load(io.BytesIO(response.content), allow_pickle=True)
 
 
 def get_training_patch(
@@ -136,95 +119,6 @@ def get_training_patch(
     ee_init()
     image = sentinel2_image("2020-1-1", "2021-1-1").addBands(landcover_image())
     return get_patch(image, lat, lon, bands, patch_size, scale=10)
-
-
-# def get_patch(
-#     lat: float,
-#     lon: float,
-#     bands: Optional[List[str]] = None,
-#     patch_size: int = 16,
-#     scale: int = 10,
-#     max_retries: int = 10,
-#     retry_exp_backoff: float = 0.5,
-# ) -> np.ndarray:
-#     credentials, project = google.auth.default(
-#         scopes=[
-#             "https://www.googleapis.com/auth/cloud-platform",
-#             "https://www.googleapis.com/auth/earthengine",
-#         ]
-#     )
-#     ee.Initialize(
-#         credentials,
-#         project=project,
-#         opt_url="https://earthengine-highvolume.googleapis.com",
-#     )
-
-#     # # There is an Earth Engine quota that if exceeded will
-#     # # return us "status code 429: Too Many Requests"
-#     # # If we get that status code, we can safely retry the request.
-#     # # We use exponential backoff as a retry strategy:
-#     # #   https://en.wikipedia.org/wiki/Exponential_backoff
-#     # # For more information on Earth Engine request quotas, see
-#     # #   https://developers.google.com/earth-engine/guides/usage
-#     # # ee.ee_exception.EEException
-#     # http = requests.Session()
-#     # retry_strategy = Retry(
-#     #     total=max_retries,
-#     #     status_forcelist=[429],
-#     #     backoff_factor=retry_exp_backoff,
-#     # )
-#     # http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
-
-#     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
-#         CLOUD_BIT = 10
-#         CIRRUS_CLOUD_BIT = 11
-#         bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
-#         mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
-#         return image.updateMask(mask)
-
-#     sentinel2 = (
-#         ee.ImageCollection("COPERNICUS/S2")
-#         .filterDate("2020-1-1", "2021-1-1")
-#         .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
-#         .map(mask_sentinel2_clouds)
-#         .median()
-#     )
-
-#     # Remap the ESA classifications into the Dynamic World classifications
-#     # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
-#     fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-#     toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
-#     landcover = (
-#         ee.ImageCollection("ESA/WorldCover/v100")
-#         .first()
-#         .select("Map")
-#         .remap(fromValues, toValues)
-#         .rename("landcover")
-#     )
-
-#     image = sentinel2.addBands(landcover)
-#     point = ee.Geometry.Point([lon, lat])
-#     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
-#     url = image.getDownloadURL(
-#         {
-#             "region": region,
-#             "dimensions": [patch_size, patch_size],
-#             "format": "NPY",
-#             "bands": bands or image.bandNames().getInfo(),
-#         }
-#     )
-
-#     # Fetch the data from Earth Engine and return it as a numpy array.
-#     # np_bytes = http.get(url).content
-#     # import backoff
-
-#     # @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
-#     # def get_with_retries(url: str) -> bytes:
-#     #     return requests.get(url).content
-
-#     # np_bytes = get_with_retries(url)
-#     np_bytes = requests.get(url).content
-#     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
 def sample_random_points(
