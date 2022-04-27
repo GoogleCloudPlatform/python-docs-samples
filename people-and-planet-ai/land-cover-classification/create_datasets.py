@@ -19,7 +19,6 @@ import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import numpy as np
 
-import train_model
 
 a = TypeVar("a")
 
@@ -153,6 +152,8 @@ def run(
     validation_ratio: float = 0.1,
     beam_args: Optional[List[str]] = None,
 ) -> None:
+    import train_model
+
     def split_dataset(element: a, num_partitions: int) -> int:
         import random
 
