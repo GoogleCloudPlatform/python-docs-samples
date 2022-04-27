@@ -78,8 +78,8 @@ def get_patch(
     bands: List[str],
     patch_size: int,
     scale: int,
-    max_retries: int = 20,
-    retry_exp_backoff: float = 0.5,
+    max_retries: int = 50,
+    retry_exp_backoff: float = 1.0,
 ) -> np.ndarray:
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
@@ -105,12 +105,13 @@ def get_patch(
     session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
     response = session.get(url)
     response.raise_for_status()
+    print(f"Got patch for {(lat, lon)}")
 
     return np.load(io.BytesIO(response.content), allow_pickle=True)
 
 
 def get_training_patch(
-    lat: float, lon: float, bands: List[str] = [], patch_size: int = 64
+    lat: float, lon: float, bands: List[str] = [], patch_size: int = 16
 ) -> np.ndarray:
     ee_init()
     image = sentinel2_image("2020-1-1", "2021-1-1").addBands(landcover_image())
