@@ -27,18 +27,17 @@ from requests.adapters import HTTPAdapter, Retry
 
 
 def ee_init() -> None:
-    # credentials, project = google.auth.default(
-    #     scopes=[
-    #         "https://www.googleapis.com/auth/cloud-platform",
-    #         "https://www.googleapis.com/auth/earthengine",
-    #     ]
-    # )
-    # ee.Initialize(
-    #     credentials,
-    #     project=project,
-    #     opt_url="https://earthengine-highvolume.googleapis.com",
-    # )
-    ee.Initialize()
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(
+        credentials,
+        project=project,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
 
 
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
