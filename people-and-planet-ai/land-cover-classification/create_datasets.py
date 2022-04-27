@@ -13,29 +13,60 @@
 # limitations under the License.
 
 import csv
-from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
+import random
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+import ee
+import google.auth
+import io
 import numpy as np
+import requests
+from requests.adapters import HTTPAdapter, Retry
+
+
+def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
+    def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
+        CLOUD_BIT = 10
+        CIRRUS_CLOUD_BIT = 11
+        bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
+        mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
+        return image.updateMask(mask)
+
+    return (
+        ee.ImageCollection("COPERNICUS/S2")
+        .filterDate(start_date, end_date)
+        .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
+        .map(mask_sentinel2_clouds)
+        .median()
+    )
+
+
+def landcover_image() -> ee.Image:
+    # Remap the ESA classifications into the Dynamic World classifications
+    # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
+    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
+    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
+    return (
+        ee.ImageCollection("ESA/WorldCover/v100")
+        .first()
+        .select("Map")
+        .remap(fromValues, toValues)
+        .rename("landcover")
+    )
 
 
 def get_patch(
+    image: ee.Image,
     lat: float,
     lon: float,
-    bands: Optional[List[str]] = None,
-    patch_size: int = 16,
-    scale: int = 10,
+    bands: List[str],
+    patch_size: int,
+    scale: int,
     max_retries: int = 10,
     retry_exp_backoff: float = 0.5,
 ) -> np.ndarray:
-    import ee
-    import google.auth
-    import io
-    import numpy as np
-    import requests
-    from requests.adapters import HTTPAdapter, Retry
-
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/cloud-platform",
@@ -46,6 +77,17 @@ def get_patch(
         credentials,
         project=project,
         opt_url="https://earthengine-highvolume.googleapis.com",
+    )
+
+    point = ee.Geometry.Point([lon, lat])
+    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
+    url = image.getDownloadURL(
+        {
+            "region": region,
+            "dimensions": [patch_size, patch_size],
+            "format": "NPY",
+            "bands": bands,
+        }
     )
 
     # # There is an Earth Engine quota that if exceeded will
@@ -64,45 +106,6 @@ def get_patch(
     # )
     # http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
-    def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
-        CLOUD_BIT = 10
-        CIRRUS_CLOUD_BIT = 11
-        bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
-        mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
-        return image.updateMask(mask)
-
-    sentinel2 = (
-        ee.ImageCollection("COPERNICUS/S2")
-        .filterDate("2020-1-1", "2021-1-1")
-        .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
-        .map(mask_sentinel2_clouds)
-        .median()
-    )
-
-    # Remap the ESA classifications into the Dynamic World classifications
-    # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
-    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
-    landcover = (
-        ee.ImageCollection("ESA/WorldCover/v100")
-        .first()
-        .select("Map")
-        .remap(fromValues, toValues)
-        .rename("landcover")
-    )
-
-    image = sentinel2.addBands(landcover)
-    point = ee.Geometry.Point([lon, lat])
-    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
-    url = image.getDownloadURL(
-        {
-            "region": region,
-            "dimensions": [patch_size, patch_size],
-            "format": "NPY",
-            "bands": bands or image.bandNames().getInfo(),
-        }
-    )
-
     # Fetch the data from Earth Engine and return it as a numpy array.
     # np_bytes = http.get(url).content
     # import backoff
@@ -116,11 +119,105 @@ def get_patch(
     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
 
 
+def get_training_patch(
+    lat: float, lon: float, bands: List[str], patch_size: int = 64
+) -> np.ndarray:
+    image = sentinel2_image("2020-1-1", "2021-1-1").addBands(landcover_image())
+    return get_patch(image, lat, lon, bands, patch_size, scale=10)
+
+
+# def get_patch(
+#     lat: float,
+#     lon: float,
+#     bands: Optional[List[str]] = None,
+#     patch_size: int = 16,
+#     scale: int = 10,
+#     max_retries: int = 10,
+#     retry_exp_backoff: float = 0.5,
+# ) -> np.ndarray:
+#     credentials, project = google.auth.default(
+#         scopes=[
+#             "https://www.googleapis.com/auth/cloud-platform",
+#             "https://www.googleapis.com/auth/earthengine",
+#         ]
+#     )
+#     ee.Initialize(
+#         credentials,
+#         project=project,
+#         opt_url="https://earthengine-highvolume.googleapis.com",
+#     )
+
+#     # # There is an Earth Engine quota that if exceeded will
+#     # # return us "status code 429: Too Many Requests"
+#     # # If we get that status code, we can safely retry the request.
+#     # # We use exponential backoff as a retry strategy:
+#     # #   https://en.wikipedia.org/wiki/Exponential_backoff
+#     # # For more information on Earth Engine request quotas, see
+#     # #   https://developers.google.com/earth-engine/guides/usage
+#     # # ee.ee_exception.EEException
+#     # http = requests.Session()
+#     # retry_strategy = Retry(
+#     #     total=max_retries,
+#     #     status_forcelist=[429],
+#     #     backoff_factor=retry_exp_backoff,
+#     # )
+#     # http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+
+#     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
+#         CLOUD_BIT = 10
+#         CIRRUS_CLOUD_BIT = 11
+#         bit_mask = (1 << CLOUD_BIT) | (1 << CIRRUS_CLOUD_BIT)
+#         mask = image.select("QA60").bitwiseAnd(bit_mask).eq(0)
+#         return image.updateMask(mask)
+
+#     sentinel2 = (
+#         ee.ImageCollection("COPERNICUS/S2")
+#         .filterDate("2020-1-1", "2021-1-1")
+#         .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
+#         .map(mask_sentinel2_clouds)
+#         .median()
+#     )
+
+#     # Remap the ESA classifications into the Dynamic World classifications
+#     # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
+#     fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
+#     toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
+#     landcover = (
+#         ee.ImageCollection("ESA/WorldCover/v100")
+#         .first()
+#         .select("Map")
+#         .remap(fromValues, toValues)
+#         .rename("landcover")
+#     )
+
+#     image = sentinel2.addBands(landcover)
+#     point = ee.Geometry.Point([lon, lat])
+#     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
+#     url = image.getDownloadURL(
+#         {
+#             "region": region,
+#             "dimensions": [patch_size, patch_size],
+#             "format": "NPY",
+#             "bands": bands or image.bandNames().getInfo(),
+#         }
+#     )
+
+#     # Fetch the data from Earth Engine and return it as a numpy array.
+#     # np_bytes = http.get(url).content
+#     # import backoff
+
+#     # @backoff.on_exception(backoff.expo, ee.ee_exception.EEException)
+#     # def get_with_retries(url: str) -> bytes:
+#     #     return requests.get(url).content
+
+#     # np_bytes = get_with_retries(url)
+#     np_bytes = requests.get(url).content
+#     return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+
+
 def sample_random_points(
     region: Dict[str, float], points_per_region: int = 10
 ) -> Iterable[Tuple[float, float]]:
-    import random
-
     for _ in range(points_per_region):
         lat = random.uniform(region["south"], region["north"])
         lon = random.uniform(region["west"], region["east"])
@@ -152,8 +249,6 @@ def run(
     import train_model
 
     def split_dataset(element: bytes, num_partitions: int) -> int:
-        import random
-
         weights = [1 - validation_ratio, validation_ratio]
         return random.choices([0, 1], weights)[0]
 
@@ -172,7 +267,7 @@ def run(
             | "Sample random points"
             >> beam.FlatMap(sample_random_points, points_per_region)
             | "Reshuffle" >> beam.Reshuffle()
-            | "Get patch" >> beam.MapTuple(get_patch, bands, patch_size, scale=10)
+            | "Get patch" >> beam.MapTuple(get_training_patch, bands, patch_size)
             | "Serialize" >> beam.Map(serialize)
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
