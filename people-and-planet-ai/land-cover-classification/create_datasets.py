@@ -189,9 +189,9 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument("--regions-file", default="./data/training-regions.csv")
-    parser.add_argument("--training-prefix", default="./datasets/training")
-    parser.add_argument("--validation-prefix", default="./datasets/validation")
+    parser.add_argument("--regions-file", default="data/training-regions.csv")
+    parser.add_argument("--training-prefix", default="datasets/training")
+    parser.add_argument("--validation-prefix", default="datasets/validation")
     parser.add_argument("--points-per-region", default=5, type=int)
     parser.add_argument("--patch-size", default=16, type=int)
     parser.add_argument("--validation-ratio", default=0.1, type=float)
