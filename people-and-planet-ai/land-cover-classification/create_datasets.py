@@ -86,7 +86,7 @@ def get_patch(
             "region": region,
             "dimensions": [patch_size, patch_size],
             "format": "NPY",
-            "bands": bands,
+            "bands": bands or image.bandNames().getInfo(),
         }
     )
 
@@ -120,7 +120,7 @@ def get_patch(
 
 
 def get_training_patch(
-    lat: float, lon: float, bands: List[str], patch_size: int = 64
+    lat: float, lon: float, bands: List[str] = [], patch_size: int = 64
 ) -> np.ndarray:
     image = sentinel2_image("2020-1-1", "2021-1-1").addBands(landcover_image())
     return get_patch(image, lat, lon, bands, patch_size, scale=10)
