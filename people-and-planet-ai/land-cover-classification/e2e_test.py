@@ -106,7 +106,7 @@ def run_notebook(bucket_name: str) -> None:
 def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     training_file = f"gs://{bucket_name}/land-cover/training-data"
     validation_file = f"gs://{bucket_name}/land-cover/validation-data"
-    points_per_region = 200
+    points_per_region = 100
     training_patch_size = 8
     cmd = [
         "python",
