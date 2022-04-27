@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import csv
+import io
 import random
 from typing import Dict, Iterable, List, Optional, Tuple
 
@@ -20,7 +21,6 @@ import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
 import google.auth
-import io
 import numpy as np
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -92,24 +92,20 @@ def get_patch(
         }
     )
 
-    # # There is an Earth Engine quota that if exceeded will
-    # # return us "status code 429: Too Many Requests"
-    # # If we get that status code, we can safely retry the request.
-    # # We use exponential backoff as a retry strategy:
-    # #   https://en.wikipedia.org/wiki/Exponential_backoff
-    # # For more information on Earth Engine request quotas, see
-    # #   https://developers.google.com/earth-engine/cloud/highvolume
-    # session = requests.Session()
-    # retry_strategy = Retry(
-    #     total=max_retries,
-    #     status_forcelist=[429],
-    #     backoff_factor=retry_exp_backoff,
-    # )
-    # session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
-
-    session = requests
+    # We use exponential backoff as a retry strategy:
+    #   https://en.wikipedia.org/wiki/Exponential_backoff
+    # For more information on Earth Engine request quotas, see
+    #   https://developers.google.com/earth-engine/cloud/highvolume
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=max_retries,
+        status_forcelist=[429],  # Too many requests error
+        backoff_factor=retry_exp_backoff,
+    )
+    session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
     response = session.get(url)
     response.raise_for_status()
+
     return np.load(io.BytesIO(response.content), allow_pickle=True)
 
 
