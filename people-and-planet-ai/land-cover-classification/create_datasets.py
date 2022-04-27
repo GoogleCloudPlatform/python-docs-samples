@@ -117,8 +117,17 @@ def get_patch(
     #     return requests.get(url).content
 
     # np_bytes = get_with_retries(url)
-    np_bytes = requests.get(url).content
-    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+    response = requests.get(url)
+    if response.status_code != 200:
+        print(response.content)
+        raise RuntimeError(f"Status code {response.status_code}\n{response.text}")
+    np_bytes = response.content
+    # np_bytes = requests.get(url).content
+    try:
+        return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+    except Exception as e:
+        logging.error(np_bytes, e)
+        raise e
 
 
 def get_training_patch(
