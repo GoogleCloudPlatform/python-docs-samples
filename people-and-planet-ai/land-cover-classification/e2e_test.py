@@ -113,7 +113,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         "create_datasets.py",
         f"--training-file={training_file}",
         f"--validation-file={validation_file}",
-        "--regions-file=data/regions.csv",
+        "--regions-file=data/training-regions.csv",
         f"--points-per-region={points_per_region}",
         f"--patch-size={training_patch_size}",
         "--runner=DataflowRunner",
