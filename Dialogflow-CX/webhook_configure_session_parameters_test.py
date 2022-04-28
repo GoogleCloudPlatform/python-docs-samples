@@ -26,7 +26,7 @@ def fixture_app():
 
 
 def test_validate_parameter(app):
-    """Parameterized test for configure new session parameters."""
+    """Test for configure new session parameters."""
 
     request = {"fulfillmentInfo": {"tag": "MOCK_TAG"}}
 

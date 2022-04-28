@@ -12,23 +12,34 @@
 # limitations under the License.
 
 
-""" DialogFlow CX: webhook to configure new session parameters."""
+""" DialogFlow CX: Configure new session parameters with trigger transition."""
 
-# [START dialogflow_v3beta1_webhook_configure_session_parameters]
+# [START dialogflow_v3beta1_webhook_configure_session_parameters_trigger_transition]
 
-# TODO (developer): change entry point to configure_session_params in Cloud Function
+# TODO (developer): change entry point to trigger_transition in Cloud Function
 
 
-def configure_session_params(request):
+def trigger_transition(request):
     """Webhook to validate or configure new session parameters."""
 
     request_dict = request.get_json()
-    tag = request_dict["fulfillmentInfo"]["tag"]
+    session_parameter = request_dict["sessionInfo"]["parameters"].get("value", 25)
 
-    new_session_parameter = "Hi, I am new!"
-    text = f"{new_session_parameter}. I'm a session parameter configured by the webhook. The webhook's tag is {tag}."
+    if session_parameter > 15:
+        text = f"You said {session_parameter}. Let me redirect you to our higher number department"
+        target_page = (
+            "projects/<Project ID>/locations/<Location ID>/"
+            "agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>"
+        )
+    else:
+        text = f"{session_parameter} is a number I can help you with!"
+        target_page = (
+            "projects/<Project ID>/locations/<Location ID>/"
+            "agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>"
+        )
 
     json_response = {
+        "target_page": target_page,
         "fulfillment_response": {
             "messages": [
                 {
@@ -41,14 +52,9 @@ def configure_session_params(request):
                 },
             ],
         },
-        "sessionInfo": {
-            "parameters": {
-                "newSessionParameter": new_session_parameter,
-            },
-        },
     }
 
     return json_response
 
 
-# [END dialogflow_v3beta1_webhook_configure_session_parameters]
+# [END dialogflow_v3beta1_webhook_configure_session_parameters_trigger_transition]
