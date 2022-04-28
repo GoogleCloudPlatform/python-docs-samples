@@ -129,7 +129,7 @@ def write_to_numpy(results: Dict, predictions_prefix: str = "predictions") -> No
 
 
 def run(
-    regions_file: str = "data/prediction-regions.csv",
+    regions_file: str = "data/prediction-locations.csv",
     model_path: str = "model",
     predictions_prefix: str = "predictions",
     patch_size: int = 256,
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument("--regions-file", default="data/prediction-regions.csv")
+    parser.add_argument("--regions-file", default="data/prediction-locations.csv")
     parser.add_argument("--model-path", default="model")
     parser.add_argument("--predictions-prefix", default="predictions")
     parser.add_argument("--patch-size", default=256, type=int)
