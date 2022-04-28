@@ -19,7 +19,7 @@ steps:
     args:
       - "-c"
       - |
-        WAIT=30 ./test/retry.sh "gcloud sql databases create ${_DB_NAME} \
+        WAIT=30 ./retry.sh "gcloud sql databases create ${_DB_NAME} \
           --instance ${_DB_INSTANCE} \
           --project ${PROJECT_ID}"
 
@@ -30,7 +30,7 @@ steps:
       - "-c"
       - |
         echo -n "${_DB_PASS}" > db_password
-        ./test/retry.sh "gcloud sql users create ${_DB_USER} \
+        ./retry.sh "gcloud sql users create ${_DB_USER} \
           --password $(cat db_password) \
           --instance ${_DB_INSTANCE} \
           --project ${PROJECT_ID}"
@@ -42,7 +42,7 @@ steps:
     args:
       - "-c"
       - |
-        ./test/retry.sh "gsutil mb \
+        ./retry.sh "gsutil mb \
           -l ${_REGION} \
           -p ${PROJECT_ID} \
           gs://${_STORAGE_BUCKET}"
@@ -59,7 +59,7 @@ steps:
         SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]' | fold -w 30 | head -n1)
         PASSWORD_NAME=${_SECRET_PASSWORD_NAME}" > ${_SECRET_SETTINGS_NAME}
 
-        ./test/retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
+        ./retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
           --project $PROJECT_ID \
           --data-file=${_SECRET_SETTINGS_NAME}"
 
@@ -72,7 +72,7 @@ steps:
 
         echo -n "${_SECRET_PASSWORD_VALUE}" > ${_SECRET_PASSWORD_NAME}
 
-        ./test/retry.sh "gcloud secrets create ${_SECRET_PASSWORD_NAME} \
+        ./retry.sh "gcloud secrets create ${_SECRET_PASSWORD_NAME} \
           --project $PROJECT_ID \
           --data-file=${_SECRET_PASSWORD_NAME}"
 
@@ -89,7 +89,7 @@ steps:
     args:
       - "-c"
       - |
-        ./test/retry.sh "docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} ."
+        ./retry.sh "docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} ."
 
   - id: "Push Container Image"
     name: "gcr.io/cloud-builders/docker"
@@ -97,7 +97,7 @@ steps:
     args:
       - "-c"
       - |
-        ./test/retry.sh "docker push gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}"
+        ./retry.sh "docker push gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}"
 
   - id: "Migrate database"
     name: "gcr.io/google-appengine/exec-wrapper"
@@ -142,7 +142,7 @@ steps:
     args:
       - "-c"
       - |
-        ./test/retry.sh "gcloud run deploy ${_SERVICE} \
+        ./retry.sh "gcloud run deploy ${_SERVICE} \
           --project $PROJECT_ID \
           --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
           --no-allow-unauthenticated \
