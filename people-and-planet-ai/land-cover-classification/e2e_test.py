@@ -54,18 +54,6 @@ PY_FILE = "README.py"
 sys.modules["google.colab"] = Mock()
 
 
-# Converting a notebook to Python source leaves us with the IPython magics
-# as undefined methods, so we'll use a custom implementation for testing.
-class PatchedIPython:
-    @staticmethod
-    def system(cmd: str) -> None:
-        print(f"!{cmd}")
-
-
-def get_ipython() -> PatchedIPython:
-    return PatchedIPython()
-
-
 logging.getLogger().setLevel(logging.INFO)
 
 
@@ -110,8 +98,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     cmd = [
         "python",
         "create_datasets.py",
-        f"--training-file={training_file}",
-        f"--validation-file={validation_file}",
+        f"--training-data={training_file}",
+        f"--validation-data={validation_file}",
         f"--points-per-region={points_per_region}",
         f"--patch-size={training_patch_size}",
         "--runner=DataflowRunner",
