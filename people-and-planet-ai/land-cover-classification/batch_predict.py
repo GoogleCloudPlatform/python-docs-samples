@@ -14,52 +14,16 @@
 
 import csv
 import io
-import random
-from typing import Dict, Iterable, List, Optional, Tuple, TypeVar
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import apache_beam as beam
+from apache_beam.io.filesystems import FileSystems
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
 import google.auth
 import numpy as np
 import requests
 from requests.adapters import HTTPAdapter, Retry
-
-import train_model
-
-a = TypeVar("a")
-
-SENTINEL2_BANDS = [
-    "B1",
-    "B2",
-    "B3",
-    "B4",
-    "B5",
-    "B6",
-    "B7",
-    "B8",
-    "B8A",
-    "B9",
-    "B10",
-    "B11",
-    "B12",
-]
-
-# Define the input and output names for the model.
-INPUT_NAMES = SENTINEL2_BANDS
-OUTPUT_NAMES = ["landcover"]
-
-
-# There is an Earth Engine quota that if exceeded will
-# return us "status code 429: Too Many Requests"
-# If we get that status code, we can safely retry the request.
-# We use exponential backoff as a retry strategy:
-#   https://en.wikipedia.org/wiki/Exponential_backoff
-# For more information on Earth Engine request quotas, see
-#   https://developers.google.com/earth-engine/guides/usage
-MAX_RETRIES = 10
-RETRY_STATUS = [429]
-EXPONENTIAL_BACKOFF_IN_SECONDS = 0.5
 
 
 def ee_init() -> None:
@@ -72,12 +36,11 @@ def ee_init() -> None:
     ee.Initialize(
         credentials,
         project=project,
-        opt_url="https://earthengine-highvolume.googleapis.com",
+        # opt_url="https://earthengine-highvolume.googleapis.com",
     )
 
 
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
-    # https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
         CLOUD_BIT = 10
         CIRRUS_CLOUD_BIT = 11
@@ -91,21 +54,6 @@ def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
         .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
         .map(mask_sentinel2_clouds)
         .median()
-        .select(SENTINEL2_BANDS)
-    )
-
-
-def landcover_image() -> ee.Image:
-    # Remap the ESA classifications into the Dynamic World classifications
-    # https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
-    fromValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100]
-    toValues = [1, 5, 2, 4, 6, 7, 8, 0, 3, 3, 7]
-    return (
-        ee.ImageCollection("ESA/WorldCover/v100")
-        .first()
-        .select("Map")
-        .remap(fromValues, toValues)
-        .rename("landcover")
     )
 
 
@@ -113,111 +61,94 @@ def get_patch(
     image: ee.Image,
     lat: float,
     lon: float,
+    bands: List[str],
     patch_size: int,
     scale: int,
-    bands: Optional[List[str]] = None,
+    max_retries: int = 50,
+    retry_exp_backoff: float = 1.0,
 ) -> np.ndarray:
-    # Prepare to download the patch of pixels as a numpy array.
     point = ee.Geometry.Point([lon, lat])
+    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
     url = image.getDownloadURL(
         {
-            "region": point.buffer(scale * patch_size / 2, 1).bounds(1),
+            "region": region,
             "dimensions": [patch_size, patch_size],
             "format": "NPY",
             "bands": bands or image.bandNames().getInfo(),
         }
     )
 
-    # Add a retry strategy to the HTTP requests.
+    # We use exponential backoff as a retry strategy:
+    #   https://en.wikipedia.org/wiki/Exponential_backoff
+    # For more information on Earth Engine request quotas, see
+    #   https://developers.google.com/earth-engine/cloud/highvolume
+    session = requests.Session()
     retry_strategy = Retry(
-        total=MAX_RETRIES,
-        status_forcelist=[429],
-        backoff_factor=EXPONENTIAL_BACKOFF_IN_SECONDS,
+        total=max_retries,
+        status_forcelist=[429],  # Too many requests error
+        backoff_factor=retry_exp_backoff,
     )
-    http = requests.Session()
-    http.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+    session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
+    response = session.get(url)
+    response.raise_for_status()
+    print(f"Got patch for {(lat, lon)}")
 
-    # Fetch the data from Earth Engine and return it as a numpy array.
-    np_bytes = http.get(url).content
-    return np.load(io.BytesIO(np_bytes), allow_pickle=True)
+    return np.load(io.BytesIO(response.content), allow_pickle=True)
 
 
-def get_training_patch(lat: float, lon: float, patch_size: int = 16) -> np.ndarray:
+def get_prediction_patch(
+    region: Dict, bands: List[str] = [], patch_size: int = 256
+) -> np.ndarray:
     ee_init()
-    inputs = sentinel2_image("2020-1-1", "2021-1-1")
-    outputs = landcover_image()
-    image = inputs.addBands(outputs)
-    return get_patch(image, lat, lon, patch_size, scale=10)
+    lat = region["lat"]
+    lon = region["lon"]
+    year = region["year"]
+    image = sentinel2_image(f"{year}-1-1", f"{year + 1}-1-1")
+    return get_patch(image, lat, lon, bands, patch_size, scale=10)
 
 
-def get_prediction_patch(lat: float, lon: float, patch_size: int = 256) -> np.ndarray:
-    ee_init()
-    image = sentinel2_image("2020-1-1", "2021-1-1")
-    return get_patch(image, lat, lon, patch_size, scale=10)
-
-
-def sample_random_points(
-    region: Dict[str, float], points_per_region: int = 10
-) -> Iterable[Tuple[float, float]]:
-    import random
-
-    for _ in range(points_per_region):
-        lat = random.uniform(region["south"], region["north"])
-        lon = random.uniform(region["west"], region["east"])
-        yield (lat, lon)
-
-
-def serialize(patch: np.ndarray, names: List[str]) -> bytes:
+def predict(name: str, input_patch: np.ndarray, model_path: str = "model") -> Dict:
     import tensorflow as tf
 
-    features = {
-        name: tf.train.Feature(
-            float_list=tf.train.FloatList(value=patch[name].flatten())
-        )
-        for name in names
+    model = tf.keras.models.load_model(model_path)
+    inputs = np.stack([input_patch[name] for name in input_patch.dtype.names], axis=-1)
+    probabilities = model.predict(np.stack([inputs]))[0]
+    return {
+        "name": name,
+        "inputs": input_patch,
+        "outputs": probabilities,
     }
-    example = tf.train.Example(features=tf.train.Features(feature=features))
-    return example.SerializeToString()
+
+
+def write_to_numpy(results: Dict, predictions_prefix: str = "predictions"):
+    filename = f"{predictions_prefix}/{results['name']}.npz"
+    with FileSystems.create(filename) as f:
+        np.savez_compressed(f, inputs=results["inputs"], outputs=results["outputs"])
 
 
 def run(
-    training_file: str,
-    validation_file: str,
-    regions_file: str = "data/training-regions.csv",
-    points_per_region: int = 500,
-    patch_size: int = 64,
-    validation_ratio: float = 0.1,
+    regions_file: str = "data/prediction-regions.csv",
+    model_path: str = "model",
+    predictions_prefix: str = "predictions",
+    patch_size: int = 256,
     beam_args: Optional[List[str]] = None,
 ) -> None:
-    def split_dataset(element: a, num_partitions: int) -> int:
-        weights = [1 - validation_ratio, validation_ratio]
-        return random.choices([0, 1], weights)[0]
+    import train_model
 
     with open(regions_file) as f:
-        csv_reader = csv.DictReader(f)
-        regions = [
-            {key: float(value) for key, value in row.items()} for row in csv_reader
-        ]
+        regions = csv.DictReader(f)
+        # csv_reader = csv.DictReader(f)
+        # regions = [row for row in csv_reader]
 
-    input_and_output_names = train_model.INPUT_BANDS + train_model.OUTPUT_BANDS
+    bands = train_model.INPUT_BANDS + train_model.OUTPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
-        training_data, validation_data = (
+        (
             pipeline
             | "Create regions" >> beam.Create(regions)
-            | "Sample random points"
-            >> beam.FlatMap(sample_random_points, points_per_region)
-            | "Reshuffle" >> beam.Reshuffle()
-            | "Get patch" >> beam.MapTuple(get_training_patch, patch_size)
-            | "Serialize" >> beam.Map(serialize, input_and_output_names)
-            | "Split dataset" >> beam.Partition(split_dataset, 2)
-        )
-
-        training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
-            training_file, file_name_suffix=".tfrecord.gz"
-        )
-        validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
-            validation_file, file_name_suffix=".tfrecord.gz"
+            | "Get patch" >> beam.Map(get_prediction_patch, bands, patch_size)
+            | "Predict" >> beam.MapTuple(predict, model_path)
+            | "Write to NumPy" >> beam.Map(write_to_numpy, predictions_prefix)
         )
 
 
@@ -227,30 +158,11 @@ if __name__ == "__main__":
 
     logging.getLogger().setLevel(logging.INFO)
 
-    parser = argparse.ArgumentParser()
-    commands = parser.add_subparsers(dest="command", required=True)
-
-    create_datasets = commands.add_parser("create-datasets", allow_abbrev=False)
-    create_datasets.add_argument("--training-file", required=True)
-    create_datasets.add_argument("--validation-file", required=True)
-    create_datasets.add_argument("--regions-file", default="data/training-regions.csv")
-    create_datasets.add_argument("--points-per-region", default=10, type=int)
-    create_datasets.add_argument("--patch-size", default=16, type=int)
-    create_datasets.add_argument("--validation-ratio", default=0.1, type=float)
-
-    batch_predict = commands.add_parser("batch-predict", allow_abbrev=False)
-
+    parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser.add_argument("--regions-file", default="data/prediction-regions.csv")
+    parser.add_argument("--model-path", default="model")
+    parser.add_argument("--predictions-prefix", default="predictions")
+    parser.add_argument("--patch-size", default=256, type=int)
     args, beam_args = parser.parse_known_args()
 
-    if args.command == "create-datasets":
-        run(
-            training_file=args.training_file,
-            validation_file=args.validation_file,
-            regions_file=args.regions_file,
-            points_per_region=args.points_per_region,
-            patch_size=args.patch_size,
-            validation_ratio=args.validation_ratio,
-            beam_args=beam_args,
-        )
-    else:
-        raise ValueError(f"unrecognized command: {args.command}")
+    run(**vars(args), beam_args=beam_args)
