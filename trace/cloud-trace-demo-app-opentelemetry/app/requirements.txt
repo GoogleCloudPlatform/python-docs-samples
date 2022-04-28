@@ -2,8 +2,8 @@
 Flask==1.1.4
 itsdangerous==1.1.0
 markupsafe==1.1.1
-opentelemetry-exporter-gcp-trace==1.2.0
-opentelemetry-propagator-gcp==1.2.0
+opentelemetry-exporter-gcp-trace==1.3.0
+opentelemetry-propagator-gcp==1.3.0
 opentelemetry-instrumentation-flask==0.20b0
 grpcio==1.45.0
 httpretty==1.1.4
