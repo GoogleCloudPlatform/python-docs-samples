@@ -29,6 +29,7 @@ import nbconvert
 import nbformat
 import pytest
 
+import train_model
 
 """
 For local testing, run `ee.Authenticate()` as a one-time step.
@@ -91,27 +92,45 @@ def test_notebook(bucket_name: str) -> None:
 
 
 def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
-    training_file = f"gs://{bucket_name}/land-cover/training-data"
-    validation_file = f"gs://{bucket_name}/land-cover/validation-data"
+    training_data = f"gs://{bucket_name}/land-cover/training-data"
+    validation_data = f"gs://{bucket_name}/land-cover/validation-data"
     points_per_region = 100
-    training_patch_size = 16
+    patch_size = 16
+    batch_size = 32
+
     cmd = [
         "python",
         "create_datasets.py",
-        f"--training-data={training_file}",
-        f"--validation-data={validation_file}",
+        f"--training-data={training_data}",
+        f"--validation-data={validation_data}",
         f"--points-per-region={points_per_region}",
-        f"--patch-size={training_patch_size}",
+        f"--patch-size={patch_size}",
         "--runner=DataflowRunner",
         f"--project={PROJECT}",
         f"--region={LOCATION}",
-        f"--job_name={NAME.replace('/', '-')}-{UUID}",
+        f"--job_name={NAME.replace('/', '-')}-training-{UUID}",
         f"--temp_location=gs://{bucket_name}/land-cover/temp",
         "--setup_file=./setup.py",
     ]
     subprocess.check_call(cmd)
 
-    # TODO: check the names and shapes on the training and validation files
+    def validate_dataset(data_path: str) -> None:
+        dataset = train_model.read_dataset(data_path, patch_size, batch_size)
+        x, y = [pair for pair in dataset.take(1)][0]
+
+        expected_shape = (batch_size, patch_size, patch_size, 13)
+        assert (
+            x.shape == expected_shape
+        ), f"expected shape {expected_shape}, but got {x.shape} for inputs in {data_path}"
+
+        expected_shape = (batch_size, patch_size, patch_size, 9)
+        assert (
+            y.shape == expected_shape
+        ), f"expected shape {expected_shape}, but got {y.shape} for outputs in {data_path}"
+
+    # Make sure the training dataset is valid.
+    validate_dataset(training_data)
+    validate_dataset(validation_data)
 
 
 # TODO: Not implemented
@@ -146,7 +165,7 @@ def run(
             [
                 "from unittest.mock import Mock",
                 "get_ipython = Mock()",
-                nbconvert.PythonExporter().from_notebook_node(notebook),
+                nbconvert.PythonExporter().from_notebook_node(notebook)[0],
             ]
         )
 
