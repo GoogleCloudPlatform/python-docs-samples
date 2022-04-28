@@ -30,7 +30,8 @@ def structured_logging(request):
 
     # Import Python Standard Library
     import logging
-    # Construct log message and metadata
+    # Construct log message and additional metadata
+    # https://cloud.google.com/run/docs/logging#using-json
     msg = "Hello, world!"
     metadata = {"component": "arbitrary-property"}
 
