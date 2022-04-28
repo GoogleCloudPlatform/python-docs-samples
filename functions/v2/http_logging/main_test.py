@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import flask
+from requests import Response
 import pytest
 
 import main
@@ -25,8 +27,23 @@ def app():
 
 
 def test_functions_log_http_should_print_message(app, capsys):
-    with app.test_request_context():
-        res = main.structured_logging(flask.request)
-        out, _ = capsys.readouterr()
-        assert "Hello, world!" in res
-        assert "Wrote logs to New-Structured-Log" in out
+    # Mimick the Cloud Run / GCFv2 environment to force handler to print to stdout 
+    os.environ['K_SERVICE'] = 'test-service-name'
+    os.environ['K_REVISION'] = 'test-revision-name'
+    os.environ['K_CONFIGURATION'] = 'test-config-name'
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    mock_trace_value = 'abcdef'
+    expected = {
+        'severity': 'INFO',
+        'component': 'arbitrary-property',
+        'logging.googleapis.com/trace': f"projects/{project_id}/traces/{ mock_trace_value}",
+    }
+    # Force trace with trace header
+    with app.test_request_context(headers={'x-cloud-trace-context': f"{mock_trace_value}/2;o=1"}):
+        response = main.structured_logging(flask.request)
+        out, err = capsys.readouterr()
+        print(err)
+        assert "Hello, world!" in err
+        assert expected['severity'] in err
+        assert expected['component'] in err
+        assert expected['logging.googleapis.com/trace'] in err

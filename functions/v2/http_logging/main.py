@@ -13,34 +13,31 @@
 # limitations under the License.
 #
 # [START functions_structured_logging]
-import google.cloud.logging
-from google.cloud.logging.handlers import StructuredLogHandler
-from google.cloud.logging_v2.handlers import setup_logging
+import functions_framework
+from google.cloud.logging import Client
+from google.cloud.logging_v2.handlers import StructuredLogHandler, setup_logging
+# from google.cloud.logging.handlers import 
 
-
+@functions_framework.http
 def structured_logging(request):
-    logging_client = google.cloud.logging.Client()
+    # Initialize the logging client
+    logging_client = Client()
+    # Sets up a Log Handler that exports logs in JSON format to stdout
+    logging_client.setup_logging()
+    # Or manually set up JSON handler
+    # handler = StructuredLogHandler(project_id="")
+    # setup_logging(handler) 
+    
+    # Import Python Standard Library
+    import logging
+    # Construct log message and metadata
+    msg = "Hello, world!"
+    metadata = {"component": "arbitrary-property"}
 
-    handler = StructuredLogHandler()
-    setup_logging(handler)
+    # Write structured log with additional component fields 
+    # HTTP request data is attached automatically for request-log correlation
+    logging.info(msg, extra={"json_fields": metadata})
 
-    logger = logging_client.logger("New-Structured-Log")
-
-    msg = (f"{request.headers}"
-           f"{request.get_data().decode()}"
-           )
-
-    # Write structured log with HTTP request data
-    logger.log_struct(
-        {
-            "message": "Hello, world!",
-            "severity": "NOTICE",
-            "component": "arbitrary-property",
-            "httpRequest": msg
-        }
-    )
-
-    print("Wrote logs to {}.".format(logger.name))
-    return "Hello, world!"
+    return "Success: A log message was written"
 
 # [END functions_structured_logging]
