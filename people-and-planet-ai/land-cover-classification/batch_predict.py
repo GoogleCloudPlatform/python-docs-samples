@@ -14,7 +14,7 @@
 
 import csv
 import io
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import apache_beam as beam
 from apache_beam.io.filesystems import FileSystems
@@ -100,9 +100,9 @@ def get_prediction_patch(
     region: Dict, bands: List[str] = [], patch_size: int = 256
 ) -> np.ndarray:
     ee_init()
-    lat = region["lat"]
-    lon = region["lon"]
-    year = region["year"]
+    lat = float(region["lat"])
+    lon = float(region["lon"])
+    year = int(region["year"])
     image = sentinel2_image(f"{year}-1-1", f"{year + 1}-1-1")
     return get_patch(image, lat, lon, bands, patch_size, scale=10)
 
