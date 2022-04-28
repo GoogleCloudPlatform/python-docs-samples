@@ -154,8 +154,13 @@ def run(
     # Convert the notebook file into a Python source file.
     with open(ipynb_file) as f:
         notebook = nbformat.read(f, as_version=4)
-        nb_source, _ = nbconvert.PythonExporter().from_notebook_node(notebook)
-        py_source = f"from test_utils import get_ipython\n{nb_source}"
+        py_source = "\n".join(
+            [
+                "from unittest.mock import Mock",
+                "get_ipython = Mock()",
+                nbconvert.PythonExporter().from_notebook_node(notebook),
+            ]
+        )
 
     with open(py_file, "w") as f:
         f.write(py_source)
