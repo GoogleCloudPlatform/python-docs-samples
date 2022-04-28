@@ -136,9 +136,7 @@ def run(
     import train_model
 
     with open(regions_file) as f:
-        regions = csv.DictReader(f)
-        # csv_reader = csv.DictReader(f)
-        # regions = [row for row in csv_reader]
+        regions = list(csv.DictReader(f))
 
     bands = train_model.INPUT_BANDS + train_model.OUTPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
