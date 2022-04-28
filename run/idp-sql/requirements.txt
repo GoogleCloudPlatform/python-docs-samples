@@ -1,5 +1,5 @@
 Flask==2.1.0
-SQLAlchemy==1.4.27
+SQLAlchemy==1.4.36
 pg8000==1.24.2
 gunicorn==20.1.0
 firebase-admin==5.2.0
