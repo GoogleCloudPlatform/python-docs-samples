@@ -1,0 +1,3 @@
+google-api-python-client==2.34.0
+grpcio==1.44.0
+google-cloud-video-live-stream==0.1.1
