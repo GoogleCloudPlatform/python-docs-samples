@@ -21,6 +21,23 @@ def create_conversation(
     transcript_uri: str = "gs://cloud-samples-data/ccai/chat_sample.json",
     audio_uri: str = "gs://cloud-samples-data/ccai/voice_6912.txt",
 ) -> contact_center_insights_v1.Conversation:
+    """Creates a conversation.
+
+    Args:
+        project_id:
+            The project identifier. For example, 'my-project'.
+        transcript_uri:
+            The Cloud Storage URI that points to a file that contains the
+            conversation transcript. Format is 'gs://{bucket_name}/{file.json}'.
+            For example, 'gs://cloud-samples-data/ccai/chat_sample.json'.
+        audio_uri:
+            The Cloud Storage URI that points to a file that contains the
+            conversation audio. Format is 'gs://{bucket_name}/{file.json}'.
+            For example, 'gs://cloud-samples-data/ccai/voice_6912.txt'.
+
+    Returns:
+        A conversation.
+    """
     # Construct a parent resource.
     parent = (
         contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(

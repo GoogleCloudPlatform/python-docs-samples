@@ -20,6 +20,15 @@ from google.protobuf import duration_pb2
 
 
 def set_project_ttl(project_id: str) -> None:
+    """Sets a project-level TTL for all incoming conversations.
+
+    Args:
+        project_id:
+            The project identifier. For example, 'my-project'.
+
+    Returns:
+        None.
+    """
     # Construct a settings resource.
     settings = contact_center_insights_v1.Settings()
     settings.name = (

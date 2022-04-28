@@ -19,6 +19,15 @@ from google.cloud import contact_center_insights_v1
 def create_phrase_matcher_all_of(
     project_id: str,
 ) -> contact_center_insights_v1.PhraseMatcher:
+    """Creates a phrase matcher that matches all specified queries.
+
+    Args:
+        project_id:
+            The project identifier. For example, 'my-project'.
+
+    Returns:
+        A phrase matcher.
+    """
     # Construct a parent resource.
     parent = (
         contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(

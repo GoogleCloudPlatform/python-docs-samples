@@ -17,6 +17,17 @@ from google.cloud import contact_center_insights_v1
 
 
 def create_analysis(conversation_name: str) -> contact_center_insights_v1.Analysis:
+    """Creates an analysis.
+
+    Args:
+        conversation_name:
+            The parent resource of the analysis.
+            Format is 'projects/{project_id}/locations/{location_id}/conversations/{conversation_id}'.
+            For example, 'projects/my-project/locations/us-central1/conversations/123456789'.
+
+    Returns:
+        An analysis.
+    """
     # Construct an analysis.
     analysis = contact_center_insights_v1.Analysis()
 

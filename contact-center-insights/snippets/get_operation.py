@@ -19,6 +19,17 @@ from google.longrunning import operations_pb2
 
 
 def get_operation(operation_name: str) -> operations_pb2.Operation:
+    """Gets an operation.
+
+    Args:
+        operation_name:
+            The operation name.
+            Format is 'projects/{project_id}/locations/{location_id}/operations/{operation_id}'.
+            For example, 'projects/my-project/locations/us-central1/operations/123456789'.
+
+    Returns:
+        An operation.
+    """
     # Construct an Insights client that will authenticate via Application Default Credentials.
     # See authentication details at https://cloud.google.com/docs/authentication/production.
     insights_client = contact_center_insights_v1.ContactCenterInsightsClient()

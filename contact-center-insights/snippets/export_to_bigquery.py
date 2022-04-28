@@ -22,6 +22,23 @@ def export_to_bigquery(
     bigquery_dataset_id: str,
     bigquery_table_id: str,
 ) -> None:
+    """Exports data to BigQuery.
+
+    Args:
+        project_id:
+            The project identifier that owns the data source to be exported.
+            For example, 'my-project'.
+        bigquery_project_id:
+            The project identifier that owns the BigQuery sink to export data to.
+            For example, 'my-project'.
+        bigquery_dataset_id:
+            The BigQuery dataset identifier. For example, 'my-dataset'.
+        bigquery_table_id:
+            The BigQuery table identifier. For example, 'my-table'.
+
+    Returns:
+        None.
+    """
     # Construct an export request.
     request = contact_center_insights_v1.ExportInsightsDataRequest()
     request.parent = (

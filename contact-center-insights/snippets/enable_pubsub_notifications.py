@@ -20,6 +20,23 @@ from google.cloud import contact_center_insights_v1
 def enable_pubsub_notifications(
     project_id: str, topic_create_conversation: str, topic_create_analysis: str
 ) -> None:
+    """Enables Cloud Pub/Sub notifications for specified events.
+
+    Args:
+        project_id:
+            The project identifier. For example, 'my-project'.
+        topic_create_conversation:
+            The Cloud Pub/Sub topic to notify of conversation creation events.
+            Format is 'projects/{project_id}/topics/{topic_id}'.
+            For example, 'projects/my-project/topics/my-topic'.
+        topic_create_analysis:
+            The Cloud Pub/Sub topic to notify of analysis creation events.
+            Format is 'projects/{project_id}/topics/{topic_id}'.
+            For example, 'projects/my-project/topics/my-topic'.
+
+    Returns:
+        None.
+    """
     # Construct a settings resource.
     settings = contact_center_insights_v1.Settings()
     settings.name = (

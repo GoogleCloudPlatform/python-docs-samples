@@ -17,6 +17,15 @@ from google.cloud import contact_center_insights_v1
 
 
 def create_issue_model(project_id: str) -> contact_center_insights_v1.IssueModel:
+    """Creates an issue model.
+
+    Args:
+        project_id:
+            The project identifier. For example, 'my-project'.
+
+    Returns:
+        An issue model.
+    """
     # Construct a parent resource.
     parent = (
         contact_center_insights_v1.ContactCenterInsightsClient.common_location_path(
