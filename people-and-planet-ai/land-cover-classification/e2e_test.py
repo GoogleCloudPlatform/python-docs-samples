@@ -197,9 +197,11 @@ def test_notebook(bucket_name: str) -> None:
             dtype=[(name, "<f8") for name in trainer.INPUT_BANDS],
         )
         outputs = np.zeros(shape=(16, 16, 9))
-        for name in {row["name"] for row in csv.DictReader(f)}:
+        for row in csv.DictReader(f):
+            name = f"{row['name']}/{row['year']}"
             results = {"name": name, "inputs": inputs, "outputs": outputs}
-            batch_predict.write_to_numpy(results, predictions_prefix)
+            filename = batch_predict.write_to_numpy(results, predictions_prefix)
+            print(f"Created {filename}")
 
     # Run the notebook.
     run(
