@@ -14,6 +14,7 @@
 
 runtime: custom
 env: flex
+entrypoint: gunicorn -b :$PORT app:app
 
 # Note: Saving credentials in environment variables is convenient, but not
 # secure - consider a more secure solution such as

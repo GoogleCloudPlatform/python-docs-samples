@@ -19,7 +19,7 @@ from flask.testing import FlaskClient
 
 import pytest
 
-import main
+import app
 
 logger = logging.getLogger()
 
@@ -38,13 +38,16 @@ def setup_test_env():
 @pytest.fixture(scope="module")
 def client() -> FlaskClient:
     setup_test_env()
-    main.app.testing = True
-    client = main.app.test_client()
+    app.app.testing = True
+    print("DB Type: ", app.db)
+    client = app.app.test_client()
+    print("DB Type: ", app.db)
+
     return client
 
 
 def test_get_votes(client: FlaskClient) -> None:
-    response = client.get("/votes")
+    response = client.get("/")
     text = "Tabs VS Spaces"
     body = response.text
     assert response.status_code == 200
@@ -61,15 +64,15 @@ def test_cast_vote(client: FlaskClient) -> None:
 
 def test_unix_connection(client: FlaskClient) -> None:
     del os.environ["INSTANCE_HOST"]
-    main.db = main.init_connection_pool()
-    assert "unix_sock" in str(main.db.url)
+    app.db = app.init_connection_pool()
+    assert "unix_sock" in str(app.db.url)
     test_get_votes(client)
     test_cast_vote(client)
 
 
 def test_connector_connection(client: FlaskClient) -> None:
     del os.environ["INSTANCE_UNIX_SOCKET"]
-    main.db = main.init_connection_pool()
-    assert str(main.db.url) == "postgresql+pg8000://"
+    app.db = app.init_connection_pool()
+    assert str(app.db.url) == "postgresql+pg8000://"
     test_get_votes(client)
     test_cast_vote(client)

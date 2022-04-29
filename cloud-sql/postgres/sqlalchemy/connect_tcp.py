@@ -23,38 +23,7 @@ import sqlalchemy
 
 # connect_tcp_socket initializes a TCP connection pool
 # for a Cloud SQL instance of Postgres.
-def connect_tcp_socket():
-    # [START_EXCLUDE]
-    db_config = {
-        # [START cloud_sql_postgres_sqlalchemy_limit]
-        # Pool size is the maximum number of permanent connections to keep.
-        "pool_size": 5,
-        # Temporarily exceeds the set pool_size if no connections are available.
-        "max_overflow": 2,
-        # The total number of concurrent connections for your application will be
-        # a total of pool_size and max_overflow.
-        # [END cloud_sql_postgres_sqlalchemy_limit]
-
-        # [START cloud_sql_postgres_sqlalchemy_backoff]
-        # SQLAlchemy automatically uses delays between failed connection attempts,
-        # but provides no arguments for configuration.
-        # [END cloud_sql_postgres_sqlalchemy_backoff]
-
-        # [START cloud_sql_postgres_sqlalchemy_timeout]
-        # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
-        # new connection from the pool. After the specified amount of time, an
-        # exception will be thrown.
-        "pool_timeout": 30,  # 30 seconds
-        # [END cloud_sql_postgres_sqlalchemy_timeout]
-
-        # [START cloud_sql_postgres_sqlalchemy_lifetime]
-        # 'pool_recycle' is the maximum number of seconds a connection can persist.
-        # Connections that live longer than the specified amount of time will be
-        # reestablished
-        "pool_recycle": 1800,  # 30 minutes
-        # [END cloud_sql_postgres_sqlalchemy_lifetime]
-    }
-    # [END_EXCLUDE]
+def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
@@ -95,7 +64,33 @@ def connect_tcp_socket():
         ),
         connect_args=connect_args,
         # [START_EXCLUDE]
-        **db_config,
+        # [START cloud_sql_postgres_sqlalchemy_limit]
+        # Pool size is the maximum number of permanent connections to keep.
+        pool_size=5,
+        # Temporarily exceeds the set pool_size if no connections are available.
+        max_overflow=2,
+        # The total number of concurrent connections for your application will be
+        # a total of pool_size and max_overflow.
+        # [END cloud_sql_postgres_sqlalchemy_limit]
+
+        # [START cloud_sql_postgres_sqlalchemy_backoff]
+        # SQLAlchemy automatically uses delays between failed connection attempts,
+        # but provides no arguments for configuration.
+        # [END cloud_sql_postgres_sqlalchemy_backoff]
+
+        # [START cloud_sql_postgres_sqlalchemy_timeout]
+        # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
+        # new connection from the pool. After the specified amount of time, an
+        # exception will be thrown.
+        pool_timeout=30,  # 30 seconds
+        # [END cloud_sql_postgres_sqlalchemy_timeout]
+
+        # [START cloud_sql_postgres_sqlalchemy_lifetime]
+        # 'pool_recycle' is the maximum number of seconds a connection can persist.
+        # Connections that live longer than the specified amount of time will be
+        # re-established
+        pool_recycle=1800,  # 30 minutes
+        # [END cloud_sql_postgres_sqlalchemy_lifetime]
         # [END_EXCLUDE]
     )
     return pool

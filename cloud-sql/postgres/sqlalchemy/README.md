@@ -108,7 +108,7 @@ pip install -r requirements.txt
 
 Finally, start the application:
 ```bash
-python main.py
+python app.py
 ```
 
 Navigate towards `http://127.0.0.1:8080` to verify your application is running correctly.
@@ -123,6 +123,8 @@ variables into the runtime. Your `app.standard.yaml` file should look like this:
 
 ```yaml
 runtime: python37
+entrypoint: gunicorn -b :$PORT app:app
+
 env_variables:
   INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
   DB_USER: <YOUR_DB_USER_NAME>
@@ -151,6 +153,7 @@ variables into the runtime. Your `app.flexible.yaml` file should look like this:
 ```yaml
 runtime: custom
 env: flex
+entrypoint: gunicorn -b :$PORT app:app
 
 env_variables:
   INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
