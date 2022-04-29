@@ -277,7 +277,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
             f"--validation-data=gs://{bucket_name}/land-cover/datasets/validation/*.tfrecord.gz",
             f"--model-path=gs://{bucket_name}/land-cover/model",
             f"--patch-size={PATCH_SIZE}",
-            f"--epochs=10",
+            "--epochs=10",
         ],
     )
 
@@ -293,7 +293,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     validate_outputs(outputs)
 
 
-def test_land_cover_predict_cloud_run(service_url: str) -> None:
+def test_land_cover_online_predict_cloud_run(service_url: str) -> None:
     # ℹ️ If this command changes, please update the corresponding command at the
     #   "📞 Online predictions in Cloud Run" section in the `README.ipynb` notebook.
     # TODO:
@@ -301,7 +301,7 @@ def test_land_cover_predict_cloud_run(service_url: str) -> None:
     raise NotImplementedError("test_land_cover_predict_cloud_run")
 
 
-def test_land_cover_predict_dataflow(bucket_name: str) -> None:
+def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
     # Upload a pre-trained model.
     storage_client = storage.Client()
     storage_client.bucket(bucket_name).blob(
@@ -341,13 +341,13 @@ def test_land_cover_predict_dataflow(bucket_name: str) -> None:
 def validate_inputs(inputs: np.ndarray) -> None:
     assert (
         inputs.shape == INPUTS_SHAPE
-    ), f"expected shape {INPUTS_SHAPE}, but got {inputs.shape} for inputs in {data_path}"
+    ), f"expected shape {INPUTS_SHAPE}, but got {inputs.shape} for inputs"
 
 
 def validate_outputs(outputs: np.ndarray) -> None:
     assert (
         outputs.shape == OUTPUTS_SHAPE
-    ), f"expected shape {OUTPUTS_SHAPE}, but got {outputs.shape} for outputs in {data_path}"
+    ), f"expected shape {OUTPUTS_SHAPE}, but got {outputs.shape} for outputs"
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
