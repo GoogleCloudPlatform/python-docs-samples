@@ -22,6 +22,7 @@ import sys
 from unittest.mock import Mock, patch
 import uuid
 
+from apache_beam.io.filesystems import FileSystems
 from apache_beam.testing.test_pipeline import TestPipeline
 import ee
 import google.auth
@@ -57,6 +58,8 @@ IPYNB_FILE = "README.ipynb"
 PY_FILE = "README.py"
 
 PATCH_SIZE = 16
+INPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE, len(trainer.INPUT_BANDS))
+OUTPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE, trainer.NUM_CLASSIFICATIONS)
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -237,26 +240,19 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         "--runner=DataflowRunner",
         f"--project={PROJECT}",
         f"--region={LOCATION}",
-        f"--job_name={NAME.replace('/', '-')}-training-{UUID}",  # not used in notebook
         f"--temp_location=gs://{bucket_name}/land-cover/temp",
         "--setup_file=./setup.py",
+        # Parameters for testing only, not used in the notebook.
+        f"--job_name={NAME.replace('/', '-')}-training-{UUID}",
     ]
     subprocess.check_call(cmd)
 
     def validate_dataset(data_path_prefix: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
         dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
-        x, y = [pair for pair in dataset.take(1)][0]
-
-        expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, 13)
-        assert (
-            x.shape == expected_shape
-        ), f"expected shape {expected_shape}, but got {x.shape} for inputs in {data_path}"
-
-        expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, 9)
-        assert (
-            y.shape == expected_shape
-        ), f"expected shape {expected_shape}, but got {y.shape} for outputs in {data_path}"
+        inputs, outputs = [pair for pair in dataset.take(1)][0]
+        validate_inputs(inputs)
+        validate_outputs(outputs)
 
     # Make sure the training dataset is valid.
     validate_dataset(training_prefix)
@@ -289,16 +285,12 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     model = tf.keras.models.load_model(f"gs://{bucket_name}/land-cover/model")
     with open("data/prediction-locations.csv") as f:
         region = next(csv.DictReader(f))
-    name, patch = batch_predict.get_prediction_patch(
+    _, patch = batch_predict.get_prediction_patch(
         region, trainer.INPUT_BANDS, PATCH_SIZE
     )
     inputs = np.stack([patch[name] for name in trainer.INPUT_BANDS], axis=-1)
-    probabilities = model.predict([inputs])
-
-    expected_shape = (1, PATCH_SIZE, PATCH_SIZE, 9)
-    assert (
-        probabilities.shape == expected_shape
-    ), f"expected shape {expected_shape}, but got {probabilities.shape} for model outputs"
+    outputs = model.predict([inputs])
+    validate_outputs(outputs)
 
 
 def test_land_cover_predict_cloud_run(service_url: str) -> None:
@@ -306,15 +298,56 @@ def test_land_cover_predict_cloud_run(service_url: str) -> None:
     #   "📞 Online predictions in Cloud Run" section in the `README.ipynb` notebook.
     # TODO:
     # - check input and output shapes
-    pass
+    raise NotImplementedError("test_land_cover_predict_cloud_run")
 
 
-def test_land_cover_predict_dataflow() -> None:
+def test_land_cover_predict_dataflow(bucket_name: str) -> None:
+    # Upload a pre-trained model.
+    storage_client = storage.Client()
+    storage_client.bucket(bucket_name).blob(
+        "land-cover/pre-trained-model"
+    ).upload_from_filename("data/model")
+
     # ℹ️ If this command changes, please update the corresponding command at the
     #   "🧺 Batch predictions in Dataflow" section in the `README.ipynb` notebook.
-    # TODO:
-    # - check input and output shapes
-    pass
+    cmd = [
+        "python",
+        "batch_predict.py",
+        f"--model-path=gs://{bucket_name}/land-cover/pre-trained-model",
+        f"--predictions-prefix=gs://{bucket_name}/land-cover/predictions",
+        f"--patch-size={PATCH_SIZE}",
+        "--runner=DataflowRunner",
+        f"--project={PROJECT}",
+        f"--region={LOCATION}",
+        f"--temp_location=gs://{bucket_name}/land-cover/temp",
+        "--setup_file=./setup.py",
+        # Parameters for testing only, not used in the notebook.
+        f"--job_name={NAME.replace('/', '-')}-prediction-{UUID}",
+    ]
+    subprocess.check_call(cmd)
+
+    with open("data/prediction-locations.csv") as f:
+        for region in csv.DictReader(f):
+            name = region["name"]
+            year = region["year"]
+            filename = f"gs://{bucket_name}/land-cover/predictions/{name}/{year}.npz"
+            with FileSystems.open(filename) as f:
+                npz_file = np.load(f)
+                inputs, outputs = (npz_file["inputs"], npz_file["outputs"])
+                validate_inputs(inputs)
+                validate_outputs(outputs)
+
+
+def validate_inputs(inputs: np.ndarray) -> None:
+    assert (
+        inputs.shape == INPUTS_SHAPE
+    ), f"expected shape {INPUTS_SHAPE}, but got {inputs.shape} for inputs in {data_path}"
+
+
+def validate_outputs(outputs: np.ndarray) -> None:
+    assert (
+        outputs.shape == OUTPUTS_SHAPE
+    ), f"expected shape {OUTPUTS_SHAPE}, but got {outputs.shape} for outputs in {data_path}"
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
