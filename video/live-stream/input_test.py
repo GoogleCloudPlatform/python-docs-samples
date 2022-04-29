@@ -15,7 +15,7 @@
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import FailedPrecondition, NotFound
 import pytest
 
 import create_input
@@ -38,6 +38,8 @@ def test_input_operations(capsys: pytest.fixture) -> None:
         if utils.is_resource_stale(response.create_time):
             try:
                 delete_input.delete_input(project_name, location, next_input_id)
+            except FailedPrecondition as e:
+                print(f"Ignoring FailedPrecondition, details: {e}")
             except NotFound as e:
                 print(f"Ignoring NotFound, details: {e}")
 
