@@ -14,11 +14,14 @@
 
 from flask import render_template, Response
 
-from app import get_index_context, init_db, save_vote
+from app import get_index_context, init_connection_pool, migrate_db, save_vote
 
 ############ TABS vs. SPACES App for Cloud Functions ############
 
-db = init_db()
+# initiate a connection pool to a Cloud SQL database
+db = init_connection_pool()
+# creates required 'votes' table in database (if it does not exist)
+migrate_db(db)
 
 
 def votes(request):

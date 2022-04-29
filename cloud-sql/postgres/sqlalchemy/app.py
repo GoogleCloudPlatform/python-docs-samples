@@ -58,18 +58,21 @@ def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
         )
 
 
-# init_db initiates a connection pool to a Cloud SQL database
+# This global variable is declared with a value of `None`, instead of calling
+# `init_db()` immediately, to simplify testing. In general, it
+# is safe to initialize your database connection pool when your script starts
+# -- there is no need to wait for the first request.
+db = None
+
+
+# init_db lazily instantiates a database connection pool. Users of Cloud Run or
+# App Engine may wish to skip this lazy instantiation and connect as soon
+# as the function is loaded. This is primarily to help testing.
+@app.before_first_request
 def init_db() -> sqlalchemy.engine.base.Engine:
+    global db
     db = init_connection_pool()
     migrate_db(db)
-    return db
-
-
-# This global variable is declared with a value of `None` when Flask app
-# is in testing mode. Otherwise `init_db()` is called immediately, this is
-# to simplify testing. In general, it is safe to initialize your
-# database connection pool when your script starts.
-db = init_db() if app.config["TESTING"] is False else None
 
 
 @app.route("/", methods=["GET"])
