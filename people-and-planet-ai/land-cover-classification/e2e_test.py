@@ -58,6 +58,7 @@ PY_FILE = "README.py"
 sys.modules["google.colab"] = Mock()
 
 
+# Add more logging information for debugging.
 logging.getLogger().setLevel(logging.INFO)
 
 
@@ -75,7 +76,7 @@ def bucket_name() -> str:
 
 
 @pytest.fixture(scope="session")
-def container_image(bucket_name: str) -> str:
+def container_image() -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
     # gcloud builds submit --pack image=gcr.io/{project}/land-cover:latest serving/
@@ -202,11 +203,11 @@ def test_notebook(bucket_name: str) -> None:
 
     # Run the notebook.
     run(
-        ipynb_file=IPYNB_FILE,
-        py_file=PY_FILE,
         project=PROJECT,
         bucket=bucket_name,
         location=LOCATION,
+        ipynb_file=IPYNB_FILE,
+        py_file=PY_FILE,
     )
 
 
@@ -217,6 +218,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     patch_size = 16
     batch_size = 32
 
+    # ℹ️ If this command changes, please update the corresponding command at the
+    #   "🚄 Create the datasets in Dataflow" section in the `README.ipynb` notebook.
     cmd = [
         "python",
         "create_datasets.py",
@@ -227,7 +230,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         "--runner=DataflowRunner",
         f"--project={PROJECT}",
         f"--region={LOCATION}",
-        f"--job_name={NAME.replace('/', '-')}-training-{UUID}",
+        f"--job_name={NAME.replace('/', '-')}-training-{UUID}",  # not used in notebook
         f"--temp_location=gs://{bucket_name}/land-cover/temp",
         "--setup_file=./setup.py",
     ]
@@ -253,29 +256,38 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     validate_dataset(validation_prefix)
 
 
-def test_land_cover_predict_cloud_run(service_url: str) -> None:
+def test_land_cover_train_model_vertex_ai(service_url: str) -> None:
+    # ℹ️ If this command changes, please update the corresponding command at the
+    #   "🧠 Train the model in Vertex AI" section in the `README.ipynb` notebook.
     # TODO:
-    # - send a prediction
-    # - check shapes
+    #   - check the model directory was created
     pass
 
 
-# TODO: Not implemented
-# def test_land_cover_predict_dataflow(run_notebook: None) -> None:
-#     # TODO:
-#     # - fixture: job_id from job name (wait until finish successfully)
-#     # -
-#     pass
+def test_land_cover_predict_cloud_run(service_url: str) -> None:
+    # ℹ️ If this command changes, please update the corresponding command at the
+    #   "📞 Online predictions in Cloud Run" section in the `README.ipynb` notebook.
+    # TODO:
+    # - check input and output shapes
+    pass
+
+
+def test_land_cover_predict_dataflow() -> None:
+    # ℹ️ If this command changes, please update the corresponding command at the
+    #   "🧺 Batch predictions in Dataflow" section in the `README.ipynb` notebook.
+    # TODO:
+    # - check input and output shapes
+    pass
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
 @patch("google.cloud.aiplatform.CustomTrainingJob.run", Mock())
 def run(
-    ipynb_file: str,
-    py_file: str,
     project: str,
     bucket: str,
     location: str,
+    ipynb_file: str,
+    py_file: str,
 ) -> None:
     # Convert the notebook file into a Python source file.
     with open(ipynb_file) as f:
@@ -328,9 +340,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--bucket", required=True)
     parser.add_argument("--project", default=PROJECT)
+    parser.add_argument("--location", default=LOCATION)
     parser.add_argument("--ipynb-file", default=IPYNB_FILE)
     parser.add_argument("--py-file", default=PY_FILE)
-    parser.add_argument("--location", default=LOCATION)
     args = parser.parse_args()
 
     # For local testing, make sure you've run `ee.Authenticate()`.

@@ -16,7 +16,8 @@ from typing import Dict, Tuple
 
 import tensorflow as tf
 
-SENTINEL2_BANDS = [
+# Define the input and output names for the model.
+INPUT_BANDS = [
     "B1",
     "B2",
     "B3",
@@ -31,11 +32,9 @@ SENTINEL2_BANDS = [
     "B11",
     "B12",
 ]
-
-# Define the input and output names for the model.
-INPUT_BANDS = SENTINEL2_BANDS
 OUTPUT_BANDS = ["landcover"]
 
+# Number of land cover classifications.
 NUM_CLASSIFICATIONS = 9
 
 
