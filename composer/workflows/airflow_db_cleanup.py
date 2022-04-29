@@ -106,7 +106,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": DagRun.dag_id
 }, {
     "airflow_db_model": TaskInstance,
-    "age_check_column": TaskInstance.execution_date,
+    "age_check_column": TaskInstance.run_id,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
@@ -141,7 +141,7 @@ try:
     from airflow.models import TaskReschedule
     DATABASE_OBJECTS.append({
         "airflow_db_model": TaskReschedule,
-        "age_check_column": TaskReschedule.execution_date,
+        "age_check_column": TaskReschedule.run_id,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None
