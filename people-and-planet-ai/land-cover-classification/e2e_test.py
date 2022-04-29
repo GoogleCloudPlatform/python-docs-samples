@@ -192,11 +192,13 @@ def test_notebook(bucket_name: str) -> None:
     # First, create prediction files with the right shapes to test displaying results.
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
-        inputs = np.array(
-            [np.zeros(shape=(16, 16)) for _ in trainer.INPUT_BANDS],
+        inputs = np.zeros(
+            shape=(16, 16),
             dtype=[(name, "<f8") for name in trainer.INPUT_BANDS],
         )
-        outputs = np.zeros(shape=(16, 16, 9))
+        print(f"inputs {inputs.shape} {inputs.dtype}")
+        outputs = np.zeros(shape=(16, 16, 9), dtype=np.float32)
+        print(f"outputs {outputs.dtype} {outputs.shape}")
         for row in csv.DictReader(f):
             name = f"{row['name']}/{row['year']}"
             results = {"name": name, "inputs": inputs, "outputs": outputs}
@@ -216,7 +218,7 @@ def test_notebook(bucket_name: str) -> None:
 def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     training_prefix = f"gs://{bucket_name}/land-cover/training-data"
     validation_prefix = f"gs://{bucket_name}/land-cover/validation-data"
-    points_per_region = 100
+    points_per_region = 50
     patch_size = 16
     batch_size = 32
 
