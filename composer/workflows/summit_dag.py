@@ -55,7 +55,7 @@ CLUSTER_CONFIG = {
 }
 CLUSTER_NAME='data-science-onramp-cluster-20220322'  #TODO(coleleah) update to pull from variable
 PYSPARK_JAR = 'gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar'
-PROCESSING_PYTHON_FILE = 'gs://{{var.value.gcs_bucket}}/summit_dag_simple_process.py'
+PROCESSING_PYTHON_FILE = 'gs://{{var.value.gcs_bucket}}/summit_dag_process.py'
 PROCESSING_PYSPARK_JOB = {
     "reference": {"project_id": PROJECT_NAME},
     "placement": {"cluster_name": CLUSTER_NAME},
