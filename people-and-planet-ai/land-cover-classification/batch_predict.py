@@ -135,12 +135,12 @@ def run(
     patch_size: int = 256,
     beam_args: Optional[List[str]] = None,
 ) -> None:
-    import train_model
+    import trainer
 
     with open(regions_file) as f:
         regions = [dict(row) for row in csv.DictReader(f)]
 
-    bands = train_model.INPUT_BANDS
+    bands = trainer.INPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
         (

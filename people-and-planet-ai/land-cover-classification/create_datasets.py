@@ -149,7 +149,7 @@ def run(
     validation_ratio: float = 0.1,
     beam_args: Optional[List[str]] = None,
 ) -> None:
-    import train_model
+    import trainer
 
     def split_dataset(element: bytes, num_partitions: int) -> int:
         weights = [1 - validation_ratio, validation_ratio]
@@ -161,7 +161,7 @@ def run(
             {key: float(value) for key, value in row.items()} for row in csv_reader
         ]
 
-    bands = train_model.INPUT_BANDS + train_model.OUTPUT_BANDS
+    bands = trainer.INPUT_BANDS + trainer.OUTPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
         training_data, validation_data = (

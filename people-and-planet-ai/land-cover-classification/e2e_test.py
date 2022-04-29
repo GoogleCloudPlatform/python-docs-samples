@@ -32,7 +32,7 @@ import numpy as np
 import pytest
 
 import batch_predict
-import train_model
+import trainer
 
 """
 For local testing, run `ee.Authenticate()` as a one-time step.
@@ -192,8 +192,8 @@ def test_notebook(bucket_name: str) -> None:
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         inputs = np.array(
-            [np.zeros(shape=(16, 16)) for _ in train_model.INPUT_BANDS],
-            dtype=[(name, "<f8") for name in train_model.INPUT_BANDS],
+            [np.zeros(shape=(16, 16)) for _ in trainer.INPUT_BANDS],
+            dtype=[(name, "<f8") for name in trainer.INPUT_BANDS],
         )
         outputs = np.zeros(shape=(16, 16, 9))
         for name in {row["name"] for row in csv.DictReader(f)}:
@@ -235,7 +235,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
 
     def validate_dataset(data_path_prefix: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
-        dataset = train_model.read_dataset(data_path, patch_size, batch_size)
+        dataset = trainer.read_dataset(data_path, patch_size, batch_size)
         x, y = [pair for pair in dataset.take(1)][0]
 
         expected_shape = (batch_size, patch_size, patch_size, 13)
