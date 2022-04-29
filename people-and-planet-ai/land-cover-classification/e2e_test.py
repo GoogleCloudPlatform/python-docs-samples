@@ -25,11 +25,13 @@ import uuid
 from apache_beam.testing.test_pipeline import TestPipeline
 import ee
 import google.auth
+from google.cloud import aiplatform
 from google.cloud import storage
 import nbconvert
 import nbformat
 import numpy as np
 import pytest
+import tensorflow as tf
 
 import batch_predict
 import trainer
@@ -53,6 +55,8 @@ LOCATION = "us-central1"
 
 IPYNB_FILE = "README.ipynb"
 PY_FILE = "README.py"
+
+PATCH_SIZE = 16
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -193,11 +197,11 @@ def test_notebook(bucket_name: str) -> None:
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         inputs = np.zeros(
-            shape=(16, 16),
+            shape=(PATCH_SIZE, PATCH_SIZE),
             dtype=[(name, "<f8") for name in trainer.INPUT_BANDS],
         )
         print(f"inputs {inputs.shape} {inputs.dtype}")
-        outputs = np.zeros(shape=(16, 16, 9), dtype=np.float32)
+        outputs = np.zeros(shape=(PATCH_SIZE, PATCH_SIZE, 9), dtype=np.float32)
         print(f"outputs {outputs.dtype} {outputs.shape}")
         for row in csv.DictReader(f):
             name = f"{row['name']}/{row['year']}"
@@ -219,7 +223,6 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     training_prefix = f"gs://{bucket_name}/land-cover/training-data"
     validation_prefix = f"gs://{bucket_name}/land-cover/validation-data"
     points_per_region = 50
-    patch_size = 16
     batch_size = 32
 
     # ℹ️ If this command changes, please update the corresponding command at the
@@ -230,7 +233,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         f"--training-prefix={training_prefix}",
         f"--validation-prefix={validation_prefix}",
         f"--points-per-region={points_per_region}",
-        f"--patch-size={patch_size}",
+        f"--patch-size={PATCH_SIZE}",
         "--runner=DataflowRunner",
         f"--project={PROJECT}",
         f"--region={LOCATION}",
@@ -242,15 +245,15 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
 
     def validate_dataset(data_path_prefix: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
-        dataset = trainer.read_dataset(data_path, patch_size, batch_size)
+        dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
         x, y = [pair for pair in dataset.take(1)][0]
 
-        expected_shape = (batch_size, patch_size, patch_size, 13)
+        expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, 13)
         assert (
             x.shape == expected_shape
         ), f"expected shape {expected_shape}, but got {x.shape} for inputs in {data_path}"
 
-        expected_shape = (batch_size, patch_size, patch_size, 9)
+        expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, 9)
         assert (
             y.shape == expected_shape
         ), f"expected shape {expected_shape}, but got {y.shape} for outputs in {data_path}"
@@ -260,12 +263,42 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     validate_dataset(validation_prefix)
 
 
-def test_land_cover_train_model_vertex_ai(service_url: str) -> None:
-    # ℹ️ If this command changes, please update the corresponding command at the
+def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
+    aiplatform.init(project=PROJECT, location=LOCATION, staging_bucket=bucket_name)
+
+    # ℹ️ If these commands change, please update the corresponding commands at the
     #   "🧠 Train the model in Vertex AI" section in the `README.ipynb` notebook.
-    # TODO:
-    #   - check the model directory was created
-    pass
+    job = aiplatform.CustomTrainingJob(
+        display_name=f"{NAME.replace('/', '_').replace('-', '_')}_{UUID}",
+        script_path="trainer.py",
+        container_uri="us-docker.pkg.dev/vertex-ai/training/tf-gpu.2-8:latest",
+    )
+    job.run(
+        accelerator_type="NVIDIA_TESLA_K80",
+        accelerator_count=1,
+        args=[
+            f"--training-data=gs://{bucket_name}/land-cover/datasets/training/*.tfrecord.gz",
+            f"--validation-data=gs://{bucket_name}/land-cover/datasets/validation/*.tfrecord.gz",
+            f"--model-path=gs://{bucket_name}/land-cover/model",
+            f"--patch-size={PATCH_SIZE}",
+            f"--epochs=10",
+        ],
+    )
+
+    # Make sure the model works.
+    model = tf.keras.models.load_model(f"gs://{bucket_name}/land-cover/model")
+    with open("data/prediction-locations.csv") as f:
+        region = next(csv.DictReader(f))
+    name, patch = batch_predict.get_prediction_patch(
+        region, trainer.INPUT_BANDS, PATCH_SIZE
+    )
+    inputs = np.stack([patch[name] for name in trainer.INPUT_BANDS], axis=-1)
+    probabilities = model.predict([inputs])
+
+    expected_shape = (1, PATCH_SIZE, PATCH_SIZE, 9)
+    assert (
+        probabilities.shape == expected_shape
+    ), f"expected shape {expected_shape}, but got {probabilities.shape} for model outputs"
 
 
 def test_land_cover_predict_cloud_run(service_url: str) -> None:
