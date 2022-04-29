@@ -254,6 +254,7 @@ def test_land_cover_predict_cloud_run(service_url: str) -> None:
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
+@patch("google.cloud.aiplatform.CustomTrainingJob.run", Mock())
 def run(
     ipynb_file: str,
     py_file: str,
