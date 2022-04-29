@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#TODOS
-# [ ] - load data into bigquery
-# [ ]
-
 
 import datetime
 import os
@@ -24,9 +20,24 @@ from airflow import models
 from airflow.providers.google.cloud.operators import dataproc
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-#from dependencies import bigquery
 from airflow.utils import trigger_rule
 
+
+
+PROJECT_NAME = '{{var.value.gcp_project}}'
+
+# BigQuery configs
+BQ_DATASET_NAME="bigquery-public-data.ghcn_d.ghcnd_2021" #TODO(coleleah) update to have more than one year, update to be only dataset and not fully qualified project/dataset/table id
+BQ_DESTINATION_DATASET_NAME="holiday_weather" #TODO(coleleah) update to have more than one year
+BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  #TODO(coleleah) update to have more than one year
+WEATHER_HOLIDAYS_JOIN_QUERY = f"""
+SELECT Holidays.Date, Holiday, id, element, value
+FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
+JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id LIKE "US%") AS Weather
+ON Holidays.Date = Weather.Date;
+"""
+
+# Dataproc configs
 CLUSTER_CONFIG = {
     "config_bucket": '{{var.value.gcs_bucket}}',
     "gce_cluster_config": {
@@ -38,19 +49,11 @@ CLUSTER_CONFIG = {
         "machine_type_uri": "n1-standard-4"
     },
     "worker_config": {
-        "num_instances": 8,
+        "num_instances": 4,
         "machine_type_uri": "n1-standard-4"
     },
 }
-
-# PROJECT_NAME = '{{var.value.gcp_project}}'
-
-PROJECT_NAME = "leah-playground"
-BQ_DATASET_NAME="bigquery-public-data.ghcn_d.ghcnd_2021" #TODO(coleleah) update to have more than one year, update to be only dataset and not fully qualified project/dataset/table id
-BQ_DESTINATION_DATASET_NAME="holiday_weather" #TODO(coleleah) update to have more than one year
-BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"
-# CLUSTER_NAME='data-science-onramp-cluster-{{ ds_nodash }}'
-CLUSTER_NAME='data-science-onramp-cluster-20220322'
+CLUSTER_NAME='data-science-onramp-cluster-20220322'  #TODO(coleleah) update to pull from variable
 PYSPARK_JAR = 'gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar'
 PROCESSING_PYTHON_FILE = 'gs://{{var.value.gcs_bucket}}/summit_dag_simple_process.py'
 PROCESSING_PYSPARK_JOB = {
@@ -60,13 +63,6 @@ PROCESSING_PYSPARK_JOB = {
     
 }
 
-
-WEATHER_HOLIDAYS_JOIN_QUERY = f"""
-SELECT Holidays.Date, Holiday, id, element, value
-FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
-JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id LIKE "US%") AS Weather
-ON Holidays.Date = Weather.Date;
-"""
 
 yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
@@ -82,46 +78,44 @@ default_dag_args = {
     'email_on_retry': False,
     # If a task fails, retry it once after waiting at least 5 minutes
     'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': PROJECT_NAME,
-    'region': '{{ var.value.gce_region }}',
+    'retry_delay': datetime.timedelta(minutes=5)
 
 }
 
 with models.DAG(
-        'data_analytics_ml_pipeline_simple',
+        'summit_dag',
         # Continue to run DAG once per day
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-    # [END composer_hadoop_schedule]
 
-    # # Create a Cloud Dataproc cluster.
-    # create_dataproc_cluster = dataproc.DataprocCreateClusterOperator(
-    #     task_id='create_dataproc_cluster',
-    #     # Give the cluster a unique name by appending the date scheduled.
-    #     # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
-    #     cluster_name=CLUSTER_NAME,
-    #     cluster_config=CLUSTER_CONFIG,
-    #     region='{{ var.value.gce_region }}'
-    # )
+    # Create a Cloud Dataproc cluster.
+    create_dataproc_cluster = dataproc.DataprocCreateClusterOperator(
+        task_id='create_dataproc_cluster',
+        # Give the cluster a unique name by appending the date scheduled.
+        # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
+        cluster_name=CLUSTER_NAME,
+        cluster_config=CLUSTER_CONFIG,
+        region='{{ var.value.gce_region }}'
+    )
 
     # Run the ingestion job
     run_data_processing = dataproc.DataprocSubmitJobOperator(
         task_id='run_data_processing',
+        region='{{ var.value.gce_region }}',
         job=PROCESSING_PYSPARK_JOB)
 
 
-    # load_external_dataset = GCSToBigQueryOperator(
-    #     task_id='run_bq_external_ingestion',
-    #     bucket='{{var.value.gcs_bucket}}',
-    #     source_objects=['holidays.csv'],
-    #     destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
-    #     source_format="CSV",
-    #     schema_fields=[
-    #         {"name": "Date", "type": "DATE"}, {"name": "Holiday", "type": "STRING"}
-    #     ],
-    #     skip_leading_rows=1,
-    # )
+    load_external_dataset = GCSToBigQueryOperator(
+        task_id='run_bq_external_ingestion',
+        bucket='{{var.value.gcs_bucket}}',
+        source_objects=['holidays.csv'],
+        destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
+        source_format="CSV",
+        schema_fields=[
+            {"name": "Date", "type": "DATE"}, {"name": "Holiday", "type": "STRING"}
+        ],
+        skip_leading_rows=1,
+    )
 
     bq_join_holidays_weather_data = BigQueryInsertJobOperator(
         task_id="bq_join_holidays_weather_data",
@@ -138,19 +132,19 @@ with models.DAG(
         },
         location="US", #todo template
     )
-    # # Delete Cloud Dataproc cluster.
-    # delete_dataproc_cluster = dataproc.DataprocDeleteClusterOperator(
-    #     task_id='delete_dataproc_cluster',
-    #     cluster_name=CLUSTER_NAME,
-    #     region='{{ var.value.gce_region }}',
-    #     # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
-    #     # even if the Dataproc job fails.
-    #     trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
+    # Delete Cloud Dataproc cluster.
+    delete_dataproc_cluster = dataproc.DataprocDeleteClusterOperator(
+        task_id='delete_dataproc_cluster',
+        cluster_name=CLUSTER_NAME,
+        region='{{ var.value.gce_region }}',
+        # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
+        # even if the Dataproc job fails.
+        trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
 
     # [START composer_hadoop_steps]
     # Define DAG dependencies.
-    # create_dataproc_cluster >> run_data_ingestion >> delete_dataproc_cluster
+    create_dataproc_cluster >> run_data_processing >> delete_dataproc_cluster
  
-    # load_external_dataset >> bq_join_holidays_weather_data
+    load_external_dataset >> bq_join_holidays_weather_data >> run_data_processing
     #bq_join_holidays_weather_data >> run_data_processing
-    run_data_processing
+    #run_data_processing
