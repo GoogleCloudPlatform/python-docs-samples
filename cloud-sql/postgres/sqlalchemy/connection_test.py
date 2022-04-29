@@ -39,9 +39,7 @@ def setup_test_env():
 def client() -> FlaskClient:
     setup_test_env()
     app.app.testing = True
-    print("DB Type: ", app.db)
     client = app.app.test_client()
-    print("DB Type: ", app.db)
 
     return client
 
