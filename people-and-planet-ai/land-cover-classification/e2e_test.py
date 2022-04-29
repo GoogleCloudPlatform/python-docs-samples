@@ -92,8 +92,8 @@ def test_notebook(bucket_name: str) -> None:
 
 
 def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
-    training_data = f"gs://{bucket_name}/land-cover/training-data"
-    validation_data = f"gs://{bucket_name}/land-cover/validation-data"
+    training_prefix = f"gs://{bucket_name}/land-cover/training-data"
+    validation_prefix = f"gs://{bucket_name}/land-cover/validation-data"
     points_per_region = 100
     patch_size = 16
     batch_size = 32
@@ -101,8 +101,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     cmd = [
         "python",
         "create_datasets.py",
-        f"--training-data={training_data}",
-        f"--validation-data={validation_data}",
+        f"--training-prefix={training_prefix}",
+        f"--validation-prefix={validation_prefix}",
         f"--points-per-region={points_per_region}",
         f"--patch-size={patch_size}",
         "--runner=DataflowRunner",
@@ -114,7 +114,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     ]
     subprocess.check_call(cmd)
 
-    def validate_dataset(data_path: str) -> None:
+    def validate_dataset(data_path_prefix: str) -> None:
+        data_path = f"{data_path_prefix}*.tfrecord.gz"
         dataset = train_model.read_dataset(data_path, patch_size, batch_size)
         x, y = [pair for pair in dataset.take(1)][0]
 
@@ -129,8 +130,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         ), f"expected shape {expected_shape}, but got {y.shape} for outputs in {data_path}"
 
     # Make sure the training dataset is valid.
-    validate_dataset(training_data)
-    validate_dataset(validation_data)
+    validate_dataset(training_prefix)
+    validate_dataset(validation_prefix)
 
 
 # TODO: Not implemented
