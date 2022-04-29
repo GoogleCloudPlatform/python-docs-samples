@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import csv
 import importlib
 import logging
 import os
@@ -27,8 +28,10 @@ import google.auth
 from google.cloud import storage
 import nbconvert
 import nbformat
+import numpy as np
 import pytest
 
+import batch_predict
 import train_model
 
 """
@@ -184,6 +187,18 @@ def test_notebook(bucket_name: str) -> None:
         ]
     )
     ee.Initialize(credentials, project=PROJECT)
+
+    # First, create prediction files with the right shapes to test displaying results.
+    with open("data/prediction-locations.csv") as f:
+        predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
+        inputs = np.array(
+            [np.zeros(shape=(16, 16)) for _ in train_model.INPUT_BANDS],
+            dtype=[(name, "<f8") for name in train_model.INPUT_BANDS],
+        )
+        outputs = np.zeros(shape=(16, 16, 9))
+        for name in {row["name"] for row in csv.DictReader(f)}:
+            results = {"name": name, "inputs": inputs, "outputs": outputs}
+            batch_predict.write_to_numpy(results, predictions_prefix)
 
     # Run the notebook.
     run(
