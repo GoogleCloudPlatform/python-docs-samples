@@ -122,10 +122,11 @@ def predict(name: str, input_patch: np.ndarray, model_path: str = "model") -> Di
     }
 
 
-def write_to_numpy(results: Dict, predictions_prefix: str = "predictions") -> None:
+def write_to_numpy(results: Dict, predictions_prefix: str = "predictions") -> str:
     filename = f"{predictions_prefix}/{results['name']}.npz"
     with FileSystems.create(filename) as f:
         np.savez_compressed(f, inputs=results["inputs"], outputs=results["outputs"])
+    return filename
 
 
 def run(
