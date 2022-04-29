@@ -47,4 +47,4 @@ steps:
 substitutions:
   _SERVICE: logger-job
   _VERSION: manual
-  _REGION: us-central1
+  _REGION: us-west1
