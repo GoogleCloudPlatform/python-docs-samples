@@ -71,6 +71,110 @@ def bucket_name() -> str:
     bucket.delete(force=True)
 
 
+@pytest.fixture(scope="session")
+def container_image(bucket_name: str) -> str:
+    # https://cloud.google.com/sdk/gcloud/reference/builds/submit
+    container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
+    # gcloud builds submit --pack image=gcr.io/{project}/land-cover:latest serving/
+    subprocess.check_call(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            f"--project={PROJECT}",
+            "--pack",
+            f"image={container_image}",
+            "serving/",
+            "--machine-type=e2-highcpu-8",
+            "--quiet",
+        ]
+    )
+
+    logging.info(f"container_image: {container_image}")
+    yield container_image
+
+    # https://cloud.google.com/sdk/gcloud/reference/container/images/delete
+    subprocess.check_call(
+        [
+            "gcloud",
+            "container",
+            "images",
+            "delete",
+            container_image,
+            f"--project={PROJECT}",
+            "--force-delete-tags",
+            "--quiet",
+        ]
+    )
+
+
+@pytest.fixture(scope="session")
+def service_url(container_image: str) -> str:
+    # https://cloud.google.com/sdk/gcloud/reference/run/deploy
+    service_name = f"{NAME.replace('/', '-')}-{UUID}"
+    subprocess.check_call(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            service_name,
+            f"--project={PROJECT}",
+            f"--image={container_image}",
+            f"--region={LOCATION}",
+            "--no-allow-unauthenticated",
+        ]
+    )
+
+    # https://cloud.google.com/sdk/gcloud/reference/run/services/describe
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                service_name,
+                f"--project={PROJECT}",
+                f"--region={LOCATION}",
+                "--format=get(status.url)",
+            ],
+            capture_output=True,
+        )
+        .stdout.decode("utf-8")
+        .strip()
+    )
+
+    logging.info(f"service_url: {service_url}")
+    yield service_url
+
+    # https://cloud.google.com/sdk/gcloud/reference/run/services/delete
+    subprocess.check_call(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name,
+            "--platform=managed",
+            f"--project={PROJECT}",
+            f"--region={LOCATION}",
+            "--quiet",
+        ]
+    )
+
+
+@pytest.fixture(scope="session")
+def identity_token() -> str:
+    yield (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token", f"--project={PROJECT}"],
+            capture_output=True,
+        )
+        .stdout.decode("utf-8")
+        .strip()
+    )
+
+
 def test_notebook(bucket_name: str) -> None:
     # Authenticate Earth Engine using the default credentials.
     credentials, _ = google.auth.default(
@@ -134,13 +238,11 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     validate_dataset(validation_prefix)
 
 
-# TODO: Not implemented
-# def test_land_cover_predict_cloud_run(run_notebook: None) -> None:
-#     # TODO:
-#     # - fixture: service_url wait until it's deployed (with cleanup)
-#     # - send a prediction
-#     # - check shapes
-#     pass
+def test_land_cover_predict_cloud_run(service_url: str) -> None:
+    # TODO:
+    # - send a prediction
+    # - check shapes
+    pass
 
 
 # TODO: Not implemented
