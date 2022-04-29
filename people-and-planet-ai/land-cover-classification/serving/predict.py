@@ -14,8 +14,7 @@
 
 import io
 import os
-from typing import List, Optional
-from unittest.mock import DEFAULT
+from typing import List
 
 import ee
 import flask
@@ -83,18 +82,13 @@ def predict(lat: float, lon: float, year: int) -> List:
 
 
 def ee_init() -> None:
-    # credentials, project = google.auth.default(
-    #     scopes=[
-    #         "https://www.googleapis.com/auth/cloud-platform",
-    #         "https://www.googleapis.com/auth/earthengine",
-    #     ]
-    # )
-    # ee.Initialize(
-    #     credentials,
-    #     project=project,
-    #     # opt_url="https://earthengine-highvolume.googleapis.com",
-    # )
-    ee.Initialize()
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(credentials, project=project)
 
 
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
