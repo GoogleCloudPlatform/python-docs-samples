@@ -266,7 +266,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
         "-m",
         "cp",
         "data/training/*",
-        f"gs://{bucket_name}/land-cover/training/",
+        f"gs://{bucket_name}/land-cover/datasets/training/",
     ]
     subprocess.check_call(cmd)
     cmd = [
@@ -274,7 +274,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
         "-m",
         "cp",
         "data/validation/*",
-        f"gs://{bucket_name}/land-cover/validation/",
+        f"gs://{bucket_name}/land-cover/datasets/validation/",
     ]
     subprocess.check_call(cmd)
 
