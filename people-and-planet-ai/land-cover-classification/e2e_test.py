@@ -250,8 +250,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
         dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
         inputs, outputs = [pair for pair in dataset.take(1)][0]
-        validate_inputs(inputs)
-        validate_outputs(outputs)
+        validate_dataset_inputs(inputs, batch_size)
+        validate_outputs(outputs, batch_size)
 
     # Make sure the training dataset is valid.
     validate_dataset(training_prefix)
@@ -360,19 +360,29 @@ def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
                 validate_outputs(outputs)
 
 
-def validate_inputs(inputs: np.ndarray) -> None:
-    assert (
-        inputs.shape == INPUTS_SHAPE
-    ), f"expected shape {INPUTS_SHAPE}, but got {inputs.shape} for inputs"
+def validate_dataset_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
+    assert inputs.shape == (
+        batch_size,
+        *INPUTS_SHAPE,
+        len(INPUTS_DTYPE),
+    ), f"expected shape {(batch_size, *INPUTS_SHAPE)}, but got {inputs.shape} for inputs"
+
+
+def validate_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
+    assert inputs.shape == (
+        batch_size,
+        *INPUTS_SHAPE,
+    ), f"expected shape {(batch_size, *INPUTS_SHAPE)}, but got {inputs.shape} for inputs"
     assert (
         inputs.dtype == INPUTS_DTYPE
     ), f"expected type {INPUTS_DTYPE}, but got {inputs.dtype} for inputs"
 
 
-def validate_outputs(outputs: np.ndarray) -> None:
-    assert (
-        outputs.shape == OUTPUTS_SHAPE
-    ), f"expected shape {OUTPUTS_SHAPE}, but got {outputs.shape} for outputs"
+def validate_outputs(outputs: np.ndarray, batch_size: int = 1) -> None:
+    assert outputs.shape == (
+        batch_size,
+        *OUTPUTS_SHAPE,
+    ), f"expected shape {(batch_size, *OUTPUTS_SHAPE)}, but got {outputs.shape} for outputs"
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
