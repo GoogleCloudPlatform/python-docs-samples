@@ -93,10 +93,8 @@ def container_image() -> str:
             "builds",
             "submit",
             f"--project={PROJECT}",
-            "--pack",
-            f"image={container_image}",
+            f"--tag={container_image}",
             "serving/",
-            "--machine-type=e2-highcpu-8",
             "--quiet",
         ]
     )
@@ -120,7 +118,7 @@ def container_image() -> str:
 
 
 @pytest.fixture(scope="session")
-def service_url(container_image: str) -> str:
+def service_url(bucket_name: str, container_image: str) -> str:
     # https://cloud.google.com/sdk/gcloud/reference/run/deploy
     service_name = f"{NAME.replace('/', '-')}-{UUID}"
     subprocess.check_call(
@@ -132,6 +130,7 @@ def service_url(container_image: str) -> str:
             f"--project={PROJECT}",
             f"--image={container_image}",
             f"--region={LOCATION}",
+            f"--update-env-vars=MODEL_PATH=gs://{bucket_name}/land-cover/model",
             "--no-allow-unauthenticated",
         ]
     )
@@ -166,7 +165,6 @@ def service_url(container_image: str) -> str:
             "services",
             "delete",
             service_name,
-            "--platform=managed",
             f"--project={PROJECT}",
             f"--region={LOCATION}",
             "--quiet",
