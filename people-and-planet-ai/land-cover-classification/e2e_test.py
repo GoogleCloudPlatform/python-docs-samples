@@ -58,7 +58,8 @@ IPYNB_FILE = "README.ipynb"
 PY_FILE = "README.py"
 
 PATCH_SIZE = 16
-INPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE, len(trainer.INPUT_BANDS))
+INPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE)
+INPUTS_DTYPE = [(name, "<f8") for name in trainer.INPUT_BANDS]
 OUTPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE, trainer.NUM_CLASSIFICATIONS)
 
 # Colab libraries are not available, so we disable them explicitly.
@@ -363,6 +364,9 @@ def validate_inputs(inputs: np.ndarray) -> None:
     assert (
         inputs.shape == INPUTS_SHAPE
     ), f"expected shape {INPUTS_SHAPE}, but got {inputs.shape} for inputs"
+    assert (
+        inputs.dtype == INPUTS_DTYPE
+    ), f"expected type {INPUTS_DTYPE}, but got {inputs.dtype} for inputs"
 
 
 def validate_outputs(outputs: np.ndarray) -> None:
