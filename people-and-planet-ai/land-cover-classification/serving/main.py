@@ -70,13 +70,14 @@ def predict(lat: float, lon: float, year: int) -> List:
     response.raise_for_status()
     patch = np.load(io.BytesIO(response.content), allow_pickle=True)
 
-    inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
     model = tf.keras.models.load_model(model_path)
-    probabilities = model.predict(np.stack([inputs]))[0]
+    model_inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
+    probabilities = model.predict(np.stack([model_inputs]))[0]
     outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
 
     if include_inputs:
-        return {"inputs": inputs.tolist(), "outputs": outputs.tolist()}
+        inputs = {name: patch[name].tolist() for name in patch.dtype.names}
+        return {"inputs": inputs, "outputs": outputs.tolist()}
     else:
         return {"outputs": outputs.tolist()}
 
