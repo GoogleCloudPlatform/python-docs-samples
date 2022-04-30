@@ -47,9 +47,9 @@ DEFAULT_MODEL_PATH = os.environ["MODEL_PATH"]
 
 @app.route("/predict/<float(signed=True):lat>/<float(signed=True):lon>/<int:year>")
 def predict(lat: float, lon: float, year: int) -> List:
-    patch_size = int(flask.request.args.get("patch-size", 256))
+    patch_size = flask.request.args.get("patch-size", 256, type=int)
     model_path = flask.request.args.get("model-path", DEFAULT_MODEL_PATH)
-    include_inputs = flask.request.args.get("include-inputs", False)
+    include_inputs = flask.request.args.get("include-inputs", "false") == "true"
 
     ee_init()
 
