@@ -262,6 +262,26 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
 def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     aiplatform.init(project=PROJECT, location=LOCATION, staging_bucket=bucket_name)
 
+    # Upload training and validation data to Cloud Storage.
+    cmd = [
+        "gsutil",
+        "-m",
+        "cp",
+        "-R",
+        "data/training",
+        f"gs://{bucket_name}/land-cover/training",
+    ]
+    subprocess.check_call(cmd)
+    cmd = [
+        "gsutil",
+        "-m",
+        "cp",
+        "-R",
+        "data/validation",
+        f"gs://{bucket_name}/land-cover/validation",
+    ]
+    subprocess.check_call(cmd)
+
     # ℹ️ If these commands change, please update the corresponding commands at the
     #   "🧠 Train the model in Vertex AI" section in the `README.ipynb` notebook.
     job = aiplatform.CustomTrainingJob(
@@ -302,11 +322,16 @@ def test_land_cover_online_predict_cloud_run(service_url: str) -> None:
 
 
 def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
-    # Upload a pre-trained model.
-    storage_client = storage.Client()
-    storage_client.bucket(bucket_name).blob(
-        "land-cover/pre-trained-model"
-    ).upload_from_filename("data/model")
+    # Upload a pre-trained model to Cloud Storage.
+    cmd = [
+        "gsutil",
+        "-m",
+        "cp",
+        "-R",
+        "data/model",
+        f"gs://{bucket_name}/land-cover/pre-trained-model",
+    ]
+    subprocess.check_call(cmd)
 
     # ℹ️ If this command changes, please update the corresponding command at the
     #   "🧺 Batch predictions in Dataflow" section in the `README.ipynb` notebook.
