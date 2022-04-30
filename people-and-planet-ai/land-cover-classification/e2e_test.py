@@ -267,18 +267,16 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
         "gsutil",
         "-m",
         "cp",
-        "-R",
-        "data/training",
-        f"gs://{bucket_name}/land-cover/training",
+        "data/training/*",
+        f"gs://{bucket_name}/land-cover/training/",
     ]
     subprocess.check_call(cmd)
     cmd = [
         "gsutil",
         "-m",
         "cp",
-        "-R",
-        "data/validation",
-        f"gs://{bucket_name}/land-cover/validation",
+        "data/validation/*",
+        f"gs://{bucket_name}/land-cover/validation/",
     ]
     subprocess.check_call(cmd)
 
@@ -328,8 +326,8 @@ def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
         "-m",
         "cp",
         "-R",
-        "data/model",
-        f"gs://{bucket_name}/land-cover/pre-trained-model",
+        "data/model/*",
+        f"gs://{bucket_name}/land-cover/pre-trained-model/",
     ]
     subprocess.check_call(cmd)
 
