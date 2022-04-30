@@ -356,8 +356,8 @@ def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
             with FileSystems.open(filename) as f:
                 npz_file = np.load(f)
                 inputs, outputs = (npz_file["inputs"], npz_file["outputs"])
-                validate_inputs(inputs)
-                validate_outputs(outputs)
+                validate_inputs(np.stack([inputs]))
+                validate_outputs(np.stack([outputs]))
 
 
 def validate_dataset_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
