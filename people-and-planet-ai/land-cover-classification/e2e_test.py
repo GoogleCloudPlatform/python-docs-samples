@@ -59,6 +59,7 @@ PY_FILE = "README.py"
 
 PATCH_SIZE = 16
 INPUTS_DTYPE = [(name, "<f8") for name in trainer.INPUT_BANDS]
+NUM_CLASSES = trainer.NUM_CLASSIFICATIONS
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -251,8 +252,8 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
         dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
         inputs, outputs = [pair for pair in dataset.take(1)][0]
-        validate_dataset_inputs(inputs, batch_size)
-        validate_dataset_outputs(outputs, batch_size)
+        assert inputs.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
+        assert outputs.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
     # Make sure the training dataset is valid.
     validate_dataset(training_prefix)
@@ -308,7 +309,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     )
     inputs = np.stack([patch[name] for name in trainer.INPUT_BANDS], axis=-1)
     outputs = model.predict([inputs])
-    validate_outputs(outputs)
+    assert outputs.shape == (1, PATCH_SIZE, PATCH_SIZE)
 
 
 def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
@@ -349,39 +350,9 @@ def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
             with FileSystems.open(filename) as f:
                 npz_file = np.load(f)
                 inputs, outputs = (npz_file["inputs"], npz_file["outputs"])
-                validate_inputs(np.stack([inputs]))
-                validate_outputs(np.stack([outputs]))
-
-
-def validate_dataset_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
-    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
-    assert inputs.shape == (
-        expected_shape
-    ), f"expected shape {expected_shape}, but got {inputs.shape} for inputs"
-
-
-def validate_dataset_outputs(outputs: np.ndarray, batch_size: int = 1) -> None:
-    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, trainer.NUM_CLASSIFICATIONS)
-    assert outputs.shape == (
-        expected_shape
-    ), f"expected shape {expected_shape}, but got {outputs.shape} for outputs"
-
-
-def validate_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
-    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE)
-    assert inputs.shape == (
-        expected_shape
-    ), f"expected shape {expected_shape}, but got {inputs.shape} for inputs"
-    assert (
-        inputs.dtype == INPUTS_DTYPE
-    ), f"expected type {INPUTS_DTYPE}, but got {inputs.dtype} for inputs"
-
-
-def validate_outputs(outputs: np.ndarray, batch_size: int = 1) -> None:
-    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE)
-    assert outputs.shape == (
-        expected_shape
-    ), f"expected shape {expected_shape}, but got {outputs.shape} for outputs"
+                assert inputs.shape == (PATCH_SIZE, PATCH_SIZE)
+                assert inputs.dtype.names == tuple(trainer.INPUT_BANDS)
+                assert outputs.shape == (PATCH_SIZE, PATCH_SIZE)
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
