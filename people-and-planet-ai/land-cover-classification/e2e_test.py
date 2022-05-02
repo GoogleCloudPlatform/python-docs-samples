@@ -130,6 +130,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--image={container_image}",
             f"--region={LOCATION}",
             f"--update-env-vars=MODEL_PATH=gs://{bucket_name}/land-cover/model",
+            "--memory=1G",
             "--no-allow-unauthenticated",
         ]
     )
@@ -172,7 +173,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def identity_token() -> str:
+def id_token() -> str:
     yield (
         subprocess.run(
             ["gcloud", "auth", "print-identity-token", f"--project={PROJECT}"],
@@ -183,7 +184,7 @@ def identity_token() -> str:
     )
 
 
-def test_notebook(bucket_name: str) -> None:
+def test_notebook(bucket_name: str, service_url: str, id_token: str) -> None:
     # Authenticate Earth Engine using the default credentials.
     credentials, _ = google.auth.default(
         scopes=[
@@ -216,6 +217,8 @@ def test_notebook(bucket_name: str) -> None:
         location=LOCATION,
         ipynb_file=IPYNB_FILE,
         py_file=PY_FILE,
+        service_url=service_url,
+        id_token=id_token,
     )
 
 
@@ -308,12 +311,6 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     validate_outputs(outputs)
 
 
-def test_land_cover_online_predict_cloud_run(service_url: str) -> None:
-    # ℹ️ If this command changes, please update the corresponding command at the
-    #   "📞 Online predictions in Cloud Run" section in the `README.ipynb` notebook.
-    pass
-
-
 def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
     # Upload a pre-trained model to Cloud Storage.
     cmd = [
@@ -388,6 +385,8 @@ def run(
     location: str,
     ipynb_file: str,
     py_file: str,
+    service_url: str,
+    id_token: str,
 ) -> None:
     # Convert the notebook file into a Python source file.
     with open(ipynb_file) as f:
@@ -408,6 +407,8 @@ def run(
         "GOOGLE_CLOUD_PROJECT": project,
         "CLOUD_STORAGE_BUCKET": bucket,
         "CLOUD_LOCATION": location,
+        "SERVICE_URL": service_url,
+        "IDENTITY_TOKEN": id_token,
     }
     print("+" + "-" * 60)
     print("|  Environment variables")
@@ -439,6 +440,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--bucket", required=True)
+    parser.add_argument("--service-url", required=True)
+    parser.add_argument("--id-token", required=True)
     parser.add_argument("--project", default=PROJECT)
     parser.add_argument("--location", default=LOCATION)
     parser.add_argument("--ipynb-file", default=IPYNB_FILE)
