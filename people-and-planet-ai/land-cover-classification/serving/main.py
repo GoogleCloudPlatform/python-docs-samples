@@ -51,25 +51,28 @@ def predict(lat: float, lon: float, year: int) -> List:
     patch_size = flask.request.args.get("patch-size", 256, type=int)
     model_path = flask.request.args.get("model-path", DEFAULT_MODEL_PATH)
 
-    ee_init()
+    try:
+        ee_init()
 
-    patch = get_patch(
-        image=sentinel2_image(f"{year}-01-01", f"{year}-12-31"),
-        lat=lat,
-        lon=lon,
-        bands=INPUT_BANDS,
-        patch_size=patch_size,
-        scale=10,
-    )
+        patch = get_patch(
+            image=sentinel2_image(f"{year}-01-01", f"{year}-12-31"),
+            lat=lat,
+            lon=lon,
+            bands=INPUT_BANDS,
+            patch_size=patch_size,
+            scale=10,
+        )
 
-    model = tf.keras.models.load_model(model_path)
-    model_inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
-    probabilities = model.predict(np.stack([model_inputs]))[0]
-    outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
+        model = tf.keras.models.load_model(model_path)
+        model_inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
+        probabilities = model.predict(np.stack([model_inputs]))[0]
+        outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
 
-    with io.BytesIO() as f:
-        np.savez_compressed(f, inputs=patch, outputs=outputs)
-        return f.getvalue()
+        with io.BytesIO() as f:
+            np.savez_compressed(f, inputs=patch, outputs=outputs)
+            return f.getvalue()
+    except Exception as e:
+        return (f"{type(e).__name__}: {e}", 500)
 
 
 def ee_init() -> None:
