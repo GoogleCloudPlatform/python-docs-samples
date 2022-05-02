@@ -75,11 +75,12 @@ def predict(lat: float, lon: float, year: int) -> List:
     probabilities = model.predict(np.stack([model_inputs]))[0]
     outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
 
-    if include_inputs:
-        inputs = {name: patch[name].tolist() for name in patch.dtype.names}
-        return {"inputs": inputs, "outputs": outputs.tolist()}
-    else:
-        return {"outputs": outputs.tolist()}
+    with io.BytesIO() as f:
+        if include_inputs:
+            np.savez_compressed(f, inputs=patch, outputs=outputs)
+        else:
+            np.savez_compressed(f, outputs=outputs)
+    return f.getvalue()
 
 
 def ee_init() -> None:

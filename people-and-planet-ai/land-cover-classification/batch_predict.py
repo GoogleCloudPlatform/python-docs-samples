@@ -109,16 +109,17 @@ def get_prediction_patch(
     return (name, patch)
 
 
-def predict(name: str, input_patch: np.ndarray, model_path: str = "model") -> Dict:
+def predict(name: str, patch: np.ndarray, model_path: str = "model") -> Dict:
     import tensorflow as tf
 
     model = tf.keras.models.load_model(model_path)
-    inputs = np.stack([input_patch[name] for name in input_patch.dtype.names], axis=-1)
+    inputs = np.stack([patch[name] for name in patch.dtype.names], axis=-1)
     probabilities = model.predict(np.stack([inputs]))[0]
+    outputs = np.argmax(probabilities, axis=-1)
     return {
         "name": name,
-        "inputs": input_patch,
-        "outputs": probabilities,
+        "inputs": patch,
+        "outputs": outputs,
     }
 
 
