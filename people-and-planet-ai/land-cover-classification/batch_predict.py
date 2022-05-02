@@ -103,6 +103,7 @@ def get_prediction_patch(
     lat = float(region["lat"])
     lon = float(region["lon"])
     year = int(region["year"])
+
     name = f"{region['name']}/{year}"
     image = sentinel2_image(f"{year}-1-1", f"{year + 1}-1-1")
     patch = get_patch(image, lat, lon, bands, patch_size, scale=10)

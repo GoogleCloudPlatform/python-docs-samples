@@ -309,7 +309,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     )
     inputs = np.stack([patch[name] for name in trainer.INPUT_BANDS], axis=-1)
     outputs = model.predict([inputs])
-    assert outputs.shape == (1, PATCH_SIZE, PATCH_SIZE)
+    assert outputs.shape == (1, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
 
 def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
