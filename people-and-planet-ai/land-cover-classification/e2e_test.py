@@ -79,6 +79,8 @@ def bucket_name() -> str:
     logging.info(f"bucket_name: {bucket_name}")
     yield bucket_name
 
+    subprocess.check_call(["gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*"])
+
     bucket.delete(force=True)
 
 
