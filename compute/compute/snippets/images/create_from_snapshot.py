@@ -19,11 +19,9 @@
 # directory and apply your changes there.
 
 
-# [START compute_windows_image_create]
-# [START compute_images_create]
+# [START compute_images_create_from_snapshot]
 import sys
-from typing import Any, Optional
-import warnings
+from typing import Any, Iterable, Optional
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -75,79 +73,59 @@ def wait_for_extended_operation(
     return result
 
 
-STOPPED_MACHINE_STATUS = (
-    compute_v1.Instance.Status.TERMINATED.name,
-    compute_v1.Instance.Status.STOPPED.name,
-)
-
-
-def create_image_from_disk(
+def create_image_from_snapshot(
     project_id: str,
-    zone: str,
-    source_disk_name: str,
+    source_snapshot_name: str,
     image_name: str,
+    source_project_id: Optional[str] = None,
+    guest_os_features: Optional[Iterable[str]] = None,
     storage_location: Optional[str] = None,
-    force_create: bool = False,
 ) -> compute_v1.Image:
     """
-    Creates a new disk image.
+    Creates an image based on a snapshot.
 
     Args:
-        project_id: project ID or project number of the Cloud project you use.
-        zone: zone of the disk you copy from.
-        source_disk_name: name of the source disk you copy from.
+        project_id: project ID or project number of the Cloud project you want to place your new image in.
+        source_snapshot_name: name of the snapshot you want to use as a base of your image.
         image_name: name of the image you want to create.
-        storage_location: storage location for the image. If the value is undefined,
-            function will store the image in the multi-region closest to your image's
-            source location.
-        force_create: create the image even if the source disk is attached to a
-            running instance.
+        source_project_id: name of the project that hosts the source snapshot. If left unset, it's assumed to equal
+            the `project_id`.
+        guest_os_features: an iterable collection of guest features you want to enable for the bootable image.
+            Learn more about Guest OS features here:
+            https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#guest-os-features
+        storage_location: the storage location of your image. For example, specify "us" to store the image in the
+            `us` multi-region, or "us-central1" to store it in the `us-central1` region. If you do not make a selection,
+             Compute Engine stores the image in the multi-region closest to your image's source location.
 
     Returns:
         An Image object.
     """
+    if source_project_id is None:
+        source_project_id = project_id
+
+    snapshot_client = compute_v1.SnapshotsClient()
     image_client = compute_v1.ImagesClient()
-    disk_client = compute_v1.DisksClient()
-    instance_client = compute_v1.InstancesClient()
+    src_snapshot = snapshot_client.get(
+        project=source_project_id, snapshot=source_snapshot_name
+    )
 
-    # Get source disk
-    disk = disk_client.get(project=project_id, zone=zone, disk=source_disk_name)
-
-    for disk_user in disk.users:
-        instance = instance_client.get(
-            project=project_id, zone=zone, instance=disk_user
-        )
-        if instance.status in STOPPED_MACHINE_STATUS:
-            continue
-        if not force_create:
-            raise RuntimeError(
-                f"Instance {disk_user} should be stopped. For Windows instances please "
-                f"stop the instance using `GCESysprep` command. For Linux instances just "
-                f"shut it down normally. You can supress this error and create an image of"
-                f"the disk by setting `force_create` parameter to true (not recommended). \n"
-                f"More information here: \n"
-                f" * https://cloud.google.com/compute/docs/instances/windows/creating-windows-os-image#api \n"
-                f" * https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#prepare_instance_for_image"
-            )
-        else:
-            warnings.warn(
-                f"Warning: The `force_create` option may compromise the integrity of your image. "
-                f"Stop the {disk_user} instance before you create the image if possible."
-            )
-
-    # Create image
     image = compute_v1.Image()
-    image.source_disk = disk.self_link
     image.name = image_name
+    image.source_snapshot = src_snapshot.self_link
+
     if storage_location:
         image.storage_locations = [storage_location]
 
+    if guest_os_features:
+        image.guest_os_features = [
+            compute_v1.GuestOsFeature(type_=feature) for feature in guest_os_features
+        ]
+
     operation = image_client.insert(project=project_id, image_resource=image)
 
-    wait_for_extended_operation(operation, "image creation from disk")
+    wait_for_extended_operation(operation, "image creation from snapshot")
 
     return image_client.get(project=project_id, image=image_name)
 
 
-# [END compute_images_create]
-# [END compute_windows_image_create]
+# [END compute_images_create_from_snapshot]
