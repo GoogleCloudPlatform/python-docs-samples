@@ -10,7 +10,7 @@ db-dtypes==1.0.0
 Fiona==1.8.21
 geojson==2.5.0
 geopandas==0.10.2
-google-api-core==2.7.2
+google-api-core==2.7.3
 google-auth==2.6.6
 google-cloud-bigquery==3.0.1
 google-cloud-bigquery-storage==2.13.1
