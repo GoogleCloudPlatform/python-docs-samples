@@ -252,7 +252,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
         inputs, outputs = [pair for pair in dataset.take(1)][0]
         validate_dataset_inputs(inputs, batch_size)
-        validate_outputs(outputs, batch_size)
+        validate_dataset_outputs(outputs, batch_size)
 
     # Make sure the training dataset is valid.
     validate_dataset(training_prefix)
@@ -358,6 +358,13 @@ def validate_dataset_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
     assert inputs.shape == (
         expected_shape
     ), f"expected shape {expected_shape}, but got {inputs.shape} for inputs"
+
+
+def validate_dataset_outputs(outputs: np.ndarray, batch_size: int = 1) -> None:
+    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, trainer.NUM_CLASSIFICATIONS)
+    assert outputs.shape == (
+        expected_shape
+    ), f"expected shape {expected_shape}, but got {outputs.shape} for outputs"
 
 
 def validate_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
