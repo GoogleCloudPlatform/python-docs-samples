@@ -216,10 +216,10 @@ def test_notebook(bucket_name: str, service_url: str, id_token: str) -> None:
         project=PROJECT,
         bucket=bucket_name,
         location=LOCATION,
-        ipynb_file=IPYNB_FILE,
-        py_file=PY_FILE,
         service_url=service_url,
         id_token=id_token,
+        ipynb_file=IPYNB_FILE,
+        py_file=PY_FILE,
     )
 
 
@@ -361,10 +361,10 @@ def run(
     project: str,
     bucket: str,
     location: str,
-    ipynb_file: str,
-    py_file: str,
     service_url: str,
     id_token: str,
+    ipynb_file: str = IPYNB_FILE,
+    py_file: str = PY_FILE,
 ) -> None:
     # Convert the notebook file into a Python source file.
     with open(ipynb_file) as f:
@@ -411,23 +411,3 @@ def run(
             print(f"{i + 1 :4}| {line}")
         print("+" + "-" * 60)
         raise error
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--bucket", required=True)
-    parser.add_argument("--service-url", required=True)
-    parser.add_argument("--id-token", required=True)
-    parser.add_argument("--project", default=PROJECT)
-    parser.add_argument("--location", default=LOCATION)
-    parser.add_argument("--ipynb-file", default=IPYNB_FILE)
-    parser.add_argument("--py-file", default=PY_FILE)
-    args = parser.parse_args()
-
-    # For local testing, make sure you've run `ee.Authenticate()`.
-    ee.Initialize()
-
-    # Run the notebook.
-    run(**vars(args))
