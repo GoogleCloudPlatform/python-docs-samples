@@ -80,7 +80,7 @@ def predict(lat: float, lon: float, year: int) -> List:
             np.savez_compressed(f, inputs=patch, outputs=outputs)
         else:
             np.savez_compressed(f, outputs=outputs)
-    return f.getvalue()
+        return f.getvalue()
 
 
 def ee_init() -> None:
