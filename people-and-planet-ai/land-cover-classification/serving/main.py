@@ -49,7 +49,6 @@ DEFAULT_MODEL_PATH = os.environ["MODEL_PATH"]
 def predict(lat: float, lon: float, year: int) -> List:
     patch_size = flask.request.args.get("patch-size", 256, type=int)
     model_path = flask.request.args.get("model-path", DEFAULT_MODEL_PATH)
-    include_inputs = flask.request.args.get("include-inputs", "false") == "true"
 
     ee_init()
 
@@ -76,10 +75,7 @@ def predict(lat: float, lon: float, year: int) -> List:
     outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
 
     with io.BytesIO() as f:
-        if include_inputs:
-            np.savez_compressed(f, inputs=patch, outputs=outputs)
-        else:
-            np.savez_compressed(f, outputs=outputs)
+        np.savez_compressed(f, inputs=patch, outputs=outputs)
         return f.getvalue()
 
 
