@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from typing import Dict, Tuple
 
 import tensorflow as tf
@@ -129,6 +130,9 @@ if __name__ == "__main__":
     parser.add_argument("--training-data", default="datasets/training*.tfrecord.gz")
     parser.add_argument("--validation-data", default="datasets/validation*.tfrecord.gz")
     parser.add_argument("--model-path", default="model")
+    parser.add_argument(
+        "--model-path", default=os.environ.get("AIP_MODEL_DIR", "model")
+    )
     parser.add_argument("--patch-size", default=16, type=int)
     parser.add_argument("--epochs", default=50, type=int)
     parser.add_argument("--batch-size", default=256, type=int)
