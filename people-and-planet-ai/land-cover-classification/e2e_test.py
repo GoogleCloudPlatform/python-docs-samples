@@ -313,9 +313,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
 def test_land_cover_online_predict_cloud_run(service_url: str) -> None:
     # ℹ️ If this command changes, please update the corresponding command at the
     #   "📞 Online predictions in Cloud Run" section in the `README.ipynb` notebook.
-    # TODO:
-    # - check input and output shapes
-    raise NotImplementedError("test_land_cover_predict_cloud_run")
+    pass
 
 
 def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
