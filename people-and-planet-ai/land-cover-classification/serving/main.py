@@ -19,6 +19,7 @@ from typing import List
 import ee
 import flask
 import google.auth
+import google.api_core.retry
 import numpy as np
 import requests
 import tensorflow as tf
@@ -52,22 +53,14 @@ def predict(lat: float, lon: float, year: int) -> List:
 
     ee_init()
 
-    scale = 10
-    image = sentinel2_image(f"{year}-01-01", f"{year}-12-31")
-    point = ee.Geometry.Point([lon, lat])
-    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
-    url = image.getDownloadURL(
-        {
-            "region": region,
-            "dimensions": [patch_size, patch_size],
-            "format": "NPY",
-            "bands": INPUT_BANDS,
-        }
+    patch = get_patch(
+        image=sentinel2_image(f"{year}-01-01", f"{year}-12-31"),
+        lat=lat,
+        lon=lon,
+        bands=INPUT_BANDS,
+        patch_size=patch_size,
+        scale=10,
     )
-
-    response = requests.get(url)
-    response.raise_for_status()
-    patch = np.load(io.BytesIO(response.content), allow_pickle=True)
 
     model = tf.keras.models.load_model(model_path)
     model_inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
@@ -104,6 +97,33 @@ def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
         .map(mask_sentinel2_clouds)
         .median()
     )
+
+
+@google.api_core.retry.Retry()
+def get_patch(
+    image: ee.Image,
+    lat: float,
+    lon: float,
+    bands: List[str],
+    patch_size: int,
+    scale: int,
+) -> np.ndarray:
+    point = ee.Geometry.Point([lon, lat])
+    region = point.buffer(scale * patch_size / 2, 1).bounds(1)
+    url = image.getDownloadURL(
+        {
+            "region": region,
+            "dimensions": [patch_size, patch_size],
+            "format": "NPY",
+            "bands": bands or image.bandNames().getInfo(),
+        }
+    )
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    print(f"Got patch for {(lat, lon)}")
+    return np.load(io.BytesIO(response.content), allow_pickle=True)
 
 
 if __name__ == "__main__":

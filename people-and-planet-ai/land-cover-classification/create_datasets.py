@@ -21,9 +21,9 @@ import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
 import google.auth
+import google.api_core.retry
 import numpy as np
 import requests
-from requests.adapters import HTTPAdapter, Retry
 
 
 def ee_init() -> None:
@@ -71,6 +71,7 @@ def landcover_image() -> ee.Image:
     )
 
 
+@google.api_core.retry.Retry()
 def get_patch(
     image: ee.Image,
     lat: float,
@@ -78,8 +79,6 @@ def get_patch(
     bands: List[str],
     patch_size: int,
     scale: int,
-    max_retries: int = 50,
-    retry_exp_backoff: float = 1.0,
 ) -> np.ndarray:
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
@@ -92,18 +91,7 @@ def get_patch(
         }
     )
 
-    # We use exponential backoff as a retry strategy:
-    #   https://en.wikipedia.org/wiki/Exponential_backoff
-    # For more information on Earth Engine request quotas, see
-    #   https://developers.google.com/earth-engine/cloud/highvolume
-    session = requests.Session()
-    retry_strategy = Retry(
-        total=max_retries,
-        status_forcelist=[429],  # Too many requests error
-        backoff_factor=retry_exp_backoff,
-    )
-    session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
-    response = session.get(url)
+    response = requests.get(url)
     response.raise_for_status()
     print(f"Got patch for {(lat, lon)}")
 
