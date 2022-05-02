@@ -18,8 +18,8 @@ from typing import List
 
 import ee
 import flask
-import google.auth
 import google.api_core.retry
+import google.auth
 import numpy as np
 import requests
 import tensorflow as tf

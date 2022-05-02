@@ -20,8 +20,8 @@ from typing import Dict, Iterable, List, Optional, Tuple
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
-import google.auth
 import google.api_core.retry
+import google.auth
 import numpy as np
 import requests
 
