@@ -18,7 +18,7 @@ from typing import List
 
 import ee
 import flask
-import google.api_core.retry
+import google.api_core
 import google.auth
 import numpy as np
 import requests
@@ -120,7 +120,8 @@ def get_patch(
     )
 
     response = requests.get(url)
-    response.raise_for_status()
+    if response.status_code == 429:
+        raise google.api_core.exceptions.TooManyRequests(response.text)
 
     print(f"Got patch for {(lat, lon)}")
     return np.load(io.BytesIO(response.content), allow_pickle=True)
