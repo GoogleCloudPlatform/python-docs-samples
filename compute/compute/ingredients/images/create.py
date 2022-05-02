@@ -17,10 +17,11 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import time
+
+import warnings
+from typing import Optional
 
 from google.cloud import compute_v1
-import warnings
 
 # <INGREDIENT create_image>
 STOPPED_MACHINE_STATUS = (
@@ -29,8 +30,8 @@ STOPPED_MACHINE_STATUS = (
 )
 
 
-def create_image(project_id: str, zone: str, source_disk_name: str, image_name: str,
-                 storage_location: str = None, force_create: bool = False) -> compute_v1.Image:
+def create_image_from_disk(project_id: str, zone: str, source_disk_name: str, image_name: str,
+                           storage_location: Optional[str] = None, force_create: bool = False) -> compute_v1.Image:
     """
     Creates a new disk image.
 
@@ -44,6 +45,9 @@ def create_image(project_id: str, zone: str, source_disk_name: str, image_name: 
             source location.
         force_create: create the image even if the source disk is attached to a
             running instance.
+
+    Returns:
+        An Image object.
     """
     image_client = compute_v1.ImagesClient()
     disk_client = compute_v1.DisksClient()
@@ -77,7 +81,7 @@ def create_image(project_id: str, zone: str, source_disk_name: str, image_name: 
 
     operation = image_client.insert(project=project_id, image_resource=image)
 
-    wait_for_extended_operation(operation, "image creation")
+    wait_for_extended_operation(operation, "image creation from disk")
 
     return image_client.get(project=project_id, image=image_name)
 # </INGREDIENT>
