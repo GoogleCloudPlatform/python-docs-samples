@@ -58,9 +58,7 @@ IPYNB_FILE = "README.ipynb"
 PY_FILE = "README.py"
 
 PATCH_SIZE = 16
-INPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE)
 INPUTS_DTYPE = [(name, "<f8") for name in trainer.INPUT_BANDS]
-OUTPUTS_SHAPE = (PATCH_SIZE, PATCH_SIZE, trainer.NUM_CLASSIFICATIONS)
 
 # Colab libraries are not available, so we disable them explicitly.
 sys.modules["google.colab"] = Mock()
@@ -359,28 +357,27 @@ def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
 
 
 def validate_dataset_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
+    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
     assert inputs.shape == (
-        batch_size,
-        *INPUTS_SHAPE,
-        len(INPUTS_DTYPE),
-    ), f"expected shape {(batch_size, *INPUTS_SHAPE)}, but got {inputs.shape} for inputs"
+        expected_shape
+    ), f"expected shape {expected_shape}, but got {inputs.shape} for inputs"
 
 
 def validate_inputs(inputs: np.ndarray, batch_size: int = 1) -> None:
+    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE)
     assert inputs.shape == (
-        batch_size,
-        *INPUTS_SHAPE,
-    ), f"expected shape {(batch_size, *INPUTS_SHAPE)}, but got {inputs.shape} for inputs"
+        expected_shape
+    ), f"expected shape {expected_shape}, but got {inputs.shape} for inputs"
     assert (
         inputs.dtype == INPUTS_DTYPE
     ), f"expected type {INPUTS_DTYPE}, but got {inputs.dtype} for inputs"
 
 
 def validate_outputs(outputs: np.ndarray, batch_size: int = 1) -> None:
+    expected_shape = (batch_size, PATCH_SIZE, PATCH_SIZE)
     assert outputs.shape == (
-        batch_size,
-        *OUTPUTS_SHAPE,
-    ), f"expected shape {(batch_size, *OUTPUTS_SHAPE)}, but got {outputs.shape} for outputs"
+        expected_shape
+    ), f"expected shape {expected_shape}, but got {outputs.shape} for outputs"
 
 
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
