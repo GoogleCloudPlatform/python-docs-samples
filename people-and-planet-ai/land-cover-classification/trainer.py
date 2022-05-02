@@ -129,7 +129,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--training-data", default="datasets/training*.tfrecord.gz")
     parser.add_argument("--validation-data", default="datasets/validation*.tfrecord.gz")
-    parser.add_argument("--model-path", default="model")
     parser.add_argument(
         "--model-path", default=os.environ.get("AIP_MODEL_DIR", "model")
     )
