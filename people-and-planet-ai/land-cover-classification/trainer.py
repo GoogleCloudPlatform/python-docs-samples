@@ -127,14 +127,39 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--training-data", default="datasets/training*.tfrecord.gz")
-    parser.add_argument("--validation-data", default="datasets/validation*.tfrecord.gz")
     parser.add_argument(
-        "--model-path", default=os.environ.get("AIP_MODEL_DIR", "model")
+        "--training-data",
+        default="datasets/training*.tfrecord.gz",
+        help="Local or Cloud Storage file pattern for the training data files.",
     )
-    parser.add_argument("--patch-size", default=16, type=int)
-    parser.add_argument("--epochs", default=50, type=int)
-    parser.add_argument("--batch-size", default=256, type=int)
+    parser.add_argument(
+        "--validation-data",
+        default="datasets/validation*.tfrecord.gz",
+        help="Local or Cloud Storage file pattern for the validation data files.",
+    )
+    parser.add_argument(
+        "--model-path",
+        default=os.environ.get("AIP_MODEL_DIR", "model"),
+        help="Local or Cloud Storage path to save the model to.",
+    )
+    parser.add_argument(
+        "--patch-size",
+        default=16,
+        type=int,
+        help="Patch size of the training and validation datasets.",
+    )
+    parser.add_argument(
+        "--epochs",
+        default=50,
+        type=int,
+        help="Number of times for the model to train over the training dataset.",
+    )
+    parser.add_argument(
+        "--batch-size",
+        default=256,
+        type=int,
+        help="Number of training examples for the model to train on at the same time.",
+    )
     args = parser.parse_args()
 
     run(**vars(args))

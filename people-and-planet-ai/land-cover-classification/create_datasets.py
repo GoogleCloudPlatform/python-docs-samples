@@ -131,7 +131,7 @@ def serialize(patch: np.ndarray) -> bytes:
 
 
 def run(
-    regions_file: str = "data/training-regions.csv",
+    bounds_file: str = "data/training-bounds.csv",
     training_prefix: str = "datasets/training",
     validation_prefix: str = "datasets/validation",
     points_per_region: int = 5,
@@ -145,7 +145,7 @@ def run(
         weights = [1 - validation_ratio, validation_ratio]
         return random.choices([0, 1], weights)[0]
 
-    with open(regions_file) as f:
+    with open(bounds_file) as f:
         regions = [dict(row) for row in csv.DictReader(f)]
 
     bands = trainer.INPUT_BANDS + trainer.OUTPUT_BANDS
@@ -177,12 +177,39 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument("--regions-file", default="data/training-regions.csv")
-    parser.add_argument("--training-prefix", default="datasets/training")
-    parser.add_argument("--validation-prefix", default="datasets/validation")
-    parser.add_argument("--points-per-region", default=5, type=int)
-    parser.add_argument("--patch-size", default=16, type=int)
-    parser.add_argument("--validation-ratio", default=0.1, type=float)
+    parser.add_argument(
+        "--bounds-file",
+        default="data/training-bounds.csv",
+        help="CSV file with west,south,east,north bounds to extract training data points from.",
+    )
+    parser.add_argument(
+        "--training-prefix",
+        default="datasets/training",
+        help="Local or Cloud Storage path prefix to save training data to.",
+    )
+    parser.add_argument(
+        "--validation-prefix",
+        default="datasets/validation",
+        help="Local or Cloud Storage path prefix to save validation data to.",
+    )
+    parser.add_argument(
+        "--points-per-region",
+        default=5,
+        type=int,
+        help="Number of data points to extract for each region bounds.",
+    )
+    parser.add_argument(
+        "--patch-size",
+        default=16,
+        type=int,
+        help="Length of the patch square for each training data point.",
+    )
+    parser.add_argument(
+        "--validation-ratio",
+        default=0.1,
+        type=float,
+        help="Ratio between 0 and 1 of the total data to split into the validation dataset.",
+    )
     args, beam_args = parser.parse_known_args()
 
     run(**vars(args), beam_args=beam_args)

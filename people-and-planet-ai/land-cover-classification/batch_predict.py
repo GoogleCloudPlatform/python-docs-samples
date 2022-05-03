@@ -152,10 +152,27 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument("--regions-file", default="data/prediction-locations.csv")
-    parser.add_argument("--model-path", default="model")
-    parser.add_argument("--predictions-prefix", default="predictions")
-    parser.add_argument("--patch-size", default=256, type=int)
+    parser.add_argument(
+        "--regions-file",
+        default="data/prediction-locations.csv",
+        help="CSV file with the locations and years to predict.",
+    )
+    parser.add_argument(
+        "--model-path",
+        default="model",
+        help="Local or Cloud Storage path of the trained model to use.",
+    )
+    parser.add_argument(
+        "--predictions-prefix",
+        default="predictions",
+        help="Local or Cloud Storage path prefix to save the prediction results.",
+    )
+    parser.add_argument(
+        "--patch-size",
+        default=256,
+        type=int,
+        help="Length of the patch square for each region to predict.",
+    )
     args, beam_args = parser.parse_known_args()
 
     run(**vars(args), beam_args=beam_args)
