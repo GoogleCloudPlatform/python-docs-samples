@@ -194,7 +194,7 @@ def pretrained_model(bucket_name: str) -> None:
     yield model_path
 
 
-def write_predictions(name: str, predictions_prefix: str = "./") -> str:
+def write_empty_predictions(name: str, predictions_prefix: str = ".") -> str:
     results = {
         "name": name,
         "inputs": np.zeros(
@@ -219,13 +219,13 @@ def test_notebook(bucket_name: str) -> None:
     ee.Initialize(credentials, project=PROJECT)
 
     # First, create prediction files with the right shapes to test displaying results.
-    write_predictions(f"results.npz")
+    write_empty_predictions("results.npz")
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         for row in csv.DictReader(f):
             name = row["name"]
             year = row["year"]
-            write_predictions(f"{name}/{year}.npz", predictions_prefix)
+            write_empty_predictions(f"{name}/{year}.npz", predictions_prefix)
 
     # Run the notebook.
     run(
