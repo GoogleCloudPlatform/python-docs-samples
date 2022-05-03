@@ -219,13 +219,13 @@ def test_notebook(bucket_name: str) -> None:
     ee.Initialize(credentials, project=PROJECT)
 
     # First, create prediction files with the right shapes to test displaying results.
-    write_empty_predictions("results.npz")
+    write_empty_predictions("results")
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         for row in csv.DictReader(f):
             name = row["name"]
             year = row["year"]
-            write_empty_predictions(f"{name}/{year}.npz", predictions_prefix)
+            write_empty_predictions(f"{name}/{year}", predictions_prefix)
 
     # Run the notebook.
     run(
