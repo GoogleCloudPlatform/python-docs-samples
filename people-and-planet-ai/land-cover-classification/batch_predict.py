@@ -80,6 +80,7 @@ def get_patch(
     response = requests.get(url)
     if response.status_code == 429:
         raise exceptions.TooManyRequests(response.text)
+    response.raise_for_status()
 
     print(f"Got patch for {(lat, lon)}")
     return np.load(io.BytesIO(response.content), allow_pickle=True)
