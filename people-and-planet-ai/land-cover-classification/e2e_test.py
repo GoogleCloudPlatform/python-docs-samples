@@ -37,14 +37,6 @@ import tensorflow as tf
 import batch_predict
 import trainer
 
-"""
-For local testing, run `ee.Authenticate()` as a one-time step.
-
-    export GOOGLE_CLOUD_PROJECT="my-project-id"
-    export BUCKET="my-cloud-storage-bucket"
-    python -c "import ee; ee.Authenticate()"
-    python e2e_test.py --bucket $BUCKET
-"""
 
 PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
 
@@ -187,7 +179,25 @@ def id_token() -> str:
     )
 
 
-def test_notebook(bucket_name: str, service_url: str, id_token: str) -> None:
+@pytest.fixture(scope="session")
+def pretrained_model(bucket_name: str) -> None:
+    # Upload a pre-trained model to Cloud Storage.
+    model_path = f"gs://{bucket_name}/land-cover/model/"
+    cmd = [
+        "gsutil",
+        "-m",
+        "cp",
+        "-R",
+        "data/model/*",
+        model_path,
+    ]
+    subprocess.check_call(cmd)
+    yield model_path
+
+
+def test_notebook(
+    bucket_name: str, service_url: str, id_token: str, pretrained_model: str
+) -> None:
     # Authenticate Earth Engine using the default credentials.
     credentials, _ = google.auth.default(
         scopes=[
@@ -296,14 +306,14 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
         args=[
             f"--training-data=gs://{bucket_name}/land-cover/datasets/training/*.tfrecord.gz",
             f"--validation-data=gs://{bucket_name}/land-cover/datasets/validation/*.tfrecord.gz",
-            f"--model-path=gs://{bucket_name}/land-cover/model",
+            f"--model-path=gs://{bucket_name}/land-cover/model-vertex",
             f"--patch-size={PATCH_SIZE}",
             "--epochs=10",
         ],
     )
 
     # Make sure the model works.
-    model = tf.keras.models.load_model(f"gs://{bucket_name}/land-cover/model")
+    model = tf.keras.models.load_model(f"gs://{bucket_name}/land-cover/model-vertex")
     with open("data/prediction-locations.csv") as f:
         region = next(csv.DictReader(f))
     _, patch = batch_predict.get_prediction_patch(
@@ -314,24 +324,15 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     assert outputs.shape == (1, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
 
-def test_land_cover_batch_predict_dataflow(bucket_name: str) -> None:
-    # Upload a pre-trained model to Cloud Storage.
-    cmd = [
-        "gsutil",
-        "-m",
-        "cp",
-        "-R",
-        "data/model/*",
-        f"gs://{bucket_name}/land-cover/pre-trained-model/",
-    ]
-    subprocess.check_call(cmd)
-
+def test_land_cover_batch_predict_dataflow(
+    bucket_name: str, pretrained_model: str
+) -> None:
     # ℹ️ If this command changes, please update the corresponding command at the
     #   "🧺 Batch predictions in Dataflow" section in the `README.ipynb` notebook.
     cmd = [
         "python",
         "batch_predict.py",
-        f"--model-path=gs://{bucket_name}/land-cover/pre-trained-model",
+        f"--model-path={pretrained_model}",
         f"--predictions-prefix=gs://{bucket_name}/land-cover/predictions",
         f"--patch-size={PATCH_SIZE}",
         "--runner=DataflowRunner",
