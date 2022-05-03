@@ -20,7 +20,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import ee
-import google.api_core
+from google.api_core import exceptions, retry
 import google.auth
 import numpy as np
 import requests
@@ -71,7 +71,7 @@ def landcover_image() -> ee.Image:
     )
 
 
-@google.api_core.retry.Retry()
+@retry.Retry()
 def get_patch(
     image: ee.Image,
     lat: float,
@@ -93,7 +93,7 @@ def get_patch(
 
     response = requests.get(url)
     if response.status_code == 429:
-        raise google.api_core.exceptions.TooManyRequests(response.text)
+        raise exceptions.TooManyRequests(response.text)
 
     print(f"Got patch for {(lat, lon)}")
     return np.load(io.BytesIO(response.content), allow_pickle=True)
