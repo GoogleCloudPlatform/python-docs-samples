@@ -196,7 +196,7 @@ def pretrained_model(bucket_name: str) -> None:
 
 def write_empty_predictions(name: str, predictions_prefix: str = ".") -> str:
     results = {
-        "name": name,
+        "filename": name,
         "inputs": np.zeros(
             shape=(PATCH_SIZE, PATCH_SIZE),
             dtype=[(name, np.float64) for name in trainer.INPUT_BANDS],
@@ -223,9 +223,7 @@ def test_notebook(bucket_name: str) -> None:
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         for row in csv.DictReader(f):
-            name = row["name"]
-            year = row["year"]
-            write_empty_predictions(f"{name}/{year}", predictions_prefix)
+            write_empty_predictions(f"{row['name']}/{row['year']}", predictions_prefix)
 
     # Run the notebook.
     run(
