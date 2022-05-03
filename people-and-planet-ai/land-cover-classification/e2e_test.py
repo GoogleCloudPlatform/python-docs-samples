@@ -361,7 +361,7 @@ def test_land_cover_batch_predict_dataflow(
 
 
 def test_land_cover_online_predict_cloud_run(
-    pretrained_model: str, identity_token: str
+    pretrained_model: str, service_url: str, identity_token: str
 ) -> None:
     response = requests.get(
         f"{service_url}/predict/39.781/-121.526/2018",
