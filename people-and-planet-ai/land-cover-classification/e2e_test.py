@@ -201,7 +201,7 @@ def write_empty_predictions(name: str, predictions_prefix: str = ".") -> str:
             shape=(PATCH_SIZE, PATCH_SIZE),
             dtype=[(name, np.float64) for name in trainer.INPUT_BANDS],
         ),
-        "outputs": np.zeros(shape=(PATCH_SIZE, PATCH_SIZE, 9), dtype=np.float32),
+        "outputs": np.zeros(shape=(PATCH_SIZE, PATCH_SIZE), dtype=np.uint8),
     }
     filename = batch_predict.write_to_numpy(results, predictions_prefix)
     print(f"Created {filename}")
