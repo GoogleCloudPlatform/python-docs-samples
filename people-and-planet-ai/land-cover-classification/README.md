@@ -7,12 +7,12 @@
 This model uses satellite data to classify what is on Earth. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
 
 * **Model**: 2D Fully Convolutional Network in [TensorFlow]
-* **Creating datasets**: [Sentinel-2] satellite data and [ESA World Map] from [Earth Engine] with [Dataflow]
+* **Creating datasets**: [Sentinel-2] satellite data and [ESA WorldCover] from [Earth Engine] with [Dataflow]
 * **Training the model**: [TensorFlow] in [Vertex AI]
 * **Getting predictions**: [TensorFlow] in [Cloud Run] (real-time) and [Dataflow] (batch)
 
 [Sentinel-2]: https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
-[ESA World map]: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
+[ESA WorldCover]: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100
 
 [Cloud Run]: https://cloud.google.com/run
 [Dataflow]: https://cloud.google.com/dataflow
