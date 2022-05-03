@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""This does model predictions for a batch of images."""
+
 import csv
 import io
 from typing import Dict, List, Optional
@@ -27,12 +29,16 @@ import requests
 
 
 def ee_init() -> None:
+    """Authenticate and initialize Earth Engine with the default credentials."""
     credentials, project = google.auth.default(
         scopes=[
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/earthengine",
         ]
     )
+
+    # Use the Earth Engine High Volume endpoint.
+    #   https://developers.google.com/earth-engine/cloud/highvolume
     ee.Initialize(
         credentials,
         project=project,
@@ -41,6 +47,20 @@ def ee_init() -> None:
 
 
 def sentinel2_image(start_date: str, end_date: str) -> ee.Image:
+    """Get a Sentinel-2 Earth Engine image.
+
+    This filters clouds and returns the median for the selected time range.
+
+    For more information, see:
+        https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
+
+    Args:
+        start_date: Beginning of the time range to consider for the median.
+        end_date: End of the time range to consider for the median.
+
+    Returns: An Earth Engine image with the median Sentinel-2 values.
+    """
+
     def mask_sentinel2_clouds(image: ee.Image) -> ee.Image:
         CLOUD_BIT = 10
         CIRRUS_CLOUD_BIT = 11
@@ -66,6 +86,18 @@ def get_patch(
     patch_size: int,
     scale: int,
 ) -> np.ndarray:
+    """Fetches a patch of pixels from Earth Engine as a NumPy array.
+
+    Args:
+        image: Earth Engine image to fetch from.
+        lat: Latitde of the point of interest.
+        lon: Longitude of the point of interest.
+        bands: List of bands to extract from the Earth Engine image.
+        patch_size: Size in pixels of the surrounding square patch to use.
+        scale: Number of meters per pixel.
+    """
+
+    # Create the URL to download the band values of the patch of pixels.
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
     url = image.getDownloadURL(
@@ -77,11 +109,16 @@ def get_patch(
         }
     )
 
+    # Download the pixel data. If we get "429: Too Many Requests" errors,
+    # it's safe to retry the request.
     response = requests.get(url)
     if response.status_code == 429:
+        # The retry.Retry library only works with `google.api_core` exceptions.
         raise exceptions.TooManyRequests(response.text)
+    # Still raise any other exceptions to make sure we got valid data.
     response.raise_for_status()
 
+    # Load the NumPy file data and return it as a NumPy array.
     print(f"Got patch for {(lat, lon)}")
     return np.load(io.BytesIO(response.content), allow_pickle=True)
 
@@ -89,6 +126,18 @@ def get_patch(
 def get_prediction_patch(
     region: Dict, bands: List[str] = [], patch_size: int = 256
 ) -> np.ndarray:
+    """Fetches a prediction data patch including only inputs.
+
+    The region dictionary must include: "name", "lat", "lon", and "year".
+
+    Args:
+        region: Dictionary with information of the point of interest.
+        bands: List of bands to extract from the Earth Engine image.
+        patch_size: Size in pixels of the surrounding square patch to use.
+
+    Returns: A tuple of (filename, patch).
+    """
+
     ee_init()
     lat = float(region["lat"])
     lon = float(region["lon"])
@@ -101,21 +150,45 @@ def get_prediction_patch(
 
 
 def predict(filename: str, patch: np.ndarray, model_path: str = "model") -> Dict:
+    """Gets a prediction from the model.
+
+    Args:
+        filename: Base file name to save the results to.
+        patch: Input patch pixel data as a NumPy array.
+        model_path: Local or Cloud Storage path to load the model to use.
+
+    Returns:
+        A dictionary containing the results of the prediction:
+            filename: Base file name to save the results to.
+            inputs: Input patch as a NumPy array.
+            outputs: Output patch as a NumPy array.
+    """
     import tensorflow as tf
 
+    # Load the model and get the predictions. If the model is hosted
+    # somewhere else, this is where we would send a request.
     model = tf.keras.models.load_model(model_path)
     inputs = np.stack([patch[name] for name in patch.dtype.names], axis=-1)
     probabilities = model.predict(np.stack([inputs]))[0]
     outputs = np.argmax(probabilities, axis=-1)
+
     return {
-        "name": filename,
+        "filename": filename,
         "inputs": patch,
         "outputs": outputs,
     }
 
 
 def write_to_numpy(results: Dict, predictions_prefix: str = "predictions") -> str:
-    filename = f"{predictions_prefix}/{results['name']}.npz"
+    """Writes the prediction results into a compressed NumPy file.
+
+    The results dictionary must include: "filename", "inputs", and "outputs".
+
+    Args:
+        results: The prediction results to write.
+        predictions_prefix: Local or Cloud Storage path prefix to write to.
+    """
+    filename = f"{predictions_prefix}/{results['filename']}.npz"
     with FileSystems.create(filename) as f:
         np.savez_compressed(f, inputs=results["inputs"], outputs=results["outputs"])
     return filename
@@ -128,11 +201,22 @@ def run(
     patch_size: int = 256,
     beam_args: Optional[List[str]] = None,
 ) -> None:
+    """Runs an Apache Beam pipeline to do batch predictions.
+
+    Args:
+        regions_file: CSV file with the locations and years to predict.
+        model_path: Local or Cloud Storage path of the trained model to use.
+        predictions_prefix: Local or Cloud Storage path prefix to save the results.
+        patch_size: Size in pixels of the surrounding square patch to use.
+    """
+
     import trainer
 
+    # Load the points of interest from the CSV file.
     with open(regions_file) as f:
         regions = [dict(row) for row in csv.DictReader(f)]
 
+    # Run the batch prediction pipeline.
     bands = trainer.INPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     with beam.Pipeline(options=beam_options) as pipeline:
@@ -165,13 +249,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--predictions-prefix",
         default="predictions",
-        help="Local or Cloud Storage path prefix to save the prediction results.",
+        help="Local or Cloud Storage path prefix to save the results.",
     )
     parser.add_argument(
         "--patch-size",
         default=256,
         type=int,
-        help="Length of the patch square for each region to predict.",
+        help="Size in pixels of the surrounding square patch to use.",
     )
     args, beam_args = parser.parse_known_args()
 

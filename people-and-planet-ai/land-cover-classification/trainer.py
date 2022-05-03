@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""This trains a TensorFlow model to classify land cover.
+
+The model is a simple Fully Convolutional Network (FCN) using the
+TensorFlow Keras high-level API.
+"""
+
 import os
 from typing import Dict, Tuple
 
@@ -43,15 +49,25 @@ def read_dataset(
     file_pattern: str, patch_size: int, batch_size: int
 ) -> tf.data.Dataset:
     """Reads a compressed TFRecord dataset and preprocesses it into a machine
-    learning friendly format."""
+    learning friendly format.
+
+    Args:
+        file_pattern: Local or Cloud Storage file pattern of the TFRecord files.
+        patch_size: Patch size of each example.
+        batch_size: Number of examples to batch together.
+
+    Returns: A tf.data.Dataset ready to feed to the model.
+    """
+
+    # Create the features dictionary, we need this to parse the TFRecords.
     input_shape = (patch_size, patch_size)
     features_dict = {
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
         for band_name in INPUT_BANDS + OUTPUT_BANDS
     }
-    # For more information on how to optimize your tf.data.Dataset, refer to:
-    #   https://www.tensorflow.org/guide/data_performance
+
     return (
+        # We list and interleave each TFRecord file to process each file in parallel.
         tf.data.Dataset.list_files(file_pattern)
         .interleave(
             lambda filename: tf.data.TFRecordDataset(filename, compression_type="GZIP"),
@@ -59,30 +75,58 @@ def read_dataset(
             num_parallel_calls=tf.data.AUTOTUNE,
             deterministic=False,
         )
+        # We batch before parsing and preprocessing so it can be vectorized.
         .batch(batch_size)
         .map(
             lambda batch: tf.io.parse_example(batch, features_dict),
             num_parallel_calls=tf.data.AUTOTUNE,
         )
         .map(preprocess, num_parallel_calls=tf.data.AUTOTUNE)
+        # Finally we cache the current batch and prefetch the next one.
         .cache()
         .prefetch(tf.data.AUTOTUNE)
+        # For more information on how to optimize your tf.data.Dataset, refer to:
+        #   https://www.tensorflow.org/guide/data_performance
     )
 
 
 def preprocess(patch: Dict[str, tf.Tensor]) -> Tuple[tf.Tensor, tf.Tensor]:
-    """Splits inputs and outputs into a tuple and converts the output
-    classifications into one-hot encodings."""
+    """Splits inputs and outputs into a tuple and converts them into a
+    machine learning friendly format.
+
+    Args:
+        patch: Dictionary of 2D tensors, each corrseponding to one band.
+
+    Returns: A tuple of (inputs, outputs) as dense tensors.
+    """
+
+    # Create a dense tensor from the input patch dictionary.
     inputs = tf.stack([patch[band] for band in INPUT_BANDS], axis=-1)
+
+    # Convert the labels into one-hot encoded vectors.
     outputs = tf.one_hot(tf.cast(patch["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
     return (inputs, outputs)
 
 
 def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
-    """Creates a new Fully Convolutional Network (FCN) model."""
+    """Creates a new Fully Convolutional Network (FCN) model.
+
+    Args:
+        training_dataset: The dataset to use for the normalization layer.
+
+    Returns: A Fully Convolutional Network model.
+    """
+
+    # Create and adapt the normalization preprocessing layer with the
+    # training dataset.
+    # ℹ️ The validation dataset must not be seen by the model before training,
+    #    otherwise the validation will be biased.
     normalization = tf.keras.layers.Normalization()
     normalization.adapt(training_dataset.map(lambda x, _: x))
 
+    # Define and compile a simple Fully Convolutional Network model.
+    # The combination of using a Conv2D with a Conv2DTranspose makes it
+    # fully convolutional, so it can accept variable-sized 2D inputs.
     model = tf.keras.Sequential(
         [
             tf.keras.Input(shape=(None, None, len(INPUT_BANDS))),
@@ -110,10 +154,22 @@ def run(
     epochs: int,
     batch_size: int = 256,
 ) -> None:
-    """Creates, trains and saves a new model."""
+    """Creates, trains and saves a new model.
+
+    Args:
+        training_data: File pattern for the training data files.
+        validation_data: File pattern for the validation data files.
+        model_path: Path to save the model to.
+        patch_size: Patch size of the training and validation datasets.
+        epochs: Number of times to go through the training dataset.
+        batch_size: Number of examples for the model to look at the same time.
+    """
+
+    # Read the training and validation datasets.
     training_dataset = read_dataset(training_data, patch_size, batch_size)
     validation_dataset = read_dataset(validation_data, patch_size, batch_size)
 
+    # Create, train and save the model.
     model = new_model(training_dataset)
     model.fit(
         training_dataset.shuffle(10),
@@ -152,13 +208,13 @@ if __name__ == "__main__":
         "--epochs",
         default=50,
         type=int,
-        help="Number of times for the model to train over the training dataset.",
+        help="Number of times to go through the training dataset.",
     )
     parser.add_argument(
         "--batch-size",
         default=256,
         type=int,
-        help="Number of training examples for the model to train on at the same time.",
+        help="Number of examples for the model to look at the same time.",
     )
     args = parser.parse_args()
 
