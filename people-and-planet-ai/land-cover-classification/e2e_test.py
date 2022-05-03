@@ -373,7 +373,8 @@ def test_land_cover_online_predict_cloud_run(
     response.raise_for_status()
 
     npz_file = np.load(io.BytesIO(response.content))
-    assert npz_file["inputs"].shape == (PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
+    assert npz_file["inputs"].shape == (PATCH_SIZE, PATCH_SIZE)
+    assert npz_file["inputs"].dtype.names == tuple(trainer.INPUT_BANDS)
     assert npz_file["outputs"].shape == (PATCH_SIZE, PATCH_SIZE)
 
 
