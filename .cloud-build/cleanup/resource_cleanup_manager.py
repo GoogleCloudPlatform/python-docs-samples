@@ -13,11 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import abc
 from google.cloud import aiplatform
+from google.cloud.aiplatform import base
+
+import abc
 from typing import Any
 from proto.datetime_helpers import DatetimeWithNanoseconds
-from google.cloud.aiplatform import base
+
 
 # If a resource was updated within this number of seconds, do not delete.
 RESOURCE_UPDATE_BUFFER_IN_SECONDS = 60 * 60 * 8

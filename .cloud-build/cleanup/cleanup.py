@@ -14,11 +14,9 @@
 # limitations under the License.
 
 from typing import List
+
 from resource_cleanup_manager import (
-    ResourceCleanupManager,
-    DatasetResourceCleanupManager,
-    EndpointResourceCleanupManager,
-    ModelResourceCleanupManager,
+    DatasetResourceCleanupManager, EndpointResourceCleanupManager, ModelResourceCleanupManager, ResourceCleanupManager
 )
 
 
