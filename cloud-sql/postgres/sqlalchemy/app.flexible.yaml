@@ -12,30 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python
+runtime: custom
 env: flex
-entrypoint: gunicorn -b :$PORT main:app
+entrypoint: gunicorn -b :$PORT app:app
 
-runtime_config:
-  python_version: 3
-
-# Choose to enable either a TCP or Unix domain socket for your database connection
-# # Enable a Unix domain socket
-# beta_settings:
-#   cloud_sql_instances: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
-
-# Enable a TCP domain socket
-beta_settings:
-  cloud_sql_instances: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>=tcp:<PORT>
-
-# Remember - storing secrets in plaintext is potentially unsafe. Consider using
-# something like https://cloud.google.com/secret-manager/docs/overview to help keep
-# secrets secret.
+# Note: Saving credentials in environment variables is convenient, but not
+# secure - consider a more secure solution such as
+# Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+# keep secrets safe.
 env_variables:
-  INSTANCE_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
-  DB_USER: my-db-user
-  DB_PASS: my-db-pass
-  DB_NAME: my_db
+  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
 
-  # TCP connection setup; remove if using a Unix domain socket instead
-  DB_HOST: 172.17.0.1:<PORT>
+beta_settings:
+  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
