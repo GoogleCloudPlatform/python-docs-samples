@@ -1,0 +1,41 @@
+steps:
+  # Show the gcloud info and check if gcloud exists
+  - name: ${_PYTHON_IMAGE}
+    entrypoint: /bin/sh
+    args:
+    - -c
+    - 'gcloud config list'
+  # # Clone the Git repo
+  # - name: ${_PYTHON_IMAGE}
+  #   entrypoint: git
+  #   args: ['clone', "${_GIT_REPO}", "--branch", "${_GIT_BRANCH_NAME}", "."]    
+  # Check the Python version
+  - name: ${_PYTHON_IMAGE}
+    entrypoint: /bin/sh
+    args:
+    - -c
+    - 'python3 .cloud-build/CheckPythonVersion.py'
+  # Fetch base branch if required
+  - name: ${_PYTHON_IMAGE}
+    entrypoint: /bin/sh
+    args:
+    - -c
+    - 'if [ -n "${_BASE_BRANCH}" ]; then git fetch origin "${_BASE_BRANCH}":refs/remotes/origin/"${_BASE_BRANCH}"; else echo "Skipping fetch."; fi'
+  # Install Python dependencies
+  - name: ${_PYTHON_IMAGE}
+    entrypoint: /bin/sh
+    args:
+    - -c
+    - 'python3 -m pip install -U pip && python3 -m pip install -U --user -r .cloud-build/requirements.txt'
+  # Install Python dependencies and run testing script
+  - name: ${_PYTHON_IMAGE}
+    entrypoint: /bin/sh
+    args:
+    - -c
+    - 'python3 -m pip install -U pip && python3 -m pip freeze && python3 .cloud-build/execute_changed_notebooks_cli.py --test_paths_file "${_TEST_PATHS_FILE}" --base_branch "${_FORCED_BASE_BRANCH}" --container_uri ${_PYTHON_IMAGE} --staging_bucket ${_GCS_STAGING_BUCKET}  --artifacts_bucket ${_GCS_STAGING_BUCKET}/executed_notebooks/PR_${_PR_NUMBER}/BUILD_${BUILD_ID} --variable_project_id ${PROJECT_ID} --variable_region ${_GCP_REGION}'
+    env:
+    - 'IS_TESTING=1'
+timeout: 86400s
+options:
+  pool:
+    name: ${_PRIVATE_POOL_NAME}
