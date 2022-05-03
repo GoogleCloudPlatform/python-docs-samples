@@ -108,11 +108,11 @@ def get_training_patch(
 
 
 def sample_random_points(
-    region: Dict[str, float], points_per_region: int = 10
+    region: Dict[str, str], points_per_region: int = 10
 ) -> Iterable[Tuple[float, float]]:
     for _ in range(points_per_region):
-        lat = random.uniform(region["south"], region["north"])
-        lon = random.uniform(region["west"], region["east"])
+        lat = random.uniform(float(region["south"]), float(region["north"]))
+        lon = random.uniform(float(region["west"]), float(region["east"]))
         yield (lat, lon)
 
 
@@ -145,10 +145,7 @@ def run(
         return random.choices([0, 1], weights)[0]
 
     with open(regions_file) as f:
-        csv_reader = csv.DictReader(f)
-        regions = [
-            {key: float(value) for key, value in row.items()} for row in csv_reader
-        ]
+        regions = [dict(row) for row in csv.DictReader(f)]
 
     bands = trainer.INPUT_BANDS + trainer.OUTPUT_BANDS
     beam_options = PipelineOptions(beam_args, save_main_session=True)
