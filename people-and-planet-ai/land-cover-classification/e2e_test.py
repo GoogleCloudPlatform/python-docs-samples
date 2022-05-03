@@ -14,6 +14,7 @@
 
 import csv
 import importlib
+import io
 import logging
 import os
 import platform
@@ -32,6 +33,7 @@ import nbconvert
 import nbformat
 import numpy as np
 import pytest
+import requests
 import tensorflow as tf
 
 import batch_predict
@@ -72,7 +74,6 @@ def bucket_name() -> str:
     yield bucket_name
 
     subprocess.check_call(["gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*"])
-
     bucket.delete(force=True)
 
 
@@ -80,7 +81,6 @@ def bucket_name() -> str:
 def container_image() -> str:
     # https://cloud.google.com/sdk/gcloud/reference/builds/submit
     container_image = f"gcr.io/{PROJECT}/{NAME}:{UUID}"
-    # gcloud builds submit --pack image=gcr.io/{project}/land-cover:latest serving/
     subprocess.check_call(
         [
             "gcloud",
@@ -168,7 +168,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def id_token() -> str:
+def identity_token() -> str:
     yield (
         subprocess.run(
             ["gcloud", "auth", "print-identity-token", f"--project={PROJECT}"],
@@ -181,7 +181,6 @@ def id_token() -> str:
 
 @pytest.fixture(scope="session")
 def pretrained_model(bucket_name: str) -> None:
-    # Upload a pre-trained model to Cloud Storage.
     model_path = f"gs://{bucket_name}/land-cover/model/"
     cmd = [
         "gsutil",
@@ -195,9 +194,21 @@ def pretrained_model(bucket_name: str) -> None:
     yield model_path
 
 
-def test_notebook(
-    bucket_name: str, service_url: str, id_token: str, pretrained_model: str
-) -> None:
+def write_predictions(name: str, predictions_prefix: str = "./") -> str:
+    results = {
+        "name": name,
+        "inputs": np.zeros(
+            shape=(PATCH_SIZE, PATCH_SIZE),
+            dtype=[(name, np.float64) for name in trainer.INPUT_BANDS],
+        ),
+        "outputs": np.zeros(shape=(PATCH_SIZE, PATCH_SIZE, 9), dtype=np.float32),
+    }
+    filename = batch_predict.write_to_numpy(results, predictions_prefix)
+    print(f"Created {filename}")
+    return filename
+
+
+def test_notebook(bucket_name: str) -> None:
     # Authenticate Earth Engine using the default credentials.
     credentials, _ = google.auth.default(
         scopes=[
@@ -208,28 +219,19 @@ def test_notebook(
     ee.Initialize(credentials, project=PROJECT)
 
     # First, create prediction files with the right shapes to test displaying results.
+    write_predictions(f"results.npz")
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
-        inputs = np.zeros(
-            shape=(PATCH_SIZE, PATCH_SIZE),
-            dtype=[(name, "<f8") for name in trainer.INPUT_BANDS],
-        )
-        print(f"inputs {inputs.shape} {inputs.dtype}")
-        outputs = np.zeros(shape=(PATCH_SIZE, PATCH_SIZE, 9), dtype=np.float32)
-        print(f"outputs {outputs.dtype} {outputs.shape}")
         for row in csv.DictReader(f):
-            name = f"{row['name']}/{row['year']}"
-            results = {"name": name, "inputs": inputs, "outputs": outputs}
-            filename = batch_predict.write_to_numpy(results, predictions_prefix)
-            print(f"Created {filename}")
+            name = row["name"]
+            year = row["year"]
+            write_predictions(f"{name}/{year}.npz", predictions_prefix)
 
     # Run the notebook.
     run(
         project=PROJECT,
         bucket=bucket_name,
         location=LOCATION,
-        service_url=service_url,
-        id_token=id_token,
         ipynb_file=IPYNB_FILE,
         py_file=PY_FILE,
     )
@@ -358,14 +360,29 @@ def test_land_cover_batch_predict_dataflow(
                 assert outputs.shape == (PATCH_SIZE, PATCH_SIZE)
 
 
+def test_land_cover_online_predict_cloud_run(
+    pretrained_model: str, identity_token: str
+) -> None:
+    response = requests.get(
+        f"{service_url}/predict/39.781/-121.526/2018",
+        headers={"Authorization": f"Bearer {identity_token}"},
+        params={"model-path": pretrained_model, "patch-size": PATCH_SIZE},
+    )
+    if response.status_code != 200:
+        print(response.text)
+    response.raise_for_status()
+
+    npz_file = np.load(io.BytesIO(response.content))
+    assert npz_file["inputs"].shape == (PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
+    assert npz_file["outputs"].shape == (PATCH_SIZE, PATCH_SIZE)
+
+
 @patch("apache_beam.Pipeline", lambda **kwargs: TestPipeline())
 @patch("google.cloud.aiplatform.CustomTrainingJob.run", Mock())
 def run(
     project: str,
     bucket: str,
     location: str,
-    service_url: str,
-    id_token: str,
     ipynb_file: str = IPYNB_FILE,
     py_file: str = PY_FILE,
 ) -> None:
@@ -388,8 +405,6 @@ def run(
         "GOOGLE_CLOUD_PROJECT": project,
         "CLOUD_STORAGE_BUCKET": bucket,
         "CLOUD_LOCATION": location,
-        "SERVICE_URL": service_url,
-        "IDENTITY_TOKEN": id_token,
     }
     print("+" + "-" * 60)
     print("|  Environment variables")

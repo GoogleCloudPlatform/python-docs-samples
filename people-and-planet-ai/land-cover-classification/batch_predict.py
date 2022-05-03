@@ -93,13 +93,13 @@ def get_prediction_patch(
     lon = float(region["lon"])
     year = int(region["year"])
 
-    name = f"{region['name']}/{year}"
+    filename = f"{region['name']}/{year}"
     image = sentinel2_image(f"{year}-1-1", f"{year + 1}-1-1")
     patch = get_patch(image, lat, lon, bands, patch_size, scale=10)
-    return (name, patch)
+    return (filename, patch)
 
 
-def predict(name: str, patch: np.ndarray, model_path: str = "model") -> Dict:
+def predict(filename: str, patch: np.ndarray, model_path: str = "model") -> Dict:
     import tensorflow as tf
 
     model = tf.keras.models.load_model(model_path)
@@ -107,7 +107,7 @@ def predict(name: str, patch: np.ndarray, model_path: str = "model") -> Dict:
     probabilities = model.predict(np.stack([inputs]))[0]
     outputs = np.argmax(probabilities, axis=-1)
     return {
-        "name": name,
+        "name": filename,
         "inputs": patch,
         "outputs": outputs,
     }
