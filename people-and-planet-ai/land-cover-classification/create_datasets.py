@@ -153,14 +153,17 @@ def get_patch(
     # Create the URL to download the band values of the patch of pixels.
     point = ee.Geometry.Point([lon, lat])
     region = point.buffer(scale * patch_size / 2, 1).bounds(1)
-    url = image.getDownloadURL(
-        {
-            "region": region,
-            "dimensions": [patch_size, patch_size],
-            "format": "NPY",
-            "bands": bands or image.bandNames().getInfo(),
-        }
-    )
+    try:
+        url = image.getDownloadURL(
+            {
+                "region": region,
+                "dimensions": [patch_size, patch_size],
+                "format": "NPY",
+                "bands": bands or image.bandNames().getInfo(),
+            }
+        )
+    except ee.ee_exception.EEException:
+        raise exceptions.TooManyRequests("image.getDownloadURL")
 
     # Download the pixel data. If we get "429: Too Many Requests" errors,
     # it's safe to retry the request.
