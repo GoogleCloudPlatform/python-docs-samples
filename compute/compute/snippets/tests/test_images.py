@@ -54,7 +54,7 @@ def test_snapshot(test_disk):
     Make a snapshot that will be deleted when tests are done.
     """
     test_snap_name = "test-snap-" + uuid.uuid4().hex[:10]
-    snap = create_snapshot(PROJECT, test_disk.zone.rsplit('/')[-1], test_disk.name, test_snap_name)
+    snap = create_snapshot(PROJECT, test_disk.name, test_snap_name, zone=test_disk.zone.rsplit('/')[-1])
     yield snap
     delete_snapshot(PROJECT, snap.name)
 
@@ -115,8 +115,8 @@ def test_create_delete_image(test_disk):
 
 
 def test_image_from_image(autodelete_image_name):
-    src_img = get_image_from_family('debian-cloud', 'debian-11')
-    new_image = create_image_from_image(PROJECT, src_img.name, autodelete_image_name, 'debian-cloud',
+    src_img = get_image_from_family('ubuntu-os-cloud', 'ubuntu-2204-lts')
+    new_image = create_image_from_image(PROJECT, src_img.name, autodelete_image_name, 'ubuntu-os-cloud',
                                         guest_os_features=[compute_v1.GuestOsFeature.Type.MULTI_IP_SUBNET.name],
                                         storage_location='eu')
 

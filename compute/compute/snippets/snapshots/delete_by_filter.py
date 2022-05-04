@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 # flake8: noqa
 
 
@@ -19,9 +20,9 @@
 # directory and apply your changes there.
 
 
-# [START compute_disk_create_from_image]
+# [START compute_snapshot_delete_by_filter]
 import sys
-from typing import Any
+from typing import Any, Iterable, NoReturn
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -74,45 +75,54 @@ def wait_for_extended_operation(
     return result
 
 
-def create_disk_from_image(
-    project_id: str,
-    zone: str,
-    disk_name: str,
-    disk_type: str,
-    disk_size_gb: int,
-    source_image: str,
-) -> compute_v1.Disk:
+def delete_snapshot(project_id: str, snapshot_name: str) -> NoReturn:
     """
-    Creates a new disk in a project in given zone using an image as base.
+    Delete a snapshot of a disk.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        zone: name of the zone in which you want to create the disk.
-        disk_name: name of the disk you want to create.
-        disk_type: the type of disk you want to create. This value uses the following format:
-            "zones/{zone}/diskTypes/(pd-standard|pd-ssd|pd-balanced|pd-extreme)".
-            For example: "zones/us-west3-b/diskTypes/pd-ssd"
-        disk_size_gb: size of the new disk in gigabytes
-        source_image: source image to use when creating this disk. You must have read access to this disk. This
-            can be one of the publicly available images or an image from one of your projects.
-            This value uses the following format: "projects/{project_name}/global/images/{image_name}"
+        snapshot_name: name of the snapshot to delete.
+    """
+
+    snapshot_client = compute_v1.SnapshotsClient()
+    operation = snapshot_client.delete(project=project_id, snapshot=snapshot_name)
+
+    wait_for_extended_operation(operation, "snapshot deletion")
+
+    return
+
+
+def list_snapshots(project_id: str, filter: str = "") -> Iterable[compute_v1.Snapshot]:
+    """
+    List snapshots from a project.
+
+    Args:
+        project_id: project ID or project number of the Cloud project you want to use.
+        filter: filter to be applied when listing snapshots. Learn more about filters here:
+            https://cloud.google.com/python/docs/reference/compute/latest/google.cloud.compute_v1.types.ListSnapshotsRequest
 
     Returns:
-        An unattached Disk instance.
+        An iterable containing all Snapshots that match the provided filter.
     """
-    disk = compute_v1.Disk()
-    disk.size_gb = disk_size_gb
-    disk.name = disk_name
-    disk.zone = zone
-    disk.type_ = disk_type
-    disk.source_image = source_image
 
-    disk_client = compute_v1.DisksClient()
-    operation = disk_client.insert(project=project_id, zone=zone, disk_resource=disk)
+    snapshot_client = compute_v1.SnapshotsClient()
+    request = compute_v1.ListSnapshotsRequest()
+    request.project = project_id
+    request.filter = filter
 
-    wait_for_extended_operation(operation, "disk creation")
-
-    return disk_client.get(project=project_id, zone=zone, disk=disk.name)
+    return snapshot_client.list(request)
 
 
-# [END compute_disk_create_from_image]
+def delete_snapshots_by_filter(project_id: str, filter: str):
+    """
+    Deletes all snapshots in project that meet the filter criteria.
+
+    Args:
+        project_id: project ID or project number of the Cloud project you want to use.
+        filter: filter to be applied when looking for snapshots for deletion.
+    """
+    for snapshot in list_snapshots(project_id, filter):
+        delete_snapshot(project_id, snapshot.name)
+
+
+# [END compute_snapshot_delete_by_filter]
