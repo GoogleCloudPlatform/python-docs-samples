@@ -44,7 +44,7 @@ def map_services(environment):
 
 def production_url(service_name):
     """Generates url for a service when deployed to App Engine."""
-    project_id = os.environ.get('GAE_LONG_APP_ID')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     project_url = '{}.appspot.com'.format(project_id)
     if service_name == 'default':
         return 'https://{}'.format(project_url)
