@@ -15,7 +15,6 @@
 # [START cloud_sql_mysql_sqlalchemy_connect_tcp]
 # [START cloud_sql_mysql_sqlalchemy_sslcerts]
 import os
-import ssl
 
 import sqlalchemy
 
@@ -43,11 +42,12 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
         db_cert = os.environ["DB_CERT"]  # e.g. '/path/to/my/client-cert.pem'
         db_key = os.environ["DB_KEY"]  # e.g. '/path/to/my/client-key.pem'
 
-        ssl_context = ssl.SSLContext()
-        ssl_context.verify_mode = ssl.CERT_REQUIRED
-        ssl_context.load_verify_locations(db_root_cert)
-        ssl_context.load_cert_chain(db_cert, db_key)
-        connect_args["ssl_context"] = ssl_context
+        ssl_args = {
+            "ssl_ca": db_root_cert,
+            "ssl_cert": db_cert,
+            "ssl_key": db_key
+        }
+        connect_args = ssl_args
 
     # [START cloud_sql_mysql_sqlalchemy_connect_tcp]
     pool = sqlalchemy.create_engine(
