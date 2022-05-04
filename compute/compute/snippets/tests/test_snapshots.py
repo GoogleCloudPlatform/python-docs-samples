@@ -21,6 +21,7 @@ from ..disks.delete import delete_disk
 from ..images.get import get_image_from_family
 from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
+from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
 
 PROJECT = google.auth.default()[1]
@@ -43,7 +44,7 @@ def test_disk():
 
 def test_snapshot_create_delete(test_disk):
     snapshot_name = "test-snapshot-" + uuid.uuid4().hex[:10]
-    snapshot = create_snapshot(PROJECT, ZONE, test_disk.name, snapshot_name)
+    snapshot = create_snapshot(PROJECT, test_disk.name, snapshot_name, zone=ZONE)
     assert(snapshot.name == snapshot_name)
     assert(snapshot.source_disk == test_disk.self_link)
     for i_snapshot in list_snapshots(PROJECT):
@@ -51,6 +52,11 @@ def test_snapshot_create_delete(test_disk):
             break
     else:
         pytest.fail("Couldn't find the created snapshot on snapshot list.")
+
+    snapshot_get = get_snapshot(PROJECT, snapshot_name)
+    assert snapshot_get.name == snapshot_name
+    assert snapshot_get.disk_size_gb == snapshot.disk_size_gb
+    assert snapshot_get.self_link == snapshot.self_link
 
     delete_snapshot(PROJECT, snapshot_name)
     for i_snapshot in list_snapshots(PROJECT):

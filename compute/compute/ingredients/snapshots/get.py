@@ -21,25 +21,22 @@ from typing import Iterable
 from google.cloud import compute_v1
 
 
-# <INGREDIENT list_snapshots>
-def list_snapshots(project_id: str, filter: str = "") -> Iterable[compute_v1.Snapshot]:
+# <INGREDIENT get_snapshot>
+def get_snapshot(project_id: str, snapshot_name: str) -> compute_v1.Snapshot:
     """
-    List snapshots from a project.
+    Get information about a Snapshot.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        filter: filter to be applied when listing snapshots. Learn more about filters here:
-            https://cloud.google.com/python/docs/reference/compute/latest/google.cloud.compute_v1.types.ListSnapshotsRequest
+        snapshot_name: the name of the snapshot you want to look up.
 
     Returns:
-        An iterable containing all Snapshots that match the provided filter.
+        A Snapshot object.
     """
 
     snapshot_client = compute_v1.SnapshotsClient()
-    request = compute_v1.ListSnapshotsRequest()
-    request.project = project_id
-    request.filter = filter
 
-    return snapshot_client.list(request)
+    return snapshot_client.get(project=project_id, snapshot=snapshot_name)
 # </INGREDIENT>
+
 
