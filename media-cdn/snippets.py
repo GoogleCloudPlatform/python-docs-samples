@@ -24,13 +24,14 @@ at https://cloud.google.com/media-cdn/docs.
 import argparse
 import base64
 import datetime
+
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
 
 from six.moves import urllib
 
 
-# [START media_cdn_sign_url]
+# [START mediacdn_sign_url]
 def sign_url(url, key_name, base64_key, expiration_time):
     """Gets the Signed URL string for the specified URL and configuration.
 
@@ -104,18 +105,16 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
         decoded_key).sign(policy.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
     signature = signature[:-2]  # to remove trailing '=' symbols
-    
     signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
             url=stripped_url,
             separator='&' if query_params else '?',
             policy=policy,
             signature=signature)
-
     print(signed_url)
-# [END media_cdn_sign_url]
+# [END mediacdn_sign_url]
 
 
-# [START media_cdn_sign_cookie]
+# [START mediacdn_sign_cookie]
 def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     """Gets the Signed cookie value for the specified URL prefix and configuration.
 
@@ -148,7 +147,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
     print(signed_policy)
-# [END media_cdn_sign_cookie]
+# [END mediacdn_sign_cookie]
 
 
 if __name__ == '__main__':
