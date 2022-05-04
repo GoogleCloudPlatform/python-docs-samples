@@ -23,6 +23,7 @@ import sys
 from unittest.mock import Mock, patch
 import uuid
 
+import apache_beam as beam
 from apache_beam.io.filesystems import FileSystems
 from apache_beam.testing.test_pipeline import TestPipeline
 import ee
@@ -37,6 +38,7 @@ import requests
 import tensorflow as tf
 
 import batch_predict
+import create_datasets
 import trainer
 
 
@@ -194,20 +196,6 @@ def pretrained_model(bucket_name: str) -> None:
     yield model_path
 
 
-def write_empty_predictions(name: str, predictions_prefix: str = ".") -> str:
-    results = {
-        "filename": name,
-        "inputs": np.zeros(
-            shape=(PATCH_SIZE, PATCH_SIZE),
-            dtype=[(name, np.float64) for name in trainer.INPUT_BANDS],
-        ),
-        "outputs": np.zeros(shape=(PATCH_SIZE, PATCH_SIZE), dtype=np.uint8),
-    }
-    filename = batch_predict.write_to_numpy(results, predictions_prefix)
-    print(f"Created {filename}")
-    return filename
-
-
 def test_notebook(bucket_name: str) -> None:
     # Authenticate Earth Engine using the default credentials.
     credentials, _ = google.auth.default(
@@ -219,11 +207,11 @@ def test_notebook(bucket_name: str) -> None:
     ee.Initialize(credentials, project=PROJECT)
 
     # First, create prediction files with the right shapes to test displaying results.
-    write_empty_predictions("results")
+    write_numpy_predictions("results")
     with open("data/prediction-locations.csv") as f:
         predictions_prefix = f"gs://{bucket_name}/land-cover/predictions"
         for row in csv.DictReader(f):
-            write_empty_predictions(f"{row['name']}/{row['year']}", predictions_prefix)
+            write_numpy_predictions(f"{row['name']}/{row['year']}", predictions_prefix)
 
     # Run the notebook.
     run(
@@ -275,23 +263,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
 def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     aiplatform.init(project=PROJECT, location=LOCATION, staging_bucket=bucket_name)
 
-    # Upload training and validation data to Cloud Storage.
-    cmd = [
-        "gsutil",
-        "-m",
-        "cp",
-        "data/training/*",
-        f"gs://{bucket_name}/land-cover/datasets/training/",
-    ]
-    subprocess.check_call(cmd)
-    cmd = [
-        "gsutil",
-        "-m",
-        "cp",
-        "data/validation/*",
-        f"gs://{bucket_name}/land-cover/datasets/validation/",
-    ]
-    subprocess.check_call(cmd)
+    write_tfrecords(f"gs://{bucket_name}/land-cover/datasets")
 
     # ℹ️ If these commands change, please update the corresponding commands at the
     #   "🧠 Train the model in Vertex AI" section in the `README.ipynb` notebook.
@@ -301,7 +273,7 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
         container_uri="us-docker.pkg.dev/vertex-ai/training/tf-gpu.2-8:latest",
     )
     job.run(
-        accelerator_type="NVIDIA_TESLA_K80",
+        accelerator_type="NVIDIA_TESLA_T4",
         accelerator_count=1,
         args=[
             f"--training-data=gs://{bucket_name}/land-cover/datasets/training/*.tfrecord.gz",
@@ -428,3 +400,35 @@ def run(
             print(f"{i + 1 :4}| {line}")
         print("+" + "-" * 60)
         raise error
+
+
+def write_numpy_predictions(name: str, path_prefix: str = ".") -> str:
+    results = {
+        "filename": name,
+        "inputs": np.zeros(
+            shape=(PATCH_SIZE, PATCH_SIZE),
+            dtype=[(name, np.float64) for name in trainer.INPUT_BANDS],
+        ),
+        "outputs": np.zeros(shape=(PATCH_SIZE, PATCH_SIZE), dtype=np.uint8),
+    }
+    filename = batch_predict.write_to_numpy(results, path_prefix)
+    print(f"Created {filename}")
+    return filename
+
+
+def write_tfrecords(path_prefix: str) -> str:
+    bands = trainer.INPUT_BANDS + trainer.OUTPUT_BANDS
+    patch = np.zeros(
+        shape=(PATCH_SIZE, PATCH_SIZE),
+        dtype=[(name, np.float64) for name in bands],
+    )
+    serialized = create_datasets.serialize(patch)
+
+    with beam.Pipeline() as pipeline:
+        data = pipeline | beam.Create([serialized] * 10)
+        data | "Write training" >> beam.io.WriteToTFRecord(
+            f"{path_prefix}/training/data", file_name_suffix=".tfrecord.gz"
+        )
+        data | "Write validation" >> beam.io.WriteToTFRecord(
+            f"{path_prefix}/validation/data", file_name_suffix=".tfrecord.gz"
+        )

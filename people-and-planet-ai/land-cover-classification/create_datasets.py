@@ -265,10 +265,10 @@ def run(
             | "Split dataset" >> beam.Partition(split_dataset, 2)
         )
 
-        training_data | "Write training data" >> beam.io.tfrecordio.WriteToTFRecord(
+        training_data | "Write training data" >> beam.io.WriteToTFRecord(
             training_prefix, file_name_suffix=".tfrecord.gz"
         )
-        validation_data | "Write validation data" >> beam.io.tfrecordio.WriteToTFRecord(
+        validation_data | "Write validation data" >> beam.io.WriteToTFRecord(
             validation_prefix, file_name_suffix=".tfrecord.gz"
         )
 
