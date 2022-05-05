@@ -90,9 +90,15 @@ def predict(lat: float, lon: float, year: int) -> flask.Response:
         # Load the model and get the predictions. If the model is hosted
         # somewhere else, this is where we would send a request.
         model = tf.keras.models.load_model(model_path)
-        model_inputs = np.stack([patch[name] for name in INPUT_BANDS], axis=-1)
-        probabilities = model.predict(np.stack([model_inputs]))[0]
-        outputs = np.argmax(probabilities, axis=-1).astype(np.uint8)
+
+        # Create an input dictionary with a batch containing a single patch.
+        inputs_batch = {name: np.stack([patch[name]]) for name in patch.dtype.names}
+
+        # Get the first (and only) element in the predictions batch.
+        probabilities = model.predict(inputs_batch)[0]
+
+        # Get discrete classification values from the probability distribution.
+        outputs = np.argmax(probabilities, axis=-1)
 
         # Serialize the results into a compressed NumPy file.
         with io.BytesIO() as f:

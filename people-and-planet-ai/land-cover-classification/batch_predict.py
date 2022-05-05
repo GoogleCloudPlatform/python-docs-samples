@@ -171,8 +171,14 @@ def predict(filename: str, patch: np.ndarray, model_path: str = "model") -> Dict
     # Load the model and get the predictions. If the model is hosted
     # somewhere else, this is where we would send a request.
     model = tf.keras.models.load_model(model_path)
-    inputs = np.stack([patch[name] for name in patch.dtype.names], axis=-1)
-    probabilities = model.predict(np.stack([inputs]))[0]
+
+    # Create an input dictionary with a batch containing a single patch.
+    inputs_batch = {name: np.stack([patch[name]]) for name in patch.dtype.names}
+
+    # Get the first (and only) element in the predictions batch.
+    probabilities = model.predict(inputs_batch)[0]
+
+    # Get discrete classification values from the probability distribution.
     outputs = np.argmax(probabilities, axis=-1)
 
     return {

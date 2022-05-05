@@ -204,7 +204,11 @@ def test_notebook(bucket_name: str) -> None:
             "https://www.googleapis.com/auth/earthengine",
         ]
     )
-    ee.Initialize(credentials, project=PROJECT)
+    ee.Initialize(
+        credentials,
+        project=PROJECT,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
 
     # First, create prediction files with the right shapes to test displaying results.
     write_numpy_predictions("results")
@@ -291,9 +295,9 @@ def test_land_cover_train_model_vertex_ai(bucket_name: str) -> None:
     _, patch = batch_predict.get_prediction_patch(
         region, trainer.INPUT_BANDS, PATCH_SIZE
     )
-    inputs = np.stack([patch[name] for name in trainer.INPUT_BANDS], axis=-1)
-    outputs = model.predict([inputs])
-    assert outputs.shape == (1, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
+    inputs_batch = {name: np.stack([patch[name]]) for name in patch.dtype.names}
+    probabilities = model.predict(inputs_batch)
+    assert probabilities.shape == (1, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
 
 def test_land_cover_batch_predict_dataflow(
@@ -354,6 +358,7 @@ def run(
     project: str,
     bucket: str,
     location: str,
+    points_per_region: int = 1,
     ipynb_file: str = IPYNB_FILE,
     py_file: str = PY_FILE,
 ) -> None:
@@ -376,6 +381,7 @@ def run(
         "GOOGLE_CLOUD_PROJECT": project,
         "CLOUD_STORAGE_BUCKET": bucket,
         "CLOUD_LOCATION": location,
+        "POINTS_PER_REGION": str(points_per_region),
     }
     print("+" + "-" * 60)
     print("|  Environment variables")

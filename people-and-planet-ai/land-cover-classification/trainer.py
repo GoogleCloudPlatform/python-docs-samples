@@ -45,6 +45,24 @@ OUTPUT_BANDS = ["landcover"]
 NUM_CLASSIFICATIONS = 9
 
 
+def preprocess(values: Dict[str, tf.Tensor]) -> Tuple[Dict[str, tf.Tensor], tf.Tensor]:
+    """Splits inputs and outputs into a tuple and converts them into a
+    machine learning friendly format.
+
+    Args:
+        values: Dictionary of 2D tensors, each corrseponding to one band.
+
+    Returns: A tuple of (inputs, outputs).
+    """
+
+    # Create a dictionary of band values.
+    inputs = {name: values[name] for name in INPUT_BANDS}
+
+    # Convert the labels into one-hot encoded vectors.
+    outputs = tf.one_hot(tf.cast(values["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
+    return (inputs, outputs)
+
+
 def read_dataset(
     file_pattern: str, patch_size: int, batch_size: int
 ) -> tf.data.Dataset:
@@ -60,7 +78,7 @@ def read_dataset(
     """
 
     # Create the features dictionary, we need this to parse the TFRecords.
-    input_shape = (patch_size, patch_size)
+    input_shape = (patch_size, patch_size, 1)
     features_dict = {
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
         for band_name in INPUT_BANDS + OUTPUT_BANDS
@@ -85,27 +103,9 @@ def read_dataset(
         # Finally we cache the current batch and prefetch the next one.
         .cache()
         .prefetch(tf.data.AUTOTUNE)
-        # For more information on how to optimize your tf.data.Dataset, refer to:
+        # For more information on how to optimize your tf.data.Dataset, see:
         #   https://www.tensorflow.org/guide/data_performance
     )
-
-
-def preprocess(patch: Dict[str, tf.Tensor]) -> Tuple[tf.Tensor, tf.Tensor]:
-    """Splits inputs and outputs into a tuple and converts them into a
-    machine learning friendly format.
-
-    Args:
-        patch: Dictionary of 2D tensors, each corrseponding to one band.
-
-    Returns: A tuple of (inputs, outputs) as dense tensors.
-    """
-
-    # Create a dense tensor from the input patch dictionary.
-    inputs = tf.stack([patch[band] for band in INPUT_BANDS], axis=-1)
-
-    # Convert the labels into one-hot encoded vectors.
-    outputs = tf.one_hot(tf.cast(patch["landcover"], tf.uint8), NUM_CLASSIFICATIONS)
-    return (inputs, outputs)
 
 
 def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
@@ -117,27 +117,33 @@ def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
     Returns: A Fully Convolutional Network model.
     """
 
-    # Create and adapt the normalization preprocessing layer with the
-    # training dataset.
-    # ℹ️ The validation dataset must not be seen by the model before training,
-    #    otherwise the validation will be biased.
+    # Adapt the Normalization layer with the training dataset.
     normalization = tf.keras.layers.Normalization()
-    normalization.adapt(training_dataset.map(lambda x, _: x))
-
-    # Define and compile a simple Fully Convolutional Network model.
-    # The combination of using a Conv2D with a Conv2DTranspose makes it
-    # fully convolutional, so it can accept variable-sized 2D inputs.
-    model = tf.keras.Sequential(
-        [
-            tf.keras.Input(shape=(None, None, len(INPUT_BANDS))),
-            normalization,
-            tf.keras.layers.Conv2D(filters=32, kernel_size=5, activation="relu"),
-            tf.keras.layers.Conv2DTranspose(
-                filters=16, kernel_size=5, activation="relu"
-            ),
-            tf.keras.layers.Dense(NUM_CLASSIFICATIONS, activation="softmax"),
-        ]
+    normalization.adapt(
+        training_dataset.map(
+            lambda inputs, _: tf.stack([inputs[name] for name in INPUT_BANDS], axis=-1)
+        )
     )
+
+    # Define the Fully Convolutional Network.
+    layers = [
+        tf.keras.Input(shape=(None, None, len(INPUT_BANDS))),
+        normalization,
+        tf.keras.layers.Conv2D(filters=32, kernel_size=5, activation="relu"),
+        tf.keras.layers.Conv2DTranspose(filters=16, kernel_size=5, activation="relu"),
+        tf.keras.layers.Dense(NUM_CLASSIFICATIONS, activation="softmax"),
+    ]
+    fcn_model = tf.keras.Sequential(layers, name="FullyConvolutionalNetwork")
+
+    # Define the input dictionary layers.
+    input_layers = {
+        name: tf.keras.Input(shape=(None, None, 1), name=name) for name in INPUT_BANDS
+    }
+
+    # Model wrapper that takes an input dictionary and feeds it to the FCN.
+    inputs = tf.keras.layers.concatenate(input_layers.values())
+    model = tf.keras.Model(input_layers, fcn_model(inputs))
+
     model.compile(
         optimizer="adam",
         loss="categorical_crossentropy",
