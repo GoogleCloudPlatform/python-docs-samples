@@ -78,7 +78,7 @@ def read_dataset(
     """
 
     # Create the features dictionary, we need this to parse the TFRecords.
-    input_shape = (patch_size, patch_size, 1)
+    input_shape = (patch_size, patch_size)
     features_dict = {
         band_name: tf.io.FixedLenFeature(input_shape, tf.float32)
         for band_name in INPUT_BANDS + OUTPUT_BANDS
