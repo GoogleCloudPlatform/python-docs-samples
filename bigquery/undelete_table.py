@@ -28,7 +28,7 @@ def undelete_table(table_id: str, recovered_table_id: str) -> None:
     # table_id = "your-project.your_dataset.your_table"
 
     # TODO(developer): Choose a new table ID for the recovered table data.
-    # recovery_table_id = "your-project.your_dataset.your_table_recovered"
+    # recovered_table_id = "your-project.your_dataset.your_table_recovered"
 
     # TODO(developer): Choose an appropriate snapshot point as epoch
     # milliseconds. For this example, we choose the current time as we're about
