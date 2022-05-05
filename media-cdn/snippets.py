@@ -68,7 +68,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
     signed_url = u'{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
 
-    print(signed_url)
+    return signed_url
 
 
 def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
@@ -110,7 +110,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
             separator='&' if query_params else '?',
             policy=policy,
             signature=signature)
-    print(signed_url)
+    return signed_url
 # [END mediacdn_sign_url]
 
 
@@ -146,7 +146,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
 
     signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
-    print(signed_policy)
+    return signed_policy
 # [END mediacdn_sign_cookie]
 
 
@@ -210,11 +210,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'sign-url':
-        sign_url(
-            args.url, args.key_name, args.base64_key, args.expiration_time)
+        print(sign_url(args.url, args.key_name, args.base64_key, args.expiration_time))
     elif args.command == 'sign-url-prefix':
-        sign_url_prefix(
-            args.url, args.url_prefix, args.key_name, args.base64_key, args.expiration_time)
+        print(sign_url_prefix(args.url, args.url_prefix, args.key_name, args.base64_key, args.expiration_time))
     elif args.command == 'sign-cookie':
-        sign_cookie(
-            args.url_prefix, args.key_name, args.base64_key, args.expiration_time)
+        print(sign_cookie(args.url_prefix, args.key_name, args.base64_key, args.expiration_time))

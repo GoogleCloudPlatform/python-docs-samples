@@ -25,25 +25,22 @@ EPOCH_TIME = 1650848400
 
 
 def test_sign_url(capsys):
-    snippets.sign_url(
+    results = []
+    results.append(snippets.sign_url(
         'http://35.186.234.33/index.html',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-    snippets.sign_url(
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
+    results.append(snippets.sign_url(
         'http://www.example.com/',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-    snippets.sign_url(
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
+    results.append(snippets.sign_url(
         'http://www.example.com/some/path?some=query&another=param',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-
-    out, _ = capsys.readouterr()
-
-    results = out.splitlines()
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
     assert results[0] == (
         'http://35.186.234.33/index.html?Expires=1650848400&KeyName=my-key&'
         'Signature=16-oE9GZ5U9S_LYrW8RplZhvMfI7RGtGRY0C-Ahh6YAwiJ0UaEi6rQuPxfm6R-cBPfs8MwRGiu2fAoS1JOoKCA')
@@ -56,28 +53,25 @@ def test_sign_url(capsys):
 
 
 def test_sign_url_prefix(capsys):
-    snippets.sign_url_prefix(
+    results = []
+    results.append(snippets.sign_url_prefix(
         'http://35.186.234.33/index.html',
         'http://35.186.234.33/',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-    snippets.sign_url_prefix(
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
+    results.append(snippets.sign_url_prefix(
         'http://www.example.com/',
         'http://www.example.com/',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-    snippets.sign_url_prefix(
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
+    results.append(snippets.sign_url_prefix(
         'http://www.example.com/some/path?some=query&another=param',
         'http://www.example.com/some/',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-
-    out, _ = capsys.readouterr()
-
-    results = out.splitlines()
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
     assert results[0] == (
         'http://35.186.234.33/index.html?URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMv&'
         'Expires=1650848400&KeyName=my-key&'
@@ -94,20 +88,17 @@ def test_sign_url_prefix(capsys):
 
 
 def test_sign_cookie(capsys):
-    snippets.sign_cookie(
+    results = []
+    results.append(snippets.sign_cookie(
         'http://35.186.234.33/index.html',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-    snippets.sign_cookie(
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
+    results.append(snippets.sign_cookie(
         'http://www.example.com/foo/',
         'my-key',
         'BxwXXNjeGaoWqjr7GHEymRJkP4SaOC12dTGixk7Yr8I=',
-        datetime.datetime.utcfromtimestamp(EPOCH_TIME))
-
-    out, _ = capsys.readouterr()
-
-    results = out.splitlines()
+        datetime.datetime.utcfromtimestamp(EPOCH_TIME)))
     assert results[0] == (
         'Cloud-CDN-Cookie=URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMvaW5kZXguaHRtbA==:'
         'Expires=1650848400:KeyName=my-key:'
