@@ -256,7 +256,9 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         data_path = f"{data_path_prefix}*.tfrecord.gz"
         dataset = trainer.read_dataset(data_path, PATCH_SIZE, batch_size)
         inputs, outputs = [pair for pair in dataset.take(1)][0]
-        assert inputs.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, len(INPUTS_DTYPE))
+        assert set(inputs.keys()) == set(trainer.INPUT_BANDS)
+        for values in inputs.values():
+            assert values.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, 1)
         assert outputs.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
     # Make sure the training dataset is valid.
