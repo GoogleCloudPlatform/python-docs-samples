@@ -54,7 +54,7 @@ def predict(lat: float, lon: float, year: int) -> flask.Response:
     """Gets a prediction from the model.
 
     Args:
-        lat: Latitede of the point of interest.
+        lat: Latitude of the point of interest.
         lon: Longitude of the point of interest.
         year: Year of interest, the model takes the median of that year.
 
@@ -174,7 +174,7 @@ def get_patch(
 
     Args:
         image: Earth Engine image to fetch from.
-        lat: Latitde of the point of interest.
+        lat: Latitude of the point of interest.
         lon: Longitude of the point of interest.
         bands: List of bands to extract from the Earth Engine image.
         patch_size: Size in pixels of the surrounding square patch to use.
