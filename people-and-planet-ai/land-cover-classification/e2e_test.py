@@ -258,7 +258,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         inputs, outputs = [pair for pair in dataset.take(1)][0]
         assert set(inputs.keys()) == set(trainer.INPUT_BANDS)
         for values in inputs.values():
-            assert values.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, 1)
+            assert values.shape == (batch_size, PATCH_SIZE, PATCH_SIZE)
         assert outputs.shape == (batch_size, PATCH_SIZE, PATCH_SIZE, NUM_CLASSES)
 
     # Make sure the training dataset is valid.
