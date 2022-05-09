@@ -19,14 +19,13 @@ from google.cloud.logging import Client
 
 @functions_framework.http
 def structured_logging(request):
-    # Initialize the logging client
-    logging_client = Client()
-    # Sets up a Log Handler that exports logs in JSON format to stdout
-    logging_client.setup_logging()
-    # Or manually set up JSON handler
-    # from google.cloud.logging_v2.handlers import StructuredLogHandler, setup_logging
-    # handler = StructuredLogHandler(project_id="")
-    # setup_logging(handler)
+    # Initialize the Google Cloud logging client
+    cloud_logging_client = Client()
+    # Set up a Log Handler that exports logs in JSON format to stdout
+    # when running in a serverless environment.
+    # To manually set up a Structured Log Handler, see
+    # https://googleapis.dev/python/logging/latest/handlers-structured-log.html
+    cloud_logging_client.setup_logging()
 
     # Import Python Standard Library
     import logging

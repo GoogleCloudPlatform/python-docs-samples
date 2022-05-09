@@ -15,6 +15,7 @@
 import os
 
 import flask
+import json
 import pytest
 
 import main
@@ -32,18 +33,19 @@ def test_functions_log_http_should_print_message(app, capsys):
     os.environ['K_REVISION'] = 'test-revision-name'
     os.environ['K_CONFIGURATION'] = 'test-config-name'
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-    mock_trace_value = 'abcdef'
+    mock_trace = 'abcdef'
+    mock_span = '2'
     expected = {
+        'message': 'Hello, world!',
         'severity': 'INFO',
         'component': 'arbitrary-property',
-        'logging.googleapis.com/trace': f"projects/{project_id}/traces/{ mock_trace_value}",
+        'logging.googleapis.com/trace': f"projects/{project_id}/traces/{mock_trace}",
+        'logging.googleapis.com/spanId': mock_span
     }
     # Force trace with trace header
-    with app.test_request_context(headers={'x-cloud-trace-context': f"{mock_trace_value}/2;o=1"}):
+    with app.test_request_context(headers={'x-cloud-trace-context': f"{mock_trace}/{mock_span};o=1"}):
         main.structured_logging(flask.request)
         _, err = capsys.readouterr()
-        print(err)
-        assert "Hello, world!" in err
-        assert expected['severity'] in err
-        assert expected['component'] in err
-        assert expected['logging.googleapis.com/trace'] in err
+        output_json = json.loads(err)
+        for (key, value) in expected.items():
+            assert value == output_json[key]
