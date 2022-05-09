@@ -14,8 +14,8 @@
 
 import os
 
-import flask
 import json
+import flask
 import pytest
 
 import main
