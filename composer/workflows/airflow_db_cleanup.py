@@ -81,7 +81,7 @@ DAG_OWNER_NAME = "operations"
 ALERT_EMAIL_ADDRESSES = []
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
-AIRFLOW_VERSION = os.environ["MAJOR_VERSION"].split(".")
+AIRFLOW_VERSION = os.getenv("MAJOR_VERSION", "2.2.0").split(".")
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
     Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30))
 # Prints the database entries which will be getting deleted; set to False
@@ -106,7 +106,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": DagRun.dag_id
 }, {
     "airflow_db_model": TaskInstance,
-    "age_check_column": TaskInstance.execution_date if AIRFLOW_VERSION < ['2','2','0'] else TaskInstance.start_date,
+    "age_check_column": TaskInstance.execution_date if AIRFLOW_VERSION < ['2', '2', '0'] else TaskInstance.start_date,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
@@ -130,7 +130,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": None
 }, {
     "airflow_db_model": DagModel,
-    "age_check_column": DagModel.last_parsed_time,  # prior to Airflow 2.0.2 this column was named last_scheduler_run
+    "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ['2', '2', '0'] else DagModel.last_parsed_time,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
@@ -141,7 +141,7 @@ try:
     from airflow.models import TaskReschedule
     DATABASE_OBJECTS.append({
         "airflow_db_model": TaskReschedule,
-        "age_check_column": TaskReschedule.execution_date if AIRFLOW_VERSION < ['2','2','0'] else TaskReschedule.start_date,
+        "age_check_column": TaskReschedule.execution_date if AIRFLOW_VERSION < ['2', '2', '0'] else TaskReschedule.start_date,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None
