@@ -130,7 +130,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": None
 }, {
     "airflow_db_model": DagModel,
-    "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ['2', '2', '0'] else DagModel.last_parsed_time,
+    "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ['2', '0', '2'] else DagModel.last_parsed_time,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
