@@ -20,7 +20,7 @@ google-resumable-media==2.3.2
 googleapis-common-protos==1.56.0
 grpcio==1.46.0
 idna==3.3
-libcst==0.4.2
+libcst==0.4.3
 munch==2.5.0
 mypy-extensions==0.4.3
 packaging==21.3
