@@ -14,7 +14,7 @@
 
 
 from functools import wraps
-from typing import Any, Callable, Dict
+from typing import Callable, Dict, TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
@@ -22,13 +22,15 @@ from flask import request, Response
 import structlog
 
 
+a = TypeVar("a")
+
 default_app = firebase_admin.initialize_app()
 
 
 # [START cloudrun_user_auth_jwt]
 def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
     @wraps(func)
-    def decorated_function(*args: Any, **kwargs: Any) -> Any:
+    def decorated_function(*args: a, **kwargs: a) -> a:
         header = request.headers.get("Authorization", None)
         if header:
             token = header.split(" ")[1]

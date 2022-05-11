@@ -20,6 +20,7 @@ from flask import escape
 # [START functions_http_method]
 # [START functions_helloworld_get]
 import functions_framework
+
 # [END functions_helloworld_http]
 # [END functions_http_content]
 # [END functions_http_method]
@@ -118,7 +119,7 @@ def hello_gcs(event, context):
                        https://cloud.google.com/storage/docs/json_api/v1/objects#resource
         context (google.cloud.functions.Context): Metadata of triggering event.
     Returns:
-        None; the output is written to Stackdriver Logging
+        None; the output is written to Cloud Logging
     """
 
     print('Event ID: {}'.format(context.event_id))
@@ -188,8 +189,8 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
-    # This WILL be reported to Stackdriver Error
-    # Reporting, and WILL NOT show up in logs or
+    # This WILL be reported to Error Reporting,
+    # and WILL NOT show up in logs or
     # terminate the function.
     from google.cloud import error_reporting
     client = error_reporting.Client()
@@ -199,7 +200,7 @@ def hello_error_1(request):
     except RuntimeError:
         client.report_exception()
 
-    # This WILL be reported to Stackdriver Error Reporting,
+    # This WILL be reported to Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
 
@@ -208,16 +209,16 @@ def hello_error_1(request):
 
 def hello_error_2(request):
     # [START functions_helloworld_error]
-    # These errors WILL NOT be reported to Stackdriver
-    # Error Reporting, but will show up in logs.
+    # These errors WILL NOT be reported to Error
+    # Reporting, but will show up in logs.
     import logging
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
     sys.stderr.write('I failed you (sys.stderr.write)\n')
 
-    # This is considered a successful execution and WILL NOT be reported to
-    # Stackdriver Error Reporting, but the status code (500) WILL be logged.
+    # This is considered a successful execution and WILL NOT be reported
+    # to Error Reporting, but the status code (500) WILL be logged.
     from flask import abort
     return abort(500)
     # [END functions_helloworld_error]

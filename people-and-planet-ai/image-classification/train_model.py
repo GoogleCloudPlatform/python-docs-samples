@@ -19,7 +19,7 @@ import io
 import logging
 import random
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Tuple
+from typing import Callable, Dict, Iterable, Optional, Tuple, TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -27,6 +27,8 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import trainingjob
 from PIL import Image, ImageFile
 import requests
+
+a = TypeVar("a")
 
 
 def run(
@@ -117,6 +119,8 @@ def get_image(
     Returns:
         A (category, image_gcs_path) tuple.
     """
+    import apache_beam as beam
+
     base_url = "https://lilablobssc.blob.core.windows.net/wcs-unzipped"
     category = image_info["category"]
     file_name = image_info["file_name"]
@@ -157,6 +161,8 @@ def write_dataset_csv_file(
     Returns:
         The unchanged dataset_csv_filename.
     """
+    import apache_beam as beam
+
     logging.info(f"Writing dataset CSV file: {dataset_csv_filename}")
     with beam.io.gcp.gcsio.GcsIO().open(dataset_csv_filename, "w") as f:
         for category, image_gcs_path in images:
@@ -288,7 +294,7 @@ def url_get(url: str) -> bytes:
     return with_retries(lambda: requests.get(url).content)
 
 
-def with_retries(f: Callable[[], Any], max_attempts: int = 3) -> Any:
+def with_retries(f: Callable[[], a], max_attempts: int = 3) -> a:
     """Runs a function with retries, using exponential backoff.
 
     For more information:
@@ -307,7 +313,7 @@ def with_retries(f: Callable[[], Any], max_attempts: int = 3) -> Any:
         except Exception as e:
             if n < max_attempts:
                 logging.warning(f"Got an error, {n+1} of {max_attempts} attempts: {e}")
-                time.sleep(2 ** n + random.random())  # 2^n seconds + random jitter
+                time.sleep(2**n + random.random())  # 2^n seconds + random jitter
             else:
                 raise e
 
