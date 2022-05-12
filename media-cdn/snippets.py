@@ -21,7 +21,6 @@ For more information, see the README.md under /media-cdn and the documentation
 at https://cloud.google.com/media-cdn/docs.
 """
 
-import argparse
 import base64
 import datetime
 
