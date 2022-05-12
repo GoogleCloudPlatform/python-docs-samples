@@ -4,6 +4,10 @@ Python samples for [Google Cloud Platform products][cloud].
 
 [![Build Status][py-2.7-shield]][py-2.7-link] [![Build Status][py-3.6-shield]][py-3.6-link] [![Build Status][py-3.7-shield]][py-3.7-link] [![Build Status][py-3.8-shield]][py-3.8-link] [![Build Status][py-3.9-shield]][py-3.9-link] [![Build Status][py-3.10-shield]][py-3.10-link]
 
+## Google Cloud Samples
+
+To browse ready to use code samples check [Google Cloud Samples](https://cloud.google.com/docs/samples?l=python).
+
 ## Setup
 
 1. Install [`pip` and `virtualenv`][cloud_python_setup] if you do not already have them.
