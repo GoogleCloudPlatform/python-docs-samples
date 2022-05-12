@@ -17,6 +17,7 @@ import os
 from flask import jsonify
 import googleapiclient.discovery
 from slack.signature import SignatureVerifier
+import functions_framework
 
 
 kgsearch = googleapiclient.discovery.build(
@@ -89,6 +90,7 @@ def make_search_request(query):
 
 
 # [START functions_slack_search]
+@functions_framework.http
 def kg_search(request):
     if request.method != 'POST':
         return 'Only POST requests are accepted', 405
