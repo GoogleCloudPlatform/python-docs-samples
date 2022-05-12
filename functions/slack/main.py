@@ -15,9 +15,9 @@
 import os
 
 from flask import jsonify
+import functions_framework
 import googleapiclient.discovery
 from slack.signature import SignatureVerifier
-import functions_framework
 
 
 kgsearch = googleapiclient.discovery.build(
