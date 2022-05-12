@@ -20,6 +20,7 @@ import json
 import logging
 import re
 import subprocess
+import sys
 import typing
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(message)s")
@@ -71,6 +72,7 @@ class DAG:
       error_message = (f"Failed to run shell command{logged_command}, "
                        f"details: {res}")
       logger.error(error_message)
+      sys.exit(1)
     return (p.returncode, str(res.decode().strip("\n")))
 
   @staticmethod
