@@ -279,6 +279,11 @@ print_configuration = PythonOperator(
 
 def cleanup_function(**context):
 
+    if AIRFLOW_VERSION > ['2', '2', '5']:
+        logging.error("The script is not supported for this Airflow Version. "
+                      "Skipped deleting the data.")
+        return
+      
     logging.info("Retrieving max_execution_date from XCom")
     max_date = context["ti"].xcom_pull(
         task_ids=print_configuration.task_id, key="max_date")
