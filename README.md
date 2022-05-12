@@ -6,7 +6,7 @@ Python samples for [Google Cloud Platform products][cloud].
 
 ## Google Cloud Samples
 
-To browse ready to use code samples check [Google Cloud Samples](https://cloud.google.com/docs/samples?l=python).
+To browse Google Cloud product specific code samples check [Google Cloud Samples](https://cloud.google.com/docs/samples?l=python).
 
 ## Setup
 
