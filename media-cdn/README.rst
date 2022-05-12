@@ -7,7 +7,7 @@ Google Cloud Meda CDN Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=cdn/README.rst
 
 
-This directory contains samples for Google Cloud Media-CDN. 'Google Cloud Media CDN'_ Media CDN is a global edge network for streaming media, backed by Google's global network of edge caches in thousands of locations.
+This directory contains samples for Google Cloud Media CDN. 'Google Cloud Media CDN'_ Media CDN is a global edge network for streaming media, backed by Google's global network of edge caches in thousands of locations.
 
 
 
