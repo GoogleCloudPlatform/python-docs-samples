@@ -1,1 +1,4 @@
-pytest==7.0.1
+mock==4.0.3
+six==1.12.0
+uuid==1.30
+pytest==7.0.1; python_version < "3.0"
