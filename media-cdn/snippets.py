@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """This application demonstrates how to perform operations on data (content)
-when using Google Cloud Media CDN (Global Edge Network for Streaming Media).
+when using Google Cloud Media CDN.
 
 For more information, see the README.md under /media-cdn and the documentation
 at https://cloud.google.com/media-cdn/docs.
@@ -64,7 +64,6 @@ def sign_url(url, key_name, base64_key, expiration_time):
     digest = ed25519.Ed25519PrivateKey.from_private_bytes(
         decoded_key).sign(url_to_sign.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-    signature = signature[:-2]  # to remove trailing '=' symbols
     signed_url = u'{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
 
@@ -104,7 +103,6 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
     digest = ed25519.Ed25519PrivateKey.from_private_bytes(
         decoded_key).sign(policy.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-    signature = signature[:-2]  # to remove trailing '=' symbols
     signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
             url=stripped_url,
             separator='&' if query_params else '?',
@@ -125,7 +123,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
         expiration_time: expiration time as a UTC datetime object.
 
     Returns:
-        Returns the Cloud-CDN-Cookie value based on the specified configuration.
+        Returns the Edge-Cache-Cookie value based on the specified configuration.
     """
     encoded_url_prefix = base64.urlsafe_b64encode(
             url_prefix.strip().encode('utf-8')).decode('utf-8')
@@ -144,7 +142,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
     signature = signature[:-2]  # remove trailing '='
 
-    signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
+    signed_policy = u'Edge-Cache-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
     return signed_policy
 # [END mediacdn_sign_cookie]
@@ -215,3 +213,5 @@ if __name__ == '__main__':
         print(sign_url_prefix(args.url, args.url_prefix, args.key_name, args.base64_key, args.expiration_time))
     elif args.command == 'sign-cookie':
         print(sign_cookie(args.url_prefix, args.key_name, args.base64_key, args.expiration_time))
+    else:
+        parser.print_help()
