@@ -18,7 +18,7 @@
 Examples below show how to use operators for managing Dataproc Serverless batch workloads.
  You use these operators in DAGs that create, delete, list, and get a Dataproc Serverless Spark batch workload.
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
-* project_id is the Project ID.
+* project_id is the Google Cloud Project ID to use for the Cloud Dataproc Serverless.
 * bucket_name is the URI of a bucket where the main python file of the workload (spark-job.py) is located.
 * phs_cluster is the Persistent History Server cluster name.
 * image_name is the name and tag of the custom container image (image:tag).
