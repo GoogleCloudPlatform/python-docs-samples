@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 import sys
 import time
 import uuid
@@ -31,8 +30,6 @@ def temperature_celsius_udf(temperature_tenths):
         return temperature_tenths / 10
 
 
-
-
 # [START datascienceonramp_sparksession]
 if __name__ == "__main__":
     BUCKET_NAME = sys.argv[1]
@@ -47,12 +44,10 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 
-
     # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "value": UserDefinedFunction(temperature_celsius_udf, FloatType()),
-
     }
 
     for name, udf in udfs.items():
@@ -65,23 +60,21 @@ if __name__ == "__main__":
     df.show(n=20)
     # [END datascienceonramp_displaysamplerows]
 
- 
     # # [START datascienceonramp_writetogcs]
     # Write results to GCS
     if "--dry-run" in sys.argv:
         print("Data will not be uploaded to GCS")
     else:
         # Set GCS temp location
-        #temp_path = "gs://" + BUCKET_NAME
+        # temp_path = "gs://" + BUCKET_NAME
         temp_path = BUCKET_NAME
 
         print("temp_path", temp_path)
-            # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
-        df.write.format('bigquery') \
-            .option("temporaryGcsBucket", temp_path) \
-            .save('holiday_weather.holidays_weather_normalized_temperature')
+        # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
+        df.write.format("bigquery").option("temporaryGcsBucket", temp_path).save(
+            "holiday_weather.holidays_weather_normalized_temperature"
+        )
         print("Data written to BigQuery")
-
 
     #     # Write dataframe to temp location to preserve the data in final location
     #     # This takes time, so final location should not be overwritten with partial data
