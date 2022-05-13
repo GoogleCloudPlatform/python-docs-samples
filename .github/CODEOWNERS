@@ -44,7 +44,7 @@
 /jobs/**/*                             @GoogleCloudPlatform/python-samples-reviewers
 /kubernetes_engine/**/*                @GoogleCloudPlatform/python-samples-reviewers
 /kubernetes_engine/django_tutorial/**/*    @glasnt @GoogleCloudPlatform/python-samples-reviewers
-/media-cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
+/media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/**/*                       @GoogleCloudPlatform/python-samples-reviewers
