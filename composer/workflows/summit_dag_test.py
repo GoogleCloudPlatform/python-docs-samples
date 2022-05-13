@@ -15,20 +15,7 @@
 from airflow import models
 
 import internal_unit_testing
-import pytest
 
-
-# @pytest.fixture(autouse=True, scope="function")
-# # The fixture `airflow_database` lives in composer/conftest.py.
-# def set_variables(airflow_database):
-
-#     models.Variable.set('gcs_bucket', 'example_bucket')
-#     models.Variable.set('gcp_project', 'example-project')
-#     models.Variable.set('gce_zone', 'us-central1-f')
-#     yield
-#     models.Variable.delete('gcs_bucket')
-#     models.Variable.delete('gcp_project')
-#     models.Variable.delete('gce_zone')
 
 
 def test_dag_import():

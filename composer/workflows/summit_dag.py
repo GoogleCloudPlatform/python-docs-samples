@@ -28,8 +28,8 @@ from airflow.operators.dummy import DummyOperator # In later versions this is th
 PROJECT_NAME = '{{var.value.gcp_project}}'
 
 # BigQuery configs
-BQ_DESTINATION_DATASET_NAME="holiday_weather" #TODO(coleleah) update to have more than one year
-BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  #TODO(coleleah) update to have more than one year
+BQ_DESTINATION_DATASET_NAME="holiday_weather" 
+BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  
 
 
 PYSPARK_JAR = 'gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar'
@@ -99,8 +99,8 @@ with models.DAG(
 
         for year in range(1997,2022):
             # BigQuery configs
-            BQ_DATASET_NAME=f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}" #TODO(coleleah) update to have more than one year, update to be only dataset and not fully qualified project/dataset/table id
-            BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  #TODO(coleleah) update to have more than one year
+            BQ_DATASET_NAME=f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}" 
+            BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  
             WEATHER_HOLIDAYS_JOIN_QUERY = f"""
             SELECT Holidays.Date, Holiday, id, element, value
             FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
@@ -123,9 +123,8 @@ with models.DAG(
 
                     }
                 },
-                location="US", #todo template
+                location="US", 
             )
-            # load_external_dataset >> bq_join_holidays_weather_data >> create_batch
    
 
 
