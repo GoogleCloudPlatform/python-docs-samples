@@ -30,7 +30,6 @@ def temperature_celsius_udf(temperature_tenths):
         return temperature_tenths / 10
 
 
-# [START datascienceonramp_sparksession]
 if __name__ == "__main__":
     BUCKET_NAME = sys.argv[1]
     TABLE = sys.argv[2]
@@ -44,7 +43,6 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {TABLE}") from e
 
-    # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
         "value": UserDefinedFunction(temperature_celsius_udf, FloatType()),
@@ -52,15 +50,10 @@ if __name__ == "__main__":
 
     for name, udf in udfs.items():
         df = df.withColumn(name, udf(name))
-    # [END datascienceonramp_sparksingleudfs]
-    # [START datascienceonramp_sparkmultiudfs]
-    # [END datascienceonramp_sparkmultiudfs]
-    # [START datascienceonramp_displaysamplerows]
+
     # Display sample of rows
     df.show(n=20)
-    # [END datascienceonramp_displaysamplerows]
 
-    # # [START datascienceonramp_writetogcs]
     # Write results to GCS
     if "--dry-run" in sys.argv:
         print("Data will not be uploaded to GCS")
@@ -110,4 +103,3 @@ if __name__ == "__main__":
     #     print(
     #         "Data successfully uploaded to " + "gs://" + BUCKET_NAME + "/" + final_path
     #     )
-# [END datascienceonramp_writetogcs]
