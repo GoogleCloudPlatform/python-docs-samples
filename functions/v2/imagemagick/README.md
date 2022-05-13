@@ -17,7 +17,7 @@ Functions for your project.
 1. Clone this repository:
 
         git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-        cd python-docs-samples/functions/imagemagick
+        cd python-docs-samples/functions/v2/imagemagick
 
 1. Create a Cloud Storage Bucket:
 
@@ -29,14 +29,13 @@ Functions for your project.
 
         gsutil mb gs://YOUR_OUTPUT_BUCKET_NAME
 
-     This second storage bucket is used to store blurred images. (Un-blurred images will not be saved to this bucket.)
+     This second storage bucket is used to store blurred images. (Images that are **not** blurred will not be saved to this bucket.)
 
-     This is necessary because saving the blurred image to the input bucket would cause your function to be invoked a second time with the blurred image itself.
+     The second bucket is necessary because saving the blurred image to the first (input) bucket would cause your function to be invoked a second time with the blurred image itself.
 
 1. Deploy the `blur_offensive_images` function with a Storage trigger:
 
-        gcloud functions deploy blur_offensive_images --trigger-bucket=YOUR_INPUT_BUCKET_NAME --set-env-vars BLURRED_BUCKET_NAME=YOUR_OUTPUT_BUCKET_NAME --runtime python39
-        --gen2
+        gcloud functions deploy blur_offensive_images --trigger-bucket=YOUR_INPUT_BUCKET_NAME --set-env-vars BLURRED_BUCKET_NAME=YOUR_OUTPUT_BUCKET_NAME --runtime python39 --gen2
 
     * Replace `YOUR_INPUT_BUCKET_NAME` and `YOUR_OUTPUT_BUCKET_NAME` with the names of the respective Cloud Storage Buckets you created earlier.
 

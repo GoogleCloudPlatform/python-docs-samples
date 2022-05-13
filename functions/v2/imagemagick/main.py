@@ -27,7 +27,7 @@ vision_client = vision.ImageAnnotatorClient()
 
 
 # [START functions_imagemagick_analyze]
-# Blurs uploaded images that are flagged as Adult or Violence.
+# Blurs uploaded images that are flagged as Adult or Violent imagery.
 @functions_framework.cloud_event
 def blur_offensive_images(cloud_event):
     file_data = cloud_event.data
@@ -50,6 +50,7 @@ def blur_offensive_images(cloud_event):
     detected = result.safe_search_annotation
 
     # Process image
+    # 5 maps to VERY_LIKELY
     if detected.adult == 5 or detected.violence == 5:
         print(f"The image {file_name} was detected as inappropriate.")
         return __blur_image(blob)
