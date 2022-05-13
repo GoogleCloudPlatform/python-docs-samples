@@ -22,7 +22,7 @@ https://cloud.google.com/composer/docs/composer-2/configure-email#sendgrid
 
 """
 
-# [START composer_email_operator_sendgrid ]
+# [START composer_email_operator_sendgrid]
 
 import datetime
 
@@ -48,4 +48,4 @@ with airflow.DAG(
 
   task_email
 
-# [END composer_email_operator_sendgrid ]
+# [END composer_email_operator_sendgrid]
