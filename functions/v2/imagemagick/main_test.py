@@ -65,7 +65,7 @@ def test_process_safe_image(
     vision_client.safe_search_detection = MagicMock(return_value=result)
 
     filename = str(uuid.uuid4())
-    
+
     event = MagicMock()
     event.data = {
       'bucket': 'my-bucket',
