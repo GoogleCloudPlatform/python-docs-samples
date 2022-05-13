@@ -20,7 +20,7 @@ from airflow import models
 from airflow.providers.google.cloud.operators import dataproc
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-from airflow.utils import trigger_rule
+from airflow.utils.task_group import TaskGroup
 from airflow.operators.dummy import DummyOperator # In later versions this is the EmptyOperator
 
 
@@ -95,34 +95,38 @@ with models.DAG(
 
 
     
+    with TaskGroup("join_bq_datasets") as bq_join_group:
 
-    for year in range(1997,2022):
-        # BigQuery configs
-        BQ_DATASET_NAME=f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}" #TODO(coleleah) update to have more than one year, update to be only dataset and not fully qualified project/dataset/table id
-        BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  #TODO(coleleah) update to have more than one year
-        WEATHER_HOLIDAYS_JOIN_QUERY = f"""
-        SELECT Holidays.Date, Holiday, id, element, value
-        FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
-        JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id LIKE "US%") AS Weather
-        ON Holidays.Date = Weather.Date;
-        """
+        for year in range(1997,2022):
+            # BigQuery configs
+            BQ_DATASET_NAME=f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}" #TODO(coleleah) update to have more than one year, update to be only dataset and not fully qualified project/dataset/table id
+            BQ_DESTINATION_TABLE_NAME="holidays_weather_joined"  #TODO(coleleah) update to have more than one year
+            WEATHER_HOLIDAYS_JOIN_QUERY = f"""
+            SELECT Holidays.Date, Holiday, id, element, value
+            FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
+            JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id LIKE "US%") AS Weather
+            ON Holidays.Date = Weather.Date;
+            """
 
-        bq_join_holidays_weather_data = BigQueryInsertJobOperator(
-            task_id=f"bq_join_holidays_weather_data_{str(year)}",
-            configuration={
-                "query": {
-                    "query": WEATHER_HOLIDAYS_JOIN_QUERY,
-                    "useLegacySql": False,
-                    "destinationTable": {
-                            "projectId": PROJECT_NAME,
-                            "datasetId": BQ_DESTINATION_DATASET_NAME,
-                            "tableId": BQ_DESTINATION_TABLE_NAME
-                        },
-                    "writeDisposition": "WRITE_APPEND"
+            bq_join_holidays_weather_data = BigQueryInsertJobOperator(
+                task_id=f"bq_join_holidays_weather_data_{str(year)}",
+                configuration={
+                    "query": {
+                        "query": WEATHER_HOLIDAYS_JOIN_QUERY,
+                        "useLegacySql": False,
+                        "destinationTable": {
+                                "projectId": PROJECT_NAME,
+                                "datasetId": BQ_DESTINATION_DATASET_NAME,
+                                "tableId": BQ_DESTINATION_TABLE_NAME
+                            },
+                        "writeDisposition": "WRITE_APPEND"
 
-                }
-            },
-            location="US", #todo template
-        )
-        load_external_dataset >> bq_join_holidays_weather_data >> create_batch
+                    }
+                },
+                location="US", #todo template
+            )
+            # load_external_dataset >> bq_join_holidays_weather_data >> create_batch
    
+
+
+        load_external_dataset >> bq_join_group >> create_batch
