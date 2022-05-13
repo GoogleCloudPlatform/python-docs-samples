@@ -9,8 +9,6 @@ product:
     Google's global network of edge caches in thousands of locations.
 
 
-
-
 samples:
   - name: Snippets
     file: snippets.py
