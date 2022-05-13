@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START cloudfunctions_imagemagick_setup]
+# [START functions_imagemagick_setup]
 import os
 import tempfile
 
@@ -23,10 +23,10 @@ from wand.image import Image
 
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
-# [END cloudfunctions_imagemagick_setup]
+# [END functions_imagemagick_setup]
 
 
-# [START cloudfunctions_imagemagick_analyze]
+# [START functions_imagemagick_analyze]
 # Blurs uploaded images that are flagged as Adult or Violence.
 @functions_framework.cloud_event
 def blur_offensive_images(cloud_event):
@@ -57,10 +57,10 @@ def blur_offensive_images(cloud_event):
         print(f"The image {file_name} was detected as OK.")
 
 
-# [END cloudfunctions_imagemagick_analyze]
+# [END functions_imagemagick_analyze]
 
 
-# [START cloudfunctions_imagemagick_blur]
+# [START functions_imagemagick_blur]
 # Blurs the given file using ImageMagick.
 def __blur_image(current_blob):
     file_name = current_blob.name
@@ -90,4 +90,4 @@ def __blur_image(current_blob):
     os.remove(temp_local_filename)
 
 
-# [END cloudfunctions_imagemagick_blur]
+# [END functions_imagemagick_blur]
