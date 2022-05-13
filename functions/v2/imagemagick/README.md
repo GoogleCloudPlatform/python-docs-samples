@@ -27,7 +27,7 @@ Functions for your project.
 
 1. Create a second Cloud Storage Bucket:
 
-         gsutil mb gs://YOUR_OUTPUT_BUCKET_NAME
+        gsutil mb gs://YOUR_OUTPUT_BUCKET_NAME
 
      This second storage bucket is used to store blurred images. (Un-blurred images will not be saved to this bucket.)
 
