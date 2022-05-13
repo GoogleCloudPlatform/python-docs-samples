@@ -1,0 +1,4 @@
+runtime: python39
+app_engine_apis: true
+env_variables:
+  NDB_USE_CROSS_COMPATIBLE_PICKLE_PROTOCOL: "True"
