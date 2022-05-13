@@ -145,4 +145,3 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
             policy=policy, signature=signature)
     return signed_policy
 # [END mediacdn_sign_cookie]
-
