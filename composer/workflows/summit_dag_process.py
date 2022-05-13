@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # [START datascienceonramp_sparksingleudfs]
     # Single-parameter udfs
     udfs = {
-        "value_celsius": UserDefinedFunction(temperature_celsius_udf, FloatType()),
+        "value": UserDefinedFunction(temperature_celsius_udf, FloatType()),
 
     }
 
