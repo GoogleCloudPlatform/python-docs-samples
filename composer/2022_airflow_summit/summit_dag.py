@@ -14,7 +14,6 @@
 
 
 import datetime
-import os
 
 from airflow import models
 from airflow.providers.google.cloud.operators import dataproc
@@ -23,10 +22,6 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
     GCSToBigQueryOperator,
 )
 from airflow.utils.task_group import TaskGroup
-from airflow.operators.dummy import (
-    DummyOperator,
-)  # In later versions this is the EmptyOperator
-
 
 PROJECT_NAME = "{{var.value.gcp_project}}"
 

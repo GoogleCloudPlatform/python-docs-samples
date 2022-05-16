@@ -14,14 +14,12 @@
 
 
 import sys
-import time
-import uuid
 
-from google.cloud import storage
+
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import UserDefinedFunction
-from pyspark.sql.types import FloatType, IntegerType, StringType
+from pyspark.sql.types import FloatType
 
 
 def temperature_celsius_udf(temperature_tenths):
@@ -40,7 +38,7 @@ if __name__ == "__main__":
 
     # Load data into dataframe if READ_TABLE exists
     try:
-        df = spark.read.format("bigquery").option("TABLE", READ_TABLE).load()
+        df = spark.read.format("bigquery").load(READ_TABLE)
     except Py4JJavaError as e:
         raise Exception(f"Error reading {READ_TABLE}") from e
 

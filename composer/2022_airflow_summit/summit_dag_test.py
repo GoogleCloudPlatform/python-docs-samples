@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from airflow import models
-
 import internal_unit_testing
 
 
