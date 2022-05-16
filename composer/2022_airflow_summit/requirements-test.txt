@@ -1,0 +1,3 @@
+pytest==7.0.1
+cloud-composer-dag-test-utils==1.0.0
+markupsafe==2.0.1
