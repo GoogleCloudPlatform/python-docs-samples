@@ -1,5 +1,5 @@
-# Access legacy bundled services for Python 3
+# Access legacy bundled Mail API in Python 3
 
 Deploy this app to App Engine via `gcloud app deploy`. More about App Engine
-Bundled APIs at: 
-https://cloud.google.com/appengine/docs/standard/python3/services/access#python-3
+Bundled Mail API at:
+https://cloud.google.com/appengine/docs/standard/python3/services/mail#wsgi_app_without_a_web_framework
