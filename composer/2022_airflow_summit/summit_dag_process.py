@@ -56,50 +56,13 @@ if __name__ == "__main__":
 
     # Write results to GCS
     if "--dry-run" in sys.argv:
-        print("Data will not be uploaded to GCS")
+        print("Data will not be uploaded to BigQuery")
     else:
         # Set GCS temp location
-        # temp_path = "gs://" + BUCKET_NAME
         temp_path = BUCKET_NAME
 
-        print("temp_path", temp_path)
         # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
         df.write.format("bigquery").option("temporaryGcsBucket", temp_path).save(
             "holiday_weather.holidays_weather_normalized_temperature"
         )
         print("Data written to BigQuery")
-
-    #     # Write dataframe to temp location to preserve the data in final location
-    #     # This takes time, so final location should not be overwritten with partial data
-    #     print("Uploading data to GCS...")
-    #     (
-    #         df.write
-    #         # gzip the output file
-    #         .options(codec="org.apache.hadoop.io.compress.GzipCodec")
-    #         # write as csv
-    #         .csv(temp_path)
-    #     )
-
-    #     # Get GCS bucket
-    #     storage_client = storage.Client()
-    #     source_bucket = storage_client.get_bucket(BUCKET_NAME)
-
-    #     # Get all files in temp location
-    #     blobs = list(source_bucket.list_blobs(prefix=path))
-
-    #     # Copy files from temp location to the final location
-    #     # This is much quicker than the original write to the temp location
-    #     final_path = "clean_data/"
-    #     for blob in blobs:
-    #         file_match = re.match(path + r"/(part-\d*)[0-9a-zA-Z\-]*.csv.gz", blob.name)
-    #         if file_match:
-    #             new_blob = final_path + file_match[1] + ".csv.gz"
-    #             source_bucket.copy_blob(blob, source_bucket, new_blob)
-
-    #     # Delete the temp location
-    #     for blob in blobs:
-    #         blob.delete()
-
-    #     print(
-    #         "Data successfully uploaded to " + "gs://" + BUCKET_NAME + "/" + final_path
-    #     )
