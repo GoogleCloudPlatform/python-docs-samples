@@ -37,7 +37,7 @@ def remove_retention_policy(bucket_name):
     bucket.retention_period = None
     bucket.patch()
 
-    print("Removed bucket {} retention policy".format(bucket.name))
+    print(f"Removed bucket {bucket.name} retention policy")
 
 
 # [END storage_remove_retention_policy]

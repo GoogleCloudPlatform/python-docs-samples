@@ -38,7 +38,7 @@ def remove_bucket_iam_member(bucket_name, role, member):
 
     bucket.set_iam_policy(policy)
 
-    print("Removed {} with role {} from {}.".format(member, role, bucket_name))
+    print(f"Removed {member} with role {role} from {bucket_name}.")
 
 
 # [END storage_remove_bucket_iam_member]

@@ -33,11 +33,9 @@ def lock_retention_policy(bucket_name):
     # and retention period can only be increased.
     bucket.lock_retention_policy()
 
-    print("Retention policy for {} is now locked".format(bucket_name))
+    print(f"Retention policy for {bucket_name} is now locked")
     print(
-        "Retention policy effective as of {}".format(
-            bucket.retention_policy_effective_time
-        )
+        f"Retention policy effective as of {bucket.retention_policy_effective_time}"
     )
 
 

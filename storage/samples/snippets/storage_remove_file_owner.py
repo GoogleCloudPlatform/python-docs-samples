@@ -39,9 +39,7 @@ def remove_blob_owner(bucket_name, blob_name, user_email):
     blob.acl.save()
 
     print(
-        "Removed user {} from blob {} in bucket {}.".format(
-            user_email, blob_name, bucket_name
-        )
+        f"Removed user {user_email} from blob {blob_name} in bucket {bucket_name}."
     )
 
 

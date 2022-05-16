@@ -29,7 +29,7 @@ def run_quickstart():
     # Creates the new bucket
     bucket = storage_client.create_bucket(bucket_name)
 
-    print("Bucket {} created.".format(bucket.name))
+    print(f"Bucket {bucket.name} created.")
     # [END storage_quickstart]
 
 

@@ -30,7 +30,7 @@ def enable_default_event_based_hold(bucket_name):
     bucket.default_event_based_hold = True
     bucket.patch()
 
-    print("Default event based hold was enabled for {}".format(bucket_name))
+    print(f"Default event based hold was enabled for {bucket_name}")
 
 
 # [END storage_enable_default_event_based_hold]

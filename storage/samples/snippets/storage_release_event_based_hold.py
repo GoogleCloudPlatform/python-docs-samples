@@ -33,7 +33,7 @@ def release_event_based_hold(bucket_name, blob_name):
     blob.event_based_hold = False
     blob.patch()
 
-    print("Event based hold was released for {}".format(blob_name))
+    print(f"Event based hold was released for {blob_name}")
 
 
 # [END storage_release_event_based_hold]

@@ -27,7 +27,7 @@ def print_bucket_acl(bucket_name):
     bucket = storage_client.bucket(bucket_name)
 
     for entry in bucket.acl:
-        print("{}: {}".format(entry["role"], entry["entity"]))
+        print(f"{entry['role']}: {entry['entity']}")
 
 
 # [END storage_print_bucket_acl]

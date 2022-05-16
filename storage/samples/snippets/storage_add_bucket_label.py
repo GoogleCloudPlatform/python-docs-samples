@@ -36,7 +36,7 @@ def add_bucket_label(bucket_name):
     bucket.labels = labels
     bucket.patch()
 
-    print("Updated labels on {}.".format(bucket.name))
+    print(f"Updated labels on {bucket.name}.")
     pprint.pprint(bucket.labels)
 
 

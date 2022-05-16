@@ -62,7 +62,7 @@ def test_upload_encrypted_blob():
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(BUCKET)
-    blob_name = "test_blob_{}".format(uuid.uuid4().hex)
+    blob_name = f"test_blob_{uuid.uuid4().hex}"
     blob = Blob(
         blob_name,
         bucket,
@@ -81,7 +81,7 @@ def test_blob():
         blob.delete()
     except NotFound as e:
         # For the case that the rotation succeeded.
-        print("Ignoring 404, detail: {}".format(e))
+        print(f"Ignoring 404, detail: {e}")
         blob = Blob(
             blob_name,
             bucket,

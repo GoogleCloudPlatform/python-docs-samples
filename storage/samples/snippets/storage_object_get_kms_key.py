@@ -32,7 +32,7 @@ def object_get_kms_key(bucket_name, blob_name):
 
     kms_key = blob.kms_key_name
 
-    print("The KMS key of a blob is {}".format(blob.kms_key_name))
+    print(f"The KMS key of a blob is {blob.kms_key_name}")
     return kms_key
 
 

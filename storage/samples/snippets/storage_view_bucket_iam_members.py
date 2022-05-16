@@ -30,7 +30,7 @@ def view_bucket_iam_members(bucket_name):
     policy = bucket.get_iam_policy(requested_policy_version=3)
 
     for binding in policy.bindings:
-        print("Role: {}, Members: {}".format(binding["role"], binding["members"]))
+        print(f"Role: {binding['role']}, Members: {binding['members']}")
 
 
 # [END storage_view_bucket_iam_members]

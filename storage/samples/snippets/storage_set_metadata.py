@@ -32,7 +32,7 @@ def set_blob_metadata(bucket_name, blob_name):
     blob.metadata = metadata
     blob.patch()
 
-    print("The metadata for the blob {} is {}".format(blob.name, blob.metadata))
+    print(f"The metadata for the blob {blob.name} is {blob.metadata}")
 
 
 # [END storage_set_metadata]

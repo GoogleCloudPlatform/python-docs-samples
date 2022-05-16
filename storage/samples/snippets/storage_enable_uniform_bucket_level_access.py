@@ -31,7 +31,7 @@ def enable_uniform_bucket_level_access(bucket_name):
     bucket.patch()
 
     print(
-        "Uniform bucket-level access was enabled for {}.".format(bucket.name)
+        f"Uniform bucket-level access was enabled for {bucket.name}."
     )
 
 

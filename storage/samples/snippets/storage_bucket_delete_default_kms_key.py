@@ -30,7 +30,7 @@ def bucket_delete_default_kms_key(bucket_name):
     bucket.default_kms_key_name = None
     bucket.patch()
 
-    print("Default KMS key was removed from {}".format(bucket.name))
+    print(f"Default KMS key was removed from {bucket.name}")
     return bucket
 
 

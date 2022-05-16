@@ -28,7 +28,7 @@ def print_blob_acl(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     for entry in blob.acl:
-        print("{}: {}".format(entry["role"], entry["entity"]))
+        print(f"{entry['role']}: {entry['entity']}")
 
 
 # [END storage_print_file_acl]

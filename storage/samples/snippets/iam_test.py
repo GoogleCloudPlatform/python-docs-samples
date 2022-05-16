@@ -42,7 +42,7 @@ def bucket():
     bucket = None
     while bucket is None or bucket.exists():
         storage_client = storage.Client()
-        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket_name = f"test-iam-{uuid.uuid4()}"
         bucket = storage_client.bucket(bucket_name)
         bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     storage_client.create_bucket(bucket)
@@ -60,7 +60,7 @@ def public_bucket():
     bucket = None
     while bucket is None or bucket.exists():
         storage_client = storage.Client()
-        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket_name = f"test-iam-{uuid.uuid4()}"
         bucket = storage_client.bucket(bucket_name)
         bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     storage_client.create_bucket(bucket)

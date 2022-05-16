@@ -30,7 +30,7 @@ def enable_requester_pays(bucket_name):
     bucket.requester_pays = True
     bucket.patch()
 
-    print("Requester Pays has been enabled for {}".format(bucket_name))
+    print(f"Requester Pays has been enabled for {bucket_name}")
 
 
 # [END storage_enable_requester_pays]

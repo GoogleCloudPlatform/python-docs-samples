@@ -32,9 +32,7 @@ def make_blob_public(bucket_name, blob_name):
     blob.make_public()
 
     print(
-        "Blob {} is publicly accessible at {}".format(
-            blob.name, blob.public_url
-        )
+        f"Blob {blob.name} is publicly accessible at {blob.public_url}"
     )
 
 

@@ -38,7 +38,7 @@ def remove_bucket_owner(bucket_name, user_email):
     bucket.acl.user(user_email).revoke_owner()
     bucket.acl.save()
 
-    print("Removed user {} from bucket {}.".format(user_email, bucket_name))
+    print(f"Removed user {user_email} from bucket {bucket_name}.")
 
 
 # [END storage_remove_bucket_owner]

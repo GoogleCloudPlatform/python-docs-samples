@@ -44,7 +44,7 @@ def generate_signed_url(bucket_name, blob_name):
         method="GET",
     )
 
-    print("The signed url for {} is {}".format(blob.name, url))
+    print(f"The signed url for {blob.name} is {url}")
     return url
 
 

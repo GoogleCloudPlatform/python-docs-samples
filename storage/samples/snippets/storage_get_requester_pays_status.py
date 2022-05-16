@@ -29,9 +29,9 @@ def get_requester_pays_status(bucket_name):
     requester_pays_status = bucket.requester_pays
 
     if requester_pays_status:
-        print("Requester Pays is enabled for {}".format(bucket_name))
+        print(f"Requester Pays is enabled for {bucket_name}")
     else:
-        print("Requester Pays is disabled for {}".format(bucket_name))
+        print(f"Requester Pays is disabled for {bucket_name}")
 
 
 # [END storage_get_requester_pays_status]

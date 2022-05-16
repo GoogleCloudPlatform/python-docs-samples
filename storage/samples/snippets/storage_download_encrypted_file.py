@@ -52,9 +52,7 @@ def download_encrypted_blob(
     blob.download_to_filename(destination_file_name)
 
     print(
-        "Blob {} downloaded to {}.".format(
-            source_blob_name, destination_file_name
-        )
+        f"Blob {source_blob_name} downloaded to {destination_file_name}."
     )
 
 

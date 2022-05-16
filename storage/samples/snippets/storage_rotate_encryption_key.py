@@ -52,7 +52,7 @@ def rotate_encryption_key(
         if token is None:
             break
 
-    print("Key rotation complete for Blob {}".format(blob_name))
+    print(f"Key rotation complete for Blob {blob_name}")
 
 
 # [END storage_rotate_encryption_key]

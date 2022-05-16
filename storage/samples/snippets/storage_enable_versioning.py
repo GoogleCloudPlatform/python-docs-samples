@@ -30,7 +30,7 @@ def enable_versioning(bucket_name):
     bucket.versioning_enabled = True
     bucket.patch()
 
-    print("Versioning was enabled for bucket {}".format(bucket.name))
+    print(f"Versioning was enabled for bucket {bucket.name}")
     return bucket
 
 

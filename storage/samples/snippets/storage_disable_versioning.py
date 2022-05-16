@@ -30,7 +30,7 @@ def disable_versioning(bucket_name):
     bucket.versioning_enabled = False
     bucket.patch()
 
-    print("Versioning was disabled for bucket {}".format(bucket))
+    print(f"Versioning was disabled for bucket {bucket}")
     return bucket
 
 

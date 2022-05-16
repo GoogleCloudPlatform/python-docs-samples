@@ -53,7 +53,7 @@ def configure_retries(bucket_name, blob_name):
     )
 
     blob.delete(retry=modified_retry)
-    print("Blob {} deleted with a customized retry strategy.".format(blob_name))
+    print(f"Blob {blob_name} deleted with a customized retry strategy.")
 
 
 # [END storage_configure_retries]

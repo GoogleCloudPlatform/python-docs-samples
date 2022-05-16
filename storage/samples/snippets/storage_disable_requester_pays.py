@@ -30,7 +30,7 @@ def disable_requester_pays(bucket_name):
     bucket.requester_pays = False
     bucket.patch()
 
-    print("Requester Pays has been disabled for {}".format(bucket_name))
+    print(f"Requester Pays has been disabled for {bucket_name}")
 
 
 # [END storage_disable_requester_pays]

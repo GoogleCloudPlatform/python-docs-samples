@@ -38,7 +38,7 @@ def cors_configuration(bucket_name):
     ]
     bucket.patch()
 
-    print("Set CORS policies for bucket {} is {}".format(bucket.name, bucket.cors))
+    print(f"Set CORS policies for bucket {bucket.name} is {bucket.cors}")
     return bucket
 
 

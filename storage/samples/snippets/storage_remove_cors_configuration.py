@@ -29,7 +29,7 @@ def remove_cors_configuration(bucket_name):
     bucket.cors = []
     bucket.patch()
 
-    print("Remove CORS policies for bucket {}.".format(bucket.name))
+    print(f"Remove CORS policies for bucket {bucket.name}.")
     return bucket
 
 

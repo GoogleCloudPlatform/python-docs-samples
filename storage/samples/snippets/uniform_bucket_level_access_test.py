@@ -23,7 +23,7 @@ def test_get_uniform_bucket_level_access(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Uniform bucket-level access is disabled for {}.".format(bucket.name)
+        f"Uniform bucket-level access is disabled for {bucket.name}."
         in out
     )
 
@@ -35,7 +35,7 @@ def test_enable_uniform_bucket_level_access(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Uniform bucket-level access was enabled for {}.".format(bucket.name)
+        f"Uniform bucket-level access was enabled for {bucket.name}."
         in out
     )
 
@@ -47,6 +47,6 @@ def test_disable_uniform_bucket_level_access(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Uniform bucket-level access was disabled for {}.".format(bucket.name)
+        f"Uniform bucket-level access was disabled for {bucket.name}."
         in out
     )

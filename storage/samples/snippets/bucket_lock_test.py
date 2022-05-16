@@ -42,7 +42,7 @@ def bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-lock-{}".format(uuid.uuid4())
+        bucket_name = f"bucket-lock-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
@@ -61,7 +61,7 @@ def test_retention_policy_no_lock(bucket, capsys):
 
     storage_get_retention_policy.get_retention_policy(bucket.name)
     out, _ = capsys.readouterr()
-    assert "Retention Policy for {}".format(bucket.name) in out
+    assert f"Retention Policy for {bucket.name}" in out
     assert "Retention Period: 5" in out
     assert "Effective Time: " in out
     assert "Retention Policy is locked" not in out
@@ -100,11 +100,11 @@ def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Default event-based hold is not enabled for {}".format(bucket.name)
+        f"Default event-based hold is not enabled for {bucket.name}"
         in out
     )
     assert (
-        "Default event-based hold is enabled for {}".format(bucket.name)
+        f"Default event-based hold is enabled for {bucket.name}"
         not in out
     )
 
@@ -120,7 +120,7 @@ def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
     )
     out, _ = capsys.readouterr()
     assert (
-        "Default event-based hold is enabled for {}".format(bucket.name) in out
+        f"Default event-based hold is enabled for {bucket.name}" in out
     )
 
     # Changes to the bucket will be readable immediately after writing,

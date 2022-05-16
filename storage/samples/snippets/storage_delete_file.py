@@ -31,7 +31,7 @@ def delete_blob(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
     blob.delete()
 
-    print("Blob {} deleted.".format(blob_name))
+    print(f"Blob {blob_name} deleted.")
 
 
 # [END storage_delete_file]

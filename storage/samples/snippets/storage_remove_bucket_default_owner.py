@@ -40,9 +40,7 @@ def remove_bucket_default_owner(bucket_name, user_email):
     bucket.default_object_acl.save()
 
     print(
-        "Removed user {} from the default acl of bucket {}.".format(
-            user_email, bucket_name
-        )
+        f"Removed user {user_email} from the default acl of bucket {bucket_name}."
     )
 
 

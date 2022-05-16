@@ -42,7 +42,7 @@ def download_blob_to_stream(bucket_name, source_blob_name, file_obj):
     blob = bucket.blob(source_blob_name)
     blob.download_to_file(file_obj)
 
-    print("Downloaded blob {} to file-like object.".format(source_blob_name))
+    print(f"Downloaded blob {source_blob_name} to file-like object.")
 
     return file_obj
     # Before reading from file_obj, remember to rewind with file_obj.seek(0).

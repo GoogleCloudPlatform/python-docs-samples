@@ -37,14 +37,14 @@ def deactivate_key(access_id, project_id):
 
     print("The HMAC key is now inactive.")
     print("The HMAC key metadata is:")
-    print("Service Account Email: {}".format(hmac_key.service_account_email))
-    print("Key ID: {}".format(hmac_key.id))
-    print("Access ID: {}".format(hmac_key.access_id))
-    print("Project ID: {}".format(hmac_key.project))
-    print("State: {}".format(hmac_key.state))
-    print("Created At: {}".format(hmac_key.time_created))
-    print("Updated At: {}".format(hmac_key.updated))
-    print("Etag: {}".format(hmac_key.etag))
+    print(f"Service Account Email: {hmac_key.service_account_email}")
+    print(f"Key ID: {hmac_key.id}")
+    print(f"Access ID: {hmac_key.access_id}")
+    print(f"Project ID: {hmac_key.project}")
+    print(f"State: {hmac_key.state}")
+    print(f"Created At: {hmac_key.time_created}")
+    print(f"Updated At: {hmac_key.updated}")
+    print(f"Etag: {hmac_key.etag}")
     return hmac_key
 
 

@@ -35,7 +35,7 @@ def rename_blob(bucket_name, blob_name, new_name):
 
     new_blob = bucket.rename_blob(blob, new_name)
 
-    print("Blob {} has been renamed to {}".format(blob.name, new_blob.name))
+    print(f"Blob {blob.name} has been renamed to {new_blob.name}")
 
 
 # [END storage_rename_file]

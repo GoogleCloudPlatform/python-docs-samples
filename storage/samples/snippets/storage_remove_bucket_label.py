@@ -39,7 +39,7 @@ def remove_bucket_label(bucket_name):
     bucket.labels = labels
     bucket.patch()
 
-    print("Removed labels on {}.".format(bucket.name))
+    print(f"Removed labels on {bucket.name}.")
     pprint.pprint(bucket.labels)
 
 

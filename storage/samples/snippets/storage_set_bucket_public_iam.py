@@ -39,7 +39,7 @@ def set_bucket_public_iam(
 
     bucket.set_iam_policy(policy)
 
-    print("Bucket {} is now publicly readable".format(bucket.name))
+    print(f"Bucket {bucket.name} is now publicly readable")
 
 
 # [END storage_set_bucket_public_iam]

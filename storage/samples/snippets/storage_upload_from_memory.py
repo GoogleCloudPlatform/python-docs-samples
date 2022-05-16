@@ -39,9 +39,7 @@ def upload_blob_from_memory(bucket_name, contents, destination_blob_name):
     blob.upload_from_string(contents)
 
     print(
-        "{} with contents {} uploaded to {}.".format(
-            destination_blob_name, contents, bucket_name
-        )
+        f"{destination_blob_name} with contents {contents} uploaded to {bucket_name}."
     )
 
 # [END storage_file_upload_from_memory]

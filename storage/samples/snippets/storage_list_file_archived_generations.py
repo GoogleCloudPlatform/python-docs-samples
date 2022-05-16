@@ -29,7 +29,7 @@ def list_file_archived_generations(bucket_name):
     blobs = storage_client.list_blobs(bucket_name, versions=True)
 
     for blob in blobs:
-        print("{},{}".format(blob.name, blob.generation))
+        print(f"{blob.name},{blob.generation}")
 
 
 # [END storage_list_file_archived_generations]

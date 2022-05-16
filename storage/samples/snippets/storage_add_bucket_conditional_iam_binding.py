@@ -53,15 +53,15 @@ def add_bucket_conditional_iam_binding(
 
     bucket.set_iam_policy(policy)
 
-    print("Added the following member(s) with role {} to {}:".format(role, bucket_name))
+    print(f"Added the following member(s) with role {role} to {bucket_name}:")
 
     for member in members:
-        print("    {}".format(member))
+        print(f"    {member}")
 
     print("with condition:")
-    print("    Title: {}".format(title))
-    print("    Description: {}".format(description))
-    print("    Expression: {}".format(expression))
+    print(f"    Title: {title}")
+    print(f"    Description: {description}")
+    print(f"    Expression: {expression}")
 
 
 # [END storage_add_bucket_conditional_iam_binding]

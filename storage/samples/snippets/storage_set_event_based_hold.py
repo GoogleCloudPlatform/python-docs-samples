@@ -32,7 +32,7 @@ def set_event_based_hold(bucket_name, blob_name):
     blob.event_based_hold = True
     blob.patch()
 
-    print("Event based hold was set for {}".format(blob_name))
+    print(f"Event based hold was set for {blob_name}")
 
 
 # [END storage_set_event_based_hold]

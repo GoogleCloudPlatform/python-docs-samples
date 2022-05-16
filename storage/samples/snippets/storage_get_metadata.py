@@ -33,27 +33,27 @@ def blob_metadata(bucket_name, blob_name):
     # make an HTTP request.
     blob = bucket.get_blob(blob_name)
 
-    print("Blob: {}".format(blob.name))
-    print("Bucket: {}".format(blob.bucket.name))
-    print("Storage class: {}".format(blob.storage_class))
-    print("ID: {}".format(blob.id))
-    print("Size: {} bytes".format(blob.size))
-    print("Updated: {}".format(blob.updated))
-    print("Generation: {}".format(blob.generation))
-    print("Metageneration: {}".format(blob.metageneration))
-    print("Etag: {}".format(blob.etag))
-    print("Owner: {}".format(blob.owner))
-    print("Component count: {}".format(blob.component_count))
-    print("Crc32c: {}".format(blob.crc32c))
-    print("md5_hash: {}".format(blob.md5_hash))
-    print("Cache-control: {}".format(blob.cache_control))
-    print("Content-type: {}".format(blob.content_type))
-    print("Content-disposition: {}".format(blob.content_disposition))
-    print("Content-encoding: {}".format(blob.content_encoding))
-    print("Content-language: {}".format(blob.content_language))
-    print("Metadata: {}".format(blob.metadata))
-    print("Medialink: {}".format(blob.media_link))
-    print("Custom Time: {}".format(blob.custom_time))
+    print(f"Blob: {blob.name}")
+    print(f"Bucket: {blob.bucket.name}")
+    print(f"Storage class: {blob.storage_class}")
+    print(f"ID: {blob.id}")
+    print(f"Size: {blob.size} bytes")
+    print(f"Updated: {blob.updated}")
+    print(f"Generation: {blob.generation}")
+    print(f"Metageneration: {blob.metageneration}")
+    print(f"Etag: {blob.etag}")
+    print(f"Owner: {blob.owner}")
+    print(f"Component count: {blob.component_count}")
+    print(f"Crc32c: {blob.crc32c}")
+    print(f"md5_hash: {blob.md5_hash}")
+    print(f"Cache-control: {blob.cache_control}")
+    print(f"Content-type: {blob.content_type}")
+    print(f"Content-disposition: {blob.content_disposition}")
+    print(f"Content-encoding: {blob.content_encoding}")
+    print(f"Content-language: {blob.content_language}")
+    print(f"Metadata: {blob.metadata}")
+    print(f"Medialink: {blob.media_link}")
+    print(f"Custom Time: {blob.custom_time}")
     print("Temporary hold: ", "enabled" if blob.temporary_hold else "disabled")
     print(
         "Event based hold: ",
@@ -61,9 +61,7 @@ def blob_metadata(bucket_name, blob_name):
     )
     if blob.retention_expiration_time:
         print(
-            "retentionExpirationTime: {}".format(
-                blob.retention_expiration_time
-            )
+            f"retentionExpirationTime: {blob.retention_expiration_time}"
         )
 
 

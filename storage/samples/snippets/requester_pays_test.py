@@ -34,19 +34,19 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 def test_enable_requester_pays(capsys):
     storage_enable_requester_pays.enable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
-    assert "Requester Pays has been enabled for {}".format(BUCKET) in out
+    assert f"Requester Pays has been enabled for {BUCKET}" in out
 
 
 def test_disable_requester_pays(capsys):
     storage_disable_requester_pays.disable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
-    assert "Requester Pays has been disabled for {}".format(BUCKET) in out
+    assert f"Requester Pays has been disabled for {BUCKET}" in out
 
 
 def test_get_requester_pays_status(capsys):
     storage_get_requester_pays_status.get_requester_pays_status(BUCKET)
     out, _ = capsys.readouterr()
-    assert "Requester Pays is disabled for {}".format(BUCKET) in out
+    assert f"Requester Pays is disabled for {BUCKET}" in out
 
 
 @pytest.fixture

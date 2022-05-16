@@ -28,7 +28,7 @@ def dual_region_bucket():
     """Yields a dual region bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-lock-{}".format(uuid.uuid4())
+        bucket_name = f"bucket-lock-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
         bucket.location = "NAM4"
     bucket.create()
@@ -55,7 +55,7 @@ def test_set_rpo_default(dual_region_bucket, capsys):
 
 
 def test_create_bucket_turbo_replication(capsys):
-    bucket_name = "test-rpo-{}".format(uuid.uuid4())
+    bucket_name = f"test-rpo-{uuid.uuid4()}"
     storage_create_bucket_turbo_replication.create_bucket_turbo_replication(bucket_name)
     out, _ = capsys.readouterr()
     assert f"{bucket_name} created with RPO ASYNC_TURBO in NAM4." in out

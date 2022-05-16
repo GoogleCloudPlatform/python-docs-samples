@@ -35,7 +35,7 @@ def add_bucket_iam_member(bucket_name, role, member):
 
     bucket.set_iam_policy(policy)
 
-    print("Added {} with role {} to {}.".format(member, role, bucket_name))
+    print(f"Added {member} with role {role} to {bucket_name}.")
 
 
 # [END storage_add_bucket_iam_member]

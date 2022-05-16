@@ -28,14 +28,14 @@ def get_retention_policy(bucket_name):
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
 
-    print("Retention Policy for {}".format(bucket_name))
-    print("Retention Period: {}".format(bucket.retention_period))
+    print(f"Retention Policy for {bucket_name}")
+    print(f"Retention Period: {bucket.retention_period}")
     if bucket.retention_policy_locked:
         print("Retention Policy is locked")
 
     if bucket.retention_policy_effective_time:
         print(
-            "Effective Time: {}".format(bucket.retention_policy_effective_time)
+            f"Effective Time: {bucket.retention_policy_effective_time}"
         )
 
 

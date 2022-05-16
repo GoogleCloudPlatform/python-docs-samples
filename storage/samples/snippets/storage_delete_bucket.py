@@ -29,7 +29,7 @@ def delete_bucket(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete()
 
-    print("Bucket {} deleted".format(bucket.name))
+    print(f"Bucket {bucket.name} deleted")
 
 
 # [END storage_delete_bucket]

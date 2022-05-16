@@ -55,7 +55,7 @@ def _notification_topic(storage_client, publisher_client):
     binding = policy.bindings.add()
     binding.role = "roles/pubsub.publisher"
     binding.members.append(
-        "serviceAccount:{}".format(storage_client.get_service_account_email())
+        f"serviceAccount:{storage_client.get_service_account_email()}"
     )
     publisher_client.set_iam_policy(request={"resource": topic_path, "policy": policy})
 
