@@ -12,74 +12,80 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
-from django.urls import path
-from django.conf import settings
 from django.shortcuts import redirect
-from google.appengine.api import wrap_wsgi_app
-from google.cloud import logging
-from google.appengine.ext import blobstore
+from django.urls import path
 from google.appengine.api import users
+from google.appengine.api import wrap_wsgi_app
+from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
-
+from google.cloud import logging
 
 # Logging client in Python 3
 logging_client = logging.Client()
 
 # This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger("django-app-logs")
+logger = logging_client.logger('django-app-logs')
+
 
 # This datastore model keeps track of which users uploaded which photos.
 class UserPhoto(ndb.Model):
     user = ndb.StringProperty()
     blob_key = ndb.BlobKeyProperty()
 
+
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
+
     def post(self, environ):
         upload = self.get_uploads(environ)[0]
         photo_key = upload.key()
         user_photo = UserPhoto(
-            user=users.get_current_user().user_id(),
-            blob_key=photo_key)
+            user=users.get_current_user().user_id(), blob_key=photo_key)
         user_photo.put()
-        logger.log_text("Photo key: %s" % photo_key)
+        logger.log_text('Photo key: %s' % photo_key)
         return redirect('view_photo', key=photo_key)
 
+
 class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
+
     def get(self, environ, photo_key):
         if not blobstore.get(photo_key):
-            return HttpResponse("Photo key not found", status=404)
+            return HttpResponse('Photo key not found', status=404)
         else:
-          response = HttpResponse(headers = self.send_blob(environ, photo_key))
+            response = HttpResponse(headers=self.send_blob(environ, photo_key))
 
-          # Prevent Django from setting a default content-type.
-          # GAE sets it to a guessed type if the header is not set.
-          response["Content-Type"] = None
-          return response
+            # Prevent Django from setting a default content-type.
+            # GAE sets it to a guessed type if the header is not set.
+            response['Content-Type'] = None
+            return response
 
 
 def upload_form(request):
-  """Create the HTML form to upload a file."""
-  upload_url = blobstore.create_upload_url('/upload_photo')
+    """Create the HTML form to upload a file."""
+    upload_url = blobstore.create_upload_url('/upload_photo')
 
-  response = """
-<html><body>
-<form action="{0}" method="POST" enctype="multipart/form-data">
-  Upload File: <input type="file" name="file"><br>
-  <input type="submit" name="submit" value="Submit Now">
-</form>
-</body></html>""".format(upload_url)
+    response = """
+  <html><body>
+  <form action="{0}" method="POST" enctype="multipart/form-data">
+    Upload File: <input type="file" name="file"><br>
+    <input type="submit" name="submit" value="Submit Now">
+  </form>
+  </body></html>""".format(upload_url)
 
-  return HttpResponse(response)
+    return HttpResponse(response)
+
 
 def view_photo(request, key):
-  """View photo given a key."""
-  return ViewPhotoHandler().get(request.environ, key)
+    """View photo given a key."""
+    return ViewPhotoHandler().get(request.environ, key)
+
 
 def upload_photo(request):
-  """Upload handler called by blobstore when a blob is uploaded in the test."""
-  return PhotoUploadHandler().post(request.environ)
+    """Upload handler called by blobstore when a blob is uploaded in the test."""
+    return PhotoUploadHandler().post(request.environ)
+
 
 urlpatterns = (
     path('', upload_form, name='upload_form'),

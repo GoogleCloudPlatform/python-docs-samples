@@ -12,63 +12,70 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, request, redirect
-from google.appengine.api import wrap_wsgi_app
+from flask import Flask, redirect, request
 from google.appengine.api import users
+from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 
 app = Flask(__name__)
 app.wsgi_app = wrap_wsgi_app(app.wsgi_app, use_deferred=True)
 
+
 # This datastore model keeps track of which users uploaded which photos.
 class UserPhoto(ndb.Model):
     user = ndb.StringProperty()
     blob_key = ndb.BlobKeyProperty()
 
+
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
+
     def post(self):
         upload = self.get_uploads(request.environ)[0]
         user_photo = UserPhoto(
-            user=users.get_current_user().user_id(),
-            blob_key=upload.key())
+            user=users.get_current_user().user_id(), blob_key=upload.key())
         user_photo.put()
 
-        return redirect('/view_photo/%s' % upload.key())
+        return redirect("/view_photo/%s" % upload.key())
+
 
 class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
+
     def get(self, photo_key):
         if not blobstore.get(photo_key):
             return "Photo key not found", 404
         else:
-          headers = self.send_blob(request.environ, photo_key)
+            headers = self.send_blob(request.environ, photo_key)
 
-          # Prevent Flask from setting a default content-type.
-          # GAE sets it to a guessed type if the header is not set.
-          headers["Content-Type"] = None
-          return "", headers
+            # Prevent Flask from setting a default content-type.
+            # GAE sets it to a guessed type if the header is not set.
+            headers["Content-Type"] = None
+            return "", headers
+
 
 @app.route("/")
 def upload():
-  """Create the HTML form to upload a file."""
-  upload_url = blobstore.create_upload_url('/upload_photo')
+    """Create the HTML form to upload a file."""
+    upload_url = blobstore.create_upload_url("/upload_photo")
 
-  response = """
-<html><body>
-<form action="{0}" method="POST" enctype="multipart/form-data">
-  Upload File: <input type="file" name="file"><br>
-  <input type="submit" name="submit" value="Submit Now">
-</form>
-</body></html>""".format(upload_url)
+    response = """
+  <html><body>
+  <form action="{0}" method="POST" enctype="multipart/form-data">
+    Upload File: <input type="file" name="file"><br>
+    <input type="submit" name="submit" value="Submit Now">
+  </form>
+  </body></html>""".format(upload_url)
 
-  return response
+    return response
+
 
 @app.route("/view_photo/<photo_key>")
 def view_photo(photo_key):
-  """View photo given a key."""
-  return ViewPhotoHandler().get(photo_key)
+    """View photo given a key."""
+    return ViewPhotoHandler().get(photo_key)
+
 
 @app.route("/upload_photo", methods=["POST"])
 def upload_photo():
-  """Upload handler called by blobstore when a blob is uploaded in the test."""
-  return PhotoUploadHandler().post()
+    """Upload handler called by blobstore when a blob is uploaded in the test."""
+    return PhotoUploadHandler().post()

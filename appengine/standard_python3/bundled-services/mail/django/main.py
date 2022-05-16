@@ -12,28 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
+from django.conf.urls import url
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
-from django.conf.urls import url
-from django.conf import settings
-from google.appengine.api import wrap_wsgi_app
 from google.appengine.api import mail
+from google.appengine.api import wrap_wsgi_app
 from google.cloud import logging
 
 # Logging client in Python 3
 logging_client = logging.Client()
 
 # This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger("django-app-logs")
+logger = logging_client.logger('django-app-logs')
+
 
 def receive_mail(request):
     mail_message = mail.InboundEmailMessage(request.body)
     # Make a simple text log
-    logger.log_text('Received greeting at %s from %s: %s' % (
-        mail_message.to,
-        mail_message.sender,
-        mail_message.bodies('text/plain')))
+    logger.log_text(
+        'Received greeting at %s from %s: %s' %
+        (mail_message.to, mail_message.sender, mail_message.bodies('text/plain')))
     return HttpResponse('Success')
+
 
 def receive_bounce(request):
     bounce_message = mail.BounceNotification(dict(request.POST.lists()))
@@ -43,6 +44,7 @@ def receive_bounce(request):
     logger.log_text('Bounce notification: %s' % (bounce_message.__notification))
 
     return HttpResponse('Success')
+
 
 urlpatterns = (
     url(r'_ah/mail/.*$', receive_mail),
