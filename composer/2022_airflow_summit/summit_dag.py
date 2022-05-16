@@ -33,21 +33,12 @@ PROJECT_NAME = "{{var.value.gcp_project}}"
 # BigQuery configs
 BQ_DESTINATION_DATASET_NAME = "holiday_weather"
 BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
+BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
 
 
 PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = "gs://{{var.value.gcs_bucket}}/summit_dag_process.py"
-PROCESSING_PYSPARK_JOB = {
-    "reference": {"project_id": PROJECT_NAME},
-    "pyspark_job": {
-        "main_python_file_uri": PROCESSING_PYTHON_FILE,
-        "jar_file_uris": [PYSPARK_JAR],
-        "args": [
-            PROJECT_NAME,
-            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
-        ],
-    },
-}
+
 BATCH_ID = "test-batch-id-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
     "pyspark_batch": {
@@ -56,6 +47,7 @@ BATCH_CONFIG = {
         "args": [
             PROJECT_NAME,
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}",
         ],
     },
 }

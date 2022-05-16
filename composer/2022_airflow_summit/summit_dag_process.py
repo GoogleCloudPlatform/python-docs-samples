@@ -32,16 +32,17 @@ def temperature_celsius_udf(temperature_tenths):
 
 if __name__ == "__main__":
     BUCKET_NAME = sys.argv[1]
-    TABLE = sys.argv[2]
+    READ_TABLE = sys.argv[2]
+    WRITE_TABLE = sys.argv[3]
 
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_processing").getOrCreate()
 
-    # Load data into dataframe if table exists
+    # Load data into dataframe if READ_TABLE exists
     try:
-        df = spark.read.format("bigquery").option("table", TABLE).load()
+        df = spark.read.format("bigquery").option("TABLE", READ_TABLE).load()
     except Py4JJavaError as e:
-        raise Exception(f"Error reading {TABLE}") from e
+        raise Exception(f"Error reading {READ_TABLE}") from e
 
     # Single-parameter udfs
     udfs = {
@@ -63,6 +64,6 @@ if __name__ == "__main__":
 
         # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
         df.write.format("bigquery").option("temporaryGcsBucket", temp_path).save(
-            "holiday_weather.holidays_weather_normalized_temperature"
+            WRITE_TABLE
         )
         print("Data written to BigQuery")
