@@ -32,14 +32,14 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
 
 # Google Cloud Storage constants
-BUCKET_NAME = f"data-analytics-dag-process-test-{TEST_ID}"
+BUCKET_NAME = f"data-analytics-process-test-{TEST_ID}"
 BUCKET_BLOB = "data_analytics_dag_process.py"
 TEST_CSV_FILE = "test_data.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
 
 BQ_DATASET = f"data-analytics-process-test-{TEST_ID}".replace("-", "_")
-BQ_READ_TABLE = f"data-analyticsprocess-test-joined-{TEST_ID}".replace("-", "_")
+BQ_READ_TABLE = f"data-analytics-process-test-joined-{TEST_ID}".replace("-", "_")
 BQ_WRITE_TABLE = f"data-analytics-process-test-normalized-{TEST_ID}".replace("-", "_")
 TABLE_ID = f"{PROJECT_ID}.{BQ_DATASET}.{BQ_READ_TABLE}"
 
