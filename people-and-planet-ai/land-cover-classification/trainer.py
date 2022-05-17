@@ -183,7 +183,7 @@ def run(
     # Create, train and save the model.
     model = new_model(training_dataset)
     model.fit(
-        training_dataset.shuffle(10),
+        training_dataset,
         validation_data=validation_dataset,
         epochs=epochs,
     )
