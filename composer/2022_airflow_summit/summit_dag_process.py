@@ -18,14 +18,7 @@ import sys
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import UserDefinedFunction
-from pyspark.sql.types import FloatType
-
-
-def temperature_celsius_udf(temperature_tenths):
-    """Convert temperature from tenths of a degree in celsius to degrees celsius"""
-    if temperature_tenths:
-        return temperature_tenths * 10
+from pyspark.sql.functions import col
 
 
 if __name__ == "__main__":
@@ -42,14 +35,9 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {READ_TABLE}") from e
 
-    # Single-parameter udfs
-    udfs = {
-        "value": UserDefinedFunction(temperature_celsius_udf, FloatType()),
-    }
 
-    for name, udf in udfs.items():
-        df = df.withColumn(name, udf(name))
-
+    # Convert temperature from tenths of a degree in celsius to degrees celsius
+    df = df.withColumn("value", col("value") * 10)
     # Display sample of rows
     df.show(n=20)
 
