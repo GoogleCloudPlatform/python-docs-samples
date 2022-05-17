@@ -25,7 +25,7 @@ from pyspark.sql.types import FloatType
 def temperature_celsius_udf(temperature_tenths):
     """Convert temperature from tenths of a degree in celsius to degrees celsius"""
     if temperature_tenths:
-        return temperature_tenths / 10
+        return temperature_tenths * 10
 
 
 if __name__ == "__main__":
