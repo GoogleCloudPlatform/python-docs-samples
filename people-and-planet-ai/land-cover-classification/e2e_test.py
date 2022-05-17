@@ -230,7 +230,7 @@ def test_notebook(bucket_name: str) -> None:
 def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
     training_prefix = f"gs://{bucket_name}/land-cover/training-data"
     validation_prefix = f"gs://{bucket_name}/land-cover/validation-data"
-    points_per_region = 50
+    points_per_region = 10
     batch_size = 32
 
     # ℹ️ If this command changes, please update the corresponding command at the
@@ -249,6 +249,7 @@ def test_land_cover_create_datasets_dataflow(bucket_name: str) -> None:
         "--setup_file=./setup.py",
         # Parameters for testing only, not used in the notebook.
         f"--job_name={NAME.replace('/', '-')}-training-{UUID}",
+        "--max_num_workers=10",
     ]
     subprocess.check_call(cmd)
 
@@ -320,6 +321,7 @@ def test_land_cover_batch_predict_dataflow(
         "--setup_file=./setup.py",
         # Parameters for testing only, not used in the notebook.
         f"--job_name={NAME.replace('/', '-')}-prediction-{UUID}",
+        "--max_num_workers=10",
     ]
     subprocess.check_call(cmd)
 
