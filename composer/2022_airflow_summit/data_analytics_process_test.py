@@ -40,12 +40,6 @@ from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
 
-# TODO(COLELEAH): THESE STEPS:
-# put test data in bq
-# assert that the column isnt there
-# do the process
-# assert the column is there
-
 
 # GCP Project
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -53,7 +47,7 @@ TEST_ID = uuid.uuid4()
 
 # Google Cloud Storage constants
 BUCKET_NAME = f"summit-dag-process-test-{TEST_ID}"
-BUCKET_BLOB = "summit_dag_process.py"
+BUCKET_BLOB = "data_analytics_dag_process.py"
 TEST_CSV_FILE = "test_data.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
