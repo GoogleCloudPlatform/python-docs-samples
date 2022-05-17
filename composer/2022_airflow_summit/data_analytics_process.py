@@ -35,7 +35,6 @@ if __name__ == "__main__":
     except Py4JJavaError as e:
         raise Exception(f"Error reading {READ_TABLE}") from e
 
-
     # Convert temperature from tenths of a degree in celsius to degrees celsius
     df = df.withColumn("value", col("value") * 10)
     # Display sample of rows

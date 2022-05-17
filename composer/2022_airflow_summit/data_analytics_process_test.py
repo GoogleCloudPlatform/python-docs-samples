@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO(coleleah): edit this comment
-"""Test file for the setup job in the Data Science Onramp sample application Creates a test Dataproc cluster and runs the job with a --test flag.
-The job uploads a subset of the data to BigQuery.
-Then, data is pulled from BigQuery and checks are made to see if the data is dirty.
+"""Test file for the data processing job in data analytics sample DAG.
+Creates a test dataset and table from csv data, runs a serverless dataproc job on it,
+and checks the existence of a new output table in that dataset.
 """
 
 import os
@@ -33,15 +32,15 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
 
 # Google Cloud Storage constants
-BUCKET_NAME = f"summit-dag-process-test-{TEST_ID}"
+BUCKET_NAME = f"data-analytics-dag-process-test-{TEST_ID}"
 BUCKET_BLOB = "data_analytics_dag_process.py"
 TEST_CSV_FILE = "test_data.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
 
-BQ_DATASET = f"summit-dag-process-test-{TEST_ID}".replace("-", "_")
-BQ_READ_TABLE = f"summit-dag-process-test-joined-{TEST_ID}".replace("-", "_")
-BQ_WRITE_TABLE = f"summit-dag-process-test-normalized-{TEST_ID}".replace("-", "_")
+BQ_DATASET = f"data-analytics-process-test-{TEST_ID}".replace("-", "_")
+BQ_READ_TABLE = f"data-analyticsprocess-test-joined-{TEST_ID}".replace("-", "_")
+BQ_WRITE_TABLE = f"data-analytics-process-test-normalized-{TEST_ID}".replace("-", "_")
 TABLE_ID = f"{PROJECT_ID}.{BQ_DATASET}.{BQ_READ_TABLE}"
 
 DATAPROC_REGION = "us-central1"
