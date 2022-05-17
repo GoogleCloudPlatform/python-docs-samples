@@ -147,7 +147,12 @@ def new_model(training_dataset: tf.data.Dataset) -> tf.keras.Model:
     model.compile(
         optimizer="adam",
         loss="categorical_crossentropy",
-        metrics=["accuracy"],
+        metrics=[
+            tf.keras.metrics.OneHotIoU(
+                num_classes=NUM_CLASSIFICATIONS,
+                target_class_ids=list(range(NUM_CLASSIFICATIONS)),
+            )
+        ],
     )
     return model
 
