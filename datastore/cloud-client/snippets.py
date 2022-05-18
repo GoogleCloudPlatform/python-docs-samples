@@ -991,7 +991,7 @@ def index_merge_queries(client):
 def main(project_id):
     client = datastore.Client(project_id)
 
-    for name, function in list(globals().items()):
+    for name, function in globals().items():
         if name in ("main", "_preamble", "defaultdict") or not callable(function):
             continue
 
