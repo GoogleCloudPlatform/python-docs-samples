@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from datetime import datetime, timedelta
+from random import random
 
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
-from random import random
+
 
 FAILURE_PROBABILITY = 0.5
 RETRIES = 1
@@ -33,7 +34,7 @@ with DAG('retries',
          default_args=default_args,
          schedule_interval=None) as dag:
 
-    def api_call(parameter):
+    def api_call(parameter: int) -> None:
         import logging
         if random() < FAILURE_PROBABILITY:
             logging.error('Error: Simulating API flakiness')

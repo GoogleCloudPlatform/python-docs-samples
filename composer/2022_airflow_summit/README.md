@@ -8,3 +8,7 @@ at the 2022 Airflow summit. Be sure to
 ## parallel_work
 
 Running a number of tasks in parallel showcases autoscaling in a Cloud Composer environment.
+
+## retries
+
+Showcasing how retries can be used when API calls fail.
