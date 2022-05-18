@@ -25,7 +25,7 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * metastore_cluster is the Dataproc Metastore service name.
 * region_name is the region where the Dataproc Metastore service is located.
 
-TODO: Add the tutorial link once it is published.
+TODO (https://github.com/GoogleCloudPlatform/python-docs-samples/issues/7803): Add the tutorial link once it is published.
 """
 
 import datetime
