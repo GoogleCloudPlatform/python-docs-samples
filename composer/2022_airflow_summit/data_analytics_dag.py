@@ -97,7 +97,7 @@ with models.DAG(
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
             BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
-            #Specifically query a Chicago weather station
+            # Specifically query a Chicago weather station
             WEATHER_HOLIDAYS_JOIN_QUERY = f"""
             SELECT Holidays.Date, Holiday, id, element, value
             FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
