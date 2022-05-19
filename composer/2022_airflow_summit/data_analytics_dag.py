@@ -116,7 +116,7 @@ with models.DAG(
                         "writeDisposition": "WRITE_APPEND",
                     }
                 },
-                location="{{var.value.bq_location}}",
+                location="US",
             )
 
         load_external_dataset >> bq_join_group >> create_batch
