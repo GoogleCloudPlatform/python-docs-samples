@@ -41,5 +41,5 @@ with models.DAG(
 
     # Print the dag_run id from the Airflow logs
     print_dag_run_conf = bash.BashOperator(
-        task_id="print_dag_run_conf", bash_command="echo hello {{ dag_run.id }}"
+        task_id="print_dag_run_conf", bash_command="echo hello2 {{ dag_run.id }}"
     )
