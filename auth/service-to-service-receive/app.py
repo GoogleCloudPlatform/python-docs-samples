@@ -1,7 +1,6 @@
-from receive import receive_authorized_get_request
-
-
 from flask import Flask, request
+
+from receive import receive_authorized_get_request
 
 app = Flask(__name__)
 

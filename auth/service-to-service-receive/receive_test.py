@@ -17,8 +17,8 @@
 
 import os
 import subprocess
-from urllib import request
 import uuid
+from urllib import request
 
 import pytest
 
