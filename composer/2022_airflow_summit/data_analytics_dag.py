@@ -34,7 +34,7 @@ BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
 PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = "gs://{{var.value.gcs_bucket}}/data_analytics_process.py"
 
-BATCH_ID = "test-batch-id-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
+BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
     "pyspark_batch": {
         "jar_file_uris": [PYSPARK_JAR],
@@ -119,7 +119,7 @@ with models.DAG(
                         "writeDisposition": "WRITE_APPEND",
                     }
                 },
-                location="US",
+                location="{{var.value.bq_location}}",
             )
 
         load_external_dataset >> bq_join_group >> create_batch
