@@ -58,10 +58,7 @@ default_dag_args = {
     # To email on failure or retry set 'email' arg to your email and enable
     # emailing here.
     "email_on_failure": False,
-    "email_on_retry": False,
-    # If a task fails, retry it once after waiting at least 5 minutes
-    "retries": 1,
-    "retry_delay": datetime.timedelta(minutes=5),
+    "email_on_retry": False
 }
 
 with models.DAG(
