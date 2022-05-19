@@ -5,4 +5,4 @@ imageio==2.14.0
 numpy==1.21.4
 pillow==9.1.0
 scipy==1.8.1; python_version > "3.7"
-scipy==1.8.1; python_version <= "3.7"
+scipy==1.7.3; python_version <= "3.7"
