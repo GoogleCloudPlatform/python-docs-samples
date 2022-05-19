@@ -139,7 +139,6 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     digest = ed25519.Ed25519PrivateKey.from_private_bytes(
         decoded_key).sign(policy.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-    signature = signature[:-2]  # remove trailing '='
 
     signed_policy = u'Edge-Cache-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)

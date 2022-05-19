@@ -102,8 +102,8 @@ def test_sign_cookie(capsys):
     assert results[0] == (
         'Edge-Cache-Cookie=URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMvaW5kZXguaHRtbA==:'
         'Expires=1650848400:KeyName=my-key:'
-        'Signature=kTJ4QVEax5TZmxypq8pnIkjky-s_UtKGPSCd-nxqMYfwqr5HunAy-7XumWc3asRCHI2_ikVQXs7IDXJ9gV28Dg')
+        'Signature=kTJ4QVEax5TZmxypq8pnIkjky-s_UtKGPSCd-nxqMYfwqr5HunAy-7XumWc3asRCHI2_ikVQXs7IDXJ9gV28Dg==')
     assert results[1] == (
         'Edge-Cache-Cookie=URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9mb28v:'
         'Expires=1650848400:KeyName=my-key:'
-        'Signature=I0BnupL1tKbXklf1rK50nlC9JMh4HBLogTKByatOFRvALofT159BegB26Z2WmrI-ZAgAp8Q-1__bWtFdMAqCAA')
+        'Signature=I0BnupL1tKbXklf1rK50nlC9JMh4HBLogTKByatOFRvALofT159BegB26Z2WmrI-ZAgAp8Q-1__bWtFdMAqCAA==')
