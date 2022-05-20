@@ -21,6 +21,8 @@ For more information, see the README.md under /media-cdn and the documentation
 at https://cloud.google.com/media-cdn/docs.
 """
 
+# [START mediacdn_sign_url]
+# [START mediacdn_sign_cookie]
 import base64
 import datetime
 
@@ -28,6 +30,9 @@ import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
 
 from six.moves import urllib
+
+# [END mediacdn_sign_cookie]
+# [END mediacdn_sign_url]
 
 
 # [START mediacdn_sign_url]
