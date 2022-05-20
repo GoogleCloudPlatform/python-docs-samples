@@ -18,13 +18,15 @@
 
 import datetime
 
+import pytest
+
 import snippets
 
 
 EPOCH_TIME = 1650848400
 
 
-def test_sign_url(capsys):
+def test_sign_url(capsys: pytest.LogCaptureFixture) -> None:
     results = []
     results.append(snippets.sign_url(
         'http://35.186.234.33/index.html',
@@ -52,7 +54,7 @@ def test_sign_url(capsys):
         '1650848400&KeyName=my-key&Signature=Li_D6rxUh1Kj54JbmUuAms2wmjJHJUcMXJHgYxjL4LqYH02wSX-4gCayXgklNSDpfBfSHnbdC_wvcdyXvADGDw==')
 
 
-def test_sign_url_prefix(capsys):
+def test_sign_url_prefix(capsys: pytest.LogCaptureFixture) -> None:
     results = []
     results.append(snippets.sign_url_prefix(
         'http://35.186.234.33/index.html',
@@ -87,7 +89,7 @@ def test_sign_url_prefix(capsys):
         'Signature=pVN8HKc6Be-PDczd9NjqSui3HHaoCLUN5iDv6JhQ77uKigsCih6z_cMTGjeXhgGASh1zr-ZPrOnxWJxxGWxsBg==')
 
 
-def test_sign_cookie(capsys):
+def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
     results = []
     results.append(snippets.sign_cookie(
         'http://35.186.234.33/index.html',
