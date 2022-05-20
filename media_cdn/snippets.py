@@ -36,7 +36,7 @@ from six.moves import urllib
 
 
 # [START mediacdn_sign_url]
-def sign_url(url, key_name, base64_key, expiration_time):
+def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL and configuration.
 
     Args:
@@ -74,7 +74,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
     return signed_url
 
 
-def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
+def sign_url_prefix(url: str, url_prefix, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:
@@ -117,7 +117,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
 
 
 # [START mediacdn_sign_cookie]
-def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
+def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed cookie value for the specified URL prefix and configuration.
 
     Args:
