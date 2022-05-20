@@ -16,7 +16,7 @@
 
 import sys
 
-"""Sample that sets RPO (Recovery Point Objective) to default
+"""Sample that sets the replication behavior or recovery point objective (RPO) to default.
 This sample is used on this page:
     https://cloud.google.com/storage/docs/managing-turbo-replication
 For more information, see README.md.
@@ -39,7 +39,7 @@ def set_rpo_default(bucket_name):
     bucket.rpo = RPO_DEFAULT
     bucket.patch()
 
-    print(f"RPO is DEFAULT for {bucket.name}.")
+    print(f"RPO is set to DEFAULT for {bucket.name}.")
 
 
 # [END storage_set_rpo_default]

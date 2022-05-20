@@ -39,7 +39,7 @@ def set_rpo_async_turbo(bucket_name):
     bucket.rpo = RPO_ASYNC_TURBO
     bucket.patch()
 
-    print(f"RPO is ASYNC_TURBO for {bucket.name}.")
+    print(f"RPO is set to ASYNC_TURBO for {bucket.name}.")
 
 
 # [END storage_set_rpo_async_turbo]

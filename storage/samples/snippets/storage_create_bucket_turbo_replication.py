@@ -39,7 +39,7 @@ def create_bucket_turbo_replication(bucket_name):
     bucket.rpo = RPO_ASYNC_TURBO
     bucket.create()
 
-    print(f"{bucket.name} created with RPO {bucket.rpo} in {bucket.location}.")
+    print(f"{bucket.name} created with the recovery point objective (RPO) set to {bucket.rpo} in {bucket.location}.")
 
 
 # [END storage_create_bucket_turbo_replication]

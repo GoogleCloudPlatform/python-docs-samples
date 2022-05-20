@@ -45,17 +45,17 @@ def test_get_rpo(dual_region_bucket, capsys):
 def test_set_rpo_async_turbo(dual_region_bucket, capsys):
     storage_set_rpo_async_turbo.set_rpo_async_turbo(dual_region_bucket.name)
     out, _ = capsys.readouterr()
-    assert f"RPO is ASYNC_TURBO for {dual_region_bucket.name}." in out
+    assert f"RPO is set to ASYNC_TURBO for {dual_region_bucket.name}." in out
 
 
 def test_set_rpo_default(dual_region_bucket, capsys):
     storage_set_rpo_default.set_rpo_default(dual_region_bucket.name)
     out, _ = capsys.readouterr()
-    assert f"RPO is DEFAULT for {dual_region_bucket.name}." in out
+    assert f"RPO is set to DEFAULT for {dual_region_bucket.name}." in out
 
 
 def test_create_bucket_turbo_replication(capsys):
     bucket_name = f"test-rpo-{uuid.uuid4()}"
     storage_create_bucket_turbo_replication.create_bucket_turbo_replication(bucket_name)
     out, _ = capsys.readouterr()
-    assert f"{bucket_name} created with RPO ASYNC_TURBO in NAM4." in out
+    assert f"{bucket_name} created with the recovery point objective (RPO) set to ASYNC_TURBO in NAM4." in out
