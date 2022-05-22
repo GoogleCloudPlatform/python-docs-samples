@@ -20,11 +20,8 @@ from google.api_core.exceptions import (
     ServiceUnavailable,
     TooManyRequests,
 )
-
 from google.cloud import storage
-
 import pytest
-
 from test_utils.retry import RetryErrors
 from test_utils.system import unique_resource_id
 
