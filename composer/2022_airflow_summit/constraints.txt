@@ -64,7 +64,7 @@ apache-airflow-providers-apache-beam==3.1.0
 apache-airflow-providers-apache-cassandra==2.1.0
 apache-airflow-providers-apache-drill==1.0.1
 apache-airflow-providers-apache-druid==2.1.0
-apache-airflow-providers-apache-hdfs==2.2.0
+apache-airflow-providers-apache-hdfs==2.2.3
 apache-airflow-providers-apache-hive==2.1.0
 apache-airflow-providers-apache-kylin==2.0.1
 apache-airflow-providers-apache-livy==2.1.0
