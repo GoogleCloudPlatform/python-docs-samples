@@ -66,12 +66,12 @@ def export_transcript_to_storage_beta(
     # get blob from bucket
     blob = bucket.get_blob(object_name)
 
-    # get content as string
-    results_string = blob.download_as_string()
+    # get content as bytes
+    results_bytes = blob.download_as_bytes()
 
     # get transcript exported in storage bucket
     storage_transcript = types.LongRunningRecognizeResponse.from_json(
-        results_string, ignore_unknown_fields=True
+        results_bytes, ignore_unknown_fields=True
     )
 
     # Each result is for a consecutive portion of the audio. Iterate through
