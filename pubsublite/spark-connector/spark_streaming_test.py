@@ -136,7 +136,7 @@ def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
             },
             "lifecycle_config": {
                 # Schedule cluster deletion after 2 hours of inactivity.
-                "idle_delete_ttl": "3600s",
+                "idle_delete_ttl": {"seconds": 3600},
             },
         },
     }
