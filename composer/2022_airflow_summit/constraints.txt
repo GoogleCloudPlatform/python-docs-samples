@@ -50,7 +50,7 @@ adal==1.2.7
 aiohttp==3.8.1
 aiosignal==1.2.0
 alabaster==0.7.12
-alembic==1.7.5
+alembic==1.7.7
 aliyun-python-sdk-core==2.13.35
 aliyun-python-sdk-kms==2.15.0
 amqp==5.0.7
