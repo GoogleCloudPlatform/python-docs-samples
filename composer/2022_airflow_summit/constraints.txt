@@ -97,7 +97,7 @@ apache-airflow-providers-jira==2.0.1
 apache-airflow-providers-microsoft-azure==3.4.0
 apache-airflow-providers-microsoft-mssql==2.0.1
 apache-airflow-providers-microsoft-psrp==1.0.1
-apache-airflow-providers-microsoft-winrm==2.0.1
+apache-airflow-providers-microsoft-winrm==2.0.5
 apache-airflow-providers-mongo==2.2.0
 apache-airflow-providers-mysql==2.1.1
 apache-airflow-providers-neo4j==2.0.2
