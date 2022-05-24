@@ -197,7 +197,7 @@ def get_attribute_definition(
 
 
 # [START healthcare_list_attribute_definitions]
-def list_attribute_definitions(project_id, location, dataset_id, consent_store_id):
+def list_attribute_definitions(project_id: str, location: str, dataset_id: str, consent_store_id: str):
     """Lists the attribute definitions in the given consent store.
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/consent
     before running the sample."""
@@ -286,6 +286,7 @@ def patch_attribute_definition(
         .locations()
         .datasets()
         .consentStores()
+        .attributeDefinitions()
         .patch(name=attribute_definition_name, updateMask="description", body=patch)
     )
 

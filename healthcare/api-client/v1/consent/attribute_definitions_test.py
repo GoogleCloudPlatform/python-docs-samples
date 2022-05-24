@@ -38,6 +38,8 @@ request_attribute_definition_id = "test_request_attribute_definition_id_{}".form
     uuid.uuid4().hex[:5]
 )
 
+description = "whether the data is de-identifiable"
+
 
 @pytest.fixture(scope="module")
 def test_dataset():
@@ -149,6 +151,15 @@ def test_CRUD_resource_attribute_definition(
         project_id, location, dataset_id, consent_store_id
     )
 
+    attribute_definitions.patch_attribute_definition(
+        project_id,
+        location,
+        dataset_id,
+        consent_store_id,
+        resource_attribute_definition_id,
+        description,
+    )
+
     attribute_definitions.delete_attribute_definition(
         project_id,
         location,
@@ -159,10 +170,11 @@ def test_CRUD_resource_attribute_definition(
 
     out, _ = capsys.readouterr()
 
-    # Check that create/get/list/delete worked
+    # Check that create/get/list/patch/delete worked
     assert "Created RESOURCE attribute definition" in out
     assert "Got attribute definition" in out
     assert "name" in out
+    assert "Patched attribute definition" in out
     assert "Deleted attribute definition" in out
 
 
@@ -193,6 +205,15 @@ def test_CRUD_request_attribute_definition(
         project_id, location, dataset_id, consent_store_id
     )
 
+    attribute_definitions.patch_attribute_definition(
+        project_id,
+        location,
+        dataset_id,
+        consent_store_id,
+        request_attribute_definition_id,
+        description,
+    )
+
     attribute_definitions.delete_attribute_definition(
         project_id,
         location,
@@ -203,8 +224,9 @@ def test_CRUD_request_attribute_definition(
 
     out, _ = capsys.readouterr()
 
-    # Check that create/get/list/delete worked
+    # Check that create/get/list/patch/delete worked
     assert "Created REQUEST attribute definition" in out
     assert "Got attribute definition" in out
     assert "name" in out
+    assert "Patched attribute definition" in out
     assert "Deleted attribute definition" in out
