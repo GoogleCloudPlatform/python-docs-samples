@@ -1,0 +1,9 @@
+# Files generated from testing.
+/*.egg-info/
+/*.gif
+/README.py
+/datasets/
+/model/
+/predictions/
+/training-data*.tfrecord.gz
+/validation-data*.tfrecord.gz

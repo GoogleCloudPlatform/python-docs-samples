@@ -1,4 +1,4 @@
-Django==4.0.1
+Django==4.0.4
 django-environ==0.8.1
 psycopg2-binary==2.9.3
-google-cloud-secret-manager==2.9.2
+google-cloud-secret-manager==2.10.0
