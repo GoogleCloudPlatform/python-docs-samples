@@ -1,2 +1,2 @@
-google-cloud-bigquery-migration==0.4.1
+google-cloud-bigquery-migration==0.4.2
 protobuf==3.20.1
