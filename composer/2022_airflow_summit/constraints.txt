@@ -167,7 +167,7 @@ backcall==0.2.0
 backoff==1.10.0
 backports.entry-points-selectable==1.1.1
 backports.zoneinfo==0.2.1
-bcrypt==3.2.0
+bcrypt==3.2.2
 beautifulsoup4==4.10.0
 billiard==3.6.4.0
 black==21.12b0
