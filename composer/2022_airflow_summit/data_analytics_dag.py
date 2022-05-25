@@ -113,6 +113,13 @@ with models.DAG(
             ON Holidays.Date = Weather.Date;
             """
 
+            # for demo purposes we are using WRITE_TRUNCATE
+            # to reduce chance of 409 duplicate errors
+            # Your use case may be different, see the Job docs
+            # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
+            # for alternative values for the writeDisposition
+            # or consider using partitioned tables
+            # https://cloud.google.com/bigquery/docs/partitioned-tables
             bq_join_holidays_weather_data = BigQueryInsertJobOperator(
                 task_id=f"bq_join_holidays_weather_data_{str(year)}",
                 configuration={
@@ -124,7 +131,7 @@ with models.DAG(
                             "datasetId": BQ_DESTINATION_DATASET_NAME,
                             "tableId": BQ_DESTINATION_TABLE_NAME,
                         },
-                        "writeDisposition": "WRITE_APPEND",
+                        "writeDisposition": "WRITE_TRUNCATE",
                     }
                 },
                 location="US",
