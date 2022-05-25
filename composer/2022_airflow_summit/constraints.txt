@@ -136,7 +136,7 @@ arrow==1.2.1
 asana==0.10.3
 asn1crypto==1.4.0
 astroid==2.9.0
-async-timeout==4.0.1
+async-timeout==4.0.2
 atlasclient==1.0.0
 attrs==20.3.0
 avro-python3==1.9.2.1
