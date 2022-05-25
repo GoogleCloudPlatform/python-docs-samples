@@ -122,7 +122,7 @@ apache-airflow-providers-slack==4.1.0
 apache-airflow-providers-snowflake==2.3.1
 apache-airflow-providers-sqlite==2.0.1
 apache-airflow-providers-ssh==2.3.0
-apache-airflow-providers-tableau==2.1.2
+apache-airflow-providers-tableau==2.1.8
 apache-airflow-providers-telegram==2.0.1
 apache-airflow-providers-trino==2.0.2
 apache-airflow-providers-vertica==2.0.1
