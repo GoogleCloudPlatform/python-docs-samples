@@ -132,7 +132,7 @@ apache-beam==2.34.0
 apispec==3.3.2
 appdirs==1.4.4
 argcomplete==1.12.3
-arrow==1.2.1
+arrow==1.2.2
 asana==0.10.3
 asn1crypto==1.4.0
 astroid==2.9.0
