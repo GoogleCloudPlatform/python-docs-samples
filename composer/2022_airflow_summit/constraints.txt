@@ -133,7 +133,7 @@ apispec==3.3.2
 appdirs==1.4.4
 argcomplete==1.12.3
 arrow==1.2.1
-asana==0.10.3
+asana==0.10.13
 asn1crypto==1.4.0
 astroid==2.9.0
 async-timeout==4.0.1
