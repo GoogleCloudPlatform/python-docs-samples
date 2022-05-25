@@ -142,7 +142,7 @@ attrs==20.3.0
 avro-python3==1.9.2.1
 aws-xray-sdk==2.9.0
 azure-batch==11.0.0
-azure-common==1.1.27
+azure-common==1.1.28
 azure-core==1.21.1
 azure-cosmos==4.2.0
 azure-datalake-store==0.0.52
