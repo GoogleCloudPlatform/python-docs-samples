@@ -179,7 +179,7 @@ bowler==0.9.0
 cachetools==4.2.2
 cassandra-driver==3.25.0
 cattrs==1.5.0
-celery==5.2.1
+celery==5.2.6
 certifi==2020.12.5
 cffi==1.15.0
 cfgv==3.3.1
