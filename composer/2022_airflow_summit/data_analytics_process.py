@@ -48,7 +48,10 @@ if __name__ == "__main__":
         temp_path = BUCKET_NAME
 
         # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
-        df.write.format("bigquery").option("temporaryGcsBucket", temp_path).save(
+        # Uses the "overwrite" SaveMode to ensure DAG doesn't fail when being re-run
+        # See https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes
+        # for other save mode options
+        df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode("overwrite").save(
             WRITE_TABLE
         )
         print("Data written to BigQuery")
