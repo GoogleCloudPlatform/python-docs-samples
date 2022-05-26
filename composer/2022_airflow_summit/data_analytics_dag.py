@@ -113,8 +113,8 @@ with models.DAG(
             ON Holidays.Date = Weather.Date;
             """
 
-            # for demo purposes we are using WRITE_TRUNCATE
-            # to reduce chance of 409 duplicate errors
+            # for demo purposes we are using WRITE_APPEND
+            # but if you run the DAG repeatedly it will continue to append
             # Your use case may be different, see the Job docs
             # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
             # for alternative values for the writeDisposition
@@ -131,7 +131,7 @@ with models.DAG(
                             "datasetId": BQ_DESTINATION_DATASET_NAME,
                             "tableId": BQ_DESTINATION_TABLE_NAME,
                         },
-                        "writeDisposition": "WRITE_TRUNCATE",
+                        "writeDisposition": "WRITE_APPEND",
                     }
                 },
                 location="US",
