@@ -249,7 +249,7 @@ google-cloud-automl==2.5.2
 google-cloud-bigquery-datatransfer==3.4.1
 google-cloud-bigquery-storage==2.10.1
 google-cloud-bigquery==2.31.0
-google-cloud-bigtable==1.7.0
+google-cloud-bigtable==1.7.1
 google-cloud-build==3.7.1
 google-cloud-container==1.0.1
 google-cloud-core==1.7.2
