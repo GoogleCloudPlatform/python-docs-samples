@@ -30,9 +30,11 @@ BQ_DESTINATION_DATASET_NAME = "holiday_weather"
 BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
 BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
 
-
+# Dataproc configs
+BUCKET_NAME = "{{var.value.gcs_bucket}}"
 PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-PROCESSING_PYTHON_FILE = "gs://{{var.value.gcs_bucket}}/data_analytics_process.py"
+PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
+
 
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
@@ -40,11 +42,17 @@ BATCH_CONFIG = {
         "jar_file_uris": [PYSPARK_JAR],
         "main_python_file_uri": PROCESSING_PYTHON_FILE,
         "args": [
-            PROJECT_NAME,
+            BUCKET_NAME,
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}",
         ],
+
     },
+    "environment_config": {
+        "execution_config": {
+            "service_account": "{{var.value.dataproc_service_account}}"
+        }
+    }
 }
 
 yesterday = datetime.datetime.combine(
@@ -75,9 +83,11 @@ with models.DAG(
         batch=BATCH_CONFIG,
         batch_id=BATCH_ID,
     )
+    # This data is static and it is safe to use WRITE_TRUNCATE
+    # to reduce chance of 409 duplicate errors
     load_external_dataset = GCSToBigQueryOperator(
         task_id="run_bq_external_ingestion",
-        bucket="{{var.value.gcs_bucket}}",
+        bucket=BUCKET_NAME,
         source_objects=["holidays.csv"],
         destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
         source_format="CSV",
@@ -86,6 +96,7 @@ with models.DAG(
             {"name": "Holiday", "type": "STRING"},
         ],
         skip_leading_rows=1,
+        write_disposition="WRITE_TRUNCATE"
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
@@ -102,6 +113,13 @@ with models.DAG(
             ON Holidays.Date = Weather.Date;
             """
 
+            # for demo purposes we are using WRITE_TRUNCATE
+            # to reduce chance of 409 duplicate errors
+            # Your use case may be different, see the Job docs
+            # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
+            # for alternative values for the writeDisposition
+            # or consider using partitioned tables
+            # https://cloud.google.com/bigquery/docs/partitioned-tables
             bq_join_holidays_weather_data = BigQueryInsertJobOperator(
                 task_id=f"bq_join_holidays_weather_data_{str(year)}",
                 configuration={
@@ -113,7 +131,7 @@ with models.DAG(
                             "datasetId": BQ_DESTINATION_DATASET_NAME,
                             "tableId": BQ_DESTINATION_TABLE_NAME,
                         },
-                        "writeDisposition": "WRITE_APPEND",
+                        "writeDisposition": "WRITE_TRUNCATE",
                     }
                 },
                 location="US",
