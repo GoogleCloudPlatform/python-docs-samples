@@ -21,5 +21,5 @@ def test_dag_import() -> None:
     environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    import bigquery_permissions as module
-    internal_unit_testing.assert_has_valid_dag(module)
+    import bigquery_permissions
+    internal_unit_testing.assert_has_valid_dag(bigquery_permissions)
