@@ -176,7 +176,7 @@ boto3==1.18.65
 boto==2.49.0
 botocore==1.21.65
 bowler==0.9.0
-cachetools==4.2.2
+cachetools==4.2.4
 cassandra-driver==3.25.0
 cattrs==1.5.0
 celery==5.2.1
