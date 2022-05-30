@@ -47,7 +47,7 @@ def test_args():
     session.mount(BASE_URL, retry_adapter)
 
     name = str(uuid.uuid4())
-    res = requests.post(
+    res = session.post(
       BASE_URL,
       json={'name': name}
     )
