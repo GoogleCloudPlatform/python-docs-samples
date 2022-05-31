@@ -100,7 +100,7 @@ env_variables:
   DB_PASS: <YOUR_DB_PASSWORD>
   DB_NAME: <YOUR_DB_NAME>
 beta_settings:
-  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:1433
 ```
 
 Note: Saving credentials in environment variables is convenient, but not secure - consider a more

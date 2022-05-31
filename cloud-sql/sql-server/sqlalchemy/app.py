@@ -77,7 +77,6 @@ def init_db() -> sqlalchemy.engine.base.Engine:
     global db
     db = init_connection_pool()
     migrate_db(db)
-    print("URL: ", db.url)
 
 
 @app.route("/", methods=["GET"])
