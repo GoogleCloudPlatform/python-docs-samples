@@ -20,7 +20,7 @@ import sqlalchemy
 
 
 # connect_tcp_socket initializes a TCP connection pool
-# for a Cloud SQL instance of MySQL.
+# for a Cloud SQL instance of SQL Server.
 def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as

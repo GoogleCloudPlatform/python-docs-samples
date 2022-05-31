@@ -129,7 +129,6 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
             status=400,
         )
 
-    # [START cloud_sql_server_sqlalchemy_connection]
     # [START cloud_sql_sqlserver_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
@@ -152,7 +151,6 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         )
         # [END_EXCLUDE]
     # [END cloud_sql_sqlserver_sqlalchemy_connection]
-    # [END cloud_sql_server_sqlalchemy_connection]
 
     return Response(
         status=200,
