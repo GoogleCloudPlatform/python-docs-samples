@@ -12,12 +12,15 @@ This directory contains samples for Cloud Healthcare API. `Cloud Healthcare API`
 
 
 
-.. _Cloud Healthcare API: https://cloud.google.com/healthcare/docs
+.. _Cloud Healthcare API: https://cloud.google.com/healthcare-api/docs
 
 To run the sample, you need to enable the API at: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
 
-To run the sample, you need to have `Healthcare Consent Store Administrator` role.
 
+To run the sample, you need to have the following roles:
+
+* `Healthcare Consent Store Administrator`
+* `Healthcare Attribute Definition Editor`
 
 
 
@@ -68,11 +71,11 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
-Datasets
+Consent
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/v1/consents/consent_stores.py,healthcare/api-client/v1/consents/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/v1/consent/consent_stores.py,healthcare/api-client/v1/consent/README.rst
 
 
 
@@ -84,38 +87,44 @@ To run this sample:
     $ python consent_stores.py
 
     usage: consent_stores.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
-                       [--consent_store_id DATASET_ID]
-                       [--default_consent_ttl DEFAULT_CONSENT_TTL]
-                       [--member MEMBER] [--role ROLE]
-                       {create-consent-store,delete-consent-store,get-consent-store,list-consent-stores,patch-consent-store,get_iam_policy,set_iam_policy}
-                       ...
+                             [--dataset_id DATASET_ID]
+                             [--consent_store_id CONSENT_STORE_ID]
+                             [--default_consent_ttl DEFAULT_CONSENT_TTL]
+                             [--export_format {FORMAT_UNSPECIFIED,consent,JSON_BIGQUERY_IMPORT}]
+                             [--member MEMBER] [--role ROLE]
+                             {create-consent-store,delete-consent-store,get-consent-store,list-consent-stores,patch-consent-store,get_iam_policy,set_iam_policy}
+                             ...
 
     positional arguments:
       {create-consent-store,delete-consent-store,get-consent-store,list-consent-stores,patch-consent-store,get_iam_policy,set_iam_policy}
-        create-consent-store      Creates a consent store. See
+        create-consent-store
+                            Creates a new consent store within the parent dataset.
+                            See https://github.com/GoogleCloudPlatform/python-
+                            docs-samples/tree/main/healthcare/api-
+                            client/v1/consent before running the sample.
+        delete-consent-store
+                            Deletes the specified consent store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
+                            samples/tree/main/healthcare/api-client/v1/consent
                             before running the sample.
-        delete-consent-store      Deletes a consent store. See
+        get-consent-store   Gets the specified consent store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
+                            samples/tree/main/healthcare/api-client/v1/consent
                             before running the sample.
-        get-consent-store         Gets the specified consent store. See
+        list-consent-stores
+                            Lists the consent stores in the given dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
+                            samples/tree/main/healthcare/api-client/v1/consent
                             before running the sample.
-        list-consent-stores       Lists the consent stores in the given dataset. See
+        patch-consent-store
+                            Updates the consent store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
+                            samples/tree/main/healthcare/api-client/v1/consent
                             before running the sample.
-        patch-consent-store       Updates the consent store. See
-                            https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
-                            before running the sample.
-        get_iam_policy      Gets the IAM policy for the specified consent store. See
-                            https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
-                            before running the sample.
+        get_iam_policy      Gets the IAM policy for the specified consent store.
+                            See https://github.com/GoogleCloudPlatform/python-
+                            docs-samples/tree/main/healthcare/api-
+                            client/v1/consent before running the sample.
         set_iam_policy      Sets the IAM policy for the specified consent store. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
@@ -129,21 +138,112 @@ To run this sample:
                             role, such as 'roles/viewer', 'roles/owner', or
                             'roles/editor' See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/consents
+                            samples/tree/main/healthcare/api-client/v1/consent
                             before running the sample.
 
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
-      --location LOCATION   GCP cloud region
-      --consent_store_id DATASET_ID
-                            Name of consent
+      --location LOCATION   GCP location
+      --dataset_id DATASET_ID
+                            Name of dataset
+      --consent_store_id CONSENT_STORE_ID
+                            Name of consent store
       --default_consent_ttl DEFAULT_CONSENT_TTL
-                            The default time-to-live (TTL) of consents in the consent store.
+                            Default time-to-live (TTL) of consents in the consent
+                            store.
+      --export_format {FORMAT_UNSPECIFIED,consent,JSON_BIGQUERY_IMPORT}
+                            Specifies the output format. If the format is
+                            unspecified, thedefault functionality is to export to
+                            consent.
       --member MEMBER       Member to add to IAM policy (e.g.
                             "domain:example.com")
       --role ROLE           IAM Role to give to member (e.g. "roles/viewer")
+
+
+
+AttributeDefinitions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/v1/consent/attribute_definitions.py,healthcare/api-client/v1/consent/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python attribute_definitions.py
+
+    usage: attribute_definitions.py [-h] [--project_id PROJECT_ID]
+                                    [--location LOCATION]
+                                    [--dataset_id DATASET_ID]
+                                    [--consent_store_id CONSENT_STORE_ID]
+                                    [--resource_attribute_definition_id RESOURCE_ATTRIBUTE_DEFINITION_ID]
+                                    [--request_attribute_definition_id REQUEST_ATTRIBUTE_DEFINITION_ID]
+                                    [--attribute_definition_id ATTRIBUTE_DEFINITION_ID]
+                                    [--description DESCRIPTION]
+                                    {create-resource-attribute-definition,create-request-attribute-definition,get-attribute-definition,list-attribute-definitions,patch-attribute-definition,delete-attribute-definition}
+                                    ...
+
+    positional arguments:
+      {create-resource-attribute-definition,create-request-attribute-definition,get-attribute-definition,list-attribute-definitions,patch-attribute-definition,delete-attribute-definition}
+        create-resource-attribute-definition
+                            Creates a RESOURCE attribute definition. A RESOURCE
+                            attribute is an attribute whose value is determined by
+                            the properties of the data or action. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+        create-request-attribute-definition
+                            Creates a REQUEST attribute definition. A REQUEST
+                            attribute is an attribute whose value is determined by
+                            the requester's identity or purpose. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+        get-attribute-definition
+                            Gets the specified attribute definition. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+        list-attribute-definitions
+                            Lists the attribute definitions in the given consent
+                            store. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+        patch-attribute-definition
+                            Updates the attribute definition. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+        delete-attribute-definition
+                            Deletes the specified attribute definition. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/consent
+                            before running the sample.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --project_id PROJECT_ID
+                            GCP cloud project name
+      --location LOCATION   GCP location
+      --dataset_id DATASET_ID
+                            ID of dataset
+      --consent_store_id CONSENT_STORE_ID
+                            ID of consent store
+      --resource_attribute_definition_id RESOURCE_ATTRIBUTE_DEFINITION_ID
+                            ID of a RESOURCE attribute definition
+      --request_attribute_definition_id REQUEST_ATTRIBUTE_DEFINITION_ID
+                            ID of a REQUEST attribute definition
+      --attribute_definition_id ATTRIBUTE_DEFINITION_ID
+                            ID of an attribute definition
+      --description DESCRIPTION
+                            A description of an attribute
 
 
 

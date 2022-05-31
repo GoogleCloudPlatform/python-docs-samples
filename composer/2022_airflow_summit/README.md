@@ -9,6 +9,14 @@ at the 2022 Airflow summit. Be sure to
 
 Running a number of tasks in parallel showcases autoscaling in a Cloud Composer environment.
 
+## data_analytics_dag
+
+Runs a basic Data Analytics workflow using BigQuery, Cloud Storage, and Dataproc Serverless
+
 ## retries
 
 Showcasing how retries can be used when API calls fail.
+
+## bigquery_permissions
+
+Demo showing error message when there are missing permissions to query a BigQuery dataset.

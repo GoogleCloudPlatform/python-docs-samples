@@ -134,6 +134,10 @@ def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
                     "https://www.googleapis.com/auth/cloud-platform",
                 ],
             },
+            "lifecycle_config": {
+                # Schedule cluster deletion after 2 hours of inactivity.
+                "idle_delete_ttl": {"seconds": 3600},
+            },
         },
     }
 
