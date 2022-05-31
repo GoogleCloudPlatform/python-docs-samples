@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloud_sql_server_sqlalchemy_connect_connector]
+# [START cloud_sql_sqlserver_sqlalchemy_connect_connector]
 import os
 
 from google.cloud.sql.connector import Connector, IPTypes
@@ -22,7 +22,7 @@ import sqlalchemy
 
 
 # connect_with_connector initializes a connection pool for a
-# Cloud SQL instance of MySQL using the Cloud SQL Python Connector.
+# Cloud SQL instance of SQL Server using the Cloud SQL Python Connector.
 def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
@@ -47,7 +47,6 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
             db=db_name,
         )
         return conn
-
 
     pool = sqlalchemy.create_engine(
         "mssql+pytds://localhost",
@@ -75,4 +74,4 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     )
     return pool
 
-# [END cloud_sql_server_sqlalchemy_connect_connector]
+# [END cloud_sql_sqlserver_sqlalchemy_connect_connector]

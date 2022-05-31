@@ -15,6 +15,7 @@
 import datetime
 import logging
 import os
+from typing import Dict
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
@@ -46,19 +47,10 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
     )
 
 
-# This global variable is declared with a value of `None`, instead of calling
-# `init_connection_engine()` immediately, to simplify testing. In general, it
-# is safe to initialize your database connection pool when your script starts
-# -- there is no need to wait for the first request.
-db = None
-
-
-@app.before_first_request
-def create_tables():
-    global db
-    db = db or init_connection_pool()
-    # Create tables (if they don't already exist)
-    if not db.has_table("votes"):
+# create 'votes' table in database if it does not already exist
+def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
+    inspector = sqlalchemy.inspect(db)
+    if not inspector.has_table("votes"):
         metadata = sqlalchemy.MetaData(db)
         Table(
             "votes",
@@ -70,18 +62,42 @@ def create_tables():
         metadata.create_all()
 
 
+# This global variable is declared with a value of `None`, instead of calling
+# `init_db()` immediately, to simplify testing. In general, it
+# is safe to initialize your database connection pool when your script starts
+# -- there is no need to wait for the first request.
+db = None
+
+
+# init_db lazily instantiates a database connection pool. Users of Cloud Run or
+# App Engine may wish to skip this lazy instantiation and connect as soon
+# as the function is loaded. This is primarily to help testing.
+@app.before_first_request
+def init_db() -> sqlalchemy.engine.base.Engine:
+    global db
+    db = init_connection_pool()
+    migrate_db(db)
+    print("URL: ", db.url)
+
+
 @app.route("/", methods=["GET"])
-def index():
-    context = get_index_context()
+def render_index() -> str:
+    context = get_index_context(db)
     return render_template("index.html", **context)
 
 
-def get_index_context():
+@app.route("/votes", methods=["POST"])
+def cast_vote() -> Response:
+    team = request.form['team']
+    return save_vote(db, team)
+
+
+def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT TOP(5) candidate, time_cast FROM votes " "ORDER BY time_cast DESC"
+            "SELECT TOP(5) candidate, time_cast FROM votes ORDER BY time_cast DESC"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
@@ -103,21 +119,22 @@ def get_index_context():
     }
 
 
-@app.route("/", methods=["POST"])
-def save_vote():
-    # Get the team and time the vote was cast.
-    team = request.form["team"]
+@app.route("/votes", methods=["POST"])
+def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
     time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
-        logger.warning(team)
-        return Response(response="Invalid team specified.", status=400)
+        logger.warning(f"Received invalid 'team' property: '{team}'")
+        return Response(
+            response="Invalid team specified. Should be one of 'TABS' or 'SPACES'",
+            status=400,
+        )
 
     # [START cloud_sql_server_sqlalchemy_connection]
     # [START cloud_sql_sqlserver_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate) VALUES (:time_cast, :candidate)"
     )
     try:
         # Using a with statement ensures that the connection is always released
@@ -140,7 +157,7 @@ def save_vote():
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
+        response=f"Vote successfully cast for '{team}' at time {time_cast}!"
     )
 
 
