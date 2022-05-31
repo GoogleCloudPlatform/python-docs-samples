@@ -1,4 +1,5 @@
 Flask==2.1.0
+gunicorn==20.1.0
 python-tds==1.11.0
 pyodbc==4.0.32
 pyopenssl==22.0.0

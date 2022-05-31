@@ -81,6 +81,34 @@ python app.py
 
 Navigate towards `http://127.0.0.1:8080` to verify your application is running correctly.
 
+## Deploy to App Engine Standard
+
+To run on GAE-Standard, create an App Engine project by following the setup for these 
+[instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
+
+First, update `app.standard.yaml` with the correct values to pass the environment 
+variables into the runtime. Your `app.standard.yaml` file should look like this:
+
+```yaml
+runtime: python37
+entrypoint: gunicorn -b :$PORT app:app
+env_variables:
+  INSTANCE_CONNECTION_NAME: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
+```
+
+Note: Saving credentials in environment variables is convenient, but not secure - consider a more
+secure solution such as [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) to
+help keep secrets safe.
+
+Next, the following command will deploy the application to your Google Cloud project:
+
+```bash
+gcloud app deploy app.standard.yaml
+```
+
 ## Deploy to App Engine Flexible
 
 To run on GAE-Flexible, create an App Engine project by following the setup for these 
@@ -129,8 +157,7 @@ gcloud builds submit --tag gcr.io/<YOUR_PROJECT_ID>/run-sqlserver
 ```sh
 gcloud run deploy run-sqlserver --image gcr.io/<YOUR_PROJECT_ID>/run-sqlserver \
   --add-cloudsql-instances '<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>' \
-  --set-env-vars INSTANCE_HOST='127.0.0.1' \
-  --set-env-vars DB_PORT='1433' \
+  --set-env-vars INSTANCE_CONNECTION_NAME='<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>' \
   --set-env-vars DB_USER='<YOUR_DB_USER_NAME>' \
   --set-env-vars DB_PASS='<YOUR_DB_PASSWORD>' \
   --set-env-vars DB_NAME='<YOUR_DB_NAME>'
@@ -147,15 +174,15 @@ Secret Manager at runtime via an environment variable.
 
 Create secrets via the command line:
 ```sh
-echo -n $INSTANCE_HOST | \
-    gcloud secrets create [INSTANCE_HOST_SECRET] --data-file=-
+echo -n $DB_PASS | \
+    gcloud secrets create [DB_PASS_SECRET] --data-file=-
 ```
 
 Deploy the service to Cloud Run specifying the env var name and secret name:
 ```sh
 gcloud beta run deploy SERVICE --image gcr.io/<YOUR_PROJECT_ID>/run-sql \
     --add-cloudsql-instances <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME> \
-    --update-secrets INSTANCE_HOST=[INSTANCE_HOST_SECRET]:latest, \
+    --update-secrets INSTANCE_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME_SECRET]:latest, \
       DB_PORT-[DB_PORT_SECRET]:latest, \
       DB_USER=[DB_USER_SECRET]:latest, \
       DB_PASS=[DB_PASS_SECRET]:latest, \
@@ -166,5 +193,21 @@ gcloud beta run deploy SERVICE --image gcr.io/<YOUR_PROJECT_ID>/run-sql \
 
 For more details about using Cloud Run see http://cloud.run.
 Review other [Python on Cloud Run samples](../../../run/).
+
+## Deploy to Cloud Functions
+
+To deploy the service to [Cloud Functions](https://cloud.google.com/functions/docs) run the following command:
+
+```sh
+gcloud functions deploy votes --runtime python39 --trigger-http --allow-unauthenticated \
+--set-env-vars INSTANCE_CONNECTION_NAME=<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME> \
+--set-env-vars DB_USER=$DB_USER \
+--set-env-vars DB_PASS=$DB_PASS \
+--set-env-vars DB_NAME=$DB_NAME
 ```
 
+Take note of the URL output at the end of the deployment process or run the following to view your function:
+
+```sh
+gcloud app browse
+```
