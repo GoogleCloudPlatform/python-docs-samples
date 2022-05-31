@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2017 Google, Inc.
+# Copyright 2022 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,29 +15,34 @@
 # limitations under the License.
 
 """This application demonstrates how to perform operations on data (content)
-when using Google Cloud CDN (Content Delivery Network).
+when using Google Cloud Media CDN.
 
-For more information, see the README.md under /cdn and the documentation
-at https://cloud.google.com/cdn/docs.
+For more information, see the README.md under /media-cdn and the documentation
+at https://cloud.google.com/media-cdn/docs.
 """
 
-import argparse
+# [START mediacdn_sign_url]
+# [START mediacdn_sign_cookie]
 import base64
 import datetime
-import hashlib
-import hmac
+
+import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
+
 
 from six.moves import urllib
 
+# [END mediacdn_sign_cookie]
+# [END mediacdn_sign_url]
 
-# [START sign_url]
-def sign_url(url, key_name, base64_key, expiration_time):
+
+# [START mediacdn_sign_url]
+def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL and configuration.
 
     Args:
         url: URL to sign as a string.
         key_name: name of the signing key as a string.
-        base64_key: signing key as a base64 encoded string.
+        base64_key: signing key as a base64 encoded byte string.
         expiration_time: expiration time as a UTC datetime object.
 
     Returns:
@@ -60,17 +65,16 @@ def sign_url(url, key_name, base64_key, expiration_time):
             expires=expiration_timestamp,
             key_name=key_name)
 
-    digest = hmac.new(
-        decoded_key, url_to_sign.encode('utf-8'), hashlib.sha1).digest()
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
+        decoded_key).sign(url_to_sign.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-
     signed_url = u'{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
 
-    print(signed_url)
+    return signed_url
 
 
-def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
+def sign_url_prefix(url: str, url_prefix, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:
@@ -100,22 +104,20 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
             expires=expiration_timestamp,
             key_name=key_name)
 
-    digest = hmac.new(
-            decoded_key, policy.encode('utf-8'), hashlib.sha1).digest()
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
+        decoded_key).sign(policy.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-
     signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
             url=stripped_url,
             separator='&' if query_params else '?',
             policy=policy,
             signature=signature)
+    return signed_url
+# [END mediacdn_sign_url]
 
-    print(signed_url)
-# [END sign_url]
 
-
-# [START cdn_sign_cookie]
-def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
+# [START mediacdn_sign_cookie]
+def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed cookie value for the specified URL prefix and configuration.
 
     Args:
@@ -125,7 +127,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
         expiration_time: expiration time as a UTC datetime object.
 
     Returns:
-        Returns the Cloud-CDN-Cookie value based on the specified configuration.
+        Returns the Edge-Cache-Cookie value based on the specified configuration.
     """
     encoded_url_prefix = base64.urlsafe_b64encode(
             url_prefix.strip().encode('utf-8')).decode('utf-8')
@@ -139,81 +141,11 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
             expires=expiration_timestamp,
             key_name=key_name)
 
-    digest = hmac.new(
-            decoded_key, policy.encode('utf-8'), hashlib.sha1).digest()
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
+        decoded_key).sign(policy.encode('utf-8'))
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
-    signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
+    signed_policy = u'Edge-Cache-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
-    print(signed_policy)
-# [END cdn_sign_cookie]
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-            description=__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    subparsers = parser.add_subparsers(dest='command')
-
-    sign_url_parser = subparsers.add_parser(
-            'sign-url',
-            help="Sign a URL to grant temporary authorized access.")
-    sign_url_parser.add_argument(
-            'url', help='The URL to sign.')
-    sign_url_parser.add_argument(
-            'key_name',
-            help='Key name for the signing key.')
-    sign_url_parser.add_argument(
-            'base64_key',
-            help='The base64 encoded signing key.')
-    sign_url_parser.add_argument(
-            'expiration_time',
-            type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
-            help='Expiration time expessed as seconds since the epoch.')
-
-    sign_url_prefix_parser = subparsers.add_parser(
-            'sign-url-prefix',
-            help="Sign a URL prefix to grant temporary authorized access.")
-    sign_url_prefix_parser.add_argument(
-            'url', help='The request URL.')
-    sign_url_prefix_parser.add_argument(
-            'url_prefix', help='The URL prefix to sign.')
-    sign_url_prefix_parser.add_argument(
-            'key_name',
-            help='Key name for the signing key.')
-    sign_url_prefix_parser.add_argument(
-            'base64_key',
-            help='The base64 encoded signing key.')
-    sign_url_prefix_parser.add_argument(
-            'expiration_time',
-            type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
-            help='Expiration time expessed as seconds since the epoch.')
-
-    sign_cookie_parser = subparsers.add_parser(
-            'sign-cookie',
-            help="Generate a signed cookie to grant temporary authorized access.")
-    sign_cookie_parser.add_argument(
-            'url_prefix', help='The URL prefix to sign.')
-    sign_cookie_parser.add_argument(
-            'key_name',
-            help='Key name for the signing key.')
-    sign_cookie_parser.add_argument(
-            'base64_key',
-            help='The base64 encoded signing key.')
-    sign_cookie_parser.add_argument(
-            'expiration_time',
-            type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
-            help='Expiration time expressed as seconds since the epoch.')
-
-    args = parser.parse_args()
-
-    if args.command == 'sign-url':
-        sign_url(
-            args.url, args.key_name, args.base64_key, args.expiration_time)
-    elif args.command == 'sign-url-prefix':
-        sign_url_prefix(
-            args.url, args.url_prefix, args.key_name, args.base64_key, args.expiration_time)
-    elif args.command == 'sign-cookie':
-        sign_cookie(
-            args.url_prefix, args.key_name, args.base64_key, args.expiration_time)
+    return signed_policy
+# [END mediacdn_sign_cookie]
