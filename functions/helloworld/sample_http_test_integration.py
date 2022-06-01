@@ -1,4 +1,4 @@
-# Copyright 220 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ def test_args():
     session.mount(BASE_URL, retry_adapter)
 
     name = str(uuid.uuid4())
-    res = requests.post(
+    res = session.post(
       BASE_URL,
       json={'name': name}
     )

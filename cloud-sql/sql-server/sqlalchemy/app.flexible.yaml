@@ -14,14 +14,18 @@
 
 runtime: custom
 env: flex
+entrypoint: gunicorn -b :$PORT app:app
 
-# Remember - storing secrets in plaintext is potentially unsafe. Consider using
-# something like https://cloud.google.com/secret-manager/docs to help keep secrets secret.
+# Note: Saving credentials in environment variables is convenient, but not
+# secure - consider a more secure solution such as
+# Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+# keep secrets safe.
 env_variables:
-  DB_USER: <your-username>
-  DB_PASS: <your-password>
-  DB_NAME: <your-db-name>
-  DB_HOST: 172.17.0.1:<PORT>
+  INSTANCE_HOST: '172.17.0.1'
+  DB_PORT: '1433'
+  DB_USER: <YOUR_DB_USER_NAME>
+  DB_PASS: <YOUR_DB_PASSWORD>
+  DB_NAME: <YOUR_DB_NAME>
 
 beta_settings:
-  cloud_sql_instances: <project-name>:<region-name>:<instance-name>=tcp:<PORT>
+  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:1433
