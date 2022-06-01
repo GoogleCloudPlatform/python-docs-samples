@@ -32,24 +32,28 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = os.environ["DB_PORT"]  # e.g. 1433
 
+    # [END cloud_sql_sqlserver_sqlalchemy_sslcerts]
     driver_name = "mssql+pytds"
     query = {
         "driver": "ODBC Driver 17 for SQL Server"
     }
     # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp]
+    # [START cloud_sql_sqlserver_sqlalchemy_sslcerts]
     # For deployments that connect directly to a Cloud SQL instance without
     # using the Cloud SQL Proxy, configuring SSL certificates will ensure the
     # connection is encrypted.
-    if os.environ.get("DB_ROOT_CERT"):
-        driver_name = "mssql+pyodbc"
-    if os.environ.get("CLOUD_SQL_AUTH_PROXY_IP_ADDRESS_TYPE") == "PRIVATE":
+    if os.environ.get("DB_ROOT_CERT"):  # e.g. '/path/to/my/server-ca.pem'
         driver_name = "mssql+pyodbc"
         query = {
             "driver": "ODBC Driver 17 for SQL Server",
             "Encrypt": "yes",
             "Trusted_Connection": "no"
         }
-
+    if os.environ.get("CLOUD_SQL_AUTH_PROXY_IP_ADDRESS_TYPE") == "PRIVATE":
+        driver_name = "mssql+pyodbc"
+        query = {
+            "driver": "ODBC Driver 17 for SQL Server"
+        }
     # [START cloud_sql_sqlserver_sqlalchemy_connect_tcp]
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
