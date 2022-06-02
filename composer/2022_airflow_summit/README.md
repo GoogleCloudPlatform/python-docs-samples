@@ -16,3 +16,7 @@ Runs a basic Data Analytics workflow using BigQuery, Cloud Storage, and Dataproc
 ## retries
 
 Showcasing how retries can be used when API calls fail.
+
+## bigquery_permissions
+
+Demo showing error message when there are missing permissions to query a BigQuery dataset.
