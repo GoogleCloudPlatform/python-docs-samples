@@ -201,9 +201,9 @@ def input_bucket(pubsub_topic):
         payload_format="JSON_API_V1",
     ).create()
 
-    # We really want to receive this notification, 
+    # We really want to receive this notification,
     # pause for a while to ensure everything propagated.
-    time.sleep(5) 
+    time.sleep(5)
 
     yield input_bucket
 
