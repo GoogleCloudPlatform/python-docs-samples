@@ -20,11 +20,11 @@ and checks the existence of a new output table in that dataset.
 import os
 import uuid
 
+import backoff
 from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-import backoff
 import pytest
 
 
