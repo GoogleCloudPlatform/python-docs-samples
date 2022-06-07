@@ -20,10 +20,11 @@ and checks the existence of a new output table in that dataset.
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
+import backoff
 import pytest
 
 
@@ -122,13 +123,13 @@ def bq_dataset(test_bucket):
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
+# Retry if we see a flaky 409 "subnet not ready" exception
+@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
 def test_process(test_bucket):
     # check that the results table isnt there
     with pytest.raises(NotFound):
         BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}")
 
-    # do the process
-    # assert the column is there
     # create a batch
     dataproc_client = dataproc.BatchControllerClient(
         client_options={
