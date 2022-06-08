@@ -40,5 +40,4 @@ def receive_authorized_get_request(request):
             return f"Unhandled header format ({auth_type}).\n"
     return "Anonymous user.\n"
 
-
 # [END cloudrun_service_to_service_receive]
