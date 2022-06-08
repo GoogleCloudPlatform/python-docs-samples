@@ -5,4 +5,4 @@ google-cloud-aiplatform==1.12.1
 imageio==2.19.0
 matplotlib==3.5.1
 python-snappy==0.6.1
-tensorflow==2.8.0
+tensorflow==2.8.1
