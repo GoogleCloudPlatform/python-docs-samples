@@ -13,9 +13,10 @@
 # limitations under the License.
 
 # [START functions_structured_logging]
+import logging
+
 import functions_framework
 from google.cloud.logging import Client
-import logging
 
 
 @functions_framework.http
