@@ -18,6 +18,8 @@ import os
 import re
 import sys
 from typing import Callable, List
+import hashlib
+import json
 
 import click
 import github
@@ -239,10 +241,21 @@ def set(
         return
     # [END_EXCLUDE]
 
+    # Create unique sha for specific set status run
+    status_sha = hashlib.sha256(json.dumps({
+        "dry_run": dry_run,
+        "project_id": project_id,
+        "region": region,
+        "service": service,
+        "repo_name": repo_name,
+        "commit_sha": commit_sha,
+        "pull_request": pull_request,
+        "revision_url": revision_url,
+    }, sort_keys=True).encode("utf-8")).hexdigest()
     commit.create_status(
         state="success",
         target_url=revision_url,
-        context="Deployment Preview",
+        context=f"Deployment Preview: {status_sha[:7]}",
         description="Your preview is now available.",
     )
     click.secho("Success: ", fg="green", bold=True, nl=False)
