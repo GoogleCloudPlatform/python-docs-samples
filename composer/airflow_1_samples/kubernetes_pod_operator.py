@@ -211,8 +211,8 @@ with models.DAG(
         # Can be a large range of data, and can include characters that are not
         # permitted by labels.
         annotations={'key1': 'value1'},
-        # Resource specifications for Pod, this will allow you to set both cpu
-        # and memory limits and requirements.
+        # Optional resource specifications for Pod, this will allow you to
+        # set both cpu and memory limits and requirements.
         # Prior to Airflow 1.10.4, resource specifications were
         # passed as a Pod Resources Class object,
         # If using this example on a version of Airflow prior to 1.10.4,
