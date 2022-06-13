@@ -13,7 +13,7 @@
     }
   },
   "hooks": {
-    "precreate": {
+    "prebuild": {
       "commands": [
         "./setup.sh"
       ]
