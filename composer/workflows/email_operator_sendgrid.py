@@ -33,7 +33,6 @@ from airflow.operators.email import EmailOperator
 with airflow.DAG(
   "composer_sample_sendgrid",
   start_date=datetime.datetime(2022, 1, 1),
-  schedule_interval="@daily",
   ) as dag:
   
   task_email = EmailOperator(
@@ -45,7 +44,5 @@ with airflow.DAG(
     html_content='This is a test message sent through SendGrid.',
     dag=dag,
     )
-
-  task_email
 
 # [END composer_email_operator_sendgrid]
