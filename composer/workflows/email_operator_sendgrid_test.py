@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import email_operator_sendgrid
+import internal_unit_testing
 
 
 def test_email_operator_sendgrid() -> None:
