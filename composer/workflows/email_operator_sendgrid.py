@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 """Example Airflow DAG that sends an email message through SendGrid.
 
 You must configure email notifications so that Airflow sends email through
@@ -31,18 +30,18 @@ from airflow.operators.email import EmailOperator
 
 
 with airflow.DAG(
-  "composer_sample_sendgrid",
-  start_date=datetime.datetime(2022, 1, 1),
-  ) as dag:
-  
-  task_email = EmailOperator(
-    task_id='send-email',
-    conn_id='sendgrid_default',
-    # You can specify more than one recipient with a list.
-    to='user@example.com',
-    subject='EmailOperator test for SendGrid',
-    html_content='This is a test message sent through SendGrid.',
-    dag=dag,
+    "composer_sample_sendgrid",
+    start_date=datetime.datetime(2022, 1, 1),
+) as dag:
+
+    task_email = EmailOperator(
+        task_id="send-email",
+        conn_id="sendgrid_default",
+        # You can specify more than one recipient with a list.
+        to="user@example.com",
+        subject="EmailOperator test for SendGrid",
+        html_content="This is a test message sent through SendGrid.",
+        dag=dag,
     )
 
 # [END composer_email_operator_sendgrid]
