@@ -39,7 +39,9 @@ def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
     return (temp_dir, dags)
 
 
-def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
+def upload_dags_to_composer(
+    dags_directory: str, bucket_name: str, name_replacement: str = "dags/"
+) -> None:
     temp_dir, dags = _create_dags_list(dags_directory)
 
     if len(dags) > 0:
@@ -52,17 +54,19 @@ def upload_dags_to_composer(dags_directory: str, bucket_name: str) -> None:
 
         for dag in dags:
             # Remove path to temp dir
-            # if/else is a relative directory workaround for our tests
-            current_directory = os.listdir()
-            if "dags" in current_directory:
-                dag = dag.replace(f"{temp_dir}/", "dags/")
-            else:
-                dag = dag.replace(f"{temp_dir}/", "../dags/")
+            dag = dag.replace(f"{temp_dir}/", name_replacement)
 
-            # Upload to your bucket
-            blob = bucket.blob(dag)
-            blob.upload_from_filename(dag)
-            print(f"File {dag} uploaded to {bucket_name}/{dag}.")
+            try:
+                # Upload to your bucket
+                blob = bucket.blob(dag)
+                blob.upload_from_filename(dag)
+                print(f"File {dag} uploaded to {bucket_name}/{dag}.")
+            except FileNotFoundError:
+                current_directory = os.listdir()
+                print(
+                    f"dags/ directory not found in {current_directory}, you may need to override the default value of name_replacement to point to a relative directory"
+                )
+                raise
 
     else:
         print("No DAGs to upload.")
