@@ -168,7 +168,32 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
 
 
 @pytest.fixture(scope='module')
-def source_agent_pool_name():
+def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
+    """
+    Yields and auto-cleans up a CGS bucket preconfigured with necessary
+    STS service account write perms
+    """
+
+    # Setup policy for STS
+    member: str = f"serviceAccount:{sts_service_account}"
+    objectViewer = "roles/storage.objectViewer"
+    bucketReader = "roles/storage.legacyBucketReader"
+    bucketWriter = "roles/storage.legacyBucketWriter"
+
+    # Prepare policy
+    policy = gcs_bucket.get_iam_policy(requested_policy_version=3)
+    policy.bindings.append({"role": objectViewer, "members": {member}})
+    policy.bindings.append({"role": bucketReader, "members": {member}})
+    policy.bindings.append({"role": bucketWriter, "members": {member}})
+
+    # Set policy
+    gcs_bucket.set_iam_policy(policy)
+
+    yield gcs_bucket
+
+
+@pytest.fixture(scope='module')
+def agent_pool_name():
     """
     Yields a source agent pool name
     """

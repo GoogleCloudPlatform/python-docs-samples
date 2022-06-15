@@ -16,22 +16,40 @@ import backoff
 from google.api_core.exceptions import RetryError
 from google.cloud.storage import Bucket
 
-import manifest_request
+import posix_to_posix_request
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_manifest_request(
+def test_posix_to_posix_request(
         capsys, project_id: str, job_description_unique: str,
         agent_pool_name: str, posix_root_directory: str,
-        destination_bucket: Bucket, manifest_file: str):
+        intermediate_bucket: Bucket):
 
-    manifest_request.create_transfer_with_manifest(
+    # The agent pool associated with the POSIX data source.
+    # Defaults to 'projects/{project_id}/agentPools/transfer_service_default'
+    # source_agent_pool_name = 'projects/my-project/agentPools/my-agent'
+
+    # The agent pool associated with the POSIX data sink.
+    # Defaults to 'projects/{project_id}/agentPools/transfer_service_default'
+    # sink_agent_pool_name = 'projects/my-project/agentPools/my-agent'
+
+    # The root directory path on the source filesystem
+    # root_directory = '/directory/to/transfer/source'
+
+    # The root directory path on the destination filesystem
+    # destination_directory = '/directory/to/transfer/sink'
+
+    # The Google Cloud Storage bucket for intermediate storage
+    # intermediate_bucket = 'my-intermediate-bucket'
+
+    posix_to_posix_request.transfer_to_gcs(
         project_id=project_id,
         description=job_description_unique,
         source_agent_pool_name=agent_pool_name,
+        sink_agent_pool_name=agent_pool_name,
         root_directory=posix_root_directory,
-        sink_bucket=destination_bucket.name,
-        manifest_location=manifest_file
+        destination_directory=posix_root_directory,
+        intermediate_bucket=intermediate_bucket.name
     )
 
     out, _ = capsys.readouterr()

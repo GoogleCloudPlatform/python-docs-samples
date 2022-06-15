@@ -16,22 +16,21 @@ import backoff
 from google.api_core.exceptions import RetryError
 from google.cloud.storage import Bucket
 
-import manifest_request
+import posix_request
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_manifest_request(
+def test_posix_request(
         capsys, project_id: str, job_description_unique: str,
         agent_pool_name: str, posix_root_directory: str,
-        destination_bucket: Bucket, manifest_file: str):
+        sink_bucket: Bucket):
 
-    manifest_request.create_transfer_with_manifest(
+    posix_request.transfer_to_gcs(
         project_id=project_id,
         description=job_description_unique,
         source_agent_pool_name=agent_pool_name,
         root_directory=posix_root_directory,
-        sink_bucket=destination_bucket.name,
-        manifest_location=manifest_file
+        sink_bucket=sink_bucket.name
     )
 
     out, _ = capsys.readouterr()
