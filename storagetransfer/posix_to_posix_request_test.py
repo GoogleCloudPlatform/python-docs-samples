@@ -42,7 +42,7 @@ def test_posix_to_posix_request(
     # The Google Cloud Storage bucket for intermediate storage
     # intermediate_bucket = 'my-intermediate-bucket'
 
-    posix_to_posix_request.transfer_to_gcs(
+    posix_to_posix_request.transfer_between_posix(
         project_id=project_id,
         description=job_description_unique,
         source_agent_pool_name=agent_pool_name,
