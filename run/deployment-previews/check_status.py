@@ -255,7 +255,7 @@ def set(
     commit.create_status(
         state="success",
         target_url=revision_url,
-        context=f"Deployment Preview: {status_sha[:7]}",
+        context=f"Deployment Preview for {service}",
         description="Your preview is now available.",
     )
     click.secho("Success: ", fg="green", bold=True, nl=False)
