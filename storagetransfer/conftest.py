@@ -213,10 +213,10 @@ def posix_root_directory():
 
 
 @pytest.fixture(scope='module')
-def manifest_file():
+def manifest_file(source_bucket: storage.Bucket):
     """
     Yields a transfer manifest file name
     """
 
     # use arbitrary path and name
-    yield 'gs://test-manifest.csv'
+    yield f'gs://{source_bucket.name}/test-manifest.csv'
