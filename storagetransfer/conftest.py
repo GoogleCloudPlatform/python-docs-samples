@@ -165,3 +165,33 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     gcs_bucket.set_iam_policy(policy)
 
     yield gcs_bucket
+
+
+@pytest.fixture(scope='module')
+def source_agent_pool_name():
+    """
+    Yields a source agent pool name
+    """
+
+    # use default agent
+    yield ''
+
+
+@pytest.fixture(scope='module')
+def posix_root_directory():
+    """
+    Yields a POSIX root directory
+    """
+
+    # use arbitrary path
+    yield '/my-posix-root/'
+
+
+@pytest.fixture(scope='module')
+def manifest_file():
+    """
+    Yields a transfer manifest file name
+    """
+
+    # use arbitrary path and name
+    yield 'gs://test-manifest.csv'
