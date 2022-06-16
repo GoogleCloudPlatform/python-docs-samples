@@ -80,8 +80,8 @@ def receive_mail(path):
 
     # Do something with the message
     print(f"Received greeting for {message.to} at {message.date} from {message.sender}")
-    print("Message bodies follow:")
-    for content_type, payload in message.bodies():
-        print(f"   {content_type} => {payload.decode()}")
+    for content_type, payload in message.bodies("text/plain"):
+        print(f"Text/plain body: {payload.decode()}")
+        break
 
     return "OK", 200
