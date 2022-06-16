@@ -26,7 +26,7 @@ def version():
     version number so tests can invoke it.
     """
     output = subprocess.run(
-        ["gcloud", "app", "deploy", "--no-promote", "--quiet", "--format=json"],
+        "gcloud app deploy --no-promote --quiet --format=json",
         capture_output=True,
         shell=True,
     )
@@ -39,7 +39,7 @@ def version():
     result = json.loads(output.stdout)
     yield result["versions"][0]["version"]["name"]
 
-    # TODO: kill new version    
+    # TODO: kill new version
 
     return
 
