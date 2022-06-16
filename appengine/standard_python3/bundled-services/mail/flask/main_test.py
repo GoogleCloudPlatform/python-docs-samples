@@ -13,10 +13,11 @@
 # limitations under the License.
 
 import json
-import pytest
-import requests
 import subprocess
 import time
+
+import pytest
+import requests
 
 
 @pytest.fixture
@@ -25,15 +26,20 @@ def version():
     version number so tests can invoke it.
     """
     output = subprocess.run(
-        ["gcloud", "app", "deploy", "--quiet", "--format=json"],
+        ["gcloud", "app", "deploy", "--no-promote", "--quiet", "--format=json"],
         capture_output=True,
         shell=True,
     )
 
+    # For debugging:
+    print(f"App deploy return code is '{output.returncode}'\n\n")
+    print(f"App deploy stderr is '{output.stderr}'\n\n")
+    print(f"App deploy stdout is '{output.stdout}'\n\n")
+
     result = json.loads(output.stdout)
     yield result["versions"][0]["version"]["name"]
 
-    # Unfortunately, can't delete the current App Engine version
+    # TODO: kill new version    
 
     return
 
