@@ -1,0 +1,1 @@
+google-cloud-datastore==2.7.0
