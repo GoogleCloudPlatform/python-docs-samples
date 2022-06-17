@@ -18,7 +18,6 @@ from google.cloud import bigquery
 import pytest
 import test_utils.prefixer
 
-
 prefixer = test_utils.prefixer.Prefixer("python-bigquery", "samples/snippets")
 
 
@@ -50,6 +49,20 @@ def dataset_id(bigquery_client: bigquery.Client, project_id: str) -> Iterator[st
     bigquery_client.create_dataset(dataset)
     yield dataset_id
     bigquery_client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture
+def table_id(
+    bigquery_client: bigquery.Client, project_id: str, dataset_id: str
+) -> Iterator[str]:
+    table_id = prefixer.create_prefix()
+    full_table_id = f"{project_id}.{dataset_id}.{table_id}"
+    table = bigquery.Table(
+        full_table_id, schema=[bigquery.SchemaField("string_col", "STRING")]
+    )
+    bigquery_client.create_table(table)
+    yield full_table_id
+    bigquery_client.delete_table(table, not_found_ok=True)
 
 
 @pytest.fixture(scope="session")
