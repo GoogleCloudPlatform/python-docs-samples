@@ -93,7 +93,7 @@ def create_fhir_store(
         project_id, cloud_region, dataset_id
     )
 
-    body = {"version": "STU3"}
+    body = {"version": "R4"}
 
     request = (
         client.projects()
