@@ -25,7 +25,7 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * metastore_cluster is the Dataproc Metastore service name.
 * region_name is the region where the Dataproc Metastore service is located.
 
-TODO (https://github.com/GoogleCloudPlatform/python-docs-samples/issues/7803): Add the tutorial link once it is published.
+https://cloud.google.com/composer/docs/composer-2/run-dataproc-workloads
 """
 
 import datetime
@@ -51,6 +51,7 @@ PHS_CLUSTER_PATH = \
     "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
 SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+#use this for those pyspark jobs that need a spark-bigquery connector https://cloud.google.com/dataproc/docs/tutorials/bigquery-connector-spark-example
 # Start a Dataproc MetaStore Cluster
 METASTORE_SERVICE_LOCATION = \
     "projects/{{var.value.project_id}}/locations/{{var.value.region_name}}/services/{{var.value.metastore_cluster }}"
