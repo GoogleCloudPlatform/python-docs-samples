@@ -25,7 +25,7 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * metastore_cluster is the Dataproc Metastore service name.
 * region_name is the region where the Dataproc Metastore service is located.
 
-The following code is related to the Dataproc Serverless workloads with Cloud Composer guide written in: 
+The following code is related to the Dataproc Serverless workloads with Cloud Composer guide written in:
 https://cloud.google.com/composer/docs/composer-2/run-dataproc-workloads
 """
 
