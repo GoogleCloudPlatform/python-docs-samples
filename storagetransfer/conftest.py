@@ -170,7 +170,7 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
 @pytest.fixture(scope='module')
 def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
-    Yields and auto-cleans up a CGS bucket preconfigured with necessary
+    Yields and auto-cleans up a GCS bucket preconfigured with necessary
     STS service account write perms
     """
 
