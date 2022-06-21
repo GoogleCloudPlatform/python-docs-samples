@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """
-Command-line sample that creates a transfer from a POSIX file system to GCS.
+Command-line sample that creates a transfer between POSIX file systems.
 """
 
 
@@ -29,7 +29,7 @@ def transfer_between_posix(
         project_id: str, description: str, source_agent_pool_name: str,
         sink_agent_pool_name: str, root_directory: str,
         destination_directory: str, intermediate_bucket: str):
-    """Create a transfer from a POSIX file system to a GCS bucket."""
+    """Creates a transfer between POSIX file systems."""
 
     client = storage_transfer.StorageTransferServiceClient()
 
