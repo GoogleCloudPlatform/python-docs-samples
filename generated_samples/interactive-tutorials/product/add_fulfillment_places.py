@@ -32,9 +32,6 @@ product_name = (
     + product_id
 )
 
-# The request timestamp
-current_date = datetime.datetime.now()
-
 
 # add fulfillment request
 def get_add_fulfillment_request(
@@ -70,6 +67,9 @@ def add_fulfillment_places(product_name: str, timestamp, place_id):
 
 
 create_product(product_id)
+
+# The request timestamp
+current_date = datetime.datetime.now() + datetime.timedelta(seconds=30)
 print(f"------add fulfilment places with current date: {current_date}-----")
 add_fulfillment_places(product_name, current_date, "store2")
 get_product(product_name)
