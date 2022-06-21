@@ -64,7 +64,7 @@ def get_product_with_inventory_info(product_name: str) -> Product:
 # set inventory request
 def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
     # The request timestamp
-    request_time = datetime.datetime.now()
+    request_time = datetime.datetime.now() + datetime.timedelta(seconds=30)
     set_mask = FieldMask(
         paths=["price_info", "availability", "fulfillment_info", "available_quantity"]
     )
