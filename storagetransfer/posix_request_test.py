@@ -23,14 +23,14 @@ import posix_request
 def test_posix_request(
         capsys, project_id: str, job_description_unique: str,
         agent_pool_name: str, posix_root_directory: str,
-        sink_bucket: Bucket):
+        destination_bucket: Bucket):
 
     posix_request.transfer_to_gcs(
         project_id=project_id,
         description=job_description_unique,
         source_agent_pool_name=agent_pool_name,
         root_directory=posix_root_directory,
-        sink_bucket=sink_bucket.name
+        sink_bucket=destination_bucket.name
     )
 
     out, _ = capsys.readouterr()
