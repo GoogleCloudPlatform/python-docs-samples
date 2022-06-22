@@ -36,10 +36,11 @@ def receive_authorized_get_request(request):
 
         if auth_type.lower() == "bearer":
             claims = jwt.decode(creds, verify=False)
-            return f"Hello {claims['email']}!\n"
+            return f"Hello, {claims['email']}!\n"
 
         else:
             return f"Unhandled header format ({auth_type}).\n"
-    return "Anonymous user.\n"
+    return "Hello, anonymous user.\n"
+
 
 # [END cloudrun_service_to_service_receive]
