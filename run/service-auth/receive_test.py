@@ -17,8 +17,8 @@
 
 import os
 import subprocess
-import uuid
 from urllib import error, request
+import uuid
 
 import pytest
 
