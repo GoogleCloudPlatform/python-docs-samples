@@ -41,7 +41,6 @@ def services():
             project,
             "--source",
             ".",
-            "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
             "--quiet",
