@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Check out the Dataproc Serverless workloads with Cloud Composer guide at
+https://cloud.google.com/composer/docs/composer-2/run-dataproc-workloads for more details.
+"""
+
 # [START composer_dataproc_create_batch]
 
 """
@@ -24,9 +29,6 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * image_name is the name and tag of the custom container image (image:tag).
 * metastore_cluster is the Dataproc Metastore service name.
 * region_name is the region where the Dataproc Metastore service is located.
-
-The following code is related to the Dataproc Serverless workloads with Cloud Composer guide written in:
-https://cloud.google.com/composer/docs/composer-2/run-dataproc-workloads
 """
 
 import datetime
