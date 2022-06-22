@@ -17,7 +17,7 @@
 
 import os
 import subprocess
-from urllib import request
+from urllib import request, error
 import uuid
 
 import pytest
@@ -107,7 +107,8 @@ def test_noauth(services):
 
     req = request.Request(url)
 
-    response = request.urlopen(req)
-    assert response.status == 200
-    assert "Hello" in response.read().decode()
-    assert "anonymous" in response.read().decode()
+    try:
+        _ = request.urlopen(req)
+    except error.HTTPError as e:
+        assert e.code == 403
+    
