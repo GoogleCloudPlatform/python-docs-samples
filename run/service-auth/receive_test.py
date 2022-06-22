@@ -99,3 +99,15 @@ def test_auth(services):
     response = request.urlopen(req)
     assert response.status == 200
     assert "Hello" in response.read().decode()
+    assert "anonymous" not in response.read().decode()
+
+
+def test_noauth(services):
+    url = services[0].decode()
+
+    req = request.Request(url)
+
+    response = request.urlopen(req)
+    assert response.status == 200
+    assert "Hello" in response.read().decode()
+    assert "anonymous" in response.read().decode()
