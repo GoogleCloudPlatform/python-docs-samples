@@ -31,7 +31,7 @@ def receive_authorized_get_request(request):
     auth_header = request.headers.get("Authorization")
     if auth_header:
 
-        # split the auth type and value from the header
+        # split the auth type and value from the header.
         auth_type, creds = auth_header.split(" ", 1)
 
         if auth_type.lower() == "bearer":
