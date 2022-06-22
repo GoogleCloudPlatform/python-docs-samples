@@ -17,8 +17,8 @@
 
 import os
 import subprocess
-from urllib import request, error
 import uuid
+from urllib import error, request
 
 import pytest
 
@@ -111,4 +111,3 @@ def test_noauth(services):
         _ = request.urlopen(req)
     except error.HTTPError as e:
         assert e.code == 403
-    
