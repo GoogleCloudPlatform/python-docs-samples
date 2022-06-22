@@ -51,6 +51,7 @@ def test_run_script_success():
     assert "Task #0, Attempt" in output
     assert "Completed" in output
 
+
 def test_run_script_failure(capsys):
     my_env = {"FAIL_RATE": "0.99999999"}
 
