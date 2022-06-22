@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from flask import Flask, request
 
 from receive import receive_authorized_get_request
@@ -25,4 +27,4 @@ def main():
 
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8080, debug=True)
+    app.run(host="localhost", port=int(os.environ.get("PORT", 8080)), debug=True)
