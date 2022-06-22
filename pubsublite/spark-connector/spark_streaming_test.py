@@ -128,7 +128,7 @@ def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
             "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
             "config_bucket": BUCKET,
             "temp_bucket": BUCKET,
-            "software_config": {"image_version": "1.5-debian10"},
+            "software_config": {"image_version": "2.0-debian10"},
             "gce_cluster_config": {
                 "service_account_scopes": [
                     "https://www.googleapis.com/auth/cloud-platform",
