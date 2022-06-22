@@ -165,3 +165,58 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     gcs_bucket.set_iam_policy(policy)
 
     yield gcs_bucket
+
+
+@pytest.fixture(scope='module')
+def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
+    """
+    Yields and auto-cleans up a GCS bucket preconfigured with necessary
+    STS service account write perms
+    """
+
+    # Setup policy for STS
+    member: str = f"serviceAccount:{sts_service_account}"
+    objectViewer = "roles/storage.objectViewer"
+    bucketReader = "roles/storage.legacyBucketReader"
+    bucketWriter = "roles/storage.legacyBucketWriter"
+
+    # Prepare policy
+    policy = gcs_bucket.get_iam_policy(requested_policy_version=3)
+    policy.bindings.append({"role": objectViewer, "members": {member}})
+    policy.bindings.append({"role": bucketReader, "members": {member}})
+    policy.bindings.append({"role": bucketWriter, "members": {member}})
+
+    # Set policy
+    gcs_bucket.set_iam_policy(policy)
+
+    yield gcs_bucket
+
+
+@pytest.fixture(scope='module')
+def agent_pool_name():
+    """
+    Yields a source agent pool name
+    """
+
+    # use default agent
+    yield ''
+
+
+@pytest.fixture(scope='module')
+def posix_root_directory():
+    """
+    Yields a POSIX root directory
+    """
+
+    # use arbitrary path
+    yield '/my-posix-root/'
+
+
+@pytest.fixture(scope='module')
+def manifest_file(source_bucket: storage.Bucket):
+    """
+    Yields a transfer manifest file name
+    """
+
+    # use arbitrary path and name
+    yield f'gs://{source_bucket.name}/test-manifest.csv'
