@@ -61,6 +61,7 @@ def test_run_script_failure(capsys):
             stdout=subprocess.PIPE,
             check=True,
         )
+        raise Exception("Expected CalledProcessError to occur.")
     except subprocess.CalledProcessError as e:
         out = str(e.stdout)
         assert "Task #0, Attempt" in out
