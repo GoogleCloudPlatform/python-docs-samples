@@ -64,7 +64,7 @@ def upload_dags_to_composer(
             except FileNotFoundError:
                 current_directory = os.listdir()
                 print(
-                    f"dags/ directory not found in {current_directory}, you may need to override the default value of name_replacement to point to a relative directory"
+                    f"{name_replacement} directory not found in {current_directory}, you may need to override the default value of name_replacement to point to a relative directory"
                 )
                 raise
 
