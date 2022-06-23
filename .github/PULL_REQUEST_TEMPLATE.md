@@ -2,7 +2,7 @@
 
 Fixes #<ISSUE-NUMBER>
 
-Note: Please open an issue first for a discussion before submitting a pull request if you are not associated with Google.
+Note: Before submitting a pull request, please open an issue for discussion if you are not associated with Google.
 
 ## Checklist
 - [ ] I have followed [Sample Guidelines from AUTHORING_GUIDE.MD](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/AUTHORING_GUIDE.md)
