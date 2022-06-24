@@ -38,8 +38,6 @@ PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
 # S3 configs
 S3_BUCKET_NAME = "{{var.value.s3_bucket}}"
 
-
-
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
     "pyspark_batch": {
@@ -95,7 +93,21 @@ with models.DAG(
         batch=BATCH_CONFIG,
         batch_id=BATCH_ID,
     )
-    
+
+    load_external_dataset = GCSToBigQueryOperator(
+        task_id="run_bq_external_ingestion",
+        bucket=BUCKET_NAME,
+        source_objects=["holidays.csv"],
+        destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
+        source_format="CSV",
+        schema_fields=[
+            {"name": "Date", "type": "DATE"},
+            {"name": "Holiday", "type": "STRING"},
+        ],
+        skip_leading_rows=1,
+        write_disposition="WRITE_TRUNCATE"
+    )
+
     with TaskGroup("join_bq_datasets") as bq_join_group:
 
         for year in range(1997, 2022):
@@ -134,5 +146,4 @@ with models.DAG(
                 location="US",
             )
 
-        s3_to_gcs_op >> bq_join_group >> create_batch
-
+        s3_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
