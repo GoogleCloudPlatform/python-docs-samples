@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import datetime
 
 from airflow import models
@@ -21,6 +20,7 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobO
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
     GCSToBigQueryOperator,
 )
+from airflow.providers.google.cloud.transfers.s3_to_gcs import S3ToGCSOperator
 from airflow.utils.task_group import TaskGroup
 
 PROJECT_NAME = "{{var.value.gcp_project}}"
@@ -74,26 +74,19 @@ default_dag_args = {
 }
 
 with models.DAG(
-    "summit_dag",
+    "s3_to_gcs_dag",
     # Continue to run DAG once per day
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
 ) as dag:
 
-	s3_to_gcs_op = S3ToGCSOperator(
-		task_id="s3_to_gcs",
-		bucket=S3_BUCKET_NAME,
-		prefix="",
-		delimiter="",
-		verify=None,
-		delegate_to=None,
-		gcp_conn_id="google_cloud_default",
-		aws_conn_id="aws_default",
-		dest_gcs="gs://s3_gcs_test_bucket",
-		replace=False,
-		gzip=False,
-		dag=my_dag,
-	)
+    s3_to_gcs_op = S3ToGCSOperator(
+        task_id="s3_to_gcs",
+        bucket=S3_BUCKET_NAME,
+        gcp_conn_id="google_cloud_default",
+        aws_conn_id="aws_s3_connection",
+        dest_gcs=f"gs://{BUCKET_NAME}",
+    )
 
     create_batch = dataproc.DataprocCreateBatchOperator(
         task_id="create_batch",
@@ -102,30 +95,7 @@ with models.DAG(
         batch=BATCH_CONFIG,
         batch_id=BATCH_ID,
     )
-    # This data is static and it is safe to use WRITE_TRUNCATE
-    # to reduce chance of 409 duplicate errors
     
-    
-    
-    
-    # load_external_dataset = GCSToBigQueryOperator(
-    #    task_id="run_bq_external_ingestion",
-    #   bucket=BUCKET_NAME,
-    #   source_objects=["holidays.csv"],
-    #   destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
-    #   source_format="CSV",
-    #   schema_fields=[
-    #       {"name": "Date", "type": "DATE"},
-    #       {"name": "Holiday", "type": "STRING"},
-    #   ],
-    #   skip_leading_rows=1,
-    #   write_disposition="WRITE_TRUNCATE"
-    #)
-    
-    
-    
-    
-
     with TaskGroup("join_bq_datasets") as bq_join_group:
 
         for year in range(1997, 2022):
@@ -164,6 +134,5 @@ with models.DAG(
                 location="US",
             )
 
-        # load_external_dataset >> bq_join_group >> create_batch
         s3_to_gcs_op >> bq_join_group >> create_batch
-        
+
