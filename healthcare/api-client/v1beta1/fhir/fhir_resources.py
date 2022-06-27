@@ -105,10 +105,9 @@ def create_encounter(
             "code": "IMP",
             "display": "inpatient encounter",
         },
-        "reason": [
+        "reasonCode": [
             {
-                "text": "The patient had an abnormal heart rate. She was"
-                " concerned about this."
+                "text": "The patient had an abnormal heart rate. She was concerned about this."
             }
         ],
         "subject": {"reference": "Patient/{}".format(patient_id)},
@@ -152,14 +151,21 @@ def create_observation(
 
     body = {
         "resourceType": "Observation",
-        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
         "status": "final",
         "subject": {"reference": "Patient/{}".format(patient_id)},
-        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
-        "valueQuantity": {"value": 80, "unit": "bpm"},
-        "context": {"reference": "Encounter/{}".format(encounter_id)},
+        "effectiveDateTime": "2020-01-01T00:00:00+00:00",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "8867-4",
+                    "display": "Heart rate",
+                }
+            ]
+        },
+        "valueQuantity": {"value": 55, "unit": "bpm"},
+        "encounter": {"reference": "Encounter/{}".format(encounter_id)},
     }
-
     response = session.post(fhir_store_path, headers=headers, json=body)
     response.raise_for_status()
 
@@ -229,13 +235,21 @@ def conditional_update_resource(
     session = get_session(service_account_json)
 
     body = {
-        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
         "resourceType": "Observation",
-        "context": {"reference": "Encounter/{}".format(encounter_id)},
-        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
         "status": "cancelled",
         "subject": {"reference": "Patient/{}".format(patient_id)},
-        "valueQuantity": {"unit": "bpm", "value": 80},
+        "effectiveDateTime": "2020-01-01T00:00:00+00:00",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "8867-4",
+                    "display": "Heart rate",
+                }
+            ]
+        },
+        "valueQuantity": {"value": 55, "unit": "bpm"},
+        "encounter": {"reference": "Encounter/{}".format(encounter_id)},
     }
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}

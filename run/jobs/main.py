@@ -61,8 +61,8 @@ if __name__ == "__main__":
     try:
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
-        message = f"Task #{TASK_INDEX}, "
-        + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
+        message = f"Task #{TASK_INDEX}, " \
+                  + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
 
         print(json.dumps({"message": message, "severity": "ERROR"}))
         # [START cloudrun_jobs_exit_process]
