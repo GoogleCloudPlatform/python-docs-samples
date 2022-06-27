@@ -37,7 +37,7 @@ def test_bad_env_vars(capsys):
     assert "Invalid FAIL_RATE env var value" in out
 
 
-def test_run_script():
+def test_run_script_success():
     output = (
         subprocess.run(
             ["python3", "main.py"],
@@ -47,13 +47,23 @@ def test_run_script():
         .stdout.strip()
         .decode()
     )
+
+    assert "Task #0, Attempt" in output
     assert "Completed" in output
 
+
+def test_run_script_failure(capsys):
     my_env = {"FAIL_RATE": "0.99999999"}
-    with pytest.raises(subprocess.CalledProcessError, match=r".*non-zero.*"):
+
+    try:
         subprocess.run(
             ["python3", "main.py"],
             env=my_env,
-            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
             check=True,
         )
+        raise Exception("Expected CalledProcessError to occur.")
+    except subprocess.CalledProcessError as e:
+        out = str(e.stdout)
+        assert "Task #0, Attempt" in out
+        assert "failed" in out
