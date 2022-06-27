@@ -42,6 +42,15 @@ def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
 def upload_dags_to_composer(
     dags_directory: str, bucket_name: str, name_replacement: str = "dags/"
 ) -> None:
+    """
+    Given a directory, this function moves all DAG files from that directory
+    to a temporary directory, then uploads all contents of the temporary directory
+    to a given cloud storage bucket
+    Args:
+        dags_directory (str): a fully qualified path to a directory that contains a "dags/" subdirectory
+        bucket_name (str): the GCS bucket of the Cloud Composer environment to upload DAGs to
+        name_replacement (str, optional): the name of the "dags/" subdirectory that will be used when constructing the temporary directory path name Defaults to "dags/".
+    """
     temp_dir, dags = _create_dags_list(dags_directory)
 
     if len(dags) > 0:
