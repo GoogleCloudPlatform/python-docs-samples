@@ -28,7 +28,7 @@ def resume_instance(project_id: str, zone: str, instance_name: str) -> None:
     Args:
         project_id: project ID or project number of the Cloud project your instance belongs to.
         zone: name of the zone your instance belongs to.
-        instance_name: name of the instance your want to resume.
+        instance_name: name of the instance you want to resume.
     """
     instance_client = compute_v1.InstancesClient()
 

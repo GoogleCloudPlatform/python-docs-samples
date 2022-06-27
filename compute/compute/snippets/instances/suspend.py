@@ -81,7 +81,7 @@ def suspend_instance(project_id: str, zone: str, instance_name: str) -> None:
     Args:
         project_id: project ID or project number of the Cloud project your instance belongs to.
         zone: name of the zone your instance belongs to.
-        instance_name: name of the instance your want to suspend.
+        instance_name: name of the instance you want to suspend.
     """
     instance_client = compute_v1.InstancesClient()
 
@@ -89,7 +89,7 @@ def suspend_instance(project_id: str, zone: str, instance_name: str) -> None:
         project=project_id, zone=zone, instance=instance_name
     )
 
-    wait_for_extended_operation(operation, "instance suspend")
+    wait_for_extended_operation(operation, "suspend instance")
     return
 
 
