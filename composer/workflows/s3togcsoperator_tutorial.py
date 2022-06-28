@@ -111,18 +111,18 @@ with models.DAG(
     with TaskGroup("join_bq_datasets") as bq_join_group:
 
         for year in range(1997, 2022):
-            # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
             BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
             # Specifically query a Chicago weather station
             WEATHER_HOLIDAYS_JOIN_QUERY = f"""
             SELECT Holidays.Date, Holiday, id, element, value
             FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
-            JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id="USW00094846") AS Weather
+            JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table
+            WHERE Table.element="TMAX" AND Table.id="USW00094846") AS Weather
             ON Holidays.Date = Weather.Date;
             """
 
-            # for demo purposes we are using WRITE_APPEND
+            # For demo purposes we are using WRITE_APPEND
             # but if you run the DAG repeatedly it will continue to append
             # Your use case may be different, see the Job docs
             # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job

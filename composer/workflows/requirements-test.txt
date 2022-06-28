@@ -1,3 +1,2 @@
 pytest==7.0.1
 cloud-composer-dag-test-utils==1.0.0
-apache-airflow-providers-amazon==3.2.0
