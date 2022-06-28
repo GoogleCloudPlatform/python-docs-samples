@@ -25,36 +25,29 @@ def handle_webhook(request):
     tag = req["fulfillmentInfo"]["tag"]
 
     if tag == "Default Welcome Intent":
-        # You can also use the google.cloud.dialogflowcx_v3.types.WebhookRequest protos instead of manually writing the json object
-        # Please see https://googleapis.dev/python/dialogflow/latest/dialogflow_v2/types.html?highlight=webhookresponse#google.cloud.dialogflow_v2.types.WebhookResponse for an overview
-        res = {
-            "fulfillment_response": {
-                "messages": [{"text": {"text": ["Hi from a GCF Webhook"]}}]
-            }
-        }
+        text = "Hello from a GCF Webhook"
     elif tag == "get-name":
-        res = {
-            "fulfillment_response": {
-                "messages": [{"text": {"text": ["My name is Phlowhook"]}}]
-            }
-        }
+        text = "My name is Flowhook"
     else:
-        res = {
-            "fulfillment_response": {
-                "messages": [
-                    {
-                        "text": {
-                            "text": [
-                                f"There are no fulfillment responses defined for {tag} tag"
-                            ]
-                        }
+        text = f"There are no fulfillment responses defined for {tag} tag"
+
+    # You can also use the google.cloud.dialogflowcx_v3.types.WebhookRequest protos instead of manually writing the json object
+    # Please see https://googleapis.dev/python/dialogflow/latest/dialogflow_v2/types.html?highlight=webhookresponse#google.cloud.dialogflow_v2.types.WebhookResponse for an overview
+    res = {
+        "fulfillment_response": {
+            "messages": [
+                {
+                    "text": {
+                        "text": [
+                            text
+                        ]
                     }
-                ]
-            }
+                }
+            ]
         }
+    }
 
     # Returns json
     return res
-
 
 # [END dialogflow_cx_webhook]

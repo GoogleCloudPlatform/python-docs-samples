@@ -31,4 +31,4 @@ def app():
 def test_handle_webhook(app):
     with app.test_request_context(json=request):
         res = handle_webhook(flask.request)
-        assert "Hi from a GCF Webhook" in str(res)
+        assert "Hello from a GCF Webhook" in str(res)
