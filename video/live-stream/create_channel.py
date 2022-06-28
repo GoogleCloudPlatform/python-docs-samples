@@ -64,10 +64,10 @@ def create_channel(
                 key="es_video",
                 video_stream=live_stream_v1.types.VideoStream(
                     h264=live_stream_v1.types.VideoStream.H264CodecSettings(
-                        profile="main",
+                        profile="high",
                         width_pixels=1280,
                         height_pixels=720,
-                        bitrate_bps=1000000,
+                        bitrate_bps=3000000,
                         frame_rate=30,
                     ),
                 ),
