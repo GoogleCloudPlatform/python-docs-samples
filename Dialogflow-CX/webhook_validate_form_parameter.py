@@ -14,58 +14,30 @@
 
 """ DialogFlow CX: webhook to validate or invalidate form parameters snippet."""
 
-# [START dialogflow_v3beta1_webhook_validate_form_parameter]
 
-# TODO (developer): change entry point to validate_parameter in Cloud Function
-
+# [START dialogflow_cx_v3_webhook_validate_form_parameter]
 
 def validate_parameter(request):
-    """Webhook to validate or invalidate parameter based on conditions configured by the user."""
-
-    request_dict = request.get_json()
-    param_to_validate = request_dict["pageInfo"]["formInfo"]["parameterInfo"][0][
-        "value"
-    ]
-
-    if param_to_validate > 15:
-        text = "That is too many! Please pick another number."
-        param_state = "INVALID"
-    else:
-        text = "That is a number I can work with!"
-        param_state = "VALID"
-
-    json_response = {
-        "fulfillment_response": {
-            "messages": [
-                {
-                    "text": {
-                        "text": [
-                            text
-                        ],  # fulfillment text response to be sent to the agent
-                    },
-                },
-            ],
-        },
+    """Webhook will validate or invalidate parameter based on logic configured by the user."""
+    return {
         "page_info": {
             "form_info": {
                 "parameter_info": [
                     {
-                        "displayName": "paramToValidate",
+                        "displayName": 'orderNumber',
                         "required": True,
-                        "state": param_state,
+                        "state": 'INVALID',
+                        "value": 123,
                     },
                 ],
             },
         },
         "sessionInfo": {
             "parameters": {
-                # Set session parameter to null if your agent needs to reprompt the user
-                "paramToValidate": None
+                # Set session parameter to None if the form parameter is 'INVALID' and your agent needs to reprompt the user
+                "orderNumber": None,
             },
         },
     }
 
-    return json_response
-
-
-# [END dialogflow_v3beta1_webhook_validate_form_parameter]
+# [END dialogflow_cx_v3_webhook_validate_form_parameter]

@@ -25,21 +25,14 @@ def fixture_app():
     return flask.Flask(__name__)
 
 
-@pytest.mark.parametrize(
-    "value,expected_response",
-    [
-        (15, "That is a number I can work with!"),
-        (16, "That is too many! Please pick another number."),
-    ],
-)
-def test_validate_parameter(value, expected_response, app):
+def test_validate_parameter(app):
     """Parameterized test for validate form parameter webhook snippet."""
 
-    request = {"pageInfo": {"formInfo": {"parameterInfo": [{"value": value}]}}}
+    request = {"pageInfo": {"formInfo": {"parameterInfo": [{"value": 123}]}}}
 
     with app.test_request_context(json=request):
         res = validate_parameter(flask.request)
         assert (
-            res["fulfillment_response"]["messages"][0]["text"]["text"][0]
-            == expected_response
+            res["page_info"]["form_info"]["parameter_info"][0]["state"]
+            == 'INVALID'
         )
