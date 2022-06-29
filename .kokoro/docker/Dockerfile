@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -142,14 +142,14 @@ RUN set -ex \
   && rm -rf ~/.cache/
 
 
-# Install pip on Python 3.6 only.
+# Install pip on Python 3.7 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-    && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
+    && python3.7 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
-  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
+  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.7/site-packages")
   # https://github.com/docker-library/python/pull/143#issuecomment-241032683
     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
   # then we use "pip list" to ensure we don't have more than one pip version installed
@@ -167,7 +167,7 @@ RUN pip install --no-cache-dir virtualenv
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 389.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.6
+ENV CLOUDSDK_PYTHON python3.7
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
@@ -191,4 +191,4 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-CMD ["python3.6"]
+CMD ["python3.7"]
