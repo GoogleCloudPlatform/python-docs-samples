@@ -14,7 +14,7 @@
 
 """ DialogFlow CX: webhook to configure new session parameters."""
 
-# [START dialogflow_v3beta1_webhook_configure_session_parameters]
+# [START dialogflow_cx_v3_webhook_configure_session_parameters]
 
 # TODO (developer): change entry point to configure_session_params in Cloud Function
 
@@ -22,28 +22,12 @@
 def configure_session_params(request):
     """Webhook to validate or configure new session parameters."""
 
-    request_dict = request.get_json()
-    tag = request_dict["fulfillmentInfo"]["tag"]
-
-    new_session_parameter = "Hi, I am new!"
-    text = f"{new_session_parameter}. I'm a session parameter configured by the webhook. The webhook's tag is {tag}."
+    order_number = 123
 
     json_response = {
-        "fulfillment_response": {
-            "messages": [
-                {
-                    "text": {
-                        "text": [
-                            # fulfillment text response to be sent to the agent
-                            text
-                        ],
-                    },
-                },
-            ],
-        },
         "sessionInfo": {
             "parameters": {
-                "newSessionParameter": new_session_parameter,
+                "orderNumber": order_number,
             },
         },
     }
@@ -51,4 +35,4 @@ def configure_session_params(request):
     return json_response
 
 
-# [END dialogflow_v3beta1_webhook_configure_session_parameters]
+# [END dialogflow_cx_v3_webhook_configure_session_parameters]

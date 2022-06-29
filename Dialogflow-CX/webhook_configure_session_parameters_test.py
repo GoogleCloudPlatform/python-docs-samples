@@ -28,14 +28,8 @@ def fixture_app():
 def test_validate_parameter(app):
     """Test for configure new session parameters."""
 
-    request = {"fulfillmentInfo": {"tag": "MOCK_TAG"}}
+    request = {"fulfillmentInfo": {"tag": "configure-session-parameter"}}
 
     with app.test_request_context(json=request):
         res = configure_session_params(flask.request)
-        assert (
-            res["fulfillment_response"]["messages"][0]["text"]["text"][0]
-            == (
-                "Hi, I am new!. I'm a session parameter configured by the webhook. "
-                "The webhook's tag is MOCK_TAG."
-            )
-        )
+        assert "orderNumber" in res["sessionInfo"]["parameters"]
