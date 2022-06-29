@@ -24,6 +24,7 @@ from airflow.providers.google.cloud.transfers.s3_to_gcs import S3ToGCSOperator
 from airflow.utils.task_group import TaskGroup
 
 PROJECT_NAME = "{{var.value.gcp_project}}"
+REGION = "{{var.value.gce_region}}"
 
 # BigQuery configs
 BQ_DESTINATION_DATASET_NAME = "holiday_weather"
@@ -89,7 +90,7 @@ with models.DAG(
     create_batch = dataproc.DataprocCreateBatchOperator(
         task_id="create_batch",
         project_id=PROJECT_NAME,
-        region="{{ var.value.gce_region }}",
+        region=REGION,
         batch=BATCH_CONFIG,
         batch_id=BATCH_ID,
     )
