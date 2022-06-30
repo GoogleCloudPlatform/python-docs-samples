@@ -165,18 +165,19 @@ except Exception as e:
     logging.error(e)
 
 # Check for RenderedTaskInstanceFields model
-try:
-    from airflow.models import RenderedTaskInstanceFields
-    DATABASE_OBJECTS.append({
-        "airflow_db_model": RenderedTaskInstanceFields,
-        "age_check_column": RenderedTaskInstanceFields.execution_date,
-        "keep_last": False,
-        "keep_last_filters": None,
-        "keep_last_group_by": None
-    })
-
-except Exception as e:
-    logging.error(e)
+if AIRFLOW_VERSION < ['2', '3', '0']:
+    try:
+        from airflow.models import RenderedTaskInstanceFields
+        DATABASE_OBJECTS.append({
+            "airflow_db_model": RenderedTaskInstanceFields,
+            "age_check_column": RenderedTaskInstanceFields.execution_date,
+            "keep_last": False,
+            "keep_last_filters": None,
+            "keep_last_group_by": None
+        })
+    
+    except Exception as e:
+        logging.error(e)
 
 # Check for ImportError model
 try:
