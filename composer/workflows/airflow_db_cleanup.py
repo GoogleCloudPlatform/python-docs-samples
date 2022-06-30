@@ -118,7 +118,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": None
 }, {
     "airflow_db_model": XCom,
-    "age_check_column": XCom.execution_date,
+    "age_check_column": XCom.execution_date if AIRFLOW_VERSION < ['2', '2', '0'] else XCom.timestamp,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
