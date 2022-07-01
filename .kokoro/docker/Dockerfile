@@ -191,4 +191,4 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-CMD ["python3.9"]
+CMD ["python3.6"]
