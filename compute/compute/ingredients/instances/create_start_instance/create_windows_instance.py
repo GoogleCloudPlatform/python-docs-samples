@@ -67,9 +67,15 @@ def create_windows_instance(project_id: str, zone: str, instance_name: str,
     # that contain Windows instances with only internal IP addresses.
     # More information about Private Google Access: https://cloud.google.com/vpc/docs/configure-private-google-access#enabling
 
-    instance = create_instance(project_id, zone, instance_name, disks,
-                               machine_type=machine_type, network_link=network_link,
-                               subnetwork_link=subnetwork_link, external_access=True,
-                               )
+    instance = create_instance(
+        project_id,
+        zone,
+        instance_name,
+        disks,
+        machine_type=machine_type,
+        network_link=network_link,
+        subnetwork_link=subnetwork_link,
+        external_access=True,  # Set this to False to disable external IP for your instance
+    )
     return instance
 # </INGREDIENT>

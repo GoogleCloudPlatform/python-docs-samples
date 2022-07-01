@@ -19,6 +19,7 @@
 # directory and apply your changes there.
 
 
+# [START compute_create_windows_instance_external_ip]
 # [START compute_create_windows_instance_internal_ip]
 import re
 import sys
@@ -305,9 +306,10 @@ def create_windows_instance(
         machine_type=machine_type,
         network_link=network_link,
         subnetwork_link=subnetwork_link,
-        external_access=True,
+        external_access=True,  # Set this to False to disable external IP for your instance
     )
     return instance
 
 
 # [END compute_create_windows_instance_internal_ip]
+# [END compute_create_windows_instance_external_ip]

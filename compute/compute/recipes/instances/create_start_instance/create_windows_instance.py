@@ -13,6 +13,7 @@
 #  limitations under the License.
 # flake8: noqa
 
+# <REGION compute_create_windows_instance_external_ip>
 # <REGION compute_create_windows_instance_internal_ip>
 # <IMPORTS/>
 
@@ -29,3 +30,4 @@
 
 # <INGREDIENT create_windows_instance />
 # </REGION compute_create_windows_instance_internal_ip>
+# </REGION compute_create_windows_instance_external_ip>
