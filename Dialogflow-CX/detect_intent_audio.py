@@ -25,10 +25,10 @@ Examples:
 import argparse
 import uuid
 
-from google.cloud.dialogflowcx_v3beta1.services.agents import AgentsClient
-from google.cloud.dialogflowcx_v3beta1.services.sessions import SessionsClient
-from google.cloud.dialogflowcx_v3beta1.types import audio_config
-from google.cloud.dialogflowcx_v3beta1.types import session
+from google.cloud.dialogflowcx_v3.services.agents import AgentsClient
+from google.cloud.dialogflowcx_v3.services.sessions import SessionsClient
+from google.cloud.dialogflowcx_v3.types import audio_config
+from google.cloud.dialogflowcx_v3.types import session
 
 
 # [START dialogflow_detect_intent_audio]
