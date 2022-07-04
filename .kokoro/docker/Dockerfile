@@ -117,7 +117,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
+  && for PYTHON_VERSION in 3.7.13 3.8.13 3.9.13 3.10.5; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -128,9 +128,6 @@ RUN set -ex \
   && cd /usr/src/python-${PYTHON_VERSION} \
   && ./configure \
   --enable-shared \
-  # This works only on Python 2.7 and throws a warning on every other
-  # version, but seems otherwise harmless.
-  --enable-unicode=ucs4 \
   --with-system-ffi \
   --without-ensurepip \
   && make -j$(nproc) \
@@ -145,8 +142,8 @@ RUN set -ex \
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 21.3.1
-RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+ENV PYTHON_PIP_VERSION 22.1.2
+RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
   && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.10/site-packages")
