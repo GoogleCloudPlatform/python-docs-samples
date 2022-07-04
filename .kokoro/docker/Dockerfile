@@ -156,8 +156,10 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
   && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for python3
-RUN python3 /tmp/get-pip.py
+# Ensure Pip for all python3 versions
+RUN python3.9 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
 
 # Install "virtualenv", since the vast majority of users of this image
