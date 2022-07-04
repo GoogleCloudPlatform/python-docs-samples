@@ -117,7 +117,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
+  && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.13 3.9.13 3.10.5; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -160,7 +160,11 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
 RUN python3.9 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip.py
 RUN python3.7 /tmp/get-pip.py
+RUN python3.6 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
+
+# Test Pip
+RUN python3 -m pip
 
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
@@ -193,4 +197,4 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-CMD ["python3.10"]
+CMD ["python3"]
