@@ -165,6 +165,7 @@ RUN rm /tmp/get-pip.py
 
 # Test Pip
 RUN python3 -m pip
+RUN python3.6 -m pip
 RUN python3.7 -m pip
 RUN python3.8 -m pip
 RUN python3.9 -m pip
