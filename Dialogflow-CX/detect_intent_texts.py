@@ -34,7 +34,7 @@ from google.cloud.dialogflowcx_v3beta1.services.sessions import SessionsClient
 from google.cloud.dialogflowcx_v3beta1.types import session
 
 
-# [START dialogflow_detect_intent_text]
+# [START dialogflow_cx_detect_intent_text]
 def run_sample():
     # TODO(developer): Replace these values when running the function
     project_id = "YOUR-PROJECT-ID"
@@ -84,7 +84,7 @@ def detect_intent_texts(agent, session_id, texts, language_code):
         print(f"Response text: {' '.join(response_messages)}\n")
 
 
-# [END dialogflow_detect_intent_text]
+# [END dialogflow_cx_detect_intent_text]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
