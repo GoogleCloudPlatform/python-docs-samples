@@ -36,7 +36,7 @@ def home_page():
         <input type="text" name="email" id="email" size="40"/>
         <br />
         <label for="body">With this body: </label>
-        <input type="text" name="body" id="bo4y" size="40"/>
+        <input type="text" name="body" id="body" size="40"/>
         <br />
         <input type="submit" value="Send" />
     </form>
@@ -47,20 +47,21 @@ def home_page():
 
 @app.route("/", methods=["POST"])
 def send_mail():
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
     address = request.form.get("email")
     if address is None:
         return "Error: Missing email address", 400
-    else:
-        project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
-        mail.send_mail(
-            sender=f"demo-app@{project_id}.appspotmail.com",
-            to=address,
-            subject="App Engine Outgoing Email",
-            body=request.form.get("body"),
-        )
+    mail.send_mail(
+        sender=f"demo-app@{project_id}.appspotmail.com",
+        to=address,
+        subject="App Engine Outgoing Email",
+        body=request.form.get("body"),
+    )
 
-        return f"Successfully sent mail to {address}.", 201
+    print(f"Successfully sent mail to {address}.")
+    return f"Successfully sent mail to {address}.", 201
 
 
 @app.route("/_ah/bounce", methods=["POST"])

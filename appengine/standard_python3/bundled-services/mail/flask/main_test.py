@@ -23,29 +23,30 @@ import requests
 @pytest.fixture
 def version():
     """Launch a new version of the app for testing, and yield the
-    version number so tests can invoke it.
+    project and version number so tests can invoke it, then delete it.
     """
+
     output = subprocess.run(
         "gcloud app deploy --no-promote --quiet --format=json",
         capture_output=True,
         shell=True,
     )
 
-    # For debugging:
-    print(f"App deploy return code is '{output.returncode}'\n\n")
-    print(f"App deploy stderr is '{output.stderr}'\n\n")
-    print(f"App deploy stdout is '{output.stdout}'\n\n")
-
     result = json.loads(output.stdout)
-    yield result["versions"][0]["version"]["name"]
+    version_id = result["versions"][0]["id"]
+    project_id = result["versions"][0]["project"]
 
-    # TODO: kill new version
+    yield project_id, version_id
 
-    return
+    output = subprocess.run(
+        f"gcloud app versions delete {version_id}",
+        capture_output=True,
+        shell=True,
+    )
 
 
-def test_send_receive_and_bounce(version):
-    _, project_id, _, service_id, _, version_id = version.split("/")
+def test_send_receive(version):
+    project_id, version_id = version
     version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
 
     # Check that version is serving form in home page
@@ -65,20 +66,8 @@ def test_send_receive_and_bounce(version):
     assert response.status_code == 201
     assert "Successfully sent mail" in response.text
 
-    # Send invalid mail that will bounce
-    response = requests.post(
-        f"https://{version_hostname}/",
-        data={
-            "email": "nobody@example.com",
-            "body": "This message should bounce",
-        },
-    )
-
-    assert response.status_code == 201
-    assert "Successfully sent mail" in response.text
-
-    # Give the mail some time to be delivered or bounced
-    time.sleep(60)
+    # Give the mail some time to be delivered and logs to post
+    time.sleep(30)
 
     # Fetch logs to check messages on received mail
     output = subprocess.run(
@@ -94,15 +83,12 @@ def test_send_receive_and_bounce(version):
     )
     entries = json.loads(output.stdout)
 
-    textPayloads = ""
+    text_payloads = ""
     for entry in entries:
         if "textPayload" in entry:
-            textPayloads += entry["textPayload"]
-            textPayloads += "\n"
+            text_payloads += entry["textPayload"]
+            text_payloads += "\n"
 
     expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
-    assert expected in textPayloads
-    assert "This message should be delivered" in textPayloads
-
-    assert "Bounce original:  {'to': ['nobody@example.com']," in textPayloads
-    assert "Bounce notification:" in textPayloads
+    assert expected in text_payloads
+    assert "This message should be delivered" in text_payloads
