@@ -70,7 +70,7 @@ default_dag_args = {
 }
 
 with models.DAG(
-    "summit_dag",
+    "data_analytics_dag",
     # Continue to run DAG once per day
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
