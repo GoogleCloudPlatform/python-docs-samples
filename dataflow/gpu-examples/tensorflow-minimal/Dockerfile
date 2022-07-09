@@ -16,7 +16,7 @@
 #   https://www.tensorflow.org/install/source#gpu
 # For a list of all the nvidia images:
 #   https://ngc.nvidia.com/catalog/containers/nvidia:cuda/tags
-FROM nvcr.io/nvidia/cuda:11.4.2-cudnn8-runtime-ubuntu20.04
+FROM nvcr.io/nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 WORKDIR /pipeline
 
@@ -37,5 +37,5 @@ RUN apt-get update \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.8_sdk:2.37.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.8_sdk:2.39.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
