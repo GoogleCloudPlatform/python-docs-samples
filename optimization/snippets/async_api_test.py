@@ -17,7 +17,8 @@ import uuid
 import google.auth
 from google.cloud import storage
 import pytest
-from samples.snippets import async_api
+
+import async_api
 
 
 # TODO(developer): Replace the variables in the file before use.

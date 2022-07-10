@@ -15,7 +15,8 @@
 import google.auth
 import pytest
 
-from samples.snippets import sync_api
+
+import sync_api
 
 
 def test_call_sync_api(capsys: pytest.LogCaptureFixture) -> None:
