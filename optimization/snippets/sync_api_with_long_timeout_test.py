@@ -15,7 +15,7 @@
 import google.auth
 import pytest
 
-from samples.snippets import sync_api_with_long_timeout
+import sync_api_with_long_timeout
 
 
 def test_long_timeout(capsys: pytest.LogCaptureFixture) -> None:
