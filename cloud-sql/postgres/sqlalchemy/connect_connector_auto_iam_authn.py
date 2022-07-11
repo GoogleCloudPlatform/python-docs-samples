@@ -21,10 +21,10 @@ import pg8000
 import sqlalchemy
 
 
-# connect_with_connector_iam_authn initializes a connection pool for a
-# Cloud SQL instance of Postgres using the Cloud SQL Python Connector
+# connect_with_connector_auto_iam_authn initializes a connection pool for
+# a Cloud SQL instance of Postgres using the Cloud SQL Python Connector
 # with Automatic IAM Database Authentication.
-def connect_with_connector_iam_authn() -> sqlalchemy.engine.base.Engine:
+def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
