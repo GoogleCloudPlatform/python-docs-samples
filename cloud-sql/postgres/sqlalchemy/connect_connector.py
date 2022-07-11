@@ -72,7 +72,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
 
     # [START cloud_sql_postgres_sqlalchemy_connect_connector]
     # [START cloud_sql_postgres_sqlalchemy_auto_iam_authn]
-    
+
     # The Cloud SQL Python Connector can be used with SQLAlchemy
     # using the 'creator' argument to 'create_engine'
     pool = sqlalchemy.create_engine(
