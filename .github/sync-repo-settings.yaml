@@ -44,7 +44,6 @@ branchProtectionRules:
   requiredStatusCheckContexts:
     - "Kokoro CI - Lint"
     - "Kokoro CI - Python 2.7 (App Engine Standard Only)"
-    - "Kokoro CI - Python 3.6"
     - "Kokoro CI - Python 3.7"
     - "Kokoro CI - Python 3.8"
     - "cla/google"
