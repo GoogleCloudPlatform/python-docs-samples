@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloud_sql_postgres_sqlalchemy_connect_connector]
+# [START cloud_sql_postgres_sqlalchemy_auto_iam_authn]
 import os
 
 from google.cloud.sql.connector import Connector, IPTypes
@@ -21,17 +21,16 @@ import pg8000
 import sqlalchemy
 
 
-# connect_with_connector initializes a connection pool for a
-# Cloud SQL instance of Postgres using the Cloud SQL Python Connector.
-def connect_with_connector() -> sqlalchemy.engine.base.Engine:
+# connect_with_connector_iam_authn initializes a connection pool for a
+# Cloud SQL instance of Postgres using the Cloud SQL Python Connector
+# with Automatic IAM Database Authentication.
+def connect_with_connector_iam_authn() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-
     instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]  # e.g. 'project:region:instance'
-    db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
-    db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
+    db_iam_user = os.environ["DB_IAM_USER"]  # e.g. 'sa-name@project-id.iam'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
@@ -43,9 +42,9 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
         conn: pg8000.dbapi.Connection = connector.connect(
             instance_connection_name,
             "pg8000",
-            user=db_user,
-            password=db_pass,
+            user=db_iam_user,
             db=db_name,
+            enable_iam_auth=True,
             ip_type=ip_type,
         )
         return conn
@@ -78,4 +77,4 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     )
     return pool
 
-# [END cloud_sql_postgres_sqlalchemy_connect_connector]
+# [END cloud_sql_postgres_sqlalchemy_auto_iam_authn]
