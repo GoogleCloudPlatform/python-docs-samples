@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START cloud_sql_postgres_sqlalchemy_connect_connector]
+# [START cloud_sql_postgres_sqlalchemy_auto_iam_authn]
 import os
 
 from google.cloud.sql.connector import Connector, IPTypes
@@ -37,21 +38,43 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
-    enable_iam_auth, db_user = (True, db_iam_user) if db_iam_user else (False, db_user)
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
-    connector = Connector(ip_type, enable_iam_auth)
+    # initialize Cloud SQL Python Connector object
+    connector = Connector(ip_type)
 
-    def getconn() -> pg8000.dbapi.Connection:
-        conn: pg8000.dbapi.Connection = connector.connect(
-            instance_connection_name,
-            "pg8000",
-            user=db_user,
-            password=db_pass,
-            db=db_name,
-        )
-        return conn
+    # [END cloud_sql_postgres_sqlalchemy_connect_connector]
+    # [END cloud_sql_postgres_sqlalchemy_auto_iam_authn]
+    if db_iam_user:
+        # [START cloud_sql_postgres_sqlalchemy_auto_iam_authn]
+        def getconn() -> pg8000.dbapi.Connection:
+            conn: pg8000.dbapi.Connection = connector.connect(
+                instance_connection_name,
+                "pg8000",
+                user=db_iam_user,
+                db=db_name,
+                enable_iam_auth=True,
+            )
+            return conn
+        # [END cloud_sql_postgres_sqlalchemy_auto_iam_authn]
+    else:
+        # [START cloud_sql_postgres_sqlalchemy_connect_connector]
+        def getconn() -> pg8000.dbapi.Connection:
+            conn: pg8000.dbapi.Connection = connector.connect(
+                instance_connection_name,
+                "pg8000",
+                user=db_user,
+                password=db_pass,
+                db=db_name,
+            )
+            return conn
+        # [END cloud_sql_postgres_sqlalchemy_connect_connector]
 
+    # [START cloud_sql_postgres_sqlalchemy_connect_connector]
+    # [START cloud_sql_postgres_sqlalchemy_auto_iam_authn]
+    
+    # The Cloud SQL Python Connector can be used with SQLAlchemy
+    # using the 'creator' argument to 'create_engine'
     pool = sqlalchemy.create_engine(
         "postgresql+pg8000://",
         creator=getconn,
@@ -79,3 +102,4 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     return pool
 
 # [END cloud_sql_postgres_sqlalchemy_connect_connector]
+# [END cloud_sql_postgres_sqlalchemy_auto_iam_authn]
