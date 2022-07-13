@@ -435,10 +435,11 @@ def test_create_bucket_class_location(test_bucket_create):
 
 
 def test_create_bucket_dual_region(test_bucket_create, capsys):
+    location = "US"
     region_1 = "US-EAST1"
     region_2 = "US-WEST1"
     storage_create_bucket_dual_region.create_bucket_dual_region(
-        test_bucket_create.name, region_1, region_2
+        test_bucket_create.name, location, region_1, region_2
     )
     out, _ = capsys.readouterr()
     assert f"Bucket {test_bucket_create.name} created in {region_1}+{region_2}" in out

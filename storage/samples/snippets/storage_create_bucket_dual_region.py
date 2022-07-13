@@ -24,8 +24,8 @@ Sample that creates a dual region bucket.
 from google.cloud import storage
 
 
-def create_bucket_dual_region(bucket_name, region_1, region_2):
-    """Creates a Dual-Region Bucket with provided locations."""
+def create_bucket_dual_region(bucket_name, location, region_1, region_2):
+    """Creates a Dual-Region Bucket with provided location and regions.."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
 
@@ -34,9 +34,10 @@ def create_bucket_dual_region(bucket_name, region_1, region_2):
     # https://cloud.google.com/storage/docs/locations
     # region_1 = "US-EAST1"
     # region_2 = "US-WEST1"
+    # location = "US"
 
     storage_client = storage.Client()
-    storage_client.create_bucket(bucket_name, location=f"{region_1}+{region_2}")
+    storage_client.create_bucket(bucket_name, location=location, data_locations=[region_1, region_2])
 
     print(f"Bucket {bucket_name} created in {region_1}+{region_2}.")
 
@@ -46,5 +47,5 @@ def create_bucket_dual_region(bucket_name, region_1, region_2):
 
 if __name__ == "__main__":
     create_bucket_dual_region(
-        bucket_name=sys.argv[1], region_1=sys.argv[2], region_2=sys.argv[3]
+        bucket_name=sys.argv[1], location=sys.argv[2], region_1=sys.argv[3], region_2=sys.argv[4]
     )
