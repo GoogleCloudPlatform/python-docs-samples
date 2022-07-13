@@ -26,6 +26,9 @@ from airflow.providers.microsoft.azure.transfers.azure_blob_to_gcs import (
 )
 from airflow.utils.task_group import TaskGroup
 
+
+# from airflow.providers.microsoft.azure.hooks.wasb import WasbHook
+
 PROJECT_NAME = "{{var.value.gcp_project}}"
 REGION = "{{var.value.gce_region}}"
 
@@ -40,7 +43,14 @@ PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
 
 # Azure configs
-AZURE_BUCKET_NAME = "{{var.value.azure_bucket}}"
+# AZURE_BUCKET_NAME = "{{var.value.azure_bucket}}"
+
+
+#AIRFLOW_CONN_WASB_DEFAULT='{
+#    "Login": "airlfowazureblobstorage",
+#    "password": "43kryVbxpnCNlOdq+68Om4f6TaaIz0quFJ9okk9Ecs4/jvuPAQ1wnnnSAiFyL/pZmUVr0hOgc4vl+AStYqkVvQ==",
+#    "extra": {"sas_token": #"DefaultEndpointsProtocol=https;AccountName=airlfowazureblobstorage;AccountKey=43kryVbxpnCNlOdq+68Om4f6TaaIz0quFJ9okk9E#cs4/jvuPAQ1wnnnSAiFyL/pZmUVr0hOgc4vl+AStYqkVvQ==;EndpointSuffix=core.windows.net"}
+#}'
 
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
@@ -81,80 +91,88 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
 ) as dag:
-
+    
+    # wait_for_blob = WasbBlobSensor(task_id="wait_for_blob")
+    
     blob_to_gcs_op = AzureBlobStorageToGCSOperator(
         task_id="blob_to_gcs",
+        #Azure args
         blob_name="holidays.csv",
         file_path="https://airlfowazureblobstorage.blob.core.windows.net/holidays-container/holidays.csv",
-        container_name="airlfowazureblobstorage",
-        filename=None,
-        gzip=False,
-        delegate_to=None,
+        container_name="holidays-container",
+        wasb_conn_id="azure_default",
+        filename="holidays.csv",
+        
+        # GCP args
         gcp_conn_id="google_cloud_default",
-        wasb_conn_id="azure_blob_connection",
         object_name="holidays.csv",
         bucket_name=f"gs://{BUCKET_NAME}",
+        gzip=False,
+        delegate_to=None,
+        impersonation_chain=None,
     )
 
-    create_batch = dataproc.DataprocCreateBatchOperator(
-        task_id="create_batch",
-        project_id=PROJECT_NAME,
-        region=REGION,
-        batch=BATCH_CONFIG,
-        batch_id=BATCH_ID,
-    )
+    # create_batch = dataproc.DataprocCreateBatchOperator(
+    #     task_id="create_batch",
+    #     project_id=PROJECT_NAME,
+    #     region=REGION,
+    #     batch=BATCH_CONFIG,
+    #     batch_id=BATCH_ID,
+    # )
 
-    load_external_dataset = GCSToBigQueryOperator(
-        task_id="run_bq_external_ingestion",
-        bucket=BUCKET_NAME,
-        source_objects=["holidays.csv"],
-        destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
-        source_format="CSV",
-        schema_fields=[
-            {"name": "Date", "type": "DATE"},
-            {"name": "Holiday", "type": "STRING"},
-        ],
-        skip_leading_rows=1,
-        write_disposition="WRITE_TRUNCATE"
-    )
+    # load_external_dataset = GCSToBigQueryOperator(
+    #     task_id="run_bq_external_ingestion",
+    #     bucket=BUCKET_NAME,
+    #     source_objects=["holidays.csv"],
+    #     destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
+    #     source_format="CSV",
+    #     schema_fields=[
+    #         {"name": "Date", "type": "DATE"},
+    #         {"name": "Holiday", "type": "STRING"},
+    #     ],
+    #     skip_leading_rows=1,
+    #     write_disposition="WRITE_TRUNCATE"
+    # )
 
-    with TaskGroup("join_bq_datasets") as bq_join_group:
+    # with TaskGroup("join_bq_datasets") as bq_join_group:
 
-        for year in range(1997, 2022):
-            BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
-            BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
-            # Specifically query a Chicago weather station
-            WEATHER_HOLIDAYS_JOIN_QUERY = f"""
-            SELECT Holidays.Date, Holiday, id, element, value
-            FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
-            JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table
-            WHERE Table.element="TMAX" AND Table.id="USW00094846") AS Weather
-            ON Holidays.Date = Weather.Date;
-            """
+    #     for year in range(1997, 2022):
+    #         BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
+    #         BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
+    #         # Specifically query a Chicago weather station
+    #         WEATHER_HOLIDAYS_JOIN_QUERY = f"""
+    #         SELECT Holidays.Date, Holiday, id, element, value
+    #         FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
+    #         JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table
+    #         WHERE Table.element="TMAX" AND Table.id="USW00094846") AS Weather
+    #         ON Holidays.Date = Weather.Date;
+    #         """
 
-            # For demo purposes we are using WRITE_APPEND
-            # but if you run the DAG repeatedly it will continue to append
-            # Your use case may be different, see the Job docs
-            # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
-            # for alternative values for the writeDisposition
-            # or consider using partitioned tables
-            # https://cloud.google.com/bigquery/docs/partitioned-tables
-            bq_join_holidays_weather_data = BigQueryInsertJobOperator(
-                task_id=f"bq_join_holidays_weather_data_{str(year)}",
-                configuration={
-                    "query": {
-                        "query": WEATHER_HOLIDAYS_JOIN_QUERY,
-                        "useLegacySql": False,
-                        "destinationTable": {
-                            "projectId": PROJECT_NAME,
-                            "datasetId": BQ_DESTINATION_DATASET_NAME,
-                            "tableId": BQ_DESTINATION_TABLE_NAME,
-                        },
-                        "writeDisposition": "WRITE_APPEND",
-                    }
-                },
-                location="US",
-            )
+    #         # For demo purposes we are using WRITE_APPEND
+    #         # but if you run the DAG repeatedly it will continue to append
+    #         # Your use case may be different, see the Job docs
+    #         # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
+    #         # for alternative values for the writeDisposition
+    #         # or consider using partitioned tables
+    #         # https://cloud.google.com/bigquery/docs/partitioned-tables
+    #         bq_join_holidays_weather_data = BigQueryInsertJobOperator(
+    #             task_id=f"bq_join_holidays_weather_data_{str(year)}",
+    #             configuration={
+    #                 "query": {
+    #                     "query": WEATHER_HOLIDAYS_JOIN_QUERY,
+    #                     "useLegacySql": False,
+    #                     "destinationTable": {
+    #                         "projectId": PROJECT_NAME,
+    #                         "datasetId": BQ_DESTINATION_DATASET_NAME,
+    #                         "tableId": BQ_DESTINATION_TABLE_NAME,
+    #                     },
+    #                     "writeDisposition": "WRITE_APPEND",
+    #                 }
+    #             },
+    #             location="US",
+    #         )
 
-        blob_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
+        # blob_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
+    blob_to_gcs_op
+
 
