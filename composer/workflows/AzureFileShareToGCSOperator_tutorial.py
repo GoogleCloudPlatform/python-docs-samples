@@ -39,7 +39,9 @@ PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
 
 # Azure configs
-# AZURE_BUCKET_NAME = "{{var.value.azure_bucket}}"
+AZURE_BLOB_NAME = "{{var.value.azure_blob_name}}"
+AZURE_BLOB_PATH = "{{var.value.azure_blob_path}}"
+AZURE_CONTAINER_NAME = "{{var.value.azure_container_name}}"
 
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
@@ -83,16 +85,16 @@ with models.DAG(
 
     blob_to_gcs_op = AzureBlobStorageToGCSOperator(
         task_id="blob_to_gcs",
-        #Azure args
-        blob_name="holidays.csv",
-        file_path="https://airlfowazureblobstorage.blob.core.windows.net/holidays-container/holidays.csv",
-        container_name="holidays-container",
+        # Azure args
+        blob_name=AZURE_BLOB_NAME,
+        file_path=AZURE_BLOB_PATH,
+        container_name=AZURE_CONTAINER_NAME,
         wasb_conn_id="azure_blob_connection",
-        filename="https://console.cloud.google.com/storage/browser/workshop_example_bucket/",
+        filename=f"https://console.cloud.google.com/storage/browser/{BUCKET_NAME}/",
         # GCP args
         gcp_conn_id="google_cloud_default",
         object_name="holidays.csv",
-        bucket_name="workshop_example_bucket",
+        bucket_name=BUCKET_NAME,
         gzip=False,
         delegate_to=None,
         impersonation_chain=None,
@@ -117,7 +119,7 @@ with models.DAG(
             {"name": "Holiday", "type": "STRING"},
         ],
         skip_leading_rows=1,
-        write_disposition="WRITE_TRUNCATE"
+        write_disposition="WRITE_TRUNCATE",
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
@@ -159,5 +161,3 @@ with models.DAG(
             )
 
         blob_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
-
-
