@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import cgi
 import http
+import os
 import re
 
 from google.appengine.api import mail
@@ -20,66 +22,114 @@ from google.appengine.api import wrap_wsgi_app
 
 
 def HelloReceiver(environ, start_response):
-    if environ['REQUEST_METHOD'] != 'POST':
-        return ('', http.HTTPStatus.METHOD_NOT_ALLOWED, [('Allow', 'POST')])
+    if environ["REQUEST_METHOD"] != "POST":
+        return ("", http.HTTPStatus.METHOD_NOT_ALLOWED, [("Allow", "POST")])
 
-    mail_message = mail.InboundEmailMessage.from_environ(environ)
+    message = mail.InboundEmailMessage.from_environ(environ)
 
-    # Do something with the message
-    print('Received greeting from %s: %s' %
-          (mail_message.sender, mail_message.body))
+    print(f"Received greeting for {message.to} at {message.date} from {message.sender}")
+    for content_type, payload in message.bodies("text/plain"):
+        print(f"Text/plain body: {payload.decode()}")
+        break
 
-    # Return suitable response
     response = http.HTTPStatus.OK
-    start_response(f'{response.value} {response.phrase}', [])
-    return ['success'.encode('utf-8')]
+    start_response(f"{response.value} {response.phrase}", [])
+    return ["success".encode("utf-8")]
 
 
 def BounceReceiver(environ, start_response):
-    if environ['REQUEST_METHOD'] != 'POST':
-        return ('', http.HTTPStatus.METHOD_NOT_ALLOWED, [('Allow', 'POST')])
+    if environ["REQUEST_METHOD"] != "POST":
+        return ("", http.HTTPStatus.METHOD_NOT_ALLOWED, [("Allow", "POST")])
 
     bounce_message = mail.BounceNotification.from_environ(environ)
 
     # Do something with the message
-    print('Received bounce post.')
-    print('Bounce original: %s', bounce_message.original)
-    print('Bounce notification: %s', bounce_message.notification)
+    print("Received bounce post.")
+    print("Bounce original: %s", bounce_message.original)
+    print("Bounce notification: %s", bounce_message.notification)
 
     # Return suitable response
     response = http.HTTPStatus.OK
-    start_response(f'{response.value} {response.phrase}', [])
-    return ['success'.encode('utf-8')]
+    start_response(f"{response.value} {response.phrase}", [])
+    return ["success".encode("utf-8")]
 
 
 def InvalidMailSender(environ, start_response):
     # Send invalid mail to trigger a bounce notification.
     mail.send_mail(
-        sender='test-python-user@shreejad-knative-dev.appspotmail.com',
-        to='Invalid Address <random-bounce@gmail.com>',
-        subject='Test Email Subject sd',
-        body='Test Email Body sd')
+        sender="test-python-user@shreejad-knative-dev.appspotmail.com",
+        to="Invalid Address <random-bounce@gmail.com>",
+        subject="Test Email Subject sd",
+        body="Test Email Body sd",
+    )
 
-    print('Successfully sent a mail to random-bounce@gmail.com.')
-    print('This should trigger a bounce notification.')
+    print("Successfully sent a mail to random-bounce@gmail.com.")
+    print("This should trigger a bounce notification.")
 
     # Return suitable response
     response = http.HTTPStatus.OK
-    start_response(f'{response.value} {response.phrase}', [])
-    return ['success'.encode('utf-8')]
+    start_response(f"{response.value} {response.phrase}", [])
+    return ["success".encode("utf-8")]
+
+
+def HomePage(environ, start_response):
+    if environ["REQUEST_METHOD"] == "GET":
+        html = """
+<!DOCTYPE html5>
+<html>
+<head><title>App Engine Legacy Mail</title></head>
+<body>
+    <h1>Send Email from App Engine</h1>
+    <form action="" method="POST">
+        <label for="email">Send email to address: </label>
+        <input type="text" name="email" id="email" size="40"/>
+        <br />
+        <label for="body">With this body: </label>
+        <input type="text" name="body" id="body" size="40"/>
+        <br />
+        <input type="submit" value="Send" />
+    </form>
+</body>
+"""
+        response = http.HTTPStatus.OK
+        start_response(f"{response.value} {response.phrase}", [])
+        return [html.encode("utf-8")]
+
+    else:   # POST request
+        project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+        form = cgi.parse(environ["wsgi.input"])
+
+        address = form.get("email")[0]
+        if address is None:
+            print("Error: missing email address")
+            return "Error: Missing email address", 400
+
+        mail.send_mail(
+            sender=f"demo-app@{project_id}.appspotmail.com",
+            to=address,
+            subject="App Engine Outgoing Email",
+            body=form.get("body")[0],
+        )
+
+        print(f"Successfully sent mail to {address}.")
+
+        response = http.HTTPStatus.CREATED
+        start_response(f"{response.value} {response.phrase}", [])
+        return [f"Successfully sent mail to {address}.".encode("utf-8")]
 
 
 routes = {
     mail.INCOMING_MAIL_URL_PATTERN: HelloReceiver,
     mail.BOUNCE_NOTIFICATION_URL_PATH: BounceReceiver,
-    'send_invalid_mail': InvalidMailSender
+    "send_invalid_mail": InvalidMailSender,
+    "": HomePage,
 }
 
 
-class WSGIApplication():
-
+class WSGIApplication:
     def __call__(self, environ, start_response):
-        path = environ.get('PATH_INFO', '')
+        path = environ.get("PATH_INFO", "")
         for regex, callable in routes.items():
             match = re.search(regex, path)
             if match is not None:
