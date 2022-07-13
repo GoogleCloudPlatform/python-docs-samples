@@ -51,6 +51,7 @@ def send_mail():
 
     address = request.form.get("email")
     if address is None:
+        print("Error: missing email address")
         return "Error: Missing email address", 400
 
     mail.send_mail(

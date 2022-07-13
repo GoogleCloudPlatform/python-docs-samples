@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from django.conf import settings
 from django.conf.urls import url
 from django.core.wsgi import get_wsgi_application
@@ -27,29 +29,79 @@ logging_client = logging.Client()
 logger = logging_client.logger('django-app-logs')
 
 
+def home_page(request):
+    """
+        Return a form asking about mail to send in reponse to a GET request,
+        and process the form and send the mail when the form is POSTed.
+    """
+
+    if request.method == "GET":
+        html = """
+<!DOCTYPE html5>
+<html>
+<head><title>App Engine Legacy Mail</title></head>
+<body>
+    <h1>Send Email from App Engine</h1>
+
+    <form action="" method="POST">
+        <label for="email">Send email to address: </label>
+        <input type="text" name="email" id="email" size="40"/>
+        <br />
+        <label for="body">With this body: </label>
+        <input type="text" name="body" id="body" size="40"/>
+        <br />
+        <input type="submit" value="Send" />
+    </form>
+</body>
+"""
+        return HttpResponse(html)
+    else:
+        return send_mail(request.POST.get("email"), request.POST.get("body"))
+
+    
+def send_mail(address, body):
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+    if address is None:
+        return HttpResponse(content="Error: Missing email address", status=400)
+
+    mail.send_mail(
+        sender=f"demo-app@{project_id}.appspotmail.com",
+        to=address,
+        subject="App Engine Outgoing Email",
+        body=body,
+    )
+
+    print(f"Successfully sent mail to {address}.")
+    return HttpResponse(content=f"Successfully sent mail to {address}.", status=201)
+
+
 def receive_mail(request):
-    mail_message = mail.InboundEmailMessage(request.body)
-    # Make a simple text log
-    logger.log_text(
-        'Received greeting at %s from %s: %s' %
-        (mail_message.to, mail_message.sender, [body for body in mail_message.bodies()]))
-    return HttpResponse('Success')
+    message = mail.InboundEmailMessage(request.body)
+
+    print(f"Received greeting for {message.to} at {message.date} from {message.sender}")
+    for _, payload in message.bodies("text/plain"):
+        print(f"Text/plain body: {payload.decode()}")
+        break
+
+    return HttpResponse('OK')
 
 
 def receive_bounce(request):
     bounce_message = mail.BounceNotification(dict(request.POST.lists()))
 
     # Make a simple text log
-    logger.log_text('Bounce original: %s' % (bounce_message.__original))
-    logger.log_text('Bounce notification: %s' % (bounce_message.__notification))
+    print(f"Bounce original: {bounce_message.__original}")
+    print(f"Bounce notification: {bounce_message.__notification}")
 
-    return HttpResponse('Success')
+    return HttpResponse('OK')
 
 
-urlpatterns = (
-    url(r'_ah/mail/.*$', receive_mail),
-    url(r'_ah/bounce', receive_bounce),
-)
+urlpatterns = [
+    url(r'^$', home_page),
+    url(r'^_ah/mail/.*$', receive_mail),
+    url(r'^_ah/bounce$', receive_bounce),
+]
 
 settings.configure(
     DEBUG=True,
