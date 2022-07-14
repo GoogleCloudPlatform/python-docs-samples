@@ -22,6 +22,6 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
 
-    from . import AzureFileShareToGCSOperator_tutorial
+    from . import azureblobstoretogcsoperator_tutorial
 
-    internal_unit_testing.assert_has_valid_dag(AzureFileShareToGCSOperator_tutorial)
+    internal_unit_testing.assert_has_valid_dag(azureblobstoretogcsoperator_tutorial)

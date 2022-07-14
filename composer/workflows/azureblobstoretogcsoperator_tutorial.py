@@ -83,8 +83,8 @@ with models.DAG(
     default_args=default_dag_args,
 ) as dag:
 
-    blob_to_gcs_op = AzureBlobStorageToGCSOperator(
-        task_id="blob_to_gcs",
+    azure_blob_to_gcs = AzureBlobStorageToGCSOperator(
+        task_id="azure_blob_to_gcs",
         # Azure args
         blob_name=AZURE_BLOB_NAME,
         file_path=AZURE_BLOB_PATH,
@@ -160,4 +160,4 @@ with models.DAG(
                 location="US",
             )
 
-        blob_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
+        azure_blob_to_gcs >> load_external_dataset >> bq_join_group >> create_batch
