@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from flask import Flask, redirect, request
-from google.appengine.api import users
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
@@ -22,9 +21,8 @@ app = Flask(__name__)
 app.wsgi_app = wrap_wsgi_app(app.wsgi_app, use_deferred=True)
 
 
-# This datastore model keeps track of which users uploaded which photos.
-class UserPhoto(ndb.Model):
-    user = ndb.StringProperty()
+# This datastore model keeps track of uploaded photos.
+class PhotoUpload(ndb.Model):
     blob_key = ndb.BlobKeyProperty()
 
 
@@ -32,9 +30,8 @@ class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
 
     def post(self):
         upload = self.get_uploads(request.environ)[0]
-        user_photo = UserPhoto(
-            user=users.get_current_user().user_id(), blob_key=upload.key())
-        user_photo.put()
+        photo = PhotoUpload(blob_key=upload.key())
+        photo.put()
 
         return redirect("/view_photo/%s" % upload.key())
 
