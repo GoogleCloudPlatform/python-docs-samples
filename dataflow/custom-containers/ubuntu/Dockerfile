@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:latest
+FROM ubuntu:impish
 
 WORKDIR /pipeline
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.9_sdk:2.37.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.9_sdk:2.38.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 # Install Python with pip, dev tools, distutils, and a C++ compiler.

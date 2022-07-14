@@ -30,6 +30,7 @@ import pytest
 SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 SERVICE = "job-quickstart-" + SUFFIX
+REGION = "us-west1"
 
 
 @pytest.fixture
@@ -45,7 +46,7 @@ def setup_job():
             "--project",
             PROJECT,
             "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX,
+            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
         ]
     )
 
@@ -62,7 +63,7 @@ def setup_job():
             "--project",
             PROJECT,
             "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX,
+            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
         ]
     )
 
@@ -77,7 +78,7 @@ def test_end_to_end(setup_job):
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_job "
         f"AND resource.labels.job_name={SERVICE} "
-        "resource.labels.location = \"us-central1\" "
+        f"resource.labels.location = \"{REGION}\" "
         "-protoPayload.serviceName=\"run.googleapis.com\""
     )
 
@@ -95,6 +96,6 @@ def test_end_to_end(setup_job):
         if found:
             break
         # Linear backoff
-        time.sleep(x * 5)
+        time.sleep(x * 10)
 
     assert found
