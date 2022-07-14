@@ -15,7 +15,6 @@
 import http
 import re
 
-from google.appengine.api import users
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
@@ -23,7 +22,6 @@ from google.appengine.ext import ndb
 
 # This datastore model keeps track of which users uploaded which photos.
 class UserPhoto(ndb.Model):
-    user = ndb.StringProperty()
     blob_key = ndb.BlobKeyProperty()
 
 
@@ -48,8 +46,7 @@ class UploadPhotoHandler(blobstore.BlobstoreUploadHandler):
 
     def post(self, environ):
         upload = self.get_uploads(environ)[0]
-        user_photo = UserPhoto(
-            user=users.get_current_user().user_id(), blob_key=upload.key())
+        user_photo = UserPhoto(blob_key=upload.key())
         user_photo.put()
 
         # Redirect to the '/view_photo/<Photo Key>' URL
