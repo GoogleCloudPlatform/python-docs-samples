@@ -17,7 +17,6 @@ from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import path
-from google.appengine.api import users
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
@@ -32,7 +31,6 @@ logger = logging_client.logger('django-app-logs')
 
 # This datastore model keeps track of which users uploaded which photos.
 class UserPhoto(ndb.Model):
-    user = ndb.StringProperty()
     blob_key = ndb.BlobKeyProperty()
 
 
@@ -41,8 +39,7 @@ class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
     def post(self, environ):
         upload = self.get_uploads(environ)[0]
         photo_key = upload.key()
-        user_photo = UserPhoto(
-            user=users.get_current_user().user_id(), blob_key=photo_key)
+        user_photo = UserPhoto(blob_key=photo_key)
         user_photo.put()
         logger.log_text('Photo key: %s' % photo_key)
         return redirect('view_photo', key=photo_key)
