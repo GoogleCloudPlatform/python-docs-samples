@@ -23,6 +23,7 @@
 import re
 import sys
 from typing import Any, List
+import warnings
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -143,6 +144,8 @@ def create_instance(
     external_ipv4: str = None,
     accelerators: List[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
+    spot: bool = False,
+    instance_termination_action: str = "STOP",
     custom_hostname: str = None,
     delete_protection: bool = False,
 ) -> compute_v1.Instance:
@@ -175,7 +178,10 @@ def create_instance(
         accelerators: a list of AcceleratorConfig objects describing the accelerators that will
             be attached to the new instance.
         preemptible: boolean value indicating if the new instance should be preemptible
-            or not.
+            or not. Preemptible VMs have been deprecated and you should now use Spot VMs.
+        spot: boolean value indicating if the new instance should be a Spot VM or not.
+        instance_termination_action: What action should be taken once a Spot VM is terminated.
+            Possible values: "STOP", "DELETE"
         custom_hostname: Custom hostname of the new VM instance.
             Custom hostnames must conform to RFC 1035 requirements for valid hostnames.
         delete_protection: boolean value indicating if the new virtual machine should be
@@ -205,6 +211,7 @@ def create_instance(
 
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
+    instance.network_interfaces = [network_interface]
     instance.name = instance_name
     instance.disks = disks
     if re.match(r"^zones/[a-z\d\-]+/machineTypes/[a-z\d\-]+$", machine_type):
@@ -215,12 +222,21 @@ def create_instance(
     if accelerators:
         instance.guest_accelerators = accelerators
 
-    instance.network_interfaces = [network_interface]
-
     if preemptible:
         # Set the preemptible setting
+        warnings.warn(
+            "Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning
+        )
         instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.preemptible = True
+
+    if spot:
+        # Set the Spot VM setting
+        instance.scheduling = compute_v1.Scheduling()
+        instance.scheduling.provisioning_model = (
+            compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        )
+        instance.scheduling.instance_termination_action = instance_termination_action
 
     if custom_hostname is not None:
         # Set the custom hostname for the instance

@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
@@ -20,10 +20,10 @@
 from google.cloud import compute_v1
 
 
-# <INGREDIENT create_preemptible_instance>
-def create_preemptible_instance(project_id: str, zone: str, instance_name: str) -> compute_v1.Instance:
+# <INGREDIENT create_spot_instance>
+def create_spot_instance(project_id: str, zone: str, instance_name: str) -> compute_v1.Instance:
     """
-    Create a new preemptible VM instance with Debian 10 operating system.
+    Create a new Spot VM instance with Debian 10 operating system.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
@@ -38,6 +38,6 @@ def create_preemptible_instance(project_id: str, zone: str, instance_name: str) 
     )
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
-    instance = create_instance(project_id, zone, instance_name, disks, preemptible=True)
+    instance = create_instance(project_id, zone, instance_name, disks, spot=True)
     return instance
 # </INGREDIENT>

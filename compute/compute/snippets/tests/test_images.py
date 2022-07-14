@@ -96,7 +96,7 @@ def test_get_image():
 
     image2 = get_image("debian-cloud", image.name)
 
-    assert image == image2
+    assert image.name == image2.name
 
 
 def test_create_delete_image(test_disk):

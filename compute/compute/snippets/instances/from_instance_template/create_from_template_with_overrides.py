@@ -125,7 +125,7 @@ def create_instance_from_template_with_overrides(
     instance = compute_v1.Instance()
     instance.name = instance_name
     instance.machine_type = machine_type
-    instance.disks = instance_template.properties.disks
+    instance.disks = list(instance_template.properties.disks)
 
     new_disk = compute_v1.AttachedDisk()
     new_disk.initialize_params.disk_size_gb = 50
