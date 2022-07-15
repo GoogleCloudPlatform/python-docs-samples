@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from flask import Flask, request
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
 
-my_key = 'main'
+my_key = os.environ.get("GAE_VERSION", "Missing")
 
 app = Flask(__name__)
 app.wsgi_app = wrap_wsgi_app(app.wsgi_app, use_deferred=True)
@@ -36,14 +38,14 @@ def do_something_later(key, amount):
 @app.route('/counter/increment')
 def increment_counter():
     # Use default URL and queue name, no task name, execute ASAP.
-    deferred.defer(do_something_later, my_key, 20)
+    deferred.defer(do_something_later, my_key, 10)
 
     # Use default URL and queue name, no task name, execute after 60s.
-    deferred.defer(do_something_later, my_key, 20, _countdown=60)
+    deferred.defer(do_something_later, my_key, 10, _countdown=10)
 
     # Providing non-default task queue arguments
     deferred.defer(
-        do_something_later, my_key, 20, _url='/custom/path', _countdown=60)
+        do_something_later, my_key, 10, _url='/custom/path', _countdown=20)
 
     return 'Deferred counter increment.'
 
