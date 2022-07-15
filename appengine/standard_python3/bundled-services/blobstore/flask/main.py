@@ -27,7 +27,6 @@ class PhotoUpload(ndb.Model):
 
 
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
-
     def post(self):
         upload = self.get_uploads(request.environ)[0]
         photo = PhotoUpload(blob_key=upload.key())
@@ -37,7 +36,6 @@ class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
 
 
 class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
-
     def get(self, photo_key):
         if not blobstore.get(photo_key):
             return "Photo key not found", 404
@@ -61,7 +59,9 @@ def upload():
     Upload File: <input type="file" name="file"><br>
     <input type="submit" name="submit" value="Submit Now">
   </form>
-  </body></html>""".format(upload_url)
+  </body></html>""".format(
+        upload_url
+    )
 
     return response
 

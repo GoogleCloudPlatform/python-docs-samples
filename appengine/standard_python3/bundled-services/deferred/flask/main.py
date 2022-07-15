@@ -35,29 +35,28 @@ def do_something_later(key, amount):
     entity.put()
 
 
-@app.route('/counter/increment')
+@app.route("/counter/increment")
 def increment_counter():
     # Use default URL and queue name, no task name, execute ASAP.
     deferred.defer(do_something_later, my_key, 10)
 
-    # Use default URL and queue name, no task name, execute after 60s.
+    # Use default URL and queue name, no task name, execute after 10s.
     deferred.defer(do_something_later, my_key, 10, _countdown=10)
 
     # Providing non-default task queue arguments
-    deferred.defer(
-        do_something_later, my_key, 10, _url='/custom/path', _countdown=20)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=20)
 
-    return 'Deferred counter increment.'
+    return "Deferred counter increment."
 
 
-@app.route('/counter/get')
+@app.route("/counter/get")
 def view_counter():
     counter = Counter.get_or_insert(my_key, count=0)
     return str(counter.count)
 
 
-@app.route('/custom/path', methods=['POST'])
+@app.route("/custom/path", methods=["POST"])
 def custom_deferred():
-    print('Executing deferred task.')
+    print("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     return deferred.Handler().post(request.environ)

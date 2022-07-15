@@ -95,7 +95,7 @@ def HomePage(environ, start_response):
         start_response(f"{response.value} {response.phrase}", [])
         return [html.encode("utf-8")]
 
-    else:   # POST request
+    else:  # POST request
         project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
         form = cgi.parse(environ["wsgi.input"])

@@ -26,7 +26,7 @@ from google.cloud import logging
 logging_client = logging.Client()
 
 # This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger('django-app-logs')
+logger = logging_client.logger("django-app-logs")
 
 
 # This datastore model keeps track of which users uploaded which photos.
@@ -35,33 +35,31 @@ class UserPhoto(ndb.Model):
 
 
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
-
     def post(self, environ):
         upload = self.get_uploads(environ)[0]
         photo_key = upload.key()
         user_photo = UserPhoto(blob_key=photo_key)
         user_photo.put()
-        logger.log_text('Photo key: %s' % photo_key)
-        return redirect('view_photo', key=photo_key)
+        logger.log_text("Photo key: %s" % photo_key)
+        return redirect("view_photo", key=photo_key)
 
 
 class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
-
     def get(self, environ, photo_key):
         if not blobstore.get(photo_key):
-            return HttpResponse('Photo key not found', status=404)
+            return HttpResponse("Photo key not found", status=404)
         else:
             response = HttpResponse(headers=self.send_blob(environ, photo_key))
 
             # Prevent Django from setting a default content-type.
             # GAE sets it to a guessed type if the header is not set.
-            response['Content-Type'] = None
+            response["Content-Type"] = None
             return response
 
 
 def upload_form(request):
     """Create the HTML form to upload a file."""
-    upload_url = blobstore.create_upload_url('/upload_photo')
+    upload_url = blobstore.create_upload_url("/upload_photo")
 
     response = """
   <html><body>
@@ -69,7 +67,9 @@ def upload_form(request):
     Upload File: <input type="file" name="file"><br>
     <input type="submit" name="submit" value="Submit Now">
   </form>
-  </body></html>""".format(upload_url)
+  </body></html>""".format(
+        upload_url
+    )
 
     return HttpResponse(response)
 
@@ -85,19 +85,19 @@ def upload_photo(request):
 
 
 urlpatterns = (
-    path('', upload_form, name='upload_form'),
-    path('view_photo/<key>', view_photo, name='view_photo'),
-    path('upload_photo', upload_photo, name='upload_photo'),
+    path("", upload_form, name="upload_form"),
+    path("view_photo/<key>", view_photo, name="view_photo"),
+    path("upload_photo", upload_photo, name="upload_photo"),
 )
 
 settings.configure(
     DEBUG=True,
-    SECRET_KEY='thisisthesecretkey',
+    SECRET_KEY="thisisthesecretkey",
     ROOT_URLCONF=__name__,
     MIDDLEWARE_CLASSES=(
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ),
 )
 

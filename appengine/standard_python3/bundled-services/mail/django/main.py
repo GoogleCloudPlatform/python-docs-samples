@@ -26,13 +26,13 @@ from google.cloud import logging
 logging_client = logging.Client()
 
 # This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger('django-app-logs')
+logger = logging_client.logger("django-app-logs")
 
 
 def home_page(request):
     """
-        Return a form asking about mail to send in reponse to a GET request,
-        and process the form and send the mail when the form is POSTed.
+    Return a form asking about mail to send in reponse to a GET request,
+    and process the form and send the mail when the form is POSTed.
     """
 
     if request.method == "GET":
@@ -58,7 +58,7 @@ def home_page(request):
     else:
         return send_mail(request.POST.get("email"), request.POST.get("body"))
 
-    
+
 def send_mail(address, body):
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -84,7 +84,7 @@ def receive_mail(request):
         print(f"Text/plain body: {payload.decode()}")
         break
 
-    return HttpResponse('OK')
+    return HttpResponse("OK")
 
 
 def receive_bounce(request):
@@ -94,23 +94,23 @@ def receive_bounce(request):
     print(f"Bounce original: {bounce_message.__original}")
     print(f"Bounce notification: {bounce_message.__notification}")
 
-    return HttpResponse('OK')
+    return HttpResponse("OK")
 
 
 urlpatterns = [
-    url(r'^$', home_page),
-    url(r'^_ah/mail/.*$', receive_mail),
-    url(r'^_ah/bounce$', receive_bounce),
+    url(r"^$", home_page),
+    url(r"^_ah/mail/.*$", receive_mail),
+    url(r"^_ah/bounce$", receive_bounce),
 ]
 
 settings.configure(
     DEBUG=True,
-    SECRET_KEY='thisisthesecretkey',
+    SECRET_KEY="thisisthesecretkey",
     ROOT_URLCONF=__name__,
     MIDDLEWARE_CLASSES=(
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ),
 )
 

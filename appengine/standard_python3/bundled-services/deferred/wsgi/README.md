@@ -1,5 +1,4 @@
-# Access legacy bundled Deferred API in Python 3
+# WSGI app to access bundled Mail services API in Python 3
 
-Deploy this app to App Engine via `gcloud app deploy`. More about App Engine
-Bundled Deferred API at:
-https://cloud.google.com/appengine/docs/standard/python3/services/deferred#without-any-framework
+See the [main README](../README.md) for the bundled Mail services examples
+for information.

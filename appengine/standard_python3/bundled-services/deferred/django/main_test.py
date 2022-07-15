@@ -45,44 +45,39 @@ def version():
     )
 
 
-def test_send_receive(version):
+def test_upload_and_view(version):
     project_id, version_id = version
     version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
 
-    # Check that version is serving form in home page
-    response = requests.get(f"https://{version_hostname}/")
+    # Initial value of counter should be 0
+    response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.status_code == 200
-    assert '<form action="" method="POST">' in response.text
+    assert response.text == "0"
 
-    # Send valid mail
-    response = requests.post(
-        f"https://{version_hostname}/",
-        data={
-            "email": f"valid-user@{version_id}-dot-{project_id}.appspotmail.com",
-            "body": "This message should be delivered",
-        },
-    )
+    # Request counter be incremented
+    response = requests.get(f"https://{version_hostname}/counter/increment")
+    assert response.status_code == 200
 
-    assert response.status_code == 201
-    assert "Successfully sent mail" in response.text
+    # counter should be 10 almost immediately
+    time.sleep(2)
+    response = requests.get(f"https://{version_hostname}/counter/get")
+    assert response.status_code == 200
+    assert response.text == "10"
 
-    # Give the mail some time to be delivered and logs to post
-    time.sleep(30)
+    # After 10 seconds, counter should be 20
+    time.sleep(10)
+    response = requests.get(f"https://{version_hostname}/counter/get")
+    assert response.status_code == 200
+    assert response.text == "20"
 
-    # Fetch logs to check messages on received mail
-    output = subprocess.run(
-        f'gcloud logging read "resource.type=gae_app AND resource.labels.version_id={version_id}" --format=json',
-        capture_output=True,
-        shell=True,
-    )
-    entries = json.loads(output.stdout)
+    # After 20 seconds, counter should be 30
+    time.sleep(10)
+    response = requests.get(f"https://{version_hostname}/counter/get")
+    assert response.status_code == 200
+    assert response.text == "30"
 
-    text_payloads = ""
-    for entry in entries:
-        if "textPayload" in entry:
-            text_payloads += entry["textPayload"]
-            text_payloads += "\n"
-
-    expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
-    assert expected in text_payloads
-    assert "This message should be delivered" in text_payloads
+    # counter should stay at 30 unless another request to increment it is set
+    time.sleep(10)
+    response = requests.get(f"https://{version_hostname}/counter/get")
+    assert response.status_code == 200
+    assert response.text == "30"

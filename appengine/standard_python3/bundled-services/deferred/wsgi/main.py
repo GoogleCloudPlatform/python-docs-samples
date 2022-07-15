@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
 
-my_key = 'main'
+my_key = os.environ.get("GAE_VERSION", "Missing")
 
 
 class Counter(ndb.Model):
@@ -33,44 +34,42 @@ def do_something_later(key, amount):
 
 def IncrementCounter(environ, start_response):
     # Use default URL and queue name, no task name, execute ASAP.
-    deferred.defer(do_something_later, my_key, 20)
+    deferred.defer(do_something_later, my_key, 10)
 
-    # Use default URL and queue name, no task name, execute after 60s.
-    deferred.defer(do_something_later, my_key, 20, _countdown=60)
+    # Use default URL and queue name, no task name, execute after 10s.
+    deferred.defer(do_something_later, my_key, 10, _countdown=10)
 
     # Providing non-default task queue arguments
-    deferred.defer(
-        do_something_later, my_key, 20, _url='/custom/path', _countdown=60)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=20)
 
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    return ['Deferred counter increment.'.encode('utf-8')]
+    start_response("200 OK", [("Content-Type", "text/html")])
+    return ["Deferred counter increment.".encode("utf-8")]
 
 
 def ViewCounter(environ, start_response):
     counter = Counter.get_or_insert(my_key, count=0)
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    return [str(counter.count).encode('utf-8')]
+    start_response("200 OK", [("Content-Type", "text/html")])
+    return [str(counter.count).encode("utf-8")]
 
 
 class CustomDeferredHandler(deferred.Handler):
     """Deferred task handler that adds additional logic."""
 
     def post(self, environ):
-        print('Executing deferred task.')
+        print("Executing deferred task.")
         return super().post(environ)
 
 
 routes = {
-    'counter/increment': IncrementCounter,
-    'counter/get': ViewCounter,
-    'custom/path': CustomDeferredHandler()
+    "counter/increment": IncrementCounter,
+    "counter/get": ViewCounter,
+    "custom/path": CustomDeferredHandler(),
 }
 
 
-class WSGIApplication():
-
+class WSGIApplication:
     def __call__(self, environ, start_response):
-        path = environ.get('PATH_INFO', '').lstrip('/')
+        path = environ.get("PATH_INFO", "").lstrip("/")
         for regex, handler in routes.items():
             match = re.search(regex, path)
             if match is not None:

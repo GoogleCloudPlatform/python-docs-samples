@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
@@ -21,13 +23,13 @@ from google.appengine.ext import deferred
 from google.appengine.ext import ndb
 from google.cloud import logging
 
-my_key = 'main'
+my_key = os.environ.get("GAE_VERSION", "Missing")
 
 # Logging client in Python 3
 logging_client = logging.Client()
 
 # This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger('django-app-logs')
+logger = logging_client.logger("django-app-logs")
 
 
 class Counter(ndb.Model):
@@ -42,16 +44,15 @@ def do_something_later(key, amount):
 
 def increment_counter(request):
     # Use default URL and queue name, no task name, execute ASAP.
-    deferred.defer(do_something_later, my_key, 20)
+    deferred.defer(do_something_later, my_key, 10)
 
-    # Use default URL and queue name, no task name, execute after 60s.
-    deferred.defer(do_something_later, my_key, 20, _countdown=60)
+    # Use default URL and queue name, no task name, execute after 10s.
+    deferred.defer(do_something_later, my_key, 10, _countdown=10)
 
     # Providing non-default task queue arguments
-    deferred.defer(
-        do_something_later, my_key, 20, _url='/custom/path', _countdown=60)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=20)
 
-    return HttpResponse('Deferred counter increment.')
+    return HttpResponse("Deferred counter increment.")
 
 
 def view_counter(request):
@@ -60,27 +61,28 @@ def view_counter(request):
 
 
 def custom_deferred(request):
-    logger.log_text('Executing deferred task.')
+    logger.log_text("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     response, status, headers = deferred.Handler().post(request.environ)
     return HttpResponse(response, status=status.value)
 
 
 urlpatterns = (
-    path('counter/get', view_counter, name='view_counter'),
-    path('counter/increment', increment_counter, name='increment_counter'),
-    path('custom/path', custom_deferred, name='custom_deferred'),
+    path("counter/get", view_counter, name="view_counter"),
+    path("counter/increment", increment_counter, name="increment_counter"),
+    path("custom/path", custom_deferred, name="custom_deferred"),
 )
 
 settings.configure(
     DEBUG=True,
-    SECRET_KEY='thisisthesecretkey',
+    SECRET_KEY="thisisthesecretkey",
     ROOT_URLCONF=__name__,
     MIDDLEWARE_CLASSES=(
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ),
-    ALLOWED_HOSTS=['*'])
+    ALLOWED_HOSTS=["*"],
+)
 
 app = wrap_wsgi_app(get_wsgi_application(), use_deferred=True)
