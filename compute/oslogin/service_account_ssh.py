@@ -32,6 +32,8 @@ import requests
 
 
 # Global variables
+from google.auth.exceptions import RefreshError
+
 SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
     'service-accounts/default/email')
@@ -77,7 +79,18 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
         'expirationTimeUsec': expiration,
     }
     print(f'Creating key {account} and {body}')
-    oslogin.users().importSshPublicKey(parent=account, body=body).execute()
+    for attempt_no in range(1, 4):
+        try:
+            # This method sometimes failed to work causing issues like #7277
+            # Maybe retrying it with some delay will make things better
+            oslogin.users().importSshPublicKey(parent=account, body=body).execute()
+        except RefreshError:
+            if attempt_no == 3:
+                break
+            time.sleep(attempt_no)
+        else:
+            break
+
     return private_key_file
 # [END create_key]
 
