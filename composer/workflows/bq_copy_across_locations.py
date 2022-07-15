@@ -71,7 +71,6 @@ default_args = {
 # --------------------------------------------------------------------------------
 
 
-
 # Source Bucket
 source_bucket = "{{var.value.gcs_source_bucket}}"
 
@@ -142,7 +141,7 @@ with models.DAG(
     # file. This is not part of an operator and cannot be templated, so it is included
     # inside of the DAG instead of with the templated variables above
     # to ensure the call to the DB only happens during DAG execution
-    table_list_file_path = models.Variable.get("table_list_file_path") 
+    table_list_file_path = models.Variable.get("table_list_file_path")
     # Get the table list from main file
     all_records = read_table_list(table_list_file_path)
 
