@@ -49,10 +49,10 @@ from airflow.utils import trigger_rule
 bq_dataset_name = 'airflow_bq_notify_dataset_{{ ds_nodash }}'
 bq_recent_questions_table_id = 'recent_questions'
 bq_most_popular_table_id = 'most_popular'
-gcs_bucket = models.Variable.get('gcs_bucket')
+gcs_bucket = "{{var.value.gcs_bucket}}"
 output_file = f'{gcs_bucket}/recent_questions.csv'
 location = 'US'
-project_id = models.Variable.get('gcp_project')
+project_id = "{{var.value.gcp_project}}"
 
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
@@ -87,7 +87,7 @@ yesterday = datetime.datetime.combine(
 default_dag_args = {
     'start_date': yesterday,
     # Email whenever an Operator in the DAG fails.
-    'email': models.Variable.get('email'),
+    'email': "{{var.value.email}}",
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
@@ -168,7 +168,7 @@ with models.DAG(
     # for more info on configuring the email operator in Cloud Composer)
     email_summary = email.EmailOperator(
         task_id='email_summary',
-        to=models.Variable.get('email'),
+        to="{{var.value.email}}",
         subject='Sample BigQuery notify data ready',
         html_content="""
         Analyzed Stack Overflow posts data from {min_date} 12AM to {max_date}

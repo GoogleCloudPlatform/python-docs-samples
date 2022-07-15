@@ -52,7 +52,7 @@ bq_recent_questions_table_id = bq_dataset_name + '.recent_questions'
 BQ_MOST_POPULAR_TABLE_NAME = 'most_popular'
 bq_most_popular_table_id = bq_dataset_name + '.' + BQ_MOST_POPULAR_TABLE_NAME
 output_file = 'gs://{gcs_bucket}/recent_questionsS.csv'.format(
-    gcs_bucket=models.Variable.get('gcs_bucket'))
+    gcs_bucket="{{var.value.gcs_bucket}}")
 
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
@@ -71,12 +71,12 @@ yesterday = datetime.datetime.combine(
 default_dag_args = {
     'start_date': yesterday,
     # Email whenever an Operator in the DAG fails.
-    'email': models.Variable.get('email'),
+    'email': "{{var.value.email}}",
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': models.Variable.get('gcp_project')
+    'project_id': "{{var.value.gcp_project}}"
 }
 
 with models.DAG(
@@ -144,7 +144,7 @@ with models.DAG(
     # Send email confirmation
     email_summary = email_operator.EmailOperator(
         task_id='email_summary',
-        to=models.Variable.get('email'),
+        to="{{var.value.email}}",
         subject='Sample BigQuery notify data ready',
         html_content="""
         Analyzed Stack Overflow posts data from {min_date} 12AM to {max_date}

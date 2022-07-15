@@ -26,7 +26,7 @@ from airflow.utils.dates import days_ago
 from airflow.utils.state import State
 
 # Assumes existence of Airflow Variable set to name of GCP Project
-PROJECT_ID = models.Variable.get("gcp_project")
+PROJECT_ID = "{{var.value.gcp_project}}"
 
 
 with models.DAG(

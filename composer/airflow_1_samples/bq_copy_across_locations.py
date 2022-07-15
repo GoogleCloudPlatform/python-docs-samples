@@ -72,13 +72,13 @@ default_args = {
 
 # 'table_list_file_path': This variable will contain the location of the main
 # file.
-table_list_file_path = models.Variable.get('table_list_file_path')
+table_list_file_path = "{{var.value.table_list_file_path}}"
 
 # Source Bucket
-source_bucket = models.Variable.get('gcs_source_bucket')
+source_bucket = "{{var.value.gcs_source_bucket}}"
 
 # Destination Bucket
-dest_bucket = models.Variable.get('gcs_dest_bucket')
+dest_bucket = "{{var.value.gcs_dest_bucket}}"
 
 # --------------------------------------------------------------------------------
 # Set GCP logging

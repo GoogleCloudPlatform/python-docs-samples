@@ -28,9 +28,9 @@ BUCKET_NAME = "cloud-samples-data/composer/data-orchestration-blog-example"
 DATA_FILE_NAME = "bike_station_data.csv"
 
 # Assumes existence of the following Airflow Variables
-PROJECT_ID = models.Variable.get("gcp_project")
-DATASET = models.Variable.get("bigquery_dataset")
-TABLE = models.Variable.get("bigquery_table")
+PROJECT_ID = "{{var.value.gcp_project}}"
+DATASET = "{{var.value.bigquery_dataset}}"
+TABLE = "{{var.value.bigquery_table}}"
 
 
 # Slack error notification example taken from Kaxil Naik's blog on Slack Integration:
