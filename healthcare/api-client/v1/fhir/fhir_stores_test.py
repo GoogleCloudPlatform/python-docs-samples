@@ -17,7 +17,9 @@ import sys
 import uuid
 
 import backoff
+from google.api_core import retry
 from google.cloud import storage
+from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 import pytest
 
@@ -43,23 +45,36 @@ import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 BACKOFF_MAX_TIME = 750
 
+client = discovery.build("healthcare", "v1")
+
+
+class OperationNotComplete(Exception):
+    """Operation is not yet complete"""
+
+    pass
+
+
+@retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
+def wait_for_operation(operation_name: str):
+    operation = (
+        client.projects()
+        .locations()
+        .datasets()
+        .operations()
+        .get(name=operation_name)
+        .execute()
+    )
+
+    if not operation.get("done", False):
+        raise OperationNotComplete(operation)
+
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
-    def create():
-        try:
-            datasets.create_dataset(project_id, location, dataset_id)
-        except HttpError as err:
-            # We ignore 409 conflict here, because we know it's most
-            # likely the first request failed on the client side, but
-            # the creation suceeded on the server side.
-            if err.resp.status == 409:
-                print("Got exception {} while creating dataset".format(err.resp.status))
-            else:
-                raise
+    operation = datasets.create_dataset(project_id, location, dataset_id)
 
-    create()
+    # Wait for the dataset to be created
+    wait_for_operation(operation["name"])
 
     yield
 

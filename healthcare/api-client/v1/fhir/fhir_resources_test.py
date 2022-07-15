@@ -17,6 +17,8 @@ import sys
 import uuid
 
 import backoff
+from google.api_core import retry
+from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 import pytest
 
@@ -40,23 +42,36 @@ resource_type = "Patient"
 
 BACKOFF_MAX_TIME = 750
 
+client = discovery.build("healthcare", "v1")
+
+
+class OperationNotComplete(Exception):
+    """Operation is not yet complete"""
+
+    pass
+
+
+@retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
+def wait_for_operation(operation_name: str):
+    operation = (
+        client.projects()
+        .locations()
+        .datasets()
+        .operations()
+        .get(name=operation_name)
+        .execute()
+    )
+
+    if not operation.get("done", False):
+        raise OperationNotComplete(operation)
+
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
-    def create():
-        try:
-            datasets.create_dataset(project_id, location, dataset_id)
-        except HttpError as err:
-            # We ignore 409 conflict here, because we know it's most
-            # likely the first request failed on the client side, but
-            # the creation suceeded on the server side.
-            if err.resp.status == 409:
-                print("Got exception {} while creating dataset".format(err.resp.status))
-            else:
-                raise
+    operation = datasets.create_dataset(project_id, location, dataset_id)
 
-    create()
+    # Wait for the dataset to be created
+    wait_for_operation(operation["name"])
 
     yield
 
@@ -161,20 +176,12 @@ def test_patient():
 
 
 def test_create_patient(test_dataset, test_fhir_store, capsys):
-    # We see HttpErrors with "dataset not initialized" message.
-    # I think retry will mitigate the flake.
-    # Googlers see b/189121491 .
-    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
-    def create():
-        # Manually create a new Patient here to test that creating a Patient
-        # works.
-        fhir_resources.create_patient(
-            project_id,
-            location,
-            dataset_id,
-            fhir_store_id,
-        )
-    create()
+    fhir_resources.create_patient(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+    )
 
     out, _ = capsys.readouterr()
 
@@ -275,20 +282,14 @@ def test_execute_bundle(test_dataset, test_fhir_store, capsys):
 
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    # We see HttpErrors with "dataset not initialized" message.
-    # I think retry will mitigate the flake.
-    # Googlers see b/189121491 .
-    @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
-    def delete():
-        fhir_resources.delete_resource(
-            project_id,
-            location,
-            dataset_id,
-            fhir_store_id,
-            resource_type,
-            test_patient,
-        )
-    delete()
+    fhir_resources.delete_resource(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        test_patient,
+    )
 
     out, _ = capsys.readouterr()
 

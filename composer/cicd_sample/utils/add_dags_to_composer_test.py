@@ -91,9 +91,14 @@ def test_upload_dags_to_composer_no_files(
     assert "No DAGs to upload." in out
 
 
+def test_upload_dags_to_composer_no_name_override(test_bucket: str) -> None:
+    with pytest.raises(FileNotFoundError):
+        add_dags_to_composer.upload_dags_to_composer(DAGS_DIR, test_bucket)
+
+
 def test_upload_dags_to_composer(
     test_bucket: str, capsys: pytest.CaptureFixture
 ) -> None:
-    add_dags_to_composer.upload_dags_to_composer(DAGS_DIR, test_bucket)
+    add_dags_to_composer.upload_dags_to_composer(DAGS_DIR, test_bucket, "../dags/")
     out, _ = capsys.readouterr()
     assert "uploaded" in out

@@ -38,13 +38,13 @@ contains the `google-cloud-bigquery` library.
 ### Who reviews my PR?
 
 This is a work in progress - in **python-docs-samples**, your PR will
-automatically be assigned to one of the owners in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners).
+automatically be assigned to one of the reviewers in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers).
 You can assign a new person using the `blunderbuss:assign` label if your assignee is OOO or busy.
 You can (and probably should) also assign a teammate in addition to the auto-assigned
 owner to review your code for product-specific needs.
 
-In **library repositories** with pre-existing samples GitHub will automatically assign a reviewer
-from python-samples-owners. If no reviewer is automatically assigned, contact [@googleapis/python-samples-owners](https://github.com/orgs/googleapis/teams/python-samples-owners).
+In **library repositories** GitHub should automatically assign a reviewer
+from python-samples-reviewers. If no reviewer is automatically assigned, contact [@googleapis/python-samples-reviewers](https://github.com/orgs/googleapis/teams/python-samples-reviewers).
 
 Please reach out to your assigned reviewer if it's been more than 2 days and you haven't gotten a response!
 
@@ -170,6 +170,84 @@ bottom, and fairly self-documenting. Prefer descriptive names, and use
 comments and docstrings only as needed to further clarify the code’s intent.
 Always introduce functions and variables before they are used. Prefer less
 indirection. Prefer imperative programming as it is easier to understand.
+
+
+### Importing Google Cloud Libraries
+
+Follow this style for importing Google Cloud libraries:
+
+```py
+from google.cloud import texttospeech_v1
+```
+
+All commonly used clients and types are exposed under `texttospeech_v1`.
+
+```py
+from google.cloud import texttospeech_v1
+
+client = texttospeech_v1.TextToSpeechClient()
+
+audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+)
+```
+
+
+### Creating Request Objects for GAPICs
+
+GAPIC libraries are generated from [protos](https://github.com/googleapis/googleapis)
+that define the API surface via a [generator](https://github.com/googleapis/gapic-generator-python).
+GAPIC libraries have library type `GAPIC_AUTO` in `.repo-metadata.json`
+located in the root of the repository. Some `GAPIC_COMBO` libraries will
+also expose [`proto-plus`](https://github.com/googleapis/proto-plus-python/) types.
+
+Because they are generated, GAPIC libraries share a common interface.
+All API proto messages are exposed as `proto-plus` message classes.
+
+`proto-plus` provides a [few ways to create objects](https://proto-plus-python.readthedocs.io/en/latest/messages.html#usage).
+
+Strongly prefer instantiating library types through the constructor
+or by instantiating an empty object and initializing individual attributes.
+The dictionary construction method is discouraged as it is harder to use
+type checking and IDEs are not able to offer intellisense.
+
+```py
+# To try this sample yourself, install `google-cloud-tasks==2.5.1`
+from google.cloud import tasks_v2
+
+
+# 1. Generated types via constructor
+task_from_constructor = tasks_v2.Task(
+    http_request=tasks_v2.HttpRequest(
+        http_method=tasks_v2.HttpMethod.POST,
+        url="https://pubsub.googleapis.com/v1/projects/my-project/topics/testtopic:publish",
+        body=b"eyJtZXNzYWdlcyI6IFt7ImRhdGEiOiAiVkdocGN5QnBjeUJoSUhSbGMzUUsifV19Cg==",
+        oauth_token=tasks_v2.OAuthToken(
+            service_account_email='my-svc-acct@my-project.iam.gserviceaccount.com'
+        )
+    )
+)
+
+# 2. Instantiate object and then set attributes
+http_request = tasks_v2.HttpRequest()
+http_request.http_method = tasks_v2.HttpMethod.POST
+http_request.url = "https://pubsub.googleapis.com/v1/projects/my-project/topics/testtopic:publish"
+http_request.body = b"eyJtZXNzYWdlcyI6IFt7ImRhdGEiOiAiVkdocGN5QnBjeUJoSUhSbGMzUUsifV19Cg==",
+http_request.oauth_token.service_account_email = "my-svc-acct@my-project.iam.gserviceaccount.com"
+
+task = tasks_v2.Task()
+task.http_request = http_request
+
+# 2. Dictionary (NOT RECOMMENDED)
+task_from_dict = {
+    "http_request": {
+        "http_method": "POST",
+        "url": "https://pubsub.googleapis.com/v1/projects/my-project/topics/testtopic:publish",
+        "body": b"eyJtZXNzYWdlcyI6IFt7ImRhdGEiOiAiVkdocGN5QnBjeUJoSUhSbGMzUUsifV19Cg==",
+        "oauth_token": {"service_account_email":"my-svc-acct@my-project.iam.gserviceaccount.com"},
+    }
+}
+```
 
 ### Functions and Classes
 
@@ -394,6 +472,8 @@ example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/ap
   having them in the test itself.
 * Avoid infinite loops.
 * Retry RPCs
+* You can enable running tests in parallel by adding `pytest-parallel` or `pytest-xdist`
+  to your `requirements-test.txt` file.
 
 ### Arrange, Act, Assert
 
@@ -690,6 +770,7 @@ cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
 cd PATH/TO/YOUR/PROJECT/
 ```
 
+ℹ️ **Note:** Nox only detects tests in the `tests` directory where the `noxfile_config.py` file is or [for any files named `*_test.py` or `test_*.py`](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/6c4c8de274496300e3285168a012f8b6203b5122/noxfile-template.py#L182-L187) in the same directory as the config file.
 
 To use nox, install it globally with `pip`:
 
@@ -798,7 +879,7 @@ For setting up a local test environment, see [Test Environment Setup](#test-envi
 Secrets (e.g., project names, API keys, passwords) are kept in
 Cloud Secret Manager. See [python-docs-samples-test-env](https://console.cloud.google.com/security/secret-manager/secret/python-docs-samples-test-env/versions?project=cloud-devrel-kokoro-resources).
 If you are unable to access the link, reach out to your assigned pull
-request reviewer or someone in [@GoogleCloudPlatform/python-samples-owners](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-owners)
+request reviewer or someone in [@GoogleCloudPlatform/python-samples-reviewers](https://github.com/orgs/GoogleCloudPlatform/teams/python-samples-reviewers)
 for assistance.
 
 1. Add the new environment variable to [`testing/test-env.tmpl.sh`](testing/test-env.tmpl.sh)

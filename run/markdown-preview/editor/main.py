@@ -33,7 +33,7 @@ def index():
 # [START run_secure_request_do]
 @app.route("/render", methods=["POST"])
 def render_handler():
-    body = request.get_json()
+    body = request.get_json(silent=True)
     if not body:
         return "Error rendering markdown: Invalid JSON", 400
 

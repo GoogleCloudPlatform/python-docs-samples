@@ -19,7 +19,7 @@ wordcount example, and deletes the cluster.
 This DAG relies on three Airflow variables
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 * gcp_project - Google Cloud Project to use for the Cloud Dataproc cluster.
-* gce_zone - Google Compute Engine zone where Cloud Dataproc cluster should be
+* gce_region - Google Compute Engine region where Cloud Dataproc cluster should be
   created.
 * gcs_bucket - Google Cloud Storage bucket to use for result of Hadoop job.
   See https://cloud.google.com/storage/docs/creating-buckets for creating a
@@ -38,7 +38,7 @@ from airflow.utils import trigger_rule
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
 # for best practices
 output_file = os.path.join(
-    models.Variable.get('gcs_bucket'), 'wordcount',
+    '{{ var.value.gcs_bucket }}', 'wordcount',
     datetime.datetime.now().strftime('%Y%m%d-%H%M%S')) + os.sep
 # Path to Hadoop wordcount example available on every Dataproc cluster.
 WORDCOUNT_JAR = (
@@ -63,7 +63,7 @@ default_dag_args = {
     # If a task fails, retry it once after waiting at least 5 minutes
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': models.Variable.get('gcp_project')
+    'project_id': '{{ var.value.gcp_project }}'
 }
 
 # [START composer_hadoop_schedule_airflow_1]
@@ -81,7 +81,7 @@ with models.DAG(
         # See https://airflow.apache.org/docs/apache-airflow/stable/macros-ref.html
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
-        zone=models.Variable.get('gce_zone'),
+        region='{{ var.value.gce_region }}',
         master_machine_type='n1-standard-2',
         worker_machine_type='n1-standard-2')
 
@@ -90,6 +90,7 @@ with models.DAG(
     run_dataproc_hadoop = dataproc_operator.DataProcHadoopOperator(
         task_id='run_dataproc_hadoop',
         main_jar=WORDCOUNT_JAR,
+        region='{{ var.value.gce_region }}',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         arguments=wordcount_args)
 
@@ -97,6 +98,8 @@ with models.DAG(
     delete_dataproc_cluster = dataproc_operator.DataprocClusterDeleteOperator(
         task_id='delete_dataproc_cluster',
         cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
+        region='{{ var.value.gce_region }}',
+
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
