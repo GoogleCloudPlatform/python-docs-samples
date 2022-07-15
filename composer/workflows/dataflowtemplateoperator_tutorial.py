@@ -32,7 +32,9 @@ Function (.js), the input file (.txt), and the JSON schema (.json).
 import datetime
 
 from airflow import models
-from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
+from airflow.providers.google.cloud.operators.dataflow import (
+    DataflowTemplatedJobStartOperator,
+)
 from airflow.utils.dates import days_ago
 
 bucket_path = "{{var.value.bucket_path}}"
