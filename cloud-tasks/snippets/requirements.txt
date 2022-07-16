@@ -1,1 +1,1 @@
-google-cloud-tasks==2.9.0
+google-cloud-tasks==2.9.1
