@@ -3,6 +3,6 @@
 apache-airflow==2.2.5
 apache-airflow-providers-apache-beam==3.3.0
 apache-airflow-providers-cncf-kubernetes==3.0.0
-apache-airflow-providers-google==6.7.0
+apache-airflow-providers-google==6.8.0
 scipy==1.8.1; python_version > '3.0'
 apache-airflow-providers-amazon==3.2.0
