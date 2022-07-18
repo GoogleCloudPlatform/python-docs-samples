@@ -27,12 +27,9 @@ import subprocess
 import time
 import uuid
 
+from google.auth.exceptions import RefreshError
 import googleapiclient.discovery
 import requests
-
-
-# Global variables
-from google.auth.exceptions import RefreshError
 
 SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
