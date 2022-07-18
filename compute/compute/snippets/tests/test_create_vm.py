@@ -32,6 +32,7 @@ from ..instances.create_start_instance.create_with_additional_disk import (
     create_with_additional_disk,
 )
 from ..instances.create_start_instance.create_with_existing_disks import create_with_existing_disks
+from ..instances.create_start_instance.create_with_local_ssd import create_with_ssd
 from ..instances.create_start_instance.create_with_snapshotted_data_disk import (
     create_with_snapshotted_data_disk,
 )
@@ -235,6 +236,20 @@ def test_create_with_existing_disks(boot_disk, empty_disk):
         )
         assert any(
             disk.disk_size_gb == 14 for disk in instance.disks
+        )
+        assert len(instance.disks) == 2
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_ssd():
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    instance = create_with_ssd(PROJECT, INSTANCE_ZONE, instance_name)
+
+    try:
+        assert any(
+            disk.type_ == compute_v1.AttachedDisk.Type.SCRATCH.name
+            for disk in instance.disks
         )
         assert len(instance.disks) == 2
     finally:
