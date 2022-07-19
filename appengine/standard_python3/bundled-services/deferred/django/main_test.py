@@ -32,9 +32,14 @@ def version():
         shell=True,
     )
 
-    result = json.loads(output.stdout)
-    version_id = result["versions"][0]["id"]
-    project_id = result["versions"][0]["project"]
+    try:
+        result = json.loads(output.stdout)
+        version_id = result["versions"][0]["id"]
+        project_id = result["versions"][0]["project"]
+    except Exception as e:
+        print(f"New version deployment output not usable: {e}")
+        print(f"Command stderr is '{output.stderr}'")
+        raise ValueError
 
     yield project_id, version_id
 

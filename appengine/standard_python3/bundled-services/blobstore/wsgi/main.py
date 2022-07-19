@@ -92,12 +92,10 @@ class Application(object):
 
     def __call__(self, environ, start_response):
         path = environ.get("PATH_INFO", "").lstrip("/")
-        print(environ)
         for regex, handler in self.routes:
             match = re.search(regex, path)
             if match is not None:
                 environ["app.url_args"] = match.groups()
-                print("match.groups for %s: " % match, match.groups())
                 callback = handler()  # instantiate the handler class
                 return callback(environ, start_response)
         return self.not_found(environ, start_response)

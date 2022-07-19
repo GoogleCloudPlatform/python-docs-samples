@@ -1,6 +1,7 @@
 # Access bundled Blobstore services API in Python 3
 
-This folder contains functionally identical apps that 
+This folder contains functionally identical apps that allow users to upload
+and download files to and from the App Engine Blobstore.
 
 The apps are written using three different web frameworks:
 [Flask](https://palletsprojects.com/p/flask/),
