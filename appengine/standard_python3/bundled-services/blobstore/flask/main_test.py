@@ -27,9 +27,9 @@ def version():
     """
 
     debug_output = subprocess.run("gcloud config list", capture_output=True, shell=True)
-    print(f"Debug stdout of list is {debug.output.stdout}")
-    print(f"Debug stderr of list is {debug.output.stderr}")
-    
+    print(f"Debug stdout of list is {debug_output.stdout}")
+    print(f"Debug stderr of list is {debug_output.stderr}")
+
     output = subprocess.run(
         "gcloud app deploy --no-promote --quiet --format=json",
         capture_output=True,
