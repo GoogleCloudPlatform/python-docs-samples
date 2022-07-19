@@ -14,23 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# set the service account key as a GOOGLE_APPLICATION_CREDENTIALS
-export GOOGLE_APPLICATION_CREDENTIALS=~/key.json
+{
+  # set the service account key as a GOOGLE_APPLICATION_CREDENTIALS
+  export GOOGLE_APPLICATION_CREDENTIALS=~/key.json
 
-# activate the python virtual env
-source ~/cloudshell_open/myenv/bin/activate
+  # activate the python virtual env
+  source ~/cloudshell_open/myenv/bin/activate
 
-# Create a GCS bucket and upload the product data to the bucket
-output=$(python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py)
+  # Create a GCS bucket and upload the product data to the bucket
+  output=$(python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py)
 
-# Get the bucket name and store it in the env variable BUCKET_NAME
-temp="${output#*The gcs bucket }"
-bucket_name="${temp% was created*}"
-export BUCKET_NAME=$bucket_name
+  # Get the bucket name and store it in the env variable BUCKET_NAME
+  temp="${output#*The gcs bucket }"
+  bucket_name="${temp% was created*}"
+  export BUCKET_NAME=$bucket_name
 
-# Import products to the Retail catalog
-python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/import_products_gcs.py
-
-echo "====================================="
-echo "Your Retail catalog is ready to use!"
-echo "====================================="
+  # Import products to the Retail catalog
+  python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/import_products_gcs.py
+} && {
+  # Print success message
+  echo "====================================="
+  echo "Your Retail catalog is ready to use!"
+  echo "====================================="
+} || {
+  # Print error message
+  echo "====================================="
+  echo "Your Retail catalog wasn't created! Please fix the errors above!"
+  echo "====================================="
+}
