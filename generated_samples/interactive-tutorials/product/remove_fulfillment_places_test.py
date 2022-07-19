@@ -28,3 +28,4 @@ def test_add_fulfillment():
         '.*get product response.*?fulfillment_info.*type_: "pickup-in-store".*?place_ids: "store1".*',
         output,
     )
+    assert not re.search(".*get product response.*?fulfillment_info.*store0.*", output)

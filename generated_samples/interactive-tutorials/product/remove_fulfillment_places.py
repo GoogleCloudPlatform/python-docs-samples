@@ -18,22 +18,11 @@ import random
 import string
 import time
 
-import google.auth
 from google.cloud.retail import ProductServiceClient, RemoveFulfillmentPlacesRequest
 
 from setup_product.setup_cleanup import create_product, delete_product, get_product
 
-project_id = google.auth.default()[1]
 product_id = "".join(random.sample(string.ascii_lowercase, 8))
-product_name = (
-    "projects/"
-    + project_id
-    + "/locations/global/catalogs/default_catalog/branches/default_branch/products/"
-    + product_id
-)
-
-# The request timestamp
-current_date = datetime.datetime.now()
 
 
 # remove fulfillment request
@@ -69,8 +58,12 @@ def remove_fulfillment_places(product_name: str, timestamp, store_id):
 # [END retail_remove_fulfillment_places]
 
 
-create_product(product_id)
+product = create_product(product_id)
+
+# The request timestamp
+current_date = datetime.datetime.now()
+
 print(f"------remove fulfilment places with current date: {current_date}-----")
-remove_fulfillment_places(product_name, current_date, "store0")
-get_product(product_name)
-delete_product(product_name)
+remove_fulfillment_places(product.name, current_date, "store0")
+get_product(product.name)
+delete_product(product.name)
