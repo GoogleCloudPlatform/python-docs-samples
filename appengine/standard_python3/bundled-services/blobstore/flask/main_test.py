@@ -26,6 +26,10 @@ def version():
     project and version number so tests can invoke it, then delete it.
     """
 
+    debug_output = subprocess.run("gcloud config list", capture_output=True, shell=True)
+    print(f"Debug stdout of list is {debug.output.stdout}")
+    print(f"Debug stderr of list is {debug.output.stderr}")
+    
     output = subprocess.run(
         "gcloud app deploy --no-promote --quiet --format=json",
         capture_output=True,
