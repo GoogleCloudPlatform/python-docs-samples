@@ -6,4 +6,4 @@ apache-airflow-providers-cncf-kubernetes==3.0.0
 apache-airflow-providers-google==6.7.0
 scipy==1.8.1; python_version > '3.0'
 apache-airflow-providers-amazon==3.2.0
-apache-airflow-providers-microsoft-azure==3.7.2
+apache-airflow-providers-microsoft-azure==3.9.0
