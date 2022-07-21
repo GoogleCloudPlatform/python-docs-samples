@@ -15,6 +15,7 @@
 import json
 import re
 import subprocess
+import uuid
 
 import pytest
 import requests
@@ -27,7 +28,7 @@ def version():
     """
 
     output = subprocess.run(
-        "gcloud app deploy --no-promote --quiet --format=json",
+        f"gcloud app deploy --no-promote --quiet --format=json --version={uuid.uuid4().hex}",
         capture_output=True,
         shell=True,
     )

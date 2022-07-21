@@ -15,6 +15,7 @@
 import json
 import subprocess
 import time
+import uuid
 
 import pytest
 import requests
@@ -27,7 +28,7 @@ def version():
     """
 
     output = subprocess.run(
-        "gcloud app deploy --no-promote --quiet --format=json",
+        f"gcloud app deploy --no-promote --quiet --format=json --version={uuid.uuid4().hex}",
         capture_output=True,
         shell=True,
     )
@@ -35,6 +36,7 @@ def version():
     result = json.loads(output.stdout)
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
+    print(f"Version is {version_id}")
 
     yield project_id, version_id
 
