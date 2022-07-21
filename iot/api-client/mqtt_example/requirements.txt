@@ -6,4 +6,4 @@ google-cloud-pubsub==2.9.0
 google-cloud-iot==2.5.1
 grpc-google-iam-v1==0.12.4
 pyjwt==2.4.0
-paho-mqtt==1.5.1
+paho-mqtt==1.6.1

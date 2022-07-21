@@ -6,5 +6,5 @@ google-cloud-pubsub==2.9.0
 google-cloud-storage==2.0.0; python_version < '3.7'
 google-cloud-storage==2.1.0; python_version > '3.6'
 cryptography==37.0.4
-paho-mqtt==1.5.1
+paho-mqtt==1.6.1
 pyjwt==2.4.0
