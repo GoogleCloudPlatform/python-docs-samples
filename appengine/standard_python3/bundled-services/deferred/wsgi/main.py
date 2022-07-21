@@ -75,5 +75,8 @@ class WSGIApplication:
             if match is not None:
                 return handler(environ, start_response)
 
+        start_response("404 Not Found", [("Content-Type", "text/plain")])
+        return ["Not found".encode("utf-8")]
+
 
 app = wrap_wsgi_app(WSGIApplication(), use_deferred=True)

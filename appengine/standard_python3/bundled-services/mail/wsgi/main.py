@@ -54,24 +54,6 @@ def BounceReceiver(environ, start_response):
     return ["success".encode("utf-8")]
 
 
-def InvalidMailSender(environ, start_response):
-    # Send invalid mail to trigger a bounce notification.
-    mail.send_mail(
-        sender="test-python-user@shreejad-knative-dev.appspotmail.com",
-        to="Invalid Address <random-bounce@gmail.com>",
-        subject="Test Email Subject sd",
-        body="Test Email Body sd",
-    )
-
-    print("Successfully sent a mail to random-bounce@gmail.com.")
-    print("This should trigger a bounce notification.")
-
-    # Return suitable response
-    response = http.HTTPStatus.OK
-    start_response(f"{response.value} {response.phrase}", [])
-    return ["success".encode("utf-8")]
-
-
 def HomePage(environ, start_response):
     if environ["REQUEST_METHOD"] == "GET":
         html = """
@@ -122,7 +104,6 @@ def HomePage(environ, start_response):
 routes = {
     mail.INCOMING_MAIL_URL_PATTERN: HelloReceiver,
     mail.BOUNCE_NOTIFICATION_URL_PATH: BounceReceiver,
-    "send_invalid_mail": InvalidMailSender,
     "": HomePage,
 }
 
@@ -134,6 +115,8 @@ class WSGIApplication:
             match = re.search(regex, path)
             if match is not None:
                 return callable(environ, start_response)
+        start_response("404 Not Found", [("Content-Type", "text/plain")])
+        return ["Not found".encode("utf-8")]
 
 
 app = wrap_wsgi_app(WSGIApplication())

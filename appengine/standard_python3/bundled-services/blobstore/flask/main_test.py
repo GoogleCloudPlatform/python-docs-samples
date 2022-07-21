@@ -27,15 +27,24 @@ def version():
     project and version number so tests can invoke it, then delete it.
     """
 
+    debug_output = subprocess.run("gcloud config list", capture_output=True, shell=True)
+    print(f"Debug stdout of list is {debug_output.stdout}")
+    print(f"Debug stderr of list is {debug_output.stderr}")
+
     output = subprocess.run(
         f"gcloud app deploy --no-promote --quiet --format=json --version={uuid.uuid4().hex}",
         capture_output=True,
         shell=True,
     )
 
-    result = json.loads(output.stdout)
-    version_id = result["versions"][0]["id"]
-    project_id = result["versions"][0]["project"]
+    try:
+        result = json.loads(output.stdout)
+        version_id = result["versions"][0]["id"]
+        project_id = result["versions"][0]["project"]
+    except Exception as e:
+        print(f"New version deployment output not usable: {e}")
+        print(f"Command stderr is '{output.stderr}'")
+        raise ValueError
 
     yield project_id, version_id
 

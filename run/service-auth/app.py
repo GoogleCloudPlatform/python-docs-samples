@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Format: //devtools/kokoro/config/proto/build.proto
+import os
 
-# Tell the trampoline which build file to use.
-env_vars: {
-    key: "TRAMPOLINE_BUILD_FILE"
-    value: ".kokoro/tests/run_tests.sh"
-}
+from flask import Flask, request
 
-env_vars: {
-    key: "REPORT_TO_BUILD_COP_BOT"
-    value: "true"
-}
+from receive import receive_authorized_get_request
 
-# Tell Trampoline to upload the Docker image after successfull build.
-env_vars: {
-    key: "TRAMPOLINE_IMAGE_UPLOAD"
-    value: "true"
-}
+app = Flask(__name__)
+
+
+@app.route("/")
+def main():
+    return receive_authorized_get_request(request)
+
+
+if __name__ == "__main__":
+    app.run(host="localhost", port=int(os.environ.get("PORT", 8080)), debug=True)

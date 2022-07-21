@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+# [START composer_dataanalyticstutorial_dag]
 import datetime
 
 from airflow import models
@@ -46,13 +47,12 @@ BATCH_CONFIG = {
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}",
         ],
-
     },
     "environment_config": {
         "execution_config": {
             "service_account": "{{var.value.dataproc_service_account}}"
         }
-    }
+    },
 }
 
 yesterday = datetime.datetime.combine(
@@ -66,11 +66,11 @@ default_dag_args = {
     # To email on failure or retry set 'email' arg to your email and enable
     # emailing here.
     "email_on_failure": False,
-    "email_on_retry": False
+    "email_on_retry": False,
 }
 
 with models.DAG(
-    "summit_dag",
+    "data_analytics_dag",
     # Continue to run DAG once per day
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
@@ -96,7 +96,7 @@ with models.DAG(
             {"name": "Holiday", "type": "STRING"},
         ],
         skip_leading_rows=1,
-        write_disposition="WRITE_TRUNCATE"
+        write_disposition="WRITE_TRUNCATE",
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
@@ -138,3 +138,4 @@ with models.DAG(
             )
 
         load_external_dataset >> bq_join_group >> create_batch
+# [END composer_dataanalyticstutorial_dag]

@@ -1,6 +1,7 @@
 # Access bundled Deferred services API in Python 3
 
-This folder contains functionally identical apps that 
+This folder contains functionally identical apps that illustrate
+use of the App Engine Deferred service.
 
 The apps are written using three different web frameworks:
 [Flask](https://palletsprojects.com/p/flask/),

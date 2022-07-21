@@ -28,7 +28,7 @@ from airflow import models
 from airflow.contrib.operators import dataproc_operator
 from airflow.utils.dates import days_ago
 
-project_id = models.Variable.get("project_id")
+project_id = "{{var.value.project_id}}"
 
 
 default_args = {
