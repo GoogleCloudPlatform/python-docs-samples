@@ -86,7 +86,7 @@ def test_send_receive(version):
     except Exception:
         print(f"Failed to read log for version {version_id}")
         print(f"gcloud stderr was {output.stderr}")
-        
+
         assert False, "Should be able to read and load logs"
 
     text_payloads = ""
