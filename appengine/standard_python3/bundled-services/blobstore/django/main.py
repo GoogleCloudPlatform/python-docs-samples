@@ -65,7 +65,7 @@ def upload_form(request):
   <html><body>
   <form action="{0}" method="POST" enctype="multipart/form-data">
     Upload File: <input type="file" name="file"><br>
-    <input type="submit" name="submit" value="Submit Now">
+    <input type="submit" name="submit" value="Submit">
   </form>
   </body></html>""".format(
         upload_url
@@ -99,6 +99,7 @@ settings.configure(
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ),
+    ALLOWED_HOSTS=["*"],
 )
 
 app = wrap_wsgi_app(get_wsgi_application())

@@ -21,15 +21,8 @@ from django.urls import path
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
-from google.cloud import logging
 
 my_key = os.environ.get("GAE_VERSION", "Missing")
-
-# Logging client in Python 3
-logging_client = logging.Client()
-
-# This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger("django-app-logs")
 
 
 class Counter(ndb.Model):
@@ -61,7 +54,7 @@ def view_counter(request):
 
 
 def custom_deferred(request):
-    logger.log_text("Executing deferred task.")
+    print("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     response, status, headers = deferred.Handler().post(request.environ)
     return HttpResponse(response, status=status.value)
