@@ -81,7 +81,13 @@ def test_send_receive(version):
         capture_output=True,
         shell=True,
     )
-    entries = json.loads(output.stdout)
+    try:
+        entries = json.loads(output.stdout)
+    except Exception as e:
+        print(f"Failed to read log for version {version_id}")
+        print(f"gcloud stderr was {output.stderr}")
+        
+        assert False, "Should be able to read and load logs"
 
     text_payloads = ""
     for entry in entries:
