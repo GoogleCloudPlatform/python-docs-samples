@@ -20,13 +20,6 @@ from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
 from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
-from google.cloud import logging
-
-# Logging client in Python 3
-logging_client = logging.Client()
-
-# This log can be found in the Cloud Logging console under 'Custom Logs'.
-logger = logging_client.logger("django-app-logs")
 
 
 def home_page(request):
@@ -90,9 +83,9 @@ def receive_mail(request):
 def receive_bounce(request):
     bounce_message = mail.BounceNotification(dict(request.POST.lists()))
 
-    # Make a simple text log
-    print(f"Bounce original: {bounce_message.__original}")
-    print(f"Bounce notification: {bounce_message.__notification}")
+    # Do something with the message
+    print(f"Bounce original: {bounce_message.original}")
+    print(f"Bounce notification: {bounce_message.notification}")
 
     return HttpResponse("OK")
 

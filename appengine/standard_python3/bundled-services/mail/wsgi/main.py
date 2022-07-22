@@ -44,9 +44,8 @@ def BounceReceiver(environ, start_response):
     bounce_message = mail.BounceNotification.from_environ(environ)
 
     # Do something with the message
-    print("Received bounce post.")
-    print("Bounce original: %s", bounce_message.original)
-    print("Bounce notification: %s", bounce_message.notification)
+    print("Bounce original: ", bounce_message.original)
+    print("Bounce notification: ", bounce_message.notification)
 
     # Return suitable response
     response = http.HTTPStatus.OK
