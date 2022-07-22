@@ -77,13 +77,7 @@ def test_send_receive(version):
 
     # Fetch logs to check messages on received mail
     output = subprocess.run(
-        [
-            "gcloud",
-            "logging",
-            "read",
-            f"resource.type=gae_app AND resource.labels.version_id={version_id}",
-            "--format=json",
-        ],
+        f'gcloud logging read "resource.type=gae_app AND resource.labels.version_id={version_id}" --format=json',
         capture_output=True,
         shell=True,
     )
@@ -92,7 +86,7 @@ def test_send_receive(version):
     except Exception as e:
         print(f"Failed to read log for version {version_id}")
         print(f"gcloud stderr was {output.stderr}")
-        
+
         assert False, "Should be able to read and load logs"
 
     text_payloads = ""
