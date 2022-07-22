@@ -83,7 +83,7 @@ def test_send_receive(version):
     )
     try:
         entries = json.loads(output.stdout)
-    except Exception as e:
+    except Exception:
         print(f"Failed to read log for version {version_id}")
         print(f"gcloud stderr was {output.stderr}")
         
