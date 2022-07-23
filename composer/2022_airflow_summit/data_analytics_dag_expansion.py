@@ -110,20 +110,17 @@ with models.DAG(
     load_external_dataset = GCSToBigQueryOperator(
         task_id="run_bq_external_ingestion",
         bucket=BUCKET_NAME,
-        source_objects=["ghcnd_{str(year)}.csv"],
+        source_objects=["ghcnd-stations.txt"],
         destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcn_d",
-        source_format="CSV",
+        source_format="TXT",
         schema_fields=[
-            {'name': 'id', 'type': 'STRING', 'mode': 'REQUIRED'},
-            {'name': 'date', 'type': 'DATE', 'mode': 'NULLABLE'},
-            {'name': 'element', 'type': 'STRING', 'mode': 'NULLABLE'},
-            {'name': 'value', 'type': 'FLOAT', 'mode': 'NULLABLE'},
-            {'name': 'mflag', 'type': 'STRING', 'mode': 'NULLABLE'},
-            {'name': 'qflag', 'type': 'STRING', 'mode': 'NULLABLE'},
-            {'name': 'sflag', 'type': 'STRING', 'mode': 'NULLABLE'},
-            {'name': 'time', 'type': 'STRING', 'mode': 'NULLABLE'},
+            {'name': 'ID', 'type': 'CHARACTER', 'mode': 'REQUIRED'},
+            {'name': 'LATITUDE', 'type': 'REAL', 'mode': 'REQUIRED'},
+            {'name': 'LONGITUDE', 'type': 'REAL', 'mode': 'REQUIRED'},
+            {'name': 'ELEVATION', 'type': 'REAL', 'mode': 'REQUIRED'},
+            {'name': 'STATE', 'type': 'CHARACTER', 'mode': 'REQUIRED'},
         ],
-        skip_leading_rows=1,
+        # skip_leading_rows=1,
         write_disposition="WRITE_TRUNCATE"
     )
 
