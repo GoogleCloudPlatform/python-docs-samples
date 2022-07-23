@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+
+
 import datetime
 
 from airflow import models
@@ -23,11 +25,19 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
 )
 from airflow.utils.task_group import TaskGroup
 
+from airflow.providers.google.cloud.transfers.sheets_to_gcs import (
+    GoogleSheetsToGCSOperator,
+)
+
 PROJECT_NAME = "{{var.value.gcp_project}}"
 
 # BigQuery configs
-BQ_DESTINATION_DATASET_NAME = "holiday_weather"
-BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
+# BQ_DESTINATION_DATASET_NAME = "holiday_weather"
+# BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
+# BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
+
+BQ_DESTINATION_DATASET_NAME = "expansion_project"
+BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
 BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
 
 # Dataproc configs
@@ -85,7 +95,11 @@ with models.DAG(
     )
 
 
-
+    # upload_sheet_to_gcs = GoogleSheetsToGCSOperator(
+    #    task_id="upload_sheet_to_gcs",
+    #    destination_bucket=BUCKET_NAME,
+    #    spreadsheet_id="1YmSwktfgfkcHk6a43iA1jOjIsYf2NF-Ei9bf135W0AY",
+    # )
 
 
     # This data is static and it is safe to use WRITE_TRUNCATE
@@ -110,19 +124,41 @@ with models.DAG(
     load_external_dataset = GCSToBigQueryOperator(
         task_id="run_bq_external_ingestion",
         bucket=BUCKET_NAME,
-        source_objects=["ghcnd-stations.txt"],
-        destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcn_d",
-        source_format="TXT",
+        source_objects=["ghcnd-stations-new.txt"],
+        destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcnd-stations-new",
+        source_format="CSV",
         schema_fields=[
-            {'name': 'ID', 'type': 'CHARACTER', 'mode': 'REQUIRED'},
-            {'name': 'LATITUDE', 'type': 'REAL', 'mode': 'REQUIRED'},
-            {'name': 'LONGITUDE', 'type': 'REAL', 'mode': 'REQUIRED'},
-            {'name': 'ELEVATION', 'type': 'REAL', 'mode': 'REQUIRED'},
-            {'name': 'STATE', 'type': 'CHARACTER', 'mode': 'REQUIRED'},
+            {'name': 'ID', 'type': 'STRING', 'mode': 'REQUIRED'},
+            {'name': 'LATITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+            {'name': 'LONGITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+            {'name': 'ELEVATION', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+            {'name': 'STATE', 'type': 'STRING', 'mode': 'REQUIRED'},
         ],
         # skip_leading_rows=1,
         write_disposition="WRITE_TRUNCATE"
     )
+    
+    
+    # load_external_dataset = GCSToBigQueryOperator(
+    #    task_id="run_bq_external_ingestion",
+    #    bucket=BUCKET_NAME,
+    #    source_objects=["ghcnd-stations.txt"],
+    #    destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcnd-stations",
+    #    source_format="CSV",
+    #    schema_fields=[
+    #        {'name': 'ID', 'type': 'STRING', 'mode': 'REQUIRED'},
+    #        {'name': 'LATITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+    #        {'name': 'LONGITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+    #        {'name': 'ELEVATION', 'type': 'FLOAT', 'mode': 'REQUIRED'},
+    #        {'name': 'STATE', 'type': 'STRING', 'mode': 'NULLABLE'},
+    #        {'name': 'NAME', 'type': 'STRING', 'mode': 'REQUIRED'},
+    #        {'name': 'GSN_FLAG', 'type': 'STRING', 'mode': 'NULLABLE'},
+    #        {'name': 'HCN_CRN_FLAG', 'type': 'STRING', 'mode': 'NULLABLE'},
+    #        {'name': 'WMO_ID', 'type': 'STRING', 'mode': 'NULLABLE'},
+    #    ],
+    #    # skip_leading_rows=1,
+    #    write_disposition="WRITE_TRUNCATE"
+    # )
 
 
 
@@ -132,13 +168,14 @@ with models.DAG(
         for year in range(1997, 2022):
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
-            BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
+            # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
+            
             # Specifically query a Chicago weather station
-            WEATHER_HOLIDAYS_JOIN_QUERY = f"""
-            SELECT Holidays.Date, Holiday, id, element, value
-            FROM `{PROJECT_NAME}.holiday_weather.holidays` AS Holidays
-            JOIN (SELECT id, date, element, value FROM {BQ_DATASET_NAME} AS Table WHERE Table.element="TMAX" AND Table.id="USW00094846") AS Weather
-            ON Holidays.Date = Weather.Date;
+            GHCND_STATIONS_JOIN_QUERY = f"""
+            SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE, Stations.ELEVATION, 
+            Stations.STATE, Table.DATE, Table.ELEMENT, Table.VALUE
+            FROM `{PROJECT_NAME}.expansion_project.ghcnd-stations-new` AS Stations, {BQ_DATASET_NAME} AS Table 
+            WHERE Stations.ID = Table.id;
             """
 
             # for demo purposes we are using WRITE_APPEND
@@ -152,7 +189,7 @@ with models.DAG(
                 task_id=f"bq_join_holidays_weather_data_{str(year)}",
                 configuration={
                     "query": {
-                        "query": WEATHER_HOLIDAYS_JOIN_QUERY,
+                        "query": GHCND_STATIONS_JOIN_QUERY,
                         "useLegacySql": False,
                         "destinationTable": {
                             "projectId": PROJECT_NAME,
@@ -165,5 +202,7 @@ with models.DAG(
                 location="US",
             )
 
+        # upload_sheet_to_gcs >> load_external_dataset >> bq_join_group >> create_batch
         load_external_dataset >> bq_join_group >> create_batch
+
 
