@@ -65,7 +65,7 @@ def test_upload_and_view(version):
     assert response.status_code == 200
 
     # counter should be 10 almost immediately
-    time.sleep(2)
+    time.sleep(5)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.status_code == 200
     assert response.text == "10"
