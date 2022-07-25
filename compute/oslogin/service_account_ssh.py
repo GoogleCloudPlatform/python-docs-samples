@@ -128,7 +128,15 @@ def main(cmd, project, instance=None, zone=None,
 
     # Using the OS Login API, get the POSIX user name from the login profile
     # for the service account.
-    profile = oslogin.users().getLoginProfile(name=account).execute()
+    for attempt_no in range(1, 4):
+        try:
+            profile = oslogin.users().getLoginProfile(name=account).execute()
+        except RefreshError:
+            if attempt_no == 3:
+                break
+            time.sleep(attempt_no)
+        else:
+            break
     username = profile.get('posixAccounts')[0].get('username')
 
     # Create the hostname of the target instance using the instance name,
