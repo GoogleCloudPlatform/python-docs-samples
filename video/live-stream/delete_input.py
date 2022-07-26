@@ -39,7 +39,7 @@ def delete_input(project_id: str, location: str, input_id: str) -> None:
 
     name = f"projects/{project_id}/locations/{location}/inputs/{input_id}"
     operation = client.delete_input(name=name)
-    operation.result(60)
+    operation.result(600)
     print("Deleted input")
 
 

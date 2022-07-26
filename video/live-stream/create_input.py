@@ -45,7 +45,7 @@ def create_input(project_id: str, location: str, input_id: str) -> str:
         type_="RTMP_PUSH",
     )
     operation = client.create_input(parent=parent, input=input, input_id=input_id)
-    response = operation.result(60)
+    response = operation.result(600)
     print(f"Input: {response.name}")
 
     return response

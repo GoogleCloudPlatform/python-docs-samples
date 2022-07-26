@@ -57,7 +57,7 @@ def update_channel(
     update_mask = field_mask.FieldMask(paths=["input_attachments"])
 
     operation = client.update_channel(channel=channel, update_mask=update_mask)
-    response = operation.result(60)
+    response = operation.result(600)
     print(f"Updated channel: {response.name}")
 
     return response

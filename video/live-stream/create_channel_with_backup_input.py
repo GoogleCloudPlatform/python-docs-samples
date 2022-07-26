@@ -132,7 +132,7 @@ def create_channel_with_backup_input(
     operation = client.create_channel(
         parent=parent, channel=channel, channel_id=channel_id
     )
-    response = operation.result(60)
+    response = operation.result(600)
     print(f"Channel: {response.name}")
 
     return response

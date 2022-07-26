@@ -54,7 +54,7 @@ def update_input(project_id: str, location: str, input_id: str) -> str:
     update_mask = field_mask.FieldMask(paths=["preprocessing_config"])
 
     operation = client.update_input(input=input, update_mask=update_mask)
-    response = operation.result(60)
+    response = operation.result(600)
     print(f"Updated input: {response.name}")
 
     return response

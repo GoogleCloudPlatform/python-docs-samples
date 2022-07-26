@@ -39,7 +39,7 @@ def delete_channel(project_id: str, location: str, channel_id: str) -> None:
 
     name = f"projects/{project_id}/locations/{location}/channels/{channel_id}"
     operation = client.delete_channel(name=name)
-    operation.result(60)
+    operation.result(600)
     print("Deleted channel")
 
 
