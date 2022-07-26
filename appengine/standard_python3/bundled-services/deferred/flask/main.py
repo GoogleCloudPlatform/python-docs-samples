@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START gae_deferred_handler_flask]
 import os
 
 from flask import Flask, request
@@ -60,3 +61,4 @@ def custom_deferred():
     print("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     return deferred.Handler().post(request.environ)
+# [END gae_deferred_handler_wsgi]
