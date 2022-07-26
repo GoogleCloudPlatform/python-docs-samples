@@ -91,7 +91,7 @@ def receive_bounce(request):
     print(f"Bounce notification: {bounce_message.notification}")
 
     return HttpResponse("OK")
-# [START gae_mail_handler_bounch_django]
+# [END gae_mail_handler_bounch_django]
 
 
 urlpatterns = [
