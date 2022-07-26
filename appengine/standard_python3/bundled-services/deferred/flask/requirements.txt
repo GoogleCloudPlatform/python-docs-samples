@@ -1,0 +1,2 @@
+Flask==2.0.1
+appengine-python-standard>=0.3.1
