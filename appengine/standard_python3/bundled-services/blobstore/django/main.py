@@ -56,13 +56,6 @@ class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
             # GAE sets it to a guessed type if the header is not set.
             response["Content-Type"] = None
             return response
-
-
-urlpatterns = (
-    path("", upload_form, name="upload_form"),
-    path("view_photo/<key>", view_photo, name="view_photo"),
-    path("upload_photo", upload_photo, name="upload_photo"),
-)
 # [END gae_blobstore_handler_django]
 
 
@@ -91,6 +84,15 @@ def view_photo(request, key):
 def upload_photo(request):
     """Upload handler called by blobstore when a blob is uploaded in the test."""
     return PhotoUploadHandler().post(request.environ)
+
+
+# [START gae_blobstore_handler_django]
+urlpatterns = (
+    path("", upload_form, name="upload_form"),
+    path("view_photo/<key>", view_photo, name="view_photo"),
+    path("upload_photo", upload_photo, name="upload_photo"),
+)
+# [END gae_blobstore_handler_django]
 
 
 settings.configure(
