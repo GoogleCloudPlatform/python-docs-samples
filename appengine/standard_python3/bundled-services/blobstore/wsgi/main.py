@@ -42,6 +42,7 @@ class UploadFormHandler:
         return [response.encode("utf-8")]
 
 
+# [START gae_blobstore_handler_wsgi]
 class UploadPhotoHandler(blobstore.BlobstoreUploadHandler):
     """Upload handler called by blobstore when a blob is uploaded in the test."""
 
@@ -80,6 +81,7 @@ urls = [
     (r"upload_photo/?$", UploadPhotoHandler),
     (r"view_photo/(.+)$", ViewPhotoHandler),
 ]
+# [END gae_blobstore_handler_wsgi]
 
 
 class Application(object):

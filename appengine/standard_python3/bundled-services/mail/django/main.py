@@ -69,6 +69,7 @@ def send_mail(address, body):
     return HttpResponse(content=f"Successfully sent mail to {address}.", status=201)
 
 
+# [START gae_mail_handler_receive_django]
 def receive_mail(request):
     message = mail.InboundEmailMessage(request.body)
 
@@ -78,8 +79,10 @@ def receive_mail(request):
         break
 
     return HttpResponse("OK")
+# [END gae_mail_handler_receive_django]
 
 
+# [START gae_mail_handler_bounce_django]
 def receive_bounce(request):
     bounce_message = mail.BounceNotification(dict(request.POST.lists()))
 
@@ -88,6 +91,7 @@ def receive_bounce(request):
     print(f"Bounce notification: {bounce_message.notification}")
 
     return HttpResponse("OK")
+# [END gae_mail_handler_bounce_django]
 
 
 urlpatterns = [

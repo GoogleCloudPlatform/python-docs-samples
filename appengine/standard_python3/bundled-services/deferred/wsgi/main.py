@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START gae_deferred_handler_wsgi]
 import os
 import re
 
@@ -80,3 +81,4 @@ class WSGIApplication:
 
 
 app = wrap_wsgi_app(WSGIApplication(), use_deferred=True)
+# [END gae_deferred_handler_wsgi]
