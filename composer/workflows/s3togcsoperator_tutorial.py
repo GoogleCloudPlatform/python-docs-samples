@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataanalyticstutorial_aws_dag]
 import datetime
 
 from airflow import models
@@ -148,3 +149,4 @@ with models.DAG(
             )
 
         s3_to_gcs_op >> load_external_dataset >> bq_join_group >> create_batch
+# [END composer_dataanalyticstutorial_aws_dag]
