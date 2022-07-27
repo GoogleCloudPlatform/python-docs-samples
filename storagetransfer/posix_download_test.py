@@ -14,7 +14,7 @@
 
 import backoff
 from google.api_core.exceptions import RetryError
-from google.api.core.exceptions import ServiceUnavailable
+from google.api_core.exceptions import ServiceUnavailable
 from google.cloud.storage import Bucket
 
 import posix_download
