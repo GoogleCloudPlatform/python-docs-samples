@@ -1,0 +1,627 @@
+{
+  "uri": "",
+  "mimeType": "application/pdf",
+  "text": "Wells Fargo\u00ae Essential Checking\nWELLS\nFARGO\nAugust 9, 2019 Page 1 of 4\nQuestions?\nRachael Dean\nCalvin Carrillo\n2 King Fork Rd.\nIndianapolis IN, 46201\nAvailable by phone 24 hours a day, 7 days a week:\n...",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "dimension": {
+        "width": 1758.0,
+        "height": 2275.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "endIndex": "1646"
+            }
+          ]
+        },
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1758
+            },
+            {
+              "x": 1758,
+              "y": 2275
+            },
+            {
+              "y": 2275
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        },
+        {
+          "languageCode": "und"
+        },
+        {
+          "languageCode": "es"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABt4=",
+        "mimeType": "image/png",
+        "width": 1758,
+        "height": 2275
+      }
+    },
+    {
+      "pageNumber": 2,
+      "dimension": {
+        "width": 1758.0,
+        "height": 2275.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "startIndex": "1646",
+              "endIndex": "4841"
+            }
+          ]
+        },
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1758
+            },
+            {
+              "x": 1758,
+              "y": 2275
+            },
+            {
+              "y": 2275
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        },
+        {
+          "languageCode": "und"
+        },
+        {
+          "languageCode": "sl"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABt4=",
+        "mimeType": "image/png",
+        "width": 1758,
+        "height": 2275
+      }
+    }
+  ],
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "4268",
+            "endIndex": "4271"
+          }
+        ],
+        "content": "8/9"
+      },
+      "type": "statement_end_date",
+      "mentionText": "8/9",
+      "confidence": 0.9630259,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.21331058,
+                  "y": 0.80923074
+                },
+                {
+                  "x": 0.22753128,
+                  "y": 0.80923074
+                },
+                {
+                  "x": 0.22753128,
+                  "y": 0.82021976
+                },
+                {
+                  "x": 0.21331058,
+                  "y": 0.82021976
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "119"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1646",
+            "endIndex": "1660"
+          }
+        ],
+        "content": "August 9, 2019"
+      },
+      "type": "statement_date",
+      "mentionText": "August 9, 2019",
+      "confidence": 0.95791525,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.06370876,
+                  "y": 0.04307692
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.04307692
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.057142857
+                },
+                {
+                  "x": 0.06370876,
+                  "y": 0.057142857
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "115",
+      "normalizedValue": {
+        "text": "2019-08-09",
+        "dateValue": {
+          "year": 2019,
+          "month": 8,
+          "day": 9
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "4841",
+            "endIndex": "4855"
+          }
+        ],
+        "content": "August 9, 2019"
+      },
+      "type": "statement_date",
+      "mentionText": "August 9, 2019",
+      "confidence": 0.9562314,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "2",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.06370876,
+                  "y": 0.04307692
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.04307692
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.057142857
+                },
+                {
+                  "x": 0.06370876,
+                  "y": 0.057142857
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "116",
+      "normalizedValue": {
+        "text": "2019-08-09",
+        "dateValue": {
+          "year": 2019,
+          "month": 8,
+          "day": 9
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1673",
+            "endIndex": "1684"
+          }
+        ],
+        "content": "WELLS\nFARGO"
+      },
+      "type": "bank_name",
+      "mentionText": "WELLS\nFARGO",
+      "confidence": 0.9486702,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.8282139,
+                  "y": 0.04923077
+                },
+                {
+                  "x": 0.903868,
+                  "y": 0.04923077
+                },
+                {
+                  "x": 0.903868,
+                  "y": 0.07824176
+                },
+                {
+                  "x": 0.8282139,
+                  "y": 0.07824176
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "3",
+      "normalizedValue": {
+        "text": "Wells Fargo ATM"
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1327",
+            "endIndex": "1330"
+          }
+        ],
+        "content": "8/9"
+      },
+      "type": "statement_end_date",
+      "mentionText": "8/9",
+      "confidence": 0.92443484,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.2138794,
+                  "y": 0.6975824
+                },
+                {
+                  "x": 0.22810012,
+                  "y": 0.6975824
+                },
+                {
+                  "x": 0.22810012,
+                  "y": 0.7076923
+                },
+                {
+                  "x": 0.2138794,
+                  "y": 0.7076923
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "118"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1331",
+            "endIndex": "1340"
+          }
+        ],
+        "content": "$4,863.69"
+      },
+      "type": "ending_balance",
+      "mentionText": "$4,863.69",
+      "confidence": 0.8939748,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.4249147,
+                  "y": 0.6975824
+                },
+                {
+                  "x": 0.4761092,
+                  "y": 0.6975824
+                },
+                {
+                  "x": 0.4761092,
+                  "y": 0.7076923
+                },
+                {
+                  "x": 0.4249147,
+                  "y": 0.7076923
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "9",
+      "normalizedValue": {
+        "text": "4863.69 USD",
+        "moneyValue": {
+          "currencyCode": "USD",
+          "units": "4863",
+          "nanos": 690000000
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "5511",
+            "endIndex": "5521"
+          }
+        ],
+        "content": "08/09/2019"
+      },
+      "type": "statement_end_date",
+      "mentionText": "08/09/2019",
+      "confidence": 0.89319146,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "2",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.23435722,
+                  "y": 0.31472528
+                },
+                {
+                  "x": 0.29351535,
+                  "y": 0.31472528
+                },
+                {
+                  "x": 0.29351535,
+                  "y": 0.3265934
+                },
+                {
+                  "x": 0.23435722,
+                  "y": 0.3265934
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "120",
+      "normalizedValue": {
+        "text": "2019-08-09",
+        "dateValue": {
+          "year": 2019,
+          "month": 8,
+          "day": 9
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "44",
+            "endIndex": "58"
+          }
+        ],
+        "content": "August 9, 2019"
+      },
+      "type": "statement_date",
+      "mentionText": "August 9, 2019",
+      "confidence": 0.8834658,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.06484642,
+                  "y": 0.06813187
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.06813187
+                },
+                {
+                  "x": 0.16268487,
+                  "y": 0.08175824
+                },
+                {
+                  "x": 0.06484642,
+                  "y": 0.08175824
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "114",
+      "normalizedValue": {
+        "text": "2019-08-09",
+        "dateValue": {
+          "year": 2019,
+          "month": 8,
+          "day": 9
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "82",
+            "endIndex": "94"
+          }
+        ],
+        "content": "Rachael Dean"
+      },
+      "type": "client_name",
+      "mentionText": "Rachael Dean",
+      "confidence": 0.8629223,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.06086462,
+                  "y": 0.22241758
+                },
+                {
+                  "x": 0.1814562,
+                  "y": 0.22241758
+                },
+                {
+                  "x": 0.1814562,
+                  "y": 0.23604396
+                },
+                {
+                  "x": 0.06086462,
+                  "y": 0.23604396
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "5"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "5498",
+            "endIndex": "5508"
+          }
+        ],
+        "content": "07/11/2019"
+      },
+      "type": "statement_start_date",
+      "mentionText": "07/11/2019",
+      "confidence": 0.8472273,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "2",
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.16439135,
+                  "y": 0.31472528
+                },
+                {
+                  "x": 0.22298066,
+                  "y": 0.31472528
+                },
+                {
+                  "x": 0.22298066,
+                  "y": 0.3265934
+                },
+                {
+                  "x": 0.16439135,
+                  "y": 0.3265934
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "122",
+      "normalizedValue": {
+        "text": "2019-07-11",
+        "dateValue": {
+          "year": 2019,
+          "month": 7,
+          "day": 11
+        }
+      }
+    }
+  ]
+}
