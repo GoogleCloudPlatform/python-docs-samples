@@ -77,6 +77,8 @@ def receive_bounce():
     print("Bounce notification: ", bounce_message.notification)
 
     return "OK", 200
+
+
 # [END gae_mail_handler_bounce_flask]
 
 
@@ -92,4 +94,6 @@ def receive_mail(path):
         break
 
     return "OK", 200
+
+
 # [END gae_mail_handler_receive_flask]

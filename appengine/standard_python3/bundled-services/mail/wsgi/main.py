@@ -36,6 +36,8 @@ def HelloReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+
+
 # [END gae_mail_handler_receive_wsgi]
 
 
@@ -54,6 +56,8 @@ def BounceReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+
+
 # [END gae_mail_handler_bounce_wsgi]
 
 

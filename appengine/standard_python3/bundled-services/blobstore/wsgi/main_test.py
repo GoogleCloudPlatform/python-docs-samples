@@ -15,10 +15,47 @@
 import json
 import re
 import subprocess
+import time
 import uuid
 
 import pytest
 import requests
+
+
+def gcloud_cli(command, retries=3):
+    """
+    Runs the gcloud CLI with given options, parses the json formatted output
+    and returns the resulting Python object.
+
+    Automatically retries with delays unless retries=0 is specified.
+
+    Usage: gcloud_cli(options, retries=retries)
+        options: command line options
+        retries: how many times to retry is gcloud CLI fails with error
+
+    Example:
+        result = gcloud_cli("app deploy --no-promote")
+        print(f"Deployed version {result['versions'][0]['id']}")
+
+    Raises Exception with the stderr output of the last attempt if all
+    retries fail.
+    """
+    for retry in range(retries):
+        time.sleep(retry * 5)  # Wait 0, 5, 10, 15, etc seconds before next try
+
+        output = subprocess.run(
+            f"gcloud {command} --quiet --format=json",
+            capture_output=True,
+            shell=True,
+        )
+        try:
+            entries = json.loads(output.stdout)
+            return entries
+        except Exception:
+            print(f"gcloud_cli attempt {retry}: Failed to read log")
+            print(f"gcloud_cli attempt {retry}: gcloud stderr was {output.stderr}")
+
+    raise Exception(f"gcloud_cli attempt {retry}: gcloud stderr was {output.stderr}")
 
 
 @pytest.fixture
@@ -27,28 +64,13 @@ def version():
     project and version number so tests can invoke it, then delete it.
     """
 
-    output = subprocess.run(
-        f"gcloud app deploy --no-promote --quiet --format=json --version={uuid.uuid4().hex}",
-        capture_output=True,
-        shell=True,
-    )
-
-    try:
-        result = json.loads(output.stdout)
-        version_id = result["versions"][0]["id"]
-        project_id = result["versions"][0]["project"]
-    except Exception as e:
-        print(f"New version deployment output not usable: {e}")
-        print(f"Command stderr is '{output.stderr}'")
-        raise ValueError
+    result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
+    version_id = result["versions"][0]["id"]
+    project_id = result["versions"][0]["project"]
 
     yield project_id, version_id
 
-    output = subprocess.run(
-        f"gcloud app versions delete {version_id}",
-        capture_output=True,
-        shell=True,
-    )
+    gcloud_cli(f"app versions delete {version_id}", retries=1)
 
 
 def test_upload_and_view(version):
