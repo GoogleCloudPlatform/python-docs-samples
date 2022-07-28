@@ -56,6 +56,7 @@ class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
             # GAE sets it to a guessed type if the header is not set.
             response["Content-Type"] = None
             return response
+# [END gae_blobstore_handler_django]
 
 
 # [END gae_blobstore_handler_django]

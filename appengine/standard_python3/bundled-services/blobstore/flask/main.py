@@ -59,8 +59,6 @@ def view_photo(photo_key):
 def upload_photo():
     """Upload handler called by blobstore when a blob is uploaded in the test."""
     return PhotoUploadHandler().post()
-
-
 # [END gae_blobstore_handler_flask]
 
 

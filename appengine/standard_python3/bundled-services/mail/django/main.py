@@ -79,8 +79,6 @@ def receive_mail(request):
         break
 
     return HttpResponse("OK")
-
-
 # [END gae_mail_handler_receive_django]
 
 
@@ -93,6 +91,7 @@ def receive_bounce(request):
     print(f"Bounce notification: {bounce_message.notification}")
 
     return HttpResponse("OK")
+# [END gae_mail_handler_bounce_django]
 
 
 # [END gae_mail_handler_bounce_django]
