@@ -59,9 +59,6 @@ class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
 # [END gae_blobstore_handler_django]
 
 
-# [END gae_blobstore_handler_django]
-
-
 def upload_form(request):
     """Create the HTML form to upload a file."""
     upload_url = blobstore.create_upload_url("/upload_photo")

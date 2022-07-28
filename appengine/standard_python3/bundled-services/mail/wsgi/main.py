@@ -57,9 +57,6 @@ def BounceReceiver(environ, start_response):
 # [END gae_mail_handler_bounce_wsgi]
 
 
-# [END gae_mail_handler_bounce_wsgi]
-
-
 def HomePage(environ, start_response):
     if environ["REQUEST_METHOD"] == "GET":
         html = """

@@ -94,9 +94,6 @@ def receive_bounce(request):
 # [END gae_mail_handler_bounce_django]
 
 
-# [END gae_mail_handler_bounce_django]
-
-
 urlpatterns = [
     url(r"^$", home_page),
     url(r"^_ah/mail/.*$", receive_mail),
