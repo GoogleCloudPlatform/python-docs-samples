@@ -21,6 +21,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "ed55eeb2b276066f"
 file_path = "resources/multi_document.pdf"
+mime_type = "application/pdf"
 
 
 def test_process_documents(capsys):
@@ -29,6 +30,7 @@ def test_process_documents(capsys):
         location=location,
         processor_id=processor_id,
         file_path=file_path,
+        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 
@@ -37,7 +39,7 @@ def test_process_documents(capsys):
 
     expected_strings = [
         "Found 8 subdocuments",
-        "confident that pages 1 to 2 are a subdocument",
+        "confident that pages 1, 2 are a subdocument",
         "confident that page 10 is a subdocument",
     ]
     for expected_string in expected_strings:

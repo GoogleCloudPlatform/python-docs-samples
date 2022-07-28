@@ -21,6 +21,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
 file_path = "resources/invoice.pdf"
+mime_type = "application/pdf"
 
 
 def test_process_documents(capsys):
@@ -29,13 +30,14 @@ def test_process_documents(capsys):
         location=location,
         processor_id=processor_id,
         file_path=file_path,
+        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 
     expected_strings = [
         "There are 1 page(s) in this document.",
         "Table with 4 columns and 6 rows",
-        "Found 13 form fields",
+        "Found 13 form field(s)",
         "'BALANCE DUE': '$2140.00'",
     ]
     for expected_string in expected_strings:

@@ -1,4 +1,4 @@
-# # Copyright 2020 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "feacd98c28866ede"
 file_path = "resources/us_driver_license.pdf"
+mime_type = "application/pdf"
 
 
 def test_process_documents(capsys):
@@ -29,6 +30,7 @@ def test_process_documents(capsys):
         location=location,
         processor_id=processor_id,
         file_path=file_path,
+        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 

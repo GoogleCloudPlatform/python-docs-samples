@@ -16,118 +16,136 @@
 # [START documentai_batch_process_document]
 import re
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import documentai_v1 as documentai
 from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id= 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# project_id = 'YOUR_PROJECT_ID'
+# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
-# gcs_input_uri = "YOUR_INPUT_URI"
-# gcs_output_uri = "YOUR_OUTPUT_BUCKET_URI"
-# gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX"
+# gcs_input_uri = "YOUR_INPUT_URI" # Format: gs://bucket/directory/file.pdf
+# input_mime_type = "application/pdf"
+# gcs_output_bucket = "YOUR_OUTPUT_BUCKET_NAME" # Format: gs://bucket
+# gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX" # Format: directory/subdirectory/
 
 
 def batch_process_documents(
-    project_id,
-    location,
-    processor_id,
-    gcs_input_uri,
-    gcs_output_uri,
-    gcs_output_uri_prefix,
+    project_id: str,
+    location: str,
+    processor_id: str,
+    gcs_input_uri: str,
+    input_mime_type: str,
+    gcs_output_bucket: str,
+    gcs_output_uri_prefix: str,
     timeout: int = 300,
 ):
 
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
-    opts = {}
-    if location == "eu":
-        opts = {"api_endpoint": "eu-documentai.googleapis.com"}
+    opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
-    destination_uri = f"{gcs_output_uri}/{gcs_output_uri_prefix}/"
-
-    gcs_documents = documentai.GcsDocuments(
-        documents=[{"gcs_uri": gcs_input_uri, "mime_type": "application/pdf"}]
+    gcs_document = documentai.GcsDocument(
+        gcs_uri=gcs_input_uri, mime_type=input_mime_type
     )
 
-    # 'mime_type' can be 'application/pdf', 'image/tiff',
-    # and 'image/gif', or 'application/json'
+    # Load GCS Input URI into a List of document files
+    gcs_documents = documentai.GcsDocuments(documents=[gcs_document])
     input_config = documentai.BatchDocumentsInputConfig(gcs_documents=gcs_documents)
 
-    # Where to write results
-    output_config = documentai.DocumentOutputConfig(
-        gcs_output_config={"gcs_uri": destination_uri}
+    # NOTE: Alternatively, specify a GCS URI Prefix to process an entire directory
+    #
+    # gcs_input_uri = "gs://bucket/directory/"
+    # gcs_prefix = documentai.GcsPrefix(gcs_uri_prefix=gcs_input_uri)
+    # input_config = documentai.BatchDocumentsInputConfig(gcs_prefix=gcs_prefix)
+    #
+
+    # Cloud Storage URI for the Output Directory
+    destination_uri = f"{gcs_output_bucket}/{gcs_output_uri_prefix}/"
+
+    gcs_output_config = documentai.DocumentOutputConfig.GcsOutputConfig(
+        gcs_uri=destination_uri
     )
 
-    # Location can be 'us' or 'eu'
-    name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
-    request = documentai.types.document_processor_service.BatchProcessRequest(
+    # Where to write results
+    output_config = documentai.DocumentOutputConfig(gcs_output_config=gcs_output_config)
+
+    # The full resource name of the processor, e.g.:
+    # projects/project_id/locations/location/processor/processor_id
+    # You must create new processors in the Cloud Console first
+    name = client.processor_path(project_id, location, processor_id)
+
+    request = documentai.BatchProcessRequest(
         name=name,
         input_documents=input_config,
         document_output_config=output_config,
     )
 
+    # BatchProcess returns a Long Running Operation (LRO)
     operation = client.batch_process_documents(request)
 
-    # Wait for the operation to finish
+    # Continually polls the operation until it is complete.
+    # This could take some time for larger files
+    # Format: projects/PROJECT_NUMBER/locations/LOCATION/operations/OPERATION_ID
+    print(f"Waiting for operation {operation.operation.name} to complete...")
     operation.result(timeout=timeout)
 
-    # Results are written to GCS. Use a regex to find
-    # output files
-    match = re.match(r"gs://([^/]+)/(.+)", destination_uri)
-    output_bucket = match.group(1)
-    prefix = match.group(2)
+    # NOTE: Can also use callbacks for asynchronous processing
+    #
+    # def my_callback(future):
+    #   result = future.result()
+    #
+    # operation.add_done_callback(my_callback)
+
+    # Once the operation is complete,
+    # get output document information from operation metadata
+    metadata = documentai.BatchProcessMetadata(operation.metadata)
+
+    if metadata.state != documentai.BatchProcessMetadata.State.SUCCEEDED:
+        raise ValueError(f"Batch Process Failed: {metadata.state_message}")
 
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(output_bucket)
-    blob_list = list(bucket.list_blobs(prefix=prefix))
+
     print("Output files:")
+    # One process per Input Document
+    for process in metadata.individual_process_statuses:
+        # output_gcs_destination format: gs://BUCKET/PREFIX/OPERATION_NUMBER/INPUT_FILE_NUMBER/
+        # The Cloud Storage API requires the bucket name and URI prefix separately
+        matches = re.match(r"gs://(.*?)/(.*)", process.output_gcs_destination)
+        if not matches:
+            print(
+                "Could not parse output GCS destination:",
+                process.output_gcs_destination,
+            )
+            continue
 
-    for i, blob in enumerate(blob_list):
-        # If JSON file, download the contents of this blob as a bytes object.
-        if ".json" in blob.name:
-            blob_as_bytes = blob.download_as_bytes()
+        output_bucket, output_prefix = matches.groups()
 
-            document = documentai.types.Document.from_json(blob_as_bytes)
-            print(f"Fetched file {i + 1}")
+        # Get List of Document Objects from the Output Bucket
+        output_blobs = storage_client.list_blobs(output_bucket, prefix=output_prefix)
+
+        # Document AI may output multiple JSON files per source file
+        for blob in output_blobs:
+            # Document AI should only output JSON files to GCS
+            if ".json" not in blob.name:
+                print(
+                    f"Skipping non-supported file: {blob.name} - Mimetype: {blob.content_type}"
+                )
+                continue
+
+            # Download JSON File as bytes object and convert to Document Object
+            print(f"Fetching {blob.name}")
+            document = documentai.Document.from_json(
+                blob.download_as_bytes(), ignore_unknown_fields=True
+            )
 
             # For a full list of Document object attributes, please reference this page:
-            # https://cloud.google.com/document-ai/docs/reference/rpc/google.cloud.documentai.v1beta3#document
+            # https://cloud.google.com/python/docs/reference/documentai/latest/google.cloud.documentai_v1.types.Document
 
             # Read the text recognition output from the processor
-            for page in document.pages:
-                for form_field in page.form_fields:
-                    field_name = get_text(form_field.field_name, document)
-                    field_value = get_text(form_field.field_value, document)
-                    print("Extracted key value pair:")
-                    print(f"\t{field_name}, {field_value}")
-                for paragraph in page.paragraphs:
-                    paragraph_text = get_text(paragraph.layout, document)
-                    print(f"Paragraph text:\n{paragraph_text}")
-        else:
-            print(f"Skipping non-supported file type {blob.name}")
-
-
-# Extract shards from the text field
-def get_text(doc_element: dict, document: dict):
-    """
-    Document AI identifies form fields by their offsets
-    in document text. This function converts offsets
-    to text snippets.
-    """
-    response = ""
-    # If a text segment spans several lines, it will
-    # be stored in different text segments.
-    for segment in doc_element.text_anchor.text_segments:
-        start_index = (
-            int(segment.start_index)
-            if segment in doc_element.text_anchor.text_segments
-            else 0
-        )
-        end_index = int(segment.end_index)
-        response += document.text[start_index:end_index]
-    return response
+            print("The document contains the following text:")
+            print(document.text)
 
 
 # [END documentai_batch_process_document]

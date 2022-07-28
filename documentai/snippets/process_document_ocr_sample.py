@@ -15,49 +15,32 @@
 
 # [START documentai_process_ocr_document]
 
+from typing import Sequence
+
+from google.api_core.client_options import ClientOptions
+from google.cloud import documentai_v1 as documentai
+
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id= 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# project_id = 'YOUR_PROJECT_ID'
+# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
+# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/processors-list for supported file types
 
 
 def process_document_ocr_sample(
-    project_id: str, location: str, processor_id: str, file_path: str
+    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
 ) -> None:
-    from google.cloud import documentai_v1beta3 as documentai
+    # Online processing request to Document AI
+    document = process_document(
+        project_id, location, processor_id, file_path, mime_type
+    )
 
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
-    opts = {}
-    if location == "eu":
-        opts = {"api_endpoint": "eu-documentai.googleapis.com"}
+    # For a full list of Document object attributes, please reference this page:
+    # https://cloud.google.com/python/docs/reference/documentai/latest/google.cloud.documentai_v1.types.Document
 
-    client = documentai.DocumentProcessorServiceClient(client_options=opts)
-
-    # The full resource name of the processor, e.g.:
-    # projects/project-id/locations/location/processor/processor-id
-    # You must create new processors in the Cloud Console first
-    name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
-
-    with open(file_path, "rb") as image:
-        image_content = image.read()
-
-    # Read the file into memory
-    document = {"content": image_content, "mime_type": "application/pdf"}
-
-    # Configure the process request
-    request = {"name": name, "raw_document": document}
-
-    # Recognizes text entities in the PDF document
-    result = client.process_document(request=request)
-
-    print("Document processing complete.")
-
-    # Read the text recognition output from the processor
-    # For a full list of Document object attributes, please reference this page: https://googleapis.dev/python/documentai/latest/_modules/google/cloud/documentai_v1beta3/types/document.html#Document
-    document = result.document
     text = document.text
-    print(f"Full document text: {repr(text)}\n")
+    print(f"Full document text: {text}\n")
     print(f"There are {len(document.pages)} page(s) in this document.\n")
 
     for page in document.pages:
@@ -70,20 +53,51 @@ def process_document_ocr_sample(
         print_tokens(page.tokens, text)
 
 
-def print_page_dimensions(dimension: dict) -> None:
+def process_document(
+    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
+) -> documentai.Document:
+    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
+
+    client = documentai.DocumentProcessorServiceClient(client_options=opts)
+
+    # The full resource name of the processor, e.g.:
+    # projects/project_id/locations/location/processor/processor_id
+    # You must create new processors in the Cloud Console first
+    name = client.processor_path(project_id, location, processor_id)
+
+    # Read the file into memory
+    with open(file_path, "rb") as image:
+        image_content = image.read()
+
+    # Load Binary Data into Document AI RawDocument Object
+    raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
+
+    # Configure the process request
+    request = documentai.ProcessRequest(name=name, raw_document=raw_document)
+
+    result = client.process_document(request=request)
+
+    return result.document
+
+
+def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None:
     print(f"    Width: {str(dimension.width)}")
     print(f"    Height: {str(dimension.height)}")
 
 
-def print_detected_langauges(detected_languages: dict) -> None:
+def print_detected_langauges(
+    detected_languages: Sequence[documentai.Document.Page.DetectedLanguage],
+) -> None:
     print("    Detected languages:")
     for lang in detected_languages:
         code = lang.language_code
-        conf_percent = "{:.1%}".format(lang.confidence)
-        print(f"        {code} ({conf_percent} confidence)")
+        print(f"        {code} ({lang.confidence:.1%} confidence)")
 
 
-def print_paragraphs(paragraphs: dict, text: str) -> None:
+def print_paragraphs(
+    paragraphs: Sequence[documentai.Document.Page.Paragraph], text: str
+) -> None:
     print(f"    {len(paragraphs)} paragraphs detected:")
     first_paragraph_text = layout_to_text(paragraphs[0].layout, text)
     print(f"        First paragraph text: {repr(first_paragraph_text)}")
@@ -91,7 +105,7 @@ def print_paragraphs(paragraphs: dict, text: str) -> None:
     print(f"        Last paragraph text: {repr(last_paragraph_text)}")
 
 
-def print_blocks(blocks: dict, text: str) -> None:
+def print_blocks(blocks: Sequence[documentai.Document.Page.Block], text: str) -> None:
     print(f"    {len(blocks)} blocks detected:")
     first_block_text = layout_to_text(blocks[0].layout, text)
     print(f"        First text block: {repr(first_block_text)}")
@@ -99,7 +113,7 @@ def print_blocks(blocks: dict, text: str) -> None:
     print(f"        Last text block: {repr(last_block_text)}")
 
 
-def print_lines(lines: dict, text: str) -> None:
+def print_lines(lines: Sequence[documentai.Document.Page.Line], text: str) -> None:
     print(f"    {len(lines)} lines detected:")
     first_line_text = layout_to_text(lines[0].layout, text)
     print(f"        First line text: {repr(first_line_text)}")
@@ -107,7 +121,7 @@ def print_lines(lines: dict, text: str) -> None:
     print(f"        Last line text: {repr(last_line_text)}")
 
 
-def print_tokens(tokens: dict, text: str) -> None:
+def print_tokens(tokens: Sequence[documentai.Document.Page.Token], text: str) -> None:
     print(f"    {len(tokens)} tokens detected:")
     first_token_text = layout_to_text(tokens[0].layout, text)
     first_token_break_type = tokens[0].detected_break.type_.name
@@ -119,21 +133,17 @@ def print_tokens(tokens: dict, text: str) -> None:
     print(f"        Last token break type: {repr(last_token_break_type)}")
 
 
-def layout_to_text(layout: dict, text: str) -> str:
+def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
     """
     Document AI identifies text in different parts of the document by their
-    offsets in the entirity of the document's text. This function converts
+    offsets in the entirety of the document's text. This function converts
     offsets to a string.
     """
     response = ""
     # If a text segment spans several lines, it will
     # be stored in different text segments.
     for segment in layout.text_anchor.text_segments:
-        start_index = (
-            int(segment.start_index)
-            if segment in layout.text_anchor.text_segments
-            else 0
-        )
+        start_index = int(segment.start_index)
         end_index = int(segment.end_index)
         response += text[start_index:end_index]
     return response

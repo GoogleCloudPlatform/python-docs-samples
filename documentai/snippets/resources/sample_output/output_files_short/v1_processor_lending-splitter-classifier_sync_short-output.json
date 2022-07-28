@@ -1,0 +1,160 @@
+{
+  "text": "2020\nDI\n\u25ba\n.\n.\n89\n19\nSCHEDULE C\nOMB No. 1545-0074\nProfit or Loss From Business\n(Form 1040)\n(Sole Proprietorship)\n\u25baGo to www.irs.gov/ScheduleC for instructions and the latest information.\nDepartment of ...",
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "endIndex": "6068"
+          }
+        ]
+      },
+      "type": "1040sc_2020",
+      "confidence": 0.5100428,
+      "pageAnchor": {
+        "pageRefs": [
+          {},
+          {
+            "page": "1"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "6068",
+            "endIndex": "7721"
+          }
+        ]
+      },
+      "type": "1099div_2020",
+      "confidence": 0.9989278,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "2"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "7721",
+            "endIndex": "11546"
+          }
+        ]
+      },
+      "type": "f11_12956_2017",
+      "confidence": 0.9895936,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "3"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "11546",
+            "endIndex": "12576"
+          }
+        ]
+      },
+      "type": "payslip",
+      "confidence": 0.8241112,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "4"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "12576",
+            "endIndex": "13936"
+          }
+        ]
+      },
+      "type": "1099g_2020",
+      "confidence": 0.998164,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "5"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "13936",
+            "endIndex": "21108"
+          }
+        ]
+      },
+      "type": "1040se_2020",
+      "confidence": 0.6683184,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "6"
+          },
+          {
+            "page": "7"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "21108",
+            "endIndex": "23235"
+          }
+        ]
+      },
+      "type": "payslip",
+      "confidence": 0.90883416,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "8"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "23235",
+            "endIndex": "24769"
+          }
+        ]
+      },
+      "type": "1099int_2020",
+      "confidence": 0.9972844,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "9"
+          }
+        ]
+      }
+    }
+  ]
+}

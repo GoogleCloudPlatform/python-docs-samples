@@ -1,0 +1,443 @@
+{
+  "text": "USA\nMONTANA\nDRIVER LICENSE\n9 CLASS: D\n12 RESTR: NONE 9a END: NONE\n4d LIC #: 0812319684104\n15 SEX: F\n3 DOB: 08/04/1968\n16 HGT: 5'-06\"\n17 WGT: 150 lb\n4b EXP: 08/04/2023\n18 EYES: BRO\n4a ISS: 02/15/2015\nS...",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "dimension": {
+        "width": 1758.0,
+        "height": 2275.0
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "endIndex": "313"
+            }
+          ]
+        }
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        },
+        {
+          "languageCode": "und"
+        },
+        {
+          "languageCode": "cy"
+        },
+        {
+          "languageCode": "no"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "symbols": [
+        {
+          "layout": {
+            "textAnchor": {
+              "textSegments": [
+                {
+                  "endIndex": "1"
+                }
+              ]
+            },
+            "confidence": 0.9974968,
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 1600,
+                  "y": 638
+                },
+                {
+                  "x": 1617,
+                  "y": 638
+                },
+                {
+                  "x": 1617,
+                  "y": 668
+                },
+                {
+                  "x": 1600,
+                  "y": 668
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.91012514,
+                  "y": 0.28043956
+                },
+                {
+                  "x": 0.9197952,
+                  "y": 0.28043956
+                },
+                {
+                  "x": 0.9197952,
+                  "y": 0.29362637
+                },
+                {
+                  "x": 0.91012514,
+                  "y": 0.29362637
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "image": {
+        "content": "/9j/4AAQSkZJRgABAQAAAQABAAA="
+      }
+    }
+  ],
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "231",
+            "endIndex": "263"
+          }
+        ],
+        "content": "123 MAIN STREET\nHELENA, MT 59601"
+      },
+      "type": "Address",
+      "mentionText": "123 MAIN STREET\nHELENA, MT 59601",
+      "confidence": 0.99813074,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.3691695,
+                  "y": 0.6356044
+                },
+                {
+                  "x": 0.5955631,
+                  "y": 0.6356044
+                },
+                {
+                  "x": 0.5955631,
+                  "y": 0.6751648
+                },
+                {
+                  "x": 0.3691695,
+                  "y": 0.6751648
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "1"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "107",
+            "endIndex": "117"
+          }
+        ],
+        "content": "08/04/1968"
+      },
+      "type": "Date Of Birth",
+      "mentionText": "08/04/1968",
+      "confidence": 0.99953145,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.43629125,
+                  "y": 0.46637362
+                },
+                {
+                  "x": 0.62343574,
+                  "y": 0.46637362
+                },
+                {
+                  "x": 0.62343574,
+                  "y": 0.4936264
+                },
+                {
+                  "x": 0.43629125,
+                  "y": 0.4936264
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "2",
+      "normalizedValue": {
+        "text": "1968-08-04",
+        "dateValue": {
+          "year": 1968,
+          "month": 8,
+          "day": 4
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "76",
+            "endIndex": "89"
+          }
+        ],
+        "content": "0812319684104"
+      },
+      "type": "Document Id",
+      "mentionText": "0812319684104",
+      "confidence": 0.99990827,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.43629125,
+                  "y": 0.4320879
+                },
+                {
+                  "x": 0.70989764,
+                  "y": 0.4320879
+                },
+                {
+                  "x": 0.70989764,
+                  "y": 0.46065935
+                },
+                {
+                  "x": 0.43629125,
+                  "y": 0.46065935
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "3"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "156",
+            "endIndex": "166"
+          }
+        ],
+        "content": "08/04/2023"
+      },
+      "type": "Expiration Date",
+      "mentionText": "08/04/2023",
+      "confidence": 0.9992678,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.43629125,
+                  "y": 0.50197804
+                },
+                {
+                  "x": 0.6040956,
+                  "y": 0.50197804
+                },
+                {
+                  "x": 0.6040956,
+                  "y": 0.527033
+                },
+                {
+                  "x": 0.43629125,
+                  "y": 0.527033
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "4",
+      "normalizedValue": {
+        "text": "2023-08-04",
+        "dateValue": {
+          "year": 2023,
+          "month": 8,
+          "day": 4
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "208",
+            "endIndex": "214"
+          }
+        ],
+        "content": "SAMPLE"
+      },
+      "type": "Family Name",
+      "mentionText": "SAMPLE",
+      "confidence": 0.9984405,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.36632538,
+                  "y": 0.5810989
+                },
+                {
+                  "x": 0.48293516,
+                  "y": 0.5810989
+                },
+                {
+                  "x": 0.48293516,
+                  "y": 0.60087913
+                },
+                {
+                  "x": 0.36632538,
+                  "y": 0.60087913
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "5"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "217",
+            "endIndex": "228"
+          }
+        ],
+        "content": "BRENDA LYNN"
+      },
+      "type": "Given Names",
+      "mentionText": "BRENDA LYNN",
+      "confidence": 0.99568695,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.36973834,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.5767918,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.5767918,
+                  "y": 0.6232967
+                },
+                {
+                  "x": 0.36973834,
+                  "y": 0.6232967
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "6"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "188",
+            "endIndex": "198"
+          }
+        ],
+        "content": "02/15/2015"
+      },
+      "type": "Issue Date",
+      "mentionText": "02/15/2015",
+      "confidence": 0.9998014,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.43629125,
+                  "y": 0.5314286
+                },
+                {
+                  "x": 0.6040956,
+                  "y": 0.5314286
+                },
+                {
+                  "x": 0.6040956,
+                  "y": 0.5564835
+                },
+                {
+                  "x": 0.43629125,
+                  "y": 0.5564835
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "7",
+      "normalizedValue": {
+        "text": "2015-02-15",
+        "dateValue": {
+          "year": 2015,
+          "month": 2,
+          "day": 15
+        }
+      }
+    },
+    {
+      "type": "Portrait",
+      "confidence": 0.89617,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.014050052,
+                  "y": 0.34131867
+                },
+                {
+                  "x": 0.35739475,
+                  "y": 0.34131867
+                },
+                {
+                  "x": 0.35739475,
+                  "y": 0.6756044
+                },
+                {
+                  "x": 0.014050052,
+                  "y": 0.6756044
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "0"
+    }
+  ]
+}

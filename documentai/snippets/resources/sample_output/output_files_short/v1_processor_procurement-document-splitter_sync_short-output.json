@@ -1,0 +1,97 @@
+{
+  "text": "Google\nINVOICE\n# 23413561D\nJohn Smith\nDate:\nSep 24, 2019\nBill To:\nJane Smith,\n1600 Amphitheatre Pkway\nMountain View, CA 94043\nDue Date:\nSep 30, 2019\nBalance Due:\n$4,647.68\nItem\nQuantity\nRate\nAmount\n$9...",
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "endIndex": "665"
+          }
+        ]
+      },
+      "type": "invoice_statement",
+      "confidence": 0.995982,
+      "pageAnchor": {
+        "pageRefs": [
+          {}
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "665",
+            "endIndex": "1236"
+          }
+        ]
+      },
+      "type": "receipt_statement",
+      "confidence": 0.9840074,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1236",
+            "endIndex": "1954"
+          }
+        ]
+      },
+      "type": "other",
+      "confidence": 0.8117405,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "2"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1954",
+            "endIndex": "3924"
+          }
+        ]
+      },
+      "type": "utility_statement",
+      "confidence": 0.9991843,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "3"
+          }
+        ]
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "3924",
+            "endIndex": "4201"
+          }
+        ]
+      },
+      "type": "restaurant_statement",
+      "confidence": 0.9970099,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "4"
+          }
+        ]
+      }
+    }
+  ]
+}

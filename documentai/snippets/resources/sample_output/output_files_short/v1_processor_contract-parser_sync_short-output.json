@@ -1,0 +1,451 @@
+{
+  "uri": "",
+  "mimeType": "application/pdf",
+  "text": "WORLDWIDE LICENSE AND DISTRIBUTION AGREEMENT\nThis License Agreement (the \"Agreement\") is made on August 6, 2015 (the \"Effective\nDate\") by and between Cymbal Inc. (the \"Licensor,\" or \"Cymbal\"), a corpo...",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "dimension": {
+        "width": 1758.0,
+        "height": 2275.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "endIndex": "2329"
+            }
+          ]
+        },
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1758
+            },
+            {
+              "x": 1758,
+              "y": 2275
+            },
+            {
+              "y": 2275
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABt4=",
+        "mimeType": "image/png",
+        "width": 1758,
+        "height": 2275
+      }
+    }
+  ],
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "50",
+            "endIndex": "67"
+          }
+        ],
+        "content": "License Agreement"
+      },
+      "type": "document_name",
+      "mentionText": "License Agreement",
+      "confidence": 0.7608291,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.17918089,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.3407281,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.3407281,
+                  "y": 0.081318684
+                },
+                {
+                  "x": 0.17918089,
+                  "y": 0.081318684
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "0"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "97",
+            "endIndex": "111"
+          }
+        ],
+        "content": "August 6, 2015"
+      },
+      "type": "effective_date",
+      "mentionText": "August 6, 2015",
+      "confidence": 0.64044756,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.612628,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.7400455,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.7400455,
+                  "y": 0.081318684
+                },
+                {
+                  "x": 0.612628,
+                  "y": 0.081318684
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "1",
+      "normalizedValue": {
+        "text": "2015-08-06",
+        "dateValue": {
+          "year": 2015,
+          "month": 8,
+          "day": 6
+        }
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "2311",
+            "endIndex": "2327"
+          }
+        ],
+        "content": "laws of New\nYork"
+      },
+      "type": "governing_law",
+      "mentionText": "laws of New\nYork",
+      "confidence": 0.5911125,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.13651878,
+                  "y": 0.883956
+                },
+                {
+                  "x": 0.85949945,
+                  "y": 0.883956
+                },
+                {
+                  "x": 0.85949945,
+                  "y": 0.9164835
+                },
+                {
+                  "x": 0.13651878,
+                  "y": 0.9164835
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "2"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1505",
+            "endIndex": "1519"
+          }
+        ],
+        "content": "ten (10) years"
+      },
+      "type": "initial_term",
+      "mentionText": "ten (10) years",
+      "confidence": 0.6567275,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.21274175,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.34186575,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.34186575,
+                  "y": 0.62197804
+                },
+                {
+                  "x": 0.21274175,
+                  "y": 0.62197804
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "3",
+      "normalizedValue": {
+        "text": "10-0-0"
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "1728",
+            "endIndex": "1744"
+          }
+        ],
+        "content": "thirty (30) days"
+      },
+      "type": "notice_to_terminate_renewal",
+      "mentionText": "thirty (30) days",
+      "confidence": 0.3488372,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.5659841,
+                  "y": 0.6421978
+                },
+                {
+                  "x": 0.68486917,
+                  "y": 0.6421978
+                },
+                {
+                  "x": 0.68486917,
+                  "y": 0.658022
+                },
+                {
+                  "x": 0.5659841,
+                  "y": 0.658022
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "4",
+      "normalizedValue": {
+        "text": "0-0-30"
+      }
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "150",
+            "endIndex": "161"
+          }
+        ],
+        "content": "Cymbal Inc."
+      },
+      "type": "parties",
+      "mentionText": "Cymbal Inc.",
+      "confidence": 0.6546992,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.32992035,
+                  "y": 0.083076924
+                },
+                {
+                  "x": 0.43060297,
+                  "y": 0.083076924
+                },
+                {
+                  "x": 0.43060297,
+                  "y": 0.10021978
+                },
+                {
+                  "x": 0.32992035,
+                  "y": 0.10021978
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "5"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "331",
+            "endIndex": "346"
+          }
+        ],
+        "content": "B-Cafetal, Inc."
+      },
+      "type": "parties",
+      "mentionText": "B-Cafetal, Inc.",
+      "confidence": 0.47959587,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.41467577,
+                  "y": 0.11956044
+                },
+                {
+                  "x": 0.5307167,
+                  "y": 0.11956044
+                },
+                {
+                  "x": 0.5307167,
+                  "y": 0.13582417
+                },
+                {
+                  "x": 0.41467577,
+                  "y": 0.13582417
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "6"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "97",
+            "endIndex": "111"
+          },
+          {
+            "startIndex": "1505",
+            "endIndex": "1519"
+          }
+        ]
+      },
+      "type": "expiration_date",
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.612628,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.7400455,
+                  "y": 0.06549451
+                },
+                {
+                  "x": 0.7400455,
+                  "y": 0.081318684
+                },
+                {
+                  "x": 0.612628,
+                  "y": 0.081318684
+                }
+              ]
+            }
+          },
+          {
+            "boundingPoly": {
+              "normalizedVertices": [
+                {
+                  "x": 0.21274175,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.34186575,
+                  "y": 0.60571426
+                },
+                {
+                  "x": 0.34186575,
+                  "y": 0.62197804
+                },
+                {
+                  "x": 0.21274175,
+                  "y": 0.62197804
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "7",
+      "normalizedValue": {
+        "text": "2025-08-06",
+        "dateValue": {
+          "year": 2025,
+          "month": 8,
+          "day": 6
+        }
+      }
+    }
+  ]
+}
