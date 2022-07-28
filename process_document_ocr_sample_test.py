@@ -21,6 +21,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "91e072f8626a76b7"
 file_path = "resources/handwritten_form.pdf"
+mime_type = "application/pdf"
 
 
 def test_process_documents(capsys):
@@ -29,6 +30,7 @@ def test_process_documents(capsys):
         location=location,
         processor_id=processor_id,
         file_path=file_path,
+        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 
