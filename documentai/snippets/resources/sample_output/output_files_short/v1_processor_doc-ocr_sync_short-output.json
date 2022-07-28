@@ -1,0 +1,150 @@
+{
+  "uri": "",
+  "mimeType": "application/pdf",
+  "text": "CHAPTER I\nIN WHICH We Are Introduced to\nWinnie-the-Pooh and Some\nBees, and the Stories Begin\nHERE is Edward Bear, coming\ndownstairs now, bump, bump, bump, on the back\nof his head, behind Christopher R...",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "dimension": {
+        "width": 1589.0,
+        "height": 2515.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "endIndex": "791"
+            }
+          ]
+        },
+        "confidence": 0.9815325,
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1589
+            },
+            {
+              "x": 1589,
+              "y": 2515
+            },
+            {
+              "y": 2515
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en",
+          "confidence": 0.9800994
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABjU=",
+        "mimeType": "image/png",
+        "width": 1589,
+        "height": 2515
+      }
+    },
+    {
+      "pageNumber": 2,
+      "dimension": {
+        "width": 1591.0,
+        "height": 2513.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "startIndex": "791",
+              "endIndex": "1711"
+            }
+          ]
+        },
+        "confidence": 0.97097445,
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1591
+            },
+            {
+              "x": 1591,
+              "y": 2513
+            },
+            {
+              "y": 2513
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en",
+          "confidence": 1.0
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABjc=",
+        "mimeType": "image/png",
+        "width": 1591,
+        "height": 2513
+      }
+    }
+  ]
+}

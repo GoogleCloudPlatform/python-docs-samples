@@ -21,6 +21,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
 file_path = "resources/invoice.pdf"
+mime_type = "application/pdf"
 
 
 def test_quickstart(capsys):
@@ -29,8 +30,9 @@ def test_quickstart(capsys):
         location=location,
         processor_id=processor_id,
         file_path=file_path,
+        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 
-    assert "Paragraph" in out
+    assert "text:" in out
     assert "Invoice" in out

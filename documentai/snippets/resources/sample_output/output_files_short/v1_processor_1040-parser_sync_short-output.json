@@ -1,0 +1,763 @@
+{
+  "uri": "",
+  "mimeType": "application/pdf",
+  "text": "Department of the Treasury-Internal Revenue Service\n1040 US. Individual Income Tax Return(99\n) 2019\nOMB No. 1545-0074\nIRS Use Only-Do not write or staple in this space.\nFiling Status \u2611 Single \u2610 Marrie...",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "dimension": {
+        "width": 1787.0,
+        "height": 2297.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "endIndex": "3123"
+            }
+          ]
+        },
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1787
+            },
+            {
+              "x": 1787,
+              "y": 2297
+            },
+            {
+              "y": 2297
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        },
+        {
+          "languageCode": "und"
+        },
+        {
+          "languageCode": "es"
+        },
+        {
+          "languageCode": "da"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABvs=",
+        "mimeType": "image/jpeg",
+        "width": 1787,
+        "height": 2297
+      },
+      "transforms": [
+        {
+          "rows": 2,
+          "cols": 3,
+          "type": 6,
+          "data": "tP+bWYxIir9/julJU//vv10zKR017JtAf47pSVP/7z+0/5tZjEiKvwCfm5W+jzZA"
+        }
+      ]
+    },
+    {
+      "pageNumber": 2,
+      "dimension": {
+        "width": 1791.0,
+        "height": 2300.0,
+        "unit": "pixels"
+      },
+      "layout": {
+        "textAnchor": {
+          "textSegments": [
+            {
+              "startIndex": "3123",
+              "endIndex": "5999"
+            }
+          ]
+        },
+        "boundingPoly": {
+          "vertices": [
+            {},
+            {
+              "x": 1791
+            },
+            {
+              "x": 1791,
+              "y": 2300
+            },
+            {
+              "y": 2300
+            }
+          ],
+          "normalizedVertices": [
+            {},
+            {
+              "x": 1.0
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            },
+            {
+              "y": 1.0
+            }
+          ]
+        },
+        "orientation": 1
+      },
+      "detectedLanguages": [
+        {
+          "languageCode": "en"
+        },
+        {
+          "languageCode": "und"
+        },
+        {
+          "languageCode": "pt"
+        },
+        {
+          "languageCode": "de"
+        }
+      ],
+      "blocks": [
+        {}
+      ],
+      "paragraphs": [
+        {}
+      ],
+      "lines": [
+        {}
+      ],
+      "tokens": [
+        {}
+      ],
+      "image": {
+        "content": "iVBORw0KGgoAAAANSUhEUgAABv8=",
+        "mimeType": "image/jpeg",
+        "width": 1791,
+        "height": 2300
+      },
+      "transforms": [
+        {
+          "rows": 2,
+          "cols": 3,
+          "type": 6,
+          "data": "N5ElEZOzjb9GtLVxI//vv/Y0ahs8+5tARrS1cSP/7z83kSURk7ONv2D79NDifjlA"
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "5391",
+            "endIndex": "5399"
+          }
+        ],
+        "content": "Captain"
+      },
+      "type": "Occupation",
+      "mentionText": "Captain",
+      "confidence": 0.99037826,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 1035,
+                  "y": 1083
+                },
+                {
+                  "x": 1111,
+                  "y": 1083
+                },
+                {
+                  "x": 1111,
+                  "y": 1112
+                },
+                {
+                  "x": 1035,
+                  "y": 1112
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.57788944,
+                  "y": 0.47086957
+                },
+                {
+                  "x": 0.62032384,
+                  "y": 0.47086957
+                },
+                {
+                  "x": 0.62032384,
+                  "y": 0.48347825
+                },
+                {
+                  "x": 0.57788944,
+                  "y": 0.48347825
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "0"
+    },
+    {
+      "textAnchor": {
+        "content": "9198849745"
+      },
+      "type": "PhoneNumber",
+      "mentionText": "9198849745",
+      "confidence": 0.9,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 433,
+                  "y": 1214
+                },
+                {
+                  "x": 814,
+                  "y": 1204
+                },
+                {
+                  "x": 813,
+                  "y": 1232
+                },
+                {
+                  "x": 431,
+                  "y": 1241
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.24176438,
+                  "y": 0.5278261
+                },
+                {
+                  "x": 0.45449468,
+                  "y": 0.52347827
+                },
+                {
+                  "x": 0.45393634,
+                  "y": 0.53565216
+                },
+                {
+                  "x": 0.24064769,
+                  "y": 0.5395652
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "1"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "5642",
+            "endIndex": "5673"
+          }
+        ],
+        "content": "FlorenceCBrownell999@gmail.com"
+      },
+      "type": "EmailAddress",
+      "mentionText": "FlorenceCBrownell999@gmail.com",
+      "confidence": 0.9940997,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "page": "1",
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 1049,
+                  "y": 1186
+                },
+                {
+                  "x": 1421,
+                  "y": 1186
+                },
+                {
+                  "x": 1421,
+                  "y": 1230
+                },
+                {
+                  "x": 1049,
+                  "y": 1230
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.5857063,
+                  "y": 0.5156522
+                },
+                {
+                  "x": 0.7934115,
+                  "y": 0.5156522
+                },
+                {
+                  "x": 0.7934115,
+                  "y": 0.5347826
+                },
+                {
+                  "x": 0.5857063,
+                  "y": 0.5347826
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "2"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "95",
+            "endIndex": "100"
+          }
+        ],
+        "content": "2019"
+      },
+      "type": "Year",
+      "mentionText": "2019",
+      "confidence": 0.9546757,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 909,
+                  "y": 262
+                },
+                {
+                  "x": 1051,
+                  "y": 262
+                },
+                {
+                  "x": 1051,
+                  "y": 331
+                },
+                {
+                  "x": 909,
+                  "y": 331
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.5086737,
+                  "y": 0.11406182
+                },
+                {
+                  "x": 0.58813655,
+                  "y": 0.11406182
+                },
+                {
+                  "x": 0.58813655,
+                  "y": 0.144101
+                },
+                {
+                  "x": 0.5086737,
+                  "y": 0.144101
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "3"
+    },
+    {
+      "textAnchor": {
+        "content": "Single"
+      },
+      "type": "FilingStatusCheckbox",
+      "mentionText": "Single",
+      "confidence": 0.9910982,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 358,
+                  "y": 360
+                },
+                {
+                  "x": 1562,
+                  "y": 338
+                },
+                {
+                  "x": 1561,
+                  "y": 381
+                },
+                {
+                  "x": 357,
+                  "y": 402
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.20033576,
+                  "y": 0.15672617
+                },
+                {
+                  "x": 0.8740907,
+                  "y": 0.14714846
+                },
+                {
+                  "x": 0.87353104,
+                  "y": 0.16586852
+                },
+                {
+                  "x": 0.19977616,
+                  "y": 0.17501089
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "4"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "565",
+            "endIndex": "576"
+          }
+        ],
+        "content": "Florence C"
+      },
+      "type": "FirstName",
+      "mentionText": "Florence C",
+      "confidence": 0.9875641,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 293,
+                  "y": 492
+                },
+                {
+                  "x": 393,
+                  "y": 492
+                },
+                {
+                  "x": 393,
+                  "y": 516
+                },
+                {
+                  "x": 293,
+                  "y": 516
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.16396195,
+                  "y": 0.21419242
+                },
+                {
+                  "x": 0.21992166,
+                  "y": 0.21419242
+                },
+                {
+                  "x": 0.21992166,
+                  "y": 0.22464083
+                },
+                {
+                  "x": 0.16396195,
+                  "y": 0.22464083
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "5"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "576",
+            "endIndex": "585"
+          }
+        ],
+        "content": "Brownell"
+      },
+      "type": "LastName",
+      "mentionText": "Brownell",
+      "confidence": 0.9942188,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 833,
+                  "y": 486
+                },
+                {
+                  "x": 918,
+                  "y": 486
+                },
+                {
+                  "x": 918,
+                  "y": 509
+                },
+                {
+                  "x": 833,
+                  "y": 509
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.46614438,
+                  "y": 0.21158032
+                },
+                {
+                  "x": 0.51371014,
+                  "y": 0.21158032
+                },
+                {
+                  "x": 0.51371014,
+                  "y": 0.22159338
+                },
+                {
+                  "x": 0.46614438,
+                  "y": 0.22159338
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "6"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "786",
+            "endIndex": "806"
+          }
+        ],
+        "content": "7 East Medieval Dr"
+      },
+      "type": "AddressStreet",
+      "mentionText": "7 East Medieval Dr",
+      "confidence": 0.8669415,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 289,
+                  "y": 623
+                },
+                {
+                  "x": 478,
+                  "y": 623
+                },
+                {
+                  "x": 478,
+                  "y": 648
+                },
+                {
+                  "x": 289,
+                  "y": 648
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.16172355,
+                  "y": 0.27122334
+                },
+                {
+                  "x": 0.2674874,
+                  "y": 0.27122334
+                },
+                {
+                  "x": 0.2674874,
+                  "y": 0.28210708
+                },
+                {
+                  "x": 0.16172355,
+                  "y": 0.28210708
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "7"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "806",
+            "endIndex": "810"
+          }
+        ],
+        "content": "630"
+      },
+      "type": "AddressApt",
+      "mentionText": "630",
+      "confidence": 0.9977463,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 1278,
+                  "y": 608
+                },
+                {
+                  "x": 1318,
+                  "y": 608
+                },
+                {
+                  "x": 1318,
+                  "y": 633
+                },
+                {
+                  "x": 1278,
+                  "y": 633
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.7151651,
+                  "y": 0.26469308
+                },
+                {
+                  "x": 0.73754895,
+                  "y": 0.26469308
+                },
+                {
+                  "x": 0.73754895,
+                  "y": 0.27557683
+                },
+                {
+                  "x": 0.7151651,
+                  "y": 0.27557683
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "8"
+    },
+    {
+      "textAnchor": {
+        "textSegments": [
+          {
+            "startIndex": "936",
+            "endIndex": "953"
+          }
+        ],
+        "content": "Henrico VA 23228"
+      },
+      "type": "AddressCityStateZip",
+      "mentionText": "Henrico VA 23228",
+      "confidence": 0.99062985,
+      "pageAnchor": {
+        "pageRefs": [
+          {
+            "boundingPoly": {
+              "vertices": [
+                {
+                  "x": 286,
+                  "y": 689
+                },
+                {
+                  "x": 466,
+                  "y": 689
+                },
+                {
+                  "x": 466,
+                  "y": 714
+                },
+                {
+                  "x": 286,
+                  "y": 714
+                }
+              ],
+              "normalizedVertices": [
+                {
+                  "x": 0.16004477,
+                  "y": 0.29995647
+                },
+                {
+                  "x": 0.26077226,
+                  "y": 0.29995647
+                },
+                {
+                  "x": 0.26077226,
+                  "y": 0.31084022
+                },
+                {
+                  "x": 0.16004477,
+                  "y": 0.31084022
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "id": "9"
+    }
+  ]
+}

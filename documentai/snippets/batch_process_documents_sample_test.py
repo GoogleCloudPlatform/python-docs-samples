@@ -25,6 +25,7 @@ location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
 gcs_input_uri = "gs://cloud-samples-data/documentai/invoice.pdf"
+input_mime_type = "application/pdf"
 gcs_output_uri_prefix = uuid4()
 BUCKET_NAME = f"document-ai-python-{uuid4()}"
 
@@ -50,11 +51,12 @@ def test_batch_process_documents(capsys, test_bucket):
         location=location,
         processor_id=processor_id,
         gcs_input_uri=gcs_input_uri,
-        gcs_output_uri=f"gs://{test_bucket}",
+        input_mime_type=input_mime_type,
+        gcs_output_bucket=f"gs://{test_bucket}",
         gcs_output_uri_prefix=gcs_output_uri_prefix,
     )
     out, _ = capsys.readouterr()
 
-    assert "Extracted" in out
-    assert "Paragraph" in out
-    assert "Invoice" in out
+    assert "operation" in out
+    assert "Fetching" in out
+    assert "text:" in out

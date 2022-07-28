@@ -15,74 +15,88 @@
 
 # [START documentai_process_splitter_document]
 
+from typing import Sequence
+
+from google.api_core.client_options import ClientOptions
+from google.cloud import documentai_v1 as documentai
+
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id= 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# project_id = 'YOUR_PROJECT_ID'
+# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
 # file_path = '/path/to/local/pdf'
+# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/processors-list for supported file types
 
 
 def process_document_splitter_sample(
-    project_id: str, location: str, processor_id: str, file_path: str
+    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
 ):
-    from google.cloud import documentai_v1beta3 as documentai
+    # Online processing request to Document AI
+    document = process_document(
+        project_id, location, processor_id, file_path, mime_type
+    )
 
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
-    opts = {}
-    if location == "eu":
-        opts = {"api_endpoint": "eu-documentai.googleapis.com"}
-
-    client = documentai.DocumentProcessorServiceClient(client_options=opts)
-
-    # The full resource name of the processor, e.g.:
-    # projects/project-id/locations/location/processor/processor-id
-    # You must create new processors in the Cloud Console first
-    name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
-
-    with open(file_path, "rb") as image:
-        image_content = image.read()
-
-    # Read the file into memory
-    document = {"content": image_content, "mime_type": "application/pdf"}
-
-    # Configure the process request
-    request = {"name": name, "raw_document": document}
-
-    # Recognizes text entities in the PDF document
-    result = client.process_document(request=request)
-
-    print("Document processing complete.\n")
-
-    # Read the splitter output from the document splitter processor:
-    # https://cloud.google.com/document-ai/docs/processors-list#processor_doc-splitter
+    # Read the splitter output from a document splitter/classifier processor:
+    # e.g. https://cloud.google.com/document-ai/docs/processors-list#processor_procurement-document-splitter
     # This processor only provides text for the document and information on how
     # to split the document on logical boundaries. To identify and extract text,
     # form elements, and entities please see other processors like the OCR, form,
     # and specalized processors.
-    document = result.document
+
     print(f"Found {len(document.entities)} subdocuments:")
     for entity in document.entities:
-        conf_percent = "{:.1%}".format(entity.confidence)
+        conf_percent = f"{entity.confidence:.1%}"
         pages_range = page_refs_to_string(entity.page_anchor.page_refs)
+
         # Print subdocument type information, if available
-        try:
-            doctype = entity.type
+        if entity.type_:
             print(
-                f'{conf_percent} confident that {pages_range} a "{doctype}" subdocument.'
+                f"{conf_percent} confident that {pages_range} a '{entity.type_}' subdocument."
             )
-        except AttributeError:
+        else:
             print(f"{conf_percent} confident that {pages_range} a subdocument.")
 
 
-def page_refs_to_string(page_refs: dict) -> str:
+def process_document(
+    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
+) -> documentai.Document:
+    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
+
+    client = documentai.DocumentProcessorServiceClient(client_options=opts)
+
+    # The full resource name of the processor, e.g.:
+    # projects/project_id/locations/location/processor/processor_id
+    # You must create new processors in the Cloud Console first
+    name = client.processor_path(project_id, location, processor_id)
+
+    # Read the file into memory
+    with open(file_path, "rb") as image:
+        image_content = image.read()
+
+    # Load Binary Data into Document AI RawDocument Object
+    raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
+
+    # Configure the process request
+    request = documentai.ProcessRequest(name=name, raw_document=raw_document)
+
+    result = client.process_document(request=request)
+
+    return result.document
+
+
+def page_refs_to_string(
+    page_refs: Sequence[documentai.Document.PageAnchor.PageRef],
+) -> str:
     """Converts a page ref to a string describing the page or page range."""
     if len(page_refs) == 1:
         num = str(int(page_refs[0].page) + 1)
         return f"page {num} is"
-    else:
-        start = str(int(page_refs[0].page) + 1)
-        end = str(int(page_refs[1].page) + 1)
-        return f"pages {start} to {end} are"
+
+    nums = ""
+    for page_ref in page_refs:
+        nums += f"{int(page_ref.page) + 1}, "
+    return f"pages {nums[:-2]} are"
 
 
 # [END documentai_process_splitter_document]
