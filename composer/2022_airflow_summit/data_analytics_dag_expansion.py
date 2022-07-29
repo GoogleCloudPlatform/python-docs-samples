@@ -25,26 +25,21 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
 )
 from airflow.utils.task_group import TaskGroup
 
-from airflow.providers.google.cloud.transfers.sheets_to_gcs import (
-    GoogleSheetsToGCSOperator,
-)
-
 PROJECT_NAME = "{{var.value.gcp_project}}"
 
 # BigQuery configs
-# BQ_DESTINATION_DATASET_NAME = "holiday_weather"
-# BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"
-# BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
-
 BQ_DESTINATION_DATASET_NAME = "expansion_project"
 BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
-BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
+BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
+BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
+BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
+BQ_PHX_PRCP_TABLE_NAME = "phx_annual_prcp"
+BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
 # Dataproc configs
 BUCKET_NAME = "{{var.value.gcs_bucket}}"
 PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
-PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
-
+PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process_expansion.py"
 
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
@@ -55,6 +50,10 @@ BATCH_CONFIG = {
             BUCKET_NAME,
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}",
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}",
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}",
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}",
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}",
         ],
 
     },
@@ -94,33 +93,6 @@ with models.DAG(
         batch_id=BATCH_ID,
     )
 
-
-    # upload_sheet_to_gcs = GoogleSheetsToGCSOperator(
-    #    task_id="upload_sheet_to_gcs",
-    #    destination_bucket=BUCKET_NAME,
-    #    spreadsheet_id="1YmSwktfgfkcHk6a43iA1jOjIsYf2NF-Ei9bf135W0AY",
-    # )
-
-
-    # This data is static and it is safe to use WRITE_TRUNCATE
-    # to reduce chance of 409 duplicate errors
-
-    # load_external_dataset = GCSToBigQueryOperator(
-    #     task_id="run_bq_external_ingestion",
-    #     bucket=BUCKET_NAME,
-    #     source_objects=["holidays.csv"],
-    #     destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.holidays",
-    #     source_format="CSV",
-    #     schema_fields=[
-    #         {"name": "Date", "type": "DATE"},
-    #         {"name": "Holiday", "type": "STRING"},
-    #     ],
-    #     skip_leading_rows=1,
-    #     write_disposition="WRITE_TRUNCATE"
-    # )
-
-
-
     load_external_dataset = GCSToBigQueryOperator(
         task_id="run_bq_external_ingestion",
         bucket=BUCKET_NAME,
@@ -138,55 +110,22 @@ with models.DAG(
         write_disposition="WRITE_TRUNCATE"
     )
     
-    
-    # load_external_dataset = GCSToBigQueryOperator(
-    #    task_id="run_bq_external_ingestion",
-    #    bucket=BUCKET_NAME,
-    #    source_objects=["ghcnd-stations.txt"],
-    #    destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcnd-stations",
-    #    source_format="CSV",
-    #    schema_fields=[
-    #        {'name': 'ID', 'type': 'STRING', 'mode': 'REQUIRED'},
-    #        {'name': 'LATITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-    #        {'name': 'LONGITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-    #        {'name': 'ELEVATION', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-    #        {'name': 'STATE', 'type': 'STRING', 'mode': 'NULLABLE'},
-    #        {'name': 'NAME', 'type': 'STRING', 'mode': 'REQUIRED'},
-    #        {'name': 'GSN_FLAG', 'type': 'STRING', 'mode': 'NULLABLE'},
-    #        {'name': 'HCN_CRN_FLAG', 'type': 'STRING', 'mode': 'NULLABLE'},
-    #        {'name': 'WMO_ID', 'type': 'STRING', 'mode': 'NULLABLE'},
-    #    ],
-    #    # skip_leading_rows=1,
-    #    write_disposition="WRITE_TRUNCATE"
-    # )
-
-
-
-
     with TaskGroup("join_bq_datasets") as bq_join_group:
 
         for year in range(1997, 2022):
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
             # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
-            
             # Specifically query a Chicago weather station
             GHCND_STATIONS_JOIN_QUERY = f"""
-            SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE, Stations.ELEVATION, 
+            SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE, 
             Stations.STATE, Table.DATE, Table.ELEMENT, Table.VALUE
             FROM `{PROJECT_NAME}.expansion_project.ghcnd-stations-new` AS Stations, {BQ_DATASET_NAME} AS Table 
-            WHERE Stations.ID = Table.id;
+            WHERE Stations.ID = Table.id
             """
 
-            # for demo purposes we are using WRITE_APPEND
-            # but if you run the DAG repeatedly it will continue to append
-            # Your use case may be different, see the Job docs
-            # https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
-            # for alternative values for the writeDisposition
-            # or consider using partitioned tables
-            # https://cloud.google.com/bigquery/docs/partitioned-tables
-            bq_join_holidays_weather_data = BigQueryInsertJobOperator(
-                task_id=f"bq_join_holidays_weather_data_{str(year)}",
+            bq_join_stations_data = BigQueryInsertJobOperator(
+                task_id=f"bq_join_stations_data_{str(year)}",
                 configuration={
                     "query": {
                         "query": GHCND_STATIONS_JOIN_QUERY,
@@ -202,7 +141,4 @@ with models.DAG(
                 location="US",
             )
 
-        # upload_sheet_to_gcs >> load_external_dataset >> bq_join_group >> create_batch
         load_external_dataset >> bq_join_group >> create_batch
-
-
