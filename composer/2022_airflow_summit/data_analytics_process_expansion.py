@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import math
+import sys
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import count, udf, lit, when, sum, avg
-from pyspark.sql.types import StructType, IntegerType, FloatType
+from pyspark.sql.functions import avg, lit, sum, udf
+from pyspark.sql.types import FloatType, IntegerType, StructType
 
 # BQ_DESTINATION_DATASET_NAME = "expansion_project"
 # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
@@ -54,18 +54,18 @@ if __name__ == "__main__":
         raise Exception(f"Error reading {READ_TABLE}") from e
 
     # filter out non-west states of the US
-    df = df.where((df.STATE == 'WA') | (df.STATE == 'OR') | (df.STATE == 'ID') 
-                  | (df.STATE == 'MT') | (df.STATE == 'WY') | (df.STATE == 'CO') 
-                  | (df.STATE == 'NM') | (df.STATE == 'AZ') | (df.STATE == 'UT') 
+    df = df.where((df.STATE == 'WA') | (df.STATE == 'OR') | (df.STATE == 'ID')
+                  | (df.STATE == 'MT') | (df.STATE == 'WY') | (df.STATE == 'CO')
+                  | (df.STATE == 'NM') | (df.STATE == 'AZ') | (df.STATE == 'UT')
                   | (df.STATE == 'NV') | (df.STATE == 'CA'))
     df.show(n=10)
     print("After state filtering, # of rows remaining is:", df.count())
-    
-    # filter out rows whose element value does not equal to PRCP or SNOW 
+
+    # filter out rows whose element value does not equal to PRCP or SNOW
     df = df.where((df.ELEMENT == 'PRCP') | (df.ELEMENT == 'SNOW'))
     df.show(n=10)
     print("After elemet filtering, # of rows remaining is:", df.count())
-    
+
     # convert precipitation and snowfall from "tenths of a mm" to "mm"
     @udf(returnType=FloatType())
     def converter(val) -> float:
@@ -77,11 +77,11 @@ if __name__ == "__main__":
     @udf(returnType=IntegerType())
     def date_to_year(val) -> int:
         return val.year
-    
+
     # extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
     df = df.withColumn("DATE", date_to_year(df.DATE)).withColumnRenamed('DATE', 'YEAR')
-    
+
     # each year's arithmetic mean of pricipation
     prcp_mean_df = (
         df.where(df.ELEMENT == 'PRCP')
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     )
     print("prcp mean table")
     prcp_mean_df.show(n=50)
-    
+
     # each year's arithmetic mean of snowfall
     snow_mean_df = (
         df.where(df.ELEMENT == 'SNOW')
@@ -101,14 +101,14 @@ if __name__ == "__main__":
     )
     print("snow mean table")
     snow_mean_df.show(n=50)
-    
+
     # filter out the states to move on to the distance weighting algorithm (DWA)
-    annual_df = df.where(((df.STATE == 'CA') | (df.STATE == 'NV') | (df.STATE == 'UT') 
+    annual_df = df.where(((df.STATE == 'CA') | (df.STATE == 'NV') | (df.STATE == 'UT')
                           | (df.STATE == 'CO') | (df.STATE == 'AZ') | (df.STATE == 'NM')))
-    
+
     # latitude and longitude of Phoenix
     phx_location = [33.4484, -112.0740]
-    
+
     # create blank tables for storing the results of the distance weighting algorithm (DWA)
     # the tables will have the following format
     # +------------------+-------------------+------------------+
@@ -118,20 +118,20 @@ if __name__ == "__main__":
     # +------------------+-------------------+------------------+
     phx_annual_prcp_df = spark.createDataFrame([[]], StructType([]))
     phx_annual_snow_df = spark.createDataFrame([[]], StructType([]))
-    
+
     # distance weighting algorithm (DWA)
-    def phx_dw_compute(input_list) -> float: 
+    def phx_dw_compute(input_list) -> float:
         # input_list is a list of Row object with format:
         # [
         #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
         #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
         #    ...
         # ]
-        
+
         # contains 1 / d^2 of each station
         factor_list = []
         # the total sum of 1 / d^2 of all the stations
-        factor_sum = 0.0 
+        factor_sum = 0.0
         for row in input_list:
             latitude = row[1]
             longitude = row[2]
@@ -141,12 +141,12 @@ if __name__ == "__main__":
             distance_factor = 1.0 / (distance_to_phx ** 2)
             factor_list.append(distance_factor)
             factor_sum += distance_factor
-     
+
         # contains the weights of each station
         weights_list = []
         for val in factor_list:
             weights_list.append(val / factor_sum)
-        
+
         dwa_result = 0.0
         for row in input_list:
             # this is the annual prcipitation/snowfall of each station
@@ -154,14 +154,14 @@ if __name__ == "__main__":
             # weight of each station
             weight = weights_list[input_list.index(row)]
             dwa_result += weight * annual_value
-            
+
         print("weight list", weights_list)
         print("factor list", factor_list)
         print("return result", dwa_result)
         print("factor sum", factor_sum)
-        
+
         return dwa_result
-    
+
     for year in range(1997, 2022):
         # collect() function returns a list of Row object.
         # prcp_year and snow_year will be the input for the distance weighting algorithm
@@ -176,14 +176,14 @@ if __name__ == "__main__":
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
             .agg(sum("VALUE").alias("ANNUAL_SNOW")).collect()
         )
-        
+
         phx_annual_prcp_df = (
             phx_annual_prcp_df.withColumn(f"PHX_PRCP_{year}", lit(phx_dw_compute(prcp_year)))
         )
         phx_annual_snow_df = (
             phx_annual_snow_df.withColumn(f"PHX_SNOW_{year}", lit(phx_dw_compute(snow_year)))
         )
-    
+
     # this table has only two rows (the first row contains the columns)
     phx_annual_prcp_df.show()
     phx_annual_snow_df.show()

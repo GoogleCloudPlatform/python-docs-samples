@@ -106,7 +106,7 @@ with models.DAG(
         # skip_leading_rows=1,
         write_disposition="WRITE_TRUNCATE"
     )
-    
+
     with TaskGroup("join_bq_datasets") as bq_join_group:
 
         for year in range(1997, 2022):
@@ -115,9 +115,9 @@ with models.DAG(
             # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
             # Specifically query a Chicago weather station
             GHCND_STATIONS_JOIN_QUERY = f"""
-            SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE, 
+            SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE,
             Stations.STATE, Table.DATE, Table.ELEMENT, Table.VALUE
-            FROM `{PROJECT_NAME}.expansion_project.ghcnd-stations-new` AS Stations, {BQ_DATASET_NAME} AS Table 
+            FROM `{PROJECT_NAME}.expansion_project.ghcnd-stations-new` AS Stations, {BQ_DATASET_NAME} AS Table
             WHERE Stations.ID = Table.id
             """
 
