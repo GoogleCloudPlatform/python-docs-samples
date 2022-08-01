@@ -13,31 +13,37 @@
 # limitations under the License.
 
 import sys
-import logging
-from datetime import datetime
+import math
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, count, udf, lit, when, sum, year, avg
-from pyspark.sql.types import StructType, StructField, IntegerType, FloatType
+from pyspark.sql.functions import count, udf, lit, when, sum, avg
+from pyspark.sql.types import StructType, IntegerType, FloatType
 
-import math
-
-BQ_DESTINATION_DATASET_NAME = "expansion_project"
-BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
-# name subject to change
-BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
-
+# BQ_DESTINATION_DATASET_NAME = "expansion_project"
+# BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
+# BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
+# BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
+# BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_snow_mean"
+# BQ_PHX_PRCP_TABLE_NAME = "phx_annual_prcp"
+# BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
 if __name__ == "__main__":
-    # BUCKET_NAME = sys.argv[1]
-    # READ_TABLE = sys.argv[2]
-    # WRITE_TABLE = sys.argv[3]
+    BUCKET_NAME = sys.argv[1]
+    READ_TABLE = sys.argv[2]
+    DF_WRITE_TABLE = sys.argv[3]
+    PRCP_MEAN_WRITE_TABLE = sys.argv[4]
+    SNOW_MEAN_WRITE_TABLE = sys.argv[5]
+    PHX_PRCP_WRITE_TABLE = sys.argv[6]
+    PHX_SNOW_WRITE_TABLE = sys.argv[7]
 
-    BUCKET_NAME = "workshop_example_bucket"
-    READ_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
-    # name subject to change
-    WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}"
+    # BUCKET_NAME = "workshop_example_bucket"
+    # READ_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
+    # DF_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}"
+    # PRCP_MEAN_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}"
+    # SNOW_MEAN_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}"
+    # PHX_PRCP_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}"
+    # PHX_SNOW_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}"
 
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_processing").getOrCreate()
@@ -46,12 +52,6 @@ if __name__ == "__main__":
         df = spark.read.format("bigquery").load(READ_TABLE)
     except Py4JJavaError as e:
         raise Exception(f"Error reading {READ_TABLE}") from e
-
-    # for testing purposes
-    data = df.sample(withReplacement=False, seed=1, fraction=0.0000008).collect()
-    columns = ['ID', 'LATITUDE', 'LONGITUDE', 'ELEVATION', 'STATE', 'DATE', 'ELEMENT', 'VALUE']
-    df = spark.createDataFrame(data, columns)
-    df.show()
 
     # filter out non-west states of the US
     df = df.where((df.STATE == 'WA') | (df.STATE == 'OR') | (df.STATE == 'ID') 
@@ -67,11 +67,11 @@ if __name__ == "__main__":
     print("After elemet filtering, # of rows remaining is:", df.count())
     
     # convert precipitation and snowfall from "tenths of a mm" to "mm"
-    # @udf(returnType=IntegerType())
-    # def converter(val) -> int:
-    #     return val / 10
-    # df = df.withColumn("VALUE", converter(df.VALUE))
-    # df.show()
+    @udf(returnType=FloatType())
+    def converter(val) -> float:
+        return val / 10
+    df = df.withColumn("VALUE", converter(df.VALUE))
+    df.show()
 
     # return the year of each date
     @udf(returnType=IntegerType())
@@ -101,9 +101,6 @@ if __name__ == "__main__":
     )
     print("snow mean table")
     snow_mean_df.show(n=50)
-
-
-
     
     # filter out the states to move on to the distance weighting algorithm (DWA)
     annual_df = df.where(((df.STATE == 'CA') | (df.STATE == 'NV') | (df.STATE == 'UT') 
@@ -173,14 +170,13 @@ if __name__ == "__main__":
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
             .agg(sum("VALUE").alias("ANNUAL_PRCP")).collect()
         )
-        print(prcp_year)
+        # print(prcp_year)
         snow_year = (
             annual_df.where((annual_df.ELEMENT == 'SNOW') & (annual_df.YEAR == year))
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
             .agg(sum("VALUE").alias("ANNUAL_SNOW")).collect()
         )
         
-
         phx_annual_prcp_df = (
             phx_annual_prcp_df.withColumn(f"PHX_PRCP_{year}", lit(phx_dw_compute(prcp_year)))
         )
@@ -191,28 +187,35 @@ if __name__ == "__main__":
     # this table has only two rows (the first row contains the columns)
     phx_annual_prcp_df.show()
     phx_annual_snow_df.show()
-    
 
+    # Write results to GCS
+    if "--dry-run" in sys.argv:
+        print("Data will not be uploaded to BigQuery")
+    else:
+        # Set GCS temp location
+        temp_path = BUCKET_NAME
 
+        # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
+        # Uses the "overwrite" SaveMode to ensure DAG doesn't fail when being re-run
+        # See https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes
+        # for other save mode options
+        df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
+            "overwrite"
+        ).save(DF_WRITE_TABLE)
 
+        prcp_mean_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
+            "overwrite"
+        ).save(PRCP_MEAN_WRITE_TABLE)
 
+        snow_mean_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
+            "overwrite"
+        ).save(SNOW_MEAN_WRITE_TABLE)
 
-    # # Write results to GCS
-    # if "--dry-run" in sys.argv:
-    #     print("Data will not be uploaded to BigQuery")
-    # else:
-    #     # Set GCS temp location
-    #     temp_path = BUCKET_NAME
+        phx_annual_prcp_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
+            "overwrite"
+        ).save(PHX_PRCP_WRITE_TABLE)
 
-    #     # Saving the data to BigQuery using the "indirect path" method and the spark-bigquery connector
-    #     # Uses the "overwrite" SaveMode to ensure DAG doesn't fail when being re-run
-    #     # See https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes
-    #     # for other save mode options
-    #     df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-    #         "overwrite"
-    #     ).save(WRITE_TABLE)
-    #     print("Data written to BigQuery")
-    
-
-    
-    
+        phx_annual_snow_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
+            "overwrite"
+        ).save(PHX_SNOW_WRITE_TABLE)
+        print("Data written to BigQuery")
