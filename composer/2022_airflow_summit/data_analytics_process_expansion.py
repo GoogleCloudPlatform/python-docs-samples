@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This PySpark program is trying to answer the question: "How has the rainfall 
-# and snowfall patterns changed in the western US for the past 25 years?" 
+# This PySpark program is trying to answer the question: "How has the rainfall
+# and snowfall patterns changed in the western US for the past 25 years?"
 
 import math
 import sys
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import avg, lit, sum, udf, year
-from pyspark.sql.types import FloatType, IntegerType, StructType
+from pyspark.sql.functions import avg, lit, sum, year
+from pyspark.sql.types import StructType
 
 # BQ_DESTINATION_DATASET_NAME = "expansion_project"
 # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
@@ -33,7 +33,7 @@ from pyspark.sql.types import FloatType, IntegerType, StructType
 
 if __name__ == "__main__":
     # read in the input argument
-    
+
     # GCS temp location
     BUCKET_NAME = sys.argv[1]
     # Input table
@@ -62,12 +62,12 @@ if __name__ == "__main__":
     # Load data into dataframe if READ_TABLE exists
     try:
         # The input dataset contains the information of different weather stations around the world.
-        # You can read more about the input dataset in the following link: 
+        # You can read more about the input dataset in the following link:
         # https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt
         df = spark.read.format("bigquery").load(READ_TABLE)
     except Py4JJavaError:
         raise Exception(f"Error reading {READ_TABLE}")
-    
+
     # Since our goal is to focus on the western US, we first filter out non-western states of the US.
     # The definition of western US can be found in the following link:
     # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
@@ -172,26 +172,26 @@ if __name__ == "__main__":
 
         return dwa_result
 
-    for year in range(1997, 2022):
+    for year_val in range(1997, 2022):
         # Collect() function returns a list of Row object.
         # prcp_year and snow_year will be the input for the distance weighting algorithm
         prcp_year = (
-            annual_df.where((annual_df.ELEMENT == 'PRCP') & (annual_df.YEAR == year))
+            annual_df.where((annual_df.ELEMENT == 'PRCP') & (annual_df.YEAR == year_val))
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
             .agg(sum("VALUE").alias("ANNUAL_PRCP")).collect()
         )
         # print(prcp_year)
         snow_year = (
-            annual_df.where((annual_df.ELEMENT == 'SNOW') & (annual_df.YEAR == year))
+            annual_df.where((annual_df.ELEMENT == 'SNOW') & (annual_df.YEAR == year_val))
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
             .agg(sum("VALUE").alias("ANNUAL_SNOW")).collect()
         )
 
         phx_annual_prcp_df = (
-            phx_annual_prcp_df.withColumn(f"PHX_PRCP_{year}", lit(phx_dw_compute(prcp_year)))
+            phx_annual_prcp_df.withColumn(f"PHX_PRCP_{year_val}", lit(phx_dw_compute(prcp_year)))
         )
         phx_annual_snow_df = (
-            phx_annual_snow_df.withColumn(f"PHX_SNOW_{year}", lit(phx_dw_compute(snow_year)))
+            phx_annual_snow_df.withColumn(f"PHX_SNOW_{year_val}", lit(phx_dw_compute(snow_year)))
         )
 
     # This table has only two rows (the first row contains the columns)
