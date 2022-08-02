@@ -116,7 +116,7 @@ if __name__ == "__main__":
     states_near_phx = ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT']
     annual_df = df.where(df.STATE.isin(states_near_phx))
 
-    # Latitude and longitude of Phoenix
+    # Latitude and longitude of Phoenix, which are needed to perform DWA
     phx_location = [33.4484, -112.0740]
 
     # Create blank tables for storing the results of the distance weighting algorithm (DWA)
