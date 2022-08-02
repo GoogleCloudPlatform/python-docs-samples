@@ -1,2 +1,2 @@
 pytest==7.1.2
-google-cloud-testutils==1.3.2
+google-cloud-testutils==1.3.3
