@@ -1,1 +1,1 @@
-google-cloud-automl==2.7.2
+google-cloud-automl==2.8.0
