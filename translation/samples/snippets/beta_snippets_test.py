@@ -91,7 +91,7 @@ def test_detect_language(capsys):
 def test_list_languages(capsys):
     beta_snippets.list_languages(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert "zh-CN" in out
+    assert "zh" in out
 
 
 def test_list_languages_with_target(capsys):
