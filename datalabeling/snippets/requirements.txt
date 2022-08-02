@@ -1,1 +1,1 @@
-google-cloud-datalabeling==1.5.2
+google-cloud-datalabeling==1.6.0
