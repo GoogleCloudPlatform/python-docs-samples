@@ -22,3 +22,7 @@ def update_events_timestamp(json_file):
     with open(json_file, 'w') as file:
         file.write(filedata)
     print(f"The {json_file} is updated")
+
+
+if __name__ == "__main__":
+    update_events_timestamp("../resources/user_events.json")
