@@ -44,16 +44,6 @@
   # activate the service account using the key
   gcloud auth activate-service-account --key-file ~/key.json
 } && {
-  # install necessary Google client libraries
-  virtualenv -p python3 myenv
-  source myenv/bin/activate
-  sleep 2
-
-  pip install google &&
-  pip install google-cloud-retail &&
-  pip install google-cloud.storage &&
-  pip install google-cloud.bigquery
-} && {
   echo "======================================="
   echo "The Google Cloud setup is completed."
   echo "Please proceed with the Tutorial steps"
