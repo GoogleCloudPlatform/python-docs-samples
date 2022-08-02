@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import json
 import re
 import subprocess
@@ -22,40 +23,35 @@ import pytest
 import requests
 
 
-def gcloud_cli(command, retries=3):
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def gcloud_cli(command):
     """
     Runs the gcloud CLI with given options, parses the json formatted output
     and returns the resulting Python object.
 
-    Automatically retries with delays unless retries=0 is specified.
-
-    Usage: gcloud_cli(options, retries=retries)
+    Usage: gcloud_cli(options)
         options: command line options
-        retries: how many times to retry is gcloud CLI fails with error
 
     Example:
         result = gcloud_cli("app deploy --no-promote")
         print(f"Deployed version {result['versions'][0]['id']}")
 
-    Raises Exception with the stderr output of the last attempt if all
-    retries fail.
+    Raises Exception with the stderr output of the last attempt on failure.
     """
-    for retry in range(retries):
-        time.sleep(retry * 5)  # Wait 0, 5, 10, 15, etc seconds before next try
+    output = subprocess.run(
+        f"gcloud {command} --quiet --format=json",
+        capture_output=True,
+        shell=True,
+        check=True,
+    )
+    try:
+        entries = json.loads(output.stdout)
+        return entries
+    except Exception:
+        print("Failed to read log")
+        print(f"gcloud stderr was {output.stderr}")
 
-        output = subprocess.run(
-            f"gcloud {command} --quiet --format=json",
-            capture_output=True,
-            shell=True,
-        )
-        try:
-            entries = json.loads(output.stdout)
-            return entries
-        except Exception:
-            print(f"gcloud_cli attempt {retry}: Failed to read log")
-            print(f"gcloud_cli attempt {retry}: gcloud stderr was {output.stderr}")
-
-    raise Exception(f"gcloud_cli attempt {retry}: gcloud stderr was {output.stderr}")
+    raise Exception(output.stderr)
 
 
 @pytest.fixture
@@ -70,7 +66,7 @@ def version():
 
     yield project_id, version_id
 
-    gcloud_cli(f"app versions delete {version_id}", retries=1)
+    gcloud_cli(f"app versions delete {version_id}")
 
 
 def test_upload_and_view(version):
