@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import backoff
 import json
 import re
 import subprocess
-import time
 import uuid
 
+import backoff
 import pytest
 import requests
 
