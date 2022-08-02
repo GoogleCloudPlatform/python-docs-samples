@@ -1,5 +1,5 @@
-google-cloud-storage==2.3.0
-google-cloud-asset==3.9.1
-google-cloud-resource-manager==1.5.1
-google-cloud-pubsub==2.13.0
-google-cloud-bigquery==3.1.0
+google-cloud-storage==2.4.0
+google-cloud-asset==3.10.0
+google-cloud-resource-manager==1.6.0
+google-cloud-pubsub==2.13.4
+google-cloud-bigquery==3.3.0
