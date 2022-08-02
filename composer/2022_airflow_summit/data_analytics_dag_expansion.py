@@ -52,7 +52,6 @@ BATCH_CONFIG = {
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}",
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}",
         ],
-
     },
     "environment_config": {
         "execution_config": {
@@ -103,7 +102,6 @@ with models.DAG(
             {'name': 'ELEVATION', 'type': 'FLOAT', 'mode': 'REQUIRED'},
             {'name': 'STATE', 'type': 'STRING', 'mode': 'REQUIRED'},
         ],
-        # skip_leading_rows=1,
         write_disposition="WRITE_TRUNCATE"
     )
 
@@ -112,7 +110,6 @@ with models.DAG(
         for year in range(1997, 2022):
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
-            # BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
             # Specifically query a Chicago weather station
             GHCND_STATIONS_JOIN_QUERY = f"""
             SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE,

@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This PySpark program is trying to answer the question: "How has the rainfall 
+# and snowfall patterns changed in the western US for the past 25 years?" 
+
 import math
 import sys
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import avg, lit, sum, udf
+from pyspark.sql.functions import avg, lit, sum, udf, year
 from pyspark.sql.types import FloatType, IntegerType, StructType
 
 # BQ_DESTINATION_DATASET_NAME = "expansion_project"
@@ -29,12 +32,21 @@ from pyspark.sql.types import FloatType, IntegerType, StructType
 # BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
 if __name__ == "__main__":
+    # read in the input argument
+    
+    # GCS temp location
     BUCKET_NAME = sys.argv[1]
+    # Input table
     READ_TABLE = sys.argv[2]
+    # Output table after rows filtering and unit normalization
     DF_WRITE_TABLE = sys.argv[3]
+    # Output table containing annual arithmetic mean of precipitation over the past 25 years
     PRCP_MEAN_WRITE_TABLE = sys.argv[4]
+    # Output table containing annual arithmetic mean of snowfall over the past 25 years
     SNOW_MEAN_WRITE_TABLE = sys.argv[5]
+    # Output table containing aunnal precipitation in Phoenix over the past 25 years
     PHX_PRCP_WRITE_TABLE = sys.argv[6]
+    # Output table containing annual snowfall in Phoenix over the past 25 years
     PHX_SNOW_WRITE_TABLE = sys.argv[7]
 
     # BUCKET_NAME = "workshop_example_bucket"
@@ -49,40 +61,38 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("data_processing").getOrCreate()
     # Load data into dataframe if READ_TABLE exists
     try:
+        # The input dataset contains the information of different weather stations around the world.
+        # You can read more about the input dataset in the following link: 
+        # https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt
         df = spark.read.format("bigquery").load(READ_TABLE)
-    except Py4JJavaError as e:
-        raise Exception(f"Error reading {READ_TABLE}") from e
-
-    # filter out non-west states of the US
-    df = df.where((df.STATE == 'WA') | (df.STATE == 'OR') | (df.STATE == 'ID')
-                  | (df.STATE == 'MT') | (df.STATE == 'WY') | (df.STATE == 'CO')
-                  | (df.STATE == 'NM') | (df.STATE == 'AZ') | (df.STATE == 'UT')
-                  | (df.STATE == 'NV') | (df.STATE == 'CA'))
+    except Py4JJavaError:
+        raise Exception(f"Error reading {READ_TABLE}")
+    
+    # Since our goal is to focus on the western US, we first filter out non-western states of the US.
+    # The definition of western US can be found in the following link:
+    # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
+    western_states = ['AZ', 'CA', 'CO', 'ID', 'MT', 'NM', 'NV', 'OR', 'UT', 'WA', 'WY']
+    df = df.where(df.STATE.isin(western_states))
     df.show(n=10)
     print("After state filtering, # of rows remaining is:", df.count())
 
-    # filter out rows whose element value does not equal to PRCP or SNOW
-    df = df.where((df.ELEMENT == 'PRCP') | (df.ELEMENT == 'SNOW'))
+    # The input dataset contains many different weather phenomenons.
+    # Based on our goal, we then filter out rows whose element value does not equal to PRCP or SNOW
+    # PRCP = precipitation
+    # SNOW = snowfall
+    df = df.where(df.ELEMENT.isin(['PRCP', 'SNOW']))
     df.show(n=10)
     print("After elemet filtering, # of rows remaining is:", df.count())
 
-    # convert precipitation and snowfall from "tenths of a mm" to "mm"
-    @udf(returnType=FloatType())
-    def converter(val) -> float:
-        return val / 10
-    df = df.withColumn("VALUE", converter(df.VALUE))
+    # Convert the units of precipitation and snowfall from "tenths of a mm" to "mm"
+    df = df.withColumn("VALUE", df.VALUE / 10)
     df.show()
 
-    # return the year of each date
-    @udf(returnType=IntegerType())
-    def date_to_year(val) -> int:
-        return val.year
-
-    # extract the year of each date and rename it as YEAR
+    # Extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
-    df = df.withColumn("DATE", date_to_year(df.DATE)).withColumnRenamed('DATE', 'YEAR')
+    df = df.withColumn("DATE", year(df.DATE)).withColumnRenamed('DATE', 'YEAR')
 
-    # each year's arithmetic mean of pricipation
+    # Each year's arithmetic mean of precipitation
     prcp_mean_df = (
         df.where(df.ELEMENT == 'PRCP')
         .groupBy("YEAR")
@@ -92,7 +102,7 @@ if __name__ == "__main__":
     print("prcp mean table")
     prcp_mean_df.show(n=50)
 
-    # each year's arithmetic mean of snowfall
+    # Each year's arithmetic mean of snowfall
     snow_mean_df = (
         df.where(df.ELEMENT == 'SNOW')
         .groupBy("YEAR")
@@ -102,15 +112,15 @@ if __name__ == "__main__":
     print("snow mean table")
     snow_mean_df.show(n=50)
 
-    # filter out the states to move on to the distance weighting algorithm (DWA)
-    annual_df = df.where(((df.STATE == 'CA') | (df.STATE == 'NV') | (df.STATE == 'UT')
-                          | (df.STATE == 'CO') | (df.STATE == 'AZ') | (df.STATE == 'NM')))
+    # Filter out the states to move on to the distance weighting algorithm (DWA)
+    states_near_phx = ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT']
+    annual_df = df.where(df.STATE.isin(states_near_phx))
 
-    # latitude and longitude of Phoenix
+    # Latitude and longitude of Phoenix
     phx_location = [33.4484, -112.0740]
 
-    # create blank tables for storing the results of the distance weighting algorithm (DWA)
-    # the tables will have the following format
+    # Create blank tables for storing the results of the distance weighting algorithm (DWA)
+    # The tables will have the following format
     # +------------------+-------------------+------------------+
     # |PHX_PRCP/SNOW_1997|...                |PHX_PRCP/SNOW_2021|
     # +------------------+-------------------+------------------+
@@ -119,51 +129,51 @@ if __name__ == "__main__":
     phx_annual_prcp_df = spark.createDataFrame([[]], StructType([]))
     phx_annual_snow_df = spark.createDataFrame([[]], StructType([]))
 
-    # distance weighting algorithm (DWA)
+    # Distance weighting algorithm (DWA)
     def phx_dw_compute(input_list) -> float:
-        # input_list is a list of Row object with format:
+        # Input_list is a list of Row object with format:
         # [
         #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
         #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
         #    ...
         # ]
 
-        # contains 1 / d^2 of each station
+        # Contains 1 / d^2 of each station
         factor_list = []
-        # the total sum of 1 / d^2 of all the stations
+        # The total sum of 1 / d^2 of all the stations
         factor_sum = 0.0
         for row in input_list:
             latitude = row[1]
             longitude = row[2]
-            # calculate the distance from each station to Phoenix
+            # Calculate the distance from each station to Phoenix
             distance_to_phx = math.sqrt((phx_location[0] - latitude) ** 2 + (phx_location[1] - longitude) ** 2)
-            # calculate the distance factor of each station (1 / d^2)
+            # Calculate the distance factor of each station (1 / d^2)
             distance_factor = 1.0 / (distance_to_phx ** 2)
             factor_list.append(distance_factor)
             factor_sum += distance_factor
 
-        # contains the weights of each station
+        # Contains the weights of each station
         weights_list = []
         for val in factor_list:
             weights_list.append(val / factor_sum)
 
         dwa_result = 0.0
         for row in input_list:
-            # this is the annual prcipitation/snowfall of each station
+            # This is the annual prcipitation/snowfall of each station
             annual_value = row[4]
-            # weight of each station
+            # Weight of each station
             weight = weights_list[input_list.index(row)]
             dwa_result += weight * annual_value
 
-        print("weight list", weights_list)
-        print("factor list", factor_list)
-        print("return result", dwa_result)
-        print("factor sum", factor_sum)
+        # print("weight list", weights_list)
+        # print("factor list", factor_list)
+        # print("return result", dwa_result)
+        # print("factor sum", factor_sum)
 
         return dwa_result
 
     for year in range(1997, 2022):
-        # collect() function returns a list of Row object.
+        # Collect() function returns a list of Row object.
         # prcp_year and snow_year will be the input for the distance weighting algorithm
         prcp_year = (
             annual_df.where((annual_df.ELEMENT == 'PRCP') & (annual_df.YEAR == year))
@@ -184,7 +194,7 @@ if __name__ == "__main__":
             phx_annual_snow_df.withColumn(f"PHX_SNOW_{year}", lit(phx_dw_compute(snow_year)))
         )
 
-    # this table has only two rows (the first row contains the columns)
+    # This table has only two rows (the first row contains the columns)
     phx_annual_prcp_df.show()
     phx_annual_snow_df.show()
 
@@ -199,23 +209,44 @@ if __name__ == "__main__":
         # Uses the "overwrite" SaveMode to ensure DAG doesn't fail when being re-run
         # See https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes
         # for other save mode options
-        df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-            "overwrite"
-        ).save(DF_WRITE_TABLE)
+        (
+            df.write
+            .format("bigquery")
+            .option("temporaryGcsBucket", temp_path)
+            .mode("overwrite")
+            .save(DF_WRITE_TABLE)
+        )
 
-        prcp_mean_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-            "overwrite"
-        ).save(PRCP_MEAN_WRITE_TABLE)
+        (
+            prcp_mean_df.write
+            .format("bigquery")
+            .option("temporaryGcsBucket", temp_path)
+            .mode("overwrite")
+            .save(PRCP_MEAN_WRITE_TABLE)
+        )
 
-        snow_mean_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-            "overwrite"
-        ).save(SNOW_MEAN_WRITE_TABLE)
+        (
+            snow_mean_df.write
+            .format("bigquery")
+            .option("temporaryGcsBucket", temp_path)
+            .mode("overwrite")
+            .save(SNOW_MEAN_WRITE_TABLE)
+        )
 
-        phx_annual_prcp_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-            "overwrite"
-        ).save(PHX_PRCP_WRITE_TABLE)
+        (
+            phx_annual_prcp_df.write
+            .format("bigquery")
+            .option("temporaryGcsBucket", temp_path)
+            .mode("overwrite")
+            .save(PHX_PRCP_WRITE_TABLE)
+        )
 
-        phx_annual_snow_df.write.format("bigquery").option("temporaryGcsBucket", temp_path).mode(
-            "overwrite"
-        ).save(PHX_SNOW_WRITE_TABLE)
+        (
+            phx_annual_snow_df.write
+            .format("bigquery")
+            .option("temporaryGcsBucket", temp_path)
+            .mode("overwrite")
+            .save(PHX_SNOW_WRITE_TABLE)
+        )
+
         print("Data written to BigQuery")
