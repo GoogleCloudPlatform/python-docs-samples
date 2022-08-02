@@ -24,6 +24,7 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 from annotate_assessment import annotate_assessment
 from create_assessment import create_assessment
@@ -102,14 +103,14 @@ def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
     browser.get(url_for("assess", site_key=recaptcha_site_key, _external=True))
     time.sleep(5)
 
-    browser.find_element_by_id("username").send_keys("username")
-    browser.find_element_by_id("password").send_keys("password")
-    browser.find_element_by_id("recaptchabutton").click()
+    browser.find_element(By.ID, "username").send_keys("username")
+    browser.find_element(By.ID, "password").send_keys("password")
+    browser.find_element(By.ID, "recaptchabutton").click()
 
     # Timeout of 5 seconds
     time.sleep(5)
 
-    element = browser.find_element_by_css_selector("#assessment")
+    element = browser.find_element(By.CSS_SELECTOR, "#assessment")
     token = element.get_attribute("data-token")
     action = element.get_attribute("data-action")
     return token, action
@@ -125,4 +126,4 @@ def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment
 
 
 def set_score(browser: WebDriver, score: str) -> None:
-    browser.find_element_by_css_selector("#assessment").send_keys(score)
+    browser.find_element(By.CSS_SELECTOR, "#assessment").send_keys(score)
