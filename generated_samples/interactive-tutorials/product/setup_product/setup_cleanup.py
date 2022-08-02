@@ -165,7 +165,7 @@ def create_bq_dataset(dataset_name):
         print(f"dataset {full_dataset_id} already exists")
     except NotFound:
         # Construct a Dataset object to send to the API.
-        dataset = bq.Dataset(full_dataset_id)
+        dataset = bigquery.Dataset(full_dataset_id)
         dataset.location = "US"
         bq.create_dataset(dataset)
         print("dataset is created")
