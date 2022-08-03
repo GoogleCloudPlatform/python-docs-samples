@@ -207,6 +207,9 @@ def setup_resources(
             operation=operation['name']).execute()['status'] != 'DONE':
         time.sleep(5)
 
+    # Wait for the OS of the instance to be ready to accept SSH connections
+    time.sleep(10)
+
     # Grant the service account osLogin access on the test instance.
     compute.instances().setIamPolicy(
         project=project,
