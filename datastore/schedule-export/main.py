@@ -22,6 +22,7 @@ from google.cloud import datastore_admin_v1
 project_id = os.environ.get("GCP_PROJECT")
 client = datastore_admin_v1.DatastoreAdminClient()
 
+
 def datastore_export(event, context):
     """Triggers a Datastore export from a Cloud Scheduler job.
 
