@@ -16,25 +16,11 @@ import base64
 import json
 import os
 
-from googleapiclient.discovery import build
-from googleapiclient.discovery_cache.base import Cache
+from google.cloud import datastore_admin_v1
 
 
-class MemoryCache(Cache):
-    _CACHE = {}
-
-    def get(self, url):
-        return MemoryCache._CACHE.get(url)
-
-    def set(self, url, content):
-        MemoryCache._CACHE[url] = content
-
-
-# The default cache (file_cache) is unavailable when using oauth2client >= 4.0.0 or google-auth,
-# and it will log worrisome messages unless given another interface to use.
-datastore = build("datastore", "v1", cache=MemoryCache())
 project_id = os.environ.get("GCP_PROJECT")
-
+client = datastore_admin_v1.DatastoreAdminClient()
 
 def datastore_export(event, context):
     """Triggers a Datastore export from a Cloud Scheduler job.
@@ -47,7 +33,6 @@ def datastore_export(event, context):
         context (google.cloud.functions.Context): The Cloud Functions event
             metadata.
     """
-
     if "data" in event:
         # Triggered via Cloud Scheduler, decode the inner data field of the json payload.
         json_data = json.loads(base64.b64decode(event["data"]).decode("utf-8"))
@@ -56,18 +41,19 @@ def datastore_export(event, context):
         json_data = event
 
     bucket = json_data["bucket"]
-    entity_filter = {}
+    entity_filter = datastore_admin_v1.EntityFilter()
 
     if "kinds" in json_data:
-        entity_filter["kinds"] = json_data["kinds"]
+        entity_filter.kinds = json_data["kinds"]
 
     if "namespaceIds" in json_data:
-        entity_filter["namespaceIds"] = json_data["namespaceIds"]
+        entity_filter.namespace_ids = json_data["namespaceIds"]
 
-    request_body = {"outputUrlPrefix": bucket, "entityFilter": entity_filter}
-
-    export_request = datastore.projects().export(
-        projectId=project_id, body=request_body
+    export_request = datastore_admin_v1.ExportEntitiesRequest(
+        project_id=project_id,
+        output_url_prefix=bucket,
+        entity_filter=entity_filter
     )
-    response = export_request.execute()
+    operation = client.export_entities(request=export_request)
+    response = operation.result()
     print(response)

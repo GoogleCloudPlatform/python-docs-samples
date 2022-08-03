@@ -35,15 +35,14 @@ def test_datastore_export(capsys):
 
     # Mock the Datastore service
     mockDatastore = Mock()
-    main.datastore = mockDatastore
+    main.client = mockDatastore
 
     # Call tested function
     main.datastore_export(event, mock_context)
     out, err = capsys.readouterr()
-    export_args = mockDatastore.projects().export.call_args[1]
-    req_body = export_args['body']
+    export_args = mockDatastore.export_entities.call_args[1]
     # Assert request includes test values
-    assert req_body['outputUrlPrefix'] == bucket
+    assert export_args.output_url_prefix == bucket
 
 
 def test_datastore_export_entity_filter(capsys):
@@ -61,14 +60,13 @@ def test_datastore_export_entity_filter(capsys):
 
     # Mock the Datastore service
     mockDatastore = Mock()
-    main.datastore = mockDatastore
+    main.client = mockDatastore
 
     # Call tested function
     main.datastore_export(event, mock_context)
     out, err = capsys.readouterr()
-    export_args = mockDatastore.projects().export.call_args[1]
-    req_body = export_args['body']
+    export_args = mockDatastore.export_entities.call_args[1]
     # Assert request includes test values
-    assert req_body['outputUrlPrefix'] == bucket
-    assert req_body['entityFilter']['kinds'] == kinds
-    assert req_body['entityFilter']['namespaceIds'] == namespaceIds
+    assert export_args.output_url_prefix == bucket
+    assert export_args.entity_filter.kinds == kinds
+    assert export_args.entity_filter.namespace_ids == namespaceIds
