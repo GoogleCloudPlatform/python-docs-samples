@@ -25,7 +25,7 @@ mock_context.timestamp = '2020-04-15T22:09:03.761Z'
 
 def test_datastore_export(capsys):
     # Test an export without an entity filter
-    bucket = 'gs://my-bucket'
+    bucket = 'gs://mariatta-bucket-scratch-1'
     json_string = '{{ "bucket": "{bucket}" }}'.format(bucket=bucket)
 
     # Encode data like Cloud Scheduler
@@ -42,12 +42,12 @@ def test_datastore_export(capsys):
     out, err = capsys.readouterr()
     export_args = mockDatastore.export_entities.call_args[1]
     # Assert request includes test values
-    assert export_args.output_url_prefix == bucket
+    assert export_args["request"].output_url_prefix == bucket
 
 
 def test_datastore_export_entity_filter(capsys):
     # Test an export with an entity filter
-    bucket = 'gs://my-bucket'
+    bucket = 'gs://mariatta-bucket-scratch-1'
     kinds = 'Users,Tasks'
     namespaceIds = 'Customer831,Customer157'
     json_string = '{{ "bucket": "{bucket}", "kinds": "{kinds}", "namespaceIds": "{namespaceIds}" }}'.format(
@@ -67,6 +67,7 @@ def test_datastore_export_entity_filter(capsys):
     out, err = capsys.readouterr()
     export_args = mockDatastore.export_entities.call_args[1]
     # Assert request includes test values
-    assert export_args.output_url_prefix == bucket
-    assert export_args.entity_filter.kinds == kinds
-    assert export_args.entity_filter.namespace_ids == namespaceIds
+
+    assert export_args["request"].output_url_prefix == bucket
+    assert export_args["request"].entity_filter.kinds == kinds
+    assert export_args["request"].entity_filter.namespace_ids == namespaceIds
