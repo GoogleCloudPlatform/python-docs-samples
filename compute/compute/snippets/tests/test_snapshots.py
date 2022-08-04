@@ -45,8 +45,8 @@ def test_disk():
 def test_snapshot_create_delete(test_disk):
     snapshot_name = "test-snapshot-" + uuid.uuid4().hex[:10]
     snapshot = create_snapshot(PROJECT, test_disk.name, snapshot_name, zone=ZONE)
-    assert(snapshot.name == snapshot_name)
-    assert(snapshot.source_disk == test_disk.self_link)
+    assert snapshot.name == snapshot_name
+    assert snapshot.source_disk == test_disk.self_link
     for i_snapshot in list_snapshots(PROJECT):
         if i_snapshot.name == snapshot_name:
             break

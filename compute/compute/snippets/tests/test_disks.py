@@ -42,9 +42,9 @@ def test_disk_create_delete(autodelete_disk_name):
     debian_image = get_image_from_family('debian-cloud', 'debian-11')
 
     disk = create_disk_from_image(PROJECT, ZONE, autodelete_disk_name, disk_type, 17, debian_image.self_link)
-    assert(disk.name == autodelete_disk_name)
-    assert(disk.type_.endswith(disk_type))
-    assert(disk.size_gb == 17)
+    assert disk.name == autodelete_disk_name
+    assert disk.type_.endswith(disk_type)
+    assert disk.size_gb == 17
 
     for i_disk in list_disks(PROJECT, ZONE):
         if i_disk.name == autodelete_disk_name:
