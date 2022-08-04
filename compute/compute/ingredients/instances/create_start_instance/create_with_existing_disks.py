@@ -37,7 +37,7 @@ def create_with_existing_disks(project_id: str, zone: str, instance_name: str, d
     Returns:
         Instance object.
     """
-    assert(len(disk_names) >= 1)
+    assert len(disk_names) >= 1
     disks = [get_disk(project_id, zone, disk_name) for disk_name in disk_names]
     attached_disks = []
     for disk in disks:
