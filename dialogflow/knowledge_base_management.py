@@ -51,7 +51,7 @@ def create_knowledge_base(project_id, display_name):
 
     print("Knowledge Base created:\n")
     print("Display Name: {}\n".format(response.display_name))
-    print("Knowledge ID: {}\n".format(response.name))
+    print("Name: {}\n".format(response.name))
 
 
 # [END dialogflow_create_knowledge_base]
@@ -73,7 +73,7 @@ def get_knowledge_base(project_id, knowledge_base_id):
 
     print("Got Knowledge Base:")
     print(" - Display Name: {}".format(response.display_name))
-    print(" - Knowledge ID: {}".format(response.name))
+    print(" - Name: {}".format(response.name))
     return response
 
 
