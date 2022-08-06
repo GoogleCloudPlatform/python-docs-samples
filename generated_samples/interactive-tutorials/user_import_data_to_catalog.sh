@@ -15,12 +15,6 @@
 # limitations under the License.
 
 {
-  # set the service account key as a GOOGLE_APPLICATION_CREDENTIALS
-  export GOOGLE_APPLICATION_CREDENTIALS=~/key.json
-
-  # activate the python virtual env
-  source ~/cloudshell_open/myenv/bin/activate
-
   # Create a GCS bucket and upload the product data to the bucket
   output=$(python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py)
 
