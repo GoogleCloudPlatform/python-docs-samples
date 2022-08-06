@@ -1,4 +1,4 @@
 selenium==4.3.0
-Flask==2.2.0
+Flask==2.2.1
 pytest==7.1.2
 pytest-flask==1.2.0
