@@ -1,7 +1,9 @@
 import datetime
 import re
 
-"""Run the file to update the user_events.json file with more recent timestamp"""
+"""
+Run the file to update the user_events.json and user_events_some_invalid.json files with more recent timestamp
+"""
 
 
 def update_events_timestamp(json_file):
@@ -26,3 +28,4 @@ def update_events_timestamp(json_file):
 
 if __name__ == "__main__":
     update_events_timestamp("../resources/user_events.json")
+    update_events_timestamp("../resources/user_events_some_invalid.json")
