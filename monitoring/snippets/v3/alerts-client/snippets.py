@@ -27,6 +27,13 @@ import tabulate
 
 # [START monitoring_alert_list_policies]
 def list_alert_policies(project_name):
+    """List alert policies in a project.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
+    """
+
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(name=project_name)
     print(
@@ -44,6 +51,13 @@ def list_alert_policies(project_name):
 
 # [START monitoring_alert_list_channels]
 def list_notification_channels(project_name):
+    """List alert notification channels in a project.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
+    """
+
     client = monitoring_v3.NotificationChannelServiceClient()
     channels = client.list_notification_channels(name=project_name)
     print(
@@ -62,7 +76,8 @@ def enable_alert_policies(project_name, enable, filter_=None):
     """Enable or disable alert policies in a project.
 
     Arguments:
-        project_name (str)
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
         enable (bool): Enable or disable the policies.
         filter_ (str, optional): Only enable/disable alert policies that match
             this filter_.  See
@@ -95,6 +110,17 @@ def enable_alert_policies(project_name, enable, filter_=None):
 
 # [START monitoring_alert_replace_channels]
 def replace_notification_channels(project_name, alert_policy_id, channel_ids):
+    """Replace notification channel of an alert.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
+        alert_policy_id (str): The ID of the alert policy whose notification
+            channels are to be replaced.
+        channel_ids (str): ID of notification channel to be added as channel
+            for the given alert policy.
+    """
+
     _, project_id = project_name.split("/")
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
@@ -119,6 +145,17 @@ def replace_notification_channels(project_name, alert_policy_id, channel_ids):
 
 # [START monitoring_alert_delete_channel]
 def delete_notification_channels(project_name, channel_ids, force=None):
+    """Delete alert notification channels.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
+        channel_ids list(str): List of IDs of notification channels to delete.
+        force (bool): If true, the notification channels are deleted regardless
+            of its in use by alert policies. If false, channels that are still
+            referenced by an existing alerting policy will fail to be deleted.
+    """
+
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     for channel_id in channel_ids:
         channel_name = "{}/notificationChannels/{}".format(project_name, channel_id)
@@ -136,6 +173,15 @@ def delete_notification_channels(project_name, channel_ids, force=None):
 
 # [START monitoring_alert_backup_policies]
 def backup(project_name, backup_filename):
+    """Backup alert policies from a project to a local file.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'
+        backup_filename (str): Name of the file (along with its path) to which
+            the alert policies will be written as backup.
+    """
+
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     record = {
