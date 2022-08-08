@@ -41,6 +41,7 @@ from list_secrets import list_secrets
 from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
 from update_secret import update_secret
+from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_etag import update_secret_with_etag
 
 
@@ -290,3 +291,9 @@ def test_update_secret_with_etag(secret):
     project_id, secret_id, etag = secret
     secret = update_secret_with_etag(project_id, secret_id, etag)
     assert secret.labels["secretmanager"] == "rocks"
+
+
+def test_update_secret_with_alias(secret_version):
+    project_id, secret_id, version_id, _ = secret_version
+    secret = update_secret_with_alias(project_id, secret_id)
+    assert secret.version_aliases["test"] == 1
