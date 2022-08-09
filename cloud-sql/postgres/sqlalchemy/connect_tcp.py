@@ -14,6 +14,7 @@
 
 # [START cloud_sql_postgres_sqlalchemy_connect_tcp]
 # [START cloud_sql_postgres_sqlalchemy_sslcerts]
+# [START cloud_sql_postgres_sqlalchemy_connect_tcp_sslcerts]
 import os
 import ssl
 
@@ -94,5 +95,6 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     )
     return pool
 
+# [END cloud_sql_postgres_sqlalchemy_connect_tcp_sslcerts]
 # [END cloud_sql_postgres_sqlalchemy_sslcerts]
 # [END cloud_sql_postgres_sqlalchemy_connect_tcp]
