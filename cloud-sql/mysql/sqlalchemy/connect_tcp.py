@@ -61,7 +61,9 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
             port=db_port,
             database=db_name,
         ),
+        # [END cloud_sql_postgres_sqlalchemy_connect_tcp]
         connect_args=connect_args,
+        # [START cloud_sql_postgres_sqlalchemy_connect_tcp]
         # [START_EXCLUDE]
         # [START cloud_sql_mysql_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
