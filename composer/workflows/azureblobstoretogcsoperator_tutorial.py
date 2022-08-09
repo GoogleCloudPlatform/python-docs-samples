@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataanalyticstutorial_azure_dag]
 import datetime
 
 from airflow import models
@@ -53,13 +54,12 @@ BATCH_CONFIG = {
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}",
             f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}",
         ],
-
     },
     "environment_config": {
         "execution_config": {
             "service_account": "{{var.value.dataproc_service_account}}"
         }
-    }
+    },
 }
 
 yesterday = datetime.datetime.combine(
@@ -73,7 +73,7 @@ default_dag_args = {
     # To email on failure or retry set 'email' arg to your email and enable
     # emailing here.
     "email_on_failure": False,
-    "email_on_retry": False
+    "email_on_retry": False,
 }
 
 with models.DAG(
@@ -161,3 +161,4 @@ with models.DAG(
             )
 
         azure_blob_to_gcs >> load_external_dataset >> bq_join_group >> create_batch
+# [END composer_dataanalyticstutorial_azure_dag]

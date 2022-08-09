@@ -21,6 +21,7 @@ from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
 
 
+# [START gae_mail_handler_receive_wsgi]
 def HelloReceiver(environ, start_response):
     if environ["REQUEST_METHOD"] != "POST":
         return ("", http.HTTPStatus.METHOD_NOT_ALLOWED, [("Allow", "POST")])
@@ -35,8 +36,10 @@ def HelloReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+# [END gae_mail_handler_receive_wsgi]
 
 
+# [START gae_mail_handler_bounce_wsgi]
 def BounceReceiver(environ, start_response):
     if environ["REQUEST_METHOD"] != "POST":
         return ("", http.HTTPStatus.METHOD_NOT_ALLOWED, [("Allow", "POST")])
@@ -51,6 +54,7 @@ def BounceReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+# [END gae_mail_handler_bounce_wsgi]
 
 
 def HomePage(environ, start_response):
