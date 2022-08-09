@@ -156,7 +156,7 @@ class City(object):
         # [END_EXCLUDE]
 
     def __repr__(self):
-        return(
+        return (
             f'City(\
                 name={self.name}, \
                 country={self.country}, \
