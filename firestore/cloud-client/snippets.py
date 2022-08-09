@@ -21,12 +21,14 @@ from google.cloud import firestore
 
 def quickstart_new_instance():
     # [START firestore_setup_client_create]
+    # [START firestore_setup_client_create_with_project_id]
     from google.cloud import firestore
 
     # The `project` parameter is optional and represents which project the client
     # will act on behalf of. If not supplied, the client falls back to the default
     # project inferred from the environment.
     db = firestore.Client(project='my-project-id')
+    # [END firestore_setup_client_create_with_project_id]
     # [END firestore_setup_client_create]
 
     return db
