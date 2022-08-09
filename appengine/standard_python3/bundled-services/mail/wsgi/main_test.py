@@ -17,8 +17,40 @@ import subprocess
 import time
 import uuid
 
+import backoff
 import pytest
 import requests
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def gcloud_cli(command):
+    """
+    Runs the gcloud CLI with given options, parses the json formatted output
+    and returns the resulting Python object.
+
+    Usage: gcloud_cli(options)
+        options: command line options
+
+    Example:
+        result = gcloud_cli("app deploy --no-promote")
+        print(f"Deployed version {result['versions'][0]['id']}")
+
+    Raises Exception with the stderr output of the last attempt on failure.
+    """
+    output = subprocess.run(
+        f"gcloud {command} --quiet --format=json",
+        capture_output=True,
+        shell=True,
+        check=True,
+    )
+    try:
+        entries = json.loads(output.stdout)
+        return entries
+    except Exception:
+        print("Failed to read log")
+        print(f"gcloud stderr was {output.stderr}")
+
+    raise Exception(output.stderr)
 
 
 @pytest.fixture
@@ -27,28 +59,13 @@ def version():
     project and version number so tests can invoke it, then delete it.
     """
 
-    output = subprocess.run(
-        f"gcloud app deploy --no-promote --quiet --format=json --version={uuid.uuid4().hex}",
-        capture_output=True,
-        shell=True,
-    )
-
-    try:
-        result = json.loads(output.stdout)
-        version_id = result["versions"][0]["id"]
-        project_id = result["versions"][0]["project"]
-    except Exception as e:
-        print(f"New version deployment output not usable: {e}")
-        print(f"Command stderr is '{output.stderr}'")
-        raise ValueError
+    result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
+    version_id = result["versions"][0]["id"]
+    project_id = result["versions"][0]["project"]
 
     yield project_id, version_id
 
-    output = subprocess.run(
-        f"gcloud app versions delete {version_id}",
-        capture_output=True,
-        shell=True,
-    )
+    gcloud_cli(f"app versions delete {version_id}")
 
 
 def test_send_receive(version):
@@ -76,18 +93,9 @@ def test_send_receive(version):
     time.sleep(30)
 
     # Fetch logs to check messages on received mail
-    output = subprocess.run(
-        f'gcloud logging read "resource.type=gae_app AND resource.labels.version_id={version_id}" --format=json',
-        capture_output=True,
-        shell=True,
+    entries = gcloud_cli(
+        f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
     )
-    try:
-        entries = json.loads(output.stdout)
-    except Exception:
-        print(f"Failed to read log for version {version_id}")
-        print(f"gcloud stderr was {output.stderr}")
-
-        assert False, "Should be able to read and load logs"
 
     text_payloads = ""
     for entry in entries:
