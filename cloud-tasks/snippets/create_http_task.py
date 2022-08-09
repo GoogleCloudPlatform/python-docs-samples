@@ -90,7 +90,8 @@ def create_http_task(
     if deadline is not None:
         # Add dispatch deadline for requests sent to the worker.
         duration = duration_pb2.Duration()
-        task["dispatch_deadline"] = duration.FromSeconds(deadline)
+        duration.FromSeconds(deadline)
+        task["dispatch_deadline"] = duration
 
     # Use the client to build and send the task.
     response = client.create_task(request={"parent": parent, "task": task})
