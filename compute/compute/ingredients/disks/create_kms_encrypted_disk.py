@@ -16,15 +16,18 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-
+from typing import Optional
 
 from google.cloud import compute_v1
 
 
-# <INGREDIENT create_disk_from_snapshot>
-def create_disk_from_snapshot(project_id: str, zone: str, disk_name: str, disk_type: str, disk_size_gb: int, snapshot_link: str) -> compute_v1.Disk:
+# <INGREDIENT create_kms_encrypted_disk>
+def create_kms_encrypted_disk(project_id: str, zone: str, disk_name: str, disk_type: str,
+                              disk_size_gb: int, kms_key_name: str,
+                              disk_link: Optional[str] = None, image_link: Optional[str] = None) -> compute_v1.Disk:
     """
-    Creates a new disk in a project in given zone.
+    Creates a zonal disk in a project. If you do not provide values for disk_link or image_link,
+    an empty disk will be created.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
@@ -34,22 +37,34 @@ def create_disk_from_snapshot(project_id: str, zone: str, disk_name: str, disk_t
             "zones/{zone}/diskTypes/(pd-standard|pd-ssd|pd-balanced|pd-extreme)".
             For example: "zones/us-west3-b/diskTypes/pd-ssd"
         disk_size_gb: size of the new disk in gigabytes
-        snapshot_link: a link to the snapshot you want to use as a source for the new disk.
-            This value uses the following format: "projects/{project_name}/global/snapshots/{snapshot_name}"
+        kms_key_name: URL of the key from KMS. The key might be from another project, as
+            long as you have access to it. The data will be encrypted with the same key
+            in the new disk. This value uses following format:
+            "projects/{kms_project_id}/locations/{region}/keyRings/{key_ring}/cryptoKeys/{key}"
+        disk_link: a link to the disk you want to use as a source for the new disk.
+            This value uses the following format: "projects/{project_name}/zones/{zone}/disks/{disk_name}"
+        image_link: a link to the image you want to use as a source for the new disk.
+            This value uses the following format: "projects/{project_name}/global/images/{image_name}"
 
     Returns:
-        An unattached Disk instance.
+        An attachable disk.
     """
     disk_client = compute_v1.DisksClient()
     disk = compute_v1.Disk()
     disk.zone = zone
     disk.size_gb = disk_size_gb
-    disk.source_snapshot = snapshot_link
+    if disk_link:
+        disk.source_disk = disk_link
+    if image_link:
+        disk.source_image = image_link
     disk.type_ = disk_type
     disk.name = disk_name
+    disk.disk_encryption_key = compute_v1.CustomerEncryptionKey()
+    disk.disk_encryption_key.kms_key_name = kms_key_name
     operation = disk_client.insert(project=project_id, zone=zone, disk_resource=disk)
 
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
 # </INGREDIENT>
