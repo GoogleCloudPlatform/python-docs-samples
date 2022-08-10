@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO (https://github.com/GoogleCloudPlatform/python-docs-samples/issues/8253): remove old region tags
 # [START cloud_sql_sqlserver_sqlalchemy_connect_tcp]
 # [START cloud_sql_sqlserver_sqlalchemy_sslcerts]
+# [START cloud_sql_sqlserver_sqlalchemy_connect_tcp_sslcerts]
 import os
 
 import sqlalchemy
@@ -100,5 +102,6 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
 
     return pool
 
+# [END cloud_sql_sqlserver_sqlalchemy_connect_tcp_sslcerts]
 # [END cloud_sql_sqlserver_sqlalchemy_sslcerts]
 # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp]
