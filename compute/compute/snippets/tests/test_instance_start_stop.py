@@ -21,6 +21,8 @@ import google.auth
 from google.cloud import compute_v1
 import pytest
 
+from ..disks.clone_encrypted_disk import create_disk_from_customer_encrypted_disk
+from ..disks.delete import delete_disk
 from ..instances.start import start_instance
 from ..instances.start_encrypted import start_instance_with_encryption_key
 from ..instances.stop import stop_instance
@@ -135,6 +137,13 @@ def compute_encrypted_instance():
     _delete_instance(instance)
 
 
+@pytest.fixture
+def autodelete_disk_name():
+    name = "d" + uuid.uuid4().hex[:10]
+    yield name
+    delete_disk(PROJECT, INSTANCE_ZONE, name)
+
+
 def test_instance_operations(compute_instance):
     assert _get_status(compute_instance) == "RUNNING"
 
@@ -166,3 +175,15 @@ def test_instance_encrypted(compute_encrypted_instance):
         PROJECT, INSTANCE_ZONE, compute_encrypted_instance.name, KEY_B64
     )
     assert _get_status(compute_encrypted_instance) == "RUNNING"
+
+
+def test_clone_encrypted_disk(autodelete_disk_name, compute_encrypted_instance):
+    assert _get_status(compute_encrypted_instance) == "RUNNING"
+
+    new_disk = create_disk_from_customer_encrypted_disk(
+        PROJECT, INSTANCE_ZONE, autodelete_disk_name,
+        f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard",
+        10, compute_encrypted_instance.disks[0].source,
+        encryption_key=KEY_B64)
+
+    assert new_disk.name == autodelete_disk_name
