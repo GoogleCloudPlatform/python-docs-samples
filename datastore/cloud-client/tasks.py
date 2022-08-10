@@ -45,7 +45,7 @@ def add_task(client: datastore.Client, description: str):
 
     # Create an unsaved Entity object, and tell Datastore not to index the
     # `description` field
-    task = datastore.Entity(key, exclude_from_indexes=["description"])
+    task = datastore.Entity(key, exclude_from_indexes=("description",))
 
     # Apply new field values and save the Task entity to Datastore
     task.update(
