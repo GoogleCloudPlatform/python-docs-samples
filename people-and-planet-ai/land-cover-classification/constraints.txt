@@ -1,1 +1,1 @@
-google-cloud-bigquery==3.3.1
+google-cloud-bigquery==2.34.4 # apache-beam and google-cloud-aiplatform depend on google-cloud-bigquery<3
