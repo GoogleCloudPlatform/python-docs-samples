@@ -213,7 +213,7 @@ def entity_with_parent(client):
 def properties(client):
     # [START datastore_properties]
     key = client.key("Task")
-    task = datastore.Entity(key, exclude_from_indexes=["description"])
+    task = datastore.Entity(key, exclude_from_indexes=("description",))
     task.update(
         {
             "category": "Personal",
@@ -224,6 +224,7 @@ def properties(client):
             "percent_complete": 10.5,
         }
     )
+    client.put(task)
     # [END datastore_properties]
 
     return task

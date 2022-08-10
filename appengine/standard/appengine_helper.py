@@ -118,7 +118,7 @@ def run_taskqueue_tasks(testbed, app):
 
 # py.test helpers
 
-@pytest.yield_fixture
+@pytest.fixture
 def testbed():
     """py.test fixture for the GAE testbed."""
     testbed = setup_testbed()
