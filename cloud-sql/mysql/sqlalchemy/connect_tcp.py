@@ -34,8 +34,8 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = os.environ["DB_PORT"]  # e.g. 3306
 
-    connect_args = {}
     # [END cloud_sql_mysql_sqlalchemy_connect_tcp]
+    connect_args = {}
     # For deployments that connect directly to a Cloud SQL instance without
     # using the Cloud SQL Proxy, configuring SSL certificates will ensure the
     # connection is encrypted.
@@ -63,7 +63,9 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
             port=db_port,
             database=db_name,
         ),
+        # [END cloud_sql_mysql_sqlalchemy_connect_tcp]
         connect_args=connect_args,
+        # [START cloud_sql_mysql_sqlalchemy_connect_tcp]
         # [START_EXCLUDE]
         # [START cloud_sql_mysql_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
