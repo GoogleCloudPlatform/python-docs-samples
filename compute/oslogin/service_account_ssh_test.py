@@ -17,8 +17,10 @@ import json
 import os
 import random
 import time
+from subprocess import CalledProcessError
 
 from google.oauth2 import service_account
+from google.auth.exceptions import RefreshError
 import googleapiclient.discovery
 from retrying import retry
 
@@ -84,11 +86,11 @@ def test_main(capsys):
         'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
-    # Multiple exception types can be raised, using generic Exception as a catch all.
-    # I was not able to track all the exception types that can be raised from this block
-    # of code.
+    # More exceptions could be raised, keeping track of ones I could
+    # find for now.
     @backoff.on_exception(backoff.expo,
-                      Exception,
+                      (CalledProcessError,
+                      RefreshError),
                       max_tries=5)
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
