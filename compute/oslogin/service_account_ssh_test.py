@@ -84,8 +84,12 @@ def test_main(capsys):
         'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=300000,
-           stop_max_attempt_number=10)
+    # Multiple exception types can be raised, using generic Exception as a catch all.
+    # I was not able to track all the exception types that can be raised from this block
+    # of code.
+    @backoff.on_exception(backoff.expo,
+                      Exception,
+                      max_tries=5)
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
@@ -93,10 +97,7 @@ def test_main(capsys):
         assert assert_value in out
 
     # Test SSH to the instance.
-    try:
-        ssh_login()
-    except Exception:
-        raise Exception('SSH to the test instance failed.')
+    ssh_login()
 
     finally:
         cleanup_resources(compute, iam, project, test_id, zone, account_email)
