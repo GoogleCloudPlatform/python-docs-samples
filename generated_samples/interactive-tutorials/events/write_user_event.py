@@ -14,7 +14,7 @@
 
 
 # [START retail_write_user_event]
-# Import user events into a catalog from inline source using Retail API
+# Write user event using Retail API.
 #
 import datetime
 

@@ -18,7 +18,8 @@ import os
 
 def main(bucket_name):
     # [START retail_import_products_from_gcs]
-
+    # Import products from using Retail API.
+    #
     import time
 
     import google.auth

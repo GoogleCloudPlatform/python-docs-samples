@@ -14,7 +14,7 @@
 
 
 # [START retail_rejoin_user_event]
-# Import user events into a catalog from inline source using Retail API
+# Starts a user event rejoin operation using Retail API.
 #
 import google.auth
 from google.cloud.retail import RejoinUserEventsRequest, UserEventServiceClient

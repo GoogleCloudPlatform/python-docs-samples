@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START retail_remove_fulfillment_places]
+# Remove place IDs using Retail API.
+#
 import datetime
 import random
 import string
