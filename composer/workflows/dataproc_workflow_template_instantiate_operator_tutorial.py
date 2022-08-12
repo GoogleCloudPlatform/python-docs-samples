@@ -25,10 +25,12 @@ https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
 import datetime
 
 from airflow import models
-from airflow.providers.google.cloud.operators.dataproc import DataprocInstantiateWorkflowTemplateOperator
+from airflow.providers.google.cloud.operators.dataproc import (
+    DataprocInstantiateWorkflowTemplateOperator,
+)
 from airflow.utils.dates import days_ago
 
-project_id = models.Variable.get("project_id")
+project_id = "{{var.value.project_id}}"
 
 
 default_args = {

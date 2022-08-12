@@ -1,5 +1,12 @@
 # Python Sample Authoring Guide
 
+The [Google Cloud Samples Style Guide][style-guide] is considered the primary
+guidelines for all Google Cloud samples. This section details some additional,
+Python-specific rules that will be merged into the Samples Style Guide in the 
+near future. 
+
+[style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
+
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
 we're opinionated and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
