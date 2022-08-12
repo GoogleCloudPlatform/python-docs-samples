@@ -66,3 +66,9 @@ class TestDatastoreSnippets:
         tasks = snippets.not_in_query(client)
         client.entities_to_delete.extend(tasks)
         assert tasks is not None
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_query_with_readtime(self, client):
+        tasks = snippets.query_with_readtime(client)
+        client.entities_to_delete.extend(tasks)
+        assert tasks is not None

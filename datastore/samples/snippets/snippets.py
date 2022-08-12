@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import argparse
+from datetime import datetime, timedelta, timezone
 from pprint import pprint
 
 from google.cloud import datastore  # noqa: I100
@@ -56,11 +57,31 @@ def not_in_query(client):
     return list(query.fetch())
 
 
+def query_with_readtime(client):
+    # [START datastore_snapshot_read]
+    # Create a read time of 120 seconds in the past
+    read_time = datetime.now(timezone.utc) - timedelta(seconds=120)
+
+    # Fetch an entity at time read_time
+    task_key = client.key('Task', 'sampletask')
+    entity = client.get(task_key, read_time=read_time)
+
+    # Query Task entities at time read_time
+    query = client.query(kind="Task")
+    tasks = query.fetch(read_time=read_time, limit=10)
+    # [END datastore_snapshot_read]
+
+    results = list(tasks)
+    results.append(entity)
+
+    return results
+
+
 def main(project_id):
     client = datastore.Client(project_id)
 
     for name, function in globals().items():
-        if name in ("main", "_preamble", "defaultdict") or not callable(function):
+        if name in ("main", "_preamble", "defaultdict", "datetime", "timezone", "timedelta") or not callable(function):
             continue
 
         print(name)
