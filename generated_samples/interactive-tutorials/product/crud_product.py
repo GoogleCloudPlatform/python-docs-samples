@@ -14,7 +14,7 @@
 
 
 # [START retail_crud_product]
-# Create product in a catalog using Retail API
+# Create, update, get and delete product in a catalog using Retail API.
 #
 import random
 import string

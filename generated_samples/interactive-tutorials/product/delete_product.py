@@ -14,7 +14,7 @@
 
 
 # [START retail_delete_product]
-# Delete product from a catalog using Retail API
+# Delete product from a catalog using Retail API.
 #
 import random
 import string

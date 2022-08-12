@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START retail_set_inventory]
+# Updating inventory information using Retail API.
+#
 import datetime
 import random
 import string

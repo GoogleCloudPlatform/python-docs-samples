@@ -14,7 +14,7 @@
 
 
 # [START retail_purge_user_event]
-# Import user events into a catalog from inline source using Retail API
+# Deleting user event using Retail API.
 #
 import google.auth
 from google.cloud.retail import PurgeUserEventsRequest, UserEventServiceClient

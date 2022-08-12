@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # [START retail_search_product_with_facet_spec]
+# Call Retail API to search for a products in a catalog with facets.
 #
-
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 

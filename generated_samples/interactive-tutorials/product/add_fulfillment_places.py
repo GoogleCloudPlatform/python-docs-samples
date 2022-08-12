@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START retail_add_fulfillment_places]
+# Adding place IDs using Retail API.
+#
 import datetime
 import random
 import string

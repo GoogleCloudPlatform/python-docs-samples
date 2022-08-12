@@ -14,7 +14,7 @@
 
 
 # [START retail_get_product]
-# Get product from a catalog using Retail API
+# Get product from a catalog using Retail API.
 #
 import random
 import string
