@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import base64
 import json
 import os
 import random
-import time
 from subprocess import CalledProcessError
+import time
 
-from google.oauth2 import service_account
 from google.auth.exceptions import RefreshError
+from google.oauth2 import service_account
 import googleapiclient.discovery
-from retrying import retry
 
 from service_account_ssh import main
 
@@ -89,9 +89,9 @@ def test_main(capsys):
     # More exceptions could be raised, keeping track of ones I could
     # find for now.
     @backoff.on_exception(backoff.expo,
-                      (CalledProcessError,
-                      RefreshError),
-                      max_tries=5)
+                          (CalledProcessError,
+                           RefreshError),
+                          max_tries=5)
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
