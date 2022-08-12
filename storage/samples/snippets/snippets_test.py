@@ -442,7 +442,11 @@ def test_create_bucket_dual_region(test_bucket_create, capsys):
         test_bucket_create.name, location, region_1, region_2
     )
     out, _ = capsys.readouterr()
-    assert f"Bucket {test_bucket_create.name} created in {region_1}+{region_2}" in out
+    assert f"Created bucket {test_bucket_create.name}" in out
+    assert location in out
+    assert region_1 in out
+    assert region_2 in out
+    assert "dual-region" in out
 
 
 def test_bucket_delete_default_kms_key(test_bucket, capsys):

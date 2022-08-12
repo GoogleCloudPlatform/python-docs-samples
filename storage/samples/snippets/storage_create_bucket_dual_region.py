@@ -37,9 +37,12 @@ def create_bucket_dual_region(bucket_name, location, region_1, region_2):
     # location = "US"
 
     storage_client = storage.Client()
-    storage_client.create_bucket(bucket_name, location=location, data_locations=[region_1, region_2])
+    bucket = storage_client.create_bucket(bucket_name, location=location, data_locations=[region_1, region_2])
 
-    print(f"Bucket {bucket_name} created in {region_1}+{region_2}.")
+    print(f"Created bucket {bucket_name}")
+    print(f" - location: {bucket.location}")
+    print(f" - location_type: {bucket.location_type}")
+    print(f" - customPlacementConfig data_locations: {bucket.data_locations}")
 
 
 # [END storage_create_bucket_dual_region]
