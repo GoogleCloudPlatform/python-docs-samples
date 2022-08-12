@@ -78,7 +78,7 @@ To access the Retail API, you must create a service account. Check that you are 
 1. Assign the needed roles to your service account:
 
     ```bash
-    for role in {retail.admin,storage.admin,bigquery.admin}
+    for role in {retail.admin,storage.admin}
     do gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> --member="serviceAccount:<YOUR_SERVICE_ACCOUNT_ID>@<YOUR_PROJECT_ID>.iam.gserviceaccount.com" --role="roles/${role}"
     done
     ```
