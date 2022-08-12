@@ -1,4 +1,4 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -33,7 +33,7 @@ def delay_rerun(*args):
     return True
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def client():
     client = dns.Client(PROJECT)
 
@@ -47,7 +47,7 @@ def client():
             pass
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def zone(client):
     zone = client.zone(TEST_ZONE_NAME, TEST_ZONE_DNS_NAME)
     zone.description = TEST_ZONE_DESCRIPTION
