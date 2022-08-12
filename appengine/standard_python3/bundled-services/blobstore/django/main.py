@@ -34,6 +34,7 @@ class UserPhoto(ndb.Model):
     blob_key = ndb.BlobKeyProperty()
 
 
+# [START gae_blobstore_handler_django]
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
     def post(self, environ):
         upload = self.get_uploads(environ)[0]
@@ -55,6 +56,7 @@ class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
             # GAE sets it to a guessed type if the header is not set.
             response["Content-Type"] = None
             return response
+# [END gae_blobstore_handler_django]
 
 
 def upload_form(request):
@@ -84,11 +86,14 @@ def upload_photo(request):
     return PhotoUploadHandler().post(request.environ)
 
 
+# [START gae_blobstore_handler_django]
 urlpatterns = (
     path("", upload_form, name="upload_form"),
     path("view_photo/<key>", view_photo, name="view_photo"),
     path("upload_photo", upload_photo, name="upload_photo"),
 )
+# [END gae_blobstore_handler_django]
+
 
 settings.configure(
     DEBUG=True,

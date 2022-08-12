@@ -67,6 +67,7 @@ def send_mail():
     return f"Successfully sent mail to {address}.", 201
 
 
+# [START gae_mail_handler_bounce_flask]
 @app.route("/_ah/bounce", methods=["POST"])
 def receive_bounce():
     bounce_message = mail.BounceNotification(dict(request.form.lists()))
@@ -76,8 +77,10 @@ def receive_bounce():
     print("Bounce notification: ", bounce_message.notification)
 
     return "OK", 200
+# [END gae_mail_handler_bounce_flask]
 
 
+# [START gae_mail_handler_receive_flask]
 @app.route("/_ah/mail/<path>", methods=["POST"])
 def receive_mail(path):
     message = mail.InboundEmailMessage(request.get_data())
@@ -89,3 +92,4 @@ def receive_mail(path):
         break
 
     return "OK", 200
+# [END gae_mail_handler_receive_flask]

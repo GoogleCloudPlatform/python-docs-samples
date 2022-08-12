@@ -26,6 +26,7 @@ class PhotoUpload(ndb.Model):
     blob_key = ndb.BlobKeyProperty()
 
 
+# [START gae_blobstore_handler_flask]
 class PhotoUploadHandler(blobstore.BlobstoreUploadHandler):
     def post(self):
         upload = self.get_uploads(request.environ)[0]
@@ -48,6 +49,19 @@ class ViewPhotoHandler(blobstore.BlobstoreDownloadHandler):
             return "", headers
 
 
+@app.route("/view_photo/<photo_key>")
+def view_photo(photo_key):
+    """View photo given a key."""
+    return ViewPhotoHandler().get(photo_key)
+
+
+@app.route("/upload_photo", methods=["POST"])
+def upload_photo():
+    """Upload handler called by blobstore when a blob is uploaded in the test."""
+    return PhotoUploadHandler().post()
+# [END gae_blobstore_handler_flask]
+
+
 @app.route("/")
 def upload():
     """Create the HTML form to upload a file."""
@@ -64,15 +78,3 @@ def upload():
     )
 
     return response
-
-
-@app.route("/view_photo/<photo_key>")
-def view_photo(photo_key):
-    """View photo given a key."""
-    return ViewPhotoHandler().get(photo_key)
-
-
-@app.route("/upload_photo", methods=["POST"])
-def upload_photo():
-    """Upload handler called by blobstore when a blob is uploaded in the test."""
-    return PhotoUploadHandler().post()

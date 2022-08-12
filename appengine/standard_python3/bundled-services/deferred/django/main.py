@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START gae_deferred_handler_django]
 import os
 
 from django.conf import settings
@@ -79,3 +80,4 @@ settings.configure(
 )
 
 app = wrap_wsgi_app(get_wsgi_application(), use_deferred=True)
+# [END gae_deferred_handler_django]
