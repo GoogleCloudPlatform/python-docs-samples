@@ -100,9 +100,7 @@ def test_main(capsys):
 
     # Test SSH to the instance.
     ssh_login()
-
-    finally:
-        cleanup_resources(compute, iam, project, test_id, zone, account_email)
+    cleanup_resources(compute, iam, project, test_id, zone, account_email)
 
 
 def setup_resources(
