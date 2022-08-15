@@ -21,7 +21,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound, AlreadyExists
+from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -31,6 +31,8 @@ import pytest
 # GCP Project
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
+DATAPROC_REGION = "us-central1"
+
 
 # Google Cloud Storage constants
 BUCKET_NAME = f"data-analytics-process-test{TEST_ID}"
@@ -44,45 +46,42 @@ BQ_READ_TABLE = f"data-analytics-process-test-joined-{TEST_ID}".replace("-", "_"
 BQ_WRITE_TABLE = f"data-analytics-process-test-normalized-{TEST_ID}".replace("-", "_")
 TABLE_ID = f"{PROJECT_ID}.{BQ_DATASET}.{BQ_READ_TABLE}"
 
-DATAPROC_REGION = "us-central1"
 PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 
-BATCH_ID = (
-    f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
-)
-BATCH_CONFIG = {
-    "pyspark_batch": {
-        "jar_file_uris": [PYSPARK_JAR],
-        "main_python_file_uri": PROCESSING_PYTHON_FILE,
-        "args": [
-            PROJECT_ID,
-            f"{BQ_DATASET}.{BQ_READ_TABLE}",
-            f"{BQ_DATASET}.{BQ_WRITE_TABLE}",
-        ],
-    },
-}
 
-@pytest.fixture(scope="module", autouse=True)
-def delete_dataproc_batch():
-    yield
+@pytest.fixture(scope="module")
+def test_dataproc_batch():
+
+    BATCH_ID = (
+        f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
+    )
+    BATCH_CONFIG = {
+        "pyspark_batch": {
+            "jar_file_uris": [PYSPARK_JAR],
+            "main_python_file_uri": PROCESSING_PYTHON_FILE,
+            "args": [
+                PROJECT_ID,
+                f"{BQ_DATASET}.{BQ_READ_TABLE}",
+                f"{BQ_DATASET}.{BQ_WRITE_TABLE}",
+            ],
+        },
+    }
+
+    yield (BATCH_ID, BATCH_CONFIG)
     dataproc_client = dataproc.BatchControllerClient(
         client_options={
             "api_endpoint": f"{DATAPROC_REGION}-dataproc.googleapis.com:443"
         }
     )
     request = dataproc.DeleteBatchRequest(
-        name=BATCH_ID
+        name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
-    # Make the request
-    operation = dataproc_client.delete_batch(request=request)
 
-    print("Waiting for operation to complete...")
+    # Make the request - there will only be a response if the deletion fails
+    # otherwise response will be None
+    response = dataproc_client.delete_batch(request=request)
 
-    response = operation.result()
-
-    # Handle the response
-    print(response)
 
 @pytest.fixture(scope="module")
 def test_bucket():
@@ -105,7 +104,6 @@ def test_bucket():
     bucket.delete(force=True)
 
 
-# TODO(coleleah): teardown any previous resources
 @pytest.fixture(autouse=True)
 def bq_dataset(test_bucket):
     # Create dataset and table tfor test CSV
@@ -144,8 +142,8 @@ def bq_dataset(test_bucket):
 
 
 # Retry if we see a flaky 409 "subnet not ready" exception
-@backoff.on_exception(backoff.expo, (Aborted, AlreadyExists), max_tries=3)
-def test_process(test_bucket):
+@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
+def test_process(test_bucket, test_dataproc_batch):
     # check that the results table isnt there
     with pytest.raises(NotFound):
         BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}")
@@ -158,8 +156,8 @@ def test_process(test_bucket):
     )
     request = dataproc.CreateBatchRequest(
         parent=f"projects/{PROJECT_ID}/regions/{DATAPROC_REGION}",
-        batch=BATCH_CONFIG,
-        batch_id=BATCH_ID,
+        batch=test_dataproc_batch[1],
+        batch_id=test_dataproc_batch[0],
     )
     # Make the request
     operation = dataproc_client.create_batch(request=request)
