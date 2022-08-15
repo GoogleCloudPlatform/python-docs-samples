@@ -21,7 +21,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound
+from google.api_core.exceptions import Aborted, NotFound, AlreadyExists
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -124,7 +124,7 @@ def bq_dataset(test_bucket):
 
 
 # Retry if we see a flaky 409 "subnet not ready" exception
-@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
+@backoff.on_exception(backoff.expo, (Aborted, AlreadyExists), max_tries=3)
 def test_process(test_bucket):
     # check that the results table isnt there
     with pytest.raises(NotFound):
