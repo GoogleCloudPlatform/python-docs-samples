@@ -63,6 +63,26 @@ BATCH_CONFIG = {
     },
 }
 
+@pytest.fixture(scope="module", autouse=True)
+def delete_dataproc_batch():
+    yield
+    dataproc_client = dataproc.BatchControllerClient(
+        client_options={
+            "api_endpoint": f"{DATAPROC_REGION}-dataproc.googleapis.com:443"
+        }
+    )
+    request = dataproc.DeleteBatchRequest(
+        name=BATCH_ID
+    )
+    # Make the request
+    operation = dataproc_client.delete_batch(request=request)
+
+    print("Waiting for operation to complete...")
+
+    response = operation.result()
+
+    # Handle the response
+    print(response)
 
 @pytest.fixture(scope="module")
 def test_bucket():
