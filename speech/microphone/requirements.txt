@@ -1,4 +1,4 @@
-google-cloud-speech==2.15.0
+google-cloud-speech==2.15.1
 pyaudio==0.2.12
 six==1.16.0
 
