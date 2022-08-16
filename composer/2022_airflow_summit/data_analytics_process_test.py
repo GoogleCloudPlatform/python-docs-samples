@@ -143,7 +143,7 @@ def bq_dataset(test_bucket):
 
 # Retry if we see a flaky 409 "subnet not ready" exception
 @backoff.on_exception(backoff.expo, Aborted, max_tries=3)
-def test_process(test_bucket, test_dataproc_batch):
+def test_process(test_dataproc_batch):
     # check that the results table isnt there
     with pytest.raises(NotFound):
         BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}")
