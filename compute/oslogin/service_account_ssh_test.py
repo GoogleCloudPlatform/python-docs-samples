@@ -16,11 +16,13 @@ import base64
 import json
 import os
 import random
+from subprocess import CalledProcessError
 import time
 
+import backoff
+from google.auth.exceptions import RefreshError
 from google.oauth2 import service_account
 import googleapiclient.discovery
-from retrying import retry
 
 from service_account_ssh import main
 
@@ -84,8 +86,12 @@ def test_main(capsys):
         'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=300000,
-           stop_max_attempt_number=10)
+    # More exceptions could be raised, keeping track of ones I could
+    # find for now.
+    @backoff.on_exception(backoff.expo,
+                          (CalledProcessError,
+                           RefreshError),
+                          max_tries=5)
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
@@ -93,13 +99,8 @@ def test_main(capsys):
         assert assert_value in out
 
     # Test SSH to the instance.
-    try:
-        ssh_login()
-    except Exception:
-        raise Exception('SSH to the test instance failed.')
-
-    finally:
-        cleanup_resources(compute, iam, project, test_id, zone, account_email)
+    ssh_login()
+    cleanup_resources(compute, iam, project, test_id, zone, account_email)
 
 
 def setup_resources(
