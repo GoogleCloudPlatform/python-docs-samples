@@ -38,7 +38,7 @@ pytz==2022.2.1
 PyYAML==6.0
 requests==2.28.1
 rsa==4.9
-Shapely==1.8.2
+Shapely==1.8.3
 six==1.16.0
 typing-extensions==4.3.0
 typing-inspect==0.7.1
