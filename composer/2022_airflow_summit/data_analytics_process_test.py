@@ -78,9 +78,13 @@ def test_dataproc_batch():
         name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
 
-    # Make the request - there will only be a response if the deletion fails
-    # otherwise response will be None
+    # Make the request
     response = dataproc_client.delete_batch(request=request)
+
+    # There will only be a response if the deletion fails
+    # otherwise response will be None
+    if response:
+        print(response)
 
 
 @pytest.fixture(scope="module")
