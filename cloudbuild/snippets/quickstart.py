@@ -23,10 +23,18 @@ def quickstart():
     print the in-progress status and print the completed status."""
 
     # Authorize the client with Google defaults
-    # If you're using Private Pools, add a regional `api_endpoint` to `CloudBuildClient()`
-    # For example, '<YOUR_POOL_REGION>-cloudbuild.googleapis.com'
     credentials, project_id = google.auth.default()
     client = cloudbuild_v1.services.cloud_build.CloudBuildClient()
+
+    # If you're using Private Pools or a non-global default pool, add a regional
+    # `api_endpoint` to `CloudBuildClient()`
+    # For example, '<YOUR_POOL_REGION>-cloudbuild.googleapis.com'
+    #
+    # from google.api_core import client_options
+    # client_options = client_options.ClientOptions(
+    #     api_endpoint="us-central1-cloudbuild.googleapis.com"
+    # )
+    # client = cloudbuild_v1.services.cloud_build.CloudBuildClient(client_options=client_options)
 
     build = cloudbuild_v1.Build()
 
