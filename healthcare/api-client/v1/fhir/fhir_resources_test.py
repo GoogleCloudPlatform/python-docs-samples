@@ -33,12 +33,35 @@ location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 version = "R4"
 resource_type = "Patient"
+bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 
+code_system_file = os.path.join(
+    os.path.dirname(__file__), "resources/CodeSystemExample.json"
+)
+resource_type_from_file = "CodeSystem"
+implementation_guide_file = os.path.join(
+    os.path.dirname(__file__), "resources/ImplementationGuideExample.json"
+)
+implementation_guide_url = (
+    "http://example.com/ImplementationGuide/example.implementation.guide"
+)
+implementation_guide_url = (
+    "http://example.com/ImplementationGuide/example.implementation.guide"
+)
+structure_definition_file = os.path.join(
+    os.path.dirname(__file__), "resources/StructureDefinitionExample.json"
+)
+structure_definition_profile_url_file = os.path.join(
+    os.path.dirname(__file__), "resources/StructureDefinitionProfileUrlExample.json"
+)
+profile_url = "http://example.com/StructureDefinition/example-patient-profile-url"
+implementation_guide_url = (
+    "http://example.com/ImplementationGuide/example.implementation.guide"
+)
 
 BACKOFF_MAX_TIME = 750
 
@@ -175,6 +198,21 @@ def test_patient():
     clean_up()
 
 
+def test_create_resource_from_file(test_dataset, test_fhir_store, capsys):
+    fhir_resources.create_resource_from_file(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        resource_type_from_file,
+        code_system_file,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Created FHIR resource" in out
+
+
 def test_create_patient(test_dataset, test_fhir_store, capsys):
     fhir_resources.create_patient(
         project_id,
@@ -186,6 +224,41 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     out, _ = capsys.readouterr()
 
     assert "Created Patient" in out
+
+
+def test_validate_resource(test_dataset, test_fhir_store, test_patient, capsys):
+    fhir_resources.validate_resource(
+        project_id, location, dataset_id, fhir_store_id, resource_type
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert '{"text": "success"}' in out
+
+
+def test_validate_resource_profile_url(
+    test_dataset, test_fhir_store, test_patient, capsys
+):
+    # Create a StructureDefinition resource that only exists in the FHIR store
+    # to ensure that the validate_resource_profile_url method fails, because the
+    # validation does not adhere to the constraints in the StructureDefinition.
+    fhir_resources.create_structure_definition(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        structure_definition_profile_url_file,
+    )
+
+    fhir_resources.validate_resource_profile_url(
+        project_id, location, dataset_id, fhir_store_id, resource_type, profile_url
+    )
+
+    out, _ = capsys.readouterr()
+
+    # Should fail because we are purposefully validating a resource against a
+    # profile that it does not match
+    assert '"severity": "error"' in out
 
 
 def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
@@ -279,6 +352,48 @@ def test_execute_bundle(test_dataset, test_fhir_store, capsys):
     out, _ = capsys.readouterr()
 
     assert "Executed bundle from file" in out
+
+
+def test_create_structure_definition(test_dataset, test_fhir_store, capsys):
+    fhir_resources.create_structure_definition(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        structure_definition_file,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Created StructureDefinition resource" in out
+
+
+def test_create_implementation_guide(test_dataset, test_fhir_store, capsys):
+    fhir_resources.create_implementation_guide(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        implementation_guide_file,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Created ImplementationGuide resource" in out
+
+
+def test_enable_implementation_guide(test_dataset, test_fhir_store, capsys):
+    fhir_resources.enable_implementation_guide(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        implementation_guide_url,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Enabled ImplementationGuide" in out
 
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
