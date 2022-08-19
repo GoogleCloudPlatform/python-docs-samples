@@ -59,18 +59,7 @@
           "path": "Patient.gender",
           "min": 1,
           "max": "1"
-        },
-        "type": [
-          {
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-                "valueUrl": "uri"
-              }
-            ],
-            "code": "http://hl7.org/fhirpath/System.String"
-          }
-        ]
+        }
       }
     ]
   },

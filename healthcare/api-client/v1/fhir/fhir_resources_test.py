@@ -49,9 +49,6 @@ implementation_guide_file = os.path.join(
 implementation_guide_url = (
     "http://example.com/ImplementationGuide/example.implementation.guide"
 )
-implementation_guide_url = (
-    "http://example.com/ImplementationGuide/example.implementation.guide"
-)
 structure_definition_file = os.path.join(
     os.path.dirname(__file__), "resources/StructureDefinitionExample.json"
 )
@@ -59,9 +56,6 @@ structure_definition_profile_url_file = os.path.join(
     os.path.dirname(__file__), "resources/StructureDefinitionProfileUrlExample.json"
 )
 profile_url = "http://example.com/StructureDefinition/example-patient-profile-url"
-implementation_guide_url = (
-    "http://example.com/ImplementationGuide/example.implementation.guide"
-)
 
 BACKOFF_MAX_TIME = 750
 
@@ -198,6 +192,10 @@ def test_patient():
     clean_up()
 
 
+# This test also creates a CodeSystem resource in the FHIR store, which is
+# required because it serves as a reference resource to
+# ImplementationGuideExample.json when calling
+# test_create_implementation_guide.
 def test_create_resource_from_file(test_dataset, test_fhir_store, capsys):
     fhir_resources.create_resource_from_file(
         project_id,
@@ -233,6 +231,8 @@ def test_validate_resource(test_dataset, test_fhir_store, test_patient, capsys):
 
     out, _ = capsys.readouterr()
 
+    # Should succeed because we are validating a standard Patient resource
+    # against the base FHIR store profile without any customization
     assert '{"text": "success"}' in out
 
 

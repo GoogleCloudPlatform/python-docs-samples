@@ -1102,7 +1102,7 @@ def create_implementation_guide(
 # [END healthcare_create_implementation_guide]
 
 
-# [START healthcare_create_implementation_guide]
+# [START healthcare_enable_implementation_guide]
 def enable_implementation_guide(
     project_id,
     location,
@@ -1131,7 +1131,9 @@ def enable_implementation_guide(
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
     # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
-    # implementation_guide_url = ''
+    # implementation_guide_url =
+    # 'http://hl7.org/fhir/us/core/ImplementationGuide/hl7.fhir.us.core'  #
+    # replace with the 'url' property in the ImplementationGuide resource
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
@@ -1139,8 +1141,7 @@ def enable_implementation_guide(
 
     validation_config = {
         "validationConfig": {
-            "enabledImplementationGuides": [implementation_guide_url],
-            "disableProfileValidation": False,
+            "enabledImplementationGuides": [implementation_guide_url]
         }
     }
 
@@ -1281,6 +1282,10 @@ def validate_resource(
 
     resource_path += "/$validate"
 
+    # The body shown works with a Patient resource and is not guaranteed
+    # to work with other types of FHIR resources. If necessary,
+    # supply a new body with data that corresponds to the resource you
+    # are validating.
     body = {
         "name": [{"use": "official", "family": "Smith", "given": ["Darcy"]}],
         "gender": "female",
@@ -1355,7 +1360,7 @@ def validate_resource_profile_url(
     # The body shown works with a Patient resource and is not guaranteed
     # to work with other types of FHIR resources. If necessary,
     # supply a new body with data that corresponds to the resource you
-    # are validating.
+    # are validating and supply a new resource_type.
     body = {
         "name": [{"use": "official", "family": "Smith", "given": ["Darcy"]}],
         "gender": "female",
