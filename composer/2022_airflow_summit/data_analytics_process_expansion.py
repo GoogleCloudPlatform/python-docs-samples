@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # Since our goal is to focus on the western US, we first filter out non-western states of the US.
     # The definition of western US can be found in the following link:
     # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
-    western_states = ['AZ', 'CA', 'CO', 'ID', 'MT', 'NM', 'NV', 'OR', 'UT', 'WA', 'WY']
+    western_states = ["AZ", "CA", "CO", "ID", "MT", "NM", "NV", "OR", "UT", "WA", "WY"]
     df = df.where(df.STATE.isin(western_states))
     df.show(n=10)
     print("After state filtering, # of rows remaining is:", df.count())
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # Based on our goal, we then filter out rows whose element value does not equal to PRCP or SNOW
     # PRCP = precipitation
     # SNOW = snowfall
-    df = df.where(df.ELEMENT.isin(['PRCP', 'SNOW']))
+    df = df.where(df.ELEMENT.isin(["PRCP", "SNOW"]))
     df.show(n=10)
     print("After elemet filtering, # of rows remaining is:", df.count())
 
@@ -90,11 +90,11 @@ if __name__ == "__main__":
 
     # Extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
-    df = df.withColumn("DATE", year(df.DATE)).withColumnRenamed('DATE', 'YEAR')
+    df = df.withColumn("DATE", year(df.DATE)).withColumnRenamed("DATE", "YEAR")
 
     # Each year's arithmetic mean of precipitation
     prcp_mean_df = (
-        df.where(df.ELEMENT == 'PRCP')
+        df.where(df.ELEMENT == "PRCP")
         .groupBy("YEAR")
         .agg(avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
         .sort("YEAR")
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     # Each year's arithmetic mean of snowfall
     snow_mean_df = (
-        df.where(df.ELEMENT == 'SNOW')
+        df.where(df.ELEMENT == "SNOW")
         .groupBy("YEAR")
         .agg(avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
         .sort("YEAR")
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     snow_mean_df.show(n=50)
 
     # Filter out the states to move on to the distance weighting algorithm (DWA)
-    states_near_phx = ['AZ', 'CA', 'CO', 'NM', 'NV', 'UT']
+    states_near_phx = ["AZ", "CA", "CO", "NM", "NV", "UT"]
     annual_df = df.where(df.STATE.isin(states_near_phx))
 
     # Latitude and longitude of Phoenix, which are needed to perform DWA
@@ -146,9 +146,11 @@ if __name__ == "__main__":
             latitude = row[1]
             longitude = row[2]
             # Calculate the distance from each station to Phoenix
-            distance_to_phx = math.sqrt((phx_location[0] - latitude) ** 2 + (phx_location[1] - longitude) ** 2)
+            distance_to_phx = math.sqrt(
+                (phx_location[0] - latitude) ** 2 + (phx_location[1] - longitude) ** 2
+            )
             # Calculate the distance factor of each station (1 / d^2)
-            distance_factor = 1.0 / (distance_to_phx ** 2)
+            distance_factor = 1.0 / (distance_to_phx**2)
             factor_list.append(distance_factor)
             factor_sum += distance_factor
 
@@ -176,22 +178,28 @@ if __name__ == "__main__":
         # Collect() function returns a list of Row object.
         # prcp_year and snow_year will be the input for the distance weighting algorithm
         prcp_year = (
-            annual_df.where((annual_df.ELEMENT == 'PRCP') & (annual_df.YEAR == year_val))
+            annual_df.where(
+                (annual_df.ELEMENT == "PRCP") & (annual_df.YEAR == year_val)
+            )
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-            .agg(sum("VALUE").alias("ANNUAL_PRCP")).collect()
+            .agg(sum("VALUE").alias("ANNUAL_PRCP"))
+            .collect()
         )
         # print(prcp_year)
         snow_year = (
-            annual_df.where((annual_df.ELEMENT == 'SNOW') & (annual_df.YEAR == year_val))
+            annual_df.where(
+                (annual_df.ELEMENT == "SNOW") & (annual_df.YEAR == year_val)
+            )
             .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-            .agg(sum("VALUE").alias("ANNUAL_SNOW")).collect()
+            .agg(sum("VALUE").alias("ANNUAL_SNOW"))
+            .collect()
         )
 
-        phx_annual_prcp_df = (
-            phx_annual_prcp_df.withColumn(f"PHX_PRCP_{year_val}", lit(phx_dw_compute(prcp_year)))
+        phx_annual_prcp_df = phx_annual_prcp_df.withColumn(
+            f"PHX_PRCP_{year_val}", lit(phx_dw_compute(prcp_year))
         )
-        phx_annual_snow_df = (
-            phx_annual_snow_df.withColumn(f"PHX_SNOW_{year_val}", lit(phx_dw_compute(snow_year)))
+        phx_annual_snow_df = phx_annual_snow_df.withColumn(
+            f"PHX_SNOW_{year_val}", lit(phx_dw_compute(snow_year))
         )
 
     # This table has only two rows (the first row contains the columns)
@@ -210,40 +218,35 @@ if __name__ == "__main__":
         # See https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes
         # for other save mode options
         (
-            df.write
-            .format("bigquery")
+            df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
             .mode("overwrite")
             .save(DF_WRITE_TABLE)
         )
 
         (
-            prcp_mean_df.write
-            .format("bigquery")
+            prcp_mean_df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
             .mode("overwrite")
             .save(PRCP_MEAN_WRITE_TABLE)
         )
 
         (
-            snow_mean_df.write
-            .format("bigquery")
+            snow_mean_df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
             .mode("overwrite")
             .save(SNOW_MEAN_WRITE_TABLE)
         )
 
         (
-            phx_annual_prcp_df.write
-            .format("bigquery")
+            phx_annual_prcp_df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
             .mode("overwrite")
             .save(PHX_PRCP_WRITE_TABLE)
         )
 
         (
-            phx_annual_snow_df.write
-            .format("bigquery")
+            phx_annual_snow_df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
             .mode("overwrite")
             .save(PHX_SNOW_WRITE_TABLE)

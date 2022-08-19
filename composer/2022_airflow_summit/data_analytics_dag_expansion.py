@@ -59,7 +59,7 @@ BATCH_CONFIG = {
         "execution_config": {
             "service_account": "{{var.value.dataproc_service_account}}"
         }
-    }
+    },
 }
 
 yesterday = datetime.datetime.combine(
@@ -73,7 +73,7 @@ default_dag_args = {
     # To email on failure or retry set 'email' arg to your email and enable
     # emailing here.
     "email_on_failure": False,
-    "email_on_retry": False
+    "email_on_retry": False,
 }
 
 with models.DAG(
@@ -98,13 +98,13 @@ with models.DAG(
         destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcnd-stations-new",
         source_format="CSV",
         schema_fields=[
-            {'name': 'ID', 'type': 'STRING', 'mode': 'REQUIRED'},
-            {'name': 'LATITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-            {'name': 'LONGITUDE', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-            {'name': 'ELEVATION', 'type': 'FLOAT', 'mode': 'REQUIRED'},
-            {'name': 'STATE', 'type': 'STRING', 'mode': 'REQUIRED'},
+            {"name": "ID", "type": "STRING", "mode": "REQUIRED"},
+            {"name": "LATITUDE", "type": "FLOAT", "mode": "REQUIRED"},
+            {"name": "LONGITUDE", "type": "FLOAT", "mode": "REQUIRED"},
+            {"name": "ELEVATION", "type": "FLOAT", "mode": "REQUIRED"},
+            {"name": "STATE", "type": "STRING", "mode": "REQUIRED"},
         ],
-        write_disposition="WRITE_TRUNCATE"
+        write_disposition="WRITE_TRUNCATE",
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
