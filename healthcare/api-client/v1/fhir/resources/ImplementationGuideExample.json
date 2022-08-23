@@ -1,0 +1,33 @@
+{
+  "resourceType" : "ImplementationGuide",
+  "name" : "TestImplementationGuide",
+  "url" : "http://example.com/ImplementationGuide/example.implementation.guide",
+  "packageId": "test-implementation-guide",
+  "date" : "2020-01-01",
+  "fhirVersion" : ["4.0.1"],
+  "status": "draft",
+  "license" : "CC-BY-1.0",
+  "global" : [{
+    "type" : "Patient",
+    "profile" : "http://example.com/StructureDefinition/example-patient"
+  }],
+  "definition" : {
+    "grouping" : [{
+      "name" : "test",
+      "description" : "Description"
+    }],
+    "resource": [
+      {
+        "extension": [
+          {
+            "url": "http://example.com/CodeSystem/example-category",
+            "valueString": "CodeSystem"
+          }
+        ],
+        "reference": {
+          "reference": "http://example.com/CodeSystem/example-category"
+        }
+      }
+    ]
+  }
+}
