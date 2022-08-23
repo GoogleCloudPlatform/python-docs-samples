@@ -1,0 +1,93 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "example-patient",
+  "url": "http://example.com/StructureDefinition/example-patient-profile-url",
+  "version": "1.0.0",
+  "name": "Example",
+  "title": "Example",
+  "status": "active",
+  "date": "2020-01-01",
+  "description": "This is an example.",
+  "fhirVersion": "4.0.1",
+  "kind": "complex-type",
+  "abstract": false,
+  "context": [
+    {
+      "type": "element",
+      "expression": "Patient"
+    }
+  ],
+  "type": "Patient",
+  "baseDefinition": "http://example.com/StructureDefinition/example-patient-profile-url",
+  "derivation": "constraint",
+  "snapshot": {
+    "element": [
+      {
+        "id": "Patient",
+        "path": "Patient",
+        "short": "Patient",
+        "definition": "A Patient",
+        "min": 0,
+        "max": "1",
+        "base": {
+          "path": "Patient",
+          "min": 0,
+          "max": "*"
+        }
+      },
+      {
+        "id": "Patient.name",
+        "path": "Patient.name",
+        "short": "Patient name",
+        "definition": "Patient name",
+        "min": 0,
+        "max": "1",
+        "base": {
+          "path": "Patient.name",
+          "min": 0,
+          "max": "1"
+        }
+      },
+      {
+        "id": "Patient.gender",
+        "path": "Patient.gender",
+        "short": "Patient gender",
+        "definition": "Patient gender",
+        "min": 1,
+        "max": "1",
+        "base": {
+          "path": "Patient.gender",
+          "min": 1,
+          "max": "1"
+        },
+        "type": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+                "valueUrl": "uri"
+              }
+            ],
+            "code": "http://hl7.org/fhirpath/System.String"
+          }
+        ]
+      }
+    ]
+  },
+  "differential": {
+    "element": [
+      {
+        "id": "Patient",
+        "path": "Patient"
+      },
+      {
+        "id": "Patient.name",
+        "path": "Patient.name"
+      },
+      {
+        "id": "Patient.gender",
+        "path": "Patient.gender"
+      }
+    ]
+  }
+}
