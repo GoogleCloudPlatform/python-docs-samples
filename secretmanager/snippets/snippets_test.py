@@ -23,6 +23,7 @@ from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
+from create_secret_with_user_managed_replication import create_ummr_secret
 from delete_secret import delete_secret
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
@@ -142,6 +143,12 @@ def test_add_secret_version(secret):
 
 def test_create_secret(client, project_id, secret_id):
     secret = create_secret(project_id, secret_id)
+    assert secret_id in secret.name
+
+
+def test_create_secret_with_user_managed_replication(client, project_id, secret_id):
+    locations = ["us-east1", "us-east4", "us-west1"]
+    secret = create_ummr_secret(project_id, secret_id, locations)
     assert secret_id in secret.name
 
 
