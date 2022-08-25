@@ -58,12 +58,20 @@ def send_mail(address, body):
     if address is None:
         return HttpResponse(content="Error: Missing email address", status=400)
 
-    mail.send_mail(
-        sender=f"demo-app@{project_id}.appspotmail.com",
-        to=address,
-        subject="App Engine Outgoing Email",
-        body=body,
-    )
+    try:
+        mail.send_mail(
+            sender=f"demo-app@{project_id}.appspotmail.com",
+            to=address,
+            subject="App Engine Outgoing Email",
+            body=body,
+        )
+    except Exception as e:
+            print(f"Sending mail to {address} failed with exception {e}.")
+            return HttpResponse(
+                content=f"Exception {e} when sending mail to {address}.",
+                status=500,
+            )
+
 
     print(f"Successfully sent mail to {address}.")
     return HttpResponse(content=f"Successfully sent mail to {address}.", status=201)
