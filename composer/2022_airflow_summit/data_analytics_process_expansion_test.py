@@ -35,15 +35,16 @@ DATAPROC_REGION = "us-central1"
 
 
 # Google Cloud Storage constants
-BUCKET_NAME = f"data-analytics-process-expasion-test{TEST_ID}"
+BUCKET_NAME = f"data-analytics-expansion-{TEST_ID}"
 BUCKET_BLOB = "data_analytics_process_expansion.py"
 TEST_CSV_FILE = "test_data_expansion.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
 
 # BigQuery configs
-BQ_DESTINATION_DATASET_NAME = "expansion_project"
+BQ_DESTINATION_DATASET_NAME = f"expansion_project_test_{TEST_ID}".replace("-", "_")
 BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
+BQ_DESTINATION_TABLE_ID = f"{PROJECT_ID}.{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
 BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
 BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
 BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
@@ -73,12 +74,7 @@ def test_dataproc_batch():
                 f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}",
                 f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}",
             ],
-        },
-        "environment_config": {
-            "execution_config": {
-                "service_account": "{{var.value.dataproc_service_account}}"
-            }
-        },
+        }
     }
 
     yield (BATCH_ID, BATCH_CONFIG)
@@ -120,10 +116,9 @@ def test_bucket():
     bucket = storage_client.get_bucket(BUCKET_NAME)
     bucket.delete(force=True)
 
-
 @pytest.fixture(autouse=True)
 def bq_dataset(test_bucket):
-    # Create dataset and table tfor test CSV
+    # Create dataset and table for test CSV
     BQ_CLIENT.create_dataset(BQ_DESTINATION_DATASET_NAME)
 
     job_config = bigquery.LoadJobConfig(
@@ -131,22 +126,24 @@ def bq_dataset(test_bucket):
             bigquery.SchemaField("ID", "STRING"),
             bigquery.SchemaField("LATITUDE", "FLOAT"),
             bigquery.SchemaField("LONGITUDE", "FLOAT"),
-            bigquery.SchemaField("ELEVATION", "FLOAT"),
             bigquery.SchemaField("STATE", "STRING"),
+            bigquery.SchemaField("DATE", "STRING"),
+            bigquery.SchemaField("ELEMENT", "STRING"),
+            bigquery.SchemaField("VALUE", "FLOAT"),
         ],
-        skip_leading_rows=0,
+        skip_leading_rows=1,
         # The source format defaults to CSV, so the line below is optional.
         source_format=bigquery.SourceFormat.CSV,
     )
     uri = f"gs://{BUCKET_NAME}/{TEST_CSV_FILE}"
 
     load_job = BQ_CLIENT.load_table_from_uri(
-        uri, BQ_DESTINATION_TABLE_NAME, job_config=job_config
+        uri, BQ_DESTINATION_TABLE_ID, job_config=job_config
     )  # Make an API request.
 
     load_job.result()  # Waits for the job to complete.
 
-    destination_table = BQ_CLIENT.get_table(BQ_DESTINATION_TABLE_NAME)  # Make an API request.
+    destination_table = BQ_CLIENT.get_table(BQ_DESTINATION_TABLE_ID)  # Make an API request.
     print("Loaded {} rows.".format(destination_table.num_rows))
 
     yield
@@ -161,9 +158,14 @@ def bq_dataset(test_bucket):
 # Retry if we see a flaky 409 "subnet not ready" exception
 @backoff.on_exception(backoff.expo, Aborted, max_tries=3)
 def test_process(test_dataproc_batch):
-    # check that the results table isnt there
-    with pytest.raises(NotFound):
-        BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}")
+    # check that the results tables aren't there
+    # considered using pytest parametrize, but did not want rest of test
+    # to run 5 times - only this part
+    output_tables = [BQ_NORMALIZED_TABLE_NAME, BQ_PRCP_MEAN_TABLE_NAME, BQ_SNOW_MEAN_TABLE_NAME, BQ_PHX_PRCP_TABLE_NAME, BQ_PHX_SNOW_TABLE_NAME]
+    for output_table in output_tables:
+        with pytest.raises(NotFound):
+            BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{output_table}")
+          
 
     # create a batch
     dataproc_client = dataproc.BatchControllerClient(
@@ -187,4 +189,8 @@ def test_process(test_dataproc_batch):
     print(response)
 
     # check that the results table is there now
-    assert BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}").num_rows > 0
+    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}").num_rows > 0
+    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}").num_rows > 0
+    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}").num_rows > 0
+    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}").num_rows > 0
+    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}").num_rows > 0

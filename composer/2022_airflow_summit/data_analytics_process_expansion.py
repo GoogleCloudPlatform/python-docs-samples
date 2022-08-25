@@ -68,6 +68,7 @@ if __name__ == "__main__":
     except Py4JJavaError:
         raise Exception(f"Error reading {READ_TABLE}")
 
+
     # Since our goal is to focus on the western US, we first filter out non-western states of the US.
     # The definition of western US can be found in the following link:
     # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     # SNOW = snowfall
     df = df.where(df.ELEMENT.isin(["PRCP", "SNOW"]))
     df.show(n=10)
-    print("After elemet filtering, # of rows remaining is:", df.count())
+    print("After element filtering, # of rows remaining is:", df.count())
 
     # Convert the units of precipitation and snowfall from "tenths of a mm" to "mm"
     df = df.withColumn("VALUE", df.VALUE / 10)
