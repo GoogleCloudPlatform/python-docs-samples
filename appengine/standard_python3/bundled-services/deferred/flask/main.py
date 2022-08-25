@@ -61,4 +61,6 @@ def custom_deferred():
     print("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     return deferred.Handler().post(request.environ)
+
+
 # [END gae_deferred_handler_flask]

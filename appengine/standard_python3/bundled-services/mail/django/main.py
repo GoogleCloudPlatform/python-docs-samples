@@ -66,12 +66,11 @@ def send_mail(address, body):
             body=body,
         )
     except Exception as e:
-            print(f"Sending mail to {address} failed with exception {e}.")
-            return HttpResponse(
-                content=f"Exception {e} when sending mail to {address}.",
-                status=500,
-            )
-
+        print(f"Sending mail to {address} failed with exception {e}.")
+        return HttpResponse(
+            content=f"Exception {e} when sending mail to {address}.",
+            status=500,
+        )
 
     print(f"Successfully sent mail to {address}.")
     return HttpResponse(content=f"Successfully sent mail to {address}.", status=201)
@@ -87,6 +86,8 @@ def receive_mail(request):
         break
 
     return HttpResponse("OK")
+
+
 # [END gae_mail_handler_receive_django]
 
 
@@ -99,6 +100,8 @@ def receive_bounce(request):
     print(f"Bounce notification: {bounce_message.notification}")
 
     return HttpResponse("OK")
+
+
 # [END gae_mail_handler_bounce_django]
 
 
