@@ -38,10 +38,10 @@ def IncrementCounter(environ, start_response):
     deferred.defer(do_something_later, my_key, 10)
 
     # Use default URL and queue name, no task name, execute after 10s.
-    deferred.defer(do_something_later, my_key, 10, _countdown=10)
+    deferred.defer(do_something_later, my_key, 10, _countdown=20)
 
     # Providing non-default task queue arguments
-    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=20)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=40)
 
     start_response("200 OK", [("Content-Type", "text/html")])
     return ["Deferred counter increment.".encode("utf-8")]
