@@ -17,7 +17,7 @@ import uuid
 
 import pytest
 
-import data_processing_helper
+import data_processing_helper # noqa: I100 - lint incorrectly wants to group this before pytest
 
 
 OUTPUT_FILENAME = f"test-processed-data-{uuid.uuid4()}.csv"
