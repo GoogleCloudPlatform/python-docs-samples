@@ -12,10 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import data_processing_helper
 import os
 import uuid
+
 import pytest
+
+import data_processing_helper
+
 
 OUTPUT_FILENAME = f"test-processed-data-{uuid.uuid4()}.csv"
 
