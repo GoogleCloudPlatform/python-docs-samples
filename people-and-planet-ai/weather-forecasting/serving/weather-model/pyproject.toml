@@ -1,0 +1,29 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# https://peps.python.org/pep-0621
+[project]
+name = "weather-model"
+version = "1.0.0"
+dependencies = [
+    # The more recent versions of `datasets` have a version conflict
+    # with the `dill` version required by `apache-beam`.
+    # They assume `multiprocess>=0.70.10` is installed without version
+    # constraints, so pip won't find the correct version of `datasets`.
+    "datasets==2.5.2", # version required to be installed along `apache-beam`
+    "transformers==4.25.1",
+]
+
+[project.scripts]
+weather-trainer = "weather.trainer:main"
