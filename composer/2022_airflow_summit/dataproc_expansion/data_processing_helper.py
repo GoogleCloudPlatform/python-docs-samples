@@ -44,12 +44,20 @@ def preprocess_station_data(input_filename: str, output_filename: str) -> None:
         WMO ID	81-85	Character	03980
         """
         for row in data:
-            row = [row[0:12].strip(), row[12:21].strip(), row[21:31].strip(), row[31:38].strip(), row[38:41].strip(), row[41:72].strip()]
+            row = [
+                row[0:12].strip(),
+                row[12:21].strip(),
+                row[21:31].strip(),
+                row[31:38].strip(),
+                row[38:41].strip(),
+                row[41:72].strip(),
+            ]
             rows.append(row)
-    
+
     with out:
         write = csv.writer(out)
         write.writerows(rows)
+
 
 if __name__ == "__main__":
     preprocess_station_data("ghcnd-stations.txt", "ghcn-stations-processed.csv")

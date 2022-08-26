@@ -44,7 +44,9 @@ BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
 # BigQuery configs
 BQ_DESTINATION_DATASET_NAME = f"expansion_project_test_{TEST_ID}".replace("-", "_")
 BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
-BQ_DESTINATION_TABLE_ID = f"{PROJECT_ID}.{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
+BQ_DESTINATION_TABLE_ID = (
+    f"{PROJECT_ID}.{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
+)
 BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
 BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
 BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
@@ -58,9 +60,7 @@ PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 @pytest.fixture(scope="module")
 def test_dataproc_batch():
 
-    BATCH_ID = (
-        f"summit-dag-expansion-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
-    )
+    BATCH_ID = f"summit-dag-expansion-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
         "pyspark_batch": {
             "jar_file_uris": [PYSPARK_JAR],
@@ -116,6 +116,7 @@ def test_bucket():
     bucket = storage_client.get_bucket(BUCKET_NAME)
     bucket.delete(force=True)
 
+
 @pytest.fixture(autouse=True)
 def bq_dataset(test_bucket):
     # Create dataset and table for test CSV
@@ -143,7 +144,9 @@ def bq_dataset(test_bucket):
 
     load_job.result()  # Waits for the job to complete.
 
-    destination_table = BQ_CLIENT.get_table(BQ_DESTINATION_TABLE_ID)  # Make an API request.
+    destination_table = BQ_CLIENT.get_table(
+        BQ_DESTINATION_TABLE_ID
+    )  # Make an API request.
     print("Loaded {} rows.".format(destination_table.num_rows))
 
     yield
@@ -161,11 +164,16 @@ def test_process(test_dataproc_batch):
     # check that the results tables aren't there
     # considered using pytest parametrize, but did not want rest of test
     # to run 5 times - only this part
-    output_tables = [BQ_NORMALIZED_TABLE_NAME, BQ_PRCP_MEAN_TABLE_NAME, BQ_SNOW_MEAN_TABLE_NAME, BQ_PHX_PRCP_TABLE_NAME, BQ_PHX_SNOW_TABLE_NAME]
+    output_tables = [
+        BQ_NORMALIZED_TABLE_NAME,
+        BQ_PRCP_MEAN_TABLE_NAME,
+        BQ_SNOW_MEAN_TABLE_NAME,
+        BQ_PHX_PRCP_TABLE_NAME,
+        BQ_PHX_SNOW_TABLE_NAME,
+    ]
     for output_table in output_tables:
         with pytest.raises(NotFound):
             BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{output_table}")
-          
 
     # create a batch
     dataproc_client = dataproc.BatchControllerClient(
@@ -189,8 +197,33 @@ def test_process(test_dataproc_batch):
     print(response)
 
     # check that the results table is there now
-    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}").num_rows > 0
-    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}").num_rows > 0
-    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}").num_rows > 0
-    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}").num_rows > 0
-    assert BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}").num_rows > 0
+    assert (
+        BQ_CLIENT.get_table(
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}"
+        ).num_rows
+        > 0
+    )
+    assert (
+        BQ_CLIENT.get_table(
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}"
+        ).num_rows
+        > 0
+    )
+    assert (
+        BQ_CLIENT.get_table(
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}"
+        ).num_rows
+        > 0
+    )
+    assert (
+        BQ_CLIENT.get_table(
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}"
+        ).num_rows
+        > 0
+    )
+    assert (
+        BQ_CLIENT.get_table(
+            f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}"
+        ).num_rows
+        > 0
+    )

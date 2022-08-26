@@ -28,8 +28,10 @@ def teardown():
     except FileNotFoundError:
         print("No file to delete")
 
+
 def test_data_processing_helper():
     assert OUTPUT_FILENAME not in os.listdir()
-    data_processing_helper.preprocess_station_data("ghcnd-stations.txt", OUTPUT_FILENAME)
+    data_processing_helper.preprocess_station_data(
+        "ghcnd-stations.txt", OUTPUT_FILENAME
+    )
     assert OUTPUT_FILENAME in os.listdir()
-
