@@ -27,7 +27,7 @@ from airflow.utils.task_group import TaskGroup
 PROJECT_NAME = "{{var.value.gcp_project}}"
 
 # BigQuery configs
-BQ_DESTINATION_DATASET_NAME = "phoenix_precipitation"
+BQ_DESTINATION_DATASET_NAME = "precipitation_changes"
 BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
 BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
 BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
@@ -91,22 +91,6 @@ with models.DAG(
         batch_id=BATCH_ID,
     )
 
-    #TODO(coleleah): Rethink this
-    # load_external_dataset = GCSToBigQueryOperator(
-    #     task_id="run_bq_external_ingestion",
-    #     bucket=BUCKET_NAME,
-    #     source_objects=["ghcnd-stations-new.txt"],
-    #     destination_project_dataset_table=f"{BQ_DESTINATION_DATASET_NAME}.ghcnd-stations-new",
-    #     source_format="CSV",
-    #     schema_fields=[
-    #         {"name": "ID", "type": "STRING", "mode": "REQUIRED"},
-    #         {"name": "LATITUDE", "type": "FLOAT", "mode": "REQUIRED"},
-    #         {"name": "LONGITUDE", "type": "FLOAT", "mode": "REQUIRED"},
-    #         {"name": "ELEVATION", "type": "FLOAT", "mode": "REQUIRED"},
-    #         {"name": "STATE", "type": "STRING", "mode": "REQUIRED"},
-    #     ],
-    #     write_disposition="WRITE_TRUNCATE",
-    # )
     load_external_dataset = GCSToBigQueryOperator(
         task_id="run_bq_external_ingestion",
         bucket=BUCKET_NAME,
@@ -129,7 +113,6 @@ with models.DAG(
         for year in range(1997, 2022):
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
-            # Specifically query a Chicago weather station
             GHCND_STATIONS_JOIN_QUERY = f"""
             SELECT Stations.ID, Stations.LATITUDE, Stations.LONGITUDE,
             Stations.STATE, Table.DATE, Table.ELEMENT, Table.VALUE
