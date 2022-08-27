@@ -78,17 +78,17 @@ if not IDP_KEY:
 
 
 retry_strategy = Retry(
-    total=3,
+    total=5,
     status_forcelist=[400, 401, 403, 500, 502, 503, 504],
     allowed_methods=["GET", "POST"],
-    backoff_factor=3
+    backoff_factor=5
 )
 
 retry_strategy_500 = Retry(
-    total=3,
+    total=5,
     status_forcelist=[500, 502, 503, 504],
     allowed_methods=["GET", "POST"],
-    backoff_factor=3
+    backoff_factor=5
 )
 
 
