@@ -36,7 +36,7 @@ DATAPROC_REGION = "us-central1"
 
 # Google Cloud Storage constants
 BUCKET_NAME = f"data-analytics-expansion-{TEST_ID}"
-BUCKET_BLOB = "data_analytics_process_expansion.py"
+BUCKET_BLOB = f"{os.getcwd()}/data_analytics_process_expansion.py"
 TEST_CSV_FILE = "test_data_expansion.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
@@ -86,7 +86,7 @@ def test_dataproc_batch():
     request = dataproc.DeleteBatchRequest(
         name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
-    
+
     # Declare variable outside of try/except so it can be printed in the exception
     response = None
     try:
