@@ -76,6 +76,8 @@ def test_dataproc_batch():
         name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
 
+    # Declare variable outside of try/except so it can be printed in the exception
+    response = None
     try:
         # Make the request
         response = dataproc_client.delete_batch(request=request)
