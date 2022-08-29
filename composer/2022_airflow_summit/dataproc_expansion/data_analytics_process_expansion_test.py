@@ -35,9 +35,10 @@ DATAPROC_REGION = "us-central1"
 
 
 # Google Cloud Storage constants
+# filenames include dataproc_expansion path for nox to run properly
 BUCKET_NAME = f"data-analytics-expansion-{TEST_ID}"
-BUCKET_BLOB = f"{os.getcwd()}/data_analytics_process_expansion.py"
-TEST_CSV_FILE = "test_data_expansion.csv"
+BUCKET_BLOB = "dataproc_expansion/data_analytics_process_expansion.py"
+TEST_CSV_FILE = "dataproc_expansion/test_data_expansion.csv"
 
 BQ_CLIENT = bigquery.Client(project=PROJECT_ID)
 
