@@ -88,17 +88,12 @@ def test_dataproc_batch():
     )
 
     try:
-     # Make the request
+        # Make the request
         response = dataproc_client.delete_batch(request=request)
     except NotFound:
         # There will only be a response if the deletion fails
         # otherwise response will be None
         print(response)
-
-        
-
-
-
 
 
 @pytest.fixture(scope="module")

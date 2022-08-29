@@ -53,9 +53,7 @@ PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 @pytest.fixture(scope="module")
 def test_dataproc_batch():
 
-    BATCH_ID = (
-        f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
-    )
+    BATCH_ID = f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
         "pyspark_batch": {
             "jar_file_uris": [PYSPARK_JAR],
@@ -78,12 +76,12 @@ def test_dataproc_batch():
         name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
 
-    # Make the request
-    response = dataproc_client.delete_batch(request=request)
-
-    # There will only be a response if the deletion fails
-    # otherwise response will be None
-    if response:
+    try:
+        # Make the request
+        response = dataproc_client.delete_batch(request=request)
+    except NotFound:
+        # There will only be a response if the deletion fails
+        # otherwise response will be None
         print(response)
 
 
