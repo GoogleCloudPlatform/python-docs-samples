@@ -584,7 +584,7 @@ class Utils:
                 **parameters,
             }.items()
         ]
-        logging.info(f"{cmd}")
+        logging.info(cmd)
 
         stdout = subprocess.check_output(cmd).decode("utf-8")
         logging.info(f"Launched Dataflow Template job: {unique_job_name}")

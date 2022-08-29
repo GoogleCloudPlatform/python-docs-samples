@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// [START dataflow_extensible_template_udf]
 /**
  * User-defined function (UDF) to transform events
  * as part of a Dataflow template job.
@@ -31,3 +32,4 @@
   
     return JSON.stringify(obj);
   }
+// [END dataflow_extensible_template_udf]
