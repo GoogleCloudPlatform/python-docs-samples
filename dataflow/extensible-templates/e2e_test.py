@@ -14,6 +14,7 @@ import json
 import os
 import time
 
+from google.cloud import bigquery
 from google.cloud import pubsub
 from google.cloud import storage
 
@@ -50,7 +51,12 @@ def bq_dataset(utils: Utils) -> str:
 @pytest.fixture(scope="session")
 def bq_table(utils: Utils, bq_dataset: str) -> str:
     yield from utils.bigquery_table(
-        bq_dataset, BQ_TABLE, schema="url:STRING,review:STRING"
+        bq_dataset,
+        BQ_TABLE,
+        schema=[
+            bigquery.SchemaField("url", "STRING", mode="REQUIRED"),
+            bigquery.SchemaField("review", "STRING", mode="REQUIRED"),
+        ],
     )
 
 

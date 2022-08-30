@@ -119,17 +119,16 @@ class Utils:
 
     @staticmethod
     def bigquery_table(
-        dataset_name: str, table_name: str, **kwargs
+        dataset_name: str, table_name: str, project: str = PROJECT, **kwargs
     ) -> str:
-        # bq command-line tool allows passing schema in the format
-        # "field:data_type,field:data_type" or the path to the JSON schema
-        # file on your local machine.
-        schema = kwargs.get("schema", "")
-        cmd = ["bq", "mk", "-t", f"{dataset_name}.{table_name}", schema]
-        logging.info(f"{cmd}")
-        subprocess.check_call(cmd)
-        logging.info(f"Created bigquery_table: {dataset_name}.{table_name}")
-        yield table_name
+        from google.cloud import bigquery
+        bigquery_client = bigquery.Client()
+        table = bigquery.Table(
+            f"{project}.{dataset_name}.{table_name}", **kwargs
+        )
+        result = bigquery_client.create_table(table)
+        logging.info(f"Created bigquery_table: {result.full_table_id}")
+        yield result.table_id
         # This table will be deleted when the dataset is deleted.
 
     @staticmethod
