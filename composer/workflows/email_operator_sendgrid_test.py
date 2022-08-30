@@ -21,6 +21,6 @@ def test_email_operator_sendgrid() -> None:
     environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    import email_operator_sendgrid
+    from . import email_operator_sendgrid
 
     internal_unit_testing.assert_has_valid_dag(email_operator_sendgrid)
