@@ -1,0 +1,8 @@
+apache-beam[gcp]==2.38.0
+earthengine-api==0.1.311
+folium==0.12.1.post1
+google-cloud-aiplatform==1.12.1
+imageio==2.19.0
+matplotlib==3.5.1
+python-snappy==0.6.1
+tensorflow==2.8.1

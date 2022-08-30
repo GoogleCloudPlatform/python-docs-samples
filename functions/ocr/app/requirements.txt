@@ -1,5 +1,5 @@
 google-cloud-pubsub==2.9.0
 google-cloud-storage==2.0.0; python_version < '3.7'
 google-cloud-storage==2.1.0; python_version > '3.6'
-google-cloud-translate==3.7.2
-google-cloud-vision==2.7.2
+google-cloud-translate==3.8.0
+google-cloud-vision==3.1.0

@@ -282,8 +282,7 @@ The following sections describe how to delete or turn off these resources.
 
 ## Limitations
 
-* You must use a Google-provided base image to package your containers using Docker.
-* You cannot update streaming jobs using Flex Template.
-* You cannot use FlexRS for Flex Template jobs.
+There are certain limitations that apply to Flex Templates jobs. 
 
-📝 Docs: [Using Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates)
+📝 [Using Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates#limitations)
+Google Cloud Dataflow documentation page is the authoritative source for the up-to-date information on that.

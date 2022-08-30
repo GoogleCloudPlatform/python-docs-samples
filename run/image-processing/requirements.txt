@@ -3,6 +3,6 @@ pytest==7.0.1; python_version > "3.0"
 # pin pytest to 4.6.11 for Python2.
 pytest==7.0.1; python_version < "3.0"
 gunicorn==20.1.0
-google-cloud-vision==2.7.2
+google-cloud-vision==3.1.0
 google-cloud-storage==2.1.0
-Wand==0.6.7
+Wand==0.6.8

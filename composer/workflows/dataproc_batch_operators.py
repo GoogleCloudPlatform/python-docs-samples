@@ -11,16 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# Check out the Dataproc Serverless workloads with Cloud Composer guide at
+# https://cloud.google.com/composer/docs/composer-2/run-dataproc-workloads for more details.
 
 # [START composer_dataproc_create_batch]
 
-"""Example Airflow DAG that kicks off a batches job which will run a linear regression Spark ML job
-This DAG relies on an Airflow variable
+"""
+Examples below show how to use operators for managing Dataproc Serverless batch workloads.
+ You use these operators in DAGs that create, delete, list, and get a Dataproc Serverless Spark batch workload.
 https://airflow.apache.org/docs/apache-airflow/stable/concepts/variables.html
-* project_id - Google Cloud Project ID to use for the Cloud Dataproc Serverless.
-* sparkml_file_location - Google Cloud Storage bucket where you've stored the natality_spark_ml file
-* phs_cluster - Google Dataproc Cluster, a single node cluster that you have started and is running
-TODO: Add the tutorial link once it is published.
+* project_id is the Google Cloud Project ID to use for the Cloud Dataproc Serverless.
+* bucket_name is the URI of a bucket where the main python file of the workload (spark-job.py) is located.
+* phs_cluster is the Persistent History Server cluster name.
+* image_name is the name and tag of the custom container image (image:tag).
+* metastore_cluster is the Dataproc Metastore service name.
+* region_name is the region where the Dataproc Metastore service is located.
 """
 
 import datetime
@@ -46,6 +51,8 @@ PHS_CLUSTER_PATH = \
     "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
 SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+# use this for those pyspark jobs that need a spark-bigquery connector
+# https://cloud.google.com/dataproc/docs/tutorials/bigquery-connector-spark-example
 # Start a Dataproc MetaStore Cluster
 METASTORE_SERVICE_LOCATION = \
     "projects/{{var.value.project_id}}/locations/{{var.value.region_name}}/services/{{var.value.metastore_cluster }}"

@@ -229,7 +229,7 @@ def test_end_to_end(input_bucket, output_bucket):
     blob.upload_from_filename("test-images/zombie.jpg", content_type="image/jpeg")
 
     # Wait for image processing to complete
-    time.sleep(30)
+    time.sleep(60)
 
     for x in range(10):
         # Check for blurred image in output bucket

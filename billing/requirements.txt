@@ -1,1 +1,1 @@
-google-cloud-billing==1.5.1
+google-cloud-billing==1.7.0
