@@ -36,6 +36,8 @@ def HelloReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+
+
 # [END gae_mail_handler_receive_wsgi]
 
 
@@ -54,6 +56,8 @@ def BounceReceiver(environ, start_response):
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
     return ["success".encode("utf-8")]
+
+
 # [END gae_mail_handler_bounce_wsgi]
 
 
@@ -90,12 +94,17 @@ def HomePage(environ, start_response):
             print("Error: missing email address")
             return "Error: Missing email address", 400
 
-        mail.send_mail(
-            sender=f"demo-app@{project_id}.appspotmail.com",
-            to=address,
-            subject="App Engine Outgoing Email",
-            body=form.get("body")[0],
-        )
+        try:
+            mail.send_mail(
+                sender=f"demo-app@{project_id}.appspotmail.com",
+                to=address,
+                subject="App Engine Outgoing Email",
+                body=form.get("body")[0],
+            )
+        except Exception as e:
+            print(f"Sending mail to {address} failed with exception {e}.")
+            start_response("500 SERVER ERROR")
+            return [f"Exception {e} when sending mail to {address}.".encode("utf-8")]
 
         print(f"Successfully sent mail to {address}.")
 
