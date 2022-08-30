@@ -20,16 +20,18 @@
  * @param {string} inJson input Pub/Sub JSON message (stringified)
  */
  function process(inJson) {
-    var obj = JSON.parse(inJson),
-        includePubsubMessage = obj.data && obj.attributes,
-        data = includePubsubMessage ? obj.data : obj;
-    
-    if (! data.hasOwnProperty('url')) {
+    // Nashorn engine is only ECMAScript 5.1 (ES5) compliant. Newer ES6
+    // JavaScript keywords like `let` or `const` will cause syntax errors.
+    var obj = JSON.parse(inJson);
+    var includePubsubMessage = obj.data && obj.attributes;
+    var data = includePubsubMessage ? obj.data : obj;
+
+    if (!data.hasOwnProperty('url')) {
       throw new Error("No url found");
     } else if (data.url !== "https://beam.apache.org/") {
       throw new Error("Unrecognized url");
     }
-  
+
     return JSON.stringify(obj);
   }
 // [END dataflow_extensible_template_udf]

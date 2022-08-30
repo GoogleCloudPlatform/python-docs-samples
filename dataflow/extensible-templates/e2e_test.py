@@ -49,7 +49,9 @@ def bq_dataset(utils: Utils) -> str:
 
 @pytest.fixture(scope="session")
 def bq_table(utils: Utils, bq_dataset: str) -> str:
-    yield from utils.bigquery_table(bq_dataset, BQ_TABLE)
+    yield from utils.bigquery_table(
+        bq_dataset, BQ_TABLE, schema="url:STRING,review:STRING"
+    )
 
 
 @pytest.fixture(scope="session")
