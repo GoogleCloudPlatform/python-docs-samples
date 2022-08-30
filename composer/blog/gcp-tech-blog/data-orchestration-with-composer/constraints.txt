@@ -229,7 +229,7 @@ google-cloud-audit-log==0.1.0
 google-cloud-automl==2.3.0
 google-cloud-bigquery-datatransfer==3.2.0
 google-cloud-bigquery-storage==2.5.0
-google-cloud-bigquery==3.3.1
+google-cloud-bigquery==2.20.0
 google-cloud-bigtable==1.7.0
 google-cloud-container==1.0.1
 google-cloud-core==1.7.1
