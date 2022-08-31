@@ -115,7 +115,7 @@ def dataflow_jobs_cancel(job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_empty")], indirect=True
+    "dataflow_job_name", [("test-run-template-empty")], indirect=True
 )
 def test_run_template_python_empty_args(app, dataflow_job_name):
     project = PROJECT
@@ -125,7 +125,7 @@ def test_run_template_python_empty_args(app, dataflow_job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_python")], indirect=True
+    "dataflow_job_name", [("test-run-template-python")], indirect=True
 )
 def test_run_template_python(app, dataflow_job_name):
     project = PROJECT
@@ -145,7 +145,7 @@ def test_run_template_http_empty_args(app):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_url")], indirect=True
+    "dataflow_job_name", [("test-run-template-url")], indirect=True
 )
 def test_run_template_http_url(app, dataflow_job_name):
     args = {
@@ -162,7 +162,7 @@ def test_run_template_http_url(app, dataflow_job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_data")], indirect=True
+    "dataflow_job_name", [("test-run-template-data")], indirect=True
 )
 def test_run_template_http_data(app, dataflow_job_name):
     args = {
@@ -179,7 +179,7 @@ def test_run_template_http_data(app, dataflow_job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_json")], indirect=True
+    "dataflow_job_name", [("test-run-template-json")], indirect=True
 )
 def test_run_template_http_json(app, dataflow_job_name):
     args = {
