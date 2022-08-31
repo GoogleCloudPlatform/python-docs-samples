@@ -86,12 +86,15 @@ def get_job_id_from_name(job_name):
     )
     response = jobs_request.execute()
 
-    # search for the job in the list that has our name (names are unique)
-    for job in response["jobs"]:
-        if job["name"] == job_name:
-            return job["id"]
-    # if we don't find a job, just return
-    return
+    try:
+        # search for the job in the list that has our name (names are unique)
+        for job in response["jobs"]:
+            if job["name"] == job_name:
+                return job["id"]
+        # if we don't find a job, just return
+        return
+    except Exception as e:
+        raise ValueError(f"response:\n{response}") from e
 
 
 # We retry the cancel operation a few times until the job is in a state where it can be cancelled
