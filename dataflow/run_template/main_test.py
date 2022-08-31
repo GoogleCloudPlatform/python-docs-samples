@@ -135,7 +135,7 @@ def test_run_template_python(app, dataflow_job_name):
         "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
     res = main.run(project, dataflow_job_name, template, parameters)
-    assert "test_run_template_python" in res["job"]["name"]
+    assert dataflow_job_name in res["job"]["name"]
 
 
 def test_run_template_http_empty_args(app):
@@ -158,7 +158,7 @@ def test_run_template_http_url(app, dataflow_job_name):
     with app.test_request_context("/?" + url_encode(args)):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_url" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]
 
 
 @pytest.mark.parametrize(
@@ -175,7 +175,7 @@ def test_run_template_http_data(app, dataflow_job_name):
     with app.test_request_context(data=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_data" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]
 
 
 @pytest.mark.parametrize(
@@ -192,4 +192,4 @@ def test_run_template_http_json(app, dataflow_job_name):
     with app.test_request_context(json=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_json" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]
