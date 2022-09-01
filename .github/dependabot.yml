@@ -10,4 +10,7 @@ updates:
     schedule:
       interval: "weekly"
 
-update configured
+
+run configure
+
+end
