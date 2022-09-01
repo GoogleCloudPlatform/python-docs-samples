@@ -1,1 +1,1 @@
-google-cloud-service-directory==1.5.0
+google-cloud-service-directory==1.5.1
