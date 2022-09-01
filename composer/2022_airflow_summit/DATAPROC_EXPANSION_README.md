@@ -10,7 +10,7 @@ Go through the tutorial to [Run a data analytics DAG in Google Cloud](https://cl
 
 ## About this example 
 
-This directory has a DAG similar to the data analytics DAG found in the [Run a data analytics DAG in Google Cloud](https://cloud.google.com/composer/docs/data-analytics-googlecloud) tutorial, but includes a more complicated data processing step with Dataproc. Instead of answering the question, "How warm was it in Chicago on Thanksgiving for the past 25 years?" we will answer the question, "How have the rainfall patterns changed over the past 25 years in the western part of the US and in Phoenix, AZ?" We define the western part of the US as the [census defined West region](https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf), and chose Phoenix as it is a city that has been affected by climate change in recent years, especially with respect to water. 
+This directory has a DAG similar to the data analytics DAG found in the [Run a data analytics DAG in Google Cloud](https://cloud.google.com/composer/docs/data-analytics-googlecloud) tutorial, but includes a more complicated data processing step with Dataproc. Instead of answering the question, "How warm was it in Chicago on Thanksgiving for the past 25 years?" we will answer the question, "How have the rainfall patterns changed over the past 25 years in the western part of the US and in Phoenix, AZ?" We define the western part of the US as the [census defined West region](https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf), and chose Phoenix as it is a city that has been affected by climate change in recent years, especially with respect to water.
 
 The Dataproc Serverless job uses [arithmetic mean](https://www.weather.gov/abrfc/map#arithmetic_mean) to calculate precipitation and snowfall in the western states, and uses [distance weighting](https://www.weather.gov/abrfc/map#distance_weighting) to focus on the Phoenix specific area.
 
@@ -24,8 +24,8 @@ The DAG has three steps:
     2. Removing any data points that are not about snow or other precipitation (data where `ELEMENT` is not `SNOW` or `PRCP`)
     3. Convert the values in the `ELEMENT` column (now equal to `SNOW` or `PRCP`) to be in mm, instead of tenths of a mm. 
     4. Extract the year from the date so the Date column is left only with the year
-    5. Calculate the [arithmetic mean](https://www.weather.gov/abrfc/map#:~:text=The%20grid%20point%20precipitation%20value,obtain%20the%20areal%20average%20precipitation.) of precipitation and of snowfall
-    6. Calculate the [distance weighting](https://www.weather.gov/abrfc/map#:~:text=The%20grid%20point%20precipitation%20value,obtain%20the%20areal%20average%20precipitation.) for Phoenix. 
+    5. Calculate the [arithmetic mean](https://www.weather.gov/abrfc/map#arithmetic_mean) of precipitation and of snowfall
+    6. Calculate the [distance weighting](https://www.weather.gov/abrfc/map#distance_weighting) for Phoenix. 
     7. Write the results to tables in BigQuery
 
 ## Running this sample
