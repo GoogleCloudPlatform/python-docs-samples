@@ -6,7 +6,7 @@
 
 
 ## Prerequisites
-Go through the tutorial to [Run a data analytics DAG in Google Cloud](https://cloud.google.com/composer/docs/data-analytics-googlecloud)
+Go through the tutorial to [Run a data analytics DAG in Google Cloud](https://cloud.google.com/composer/docs/data-analytics-googlecloud) skipping the cleanup steps.
 
 ## About this example 
 
