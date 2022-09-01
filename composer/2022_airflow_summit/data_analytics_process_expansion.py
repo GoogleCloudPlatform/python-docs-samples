@@ -23,13 +23,6 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import avg, lit, sum, year
 from pyspark.sql.types import StructType
 
-# BQ_DESTINATION_DATASET_NAME = "expansion_project"
-# BQ_DESTINATION_TABLE_NAME = "ghcnd_stations_joined"
-# BQ_NORMALIZED_TABLE_NAME = "ghcnd_stations_normalized"
-# BQ_PRCP_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
-# BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_snow_mean"
-# BQ_PHX_PRCP_TABLE_NAME = "phx_annual_prcp"
-# BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
 if __name__ == "__main__":
     # read in the input argument
@@ -48,14 +41,6 @@ if __name__ == "__main__":
     PHX_PRCP_WRITE_TABLE = sys.argv[6]
     # Output table containing annual snowfall in Phoenix over the past 25 years
     PHX_SNOW_WRITE_TABLE = sys.argv[7]
-
-    # BUCKET_NAME = "workshop_example_bucket"
-    # READ_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_DESTINATION_TABLE_NAME}"
-    # DF_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_NORMALIZED_TABLE_NAME}"
-    # PRCP_MEAN_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PRCP_MEAN_TABLE_NAME}"
-    # SNOW_MEAN_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_SNOW_MEAN_TABLE_NAME}"
-    # PHX_PRCP_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}"
-    # PHX_SNOW_WRITE_TABLE = f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}"
 
     # Create a SparkSession, viewable via the Spark UI
     spark = SparkSession.builder.appName("data_processing").getOrCreate()
