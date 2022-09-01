@@ -12,7 +12,7 @@ Go through the tutorial to [Run a data analytics DAG in Google Cloud](https://cl
 
 This directory has a DAG similar to the data analytics DAG found in the [Run a data analytics DAG in Google Cloud](https://cloud.google.com/composer/docs/data-analytics-googlecloud) tutorial, but includes a more complicated data processing step with Dataproc. Instead of answering the question, "How warm was it in Chicago on Thanksgiving for the past 25 years?" we will answer the question, "How have the rainfall patterns changed over the past 25 years in the western part of the US and in Phoenix, AZ?" We define the western part of the US as the [census defined West region](https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf), and chose Phoenix as it is a city that has been affected by climate change in recent years, especially with respect to water. 
 
-The Dataproc Serverless job uses [arithmetic mean](https://www.weather.gov/abrfc/map#:~:text=The%20grid%20point%20precipitation%20value,obtain%20the%20areal%20average%20precipitation.) to calculate precipitation and snowfall in the western states, and uses [distance weighting](https://www.weather.gov/abrfc/map#:~:text=The%20grid%20point%20precipitation%20value,obtain%20the%20areal%20average%20precipitation.) to focus on the Phoenix specific area.
+The Dataproc Serverless job uses [arithmetic mean](https://www.weather.gov/abrfc/map#arithmetic_mean) to calculate precipitation and snowfall in the western states, and uses [distance weighting](https://www.weather.gov/abrfc/map#distance_weighting) to focus on the Phoenix specific area.
 
 
 The DAG has three steps:
