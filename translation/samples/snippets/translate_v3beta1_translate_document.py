@@ -43,7 +43,7 @@ def translate_document(project_id: str, file_path: str):
 
     # To output the translated document, uncomment the code below.
     # f = open('/tmp/output', 'wb')
-    # f.write(response.document_translation.byte_stream_outputs)
+    # f.write(response.document_translation.byte_stream_outputs[0])
     # f.close()
 
     # If not provided in the TranslationRequest, the translated file will only be returned through a byte-stream
