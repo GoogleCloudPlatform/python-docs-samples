@@ -23,6 +23,6 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
 
-    import data_analytics_dag_expansion as module
+    from . import data_analytics_dag_expansion
 
-    internal_unit_testing.assert_has_valid_dag(module)
+    internal_unit_testing.assert_has_valid_dag(data_analytics_dag_expansion)
