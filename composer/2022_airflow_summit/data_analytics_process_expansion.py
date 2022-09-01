@@ -167,11 +167,6 @@ if __name__ == "__main__":
             weight = weights_list[input_list.index(row)]
             dwa_result += weight * annual_value
 
-        # print("weight list", weights_list)
-        # print("factor list", factor_list)
-        # print("return result", dwa_result)
-        # print("factor sum", factor_sum)
-
         return dwa_result
 
     for year_val in range(1997, 2022):
@@ -185,7 +180,7 @@ if __name__ == "__main__":
             .agg(sum("VALUE").alias("ANNUAL_PRCP"))
             .collect()
         )
-        # print(prcp_year)
+
         snow_year = (
             annual_df.where(
                 (annual_df.ELEMENT == "SNOW") & (annual_df.YEAR == year_val)
