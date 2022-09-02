@@ -13,12 +13,13 @@
 # limitations under the License.
 
 import typing
+from typing import Union
 
 if typing.TYPE_CHECKING:
-    from google.cloud import bigquery
+    from google.cloud.bigquery import LoadJob, CopyJob, ExtractJob, QueryJob
 
 
-def create_job() -> "bigquery.QueryJob":
+def create_job() -> "Union[LoadJob, CopyJob, ExtractJob, QueryJob]":
 
     # [START bigquery_create_job]
     from google.cloud import bigquery
@@ -26,20 +27,41 @@ def create_job() -> "bigquery.QueryJob":
     # Construct a BigQuery client object.
     client = bigquery.Client()
 
-    query_job = client.query(
-        "SELECT country_name from `bigquery-public-data.utility_us.country_code_iso`",
-        # Explicitly force job execution to be routed to a specific processing
-        # location.
-        location="US",
-        # Specify a job configuration to set optional job resource properties.
-        job_config=bigquery.QueryJobConfig(
-            labels={"example-label": "example-value"}, maximum_bytes_billed=1000000
-        ),
-        # The client libraries automatically generate a job ID. Override the
-        # generated ID with either the job_id_prefix or job_id parameters.
-        job_id_prefix="code_sample_",
+    query_job = client.create_job(
+        # Specify a job configuration, providing a query
+        # and/or optional job resource properties, as needed.
+        # The job instance can be a LoadJob, CopyJob, ExtractJob, QueryJob
+        # Here, we demonstrate a "query" job.
+        # References:
+        #     https://googleapis.dev/python/bigquery/latest/generated/google.cloud.bigquery.client.Client.html#google.cloud.bigquery.client.Client.create_job
+        #     https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
+        #
+        # Example use cases for .create_job() include:
+        #    * to retry failed jobs
+        #    * to generate jobs with an experimental API property that hasn't
+        #      been added to one of the manually written job configuration
+        #      classes yet
+        #
+        # NOTE: unless it is necessary to create a job in this way, the
+        # preferred approach is to use one of the dedicated API calls:
+        #   client.query()
+        #   client.extract_table()
+        #   client.copy_table()
+        #   client.load_table_file(), client.load_table_from_dataframe(), etc
+        job_config={
+            "query": {
+                "query": """
+                         SELECT country_name
+                         FROM `bigquery-public-data.utility_us.country_code_iso`
+                         LIMIT 5
+                         """,
+            },
+            "labels": {"example-label": "example-value"},
+            "maximum_bytes_billed": 10000000,
+        }
     )  # Make an API request.
 
-    print("Started job: {}".format(query_job.job_id))
+    print(f"Started job: {query_job.job_id}")
     # [END bigquery_create_job]
+
     return query_job
