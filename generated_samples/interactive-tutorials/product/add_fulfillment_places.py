@@ -15,7 +15,6 @@
 # [START retail_add_fulfillment_places]
 # Adding place IDs using Retail API.
 #
-import datetime
 import random
 import string
 import time
@@ -37,13 +36,12 @@ product_name = (
 
 # add fulfillment request
 def get_add_fulfillment_request(
-    product_name: str, timestamp, place_id
+    product_name: str, place_id
 ) -> AddFulfillmentPlacesRequest:
     add_fulfillment_request = AddFulfillmentPlacesRequest()
     add_fulfillment_request.product = product_name
     add_fulfillment_request.type_ = "pickup-in-store"
     add_fulfillment_request.place_ids = [place_id]
-    add_fulfillment_request.add_time = timestamp
     add_fulfillment_request.allow_missing = True
 
     print("---add fulfillment request---")
@@ -53,10 +51,8 @@ def get_add_fulfillment_request(
 
 
 # add fulfillment places to product
-def add_fulfillment_places(product_name: str, timestamp, place_id):
-    add_fulfillment_request = get_add_fulfillment_request(
-        product_name, timestamp, place_id
-    )
+def add_fulfillment_places(product_name: str, place_id):
+    add_fulfillment_request = get_add_fulfillment_request(product_name, place_id)
     ProductServiceClient().add_fulfillment_places(add_fulfillment_request)
 
     # This is a long running operation and its result is not immediately present with get operations,
@@ -70,9 +66,7 @@ def add_fulfillment_places(product_name: str, timestamp, place_id):
 
 create_product(product_id)
 
-# The request timestamp
-current_date = datetime.datetime.now() + datetime.timedelta(seconds=30)
-print(f"------add fulfilment places with current date: {current_date}-----")
-add_fulfillment_places(product_name, current_date, "store2")
+print("------add fulfilment places-----")
+add_fulfillment_places(product_name, "store2")
 get_product(product_name)
 delete_product(product_name)
