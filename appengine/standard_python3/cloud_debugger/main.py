@@ -16,7 +16,7 @@
 # [START gae_python3_app]
 import logging
 
-from flask import Flask, request
+from flask import Flask, render_template, request
 
 # Enable cloud debugger
 try:
@@ -67,12 +67,7 @@ def ReverseString():
 
     current = StringProcessor(s).Reverse()
     expected = s[::-1]
-    return '''
-        <table>
-            <tr><th>Program Output:</th><th>{}</th></tr>
-            <tr><th>Correct Output:</th><th>{}</th><tr>
-        </table>
-    '''.format(current, expected)
+    return render_template("index.html", current=current, expected=expected)
 
 
 @app.route('/')
