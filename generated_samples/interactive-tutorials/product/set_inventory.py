@@ -15,7 +15,6 @@
 # [START retail_set_inventory]
 # Updating inventory information using Retail API.
 #
-import datetime
 import random
 import string
 import time
@@ -65,15 +64,12 @@ def get_product_with_inventory_info(product_name: str) -> Product:
 
 # set inventory request
 def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
-    # The request timestamp
-    request_time = datetime.datetime.now() + datetime.timedelta(seconds=30)
     set_mask = FieldMask(
         paths=["price_info", "availability", "fulfillment_info", "available_quantity"]
     )
 
     set_inventory_request = SetInventoryRequest()
     set_inventory_request.inventory = get_product_with_inventory_info(product_name)
-    set_inventory_request.set_time = request_time
     set_inventory_request.allow_missing = True
     set_inventory_request.set_mask = set_mask
 
