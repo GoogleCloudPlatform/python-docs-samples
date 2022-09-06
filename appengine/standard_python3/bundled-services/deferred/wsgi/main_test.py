@@ -81,20 +81,20 @@ def test_upload_and_view(version):
     response = requests.get(f"https://{version_hostname}/counter/increment")
     assert response.status_code == 200
 
-    # counter should be 10 almost immediately
-    time.sleep(5)
+    # counter should be 10 almost immediately. ALMOST immediately
+    time.sleep(10)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.status_code == 200
     assert response.text == "10"
 
-    # After 10 seconds, counter should be 20
-    time.sleep(10)
+    # After 20 seconds, counter should be 20
+    time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.status_code == 200
     assert response.text == "20"
 
-    # After 20 seconds, counter should be 30
-    time.sleep(10)
+    # After 40 seconds, counter should be 30
+    time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.status_code == 200
     assert response.text == "30"

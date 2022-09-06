@@ -15,6 +15,7 @@ ignoreFiles:
   - "**/constraints.txt"
   - "**/constraints-test.txt"
   - "**/apt.txt"
+  - "**/ghcn-stations.txt"
   
 
 sourceFileExtensions:

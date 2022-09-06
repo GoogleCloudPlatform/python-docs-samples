@@ -90,7 +90,7 @@ def test_send_receive(version):
     assert "Successfully sent mail" in response.text
 
     # Give the mail some time to be delivered and logs to post
-    time.sleep(30)
+    time.sleep(60)
 
     # Fetch logs to check messages on received mail
     entries = gcloud_cli(
