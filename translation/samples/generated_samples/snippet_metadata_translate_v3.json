@@ -75,33 +75,33 @@
       "regionTag": "translate_v3_generated_TranslationService_BatchTranslateDocument_async",
       "segments": [
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 48,
-          "start": 34,
+          "end": 55,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 55,
-          "start": 49,
+          "end": 62,
+          "start": 56,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 59,
-          "start": 56,
+          "end": 66,
+          "start": 63,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -171,33 +171,33 @@
       "regionTag": "translate_v3_generated_TranslationService_BatchTranslateDocument_sync",
       "segments": [
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 48,
-          "start": 34,
+          "end": 55,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 55,
-          "start": 49,
+          "end": 62,
+          "start": 56,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 59,
-          "start": 56,
+          "end": 66,
+          "start": 63,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -248,33 +248,33 @@
       "regionTag": "translate_v3_generated_TranslationService_BatchTranslateText_async",
       "segments": [
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 48,
-          "start": 34,
+          "end": 55,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 55,
-          "start": 49,
+          "end": 62,
+          "start": 56,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 59,
-          "start": 56,
+          "end": 66,
+          "start": 63,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -324,33 +324,33 @@
       "regionTag": "translate_v3_generated_TranslationService_BatchTranslateText_sync",
       "segments": [
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 58,
+          "end": 65,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 48,
-          "start": 34,
+          "end": 55,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 55,
-          "start": 49,
+          "end": 62,
+          "start": 56,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 59,
-          "start": 56,
+          "end": 66,
+          "start": 63,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -409,33 +409,33 @@
       "regionTag": "translate_v3_generated_TranslationService_CreateGlossary_async",
       "segments": [
         {
-          "end": 52,
+          "end": 59,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 52,
+          "end": 59,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 42,
-          "start": 34,
+          "end": 49,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 49,
-          "start": 43,
+          "end": 56,
+          "start": 50,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 53,
-          "start": 50,
+          "end": 60,
+          "start": 57,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -493,33 +493,33 @@
       "regionTag": "translate_v3_generated_TranslationService_CreateGlossary_sync",
       "segments": [
         {
-          "end": 52,
+          "end": 59,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 52,
+          "end": 59,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 42,
-          "start": 34,
+          "end": 49,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 49,
-          "start": 43,
+          "end": 56,
+          "start": 50,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 53,
-          "start": 50,
+          "end": 60,
+          "start": 57,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -574,33 +574,33 @@
       "regionTag": "translate_v3_generated_TranslationService_DeleteGlossary_async",
       "segments": [
         {
-          "end": 48,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 48,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 45,
-          "start": 39,
+          "end": 52,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 49,
-          "start": 46,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -654,33 +654,33 @@
       "regionTag": "translate_v3_generated_TranslationService_DeleteGlossary_sync",
       "segments": [
         {
-          "end": 48,
+          "end": 55,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 48,
+          "end": 55,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 45,
-          "start": 39,
+          "end": 52,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 49,
-          "start": 46,
+          "end": 56,
+          "start": 53,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -747,33 +747,33 @@
       "regionTag": "translate_v3_generated_TranslationService_DetectLanguage_async",
       "segments": [
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 39,
-          "start": 34,
+          "end": 46,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 42,
-          "start": 40,
+          "end": 49,
+          "start": 47,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 46,
-          "start": 43,
+          "end": 53,
+          "start": 50,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -839,33 +839,33 @@
       "regionTag": "translate_v3_generated_TranslationService_DetectLanguage_sync",
       "segments": [
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 39,
-          "start": 34,
+          "end": 46,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 42,
-          "start": 40,
+          "end": 49,
+          "start": 47,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 46,
-          "start": 43,
+          "end": 53,
+          "start": 50,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -920,33 +920,33 @@
       "regionTag": "translate_v3_generated_TranslationService_GetGlossary_async",
       "segments": [
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 45,
-          "start": 42,
+          "end": 52,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1000,33 +1000,33 @@
       "regionTag": "translate_v3_generated_TranslationService_GetGlossary_sync",
       "segments": [
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 45,
-          "start": 42,
+          "end": 52,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1089,33 +1089,33 @@
       "regionTag": "translate_v3_generated_TranslationService_GetSupportedLanguages_async",
       "segments": [
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 45,
-          "start": 42,
+          "end": 52,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1177,33 +1177,33 @@
       "regionTag": "translate_v3_generated_TranslationService_GetSupportedLanguages_sync",
       "segments": [
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 44,
+          "end": 51,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 45,
-          "start": 42,
+          "end": 52,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1258,33 +1258,33 @@
       "regionTag": "translate_v3_generated_TranslationService_ListGlossaries_async",
       "segments": [
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 46,
-          "start": 42,
+          "end": 53,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1338,33 +1338,33 @@
       "regionTag": "translate_v3_generated_TranslationService_ListGlossaries_sync",
       "segments": [
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 45,
+          "end": 52,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 38,
-          "start": 34,
+          "end": 45,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 41,
-          "start": 39,
+          "end": 48,
+          "start": 46,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 46,
-          "start": 42,
+          "end": 53,
+          "start": 49,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1415,33 +1415,33 @@
       "regionTag": "translate_v3_generated_TranslationService_TranslateDocument_async",
       "segments": [
         {
-          "end": 49,
+          "end": 56,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 49,
+          "end": 56,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 43,
-          "start": 34,
+          "end": 50,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 46,
-          "start": 44,
+          "end": 53,
+          "start": 51,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 50,
-          "start": 47,
+          "end": 57,
+          "start": 54,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1491,33 +1491,33 @@
       "regionTag": "translate_v3_generated_TranslationService_TranslateDocument_sync",
       "segments": [
         {
-          "end": 49,
+          "end": 56,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 49,
+          "end": 56,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 43,
-          "start": 34,
+          "end": 50,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 46,
-          "start": 44,
+          "end": 53,
+          "start": 51,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 50,
-          "start": 47,
+          "end": 57,
+          "start": 54,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1592,33 +1592,33 @@
       "regionTag": "translate_v3_generated_TranslationService_TranslateText_async",
       "segments": [
         {
-          "end": 46,
+          "end": 53,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 46,
+          "end": 53,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 40,
-          "start": 34,
+          "end": 47,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 43,
-          "start": 41,
+          "end": 50,
+          "start": 48,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 47,
-          "start": 44,
+          "end": 54,
+          "start": 51,
           "type": "RESPONSE_HANDLING"
         }
       ],
@@ -1692,33 +1692,33 @@
       "regionTag": "translate_v3_generated_TranslationService_TranslateText_sync",
       "segments": [
         {
-          "end": 46,
+          "end": 53,
           "start": 27,
           "type": "FULL"
         },
         {
-          "end": 46,
+          "end": 53,
           "start": 27,
           "type": "SHORT"
         },
         {
-          "end": 33,
-          "start": 31,
+          "end": 40,
+          "start": 38,
           "type": "CLIENT_INITIALIZATION"
         },
         {
-          "end": 40,
-          "start": 34,
+          "end": 47,
+          "start": 41,
           "type": "REQUEST_INITIALIZATION"
         },
         {
-          "end": 43,
-          "start": 41,
+          "end": 50,
+          "start": 48,
           "type": "REQUEST_EXECUTION"
         },
         {
-          "end": 47,
-          "start": 44,
+          "end": 54,
+          "start": 51,
           "type": "RESPONSE_HANDLING"
         }
       ],

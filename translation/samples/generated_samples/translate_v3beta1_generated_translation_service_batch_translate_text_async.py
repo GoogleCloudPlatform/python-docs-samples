@@ -24,6 +24,13 @@
 
 
 # [START translate_v3beta1_generated_TranslationService_BatchTranslateText_async]
+# This snippet has been automatically generated and should be regarded as a
+# code template only.
+# It will require modifications to work:
+# - It may require correct/in-range values for request initialization.
+# - It may require specifying regional endpoints when creating the service
+#   client as shown in:
+#   https://googleapis.dev/python/google-api-core/latest/client_options.html
 from google.cloud import translate_v3beta1
 
 
@@ -41,7 +48,7 @@ async def sample_batch_translate_text():
     request = translate_v3beta1.BatchTranslateTextRequest(
         parent="parent_value",
         source_language_code="source_language_code_value",
-        target_language_codes=['target_language_codes_value_1', 'target_language_codes_value_2'],
+        target_language_codes=['target_language_codes_value1', 'target_language_codes_value2'],
         input_configs=input_configs,
         output_config=output_config,
     )
