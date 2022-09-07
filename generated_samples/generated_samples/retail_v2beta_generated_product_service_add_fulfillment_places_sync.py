@@ -24,6 +24,13 @@
 
 
 # [START retail_v2beta_generated_ProductService_AddFulfillmentPlaces_sync]
+# This snippet has been automatically generated and should be regarded as a
+# code template only.
+# It will require modifications to work:
+# - It may require correct/in-range values for request initialization.
+# - It may require specifying regional endpoints when creating the service
+#   client as shown in:
+#   https://googleapis.dev/python/google-api-core/latest/client_options.html
 from google.cloud import retail_v2beta
 
 
@@ -35,7 +42,7 @@ def sample_add_fulfillment_places():
     request = retail_v2beta.AddFulfillmentPlacesRequest(
         product="product_value",
         type_="type__value",
-        place_ids=['place_ids_value_1', 'place_ids_value_2'],
+        place_ids=['place_ids_value1', 'place_ids_value2'],
     )
 
     # Make the request

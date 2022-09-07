@@ -24,6 +24,13 @@
 
 
 # [START retail_v2beta_generated_CatalogService_BatchRemoveCatalogAttributes_sync]
+# This snippet has been automatically generated and should be regarded as a
+# code template only.
+# It will require modifications to work:
+# - It may require correct/in-range values for request initialization.
+# - It may require specifying regional endpoints when creating the service
+#   client as shown in:
+#   https://googleapis.dev/python/google-api-core/latest/client_options.html
 from google.cloud import retail_v2beta
 
 
@@ -34,7 +41,7 @@ def sample_batch_remove_catalog_attributes():
     # Initialize request argument(s)
     request = retail_v2beta.BatchRemoveCatalogAttributesRequest(
         attributes_config="attributes_config_value",
-        attribute_keys=['attribute_keys_value_1', 'attribute_keys_value_2'],
+        attribute_keys=['attribute_keys_value1', 'attribute_keys_value2'],
     )
 
     # Make the request
