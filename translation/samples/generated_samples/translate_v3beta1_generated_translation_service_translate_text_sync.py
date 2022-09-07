@@ -24,6 +24,13 @@
 
 
 # [START translate_v3beta1_generated_TranslationService_TranslateText_sync]
+# This snippet has been automatically generated and should be regarded as a
+# code template only.
+# It will require modifications to work:
+# - It may require correct/in-range values for request initialization.
+# - It may require specifying regional endpoints when creating the service
+#   client as shown in:
+#   https://googleapis.dev/python/google-api-core/latest/client_options.html
 from google.cloud import translate_v3beta1
 
 
@@ -33,7 +40,7 @@ def sample_translate_text():
 
     # Initialize request argument(s)
     request = translate_v3beta1.TranslateTextRequest(
-        contents=['contents_value_1', 'contents_value_2'],
+        contents=['contents_value1', 'contents_value2'],
         target_language_code="target_language_code_value",
         parent="parent_value",
     )
