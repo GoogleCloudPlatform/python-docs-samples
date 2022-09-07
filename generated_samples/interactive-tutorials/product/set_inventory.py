@@ -15,16 +15,17 @@
 # [START retail_set_inventory]
 # Updating inventory information using Retail API.
 #
+import asyncio
 import random
 import string
-import time
 
+from google.api_core.exceptions import GoogleAPICallError
 import google.auth
 from google.cloud.retail import (
     FulfillmentInfo,
     PriceInfo,
     Product,
-    ProductServiceClient,
+    ProductServiceAsyncClient,
     SetInventoryRequest,
 )
 from google.protobuf.field_mask_pb2 import FieldMask
@@ -82,16 +83,21 @@ def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
 # set inventory to product
 def set_inventory(product_name: str):
     set_inventory_request = get_set_inventory_request(product_name)
-    ProductServiceClient().set_inventory(set_inventory_request)
-
-    # This is a long running operation and its result is not immediately present with get operations,
-    # thus we simulate wait with sleep method.
-    print("---set inventory, wait 90 seconds:---")
-    time.sleep(90)
+    return ProductServiceAsyncClient().set_inventory(set_inventory_request)
 
 
-create_product(product_id)
-set_inventory(product_name)
-get_product(product_name)
-delete_product(product_name)
+async def set_inventory_and_remove_product(product_name: str):
+    operation = await set_inventory(product_name)
+    # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
+    try:
+        await operation.result()
+    except GoogleAPICallError:
+        pass
+
+    get_product(product_name)
+    delete_product(product_name)
+
+
+product = create_product(product_id)
+asyncio.run(set_inventory_and_remove_product(product.name))
 # [END retail_set_inventory]

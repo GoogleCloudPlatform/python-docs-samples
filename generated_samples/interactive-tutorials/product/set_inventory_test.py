@@ -34,6 +34,6 @@ def test_set_inventory():
         output,
     )
     assert re.match(
-        ".*product projects/.*/locations/global/catalogs/default_catalog/branches/default_branch/products.* was deleted.*",
+        ".*product projects/.*/locations/global/catalogs/default_catalog/branches/0/products.* was deleted.*",
         output,
     )

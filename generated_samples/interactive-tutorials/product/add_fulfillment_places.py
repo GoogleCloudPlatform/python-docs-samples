@@ -15,12 +15,13 @@
 # [START retail_add_fulfillment_places]
 # Adding place IDs using Retail API.
 #
+import asyncio
 import random
 import string
-import time
 
+from google.api_core.exceptions import GoogleAPICallError
 import google.auth
-from google.cloud.retail import AddFulfillmentPlacesRequest, ProductServiceClient
+from google.cloud.retail import AddFulfillmentPlacesRequest, ProductServiceAsyncClient
 
 from setup_product.setup_cleanup import create_product, delete_product, get_product
 
@@ -50,23 +51,23 @@ def get_add_fulfillment_request(
     return add_fulfillment_request
 
 
-# add fulfillment places to product
-def add_fulfillment_places(product_name: str, place_id):
-    add_fulfillment_request = get_add_fulfillment_request(product_name, place_id)
-    ProductServiceClient().add_fulfillment_places(add_fulfillment_request)
+async def add_places(product_name: str):
+    print("------add fulfillment places-----")
+    add_fulfillment_request = get_add_fulfillment_request(product_name, "store2")
+    operation = await ProductServiceAsyncClient().add_fulfillment_places(
+        add_fulfillment_request
+    )
+    # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
+    try:
+        await operation.result()
+    except GoogleAPICallError:
+        pass
 
-    # This is a long running operation and its result is not immediately present with get operations,
-    # thus we simulate wait with sleep method.
-    print("---add fulfillment places, wait 90 seconds :---")
-    time.sleep(90)
-
-
-# [END retail_add_fulfillment_places]
+    get_product(product_name)
+    delete_product(product_name)
 
 
 create_product(product_id)
 
-print("------add fulfilment places-----")
-add_fulfillment_places(product_name, "store2")
-get_product(product_name)
-delete_product(product_name)
+asyncio.run(add_places(product_name))
+# [END retail_add_fulfillment_places]
