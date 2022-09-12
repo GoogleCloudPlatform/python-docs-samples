@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START retail_import_products_from_inline_source]
 # Import products into a catalog from inline source using Retail API
 #
 import random
@@ -144,5 +143,3 @@ def import_products_from_inline_source():
 
 
 import_products_from_inline_source()
-
-# [END retail_import_products_from_inline_source]

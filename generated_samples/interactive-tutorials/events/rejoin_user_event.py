@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_rejoin_user_event]
 # Starts a user event rejoin operation using Retail API.
 #
 import google.auth
@@ -55,5 +54,3 @@ def call_rejoin_user_events():
 write_user_event(visitor_id)
 call_rejoin_user_events()
 purge_user_event(visitor_id)
-
-# [END retail_rejoin_user_event]

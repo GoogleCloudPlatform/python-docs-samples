@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_get_product]
 # Get product from a catalog using Retail API.
 #
 import random
@@ -56,5 +55,3 @@ created_product = create_product(product_id)
 product = get_product(created_product.name)
 # remove created product
 delete_product(created_product.name)
-
-# [END retail_get_product]

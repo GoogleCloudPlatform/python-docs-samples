@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START retail_search_for_products_with_page_size]
 # Call Retail API to search for a products in a catalog,
 # limit the number of the products per page and go to the next page using "next_page_token"
 # or jump to chosen page using "offset".
@@ -69,4 +68,3 @@ def search():
 
 
 search()
-# [END retail_search_for_products_with_page_size]

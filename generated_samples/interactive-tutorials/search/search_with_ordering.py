@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START retail_search_for_products_with_ordering]
 # Call Retail API to search for a products in a catalog, order the results by different product fields.
 #
 
@@ -57,4 +56,3 @@ def search():
 
 
 search()
-# [END retail_search_for_products_with_ordering]

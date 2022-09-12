@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_crud_product]
 # Create, update, get and delete product in a catalog using Retail API.
 #
 import random
@@ -140,4 +139,3 @@ create_product()
 get_product()
 update_product()
 delete_product()
-# [END retail_crud_product]

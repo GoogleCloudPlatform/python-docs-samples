@@ -17,7 +17,6 @@ import os
 
 
 def main(bucket_name):
-    # [START retail_import_products_from_gcs]
     # Import products from using Retail API.
     #
     import time
@@ -106,8 +105,6 @@ def main(bucket_name):
         )
 
     import_products_from_gcs()
-
-    # [END retail_import_products_from_gcs]
 
 
 if __name__ == "__main__":

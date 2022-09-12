@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START retail_search_product_with_facet_spec]
 # Call Retail API to search for a products in a catalog with facets.
 #
 import google.auth
@@ -63,4 +62,3 @@ def search():
 
 
 search()
-# [END retail_search_product_with_facet_spec]

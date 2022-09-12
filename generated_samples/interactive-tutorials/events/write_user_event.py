@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_write_user_event]
 # Write user event using Retail API.
 #
 import datetime
@@ -71,5 +70,3 @@ def write_user_event():
 
 write_user_event()
 purge_user_event(visitor_id)
-
-# [END retail_write_user_event]

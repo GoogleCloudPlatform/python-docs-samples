@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START retail_add_fulfillment_places]
 # Adding place IDs using Retail API.
 #
 import asyncio
