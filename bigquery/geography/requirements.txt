@@ -1,5 +1,5 @@
 attrs==22.1.0
-certifi==2022.6.15
+certifi==2022.6.15.1
 cffi==1.15.1
 charset-normalizer==2.1.1
 click==8.1.3
