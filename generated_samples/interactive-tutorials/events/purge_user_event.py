@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_purge_user_event]
 # Deleting user event using Retail API.
 #
 import google.auth
@@ -52,4 +51,3 @@ def call_purge_user_events():
 
 write_user_event(visitor_id)
 call_purge_user_events()
-# [END retail_purge_user_event]

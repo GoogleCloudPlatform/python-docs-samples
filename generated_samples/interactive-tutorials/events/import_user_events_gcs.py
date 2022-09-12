@@ -17,7 +17,6 @@ import os
 
 
 def main(bucket_name):
-    # [START retail_import_user_events_from_gcs]
     # Import user events into a catalog from GCS using Retail API
 
     import time
@@ -102,8 +101,6 @@ def main(bucket_name):
 
     import_user_events_from_gcs()
 
-
-# [END retail_import_user_events_from_gcs]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

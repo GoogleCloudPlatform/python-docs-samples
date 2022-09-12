@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-# [START retail_update_product]
 # Update product in a catalog using Retail API
 #
 import random
@@ -91,5 +90,3 @@ created_product = create_product(generated_product_id)
 update_product(created_product)
 # delete product
 delete_product(created_product.name)
-
-# [END retail_update_product]

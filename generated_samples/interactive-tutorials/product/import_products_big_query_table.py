@@ -20,7 +20,6 @@ project_id = google.auth.default()[1]
 
 
 def main(project_id, dataset_id, table_id):
-    # [START retail_import_products_from_big_query]
     # TODO: Set project_id to your Google Cloud Platform project ID.
     # project_id = "my-project"
 
@@ -103,8 +102,6 @@ def main(project_id, dataset_id, table_id):
             print("---operation.result is empty---")
 
     import_products_from_big_query()
-
-    # [END retail_import_products_from_big_query]
 
 
 if __name__ == "__main__":
