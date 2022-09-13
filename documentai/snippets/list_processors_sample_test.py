@@ -15,25 +15,19 @@
 
 import os
 
-from samples.snippets import review_document_sample
+from samples.snippets import list_processors_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "b7054d67d76c39f1"
-file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
 
 
-def test_review_document(capsys):
-    review_document_sample.review_document_sample(
-        project_id=project_id,
-        location=location,
-        processor_id=processor_id,
-        file_path=file_path,
-        mime_type=mime_type,
+def test_list_processors(capsys):
+    list_processors_sample.list_processors_sample(
+        project_id=project_id, location=location
     )
     out, _ = capsys.readouterr()
 
-    assert "projects/" in out
-    assert "locations/" in out
-    assert "operations/" in out
+    assert "Processor Name:" in out
+    assert "Processor Display Name:" in out
+    assert "OCR_PROCESSOR" in out
+    assert "FORM_PARSER_PROCESSOR" in out

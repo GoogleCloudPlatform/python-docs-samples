@@ -15,25 +15,18 @@
 
 import os
 
-from samples.snippets import review_document_sample
+from samples.snippets import list_operations_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "b7054d67d76c39f1"
-file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
+operations_filter = "TYPE=BATCH_PROCESS_DOCUMENTS AND STATE=DONE"
 
 
-def test_review_document(capsys):
-    review_document_sample.review_document_sample(
-        project_id=project_id,
-        location=location,
-        processor_id=processor_id,
-        file_path=file_path,
-        mime_type=mime_type,
+def test_list_operations(capsys):
+    list_operations_sample.list_operations_sample(
+        project_id=project_id, location=location, operations_filter=operations_filter
     )
     out, _ = capsys.readouterr()
 
-    assert "projects/" in out
-    assert "locations/" in out
-    assert "operations/" in out
+    assert "operations" in out
+    assert "BatchProcessMetadata" in out

@@ -16,18 +16,25 @@
 # [START documentai_process_document]
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai_v1 as documentai
+from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' #  Create processor in Cloud Console
+# processor_id = 'YOUR_PROCESSOR_ID' #  Create processor before running sample
+# processor_version = "pretrained" # Optional. Processor version to use
 # file_path = '/path/to/local/pdf'
-# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/processors-list for supported file types
+# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+# field_mask = "text,entities,pages.pageNumber"  # Optional. The fields to return in the Document object.
 
 
 def process_document_sample(
-    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
+    project_id: str,
+    location: str,
+    processor_id: str,
+    file_path: str,
+    mime_type: str,
+    field_mask: str = None,
 ):
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
@@ -35,9 +42,17 @@ def process_document_sample(
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
     # The full resource name of the processor, e.g.:
-    # projects/project_id/locations/location/processor/processor_id
+    # projects/{project_id}/locations/{location}/processors/{processor_id}
     # You must create new processors in the Cloud Console first
     name = client.processor_path(project_id, location, processor_id)
+
+    # NOTE: Alternatively, specify the processor_version to specify a particular version of the processor to use
+    # projects/{project_id}/locations/{location}/processors/{processor_id}/processorVersions/{processorVersion}
+    #
+    # name = client.processor_version_path(
+    #     project_id, location, processor_id, processor_version
+    # )
+    #
 
     # Read the file into memory
     with open(file_path, "rb") as image:
@@ -47,7 +62,9 @@ def process_document_sample(
     raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
 
     # Configure the process request
-    request = documentai.ProcessRequest(name=name, raw_document=raw_document)
+    request = documentai.ProcessRequest(
+        name=name, raw_document=raw_document, field_mask=field_mask
+    )
 
     result = client.process_document(request=request)
 
