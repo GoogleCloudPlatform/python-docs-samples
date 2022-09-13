@@ -15,25 +15,27 @@
 
 import os
 
-from samples.snippets import review_document_sample
+import mock
+
+from samples.snippets import delete_processor_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "b7054d67d76c39f1"
-file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
+processor_id = "aaaaaaaaa"
+parent = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
 
 
-def test_review_document(capsys):
-    review_document_sample.review_document_sample(
-        project_id=project_id,
-        location=location,
-        processor_id=processor_id,
-        file_path=file_path,
-        mime_type=mime_type,
+@mock.patch("google.cloud.documentai.DocumentProcessorServiceClient.delete_processor")
+@mock.patch("google.api_core.operation.Operation")
+def test_delete_processor(operation_mock, delete_processor_mock, capsys):
+    delete_processor_mock.return_value = operation_mock
+
+    delete_processor_sample.delete_processor_sample(
+        project_id=project_id, location=location, processor_id=processor_id
     )
+
+    delete_processor_mock.assert_called_once()
+
     out, _ = capsys.readouterr()
 
-    assert "projects/" in out
-    assert "locations/" in out
-    assert "operations/" in out
+    assert "operation" in out

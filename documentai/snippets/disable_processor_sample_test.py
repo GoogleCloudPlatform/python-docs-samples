@@ -15,25 +15,24 @@
 
 import os
 
-from samples.snippets import review_document_sample
+from samples.snippets import disable_processor_sample, enable_processor_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "b7054d67d76c39f1"
-file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
+processor_id = "5e32eb3e1d0237c0"
 
 
-def test_review_document(capsys):
-    review_document_sample.review_document_sample(
-        project_id=project_id,
-        location=location,
-        processor_id=processor_id,
-        file_path=file_path,
-        mime_type=mime_type,
+def test_disable_processor(capsys):
+    disable_processor_sample.disable_processor_sample(
+        project_id=project_id, location=location, processor_id=processor_id
     )
     out, _ = capsys.readouterr()
 
-    assert "projects/" in out
-    assert "locations/" in out
-    assert "operations/" in out
+    assert "projects" in out
+    assert "locations" in out
+    assert "operations" in out
+
+    # Re-Enable Processor
+    enable_processor_sample.enable_processor_sample(
+        project_id=project_id, location=location, processor_id=processor_id
+    )
