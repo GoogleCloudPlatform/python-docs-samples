@@ -16,7 +16,6 @@
 import os
 
 import mock
-
 from samples.snippets import delete_processor_sample
 
 location = "us"
