@@ -17,13 +17,13 @@
 import re
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai_v1 as documentai
-from google.cloud import storage
+from google.cloud import documentai, storage
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
+# processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
+# processor_version = "pretrained" # Optional. Processor version to use
 # gcs_input_uri = "YOUR_INPUT_URI" # Format: gs://bucket/directory/file.pdf
 # input_mime_type = "application/pdf"
 # gcs_output_bucket = "YOUR_OUTPUT_BUCKET_NAME" # Format: gs://bucket
@@ -75,6 +75,14 @@ def batch_process_documents(
     # projects/project_id/locations/location/processor/processor_id
     # You must create new processors in the Cloud Console first
     name = client.processor_path(project_id, location, processor_id)
+
+    # NOTE: Alternatively, specify the processor_version to specify a particular version of the processor to use
+    # projects/{project_id}/locations/{location}/processors/{processor_id}/processorVersions/{processorVersion}
+    #
+    # name = client.processor_version_path(
+    #     project_id, location, processor_id, processor_version
+    # )
+    #
 
     request = documentai.BatchProcessRequest(
         name=name,

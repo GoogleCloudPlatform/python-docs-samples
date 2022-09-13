@@ -16,12 +16,12 @@
 # [START documentai_review_document]
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai_v1 as documentai
+from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
+# processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
 # file_path = '/path/to/local/pdf'
 # mime_type = 'application/pdf'  # https://cloud.google.com/document-ai/docs/file-types
 

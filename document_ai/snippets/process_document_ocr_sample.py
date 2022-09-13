@@ -18,14 +18,14 @@
 from typing import Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai_v1 as documentai
+from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' # Create processor in Cloud Console
+# processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
 # file_path = '/path/to/local/pdf'
-# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/processors-list for supported file types
+# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 
 
 def process_document_ocr_sample(
@@ -63,7 +63,7 @@ def process_document(
 
     # The full resource name of the processor, e.g.:
     # projects/project_id/locations/location/processor/processor_id
-    # You must create new processors in the Cloud Console first
+    # You must create processors before running sample code.
     name = client.processor_path(project_id, location, processor_id)
 
     # Read the file into memory
