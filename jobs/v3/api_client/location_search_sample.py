@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
+# [START job_instantiate]
 import os
 import time
 
@@ -22,10 +22,10 @@ from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END instantiate]
+# [END job_instantiate]
 
 
-# [START basic_location_search]
+# [START job_basic_location_search]
 def basic_location_search(client_service, company_name, location, distance):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -44,10 +44,10 @@ def basic_location_search(client_service, company_name, location, distance):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END basic_location_search]
+# [END job_basic_location_search]
 
 
-# [START keyword_location_search]
+# [START job_keyword_location_search]
 def keyword_location_search(client_service, company_name, location, distance,
                             keyword):
     request_metadata = {
@@ -67,10 +67,10 @@ def keyword_location_search(client_service, company_name, location, distance,
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END keyword_location_search]
+# [END job_keyword_location_search]
 
 
-# [START city_location_search]
+# [START job_city_location_search]
 def city_location_search(client_service, company_name, location):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -89,10 +89,10 @@ def city_location_search(client_service, company_name, location):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END city_location_search]
+# [END job_city_location_search]
 
 
-# [START multi_locations_search]
+# [START job_multi_locations_search]
 def multi_locations_search(client_service, company_name, location1, distance1,
                            location2):
     request_metadata = {
@@ -113,10 +113,10 @@ def multi_locations_search(client_service, company_name, location1, distance1,
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END multi_locations_search]
+# [END job_multi_locations_search]
 
 
-# [START broadening_location_search]
+# [START job_broadening_location_search]
 def broadening_location_search(client_service, company_name, location):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -136,7 +136,7 @@ def broadening_location_search(client_service, company_name, location):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END broadening_location_search]
+# [END job_broadening_location_search]
 
 
 location = 'Mountain View, CA'

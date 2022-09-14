@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-# [START instantiate]
+# [START job_instantiate]
 import os
 import random
 import string
@@ -25,10 +25,10 @@ from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END instantiate]
+# [END job_instantiate]
 
 
-# [START custom_attribute_job]
+# [START job_custom_attribute_job]
 def generate_job_with_custom_attributes(company_name):
     # Requisition id should be a unique Id in your system.
     requisition_id = 'job_with_custom_attributes:' + ''.join(
@@ -61,10 +61,10 @@ def generate_job_with_custom_attributes(company_name):
     }
     print('Job generated: %s' % job)
     return job
-# [END custom_attribute_job]
+# [END job_custom_attribute_job]
 
 
-# [START custom_attribute_filter_string_value]
+# [START job_custom_attribute_filter_string_value]
 def custom_attribute_filter_string_value(client_service):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -83,10 +83,10 @@ def custom_attribute_filter_string_value(client_service):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END custom_attribute_filter_string_value]
+# [END job_custom_attribute_filter_string_value]
 
 
-# [START custom_attribute_filter_long_value]
+# [START job_custom_attribute_filter_long_value]
 def custom_attribute_filter_long_value(client_service):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -106,10 +106,10 @@ def custom_attribute_filter_long_value(client_service):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END custom_attribute_filter_long_value]
+# [END job_custom_attribute_filter_long_value]
 
 
-# [START custom_attribute_filter_multi_attributes]
+# [START job_custom_attribute_filter_multi_attributes]
 def custom_attribute_filter_multi_attributes(client_service):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -130,7 +130,7 @@ def custom_attribute_filter_multi_attributes(client_service):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END custom_attribute_filter_multi_attributes]
+# [END job_custom_attribute_filter_multi_attributes]
 
 
 def set_up():

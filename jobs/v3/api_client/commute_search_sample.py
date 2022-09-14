@@ -14,17 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
+# [START job_instantiate]
 import os
 import time
 
 from googleapiclient.discovery import build
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END instantiate]
+# [END job_instantiate]
 
 
-# [START commute_search]
+# [START job_commute_search]
 def commute_search(client_service, company_name):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -50,7 +50,7 @@ def commute_search(client_service, company_name):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END commute_search]
+# [END job_commute_search]
 
 
 def set_up():
