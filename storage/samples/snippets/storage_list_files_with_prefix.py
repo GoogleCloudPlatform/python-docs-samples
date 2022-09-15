@@ -53,6 +53,7 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     # Note: Client.list_blobs requires at least package version 1.17.0.
     blobs = storage_client.list_blobs(bucket_name, prefix=prefix, delimiter=delimiter)
 
+    # Note: The call returns a response only when the iterator is consumed.
     print("Blobs:")
     for blob in blobs:
         print(blob.name)
