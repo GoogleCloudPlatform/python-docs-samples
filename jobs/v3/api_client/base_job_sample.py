@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START job_instantiate]
+# [START instantiate]
 import os
 import random
 import string
@@ -24,10 +24,10 @@ from googleapiclient.errors import Error
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END job_instantiate]
+# [END instantiate]
 
 
-# [START job_basic_job]
+# [START basic_job]
 def generate_job_with_required_fields(company_name):
     # Requisition id should be a unique Id in your system.
     requisition_id = 'job_with_required_fields:' + ''.join(
@@ -48,10 +48,10 @@ def generate_job_with_required_fields(company_name):
     }
     print('Job generated: %s' % job)
     return job
-# [END job_basic_job]
+# [END basic_job]
 
 
-# [START job_create_job]
+# [START create_job]
 def create_job(client_service, job_to_be_created):
     try:
         request = {'job': job_to_be_created}
@@ -62,10 +62,10 @@ def create_job(client_service, job_to_be_created):
     except Error as e:
         print('Got exception while creating job')
         raise e
-# [END job_create_job]
+# [END create_job]
 
 
-# [START job_get_job]
+# [START get_job]
 def get_job(client_service, job_name):
     try:
         job_existed = client_service.projects().jobs().get(
@@ -75,10 +75,10 @@ def get_job(client_service, job_name):
     except Error as e:
         print('Got exception while getting job')
         raise e
-# [END job_get_job]
+# [END get_job]
 
 
-# [START job_update_job]
+# [START update_job]
 def update_job(client_service, job_name, job_to_be_updated):
     try:
         request = {'job': job_to_be_updated}
@@ -89,10 +89,10 @@ def update_job(client_service, job_name, job_to_be_updated):
     except Error as e:
         print('Got exception while updating job')
         raise e
-# [END job_update_job]
+# [END update_job]
 
 
-# [START job_update_job_with_field_mask]
+# [START update_job_with_field_mask]
 def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
                                field_mask):
     try:
@@ -104,10 +104,10 @@ def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
     except Error as e:
         print('Got exception while updating job with field mask')
         raise e
-# [END job_update_job_with_field_mask]
+# [END update_job_with_field_mask]
 
 
-# [START job_delete_job]
+# [START delete_job]
 def delete_job(client_service, job_name):
     try:
         client_service.projects().jobs().delete(name=job_name).execute()
@@ -115,7 +115,7 @@ def delete_job(client_service, job_name):
     except Error as e:
         print('Got exception while deleting job')
         raise e
-# [END job_delete_job]
+# [END delete_job]
 
 
 def run_sample():

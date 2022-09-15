@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START job_instantiate]
+# [START instantiate]
 import os
 import time
 
@@ -22,10 +22,10 @@ from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END job_instantiate]
+# [END instantiate]
 
 
-# [START job_basic_keyword_search]
+# [START basic_keyword_search]
 def basic_keyword_search(client_service, company_name, keyword):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -44,10 +44,10 @@ def basic_keyword_search(client_service, company_name, keyword):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_basic_keyword_search]
+# [END basic_keyword_search]
 
 
-# [START job_category_filter]
+# [START category_filter]
 def category_search(client_service, company_name, categories):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -66,10 +66,10 @@ def category_search(client_service, company_name, categories):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_category_filter]
+# [END category_filter]
 
 
-# [START job_employment_types_filter]
+# [START employment_types_filter]
 def employment_types_search(client_service, company_name, employment_types):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -88,10 +88,10 @@ def employment_types_search(client_service, company_name, employment_types):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_employment_types_filter]
+# [END employment_types_filter]
 
 
-# [START job_date_range_filter]
+# [START date_range_filter]
 def date_range_search(client_service, company_name, date_range):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -110,10 +110,10 @@ def date_range_search(client_service, company_name, date_range):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_date_range_filter]
+# [END date_range_filter]
 
 
-# [START job_language_code_filter]
+# [START language_code_filter]
 def language_code_search(client_service, company_name, language_codes):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -132,10 +132,10 @@ def language_code_search(client_service, company_name, language_codes):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_language_code_filter]
+# [END language_code_filter]
 
 
-# [START job_company_display_name_filter]
+# [START company_display_name_filter]
 def company_display_name_search(client_service, company_name,
                                 company_display_names):
     request_metadata = {
@@ -155,10 +155,10 @@ def company_display_name_search(client_service, company_name,
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_company_display_name_filter]
+# [END company_display_name_filter]
 
 
-# [START job_compensation_filter]
+# [START compensation_filter]
 def compensation_search(client_service, company_name):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -193,7 +193,7 @@ def compensation_search(client_service, company_name):
     response = client_service.projects().jobs().search(
         parent=parent, body=request).execute()
     print(response)
-# [END job_compensation_filter]
+# [END compensation_filter]
 
 
 def set_up():

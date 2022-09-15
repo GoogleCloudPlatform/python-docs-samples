@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START job_instantiate]
+# [START instantiate]
 import os
 import time
 
@@ -22,10 +22,10 @@ from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-# [END job_instantiate]
+# [END instantiate]
 
 
-# [START job_search_for_alerts]
+# [START search_for_alerts]
 def search_for_alerts(client_service, company_name):
     request_metadata = {
         'user_id': 'HashedUserId',
@@ -41,7 +41,7 @@ def search_for_alerts(client_service, company_name):
     response = client_service.projects().jobs().searchForAlert(
         parent=parent, body=request).execute()
     print(response)
-# [END job_search_for_alerts]
+# [END search_for_alerts]
 
 
 def set_up():
