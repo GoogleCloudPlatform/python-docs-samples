@@ -107,7 +107,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
 
             response = operation.result()
         else:
-            raise(e)
+            raise (e)
 
     yield response
 
