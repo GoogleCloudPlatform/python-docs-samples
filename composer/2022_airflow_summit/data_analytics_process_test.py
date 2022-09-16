@@ -21,7 +21,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound, AlreadyExists
+from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -50,15 +50,12 @@ PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 
 
-# Retry if we see a flaky 409 "subnet not ready" exception
-@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
-@pytest.fixture(scope="function")
-def test_dataproc_batch(test_bucket, bq_dataset):
-    # check that the results table isnt there
-    with pytest.raises(NotFound):
-        BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}")
+@pytest.fixture(scope="module")
+def test_dataproc_batch():
 
-    BATCH_ID = f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
+    BATCH_ID = (
+        f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
+    )
     BATCH_CONFIG = {
         "pyspark_batch": {
             "jar_file_uris": [PYSPARK_JAR],
@@ -71,27 +68,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         },
     }
 
-    # create a batch
-    dataproc_client = dataproc.BatchControllerClient(
-        client_options={
-            "api_endpoint": f"{DATAPROC_REGION}-dataproc.googleapis.com:443"
-        }
-    )
-    request = dataproc.CreateBatchRequest(
-        parent=f"projects/{PROJECT_ID}/regions/{DATAPROC_REGION}",
-        batch=BATCH_CONFIG,
-        batch_id=BATCH_ID,
-    )
-
-    # Make the request
-    operation = dataproc_client.create_batch(request=request)
-
-    print("Waiting for operation to complete...")
-
-    response = operation.result()
-
-    yield response
-
+    yield (BATCH_ID, BATCH_CONFIG)
     dataproc_client = dataproc.BatchControllerClient(
         client_options={
             "api_endpoint": f"{DATAPROC_REGION}-dataproc.googleapis.com:443"
@@ -131,7 +108,7 @@ def test_bucket():
     bucket.delete(force=True)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(autouse=True)
 def bq_dataset(test_bucket):
     # Create dataset and table tfor test CSV
     BQ_CLIENT.create_dataset(BQ_DATASET)
@@ -168,9 +145,33 @@ def bq_dataset(test_bucket):
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
+# Retry if we see a flaky 409 "subnet not ready" exception
+@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
 def test_process(test_dataproc_batch):
+    # check that the results table isnt there
+    with pytest.raises(NotFound):
+        BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}")
 
-    print(test_dataproc_batch)
+    # create a batch
+    dataproc_client = dataproc.BatchControllerClient(
+        client_options={
+            "api_endpoint": f"{DATAPROC_REGION}-dataproc.googleapis.com:443"
+        }
+    )
+    request = dataproc.CreateBatchRequest(
+        parent=f"projects/{PROJECT_ID}/regions/{DATAPROC_REGION}",
+        batch=test_dataproc_batch[1],
+        batch_id=test_dataproc_batch[0],
+    )
+    # Make the request
+    operation = dataproc_client.create_batch(request=request)
+
+    print("Waiting for operation to complete...")
+
+    response = operation.result()
+
+    # Handle the response
+    print(response)
 
     # check that the results table is there now
     assert BQ_CLIENT.get_table(f"{BQ_DATASET}.{BQ_WRITE_TABLE}").num_rows > 0
