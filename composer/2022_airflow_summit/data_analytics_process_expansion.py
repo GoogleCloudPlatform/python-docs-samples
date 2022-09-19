@@ -62,7 +62,7 @@ if __name__ == "__main__":
     print("After state filtering, # of rows remaining is:", df.count())
 
     # The input dataset contains many different weather phenomenons.
-    # Based on our goal, we then filter out rows whose element value does not equal to PRCP or SNOW
+    # Based on the goal, you then filter out rows whose element value does not equal to PRCP or SNOW
     # PRCP = precipitation
     # SNOW = snowfall
     df = df.where(df.ELEMENT.isin(["PRCP", "SNOW"]))
