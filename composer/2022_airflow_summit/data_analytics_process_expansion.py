@@ -53,7 +53,7 @@ if __name__ == "__main__":
     except Py4JJavaError:
         raise Exception(f"Error reading {READ_TABLE}")
 
-    # Since our goal is to focus on the western US, we first filter out non-western states of the US.
+    # Since the goal is to focus on the western US, you first filter out non-western states of the US.
     # The definition of western US can be found in the following link:
     # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
     western_states = ["AZ", "CA", "CO", "ID", "MT", "NM", "NV", "OR", "UT", "WA", "WY"]
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         .agg(avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
         .sort("YEAR")
     )
-    print("prcp mean table")
+    print("PRCP mean table")
     prcp_mean_df.show(n=50)
 
     # Each year's arithmetic mean of snowfall
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         .agg(avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
         .sort("YEAR")
     )
-    print("snow mean table")
+    print("SNOW mean table")
     snow_mean_df.show(n=50)
 
     # Filter out the states to move on to the distance weighting algorithm (DWA)
@@ -140,9 +140,7 @@ if __name__ == "__main__":
             factor_sum += distance_factor
 
         # Contains the weights of each station
-        weights_list = []
-        for val in factor_list:
-            weights_list.append(val / factor_sum)
+        weights_list = [val / factor_sum for val in factor_list]
 
         dwa_result = 0.0
         for row in input_list:

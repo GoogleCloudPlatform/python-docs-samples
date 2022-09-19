@@ -37,7 +37,7 @@ BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
 # Dataproc configs
 BUCKET_NAME = "{{var.value.gcs_bucket}}"
-PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.26.0.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process_expansion.py"
 
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
