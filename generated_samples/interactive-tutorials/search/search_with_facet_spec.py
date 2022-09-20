@@ -55,9 +55,12 @@ def search():
     search_request = get_search_request("Tee", facet_key)
     search_response = SearchServiceClient().search(search_request)
     print("---search response---")
-    print(search_response)
-    print("---facets:---")
-    print(search_response.facets)
+    if not search_response.results:
+        print("The search operation returned no matching results.")
+    else:
+        print(search_response)
+        print("---facets:---")
+        print(search_response.facets)
     return search_response
 
 

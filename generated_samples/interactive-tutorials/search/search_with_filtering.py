@@ -51,7 +51,10 @@ def search():
     search_request = get_search_request("Tee", filter_)
     search_response = SearchServiceClient().search(search_request)
     print("---search response---")
-    print(search_response)
+    if not search_response.results:
+        print("The search operation returned no matching results.")
+    else:
+        print(search_response)
     return search_response
 
 
