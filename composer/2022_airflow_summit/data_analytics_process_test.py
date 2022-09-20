@@ -88,7 +88,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         response = operation.result()
     except Aborted as e:
         # retry once if we see a flaky 409 "subnet not ready error"
-        if "/subnetworks/default" in e:
+        if "/subnetworks/default" in str(e):
             # delete the errored out batch so we don't see an "AlreadyExists"
             delete_request = dataproc.DeleteBatchRequest(
                 name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"

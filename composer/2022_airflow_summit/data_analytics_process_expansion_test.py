@@ -53,7 +53,7 @@ BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
 BQ_PHX_PRCP_TABLE_NAME = "phx_annual_prcp"
 BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
-PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
+PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.26.0.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 
 
@@ -99,8 +99,8 @@ def test_dataproc_batch(test_bucket, bq_dataset):
     )
     request = dataproc.CreateBatchRequest(
         parent=f"projects/{PROJECT_ID}/regions/{DATAPROC_REGION}",
-        batch=test_dataproc_batch[1],
-        batch_id=test_dataproc_batch[0],
+        batch=BATCH_CONFIG,
+        batch_id=BATCH_ID,
     )
     try:
         # Make the request
@@ -111,7 +111,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         response = operation.result()
     except Aborted as e:
         # retry once if we see a flaky 409 "subnet not ready error"
-        if "/subnetworks/default" in e:
+        if "/subnetworks/default" in str(e):
             # delete the errored out batch so we don't see an "AlreadyExists"
             delete_request = dataproc.DeleteBatchRequest(
                 name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"

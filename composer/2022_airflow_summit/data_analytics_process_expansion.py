@@ -197,14 +197,14 @@ if __name__ == "__main__":
         # for other save mode options
         (
             df.write.format("bigquery")
-            .option("temporaryGcsBucket", temp_path)
+            .option("writeMethod", "direct")
             .mode("overwrite")
             .save(DF_WRITE_TABLE)
         )
 
         (
             prcp_mean_df.write.format("bigquery")
-            .option("temporaryGcsBucket", temp_path)
+            .option("writeMethod", "direct")
             .mode("overwrite")
             .save(PRCP_MEAN_WRITE_TABLE)
         )
@@ -218,14 +218,14 @@ if __name__ == "__main__":
 
         (
             phx_annual_prcp_df.write.format("bigquery")
-            .option("temporaryGcsBucket", temp_path)
+            .option("writeMethod", "direct")
             .mode("overwrite")
             .save(PHX_PRCP_WRITE_TABLE)
         )
 
         (
             phx_annual_snow_df.write.format("bigquery")
-            .option("temporaryGcsBucket", temp_path)
+            .option("writeMethod", "direct")
             .mode("overwrite")
             .save(PHX_SNOW_WRITE_TABLE)
         )
