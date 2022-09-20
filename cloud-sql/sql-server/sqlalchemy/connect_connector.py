@@ -37,7 +37,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
     # [START_EXCLUDE]
     if 'DB_ROOT_CERT' in os.environ:
-        db_root_cert = os.environ["DB_ROOT_CERT"] # e.g. 'certs/server-ca.pem'
+        db_root_cert = os.environ["DB_ROOT_CERT"]  # e.g. 'certs/server-ca.pem'
     else:
         db_root_cert = None
     # [END_EXCLUDE]
