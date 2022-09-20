@@ -50,7 +50,10 @@ def search():
     search_response = SearchServiceClient().search(search_request)
 
     print("---search response---")
-    print(search_response)
+    if not search_response.results:
+        print("The search operation returned no matching results.")
+    else:
+        print(search_response)
     return search_response
 
 

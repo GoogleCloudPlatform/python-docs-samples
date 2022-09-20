@@ -58,7 +58,10 @@ def search():
     search_response_first_page = SearchServiceClient().search(search_request_first_page)
 
     print("---search response---")
-    print(search_response_first_page)
+    if not search_response_first_page.results:
+        print("The search operation returned no matching results.")
+    else:
+        print(search_response_first_page)
 
     # PASTE CALL WITH NEXT PAGE TOKEN HERE:
 
