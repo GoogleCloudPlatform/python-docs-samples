@@ -149,7 +149,7 @@
         "shortName": "create_job"
       },
       "description": "Sample for CreateJob",
-      "file": "batch_v1alpha_generated_batch_service_create_job_sync_eb4fa717.py",
+      "file": "batch_v1alpha_generated_batch_service_create_job_sync_ee80cfe8.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_CreateJob_sync",
@@ -185,7 +185,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_create_job_sync_eb4fa717.py"
+      "title": "batch_v1alpha_generated_batch_service_create_job_sync_ee80cfe8.py"
     },
     {
       "canonical": true,
@@ -237,7 +237,7 @@
         "shortName": "create_job"
       },
       "description": "Sample for CreateJob",
-      "file": "batch_v1alpha_generated_batch_service_create_job_sync_ee80cfe8.py",
+      "file": "batch_v1alpha_generated_batch_service_create_job_sync_eb4fa717.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_CreateJob_sync",
@@ -273,7 +273,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_create_job_sync_ee80cfe8.py"
+      "title": "batch_v1alpha_generated_batch_service_create_job_sync_eb4fa717.py"
     },
     {
       "canonical": true,
@@ -398,7 +398,7 @@
         "shortName": "delete_job"
       },
       "description": "Sample for DeleteJob",
-      "file": "batch_v1alpha_generated_batch_service_delete_job_sync_18fb9154.py",
+      "file": "batch_v1alpha_generated_batch_service_delete_job_sync_affefd11.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_DeleteJob_sync",
@@ -434,7 +434,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_delete_job_sync_18fb9154.py"
+      "title": "batch_v1alpha_generated_batch_service_delete_job_sync_affefd11.py"
     },
     {
       "canonical": true,
@@ -478,7 +478,7 @@
         "shortName": "delete_job"
       },
       "description": "Sample for DeleteJob",
-      "file": "batch_v1alpha_generated_batch_service_delete_job_sync_affefd11.py",
+      "file": "batch_v1alpha_generated_batch_service_delete_job_sync_18fb9154.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_DeleteJob_sync",
@@ -514,7 +514,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_delete_job_sync_affefd11.py"
+      "title": "batch_v1alpha_generated_batch_service_delete_job_sync_18fb9154.py"
     },
     {
       "canonical": true,
@@ -639,7 +639,7 @@
         "shortName": "get_job"
       },
       "description": "Sample for GetJob",
-      "file": "batch_v1alpha_generated_batch_service_get_job_sync_1014e8c7.py",
+      "file": "batch_v1alpha_generated_batch_service_get_job_sync_17387e0a.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_GetJob_sync",
@@ -675,7 +675,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_get_job_sync_1014e8c7.py"
+      "title": "batch_v1alpha_generated_batch_service_get_job_sync_17387e0a.py"
     },
     {
       "canonical": true,
@@ -719,7 +719,7 @@
         "shortName": "get_job"
       },
       "description": "Sample for GetJob",
-      "file": "batch_v1alpha_generated_batch_service_get_job_sync_17387e0a.py",
+      "file": "batch_v1alpha_generated_batch_service_get_job_sync_1014e8c7.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_GetJob_sync",
@@ -755,7 +755,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_get_job_sync_17387e0a.py"
+      "title": "batch_v1alpha_generated_batch_service_get_job_sync_1014e8c7.py"
     },
     {
       "canonical": true,
@@ -880,7 +880,7 @@
         "shortName": "get_task"
       },
       "description": "Sample for GetTask",
-      "file": "batch_v1alpha_generated_batch_service_get_task_sync_29b69ea9.py",
+      "file": "batch_v1alpha_generated_batch_service_get_task_sync_657a0e4c.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_GetTask_sync",
@@ -916,7 +916,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_get_task_sync_29b69ea9.py"
+      "title": "batch_v1alpha_generated_batch_service_get_task_sync_657a0e4c.py"
     },
     {
       "canonical": true,
@@ -960,7 +960,7 @@
         "shortName": "get_task"
       },
       "description": "Sample for GetTask",
-      "file": "batch_v1alpha_generated_batch_service_get_task_sync_657a0e4c.py",
+      "file": "batch_v1alpha_generated_batch_service_get_task_sync_29b69ea9.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_GetTask_sync",
@@ -996,7 +996,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_get_task_sync_657a0e4c.py"
+      "title": "batch_v1alpha_generated_batch_service_get_task_sync_29b69ea9.py"
     },
     {
       "canonical": true,
@@ -1121,7 +1121,7 @@
         "shortName": "list_jobs"
       },
       "description": "Sample for ListJobs",
-      "file": "batch_v1alpha_generated_batch_service_list_jobs_sync_21301b63.py",
+      "file": "batch_v1alpha_generated_batch_service_list_jobs_sync_830dac29.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_ListJobs_sync",
@@ -1157,7 +1157,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_list_jobs_sync_21301b63.py"
+      "title": "batch_v1alpha_generated_batch_service_list_jobs_sync_830dac29.py"
     },
     {
       "canonical": true,
@@ -1201,7 +1201,7 @@
         "shortName": "list_jobs"
       },
       "description": "Sample for ListJobs",
-      "file": "batch_v1alpha_generated_batch_service_list_jobs_sync_830dac29.py",
+      "file": "batch_v1alpha_generated_batch_service_list_jobs_sync_21301b63.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_ListJobs_sync",
@@ -1237,7 +1237,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_list_jobs_sync_830dac29.py"
+      "title": "batch_v1alpha_generated_batch_service_list_jobs_sync_21301b63.py"
     },
     {
       "canonical": true,
@@ -1362,7 +1362,7 @@
         "shortName": "list_tasks"
       },
       "description": "Sample for ListTasks",
-      "file": "batch_v1alpha_generated_batch_service_list_tasks_sync_97ddc579.py",
+      "file": "batch_v1alpha_generated_batch_service_list_tasks_sync_af95f032.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_ListTasks_sync",
@@ -1398,7 +1398,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_list_tasks_sync_97ddc579.py"
+      "title": "batch_v1alpha_generated_batch_service_list_tasks_sync_af95f032.py"
     },
     {
       "canonical": true,
@@ -1442,7 +1442,7 @@
         "shortName": "list_tasks"
       },
       "description": "Sample for ListTasks",
-      "file": "batch_v1alpha_generated_batch_service_list_tasks_sync_af95f032.py",
+      "file": "batch_v1alpha_generated_batch_service_list_tasks_sync_97ddc579.py",
       "language": "PYTHON",
       "origin": "API_DEFINITION",
       "regionTag": "batch_v1alpha_generated_BatchService_ListTasks_sync",
@@ -1478,7 +1478,7 @@
           "type": "RESPONSE_HANDLING"
         }
       ],
-      "title": "batch_v1alpha_generated_batch_service_list_tasks_sync_af95f032.py"
+      "title": "batch_v1alpha_generated_batch_service_list_tasks_sync_97ddc579.py"
     }
   ]
 }
