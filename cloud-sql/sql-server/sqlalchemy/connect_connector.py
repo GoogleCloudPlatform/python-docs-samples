@@ -35,6 +35,12 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
+    # [START_EXCLUDE]
+    if 'DB_ROOT_CERT' in os.environ:
+        db_root_cert = os.environ["DB_ROOT_CERT"] # e.g. 'certs/server-ca.pem'
+    else:
+        db_root_cert = None
+    # [END_EXCLUDE]
 
     connector = Connector(ip_type)
 
@@ -45,6 +51,9 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
             user=db_user,
             password=db_pass,
             db=db_name,
+            # [START_EXCLUDE]
+            cafile=db_root_cert,
+            # [END_EXCLUDE]
         )
         return conn
 
