@@ -36,7 +36,7 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
 
     # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp]
     # [START_EXCLUDE]
-    connect_args={}
+    connect_args = {}
     # [END_EXCLUDE]
     # For deployments that connect directly to a Cloud SQL instance without
     # using the Cloud SQL Proxy, configuring SSL certificates will ensure the
