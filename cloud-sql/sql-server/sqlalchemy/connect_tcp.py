@@ -34,41 +34,34 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = os.environ["DB_PORT"]  # e.g. 1433
 
-    # [END cloud_sql_sqlserver_sqlalchemy_sslcerts]
-    driver_name = "mssql+pytds"
-    query = {
-        "driver": "ODBC Driver 17 for SQL Server"
-    }
     # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp]
-    # [START cloud_sql_sqlserver_sqlalchemy_sslcerts]
+    # [START_EXCLUDE]
+    connect_args={}
+    # [END_EXCLUDE]
     # For deployments that connect directly to a Cloud SQL instance without
     # using the Cloud SQL Proxy, configuring SSL certificates will ensure the
     # connection is encrypted.
     if os.environ.get("DB_ROOT_CERT"):  # e.g. '/path/to/my/server-ca.pem'
-        driver_name = "mssql+pyodbc"
-        query = {
-            "driver": "ODBC Driver 17 for SQL Server",
-            "Encrypt": "yes",
-            "Trusted_Connection": "no"
+        connect_args = {
+            "cafile" : os.environ["DB_ROOT_CERT"],
+            "validate_host": False,
         }
-    if os.environ.get("CLOUD_SQL_AUTH_PROXY_IP_ADDRESS_TYPE") == "PRIVATE":
-        driver_name = "mssql+pyodbc"
-        query = {
-            "driver": "ODBC Driver 17 for SQL Server"
-        }
+
     # [START cloud_sql_sqlserver_sqlalchemy_connect_tcp]
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
-        # <driver_name>://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>?driver=ODBC+Driver+17+for+SQL+Server
+        # mssql+pytds://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
         sqlalchemy.engine.url.URL.create(
-            drivername=driver_name,
+            drivername="mssql+pytds",
             username=db_user,
             password=db_pass,
             database=db_name,
             host=db_host,
             port=db_port,
-            query=query,
         ),
+        # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp]
+        connect_args=connect_args,
+        # [START cloud_sql_sqlserver_sqlalchemy_connect_tcp]
         # [START_EXCLUDE]
         # [START cloud_sql_sqlserver_sqlalchemy_limit]
         # Pool size is the maximum number of permanent connections to keep.
