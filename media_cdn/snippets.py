@@ -23,8 +23,12 @@ at https://cloud.google.com/media-cdn/docs.
 
 # [START mediacdn_sign_url]
 # [START mediacdn_sign_cookie]
+# [START mediacdn_sign_token]
 import base64
 import datetime
+import hmac
+import hashlib
+# [END mediacdn_sign_token]
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
@@ -149,3 +153,38 @@ def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time
             policy=policy, signature=signature)
     return signed_policy
 # [END mediacdn_sign_cookie]
+
+
+# [START mediacdn_sign_token]
+def sign_token(url_prefix: str, base64_key: bytes, algo: str, expiration_time: datetime.datetime = None) -> bytes:
+    """Gets the Signed URL Suffix string for the Media CDN' Short token URL requests.
+
+    Args:
+        url_prefix: URL prefix to sign as a string.
+        base64_key: Secret key as a base64 encoded string.
+        algo: Algorithm can be either `SHA1` or `SHA256`.
+        expiration_time: Expiration time as a UTC datetime object.
+
+    Returns:
+        Returns the Signed URL appended with the query parameters based on the
+        specified URL prefix and configuration.
+    """
+    output = b"URLPrefix=" + base64.standard_b64encode(url_prefix.encode("utf-8"))
+
+    if not expiration_time:
+        expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
+    epoch_duration = int(
+        (expiration_time - datetime.datetime.utcfromtimestamp(0)).total_seconds()
+    )
+    output += b"~Expires=" + str(epoch_duration).encode("utf-8")
+    key = base64.standard_b64decode(base64_key)
+    algo = algo.lower()
+    if algo == "sha1":
+        signature = hmac.new(key, output, digestmod=hashlib.sha1).hexdigest()
+    elif algo == "sha256":
+        signature = hmac.new(key, output, digestmod=hashlib.sha256).hexdigest()
+    else:
+        raise ValueError("User input(`algo`) can be either `sha1` or `sha256`")
+    output += b"~hmac=" + signature.encode("utf-8")
+    return output
+# [END mediacdn_sign_token]

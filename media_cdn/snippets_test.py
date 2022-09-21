@@ -109,3 +109,41 @@ def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
         'Edge-Cache-Cookie=URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9mb28v:'
         'Expires=1650848400:KeyName=my-key:'
         'Signature=I0BnupL1tKbXklf1rK50nlC9JMh4HBLogTKByatOFRvALofT159BegB26Z2WmrI-ZAgAp8Q-1__bWtFdMAqCAA==')
+
+
+def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
+    results = [
+        snippets.sign_token(
+            url_prefix='http://35.186.234.33',
+            base64_key=b'9koFqysqLzTsU5Mm7BDsVjOjDqN8RRrmsu3Oojxj7mo=',
+            algo='sha1',
+            expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
+        ),
+        snippets.sign_token(
+            url_prefix='http://www.example.com',
+            base64_key=b'o7SD7eS/5q0ZNEVPKkPRAo6Yl3aPFXCh62Kyez1ygIQ=',
+            algo='sha1',
+            expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
+        ),
+        snippets.sign_token(
+            url_prefix='http://www.example.com',
+            base64_key=b'dhs2goW4rKqaYap+xcLCh2gYJIZQv9p1R1vHvRGH4CU=',
+            algo='sha256',
+            expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
+        ),
+    ]
+    print(results)
+    assert results[0] == (
+        b'URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM='
+        b'~Expires=1650848400'
+        b'~hmac=9326e3e91cf5f6ac1a2102eca641c34b58fcac30')
+    assert results[1] == (
+        b'URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ=='
+        b'~Expires=1650848400~hmac=da5b23b5bf07f38ae25825f8445464b745b6bfbc'
+    )
+    assert results[2] == (
+        b'URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ=='
+        b'~Expires=1650848400'
+        b'~hmac=add26c03a6f30581ff9dcd580d305031cb94d3d5085d443b4039cabdcb7e785d'
+    )
+
