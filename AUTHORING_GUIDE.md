@@ -780,9 +780,8 @@ cd PATH/TO/YOUR/PROJECT/
 ℹ️ **Note:** Nox only detects tests in the `tests` directory where the `noxfile_config.py` file is or [for any files named `*_test.py` or `test_*.py`](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/6c4c8de274496300e3285168a012f8b6203b5122/noxfile-template.py#L182-L187) in the same directory as the config file.
 
 To use nox, install it globally with `pip`:
-
 ```console
-$ pip install nox
+pip install nox
 ```
 
 To run style checks on your samples:

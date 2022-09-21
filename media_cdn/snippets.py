@@ -26,8 +26,8 @@ at https://cloud.google.com/media-cdn/docs.
 # [START mediacdn_sign_token]
 import base64
 import datetime
-import hmac
 import hashlib
+import hmac
 # [END mediacdn_sign_token]
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
@@ -78,7 +78,7 @@ def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime
     return signed_url
 
 
-def sign_url_prefix(url: str, url_prefix, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+def sign_url_prefix(url: str, url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:

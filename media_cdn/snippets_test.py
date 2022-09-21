@@ -111,7 +111,7 @@ def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
         'Signature=I0BnupL1tKbXklf1rK50nlC9JMh4HBLogTKByatOFRvALofT159BegB26Z2WmrI-ZAgAp8Q-1__bWtFdMAqCAA==')
 
 
-def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
+def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
     results = [
         snippets.sign_token(
             url_prefix='http://35.186.234.33',
@@ -146,4 +146,3 @@ def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
         b'~Expires=1650848400'
         b'~hmac=add26c03a6f30581ff9dcd580d305031cb94d3d5085d443b4039cabdcb7e785d'
     )
-
