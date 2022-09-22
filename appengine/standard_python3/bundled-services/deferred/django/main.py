@@ -32,9 +32,9 @@ class Counter(ndb.Model):
 
 
 def do_something_later(key, amount):
-    entity = Counter.get_or_insert(key, count=0)
+    entity = Counter.get_or_insert(key, count=0, retries=2)
     entity.count += amount
-    entity.put()
+    entity.put(retries=2)
 
 
 def increment_counter(request):
@@ -51,7 +51,7 @@ def increment_counter(request):
 
 
 def view_counter(request):
-    counter = Counter.get_or_insert(my_key, count=0)
+    counter = Counter.get_or_insert(my_key, count=0, retries=2)
     return HttpResponse(str(counter.count))
 
 

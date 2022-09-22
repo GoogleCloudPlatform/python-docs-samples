@@ -29,9 +29,9 @@ class Counter(ndb.Model):
 
 
 def do_something_later(key, amount):
-    entity = Counter.get_or_insert(key, count=0)
+    entity = Counter.get_or_insert(key, count=0, retries=2)
     entity.count += amount
-    entity.put()
+    entity.put(retries=2)
 
 
 def IncrementCounter(environ, start_response):
@@ -49,7 +49,7 @@ def IncrementCounter(environ, start_response):
 
 
 def ViewCounter(environ, start_response):
-    counter = Counter.get_or_insert(my_key, count=0)
+    counter = Counter.get_or_insert(my_key, count=0, retries=2)
     start_response("200 OK", [("Content-Type", "text/html")])
     return [str(counter.count).encode("utf-8")]
 
