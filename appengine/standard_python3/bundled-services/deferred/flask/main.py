@@ -15,6 +15,7 @@
 # [START gae_deferred_handler_flask]
 import os
 
+import backoff
 from flask import Flask, request
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import deferred
@@ -31,8 +32,9 @@ class Counter(ndb.Model):
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def do_something_later(key, amount):
-    entity = Counter.get_or_insert(key, count=0, retries=2)
+    entity = Counter.get_or_insert(key, count=0)
     entity.count += amount
     entity.put()
 
@@ -52,8 +54,9 @@ def increment_counter():
 
 
 @app.route("/counter/get")
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def view_counter():
-    counter = Counter.get_or_insert(my_key, count=0, retries=2)
+    counter = Counter.get_or_insert(my_key, count=0)
     return str(counter.count)
 
 
