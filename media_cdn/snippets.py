@@ -26,9 +26,13 @@ at https://cloud.google.com/media-cdn/docs.
 # [START mediacdn_sign_token]
 import base64
 import datetime
+# [END mediacdn_sign_cookie]
+# [END mediacdn_sign_url]
 import hashlib
 import hmac
 # [END mediacdn_sign_token]
+# [START mediacdn_sign_cookie]
+# [START mediacdn_sign_url]
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
