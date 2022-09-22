@@ -15,7 +15,6 @@
 # This PySpark program is trying to answer the question: "How has the rainfall
 # and snowfall patterns changed in the western US for the past 25 years?"
 
-import math
 import sys
 
 import pandas as pd
@@ -24,10 +23,13 @@ from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 
-# Distance weighting algorithm (DWA)
+# Inverse Distance Weighting algorithm (DWA)
 @f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
 def phx_dw_compute(year, df) -> pd.DataFrame:
-        # Calculate the distance from each station to Phoenix.
+        # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
+        # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
+        # its measurement is weighed. 
+        #
         # This function combines the distance equation and inverse distance factor since the distance equation is:
         #
         #     d = sqrt((x1-x2)^2 + (y1-y2)^2))
@@ -39,10 +41,14 @@ def phx_dw_compute(year, df) -> pd.DataFrame:
         # so we negate the square and square root to combine this into:
         #
         #     idf = 1 / ((x1-x2)^2 + (y1-y2)^2))
-        #
+        
+        # Latitude and longitude of Phoenix
+        PHX_LATITUDE = 33.4484
+        PHX_LONGITUDE =  -112.0740
+
         inverse_distance_factors = 1.0 / \
-            ((phx_location[0] - df.LATITUDE) ** 2 +
-             (phx_location[1] - df.LONGITUDE) ** 2)
+            ((PHX_LATITUDE - df.LATITUDE) ** 2 +
+             (PHX_LONGITUDE - df.LONGITUDE) ** 2)
 
         # Calculate each station's weight
         weights = inverse_distance_factors / inverse_distance_factors.sum()
@@ -125,9 +131,6 @@ if __name__ == "__main__":
     # Filter out the states to move on to the distance weighting algorithm (DWA)
     states_near_phx = ["AZ", "CA", "CO", "NM", "NV", "UT"]
     annual_df = df.where(df.STATE.isin(states_near_phx))
-
-    # Latitude and longitude of Phoenix, which are needed to perform DWA
-    phx_location = [33.4484, -112.0740]
 
     # Calculate the distance-weighted precipitation amount
     phx_annual_prcp_df = (
