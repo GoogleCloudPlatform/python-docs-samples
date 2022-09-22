@@ -23,7 +23,6 @@ import pandas as pd
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
-from pyspark.sql.types import StructType
 
 # Distance weighting algorithm (DWA)
 @f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
