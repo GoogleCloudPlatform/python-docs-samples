@@ -18,11 +18,37 @@
 import math
 import sys
 
+import pandas as pd
+
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import avg, lit, sum, year
+import pyspark.sql.functions as f
 from pyspark.sql.types import StructType
 
+# Distance weighting algorithm (DWA)
+@f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
+def phx_dw_compute(year, df) -> pd.DataFrame:
+        # Calculate the distance from each station to Phoenix.
+        # This function combines the distance equation and inverse distance factor since the distance equation is:
+        #
+        #     d = sqrt((x1-x2)^2 + (y1-y2)^2))
+        #
+        # and the inverse distance factor is:
+        #
+        #     idf = 1 / d^2
+        #
+        # so we negate the square and square root to combine this into:
+        #
+        #     idf = 1 / ((x1-x2)^2 + (y1-y2)^2))
+        #
+        inverse_distance_factors = 1.0 / \
+            ((phx_location[0] - df.LATITUDE) ** 2 +
+             (phx_location[1] - df.LONGITUDE) ** 2)
+
+        # Calculate each station's weight
+        weights = inverse_distance_factors / inverse_distance_factors.sum()
+
+        return pd.DataFrame({"YEAR": year, "VALUE": (weights * df.ANNUAL_AMOUNT).sum()})
 
 if __name__ == "__main__":
     # read in the input argument
@@ -75,13 +101,13 @@ if __name__ == "__main__":
 
     # Extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
-    df = df.withColumn("DATE", year(df.DATE)).withColumnRenamed("DATE", "YEAR")
+    df = df.withColumn("DATE", f.year(df.DATE)).withColumnRenamed("DATE", "YEAR")
 
     # Each year's arithmetic mean of precipitation
     prcp_mean_df = (
         df.where(df.ELEMENT == "PRCP")
         .groupBy("YEAR")
-        .agg(avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
+        .agg(f.avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
         .sort("YEAR")
     )
     print("PRCP mean table")
@@ -91,7 +117,7 @@ if __name__ == "__main__":
     snow_mean_df = (
         df.where(df.ELEMENT == "SNOW")
         .groupBy("YEAR")
-        .agg(avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
+        .agg(f.avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
         .sort("YEAR")
     )
     print("SNOW mean table")
@@ -104,83 +130,29 @@ if __name__ == "__main__":
     # Latitude and longitude of Phoenix, which are needed to perform DWA
     phx_location = [33.4484, -112.0740]
 
-    # Create blank tables for storing the results of the distance weighting algorithm (DWA)
-    # The tables will have the following format
-    # +------------------+-------------------+------------------+
-    # |PHX_PRCP/SNOW_1997|...                |PHX_PRCP/SNOW_2021|
-    # +------------------+-------------------+------------------+
-    # |DWA result (float)|...                |DWA result (float)|
-    # +------------------+-------------------+------------------+
-    phx_annual_prcp_df = spark.createDataFrame([[]], StructType([]))
-    phx_annual_snow_df = spark.createDataFrame([[]], StructType([]))
-
-    # Distance weighting algorithm (DWA)
-    def phx_dw_compute(input_list) -> float:
-        # Input_list is a list of Row object with format:
-        # [
-        #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
-        #    ROW(ID='...', LATITUDE='...', LONGITUDE='...', YEAR='...', ANNUAL_PRCP/ANNUAL_SNOW='...'),
-        #    ...
-        # ]
-
-        # Contains 1 / d^2 of each station
-        factor_list = []
-        # The total sum of 1 / d^2 of all the stations
-        factor_sum = 0.0
-        for row in input_list:
-            latitude = row[1]
-            longitude = row[2]
-            # Calculate the distance from each station to Phoenix
-            distance_to_phx = math.sqrt(
-                (phx_location[0] - latitude) ** 2 + (phx_location[1] - longitude) ** 2
-            )
-            # Calculate the distance factor of each station (1 / d^2)
-            distance_factor = 1.0 / (distance_to_phx**2)
-            factor_list.append(distance_factor)
-            factor_sum += distance_factor
-
-        # Contains the weights of each station
-        weights_list = [val / factor_sum for val in factor_list]
-
-        dwa_result = 0.0
-        for row in input_list:
-            # This is the annual prcipitation/snowfall of each station
-            annual_value = row[4]
-            # Weight of each station
-            weight = weights_list[input_list.index(row)]
-            dwa_result += weight * annual_value
-
-        return dwa_result
-
-    for year_val in range(1997, 2022):
-        # Collect() function returns a list of Row object.
-        # prcp_year and snow_year will be the input for the distance weighting algorithm
-        prcp_year = (
-            annual_df.where(
-                (annual_df.ELEMENT == "PRCP") & (annual_df.YEAR == year_val)
-            )
-            .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-            .agg(sum("VALUE").alias("ANNUAL_PRCP"))
-            .collect()
+    # Calculate the distance-weighted precipitation amount
+    phx_annual_prcp_df = (
+        annual_df.where(
+            (annual_df.ELEMENT == "PRCP")
         )
+        .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
+        .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
+        .groupBy("YEAR")
+        .apply(phx_dw_compute)
+    )
 
-        snow_year = (
-            annual_df.where(
-                (annual_df.ELEMENT == "SNOW") & (annual_df.YEAR == year_val)
-            )
-            .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-            .agg(sum("VALUE").alias("ANNUAL_SNOW"))
-            .collect()
+    # Calculate the distance-weighted snowfall amount
+    phx_annual_snow_df = (
+        annual_df.where(
+            (annual_df.ELEMENT == "SNOW")
         )
+        .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
+        .agg(f.sum("VALUE").alias("ANNUAL_AMMOUNT"))
+        .groupBy("YEAR")
+        .apply(phx_dw_compute)
+    )
 
-        phx_annual_prcp_df = phx_annual_prcp_df.withColumn(
-            f"PHX_PRCP_{year_val}", lit(phx_dw_compute(prcp_year))
-        )
-        phx_annual_snow_df = phx_annual_snow_df.withColumn(
-            f"PHX_SNOW_{year_val}", lit(phx_dw_compute(snow_year))
-        )
-
-    # This table has only two rows (the first row contains the columns)
+    # Display the tables
     phx_annual_prcp_df.show()
     phx_annual_snow_df.show()
 
