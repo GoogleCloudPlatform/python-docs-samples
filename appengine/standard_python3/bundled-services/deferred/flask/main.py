@@ -34,7 +34,7 @@ class Counter(ndb.Model):
 def do_something_later(key, amount):
     entity = Counter.get_or_insert(key, count=0, retries=2)
     entity.count += amount
-    entity.put(retries=2)
+    entity.put()
 
 
 @app.route("/counter/increment")
