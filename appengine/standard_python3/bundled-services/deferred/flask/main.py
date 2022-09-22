@@ -28,6 +28,7 @@ app.wsgi_app = wrap_wsgi_app(app.wsgi_app, use_deferred=True)
 
 class Counter(ndb.Model):
     count = ndb.IntegerProperty(indexed=False)
+    updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
 def do_something_later(key, amount):

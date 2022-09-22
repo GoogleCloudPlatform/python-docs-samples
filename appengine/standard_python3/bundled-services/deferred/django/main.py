@@ -28,6 +28,7 @@ my_key = os.environ.get("GAE_VERSION", "Missing")
 
 class Counter(ndb.Model):
     count = ndb.IntegerProperty(indexed=False)
+    updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
 def do_something_later(key, amount):
