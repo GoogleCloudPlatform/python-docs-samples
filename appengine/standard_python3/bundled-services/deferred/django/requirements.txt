@@ -1,3 +1,4 @@
+backoff==2.1.2
 Django==3.2.8
 django-environ==0.7.0
 google-cloud-logging==2.7.2

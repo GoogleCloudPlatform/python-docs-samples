@@ -1,1 +1,2 @@
+backoff==2.1.2
 appengine-python-standard>=0.3.1

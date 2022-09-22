@@ -15,6 +15,7 @@
 # [START gae_deferred_handler_django]
 import os
 
+import backoff
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
@@ -31,6 +32,7 @@ class Counter(ndb.Model):
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def do_something_later(key, amount):
     entity = Counter.get_or_insert(key, count=0, retries=2)
     entity.count += amount
@@ -50,6 +52,7 @@ def increment_counter(request):
     return HttpResponse("Deferred counter increment.")
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def view_counter(request):
     counter = Counter.get_or_insert(my_key, count=0, retries=2)
     return HttpResponse(str(counter.count))

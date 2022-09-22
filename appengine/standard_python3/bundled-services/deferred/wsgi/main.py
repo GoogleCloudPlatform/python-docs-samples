@@ -16,6 +16,7 @@
 import os
 import re
 
+import backoff
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
@@ -28,6 +29,7 @@ class Counter(ndb.Model):
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def do_something_later(key, amount):
     entity = Counter.get_or_insert(key, count=0, retries=2)
     entity.count += amount
@@ -48,6 +50,7 @@ def IncrementCounter(environ, start_response):
     return ["Deferred counter increment.".encode("utf-8")]
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def ViewCounter(environ, start_response):
     counter = Counter.get_or_insert(my_key, count=0, retries=2)
     start_response("200 OK", [("Content-Type", "text/html")])
