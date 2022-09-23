@@ -44,7 +44,7 @@ def phx_dw_compute(year, df) -> pd.DataFrame:
         
         # Latitude and longitude of Phoenix
         PHX_LATITUDE = 33.4484
-        PHX_LONGITUDE =  -112.0740
+        PHX_LONGITUDE = -112.0740
 
         inverse_distance_factors = 1.0 / \
             ((PHX_LATITUDE - df.LATITUDE) ** 2 +
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             (annual_df.ELEMENT == "SNOW")
         )
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-        .agg(f.sum("VALUE").alias("ANNUAL_AMMOUNT"))
+        .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
         .apply(phx_dw_compute)
     )
