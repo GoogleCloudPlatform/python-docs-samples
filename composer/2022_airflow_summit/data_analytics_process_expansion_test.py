@@ -73,7 +73,6 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         with pytest.raises(NotFound):
             BQ_CLIENT.get_table(f"{BQ_DESTINATION_DATASET_NAME}.{output_table}")
 
-
     BATCH_ID = f"summit-dag-expansion-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
         "pyspark_batch": {
@@ -215,10 +214,8 @@ def bq_dataset(test_bucket):
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
-
 def test_process(test_dataproc_batch):
     print(test_dataproc_batch)
- 
 
     # check that the results table is there now
     assert (

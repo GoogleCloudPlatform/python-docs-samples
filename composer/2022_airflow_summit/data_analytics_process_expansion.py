@@ -26,34 +26,35 @@ import pyspark.sql.functions as f
 # Inverse Distance Weighting algorithm (DWA)
 @f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
 def phx_dw_compute(year, df) -> pd.DataFrame:
-        # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
-        # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
-        # its measurement is weighed. 
-        #
-        # This function combines the distance equation and inverse distance factor since the distance equation is:
-        #
-        #     d = sqrt((x1-x2)^2 + (y1-y2)^2))
-        #
-        # and the inverse distance factor is:
-        #
-        #     idf = 1 / d^2
-        #
-        # so we negate the square and square root to combine this into:
-        #
-        #     idf = 1 / ((x1-x2)^2 + (y1-y2)^2))
-        
-        # Latitude and longitude of Phoenix
-        PHX_LATITUDE = 33.4484
-        PHX_LONGITUDE = -112.0740
+    # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
+    # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
+    # its measurement is weighed.
+    #
+    # This function combines the distance equation and inverse distance factor since the distance equation is:
+    #
+    #     d = sqrt((x1-x2)^2 + (y1-y2)^2))
+    #
+    # and the inverse distance factor is:
+    #
+    #     idf = 1 / d^2
+    #
+    # so we negate the square and square root to combine this into:
+    #
+    #     idf = 1 / ((x1-x2)^2 + (y1-y2)^2))
 
-        inverse_distance_factors = 1.0 / \
-            ((PHX_LATITUDE - df.LATITUDE) ** 2 +
-             (PHX_LONGITUDE - df.LONGITUDE) ** 2)
+    # Latitude and longitude of Phoenix
+    PHX_LATITUDE = 33.4484
+    PHX_LONGITUDE = -112.0740
 
-        # Calculate each station's weight
-        weights = inverse_distance_factors / inverse_distance_factors.sum()
+    inverse_distance_factors = 1.0 / (
+        (PHX_LATITUDE - df.LATITUDE) ** 2 + (PHX_LONGITUDE - df.LONGITUDE) ** 2
+    )
 
-        return pd.DataFrame({"YEAR": year, "VALUE": (weights * df.ANNUAL_AMOUNT).sum()})
+    # Calculate each station's weight
+    weights = inverse_distance_factors / inverse_distance_factors.sum()
+
+    return pd.DataFrame({"YEAR": year, "VALUE": (weights * df.ANNUAL_AMOUNT).sum()})
+
 
 if __name__ == "__main__":
     # read in the input argument
@@ -134,9 +135,7 @@ if __name__ == "__main__":
 
     # Calculate the distance-weighted precipitation amount
     phx_annual_prcp_df = (
-        annual_df.where(
-            (annual_df.ELEMENT == "PRCP")
-        )
+        annual_df.where((annual_df.ELEMENT == "PRCP"))
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
         .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
@@ -145,9 +144,7 @@ if __name__ == "__main__":
 
     # Calculate the distance-weighted snowfall amount
     phx_annual_snow_df = (
-        annual_df.where(
-            (annual_df.ELEMENT == "SNOW")
-        )
+        annual_df.where((annual_df.ELEMENT == "SNOW"))
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
         .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
