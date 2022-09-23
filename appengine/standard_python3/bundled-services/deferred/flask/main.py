@@ -42,10 +42,10 @@ def increment_counter():
     deferred.defer(do_something_later, my_key, 10)
 
     # Use default URL and queue name, no task name, execute after 10s.
-    deferred.defer(do_something_later, my_key, 10, _countdown=10)
+    deferred.defer(do_something_later, my_key, 10, _countdown=20)
 
     # Providing non-default task queue arguments
-    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=20)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=40)
 
     return "Deferred counter increment."
 
@@ -61,4 +61,6 @@ def custom_deferred():
     print("Executing deferred task.")
     # request.environ contains the WSGI `environ` dictionary (See PEP 0333)
     return deferred.Handler().post(request.environ)
+
+
 # [END gae_deferred_handler_flask]

@@ -105,44 +105,44 @@ To run this sample:
                             before running the sample.
         delete-fhir-store   Deletes the specified FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get-fhir-store      Gets the specified FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get-fhir-store-metadata
                             Gets the FHIR capability statement (STU3, R4), or the
                             conformance statement in the DSTU2 case for the store,
                             which contains a description of functionality
                             supported by the server. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         list-fhir-stores    Lists the FHIR stores in the given dataset. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         patch-fhir-store    Updates the FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         import-fhir-resources
                             Import resources into the FHIR store by copying them
                             from the specified source. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         export-fhir-store-gcs
                             Export resources to a Google Cloud Storage bucket by
                             copying them from the FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get_iam_policy      Gets the IAM policy for the specified FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         set_iam_policy      Sets the IAM policy for the specified FHIR store. A
                             single member will be assigned a single role. A member
                             can be any of: - allUsers, that is, anyone -
@@ -156,10 +156,10 @@ To run this sample:
                             role, such as 'roles/viewer', 'roles/owner', or
                             'roles/editor' See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
 
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP cloud project name
@@ -199,88 +199,131 @@ To run this sample:
     usage: fhir_resources.py [-h] [--project_id PROJECT_ID] [--location LOCATION]
                              [--dataset_id DATASET_ID]
                              [--fhir_store_id FHIR_STORE_ID]
+                             [--resource_file RESOURCE_FILE]
                              [--resource_type RESOURCE_TYPE]
                              [--resource_id RESOURCE_ID] [--patient_id PATIENT_ID]
                              [--encounter_id ENCOUNTER_ID] [--bundle BUNDLE]
                              [--uri_prefix URI_PREFIX] [--version_id VERSION_ID]
-                             {create-patient,create-encounter,create-observation,delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything}
+                             [--structure_definition_file STRUCTURE_DEFINITION_FILE]
+                             [--profile_url PROFILE_URL]
+                             [--implementation_guide_file IMPLEMENTATION_GUIDE_FILE]
+                             [--implementation_guide_url IMPLEMENTATION_GUIDE_URL]
+                             {create-resource-from-file,create-patient,create-encounter,create-observation,delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,create-structure-definition,create-implementation-guide,enable-implementation-guide,validate-resource,validate-resource-profile-url}
                              ...
 
     positional arguments:
-      {create-patient,create-encounter,create-observation,delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything}
+      {create-resource-from-file,create-patient,create-encounter,create-observation,delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,create-structure-definition,create-implementation-guide,enable-implementation-guide,validate-resource,validate-resource-profile-url}
+        create-resource-from-file
+                            Creates a new FHIR resource in a FHIR store using a
+                            JSON resource file. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         create-patient      Creates a new Patient resource in a FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         create-encounter    Creates a new Encounter resource in a FHIR store based
                             on a Patient. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         create-observation  Creates a new Observation resource in a FHIR store
                             based on an Encounter. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         delete-resource     Deletes a FHIR resource. Regardless of whether the
                             operation succeeds or fails, the server returns a 200
                             OK HTTP status code. To check that the resource was
                             successfully deleted, search for or get the resource
                             and see if it exists. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get-resource        Gets a FHIR resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         list-resource-history
                             Gets the history of a resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         execute-bundle      Executes the operations in the given bundle. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get-resource-history
                             Gets a version resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         delete-resource-purge
                             Deletes versions of a resource (excluding current
                             version). See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         update-resource     Updates an existing resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         patch-resource      Updates part of an existing resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         search-resources-get
                             Uses the searchResources GET method to search for
                             resources in the given FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         search-resources-post
                             Uses the searchResources GET method to search for
                             resources in the given FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
         get-patient-everything
                             Gets all the resources in the patient compartment. See
                             https://github.com/GoogleCloudPlatform/python-docs-
-                            samples/tree/main/healthcare/api-client/v1/fhir
-                            before running the sample.
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
+        create-structure-definition
+                            Creates a new StructureDefinition resource in a FHIR
+                            store from a StructureDefinition JSON file. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
+        create-implementation-guide
+                            Creates a new ImplementationGuide resource in a FHIR
+                            store from an ImplementationGuide JSON file. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
+        enable-implementation-guide
+                            Patches an existing FHIR store to enable an
+                            ImplementationGuide resource that exists in the FHIR
+                            store. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
+        validate-resource   Validates an input FHIR resource's conformance to the
+                            base profile configured on the FHIR store. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
+        validate-resource-profile-url
+                            Validates an input FHIR resource's conformance to a
+                            profile URL. The profile StructureDefinition resource
+                            must exist in the FHIR store before performing
+                            validation against the URL. See
+                            https://github.com/GoogleCloudPlatform/python-docs-
+                            samples/tree/main/healthcare/api-client/v1/fhir before
+                            running the sample.
 
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
@@ -289,6 +332,9 @@ To run this sample:
                             Name of dataset
       --fhir_store_id FHIR_STORE_ID
                             Name of FHIR store
+      --resource_file RESOURCE_FILE
+                            A JSON file containing the contents of a FHIR resource
+                            to create
       --resource_type RESOURCE_TYPE
                             The type of resource. First letter must be capitalized
       --resource_id RESOURCE_ID
@@ -305,6 +351,16 @@ To run this sample:
                             Prefix of gs:// URIs for import and export
       --version_id VERSION_ID
                             Version of a FHIR resource
+      --structure_definition_file STRUCTURE_DEFINITION_FILE
+                            A StructureDefinition resource JSON file
+      --profile_url PROFILE_URL
+                            The canonical URL of the FHIR profile to validate
+                            against
+      --implementation_guide_file IMPLEMENTATION_GUIDE_FILE
+                            An ImplementationGuide resource JSON file
+      --implementation_guide_url IMPLEMENTATION_GUIDE_URL
+                            the URL defined in the 'url' property of the
+                            ImplementationGuide resource
 
 
 
