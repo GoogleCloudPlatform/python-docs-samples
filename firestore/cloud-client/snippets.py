@@ -209,7 +209,7 @@ def add_data_with_id():
 
 
 def add_custom_class_generated_id():
-    db = firestore.Client(project="maratt")
+    db = firestore.Client()
     # [START firestore_data_set_id_random_collection]
     city = {
         u'name': u'Tokyo',
