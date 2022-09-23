@@ -209,13 +209,14 @@ def add_data_with_id():
 
 
 def add_custom_class_generated_id():
-    db = firestore.Client()
+    db = firestore.Client(project="maratt")
     # [START firestore_data_set_id_random_collection]
     city = {
         u'name': u'Tokyo',
         u'country': u'Japan'
     }
-    db.collection(u'cities').add(city)
+    update_time, city_ref = db.collection(u'cities').add(city)
+    print(f'Added document with id {city_ref.id}')
     # [END firestore_data_set_id_random_collection]
 
 
