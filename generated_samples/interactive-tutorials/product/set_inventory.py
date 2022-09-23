@@ -73,6 +73,10 @@ def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
     set_inventory_request.allow_missing = True
     set_inventory_request.set_mask = set_mask
 
+    # To send an out-of-order request assign the invalid set_time here:
+    # import datetime
+    # set_inventory_request.set_time = datetime.datetime.now() - datetime.timedelta(days=1)
+
     print("---set inventory request---")
     print(set_inventory_request)
 
@@ -99,4 +103,3 @@ async def set_inventory_and_remove_product(product_name: str):
 
 product = create_product(product_id)
 asyncio.run(set_inventory_and_remove_product(product.name))
-# [END retail_set_inventory]
