@@ -15,21 +15,23 @@
 
 import os
 
-from samples.snippets import process_document_sample
+from samples.snippets import process_document_processor_version_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
+processor_version_id = "stable"
 file_path = "resources/invoice.pdf"
 mime_type = "application/pdf"
 field_mask = "text,pages.pageNumber"
 
 
-def test_process_documents(capsys):
-    process_document_sample.process_document_sample(
+def test_process_document_processor_versions(capsys):
+    process_document_processor_version_sample.process_document_processor_version_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
+        processor_version_id=processor_version_id,
         file_path=file_path,
         mime_type=mime_type,
         field_mask=field_mask,

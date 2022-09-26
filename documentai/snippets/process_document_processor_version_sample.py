@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-# [START documentai_process_document]
+# [START documentai_process_document_processor_version]
 
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
@@ -21,16 +21,18 @@ from google.cloud import documentai
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
+# processor_id = 'YOUR_PROCESSOR_ID' #  Create processor before running sample
+# processor_version_id = 'YOUR_PROCESSOR_VERSION_ID' # Processor version to use
 # file_path = '/path/to/local/pdf'
 # mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 # field_mask = "text,entities,pages.pageNumber"  # Optional. The fields to return in the Document object.
 
 
-def process_document_sample(
+def process_document_processor_version_sample(
     project_id: str,
     location: str,
     processor_id: str,
+    processor_version_id: str,
     file_path: str,
     mime_type: str,
     field_mask: str = None,
@@ -40,9 +42,11 @@ def process_document_sample(
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
-    # The full resource name of the processor, e.g.:
-    # projects/{project_id}/locations/{location}/processors/{processor_id}
-    name = client.processor_path(project_id, location, processor_id)
+    # The full resource name of the processor version
+    # e.g. projects/{project_id}/locations/{location}/processors/{processor_id}/processorVersions/{processor_version_id}
+    name = client.processor_version_path(
+        project_id, location, processor_id, processor_version_id
+    )
 
     # Read the file into memory
     with open(file_path, "rb") as image:
@@ -67,4 +71,4 @@ def process_document_sample(
     print(document.text)
 
 
-# [END documentai_process_document]
+# [END documentai_process_document_processor_version]
