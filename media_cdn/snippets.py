@@ -82,7 +82,13 @@ def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime
     return signed_url
 
 
-def sign_url_prefix(url: str, url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+def sign_url_prefix(
+    url: str,
+    url_prefix: str,
+    key_name: str,
+    base64_key: str,
+    expiration_time: datetime.datetime,
+) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:
