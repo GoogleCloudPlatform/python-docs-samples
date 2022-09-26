@@ -15,22 +15,20 @@
 
 import os
 
-from samples.snippets import disable_processor_sample, enable_processor_sample
+from samples.snippets import list_processor_versions_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "5e32eb3e1d0237c0"
+processor_id = "52a38e080c1a7296"
 
 
-def test_disable_processor(capsys):
-    disable_processor_sample.disable_processor_sample(
+def test_list_processor_versions(capsys):
+    list_processor_versions_sample.list_processor_versions_sample(
         project_id=project_id, location=location, processor_id=processor_id
     )
     out, _ = capsys.readouterr()
 
-    assert "projects" in out or "DISABLED" in out
-
-    # Re-Enable Processor
-    enable_processor_sample.enable_processor_sample(
-        project_id=project_id, location=location, processor_id=processor_id
-    )
+    assert "Processor Version: pretrained-ocr" in out
+    assert "Display Name: Google Stable" in out
+    assert "Display Name: Google Release Candidate" in out
+    assert "DEPLOYED" in out

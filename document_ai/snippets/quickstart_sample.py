@@ -38,7 +38,6 @@ def quickstart(
 
     # The full resource name of the processor, e.g.:
     # projects/project_id/locations/location/processor/processor_id
-    # You must create new processors in the Cloud Console first
     name = client.processor_path(project_id, location, processor_id)
 
     # Read the file into memory
