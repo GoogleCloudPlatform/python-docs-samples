@@ -167,24 +167,38 @@ def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time
 
 # [START mediacdn_sign_token]
 def sign_token(
-    url_prefix: str,
     base64_key: bytes,
-    algo: str,
+    encryption_algorithm: str,
     expiration_time: datetime.datetime = None,
+    url_prefix: str = None,
+    full_path: str = None,
+    path_globs: str = None,
 ) -> bytes:
     """Gets the Signed URL Suffix string for the Media CDN' Short token URL requests.
 
     Args:
-        url_prefix: URL prefix to sign as a string.
         base64_key: Secret key as a base64 encoded string.
-        algo: Algorithm can be either `SHA1` or `SHA256`.
+        encryption_algorithm: Algorithm can be either `SHA1` or `SHA256`.
         expiration_time: Expiration time as a UTC datetime object.
+        url_prefix: URL prefix to sign as a string.
+        full_path: URL prefix to sign as a string.
+        path_globs: URL prefix to sign as a string.
 
     Returns:
         The Signed URL appended with the query parameters based on the
         specified URL prefix and configuration.
     """
-    output = b"URLPrefix=" + base64.standard_b64encode(url_prefix.encode("utf-8"))
+    full_path = ""
+    path_globs = ""
+
+    if url_prefix is None and full_path is None and path_globs is None:
+        raise ValueError("User Input Missing: One of `url_prefix`, `full_path` or `path_globs` must be specified")
+
+    algo = encryption_algorithm.lower()
+    if algo not in ['sha1', 'sha256', 'ed25519']:
+        raise ValueError("Input Missing Error: `encryption_algorithm` can only be one of `sha1`, `sha256` or `ed25519`")
+
+    output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
 
     if not expiration_time:
         expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
@@ -192,14 +206,18 @@ def sign_token(
         (expiration_time - datetime.datetime.utcfromtimestamp(0)).total_seconds()
     )
     output += b"~Expires=" + str(epoch_duration).encode("utf-8")
-    key = base64.standard_b64decode(base64_key)
-    algo = algo.lower()
+    decoded_key = base64.urlsafe_b64decode(base64_key)
     if algo == "sha1":
-        signature = hmac.new(key, output, digestmod=hashlib.sha1).hexdigest()
+        signature = hmac.new(decoded_key, output, digestmod=hashlib.sha1).hexdigest()
+        output += b"~hmac=" + signature.encode("utf-8")
     elif algo == "sha256":
-        signature = hmac.new(key, output, digestmod=hashlib.sha256).hexdigest()
+        signature = hmac.new(decoded_key, output, digestmod=hashlib.sha256).hexdigest()
+        output += b"~hmac=" + signature.encode("utf-8")
+    elif algo == "ed25519":
+        digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(output)
+        signature = base64.urlsafe_b64encode(digest).decode('utf-8')
+        output += b"~Signature=" + signature.encode("utf-8")
     else:
         raise ValueError("User input(`algo`) can be either `sha1` or `sha256`")
-    output += b"~hmac=" + signature.encode("utf-8")
     return output
 # [END mediacdn_sign_token]
