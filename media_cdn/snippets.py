@@ -181,7 +181,7 @@ def sign_token(
         expiration_time: Expiration time as a UTC datetime object.
 
     Returns:
-        Returns the Signed URL appended with the query parameters based on the
+        The Signed URL appended with the query parameters based on the
         specified URL prefix and configuration.
     """
     output = b"URLPrefix=" + base64.standard_b64encode(url_prefix.encode("utf-8"))
