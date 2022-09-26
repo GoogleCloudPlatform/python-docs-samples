@@ -19,7 +19,7 @@ from samples.snippets import process_document_ocr_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "91e072f8626a76b7"
+processor_id = "52a38e080c1a7296"
 file_path = "resources/handwritten_form.pdf"
 mime_type = "application/pdf"
 

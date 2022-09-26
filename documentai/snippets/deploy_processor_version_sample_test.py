@@ -1,4 +1,4 @@
-# # Copyright 2020 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,26 +15,34 @@
 
 import os
 
-from samples.snippets import process_document_sample
+import mock
+from samples.snippets import deploy_processor_version_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "90484cfdedb024f6"
-file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
-field_mask = "text,pages.pageNumber"
+processor_id = "aaaaaaaaa"
+processor_version_id = "xxxxxxxxxx"
 
 
-def test_process_documents(capsys):
-    process_document_sample.process_document_sample(
+# TODO: Switch to Real Endpoint when Deployable Versions are Available
+@mock.patch(
+    "google.cloud.documentai.DocumentProcessorServiceClient.deploy_processor_version"
+)
+@mock.patch("google.api_core.operation.Operation")
+def test_deploy_processor_version(
+    operation_mock, deploy_processor_version_mock, capsys
+):
+    deploy_processor_version_mock.return_value = operation_mock
+
+    deploy_processor_version_sample.deploy_processor_version_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
-        file_path=file_path,
-        mime_type=mime_type,
-        field_mask=field_mask,
+        processor_version_id=processor_version_id,
     )
+
+    deploy_processor_version_mock.assert_called_once()
+
     out, _ = capsys.readouterr()
 
-    assert "text:" in out
-    assert "Invoice" in out
+    assert "operation" in out
