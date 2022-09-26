@@ -166,7 +166,12 @@ def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time
 
 
 # [START mediacdn_sign_token]
-def sign_token(url_prefix: str, base64_key: bytes, algo: str, expiration_time: datetime.datetime = None) -> bytes:
+def sign_token(
+    url_prefix: str,
+    base64_key: bytes,
+    algo: str,
+    expiration_time: datetime.datetime = None,
+) -> bytes:
     """Gets the Signed URL Suffix string for the Media CDN' Short token URL requests.
 
     Args:
