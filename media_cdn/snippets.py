@@ -30,12 +30,12 @@ import datetime
 # [END mediacdn_sign_url]
 import hashlib
 import hmac
-# [END mediacdn_sign_token]
 # [START mediacdn_sign_cookie]
 # [START mediacdn_sign_url]
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
+# [END mediacdn_sign_token]
 
 from six.moves import urllib
 

@@ -131,6 +131,12 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
             encryption_algorithm='sha256',
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
         ),
+        snippets.sign_token(
+            url_prefix='http://0.0.0.0/',
+            base64_key=b'Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=',
+            encryption_algorithm='ed25519',
+            expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
+        ),
     ]
     print(results)
     assert results[0] == (
@@ -145,4 +151,9 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
         b'URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ=='
         b'~Expires=1650848400'
         b'~hmac=add26c03a6f30581ff9dcd580d305031cb94d3d5085d443b4039cabdcb7e785d'
+    )
+    assert results[3] == (
+        b'URLPrefix=aHR0cDovLzAuMC4wLjAv'
+        b'~Expires=1650848400'
+        b'~Signature=HXJewEzhm6Dda3FlsyaXa_6aCR6CPkz6SQGNApFNZp2AVxb9g96bGtZtmiwRatmrvLOM1pibMO3OeDp3za9oDg=='
     )
