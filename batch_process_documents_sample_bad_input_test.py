@@ -44,4 +44,4 @@ def test_batch_process_documents_with_bad_input(capsys):
         out, _ = capsys.readouterr()
         assert "Failed" in out
     except Exception as e:
-        assert "Internal error" in e.message
+        assert "Failed" in e.message
