@@ -116,19 +116,19 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
         snippets.sign_token(
             url_prefix='http://35.186.234.33',
             base64_key=b'9koFqysqLzTsU5Mm7BDsVjOjDqN8RRrmsu3Oojxj7mo=',
-            algo='sha1',
+            encryption_algorithm='sha1',
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
         ),
         snippets.sign_token(
             url_prefix='http://www.example.com',
             base64_key=b'o7SD7eS/5q0ZNEVPKkPRAo6Yl3aPFXCh62Kyez1ygIQ=',
-            algo='sha1',
+            encryption_algorithm='sha1',
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
         ),
         snippets.sign_token(
             url_prefix='http://www.example.com',
             base64_key=b'dhs2goW4rKqaYap+xcLCh2gYJIZQv9p1R1vHvRGH4CU=',
-            algo='sha256',
+            encryption_algorithm='sha256',
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME)
         ),
     ]
