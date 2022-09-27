@@ -16,3 +16,20 @@ steps:
   - id: "Docker push to Artifact Registry"
     name: "gcr.io/cloud-builders/docker"
     args: ["push", "us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/filesystem-e2e-test:${BUILD_ID}"]
+  - id: "Deploy to Cloud Run"
+    name: "gcr.io/cloud-builders/gcloud:latest"
+    args:
+    - alpha
+    - run
+    - deploy
+    - ${_SERVICE_NAME}
+    - --image=us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/filesystem-e2e-test:${BUILD_ID}
+    - --execution-environment=gen2
+    - --vpc-connector=${_CONNECTOR}
+    - --update-env-vars=FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE}
+    - --region=${_DEPLOY_REGION}
+    - --no-allow-unauthenticated
+
+substitutions:
+  _DEPLOY_REGION: us-central1
+  _FILESHARE: vol1
