@@ -861,7 +861,7 @@ def delete_full_collection():
         deleted = 0
 
         for doc in docs:
-            print(f'Deleting doc {doc.id} => {doc.to_dict()}')
+            print(f'Deleting doc {doc.id} => {doc.get().to_dict()}')
             doc.delete()
             deleted = deleted + 1
 
