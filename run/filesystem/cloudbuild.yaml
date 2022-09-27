@@ -20,7 +20,7 @@ steps:
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
     args:
-      - alpha
+      - beta
       - run
       - deploy
       - ${_SERVICE_NAME}
