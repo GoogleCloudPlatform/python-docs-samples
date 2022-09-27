@@ -13,6 +13,6 @@ steps:
   - id: "Docker build"
     name: "gcr.io/cloud-builders/docker"
     args: [ "build", "-t", "us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/filesystem-e2e-test:${BUILD_ID}", "."]
-
-images:
-- "us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/filesystem-e2e-test:${BUILD_ID}"
+  - id: "Docker push to Artifact Registry"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/filesystem-e2e-test:${BUILD_ID}"]
