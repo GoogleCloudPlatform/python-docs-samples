@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     # Inverse Distance Weighting algorithm (DWA)
     @f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
-    def phx_dw_compute(year, df) -> pd.DataFrame:
+    def phx_dw_compute(year: tuple, df: pd.DataFrame) -> pd.DataFrame:
         # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
         # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
         # its measurement is weighed.
@@ -119,6 +119,13 @@ if __name__ == "__main__":
         # so we negate the square and square root to combine this into:
         #
         #     idf = 1 / ((x1-x2)^2 + (y1-y2)^2))
+        #
+        # Args:
+        #    year: a tuple containing a single 4-digit integer value for this group's year
+        #    df: a pandas dataframe
+        #
+        # Returns:
+        #    A new pandas dataframe
 
         # Latitude and longitude of Phoenix
         PHX_LATITUDE = 33.4484
