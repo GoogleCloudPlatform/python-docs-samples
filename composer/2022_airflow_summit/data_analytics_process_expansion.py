@@ -188,6 +188,8 @@ if __name__ == "__main__":
             .save(PRCP_MEAN_WRITE_TABLE)
         )
 
+# this table write mysteriously fails when using the direct method
+# but works as is using the indirect method
         (
             snow_mean_df.write.format("bigquery")
             .option("temporaryGcsBucket", temp_path)
