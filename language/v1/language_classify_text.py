@@ -32,12 +32,12 @@ def sample_classify_text(text_content):
     Classifying Content in a String
 
     Args:
-      text_content The text content to analyze. Must include at least 20 words.
+      text_content The text content to analyze.
     """
 
     client = language_v1.LanguageServiceClient()
 
-    # text_content = 'That actor on TV makes movies in Hollywood and also stars in a variety of popular new TV shows.'
+    # text_content = "That actor on TV makes movies in Hollywood and also stars in a variety of popular new TV shows."
 
     # Available types: PLAIN_TEXT, HTML
     type_ = language_v1.Document.Type.PLAIN_TEXT
@@ -48,7 +48,16 @@ def sample_classify_text(text_content):
     language = "en"
     document = {"content": text_content, "type_": type_, "language": language}
 
-    response = client.classify_text(request = {'document': document})
+    content_categories_version = (
+        language_v1.ClassificationModelOptions.V2Model.ContentCategoriesVersion.V2)
+    response = client.classify_text(request = {
+        "document": document,
+        "classification_model_options": {
+            "v2_model": {
+                "content_categories_version": content_categories_version
+            }
+        }
+    })
     # Loop through classified categories returned from the API
     for category in response.categories:
         # Get the name of the category representing the document.

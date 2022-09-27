@@ -16,15 +16,15 @@ test:
 
     - name: language_classify_text - Classifying Content of a text string (*custom value*)
       spec:
-      # Custom value: "Let's drink coffee and eat bagels at a coffee shop. I want muffins, croisants, coffee and baked goods."
+      # Custom value: "Dungeons and dragons and loot, oh my!"
       - call:
           sample: language_classify_text
           params:
-            text_content: {literal: "Let's drink coffee and eat bagels at a coffee shop. I want muffins, croisants, coffee and baked goods."}
+            text_content: {literal: "Dungeons and dragons and loot, oh my!"}
       - assert_contains_any:
-        - {literal: "Food"}
-        - {literal: "Drink"}
-        - {literal: "Coffee"}
+        - {literal: "Games"}
+        - {literal: "Roleplaying"}
+        - {literal: "Computer"}
 
     - name: language_classify_gcs - Classifying Content of text file in GCS (default value)
       spec:
