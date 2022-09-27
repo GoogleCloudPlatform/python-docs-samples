@@ -24,7 +24,7 @@ parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
-# [START batch_job_create]
+# [START job_discovery_batch_job_create]
 def batch_job_create(client_service, company_name):
     import base_job_sample
     created_jobs = []
@@ -55,10 +55,10 @@ def batch_job_create(client_service, company_name):
     batch.execute()
 
     return created_jobs
-# [END batch_job_create]
+# [END job_discovery_batch_job_create]
 
 
-# [START batch_job_update]
+# [START job_discovery_batch_job_update]
 def batch_job_update(client_service, jobs_to_be_updated):
     updated_jobs = []
 
@@ -91,10 +91,10 @@ def batch_job_update(client_service, jobs_to_be_updated):
     batch.execute()
 
     return updated_jobs
-# [END batch_job_update]
+# [END job_discovery_batch_job_update]
 
 
-# [START batch_job_delete]
+# [START job_discovery_batch_job_delete]
 def batch_job_delete(client_service, jobs_to_be_deleted):
 
     def job_delete_callback(request_id, response, exception):
@@ -113,7 +113,7 @@ def batch_job_delete(client_service, jobs_to_be_deleted):
             callback=job_delete_callback)
 
     batch.execute()
-# [END batch_job_delete]
+# [END job_discovery_batch_job_delete]
 
 
 def run_sample():
