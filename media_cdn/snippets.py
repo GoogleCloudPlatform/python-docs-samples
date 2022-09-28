@@ -202,13 +202,19 @@ def sign_token(
 ) -> bytes:
     """Gets the Signed URL Suffix string for the Media CDN' Short token URL requests.
 
+    One of (`url_prefix`, `full_path`, `path_globs`) must be included in each input.
+
     Args:
         base64_key: Secret key as a base64 encoded string.
         encryption_algorithm: Algorithm can be either `SHA1` or `SHA256`.
         expiration_time: Expiration time as a UTC datetime object.
-        url_prefix: URL prefix to sign as a string.
-        full_path: URL prefix to sign as a string.
-        path_globs: URL prefix to sign as a string.
+
+        url_prefix: the URL prefix to sign, including protocol.
+                    For example: http://example.com/path/ for URLs under /path or http://example.com/path?param=1
+        full_path:  A full path to sign, starting with the first '/'.
+                    For example: /path/to/content.mp4
+        path_globs: a set of ','- or '!'-delimited path glob strings.
+                    For example: /tv/*!/film/* to sign paths starting with /tv/ or /film/ in any URL.
 
     Returns:
         The Signed URL appended with the query parameters based on the
@@ -226,7 +232,13 @@ def sign_token(
             "Input Missing Error: `encryption_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
 
-    output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
+    if full_path:
+        output = "FullPath".encode("utf-8")  # Not required to include path in signature
+    elif path_globs:
+        path_globs = path_globs.strip()
+        output = f"PathGlob={path_globs}".encode("utf-8")
+    elif url_prefix:
+        output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
 
     if not expiration_time:
         expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
@@ -234,6 +246,7 @@ def sign_token(
         (expiration_time - datetime.datetime.utcfromtimestamp(0)).total_seconds()
     )
     output += b"~Expires=" + str(epoch_duration).encode("utf-8")
+
     decoded_key = base64.urlsafe_b64decode(base64_key)
     if algo == "sha1":
         signature = hmac.new(decoded_key, output, digestmod=hashlib.sha1).hexdigest()
