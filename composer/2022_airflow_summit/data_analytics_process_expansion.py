@@ -21,7 +21,7 @@ import pandas as pd
 
 from py4j.protocol import Py4JJavaError
 from pyspark.sql import SparkSession
-import pyspark.sql.functions as f
+import pyspark.sql.functions as functions
 
 
 if __name__ == "__main__":
@@ -75,13 +75,13 @@ if __name__ == "__main__":
 
     # Extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
-    df = df.withColumn("DATE", f.year(df.DATE)).withColumnRenamed("DATE", "YEAR")
+    df = df.withColumn("DATE", functions.year(df.DATE)).withColumnRenamed("DATE", "YEAR")
 
     # Each year's arithmetic mean of precipitation
     prcp_mean_df = (
         df.where(df.ELEMENT == "PRCP")
         .groupBy("YEAR")
-        .agg(f.avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
+        .agg(functions.avg("VALUE").alias("ANNUAL_PRCP_MEAN"))
         .sort("YEAR")
     )
     print("PRCP mean table")
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     snow_mean_df = (
         df.where(df.ELEMENT == "SNOW")
         .groupBy("YEAR")
-        .agg(f.avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
+        .agg(functions.avg("VALUE").alias("ANNUAL_SNOW_MEAN"))
         .sort("YEAR")
     )
     print("SNOW mean table")
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     annual_df = df.where(df.STATE.isin(states_near_phx))
 
     # Inverse Distance Weighting algorithm (DWA)
-    @f.pandas_udf("YEAR integer, VALUE double", f.PandasUDFType.GROUPED_MAP)
+    @functions.pandas_udf("YEAR integer, VALUE double", functions.PandasUDFType.GROUPED_MAP)
     def phx_dw_compute(year: tuple, df: pd.DataFrame) -> pd.DataFrame:
         # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
         # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     phx_annual_prcp_df = (
         annual_df.where((annual_df.ELEMENT == "PRCP"))
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-        .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
+        .agg(functions.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
         .apply(phx_dw_compute)
     )
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     phx_annual_snow_df = (
         annual_df.where((annual_df.ELEMENT == "SNOW"))
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
-        .agg(f.sum("VALUE").alias("ANNUAL_AMOUNT"))
+        .agg(functions.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
         .apply(phx_dw_compute)
     )
