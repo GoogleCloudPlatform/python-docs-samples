@@ -169,24 +169,51 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
             encryption_algorithm="ed25519",
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME),
         ),
+        snippets.sign_token(
+            url_prefix="http://34.104.35.20/",
+            encryption_algorithm="ed25519",
+            base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
+            expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
+        ),
     ]
     print(results)
     assert results[0] == (
-        b"URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM="
-        b"~Expires=1650848400"
-        b"~hmac=9326e3e91cf5f6ac1a2102eca641c34b58fcac30"
+        "URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM~Expires=1650848400"
+        "~hmac=88d75457e5e729234460b11c7bdff0138222ed3a"
     )
     assert results[1] == (
-        b"URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ=="
-        b"~Expires=1650848400~hmac=da5b23b5bf07f38ae25825f8445464b745b6bfbc"
+        "URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ~Expires=1650848400"
+        "~hmac=9103fd35ef2b628955ac0ba0cf1f16e1e7efd1da"
     )
     assert results[2] == (
-        b"URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ=="
-        b"~Expires=1650848400"
-        b"~hmac=add26c03a6f30581ff9dcd580d305031cb94d3d5085d443b4039cabdcb7e785d"
+        "URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbQ~Expires=1650848400"
+        "~hmac=adf7ec51554ed1ba0d4806ba79ea36cb23680a41cb38a46b77b6359680400837"
     )
     assert results[3] == (
-        b"URLPrefix=aHR0cDovLzAuMC4wLjAv"
-        b"~Expires=1650848400"
-        b"~Signature=HXJewEzhm6Dda3FlsyaXa_6aCR6CPkz6SQGNApFNZp2AVxb9g96bGtZtmiwRatmrvLOM1pibMO3OeDp3za9oDg=="
+        "URLPrefix=aHR0cDovLzAuMC4wLjAv~Expires=1650848400"
+        "~Signature=HXJewEzhm6Dda3FlsyaXa_6aCR6CPkz6SQGNApFNZp2AVxb9g96bGtZtmiwRatmrvLOM1pibMO3OeDp3za9oDg=="
+    )
+    assert results[4] == (
+        "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8~Expires=1664290336"
+        "~Signature=NSU1VX2IzgZv24cOObQ2-U_R0uHEwyK9PxGFo41wiFKTfnNo60-vkia-tis0IHPjanwtg53pRkumRhqu_iJGCw=="
+    )
+    assert snippets.sign_token(
+        path_globs="/shankar/*",
+        encryption_algorithm="ed25519",
+        base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
+        expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
+    ) == (
+        "PathGlobs=/shankar/*"
+        "~Expires=1664290336"
+        "~Signature=W9A9DSHa3bIE3S_Z4xHFmHkCFLCfOxgVqSnkPI6srIRyzHTX1Yc3LZi0F5Ec3PQeZyG-UiyA-mUzd5jOMhUsCw=="
+    )
+    assert snippets.sign_token(
+        url_prefix="http://34.104.35.20/",
+        encryption_algorithm="ed25519",
+        base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
+        expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
+    ) == (
+        "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8"
+        "~Expires=1664290336"
+        "~Signature=NSU1VX2IzgZv24cOObQ2-U_R0uHEwyK9PxGFo41wiFKTfnNo60-vkia-tis0IHPjanwtg53pRkumRhqu_iJGCw=="
     )

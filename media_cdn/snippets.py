@@ -236,9 +236,13 @@ def sign_token(
         output = "FullPath".encode("utf-8")  # Not required to include path in signature
     elif path_globs:
         path_globs = path_globs.strip()
-        output = f"PathGlob={path_globs}".encode("utf-8")
+        output = f"PathGlobs={path_globs}".encode("utf-8")
     elif url_prefix:
         output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
+
+        # TODO(sampathm): Remove following block
+    while chr(output[-1]) == "=":
+        output = output[:-1]
 
     if not expiration_time:
         expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
@@ -258,7 +262,7 @@ def sign_token(
         digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(output)
         signature = base64.urlsafe_b64encode(digest).decode("utf-8")
         output += b"~Signature=" + signature.encode("utf-8")
-    return output
+    return output.decode("utf-8")
 
 
 # [END mediacdn_sign_token]
