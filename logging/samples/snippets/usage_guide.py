@@ -315,13 +315,19 @@ def _sink_bigquery_setup(client):
     client.update_dataset(dataset, ["access_entries"])  # API call
     # [END sink_dataset_permissions]
 
-    return dataset
+    # create callback wrapper to delete dataset when done
+    class DatasetDeleter:
+        def delete(self):
+            client.delete_dataset(dataset, delete_contents=True)
+
+    return dataset, DatasetDeleter()
 
 
 @snippet
 def sink_bigquery(client, to_delete):
     """Sink log entries to bigquery."""
-    dataset = _sink_bigquery_setup(client)
+    dataset, dataset_deleter = _sink_bigquery_setup(client)
+    to_delete.append(dataset_deleter)
     sink_name = "robots-bigquery-%d" % (_millis(),)
     filter_str = "textPayload:robot"
 
