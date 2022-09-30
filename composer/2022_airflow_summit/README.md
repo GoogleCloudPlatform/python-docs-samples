@@ -11,7 +11,11 @@ Running a number of tasks in parallel showcases autoscaling in a Cloud Composer 
 
 ## data_analytics_dag
 
-Runs a basic Data Analytics workflow using BigQuery, Cloud Storage, and Dataproc Serverless
+Runs a basic Data Analytics workflow using BigQuery, Cloud Storage, and Dataproc Serverless. More detailed documentation can be found for this DAG [in the Composer documentation](https://cloud.google.com/composer/docs/data-analytics-googlecloud)
+
+## data_analytics_dag_expansion
+
+This DAG is nearly identical to `data_analytics_dag` only it features a more complex Dataproc job. For more info, refer to the [README](./DATAPROC_EXPANSION_README.md)
 
 ## retries
 
