@@ -148,35 +148,34 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
         snippets.sign_token(
             url_prefix="http://35.186.234.33",
             base64_key=b"9koFqysqLzTsU5Mm7BDsVjOjDqN8RRrmsu3Oojxj7mo=",
-            encryption_algorithm="sha1",
+            signature_algorithm="sha1",
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME),
         ),
         snippets.sign_token(
             url_prefix="http://www.example.com",
             base64_key=b"o7SD7eS/5q0ZNEVPKkPRAo6Yl3aPFXCh62Kyez1ygIQ=",
-            encryption_algorithm="sha1",
+            signature_algorithm="sha1",
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME),
         ),
         snippets.sign_token(
             url_prefix="http://www.example.com",
             base64_key=b"dhs2goW4rKqaYap+xcLCh2gYJIZQv9p1R1vHvRGH4CU=",
-            encryption_algorithm="sha256",
+            signature_algorithm="sha256",
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME),
         ),
         snippets.sign_token(
             url_prefix="http://0.0.0.0/",
             base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
-            encryption_algorithm="ed25519",
+            signature_algorithm="ed25519",
             expiration_time=datetime.datetime.utcfromtimestamp(EPOCH_TIME),
         ),
         snippets.sign_token(
             url_prefix="http://34.104.35.20/",
-            encryption_algorithm="ed25519",
+            signature_algorithm="ed25519",
             base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
             expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
         ),
     ]
-    print(results)
     assert results[0] == (
         "URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM~Expires=1650848400"
         "~hmac=88d75457e5e729234460b11c7bdff0138222ed3a"
@@ -191,29 +190,24 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
     )
     assert results[3] == (
         "URLPrefix=aHR0cDovLzAuMC4wLjAv~Expires=1650848400"
-        "~Signature=HXJewEzhm6Dda3FlsyaXa_6aCR6CPkz6SQGNApFNZp2AVxb9g96bGtZtmiwRatmrvLOM1pibMO3OeDp3za9oDg=="
+        "~Signature=KtCpkReRbVU7SkpZlsDigGyhgzos2MnbIuepvqbSm-7b33BlZM91s-KkNx97qvYIcYIQR-GlcQCTmzZNBX2DCQ"
     )
     assert results[4] == (
-        "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8~Expires=1664290336"
-        "~Signature=NSU1VX2IzgZv24cOObQ2-U_R0uHEwyK9PxGFo41wiFKTfnNo60-vkia-tis0IHPjanwtg53pRkumRhqu_iJGCw=="
+        "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8~Expires=1664290336~Signature=5WaeYalsQM7lYtm_OC3klhoIrBSRJTtjsk8D322gWd9cp3MKZZxiads0VUCmEdZFCHo8MYayVCxiwooaKSdkDA"
     )
     assert snippets.sign_token(
         path_globs="/shankar/*",
-        encryption_algorithm="ed25519",
+        signature_algorithm="ed25519",
         base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
         expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
     ) == (
-        "PathGlobs=/shankar/*"
-        "~Expires=1664290336"
-        "~Signature=W9A9DSHa3bIE3S_Z4xHFmHkCFLCfOxgVqSnkPI6srIRyzHTX1Yc3LZi0F5Ec3PQeZyG-UiyA-mUzd5jOMhUsCw=="
+        "PathGlobs=/shankar/*~Expires=1664290336~Signature=5WaeYalsQM7lYtm_OC3klhoIrBSRJTtjsk8D322gWd9cp3MKZZxiads0VUCmEdZFCHo8MYayVCxiwooaKSdkDA"
     )
     assert snippets.sign_token(
-        url_prefix="http://34.104.35.20/",
-        encryption_algorithm="ed25519",
-        base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
+        full_path="/music/video/mj-killer-song.mp4",
+        signature_algorithm="ed25519",
+        base64_key=b"Auo+t35Q1R/pk7sn2J6m/dhsMn+4Lbdlk+6qmmkxdFa=",
         expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
     ) == (
-        "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8"
-        "~Expires=1664290336"
-        "~Signature=NSU1VX2IzgZv24cOObQ2-U_R0uHEwyK9PxGFo41wiFKTfnNo60-vkia-tis0IHPjanwtg53pRkumRhqu_iJGCw=="
+        "FullPath~Expires=1664290336~Signature=sw6yny9hipPfYX_s8BJYyzaP3mWjQRdauBzWpwa-61ZlBiljhLUTsjqDVy9kmavY5CN9o9m_ECXIuVef9n9wAw"
     )

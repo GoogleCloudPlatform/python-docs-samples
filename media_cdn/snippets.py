@@ -41,6 +41,7 @@ import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
 from six.moves import urllib
 
+
 # [END mediacdn_sign_cookie]
 # [END mediacdn_sign_url]
 
@@ -194,7 +195,7 @@ def sign_cookie(
 # [START mediacdn_sign_token]
 def sign_token(
     base64_key: bytes,
-    encryption_algorithm: str,
+    signature_algorithm: str,
     expiration_time: datetime.datetime = None,
     url_prefix: str = None,
     full_path: str = None,
@@ -206,7 +207,7 @@ def sign_token(
 
     Args:
         base64_key: Secret key as a base64 encoded string.
-        encryption_algorithm: Algorithm can be either `SHA1` or `SHA256`.
+        signature_algorithm: Algorithm can be either `SHA1` or `SHA256` or `Ed25519`.
         expiration_time: Expiration time as a UTC datetime object.
 
         url_prefix: the URL prefix to sign, including protocol.
@@ -221,48 +222,53 @@ def sign_token(
         specified URL prefix and configuration.
     """
 
-    if url_prefix is None and full_path is None and path_globs is None:
-        raise ValueError(
-            "User Input Missing: One of `url_prefix`, `full_path` or `path_globs` must be specified"
-        )
+    decoded_key = base64.urlsafe_b64decode(base64_key)
+    algo = signature_algorithm.lower()
 
-    algo = encryption_algorithm.lower()
-    if algo not in ["sha1", "sha256", "ed25519"]:
-        raise ValueError(
-            "Input Missing Error: `encryption_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
-        )
-
+    to_sign = b""
     if full_path:
-        output = "FullPath".encode("utf-8")  # Not required to include path in signature
+        output = "FullPath".encode("utf-8")
+        to_sign = f"FullPath={full_path}".encode("utf-8")
     elif path_globs:
         path_globs = path_globs.strip()
         output = f"PathGlobs={path_globs}".encode("utf-8")
     elif url_prefix:
         output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
+    else:
+        raise ValueError(
+            "User Input Missing: One of `url_prefix`, `full_path` or `path_globs` must be specified"
+        )
 
-        # TODO(sampathm): Remove following block
-    while chr(output[-1]) == "=":
+    # trim padding(`=`) for url friendly output
+    while output[-1] == ord("="):
         output = output[:-1]
 
     if not expiration_time:
         expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
-    epoch_duration = int(
-        (expiration_time - datetime.datetime.utcfromtimestamp(0)).total_seconds()
-    )
+    else:
+        epoch_duration = int(
+            (expiration_time - datetime.datetime.utcfromtimestamp(0)).total_seconds()
+        )
     output += b"~Expires=" + str(epoch_duration).encode("utf-8")
+    to_sign += b"~Expires=" + str(epoch_duration).encode("utf-8")
 
-    decoded_key = base64.urlsafe_b64decode(base64_key)
-    if algo == "sha1":
-        signature = hmac.new(decoded_key, output, digestmod=hashlib.sha1).hexdigest()
-        output += b"~hmac=" + signature.encode("utf-8")
+    if algo == "ed25519":
+        digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(to_sign)
+        signature = base64.urlsafe_b64encode(digest).decode("utf-8")
+        output += b"~Signature=" + signature.encode("utf-8")
     elif algo == "sha256":
         signature = hmac.new(decoded_key, output, digestmod=hashlib.sha256).hexdigest()
         output += b"~hmac=" + signature.encode("utf-8")
-    elif algo == "ed25519":
-        digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(output)
-        signature = base64.urlsafe_b64encode(digest).decode("utf-8")
-        output += b"~Signature=" + signature.encode("utf-8")
-    return output.decode("utf-8")
+    elif algo == "sha1":
+        signature = hmac.new(decoded_key, output, digestmod=hashlib.sha1).hexdigest()
+        output += b"~hmac=" + signature.encode("utf-8")
+    else:
+        raise ValueError(
+            "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
+        )
+
+    output = output.decode("utf-8").strip("=")
+    return output
 
 
 # [END mediacdn_sign_token]
