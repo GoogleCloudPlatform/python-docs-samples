@@ -12,24 +12,27 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START batch_list_jobs]
-from typing import Iterable
+# [START batch_get_task]
 
 from google.cloud import batch_v1
 
 
-def list_jobs(project_id: str, region: str) -> Iterable[batch_v1.Job]:
+def get_task(project_id: str, region: str, job_name: str, group_name: str, task_number: int) -> batch_v1.Task:
     """
-    Get a list of all jobs defined in given region.
+    Retrieve information about a Task.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        region: name of the region hosting the jobs.
+        region: name of the region hosts the job.
+        job_name: the name of the job you want to retrieve information about.
+        group_name: the name of the group that owns the task you want to check. Usually it's `group0`.
+        task_number: number of the task you want to look up.
 
     Returns:
-        An iterable collection of Job object.
+        A Task object representing the specified task.
     """
     client = batch_v1.BatchServiceClient()
 
-    return client.list_jobs(parent=f"projects/{project_id}/locations/{region}")
-# [END batch_list_jobs]
+    return client.get_task(name=f"projects/{project_id}/locations/{region}/jobs/{job_name}"
+                                f"/taskGroups/{group_name}/tasks/{task_number}")
+# [END batch_get_task]
