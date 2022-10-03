@@ -58,18 +58,18 @@ def not_in_query(client):
 
 
 def query_with_readtime(client):
-    # [START datastore_snapshot_read]
-    # Create a read time of 120 seconds in the past
-    read_time = datetime.now(timezone.utc) - timedelta(seconds=120)
+    # [START datastore_stale_read]
+    # Create a read time of 15 seconds in the past
+    read_time = datetime.now(timezone.utc) - timedelta(seconds=15)
 
-    # Fetch an entity at time read_time
+    # Fetch an entity with read_time
     task_key = client.key('Task', 'sampletask')
     entity = client.get(task_key, read_time=read_time)
 
-    # Query Task entities at time read_time
+    # Query Task entities with read_time
     query = client.query(kind="Task")
     tasks = query.fetch(read_time=read_time, limit=10)
-    # [END datastore_snapshot_read]
+    # [END datastore_stale_read]
 
     results = list(tasks)
     results.append(entity)
