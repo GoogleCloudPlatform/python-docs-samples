@@ -58,6 +58,7 @@ def create_script_job_with_bucket(project_id: str, region: str, job_name: str, b
     task.max_run_duration = "3600s"
 
     # Tasks are grouped inside a job using TaskGroups.
+    # Currently, it's possible to have only one task group.
     group = batch_v1.TaskGroup()
     group.task_count = 4
     group.task_spec = task
