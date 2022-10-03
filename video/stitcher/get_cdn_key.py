@@ -20,7 +20,7 @@ Example usage:
         --cdn_key_id <cdn_key_id>
 """
 
-# [START video_stitcher_get_cdn_key]
+# [START videostitcher_get_cdn_key]
 
 import argparse
 
@@ -44,7 +44,7 @@ def get_cdn_key(project_id: str, location: str, cdn_key_id: str) -> str:
     return response
 
 
-# [END video_stitcher_get_cdn_key]
+# [END videostitcher_get_cdn_key]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

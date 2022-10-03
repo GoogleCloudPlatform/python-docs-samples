@@ -20,7 +20,7 @@ Example usage:
     python get_vod_ad_tag_detail.py --project_id <project-id> --location <location> --session_id <session-id> --ad_tag_details_id <ad-tag-details-id>
 """
 
-# [START video_stitcher_get_vod_ad_tag_detail]
+# [START videostitcher_get_vod_ad_tag_detail]
 
 import argparse
 
@@ -49,7 +49,7 @@ def get_vod_ad_tag_detail(
     return response
 
 
-# [END video_stitcher_get_vod_ad_tag_detail]
+# [END videostitcher_get_vod_ad_tag_detail]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

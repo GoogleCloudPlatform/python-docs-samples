@@ -21,7 +21,7 @@ Example usage:
         --slate_id <slate-id> --slate_uri <uri>
 """
 
-# [START video_stitcher_create_slate]
+# [START videostitcher_create_slate]
 
 import argparse
 
@@ -52,7 +52,7 @@ def create_slate(project_id: str, location: str, slate_id: str, slate_uri: str) 
     return response
 
 
-# [END video_stitcher_create_slate]
+# [END videostitcher_create_slate]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

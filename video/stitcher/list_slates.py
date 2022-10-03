@@ -19,7 +19,7 @@ Example usage:
     python list_slates.py --project_id <project-id> --location <location>
 """
 
-# [START video_stitcher_list_slates]
+# [START videostitcher_list_slates]
 
 import argparse
 
@@ -45,7 +45,7 @@ def list_slates(project_id: str, location: str) -> str:
     return response
 
 
-# [END video_stitcher_list_slates]
+# [END videostitcher_list_slates]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
