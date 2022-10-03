@@ -19,7 +19,7 @@ Example usage:
     python list_cdn_keys.py --project_id <project-id> --location <location>
 """
 
-# [START video_stitcher_list_cdn_keys]
+# [START videostitcher_list_cdn_keys]
 
 import argparse
 
@@ -45,7 +45,7 @@ def list_cdn_keys(project_id: str, location: str) -> str:
     return response
 
 
-# [END video_stitcher_list_cdn_keys]
+# [END videostitcher_list_cdn_keys]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

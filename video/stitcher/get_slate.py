@@ -20,7 +20,7 @@ Example usage:
         --slate_id <slate-id>
 """
 
-# [START video_stitcher_get_slate]
+# [START videostitcher_get_slate]
 
 import argparse
 
@@ -44,7 +44,7 @@ def get_slate(project_id: str, location: str, slate_id: str) -> str:
     return response
 
 
-# [END video_stitcher_get_slate]
+# [END videostitcher_get_slate]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

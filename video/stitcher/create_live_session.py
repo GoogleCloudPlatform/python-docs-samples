@@ -22,7 +22,7 @@ Example usage:
         --slate_id <slate-id>
 """
 
-# [START video_stitcher_create_live_session]
+# [START videostitcher_create_live_session]
 
 import argparse
 
@@ -61,7 +61,7 @@ def create_live_session(
     return response
 
 
-# [END video_stitcher_create_live_session]
+# [END videostitcher_create_live_session]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

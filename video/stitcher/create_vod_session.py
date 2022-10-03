@@ -21,7 +21,7 @@ Example usage:
         --location <location> --source_uri <uri> --ad_tag_uri <uri>
 """
 
-# [START video_stitcher_create_vod_session]
+# [START videostitcher_create_vod_session]
 
 import argparse
 
@@ -56,7 +56,7 @@ def create_vod_session(
     return response
 
 
-# [END video_stitcher_create_vod_session]
+# [END videostitcher_create_vod_session]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

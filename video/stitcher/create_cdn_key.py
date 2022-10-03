@@ -21,7 +21,7 @@ Example usage:
         --hostname <hostname> [--gcdn_keyname <name> --gcdn_private_key <secret> | --akamai_token_key <token-key>]
 """
 
-# [START video_stitcher_create_cdn_key]
+# [START videostitcher_create_cdn_key]
 
 import argparse
 
@@ -76,7 +76,7 @@ def create_cdn_key(
     return response
 
 
-# [END video_stitcher_create_cdn_key]
+# [END videostitcher_create_cdn_key]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

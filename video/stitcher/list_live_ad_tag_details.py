@@ -21,7 +21,7 @@ Example usage:
         --location <location> --session_id <session-id>
 """
 
-# [START video_stitcher_list_live_ad_tag_details]
+# [START videostitcher_list_live_ad_tag_details]
 
 import argparse
 
@@ -48,7 +48,7 @@ def list_live_ad_tag_details(project_id: str, location: str, session_id: str) ->
     return page_result
 
 
-# [END video_stitcher_list_live_ad_tag_details]
+# [END videostitcher_list_live_ad_tag_details]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

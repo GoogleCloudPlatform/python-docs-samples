@@ -20,7 +20,7 @@ Example usage:
         --session_id <session-id>
 """
 
-# [START video_stitcher_get_live_session]
+# [START videostitcher_get_live_session]
 
 import argparse
 
@@ -45,7 +45,7 @@ def get_live_session(project_id: str, location: str, session_id: str) -> str:
     return response
 
 
-# [END video_stitcher_get_live_session]
+# [END videostitcher_get_live_session]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

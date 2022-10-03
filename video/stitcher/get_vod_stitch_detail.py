@@ -22,7 +22,7 @@ Example usage:
         --stitch_details_id <stitch-details-id>
 """
 
-# [START video_stitcher_get_vod_stitch_detail]
+# [START videostitcher_get_vod_stitch_detail]
 
 import argparse
 
@@ -51,7 +51,7 @@ def get_vod_stitch_detail(
     return response
 
 
-# [END video_stitcher_get_vod_stitch_detail]
+# [END videostitcher_get_vod_stitch_detail]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
