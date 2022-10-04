@@ -73,7 +73,7 @@ def data_path(bucket_name: str) -> str:
 @pytest.fixture(scope="session")
 def model_path(bucket_name: str) -> str:
     # This is a different path than where Vertex AI saves its model.
-    gcs_path = f"gs://{bucket_name}/model"
+    gcs_path = f"gs://{bucket_name}/pretrained-model"
     conftest.run_cmd("gsutil", "-m", "cp", "-r", "./pretrained-model", gcs_path)
     return gcs_path
 
@@ -113,27 +113,48 @@ def test_pretrained_model() -> None:
     tf.ensure_shape(probabilities, [patch_size, patch_size, NUM_CLASSES])
 
 
-def test_readme(prelude: str) -> None:
+def test_readme(project: str) -> None:
     conftest.run_notebook(
         "README.ipynb",
-        prelude,
+        prelude=textwrap.dedent(
+            f"""\
+            from serving.data import ee_init
+
+            # Google Cloud resources.
+            project = {repr(project)}
+
+            # Initialize Earth Engine.
+            ee_init()
+            """
+        ),
         section="# 📚 Understand the data",
         until_end=True,
     )
 
 
-def test_land_cover_change(prelude: str) -> None:
+def test_land_cover_change(project: str) -> None:
     conftest.run_notebook(
         "land-cover-change.ipynb",
-        prelude,
+        prelude=textwrap.dedent(
+            f"""\
+            from serving.data import ee_init
+
+            # Google Cloud resources.
+            project = {repr(project)}
+
+            # Initialize Earth Engine.
+            ee_init()
+            """
+        ),
         section="# 🗾 Visualize changes in the land",
         until_end=True,
     )
 
 
 def test_land_cover_tensorflow(
-    prelude: str,
+    project: str,
     bucket_name: str,
+    location: str,
     unique_name: str,
     data_path: str,
     model_path: str,
@@ -153,7 +174,19 @@ def test_land_cover_tensorflow(
 
         conftest.run_notebook_parallel(
             "cloud-tensorflow.ipynb",
-            prelude,
+            prelude=textwrap.dedent(
+                f"""\
+                from serving.data import ee_init
+
+                # Google Cloud resources.
+                project = {repr(project)}
+                bucket = {repr(bucket_name)}
+                location = {repr(location)}
+
+                # Initialize Earth Engine.
+                ee_init()
+                """
+            ),
             sections=[
                 "# 📚 Understand the data",
                 "# 🗄 Create the dataset",
