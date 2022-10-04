@@ -1,4 +1,4 @@
 google==3.0.0
-google-cloud-retail==1.10.0
+google-cloud-retail==1.10.1
 google-cloud-storage==2.5.0
 google-cloud-bigquery==3.3.3
