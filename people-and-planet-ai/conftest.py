@@ -86,7 +86,7 @@ def bucket_name(test_name: str, location: str, unique_id: str) -> str:
     # Deleting a bucket with too many files results in an error.
     try:
         run_cmd("gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*")
-    except subprocess.CalledProcessError:
+    except RuntimeError:
         # If no files were found and it fails, ignore the error.
         pass
 
@@ -291,7 +291,9 @@ def run_notebook(
         error = re.sub(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]", "", str(e))
 
     if error:
-        raise RuntimeError(error)
+        raise RuntimeError(
+            f"Error on {repr(ipynb_file)}, section {repr(section)}: {error}"
+        )
 
 
 def run_notebook_parallel(
