@@ -22,8 +22,8 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    # ℹ️ Testing only in Python 3.7 since that's what Colab uses.
-    "ignored_versions": ["2.7", "3.6", "3.8", "3.9", "3.10"],
+    # ℹ️ Testing only in Python 3.9 since it's the latest supported version for Dataflow.
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
@@ -39,5 +39,7 @@ TEST_CONFIG_OVERRIDE = {
     "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    "envs": {
+        "PYTEST_ADDOPTS": "-n=16",  # not CPU-bound, it's bound by Cloud requests.
+    },
 }
