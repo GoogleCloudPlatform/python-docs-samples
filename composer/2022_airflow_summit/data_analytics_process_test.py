@@ -30,7 +30,7 @@ import pytest
 # GCP Project
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
-DATAPROC_REGION = "us-central1"
+DATAPROC_REGION = "northamerica-northeast1"
 
 
 # Google Cloud Storage constants
@@ -88,7 +88,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         response = operation.result()
     except Aborted as e:
         # retry once if we see a flaky 409 "subnet not ready error"
-        if "/subnetworks/default" in e:
+        if "/subnetworks/default" in str(e):
             # delete the errored out batch so we don't see an "AlreadyExists"
             delete_request = dataproc.DeleteBatchRequest(
                 name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
@@ -114,12 +114,14 @@ def test_dataproc_batch(test_bucket, bq_dataset):
         name=f"projects/{PROJECT_ID}/locations/{DATAPROC_REGION}/batches/{BATCH_ID}"
     )
 
-    # Make the request
-    response = dataproc_client.delete_batch(request=request)
-
-    # There will only be a response if the deletion fails
-    # otherwise response will be None
-    if response:
+    # Declare variable outside of try/except so it can be printed in the exception
+    response = None
+    try:
+        # Make the request
+        response = dataproc_client.delete_batch(request=request)
+    except NotFound:
+        # There will only be a response if the deletion fails
+        # otherwise response will be None
         print(response)
 
 

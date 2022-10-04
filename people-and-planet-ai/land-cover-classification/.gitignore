@@ -1,9 +1,7 @@
-# Files generated from testing.
+# Generated from the `serving` package build.
 /*.egg-info/
-/*.gif
-/README.py
-/datasets/
+
+# Created by the notebooks.
+/data/
 /model/
 /predictions/
-/training-data*.tfrecord.gz
-/validation-data*.tfrecord.gz

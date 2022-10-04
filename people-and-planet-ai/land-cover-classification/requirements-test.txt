@@ -1,4 +1,7 @@
-ipython==7.33.0
-nbconvert==6.5.0
+# Requirements to run tests.
+apache-beam[interactive]==2.41.0
+importnb==0.7.0
+ipykernel==6.15.3
+nbclient==0.6.8
 pytest-xdist==2.5.0
 pytest==7.1.2
