@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataform_async_workflow_invocation]
 """
 Example Airflow DAG that creates a Dataform compilation result, starts an asynchronous Dataform workflow invocation, and polls the status of the workflow until it enters a desired state by using DataformWorkflowInvocationStateSensor.
 This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators, see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
@@ -72,8 +73,10 @@ is_workflow_invocation_done = DataformWorkflowInvocationStateSensor(
     project_id=PROJECT_ID,
     region=REGION,
     repository_id=REPOSITORY_ID,
+    # workflow_invocation_id is last element of full resource name generated in create_workflow_invocation 
     workflow_invocation_id=("{{ task_instance.xcom_pull('create_workflow_invocation')['name'].split('/')[-1] }}"),
     expected_statuses={WorkflowInvocation.State.SUCCEEDED},
 )
 
 create_compilation_result >> create_workflow_invocation
+# [END composer_dataform_async_workflow_invocation]

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataform_workflow_invocation]
 """
 Example Airflow DAG that creates a Dataform compilation result and starts a Dataform workflow invocation. This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators, see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
 """
@@ -60,8 +61,10 @@ with models.DAG(
         region=REGION,
         repository_id=REPOSITORY_ID,
          workflow_invocation={
+            # compilation_result is full resource name generated in create_compilation_result
             "compilation_result": "{{ task_instance.xcom_pull('create_compilation_result')['name'] }}"
         },
     )
 
 create_compilation_result >> create_workflow_invocation
+# [END composer_dataform_workflow_invocation]
