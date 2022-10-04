@@ -1,1 +1,1 @@
-google-cloud-bigquery-connection==1.7.1
+google-cloud-bigquery-connection==1.7.2
