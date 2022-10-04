@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 import tempfile
 import textwrap
 
@@ -65,7 +64,6 @@ def model_path(bucket_name: str) -> str:
 def cloud_run_service_name(unique_name: str, location: str) -> str:
     # The notebook itself creates the service.
     service_name = unique_name
-    yield service_name
     conftest.cloud_run_cleanup(service_name, location)
 
 
