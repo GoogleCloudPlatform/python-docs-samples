@@ -116,8 +116,8 @@ def test_pretrained_model() -> None:
 def test_readme(prelude: str) -> None:
     conftest.run_notebook(
         "README.ipynb",
-        "# 📚 Understand the data",
         prelude,
+        section="# 📚 Understand the data",
         until_end=True,
     )
 
@@ -125,124 +125,89 @@ def test_readme(prelude: str) -> None:
 def test_land_cover_change(prelude: str) -> None:
     conftest.run_notebook(
         "land-cover-change.ipynb",
-        "# 🗾 Visualize changes in the land",
         prelude,
+        section="# 🗾 Visualize changes in the land",
         until_end=True,
     )
 
 
-def test_introduction_tensorflow(prelude: str) -> None:
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "# 📚 Understand the data",
-        prelude,
-    )
-
-
-def test_create_dataset_tensorflow(
-    prelude: str, unique_name: str, bucket_name: str
+def test_land_cover_tensorflow(
+    prelude: str,
+    bucket_name: str,
+    unique_name: str,
+    data_path: str,
+    model_path: str,
+    cloud_run_service_name: str,
+    aiplatform_model_name: str,
+    identity_token: str,
 ) -> None:
-    def preprocess(source: str) -> str:
-        dataflow_flags = [
-            '--runner="DataflowRunner"',
-            f"--job_name={unique_name}-dataset",
-            "--max-requests=1",
-        ]
-        return source.replace('--runner="DataflowRunner"', " ".join(dataflow_flags))
-
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "# 🗄 Create the dataset",
-        prelude,
-        substitute={
-            "points_per_class": 1,
-            "--data-path": f"gs://{bucket_name}/dataflow-data",
-        },
-        preprocess_cell=preprocess,
-    )
-
-
-def test_train_model_tensorflow(prelude: str, data_path: str, unique_name: str) -> None:
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "# 🧠 Train the model",
-        prelude,
-        substitute={
-            "display_name": unique_name,
-            "data_path": data_path,
-            "epochs": 1,
-        },
-    )
-
-
-def test_predict_local_tensorflow(prelude: str, model_path: str) -> None:
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "## 💻 Local predictions",
-        prelude,
-        substitute={
-            "model_path": model_path,
-        },
-    )
-
-
-def test_predict_cloud_run_tensorflow(
-    prelude: str, cloud_run_service_name: str, model_path: str, identity_token: str
-) -> None:
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "## ☁️ Cloud Run predictions",
-        prelude,
-        substitute={
-            "service_name": cloud_run_service_name,
-            "model_path": model_path,
-            "identity_token": identity_token,
-        },
-    )
-
-
-def test_predict_dataflow_tensorflow(
-    prelude: str, unique_name: str, model_path: str
-) -> None:
-    # Only grab the first location to shorten the runtime.
+    # For Dataflow batch prediction, only grab the first location to shorten the runtime.
     with open("predict-locations.csv") as f:
         # Grab the header row and first entry.
         subset = f.readlines()[:2]
 
-    with tempfile.NamedTemporaryFile("w") as f:
+    with tempfile.NamedTemporaryFile("w") as locations_file:
         for line in subset:
-            f.write(line)
-        f.flush()
+            locations_file.write(line)
+        locations_file.flush()
 
-        def preprocess(source: str) -> str:
-            dataflow_flags = [
-                '--runner="DataflowRunner"',
-                f"--job_name={unique_name}-predict",
-                "--max-requests=1",
-                f"--locations-file={f.name}",
-            ]
-            return source.replace('--runner="DataflowRunner"', " ".join(dataflow_flags))
-
-        conftest.run_notebook(
+        conftest.run_notebook_parallel(
             "cloud-tensorflow.ipynb",
-            "## 🧺 Dataflow batch prediction",
             prelude,
-            substitute={
-                "model_path": model_path,
+            sections=[
+                "# 📚 Understand the data",
+                "# 🗄 Create the dataset",
+                "# 🧠 Train the model",
+                "## 💻 Local predictions",
+                "## ☁️ Cloud Run predictions",
+                "## 🧺 Dataflow batch prediction",
+                "## 🌍 Earth Engine with AI Platform",
+            ],
+            variables={
+                "# 🗄 Create the dataset": {
+                    "points_per_class": 1,
+                    "--data-path": f"gs://{bucket_name}/dataflow-data",
+                },
+                "# 🧠 Train the model": {
+                    "display_name": unique_name,
+                    "data_path": data_path,
+                    "epochs": 1,
+                },
+                "## 💻 Local predictions": {
+                    "model_path": model_path,
+                },
+                "## ☁️ Cloud Run predictions": {
+                    "service_name": cloud_run_service_name,
+                    "model_path": model_path,
+                    "identity_token": identity_token,
+                },
+                "## 🧺 Dataflow batch prediction": {
+                    "model_path": model_path,
+                },
+                "## 🌍 Earth Engine with AI Platform": {
+                    "model_name": aiplatform_model_name,
+                    "model_path": model_path,
+                },
             },
-            preprocess_cell=preprocess,
+            replace={
+                "# 🗄 Create the dataset": {
+                    '--runner="DataflowRunner"': " ".join(
+                        [
+                            '--runner="DataflowRunner"',
+                            f"--job_name={unique_name}-dataset",
+                            "--max-requests=1",
+                        ]
+                    )
+                },
+                "## 🧺 Dataflow batch prediction": {
+                    '--runner="DataflowRunner"': " ".join(
+                        [
+                            '--runner="DataflowRunner"',
+                            f"--job_name={unique_name}-predict",
+                            "--max-requests=1",
+                            f"--locations-file={locations_file.name}",
+                        ]
+                    )
+                },
+            },
         )
-
-
-def test_predict_aiplatform_tensorflow(
-    prelude: str, aiplatform_model_name: str, model_path: str
-) -> None:
-    conftest.run_notebook(
-        "cloud-tensorflow.ipynb",
-        "## 🌍 Earth Engine with AI Platform",
-        prelude,
-        substitute={
-            "model_name": aiplatform_model_name,
-            "model_path": model_path,
-        },
-    )

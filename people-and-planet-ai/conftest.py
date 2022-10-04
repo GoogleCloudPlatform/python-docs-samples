@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import multiprocessing
 import os
 import platform
 import re
@@ -213,10 +214,11 @@ def notebook_filter_section(
 
 def run_notebook(
     ipynb_file: str,
-    section: str = "",
     prelude: str = "",
-    substitute: dict = {},
-    preprocess_cell: Callable[[str], str] = lambda source: source,
+    section: str = "",
+    variables: dict = {},
+    replace: dict[str, str] = {},
+    preprocess: Callable[[str], str] = lambda source: source,
     skip_shell_commands: bool = False,
     until_end: bool = False,
 ) -> None:
@@ -231,7 +233,7 @@ def run_notebook(
             re.compile(rf"""\b{name}\s*=\s*(?:f?'[^']*'|f?"[^"]*"|\w+)"""),
             f"{name} = {repr(value)}",
         )
-        for name, value in substitute.items()
+        for name, value in variables.items()
     ]
 
     # Filter the section if any, otherwise use the entire notebook.
@@ -252,7 +254,7 @@ def run_notebook(
             continue
 
         # Run any custom preprocessing functions before.
-        cell["source"] = preprocess_cell(cell["source"])
+        cell["source"] = preprocess(cell["source"])
 
         # Preprocess shell commands.
         if skip_shell_commands:
@@ -271,6 +273,10 @@ def run_notebook(
         for regex, new_value in compiled_substitutions:
             cell["source"] = regex.sub(new_value, cell["source"])
 
+        # Apply replacements.
+        for old, new in replace.items():
+            cell["source"] = cell["source"].replace(old, new)
+
     # Prepend the prelude cell.
     nb.cells = [nbformat.v4.new_code_cell(prelude)] + nb.cells
 
@@ -286,3 +292,31 @@ def run_notebook(
 
     if error:
         raise RuntimeError(error)
+
+
+def run_notebook_parallel(
+    ipynb_file: str,
+    prelude: str,
+    sections: list[str],
+    variables: dict[str, dict] = {},
+    replace: dict[str, dict[str, str]] = {},
+    skip_shell_commands: list[str] = [],
+) -> None:
+    args = [
+        {
+            "ipynb_file": ipynb_file,
+            "section": section,
+            "prelude": prelude,
+            "variables": variables.get(section, {}),
+            "replace": replace.get(section, {}),
+            "skip_shell_commands": section in skip_shell_commands,
+        }
+        for section in sections
+    ]
+    with multiprocessing.Pool(len(args)) as pool:
+        pool.map(_run_notebook_section, args)
+
+
+def _run_notebook_section(kwargs: dict):
+    # Helper function to make it pickleable and run with multiprpcessing.
+    conftest.run_notebook(**kwargs)
