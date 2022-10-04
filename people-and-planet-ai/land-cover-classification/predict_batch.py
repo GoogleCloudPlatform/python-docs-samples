@@ -128,7 +128,7 @@ def run_tensorflow(
         save_main_session=True,
         setup_file="./setup.py",
         max_num_workers=max_requests,  # distributed runners
-        direct_num_workers=max_requests,  # direct runner
+        direct_num_workers=max(max_requests, 20),  # direct runner
         disk_size_gb=50,
     )
     with beam.Pipeline(options=beam_options) as pipeline:
