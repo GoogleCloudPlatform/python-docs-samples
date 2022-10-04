@@ -39,23 +39,6 @@ def test_name(python_version: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def prelude(project: str, bucket_name: str, location: str) -> str:
-    return textwrap.dedent(
-        f"""\
-        from serving.data import ee_init
-
-        # Google Cloud resources.
-        project = {repr(project)}
-        bucket = {repr(bucket_name)}
-        location = {repr(location)}
-
-        # Initialize Earth Engine.
-        ee_init()
-        """
-    )
-
-
-@pytest.fixture(scope="session")
 def data_path(bucket_name: str) -> str:
     # The Vertex AI training expects data here.
     gcs_path = f"gs://{bucket_name}/land-cover/data"
@@ -76,11 +59,6 @@ def model_path(bucket_name: str) -> str:
     gcs_path = f"gs://{bucket_name}/pretrained-model"
     conftest.run_cmd("gsutil", "-m", "cp", "-r", "./pretrained-model", gcs_path)
     return gcs_path
-
-
-@pytest.fixture(scope="session")
-def model_url(cloud_run_deploy: Callable[..., str]) -> str:
-    return cloud_run_deploy("serving")
 
 
 @pytest.fixture(scope="session")
