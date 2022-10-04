@@ -86,7 +86,7 @@ def bucket_name(test_name: str, location: str, unique_id: str) -> str:
     # Deleting a bucket with too many files results in an error.
     try:
         run_cmd("gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*")
-    except subprocess.CalledProcessError():
+    except subprocess.CalledProcessError:
         # If no files were found and it fails, ignore the error.
         pass
 
@@ -319,4 +319,4 @@ def run_notebook_parallel(
 
 def _run_notebook_section(kwargs: dict):
     # Helper function to make it pickleable and run with multiprpcessing.
-    conftest.run_notebook(**kwargs)
+    run_notebook(**kwargs)
