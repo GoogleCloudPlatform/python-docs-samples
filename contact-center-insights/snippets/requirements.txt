@@ -1,3 +1,3 @@
 google-api-core==2.10.1
 google-cloud-bigquery==3.3.3
-google-cloud-contact-center-insights==1.4.3
+google-cloud-contact-center-insights==1.4.4
