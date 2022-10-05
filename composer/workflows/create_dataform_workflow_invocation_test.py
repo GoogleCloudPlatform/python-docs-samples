@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import create_dataform_workflow_invocation
+import internal_unit_testing
 
 
 def test_create_dataform_workflow_invocation() -> None:

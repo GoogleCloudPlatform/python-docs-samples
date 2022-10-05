@@ -23,14 +23,12 @@ import datetime
 from google.cloud.dataform_v1beta1 import WorkflowInvocation
 
 from airflow import models
-from airflow.models.baseoperator import chain
 from airflow.providers.google.cloud.operators.dataform import (
-    DataformCancelWorkflowInvocationOperator,
     DataformCreateCompilationResultOperator,
-    DataformCreateWorkflowInvocationOperator,
-    DataformGetCompilationResultOperator,
-    DataformGetWorkflowInvocationOperator,
+    DataformCreateWorkflowInvocationOperator
 )
+from airflow.providers.google.cloud.sensors.dataform import DataformWorkflowInvocationStateSensor
+
 
 DAG_ID = "dataform"
 PROJECT_ID = "my_project_ID"  # Replace with your Dataform Google Cloud Project ID
@@ -41,7 +39,7 @@ GIT_COMMITISH = "main"  # Replace with the Git branch or a Git SHA in your remot
 with models.DAG(
     DAG_ID,
     schedule_interval='@once',  # Override to match your needs
-    start_date=datetime(2022, 1, 1),
+    start_date=datetime.datetime(2022, 1, 1),
     catchup=False,  # Override to match your needs
     tags=['dataform'],
 ) as dag:
@@ -64,7 +62,7 @@ create_workflow_invocation = DataformCreateWorkflowInvocationOperator(
     asynchronous=True,
     workflow_invocation={
         # Replace my_compilation_result with the name of the compilation result for this workflow invocation.
-        "compilation_result": my_compilation_result 
+        "compilation_result": "my_compilation_result" 
     }
 )
 
