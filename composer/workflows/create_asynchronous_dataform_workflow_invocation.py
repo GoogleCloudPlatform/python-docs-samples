@@ -23,14 +23,12 @@ import datetime
 from google.cloud.dataform_v1beta1 import WorkflowInvocation
 
 from airflow import models
-from airflow.models.baseoperator import chain
 from airflow.providers.google.cloud.operators.dataform import (
-    DataformCancelWorkflowInvocationOperator,
     DataformCreateCompilationResultOperator,
-    DataformCreateWorkflowInvocationOperator,
-    DataformGetCompilationResultOperator,
-    DataformGetWorkflowInvocationOperator,
+    DataformCreateWorkflowInvocationOperator
 )
+from airflow.providers.google.cloud.sensors.dataform import DataformWorkflowInvocationStateSensor
+
 
 DAG_ID = "dataform"
 PROJECT_ID = "my_project_ID"  # Replace with your Dataform Google Cloud Project ID
