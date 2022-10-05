@@ -22,6 +22,6 @@ setup(
     install_requires=[
         "apache-beam[gcp]==2.41.0",
         "earthengine-api==0.1.325",
-        "tensorflow==2.10.0",
+        "tensorflow==2.9.2",
     ],
 )
