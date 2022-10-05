@@ -41,7 +41,7 @@ GIT_COMMITISH = "main"  # Replace with the Git branch or a Git SHA in your remot
 with models.DAG(
     DAG_ID,
     schedule_interval='@once',  # Override to match your needs
-    start_date=datetime(2022, 1, 1),
+    start_date=datetime.datetime(2022, 1, 1),
     catchup=False,  # Override to match your needs
     tags=['dataform'],
 ) as dag:
