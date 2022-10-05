@@ -19,26 +19,29 @@ Example Airflow DAG that creates a Dataform compilation result and starts a Data
 
 import datetime
 
-from google.cloud.dataform_v1beta1 import WorkflowInvocation
 
 from airflow import models
 from airflow.providers.google.cloud.operators.dataform import (
     DataformCreateCompilationResultOperator,
-    DataformCreateWorkflowInvocationOperator
+    DataformCreateWorkflowInvocationOperator,
 )
 
 DAG_ID = "dataform"
 PROJECT_ID = "my_project_ID"  # Replace with your Dataform Google Cloud Project ID
 REPOSITORY_ID = "my_repository_ID"  # Replace with the name of your Dataform repository
-REGION = "us-central1"  # Replace with the region in which the Dataform repository is located
-GIT_COMMITISH = "main"  # Replace with the Git branch or a Git SHA in your remote Git repository
+REGION = (
+    "us-central1"  # Replace with the region in which the Dataform repository is located
+)
+GIT_COMMITISH = (
+    "main"  # Replace with the Git branch or a Git SHA in your remote Git repository
+)
 
 with models.DAG(
     DAG_ID,
-    schedule_interval='@once',  # Override to match your needs
+    schedule_interval="@once",  # Override to match your needs
     start_date=datetime.datetime(2022, 1, 1),
     catchup=False,  # Override to match your needs
-    tags=['dataform'],
+    tags=["dataform"],
 ) as dag:
 
     create_compilation_result = DataformCreateCompilationResultOperator(
@@ -52,11 +55,11 @@ with models.DAG(
     )
 
     create_workflow_invocation = DataformCreateWorkflowInvocationOperator(
-        task_id='create_workflow_invocation',
+        task_id="create_workflow_invocation",
         project_id=PROJECT_ID,
         region=REGION,
         repository_id=REPOSITORY_ID,
-         workflow_invocation={
+        workflow_invocation={
             # compilation_result is full resource name generated in create_compilation_result
             "compilation_result": "{{ task_instance.xcom_pull('create_compilation_result')['name'] }}"
         },

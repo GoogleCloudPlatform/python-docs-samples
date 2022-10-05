@@ -22,4 +22,5 @@ def test_create_dataform_workflow_invocation() -> None:
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     from . import create_dataform_workflow_invocation
+
     internal_unit_testing.assert_has_valid_dag(create_dataform_workflow_invocation)
