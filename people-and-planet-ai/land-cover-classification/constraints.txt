@@ -1,5 +1,5 @@
 cachetools==4.2.4 # apache-beam requires cachetools<5
-fastavro==1.5.4
+fastavro==1.6.1
 fasteners==0.18
 google-api-python-client==1.12.11 # earthengine-api requires google-api-python-client<2
 google-apitools==0.5.31 # apache-beam requires google-apitools<0.5.32
