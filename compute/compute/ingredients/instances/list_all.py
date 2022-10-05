@@ -12,10 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+from collections import defaultdict
 from typing import Dict, Iterable
 
 from google.cloud import compute_v1
@@ -42,17 +43,16 @@ def list_all_instances(
 
     agg_list = instance_client.aggregated_list(request=request)
 
-    all_instances = {}
+    all_instances = defaultdict(list)
     print("Instances found:")
     # Despite using the `max_results` parameter, you don't need to handle the pagination
     # yourself. The returned `AggregatedListPager` object handles pagination
     # automatically, returning separated pages as you iterate over the results.
     for zone, response in agg_list:
         if response.instances:
-            all_instances[zone] = response.instances
+            all_instances[zone].extend(response.instances)
             print(f" {zone}:")
             for instance in response.instances:
                 print(f" - {instance.name} ({instance.machine_type})")
     return all_instances
 # </INGREDIENT>
-
