@@ -109,3 +109,66 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 
 
 # [END dialogflow_analyze_content_text]
+
+# [START dialogflow_analyze_content_audio_stream]
+def analyze_content_audio_stream(project_id, conversation_id, participant_id, audio_file_path):
+    """Analyze audio content for END_USER
+
+    Args:
+        project_id: The GCP project linked with the conversation profile.
+        conversation_id: Id of the conversation.
+        participant_id: Id of the participant.
+        audio_file_path: audio file in wav/mp3 format contains utterances of END_USER."""
+
+    # Initialize client that will be used to send requests across threads. This
+    # client only needs to be created once, and can be reused for multiple requests.
+    # After completing all of your requests, call the "__exit__()" method to safely
+    # clean up any remaining background resources. Alternatively, use the client as
+    # a context manager.
+    client = dialogflow.ParticipantsClient()
+
+    participant_path = client.participant_path(
+        project_id, conversation_id, participant_id
+    )
+    # Note: hard coding audio_encoding and sample_rate_hertz for simplicity.
+    audio_encoding = dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16
+    sample_rate_hertz = 16000
+
+    # Generates requests based on the audio files. Will by default use the first channel as
+    # END_USER, and second channel as HUMAN_AGENT.
+    def request_generator(audio_config, audio_file_path):
+
+        # The first request contains the configuration.
+        yield dialogflow.StreamingAnalyzeContentRequest(
+            participant=participant_path, audio_config=audio_config
+        )
+
+        # Here we are reading small chunks of audio data from a local
+        # audio file.  In practice these chunks should come from
+        # an audio input device.
+        with open(audio_file_path, "rb") as audio_file:
+            while True:
+                chunk = audio_file.read(4096)
+                if not chunk:
+                    break
+                # The later requests contains audio data.
+                yield dialogflow.StreamingAnalyzeContentRequest(input_audio=chunk)
+
+    audio_config = dialogflow.InputAudioConfig(
+        audio_encoding=audio_encoding,
+        language_code='en-US',
+        sample_rate_hertz=sample_rate_hertz,
+        single_utterance=True,
+        model='phone_call',
+        # Make sure your project is Dialogflow ES ENTERPRISE_TIER in order to "USE_ENHANCED" model.
+        model_variant='USE_ENHANCED'
+    )
+    requests = request_generator(audio_config, audio_file_path)
+    responses = client.streaming_analyze_content(requests=requests)
+    print("=" * 20)
+    for response in responses:
+        print(f'Transcript: "{response.message.content}".')
+
+    print("=" * 20)
+
+# [END dialogflow_analyze_content_audio_stream]
