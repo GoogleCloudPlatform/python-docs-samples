@@ -24,7 +24,7 @@ from list_ca_pools import list_ca_pools
 from update_ca_pool_issuance_policy import update_ca_pool_issuance_policy
 
 PROJECT = google.auth.default()[1]
-LOCATION = "europe-west1"
+LOCATION = "us-central1"
 
 
 def generate_name() -> str:

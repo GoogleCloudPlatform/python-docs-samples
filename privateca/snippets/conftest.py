@@ -25,7 +25,7 @@ from delete_certificate_authority import delete_certificate_authority
 from delete_certificate_template import delete_certificate_template
 
 PROJECT = google.auth.default()[1]
-LOCATION = "europe-west1"
+LOCATION = "us-central1"
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000

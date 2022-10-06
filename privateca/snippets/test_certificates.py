@@ -30,7 +30,7 @@ from filter_certificates import filter_certificates
 from revoke_certificate import revoke_certificate
 
 PROJECT = google.auth.default()[1]
-LOCATION = "europe-west1"
+LOCATION = "us-central1"
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CERTIFICATE_LIFETIME = 1000000
