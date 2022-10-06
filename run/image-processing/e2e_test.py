@@ -231,7 +231,7 @@ def test_end_to_end(input_bucket, output_bucket):
     # Wait for image processing to complete
     time.sleep(60)
 
-    for x in range(10):
+    for x in range(20):
         # Check for blurred image in output bucket
         output_blobs = list(output_bucket.list_blobs())
         if len(output_blobs) > 0:
