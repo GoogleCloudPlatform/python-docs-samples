@@ -35,19 +35,27 @@ TABLE = "bigquery-public-data.new_york_citibike.citibike_trips"
 CITIBIKE_TABLE_NAME = "RAW_DATA"
 EXTERNAL_TABLES = {
     "gas_prices": {
-        "url": "https://data.ny.gov/api/views/wuxr-ni2i/rows.csv",
+        "url": "https://data.ny.gov/api/views/nqur-w4p7/rows.csv",
         "schema": StructType(
             [
                 StructField("Date", StringType(), True),
                 StructField("New_York_State_Average_USD_per_Gal", FloatType(), True),
                 StructField("Albany_Average_USD_per_Gal", FloatType(), True),
-                StructField("Blinghamton_Average_USD_per_Gal", FloatType(), True),
+                StructField("Batavia_Average_USD_per_Gal", FloatType(), True),
+                StructField("Binghamton_Average_USD_per_Gal", FloatType(), True),
                 StructField("Buffalo_Average_USD_per_Gal", FloatType(), True),
+                StructField("Dutchess_Average_USD_per_Gal", FloatType(), True),
+                StructField("Elmira_Average_USD_per_Gal", FloatType(), True),
+                StructField("Glens_Falls_Average_USD_per_Gal", FloatType(), True),
+                StructField("Ithaca_Average_USD_per_Gal", FloatType(), True),
+                StructField("Kingston_Average_USD_per_Gal", FloatType(), True),
                 StructField("Nassau_Average_USD_per_Gal", FloatType(), True),
                 StructField("New_York_City_Average_USD_per_Gal", FloatType(), True),
                 StructField("Rochester_Average_USD_per_Gal", FloatType(), True),
                 StructField("Syracuse_Average_USD_per_Gal", FloatType(), True),
                 StructField("Utica_Average_USD_per_Gal", FloatType(), True),
+                StructField("Watertown_Average_USD_per_Gal", FloatType(), True),
+                StructField("White_Plains_Average_USD_per_Gal", FloatType(), True),
             ]
         ),
     },
