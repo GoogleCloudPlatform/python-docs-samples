@@ -24,8 +24,6 @@ from unittest import mock
 import uuid
 from collections.abc import Callable, Iterable
 
-import nbclient
-import nbformat
 from google.cloud import storage
 import pytest
 
@@ -194,23 +192,6 @@ def aiplatform_cleanup(model_name: str, location: str, versions: list[str]) -> N
     )
 
 
-def notebook_filter_section(
-    start: str,
-    end: str,
-    cells: list[nbformat.NotebookNode],
-    until_end: bool = False,
-) -> Iterable[nbformat.NotebookNode]:
-    in_section = False
-    for cell in cells:
-        if cell["cell_type"] == "markdown":
-            if not in_section and cell["source"].startswith(start):
-                in_section = True
-            elif in_section and not until_end and cell["source"].startswith(end):
-                return
-
-        if in_section:
-            yield cell
-
 
 def run_notebook(
     ipynb_file: str,
@@ -222,6 +203,26 @@ def run_notebook(
     skip_shell_commands: bool = False,
     until_end: bool = False,
 ) -> None:
+    import nbclient
+    import nbformat
+
+    def notebook_filter_section(
+        start: str,
+        end: str,
+        cells: list[nbformat.NotebookNode],
+        until_end: bool = False,
+    ) -> Iterable[nbformat.NotebookNode]:
+        in_section = False
+        for cell in cells:
+            if cell["cell_type"] == "markdown":
+                if not in_section and cell["source"].startswith(start):
+                    in_section = True
+                elif in_section and not until_end and cell["source"].startswith(end):
+                    return
+
+            if in_section:
+                yield cell
+
     # Regular expression to match and remove shell commands from the notebook.
     #   https://regex101.com/r/EHWBpT/1
     shell_command_re = re.compile(r"^!((?:[^\n]+\\\n)*(?:[^\n]+))$", re.MULTILINE)
