@@ -31,6 +31,7 @@ import pytest
 def project_id():
     yield os.environ.get("GOOGLE_CLOUD_PROJECT")
 
+
 def aws_key_pair():
     # Retrieve the credentials specific to STS integration tests, or fallback to the default
     if os.environ.get("STS_AWS_ACCESS_KEY_ID") and os.environ.get("STS_AWS_SECRET_ACCESS_KEY"):
@@ -50,10 +51,10 @@ def aws_key_pair():
         }
 
 
-
 @pytest.fixture(scope='module')
 def aws_access_key_id():
     yield aws_key_pair()['aws_access_key_id']
+
 
 @pytest.fixture(scope='module')
 def aws_secret_access_key():
