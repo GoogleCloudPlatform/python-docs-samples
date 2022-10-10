@@ -11,7 +11,7 @@ Fiona==1.8.21
 geojson==2.5.0
 geopandas===0.10.2; python_version == '3.7'
 geopandas==0.11.1; python_version >= '3.8'
-google-api-core==2.10.1
+google-api-core==2.10.2
 google-auth==2.12.0
 google-cloud-bigquery==3.3.3
 google-cloud-bigquery-storage==2.16.1
@@ -40,6 +40,6 @@ requests==2.28.1
 rsa==4.9
 Shapely==1.8.4
 six==1.16.0
-typing-extensions==4.3.0
+typing-extensions==4.4.0
 typing-inspect==0.8.0
 urllib3==1.26.12
