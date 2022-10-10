@@ -1,1 +1,1 @@
-google-cloud-bigquery-migration==0.7.1
+google-cloud-bigquery-migration==0.7.2
