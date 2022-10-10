@@ -216,6 +216,14 @@ class ProtoEncoder(json.JSONEncoder):
 # [START monitoring_alert_update_channel]
 # [START monitoring_alert_enable_channel]
 def restore(project_name, backup_filename):
+    """Restore alert policies in a project.
+
+    Arguments:
+        project_name (str): The Google Cloud Project to use. The project name
+            must be in the format - 'projects/<PROJECT_NAME>'.
+        backup_filename (str): Name of the file (along with its path) from
+            which the alert policies will be restored.
+    """
     print(
         "Loading alert policies and notification channels from {}.".format(
             backup_filename
