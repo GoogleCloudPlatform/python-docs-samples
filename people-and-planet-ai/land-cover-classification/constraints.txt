@@ -10,7 +10,7 @@ google-cloud-bigquery==2.34.4 # apache-beam requires google-cloud-bigquery<3
 google-cloud-bigtable==1.7.2 # apache-beam requires google-cloud-bigtable<2
 google-cloud-core==2.3.2
 google-cloud-datastore==1.15.5 # apache-beam requires google-cloud-datastore<2
-google-cloud-dlp==3.8.0
+google-cloud-dlp==3.9.2
 google-cloud-language==1.3.2 # apache-beam requires google-cloud-language<2
 google-cloud-pubsub==2.13.5
 google-cloud-pubsublite==1.4.2
