@@ -27,8 +27,7 @@ import aws_s3_compatible_source_request
 def test_aws_s3_compatible_source_request(
         capsys, project_id: str, job_description_unique: str,
         agent_pool_name: str, source_bucket: Bucket,
-        posix_root_directory: str,
-        destination_bucket: Bucket):
+        posix_root_directory: str, destination_bucket: Bucket):
 
     AuthMethod = transfer_types.S3CompatibleMetadata.AuthMethod
     NetworkProtocol = transfer_types.S3CompatibleMetadata.NetworkProtocol
