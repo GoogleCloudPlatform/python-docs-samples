@@ -13,12 +13,12 @@
 # limitations under the License.
 
 
-# [START speech_create_recognizer]
+# [START speech_transcribe_gcs_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def create_recognizer(project_id, recognizer_id):
+def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
     # Instantiates a client
     client = SpeechClient()
 
@@ -30,13 +30,25 @@ def create_recognizer(project_id, recognizer_id):
         ),
     )
 
+    # Creates a Recognizer
     operation = client.create_recognizer(request=request)
     recognizer = operation.result()
 
-    print("Created Recognizer:", recognizer.name)
-    return recognizer
-# [END speech_create_recognizer]
+    config = cloud_speech.RecognitionConfig(auto_decoding_config={})
+
+    request = cloud_speech.RecognizeRequest(
+        recognizer=recognizer.name, config=config, uri=gcs_uri
+    )
+
+    # Transcribes the audio into text
+    response = client.recognize(request=request)
+
+    for result in response.results:
+        print("Transcript: {}".format(result.alternatives[0].transcript))
+
+    return response
+# [END speech_transcribe_gcs_v2]
 
 
 if __name__ == "__main__":
-    create_recognizer()
+    transcribe_gcs_v2()
