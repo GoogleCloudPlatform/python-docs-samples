@@ -266,7 +266,7 @@ def sign_token(
         raise ValueError(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
-
+    # trim padding for url friendly suffix
     output = output.decode("utf-8").strip("=")
     return output
 

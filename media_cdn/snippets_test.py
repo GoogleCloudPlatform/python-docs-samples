@@ -143,7 +143,7 @@ def test_sign_cookie(capsys: pytest.LogCaptureFixture) -> None:
     )
 
 
-def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
+def test_sign_token_basic(capsys: pytest.LogCaptureFixture) -> None:
     results = [
         snippets.sign_token(
             url_prefix="http://35.186.234.33",
@@ -172,9 +172,21 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
         snippets.sign_token(
             url_prefix="http://34.104.35.20/",
             signature_algorithm="ed25519",
+            base64_key=b"Auo+t35Q1R/pk7sn2J6m/dhsMn+4Lbdlk+6qmmkxdFa=",
+            expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
+        ),
+        snippets.sign_token(
+            path_globs="/shankar/*",
+            signature_algorithm="ed25519",
             base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
             expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
         ),
+        snippets.sign_token(
+            full_path="/music/video/mj-killer-song.mp4",
+            signature_algorithm="ed25519",
+            base64_key=b"Auo+t35Q1R/pk7sn2J6m/dhsMn+4Lbdlk+6qmmkxdFa=",
+            expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
+        )
     ]
     assert results[0] == (
         "URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM~Expires=1650848400"
@@ -195,19 +207,9 @@ def test_sign_token(capsys: pytest.LogCaptureFixture) -> None:
     assert results[4] == (
         "URLPrefix=aHR0cDovLzM0LjEwNC4zNS4yMC8~Expires=1664290336~Signature=5WaeYalsQM7lYtm_OC3klhoIrBSRJTtjsk8D322gWd9cp3MKZZxiads0VUCmEdZFCHo8MYayVCxiwooaKSdkDA"
     )
-    assert snippets.sign_token(
-        path_globs="/shankar/*",
-        signature_algorithm="ed25519",
-        base64_key=b"Auo-t35Q1R_pk7sn2J6m_dhsMn-4Lbdlk-6qmmkxdFY=",
-        expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
-    ) == (
+    assert results[5] == (
         "PathGlobs=/shankar/*~Expires=1664290336~Signature=5WaeYalsQM7lYtm_OC3klhoIrBSRJTtjsk8D322gWd9cp3MKZZxiads0VUCmEdZFCHo8MYayVCxiwooaKSdkDA"
     )
-    assert snippets.sign_token(
-        full_path="/music/video/mj-killer-song.mp4",
-        signature_algorithm="ed25519",
-        base64_key=b"Auo+t35Q1R/pk7sn2J6m/dhsMn+4Lbdlk+6qmmkxdFa=",
-        expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
-    ) == (
+    assert results[6] == (
         "FullPath~Expires=1664290336~Signature=sw6yny9hipPfYX_s8BJYyzaP3mWjQRdauBzWpwa-61ZlBiljhLUTsjqDVy9kmavY5CN9o9m_ECXIuVef9n9wAw"
     )
