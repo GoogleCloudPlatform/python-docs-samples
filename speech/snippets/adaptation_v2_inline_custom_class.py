@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-# [START speech_quickstart_v2]
+# [START speech_adaptation_v2_inline_custom_class]
 import io
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def quickstart_v2(project_id, recognizer_id, audio_file):
+def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
     # Instantiates a client
     client = SpeechClient()
 
@@ -28,7 +28,7 @@ def quickstart_v2(project_id, recognizer_id, audio_file):
         parent=f"projects/{project_id}/locations/global",
         recognizer_id=recognizer_id,
         recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_long"
+            language_codes=["en-US"], model="latest_short"
         ),
     )
 
@@ -40,7 +40,20 @@ def quickstart_v2(project_id, recognizer_id, audio_file):
     with io.open(audio_file, "rb") as f:
         content = f.read()
 
-    config = cloud_speech.RecognitionConfig(auto_decoding_config={})
+    # Build inline phrase set to produce a more accurate transcript
+    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "${keem}", "boost": 20}])
+    custom_class = cloud_speech.CustomClass(name="keem", items=[{"value": "Keem"}])
+    adaptation = cloud_speech.SpeechAdaptation(
+        phrase_sets=[
+            cloud_speech.SpeechAdaptation.AdaptationPhraseSet(
+                inline_phrase_set=phrase_set
+            )
+        ],
+        custom_classes=[custom_class]
+    )
+    config = cloud_speech.RecognitionConfig(
+        auto_decoding_config={}, adaptation=adaptation
+    )
 
     request = cloud_speech.RecognizeRequest(
         recognizer=recognizer.name, config=config, content=content
@@ -53,8 +66,8 @@ def quickstart_v2(project_id, recognizer_id, audio_file):
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
-# [END speech_quickstart_v2]
+# [END speech_adaptation_v2_inline_custom_class]
 
 
 if __name__ == "__main__":
-    quickstart_v2()
+    adaptation_v2_inline_custom_class()
