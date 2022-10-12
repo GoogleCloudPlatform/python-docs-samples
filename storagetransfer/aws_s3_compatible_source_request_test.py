@@ -25,9 +25,14 @@ import aws_s3_compatible_source_request
 @backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,),
                       max_time=60)
 def test_aws_s3_compatible_source_request(
-        capsys, project_id: str, job_description_unique: str,
-        agent_pool_name: str, source_bucket: Bucket,
-        posix_root_directory: str, destination_bucket: Bucket):
+    capsys,
+    project_id: str,
+    job_description_unique: str,
+    agent_pool_name: str,
+    source_bucket: Bucket,
+    posix_root_directory: str,
+    destination_bucket: Bucket
+) -> None:
 
     AuthMethod = transfer_types.S3CompatibleMetadata.AuthMethod
     NetworkProtocol = transfer_types.S3CompatibleMetadata.NetworkProtocol
