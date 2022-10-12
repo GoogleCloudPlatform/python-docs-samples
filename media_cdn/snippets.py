@@ -145,7 +145,7 @@ def sign_url_prefix(
     return signed_url
 
 
-# [START mediacdn_sign_url_prefix]
+# [END mediacdn_sign_url_prefix]
 
 
 # [START mediacdn_sign_cookie]
