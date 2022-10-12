@@ -31,18 +31,19 @@ RequestModel = storage_transfer.S3CompatibleMetadata.RequestModel
 
 
 def transfer_from_S3_compat_to_gcs(
-        project_id: str,
-        description: str,
-        source_agent_pool_name: str,
-        source_bucket_name: str,
-        source_path: str,
-        gcs_sink_bucket: str,
-        gcs_path: str,
-        region: str,
-        endpoint: str,
-        protocol: NetworkProtocol,
-        request_model: RequestModel,
-        auth_method: AuthMethod,):
+    project_id: str,
+    description: str,
+    source_agent_pool_name: str,
+    source_bucket_name: str,
+    source_path: str,
+    gcs_sink_bucket: str,
+    gcs_path: str,
+    region: str,
+    endpoint: str,
+    protocol: NetworkProtocol,
+    request_model: RequestModel,
+    auth_method: AuthMethod,
+) -> None:
     """Creates a transfer from an AWS S3-compatible source to GCS"""
 
     client = storage_transfer.StorageTransferServiceClient()
