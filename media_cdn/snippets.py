@@ -90,8 +90,6 @@ def sign_url(
 
 
 # [END mediacdn_sign_url]
-
-
 # [START mediacdn_sign_url_prefix]
 def sign_url_prefix(
     url: str,
@@ -146,8 +144,6 @@ def sign_url_prefix(
 
 
 # [END mediacdn_sign_url_prefix]
-
-
 # [START mediacdn_sign_cookie]
 def sign_cookie(
     url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime
@@ -190,8 +186,6 @@ def sign_cookie(
 
 
 # [END mediacdn_sign_cookie]
-
-
 # [START mediacdn_sign_token]
 def sign_token(
     base64_key: bytes,

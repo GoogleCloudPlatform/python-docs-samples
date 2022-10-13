@@ -186,7 +186,7 @@ def test_sign_token_basic(capsys: pytest.LogCaptureFixture) -> None:
             signature_algorithm="ed25519",
             base64_key=b"Auo+t35Q1R/pk7sn2J6m/dhsMn+4Lbdlk+6qmmkxdFa=",
             expiration_time=datetime.datetime.utcfromtimestamp(1664290336),
-        )
+        ),
     ]
     assert results[0] == (
         "URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzM~Expires=1650848400"
