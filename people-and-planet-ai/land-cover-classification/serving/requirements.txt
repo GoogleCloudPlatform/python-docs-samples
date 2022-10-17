@@ -1,4 +1,5 @@
-Flask==2.1.2
-earthengine-api==0.1.311
+# Requirements for the prediction web service.
+Flask==2.2.2
+earthengine-api==0.1.325
 gunicorn==20.1.0
-tensorflow==2.9.1
+tensorflow==2.10.0

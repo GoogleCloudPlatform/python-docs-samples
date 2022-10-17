@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
-with open("requirements.txt") as f:
-    requirements = f.readlines()
-
+# Requirements for the Dataflow dataset creation pipeline.
 setup(
     name="ppai-landcover-classification",
     url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/people-and-planet-ai/land-cover-classification",
-    packages=find_packages(),
-    install_requires=requirements,
+    packages=["serving"],
+    install_requires=[
+        "apache-beam[gcp]==2.41.0",
+        "earthengine-api==0.1.325",
+        "tensorflow==2.10.0",
+    ],
 )
