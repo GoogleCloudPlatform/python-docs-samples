@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest import mock
+
 import flask
 from google.cloud import vision_v1
 import pytest
-from unittest import mock
+
 import vision_function
 
 
