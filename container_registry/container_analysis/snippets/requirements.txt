@@ -1,4 +1,4 @@
-google-cloud-pubsub==2.13.9
+google-cloud-pubsub==2.13.10
 google-cloud-containeranalysis==2.9.3
 grafeas==1.6.1
 pytest==7.1.3
