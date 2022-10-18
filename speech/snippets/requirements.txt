@@ -1,2 +1,2 @@
-google-cloud-speech==2.16.1
+google-cloud-speech==2.16.2
 google-cloud-storage==2.5.0
