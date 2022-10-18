@@ -1,1 +1,1 @@
-google-cloud-tasks==2.10.3
+google-cloud-tasks==2.10.4
