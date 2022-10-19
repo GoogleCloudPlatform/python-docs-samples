@@ -28,13 +28,15 @@ from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-
 # [END trace_demo_imports]
+import requests
+
 
 # [START trace_demo_middleware]
 app = flask.Flask(__name__)
 FlaskInstrumentor().instrument_app(app)
 # [END trace_demo_middleware]
+
 
 # [START trace_demo_create_exporter]
 def configure_exporter(exporter):
@@ -46,6 +48,7 @@ def configure_exporter(exporter):
 configure_exporter(CloudTraceSpanExporter())
 tracer = trace.get_tracer(__name__)
 # [END trace_demo_create_exporter]
+
 
 @app.route("/")
 def template_test():
@@ -64,12 +67,13 @@ def template_test():
 
     # [START trace_context_header]
     with tracer.start_as_current_span("span_" + keyword):
-    response = requests.get(
-        url,
-        params=data
-    )
+        response = requests.get(
+            url,
+            params=data
+        )
     # [END trace_context_header]
     return response.text + keyword
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
