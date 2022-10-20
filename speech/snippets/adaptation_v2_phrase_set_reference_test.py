@@ -41,11 +41,11 @@ def test_adaptation_v2_phrase_set_reference(capsys):
     recognizer_id = "recognizer-" + str(uuid4())
     phrase_set_id = "phrase-set-" + str(uuid4())
     response = adaptation_v2_phrase_set_reference.adaptation_v2_phrase_set_reference(
-        project_id, recognizer_id, phrase_set_id, os.path.join(RESOURCES, "baby_keem.wav")
+        project_id, recognizer_id, phrase_set_id, os.path.join(RESOURCES, "fair.wav")
     )
 
     assert re.search(
-        r"play Baby Keem",
+        r"the word is fare",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )

@@ -41,8 +41,8 @@ def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
         content = f.read()
 
     # Build inline phrase set to produce a more accurate transcript
-    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "${keem}", "boost": 20}])
-    custom_class = cloud_speech.CustomClass(name="keem", items=[{"value": "Keem"}])
+    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "${fare}", "boost": 20}])
+    custom_class = cloud_speech.CustomClass(name="fare", items=[{"value": "fare"}])
     adaptation = cloud_speech.SpeechAdaptation(
         phrase_sets=[
             cloud_speech.SpeechAdaptation.AdaptationPhraseSet(

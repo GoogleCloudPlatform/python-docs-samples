@@ -41,7 +41,7 @@ def adaptation_v2_inline_phrase_set(project_id, recognizer_id, audio_file):
         content = f.read()
 
     # Build inline phrase set to produce a more accurate transcript
-    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "Keem", "boost": 10}])
+    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}])
     adaptation = cloud_speech.SpeechAdaptation(
         phrase_sets=[
             cloud_speech.SpeechAdaptation.AdaptationPhraseSet(

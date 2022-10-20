@@ -34,11 +34,11 @@ def test_adaptation_v2_inline_custom_class(capsys):
 
     recognizer_id = "recognizer-" + str(uuid4())
     response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class(
-        project_id, recognizer_id, os.path.join(RESOURCES, "baby_keem.wav")
+        project_id, recognizer_id, os.path.join(RESOURCES, "fair.wav")
     )
 
     assert re.search(
-        r"play Baby Keem",
+        r"the word is fare",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )

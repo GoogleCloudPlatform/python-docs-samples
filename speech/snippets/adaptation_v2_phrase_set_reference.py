@@ -44,7 +44,7 @@ def adaptation_v2_phrase_set_reference(project_id, recognizer_id, phrase_set_id,
     request = cloud_speech.CreatePhraseSetRequest(
         parent=f"projects/{project_id}/locations/global",
         phrase_set_id=phrase_set_id,
-        phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "Keem", "boost": 10}]))
+        phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}]))
 
     operation = client.create_phrase_set(request=request)
     phrase_set = operation.result()
