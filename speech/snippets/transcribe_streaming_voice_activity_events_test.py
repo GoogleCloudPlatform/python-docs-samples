@@ -18,7 +18,7 @@ from uuid import uuid4
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-import adaptation_v2_inline_phrase_set
+import transcribe_streaming_voice_activity_events
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
@@ -29,17 +29,27 @@ def delete_recognizer(name):
     client.delete_recognizer(request=request)
 
 
-def test_adaptation_v2_inline_phrase_set(capsys):
+def test_transcribe_streaming_voice_activity_events(capsys):
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
-    response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set(
-        project_id, recognizer_id, os.path.join(RESOURCES, "fair.wav")
+    responses = transcribe_streaming_voice_activity_events.transcribe_streaming_voice_activity_events(
+        project_id, recognizer_id, os.path.join(RESOURCES, "audio.wav")
+    )
+
+    transcript = ""
+    for response in responses:
+        for result in response.results:
+            transcript += result.alternatives[0].transcript
+
+    assert (
+        responses[0].speech_event_type
+        == cloud_speech.StreamingRecognizeResponse.SpeechEventType.SPEECH_ACTIVITY_BEGIN
     )
 
     assert re.search(
-        r"the word is fare",
-        response.results[0].alternatives[0].transcript,
+        r"how old is the Brooklyn Bridge",
+        transcript,
         re.DOTALL | re.I,
     )
 

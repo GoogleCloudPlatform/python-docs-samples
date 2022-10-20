@@ -44,7 +44,7 @@ def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_i
     request = cloud_speech.CreateCustomClassRequest(
         parent=f"projects/{project_id}/locations/global",
         custom_class_id=custom_class_id,
-        custom_class=cloud_speech.CustomClass(items=[{"value": "Keem"}]))
+        custom_class=cloud_speech.CustomClass(items=[{"value": "fare"}]))
 
     operation = client.create_custom_class(request=request)
     custom_class = operation.result()
@@ -69,10 +69,6 @@ def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_i
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config={}, adaptation=adaptation
     )
-
-    print(custom_class)
-    print(phrase_set)
-    print(config)
 
     request = cloud_speech.RecognizeRequest(
         recognizer=recognizer.name, config=config, content=content
