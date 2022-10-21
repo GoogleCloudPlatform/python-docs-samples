@@ -1,5 +1,5 @@
 numpy==1.22.0; python_version > "3.6"
-tensorflow==2.8.1
+tensorflow==2.10.0
 earthengine-api==0.1.311
 pytest==7.0.1
 pytest-xdist==2.5.0
