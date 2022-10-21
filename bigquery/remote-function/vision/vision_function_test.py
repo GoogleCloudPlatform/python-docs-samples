@@ -23,12 +23,12 @@ import vision_function
 
 # Create a fake "app" for generating test request contexts.
 @pytest.fixture(scope="module")
-def app():
+def app() -> flask.Flask:
     return flask.Flask(__name__)
 
 
 @mock.patch('vision_function.vision_v1')
-def test_vision_function(mock_vision_v1, app):
+def test_vision_function(mock_vision_v1: object, app: flask.Flask) -> None:
     object_localization_mock = mock.Mock(side_effect=[
         vision_v1.AnnotateImageResponse(
             {'localized_object_annotations': [{'name': 'apple'}]}),
@@ -48,7 +48,8 @@ def test_vision_function(mock_vision_v1, app):
 
 
 @mock.patch('vision_function.vision_v1')
-def test_vision_function_error(mock_vision_v1, app):
+def test_vision_function_error(
+        mock_vision_v1: object, app: flask.Flask) -> None:
     object_localization_mock = mock.Mock(side_effect=Exception('API error'))
     mock_vision_v1.ImageAnnotatorClient = mock.Mock(
         return_value=mock.Mock(object_localization=object_localization_mock))
