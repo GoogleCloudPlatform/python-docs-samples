@@ -25,7 +25,7 @@ import argparse
 from google.cloud import storage_transfer
 
 
-def transfer_to_gcs(
+def transfer_from_posix_to_gcs(
         project_id: str, description: str, source_agent_pool_name: str,
         root_directory: str, sink_bucket: str):
     """Create a transfer from a POSIX file system to a GCS bucket."""
@@ -96,4 +96,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    transfer_to_gcs(**vars(args))
+    transfer_from_posix_to_gcs(**vars(args))
