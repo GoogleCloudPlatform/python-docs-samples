@@ -269,10 +269,10 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     assert table.num_rows == 50
 
 
-def test_datalab_load_table_from_dataframe(to_delete: str) -> None:
+def test_datalab_load_table_from_dataframe(to_delete):
     """ Wrap test with retries to handle transient errors """
     @Retry()
-    def datalab_load_table_from_dataframe(to_delete: str) -> None:
+    def datalab_load_table_from_dataframe(to_delete):
         # [START bigquery_migration_datalab_load_table_from_dataframe]
         import google.datalab.bigquery as bq
         import pandas
