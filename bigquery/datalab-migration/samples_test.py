@@ -18,9 +18,9 @@ from google.api_core.retry import Retry
 import google.auth
 import google.datalab
 import IPython
-import pytest
 from IPython.terminal import interactiveshell
 from IPython.testing import tools
+import pytest
 
 # Get default project
 _, PROJECT_ID = google.auth.default()
@@ -307,7 +307,7 @@ def test_datalab_load_table_from_dataframe(to_delete):
         # rows in the destination table after the job is run. If errors are
         # encountered during the insertion, this test will fail.
         # See https://cloud.google.com/bigquery/streaming-data-into-bigquery
-    datalab_load_table_from_dataframe(to_delete)        
+    datalab_load_table_from_dataframe(to_delete)
 
 
 def test_client_library_load_table_from_dataframe(to_delete):
