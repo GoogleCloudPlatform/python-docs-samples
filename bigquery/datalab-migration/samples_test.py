@@ -14,11 +14,11 @@
 
 import time
 
+from google.api_core.retry import Retry
 import google.auth
 import google.datalab
 import IPython
 import pytest
-from google.api_core.retry import Retry
 from IPython.terminal import interactiveshell
 from IPython.testing import tools
 
