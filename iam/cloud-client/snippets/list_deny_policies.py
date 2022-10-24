@@ -16,8 +16,8 @@
 
 # [START iam_list_deny_policy]
 def list_deny_policy(project_id: str) -> None:
-    from google.cloud import iam_v2beta
-    from google.cloud.iam_v2beta import types
+    from google.cloud import iam_v2
+    from google.cloud.iam_v2 import types
 
     """
     List all the deny policies that are attached to a resource.
@@ -25,7 +25,7 @@ def list_deny_policy(project_id: str) -> None:
 
     project_id: ID or number of the Google Cloud project you want to use.
     """
-    policies_client = iam_v2beta.PoliciesClient()
+    policies_client = iam_v2.PoliciesClient()
 
     # Each deny policy is attached to an organization, folder, or project.
     # To work with deny policies, specify the attachment point.

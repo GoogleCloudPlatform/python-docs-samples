@@ -18,9 +18,8 @@
 
 
 def create_deny_policy(project_id: str, policy_id: str) -> None:
-    from google.cloud import iam_v2beta
-    from google.cloud.iam_v2beta import types
-    from google.type import expr_pb2
+    from google.cloud import iam_v2
+    from google.cloud.iam_v2 import types
 
     """
       Create a deny policy.
@@ -36,7 +35,7 @@ def create_deny_policy(project_id: str, policy_id: str) -> None:
       project_id: ID or number of the Google Cloud project you want to use.
       policy_id: Specify the ID of the deny policy you want to create.
     """
-    policies_client = iam_v2beta.PoliciesClient()
+    policies_client = iam_v2.PoliciesClient()
 
     # Each deny policy is attached to an organization, folder, or project.
     # To work with deny policies, specify the attachment point.
@@ -100,9 +99,9 @@ def create_deny_policy(project_id: str, policy_id: str) -> None:
     request.policy = policy
     request.policy_id = policy_id
 
-    # Build the create policy request.
-    policies_client.create_policy(request=request)
-    print(f"Created the deny policy: {policy_id}")
+    # Build the create policy request and wait for the operation to complete.
+    result = policies_client.create_policy(request=request).result()
+    print(f"Created the deny policy: {result.name.rsplit('/')[-1]}")
 
 
 if __name__ == "__main__":

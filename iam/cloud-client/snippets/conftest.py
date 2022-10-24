@@ -16,19 +16,22 @@ import os
 import re
 import uuid
 
-from _pytest.capture import CaptureFixture
+from google.cloud import iam_v2
+from google.cloud.iam_v2 import types
 import pytest
-
-from create_deny_policy import create_deny_policy
-from delete_deny_policy import delete_deny_policy
+from samples.snippets.create_deny_policy import create_deny_policy
+from samples.snippets.delete_deny_policy import delete_deny_policy
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 
 @pytest.fixture
-def deny_policy(capsys: CaptureFixture) -> None:
-    policy_id = f"limit-project-deletion-{uuid.uuid4()}"
+def deny_policy(capsys: "pytest.CaptureFixture[str]") -> None:
+    policy_id = f"test-deny-policy-{uuid.uuid4()}"
+
+    # Delete any existing policies. Otherwise it might throw quota issue.
+    delete_existing_deny_policies(PROJECT_ID, "test-deny-policy")
 
     # Create the Deny policy.
     create_deny_policy(PROJECT_ID, policy_id)
@@ -39,3 +42,15 @@ def deny_policy(capsys: CaptureFixture) -> None:
     delete_deny_policy(PROJECT_ID, policy_id)
     out, _ = capsys.readouterr()
     assert re.search(f"Deleted the deny policy: {policy_id}", out)
+
+
+def delete_existing_deny_policies(project_id: str, delete_name_prefix: str) -> None:
+    policies_client = iam_v2.PoliciesClient()
+
+    attachment_point = f"cloudresourcemanager.googleapis.com%2Fprojects%2F{project_id}"
+
+    request = types.ListPoliciesRequest()
+    request.parent = f"policies/{attachment_point}/denypolicies"
+    for policy in policies_client.list_policies(request=request):
+        if delete_name_prefix in policy.name:
+            delete_deny_policy(PROJECT_ID, str(policy.name).rsplit("/", 1)[-1])

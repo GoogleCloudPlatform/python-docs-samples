@@ -15,23 +15,25 @@
 import os
 import re
 
-from _pytest.capture import CaptureFixture
+import pytest
 from samples.snippets.get_deny_policy import get_deny_policy
 from samples.snippets.list_deny_policies import list_deny_policy
 from samples.snippets.update_deny_policy import update_deny_policy
 
-PROJECT_ID = os.environ["PROJECT_ID"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 
-def test_retrieve_policy(capsys: CaptureFixture, deny_policy) -> None:
+def test_retrieve_policy(
+    capsys: "pytest.CaptureFixture[str]", deny_policy: str
+) -> None:
     # Test policy retrieval, given the policy id.
     get_deny_policy(PROJECT_ID, deny_policy)
     out, _ = capsys.readouterr()
     assert re.search(f"Retrieved the deny policy: {deny_policy}", out)
 
 
-def test_list_policies(capsys: CaptureFixture, deny_policy) -> None:
+def test_list_policies(capsys: "pytest.CaptureFixture[str]", deny_policy: str) -> None:
     # Check if the created policy is listed.
     list_deny_policy(PROJECT_ID)
     out, _ = capsys.readouterr()
@@ -39,7 +41,9 @@ def test_list_policies(capsys: CaptureFixture, deny_policy) -> None:
     assert re.search("Listed all deny policies", out)
 
 
-def test_update_deny_policy(capsys: CaptureFixture, deny_policy) -> None:
+def test_update_deny_policy(
+    capsys: "pytest.CaptureFixture[str]", deny_policy: str
+) -> None:
     # Check if the policy rule is updated.
     policy = get_deny_policy(PROJECT_ID, deny_policy)
     update_deny_policy(PROJECT_ID, deny_policy, policy.etag)
