@@ -18,10 +18,6 @@ FROM python:3.10-slim
 
 RUN pip3 install --upgrade pip
 
-RUN apt-get update \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 

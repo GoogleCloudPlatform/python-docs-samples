@@ -57,22 +57,20 @@ def template_test():
 
     # Keyword that gets passed in will be concatenated to the final output string.
     keyword = app.config['keyword']
-    # If there is no endpoint, return the output string.
+    # If there is endpoint, send keyword to next service, else return the output string
+# [START trace_context_header]
+    # No need for explicit trace context propagation
     url = app.config['endpoint']
-    if url == "":
-        return keyword, 200
-
-    # Endpoint is the next service to send string to.
-    data = {'body': keyword}
-
-    # [START trace_context_header]
-    with tracer.start_as_current_span("span_" + keyword):
+    if url != "":
+        data = {'body': keyword}
         response = requests.get(
             url,
             params=data
         )
-    # [END trace_context_header]
-    return response.text + keyword
+        return response.text + keyword
+    else:
+        return keyword, 200
+# [END trace_context_header]
 
 
 if __name__ == "__main__":

@@ -13,17 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-################## Set up service a ###########################
+set -o errexit  # exit on error
+SCRIPT_DIR=$(realpath $(dirname "$0"))
+pushd $SCRIPT_DIR > /dev/null
 
-echo "Creating service a"
+echo ################## Build the demo application image ###########
+project_id=${1:-$PROJECT_ID}
+if [ -z "$project_id" ]; then
+  project_id=$(gcloud config get-value core/project)
+fi
+if [ -z "$project_id" ]; then
+  echo "  Cannot find GCP project id. Please, setup project using 'gcloud config set project' CLI"
+  popd
+  exit 1
+fi
+
+docker build -t gcr.io/${project_id}/cloud-trace-demo:v1 -f app/Dockerfile ./app/
+
+echo ################## Set up service a ###########################
 kubectl apply -f app/demo-service-a.yaml
 
-################## Set up service b ###########################
-echo "Fetching the external IP of service a"
+echo ################## Set up service b ###########################
 endpoint=""
 for run in {1..20}
 do
-  echo "Attempt #${run} to fetch the external IP of service a..."
+  echo "  Attempt #${run} to fetch the external IP of service a..."
   sleep 5
   endpoint=`kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
   if [[ "$endpoint" != "" ]]; then
@@ -32,21 +46,21 @@ do
 done
 
 if [[ "$endpoint" == "" ]]; then
-  echo "Unable to get external IP for service cloud-trace-demo-a"
+  echo "  Unable to get external IP for service cloud-trace-demo-a"
+  popd
   exit 1
 fi
 
-echo "Passing external IP for the first service ${endpoint} to the second service template"
+echo "  Passing external IP for the first service ${endpoint} to the second service template"
 sed "s/{{ endpoint }}/${endpoint}/g" app/demo-service-b.yaml.template > app/demo-service-b.yaml
 kubectl apply -f app/demo-service-b.yaml
 rm app/demo-service-b.yaml
 
-################## Set up service c ###########################
-echo "Fetching the external IP of service b"
+echo ################## Set up service c ###########################
 endpoint=""
 for run in {1..20}
 do
-  echo "Attempt #${run} to fetch the external IP of service b..."
+  echo "  Attempt #${run} to fetch the external IP of service b..."
   sleep 5
   endpoint=`kubectl get svc cloud-trace-demo-b -ojsonpath='{.status.loadBalancer.ingress[0].ip}'`
   if [[ "$endpoint" != "" ]]; then
@@ -55,13 +69,15 @@ do
 done
 
 if [[ "$endpoint" == "" ]]; then
-  echo "Unable to get external IP for service cloud-trace-demo-a"
+  echo "  Unable to get external IP for service cloud-trace-demo-a"
+  popd
   exit 1
 fi
 
-echo "Passing external IP for the service b ${endpoint} to the service c"
+echo "  Passing external IP for the service b ${endpoint} to the service c"
 sed "s/{{ endpoint }}/${endpoint}/g" app/demo-service-c.yaml.template > app/demo-service-c.yaml
 kubectl apply -f app/demo-service-c.yaml
 rm app/demo-service-c.yaml
 
-echo "Successfully deployed all services"
+echo "  Successfully deployed all services"
+popd
