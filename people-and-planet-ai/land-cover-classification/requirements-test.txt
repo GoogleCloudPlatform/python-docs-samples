@@ -1,6 +1,6 @@
 # Requirements to run tests.
 apache-beam[interactive]==2.41.0
-importnb==0.8.0
+importnb==2022.10.24
 ipykernel==6.16.0
 nbclient==0.6.8
 pytest-xdist==2.5.0
