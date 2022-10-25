@@ -16,33 +16,30 @@
 A sample app demonstrating CloudTraceSpanExporter
 """
 
-import argparse
+import os
 import random
 import time
 
-# [START trace_demo_imports]
 import flask
-from opentelemetry import propagate, trace
+# [START trace_demo_imports]
+from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.propagate import set_global_textmap
 from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 # [END trace_demo_imports]
 import requests
 
 
-# [START trace_demo_middleware]
-app = flask.Flask(__name__)
-FlaskInstrumentor().instrument_app(app)
-# [END trace_demo_middleware]
-
-
 # [START trace_demo_create_exporter]
 def configure_exporter(exporter):
-    trace.set_tracer_provider(TracerProvider())
-    trace.get_tracer_provider().add_span_processor(SimpleSpanProcessor(exporter))
-    propagate.set_global_textmap(CloudTraceFormatPropagator())
+    set_global_textmap(CloudTraceFormatPropagator())
+    tracer_provider = TracerProvider()
+    tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+    trace.set_tracer_provider(tracer_provider)
 
 
 configure_exporter(CloudTraceSpanExporter())
@@ -50,35 +47,35 @@ tracer = trace.get_tracer(__name__)
 # [END trace_demo_create_exporter]
 
 
+# [START trace_demo_middleware]
+app = flask.Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
+RequestsInstrumentor().instrument()
+# [END trace_demo_middleware]
+
+
 @app.route("/")
 def template_test():
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
 
-    # Keyword that gets passed in will be concatenated to the final output string.
-    keyword = app.config['keyword']
-    # If there is endpoint, send keyword to next service, else return the output string
+    # If there is an endpoint, send keyword to next service.
+    # Return received input with the keyword
+    keyword = os.getenv("KEYWORD")
+    endpoint = os.getenv("ENDPOINT")
 # [START trace_context_header]
-    # No need for explicit trace context propagation
-    url = app.config['endpoint']
-    if url != "":
+    if endpoint is not None and endpoint != "":
         data = {'body': keyword}
         response = requests.get(
-            url,
+            endpoint,
             params=data
         )
-        return response.text + keyword
+        return keyword + "\n" + response.text
     else:
         return keyword, 200
 # [END trace_context_header]
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--keyword",  default="", help="name of the service.")
-    parser.add_argument("--endpoint", default="", help="endpoint to dispatch appended string, simply respond if not set")
-
-    args = parser.parse_args()
-    app.config['keyword'] = args.keyword
-    app.config['endpoint'] = args.endpoint
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    port = os.getenv("PORT")
+    app.run(debug=True, host="0.0.0.0", port=port)

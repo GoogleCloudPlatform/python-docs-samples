@@ -26,31 +26,39 @@ If you are using Cloud Shell, skip to the next section.
    gcloud services enable container.googleapis.com
    ```
 
-1. Setup GCP project to `YOUR_PROJECT_ID`. Please, replace `YOUR_PROJECT_ID` with your GCP project id.
+1. Setup GCP project to `YOUR_PROJECT_ID`. Replace `YOUR_PROJECT_ID` with your GCP project id.
 
    ```bash
    gcloud config set project YOUR_PROJECT_ID
    ```
 
-1. Setup the location of GKE cluster and create the cluster named "cloud-trace-demo".
-The example below sets the cluster's location to "us-central1" region.
-You can replace the region with one which is [closer][] to you:
+1. Setup the location of GKE cluster and create a new cluster named
+`cloud-trace-demo`.
+The example below sets the cluster's location to the "us-central1-c" zone.
+You can replace the zone with one which you like. See [zones][] for the full
+list.
 
    ```bash
-   REGION=us-central1
+   ZONE=us-central1-c
    gcloud container clusters create cloud-trace-demo \
-       --region $REGION
+       --zone $ZONE
    ```
 
-1. Update GKE cluster credentials and verify access to the cluster:
+1. Update GKE cluster credentials and verify the access to the cluster:
 
    ```bash
-   gcloud container clusters get-credentials cloud-trace-demo --region $REGION
+   gcloud container clusters get-credentials cloud-trace-demo --zone $ZONE
    kubectl get nodes
    ```
 
-   The output is expected to display 9 work nodes (3 nodes per each zone of the us-central1 region).
-   If you selected a different region, the number of nodes can differ.
+   The output is similar to the following:
+
+   ```bash
+   NAME                                              STATUS   ROLES    AGE     VERSION
+   gke-cloud-trace-demo-default-pool-43f3fe97-dnk1   Ready    <none>   5m      v1.23.8-gke.1900
+   gke-cloud-trace-demo-default-pool-43f3fe97-j2b8   Ready    <none>   5m      v1.23.8-gke.1900
+   gke-cloud-trace-demo-default-pool-43f3fe97-znvv   Ready    <none>   5m      v1.23.8-gke.1900
+   ```
 
 1. Download the demo application:
 
@@ -65,11 +73,9 @@ You can replace the region with one which is [closer][] to you:
    ./setup.sh
    ```
 
-   You can provide a project id as an argument to `setup.sh` or it will use
-   the project id you set in Step 3.
-   The script will build the docker image of the demo application.
-   Will store the image into container at `gcr.io/${PROJECT_ID}/cloud-trace-demo:v1`.
-   And will deploy 3 services of the application.
+   The setup deployes 3 services of the demo application using a pre-built
+   image. If you like, you can build your own container image using
+   [`app/Dockerfile`][dockerfile].
 
 1. Track the status of the deployment:
 
@@ -77,31 +83,39 @@ You can replace the region with one which is [closer][] to you:
    kubectl get deployments
    ```
 
-   You are supposed to see three deployments:
+   The output is similar to the following:
 
-   * cloud-trace-demo-a
-   * cloud-trace-demo-b
-   * cloud-trace-demo-c
+   ```bash
+   NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+   cloud-trace-demo-a   1/1     1            1           3m
+   cloud-trace-demo-b   1/1     1            1           3m
+   cloud-trace-demo-c   1/1     1            1           3m
+   ```
 
 1. Send a curl request to the cloud-trace-demo-a:
 
    ```bash
-   curl $(kubectl get svc -o=jsonpath='{.items[?(@.metadata.name=="cloud-trace-demo-c")].status.loadBalancer.ingress[0].ip}')
+   curl $(kubectl get svc -o=jsonpath='{.items[?(@.metadata.name=="cloud-trace-demo-a")].status.loadBalancer.ingress[0].ip}')
    ```
 
-   You are supposed to see "Helloworld!" string to be printed as a return value.
+   The output is similar to the following:
+
+   ```bash
+   Hello, I am service A
+   And I am service B
+   Hello, I am service C
+   ```
 
 1. Visit [Trace List](https://console.cloud.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
 
     ![Screenshot](example-trace.png)
 
-1. To clean up either [delete the project][delete-project] or only the provisioned resources:
+1. To clean up the provisioned resources:
 
    ```bash
-   gcloud container registry delete gcr.io/$(gcloud config get-value core/project))/cloud-trace-demo:v1
-   gcloud container clusters delete cloud-trace-demo --region $REGION
+   gcloud container clusters delete cloud-trace-demo --zone $ZONE
    ```
 
-[closer]: https://cloud.google.com/about/locations#regions
-[delete-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects#shutting_down_projects
+[zones]: https://cloud.google.com/compute/docs/regions-zones#zones_and_clusters
+[dockerfile]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/trace/cloud-trace-demo-app-opentelemetry/app/Dockerfile

@@ -14,19 +14,25 @@
 """
 A sample app demonstrating Google Cloud Trace
 """
+import os
+
 import mock
 
 import app
 
 
+expected_response = '''Hello, I am service A
+And I am service B
+Hello, I am service C'''
+
+
 def test_traces():
-    service_keyword = "Hello"
+    expected = "Lorem ipsum dolor sit amet"
+    os.environ["KEYWORD"] = expected
     app.app.testing = True
-    app.app.config['keyword'] = service_keyword
-    app.app.config['endpoint'] = ""
     exporter = mock.Mock()
     app.configure_exporter(exporter)
     client = app.app.test_client()
     resp = client.get("/")
     assert resp.status_code == 200
-    assert service_keyword in resp.data.decode('utf-8')
+    assert expected in resp.data.decode('utf-8')
