@@ -66,8 +66,7 @@ create_workflow_invocation = DataformCreateWorkflowInvocationOperator(
     repository_id=REPOSITORY_ID,
     asynchronous=True,
     workflow_invocation={
-        # Replace my_compilation_result with the name of the compilation result for this workflow invocation.
-        "compilation_result": "my_compilation_result"
+        "compilation_result": "{{ task_instance.xcom_pull('create_compilation_result')['name'] }}"
     },
 )
 
