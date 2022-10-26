@@ -82,5 +82,6 @@ is_workflow_invocation_done = DataformWorkflowInvocationStateSensor(
     expected_statuses={WorkflowInvocation.State.SUCCEEDED},
 )
 
-create_compilation_result >> create_workflow_invocation
+# NOTE: is_workflow_invocation_done waits for workflow completion, it might take significant amount of time to finish depending on the project
+create_compilation_result >> create_workflow_invocation >> is_workflow_invocation_done
 # [END composer_dataform_async_workflow_invocation]
