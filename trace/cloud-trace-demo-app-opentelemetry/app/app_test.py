@@ -21,11 +21,6 @@ import mock
 import app
 
 
-expected_response = '''Hello, I am service A
-And I am service B
-Hello, I am service C'''
-
-
 def test_traces():
     expected = "Lorem ipsum dolor sit amet"
     os.environ["KEYWORD"] = expected
