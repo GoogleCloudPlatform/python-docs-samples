@@ -26,7 +26,7 @@ def test_posix_request(
         agent_pool_name: str, posix_root_directory: str,
         destination_bucket: Bucket):
 
-    posix_request.transfer_to_gcs(
+    posix_request.transfer_from_posix_to_gcs(
         project_id=project_id,
         description=job_description_unique,
         source_agent_pool_name=agent_pool_name,

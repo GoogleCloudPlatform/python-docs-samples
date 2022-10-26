@@ -1,5 +1,0 @@
-# The version of google-cloud-trace must remain at 0.24.2 for this sample
-google-cloud-trace===0.24.2
-opencensus==0.10.0
-opencensus-ext-stackdriver==0.8.0
-Flask==2.1.0
