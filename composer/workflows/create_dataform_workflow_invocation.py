@@ -14,7 +14,9 @@
 
 # [START composer_dataform_workflow_invocation]
 """
-Example Airflow DAG that creates a Dataform compilation result and starts a Dataform workflow invocation. This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators, see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
+Example Airflow DAG that creates a Dataform compilation result and starts a Dataform workflow invocation.
+This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators,
+see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
 """
 
 import datetime
@@ -61,6 +63,7 @@ with models.DAG(
         repository_id=REPOSITORY_ID,
         workflow_invocation={
             # compilation_result is full resource name generated in create_compilation_result
+            # for example projects/YOUR-PROJECT/locations/us-central1/repositories/YOUR_REPOSITORY/compilationResults/123456-abcdef-789012-ghijkl
             "compilation_result": "{{ task_instance.xcom_pull('create_compilation_result')['name'] }}"
         },
     )

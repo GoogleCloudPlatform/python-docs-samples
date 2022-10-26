@@ -14,8 +14,10 @@
 
 # [START composer_dataform_async_workflow_invocation]
 """
-Example Airflow DAG that creates a Dataform compilation result, starts an asynchronous Dataform workflow invocation, and polls the status of the workflow until it enters a desired state by using DataformWorkflowInvocationStateSensor.
-This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators, see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
+Example Airflow DAG that creates a Dataform compilation result, starts an asynchronous Dataform workflow invocation, and
+polls the status of the workflow until it enters a desired state by using DataformWorkflowInvocationStateSensor.
+This Airflow DAG uses Google Dataform Airflow operators. For more information about Google Dataform Airflow operators,
+see https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/dataform.html?highlight=dataform#google-dataform-operators
 """
 
 import datetime
