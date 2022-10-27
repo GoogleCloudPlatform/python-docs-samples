@@ -8,4 +8,4 @@ opentelemetry-instrumentation-flask==0.20b0
 grpcio==1.47.0
 httpretty==1.1.4
 google-cloud-monitoring==2.10.0
-google-cloud-trace==1.7.2
+google-cloud-trace==1.7.3

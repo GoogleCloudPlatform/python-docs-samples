@@ -88,7 +88,7 @@ apache-airflow-providers-exasol==3.0.0
 apache-airflow-providers-facebook==3.0.0
 apache-airflow-providers-ftp==3.0.0
 apache-airflow-providers-github==2.0.0
-apache-airflow-providers-google==8.1.0
+apache-airflow-providers-google==8.3.0
 apache-airflow-providers-grpc==3.0.0
 apache-airflow-providers-hashicorp==3.0.0
 apache-airflow-providers-http==3.0.0

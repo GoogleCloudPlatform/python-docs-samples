@@ -17,4 +17,4 @@ google-cloud-pubsublite==1.4.2
 google-cloud-storage==2.5.0
 google-cloud-spanner==1.19.3 # apache-beam requires google-cloud-spanner<2
 google-cloud-resource-manager==1.6.3
-google-cloud-recommendations-ai==0.7.1
+google-cloud-recommendations-ai==0.7.1 # apache-beam requires google-cloud-recommendations-ai<0.8
