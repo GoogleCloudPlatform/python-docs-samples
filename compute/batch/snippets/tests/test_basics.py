@@ -27,6 +27,7 @@ from ..get.get_job import get_job
 from ..get.get_task import get_task
 from ..list.list_jobs import list_jobs
 from ..list.list_tasks import list_tasks
+from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
 REGION = 'europe-north1'
@@ -82,11 +83,18 @@ def _check_tasks(job_name):
     print('Tasks tested')
 
 
-def test_script_job(job_name):
+def _check_logs(job, capsys):
+    print_job_logs(PROJECT, job)
+    output = [line for line in capsys.readouterr().out.splitlines(keepends=False) if line != ""]
+    assert len(output) == 4
+    assert all(log_msg.startswith("STDOUT") for log_msg in output)
+
+
+def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
-    _test_body(job, additional_test=lambda: _check_tasks(job_name))
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
 
 
 def test_container_job(job_name):
     job = create_container_job(PROJECT, REGION, job_name)
-    _test_body(job)
+    _test_body(job, additional_test=lambda: _check_tasks(job_name))
