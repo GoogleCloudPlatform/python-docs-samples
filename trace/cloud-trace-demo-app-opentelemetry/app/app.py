@@ -68,7 +68,7 @@ def template_test():
         data = {'body': keyword}
         response = requests.get(
             endpoint,
-            params=data
+            params=data,
         )
         return keyword + "\n" + response.text
     else:
