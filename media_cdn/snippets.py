@@ -202,7 +202,7 @@ def sign_token(
     Args:
         base64_key: Secret key as a base64 encoded string.
         signature_algorithm: Algorithm can be either `SHA1` or `SHA256` or `Ed25519`.
-        expiration_time: Expiration time as a UTC datetime object.
+        expiration_time: Expiration time as a UTC datetime object. Default is 1 hour.
 
         url_prefix: the URL prefix to sign, including protocol.
                     For example: http://example.com/path/ for URLs under /path or http://example.com/path?param=1
@@ -227,16 +227,12 @@ def sign_token(
         path_globs = path_globs.strip()
         output = f"PathGlobs={path_globs}".encode("utf-8")
     elif url_prefix:
-        output = b"URLPrefix=" + base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
+        encoded_prefix = base64.urlsafe_b64encode(url_prefix.encode("utf-8"))
+        output = b"URLPrefix=" + encoded_prefix.rstrip(b"=")
     else:
         raise ValueError(
             "User Input Missing: One of `url_prefix`, `full_path` or `path_globs` must be specified"
         )
-
-    # trim padding(`=`) for url friendly output
-    while output[-1] == ord("="):
-        output = output[:-1]
-
     if not expiration_time:
         expiration_time = datetime.datetime.now() + datetime.timedelta(hours=1)
     else:
@@ -261,7 +257,7 @@ def sign_token(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
     # trim padding for url friendly suffix
-    output = output.decode("utf-8").strip("=")
+    output = output.decode("utf-8").rstrip("=")
     return output
 
 
