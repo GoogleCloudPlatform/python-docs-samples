@@ -25,6 +25,7 @@ def run_quickstart(project=""):
 
     series = monitoring_v3.TimeSeries()
     series.metric.type = "custom.googleapis.com/my_metric"
+    series.metric.labels["store_id"] = "Pittsburgh"
     series.resource.type = "gce_instance"
     series.resource.labels["instance_id"] = "1234567890123456789"
     series.resource.labels["zone"] = "us-central1-f"
