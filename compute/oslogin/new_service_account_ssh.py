@@ -99,6 +99,9 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
     print(f'Setting key for {account}...')
     oslogin_client.import_ssh_public_key(request)
 
+    # Let the key properly propagate
+    time.sleep(5)
+
     return private_key_file
 
 
@@ -117,8 +120,10 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str):
     """
     ssh_command = [
         'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
+        '-o', 'UserKnownHostsFile=/dev/null',
         f'{username}@{hostname}', cmd,
     ]
+    print(f"Executing ssh command: {' '.join(ssh_command)}")
     ssh = subprocess.run(
         ssh_command, shell=False, stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT, text=True, check=True,
@@ -128,11 +133,12 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str):
 
 
 def main(cmd, project: str, instance: Optional[str] = None, zone: Optional[str] = None,
-         account: Optional[str] = None, hostname: Optional[str] = None):
+         account: Optional[str] = None, hostname: Optional[str] = None, oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None):
     """Run a command on a remote system."""
 
     # Create the OS Login API object.
-    oslogin = oslogin_v1.OsLoginServiceClient()
+    if oslogin is None:
+        oslogin = oslogin_v1.OsLoginServiceClient()
 
     # Identify the service account ID if it is not already provided.
     account = account or requests.get(
