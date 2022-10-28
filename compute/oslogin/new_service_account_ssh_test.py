@@ -27,6 +27,7 @@ import time
 
 import pytest
 import google.auth
+from google.api_core.exceptions import NotFound
 from google.cloud import compute_v1
 from google.cloud import iam_credentials_v1
 from google.cloud import oslogin_v1
@@ -116,8 +117,11 @@ def ssh_firewall():
     firewall_client.insert(request).result()
 
     yield firewall_client.get(project=PROJECT, firewall=TEST_ID)
-
-    firewall_client.delete(project=PROJECT, firewall=TEST_ID)
+    try:
+        firewall_client.delete(project=PROJECT, firewall=TEST_ID)
+    except NotFound:
+        # That means the GCE Enforcer deleted it before us
+        pass
 
 
 @pytest.fixture()
