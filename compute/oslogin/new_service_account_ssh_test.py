@@ -24,16 +24,15 @@ several necessary permissions.
 import base64
 import json
 import time
+import uuid
 
-import pytest
-import google.auth
 from google.api_core.exceptions import NotFound
+import google.auth
 from google.cloud import compute_v1
-from google.cloud import iam_credentials_v1
 from google.cloud import oslogin_v1
 from google.oauth2 import service_account
-import uuid
 import googleapiclient.discovery
+import pytest
 
 from new_service_account_ssh import main
 
@@ -148,7 +147,6 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
     access.name = "External NAT"
     access.network_tier = access.NetworkTier.PREMIUM.name
     network_interface.access_configs = [access]
-
 
     instance.disks = [disk]
     instance.machine_type = f"zones/{ZONE}/machineTypes/e2-micro"

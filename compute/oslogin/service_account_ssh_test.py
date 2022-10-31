@@ -20,10 +20,10 @@ from subprocess import CalledProcessError
 import time
 
 import backoff
-import pytest
 from google.auth.exceptions import RefreshError
 from google.oauth2 import service_account
 import googleapiclient.discovery
+import pytest
 
 from service_account_ssh import main
 

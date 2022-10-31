@@ -22,11 +22,11 @@ on the same internal VPC network.
 import argparse
 import subprocess
 import time
-import uuid
 from typing import List, Optional, Tuple
+import uuid
 
-import requests
 from google.cloud import oslogin_v1
+import requests
 
 SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
