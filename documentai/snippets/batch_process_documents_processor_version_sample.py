@@ -17,6 +17,7 @@
 import re
 
 from google.api_core.client_options import ClientOptions
+from google.api_core.exceptions import RetryError
 from google.cloud import documentai, storage
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -39,7 +40,7 @@ def batch_process_documents_processor_version(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
-    timeout: int = 300,
+    timeout: int = 400,
 ):
 
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
@@ -90,8 +91,12 @@ def batch_process_documents_processor_version(
     # Continually polls the operation until it is complete.
     # This could take some time for larger files
     # Format: projects/PROJECT_NUMBER/locations/LOCATION/operations/OPERATION_ID
-    print(f"Waiting for operation {operation.operation.name} to complete...")
-    operation.result(timeout=timeout)
+    try:
+        print(f"Waiting for operation {operation.operation.name} to complete...")
+        operation.result(timeout=timeout)
+    # Catch exception when operation doesn't finish before timeout
+    except (RetryError) as e:
+        print(e.message)
 
     # NOTE: Can also use callbacks for asynchronous processing
     #

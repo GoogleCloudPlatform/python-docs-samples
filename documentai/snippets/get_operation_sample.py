@@ -16,6 +16,7 @@
 # [START documentai_get_operation]
 
 from google.api_core.client_options import ClientOptions
+from google.api_core.exceptions import NotFound
 from google.cloud import documentai
 from google.longrunning.operations_pb2 import GetOperationRequest
 
@@ -33,10 +34,12 @@ def get_operation_sample(location: str, operation_name: str):
     request = GetOperationRequest(name=operation_name)
 
     # Make GetOperation request
-    operation = client.get_operation(request=request)
-
-    # Print the Operation Information
-    print(operation)
+    try:
+        operation = client.get_operation(request=request)
+        # Print the Operation Information
+        print(operation)
+    except (NotFound) as e:
+        print(e.message)
 
 
 # [END documentai_get_operation]

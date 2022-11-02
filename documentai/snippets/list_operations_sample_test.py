@@ -29,4 +29,3 @@ def test_list_operations(capsys):
     out, _ = capsys.readouterr()
 
     assert "operations" in out
-    assert "BatchProcessMetadata" in out
