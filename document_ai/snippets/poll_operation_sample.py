@@ -18,6 +18,7 @@
 from time import sleep
 
 from google.api_core.client_options import ClientOptions
+from google.api_core.exceptions import NotFound
 from google.cloud import documentai
 from google.longrunning.operations_pb2 import GetOperationRequest
 
@@ -36,7 +37,11 @@ def poll_operation_sample(location: str, operation_name: str):
 
     while True:
         # Make GetOperation request
-        operation = client.get_operation(request=request)
+        try:
+            operation = client.get_operation(request=request)
+        except (NotFound) as e:
+            print(e.message)
+            break
 
         # Print the Operation Information
         print(operation)

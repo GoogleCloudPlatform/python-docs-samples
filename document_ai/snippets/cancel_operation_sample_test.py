@@ -30,4 +30,3 @@ def test_cancel_operation(capsys):
     out, _ = capsys.readouterr()
 
     assert "Operation" in out
-    assert "cancelled" in out
