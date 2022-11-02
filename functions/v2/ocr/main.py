@@ -13,6 +13,9 @@
 # limitations under the License.
 
 # [START functions_cloudevent_ocr]
+import os
+
+from google.cloud import pubsub_v1
 from google.cloud import storage
 from google.cloud import translate_v2 as translate
 from google.cloud import vision
@@ -30,11 +33,7 @@ project_id = os.environ["GCP_PROJECT"]
 
 # [START functions_cloudevent_ocr_detect]
 @functions_framework.cloud_event
-def detect_text(cloud_event):
-    """ Extract the text from an image when uploaded to Cloud Storage, then
-        trigger events requesting the text be translated to each target language.
-    """
-
+def process_image(cloud_event):
     # Check that the received event is of the expected type, return error if not
     expected_type = "google.cloud.storage.object.v1.finalized"
     received_type = cloud_event.type
@@ -45,6 +44,20 @@ def detect_text(cloud_event):
     data = cloud_event.data
     bucket = data["bucket"]
     filename = data["name"]
+
+    detect_text(bucket, filename)
+
+    print("File {} processed.".format(file["filename"]))
+
+
+def detect_text(cloud_event):
+    """ Extract the text from an image when uploaded to Cloud Storage, then
+        trigger events requesting the text be translated to each target language.
+    """
+
+    print("Looking for text in image {}".format(filename))
+
+    futures = []
 
     # Use the Vision API to extract text from the image
     image = vision.Image(
@@ -64,6 +77,24 @@ def detect_text(cloud_event):
     src_lang = detect_language_response["language"]
     print("Detected language {} for text {}.".format(src_lang, text))
 
+    # Submit a message to the bus for each target language
+    to_langs = os.environ["TO_LANG"].split(",")
+    for target_lang in to_langs:
+        topic_name = os.environ["TRANSLATE_TOPIC"]
+        if src_lang == target_lang or src_lang == "und":
+            topic_name = os.environ["RESULT_TOPIC"]
+        message = {
+            "text": text,
+            "filename": filename,
+            "lang": target_lang,
+            "src_lang": src_lang,
+        }
+        message_data = json.dumps(message).encode("utf-8")
+        topic_path = publisher.topic_path(project_id, topic_name)
+        future = publisher.publish(topic_path, data=message_data)
+        futures.append(future)
+    for future in futures:
+        future.result()
 
 
 # [END functions_cloudevent_storage]
