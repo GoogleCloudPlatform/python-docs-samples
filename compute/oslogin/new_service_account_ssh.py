@@ -13,6 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# [START compute_oslogin_ssh]
 """
 Example of using the OS Login API to apply public SSH keys for a service
 account, and use that service account to execute commands on a remote
@@ -198,3 +199,4 @@ if __name__ == '__main__':
 
     main(args.cmd, args.project, instance=args.instance, zone=args.zone,
          account=args.account, hostname=args.hostname)
+# [END compute_oslogin_ssh]
