@@ -1,3 +1,4 @@
-google-api-python-client==2.34.0
-flask==2.0.2
-slackclient==2.9.3
+google-api-python-client==2.47.0
+flask==2.1.0
+functions-framework==3.2.0
+slackclient==2.9.4

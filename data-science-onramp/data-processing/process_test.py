@@ -123,7 +123,9 @@ def setup_and_teardown_cluster():
         try:
             # Delete cluster
             operation = cluster_client.delete_cluster(
-                project_id=PROJECT_ID, region=CLUSTER_REGION, cluster_name=DATAPROC_CLUSTER
+                project_id=PROJECT_ID,
+                region=CLUSTER_REGION,
+                cluster_name=DATAPROC_CLUSTER,
             )
             operation.result()
         except NotFound:

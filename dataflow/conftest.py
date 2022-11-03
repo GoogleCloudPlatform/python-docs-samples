@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from dataclasses import dataclass
+from google.api_core.exceptions import NotFound
 import itertools
 import json
 import logging
@@ -91,23 +92,44 @@ class Utils:
         logging.info(f"Deleted storage_bucket: {bucket.name}")
 
     @staticmethod
-    def bigquery_dataset(name: str, project: str = PROJECT) -> str:
+    def bigquery_dataset(
+        name: str,
+        project: str = PROJECT,
+        location: str = REGION,
+    ) -> str:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
 
         dataset_name = Utils.underscore_name(name)
-        dataset = bigquery_client.create_dataset(
-            bigquery.Dataset(f"{project}.{dataset_name}")
-        )
+        dataset = bigquery.Dataset(f"{project}.{dataset_name}")
+        dataset.location = location
+        result = bigquery_client.create_dataset(dataset)
 
-        logging.info(f"Created bigquery_dataset: {dataset.full_dataset_id}")
-        yield dataset_name
+        logging.info(f"Created bigquery_dataset: {result.full_dataset_id}")
+        yield result.dataset_id
 
-        bigquery_client.delete_dataset(
-            f"{project}.{dataset_name}", delete_contents=True
+        try:
+            bigquery_client.delete_dataset(
+                f"{project}.{dataset_name}", delete_contents=True
+            )
+            logging.info(f"Deleted bigquery_dataset: {result.full_dataset_id}")
+        except NotFound:
+            logging.info(f"{result.full_dataset_id} already deleted.")
+
+    @staticmethod
+    def bigquery_table(
+        dataset_name: str, table_name: str, project: str = PROJECT, **kwargs
+    ) -> str:
+        from google.cloud import bigquery
+        bigquery_client = bigquery.Client()
+        table = bigquery.Table(
+            f"{project}.{dataset_name}.{table_name}", **kwargs
         )
-        logging.info(f"Deleted bigquery_dataset: {dataset.full_dataset_id}")
+        result = bigquery_client.create_table(table)
+        logging.info(f"Created bigquery_table: {result.full_table_id}")
+        yield result.table_id
+        # This table will be deleted when the dataset is deleted.
 
     @staticmethod
     def bigquery_table_exists(
@@ -138,7 +160,7 @@ class Utils:
 
         publisher_client = pubsub.PublisherClient()
         topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
-        topic = publisher_client.create_topic(topic_path)
+        topic = publisher_client.create_topic(request={"name": topic_path})
 
         logging.info(f"Created pubsub_topic: {topic.name}")
         yield topic.name
@@ -164,7 +186,9 @@ class Utils:
         subscription_path = subscriber.subscription_path(
             project, Utils.hyphen_name(name)
         )
-        subscription = subscriber.create_subscription(subscription_path, topic_path)
+        subscription = subscriber.create_subscription(
+            request={"name": subscription_path, "topic": topic_path}
+        )
 
         logging.info(f"Created pubsub_subscription: {subscription.name}")
         yield subscription.name
@@ -360,22 +384,16 @@ class Utils:
 
     @staticmethod
     def dataflow_jobs_wait(
-        job_id: str = None,
-        job_name: str = None,
+        job_id: str,
         project: str = PROJECT,
         region: str = REGION,
         target_states: Set[str] = {"JOB_STATE_DONE"},
-        list_page_size: int = LIST_PAGE_SIZE,
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> Optional[str]:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
-
-        assert job_id or job_name, "required to pass either a job_id or a job_name"
-        if not job_id:
-            job_id = Utils.dataflow_job_id(job_name, project, list_page_size)
 
         finish_states = {
             "JOB_STATE_DONE",
@@ -526,6 +544,46 @@ class Utils:
         logging.info(f"Launched Dataflow Flex Template job: {unique_job_name}")
         job_id = yaml.safe_load(stdout)["job"]["id"]
         logging.info(f"Dataflow Flex Template job id: {job_id}")
+        logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
+        yield job_id
+
+        Utils.dataflow_jobs_cancel(job_id)
+
+    @staticmethod
+    def dataflow_extensible_template_run(
+        job_name: str,
+        template_path: str,
+        bucket_name: str,
+        parameters: Dict[str, str] = {},
+        project: str = PROJECT,
+        region: str = REGION,
+    ) -> str:
+        import yaml
+
+        unique_job_name = Utils.hyphen_name(job_name)
+        logging.info(f"dataflow_job_name: {unique_job_name}")
+        cmd = [
+            "gcloud",
+            "dataflow",
+            "jobs",
+            "run",
+            unique_job_name,
+            f"--gcs-location={template_path}",
+            f"--project={project}",
+            f"--region={region}",
+            f"--staging-location=gs://{bucket_name}/staging",
+        ] + [
+            f"--parameters={name}={value}"
+            for name, value in {
+                **parameters,
+            }.items()
+        ]
+        logging.info(cmd)
+
+        stdout = subprocess.check_output(cmd).decode("utf-8")
+        logging.info(f"Launched Dataflow Template job: {unique_job_name}")
+        job_id = yaml.safe_load(stdout)["id"]
+        logging.info(f"Dataflow Template job id: {job_id}")
         logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
