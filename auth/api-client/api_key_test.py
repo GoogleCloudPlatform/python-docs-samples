@@ -16,9 +16,8 @@ import re
 
 from _pytest.capture import CaptureFixture
 import google.auth.transport.requests
-import pytest
-
 from google.cloud.api_keys_v2 import Key
+import pytest
 
 import authenticate_with_api_key
 import create_api_key
