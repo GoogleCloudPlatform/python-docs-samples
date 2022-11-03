@@ -11,13 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import re
 import os
-
-import google.auth.transport.requests
+import re
 
 from _pytest.capture import CaptureFixture
 import pytest
+
+import google.auth.transport.requests
+
+from google.cloud.api_keys_v2 import Key
 
 import authenticate_with_api_key
 import create_api_key
@@ -28,8 +30,6 @@ import restrict_api_key_api
 import restrict_api_key_http
 import restrict_api_key_ios
 import restrict_api_key_server
-
-from google.cloud.api_keys_v2 import Key
 
 CREDENTIALS, PROJECT = google.auth.default()
 SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
