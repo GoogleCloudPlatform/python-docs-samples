@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import re
+import os
 
-import pytest
+import google.auth.transport.requests
+
 from _pytest.capture import CaptureFixture
+import pytest
 
 import authenticate_with_api_key
 import create_api_key
@@ -27,8 +30,6 @@ import restrict_api_key_ios
 import restrict_api_key_server
 
 from google.cloud.api_keys_v2 import Key
-import google.auth.transport.requests
-import os
 
 CREDENTIALS, PROJECT = google.auth.default()
 SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
