@@ -77,7 +77,7 @@ def execute(
 
 
 def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
-                   account: str, expire_time: int = 300):
+                   account: str, expire_time: int = 300) -> str:
     """
     Generates a temporary SSH key pair and apply it to the specified account.
 
@@ -92,7 +92,7 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
         to the file name.
 
     """
-    private_key_file = f'/tmp/key-{str(uuid.uuid4()}'
+    private_key_file = f'/tmp/key-{uuid.uuid4()}'
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
     with open(f'{private_key_file}.pub', 'r') as original:
@@ -115,7 +115,7 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
     return private_key_file
 
 
-def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str):
+def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> str:
     """
     Runs a command on a remote system.
 

@@ -190,7 +190,7 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
 
 
 def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
-    account = f'users/{oslogin_service_account['name']}'
+    account = f'users/{oslogin_service_account["name"]}'
     oslogin_client = oslogin_v1.OsLoginServiceClient(credentials=oslogin_service_account['credentials'])
     # Letting everything settle down...
     time.sleep(60)
