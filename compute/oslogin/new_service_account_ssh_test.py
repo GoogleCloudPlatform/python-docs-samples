@@ -32,6 +32,7 @@ from google.cloud import compute_v1
 from google.cloud import oslogin_v1
 from google.oauth2 import service_account
 import googleapiclient.discovery
+import googleapiclient.errors
 import pytest
 
 from new_service_account_ssh import main
@@ -95,7 +96,7 @@ def oslogin_service_account():
         iam.projects().serviceAccounts().delete(
             name=f'projects/{PROJECT}/serviceAccounts/{account_email}'
         ).execute()
-    except Exception:
+    except googleapiclient.errors.Error:
         pass
 
 
