@@ -87,7 +87,7 @@ def _check_logs(job, capsys):
     print_job_logs(PROJECT, job)
     output = [line for line in capsys.readouterr().out.splitlines(keepends=False) if line != ""]
     assert len(output) == 4
-    assert all(log_msg.startswith("STDOUT") for log_msg in output)
+    assert all("Hello world!" in log_msg for log_msg in output)
 
 
 def test_script_job(job_name, capsys):
