@@ -35,11 +35,15 @@ SERVICE_ACCOUNT_METADATA_URL = (
 HEADERS = {'Metadata-Flavor': 'Google'}
 
 
-def execute(cmd: List[str], cwd: Optional[str] = None,
-            capture_output: Optional[bool] = False, env: Optional[dict] = None,
-            raise_errors: Optional[bool] = True) -> Tuple[int, str]:
+def execute(
+    cmd: list[str],
+    cwd: Optional[str] = None,
+    capture_output: Optional[bool] = False,
+    env: Optional[dict] = None,
+    raise_errors: Optional[bool] = True
+) -> tuple[int, str]:
     """
-    Execute an external command (wrapper for Python subprocess).
+    Executes an external command (wrapper for Python subprocess).
 
     Args:
         cmd: The command to be executed.
@@ -52,10 +56,15 @@ def execute(cmd: List[str], cwd: Optional[str] = None,
         Return code and captured output.
     """
     print(f'Executing command: {cmd}')
-    process = subprocess.run(cmd, cwd=cwd,
-                             stdout=subprocess.PIPE if capture_output else subprocess.DEVNULL,
-                             stderr=subprocess.STDOUT, text=True,
-                             env=env, check=raise_errors)
+    process = subprocess.run(
+        cmd,
+        cwd=cwd,
+        stdout=subprocess.PIPE if capture_output else subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        text=True,
+        env=env,
+        check=raise_errors
+    )
     output = process.stdout
     returncode = process.returncode
 
@@ -70,7 +79,7 @@ def execute(cmd: List[str], cwd: Optional[str] = None,
 def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
                    account: str, expire_time: int = 300):
     """
-    Generate a temporary SSH key pair and apply it to the specified account.
+    Generates a temporary SSH key pair and apply it to the specified account.
 
     Args:
         oslogin_client: OS Login client object.
@@ -83,10 +92,10 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
         to the file name.
 
     """
-    private_key_file = '/tmp/key-' + str(uuid.uuid4())
+    private_key_file = f'/tmp/key-{str(uuid.uuid4()}'
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
-    with open(private_key_file + '.pub', 'r') as original:
+    with open(f'{private_key_file}.pub', 'r') as original:
         public_key = original.read().strip()
 
     # Expiration time is in microseconds.
@@ -108,7 +117,7 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
 
 def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str):
     """
-    Run a command on a remote system.
+    Runs a command on a remote system.
 
     Args:
         cmd: Command to be run.
@@ -120,22 +129,37 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str):
         Output of the executed command.
     """
     ssh_command = [
-        'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
+        'ssh',
+        '-i', private_key_file,
+        '-o', 'StrictHostKeyChecking=no',
         '-o', 'UserKnownHostsFile=/dev/null',
-        f'{username}@{hostname}', cmd,
+        f'{username}@{hostname}',
+        cmd,
     ]
     print(f"Executing ssh command: {' '.join(ssh_command)}")
     ssh = subprocess.run(
-        ssh_command, shell=False, stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT, text=True, check=True,
-        env={'SSH_AUTH_SOCK': ''})
+        ssh_command,
+        shell=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=True,
+        env={'SSH_AUTH_SOCK': ''},
+    )
 
     return ssh.stdout
 
 
-def main(cmd, project: str, instance: Optional[str] = None, zone: Optional[str] = None,
-         account: Optional[str] = None, hostname: Optional[str] = None, oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None):
-    """Run a command on a remote system."""
+def main(
+    cmd,
+    project: str,
+    instance: Optional[str] = None,
+    zone: Optional[str] = None,
+    account: Optional[str] = None,
+    hostname: Optional[str] = None,
+    oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None
+) -> None:
+    """Runs a command on a remote system."""
 
     # Create the OS Login API object.
     if oslogin is None:
@@ -146,7 +170,7 @@ def main(cmd, project: str, instance: Optional[str] = None, zone: Optional[str] 
         SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
 
     if not account.startswith('users/'):
-        account = 'users/' + account
+        account = f'users/{account}'
 
     # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)
@@ -170,7 +194,7 @@ def main(cmd, project: str, instance: Optional[str] = None, zone: Optional[str] 
         # Shred the private key and delete the pair.
         execute(['shred', private_key_file])
         execute(['rm', private_key_file])
-        execute(['rm', private_key_file + '.pub'])
+        execute(['rm', f'{private_key_file}.pub'])
 
 
 if __name__ == '__main__':
