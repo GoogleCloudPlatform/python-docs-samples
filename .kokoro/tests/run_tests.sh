@@ -159,7 +159,7 @@ test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
 btlr_args=(
     "run"
-    "--max-cmd-duration=30m"
+    "--max-cmd-duration=60m"
     "**/requirements.txt"
 )
 
