@@ -23,7 +23,7 @@ on the same internal VPC network.
 import argparse
 import subprocess
 import time
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import uuid
 
 from google.cloud import oslogin_v1
@@ -41,7 +41,7 @@ def execute(
     capture_output: Optional[bool] = False,
     env: Optional[dict] = None,
     raise_errors: Optional[bool] = True
-) -> tuple[int, str]:
+) -> Tuple[int, str]:
     """
     Executes an external command (wrapper for Python subprocess).
 
