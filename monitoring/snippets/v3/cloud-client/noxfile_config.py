@@ -22,7 +22,7 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': [],
+    'ignored_versions': ["2.7"],
 
     # Declare optional test sessions you want to opt-in. Currently we
     # have the following optional test sessions:
