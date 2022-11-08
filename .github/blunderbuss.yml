@@ -111,7 +111,7 @@ assign_issues_by:
 - labels:
   - 'api: datalabeling'
   to:
-  - python-sample-reviewers
+  - GoogleCloudPlatform/python-samples-reviewers
   
 assign_prs_by:
 - labels:
