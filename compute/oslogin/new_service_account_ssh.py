@@ -23,7 +23,7 @@ on the same internal VPC network.
 import argparse
 import subprocess
 import time
-from typing import List, Optional, Tuple
+from typing import List, Optional
 import uuid
 
 from google.cloud import oslogin_v1
@@ -36,7 +36,7 @@ HEADERS = {'Metadata-Flavor': 'Google'}
 
 
 def execute(
-    cmd: list[str],
+    cmd: List[str],
     cwd: Optional[str] = None,
     capture_output: Optional[bool] = False,
     env: Optional[dict] = None,
