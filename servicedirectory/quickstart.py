@@ -16,19 +16,19 @@
 
 # [START servicedirectory_quickstart]
 from google.cloud import servicedirectory_v1
+from google.cloud.servicedirectory_v1.services.registration_service import pagers
 
 
-def list_namespaces(project_id, location_id):
+def list_namespaces(project_id: str, location_id: str) -> pagers.ListNamespacesPager:
     """Lists all namespaces in the given location."""
-
     client = servicedirectory_v1.RegistrationServiceClient()
-
     response = client.list_namespaces(
-        parent=f'projects/{project_id}/locations/{location_id}')
-
-    print(f'Listed namespaces in {location_id}.')
+        parent=f"projects/{project_id}/locations/{location_id}"
+    )
+    print(f"Listed namespaces in {location_id}.")
     for namespace in response:
-        print(f'Namespace: {namespace.name}')
-
+        print(f"Namespace: {namespace.name}")
     return response
+
+
 # [END servicedirectory_quickstart]

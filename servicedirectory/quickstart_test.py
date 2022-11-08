@@ -18,28 +18,33 @@ from os import environ
 import uuid
 
 from google.cloud import servicedirectory_v1
+from google.cloud.servicedirectory_v1.types import registration_service
+from google.cloud.servicedirectory_v1.types import namespace as gcs_namespace
 
 import pytest
 
 import quickstart
 
-PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
-LOCATION_ID = 'us-east1'
-NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
+PROJECT_ID = environ["GOOGLE_CLOUD_PROJECT"]
+LOCATION_ID = "us-east1"
+NAMESPACE_ID = f"test-namespace-{uuid.uuid4().hex}"
 
 
-@pytest.fixture(scope='module')
-def client():
+@pytest.fixture(scope="module")
+def client() -> registration_service.client.RegistrationServiceClient:
     return servicedirectory_v1.RegistrationServiceClient()
 
 
-@pytest.fixture(scope='module')
-def namespace(client):
+@pytest.fixture(scope="module")
+def namespace(
+    client: registration_service.client.RegistrationServiceClient,
+) -> gcs_namespace.Namespace:
     namespace = servicedirectory_v1.Namespace(
-        name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID))
+        name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
+    )
 
     client.create_namespace(
-        parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
+        parent=f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
         namespace=namespace,
         namespace_id=NAMESPACE_ID,
     )
@@ -49,6 +54,8 @@ def namespace(client):
     client.delete_namespace(name=namespace.name)
 
 
-def test_list_namespace(namespace):
-    assert namespace in quickstart.list_namespaces(PROJECT_ID,
-                                                   LOCATION_ID).namespaces
+def test_list_namespace(namespace: gcs_namespace.Namespace) -> None:
+    assert namespace.name in [
+        each.name
+        for each in quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
+    ]
