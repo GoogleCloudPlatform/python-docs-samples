@@ -19,8 +19,8 @@ from google.cloud import vision_v1
 
 
 @functions_framework.http
-def localize_objects(request: flask.Request) -> flask.Response:
-    """BigQuery remote function to detect and extract objects from input images.
+def label_detection(request: flask.Request) -> flask.Response:
+    """BigQuery remote function to label input images.
     Args:
         request: HTTP request from BigQuery
         https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#input_format
@@ -33,7 +33,7 @@ def localize_objects(request: flask.Request) -> flask.Response:
         calls = request.get_json()['calls']
         replies = []
         for call in calls:
-            results = client.object_localization(
+            results = client.label_detection(
                 {'source': {'image_uri': call[0]}})
             replies.append(vision_v1.AnnotateImageResponse.to_dict(results))
         return flask.make_response(flask.jsonify({'replies': replies}))
