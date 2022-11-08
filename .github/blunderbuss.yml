@@ -48,6 +48,10 @@ assign_issues_by:
   to:
   - m-strzelczyk
 - labels:
+  - 'api: container'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
+- labels:
   - 'api: datascienceonramp'
   to:
   - leahecole
