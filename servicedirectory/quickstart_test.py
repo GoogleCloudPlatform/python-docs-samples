@@ -48,10 +48,10 @@ def namespace(
         namespace=namespace,
         namespace_id=NAMESPACE_ID,
     )
-
-    yield namespace
-
-    client.delete_namespace(name=namespace.name)
+    try:
+        yield namespace
+    finally:
+        client.delete_namespace(name=namespace.name)
 
 
 def test_list_namespace(namespace: gcs_namespace.Namespace) -> None:
