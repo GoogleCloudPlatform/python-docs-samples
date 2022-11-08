@@ -112,6 +112,7 @@ assign_issues_by:
   - 'api: datalabeling'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc
   
 assign_prs_by:
 - labels:
