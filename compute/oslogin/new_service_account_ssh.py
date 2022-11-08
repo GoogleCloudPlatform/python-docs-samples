@@ -137,17 +137,24 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
         cmd,
     ]
     print(f"Executing ssh command: {' '.join(ssh_command)}")
-    ssh = subprocess.run(
-        ssh_command,
-        shell=False,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        check=True,
-        env={'SSH_AUTH_SOCK': ''},
-    )
+    tries = 0
+    while tries < 3:
+        try:
+            ssh = subprocess.run(
+                ssh_command,
+                shell=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                check=True,
+                env={'SSH_AUTH_SOCK': ''},
+            )
+        except subprocess.CalledProcessError:
+            time.sleep(30)
+            tries += 1
+        else:
+            return ssh.stdout
 
-    return ssh.stdout
 
 
 def main(
