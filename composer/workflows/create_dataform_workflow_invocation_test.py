@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,23 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-A sample app demonstrating Google Cloud Trace
-"""
-import os
 
-import mock
-
-import app
+import internal_unit_testing
 
 
-def test_traces():
-    expected = "Lorem ipsum dolor sit amet"
-    os.environ["KEYWORD"] = expected
-    app.app.testing = True
-    exporter = mock.Mock()
-    app.configure_exporter(exporter)
-    client = app.app.test_client()
-    resp = client.get("/")
-    assert resp.status_code == 200
-    assert expected in resp.data.decode('utf-8')
+def test_create_dataform_workflow_invocation() -> None:
+    """Test that the DAG file can be successfully imported.
+    This tests that the DAG can be parsed, but does not run it in an Airflow
+    environment. This is a recommended confidence check by the official Airflow
+    docs: https://airflow.incubator.apache.org/tutorial.html#testing
+    """
+    from . import create_dataform_workflow_invocation
+
+    internal_unit_testing.assert_has_valid_dag(create_dataform_workflow_invocation)

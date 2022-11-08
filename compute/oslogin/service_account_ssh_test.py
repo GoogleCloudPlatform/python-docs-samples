@@ -95,7 +95,7 @@ def test_main(capsys):
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
-        assert_value = 'Linux {test_id}'.format(test_id=test_id)
+        assert_value = '{test_id}'.format(test_id=test_id)
         assert assert_value in out
 
     # Test SSH to the instance.
