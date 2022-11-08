@@ -18,7 +18,7 @@ from os import environ
 import uuid
 
 from google.cloud import servicedirectory_v1
-from google.cloud.servicedirectory_v1.types import registration_service
+from google.cloud.servicedirectory_v1.services import registration_service
 from google.cloud.servicedirectory_v1.types import namespace as gcs_namespace
 
 import pytest
