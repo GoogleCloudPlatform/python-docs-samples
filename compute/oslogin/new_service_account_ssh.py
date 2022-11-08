@@ -156,7 +156,6 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
             return ssh.stdout
 
 
-
 def main(
     cmd,
     project: str,
