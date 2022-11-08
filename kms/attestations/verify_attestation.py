@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google, LLC.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ obtained from Cloud HSM.
 For more information, visit https://cloud.google.com/kms/docs/attest-key.
 """
 
-# [START verify_attestations]
+# [START kms_verify_attestations]
 import argparse
 import gzip
 
@@ -69,7 +69,7 @@ def verify(attestation_file, bundle_file):
                 # errors can be ignored.
                 continue
         return False
-# [END verify_attestations]
+# [END kms_verify_attestations]
 
 
 if __name__ == '__main__':
