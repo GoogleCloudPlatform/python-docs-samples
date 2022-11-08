@@ -13,7 +13,7 @@ Samples, quickstarts, and other documentation are available at <a href="https://
 This quickstart shows you how to create and use encryption keys with Cloud Key Management Service.
 
 
-<a href="https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-kms&page=editor&open_in_editor=quickstart.py"><img alt="Open in Cloud Shell" src="http://gstatic.com/cloudssh/images/open-btn.png"> 
+<a href="https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/snippets/quickstart.py"><img alt="Open in Cloud Shell" src="http://gstatic.com/cloudssh/images/open-btn.png"> 
 </a>
 
 To run this sample:
@@ -38,7 +38,7 @@ More information about the Cloud KMS quickstart is available at https://cloud.go
 
 These samples use the [Google Cloud Client Library for Python][client_library_python].
 You can read the documentation for more details on API usage and use GitHub
-to <a href="https://github.com/googleapis/python-kms">browse the source</a> and [report issues][issues].
+to <a href="https://github.com/GoogleCloudPlatform/python-docs-samples/kms/snippets">browse the source</a> and [report issues][issues].
 
 ### Contributing
 View the [contributing guidelines][contrib_guide], the [Python style guide][py_style] for more information.
