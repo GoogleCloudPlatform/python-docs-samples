@@ -108,7 +108,11 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
-
+- labels:
+  - 'api: datalabeling'
+  to:
+  - python-sample-reviewers
+  
 assign_prs_by:
 - labels:
   - 'api: auth'
