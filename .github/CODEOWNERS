@@ -53,6 +53,7 @@
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers
+/optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers
 /people-and-planet-ai/**/*             @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
 /profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers

@@ -83,6 +83,10 @@ assign_issues_by:
   to:
   - alixhami
 - labels:
+  - 'api: optimization'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
   - 'api: people-and-planet-ai'
   to:
   - davidcavazos
