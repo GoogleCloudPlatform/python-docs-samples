@@ -16,7 +16,7 @@
 import quickstart
 
 
-def test_quickstart(capsys):
+def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     quickstart.quickstart()
     out, _ = capsys.readouterr()
     # Prints in-progress message
