@@ -39,7 +39,7 @@ def report_manual_error():
 
     client = error_reporting.Client()
     client.report("An error has occurred.")
-# [START error_reporting_setup_python_manual]
+# [END error_reporting_setup_python_manual]
 # [END error_reporting_manual]
 
 
