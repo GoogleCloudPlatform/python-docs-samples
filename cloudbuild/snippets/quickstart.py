@@ -18,7 +18,7 @@ import google.auth
 from google.cloud.devtools import cloudbuild_v1
 
 
-def quickstart():
+def quickstart() -> None:
     """Create and execute a simple Google Cloud Build configuration,
     print the in-progress status and print the completed status."""
 
