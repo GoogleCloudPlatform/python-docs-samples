@@ -113,6 +113,11 @@ assign_issues_by:
   to:
   - nicain
 - labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc  
+- labels:
   - 'api: monitoring'
   to: 
   - GoogleCloudPlatform/dee-observability
