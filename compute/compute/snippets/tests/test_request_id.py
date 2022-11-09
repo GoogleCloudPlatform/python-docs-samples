@@ -19,7 +19,7 @@ import google.auth
 from google.cloud import compute_v1
 import pytest
 
-from samples.snippets.instances.create_start_instance.create_windows_instance import \
+from ..instances.create_start_instance.create_windows_instance import \
     get_image_from_family
 
 from ..disks.delete import delete_disk
