@@ -78,8 +78,8 @@ with models.DAG(
         # entrypoint is used. The cmds parameter is templated.
         cmds=['echo'],
         # The namespace to run within Kubernetes, default namespace is
-        # `default`. In Composer 1 there is the potential for 
-        # the resource starvation of Airflow workers and scheduler 
+        # `default`. In Composer 1 there is the potential for
+        # the resource starvation of Airflow workers and scheduler
         # within the Cloud Composer environment,
         # the recommended solution is to increase the amount of nodes in order
         # to satisfy the computing requirements. Alternatively, launching pods
