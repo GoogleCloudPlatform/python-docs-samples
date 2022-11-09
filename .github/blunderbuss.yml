@@ -36,7 +36,7 @@ assign_issues_by:
 - labels:
   - 'api: cloudbuild'
   to:
-  - GoogleCloudPlatform/python-samples-owners
+  - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: cloudsql'
   to:
