@@ -50,7 +50,7 @@
 /media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers
-/monitoring/**/*                       @GoogleCloudPlatform/python-samples-reviewers
+/monitoring/**/*                       @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers

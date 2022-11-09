@@ -112,6 +112,9 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
+- labels:
+  - 'api: monitoring'
+  to: GoogleCloudPlatform/dee-observability
 
 assign_prs_by:
 - labels:
