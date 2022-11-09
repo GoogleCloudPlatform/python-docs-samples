@@ -34,6 +34,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/python-samples-owners
+- labels:
   - 'api: cloudsql'
   to:
   - GoogleCloudPlatform/infra-db-dpes
