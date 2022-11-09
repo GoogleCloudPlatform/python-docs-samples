@@ -110,7 +110,8 @@ assign_issues_by:
   - nicain
 - labels:
   - 'api: monitoring'
-  to: GoogleCloudPlatform/dee-observability
+  to: 
+  - GoogleCloudPlatform/dee-observability
 
 assign_prs_by:
 - labels:
