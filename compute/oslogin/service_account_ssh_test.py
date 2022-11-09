@@ -23,6 +23,7 @@ import backoff
 from google.auth.exceptions import RefreshError
 from google.oauth2 import service_account
 import googleapiclient.discovery
+import pytest
 
 from service_account_ssh import main
 
@@ -40,7 +41,7 @@ several necessary permissions.
 
 
 def test_main(capsys):
-
+    pytest.skip("We are disabling this test, as it will be replaced.")
     # Initialize variables.
     cmd = 'uname -a'
     project = os.environ['GOOGLE_CLOUD_PROJECT']

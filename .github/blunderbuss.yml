@@ -34,6 +34,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/torus-dpe
+- labels:
   - 'api: cloudsql'
   to:
   - GoogleCloudPlatform/infra-db-dpes
@@ -112,8 +116,12 @@ assign_issues_by:
   - 'api: datalabeling'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
-  - ivanmkc
-  
+  - ivanmkc  
+- labels:
+  - 'api: monitoring'
+  to: 
+  - GoogleCloudPlatform/dee-observability
+
 assign_prs_by:
 - labels:
   - 'api: auth'
