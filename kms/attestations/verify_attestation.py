@@ -31,7 +31,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 import pem
 
 
-def verify(attestation_file: str, bundle_file: str):bool
+def verify(attestation_file, bundle_file):
     """Verifies an attestation using a bundle of certificates.
 
     Args:
