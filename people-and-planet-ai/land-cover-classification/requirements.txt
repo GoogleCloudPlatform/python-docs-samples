@@ -4,5 +4,5 @@ earthengine-api==0.1.325
 folium==0.13.0
 google-cloud-aiplatform==1.17.1
 imageio==2.22.0
-plotly==5.10.0
+plotly==5.11.0
 tensorflow==2.10.0
