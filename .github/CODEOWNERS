@@ -25,6 +25,7 @@
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
 /blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers
 /cdn/**/*                              @mpwarres @GoogleCloudPlatform/python-samples-reviewers
+/cloudbuild/**/*                       @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /composer/**/*                         @leahecole @rachael-ds @rafalbiegacz @GoogleCloudPlatform/python-samples-reviewers
@@ -32,6 +33,7 @@
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
 /dataflow/**/*                         @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
+/datalabeling/**/*                     @GoogleCloudPlatform/python-samples-reviewers @ivanmkc
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
@@ -49,7 +51,7 @@
 /media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers
-/monitoring/**/*                       @GoogleCloudPlatform/python-samples-reviewers
+/monitoring/**/*                       @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers
