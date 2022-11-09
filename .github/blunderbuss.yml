@@ -34,6 +34,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/torus-dpe
+- labels:
   - 'api: cloudsql'
   to:
   - GoogleCloudPlatform/infra-db-dpes
@@ -108,6 +112,10 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
+- labels:
+  - 'api: monitoring'
+  to: 
+  - GoogleCloudPlatform/dee-observability
 
 assign_prs_by:
 - labels:
