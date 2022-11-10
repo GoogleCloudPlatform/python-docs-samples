@@ -24,6 +24,7 @@ import uuid
 
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
+import backoff
 import pytest
 
 # Unique suffix to create distinct service names
@@ -36,61 +37,38 @@ REGION = "us-west1"
 @pytest.fixture
 def setup_job():
     # Build container image and run the job
-    # Retry up to 3 times
-    built = False
-    for x in range(3):
-        try:
-            subprocess.check_call(
-                [
-                    "gcloud",
-                    "builds",
-                    "submit",
-                    "--config",
-                    "e2e_test_setup.yaml",
-                    "--project",
-                    PROJECT,
-                    "--substitutions",
-                    "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-                ]
-            )
-            built = True
-        except Exception as e:
-            print(e)
-
-        if built:
-            break
-
-        # Linear backoff
-        time.sleep(x * 10)
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    subprocess.check_call(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            "--config",
+            "e2e_test_setup.yaml",
+            "--project",
+            PROJECT,
+            "--substitutions",
+            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+        ]
+    )
 
     yield SERVICE
 
     # Clean up the test resource
-    destroyed = False
-    for x in range(3):
-        try:
-            subprocess.check_call(
-                [
-                    "gcloud",
-                    "builds",
-                    "submit",
-                    "--config",
-                    "e2e_test_cleanup.yaml",
-                    "--project",
-                    PROJECT,
-                    "--substitutions",
-                    "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-                ]
-            )
-            destroyed = True
-        except Exception as e:
-            print(e)
-
-        if destroyed:
-            break
-
-        # Linear backoff
-        time.sleep(x * 10)
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    subprocess.check_call(
+        [
+            "gcloud",
+            "builds",
+            "submit",
+            "--config",
+            "e2e_test_cleanup.yaml",
+            "--project",
+            PROJECT,
+            "--substitutions",
+            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+        ]
+    )
 
 
 def test_end_to_end(setup_job):
