@@ -55,7 +55,7 @@ def setup_job():
             )
             built = True
         except Exception as e:
-            print e
+            print(e)
             
         if built:
             break
@@ -84,7 +84,7 @@ def setup_job():
             )
             destroyed = True
         except Exception as e:
-            print e
+            print(e)
             
         if destroyed:
             break
