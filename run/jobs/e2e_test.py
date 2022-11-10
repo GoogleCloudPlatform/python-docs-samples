@@ -56,10 +56,10 @@ def setup_job():
             built = True
         except Exception as e:
             print(e)
-            
+
         if built:
             break
-            
+
         # Linear backoff
         time.sleep(x * 10)
 
@@ -85,10 +85,10 @@ def setup_job():
             destroyed = True
         except Exception as e:
             print(e)
-            
+
         if destroyed:
             break
-            
+
         # Linear backoff
         time.sleep(x * 10)
 
