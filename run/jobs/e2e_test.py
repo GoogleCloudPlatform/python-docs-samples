@@ -36,36 +36,61 @@ REGION = "us-west1"
 @pytest.fixture
 def setup_job():
     # Build container image and run the job
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_setup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
+    # Retry up to 3 times
+    built = False
+    for x in range(3):
+        try:
+            subprocess.check_call(
+                [
+                    "gcloud",
+                    "builds",
+                    "submit",
+                    "--config",
+                    "e2e_test_setup.yaml",
+                    "--project",
+                    PROJECT,
+                    "--substitutions",
+                    "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+                ]
+            )
+            built = True
+        except Exception as e:
+            print e
+            
+        if built:
+            break
+            
+        # Linear backoff
+        time.sleep(x * 10)
 
     yield SERVICE
 
     # Clean up the test resource
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_cleanup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
+    destroyed = False
+    for x in range(3):
+        try:
+            subprocess.check_call(
+                [
+                    "gcloud",
+                    "builds",
+                    "submit",
+                    "--config",
+                    "e2e_test_cleanup.yaml",
+                    "--project",
+                    PROJECT,
+                    "--substitutions",
+                    "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+                ]
+            )
+            destroyed = True
+        except Exception as e:
+            print e
+            
+        if destroyed:
+            break
+            
+        # Linear backoff
+        time.sleep(x * 10)
 
 
 def test_end_to_end(setup_job):
