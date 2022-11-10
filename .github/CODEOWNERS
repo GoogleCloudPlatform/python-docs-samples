@@ -65,6 +65,7 @@
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
+/texttospeech/snippets                 @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
