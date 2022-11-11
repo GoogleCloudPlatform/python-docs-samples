@@ -28,6 +28,7 @@ processor_version_id = "pretrained-form-parser-v1.0-2020-09-23"
 gcs_input_uri = "gs://cloud-samples-data/documentai/invoice.pdf"
 input_mime_type = "application/pdf"
 gcs_output_uri_prefix = uuid4()
+field_mask = "text,pages.pageNumber"
 BUCKET_NAME = f"document-ai-python-{uuid4()}"
 
 
@@ -56,6 +57,7 @@ def test_batch_process_documents_processor_version(capsys, test_bucket):
         input_mime_type=input_mime_type,
         gcs_output_bucket=f"gs://{test_bucket}",
         gcs_output_uri_prefix=gcs_output_uri_prefix,
+        field_mask=field_mask,
     )
     out, _ = capsys.readouterr()
 

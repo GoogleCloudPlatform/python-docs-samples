@@ -29,6 +29,7 @@ from google.cloud import documentai, storage
 # input_mime_type = "application/pdf"
 # gcs_output_bucket = "YOUR_OUTPUT_BUCKET_NAME" # Format: gs://bucket
 # gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX" # Format: directory/subdirectory/
+# field_mask = "text,entities,pages.pageNumber"  # Optional. The fields to return in the Document object.
 
 
 def batch_process_documents_processor_version(
@@ -40,6 +41,7 @@ def batch_process_documents_processor_version(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
+    field_mask: str = None,
     timeout: int = 400,
 ):
 
@@ -67,7 +69,7 @@ def batch_process_documents_processor_version(
     destination_uri = f"{gcs_output_bucket}/{gcs_output_uri_prefix}/"
 
     gcs_output_config = documentai.DocumentOutputConfig.GcsOutputConfig(
-        gcs_uri=destination_uri
+        gcs_uri=destination_uri, field_mask=field_mask
     )
 
     # Where to write results
