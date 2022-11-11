@@ -33,6 +33,7 @@
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
 /dataflow/**/*                         @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
+/datalabeling/**/*                     @GoogleCloudPlatform/python-samples-reviewers @ivanmkc
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
@@ -55,6 +56,7 @@
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers
 /notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers
+/optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers
 /people-and-planet-ai/**/*             @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
 /profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers
@@ -62,6 +64,7 @@
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
+/secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
