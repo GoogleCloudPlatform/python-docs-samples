@@ -20,6 +20,7 @@ from samples.snippets import process_document_ocr_sample
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "52a38e080c1a7296"
+processor_version = "rc"
 file_path = "resources/handwritten_form.pdf"
 mime_type = "application/pdf"
 
@@ -29,6 +30,7 @@ def test_process_documents(capsys):
         project_id=project_id,
         location=location,
         processor_id=processor_id,
+        processor_version=processor_version,
         file_path=file_path,
         mime_type=mime_type,
     )
