@@ -22,9 +22,9 @@ import subprocess
 import time
 import uuid
 
+import backoff
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
-import backoff
 import pytest
 
 # Unique suffix to create distinct service names
@@ -74,6 +74,7 @@ def setup_job():
     setup()
     yield SERVICE
     teardown()
+
 
 def test_end_to_end(setup_job):
     client = LoggingServiceV2Client()
