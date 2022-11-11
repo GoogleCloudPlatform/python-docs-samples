@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 import tempfile
 import textwrap
 
@@ -61,7 +62,7 @@ def model_path(bucket_name: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def cloud_run_service_name(unique_name: str, location: str) -> str:
+def cloud_run_service_name(unique_name: str, location: str) -> Iterable[str]:
     # The notebook itself creates the service.
     service_name = unique_name
     yield service_name
@@ -69,7 +70,7 @@ def cloud_run_service_name(unique_name: str, location: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def aiplatform_model_name(unique_name: str, location: str) -> str:
+def aiplatform_model_name(unique_name: str, location: str) -> Iterable[str]:
     # The notebook itself creates the service.
     model_name = unique_name.replace("-", "_")
     yield model_name
@@ -164,60 +165,62 @@ def test_land_cover_tensorflow(
                 ee_init()
                 """
             ),
-            sections=[
-                "# 📚 Understand the data",
-                "# 🗄 Create the dataset",
-                "# 🧠 Train the model",
-                "## 💻 Local predictions",
-                "## ☁️ Cloud Run predictions",
-                "## 🧺 Dataflow batch prediction",
-                "## 🌍 Earth Engine with AI Platform",
-            ],
-            variables={
+            sections={
+                "# 📚 Understand the data": {},
                 "# 🗄 Create the dataset": {
-                    "points_per_class": 1,
-                    "--data-path": f"gs://{bucket_name}/dataflow-data",
+                    "variables": {
+                        "points_per_class": 1,
+                        "--data-path": f"gs://{bucket_name}/dataflow-data",
+                    },
+                    "replace": {
+                        '--runner="DataflowRunner"': " ".join(
+                            [
+                                '--runner="DataflowRunner"',
+                                f"--job_name={unique_name}-dataset",
+                                "--max-requests=1",
+                            ]
+                        )
+                    },
                 },
                 "# 🧠 Train the model": {
-                    "display_name": unique_name,
-                    "data_path": data_path,
-                    "epochs": 1,
+                    "variables": {
+                        "display_name": unique_name,
+                        "data_path": data_path,
+                        "epochs": 1,
+                    },
                 },
                 "## 💻 Local predictions": {
-                    "model_path": model_path,
+                    "variables": {
+                        "model_path": model_path,
+                    },
                 },
                 "## ☁️ Cloud Run predictions": {
-                    "service_name": cloud_run_service_name,
-                    "model_path": model_path,
-                    "identity_token": identity_token,
+                    "variables": {
+                        "service_name": cloud_run_service_name,
+                        "model_path": model_path,
+                        "identity_token": identity_token,
+                    },
                 },
                 "## 🧺 Dataflow batch prediction": {
-                    "model_path": model_path,
+                    "variables": {
+                        "model_path": model_path,
+                    },
+                    "replace": {
+                        '--runner="DataflowRunner"': " ".join(
+                            [
+                                '--runner="DataflowRunner"',
+                                f"--job_name={unique_name}-predict",
+                                "--max-requests=1",
+                                f"--locations-file={locations_file.name}",
+                            ]
+                        )
+                    },
                 },
                 "## 🌍 Earth Engine with AI Platform": {
-                    "model_name": aiplatform_model_name,
-                    "model_path": model_path,
-                },
-            },
-            replace={
-                "# 🗄 Create the dataset": {
-                    '--runner="DataflowRunner"': " ".join(
-                        [
-                            '--runner="DataflowRunner"',
-                            f"--job_name={unique_name}-dataset",
-                            "--max-requests=1",
-                        ]
-                    )
-                },
-                "## 🧺 Dataflow batch prediction": {
-                    '--runner="DataflowRunner"': " ".join(
-                        [
-                            '--runner="DataflowRunner"',
-                            f"--job_name={unique_name}-predict",
-                            "--max-requests=1",
-                            f"--locations-file={locations_file.name}",
-                        ]
-                    )
+                    "variables": {
+                        "model_name": aiplatform_model_name,
+                        "model_path": model_path,
+                    },
                 },
             },
         )

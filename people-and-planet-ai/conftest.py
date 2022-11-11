@@ -65,7 +65,7 @@ def unique_name(test_name: str, unique_id: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def bucket_name(test_name: str, location: str, unique_id: str) -> str:
+def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
     # Override for local testing.
     if "GOOGLE_CLOUD_BUCKET" in os.environ:
         bucket_name = os.environ["GOOGLE_CLOUD_BUCKET"]
@@ -192,7 +192,6 @@ def aiplatform_cleanup(model_name: str, location: str, versions: list[str]) -> N
     )
 
 
-
 def run_notebook(
     ipynb_file: str,
     prelude: str = "",
@@ -203,7 +202,8 @@ def run_notebook(
     skip_shell_commands: bool = False,
     until_end: bool = False,
 ) -> None:
-    import nbclient
+    from nbclient.client import NotebookClient
+    from nbclient.exceptions import CellExecutionError
     import nbformat
 
     def notebook_filter_section(
@@ -283,10 +283,10 @@ def run_notebook(
 
     # Run the notebook.
     error = ""
-    client = nbclient.NotebookClient(nb)
+    client = NotebookClient(nb)
     try:
         client.execute()
-    except nbclient.exceptions.CellExecutionError as e:
+    except CellExecutionError as e:
         # Remove colors and other escape characters to make it easier to read in the logs.
         #   https://stackoverflow.com/a/33925425
         error = re.sub(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]", "", str(e))
@@ -299,22 +299,24 @@ def run_notebook(
 
 def run_notebook_parallel(
     ipynb_file: str,
-    prelude: str,
-    sections: list[str],
-    variables: dict[str, dict] = {},
-    replace: dict[str, dict[str, str]] = {},
-    skip_shell_commands: list[str] = [],
+    sections: dict[str, dict],
+    prelude: str = "",
+    variables: dict = {},
+    replace: dict[str, str] = {},
+    skip_shell_commands: bool = False,
 ) -> None:
     args = [
         {
             "ipynb_file": ipynb_file,
             "section": section,
-            "prelude": prelude,
-            "variables": variables.get(section, {}),
-            "replace": replace.get(section, {}),
-            "skip_shell_commands": section in skip_shell_commands,
+            "prelude": params.get("prelude", prelude),
+            "variables": {**variables, **params.get("variables", {})},
+            "replace": {**replace, **params.get("replace", {})},
+            "skip_shell_commands": params.get(
+                "skip_shell_commands", skip_shell_commands
+            ),
         }
-        for section in sections
+        for section, params in sections.items()
     ]
     with multiprocessing.Pool(len(args)) as pool:
         pool.map(_run_notebook_section, args)
