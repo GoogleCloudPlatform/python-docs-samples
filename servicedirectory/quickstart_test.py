@@ -43,19 +43,18 @@ def namespace(
         name=client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
     )
 
-    client.create_namespace(
-        parent=f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
-        namespace=namespace,
-        namespace_id=NAMESPACE_ID,
-    )
     try:
+        client.create_namespace(
+            parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
+            namespace=namespace,
+            namespace_id=NAMESPACE_ID,
+        )
         yield namespace
     finally:
         client.delete_namespace(name=namespace.name)
 
 
-def test_list_namespace(namespace: gcs_namespace.Namespace) -> None:
-    assert namespace.name in [
-        each.name
-        for each in quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
-    ]
+
+def test_list_namespace(namespace):
+    google_cloud_namespaces = quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
+    assert namespace.name in [_namespace.name for _namespace in google_cloud_namespaces]
