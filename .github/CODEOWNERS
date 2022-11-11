@@ -79,6 +79,7 @@
 /run/**/*                              @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
+/securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
