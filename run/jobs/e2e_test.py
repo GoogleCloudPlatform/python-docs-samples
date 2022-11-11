@@ -38,38 +38,42 @@ REGION = "us-west1"
 def setup_job():
     # Build container image and run the job
     @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_setup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
-
-    yield SERVICE
+    def setup():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_setup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
 
     # Clean up the test resource
     @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_cleanup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
+    def teardown():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_cleanup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
 
+    # Run the fixture
+    setup()
+    yield SERVICE
+    teardown()
 
 def test_end_to_end(setup_job):
     client = LoggingServiceV2Client()
