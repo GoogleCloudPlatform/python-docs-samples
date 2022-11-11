@@ -19,8 +19,8 @@ import uuid
 from google.cloud import iam_v2
 from google.cloud.iam_v2 import types
 import pytest
-from cloud-client.snippets.create_deny_policy import create_deny_policy
-from cloud-client.snippets.delete_deny_policy import delete_deny_policy
+from snippets.create_deny_policy import create_deny_policy
+from snippets.delete_deny_policy import delete_deny_policy
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
