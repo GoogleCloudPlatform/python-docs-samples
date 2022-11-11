@@ -45,7 +45,7 @@ def namespace(
 
     try:
         client.create_namespace(
-            parent=f'projects/{PROJECT_ID}/locations/{LOCATION_ID}',
+            parent=f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
             namespace=namespace,
             namespace_id=NAMESPACE_ID,
         )
