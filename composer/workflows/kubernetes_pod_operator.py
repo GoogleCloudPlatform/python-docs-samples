@@ -20,7 +20,7 @@ import datetime
 from airflow import models
 from airflow.kubernetes.secret import Secret
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
-
+from kubernetes.client import models as k8s
 
 # A Secret is an object that contains a small amount of sensitive data such as
 # a password, a token, or a key. Such information might otherwise be put in a
@@ -48,7 +48,18 @@ secret_volume = Secret(
     # Key in the form of service account file name
     key='service-account.json')
 # [END composer_kubernetespodoperator_secretobject]
-
+# The way to specify resources for pods changed in Airflow 2.3
+# This is a workaround to ensure users  
+# running Airflow 2.0<Airflow 2.3 aren't broken
+airflow_version = float(airflow.__version__)
+if airflow_version >= 2.3:
+  CONTAINER_RESOURCES = k8s.V1ResourceRequirements(
+      limits={'memory': '250M', 'cpu': "100m"},
+  )
+  RESOURCES = None
+else:
+  CONTAINER_RESOURCES = None
+  RESOURCES={'limit_memory': "250M", 'limit_cpu': "100m"}
 # If you are running Airflow in more than one time zone
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
 # for best practices
@@ -226,7 +237,14 @@ with models.DAG(
         # resources = pod.Resources() instead passing a dict
         # For more info see:
         # https://github.com/apache/airflow/pull/4551
-        resources={'limit_memory': "250M", 'limit_cpu': "100m"},
+        # At the top of this DAG there is a check for Airflow version
+        # Prior to Airflow 2.3 and the cncf providers package 5.0.0
+        # resources were passed as a dictionary. This change was made in
+        # https://github.com/apache/airflow/pull/27197
+        # Additionally, "memory" and "cpu" were previously named
+        # "limit_memory" and "limit_cpu"
+        resources=RESOURCES,
+        container_resources=CONTAINER_RESOURCES, 
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.
         config_file='/home/airflow/composer_kube_config',
