@@ -18,6 +18,7 @@ assign_issues_by:
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: secretmanager'
   to:
   - GoogleCloudPlatform/aap-dpes
 - labels:
