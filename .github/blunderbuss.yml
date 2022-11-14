@@ -143,7 +143,11 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: clouderrorreporting'
+  to:
+  - googleapis/python-samples-reviewers
+  - googleapis/api-logging
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
