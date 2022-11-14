@@ -26,7 +26,7 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.3"
+SCRIPT_VERSION = "1.4"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
@@ -3455,6 +3455,10 @@ class DatabaseImporter(DatabasePorter):
             "${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
             f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
+            "export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://"
+            "${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
+            f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
             "export AIRFLOW__CORE__FERNET_KEY="
             f"{self.fernet_key},{self.fernet_key_from_source_environment} "
             "&& airflow rotate-fernet-key"
@@ -3496,6 +3500,10 @@ class DatabaseImporter(DatabasePorter):
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
             f"{DatabaseImporter.TEMPORARY_DATABASE_NAME}"
         )
 
@@ -3524,7 +3532,7 @@ class DatabaseImporter(DatabasePorter):
             "airflow connections add airflow_db "
             "--conn-type postgres "
             "--conn-login $SQL_USER "
-            "--conn-password $SQL_PASSWORD "
+            '--conn-password="$SQL_PASSWORD" '
             f"--conn-host {self.sql_proxy} "
             f"--conn-port {DatabaseImporter.SQL_PROXY_PORT} "
             f"--conn-schema {self.sql_database}",
@@ -3537,7 +3545,12 @@ class DatabaseImporter(DatabasePorter):
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
-            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} && airflow db upgrade"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& airflow db upgrade"
         )
         output = EnvironmentUtils.execute_command_in_a_pod(
             self.worker_pod_namespace,
