@@ -15,7 +15,9 @@ ignoreFiles:
   - "**/constraints.txt"
   - "**/constraints-test.txt"
   - "**/apt.txt"
-  
+  - "**/ghcnd-stations.txt"
+
+ignoreLicenseYear: true
 
 sourceFileExtensions:
   - "ts"

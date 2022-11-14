@@ -124,6 +124,7 @@ def _determine_local_import_names(start_dir: str) -> List[str]:
 # Linting with flake8.
 #
 # We ignore the following rules:
+#   ANN101: missing type annotation for self in method
 #   E203: whitespace before ‘:’
 #   E266: too many leading ‘#’ for block comment
 #   E501: line too long
@@ -137,7 +138,7 @@ FLAKE8_COMMON_ARGS = [
     "--max-complexity=20",
     "--import-order-style=google",
     "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
+    "--ignore=ANN101,E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
     "--max-line-length=88",
 ]
 
@@ -184,42 +185,55 @@ def _session_tests(
 ) -> None:
     # check for presence of tests
     test_list = glob.glob("*_test.py") + glob.glob("test_*.py")
+    test_list.extend(glob.glob("tests"))
+
     if len(test_list) == 0:
         print("No tests found, skipping directory.")
-    else:
-        if TEST_CONFIG["pip_version_override"]:
-            pip_version = TEST_CONFIG["pip_version_override"]
-            session.install(f"pip=={pip_version}")
-        """Runs py.test for a particular project."""
-        if os.path.exists("requirements.txt"):
-            if os.path.exists("constraints.txt"):
-                session.install("-r", "requirements.txt", "-c", "constraints.txt")
-            else:
-                session.install("-r", "requirements.txt")
+        return
 
-        if os.path.exists("requirements-test.txt"):
-            if os.path.exists("constraints-test.txt"):
-                session.install(
-                    "-r", "requirements-test.txt", "-c", "constraints-test.txt"
-                )
-            else:
-                session.install("-r", "requirements-test.txt")
+    if TEST_CONFIG["pip_version_override"]:
+        pip_version = TEST_CONFIG["pip_version_override"]
+        session.install(f"pip=={pip_version}")
+    """Runs py.test for a particular project."""
+    concurrent_args = []
+    if os.path.exists("requirements.txt"):
+        if os.path.exists("constraints.txt"):
+            session.install("-r", "requirements.txt", "-c", "constraints.txt")
+        else:
+            session.install("-r", "requirements.txt")
+        with open("requirements.txt") as rfile:
+            packages = rfile.read()
 
-        if INSTALL_LIBRARY_FROM_SOURCE:
-            session.install("-e", _get_repo_root())
+    if os.path.exists("requirements-test.txt"):
+        if os.path.exists("constraints-test.txt"):
+            session.install(
+                "-r", "requirements-test.txt", "-c", "constraints-test.txt"
+            )
+        else:
+            session.install("-r", "requirements-test.txt")
+        with open("requirements-test.txt") as rtfile:
+            packages += rtfile.read()
 
-        if post_install:
-            post_install(session)
+    if INSTALL_LIBRARY_FROM_SOURCE:
+        session.install("-e", _get_repo_root())
 
-        session.run(
-            "pytest",
-            *(PYTEST_COMMON_ARGS + session.posargs),
-            # Pytest will return 5 when no tests are collected. This can happen
-            # on travis where slow and flaky tests are excluded.
-            # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
-            success_codes=[0, 5],
-            env=get_pytest_env_vars(),
-        )
+    if post_install:
+        post_install(session)
+
+    if "pytest-parallel" in packages:
+        concurrent_args.extend(['--workers', 'auto', '--tests-per-worker', 'auto'])
+    elif "pytest-xdist" in packages:
+        concurrent_args.extend(['-n', 'auto'])
+
+    session.run(
+        "pytest",
+        *(PYTEST_COMMON_ARGS + session.posargs + concurrent_args),
+        # Pytest will return 5 when no tests are collected. This can happen
+        # on travis where slow and flaky tests are excluded.
+        # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
+        success_codes=[0, 5],
+        env=get_pytest_env_vars(),
+    )
 
 
 @nox.session(python=ALL_VERSIONS)

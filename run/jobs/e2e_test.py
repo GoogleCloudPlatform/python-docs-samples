@@ -19,8 +19,10 @@
 import datetime
 import os
 import subprocess
+import time
 import uuid
 
+import backoff
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 import pytest
@@ -29,41 +31,49 @@ import pytest
 SUFFIX = uuid.uuid4().hex[:10]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 SERVICE = "job-quickstart-" + SUFFIX
+REGION = "us-west1"
 
 
 @pytest.fixture
 def setup_job():
     # Build container image and run the job
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_setup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX,
-        ]
-    )
-
-    yield SERVICE
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    def setup():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_setup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
 
     # Clean up the test resource
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_cleanup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX,
-        ]
-    )
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    def teardown():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_cleanup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
+
+    # Run the fixture
+    setup()
+    yield SERVICE
+    teardown()
 
 
 def test_end_to_end(setup_job):
@@ -74,21 +84,26 @@ def test_end_to_end(setup_job):
     filter_date = now - datetime.timedelta(minutes=3)
     filters = (
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
-        "resource.type=cloud_run_revision "
-        f"AND resource.labels.service_name={SERVICE} "
-        "resource.labels.location = \"us-central1\" "
+        "resource.type=cloud_run_job "
+        f"AND resource.labels.job_name={SERVICE} "
+        f"resource.labels.location = \"{REGION}\" "
         "-protoPayload.serviceName=\"run.googleapis.com\""
     )
 
-    # Retry a maximum number of 10 times to find results in stackdriver
+    # Retry a maximum number of 5 times to find results in Cloud Logging
     found = False
-    iterator = client.list_log_entries(
-        {"resource_names": resource_names, "filter": filters}
-    )
-    for entry in iterator:
-        if "Task" in entry.text_payload:
-            found = True
-            # If there are any results, exit loop
+    for x in range(5):
+        iterator = client.list_log_entries(
+            {"resource_names": resource_names, "filter": filters}
+        )
+        for entry in iterator:
+            if "Task" in entry.text_payload:
+                found = True
+                # If there are any results, exit loop
+                break
+        if found:
             break
+        # Linear backoff
+        time.sleep(x * 10)
 
     assert found

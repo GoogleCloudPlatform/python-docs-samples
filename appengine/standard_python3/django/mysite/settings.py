@@ -67,11 +67,12 @@ DEBUG = env("DEBUG")
 # to App Engine. This code takes the URL and converts it to both these settings formats.
 APPENGINE_URL = env("APPENGINE_URL", default=None)
 if APPENGINE_URL:
-    # Ensure the HTTPS is in the URL before it's used.
-    APPENGINE_URL = urlparse(APPENGINE_URL, "https").geturl()
+    # Ensure a scheme is present in the URL before it's processed.
+    if not urlparse(APPENGINE_URL).scheme:
+        APPENGINE_URL = f"https://{APPENGINE_URL}"
 
-    ALLOWED_HOSTS = [APPENGINE_URL]
-    CSRF_TRUSTED_ORIGINS = [urlparse(APPENGINE_URL).netloc]
+    ALLOWED_HOSTS = [urlparse(APPENGINE_URL).netloc]
+    CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ["*"]

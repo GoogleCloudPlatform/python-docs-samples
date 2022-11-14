@@ -21,12 +21,14 @@ from google.cloud import firestore
 
 def quickstart_new_instance():
     # [START firestore_setup_client_create]
+    # [START firestore_setup_client_create_with_project_id]
     from google.cloud import firestore
 
     # The `project` parameter is optional and represents which project the client
     # will act on behalf of. If not supplied, the client falls back to the default
     # project inferred from the environment.
     db = firestore.Client(project='my-project-id')
+    # [END firestore_setup_client_create_with_project_id]
     # [END firestore_setup_client_create]
 
     return db
@@ -154,7 +156,7 @@ class City(object):
         # [END_EXCLUDE]
 
     def __repr__(self):
-        return(
+        return (
             f'City(\
                 name={self.name}, \
                 country={self.country}, \
@@ -209,8 +211,12 @@ def add_data_with_id():
 def add_custom_class_generated_id():
     db = firestore.Client()
     # [START firestore_data_set_id_random_collection]
-    city = City(name=u'Tokyo', state=None, country=u'Japan')
-    db.collection(u'cities').add(city.to_dict())
+    city = {
+        u'name': u'Tokyo',
+        u'country': u'Japan'
+    }
+    update_time, city_ref = db.collection(u'cities').add(city)
+    print(f'Added document with id {city_ref.id}')
     # [END firestore_data_set_id_random_collection]
 
 
@@ -855,12 +861,12 @@ def delete_full_collection():
 
     # [START firestore_data_delete_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(batch_size).stream()
+        docs = coll_ref.list_documents(page_size=batch_size)
         deleted = 0
 
         for doc in docs:
-            print(f'Deleting doc {doc.id} => {doc.to_dict()}')
-            doc.reference.delete()
+            print(f'Deleting doc {doc.id} => {doc.get().to_dict()}')
+            doc.delete()
             deleted = deleted + 1
 
         if deleted >= batch_size:

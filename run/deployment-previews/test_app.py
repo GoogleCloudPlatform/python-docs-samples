@@ -13,13 +13,15 @@
 # limitations under the License.
 
 import os
-from typing import Any, List, NoReturn
+from typing import List, NoReturn, TypeVar
 
 from click.testing import CliRunner
 from mock import MagicMock, patch
 import pytest
 
 from check_status import cli
+
+a = TypeVar("a")
 
 MOCK_SERVICE_NAME = "myservice"
 MOCK_GH_TOKEN = "aaaaa"
@@ -70,7 +72,7 @@ def service_data(name: str, tags: List[str]) -> dict:
 
 
 @patch("check_status.discovery")
-def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
+def test_set_wrongtag(discovery_mock: a) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)
@@ -110,7 +112,7 @@ def test_set_wrongtag(discovery_mock: Any) -> NoReturn:
 
 @patch("check_status.discovery")
 @patch("check_status.github")
-def test_set_check_calls(github_mock: Any, discovery_mock: Any) -> NoReturn:
+def test_set_check_calls(github_mock: a, discovery_mock: a) -> NoReturn:
     service_mock = MagicMock()
     service_mock.projects = MagicMock(return_value=service_mock)
     service_mock.locations = MagicMock(return_value=service_mock)

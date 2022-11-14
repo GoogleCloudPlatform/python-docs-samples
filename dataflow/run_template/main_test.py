@@ -66,7 +66,7 @@ def dataflow_job_name(request):
 
     # cancel the Dataflow job after running the test
     # no need to cancel after the empty_args test - it won't create a job and cancellation will throw an error
-    if label != "test_run_template_empty":
+    if label != "test-run-template-empty":
         dataflow_jobs_cancel(job_name)
     else:
         print("No active jobs to cancel, cancelling skipped.")
@@ -86,12 +86,15 @@ def get_job_id_from_name(job_name):
     )
     response = jobs_request.execute()
 
-    # search for the job in the list that has our name (names are unique)
-    for job in response["jobs"]:
-        if job["name"] == job_name:
-            return job["id"]
-    # if we don't find a job, just return
-    return
+    try:
+        # search for the job in the list that has our name (names are unique)
+        for job in response["jobs"]:
+            if job["name"] == job_name:
+                return job["id"]
+        # if we don't find a job, just return
+        return
+    except Exception as e:
+        raise ValueError(f"response:\n{response}") from e
 
 
 # We retry the cancel operation a few times until the job is in a state where it can be cancelled
@@ -115,7 +118,7 @@ def dataflow_jobs_cancel(job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_empty")], indirect=True
+    "dataflow_job_name", [("test-run-template-empty")], indirect=True
 )
 def test_run_template_python_empty_args(app, dataflow_job_name):
     project = PROJECT
@@ -125,7 +128,7 @@ def test_run_template_python_empty_args(app, dataflow_job_name):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_python")], indirect=True
+    "dataflow_job_name", [("test-run-template-python")], indirect=True
 )
 def test_run_template_python(app, dataflow_job_name):
     project = PROJECT
@@ -135,7 +138,7 @@ def test_run_template_python(app, dataflow_job_name):
         "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
     }
     res = main.run(project, dataflow_job_name, template, parameters)
-    assert "test_run_template_python" in res["job"]["name"]
+    assert dataflow_job_name in res["job"]["name"]
 
 
 def test_run_template_http_empty_args(app):
@@ -145,7 +148,7 @@ def test_run_template_http_empty_args(app):
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_url")], indirect=True
+    "dataflow_job_name", [("test-run-template-url")], indirect=True
 )
 def test_run_template_http_url(app, dataflow_job_name):
     args = {
@@ -158,11 +161,11 @@ def test_run_template_http_url(app, dataflow_job_name):
     with app.test_request_context("/?" + url_encode(args)):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_url" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_data")], indirect=True
+    "dataflow_job_name", [("test-run-template-data")], indirect=True
 )
 def test_run_template_http_data(app, dataflow_job_name):
     args = {
@@ -175,11 +178,11 @@ def test_run_template_http_data(app, dataflow_job_name):
     with app.test_request_context(data=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_data" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]
 
 
 @pytest.mark.parametrize(
-    "dataflow_job_name", [("test_run_template_json")], indirect=True
+    "dataflow_job_name", [("test-run-template-json")], indirect=True
 )
 def test_run_template_http_json(app, dataflow_job_name):
     args = {
@@ -192,4 +195,4 @@ def test_run_template_http_json(app, dataflow_job_name):
     with app.test_request_context(json=args):
         res = main.run_template(flask.request)
         data = json.loads(res)
-        assert "test_run_template_json" in data["job"]["name"]
+        assert dataflow_job_name in data["job"]["name"]

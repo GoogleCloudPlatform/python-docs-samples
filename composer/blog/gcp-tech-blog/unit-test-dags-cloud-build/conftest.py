@@ -27,7 +27,7 @@ def airflow_database():
     # We use separate directory for local db path per session
     # by setting AIRFLOW_HOME env var, which is done in noxfile_config.py.
 
-    assert('AIRFLOW_HOME' in os.environ)
+    assert 'AIRFLOW_HOME' in os.environ
 
     airflow_home = os.environ["AIRFLOW_HOME"]
     airflow_db = f"{airflow_home}/airflow.db"
@@ -36,4 +36,4 @@ def airflow_database():
     airflow.utils.db.resetdb(rbac=None)
 
     # Making sure we are using a data file there.
-    assert(os.path.isfile(airflow_db))
+    assert os.path.isfile(airflow_db)
