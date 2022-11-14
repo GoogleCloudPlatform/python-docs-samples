@@ -15,6 +15,7 @@
 import json
 import re
 import subprocess
+import time
 import uuid
 
 import backoff
@@ -63,6 +64,7 @@ def version():
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
 
+    time.sleep(10)      # There may be a short delay before responsive
     yield project_id, version_id
 
     gcloud_cli(f"app versions delete {version_id}")
