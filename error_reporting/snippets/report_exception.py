@@ -15,7 +15,6 @@
 # limitations under the License.
 
 
-# [START error_reporting]
 # [START error_reporting_quickstart]
 # [START error_reporting_setup_python]
 def simulate_error():
@@ -29,7 +28,6 @@ def simulate_error():
         client.report_exception()
 # [END error_reporting_setup_python]
 # [END error_reporting_quickstart]
-# [END error_reporting]
 
 
 # [START error_reporting_manual]
