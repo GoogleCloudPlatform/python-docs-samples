@@ -119,7 +119,6 @@ assign_issues_by:
   - nicain
 - labels:
   - 'api: datalabeling'
-  - 'api: talent'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc  
@@ -144,7 +143,10 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: talent'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
