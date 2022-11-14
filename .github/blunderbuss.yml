@@ -127,6 +127,11 @@ assign_issues_by:
   - 'api: monitoring'
   to: 
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
 
 assign_prs_by:
 - labels:
