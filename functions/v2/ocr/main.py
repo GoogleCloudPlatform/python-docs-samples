@@ -17,12 +17,12 @@ import base64
 import json
 import os
 
+import functions_framework
+
 from google.cloud import pubsub_v1
 from google.cloud import storage
 from google.cloud import translate_v2 as translate
 from google.cloud import vision
-
-import functions_framework
 
 
 vision_client = vision.ImageAnnotatorClient()
@@ -31,6 +31,7 @@ publisher = pubsub_v1.PublisherClient()
 storage_client = storage.Client()
 
 project_id = os.environ.get("GCP_PROJECT")
+# [END functions_cloudevent_ocr]
 
 
 # [START functions_ocr_process]
@@ -61,8 +62,6 @@ def process_image(cloud_event):
     detect_text(bucket, filename)
 
     print(f"File {filename} processed.")
-
-
 # [END functions_ocr_process]
 
 
@@ -116,9 +115,7 @@ def detect_text(bucket, filename):
     # Wait for each publish request to be completed before exiting
     for future in futures:
         future.result()
-
-
-# [START functions_ocr_detect]
+# [END functions_ocr_detect]
 
 
 # [START functions_ocr_translate]
@@ -169,8 +166,6 @@ def translate_text(cloud_event):
     topic_path = publisher.topic_path(project_id, topic_name)
     future = publisher.publish(topic_path, data=message_data)
     future.result()  # Wait for operation to complete
-
-
 # [END functions_ocr_translate]
 
 
@@ -214,6 +209,4 @@ def save_result(cloud_event):
     blob.upload_from_string(text)
 
     print("File saved.")
-
-
 # [END functions_ocr_save]
