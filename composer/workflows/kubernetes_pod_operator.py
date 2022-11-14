@@ -236,7 +236,7 @@ with models.DAG(
         # https://github.com/apache/airflow/pull/27197
         # Additionally, "memory" and "cpu" were previously named
         # "limit_memory" and "limit_cpu"
-        #resources={'limit_memory': "250M", 'limit_cpu': "100m"},
+        # resources={'limit_memory': "250M", 'limit_cpu': "100m"},
         container_resources=k8s.V1ResourceRequirements(
             limits={"memory": "250M", "cpu": "100m"},
         ),
