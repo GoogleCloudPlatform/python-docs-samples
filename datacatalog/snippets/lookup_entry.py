@@ -17,7 +17,7 @@
 
 def lookup_entry(override_values):
     """Retrieves Data Catalog entry for the given Google Cloud Platform resource."""
-    # [START datacatalog_lookup_dataset]
+    # [START data_catalog_lookup_dataset]
     # [START data_catalog_lookup_entry]
     from google.cloud import datacatalog_v1
 
@@ -93,4 +93,4 @@ def lookup_entry(override_values):
         f"Retrieved entry {entry.name} for Pub/Sub Topic resource {entry.linked_resource}"
     )
     # [END data_catalog_lookup_entry]
-    # [END datacatalog_lookup_dataset]
+    # [END data_catalog_lookup_dataset]
