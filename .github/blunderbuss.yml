@@ -119,6 +119,7 @@ assign_issues_by:
   - nicain
 - labels:
   - 'api: datalabeling'
+  - 'api: talent'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc  
