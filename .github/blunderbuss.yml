@@ -16,7 +16,7 @@ assign_issues_by:
 - labels:
   - 'api: documentai'
   to:
-  - nicain
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: appengine'
   - 'api: eventarc'
