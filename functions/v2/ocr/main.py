@@ -30,7 +30,7 @@ translate_client = translate.Client()
 publisher = pubsub_v1.PublisherClient()
 storage_client = storage.Client()
 
-project_id = os.environ["GCP_PROJECT"]
+project_id = os.environ.get("GCP_PROJECT")
 
 
 # [START functions_ocr_process]
@@ -61,14 +61,16 @@ def process_image(cloud_event):
     detect_text(bucket, filename)
 
     print(f"File {filename} processed.")
+
+
 # [END functions_ocr_process]
 
 
 # [START functions_ocr_detect]
 def detect_text(bucket, filename):
-    """ Extract the text from an image uploaded to Cloud Storage, then
-        publish messages requesting subscribing services translate the text
-        to each target language and save the result.
+    """Extract the text from an image uploaded to Cloud Storage, then
+    publish messages requesting subscribing services translate the text
+    to each target language and save the result.
     """
 
     print("Looking for text in image {}".format(filename))
@@ -81,7 +83,7 @@ def detect_text(bucket, filename):
     annotations = text_detection_response.text_annotations
 
     if len(annotations) > 0:
-            text = annotations[0].description
+        text = annotations[0].description
     else:
         text = ""
     print("Extracted text {} from image ({} chars).".format(text, len(text)))
@@ -91,13 +93,13 @@ def detect_text(bucket, filename):
     print("Detected language {} for text {}.".format(src_lang, text))
 
     # Submit a message to the bus for each target language
-    futures = []    # Asynchronous publish request statuses
+    futures = []  # Asynchronous publish request statuses
 
-    to_langs = os.environ["TO_LANG"].split(",")
+    to_langs = os.environ.get("TO_LANG", "").split(",")
     for target_lang in to_langs:
-        topic_name = os.environ["TRANSLATE_TOPIC"]
+        topic_name = os.environ.get("TRANSLATE_TOPIC")
         if src_lang == target_lang or src_lang == "und":
-            topic_name = os.environ["RESULT_TOPIC"]
+            topic_name = os.environ.get("RESULT_TOPIC")
 
         message = {
             "text": text,
@@ -114,6 +116,8 @@ def detect_text(bucket, filename):
     # Wait for each publish request to be completed before exiting
     for future in futures:
         future.result()
+
+
 # [START functions_ocr_detect]
 
 
@@ -121,11 +125,11 @@ def detect_text(bucket, filename):
 @functions_framework.cloud_event
 def translate_text(cloud_event):
     """Cloud Function triggered by PubSub when a message is received from
-       a subscription.
+    a subscription.
 
-       Translates the text in the message from the specified source language
-       to the requested target language, then sends a message requesting another
-       service save the result.
+    Translates the text in the message from the specified source language
+    to the requested target language, then sends a message requesting another
+    service save the result.
     """
 
     # Check that the received event is of the expected type, return error if not
@@ -138,7 +142,7 @@ def translate_text(cloud_event):
     # dictionary, and extract the fields from that dictionary.
     data = cloud_event.data["message"]
     try:
-        message_data = base64.b64decode(data["data"])
+        message_data = base64.b64decode(data)
         message = json.loads(message_data)
 
         text = message["text"]
@@ -164,7 +168,9 @@ def translate_text(cloud_event):
     message_data = json.dumps(message).encode("utf-8")
     topic_path = publisher.topic_path(project_id, topic_name)
     future = publisher.publish(topic_path, data=message_data)
-    future.result()     # Wait for operation to complete
+    future.result()  # Wait for operation to complete
+
+
 # [END functions_ocr_translate]
 
 
@@ -172,9 +178,9 @@ def translate_text(cloud_event):
 @functions_framework.cloud_event
 def save_result(cloud_event):
     """Cloud Function triggered by PubSub when a message is received from
-       a subscription.
+    a subscription.
 
-       Saves translated text to a Cloud Storage object as requested.
+    Saves translated text to a Cloud Storage object as requested.
     """
     # Check that the received event is of the expected type, return error if not
     expected_type = "google.cloud.pubsub.topic.v1.messagePublished"
@@ -186,7 +192,7 @@ def save_result(cloud_event):
     # dictionary, and extract the fields from that dictionary.
     data = cloud_event.data["message"]
     try:
-        message_data = base64.b64decode(data["data"]).decode("utf-8")
+        message_data = base64.b64decode(data)
         message = json.loads(message_data)
 
         text = message["text"]
@@ -208,4 +214,6 @@ def save_result(cloud_event):
     blob.upload_from_string(text)
 
     print("File saved.")
+
+
 # [END functions_ocr_save]
