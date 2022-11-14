@@ -25,13 +25,13 @@ COMPOSER_ENVIRONMENT = os.environ['COMPOSER_ENVIRONMENT']
 COMPOSER2_ENVIRONMENT = os.environ['COMPOSER2_ENVIRONMENT']
 
 
-def test_get_client_id(capsys):
+def test_get_client_id(capsys: pytest.LogCaptureFixture) -> None:
     get_client_id(PROJECT, COMPOSER_LOCATION, COMPOSER_ENVIRONMENT)
     out, _ = capsys.readouterr()
     assert out.endswith('.apps.googleusercontent.com\n') is True
 
 
-def test_get_client_id_composer_2(capsys):
+def test_get_client_id_composer_2(capsys: pytest.LogCaptureFixture) -> None:
     with pytest.raises(RuntimeError):
         get_client_id(PROJECT, COMPOSER_LOCATION, COMPOSER2_ENVIRONMENT)
         out, _ = capsys.readouterr()
