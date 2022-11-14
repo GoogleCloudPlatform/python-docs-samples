@@ -128,7 +128,7 @@ assign_prs_by:
 - labels:
   - 'api: documentai'
   to:
-  - nicain
+  - GoogleCloudPlatform/dee-data-ai
 
 
 assign_issues:
