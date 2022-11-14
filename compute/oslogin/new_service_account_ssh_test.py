@@ -26,7 +26,7 @@ import json
 import time
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import NotFound, BadRequest
 import google.auth
 from google.cloud import compute_v1
 from google.cloud import oslogin_v1
@@ -119,7 +119,7 @@ def ssh_firewall():
     yield firewall_client.get(project=PROJECT, firewall=TEST_ID)
     try:
         firewall_client.delete(project=PROJECT, firewall=TEST_ID)
-    except NotFound:
+    except (NotFound, BadRequest):
         # That means the GCE Enforcer deleted it before us
         pass
 
