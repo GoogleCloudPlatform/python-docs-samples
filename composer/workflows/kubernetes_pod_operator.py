@@ -22,7 +22,7 @@ from airflow.kubernetes.secret import Secret
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
-from kubernetes.client import models as k8s
+from kubernetes.client import models as k8s_models
 
 # A Secret is an object that contains a small amount of sensitive data such as
 # a password, a token, or a key. Such information might otherwise be put in a
@@ -237,7 +237,7 @@ with models.DAG(
         # Additionally, "memory" and "cpu" were previously named
         # "limit_memory" and "limit_cpu"
         # resources={'limit_memory': "250M", 'limit_cpu': "100m"},
-        container_resources=k8s.V1ResourceRequirements(
+        container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "250M", "cpu": "100m"},
         ),
         # Specifies path to kubernetes config. If no config is specified will
