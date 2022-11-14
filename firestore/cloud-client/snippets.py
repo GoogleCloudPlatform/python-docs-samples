@@ -1012,7 +1012,7 @@ def create_and_build_bundle():
 
 
 def _setup_tombstone(db):
-  now = datatime.datetime.now(tz=datetime.timezone.utc)
+  now = datetime.datetime.now(tz=datetime.timezone.utc)
   db.collection("WorkItems").document("tombstone").set({"created": now})
   db.collection("CompletionStats").document("all stats").set(
       {"created": now - datetime.timedelta(days=1)})
