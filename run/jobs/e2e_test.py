@@ -22,6 +22,7 @@ import subprocess
 import time
 import uuid
 
+import backoff
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 import pytest
@@ -36,36 +37,43 @@ REGION = "us-west1"
 @pytest.fixture
 def setup_job():
     # Build container image and run the job
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_setup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
-
-    yield SERVICE
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    def setup():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_setup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
 
     # Clean up the test resource
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--config",
-            "e2e_test_cleanup.yaml",
-            "--project",
-            PROJECT,
-            "--substitutions",
-            "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
-        ]
-    )
+    @backoff.on_exception(backoff.expo, subprocess.CalledProcessError)
+    def teardown():
+        subprocess.check_call(
+            [
+                "gcloud",
+                "builds",
+                "submit",
+                "--config",
+                "e2e_test_cleanup.yaml",
+                "--project",
+                PROJECT,
+                "--substitutions",
+                "_SERVICE=" + SERVICE + ",_VERSION=" + SUFFIX + ",_REGION=" + REGION,
+            ]
+        )
+
+    # Run the fixture
+    setup()
+    yield SERVICE
+    teardown()
 
 
 def test_end_to_end(setup_job):

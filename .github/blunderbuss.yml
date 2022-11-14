@@ -18,6 +18,7 @@ assign_issues_by:
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: secretmanager'
   to:
   - GoogleCloudPlatform/aap-dpes
 - labels:
@@ -34,6 +35,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/torus-dpe
+- labels:
   - 'api: cloudsql'
   to:
   - GoogleCloudPlatform/infra-db-dpes
@@ -47,6 +52,10 @@ assign_issues_by:
   - 'api: compute'
   to:
   - m-strzelczyk
+- labels:
+  - 'api: container'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
 - labels:
   - 'api: datascienceonramp'
   to:
@@ -79,6 +88,10 @@ assign_issues_by:
   to:
   - alixhami
 - labels:
+  - 'api: optimization'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
   - 'api: people-and-planet-ai'
   to:
   - davidcavazos
@@ -104,6 +117,20 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
+- labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc  
+- labels:
+  - 'api: monitoring'
+  to: 
+  - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
 
 assign_prs_by:
 - labels:
