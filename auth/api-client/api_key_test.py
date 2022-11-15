@@ -35,9 +35,13 @@ SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
 @pytest.fixture(scope="module")
 def api_key():
-    api_key = create_api_key.create_api_key(PROJECT, "global")
+    api_key = create_api_key.create_api_key(PROJECT)
     yield api_key
-    delete_api_key.delete_api_key(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    delete_api_key.delete_api_key(PROJECT, get_key_id(api_key.name))
+
+
+def get_key_id(api_key_name: str):
+    return api_key_name.rsplit("/")[-1]
 
 
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
@@ -53,30 +57,30 @@ def test_lookup_api_key(api_key: Key, capsys: CaptureFixture):
 
 
 def test_restrict_api_key_android(api_key: Key, capsys: CaptureFixture):
-    restrict_api_key_android.restrict_api_key_android(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    restrict_api_key_android.restrict_api_key_android(PROJECT, get_key_id(api_key.name))
     out, err = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_api(api_key: Key, capsys: CaptureFixture):
-    restrict_api_key_api.restrict_api_key_api(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    restrict_api_key_api.restrict_api_key_api(PROJECT, get_key_id(api_key.name))
     out, err = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_http(api_key: Key, capsys: CaptureFixture):
-    restrict_api_key_http.restrict_api_key_http(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    restrict_api_key_http.restrict_api_key_http(PROJECT, get_key_id(api_key.name))
     out, err = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_ios(api_key: Key, capsys: CaptureFixture):
-    restrict_api_key_ios.restrict_api_key_ios(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    restrict_api_key_ios.restrict_api_key_ios(PROJECT, get_key_id(api_key.name))
     out, err = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_server(api_key: Key, capsys: CaptureFixture):
-    restrict_api_key_server.restrict_api_key_server(PROJECT, "global", api_key.name.rsplit("/")[-1])
+    restrict_api_key_server.restrict_api_key_server(PROJECT, get_key_id(api_key.name))
     out, err = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
