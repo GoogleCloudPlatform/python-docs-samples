@@ -72,7 +72,7 @@ def detect_text(bucket, filename):
     to each target language and save the result.
     """
 
-    print("Looking for text in image {}".format(filename))
+    print(f"Looking for text in image {filename}")
 
     # Use the Vision API to extract text from the image
     image = vision.Image(
