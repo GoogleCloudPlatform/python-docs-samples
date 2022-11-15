@@ -200,7 +200,7 @@ def save_result(cloud_event):
 
     # Save the translation in RESULT_BUCKET
     bucket_name = os.environ["RESULT_BUCKET"]
-    result_filename = "{}_{}.txt".format(filename, lang)
+    result_filename = f"{filename}_{lang}.txt"
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)
 
