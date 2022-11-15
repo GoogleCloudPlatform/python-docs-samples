@@ -26,6 +26,10 @@ assign_issues_by:
   to:
   - arithmetic1728
 - labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
+- labels:
   - 'api: bigquery'
   to:
   - shollyman
@@ -131,6 +135,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/dee-platform-ops
 - labels:
+  - 'api: datacatalog'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
   - 'api: kms'
   - 'api: cloudkms'
   to: 
@@ -157,9 +165,17 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: clouderrorreporting'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
   - 'api: talent'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
