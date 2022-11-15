@@ -14,13 +14,13 @@
 
 import time
 
+from google.api_core.retry import Retry
 import google.auth
 import google.datalab
 import IPython
 from IPython.terminal import interactiveshell
 from IPython.testing import tools
 import pytest
-
 
 # Get default project
 _, PROJECT_ID = google.auth.default()
@@ -270,46 +270,50 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
 
 
 def test_datalab_load_table_from_dataframe(to_delete):
-    # [START bigquery_migration_datalab_load_table_from_dataframe]
-    import google.datalab.bigquery as bq
-    import pandas
+    """ Wrap test with retries to handle transient errors """
+    @Retry()
+    def datalab_load_table_from_dataframe(to_delete):
+        # [START bigquery_migration_datalab_load_table_from_dataframe]
+        import google.datalab.bigquery as bq
+        import pandas
 
-    # Create the dataset
-    dataset_id = 'import_sample'
-    # [END bigquery_migration_datalab_load_table_from_dataframe]
-    # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
-    to_delete.append(dataset_id)
-    # [START bigquery_migration_datalab_load_table_from_dataframe]
-    bq.Dataset(dataset_id).create()
+        # Create the dataset
+        dataset_id = 'import_sample'
+        # [END bigquery_migration_datalab_load_table_from_dataframe]
+        # Use unique dataset ID to avoid collisions when running tests
+        dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+        to_delete.append(dataset_id)
+        # [START bigquery_migration_datalab_load_table_from_dataframe]
+        bq.Dataset(dataset_id).create()
 
-    # Create the table and load the data
-    dataframe = pandas.DataFrame([
-        {'title': 'The Meaning of Life', 'release_year': 1983},
-        {'title': 'Monty Python and the Holy Grail', 'release_year': 1975},
-        {'title': 'Life of Brian', 'release_year': 1979},
-        {
-            'title': 'And Now for Something Completely Different',
-            'release_year': 1971
-        },
-    ])
-    schema = bq.Schema.from_data(dataframe)
-    table = bq.Table(
-        '{}.monty_python'.format(dataset_id)).create(schema=schema)
-    table.insert(dataframe)  # Starts steaming insert of data
-    # [END bigquery_migration_datalab_load_table_from_dataframe]
-    # The Datalab library uses tabledata().insertAll() to load data from
-    # pandas DataFrames to tables. Because it can take a long time for the rows
-    # to be available in the table, this test does not assert on the number of
-    # rows in the destination table after the job is run. If errors are
-    # encountered during the insertion, this test will fail.
-    # See https://cloud.google.com/bigquery/streaming-data-into-bigquery
+        # Create the table and load the data
+        dataframe = pandas.DataFrame([
+            {'title': 'The Meaning of Life', 'release_year': 1983},
+            {'title': 'Monty Python and the Holy Grail', 'release_year': 1975},
+            {'title': 'Life of Brian', 'release_year': 1979},
+            {
+                'title': 'And Now for Something Completely Different',
+                'release_year': 1971
+            },
+        ])
+        schema = bq.Schema.from_data(dataframe)
+        table = bq.Table(
+            '{}.monty_python'.format(dataset_id)).create(schema=schema)
+        table.insert(dataframe)  # Starts steaming insert of data
+        # [END bigquery_migration_datalab_load_table_from_dataframe]
+        # The Datalab library uses tabledata().insertAll() to load data from
+        # pandas DataFrames to tables. Because it can take a long time for the rows
+        # to be available in the table, this test does not assert on the number of
+        # rows in the destination table after the job is run. If errors are
+        # encountered during the insertion, this test will fail.
+        # See https://cloud.google.com/bigquery/streaming-data-into-bigquery
+    datalab_load_table_from_dataframe(to_delete)
 
 
 def test_client_library_load_table_from_dataframe(to_delete):
     # [START bigquery_migration_client_library_load_table_from_dataframe]
-    from google.cloud import bigquery
     import pandas
+    from google.cloud import bigquery
 
     client = bigquery.Client(location='US')
 
