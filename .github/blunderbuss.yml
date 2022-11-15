@@ -18,12 +18,17 @@ assign_issues_by:
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: secretmanager'
   to:
   - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: auth'
   to:
   - arithmetic1728
+- labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
 - labels:
   - 'api: bigquery'
   to:
@@ -87,6 +92,10 @@ assign_issues_by:
   to:
   - alixhami
 - labels:
+  - 'api: optimization'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
   - 'api: people-and-planet-ai'
   to:
   - davidcavazos
@@ -113,9 +122,27 @@ assign_issues_by:
   to:
   - nicain
 - labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc  
+- labels:
   - 'api: monitoring'
   to: 
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: datacatalog'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -133,7 +160,18 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: clouderrorreporting'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: talent'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
