@@ -51,7 +51,7 @@ def process_image(cloud_event):
     expected_type = "google.cloud.storage.object.v1.finalized"
     received_type = cloud_event["type"]
     if received_type != expected_type:
-        raise ValueError("Expected {expected_type} but received {received_type}")
+        raise ValueError(f"Expected {expected_type} but received {received_type}")
 
     # Extract the bucket and file names of the uploaded image for processing
     data = cloud_event.data
