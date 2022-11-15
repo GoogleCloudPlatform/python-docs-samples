@@ -204,7 +204,7 @@ def save_result(cloud_event):
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)
 
-    print("Saving result to {} in bucket {}.".format(result_filename, bucket_name))
+    print(f"Saving result to {result_filename} in bucket {bucket_name}.")
 
     blob.upload_from_string(text)
 
