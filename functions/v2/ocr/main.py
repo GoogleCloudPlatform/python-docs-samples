@@ -150,7 +150,7 @@ def translate_text(cloud_event):
         raise ValueError(f"Missing or malformed PubSub message {data}: {e}.")
 
     # Translate the text and publish a message with the translation
-    print("Translating text into {}.".format(target_lang))
+    print(f"Translating text into {target_lang}.")
 
     translated_text = translate_client.translate(
         text, target_language=target_lang, source_language=src_lang
