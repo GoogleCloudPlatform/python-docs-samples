@@ -19,7 +19,7 @@ from google.cloud import language_v1
 
 def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> None:
     """
-    Demonstrate authenticating with an API key for Google Language service.
+    Authenticates with an API key for Google Language service.
 
     // TODO(Developer): Replace these variables before running the sample.
 
