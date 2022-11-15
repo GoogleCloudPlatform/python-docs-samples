@@ -69,3 +69,4 @@
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/datacatalog/*/*                       @GoogleCloudPlatform/python-samples-reviewers

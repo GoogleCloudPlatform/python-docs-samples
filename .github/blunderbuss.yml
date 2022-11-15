@@ -126,6 +126,10 @@ assign_issues_by:
   - 'api: monitoring'
   to: 
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: datacatalog'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
