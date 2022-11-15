@@ -134,7 +134,7 @@ assign_issues_by:
 - labels:
   - 'api: vision'
   to:
-  - googleapis/cdpe-cloudai
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
