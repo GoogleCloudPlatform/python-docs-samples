@@ -7,3 +7,5 @@ pandas-gbq==0.16.0; python_version > '3.6'
 pandas-gbq==0.14.1; python_version < '3.7'
 grpcio==1.47.0
 pyarrow==6.0.1
+google-api-core==2.11.0rc1
+

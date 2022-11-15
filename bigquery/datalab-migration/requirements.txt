@@ -6,3 +6,4 @@ google-cloud-bigquery-storage===2.13.2
 datalab==1.2.1
 ipython==8.0.1
 pyarrow==6.0.1
+google-api-core==2.11.0rc1

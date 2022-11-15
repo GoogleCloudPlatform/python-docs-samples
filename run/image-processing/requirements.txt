@@ -6,3 +6,4 @@ gunicorn==20.1.0
 google-cloud-vision==3.1.0
 google-cloud-storage==2.1.0
 Wand==0.6.8
+google-api-core==2.11.0rc1

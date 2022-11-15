@@ -1,1 +1,2 @@
 google-cloud-billing==1.7.0
+google-api-core==2.11.0rc1

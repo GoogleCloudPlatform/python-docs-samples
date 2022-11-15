@@ -3,3 +3,4 @@ google-cloud-pubsub==2.9.0
 python-dateutil==2.8.2
 requests==2.27.1
 xmltodict==0.13.0
+google-api-core==2.11.0rc1

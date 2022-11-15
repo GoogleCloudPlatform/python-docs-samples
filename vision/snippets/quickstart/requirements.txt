@@ -1,1 +1,2 @@
 google-cloud-vision==3.1.4
+google-api-core==2.11.0rc1

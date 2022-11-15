@@ -1,3 +1,4 @@
 functions-framework==3.2.0
 flask==2.1.0
 google-cloud-error-reporting==1.6.0
+google-api-core==2.11.0rc1
