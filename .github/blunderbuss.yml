@@ -26,6 +26,10 @@ assign_issues_by:
   to:
   - arithmetic1728
 - labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
+- labels:
   - 'api: bigquery'
   to:
   - shollyman
