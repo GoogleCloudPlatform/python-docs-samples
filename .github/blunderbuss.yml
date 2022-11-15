@@ -155,8 +155,7 @@ assign_prs_by:
 - labels:
   - 'api: clouderrorreporting'
   to:
-  - googleapis/python-samples-reviewers
-  - googleapis/api-logging
+  - GoogleCloudPlatform/python-samples-reviewers
 - labels:
   - 'api: talent'
   to:
