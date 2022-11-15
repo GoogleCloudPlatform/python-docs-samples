@@ -16,6 +16,9 @@ ignoreFiles:
   - "**/constraints-test.txt"
   - "**/apt.txt"
   - "**/ghcnd-stations.txt"
+  - "**/example.txt"
+  - "**/hello.txt"
+
 
 ignoreLicenseYear: true
 
