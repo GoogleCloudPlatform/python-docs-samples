@@ -85,7 +85,7 @@ def detect_text(bucket, filename):
         text = annotations[0].description
     else:
         text = ""
-    print("Extracted text {} from image ({} chars).".format(text, len(text)))
+    print(f"Extracted text {text} from image ({len(text)} chars).")
 
     detect_language_response = translate_client.detect_language(text)
     src_lang = detect_language_response["language"]
