@@ -81,7 +81,7 @@ def detect_text(bucket, filename):
     text_detection_response = vision_client.text_detection(image=image)
     annotations = text_detection_response.text_annotations
 
-    if len(annotations) > 0:
+    if annotations:
         text = annotations[0].description
     else:
         text = ""
