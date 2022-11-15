@@ -20,10 +20,10 @@ from google.cloud.api_keys_v2 import Key
 
 def restrict_api_key_ios(project_id: str, location: str, key_id: str) -> Key:
     """
-    Restrict an API key. You can restrict usage of an API key to specific iOS apps
+    Restricts an API key. You can restrict usage of an API key to specific iOS apps
     by providing the bundle ID of each app.
 
-    // TODO(Developer): Replace the variables before running this sample.
+    TODO(Developer): Replace the variables before running this sample.
 
     Args:
         project_id: Google Cloud project id.
@@ -41,7 +41,8 @@ def restrict_api_key_ios(project_id: str, location: str, key_id: str) -> Key:
     ios_key_restrictions.allowed_bundle_ids = ["com.google.gmail", "com.google.drive"]
 
     # Set the API restriction.
-    # For more information on API key restriction, see: https://cloud.google.com/docs/authentication/api-keys
+    # For more information on API key restriction, see:
+    # https://cloud.google.com/docs/authentication/api-keys
     restrictions = api_keys_v2.Restrictions()
     restrictions.ios_key_restrictions = ios_key_restrictions
 

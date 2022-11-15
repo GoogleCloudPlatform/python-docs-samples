@@ -20,12 +20,12 @@ from google.cloud.api_keys_v2 import Key
 
 def create_api_key(project_id: str, location: str) -> Key:
     """
-    Create and restrict an API key.
+    Creates and restrict an API key.
 
-    // TODO(Developer):
-    //  1. Before running this sample,
-    //  set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
-    //  2. Make sure you have the necessary permission to create API keys.
+    TODO(Developer):
+    1. Before running this sample,
+      set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
+    2. Make sure you have the necessary permission to create API keys.
 
     Args:
         project_id: Google Cloud project id.

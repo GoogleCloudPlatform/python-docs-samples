@@ -20,10 +20,10 @@ from google.cloud.api_keys_v2 import Key
 
 def restrict_api_key_http(project_id: str, location: str, key_id: str) -> Key:
     """
-    Restrict an API key. To restrict the websites that can use your API key,
+    Restricts an API key. To restrict the websites that can use your API key,
     you add one or more HTTP referrer restrictions.
 
-    // TODO(Developer): Replace the variables before running this sample.
+    TODO(Developer): Replace the variables before running this sample.
 
     Args:
         project_id: Google Cloud project id.
@@ -41,7 +41,8 @@ def restrict_api_key_http(project_id: str, location: str, key_id: str) -> Key:
     browser_key_restrictions.allowed_referrers = ["www.example.com/*"]
 
     # Set the API restriction.
-    # For more information on API key restriction, see: https://cloud.google.com/docs/authentication/api-keys
+    # For more information on API key restriction, see:
+    # https://cloud.google.com/docs/authentication/api-keys
     restrictions = api_keys_v2.Restrictions()
     restrictions.browser_key_restrictions = browser_key_restrictions
 

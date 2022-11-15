@@ -20,10 +20,10 @@ from google.cloud.api_keys_v2 import Key
 
 def restrict_api_key_server(project_id: str, location: str, key_id: str) -> Key:
     """
-    Restrict the API key based on IP addresses. You can specify one or more IP addresses of the callers,
+    Restricts the API key based on IP addresses. You can specify one or more IP addresses of the callers,
     for example web servers or cron jobs, that are allowed to use your API key.
 
-    // TODO(Developer): Replace the variables before running this sample.
+    TODO(Developer): Replace the variables before running this sample.
 
     Args:
         project_id: Google Cloud project id.
@@ -42,7 +42,8 @@ def restrict_api_key_server(project_id: str, location: str, key_id: str) -> Key:
     server_key_restrictions.allowed_ips = ["198.51.100.0/24", "2000:db8::/64"]
 
     # Set the API restriction.
-    # For more information on API key restriction, see: https://cloud.google.com/docs/authentication/api-keys
+    # For more information on API key restriction, see:
+    # https://cloud.google.com/docs/authentication/api-keys
     restrictions = api_keys_v2.Restrictions()
     restrictions.server_key_restrictions = server_key_restrictions
 

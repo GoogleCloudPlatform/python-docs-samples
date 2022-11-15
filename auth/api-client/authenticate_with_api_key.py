@@ -21,7 +21,7 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
     """
     Authenticates with an API key for Google Language service.
 
-    // TODO(Developer): Replace these variables before running the sample.
+    TODO(Developer): Replace these variables before running the sample.
 
     Args:
         quota_project_id: Google Cloud project id that should be used for quota and billing purposes.
@@ -42,8 +42,8 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
         request={"document": document}
     ).document_sentiment
 
-    print("Text: {}".format(text))
-    print("Sentiment: {}, {}".format(sentiment.score, sentiment.magnitude))
+    print(f"Text: {text}")
+    print("Sentiment: {sentiment.score}, {sentiment.magnitude}")
     print("Successfully authenticated using the API key")
 
 # [END auth_cloud_authenticate_api_key]

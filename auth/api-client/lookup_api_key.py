@@ -19,12 +19,12 @@ from google.cloud import api_keys_v2
 
 def lookup_api_key(api_key_string: str) -> None:
     """
-    Retrieve name (full path) of an API key using the API key string.
+    Retrieves name (full path) of an API key using the API key string.
 
-    // TODO(Developer):
-    //  1. Before running this sample,
-    //  set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
-    //  2. Make sure you have the necessary permission to view API keys.
+    TODO(Developer):
+    1. Before running this sample,
+      set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
+    2. Make sure you have the necessary permission to view API keys.
 
     Args:
         api_key_string: API key string to retrieve the API key name.

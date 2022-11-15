@@ -19,12 +19,12 @@ from google.cloud import api_keys_v2
 
 def delete_api_key(project_id: str, location: str, key_id: str) -> None:
     """
-    Delete an API key.
+    Deletes an API key.
 
-    // TODO(Developer):
-    //  1. Before running this sample,
-    //  set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
-    //  2. Make sure you have the necessary permission to delete API keys.
+    TODO(Developer):
+    1. Before running this sample,
+      set up ADC as described in https://cloud.google.com/docs/authentication/external/set-up-adc
+    2. Make sure you have the necessary permission to delete API keys.
 
     Args:
         project_id: Google Cloud project id that has the API key to delete.

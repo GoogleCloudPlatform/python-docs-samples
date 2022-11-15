@@ -20,9 +20,9 @@ from google.cloud.api_keys_v2 import Key
 
 def restrict_api_key_api(project_id: str, location: str, key_id: str) -> Key:
     """
-    Restrict an API key. Restrictions specify which APIs can be called using the API key.
+    Restricts an API key. Restrictions specify which APIs can be called using the API key.
 
-    // TODO(Developer): Replace the variables before running the sample.
+    TODO(Developer): Replace the variables before running the sample.
 
     Args:
         project_id: Google Cloud project id.
@@ -42,7 +42,8 @@ def restrict_api_key_api(project_id: str, location: str, key_id: str) -> Key:
     api_target.methods = ["transate.googleapis.com.TranslateText"]
 
     # Set the API restriction(s).
-    # For more information on API key restriction, see: https://cloud.google.com/docs/authentication/api-keys
+    # For more information on API key restriction, see:
+    # https://cloud.google.com/docs/authentication/api-keys
     restrictions = api_keys_v2.Restrictions()
     restrictions.api_targets = [api_target]
 
