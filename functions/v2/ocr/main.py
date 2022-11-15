@@ -196,7 +196,7 @@ def save_result(cloud_event):
     except Exception as e:
         raise ValueError(f"Missing or malformed PubSub message {data}: {e}.")
 
-    print("Received request to save file {}.".format(filename))
+    print(f"Received request to save file {filename}.")
 
     # Save the translation in RESULT_BUCKET
     bucket_name = os.environ["RESULT_BUCKET"]
