@@ -130,6 +130,15 @@ assign_issues_by:
   - 'api: datacatalog'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -147,7 +156,10 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: talent'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
