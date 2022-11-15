@@ -166,9 +166,12 @@ assign_prs_by:
   - GoogleCloudPlatform/python-samples-reviewers
 - labels:
   - 'api: talent'
-  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
