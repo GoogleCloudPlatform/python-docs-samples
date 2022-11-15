@@ -18,7 +18,7 @@ from google.cloud import api_keys_v2
 from google.cloud.api_keys_v2 import Key
 
 
-def restrict_api_key_ios(project_id: str, location: str, key_id: str) -> Key:
+def restrict_api_key_ios(project_id: str, key_id: str) -> Key:
     """
     Restricts an API key. You can restrict usage of an API key to specific iOS apps
     by providing the bundle ID of each app.
@@ -27,10 +27,12 @@ def restrict_api_key_ios(project_id: str, location: str, key_id: str) -> Key:
 
     Args:
         project_id: Google Cloud project id.
-        location: Can only be "global".
         key_id: ID of the key to restrict. This ID is auto-created during key creation.
         This is different from the key string. To obtain the key_id,
         you can also use the lookup api: client.lookup_key()
+    
+    Returns:
+        response: Returns the updated API Key.
     """
 
     # Create the API Keys client.
@@ -47,7 +49,7 @@ def restrict_api_key_ios(project_id: str, location: str, key_id: str) -> Key:
     restrictions.ios_key_restrictions = ios_key_restrictions
 
     key = api_keys_v2.Key()
-    key.name = f"projects/{project_id}/locations/{location}/keys/{key_id}"
+    key.name = f"projects/{project_id}/locations/global/keys/{key_id}"
     key.restrictions = restrictions
 
     # Initialize request and set arguments.

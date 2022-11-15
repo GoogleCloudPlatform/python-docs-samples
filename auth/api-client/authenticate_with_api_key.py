@@ -43,7 +43,7 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
     ).document_sentiment
 
     print(f"Text: {text}")
-    print("Sentiment: {sentiment.score}, {sentiment.magnitude}")
+    print(f"Sentiment: {sentiment.score}, {sentiment.magnitude}")
     print("Successfully authenticated using the API key")
 
 # [END auth_cloud_authenticate_api_key]

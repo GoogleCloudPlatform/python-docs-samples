@@ -17,7 +17,7 @@
 from google.cloud import api_keys_v2
 
 
-def delete_api_key(project_id: str, location: str, key_id: str) -> None:
+def delete_api_key(project_id: str, key_id: str) -> None:
     """
     Deletes an API key.
 
@@ -28,7 +28,6 @@ def delete_api_key(project_id: str, location: str, key_id: str) -> None:
 
     Args:
         project_id: Google Cloud project id that has the API key to delete.
-        location: "global"
         key_id: The API key id to delete.
     """
 
@@ -37,7 +36,7 @@ def delete_api_key(project_id: str, location: str, key_id: str) -> None:
 
     # Initialize the delete request and set the argument.
     delete_key_request = api_keys_v2.DeleteKeyRequest()
-    delete_key_request.name = f"projects/{project_id}/locations/{location}/keys/{key_id}"
+    delete_key_request.name = f"projects/{project_id}/locations/global/keys/{key_id}"
 
     # Make the request and wait for the operation to complete.
     result = client.delete_key(delete_key_request).result()
