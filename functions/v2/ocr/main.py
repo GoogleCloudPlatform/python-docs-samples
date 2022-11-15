@@ -133,7 +133,7 @@ def translate_text(cloud_event):
     expected_type = "google.cloud.pubsub.topic.v1.messagePublished"
     received_type = cloud_event["type"]
     if received_type != expected_type:
-        raise ValueError("Expected {expected_type} but received {received_type}")
+        raise ValueError(f"Expected {expected_type} but received {received_type}")
 
     # Extract the message body, expected to be a JSON representation of a
     # dictionary, and extract the fields from that dictionary.
