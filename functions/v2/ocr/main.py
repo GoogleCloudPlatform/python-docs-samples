@@ -89,7 +89,7 @@ def detect_text(bucket, filename):
 
     detect_language_response = translate_client.detect_language(text)
     src_lang = detect_language_response["language"]
-    print("Detected language {} for text {}.".format(src_lang, text))
+    print(f"Detected language {src_lang} for text {text}.")
 
     # Submit a message to the bus for each target language
     futures = []  # Asynchronous publish request statuses
