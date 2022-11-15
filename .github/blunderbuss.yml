@@ -131,6 +131,10 @@ assign_issues_by:
   - 'api: cloudkms'
   to: 
   - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - googleapis/cdpe-cloudai
 
 assign_prs_by:
 - labels:
