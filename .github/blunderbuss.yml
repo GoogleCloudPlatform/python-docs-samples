@@ -131,6 +131,10 @@ assign_issues_by:
   to: 
   - GoogleCloudPlatform/dee-observability
 - labels:
+  - 'api: datacatalog'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
   - 'api: kms'
   - 'api: cloudkms'
   to: 
