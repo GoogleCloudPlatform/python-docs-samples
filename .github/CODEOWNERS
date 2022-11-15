@@ -69,4 +69,7 @@
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
+/talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
+/vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
