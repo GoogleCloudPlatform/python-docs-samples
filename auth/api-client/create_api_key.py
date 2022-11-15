@@ -29,7 +29,7 @@ def create_api_key(project_id: str) -> Key:
 
     Args:
         project_id: Google Cloud project id.
-        
+  
     Returns:
         response: Returns the created API Key.
     """
