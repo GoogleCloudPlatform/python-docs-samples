@@ -12,22 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.mock import Mock, patch
+import unittest.mock
 
 import flask
 import pytest
 
 
-# Create a fake "app" for generating test request contexts.
 @pytest.fixture(scope="module")
 def app():
+    """Creates a fake "app" for generating test request contexts."""
     return flask.Flask(__name__)
 
 
-@patch('redis.StrictRedis')
+@unittest.mock.patch('redis.StrictRedis')
 def test_visit_count(MockStrictRedis, app):
-    mock_redis_client = Mock()
-    mock_redis_client.incr = Mock(return_value=42)
+    mock_redis_client = unittest.mock.Mock()
+    mock_redis_client.incr = unittest.mock.Mock(return_value=42)
     MockStrictRedis.return_value = mock_redis_client
 
     import main
