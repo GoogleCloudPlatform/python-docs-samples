@@ -166,6 +166,7 @@ assign_prs_by:
   - GoogleCloudPlatform/python-samples-reviewers
 - labels:
   - 'api: talent'
+  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
 
