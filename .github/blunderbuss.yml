@@ -18,6 +18,7 @@ assign_issues_by:
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: secretmanager'
   to:
   - GoogleCloudPlatform/aap-dpes
 - labels:
@@ -125,6 +126,15 @@ assign_issues_by:
   - 'api: monitoring'
   to: 
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -142,7 +152,10 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: talent'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners

@@ -63,8 +63,12 @@
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
+/secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
+/talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
+/vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
