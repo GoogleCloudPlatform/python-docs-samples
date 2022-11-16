@@ -69,10 +69,12 @@
 /secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
+/texttospeech/**/*                     @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
 /talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
-/datacatalog/**/*                       @GoogleCloudPlatform/python-samples-reviewers
+/datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/dataproc/**/**                        @GoogleCloudPlatform/cloud-dpes @GoogleCloudPlatform/python-samples-reviewers
