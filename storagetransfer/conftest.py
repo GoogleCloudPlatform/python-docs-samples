@@ -90,7 +90,6 @@ def aws_secret_access_key():
 
 @pytest.fixture(scope='module')
 def bucket_name():
-    # .
     yield f"sts-python-samples-test-{uuid.uuid4()}"
 
 
