@@ -125,11 +125,15 @@ assign_issues_by:
   - 'api: datalabeling'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
-  - ivanmkc  
+  - ivanmkc
 - labels:
   - 'api: monitoring'
-  to: 
+  to:
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: texttospeech'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
 - labels:
   - 'api: datacatalog'
   to:
