@@ -46,6 +46,7 @@ def test_functions_log_http_should_print_message(app, capsys):
     with app.test_request_context(headers={'x-cloud-trace-context': f"{mock_trace}/{mock_span};o=1"}):
         main.structured_logging(flask.request)
         _, err = capsys.readouterr()
+        assert "{}" == err
         output_json = json.loads(err)
         for (key, value) in expected.items():
             assert value == output_json[key]
