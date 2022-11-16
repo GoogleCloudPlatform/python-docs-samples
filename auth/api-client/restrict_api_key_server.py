@@ -28,8 +28,8 @@ def restrict_api_key_server(project_id: str, key_id: str) -> Key:
     Args:
         project_id: Google Cloud project id.
         key_id: ID of the key to restrict. This ID is auto-created during key creation.
-        This is different from the key string. To obtain the key_id,
-        you can also use the lookup api: client.lookup_key()
+            This is different from the key string. To obtain the key_id,
+            you can also use the lookup api: client.lookup_key()
 
     Returns:
         response: Returns the updated API Key.
