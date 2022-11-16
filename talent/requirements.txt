@@ -1,0 +1,1 @@
+google-cloud-talent==2.7.3
