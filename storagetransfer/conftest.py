@@ -38,7 +38,7 @@ aws_secret_manager_cache = None
 
 def aws_retrieve_from_secret_manager(name: str):
     """
-    Retrieve a secret given a name.
+    Retrieves a secret given a name.
 
     example ``name`` = ``projects/123/secrets/my-secret/versions/latest``
     """
@@ -58,7 +58,7 @@ def aws_retrieve_from_secret_manager(name: str):
 
     aws_secret_manager_cache = {
         'aws_access_key_id': secret['AccessKeyId'],
-        'aws_secret_access_key': secret['SecretAccessKey']
+        'aws_secret_access_key': secret['SecretAccessKey'],
     }
 
     return aws_secret_manager_cache
@@ -71,29 +71,30 @@ def aws_key_pair():
 
     if sts_aws_secret_name:
         return aws_retrieve_from_secret_manager(sts_aws_secret_name)
-    else:
-        return {
-            'aws_access_key_id': aws_access_key_id,
-            'aws_secret_access_key': aws_secret_access_key
-        }
+
+    return {
+        'aws_access_key_id': aws_access_key_id,
+        'aws_secret_access_key': aws_secret_access_key,
+    }
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def aws_access_key_id():
     yield aws_key_pair()['aws_access_key_id']
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def aws_secret_access_key():
     yield aws_key_pair()['aws_secret_access_key']
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def bucket_name():
+    # .
     yield f"sts-python-samples-test-{uuid.uuid4()}"
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def sts_service_account(project_id):
     client = storage_transfer.StorageTransferServiceClient()
     account = client.get_google_service_account({'project_id': project_id})
@@ -101,7 +102,7 @@ def sts_service_account(project_id):
     yield account.account_email
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def job_description_unique(project_id: str):
     """
     Generate a unique job description. Attempts to find and delete a job with
@@ -137,7 +138,7 @@ def job_description_unique(project_id: str):
         })
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def aws_source_bucket(bucket_name: str):
     """
     Creates an S3 bucket for testing. Empties and auto-deletes after
@@ -155,7 +156,7 @@ def aws_source_bucket(bucket_name: str):
     s3_client.delete_bucket(Bucket=bucket_name)
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def gcs_bucket(project_id: str, bucket_name: str):
     """
     Yields and auto-cleans up a CGS bucket for use in STS jobs
@@ -169,7 +170,7 @@ def gcs_bucket(project_id: str, bucket_name: str):
     bucket.delete()
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def source_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a CGS bucket preconfigured with necessary
@@ -192,7 +193,7 @@ def source_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a CGS bucket preconfigured with necessary
@@ -213,7 +214,7 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a GCS bucket preconfigured with necessary
@@ -238,7 +239,7 @@ def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def agent_pool_name():
     """
     Yields a source agent pool name
@@ -248,7 +249,7 @@ def agent_pool_name():
     yield ''
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def posix_root_directory():
     """
     Yields a POSIX root directory
@@ -258,7 +259,7 @@ def posix_root_directory():
     yield '/my-posix-root/'
 
 
-@ pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def manifest_file(source_bucket: storage.Bucket):
     """
     Yields a transfer manifest file name
