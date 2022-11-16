@@ -124,6 +124,7 @@ def _determine_local_import_names(start_dir: str) -> List[str]:
 # Linting with flake8.
 #
 # We ignore the following rules:
+#   ANN101: missing type annotation for self in method
 #   E203: whitespace before ‘:’
 #   E266: too many leading ‘#’ for block comment
 #   E501: line too long
@@ -137,7 +138,7 @@ FLAKE8_COMMON_ARGS = [
     "--max-complexity=20",
     "--import-order-style=google",
     "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
+    "--ignore=ANN101,E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
     "--max-line-length=88",
 ]
 
