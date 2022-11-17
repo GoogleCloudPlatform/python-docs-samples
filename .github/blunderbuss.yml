@@ -26,6 +26,10 @@ assign_issues_by:
   to:
   - arithmetic1728
 - labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
+- labels:
   - 'api: bigquery'
   to:
   - shollyman
@@ -125,11 +129,28 @@ assign_issues_by:
   - 'api: datalabeling'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
-  - ivanmkc  
+  - ivanmkc
 - labels:
   - 'api: monitoring'
-  to: 
+  to:
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: texttospeech'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
+- labels:
+  - 'api: datacatalog'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to: 
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -147,7 +168,22 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
+- labels:
+  - 'api: clouderrorreporting'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: talent'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: dataproc'
+  to:
+  - GoogleCloudPlatform/cloud-dpes
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
