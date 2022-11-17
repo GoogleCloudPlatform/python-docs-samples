@@ -49,8 +49,9 @@ def test_functions_log_http_should_print_message(app, capsys):
         main.structured_logging(flask.request)
         out, err = capsys.readouterr()
 
-        # DEBUG - force raw stdout to show in test output
-        assert err == ""
+        # DEBUG - view output in results
+        with capsys.disabled():
+            print(f"\nCaptured stderr:\n{err}\nEnd of captured stderr\n")
 
         output_json = json.loads(err.splitlines()[0])
         for (key, value) in expected.items():
