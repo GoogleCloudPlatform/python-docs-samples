@@ -36,25 +36,23 @@ def project_id():
 aws_secret_manager_cache = None
 
 
-def aws_retrieve_from_secret_manager(name: str):
+def parse_and_cache_secret_json(payload):
     """
-    Retrieves a secret given a name.
+    Decodes a JSON string in AWS AccessKey JSON format.
+    Supports both single-key "AccessKey" and JSON with props.
 
-    example ``name`` = ``projects/123/secrets/my-secret/versions/latest``
+    ``payload`` examples:
+    - ``{"AccessKey": {"AccessKeyId": "", "SecretAccessKey": ""}``
+    - ``{"AccessKeyId": "", "SecretAccessKey": ""}``
     """
 
     global aws_secret_manager_cache
 
-    if aws_secret_manager_cache:
-        return aws_secret_manager_cache
+    secret = json.loads(payload)
 
-    client = secretmanager.SecretManagerServiceClient()
-
-    # retrieve from secret manager
-    response = client.access_secret_version(request={"name": name})
-
-    # parse secret from secret manager
-    secret = json.loads(response.payload.data.decode("UTF-8"))
+    # normalize to props as keys
+    if secret.get('AccessKey'):
+        secret = secret.get('AccessKey')
 
     aws_secret_manager_cache = {
         'aws_access_key_id': secret['AccessKeyId'],
@@ -64,10 +62,35 @@ def aws_retrieve_from_secret_manager(name: str):
     return aws_secret_manager_cache
 
 
+def aws_retrieve_from_secret_manager(name: str):
+    """
+    Retrieves a secret given a name.
+
+    example ``name`` = ``projects/123/secrets/my-secret/versions/latest``
+    """
+
+    client = secretmanager.SecretManagerServiceClient()
+
+    # retrieve from secret manager
+    response = client.access_secret_version(request={"name": name})
+
+    # parse and cache secret from secret manager
+    return parse_and_cache_secret_json(response.payload.data.decode("UTF-8"))
+
+
 def aws_key_pair():
+    global aws_secret_manager_cache
+
+    sts_aws_secret = os.environ.get("STS_AWS_SECRET")
     sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+    if aws_secret_manager_cache:
+        return aws_secret_manager_cache
+
+    if sts_aws_secret:
+        return parse_and_cache_secret_json(sts_aws_secret)
 
     if sts_aws_secret_name:
         return aws_retrieve_from_secret_manager(sts_aws_secret_name)
