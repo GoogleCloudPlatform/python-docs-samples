@@ -22,8 +22,8 @@ import pytest
 from snippets.create_deny_policy import create_deny_policy
 from snippets.delete_deny_policy import delete_deny_policy
 
-PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+PROJECT_ID = os.environ["IAM_PROJECT_ID"]
+GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
 
 
 @pytest.fixture
