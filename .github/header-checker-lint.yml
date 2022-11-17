@@ -18,7 +18,6 @@ ignoreFiles:
   - "**/ghcnd-stations.txt"
   - "texttospeech/snippets/resources/example.txt"
   - "texttospeech/snippets/resources/hello.txt"
-  - "automl/snippets/resources/input.txt"
 
 ignoreLicenseYear: true
 
