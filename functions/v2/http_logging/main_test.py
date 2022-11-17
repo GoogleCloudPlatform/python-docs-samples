@@ -49,9 +49,11 @@ def test_functions_log_http_should_print_message(app, capsys):
         main.structured_logging(flask.request)
         out, err = capsys.readouterr()
 
-        # DEBUG - view output in results
-        with capsys.disabled():
-            print(f"\nCaptured stderr:\n{err}\nEnd of captured stderr\n")
+        # In some situations, the library adds information before the first
+        # intended line. Use the next line in that case.
+        err_lines = err.splitlines()
+        if len(err_lines) > 1:
+            err = err_lines[1]
 
         output_json = json.loads(err.splitlines()[0])
         for (key, value) in expected.items():
