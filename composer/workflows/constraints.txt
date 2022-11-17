@@ -76,7 +76,7 @@ apache-airflow-providers-arangodb==2.0.0
 apache-airflow-providers-asana==2.0.0
 apache-airflow-providers-celery==3.0.0
 apache-airflow-providers-cloudant==3.0.0
-apache-airflow-providers-cncf-kubernetes==4.1.0
+apache-airflow-providers-cncf-kubernetes==4.3.0
 apache-airflow-providers-databricks==3.0.0
 apache-airflow-providers-datadog==3.0.0
 apache-airflow-providers-dbt-cloud==2.0.0
