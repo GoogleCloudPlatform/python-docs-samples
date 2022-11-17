@@ -18,6 +18,8 @@ import os
 import flask
 import pytest
 
+import google.cloud.logging
+
 import main
 
 
@@ -28,6 +30,9 @@ def app():
 
 
 def test_functions_log_http_should_print_message(app, capsys):
+    # Override flag that adds test to output
+    google.cloud.logging._instrumentation_emitted = True
+
     # Mimic the Cloud Run / GCFv2 environment to force handler to print to stdout
     os.environ['K_SERVICE'] = 'test-service-name'
     os.environ['K_REVISION'] = 'test-revision-name'
@@ -45,8 +50,8 @@ def test_functions_log_http_should_print_message(app, capsys):
     # Force trace with trace header
     with app.test_request_context(headers={'x-cloud-trace-context': f"{mock_trace}/{mock_span};o=1"}):
         main.structured_logging(flask.request)
-        _, err = capsys.readouterr()
-        assert "{}" == err
+        out, err = capsys.readouterr()
+
         output_json = json.loads(err)
         for (key, value) in expected.items():
             assert value == output_json[key]
