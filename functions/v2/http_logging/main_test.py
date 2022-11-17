@@ -18,8 +18,6 @@ import os
 import flask
 import pytest
 
-import google.cloud.logging
-
 import main
 
 
