@@ -36,7 +36,7 @@ def project_id():
 aws_secret_manager_cache = None
 
 
-def parse_and_cache_secret_json(payload):
+def parse_and_cache_secret_json(payload: str):
     """
     Decodes a JSON string in AWS AccessKey JSON format.
     Supports both single-key "AccessKey" and JSON with props.
