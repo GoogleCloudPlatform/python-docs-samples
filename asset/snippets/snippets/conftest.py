@@ -23,7 +23,9 @@ from google.api_core.exceptions import NotFound
 from google.cloud import pubsub_v1
 import pytest
 
+import quickstart_create_saved_query
 import quickstart_createfeed
+import quickstart_delete_saved_query
 import quickstart_deletefeed
 
 
@@ -86,5 +88,38 @@ def deleter():
     for feed_name in feeds_to_delete:
         try:
             quickstart_deletefeed.delete_feed(feed_name)
+        except NotFound as e:
+            print(f"Ignoring NotFound: {e}")
+
+
+@pytest.fixture(scope="module")
+def test_saved_query():
+    saved_query_id = f"saved-query-{uuid.uuid4().hex}"
+
+    @backoff.on_exception(backoff.expo, InternalServerError, max_time=60)
+    def create_saved_query():
+        return quickstart_create_saved_query.create_saved_query(
+            PROJECT, saved_query_id, "description foo"
+        )
+
+    saved_query = create_saved_query()
+
+    yield saved_query
+
+    try:
+        quickstart_delete_saved_query.delete_saved_query(saved_query.name)
+    except NotFound as e:
+        print(f"Ignoring NotFound: {e}")
+
+
+@pytest.fixture(scope="module")
+def saved_query_deleter():
+    saved_querys_to_delete = []
+
+    yield saved_querys_to_delete
+
+    for saved_query_name in saved_querys_to_delete:
+        try:
+            quickstart_delete_saved_query.delete_saved_query(saved_query_name)
         except NotFound as e:
             print(f"Ignoring NotFound: {e}")

@@ -22,7 +22,7 @@ def batch_get_effective_iam_policies(resource_names, scope):
     # [START asset_quickstart_batch_get_effective_iam_policies]
     from google.cloud import asset_v1
 
-    # TODO scope = 'Scope for resource names'
+    # TODO scope = 'project ID/number, folder number or org number'
     # TODO resource_names = 'List of resource names'
 
     client = asset_v1.AssetServiceClient()
