@@ -187,7 +187,7 @@ assign_prs_by:
 - labels:
   - 'api: recaptchaenterprise'
   to:
-  - GoogleCloudPlatform//python-samples-reviewers
+  - sita04
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
