@@ -147,6 +147,10 @@ assign_issues_by:
   - 'api: vision'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
 
 assign_prs_by:
 - labels:
