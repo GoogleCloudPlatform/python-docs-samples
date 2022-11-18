@@ -24,7 +24,7 @@ client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
-
+# [START job_discovery_basic_keyword_search]
 # [START basic_keyword_search]
 def basic_keyword_search(client_service, company_name, keyword):
     request_metadata = {
@@ -45,8 +45,10 @@ def basic_keyword_search(client_service, company_name, keyword):
         parent=parent, body=request).execute()
     print(response)
 # [END basic_keyword_search]
+# [END job_discovery_basic_keyword_search]
 
 
+# [START job_discovery_category_filter_search]
 # [START category_filter]
 def category_search(client_service, company_name, categories):
     request_metadata = {
@@ -67,8 +69,10 @@ def category_search(client_service, company_name, categories):
         parent=parent, body=request).execute()
     print(response)
 # [END category_filter]
+# [END job_discovery_category_filter_search]
 
 
+# [START job_discovery_employment_types_filter_search]
 # [START employment_types_filter]
 def employment_types_search(client_service, company_name, employment_types):
     request_metadata = {
@@ -89,8 +93,10 @@ def employment_types_search(client_service, company_name, employment_types):
         parent=parent, body=request).execute()
     print(response)
 # [END employment_types_filter]
+# [END job_discovery_employment_types_filter_search]
 
 
+# [START job_discovery_date_range_filter_search]
 # [START date_range_filter]
 def date_range_search(client_service, company_name, date_range):
     request_metadata = {
@@ -111,8 +117,10 @@ def date_range_search(client_service, company_name, date_range):
         parent=parent, body=request).execute()
     print(response)
 # [END date_range_filter]
+# [END job_discovery_date_range_filter_search]
 
 
+# [START job_discovery_language_code_filter_search]
 # [START language_code_filter]
 def language_code_search(client_service, company_name, language_codes):
     request_metadata = {
@@ -133,8 +141,10 @@ def language_code_search(client_service, company_name, language_codes):
         parent=parent, body=request).execute()
     print(response)
 # [END language_code_filter]
+# [END job_discovery_language_code_filter_search]
 
 
+# [START job_discovery_company_display_name_search]
 # [START company_display_name_filter]
 def company_display_name_search(client_service, company_name,
                                 company_display_names):
@@ -156,8 +166,10 @@ def company_display_name_search(client_service, company_name,
         parent=parent, body=request).execute()
     print(response)
 # [END company_display_name_filter]
+# [END job_discovery_company_display_name_search]
 
 
+# [START job_discovery_compensation_search]
 # [START compensation_filter]
 def compensation_search(client_service, company_name):
     request_metadata = {
@@ -194,6 +206,7 @@ def compensation_search(client_service, company_name):
         parent=parent, body=request).execute()
     print(response)
 # [END compensation_filter]
+# [END job_discovery_compensation_search]
 
 
 def set_up():
