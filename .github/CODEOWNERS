@@ -79,4 +79,4 @@
 /datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /dataproc/**/**                        @GoogleCloudPlatform/cloud-dpes @GoogleCloudPlatform/python-samples-reviewers
-recaptcha_enterprise/**/*              @sitalakshmi @GoogleCloudPlatform/python-samples-reviewers
+recaptcha_enterprise/**/*              @sita04 @GoogleCloudPlatform/python-samples-reviewers
