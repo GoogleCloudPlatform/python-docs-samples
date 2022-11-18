@@ -90,10 +90,7 @@ def test_translate_glossary():
 
 def test_tts_standard(capsys):
     outfile = "resources/test_standard_text.mp3"
-    textfile = "resources/standard_format.txt"
-
-    with open(textfile, "r") as f:
-        text = f.read()
+    text = "this is\na test!"
 
     text_to_speech(text, outfile)
 
