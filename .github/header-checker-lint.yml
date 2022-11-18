@@ -19,7 +19,6 @@ ignoreFiles:
   - "texttospeech/snippets/resources/example.txt"
   - "texttospeech/snippets/resources/hello.txt"
 
-
 ignoreLicenseYear: true
 
 sourceFileExtensions:
