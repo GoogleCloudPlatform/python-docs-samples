@@ -29,9 +29,9 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 import pytest
 
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 from annotate_assessment import annotate_assessment
 from create_assessment import create_assessment
