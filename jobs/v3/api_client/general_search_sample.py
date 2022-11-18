@@ -24,6 +24,7 @@ client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
+
 # [START job_discovery_basic_keyword_search]
 # [START basic_keyword_search]
 def basic_keyword_search(client_service, company_name, keyword):
