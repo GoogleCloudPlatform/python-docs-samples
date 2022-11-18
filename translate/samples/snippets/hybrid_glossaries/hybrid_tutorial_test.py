@@ -40,7 +40,7 @@ def test_vision_standard_format():
 
 def test_create_and_delete_glossary():
     sys.path.insert(1, "../")
-    from beta_snippets import delete_glossary
+    from translate_v3_delete_glossary import delete_glossary
 
     languages = ["fr", "en"]
     glossary_name = f"test-glossary-{uuid.uuid4()}"
