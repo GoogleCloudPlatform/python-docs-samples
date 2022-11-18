@@ -1,4 +1,5 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+#!/usr/bin/env python
+# Copyright 2021 Google Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# All Rights Reserved.
+
 import multiprocessing
 import os
 import re
@@ -21,8 +25,11 @@ from _pytest.capture import CaptureFixture
 from flask import Flask, render_template, url_for
 from google.cloud import recaptchaenterprise_v1
 from google.cloud.recaptchaenterprise_v1 import Assessment
+
 import pytest
+
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
@@ -59,7 +66,8 @@ def browser() -> WebDriver:
     chrome_options.add_argument("--window-size=1420,1080")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
-    browser = webdriver.Chrome(chrome_options=chrome_options)
+    browser = webdriver.Chrome(ChromeDriverManager().install(),
+                               chrome_options=chrome_options)
     yield browser
     browser.close()
 
