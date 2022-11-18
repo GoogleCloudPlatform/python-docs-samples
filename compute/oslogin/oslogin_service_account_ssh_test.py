@@ -26,7 +26,7 @@ import json
 import time
 import uuid
 
-from google.api_core.exceptions import NotFound, BadRequest
+from google.api_core.exceptions import BadRequest, NotFound
 import google.auth
 from google.cloud import compute_v1
 from google.cloud import oslogin_v1
