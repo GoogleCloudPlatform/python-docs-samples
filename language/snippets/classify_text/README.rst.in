@@ -1,0 +1,28 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Natural Language API
+  short_name: Cloud Natural Language API
+  url: https://cloud.google.com/natural-language/docs/
+  description: >
+    The `Google Cloud Natural Language API`_ provides natural language
+    understanding technologies to developers.
+
+
+    This tutorial demostrates how to use the `classify_text` method to classify content category of text files, and use the result to compare texts by their similarity to each other.  See the `tutorial page`_ for details about this sample.
+
+
+    .. _tutorial page: https://cloud.google.com/natural-language/docs/classify-text-tutorial
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Classify Text Tutorial
+  file: classify_text_tutorial.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: language/classify_text

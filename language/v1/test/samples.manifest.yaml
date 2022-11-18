@@ -1,0 +1,38 @@
+type: manifest/samples
+schema_version: 3
+base: &common
+  env: 'python'
+  bin: 'python3'
+  chdir: '{@manifest_dir}/../..'
+  basepath: '.'
+samples:
+- <<: *common
+  path: '{basepath}/v1/language_classify_gcs.py'
+  sample: 'language_classify_gcs'
+- <<: *common
+  path: '{basepath}/v1/language_classify_text.py'
+  sample: 'language_classify_text'
+- <<: *common
+  path: '{basepath}/v1/language_entities_gcs.py'
+  sample: 'language_entities_gcs'
+- <<: *common
+  path: '{basepath}/v1/language_entities_text.py'
+  sample: 'language_entities_text'
+- <<: *common
+  path: '{basepath}/v1/language_entity_sentiment_gcs.py'
+  sample: 'language_entity_sentiment_gcs'
+- <<: *common
+  path: '{basepath}/v1/language_entity_sentiment_text.py'
+  sample: 'language_entity_sentiment_text'
+- <<: *common
+  path: '{basepath}/v1/language_sentiment_gcs.py'
+  sample: 'language_sentiment_gcs'
+- <<: *common
+  path: '{basepath}/v1/language_sentiment_text.py'
+  sample: 'language_sentiment_text'
+- <<: *common
+  path: '{basepath}/v1/language_syntax_gcs.py'
+  sample: 'language_syntax_gcs'
+- <<: *common
+  path: '{basepath}/v1/language_syntax_text.py'
+  sample: 'language_syntax_text'
