@@ -1,4 +1,5 @@
-# Copyright 2021 Google Inc. All Rights Reserved.
+#!/usr/bin/env python
+# Copyright 2021 Google Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# All Rights Reserved.
 
 # [START recaptcha_enterprise_create_site_key]
 from google.cloud import recaptchaenterprise_v1
