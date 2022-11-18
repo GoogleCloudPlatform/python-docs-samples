@@ -167,10 +167,8 @@ def aws_source_bucket(bucket_name: str):
     tests are ran.
     """
 
-    s3_client = boto3.client('s3')
-    s3_resource = boto3.resource('s3')
-
-    s3_client.create_bucket(Bucket=bucket_name)
+    s3_client = boto3.client('s3', **aws_key_pair())
+    s3_resource = boto3.resource('s3', **aws_key_pair())
 
     yield bucket_name
 
