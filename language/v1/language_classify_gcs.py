@@ -27,6 +27,7 @@
 # [START language_classify_gcs]
 from google.cloud import language_v1
 
+
 def sample_classify_text(gcs_content_uri):
     """
     Classifying Content in text file stored in Cloud Storage
@@ -48,18 +49,22 @@ def sample_classify_text(gcs_content_uri):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"gcs_content_uri": gcs_content_uri, "type_": type_, "language": language}
+    document = {
+        "gcs_content_uri": gcs_content_uri,
+        "type_": type_,
+        "language": language,
+    }
 
-    response = client.classify_text(request = {'document': document})
+    response = client.classify_text(request={"document": document})
     # Loop through classified categories returned from the API
     for category in response.categories:
         # Get the name of the category representing the document.
         # See the predefined taxonomy of categories:
         # https://cloud.google.com/natural-language/docs/categories
-        print(u"Category name: {}".format(category.name))
+        print("Category name: {}".format(category.name))
         # Get the confidence. Number representing how certain the classifier
         # is that this category represents the provided text.
-        print(u"Confidence: {}".format(category.confidence))
+        print("Confidence: {}".format(category.confidence))
 
 
 # [END language_classify_gcs]

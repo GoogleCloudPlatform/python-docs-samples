@@ -27,6 +27,7 @@
 # [START language_classify_text]
 from google.cloud import language_v1
 
+
 def sample_classify_text(text_content):
     """
     Classifying Content in a String
@@ -49,24 +50,25 @@ def sample_classify_text(text_content):
     document = {"content": text_content, "type_": type_, "language": language}
 
     content_categories_version = (
-        language_v1.ClassificationModelOptions.V2Model.ContentCategoriesVersion.V2)
-    response = client.classify_text(request = {
-        "document": document,
-        "classification_model_options": {
-            "v2_model": {
-                "content_categories_version": content_categories_version
-            }
+        language_v1.ClassificationModelOptions.V2Model.ContentCategoriesVersion.V2
+    )
+    response = client.classify_text(
+        request={
+            "document": document,
+            "classification_model_options": {
+                "v2_model": {"content_categories_version": content_categories_version}
+            },
         }
-    })
+    )
     # Loop through classified categories returned from the API
     for category in response.categories:
         # Get the name of the category representing the document.
         # See the predefined taxonomy of categories:
         # https://cloud.google.com/natural-language/docs/categories
-        print(u"Category name: {}".format(category.name))
+        print("Category name: {}".format(category.name))
         # Get the confidence. Number representing how certain the classifier
         # is that this category represents the provided text.
-        print(u"Confidence: {}".format(category.confidence))
+        print("Confidence: {}".format(category.confidence))
 
 
 # [END language_classify_text]

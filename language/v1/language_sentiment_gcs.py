@@ -27,6 +27,7 @@
 # [START language_sentiment_gcs]
 from google.cloud import language_v1
 
+
 def sample_analyze_sentiment(gcs_content_uri):
     """
     Analyzing Sentiment in text file stored in Cloud Storage
@@ -47,29 +48,33 @@ def sample_analyze_sentiment(gcs_content_uri):
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
-    document = {"gcs_content_uri": gcs_content_uri, "type_": type_, "language": language}
+    document = {
+        "gcs_content_uri": gcs_content_uri,
+        "type_": type_,
+        "language": language,
+    }
 
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = language_v1.EncodingType.UTF8
 
-    response = client.analyze_sentiment(request = {'document': document, 'encoding_type': encoding_type})
+    response = client.analyze_sentiment(
+        request={"document": document, "encoding_type": encoding_type}
+    )
     # Get overall sentiment of the input document
-    print(u"Document sentiment score: {}".format(response.document_sentiment.score))
+    print("Document sentiment score: {}".format(response.document_sentiment.score))
     print(
-        u"Document sentiment magnitude: {}".format(
-            response.document_sentiment.magnitude
-        )
+        "Document sentiment magnitude: {}".format(response.document_sentiment.magnitude)
     )
     # Get sentiment for all sentences in the document
     for sentence in response.sentences:
-        print(u"Sentence text: {}".format(sentence.text.content))
-        print(u"Sentence sentiment score: {}".format(sentence.sentiment.score))
-        print(u"Sentence sentiment magnitude: {}".format(sentence.sentiment.magnitude))
+        print("Sentence text: {}".format(sentence.text.content))
+        print("Sentence sentiment score: {}".format(sentence.sentiment.score))
+        print("Sentence sentiment magnitude: {}".format(sentence.sentiment.magnitude))
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print(u"Language of the text: {}".format(response.language))
+    print("Language of the text: {}".format(response.language))
 
 
 # [END language_sentiment_gcs]
