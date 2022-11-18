@@ -1,0 +1,92 @@
+<!--
+ Copyright 2021 Google LLC
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>reCAPTCHA-Enterprise</title>
+  <style>
+    #recaptchaInput{
+      width: 400px;
+      height: 200px;
+      background-color: white;
+
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      margin: auto;
+    }
+
+    input[type=text], input[type=password] {
+      width: 80%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #04AA6D;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width:100%;
+    }
+  </style>
+  <script src="https://www.google.com/recaptcha/enterprise.js?render={{site_key}}"></script>
+  <script>
+    function onSubmit(token) {
+      if (!validInput()) {
+        return;
+      }
+      console.log(token);
+      let responseElement = document.getElementById("assessment");
+      responseElement.dataset.token = token;
+      responseElement.dataset.action = "login";
+    }
+
+    function validInput() {
+      let uname = document.getElementById("username").value;
+      let pswrd = document.getElementById("password").value;
+      if (uname == null || uname == "", pswrd == null || pswrd == "") {
+        alert("Please fill all required fields!");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</head>
+<body>
+<div id="recaptchaInput" class="container">
+    <label for="username"><b>Username</b></label>
+    <input id="username" name="uname" placeholder="Enter Username" required type="text">
+    <label for="password"><b>Password</b></label>
+    <input id="password" name="psw" placeholder="Enter Password" required type="password">
+    <button class="g-recaptcha" data-action='login' data-callback='onSubmit'
+            id="recaptchabutton" data-sitekey="{{site_key}}">Submit
+    </button>
+  <label for="assessment">Score</label>
+  <input data-action="" data-token="" id="assessment">
+</div>
+<div>
+
+</div>
+</body>
+</html>
