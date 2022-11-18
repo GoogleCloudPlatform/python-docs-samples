@@ -84,6 +84,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: language'
+  to:
+    - googleapis/cdpe-cloudai
+- labels:
   - 'api: ml'
   to:
   - ivanmkc
