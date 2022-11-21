@@ -41,7 +41,7 @@ These samples show how to use the [Google Cloud Container Analysis Client Librar
 1. **Run Tests**
 
     ```
-    nox -s "py36(sample='./container_registry/container_analysis')"
+    nox -s "py36(sample='./container_registry/containeranalysis')"
     ```
 
 ## Contributing changes
