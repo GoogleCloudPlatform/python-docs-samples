@@ -44,6 +44,7 @@ assign_issues_by:
   - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: cloudsql'
+  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
@@ -58,6 +59,7 @@ assign_issues_by:
   - m-strzelczyk
 - labels:
   - 'api: container'
+  - 'api: texttospeech'
   to:
   - GoogleCloudPlatform/dee-platform-ops
 - labels:
@@ -131,26 +133,28 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
-  - 'api: texttospeech'
-  to:
-  - GoogleCloudPlatform/dee-platform-ops
-- labels:
-  - 'api: datacatalog'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
   - 'api: kms'
   - 'api: cloudkms'
-  to: 
+  to:
   - GoogleCloudPlatform/dee-infra
 - labels:
   - 'api: vision'
   to:
-  - GoogleCloudPlatform/python-samples-reviewers
+  - GoogleCloudPlatform/ml-apis
 - labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
   - 'api: vision'
   to:
-  - GoogleCloudPlatform/ml-apis
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -169,14 +173,7 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
-  - 'api: clouderrorreporting'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
-  - 'api: talent'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
+  - 'api: cloudsql'
   - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
