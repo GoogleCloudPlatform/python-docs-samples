@@ -35,8 +35,10 @@
 /compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
+/datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /dataflow/**/*                         @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
 /datalabeling/**/*                     @GoogleCloudPlatform/python-samples-reviewers @ivanmkc
+/dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
@@ -50,6 +52,7 @@
 /iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /iot/**/*                              @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
 /jobs/**/*                             @GoogleCloudPlatform/python-samples-reviewers
+/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /kubernetes_engine/**/*                @GoogleCloudPlatform/python-samples-reviewers
 /kubernetes_engine/django_tutorial/**/*    @glasnt @GoogleCloudPlatform/python-samples-reviewers
 /language/**/*                         @googleapis/python-samples-reviewers @googleapis/cdpe-cloudai
@@ -77,6 +80,3 @@
 /talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
-/datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
-/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/dataproc/**/**                        @GoogleCloudPlatform/cloud-dpes @GoogleCloudPlatform/python-samples-reviewers
