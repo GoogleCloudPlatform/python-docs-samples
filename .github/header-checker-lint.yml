@@ -20,7 +20,6 @@ ignoreFiles:
   - "texttospeech/snippets/resources/hello.txt"
   - "language/**/resources/*.txt"
   - "language/snippets/classify_text/resources/texts/*.txt"
-  - "language/v1/test/*.yaml"
 
 ignoreLicenseYear: true
 
