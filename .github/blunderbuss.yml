@@ -86,6 +86,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: language'
+  to:
+    - GoogleCloudPlatform/dee-data-ai
+- labels:
   - 'api: ml'
   to:
   - ivanmkc
