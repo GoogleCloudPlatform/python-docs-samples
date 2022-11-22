@@ -88,7 +88,7 @@ assign_issues_by:
 - labels:
   - 'api: language'
   to:
-    - googleapis/cdpe-cloudai
+    - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
