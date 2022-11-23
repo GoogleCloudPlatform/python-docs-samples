@@ -63,6 +63,10 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/dee-platform-ops
 - labels:
+  - 'api: containeranalysis'
+  to:
+  - GoogleCloudPlatform/aap-dpes
+- labels:
   - 'api: datascienceonramp'
   to:
   - leahecole
