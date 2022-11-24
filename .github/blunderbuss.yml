@@ -159,6 +159,7 @@ assign_issues_by:
   - 'api: datacatalog'
   - 'api: dataproc'
   - 'api: clouderrorreporting'
+  - 'api: recaptchaenterprise'
   - 'api: talent'
   - 'api: vision'
   to:
