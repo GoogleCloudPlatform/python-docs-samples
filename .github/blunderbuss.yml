@@ -192,7 +192,7 @@ assign_prs_by:
 - labels:
   - 'api: recaptchaenterprise'
   to:
-  - GoogleCloudPlatform/cloud-dpes
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
