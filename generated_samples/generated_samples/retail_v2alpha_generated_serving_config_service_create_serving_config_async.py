@@ -41,7 +41,7 @@ async def sample_create_serving_config():
     # Initialize request argument(s)
     serving_config = retail_v2alpha.ServingConfig()
     serving_config.display_name = "display_name_value"
-    serving_config.solution_types = "SOLUTION_TYPE_SEARCH"
+    serving_config.solution_types = ['SOLUTION_TYPE_SEARCH']
 
     request = retail_v2alpha.CreateServingConfigRequest(
         parent="parent_value",
