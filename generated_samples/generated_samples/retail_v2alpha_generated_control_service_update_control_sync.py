@@ -42,8 +42,8 @@ def sample_update_control():
     control = retail_v2alpha.Control()
     control.facet_spec.facet_key.key = "key_value"
     control.display_name = "display_name_value"
-    control.solution_types = "SOLUTION_TYPE_SEARCH"
-    control.search_solution_use_case = "SEARCH_SOLUTION_USE_CASE_BROWSE"
+    control.solution_types = ['SOLUTION_TYPE_SEARCH']
+    control.search_solution_use_case = ['SEARCH_SOLUTION_USE_CASE_BROWSE']
 
     request = retail_v2alpha.UpdateControlRequest(
         control=control,

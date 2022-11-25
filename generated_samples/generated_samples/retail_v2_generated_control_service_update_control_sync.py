@@ -41,7 +41,7 @@ def sample_update_control():
     # Initialize request argument(s)
     control = retail_v2.Control()
     control.display_name = "display_name_value"
-    control.solution_types = "SOLUTION_TYPE_SEARCH"
+    control.solution_types = ['SOLUTION_TYPE_SEARCH']
 
     request = retail_v2.UpdateControlRequest(
         control=control,
