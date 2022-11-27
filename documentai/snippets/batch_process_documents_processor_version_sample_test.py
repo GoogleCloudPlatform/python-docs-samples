@@ -27,7 +27,7 @@ processor_id = "90484cfdedb024f6"
 processor_version_id = "pretrained-form-parser-v1.0-2020-09-23"
 gcs_input_uri = "gs://cloud-samples-data/documentai/invoice.pdf"
 input_mime_type = "application/pdf"
-gcs_output_uri_prefix = uuid4()
+gcs_output_uri_prefix = f"{uuid4()}/"
 field_mask = "text,pages.pageNumber"
 BUCKET_NAME = f"document-ai-python-{uuid4()}"
 

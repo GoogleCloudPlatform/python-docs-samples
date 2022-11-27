@@ -26,7 +26,7 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
 gcs_input_uri = "gs://cloud-samples-data/documentai/invoice.pdf"
 input_mime_type = "application/pdf"
-gcs_output_uri_prefix = uuid4()
+gcs_output_uri_prefix = f"{uuid4()}/"
 field_mask = "text,pages.pageNumber"
 BUCKET_NAME = f"document-ai-python-{uuid4()}"
 

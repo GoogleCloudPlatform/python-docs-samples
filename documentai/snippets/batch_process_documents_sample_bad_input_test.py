@@ -16,6 +16,7 @@
 import os
 from uuid import uuid4
 
+from google.api_core.exceptions import InternalServerError, RetryError
 from samples.snippets import batch_process_documents_sample
 
 location = "us"
@@ -25,7 +26,7 @@ gcs_input_uri = "gs://cloud-samples-data/documentai/invoice.pdf"
 input_mime_type = "application/pdf"
 # following bucket contains .csv file which will cause the sample to fail.
 gcs_output_full_uri_with_wrong_type = "gs://documentai-beta-samples"
-gcs_output_uri_prefix = "test"
+gcs_output_uri_prefix = "test/"
 BUCKET_NAME = f"document-ai-python-{uuid4()}"
 
 
@@ -41,7 +42,8 @@ def test_batch_process_documents_with_bad_input(capsys):
             gcs_output_uri_prefix=gcs_output_uri_prefix,
             timeout=450,
         )
+    except ValueError:
         out, _ = capsys.readouterr()
-        assert "Failed" in out
-    except Exception as e:
-        assert "Failed" in e.message
+        assert "Failed" in out or "error" in out
+    except (InternalServerError, RetryError) as e:
+        assert "error" in e.message
