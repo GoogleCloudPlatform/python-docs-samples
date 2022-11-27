@@ -31,7 +31,7 @@ def get_processor_sample(project_id: str, location: str, processor_id: str):
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
     # The full resource name of the processor, e.g.:
-    # projects/project_id/locations/location/processor/processor_id
+    # projects/{project_id}/locations/{location}/processors/{processor_id}
     name = client.processor_path(project_id, location, processor_id)
 
     # Make GetProcessor request
