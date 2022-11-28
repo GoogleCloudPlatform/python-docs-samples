@@ -156,6 +156,7 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
+  - 'api: asset'
   - 'api: datacatalog'
   - 'api: dataproc'
   - 'api: clouderrorreporting'
