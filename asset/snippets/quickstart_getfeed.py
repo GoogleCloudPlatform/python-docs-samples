@@ -27,7 +27,7 @@ def get_feed(feed_name):
     client = asset_v1.AssetServiceClient()
     response = client.get_feed(request={"name": feed_name})
     print("gotten_feed: {}".format(response))
-    # [START asset_quickstart_get_feed]
+    # [END asset_quickstart_get_feed]
 
 
 if __name__ == "__main__":
