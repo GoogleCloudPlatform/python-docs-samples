@@ -38,8 +38,11 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
+    full_command = f"gcloud {command} --quiet --format=json"
+    print("Running command:", full_command)
+
     output = subprocess.run(
-        f"gcloud {command} --quiet --format=json",
+        full_command,
         capture_output=True,
         shell=True,
         check=True,
