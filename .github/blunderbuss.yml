@@ -160,6 +160,7 @@ assign_issues_by:
   - 'api: dataproc'
   - 'api: clouderrorreporting'
   - 'api: talent'
+  - 'api: recaptchaenterprise'
   - 'api: vision'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
@@ -189,10 +190,6 @@ assign_prs_by:
   - 'api: dataproc'
   to:
   - GoogleCloudPlatform/cloud-dpes
-- labels:
-  - 'api: recaptchaenterprise'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
