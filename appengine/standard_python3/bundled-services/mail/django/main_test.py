@@ -77,8 +77,8 @@ def test_send_receive(version):
 
     # Check that version is serving form in home page
     response = requests.get(f"https://{version_hostname}/")
-    assert response.status_code == 200
     assert '<form action="" method="POST">' in response.text
+    assert response.status_code == 200
 
     # Send valid mail
     response = requests.post(
@@ -89,8 +89,8 @@ def test_send_receive(version):
         },
     )
 
-    assert response.status_code == 201
     assert "Successfully sent mail" in response.text
+    assert response.status_code == 201
 
     # Give the mail some time to be delivered and logs to post
     time.sleep(60)
