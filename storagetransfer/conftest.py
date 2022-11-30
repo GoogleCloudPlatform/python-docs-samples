@@ -21,10 +21,16 @@ import os
 import uuid
 
 import boto3
+from azure.storage.blob import BlobServiceClient, ContainerClient
 from google.cloud import secretmanager, storage, storage_transfer
 from google.cloud.storage_transfer import TransferJob
 
 import pytest
+
+
+# cache secret from secret manager
+aws_secret_cache = None
+azure_secret_cache = None
 
 
 @pytest.fixture(scope='module')
@@ -32,37 +38,7 @@ def project_id():
     yield os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
-# cache secret from secret manager
-aws_secret_manager_cache = None
-
-
-def parse_and_cache_secret_json(payload: str):
-    """
-    Decodes a JSON string in AWS AccessKey JSON format.
-    Supports both single-key "AccessKey" and JSON with props.
-
-    ``payload`` examples:
-    - ``{"AccessKey": {"AccessKeyId": "", "SecretAccessKey": ""}``
-    - ``{"AccessKeyId": "", "SecretAccessKey": ""}``
-    """
-
-    global aws_secret_manager_cache
-
-    secret = json.loads(payload)
-
-    # normalize to props as keys
-    if secret.get('AccessKey'):
-        secret = secret.get('AccessKey')
-
-    aws_secret_manager_cache = {
-        'aws_access_key_id': secret['AccessKeyId'],
-        'aws_secret_access_key': secret['SecretAccessKey'],
-    }
-
-    return aws_secret_manager_cache
-
-
-def aws_retrieve_from_secret_manager(name: str):
+def retrieve_from_secret_manager(name: str):
     """
     Retrieves a secret given a name.
 
@@ -75,30 +51,98 @@ def aws_retrieve_from_secret_manager(name: str):
     response = client.access_secret_version(request={"name": name})
 
     # parse and cache secret from secret manager
-    return parse_and_cache_secret_json(response.payload.data.decode("UTF-8"))
+    return response.payload.data.decode("UTF-8")
+
+
+def aws_parse_and_cache_secret_json(payload: str):
+    """
+    Decodes a JSON string in AWS AccessKey JSON format.
+    Supports both single-key "AccessKey" and JSON with props.
+
+    ``payload`` examples:
+    - ``{"AccessKey": {"AccessKeyId": "", "SecretAccessKey": ""}``
+    - ``{"AccessKeyId": "", "SecretAccessKey": ""}``
+    """
+
+    global aws_secret_cache
+
+    secret = json.loads(payload)
+
+    # normalize to props as keys
+    if secret.get('AccessKey'):
+        secret = secret.get('AccessKey')
+
+    aws_secret_cache = {
+        'aws_access_key_id': secret['AccessKeyId'],
+        'aws_secret_access_key': secret['SecretAccessKey'],
+    }
+
+    return aws_secret_cache
 
 
 def aws_key_pair():
-    global aws_secret_manager_cache
+    global aws_secret_cache
 
     sts_aws_secret = os.environ.get("STS_AWS_SECRET")
     sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
-    if aws_secret_manager_cache:
-        return aws_secret_manager_cache
+    if aws_secret_cache:
+        return aws_secret_cache
 
     if sts_aws_secret:
-        return parse_and_cache_secret_json(sts_aws_secret)
+        return aws_parse_and_cache_secret_json(sts_aws_secret)
 
     if sts_aws_secret_name:
-        return aws_retrieve_from_secret_manager(sts_aws_secret_name)
+        res = retrieve_from_secret_manager(sts_aws_secret_name)
+        return aws_parse_and_cache_secret_json(res)
 
     return {
         'aws_access_key_id': aws_access_key_id,
         'aws_secret_access_key': aws_secret_access_key,
     }
+
+
+def azure_parse_and_cache_secret_json(payload: str):
+    """
+    Decodes a JSON string in JSON format.
+    Supports both single-key "AccessKey" and JSON with props.
+
+    ``payload`` examples:
+    - ``{"StorageAccount": "", "ConnectionString": "", "SAS": ""}``
+    """
+
+    global azure_secret_cache
+
+    secret = json.loads(payload)
+
+    azure_secret_cache = {
+        'storage_account': secret['StorageAccount'],
+        'connection_string': secret['ConnectionString'],
+        'sas_token': secret['SAS'],
+    }
+
+    return azure_secret_cache
+
+
+def azure_credentials():
+    global azure_secret_cache
+
+    sts_azure_secret = os.environ.get("STS_AZURE_SECRET")
+    sts_azure_secret_name = os.environ.get("STS_AZURE_SECRET_NAME")
+
+    if azure_secret_cache:
+        return azure_secret_cache
+
+    if sts_azure_secret:
+        return aws_parse_and_cache_secret_json(sts_azure_secret)
+
+    if sts_azure_secret_name:
+        res = retrieve_from_secret_manager(sts_azure_secret_name)
+        return aws_parse_and_cache_secret_json(res)
+
+    return azure_secret_cache
 
 
 @pytest.fixture(scope='module')
@@ -109,6 +153,21 @@ def aws_access_key_id():
 @pytest.fixture(scope='module')
 def aws_secret_access_key():
     yield aws_key_pair()['aws_secret_access_key']
+
+
+@pytest.fixture(scope='module')
+def azure_storage_account():
+    yield azure_credentials()['storage_account']
+
+
+@pytest.fixture(scope='module')
+def azure_connection_string():
+    yield azure_credentials()['connection_string']
+
+
+@pytest.fixture(scope='module')
+def azure_sas_token():
+    yield azure_credentials()['sas_token']
 
 
 @pytest.fixture(scope='module')
@@ -176,6 +235,25 @@ def aws_source_bucket(bucket_name: str):
 
     s3_resource.Bucket(bucket_name).objects.all().delete()
     s3_client.delete_bucket(Bucket=bucket_name)
+
+
+@pytest.fixture(scope='module')
+def azure_source_container(bucket_name: str):
+    """
+    Creates an Azure container for testing. Empties and auto-deletes after
+    tests are ran.
+    """
+
+    service: BlobServiceClient = BlobServiceClient.from_connection_string(
+        conn_str=azure_connection_string)
+
+    container_client: ContainerClient = service.get_container_client(
+        container=bucket_name)
+    container_client.create_container()
+
+    yield bucket_name
+
+    container_client.delete_container()
 
 
 @pytest.fixture(scope='module')
