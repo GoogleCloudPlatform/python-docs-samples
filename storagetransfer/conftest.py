@@ -28,9 +28,15 @@ from google.cloud.storage_transfer import TransferJob
 import pytest
 
 
-# cache secret from secret manager
-aws_secret_cache = None
-azure_secret_cache = None
+@pytest.fixture(scope="module")
+def secret_cache():
+    """
+    Cached secrets. Prevents multiple causes to Secret Manager.
+    """
+    return {
+        'aws': None,
+        'azure': None
+    }
 
 
 @pytest.fixture(scope='module')
@@ -54,7 +60,7 @@ def retrieve_from_secret_manager(name: str):
     return response.payload.data.decode("UTF-8")
 
 
-def aws_parse_and_cache_secret_json(payload: str):
+def aws_parse_and_cache_secret_json(payload: str, secret_cache):
     """
     Decodes a JSON string in AWS AccessKey JSON format.
     Supports both single-key "AccessKey" and JSON with props.
@@ -64,39 +70,35 @@ def aws_parse_and_cache_secret_json(payload: str):
     - ``{"AccessKeyId": "", "SecretAccessKey": ""}``
     """
 
-    global aws_secret_cache
-
     secret = json.loads(payload)
 
     # normalize to props as keys
     if secret.get('AccessKey'):
         secret = secret.get('AccessKey')
 
-    aws_secret_cache = {
+    secret_cache.aws = {
         'aws_access_key_id': secret['AccessKeyId'],
         'aws_secret_access_key': secret['SecretAccessKey'],
     }
 
-    return aws_secret_cache
+    return secret_cache.aws
 
 
-def aws_key_pair():
-    global aws_secret_cache
+def aws_key_pair(secret_cache):
+    if secret_cache.aws:
+        return secret_cache.aws
 
     sts_aws_secret = os.environ.get("STS_AWS_SECRET")
-    sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
-
-    if aws_secret_cache:
-        return aws_secret_cache
-
     if sts_aws_secret:
         return aws_parse_and_cache_secret_json(sts_aws_secret)
 
+    sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
     if sts_aws_secret_name:
         res = retrieve_from_secret_manager(sts_aws_secret_name)
         return aws_parse_and_cache_secret_json(res)
+
+    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
     return {
         'aws_access_key_id': aws_access_key_id,
@@ -104,7 +106,7 @@ def aws_key_pair():
     }
 
 
-def azure_parse_and_cache_secret_json(payload: str):
+def azure_parse_and_cache_secret_json(payload: str, secret_cache):
     """
     Decodes a JSON string in JSON format.
     Supports both single-key "AccessKey" and JSON with props.
@@ -113,31 +115,26 @@ def azure_parse_and_cache_secret_json(payload: str):
     - ``{"StorageAccount": "", "ConnectionString": "", "SAS": ""}``
     """
 
-    global azure_secret_cache
-
     secret = json.loads(payload)
 
-    azure_secret_cache = {
+    secret_cache.azure = {
         'storage_account': secret['StorageAccount'],
         'connection_string': secret['ConnectionString'],
         'sas_token': secret['SAS'],
     }
 
-    return azure_secret_cache
+    return secret_cache.azure
 
 
-def azure_credentials():
-    global azure_secret_cache
+def azure_credentials(secret_cache):
+    if secret_cache.azure:
+        return secret_cache.azure
 
     sts_azure_secret = os.environ.get("STS_AZURE_SECRET")
-    sts_azure_secret_name = os.environ.get("STS_AZURE_SECRET_NAME")
-
-    if azure_secret_cache:
-        return azure_secret_cache
-
     if sts_azure_secret:
         return azure_parse_and_cache_secret_json(sts_azure_secret)
 
+    sts_azure_secret_name = os.environ.get("STS_AZURE_SECRET_NAME")
     if sts_azure_secret_name:
         res = retrieve_from_secret_manager(sts_azure_secret_name)
         return azure_parse_and_cache_secret_json(res)
@@ -146,37 +143,37 @@ def azure_credentials():
         "env variables not found: 'STS_AZURE_SECRET'/'STS_AZURE_SECRET_NAME'")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def aws_access_key_id():
     yield aws_key_pair()['aws_access_key_id']
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def aws_secret_access_key():
     yield aws_key_pair()['aws_secret_access_key']
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def azure_storage_account():
     yield azure_credentials()['storage_account']
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def azure_connection_string():
     yield azure_credentials()['connection_string']
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def azure_sas_token():
     yield azure_credentials()['sas_token']
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def bucket_name():
     yield f"sts-python-samples-test-{uuid.uuid4()}"
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def sts_service_account(project_id):
     client = storage_transfer.StorageTransferServiceClient()
     account = client.get_google_service_account({'project_id': project_id})
@@ -184,7 +181,7 @@ def sts_service_account(project_id):
     yield account.account_email
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def job_description_unique(project_id: str):
     """
     Generate a unique job description. Attempts to find and delete a job with
@@ -220,7 +217,7 @@ def job_description_unique(project_id: str):
         })
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def aws_source_bucket(bucket_name: str):
     """
     Creates an S3 bucket for testing. Empties and auto-deletes after
@@ -238,7 +235,7 @@ def aws_source_bucket(bucket_name: str):
     s3_client.delete_bucket(Bucket=bucket_name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def azure_source_container(bucket_name: str, azure_connection_string: str):
     """
     Creates an Azure container for testing. Empties and auto-deletes after
@@ -257,7 +254,7 @@ def azure_source_container(bucket_name: str, azure_connection_string: str):
     container_client.delete_container()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def gcs_bucket(project_id: str, bucket_name: str):
     """
     Yields and auto-cleans up a CGS bucket for use in STS jobs
@@ -271,7 +268,7 @@ def gcs_bucket(project_id: str, bucket_name: str):
     bucket.delete()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def source_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a CGS bucket preconfigured with necessary
@@ -294,7 +291,7 @@ def source_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a CGS bucket preconfigured with necessary
@@ -315,7 +312,7 @@ def destination_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     """
     Yields and auto-cleans up a GCS bucket preconfigured with necessary
@@ -340,7 +337,7 @@ def intermediate_bucket(gcs_bucket: storage.Bucket, sts_service_account: str):
     yield gcs_bucket
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def agent_pool_name():
     """
     Yields a source agent pool name
@@ -350,7 +347,7 @@ def agent_pool_name():
     yield ''
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def posix_root_directory():
     """
     Yields a POSIX root directory
@@ -360,7 +357,7 @@ def posix_root_directory():
     yield '/my-posix-root/'
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def manifest_file(source_bucket: storage.Bucket):
     """
     Yields a transfer manifest file name

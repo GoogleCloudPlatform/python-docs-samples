@@ -20,8 +20,6 @@ Google Cloud Storage.
 """
 
 
-import argparse
-
 # [START storagetransfer_transfer_from_azure]
 from datetime import datetime
 
@@ -35,6 +33,9 @@ def create_one_time_azure_transfer(
     """Creates a one-time transfer job from Azure Blob Storage to Google Cloud
     Storage."""
 
+    # Initialize client that will be used to create storage transfer requests.
+    # This client only needs to be created once, and can be reused for
+    # multiple requests.
     client = storage_transfer.StorageTransferServiceClient()
 
     # The ID of the Google Cloud Platform Project that owns the job
@@ -93,34 +94,3 @@ def create_one_time_azure_transfer(
 
 
 # [END storagetransfer_transfer_from_azure]
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        '--project-id',
-        help='The ID of the Google Cloud Platform Project that owns the job',
-        required=True)
-    parser.add_argument(
-        '--description',
-        help='A useful description for your transfer job',
-        default='My transfer job')
-    parser.add_argument(
-        '--azure-storage-account',
-        help='Azure Storage Account name',
-        required=True)
-    parser.add_argument(
-        '--azure-sas-account',
-        help='Azure Shared Access Signature token',
-        required=True)
-    parser.add_argument(
-        '--source-container',
-        help='Azure Blob source container name',
-        required=True)
-    parser.add_argument(
-        '--sink-bucket',
-        help='Google Cloud Storage destination bucket name',
-        required=True)
-
-    args = parser.parse_args()
-
-    create_one_time_azure_transfer(**vars(args))
