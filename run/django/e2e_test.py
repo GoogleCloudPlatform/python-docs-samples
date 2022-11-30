@@ -178,7 +178,7 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
                 "--region",
                 REGION,
                 "--format",
-                "value(status.url)",
+                "\"value(status.url)\"",
                 "--project",
                 GOOGLE_CLOUD_PROJECT,
             ]
