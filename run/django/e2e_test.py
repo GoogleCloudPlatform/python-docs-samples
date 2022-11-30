@@ -66,7 +66,7 @@ SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
-def run_shell_cmd(args):
+def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
     """
     Runs a shell command and returns its output.
     Usage: run_shell_cmd(args)
@@ -89,10 +89,10 @@ def run_shell_cmd(args):
         )
 
         return output
-    except Exception:
+    except subprocess.CalledProcessError as e:
         print("Command failed")
-        print(f"stderr was {output.stderr}")
-    raise Exception(output.stderr)
+        print(f"stderr was {e.stderr}")
+        raise e
 
 
 @pytest.fixture
