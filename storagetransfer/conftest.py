@@ -76,17 +76,17 @@ def aws_parse_and_cache_secret_json(payload: str, secret_cache):
     if secret.get('AccessKey'):
         secret = secret.get('AccessKey')
 
-    secret_cache.aws = {
+    secret_cache['aws'] = {
         'aws_access_key_id': secret['AccessKeyId'],
         'aws_secret_access_key': secret['SecretAccessKey'],
     }
 
-    return secret_cache.aws
+    return secret_cache['aws']
 
 
 def aws_key_pair(secret_cache):
-    if secret_cache.aws:
-        return secret_cache.aws
+    if secret_cache['aws']:
+        return secret_cache['aws']
 
     sts_aws_secret = os.environ.get("STS_AWS_SECRET")
     if sts_aws_secret:
@@ -117,18 +117,18 @@ def azure_parse_and_cache_secret_json(payload: str, secret_cache):
 
     secret = json.loads(payload)
 
-    secret_cache.azure = {
+    secret_cache['azure'] = {
         'storage_account': secret['StorageAccount'],
         'connection_string': secret['ConnectionString'],
         'sas_token': secret['SAS'],
     }
 
-    return secret_cache.azure
+    return secret_cache['azure']
 
 
 def azure_credentials(secret_cache):
-    if secret_cache.azure:
-        return secret_cache.azure
+    if secret_cache['azure']:
+        return secret_cache['azure']
 
     sts_azure_secret = os.environ.get("STS_AZURE_SECRET")
     if sts_azure_secret:
@@ -219,14 +219,14 @@ def job_description_unique(project_id: str):
 
 
 @pytest.fixture
-def aws_source_bucket(bucket_name: str, ):
+def aws_source_bucket(bucket_name: str, secret_cache):
     """
     Creates an S3 bucket for testing. Empties and auto-deletes after
     tests are ran.
     """
 
-    s3_client = boto3.client('s3', **aws_key_pair())
-    s3_resource = boto3.resource('s3', **aws_key_pair())
+    s3_client = boto3.client('s3', **aws_key_pair(secret_cache))
+    s3_resource = boto3.resource('s3', **aws_key_pair(secret_cache))
 
     s3_client.create_bucket(Bucket=bucket_name)
 
