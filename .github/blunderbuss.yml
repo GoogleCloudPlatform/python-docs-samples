@@ -59,7 +59,6 @@ assign_issues_by:
   - m-strzelczyk
 - labels:
   - 'api: container'
-  - 'api: texttospeech'
   to:
   - GoogleCloudPlatform/dee-platform-ops
 - labels:
