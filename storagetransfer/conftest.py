@@ -136,11 +136,11 @@ def azure_credentials():
         return azure_secret_cache
 
     if sts_azure_secret:
-        return aws_parse_and_cache_secret_json(sts_azure_secret)
+        return azure_parse_and_cache_secret_json(sts_azure_secret)
 
     if sts_azure_secret_name:
         res = retrieve_from_secret_manager(sts_azure_secret_name)
-        return aws_parse_and_cache_secret_json(res)
+        return azure_parse_and_cache_secret_json(res)
 
     return azure_secret_cache
 
