@@ -142,7 +142,8 @@ def azure_credentials():
         res = retrieve_from_secret_manager(sts_azure_secret_name)
         return azure_parse_and_cache_secret_json(res)
 
-    return azure_secret_cache
+    raise Exception(
+        "env variables not found: 'STS_AZURE_SECRET'/'STS_AZURE_SECRET_NAME'")
 
 
 @pytest.fixture(scope='module')
@@ -238,7 +239,7 @@ def aws_source_bucket(bucket_name: str):
 
 
 @pytest.fixture(scope='module')
-def azure_source_container(bucket_name: str):
+def azure_source_container(bucket_name: str, azure_connection_string: str):
     """
     Creates an Azure container for testing. Empties and auto-deletes after
     tests are ran.
