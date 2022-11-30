@@ -90,12 +90,12 @@ def aws_key_pair(secret_cache):
 
     sts_aws_secret = os.environ.get("STS_AWS_SECRET")
     if sts_aws_secret:
-        return aws_parse_and_cache_secret_json(sts_aws_secret)
+        return aws_parse_and_cache_secret_json(sts_aws_secret, secret_cache)
 
     sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
     if sts_aws_secret_name:
         res = retrieve_from_secret_manager(sts_aws_secret_name)
-        return aws_parse_and_cache_secret_json(res)
+        return aws_parse_and_cache_secret_json(res, secret_cache)
 
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
@@ -132,40 +132,41 @@ def azure_credentials(secret_cache):
 
     sts_azure_secret = os.environ.get("STS_AZURE_SECRET")
     if sts_azure_secret:
-        return azure_parse_and_cache_secret_json(sts_azure_secret)
+        return azure_parse_and_cache_secret_json(
+            sts_azure_secret, secret_cache)
 
     sts_azure_secret_name = os.environ.get("STS_AZURE_SECRET_NAME")
     if sts_azure_secret_name:
         res = retrieve_from_secret_manager(sts_azure_secret_name)
-        return azure_parse_and_cache_secret_json(res)
+        return azure_parse_and_cache_secret_json(res, secret_cache)
 
     raise Exception(
         "env variables not found: 'STS_AZURE_SECRET'/'STS_AZURE_SECRET_NAME'")
 
 
 @pytest.fixture
-def aws_access_key_id():
-    yield aws_key_pair()['aws_access_key_id']
+def aws_access_key_id(secret_cache):
+    yield aws_key_pair(secret_cache)['aws_access_key_id']
 
 
 @pytest.fixture
-def aws_secret_access_key():
-    yield aws_key_pair()['aws_secret_access_key']
+def aws_secret_access_key(secret_cache):
+    yield aws_key_pair(secret_cache)['aws_secret_access_key']
 
 
 @pytest.fixture
-def azure_storage_account():
-    yield azure_credentials()['storage_account']
+def azure_storage_account(secret_cache):
+    yield azure_credentials(secret_cache)['storage_account']
 
 
 @pytest.fixture
-def azure_connection_string():
-    yield azure_credentials()['connection_string']
+def azure_connection_string(secret_cache):
+    yield azure_credentials(secret_cache)['connection_string']
 
 
 @pytest.fixture
-def azure_sas_token():
-    yield azure_credentials()['sas_token']
+def azure_sas_token(secret_cache):
+    yield azure_credentials(secret_cache)['sas_token']
 
 
 @pytest.fixture
@@ -218,7 +219,7 @@ def job_description_unique(project_id: str):
 
 
 @pytest.fixture
-def aws_source_bucket(bucket_name: str):
+def aws_source_bucket(bucket_name: str, ):
     """
     Creates an S3 bucket for testing. Empties and auto-deletes after
     tests are ran.
