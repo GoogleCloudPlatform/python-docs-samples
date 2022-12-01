@@ -37,8 +37,11 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
+    full_command = f"gcloud {command} --quiet --format=json"
+    print("Running command:", full_command)
+
     output = subprocess.run(
-        f"gcloud {command} --quiet --format=json",
+        full_command,
         capture_output=True,
         shell=True,
         check=True,
@@ -74,8 +77,8 @@ def test_upload_and_view(version):
 
     # Initial value of counter should be 0
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "0"
+    assert response.status_code == 200
 
     # Request counter be incremented
     response = requests.get(f"https://{version_hostname}/counter/increment")
@@ -84,23 +87,23 @@ def test_upload_and_view(version):
     # counter should be 10 almost immediately
     time.sleep(10)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "10"
+    assert response.status_code == 200
 
     # After 20 seconds, counter should be 20
     time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "20"
+    assert response.status_code == 200
 
     # After 40 seconds, counter should be 30
     time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "30"
+    assert response.status_code == 200
 
     # counter should stay at 30 unless another request to increment it is set
     time.sleep(10)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "30"
+    assert response.status_code == 200
