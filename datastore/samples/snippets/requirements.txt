@@ -1,1 +1,1 @@
-google-cloud-datastore==2.10.0
+google-cloud-datastore==2.11.0
