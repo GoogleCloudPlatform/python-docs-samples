@@ -21,7 +21,7 @@ import os
 import uuid
 
 import boto3
-from google.cloud import storage, storage_transfer
+from google.cloud import secretmanager, storage, storage_transfer
 from google.cloud.storage_transfer import TransferJob
 
 import pytest
@@ -32,14 +32,83 @@ def project_id():
     yield os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
+# cache secret from secret manager
+aws_secret_manager_cache = None
+
+
+def parse_and_cache_secret_json(payload: str):
+    """
+    Decodes a JSON string in AWS AccessKey JSON format.
+    Supports both single-key "AccessKey" and JSON with props.
+
+    ``payload`` examples:
+    - ``{"AccessKey": {"AccessKeyId": "", "SecretAccessKey": ""}``
+    - ``{"AccessKeyId": "", "SecretAccessKey": ""}``
+    """
+
+    global aws_secret_manager_cache
+
+    secret = json.loads(payload)
+
+    # normalize to props as keys
+    if secret.get('AccessKey'):
+        secret = secret.get('AccessKey')
+
+    aws_secret_manager_cache = {
+        'aws_access_key_id': secret['AccessKeyId'],
+        'aws_secret_access_key': secret['SecretAccessKey'],
+    }
+
+    return aws_secret_manager_cache
+
+
+def aws_retrieve_from_secret_manager(name: str):
+    """
+    Retrieves a secret given a name.
+
+    example ``name`` = ``projects/123/secrets/my-secret/versions/latest``
+    """
+
+    client = secretmanager.SecretManagerServiceClient()
+
+    # retrieve from secret manager
+    response = client.access_secret_version(request={"name": name})
+
+    # parse and cache secret from secret manager
+    return parse_and_cache_secret_json(response.payload.data.decode("UTF-8"))
+
+
+def aws_key_pair():
+    global aws_secret_manager_cache
+
+    sts_aws_secret = os.environ.get("STS_AWS_SECRET")
+    sts_aws_secret_name = os.environ.get("STS_AWS_SECRET_NAME")
+    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+    if aws_secret_manager_cache:
+        return aws_secret_manager_cache
+
+    if sts_aws_secret:
+        return parse_and_cache_secret_json(sts_aws_secret)
+
+    if sts_aws_secret_name:
+        return aws_retrieve_from_secret_manager(sts_aws_secret_name)
+
+    return {
+        'aws_access_key_id': aws_access_key_id,
+        'aws_secret_access_key': aws_secret_access_key,
+    }
+
+
 @pytest.fixture(scope='module')
 def aws_access_key_id():
-    yield os.environ.get("AWS_ACCESS_KEY_ID")
+    yield aws_key_pair()['aws_access_key_id']
 
 
 @pytest.fixture(scope='module')
 def aws_secret_access_key():
-    yield os.environ.get("AWS_SECRET_ACCESS_KEY")
+    yield aws_key_pair()['aws_secret_access_key']
 
 
 @pytest.fixture(scope='module')
@@ -98,8 +167,8 @@ def aws_source_bucket(bucket_name: str):
     tests are ran.
     """
 
-    s3_client = boto3.client('s3')
-    s3_resource = boto3.resource('s3')
+    s3_client = boto3.client('s3', **aws_key_pair())
+    s3_resource = boto3.resource('s3', **aws_key_pair())
 
     s3_client.create_bucket(Bucket=bucket_name)
 

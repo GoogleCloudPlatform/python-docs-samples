@@ -22,8 +22,9 @@ from airflow.providers.google.cloud.operators.kubernetes_engine import (
     GKEDeleteClusterOperator,
     GKEStartPodOperator,
 )
-
 from airflow.utils.dates import days_ago
+
+from kubernetes.client import models as k8s_models
 
 
 with models.DAG(
@@ -175,7 +176,7 @@ with models.DAG(
         location=CLUSTER_REGION,
         cluster_name=CLUSTER_NAME,
         namespace="default",
-        image="perl",
+        image="perl:5.34.0",
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
         cmds=["perl"],
@@ -202,16 +203,17 @@ with models.DAG(
         # Can be a large range of data, and can include characters that are not
         # permitted by labels.
         annotations={"key1": "value1"},
-        # Resource specifications for Pod, this will allow you to set both cpu
-        # and memory limits and requirements.
-        # Prior to Airflow 1.10.4, resource specifications were
-        # passed as a Pod Resources Class object,
-        # If using this example on a version of Airflow prior to 1.10.4,
-        # import the "pod" package from airflow.contrib.kubernetes and use
-        # resources = pod.Resources() instead passing a dict
-        # For more info see:
-        # https://github.com/apache/airflow/pull/4551
-        resources={"limit_memory": "250M", "limit_cpu": "100m"},
+        # Optional resource specifications for Pod, this will allow you to
+        # set both cpu and memory limits and requirements.
+        # Prior to Airflow 2.3 and the cncf providers package 5.0.0
+        # resources were passed as a dictionary. This change was made in
+        # https://github.com/apache/airflow/pull/27197
+        # Additionally, "memory" and "cpu" were previously named
+        # "limit_memory" and "limit_cpu"
+        # resources={'limit_memory': "250M", 'limit_cpu': "100m"},
+        container_resources=k8s_models.V1ResourceRequirements(
+            limits={"memory": "250M", "cpu": "100m"},
+        ),
         # If true, the content of /airflow/xcom/return.json from container will
         # also be pushed to an XCom when the container ends.
         do_xcom_push=False,
