@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_concepts_after_timeout]
 import time
 
 
-# [START functions_concepts_after_timeout]
 def timeout(request):
     print('Function running...')
     time.sleep(120)
