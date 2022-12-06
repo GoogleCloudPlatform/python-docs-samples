@@ -35,6 +35,12 @@ def gcp_api_call(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
+    """
+    The `GCP_PROJECT` environment variable is set automatically in the Python 3.7 runtime.
+    In later runtimes, it must be specified by the user upon function deployment.
+    See this page for more information:
+        https://cloud.google.com/functions/docs/configuring/env-var#python_37_and_go_111
+    """
     project = os.getenv('GCP_PROJECT')
     request_json = request.get_json()
 
