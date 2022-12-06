@@ -28,7 +28,6 @@ def function_specific_computation():
 
 # [START functions_tips_lazy_globals]
 # [START cloudrun_tips_global_lazy]
-# [START run_tips_global_lazy]
 # Always initialized (at cold-start)
 non_lazy_global = file_wide_computation()
 
@@ -54,6 +53,5 @@ def lazy_globals(request):
         lazy_global = function_specific_computation()
 
     return 'Lazy: {}, non-lazy: {}.'.format(lazy_global, non_lazy_global)
-# [END run_tips_global_lazy]
 # [END cloudrun_tips_global_lazy]
 # [END functions_tips_lazy_globals]
