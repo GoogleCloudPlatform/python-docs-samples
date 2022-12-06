@@ -27,6 +27,7 @@ def light_computation():
 
 
 # [START functions_tips_scopes]
+# [START cloudrun_tips_global_scope]
 # Global (instance-wide) scope
 # This computation runs at instance cold-start
 instance_var = heavy_computation()
@@ -49,3 +50,4 @@ def scope_demo(request):
     function_var = light_computation()
     return 'Instance: {}; function: {}'.format(instance_var, function_var)
 # [END functions_tips_scopes]
+# [END cloudrun_tips_global_scope]
