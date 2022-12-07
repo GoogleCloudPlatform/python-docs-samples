@@ -16,10 +16,9 @@ import json
 import os
 
 import flask
+import pytest
 
 import main
-
-import pytest
 
 
 # Create a fake "app" for generating test request contexts.
