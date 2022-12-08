@@ -59,9 +59,12 @@ assign_issues_by:
   - m-strzelczyk
 - labels:
   - 'api: container'
-  - 'api: texttospeech'
   to:
   - GoogleCloudPlatform/dee-platform-ops
+- labels:
+  - 'api: containeranalysis'
+  to:
+  - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: datascienceonramp'
   to:
@@ -85,6 +88,12 @@ assign_issues_by:
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
@@ -148,6 +157,7 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
+  - 'api: asset'
   - 'api: datacatalog'
   - 'api: dataproc'
   - 'api: clouderrorreporting'
@@ -177,7 +187,10 @@ assign_prs_by:
   - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
-
+- labels:
+  - 'api: retail'
+  to: 
+  - GoogleCloudPlatform/dee-data-ai
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
