@@ -15,8 +15,6 @@ import os
 
 import backoff
 from google.cloud import datastore
-
-
 import pytest
 
 import snippets
@@ -72,3 +70,51 @@ class TestDatastoreSnippets:
         tasks = snippets.query_with_readtime(client)
         client.entities_to_delete.extend(tasks)
         assert tasks is not None
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_count_query_in_transaction(self, client):
+        with pytest.raises(ValueError) as excinfo:
+            snippets.count_query_in_transaction(client)
+        assert "User 'John' cannot have more than 2 tasks" in str(excinfo.value)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_count_query_on_kind(self, capsys, client):
+        tasks = snippets.count_query_on_kind(client)
+        captured = capsys.readouterr()
+        assert (
+            captured.out.strip() == "Total tasks (accessible from default alias) is 2"
+        )
+        assert captured.err == ""
+
+        client.entities_to_delete.extend(tasks)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_count_query_with_limit(self, capsys, client):
+        tasks = snippets.count_query_with_limit(client)
+        captured = capsys.readouterr()
+        assert captured.out.strip() == "We have at least 2 tasks"
+        assert captured.err == ""
+
+        client.entities_to_delete.extend(tasks)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_count_query_property_filter(self, capsys, client):
+        tasks = snippets.count_query_property_filter(client)
+        captured = capsys.readouterr()
+
+        assert "Total completed tasks count is 2" in captured.out
+        assert "Total remaining tasks count is 1" in captured.out
+        assert captured.err == ""
+
+        client.entities_to_delete.extend(tasks)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_count_query_with_stale_read(self, capsys, client):
+        tasks = snippets.count_query_with_stale_read(client)
+        captured = capsys.readouterr()
+
+        assert "Latest tasks count is 3" in captured.out
+        assert "Stale tasks count is 2" in captured.out
+        assert captured.err == ""
+
+        client.entities_to_delete.extend(tasks)
