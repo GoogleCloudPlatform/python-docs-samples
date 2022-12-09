@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>reCAPTCHA-Enterprise</title>
+  <link rel="stylesheet" type="text/css" href="../static/home.css" />
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=explicit"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="../static/assessment.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+         <div class="col s12 col m8 push-m2  col l6 push-l3">
+             <div class="card-panel white z-depth-5">
+                 <img id ="user-img" src="../static/recaptcha.png" alt="reCAPTCHA logo">
+                 <h3>Checkbox Key: Demo</h3>
+                  <div class="row">
+                    <form class="col s12" id="recaptcha_form">
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input id="firstname" type="text" class="validate" length="32" required>
+                          <label for="firstname">First name</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input id="lastname" type="text" class="validate" length="32" required>
+                          <label for="lastname">Last name</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input id="email-id" type="text" class="validate" length="100" required>
+                          <label for="email-id">Email</label>
+                        </div>
+                        </div>
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input id="password" type="password" class="validate" length="32" required>
+                          <label for="password">Password</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <div class="col s12">
+                              <div id="recaptcha_render_div" data-action="signup" data-sitekey="{{context.checkbox_site_key}}"></div>
+                          </div>
+                      </div>
+                      <div class="row">
+                        <div class="col s12">
+                          <button id="submitBtn" class="btn waves-effect waves-light" name="action" type="submit" onclick="onloadCallback(event)">Sign up
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <a href="/">Already have an account?</a>
+             </div>
+         </div>
+    </div>
+    <div class="row">
+        <div class="col s12 col m8 push-m2  col l6 push-l3">
+             <div class="card-panel white z-depth-5">
+                 <div class="row">
+                    <div class="input-field col s12">
+                        <label for="scoreButton">reCAPTCHA score</label>
+                        <output class="waves-effect waves-light" id="scoreButton"></output>
+                    </div>
+                 </div>
+             </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
