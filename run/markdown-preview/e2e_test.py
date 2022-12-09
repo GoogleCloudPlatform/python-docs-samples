@@ -177,7 +177,7 @@ def renderer_service_url_auth_token(renderer_deployed_service):
                 renderer_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=value(status.url)",
+                "--format=\"value(status.url)\"",
                 "--project",
                 PROJECT,
             ]
@@ -250,7 +250,7 @@ def editor_service_url_auth_token(editor_deployed_service):
                 editor_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=value(status.url)",
+                "--format=\"value(status.url)\"",
                 "--project",
                 PROJECT,
             ]
