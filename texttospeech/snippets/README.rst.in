@@ -1,0 +1,29 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Text-to-Speech API
+  short_name: Cloud TTS API
+  url: https://cloud.google.com/text-to-speech/docs/
+  description: >
+    The `Google Cloud Text To Speech API`_ enables you to generate and customize synthesized speech from text or SSML.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: List voices
+  file: list_voices.py
+- name: Synthesize text
+  file: synthesize_text.py
+  show_help: True
+- name: Synthesize file
+  file: synthesize_file.py
+  show_help: True
+- name: Audio profile
+  file: audio_profile.py
+  show_help: True
+
+cloud_client_library: true
