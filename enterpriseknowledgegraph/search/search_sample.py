@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-# [START enterpriseknowledgegraph_search_entities]
+# [START enterpriseknowledgegraph_search]
 
 from typing import Sequence
 
@@ -29,7 +29,7 @@ from google.cloud import enterpriseknowledgegraph as ekg
 # limit = 20                            # Optional: Number of entities to return
 
 
-def search_entities_sample(
+def search_sample(
     project_id: str,
     location: str,
     search_query: str,
@@ -81,4 +81,4 @@ def search_entities_sample(
         print("\n")
 
 
-# [END enterpriseknowledgegraph_search_entities]
+# [END enterpriseknowledgegraph_search]
