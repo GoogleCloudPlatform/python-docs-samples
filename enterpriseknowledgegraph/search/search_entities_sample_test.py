@@ -15,7 +15,7 @@
 
 import os
 
-from samples.snippets import search_entities_sample
+import search_entities_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
