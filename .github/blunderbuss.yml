@@ -22,12 +22,17 @@ assign_issues_by:
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: secretmanager'
   to:
   - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: auth'
   to:
   - arithmetic1728
+- labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
 - labels:
   - 'api: bigquery'
   to:
@@ -38,7 +43,12 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/torus-dpe
+- labels:
   - 'api: cloudsql'
+  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
@@ -51,6 +61,14 @@ assign_issues_by:
   - 'api: compute'
   to:
   - m-strzelczyk
+- labels:
+  - 'api: container'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
+- labels:
+  - 'api: containeranalysis'
+  to:
+  - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: datascienceonramp'
   to:
@@ -75,6 +93,12 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
   - 'api: ml'
   to:
   - ivanmkc
@@ -82,6 +106,10 @@ assign_issues_by:
   - 'api: notebooks'
   to:
   - alixhami
+- labels:
+  - 'api: optimization'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: people-and-planet-ai'
   to:
@@ -108,6 +136,39 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
+- labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc
+- labels:
+  - 'api: monitoring'
+  to:
+  - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: asset'
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -126,11 +187,15 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
-  - 'api: documentai'
+  - 'api: cloudsql'
+  - 'api: cloudtasks'
   to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: documentai'
+  - 'api: retail'
+  to: 
   - GoogleCloudPlatform/dee-data-ai
-
-
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
