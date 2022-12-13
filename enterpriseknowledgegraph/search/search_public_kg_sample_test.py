@@ -15,7 +15,7 @@
 
 import os
 
-import search_entities_sample
+import search_public_kg_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
@@ -25,8 +25,8 @@ types = ["Organization"]
 limit = 1
 
 
-def test_search_entities(capsys):
-    search_entities_sample.search_entities_sample(
+def test_search(capsys):
+    search_public_kg_sample.search_public_kg_sample(
         project_id=project_id,
         location=location,
         search_query=search_query,
