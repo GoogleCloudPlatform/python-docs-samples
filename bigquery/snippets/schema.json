@@ -1,0 +1,20 @@
+[
+  {
+    "name": "qtr",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "quarter"
+  },
+  {
+    "name": "rep",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "sales representative"
+  },
+  {
+    "name": "sales",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "defaultValueExpression": "2.55"
+  }
+]

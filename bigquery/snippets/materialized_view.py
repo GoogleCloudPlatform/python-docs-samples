@@ -60,6 +60,7 @@ def update_materialized_view(
 
     # [START bigquery_update_materialized_view]
     import datetime
+
     from google.cloud import bigquery
 
     bigquery_client = bigquery.Client()

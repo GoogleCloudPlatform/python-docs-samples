@@ -17,8 +17,8 @@ def delete_job_metadata(job_id: str, location: str) -> None:
     orig_job_id = job_id
     orig_location = location
     # [START bigquery_delete_job]
-    from google.cloud import bigquery
     from google.api_core import exceptions
+    from google.cloud import bigquery
 
     # TODO(developer): Set the job ID to the ID of the job whose metadata you
     #                  wish to delete.

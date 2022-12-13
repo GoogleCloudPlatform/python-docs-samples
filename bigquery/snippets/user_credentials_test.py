@@ -21,7 +21,6 @@ import pytest
 
 from user_credentials import main
 
-
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 MockType = Union[mock.mock.MagicMock, mock.mock.AsyncMock]

@@ -18,8 +18,8 @@ import revoke_dataset_access
 import update_dataset_access
 
 if typing.TYPE_CHECKING:
-    import pytest
     from google.cloud import bigquery
+    import pytest
 
 
 def test_dataset_access_permissions(
