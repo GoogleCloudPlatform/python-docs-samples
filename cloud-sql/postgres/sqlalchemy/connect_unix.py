@@ -18,9 +18,8 @@ import os
 import sqlalchemy
 
 
-# connect_unix_socket initializes a Unix socket connection pool for
-# a Cloud SQL instance of Postgres.
 def connect_unix_socket() -> sqlalchemy.engine.base.Engine:
+    """ Initializes a Unix socket connection pool for a Cloud SQL instance of Postgres. """
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
