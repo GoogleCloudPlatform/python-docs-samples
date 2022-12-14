@@ -111,7 +111,9 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 # [END dialogflow_analyze_content_text]
 
 # [START dialogflow_analyze_content_audio_stream]
-def analyze_content_audio_stream(project_id, conversation_id, participant_id, audio_file_path):
+def analyze_content_audio_stream(
+    project_id, conversation_id, participant_id, audio_file_path
+):
     """Analyze audio content for END_USER
 
     Args:
@@ -156,12 +158,12 @@ def analyze_content_audio_stream(project_id, conversation_id, participant_id, au
 
     audio_config = dialogflow.InputAudioConfig(
         audio_encoding=audio_encoding,
-        language_code='en-US',
+        language_code="en-US",
         sample_rate_hertz=sample_rate_hertz,
         single_utterance=True,
-        model='phone_call',
+        model="phone_call",
         # Make sure your project is Dialogflow ES ENTERPRISE_TIER in order to "USE_ENHANCED" model.
-        model_variant='USE_ENHANCED'
+        model_variant="USE_ENHANCED",
     )
     requests = request_generator(audio_config, audio_file_path)
     responses = client.streaming_analyze_content(requests=requests)
@@ -170,5 +172,6 @@ def analyze_content_audio_stream(project_id, conversation_id, participant_id, au
         print(f'Transcript: "{response.message.content}".')
 
     print("=" * 20)
+
 
 # [END dialogflow_analyze_content_audio_stream]

@@ -18,13 +18,13 @@ import google.auth
 
 import list_training_phrases
 
-
 _, PROJECT_ID = google.auth.default()
 INTENT_ID = "7b5bd47e-6dd9-4b45-8624-565862bd2d85"
 
 
 def test_list_training_phrases(capsys):
     training_phrases = list_training_phrases.list_training_phrases(
-        PROJECT_ID, INTENT_ID,
+        PROJECT_ID,
+        INTENT_ID,
     )
     assert len(training_phrases) >= 9  # Number of training phrases at this point.
