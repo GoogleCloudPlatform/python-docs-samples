@@ -24,7 +24,7 @@ import sqlalchemy
 def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     """ 
     Initializes a connection pool for a Cloud SQL instance of MySQL.
-    
+
     Uses the Cloud SQL Python Connector with Automatic IAM Database Authentication.
     """
     # Note: Saving credentials in environment variables is convenient, but not
