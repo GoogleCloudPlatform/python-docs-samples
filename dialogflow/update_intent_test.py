@@ -18,7 +18,6 @@ import uuid
 from google.cloud.dialogflow_v2.services.agents.client import AgentsClient
 from google.cloud.dialogflow_v2.services.intents.client import IntentsClient
 from google.cloud.dialogflow_v2.types.intent import Intent
-
 import pytest
 
 from update_intent import update_intent

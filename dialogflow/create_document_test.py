@@ -18,7 +18,6 @@ import os
 import uuid
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
-
 import pytest
 
 import document_management

@@ -15,7 +15,6 @@
 import os
 
 from google.api_core.exceptions import InvalidArgument
-
 import pytest
 
 from set_agent import set_agent
