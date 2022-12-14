@@ -22,7 +22,7 @@ import sqlalchemy
 
 
 def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
-    """ 
+    """
     Initializes a connection pool for a Cloud SQL instance of Postgres.
 
     Uses the Cloud SQL Python Connector with Automatic IAM Database Authentication.
