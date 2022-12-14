@@ -27,8 +27,7 @@ CONVERSATION_PROFILE_DISPLAY_NAME = "fake_conversation_profile"
 
 
 def test_analyze_content_text(capsys):
-    """Test analyze content api with text only messages.
-    """
+    """Test analyze content api with text only messages."""
     # Create knowledge base.
     knowledge_base_management.create_knowledge_base(
         PROJECT_ID, KNOWLEDGE_BASE_DISPLAY_NAME

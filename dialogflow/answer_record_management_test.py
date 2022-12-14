@@ -26,8 +26,7 @@ CONVERSATION_PROFILE_DISPLAY_NAME = "sample code profile for smart reply"
 
 
 def test_smart_reply(capsys):
-    """Test smart reply feature.
-    """
+    """Test smart reply feature."""
 
     # Create conversation profile.
     conversation_profile_management.create_conversation_profile_smart_reply(

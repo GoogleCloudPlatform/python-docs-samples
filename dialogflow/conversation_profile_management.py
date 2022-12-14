@@ -139,7 +139,10 @@ def create_conversation_profile_smart_reply(
     }
     feature_config = {
         "suggestion_feature": {"type_": "SMART_REPLY"},
-        "suggestion_trigger_settings": {"no_small_talk": True, "only_end_user": True, },
+        "suggestion_trigger_settings": {
+            "no_small_talk": True,
+            "only_end_user": True,
+        },
         "query_config": {
             "document_query_source": {"documents": [smart_reply_allowlist_name]},
             "max_results": 3,
