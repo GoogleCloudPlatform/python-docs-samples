@@ -15,7 +15,7 @@
 
 import os
 
-from google.api_core.exceptions import FailedPrecondition, NotFound
+from google.api_core.exceptions import InvalidArgument, NotFound
 
 import cancel_entity_reconciliation_job_sample
 
@@ -29,9 +29,9 @@ def test_cancel_entity_reconciliation_job(capsys):
         cancel_entity_reconciliation_job_sample.cancel_entity_reconciliation_job_sample(
             project_id=project_id, location=location, job_id=job_id
         )
-    except (FailedPrecondition, NotFound) as e:
+    except (InvalidArgument, NotFound) as e:
         print(e.message)
 
     out, _ = capsys.readouterr()
 
-    assert "projects/" in out
+    assert "cancel" in out

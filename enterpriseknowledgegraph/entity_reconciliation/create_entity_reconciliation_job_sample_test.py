@@ -47,4 +47,4 @@ def test_create_entity_reconciliation_job(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "Job: projects/" in out or "ResourceExhausted" in out
+    assert "Job: projects/" in out or "Resource Exhausted" in out
