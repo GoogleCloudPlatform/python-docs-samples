@@ -19,12 +19,14 @@ from google.cloud import enterpriseknowledgegraph as ekg
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
-# location = 'YOUR_GRAPH_LOCATION'                  # Values: 'global'
-# input_dataset = 'YOUR_INPUT_DATASET'              # BigQuery Dataset Name
-# input_table = 'YOUR_INPUT_TABLE'                  # BigQuery Table Name
-# mapping_file_uri = 'YOUR_MAPPING_FILE             # GCS Path. Example: gs://ekg-test-gcs/mapping.yml
-# entity_type = ekg.InputConfig.EntityType.Person   # Refer to https://cloud.google.com/enterprise-knowledge-graph/docs/schema
-# output_dataset = 'YOUR_OUTPUT_DATASET'            # BigQuery Dataset Name
+# location = 'YOUR_GRAPH_LOCATION'          # Values: 'global'
+# input_dataset = 'YOUR_INPUT_DATASET'      # BigQuery Dataset Name
+# input_table = 'YOUR_INPUT_TABLE'          # BigQuery Table Name
+# mapping_file_uri = 'YOUR_MAPPING_FILE     # GCS Path. Example: gs://ekg-test-gcs/mapping.yml
+# output_dataset = 'YOUR_OUTPUT_DATASET'    # BigQuery Dataset Name
+
+# Refer to https://cloud.google.com/enterprise-knowledge-graph/docs/schema
+# entity_type = ekg.InputConfig.EntityType.Person
 
 
 def create_entity_reconciliation_job_sample(
