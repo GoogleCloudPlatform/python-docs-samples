@@ -47,6 +47,8 @@ def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
+
+
 # [END speech_transcribe_gcs_v2]
 
 

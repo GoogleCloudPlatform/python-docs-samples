@@ -20,7 +20,9 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def adaptation_v2_phrase_set_reference(project_id, recognizer_id, phrase_set_id, audio_file):
+def adaptation_v2_phrase_set_reference(
+    project_id, recognizer_id, phrase_set_id, audio_file
+):
     # Instantiates a client
     client = SpeechClient()
 
@@ -44,7 +46,8 @@ def adaptation_v2_phrase_set_reference(project_id, recognizer_id, phrase_set_id,
     request = cloud_speech.CreatePhraseSetRequest(
         parent=f"projects/{project_id}/locations/global",
         phrase_set_id=phrase_set_id,
-        phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}]))
+        phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}]),
+    )
 
     operation = client.create_phrase_set(request=request)
     phrase_set = operation.result()
@@ -72,6 +75,8 @@ def adaptation_v2_phrase_set_reference(project_id, recognizer_id, phrase_set_id,
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
+
+
 # [END speech_adaptation_v2_phrase_set_reference]
 
 

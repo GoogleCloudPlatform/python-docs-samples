@@ -81,5 +81,5 @@ def export_transcript_to_storage_beta(
         print(f"Transcript: {result.alternatives[0].transcript}")
         print(f"Confidence: {result.alternatives[0].confidence}")
 
-# [END speech_transcribe_with_speech_to_storage_beta]
+    # [END speech_transcribe_with_speech_to_storage_beta]
     return storage_transcript.results

@@ -49,7 +49,7 @@ def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
                 inline_phrase_set=phrase_set
             )
         ],
-        custom_classes=[custom_class]
+        custom_classes=[custom_class],
     )
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config={}, adaptation=adaptation
@@ -66,6 +66,8 @@ def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
+
+
 # [END speech_adaptation_v2_inline_custom_class]
 
 

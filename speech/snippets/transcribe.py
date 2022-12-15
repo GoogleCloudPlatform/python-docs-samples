@@ -54,7 +54,7 @@ def transcribe_file(speech_file):
     # them to get the transcripts for the entire audio file.
     for result in response.results:
         # The first alternative is the most likely one for this portion.
-        print(u"Transcript: {}".format(result.alternatives[0].transcript))
+        print("Transcript: {}".format(result.alternatives[0].transcript))
     # [END speech_python_migration_sync_response]
 
 
@@ -83,7 +83,7 @@ def transcribe_gcs(gcs_uri):
     # them to get the transcripts for the entire audio file.
     for result in response.results:
         # The first alternative is the most likely one for this portion.
-        print(u"Transcript: {}".format(result.alternatives[0].transcript))
+        print("Transcript: {}".format(result.alternatives[0].transcript))
 
 
 # [END speech_transcribe_sync_gcs]

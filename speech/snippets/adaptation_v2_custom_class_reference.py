@@ -20,7 +20,9 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_id, custom_class_id, audio_file):
+def adaptation_v2_custom_class_reference(
+    project_id, recognizer_id, phrase_set_id, custom_class_id, audio_file
+):
     # Instantiates a client
     client = SpeechClient()
 
@@ -44,7 +46,8 @@ def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_i
     request = cloud_speech.CreateCustomClassRequest(
         parent=f"projects/{project_id}/locations/global",
         custom_class_id=custom_class_id,
-        custom_class=cloud_speech.CustomClass(items=[{"value": "fare"}]))
+        custom_class=cloud_speech.CustomClass(items=[{"value": "fare"}]),
+    )
 
     operation = client.create_custom_class(request=request)
     custom_class = operation.result()
@@ -53,7 +56,10 @@ def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_i
     request = cloud_speech.CreatePhraseSetRequest(
         parent=f"projects/{project_id}/locations/global",
         phrase_set_id=phrase_set_id,
-        phrase_set=cloud_speech.PhraseSet(phrases=[{"value": f"${{{custom_class.name}}}", "boost": 20}]))
+        phrase_set=cloud_speech.PhraseSet(
+            phrases=[{"value": f"${{{custom_class.name}}}", "boost": 20}]
+        ),
+    )
 
     operation = client.create_phrase_set(request=request)
     phrase_set = operation.result()
@@ -81,6 +87,8 @@ def adaptation_v2_custom_class_reference(project_id, recognizer_id, phrase_set_i
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
+
+
 # [END speech_adaptation_v2_custom_class_reference]
 
 

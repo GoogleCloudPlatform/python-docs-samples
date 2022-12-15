@@ -7,7 +7,8 @@
       }
     ],
     "language": "PYTHON",
-    "name": "google-cloud-speech"
+    "name": "google-cloud-speech",
+    "version": "0.1.0"
   },
   "snippets": [
     {

@@ -92,6 +92,8 @@ def transcribe_streaming_voice_activity_events(project_id, recognizer_id, audio_
             print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return responses
+
+
 # [END speech_transcribe_streaming_voice_activity_events]
 
 
