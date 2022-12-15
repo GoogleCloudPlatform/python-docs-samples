@@ -32,7 +32,4 @@ def test_validate_parameter(app):
 
     with app.test_request_context(json=request):
         res = validate_parameter(flask.request)
-        assert (
-            res["page_info"]["form_info"]["parameter_info"][0]["state"]
-            == 'INVALID'
-        )
+        assert res["page_info"]["form_info"]["parameter_info"][0]["state"] == "INVALID"

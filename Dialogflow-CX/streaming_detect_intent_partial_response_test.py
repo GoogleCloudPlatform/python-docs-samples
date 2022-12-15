@@ -17,7 +17,9 @@ from __future__ import absolute_import
 
 import os
 
-from streaming_detect_intent_partial_response import streaming_detect_intent_partial_response
+from streaming_detect_intent_partial_response import (
+    streaming_detect_intent_partial_response,
+)
 
 
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
@@ -29,17 +31,17 @@ AUDIO = f"{DIRNAME}/{AUDIO_PATH}"
 
 def test_streaming_detect_intent_partial_response(capsys):
 
-    encoding = 'AUDIO_ENCODING_LINEAR_16'
+    encoding = "AUDIO_ENCODING_LINEAR_16"
     sample_rate_hertz = 24000
 
     streaming_detect_intent_partial_response(
-      PROJECT_ID,
-      'global',
-      AGENT_ID,
-      AUDIO,
-      encoding,
-      sample_rate_hertz,
-      "en-US",
+        PROJECT_ID,
+        "global",
+        AGENT_ID,
+        AUDIO,
+        encoding,
+        sample_rate_hertz,
+        "en-US",
     )
     out, _ = capsys.readouterr()
 

@@ -66,12 +66,9 @@ def detect_intent_with_sentiment_analysis(
     )
 
     text_input = session.TextInput(text=text)
-    query_input = session.QueryInput(
-      text=text_input,
-      language_code=language_code
-    )
+    query_input = session.QueryInput(text=text_input, language_code=language_code)
     query_params = session.QueryParameters(
-      analyze_query_text_sentiment=True,
+        analyze_query_text_sentiment=True,
     )
     request = session.DetectIntentRequest(
         session=session_path,
@@ -81,8 +78,9 @@ def detect_intent_with_sentiment_analysis(
 
     response = session_client.detect_intent(request=request)
     score = response.query_result.sentiment_analysis_result.score
-    print('Sentiment Score: {score}')
+    print("Sentiment Score: {score}")
     return score
+
 
 # [END dialogflow_cx_v3_detect_intent_sentiment_analysis_async]
 

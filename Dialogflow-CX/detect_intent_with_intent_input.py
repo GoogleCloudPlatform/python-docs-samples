@@ -73,10 +73,7 @@ def detect_intent_with_intent_input(
     )
 
     intent = session.IntentInput(intent=intent_path)
-    query_input = session.QueryInput(
-      intent=intent,
-      language_code=language_code
-    )
+    query_input = session.QueryInput(intent=intent, language_code=language_code)
     request = session.DetectIntentRequest(
         session=session_path,
         query_input=query_input,
@@ -88,6 +85,8 @@ def detect_intent_with_intent_input(
         response_text.append(response_message.text.text)
         print(response_message.text.text)
     return response_text
+
+
 # [END dialogflow_cx_v3_detect_intent_with_intent_input_async]
 
 

@@ -18,7 +18,7 @@ import logging
 
 
 def cxPrebuiltAgentsTelecom(request):
-    logging.info('Cloud Function:' + 'Invoked cloud function from Dialogflow')
+    logging.info("Cloud Function:" + "Invoked cloud function from Dialogflow")
     request_dict = request.get_json()
 
     # Get the parameters in current page
@@ -32,8 +32,8 @@ def cxPrebuiltAgentsTelecom(request):
     tag = request_dict["fulfillmentInfo"]["tag"]
 
     # BEGIN detectCustomerAnomaly
-    if tag == 'detectCustomerAnomaly':
-        logging.info(tag + ' was triggered.')
+    if tag == "detectCustomerAnomaly":
+        logging.info(tag + " was triggered.")
         phone_number = parameter_dict["phone_number"]
         bill_state = parameter_dict["bill_state"]
         parameters = copy.deepcopy(parameter_dict)
@@ -54,7 +54,7 @@ def cxPrebuiltAgentsTelecom(request):
         # December, December 1st, November
 
         # Only 999999 will have anomaly detection
-        if str(phone_number) == '999999':
+        if str(phone_number) == "999999":
             anomaly_detect = "true"
             product_line = "phone"
             purchase = "device protection"
@@ -63,9 +63,9 @@ def cxPrebuiltAgentsTelecom(request):
             updated_parameters["last_month"] = last_month_name
 
         # If bill hike amount is given - we just add it to the total bill
-        if 'bill_amount' in parameters:
-            bill_amount = parameters['bill_amount']
-            purchase_amount = bill_amount['amount']
+        if "bill_amount" in parameters:
+            bill_amount = parameters["bill_amount"]
+            purchase_amount = bill_amount["amount"]
             total_bill_amount = 54.34 + purchase_amount
 
         # Adding the updated session parameters to the new parameters json
@@ -76,20 +76,16 @@ def cxPrebuiltAgentsTelecom(request):
         updated_parameters["total_bill"] = total_bill_amount
         updated_parameters["first_month"] = first_of_month
 
-        res = {
-            "sessionInfo": {
-                "parameters": updated_parameters
-            }
-        }
+        res = {"sessionInfo": {"parameters": updated_parameters}}
 
     # BEGIN validatePhoneLine
-    elif tag == 'validatePhoneLine':
-        logging.info(tag + ' was triggered.')
+    elif tag == "validatePhoneLine":
+        logging.info(tag + " was triggered.")
         phone = parameter_dict["phone_number"]
-        phone_line_verified = 'false'
+        phone_line_verified = "false"
         line_index = None
-        domestic_coverage = 'false'
-        covered_lines = ['5555555555', '5105105100', '1231231234', '9999999999']
+        domestic_coverage = "false"
+        covered_lines = ["5555555555", "5105105100", "1231231234", "9999999999"]
 
         # Loop over the covered lines array
         for index, line in enumerate(covered_lines):
@@ -97,101 +93,119 @@ def cxPrebuiltAgentsTelecom(request):
             # included in the string. when true, update the line_index variable
             if phone == line:
                 line_index = index
-                logging.info('This is the index ' + str(line_index))
+                logging.info("This is the index " + str(line_index))
 
         # Only 9999999999 will fail
         if line_index == 3:
-            phone_line_verified = 'false'
+            phone_line_verified = "false"
         else:
-            phone_line_verified = 'true'
+            phone_line_verified = "true"
 
         # Only 1231231234 will have domestic coverage
         if line_index == 2:
-            domestic_coverage = 'true'
+            domestic_coverage = "true"
         else:
-            domestic_coverage = 'false'
+            domestic_coverage = "false"
 
         res = {
             "sessionInfo": {
                 "parameters": {
                     "phone_line_verified": phone_line_verified,
-                    "domestic_coverage": domestic_coverage
+                    "domestic_coverage": domestic_coverage,
                 }
             }
         }
 
     # BEGIN cruisePlanCoverage
-    elif tag == 'cruisePlanCoverage':
-        logging.info(tag + ' was triggered.')
+    elif tag == "cruisePlanCoverage":
+        logging.info(tag + " was triggered.")
         port = parameter_dict["destination"]
         port_is_covered = None
         # Sample list of covered cruise ports.
         covered_ports = [
-            'mexico',
-            'canada',
-            'anguilla',
+            "mexico",
+            "canada",
+            "anguilla",
         ]
 
         if port.lower() in covered_ports:
-            port_is_covered = 'true'
+            port_is_covered = "true"
         else:
-            port_is_covered = 'false'
+            port_is_covered = "false"
 
         res = {
             "sessionInfo": {
                 "parameters": {
                     "port_is_covered": port_is_covered,
-                    }
                 }
             }
+        }
 
     # BEGIN internationalCoverage
-    elif tag == 'internationalCoverage':
-        logging.info(tag + ' was triggered.')
+    elif tag == "internationalCoverage":
+        logging.info(tag + " was triggered.")
         destination = parameter_dict["destination"]
         coverage = None
         # Sample list of covered international monthly destinations.
         covered_by_monthly = [
-            'anguilla',
-            'australia',
-            'brazil',
-            'canada',
-            'chile',
-            'england',
-            'france',
-            'india',
-            'japan',
-            'mexico',
-            'russia',
-            'singapore',
+            "anguilla",
+            "australia",
+            "brazil",
+            "canada",
+            "chile",
+            "england",
+            "france",
+            "india",
+            "japan",
+            "mexico",
+            "russia",
+            "singapore",
         ]
         # Sample list of covered international daily destinations.
         covered_by_daily = [
-            'anguilla', 'australia', 'brazil', 'canada', 'chile', 'england',
-            'france', 'india', 'japan', 'mexico', 'singapore'
+            "anguilla",
+            "australia",
+            "brazil",
+            "canada",
+            "chile",
+            "england",
+            "france",
+            "india",
+            "japan",
+            "mexico",
+            "singapore",
         ]
-        if destination.lower() in covered_by_monthly and destination.lower() in covered_by_daily:
-            coverage = 'both'
-        elif destination.lower() in covered_by_monthly and destination.lower() not in covered_by_daily:
-            coverage = 'monthly_only'
-        elif destination.lower() not in covered_by_monthly and destination.lower() not in covered_by_daily:
-            coverage = 'neither'
+        if (
+            destination.lower() in covered_by_monthly
+            and destination.lower() in covered_by_daily
+        ):
+            coverage = "both"
+        elif (
+            destination.lower() in covered_by_monthly
+            and destination.lower() not in covered_by_daily
+        ):
+            coverage = "monthly_only"
+        elif (
+            destination.lower() not in covered_by_monthly
+            and destination.lower() not in covered_by_daily
+        ):
+            coverage = "neither"
         else:
             # This should never happen, because covered_by_daily is a subset of
             # covered_by_monthly
-            coverage = 'daily_only'
+            coverage = "daily_only"
 
         res = {
             "sessionInfo": {
                 "parameters": {
                     "coverage": coverage,
-                    }
                 }
             }
+        }
 
     # BEGIN cheapestPlan
-    elif tag == 'cheapestPlan':
-        logging.info(tag + ' was triggered.')
+    elif tag == "cheapestPlan":
+        logging.info(tag + " was triggered.")
         trip_duration = parameter_dict["trip_duration"]
         monthly_cost = None
         daily_cost = None
@@ -204,7 +218,7 @@ def cxPrebuiltAgentsTelecom(request):
         if trip_duration > 30:
             monthly_cost = (int(trip_duration / 30)) * 70
             daily_cost = trip_duration * 10
-            suggested_plan = 'monthly'
+            suggested_plan = "monthly"
 
         # When trip is <= 30 days, but greater than 6 days, calculate monthly
         # plan cost and daily plan cost. Suggest monthly b/c it is the cheaper
@@ -212,29 +226,29 @@ def cxPrebuiltAgentsTelecom(request):
         elif trip_duration <= 30 and trip_duration > 6:
             monthly_cost = 70
             daily_cost = trip_duration * 10
-            suggested_plan = 'monthly'
+            suggested_plan = "monthly"
 
         # When trip is <= 6 days, calculate daily plan cost. Suggest daily
         # plan.
         elif trip_duration <= 6 and trip_duration > 0:
             monthly_cost = 70
             daily_cost = trip_duration * 10
-            suggested_plan = 'daily'
+            suggested_plan = "daily"
 
         else:
             # This should never happen b/c trip_duration would have to be
             # negative
-            suggested_plan = 'null'
+            suggested_plan = "null"
 
         res = {
             "sessionInfo": {
                 "parameters": {
-                        "monthly_cost": monthly_cost,
-                        "daily_cost": daily_cost,
-                        "suggested_plan": suggested_plan,
-                    }
+                    "monthly_cost": monthly_cost,
+                    "daily_cost": daily_cost,
+                    "suggested_plan": suggested_plan,
                 }
             }
+        }
 
     # Default Case
     else:
@@ -250,7 +264,20 @@ def cxPrebuiltAgentsTelecom(request):
 def get_date_details(bill_state):
     from datetime import date
 
-    monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ]
     today = date.today()
     # index starts with 0
     first_month_name = monthNames[today.month - 1]
@@ -260,8 +287,10 @@ def get_date_details(bill_state):
     last_month_name = monthNames[today.month - 2]
     last_month_first_day_str = str(today.replace(day=1, month=(today.month - 1)))
     second_last_month_name = monthNames[today.month - 3]
-    if bill_state == 'current':
+    if bill_state == "current":
         return [first_month_name, first_day_str, last_month_name]
     else:
         return [last_month_name, last_month_first_day_str, second_last_month_name]
+
+
 # [END dialogflow_cx_v3_webhook_prebuilt_telecom]

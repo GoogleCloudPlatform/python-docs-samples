@@ -29,9 +29,9 @@ def run_sample():
     location = "YOUR-LOCATION-ID"
     agent_id = "YOUR-AGENT-ID"
     audio_file_name = "YOUR-AUDIO-FILE-PATH"
-    encoding = 'AUDIO_ENCODING_LINEAR_16'
+    encoding = "AUDIO_ENCODING_LINEAR_16"
     sample_rate_hertz = 16000
-    language_code = 'en'
+    language_code = "en"
 
     streaming_detect_intent_partial_response(
         project_id,
@@ -93,16 +93,16 @@ def streaming_detect_intent_partial_response(
                     break
                 # The later requests contains audio data.
                 audio_input = session.AudioInput(audio=chunk, config=config)
-                query_input = session.QueryInput(audio=audio_input, language_code=language_code)
+                query_input = session.QueryInput(
+                    audio=audio_input, language_code=language_code
+                )
                 yield session.StreamingDetectIntentRequest(
                     session=session_path,
                     query_input=query_input,
                     enable_partial_response=True,
                 )
 
-    responses = session_client.streaming_detect_intent(
-        requests=request_generator()
-    )
+    responses = session_client.streaming_detect_intent(requests=request_generator())
 
     print("=" * 20)
     for response in responses:
@@ -116,6 +116,8 @@ def streaming_detect_intent_partial_response(
         " ".join(msg.text.text) for msg in response.query_result.response_messages
     ]
     print(f"Response text: {' '.join(response_messages)}\n")
+
+
 # [END dialogflow_cx_streaming_detect_intent_enable_partial_response]
 
 

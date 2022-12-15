@@ -17,6 +17,7 @@
 
 # [START dialogflow_cx_v3_webhook_validate_form_parameter]
 
+
 def validate_parameter(request):
     """Webhook will validate or invalidate parameter based on logic configured by the user."""
     return {
@@ -24,9 +25,9 @@ def validate_parameter(request):
             "form_info": {
                 "parameter_info": [
                     {
-                        "displayName": 'orderNumber',
+                        "displayName": "orderNumber",
                         "required": True,
-                        "state": 'INVALID',
+                        "state": "INVALID",
                         "value": 123,
                     },
                 ],
@@ -39,5 +40,6 @@ def validate_parameter(request):
             },
         },
     }
+
 
 # [END dialogflow_cx_v3_webhook_validate_form_parameter]

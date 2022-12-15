@@ -34,11 +34,7 @@ def log_session_id_for_troubleshooting(request):
     # Return a generic response
     res = {
         "fulfillment_response": {
-            "messages": [{
-                "text": {
-                    "text": [f"Request Session ID: {session_id}"]
-                }
-            }]
+            "messages": [{"text": {"text": [f"Request Session ID: {session_id}"]}}]
         }
     }
 

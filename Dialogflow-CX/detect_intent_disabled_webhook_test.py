@@ -27,16 +27,16 @@ AGENT_ID = os.getenv("AGENT_ID")
 def test_detect_intent_positive():
     response_text_list = detect_intent_disabled_webhook(
         PROJECT_ID,
-        'global',
+        "global",
         AGENT_ID,
-        'Perfect!',
-        'en-us',
+        "Perfect!",
+        "en-us",
     )
     for response_text in response_text_list:
         assert response_text[0] in [
-          'You are welcome!',
-          'It\'s my pleasure.',
-          'Anytime.',
-          'Of course.',
-          'It\'s my pleasure to serve you.',
+            "You are welcome!",
+            "It's my pleasure.",
+            "Anytime.",
+            "Of course.",
+            "It's my pleasure to serve you.",
         ]

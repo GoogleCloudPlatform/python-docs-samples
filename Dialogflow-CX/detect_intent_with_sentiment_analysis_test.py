@@ -28,13 +28,13 @@ AGENT_ID = os.getenv("AGENT_ID")
 
 @pytest.mark.parametrize(
     "text, expected_score_min, expected_score_max",
-    (['Perfect', .5, 1], ['I am not happy', -1, -.5])
+    (["Perfect", 0.5, 1], ["I am not happy", -1, -0.5]),
 )
 def test_detect_intent_positive(text, expected_score_min, expected_score_max):
 
     score = detect_intent_with_sentiment_analysis(
         PROJECT_ID,
-        'global',
+        "global",
         AGENT_ID,
         text,
         "en-us",

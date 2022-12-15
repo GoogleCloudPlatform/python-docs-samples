@@ -32,11 +32,11 @@ def run_sample():
     # event = "YOUR-EVENT"
     # language_code = "YOUR-LANGUAGE-CODE"
 
-    project_id = 'dialogflow-cx-demo-1-348717'
-    location = 'global'
-    agent_id = '8caa6b47-5dd7-4380-b86e-ea4301d565b0'
-    event = 'sys.no-match-default'
-    language_code = 'en-us'
+    project_id = "dialogflow-cx-demo-1-348717"
+    location = "global"
+    agent_id = "8caa6b47-5dd7-4380-b86e-ea4301d565b0"
+    event = "sys.no-match-default"
+    language_code = "en-us"
 
     detect_intent_with_event_input(
         project_id,
@@ -71,19 +71,18 @@ def detect_intent_with_event_input(
 
     # Construct detect intent request:
     event = session.EventInput(event=event)
-    query_input = session.QueryInput(
-      event=event,
-      language_code=language_code
-    )
+    query_input = session.QueryInput(event=event, language_code=language_code)
     request = session.DetectIntentRequest(
-      session=session_path,
-      query_input=query_input,
+        session=session_path,
+        query_input=query_input,
     )
 
     response = session_client.detect_intent(request=request)
     response_text = response.query_result.response_messages[0].text.text[0]
-    print(f'Response: {response_text}')
+    print(f"Response: {response_text}")
     return response_text
+
+
 # [END dialogflow_cx_v3_detect_intent_event_input_async]
 
 

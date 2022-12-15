@@ -30,12 +30,12 @@ def test_detect_intent_positive(capsys, tmp_path_factory):
 
     detect_intent_synthesize_tts_response(
         PROJECT_ID,
-        'global',
+        "global",
         AGENT_ID,
         "Perfect!",
-        'OUTPUT_AUDIO_ENCODING_LINEAR_16',
+        "OUTPUT_AUDIO_ENCODING_LINEAR_16",
         "en-us",
         output_file,
     )
     out, _ = capsys.readouterr()
-    assert f'Audio content written to file: {output_file}' in out
+    assert f"Audio content written to file: {output_file}" in out

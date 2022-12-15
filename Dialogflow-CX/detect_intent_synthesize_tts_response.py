@@ -71,18 +71,14 @@ def detect_intent_synthesize_tts_response(
         session=session_id,
     )
     text_input = session.TextInput(text=text)
-    query_input = session.QueryInput(
-        text=text_input,
-        language_code=language_code
-    )
+    query_input = session.QueryInput(text=text_input, language_code=language_code)
     synthesize_speech_config = audio_config.SynthesizeSpeechConfig(
-      speaking_rate=1.25,
-      pitch=10.0,
+        speaking_rate=1.25,
+        pitch=10.0,
     )
     output_audio_config = audio_config.OutputAudioConfig(
-      synthesize_speech_config=synthesize_speech_config,
-      audio_encoding=audio_config.OutputAudioEncoding[
-        audio_encoding],
+        synthesize_speech_config=synthesize_speech_config,
+        audio_encoding=audio_config.OutputAudioEncoding[audio_encoding],
     )
     request = session.DetectIntentRequest(
         session=session_path,
@@ -92,14 +88,15 @@ def detect_intent_synthesize_tts_response(
 
     response = session_client.detect_intent(request=request)
     print(
-      'Speaking Rate: '
-      f'{response.output_audio_config.synthesize_speech_config.speaking_rate}')
-    print(
-      'Pitch: '
-      f'{response.output_audio_config.synthesize_speech_config.pitch}')
-    with open(output_file, 'wb') as fout:
+        "Speaking Rate: "
+        f"{response.output_audio_config.synthesize_speech_config.speaking_rate}"
+    )
+    print("Pitch: " f"{response.output_audio_config.synthesize_speech_config.pitch}")
+    with open(output_file, "wb") as fout:
         fout.write(response.output_audio)
-    print(f'Audio content written to file: {output_file}')
+    print(f"Audio content written to file: {output_file}")
+
+
 # [END dialogflow_cx_v3_detect_intent_synthesize_tts_response_async]
 
 

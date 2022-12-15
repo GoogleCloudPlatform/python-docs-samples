@@ -28,7 +28,7 @@ INTENT_ID = os.getenv("INTENT_ID")
 def test_detect_intent_with_intent_input():
     response_text = detect_intent_with_intent_input(
         PROJECT_ID,
-        'global',
+        "global",
         AGENT_ID,
         INTENT_ID,
         "en-us",

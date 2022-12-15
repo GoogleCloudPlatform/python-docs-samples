@@ -66,12 +66,9 @@ def detect_intent_disabled_webhook(
 
     # Prepare request
     text_input = session.TextInput(text=text)
-    query_input = session.QueryInput(
-      text=text_input,
-      language_code=language_code
-    )
+    query_input = session.QueryInput(text=text_input, language_code=language_code)
     query_params = session.QueryParameters(
-      disable_webhook=True,
+        disable_webhook=True,
     )
     request = session.DetectIntentRequest(
         session=session_path,
@@ -80,14 +77,16 @@ def detect_intent_disabled_webhook(
     )
 
     response = session_client.detect_intent(request=request)
-    print(f'Detect Intent Request: {request.query_params.disable_webhook}')
+    print(f"Detect Intent Request: {request.query_params.disable_webhook}")
     response_text = []
     for message in response.query_result.response_messages:
         if message.text:
             curr_response_text = message.text.text
-            print(f'Agent Response: {curr_response_text}')
+            print(f"Agent Response: {curr_response_text}")
             response_text.append(curr_response_text)
     return response_text
+
+
 # [END dialogflow_cx_detect_intent_with_disabled_webhook]
 
 
