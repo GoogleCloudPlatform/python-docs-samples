@@ -52,8 +52,8 @@ def transcribe_file_with_multichannel(speech_file):
         alternative = result.alternatives[0]
         print("-" * 20)
         print("First alternative of result {}".format(i))
-        print(u"Transcript: {}".format(alternative.transcript))
-        print(u"Channel Tag: {}".format(result.channel_tag))
+        print("Transcript: {}".format(alternative.transcript))
+        print("Channel Tag: {}".format(result.channel_tag))
     # [END speech_transcribe_multichannel]
 
 
@@ -81,8 +81,8 @@ def transcribe_gcs_with_multichannel(gcs_uri):
         alternative = result.alternatives[0]
         print("-" * 20)
         print("First alternative of result {}".format(i))
-        print(u"Transcript: {}".format(alternative.transcript))
-        print(u"Channel Tag: {}".format(result.channel_tag))
+        print("Transcript: {}".format(alternative.transcript))
+        print("Channel Tag: {}".format(result.channel_tag))
     # [END speech_transcribe_multichannel_gcs]
 
 

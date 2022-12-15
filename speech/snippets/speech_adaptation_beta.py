@@ -76,7 +76,7 @@ def sample_recognize(storage_uri, phrase):
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
-        print(u"Transcript: {}".format(alternative.transcript))
+        print("Transcript: {}".format(alternative.transcript))
 
     # [END speech_adaptation_beta]
     return response

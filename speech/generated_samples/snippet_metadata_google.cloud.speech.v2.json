@@ -7,7 +7,8 @@
       }
     ],
     "language": "PYTHON",
-    "name": "google-cloud-speech"
+    "name": "google-cloud-speech",
+    "version": "0.1.0"
   },
   "snippets": [
     {
@@ -46,7 +47,7 @@
           },
           {
             "name": "files",
-            "type": "Sequence[google.cloud.speech_v2.types.BatchRecognizeFileMetadata]"
+            "type": "MutableSequence[google.cloud.speech_v2.types.BatchRecognizeFileMetadata]"
           },
           {
             "name": "retry",
@@ -138,7 +139,7 @@
           },
           {
             "name": "files",
-            "type": "Sequence[google.cloud.speech_v2.types.BatchRecognizeFileMetadata]"
+            "type": "MutableSequence[google.cloud.speech_v2.types.BatchRecognizeFileMetadata]"
           },
           {
             "name": "retry",

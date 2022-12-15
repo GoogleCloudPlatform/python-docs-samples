@@ -53,6 +53,8 @@ def quickstart_v2(project_id, recognizer_id, audio_file):
         print("Transcript: {}".format(result.alternatives[0].transcript))
 
     return response
+
+
 # [END speech_quickstart_v2]
 
 

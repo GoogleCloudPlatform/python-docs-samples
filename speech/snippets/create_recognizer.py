@@ -35,6 +35,8 @@ def create_recognizer(project_id, recognizer_id):
 
     print("Created Recognizer:", recognizer.name)
     return recognizer
+
+
 # [END speech_create_recognizer]
 
 
