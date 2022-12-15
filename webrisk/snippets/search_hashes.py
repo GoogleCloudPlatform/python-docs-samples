@@ -27,6 +27,11 @@ def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> Non
         hash_prefix: A hash prefix, consisting of the most significant 4-32 bytes of a SHA256 hash.
                      For JSON requests, this field is base64-encoded. Note that if this parameter is provided
                      by a URI, it must be encoded using the web safe base64 variant (RFC 4648).
+                     Example:
+                            uri = "http://example.com"
+                            sha256 = sha256()
+                            sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))
+                            hex_string = sha256.digest()
 
         threat_type: The ThreatLists to search in. Multiple ThreatLists may be specified.
                      For the list on threat types, see: https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threattype

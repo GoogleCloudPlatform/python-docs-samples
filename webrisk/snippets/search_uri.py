@@ -16,7 +16,7 @@
 from google.cloud import webrisk_v1
 
 
-def search_uri(uri: str, threat_type= webrisk_v1.ThreatType.MALWARE) -> None:
+def search_uri(uri: str, threat_type: webrisk_v1.ThreatType.MALWARE) -> None:
     """
     This method is used to check whether a URI is on a given threatList. Multiple threatLists may
     be searched in a single query.
