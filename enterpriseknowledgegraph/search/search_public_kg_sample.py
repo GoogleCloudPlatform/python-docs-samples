@@ -33,9 +33,9 @@ def search_public_kg_sample(
     project_id: str,
     location: str,
     search_query: str,
-    languages: Sequence[str],
-    types: Sequence[str],
-    limit: int,
+    languages: Sequence[str] = None,
+    types: Sequence[str] = None,
+    limit: int = 20,
 ):
     # Create a client
     client = ekg.EnterpriseKnowledgeGraphServiceClient()
