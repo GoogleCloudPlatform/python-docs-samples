@@ -37,7 +37,7 @@ def create_entity_reconciliation_job_sample(
     mapping_file_uri: str,
     entity_type: int,
     output_dataset: str,
-):
+) -> None:
     # Create a client
     client = ekg.EnterpriseKnowledgeGraphServiceClient()
 

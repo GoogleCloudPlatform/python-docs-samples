@@ -22,7 +22,7 @@ from google.cloud import enterpriseknowledgegraph as ekg
 # location = 'YOUR_GRAPH_LOCATION'  # Values: 'global'
 
 
-def list_entity_reconciliation_jobs_sample(project_id: str, location: str):
+def list_entity_reconciliation_jobs_sample(project_id: str, location: str) -> None:
     # Create a client
     client = ekg.EnterpriseKnowledgeGraphServiceClient()
 

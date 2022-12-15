@@ -23,7 +23,9 @@ from google.cloud import enterpriseknowledgegraph as ekg
 # job_id = 'YOUR_JOB_ID'            # Entity Reconciliation Job ID
 
 
-def get_entity_reconciliation_job_sample(project_id: str, location: str, job_id: str):
+def get_entity_reconciliation_job_sample(
+    project_id: str, location: str, job_id: str
+) -> None:
     # Create a client
     client = ekg.EnterpriseKnowledgeGraphServiceClient()
 

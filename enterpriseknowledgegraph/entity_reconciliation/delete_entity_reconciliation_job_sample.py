@@ -25,7 +25,7 @@ from google.cloud import enterpriseknowledgegraph as ekg
 
 def delete_entity_reconciliation_job_sample(
     project_id: str, location: str, job_id: str
-):
+) -> None:
     # Create a client
     client = ekg.EnterpriseKnowledgeGraphServiceClient()
 
