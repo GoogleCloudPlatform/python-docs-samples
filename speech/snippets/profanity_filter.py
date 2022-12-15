@@ -39,7 +39,7 @@ def sync_recognize_with_profanity_filter_gcs(gcs_uri):
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
-        print(u"Transcript: {}".format(alternative.transcript))
+        print("Transcript: {}".format(alternative.transcript))
 
 
 # [END speech_recognize_with_profanity_filter_gcs]

@@ -55,7 +55,7 @@ async def sample_long_running_recognize():
 
     print("Waiting for operation to complete...")
 
-    response = await operation.result()
+    response = (await operation).result()
 
     # Handle the response
     print(response)
