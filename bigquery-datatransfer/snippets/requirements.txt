@@ -1,1 +1,1 @@
-google-cloud-bigquery-datatransfer==3.7.3
+google-cloud-bigquery-datatransfer==3.8.0
