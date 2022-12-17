@@ -202,8 +202,8 @@ def hello_error_1(request):
     # This WILL be reported to Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
-
 # [END functions_helloworld_error]
+
 
 # [START functions_helloworld_error]
 @functions_framework.http
