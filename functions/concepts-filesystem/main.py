@@ -13,6 +13,10 @@
 # limitations under the License.
 
 # [START functions_concepts_filesystem]
+import functions_framework
+
+
+@functions_framework.http
 def list_files(request):
     import os
     from os import path

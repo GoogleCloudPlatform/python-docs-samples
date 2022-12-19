@@ -13,6 +13,7 @@
 # limitations under the License.
 import os
 import re
+from time import sleep
 
 from _pytest.capture import CaptureFixture
 import google.auth.transport.requests
@@ -36,6 +37,7 @@ SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 @pytest.fixture(scope="module")
 def api_key():
     api_key = create_api_key.create_api_key(PROJECT)
+    sleep(20)
     yield api_key
     delete_api_key.delete_api_key(PROJECT, get_key_id(api_key.name))
 
