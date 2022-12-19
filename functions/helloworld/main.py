@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-
 # [START functions_helloworld_http]
 # [START functions_http_content]
 from flask import escape
@@ -187,8 +185,9 @@ def hello_method(request):
 # [END functions_http_method]
 
 
+# [START functions_helloworld_error]
+@functions_framework.http
 def hello_error_1(request):
-    # [START functions_helloworld_error]
     # This WILL be reported to Error Reporting,
     # and WILL NOT show up in logs or
     # terminate the function.
@@ -203,15 +202,16 @@ def hello_error_1(request):
     # This WILL be reported to Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
+# [END functions_helloworld_error]
 
-    # [END functions_helloworld_error]
 
-
+# [START functions_helloworld_error]
+@functions_framework.http
 def hello_error_2(request):
-    # [START functions_helloworld_error]
     # These errors WILL NOT be reported to Error
     # Reporting, but will show up in logs.
     import logging
+    import sys
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
@@ -221,4 +221,4 @@ def hello_error_2(request):
     # to Error Reporting, but the status code (500) WILL be logged.
     from flask import abort
     return abort(500)
-    # [END functions_helloworld_error]
+# [END functions_helloworld_error]

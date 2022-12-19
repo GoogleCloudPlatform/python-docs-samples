@@ -26,6 +26,10 @@ assign_issues_by:
   to:
   - arithmetic1728
 - labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
+- labels:
   - 'api: bigquery'
   to:
   - shollyman
@@ -40,6 +44,7 @@ assign_issues_by:
   - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: cloudsql'
+  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
@@ -56,6 +61,10 @@ assign_issues_by:
   - 'api: container'
   to:
   - GoogleCloudPlatform/dee-platform-ops
+- labels:
+  - 'api: containeranalysis'
+  to:
+  - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: datascienceonramp'
   to:
@@ -79,6 +88,12 @@ assign_issues_by:
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
@@ -121,11 +136,35 @@ assign_issues_by:
   - 'api: datalabeling'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
-  - ivanmkc  
+  - ivanmkc
 - labels:
   - 'api: monitoring'
-  to: 
+  to:
   - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: asset'
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
 assign_prs_by:
 - labels:
@@ -143,8 +182,15 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
-
+- labels:
+  - 'api: cloudsql'
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: retail'
+  to: 
+  - GoogleCloudPlatform/dee-data-ai
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
