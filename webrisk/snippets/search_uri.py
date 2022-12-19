@@ -37,7 +37,7 @@ def search_uri(uri: str, threat_type: webrisk_v1.ThreatType.MALWARE) -> None:
     request.uri = uri
 
     response = webrisk_client.search_uris(request)
-    if not response.threat.threat_types:
+    if response.threat.threat_types:
         print(f"The URI has the following threat: {response}")
         return
 
