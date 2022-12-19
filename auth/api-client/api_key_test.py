@@ -37,7 +37,7 @@ SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 @pytest.fixture(scope="module")
 def api_key():
     api_key = create_api_key.create_api_key(PROJECT)
-    sleep(60)
+    sleep(180)
     yield api_key
     delete_api_key.delete_api_key(PROJECT, get_key_id(api_key.name))
 
