@@ -17,25 +17,26 @@ from google.cloud import webrisk_v1
 
 
 def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> None:
-    """
-    Gets the full hashes that match the requested hash prefix.
+    """Gets the full hashes that match the requested hash prefix.
+
     This is used after a hash prefix is looked up in a threatList and there is a match.
     The client side threatList only holds partial hashes so the client must query this method
     to determine if there is a full hash match of a threat.
 
     Args:
         hash_prefix: A hash prefix, consisting of the most significant 4-32 bytes of a SHA256 hash.
-                     For JSON requests, this field is base64-encoded. Note that if this parameter is provided
-                     by a URI, it must be encoded using the web safe base64 variant (RFC 4648).
-                     Example:
-                            uri = "http://example.com"
-                            sha256 = sha256()
-                            sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))
-                            hex_string = sha256.digest()
+            For JSON requests, this field is base64-encoded. Note that if this parameter is provided
+            by a URI, it must be encoded using the web safe base64 variant (RFC 4648).
+            Example:
+                uri = "http://example.com"
+                sha256 = sha256()
+                sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))
+                hex_string = sha256.digest()
 
         threat_type: The ThreatLists to search in. Multiple ThreatLists may be specified.
-                     For the list on threat types, see: https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threattype
-                     threat_type = [webrisk_v1.ThreatType.MALWARE, webrisk_v1.ThreatType.SOCIAL_ENGINEERING]
+            For the list on threat types, see:
+            https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threattype
+            threat_type = [webrisk_v1.ThreatType.MALWARE, webrisk_v1.ThreatType.SOCIAL_ENGINEERING]
     """
     webrisk_client = webrisk_v1.WebRiskServiceClient()
 
@@ -48,7 +49,8 @@ def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> Non
 
     # Get all the hashes that match the prefix. Cache the returned hashes until the time
     # specified in threat_hash.expire_time
-    # For more information on response type, see: https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threathash
+    # For more information on response type, see:
+    # https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threathash
     for threat_hash in response.threats:
         print(threat_hash.hash)
 

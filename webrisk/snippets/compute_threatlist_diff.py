@@ -16,10 +16,14 @@
 from google.cloud import webrisk_v1
 
 
-def compute_threatlist_diff(threat_type: webrisk_v1.ThreatType, version_token: bytes, max_diff_entries: int,
-                            max_database_entries: int, compression_type: webrisk_v1.CompressionType) -> None:
-    """
-    Gets the most recent threat list diffs. These diffs should be applied to a local database of
+def compute_threatlist_diff(
+    threat_type: webrisk_v1.ThreatType,
+    version_token: bytes,
+    max_diff_entries: int,
+    max_database_entries: int,
+    compression_type: webrisk_v1.CompressionType,
+) -> None:
+    """Gets the most recent threat list diffs. These diffs should be applied to a local database of
     hashes to keep it up-to-date.
 
     If the local database is empty or excessively out-of-date,
@@ -29,23 +33,23 @@ def compute_threatlist_diff(threat_type: webrisk_v1.ThreatType, version_token: b
 
     Args:
         threat_type: The threat list to update. Only a single ThreatType should be specified per request.
-                     threat_type = webrisk_v1.ThreatType.MALWARE
+            threat_type = webrisk_v1.ThreatType.MALWARE
 
-        version_token: The current version token of the client for the requested list. If the client does not have
-                       a version token (this is the first time calling ComputeThreatListDiff), this may be
-                       left empty and a full database snapshot will be returned.
+        version_token: The current version token of the client for the requested list. If the
+            client does not have a version token (this is the first time calling ComputeThreatListDiff),
+            this may be left empty and a full database snapshot will be returned.
 
         max_diff_entries: The maximum size in number of entries. The diff will not contain more entries
-                          than this value. This should be a power of 2 between 2**10 and 2**20.
-                          If zero, no diff size limit is set.
-                          max_diff_entries = 1024
+            than this value. This should be a power of 2 between 2**10 and 2**20.
+            If zero, no diff size limit is set.
+            max_diff_entries = 1024
 
         max_database_entries: Sets the maximum number of entries that the client is willing to have in the local database.
-                              This should be a power of 2 between 2**10 and 2**20. If zero, no database size limit is set.
-                              max_database_entries = 1024
+            This should be a power of 2 between 2**10 and 2**20. If zero, no database size limit is set.
+            max_database_entries = 1024
 
         compression_type: The compression type supported by the client.
-                          compression_type = webrisk_v1.CompressionType.RAW
+            compression_type = webrisk_v1.CompressionType.RAW
     """
 
     webrisk_client = webrisk_v1.WebRiskServiceClient()

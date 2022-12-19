@@ -17,18 +17,17 @@ from google.cloud import webrisk_v1
 
 
 def submit_uri(project_id: str, uri: str) -> None:
-    """
-     Submits a URI suspected of containing malicious content to be reviewed. Returns a
-     google.longrunning.Operation which, once the review is complete, is updated with its result.
+    """Submits a URI suspected of containing malicious content to be reviewed.
 
-     If the result verifies the existence of malicious content, the site will be added to the
-     Google's Social Engineering lists in order to protect users that could get exposed to this
-     threat in the future. Only allow-listed projects can use this method during Early Access.
+    Returns a google.longrunning.Operation which, once the review is complete, is updated with its result.
+    If the result verifies the existence of malicious content, the site will be added to the
+    Google's Social Engineering lists in order to protect users that could get exposed to this
+    threat in the future. Only allow-listed projects can use this method during Early Access.
 
      Args:
          project_id: The name of the project that is making the submission.
          uri: The URI that is being reported for malicious content to be analyzed.
-              uri = "http://testsafebrowsing.appspot.com/s/malware.html"
+             uri = "http://testsafebrowsing.appspot.com/s/malware.html"
     """
     webrisk_client = webrisk_v1.WebRiskServiceClient()
 

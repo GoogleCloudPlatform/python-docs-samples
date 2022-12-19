@@ -13,6 +13,7 @@
 #  limitations under the License.
 import base64
 import re
+from hashlib import sha256
 
 from _pytest.capture import CaptureFixture
 import google
@@ -42,7 +43,6 @@ def test_submit_uri(capsys: CaptureFixture):
 
 
 def test_search_hashes(capsys: CaptureFixture):
-    from hashlib import sha256
     uri = "http://example.com"
     sha256 = sha256()
     sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))

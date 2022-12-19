@@ -17,10 +17,10 @@ from google.cloud import webrisk_v1
 
 
 def search_uri(uri: str, threat_type: webrisk_v1.ThreatType.MALWARE) -> None:
-    """
-    This method is used to check whether a URI is on a given threatList. Multiple threatLists may
-    be searched in a single query.
-    The response will list all requested threatLists the URI was found to match. If the URI is not
+    """Checks whether a URI is on a given threatList.
+
+    Multiple threatLists may be searched in a single query. The response will list all
+    requested threatLists the URI was found to match. If the URI is not
     found on any of the requested ThreatList an empty response will be returned.
 
     Args:
@@ -37,7 +37,7 @@ def search_uri(uri: str, threat_type: webrisk_v1.ThreatType.MALWARE) -> None:
     request.uri = uri
 
     response = webrisk_client.search_uris(request)
-    if not len(response.threat.threat_types) == 0:
+    if not response.threat.threat_types:
         print(f"The URI has the following threat: {response}")
         return
 
