@@ -12,8 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import base64
+import hashlib
 import re
-from hashlib import sha256
 
 from _pytest.capture import CaptureFixture
 import google
@@ -27,24 +27,24 @@ from .submit_uri import submit_uri
 PROJECT = google.auth.default()[1]
 
 
-def test_search_uri_with_threat(capsys: CaptureFixture):
+def test_search_uri_with_threat(capsys: CaptureFixture) -> None:
     search_uri("http://testsafebrowsing.appspot.com/s/malware.html", webrisk_v1.ThreatType.MALWARE)
     assert re.search("The URI has the following threat: ", capsys.readouterr().out)
 
 
-def test_search_uri_without_threat(capsys: CaptureFixture):
+def test_search_uri_without_threat(capsys: CaptureFixture) -> None:
     search_uri("http://testsafebrowsing.appspot.com/malware.html", webrisk_v1.ThreatType.MALWARE)
     assert re.search("The URL is safe!", capsys.readouterr().out)
 
 
-def test_submit_uri(capsys: CaptureFixture):
+def test_submit_uri(capsys: CaptureFixture) -> None:
     submit_uri(PROJECT, "http://testsafebrowsing.appspot.com/s/malware.html")
     assert re.search("Submission response: ", capsys.readouterr().out)
 
 
-def test_search_hashes(capsys: CaptureFixture):
+def test_search_hashes(capsys: CaptureFixture) -> None:
     uri = "http://example.com"
-    sha256 = sha256()
+    sha256 = hashlib.sha256()
     sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))
     hex_string = sha256.digest()
 
@@ -52,6 +52,6 @@ def test_search_hashes(capsys: CaptureFixture):
     assert re.search("Completed searching threat hashes.", capsys.readouterr().out)
 
 
-def test_compute_threatdiff_list(capsys: CaptureFixture):
+def test_compute_threatdiff_list(capsys: CaptureFixture) -> None:
     compute_threatlist_diff(webrisk_v1.ThreatType.MALWARE, b'', 1024, 1024, webrisk_v1.CompressionType.RAW)
     assert re.search("Obtained threat list diff.", capsys.readouterr().out)
