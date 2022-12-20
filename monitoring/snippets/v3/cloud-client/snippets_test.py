@@ -18,7 +18,7 @@ import re
 import backoff
 from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
-from google.api_core.exceptions import ServiceUnavailable;
+from google.api_core.exceptions import ServiceUnavailable
 import pytest
 
 import snippets
