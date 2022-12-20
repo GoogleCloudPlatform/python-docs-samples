@@ -15,7 +15,7 @@
 
 import os
 
-from samples.snippets import disable_processor_sample, enable_processor_sample
+from snippets import disable_processor_sample, enable_processor_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

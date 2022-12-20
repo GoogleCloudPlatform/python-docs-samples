@@ -16,7 +16,7 @@
 import os
 from uuid import uuid4
 
-from samples.snippets import batch_process_documents_sample
+from snippets import batch_process_documents_sample
 
 location = "us"
 project_id = os.getenv("GOOGLE_CLOUD_PROJECT")

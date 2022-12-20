@@ -16,7 +16,7 @@
 import os
 
 import mock
-from samples.snippets import deploy_processor_version_sample
+from snippets import deploy_processor_version_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
