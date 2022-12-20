@@ -71,10 +71,6 @@ def compute_threatlist_diff(
     # Type of response: DIFF/ RESET/ RESPONSE_TYPE_UNSPECIFIED
     print(response.response_type)
 
-    # List of entries to add and/or remove.
-    # print(response.additions)
-    # print(response.removals)
-
     # New version token to be used the next time when querying.
     print(response.new_version_token)
 
