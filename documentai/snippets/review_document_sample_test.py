@@ -15,7 +15,7 @@
 
 import os
 
-from snippets import review_document_sample
+from documentai.snippets import review_document_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

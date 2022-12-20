@@ -17,7 +17,7 @@ import os
 from uuid import uuid4
 
 import mock
-from snippets import create_processor_sample
+from documentai.snippets import create_processor_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
