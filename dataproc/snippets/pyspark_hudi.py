@@ -17,6 +17,7 @@
 """Pyspark Hudi example."""
 
 import sys
+
 # pylint: disable=import-error
 from pyspark.sql import SparkSession
 
@@ -57,26 +58,25 @@ def generate_test_dataframe(spark, n_rows):
     return spark.read.json(spark_context.parallelize(inserts, 2))
 
 
-def write_hudi_table(table_name, table_uri, dataframe):
+def write_hudi_table(name, uri, dataframe):
     """Writes Hudi table."""
     options = {
-            'hoodie.table.name': table_name,
+            'hoodie.table.name': name,
             'hoodie.datasource.write.recordkey.field': 'uuid',
             'hoodie.datasource.write.partitionpath.field': 'partitionpath',
-            'hoodie.datasource.write.table.name': table_name,
+            'hoodie.datasource.write.table.name': name,
             'hoodie.datasource.write.operation': 'upsert',
             'hoodie.datasource.write.precombine.field': 'ts',
             'hoodie.upsert.shuffle.parallelism': 2,
             'hoodie.insert.shuffle.parallelism': 2,
     }
-    dataframe.write \
-      .format('hudi').options(**options).mode('append').save(table_uri)
+    dataframe.write.format('hudi').options(**options).mode('append').save(uri)
 
 
-def query_commit_history(spark, table_name, table_uri):
+def query_commit_history(spark, name, uri):
     """Query commit history."""
-    tmp_table = f'{table_name}_commit_history'
-    spark.read.format('hudi').load(table_uri).createOrReplaceTempView(tmp_table)
+    tmp_table = f'{name}_commit_history'
+    spark.read.format('hudi').load(uri).createOrReplaceTempView(tmp_table)
     query = f"""
         SELECT DISTINCT(_hoodie_commit_time)
         FROM {tmp_table}
