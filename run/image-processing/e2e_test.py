@@ -30,7 +30,6 @@ import pytest
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 IMAGE_NAME = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy/vision-e2e-test/"
-# IMAGE_NAME = f"gcr.io/{PROJECT}/image-proc-{SUFFIX}"
 CLOUD_RUN_SERVICE = f"image-proc-{SUFFIX}"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
 OUTPUT_BUCKET = f"image-proc-output-{SUFFIX}"
@@ -45,11 +44,10 @@ def container_image():
             "gcloud",
             "builds",
             "submit",
-            "--tag",
-            IMAGE_NAME,
+            "--config",
+            "cloudbuild.yaml",
             "--project",
-            PROJECT,
-            "--quiet",
+            PROJECT
         ]
     )
     yield IMAGE_NAME
