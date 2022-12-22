@@ -16,7 +16,7 @@ steps:
       ["build", "-t", "${_AR_REPO_URL}/vision-e2e-test:${BUILD_ID}", "."]
   - id: "Docker push to Artifact Registry"
     name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_AR_REPO_URL}/filesystem-e2e-test:${BUILD_ID}"]
+    args: ["push", "${_AR_REPO_URL}/vision-e2e-test:${BUILD_ID}"]
   # - id: "Deploy to Cloud Run"
   #   name: "gcr.io/cloud-builders/gcloud:latest"
   #   args:
