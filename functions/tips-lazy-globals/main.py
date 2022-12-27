@@ -28,6 +28,9 @@ def function_specific_computation():
 
 # [START functions_tips_lazy_globals]
 # [START cloudrun_tips_global_lazy]
+import functions_framework
+
+
 # Always initialized (at cold-start)
 non_lazy_global = file_wide_computation()
 
@@ -35,6 +38,7 @@ non_lazy_global = file_wide_computation()
 lazy_global = None
 
 
+@functions_framework.http
 def lazy_globals(request):
     """
     HTTP Cloud Function that uses lazily-initialized globals.
