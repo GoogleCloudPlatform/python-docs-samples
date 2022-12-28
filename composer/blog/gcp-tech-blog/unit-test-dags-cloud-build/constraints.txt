@@ -1,0 +1,2 @@
+SQLAlchemy==1.3.23 # must be under 1.4 until at least Airflow 2.0 (check airflow setup.py for restrictions)
+WTForms==2.3.3 # Must stay under 3.0 because of https://github.com/dpgaspar/Flask-AppBuilder/issues/1732

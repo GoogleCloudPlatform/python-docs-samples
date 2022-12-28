@@ -28,7 +28,7 @@ def company_name():
 
 
 def test_commute_search_sample(company_name, capsys):
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def eventually_consistent_test():
         commute_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()

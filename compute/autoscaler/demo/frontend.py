@@ -1,4 +1,4 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,7 +18,7 @@ with path '/service' consumes 1 core-second of CPU time, with the timeout of
 Google Compute Engine Autoscaler can scale a web frontend server based on CPU
 utilization.
 The original version of this file is available here:
-https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/compute/
+https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/compute/
     autoscaler/demo/tests/test_frontend.py
 """
 

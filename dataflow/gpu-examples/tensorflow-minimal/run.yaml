@@ -1,0 +1,57 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This Cloud Build config runs a Dataflow job using GPUs.
+# We use the same worker image to launch the job.
+# That way we guarantee the same Python version for the workers.
+# It also already has all the requirements installed.
+
+# -----------------------------------------------------------------------------
+# To learn more about this file:
+#   https://cloud.google.com/build/docs/build-config
+#
+# To learn more about Cloud Build variable substitutions:
+#   https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values#using_user-defined_substitutions
+# -----------------------------------------------------------------------------
+
+substitutions:
+  _IMAGE: samples/dataflow/tensorflow-gpu:latest
+  _JOB_NAME: ''
+  _TEMP_LOCATION: ''
+  _REGION: us-central1
+  _GPU_TYPE: nvidia-tesla-t4
+  _GPU_COUNT: '1'
+
+steps:
+- name: gcr.io/$PROJECT_ID/$_IMAGE
+  entrypoint: python
+  args:
+  - /pipeline/main.py
+  - --runner=DataflowRunner
+  - --project=$PROJECT_ID
+  - --region=$_REGION
+  - --job_name=$_JOB_NAME
+  - --temp_location=$_TEMP_LOCATION
+  - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
+  - --machine_type=n1-standard-4
+  - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
+  - --experiment=use_runner_v2
+  - --experiment=no_use_multiple_sdk_containers
+  - --disk_size_gb=50
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+# Use the Compute Engine default service account to launch the job.
+serviceAccount: projects/$PROJECT_ID/serviceAccounts/$PROJECT_NUMBER-compute@developer.gserviceaccount.com

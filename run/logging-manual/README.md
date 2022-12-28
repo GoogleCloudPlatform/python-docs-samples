@@ -44,4 +44,4 @@ gcloud run deploy logging-manual \
 
 Read more about Cloud Run logging in the [Logging How-to Guide](http://cloud.google.com/run/docs/logging).
 
-For more details on how to work with this sample read the [Python Cloud Run Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run)
+For more details on how to work with this sample read the [Python Cloud Run Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run)

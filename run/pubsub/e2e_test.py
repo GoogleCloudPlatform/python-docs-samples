@@ -21,8 +21,8 @@ import time
 import uuid
 
 from google.api_core.exceptions import NotFound
-from google.cloud import logging_v2
 from google.cloud import pubsub_v1
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 
 import pytest
@@ -38,7 +38,7 @@ IMAGE_NAME = f"gcr.io/{PROJECT}/pubsub-test-{SUFFIX}"
 @pytest.fixture
 def container_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -48,13 +48,12 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -64,8 +63,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -73,7 +71,7 @@ def container_image():
 def deployed_service(container_image):
     # Deploy image to Cloud Run
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -86,13 +84,12 @@ def deployed_service(container_image):
             PROJECT,
             "--platform=managed",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield CLOUD_RUN_SERVICE
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -102,10 +99,10 @@ def deployed_service(container_image):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -118,11 +115,11 @@ def service_url(deployed_service):
             "run",
             "--project",
             PROJECT,
-            "--platform=managed",
-            "--region=us-central1",
             "services",
             "describe",
             CLOUD_RUN_SERVICE,
+            "--platform=managed",
+            "--region=us-central1",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
@@ -196,7 +193,7 @@ def test_end_to_end(pubsub_topic):
 
     # Check the logs for "Hello Runner"
     time.sleep(20)  # Slight delay writing to stackdriver
-    client = logging_v2.LoggingServiceV2Client()
+    client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
 
     # We add timestamp for making the query faster.
@@ -211,7 +208,7 @@ def test_end_to_end(pubsub_topic):
     # Retry a maximum number of 10 times to find results in stackdriver
     found = False
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
                 found = True

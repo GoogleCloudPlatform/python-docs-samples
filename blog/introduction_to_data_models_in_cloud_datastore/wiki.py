@@ -1,4 +1,4 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google, LLC.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -37,7 +37,7 @@ def path_to_key(datastore, path):
 
 def save_page(ds, page, content):
     with ds.transaction():
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
         current_key = path_to_key(ds, '{}.page/current.revision'.format(page))
         revision_key = path_to_key(ds, '{}.page/{}.revision'.format(page, now))
 

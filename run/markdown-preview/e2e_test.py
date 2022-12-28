@@ -22,6 +22,7 @@ import subprocess
 from urllib import request
 import uuid
 
+import backoff
 import pytest
 
 
@@ -31,10 +32,37 @@ EDITOR_IMAGE_NAME = f"gcr.io/{PROJECT}/editor-{SUFFIX}"
 RENDERER_IMAGE_NAME = f"gcr.io/{PROJECT}/renderer-{SUFFIX}"
 
 
+@backoff.on_exception(backoff.expo, subprocess.CalledProcessError, max_tries=10)
+def run_shell_command(args):
+    """
+    Runs a command with given args.
+    Usage: gcloud_cli(options)
+        options: command line options
+    Example:
+        result = gcloud_cli("app deploy --no-promote")
+        print(f"Deployed version {result['versions'][0]['id']}")
+    Raises Exception with the stderr output of the last attempt on failure.
+    """
+    full_command = " ".join(args)
+    print("Running command:", full_command)
+
+    try:
+        output = subprocess.run(
+            full_command,
+            capture_output=True,
+            shell=True,
+            check=True,
+        )
+        return output.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed: {e.stderr}")
+        raise e
+
+
 @pytest.fixture()
 def renderer_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "builds",
@@ -45,13 +73,12 @@ def renderer_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield RENDERER_IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "container",
@@ -61,15 +88,14 @@ def renderer_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
 @pytest.fixture()
 def editor_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "builds",
@@ -80,13 +106,12 @@ def editor_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield EDITOR_IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "container",
@@ -96,8 +121,7 @@ def editor_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -105,7 +129,7 @@ def editor_image():
 def renderer_deployed_service(renderer_image):
     # Deploy image to Cloud Run
     renderer_service_name = f"renderer-{SUFFIX}"
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "run",
@@ -118,13 +142,12 @@ def renderer_deployed_service(renderer_image):
             "--region=us-central1",
             "--platform=managed",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield renderer_service_name
 
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "run",
@@ -134,10 +157,10 @@ def renderer_deployed_service(renderer_image):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -145,7 +168,7 @@ def renderer_deployed_service(renderer_image):
 def renderer_service_url_auth_token(renderer_deployed_service):
     # Get Cloud Run service URL and auth token
     renderer_service_url = (
-        subprocess.run(
+        run_shell_command(
             [
                 "gcloud",
                 "run",
@@ -154,23 +177,19 @@ def renderer_service_url_auth_token(renderer_deployed_service):
                 renderer_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=value(status.url)",
+                "--format=\"value(status.url)\"",
                 "--project",
                 PROJECT,
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
+            ]
         )
-        .stdout.strip()
+        .strip()
         .decode()
     )
     renderer_auth_token = (
-        subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
-            stdout=subprocess.PIPE,
-            check=True,
+        run_shell_command(
+            ["gcloud", "auth", "print-identity-token"]
         )
-        .stdout.strip()
+        .strip()
         .decode()
     )
 
@@ -182,7 +201,7 @@ def editor_deployed_service(editor_image, renderer_service_url_auth_token):
     # Deploy editor image with renderer URL environment var
     editor_service_name = f"editor-{SUFFIX}"
     renderer_service_url, renderer_auth_token = renderer_service_url_auth_token
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "run",
@@ -197,13 +216,12 @@ def editor_deployed_service(editor_image, renderer_service_url_auth_token):
             "--set-env-vars",
             f"EDITOR_UPSTREAM_RENDER_URL={renderer_service_url}",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield editor_service_name
 
-    subprocess.run(
+    run_shell_command(
         [
             "gcloud",
             "run",
@@ -215,8 +233,7 @@ def editor_deployed_service(editor_image, renderer_service_url_auth_token):
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -224,7 +241,7 @@ def editor_deployed_service(editor_image, renderer_service_url_auth_token):
 def editor_service_url_auth_token(editor_deployed_service):
     # Get Cloud Run service URL and auth token
     editor_service_url = (
-        subprocess.run(
+        run_shell_command(
             [
                 "gcloud",
                 "run",
@@ -233,23 +250,19 @@ def editor_service_url_auth_token(editor_deployed_service):
                 editor_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=value(status.url)",
+                "--format=\"value(status.url)\"",
                 "--project",
                 PROJECT,
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
+            ]
         )
-        .stdout.strip()
+        .strip()
         .decode()
     )
     editor_auth_token = (
-        subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
-            stdout=subprocess.PIPE,
-            check=True,
+        run_shell_command(
+            ["gcloud", "auth", "print-identity-token"]
         )
-        .stdout.strip()
+        .strip()
         .decode()
     )
 

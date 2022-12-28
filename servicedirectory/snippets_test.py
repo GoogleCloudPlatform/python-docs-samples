@@ -18,8 +18,9 @@ from os import environ
 import uuid
 
 from google.api_core import exceptions
-from google.cloud import servicedirectory_v1beta1
+from google.cloud import servicedirectory_v1
 
+import quickstart
 import snippets
 
 PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
@@ -32,13 +33,18 @@ PORT = 443
 
 
 def teardown_module():
-    client = servicedirectory_v1beta1.RegistrationServiceClient()
+    client = servicedirectory_v1.RegistrationServiceClient()
     namespace_name = client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
-    try:
-        namespace = client.get_namespace(name=namespace_name)
-        client.delete_namespace(name=namespace.name)
-    except exceptions.NotFound:
-        pass
+    all_namespaces = quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
+
+    # Delete namespace only if it exists
+    for namespace in all_namespaces:
+        if namespace_name in namespace.name:
+            try:
+                client.delete_namespace(name=namespace_name)
+            except exceptions.NotFound:
+                print("Namespace already deleted")
+            break
 
 
 def test_create_namespace():

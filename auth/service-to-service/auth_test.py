@@ -44,7 +44,7 @@ def services():
     )
 
     # Get the URL for the hello-world service
-    service_url = subprocess.run(
+    endpoint = subprocess.run(
         [
             "gcloud", "run", "services", "describe", f"helloworld-{suffix}",
             "--project", project,
@@ -66,7 +66,7 @@ def services():
             "--trigger-http",
             "--no-allow-unauthenticated",
             "--entry-point=get_authorized",
-            f"--set-env-vars=URL={service_url.decode()}"
+            f"--set-env-vars=URL={endpoint.decode()}"
         ],
         check=True
         )
@@ -85,6 +85,7 @@ def services():
         [
             "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
             "--project", project,
+            "--async",
             "--platform=managed",
             "--region=us-central1",
             "--quiet",

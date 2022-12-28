@@ -14,16 +14,16 @@
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
-# You can copy this file into your directory, then it will be inported from
+# You can copy this file into your directory, then it will be imported from
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # We only run the cloud run tests in py38 session.
-    "ignored_versions": ["2.7", "3.6", "3.7"],
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8"],
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string

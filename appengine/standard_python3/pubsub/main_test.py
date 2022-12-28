@@ -51,7 +51,7 @@ def signer():
 
 @pytest.fixture
 def fake_token(signer):
-    now = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
+    now = calendar.timegm(datetime.datetime.now(tz=datetime.timezone.utc).utctimetuple())
     payload = {
         'aud': 'example.com',
         'azp': '1234567890',

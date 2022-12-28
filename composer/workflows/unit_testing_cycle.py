@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""An example DAG demonstrating a cyle in the task IDs."""
+"""An example DAG demonstrating a cycle in the task IDs."""
 
 import datetime
 
 from airflow import models
-from airflow.operators import dummy_operator
+from airflow.operators import dummy
 
-
+# If you are running Airflow in more than one time zone
+# see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
+# for best practices
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_dag_args = {
@@ -30,6 +32,5 @@ with models.DAG(
         'composer_sample_cycle',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-    start = dummy_operator.DummyOperator(task_id='oops_a_cycle')
-    end = dummy_operator.DummyOperator(task_id='oops_a_cycle')
-    start >> end
+    start = dummy.DummyOperator(task_id='oops_a_cycle')
+    start >> start

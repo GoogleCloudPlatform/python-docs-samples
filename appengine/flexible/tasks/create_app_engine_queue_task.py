@@ -15,7 +15,6 @@
 from __future__ import print_function
 
 import argparse
-import datetime
 
 
 def create_task(project, queue, location, payload=None, in_seconds=None):
@@ -23,6 +22,9 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
+    from google.protobuf import timestamp_pb2
+    import datetime
+    import json
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
@@ -31,7 +33,8 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # project = 'my-project-id'
     # queue = 'my-appengine-queue'
     # location = 'us-central1'
-    # payload = 'hello'
+    # payload = 'hello' or {'param': 'value'} for application/json
+    # in_seconds = None
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
@@ -44,6 +47,11 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
             }
     }
     if payload is not None:
+        if isinstance(payload, dict):
+            # Convert dict to JSON string
+            payload = json.dumps(payload)
+            # specify http content-type to application/json
+            task["app_engine_http_request"]["headers"] = {"Content-type": "application/json"}
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
 
@@ -52,7 +60,11 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
-        timestamp = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
+        d = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=in_seconds)
+
+        # Create Timestamp protobuf.
+        timestamp = timestamp_pb2.Timestamp()
+        timestamp.FromDatetime(d)
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp

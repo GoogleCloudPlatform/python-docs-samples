@@ -59,6 +59,7 @@ steps:
   # Cleanup tags against closed pull requests
   - id: "clean up old tag"
     name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
+    secretEnv: ["GITHUB_TOKEN"]
     args:
       [
         "cleanup",
@@ -76,4 +77,12 @@ substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
   _GITHUB_OWNER: $(push.repository.owner.name)
+
+options:
+  dynamicSubstitutions: true
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/github_token/versions/latest
+      env: "GITHUB_TOKEN"
 # [END cloudrun_deployment_preview_cleanup]

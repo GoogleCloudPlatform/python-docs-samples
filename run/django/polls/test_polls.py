@@ -19,6 +19,6 @@ from django.test import TestCase
 
 class PollViewTests(TestCase):
     def test_index_view(self: PollViewTests) -> None:
-        response = self.client.get('/')
+        response = self.client.get("/")
         assert response.status_code == 200
-        assert 'Hello, world' in str(response.content)
+        assert "Hello, world" in str(response.content)

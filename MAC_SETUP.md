@@ -70,28 +70,34 @@ test their code.
     of the versions you wish to test against.  A list of available versions
     is available on [python.org](https://www.python.org/doc/versions/)
 
-    As of September 9, 2020, the latest Python versions are:
+    As of April 28, 2022, the latest Python versions are:
 
-    *  2.7.18 (latest 2.7.x release)
+    *  3.6.13 (latest 3.6.x release)
     ```console
-    $ pyenv install 2.7.18
+    $ pyenv install 3.6.13
     ```
-    *  3.5.9 (latest 3.5.x release)
+    *  3.7.13 (latest 3.7.x release)
     ```console
-    $ pyenv install 3.5.9
+    $ pyenv install 3.7.13
     ```
-    *  3.6.11 (latest 3.6.x release)
+    *  3.8.13 (latest 3.8.x release)
     ```console
-    $ pyenv install 3.6.11
+    $ pyenv install 3.8.13
     ```
-    *  3.7.8 (latest 3.7.x release)
+    *  3.9.12 (latest 3.9.x release)
     ```console
-    $ pyenv install 3.7.8
+    $ pyenv install 3.9.12
     ```
-    *  3.8.5 (latest 3.8.x release)
+    *  3.10.4 (latest 3.10.x release)
     ```console
-    $ pyenv install 3.8.5
+    $ pyenv install 3.10.4
     ```
+    
+    > ℹ️ *Note*: If you are using an M1 Mac,
+    > certain versions of Python will not properly install with pyenv
+    > due to [incompatibilities with `clang`](https://bugs.python.org/issue45405).
+    > Python 3.6.13, 3.7.13, and 3.8.13 will work, but earlier patches Python 3.6, Python 3.7, and Python 3.8 may not. 
+
 
     > ℹ️ *Note*: If you are getting errors installing a python version,
     > try setting up the `SDKROOT` environment variable.
@@ -172,7 +178,7 @@ created virtual environment. You can install this by running
     pyenv will make your virtualenv the default Python. Since you specified	
     more than one version, it will also add binaries like `python36` and	
     `python27` to your PATH, which
-    [nox](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#using-nox)
+    [nox](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/AUTHORING_GUIDE.md#running-tests-with-nox)
     uses when picking Python interpreters.	
 
 1.  Add `.python-version` to your
@@ -181,4 +187,4 @@ created virtual environment. You can install this by running
 
 ## More on authoring samples
 If you are looking for more information on how to author samples, please view
-the [Authoring Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md)
+the [Authoring Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/AUTHORING_GUIDE.md)

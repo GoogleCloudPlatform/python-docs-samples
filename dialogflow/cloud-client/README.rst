@@ -1,3 +1,3 @@
 These samples have been moved.
 
-https://github.com/googleapis/python-dialogflow/tree/master/samples
+https://github.com/googleapis/python-dialogflow/tree/main/samples

@@ -20,12 +20,15 @@ import datetime
 import os
 import subprocess
 import time
-from urllib import request
 import uuid
 
-from google.cloud import logging_v2
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
 import pytest
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
@@ -36,7 +39,7 @@ IMAGE_NAME = f"gcr.io/{PROJECT}/logging-{SUFFIX}"
 @pytest.fixture
 def container_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -46,13 +49,12 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -62,8 +64,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -71,7 +72,7 @@ def container_image():
 def deployed_service(container_image):
     # Deploy image to Cloud Run
     service_name = f"logging-{SUFFIX}"
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -85,13 +86,12 @@ def deployed_service(container_image):
             "--platform=managed",
             "--set-env-vars",
             f"GOOGLE_CLOUD_PROJECT={PROJECT}" "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield service_name
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -101,10 +101,10 @@ def deployed_service(container_image):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -148,26 +148,34 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     service_url, auth_token = service_url_auth_token
 
     # Test that the service is responding
-    req = request.Request(
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(
         service_url,
         headers={
             "Authorization": f"Bearer {auth_token}",
             "X-Cloud-Trace-Context": "foo/bar",
         },
     )
-    response = request.urlopen(req)
-    assert response.status == 200
-
-    body = response.read()
-    assert body.decode() == "Hello Logger!"
+    assert response.status_code == 200
+    assert "Hello Logger!" in response.content.decode("UTF-8")
 
     # Test that the logs are writing properly to stackdriver
     time.sleep(10)  # Slight delay writing to stackdriver
-    client = logging_v2.LoggingServiceV2Client()
+    client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
     # We add timestamp for making the query faster.
     now = datetime.datetime.now(datetime.timezone.utc)
-    filter_date = now - datetime.timedelta(minutes=1)
+    filter_date = now - datetime.timedelta(minutes=3)
     filters = (
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_revision "
@@ -177,12 +185,19 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     )
 
     # Retry a maximum number of 10 times to find results in stackdriver
+    found = False
     for x in range(10):
-        iterator = client.list_log_entries(resource_names, filter_=filters)
+        iterator = client.list_log_entries(
+            {"resource_names": resource_names, "filter": filters}
+        )
         for entry in iterator:
+            found = True
             # If there are any results, exit loop
+            break
+        # When message found, exit loop
+        if found:
             break
         # Linear backoff
         time.sleep(3 * x)
 
-    assert iterator.num_results
+    assert found

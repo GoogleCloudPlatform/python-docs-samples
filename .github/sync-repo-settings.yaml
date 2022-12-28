@@ -1,3 +1,17 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # Whether or not rebase-merging is enabled on this repository.
 # Defaults to `true`
 rebaseMergeAllowed: true
@@ -10,11 +24,11 @@ squashMergeAllowed: true
 # Defaults to `false`
 mergeCommitAllowed: false
 
-# Rules for master branch protection
+# Rules for main branch protection
 branchProtectionRules:
 # Identifies the protection rule pattern. Name of the branch to be protected.
-# Defaults to `master`
-- pattern: master
+# Defaults to `main`
+- pattern: main
   # Can admins overwrite branch protection.
   # Defaults to `true`
   isAdminEnforced: false
@@ -30,10 +44,10 @@ branchProtectionRules:
   requiredStatusCheckContexts:
     - "Kokoro CI - Lint"
     - "Kokoro CI - Python 2.7 (App Engine Standard Only)"
-    - "Kokoro CI - Python 3.6"
     - "Kokoro CI - Python 3.7"
     - "Kokoro CI - Python 3.8"
     - "cla/google"
+    - "snippet-bot check"
 # List of explicit permissions to add (additive only)
 permissionRules:
     # Team slug to add to repository permissions

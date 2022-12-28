@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core import retry
 import pytest
 
 import fhir_stores  # noqa
@@ -28,14 +29,40 @@ dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 test_fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 
+client = fhir_stores.get_client(service_account_json)
+
+
+class OperationNotComplete(Exception):
+    """Operation is not yet complete"""
+
+    pass
+
+
+@retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
+def wait_for_operation(operation_name: str):
+    operation = (
+        client.projects()
+        .locations()
+        .datasets()
+        .operations()
+        .get(name=operation_name)
+        .execute()
+    )
+
+    if not operation.get("done", False):
+        raise OperationNotComplete(operation)
+
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    dataset = fhir_stores.create_dataset(
+    operation = fhir_stores.create_dataset(
         service_account_json, project_id, cloud_region, dataset_id
     )
 
-    yield dataset
+    # Wait for the dataset to be created
+    wait_for_operation(operation["name"])
+
+    yield
 
     # Clean up
     fhir_stores.delete_dataset(

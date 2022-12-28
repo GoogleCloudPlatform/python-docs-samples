@@ -4,7 +4,7 @@
 
 ### [Citibike trips](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=new_york_citibike&t=citibike_trips)
 * BigQuery public dataset
-* Output of [data cleaning code](https://github.com/Symmetries/python-docs-samples/tree/master/data-science-onramp/data-cleaning)
+* Output of [data processing code](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/data-science-onramp/data-processing)
 * Differences from original dataset: this output was made dirty and then cleaned for a data science tutorial, it is now a compressed csv.gzip file
 * License: Public Domain
 
@@ -14,10 +14,9 @@
 * Differences from original dataset: none
 * License: Public Domain
 
-### [US Holidays](https://www.kaggle.com/gsnehaa21/federal-holidays-usa-19662020)
-* Kaggle dataset
-* Downloaded directly from the website
-* Differences from original dataset: none
+### [US Holidays](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/data-science-onramp/data-ingestion/holidays.csv)
+* Small CSV
+* Derived from Public US Government Information
 * License: Public Domain
 
 ### [Weather](https://console.cloud.google.com/bigquery?p=bigquery-public-data&d=ghcn_d&page=dataset)

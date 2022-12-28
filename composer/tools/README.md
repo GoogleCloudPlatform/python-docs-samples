@@ -1,3 +1,4 @@
 # Composer Tools
 
-At this time, there are no Composer tools on GitHub. The environment migration script previously located here has been deprecated with the release of [in-place version upgrades](https://cloud.google.com/composer/docs/how-to/managing/upgrading). 
+* [Composer DB Migration for Airflow 1.10.14/15 -> Airflow 2](composer_db_transfer.md)
+* [Composer DAGs Pausing/Unpausing script](composer_dags.md)

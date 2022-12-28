@@ -1,134 +1,198 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 assign_issues_by:
 - labels:
   - 'api: appengine'
+  - 'api: eventarc'
+  - 'api: functions'
+  - 'api: run'
+  - 'api: secretmanager'
   to:
-  - engelke
+  - GoogleCloudPlatform/aap-dpes
 - labels:
-  - 'api: automl'
-  - 'api: dialogflow'
-  - 'api: language'
-  - 'api: speech'
-  - 'api: texttospeech'
-  - 'api: translate'
-  - 'api: videointelligence'
-  - 'api: vision'
+  - 'api: auth'
   to:
-  - sirtorry
-  - telpirion
+  - arithmetic1728
+- labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
+- labels:
+  - 'api: bigquery'
+  to:
+  - shollyman
+- labels:
+  - 'api: billingbudgets'
+  - 'api: cloudbilling'
+  to:
+  - GoogleCloudPlatform/billing-samples-maintainers
+- labels:
+  - 'api: cloudbuild'
+  to:
+  - GoogleCloudPlatform/torus-dpe
+- labels:
+  - 'api: cloudsql'
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: composer'
+  to:
+  - leahecole
+  - rachael-ds
+  - rafalbiegacz
+- labels:
+  - 'api: compute'
+  to:
+  - m-strzelczyk
+- labels:
+  - 'api: container'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
+- labels:
+  - 'api: containeranalysis'
+  to:
+  - GoogleCloudPlatform/aap-dpes
+- labels:
+  - 'api: datascienceonramp'
+  to:
+  - leahecole
+  - bradmiro
 - labels:
   - 'api: dataflow'
   to:
   - davidcavazos
 - labels:
-  - 'api: bigquery'
-  - 'api: datacatalog'
-  to:
-  - shollyman
-- labels:
-  - 'api: bigtable'
-  to:
-  - billyjacobson
-- labels:
-  - 'api: billingbudgets'
-  to:
-  - GoogleCloudPlatform/billing-samples-maintainers
-- labels:
-  - 'api: cloudsql'
-  to:
-  - GoogleCloudPlatform/cloud-sql-dpes
-- labels:
-  - 'api: containeranalysis'
-  to:
-  - donmccasland
-  - dinagraves
-  - kelsk
-- labels:
-  - 'api: datalabeling'
-  - 'api: iot'
-  to:
-  - sgreenberg
-- labels:
-  - 'api: dataproc'
-  to:
-  - bradmiro
-- labels:
   - 'api: datastore'
   - 'api: firestore'
   to:
-  - GoogleCloudPlatform/firestore-dpe
-- labels:
-  - 'api: dns'
-  to:
-  - michaelawyu
-- labels:
-  - 'api: functions'
-  to:
-  - ace-n
-  - grant
+  - GoogleCloudPlatform/cloud-native-db-dpes
 - labels:
   - 'api: healthcare'
   to:
   - noerog
 - labels:
-  - 'api: logging'
-  - 'api: clouderrorreporting'
+  - 'api: iot'
+  - 'api: cloudiot'
   to:
-  - Daniel-Sanche
+  - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
-  - alecglassford
+  - ivanmkc
 - labels:
   - 'api: notebooks'
   to:
-  - sirtorry
+  - alixhami
 - labels:
-  - 'api: cloudprofiler'
+  - 'api: optimization'
   to:
-  - kalyanac
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
+  - 'api: people-and-planet-ai'
+  to:
+  - davidcavazos
 - labels:
   - 'api: pubsub'
+  - 'api: pubsublite'
   to:
   - anguillanneuf
 - labels:
-  - 'api: run'
-  to:
-  - averikitsch
-  - grant
-- labels:
-  - 'api: cloudscheduler'
-  - 'api: cloudtasks'
-  - 'api: tasks'
-  to:
-  - averikitsch
-- labels:
   - 'api: spanner'
   to:
-  - larkee
+  - GoogleCloudPlatform/api-spanner-python
 - labels:
   - 'api: storage'
   to:
-  - GoogleCloudPlatform/storage-dpe
+  - GoogleCloudPlatform/cloud-storage-dpes
 - labels:
   - 'api: cloudtrace'
   - 'api: trace'
   to:
-  - dukeng
-  - ziweizhao
+  - ymotongpoo
+- labels:
+  - 'api: translate'
+  to:
+  - nicain
+- labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc
+- labels:
+  - 'api: monitoring'
+  to:
+  - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: asset'
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
 
-
+assign_prs_by:
+- labels:
+  - 'api: auth'
+  to:
+  - arithmetic1728
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: cloudiot'
+  - 'api: iot'
+  to:
+  - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: cloudsql'
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: retail'
+  to: 
+  - GoogleCloudPlatform/dee-data-ai
 assign_issues:
-  - busunkim96
-  - leahecole
-  - tmatsuo
-  - engelke
-  - kurtisvg
-  - dinagraves
+  - GoogleCloudPlatform/python-samples-owners
 
 assign_prs:
-  - busunkim96
-  - leahecole
-  - tmatsuo
-  - engelke
-  - kurtisvg
-  - dinagraves
+  - GoogleCloudPlatform/python-samples-owners

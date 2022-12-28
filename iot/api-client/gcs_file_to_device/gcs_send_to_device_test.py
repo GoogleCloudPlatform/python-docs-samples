@@ -20,39 +20,59 @@ import uuid
 
 from google.cloud import pubsub
 from google.cloud import storage
-import mock
 import pytest
 import requests
 
 import gcs_send_to_device as gcs_to_device
 
 # Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))  # noqa
 import manager  # noqa
 
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
-project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+topic_id = "test-device-events-{}".format(str(uuid.uuid4()))
+device_id = "test-device-{}".format(str(uuid.uuid4()))
+registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
+pubsub_topic = "projects/{}/topics/{}".format(project_id, topic_id)
 
-topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))
-device_id = 'test-device-{}'.format(str(uuid.uuid4()))
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid4().hex, int(time.time()))
-pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
+cloud_region = "us-central1"
+destination_file_name = "destination-file.bin"
+gcs_file_name = "my-config"
 
-cloud_region = 'us-central1'
-destination_file_name = 'destination-file.bin'
-gcs_file_name = 'my-config'
+storage_client = storage.Client()
 
 
-@pytest.fixture(scope='module')
-def test_blob():
+@pytest.fixture(scope="module")
+def test_bucket_name():
+    bucket_name = "python-docs-samples-iot-{}".format(uuid.uuid4())
+
+    yield bucket_name
+
+    bucket = storage_client.bucket(bucket_name)
+    bucket.delete(force=True)
+
+
+@pytest.fixture(scope="module")
+def test_bucket(test_bucket_name):
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = storage_client.bucket(test_bucket_name)
+
+    if not bucket.exists():
+        bucket = storage_client.create_bucket(test_bucket_name)
+
+    yield bucket.name
+
+
+@pytest.fixture(scope="module")
+def test_blob(test_bucket):
     """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(gcs_bucket)
+    bucket = storage_client.bucket(test_bucket)
     # Name of the blob
-    blob = bucket.blob('iot_core_store_file_gcs')
+    blob = bucket.blob("iot_core_store_file_gcs-{}".format(uuid.uuid4()))
     # Text in the blob
-    blob.upload_from_string('This file on GCS will go to a device.')
+    blob.upload_from_string("This file on GCS will go to a device.")
 
     yield blob
 
@@ -63,119 +83,93 @@ def test_blob():
         pass
 
 
-@mock.patch('google.cloud.storage.client.Client.create_bucket')
-def test_create_bucket(create_bucket_mock, capsys):
-    # Unlike other tests for sending a config, this one mocks out the creation
-    # because buckets are expensive, globally-namespaced objects.
-    create_bucket_mock.return_value = mock.sentinel.bucket
+def test_create_bucket(test_bucket_name, capsys):
+    gcs_to_device.create_bucket(test_bucket_name)
 
-    gcs_to_device.create_bucket(gcs_bucket)
-
-    create_bucket_mock.assert_called_with(gcs_bucket)
+    out, _ = capsys.readouterr()
+    assert f"Bucket {test_bucket_name} created" in out
 
 
-def test_upload_local_file(capsys):
+def test_upload_local_file(test_bucket, capsys):
     # Creates a temporary source file that gets uploaded
     # to GCS. All other tests use the blob in test_blob().
     with tempfile.NamedTemporaryFile() as source_file:
-        source_file.write(b'This is a source file.')
+        source_file.write(b"This is a source file.")
 
-        gcs_to_device.upload_local_file(
-            gcs_bucket,
-            gcs_file_name,
-            source_file.name)
+        gcs_to_device.upload_local_file(test_bucket, gcs_file_name, source_file.name)
 
     out, _ = capsys.readouterr()
-    assert 'File {} uploaded as {}.'.format(
-        source_file.name, gcs_file_name) in out
+    assert "File {} uploaded as {}.".format(source_file.name, gcs_file_name) in out
 
 
-def test_make_file_public(test_blob):
-    gcs_to_device.make_file_public(
-        gcs_bucket,
-        test_blob.name)
+def test_make_file_public(test_bucket, test_blob):
+    gcs_to_device.make_file_public(test_bucket, test_blob.name)
 
     r = requests.get(test_blob.public_url)
     # Test for the content of the file to verify that
     # it's publicly accessible.
-    assert r.text == 'This file on GCS will go to a device.'
+    assert r.text == "This file on GCS will go to a device."
 
 
-def test_send_to_device(capsys):
+def test_send_to_device(test_bucket, capsys):
     manager.create_iot_topic(project_id, topic_id)
     manager.open_registry(
-        service_account_json,
-        project_id,
-        cloud_region,
-        pubsub_topic,
-        registry_id)
+        service_account_json, project_id, cloud_region, pubsub_topic, registry_id
+    )
 
     manager.create_unauth_device(
-        service_account_json,
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id)
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
 
     gcs_to_device.send_to_device(
-        gcs_bucket,
+        test_bucket,
         gcs_file_name,
         destination_file_name,
         project_id,
         cloud_region,
         registry_id,
         device_id,
-        service_account_json)
+        service_account_json,
+    )
 
     manager.delete_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id)
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
 
-    manager.delete_registry(
-        service_account_json, project_id, cloud_region, registry_id)
+    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
 
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project_id, topic_id)
-    pubsub_client.delete_topic(topic_path)
+    pubsub_client.delete_topic(request={"topic": topic_path})
 
     out, _ = capsys.readouterr()
-    assert 'Successfully sent file to device' in out
+    assert "Successfully sent file to device" in out
 
 
 def test_get_state(capsys):
     manager.create_iot_topic(project_id, topic_id)
     manager.open_registry(
-        service_account_json,
-        project_id,
-        cloud_region,
-        pubsub_topic,
-        registry_id)
+        service_account_json, project_id, cloud_region, pubsub_topic, registry_id
+    )
 
     manager.create_unauth_device(
-        service_account_json,
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id)
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
 
     gcs_to_device.get_state(
-        service_account_json,
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id)
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
 
     manager.delete_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id)
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
 
-    manager.delete_registry(
-        service_account_json, project_id, cloud_region, registry_id)
+    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
 
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project_id, topic_id)
-    pubsub_client.delete_topic(topic_path)
+    pubsub_client.delete_topic(request={"topic": topic_path})
 
     out, _ = capsys.readouterr()
-    assert 'Id' in out
-    assert 'Config' in out
+    assert "Id" in out
+    assert "Config" in out

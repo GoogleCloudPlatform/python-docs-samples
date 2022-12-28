@@ -29,3 +29,5 @@ credentials.dat
 env/
 .idea
 .env*
+**/venv
+**/noxfile.py

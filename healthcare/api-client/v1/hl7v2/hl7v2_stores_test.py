@@ -26,7 +26,7 @@ import datasets  # noqa
 import hl7v2_stores  # noqa
 
 
-cloud_region = "us-central1"
+location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
@@ -42,7 +42,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
-            datasets.create_dataset(project_id, cloud_region, dataset_id)
+            datasets.create_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
             # likely the first request failed on the client side, but
@@ -60,7 +60,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+            datasets.delete_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
@@ -77,7 +77,7 @@ def test_hl7v2_store():
     def create():
         try:
             hl7v2_stores.create_hl7v2_store(
-                project_id, cloud_region, dataset_id, hl7v2_store_id
+                project_id, location, dataset_id, hl7v2_store_id
             )
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
@@ -101,7 +101,7 @@ def test_hl7v2_store():
     def clean_up():
         try:
             hl7v2_stores.delete_hl7v2_store(
-                project_id, cloud_region, dataset_id, hl7v2_store_id
+                project_id, location, dataset_id, hl7v2_store_id
             )
         except HttpError as err:
             # The API returns 403 when the HL7v2 store doesn't exist.
@@ -126,7 +126,7 @@ def crud_hl7v2_store_id():
     def clean_up():
         try:
             hl7v2_stores.delete_hl7v2_store(
-                project_id, cloud_region, dataset_id, hl7v2_store_id
+                project_id, location, dataset_id, hl7v2_store_id
             )
         except HttpError as err:
             # The API returns 403 when the HL7v2 store doesn't exist.
@@ -143,17 +143,19 @@ def crud_hl7v2_store_id():
 
 
 def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
-    hl7v2_stores.create_hl7v2_store(
-        project_id, cloud_region, dataset_id, hl7v2_store_id
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create():
+        hl7v2_stores.create_hl7v2_store(
+            project_id, location, dataset_id, hl7v2_store_id
+        )
 
-    hl7v2_stores.get_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id)
+    create()
 
-    hl7v2_stores.list_hl7v2_stores(project_id, cloud_region, dataset_id)
+    hl7v2_stores.get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id)
 
-    hl7v2_stores.delete_hl7v2_store(
-        project_id, cloud_region, dataset_id, hl7v2_store_id
-    )
+    hl7v2_stores.list_hl7v2_stores(project_id, location, dataset_id)
+
+    hl7v2_stores.delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -165,7 +167,7 @@ def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
 
 
 def test_patch_hl7v2_store(test_dataset, test_hl7v2_store, capsys):
-    hl7v2_stores.patch_hl7v2_store(project_id, cloud_region, dataset_id, hl7v2_store_id)
+    hl7v2_stores.patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -174,12 +176,12 @@ def test_patch_hl7v2_store(test_dataset, test_hl7v2_store, capsys):
 
 def test_get_set_hl7v2_store_iam_policy(test_dataset, test_hl7v2_store, capsys):
     get_response = hl7v2_stores.get_hl7v2_store_iam_policy(
-        project_id, cloud_region, dataset_id, hl7v2_store_id
+        project_id, location, dataset_id, hl7v2_store_id
     )
 
     set_response = hl7v2_stores.set_hl7v2_store_iam_policy(
         project_id,
-        cloud_region,
+        location,
         dataset_id,
         hl7v2_store_id,
         "serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com",

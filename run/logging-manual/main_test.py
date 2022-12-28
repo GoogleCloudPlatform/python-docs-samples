@@ -42,3 +42,11 @@ def test_with_cloud_headers(client, capsys):
     out, _ = capsys.readouterr()
     print(out)
     assert "trace" in out
+
+
+def test_no_http_request(capsys):
+    main.index()
+
+    out, _ = capsys.readouterr()
+    print(out)
+    assert "trace" not in out

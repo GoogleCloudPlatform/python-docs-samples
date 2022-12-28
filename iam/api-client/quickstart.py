@@ -15,9 +15,7 @@
 # limitations under the License.
 
 # [START iam_quickstart]
-import os
-
-from google.oauth2 import service_account
+import google.auth
 import googleapiclient.discovery
 
 
@@ -39,7 +37,7 @@ def quickstart(project_id, member):
     print(f'Role: {(binding["role"])}')
     print("Members: ")
     for m in binding["members"]:
-        print(f'[{m}]')
+        print(f"[{m}]")
 
     # Removes the member from the 'Log Writer' role.
     modify_policy_remove_member(crm_service, project_id, role, member)
@@ -48,9 +46,8 @@ def quickstart(project_id, member):
 def initialize_service():
     """Initializes a Cloud Resource Manager service."""
 
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    credentials, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
     crm_service = googleapiclient.discovery.build(
         "cloudresourcemanager", "v1", credentials=credentials
@@ -114,7 +111,7 @@ def set_policy(crm_service, project_id, policy):
     return policy
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # TODO: replace with your project ID
     project_id = "your-project-id"

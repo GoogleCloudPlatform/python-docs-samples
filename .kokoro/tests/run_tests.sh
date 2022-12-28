@@ -19,18 +19,25 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
+# If on kokoro, add btlr to the path
+if [ -n "$KOKORO_GFILE_DIR" ]; then
+  bltr_dir="$KOKORO_GFILE_DIR/v0.0.3/"
+  chmod +x "${bltr_dir}"btlr
+  export PATH="$PATH:$bltr_dir"
+fi
+
 DIFF_FROM=""
 
-# `--only-diff-master` will only run tests on project changes on the
-# last common commit from the master branch.
-if [[ $* == *--only-diff-master* ]]; then
+# `--only-diff-main` will only run tests on project changes on the
+# last common commit from the main branch.
+if [[ $* == *--only-diff-main* ]]; then
     set +e
-    git diff --quiet "origin/master..." .kokoro/tests .kokoro/docker \
+    git diff --quiet "origin/main..." .kokoro/tests .kokoro/docker \
 	.kokoro/trampoline_v2.sh
     CHANGED=$?
     set -e
     if [[ "${CHANGED}" -eq 0 ]]; then
-	DIFF_FROM="origin/master..."
+	DIFF_FROM="origin/main..."
     else
 	echo "Changes to test driver files detected. Running full tests."
     fi
@@ -130,18 +137,21 @@ ROOT=$(pwd)
 if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
     echo "=== Setting up DRIFT region tag injector ==="
     # install PyYaml (used by the DRIFT region tag parsing system)
-    echo "--- Installing PyYaml ---"
-    python3 -m pip install --user pyyaml
+    echo "--- Installing pip packages ---"
+    python3 -m pip install --user pyyaml frozendict recordclass
 
     # Use ${HOME} because trampoline will automatically clean up this
     # directory.
     export REGION_TAG_PARSER_DIR="${HOME}/region-tag-parser"
-    export PARSER_PATH="${REGION_TAG_PARSER_DIR}/wizard-py/cli.py"
+    export POLYGLOT_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/cli_bootstrap.py"
+    export PYTHON_PARSER_PATH="${REGION_TAG_PARSER_DIR}/xunit-autolabeler-v2/ast_parser/python_bootstrap.py"
 
-    if [[ ! -f $PARSER_PATH ]]; then
+    if [[ ! -f $POLYGLOT_PARSER_PATH ]]; then
         echo "--- Fetching injection script from HEAD (via GitHub) ---"
         git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch
-        chmod +x $PARSER_PATH
+
+        chmod +x $PYTHON_PARSER_PATH
+        chmod +x $POLYGLOT_PARSER_PATH
     fi
     echo "=== Region tag injector setup complete ==="
 fi
@@ -150,7 +160,7 @@ test_prog="${PROJECT_ROOT}/.kokoro/tests/run_single_test.sh"
 
 btlr_args=(
     "run"
-    "--max-cmd-duration=30m"
+    "--max-cmd-duration=60m"
     "**/requirements.txt"
 )
 
@@ -173,9 +183,9 @@ btlr_args+=(
     "${test_prog}"
 )
 
-echo "testing/btlr" "${btlr_args[@]}"
+echo "btlr" "${btlr_args[@]}"
 
-testing/btlr "${btlr_args[@]}"
+btlr "${btlr_args[@]}"
 
 RTN=$?
 cd "$ROOT"

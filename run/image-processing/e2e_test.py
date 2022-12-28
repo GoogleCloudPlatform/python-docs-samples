@@ -39,7 +39,7 @@ TOPIC = f"image_proc_{SUFFIX}"
 @pytest.fixture
 def container_image():
     # Build container image for Cloud Run deployment
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "builds",
@@ -49,13 +49,12 @@ def container_image():
             "--project",
             PROJECT,
             "--quiet",
-        ],
-        check=True,
+        ]
     )
     yield IMAGE_NAME
 
     # Delete container image
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "container",
@@ -65,8 +64,7 @@ def container_image():
             "--quiet",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -74,7 +72,7 @@ def container_image():
 def deployed_service(container_image, output_bucket):
     # Deploy image to Cloud Run
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -89,13 +87,12 @@ def deployed_service(container_image, output_bucket):
             "--set-env-vars",
             f"BLURRED_BUCKET_NAME={output_bucket.name}",
             "--no-allow-unauthenticated",
-        ],
-        check=True,
+        ]
     )
 
     yield CLOUD_RUN_SERVICE
 
-    subprocess.run(
+    subprocess.check_call(
         [
             "gcloud",
             "run",
@@ -105,10 +102,10 @@ def deployed_service(container_image, output_bucket):
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
+            "--async",
             "--project",
             PROJECT,
-        ],
-        check=True,
+        ]
     )
 
 
@@ -121,11 +118,11 @@ def service_url(deployed_service):
             "run",
             "--project",
             PROJECT,
-            "--platform=managed",
-            "--region=us-central1",
             "services",
             "describe",
             deployed_service,
+            "--platform=managed",
+            "--region=us-central1",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
@@ -232,14 +229,15 @@ def test_end_to_end(input_bucket, output_bucket):
     blob.upload_from_filename("test-images/zombie.jpg", content_type="image/jpeg")
 
     # Wait for image processing to complete
-    time.sleep(30)
+    time.sleep(60)
 
-    for x in range(10):
+    # Sometimes we may have to wait even longer. Check every 10 seconds for 5 minutes.
+    for x in range(30):
         # Check for blurred image in output bucket
         output_blobs = list(output_bucket.list_blobs())
         if len(output_blobs) > 0:
             break
 
-        time.sleep(5)
+        time.sleep(10)
 
     assert len(output_blobs) > 0

@@ -26,7 +26,7 @@ def test_print_name():
     filename = str(uuid.uuid4())
     port = 8089  # Each running framework instance needs a unique port
 
-    example_timestamp = datetime.datetime.now().isoformat()
+    example_timestamp = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
     storage_message = {
         'data': {
             'name': filename,

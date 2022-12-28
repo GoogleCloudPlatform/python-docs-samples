@@ -47,7 +47,7 @@ virtualenv /app/env
 getent passwd pythonapp || useradd -m -d /home/pythonapp pythonapp
 chown -R pythonapp:pythonapp /app
 
-# Configure supervisor to run the Go app.
+# Configure supervisor to run the app.
 cat >/etc/supervisor/conf.d/pythonapp.conf << EOF
 [program:pythonapp]
 directory=/app

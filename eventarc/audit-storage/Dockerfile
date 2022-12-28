@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_gcs_dockerfile]
+# [START eventarc_audit_storage_dockerfile]
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED True
@@ -38,4 +38,4 @@ COPY . ./
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-# [END eventarc_gcs_dockerfile]
+# [END eventarc_audit_storage_dockerfile]

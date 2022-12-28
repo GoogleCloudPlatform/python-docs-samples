@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2021 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,22 +20,39 @@ import subprocess
 from typing import Iterator, List, Tuple
 import uuid
 
-from google.cloud import secretmanager_v1 as sm
+import backoff
 import pytest
 import requests
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
 
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
+GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-POSTGRES_INSTANCE = os.environ["POSTGRES_INSTANCE"]
+PLATFORM = "managed"
 
-# Most commands in this test require the short instance form
+SERVICE = f"polls-{SUFFIX}"
+
+# Retreieve Cloud SQL test config
+POSTGRES_INSTANCE = os.environ.get("POSTGRES_INSTANCE", None)
+if not POSTGRES_INSTANCE:
+    raise Exception("'POSTGRES_INSTANCE' env var not found")
+
+# Presuming POSTGRES_INSTANCE comes in the form project:region:instance
+# Require the short form in some cases.
+# POSTGRES_INSTANCE_FULL: project:region:instance
+# POSTGRES_INSTANCE_NAME: instance only
 if ":" in POSTGRES_INSTANCE:
-    POSTGRES_INSTANCE = POSTGRES_INSTANCE.split(":")[-1]
+    POSTGRES_INSTANCE_FULL = POSTGRES_INSTANCE
+    POSTGRES_INSTANCE_NAME = POSTGRES_INSTANCE.split(":")[-1]
+else:
+    POSTGRES_INSTANCE_FULL = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_INSTANCE}"
+    POSTGRES_INSTANCE_NAME = POSTGRES_INSTANCE
 
-CLOUD_STORAGE_BUCKET = f"{PROJECT}-media-{SUFFIX}"
+POSTGRES_DATABASE = f"django-database-{SUFFIX}"
+
+CLOUD_STORAGE_BUCKET = f"{GOOGLE_CLOUD_PROJECT}-media-{SUFFIX}"
 
 POSTGRES_DATABASE = f"polls-{SUFFIX}"
 POSTGRES_USER = f"django-{SUFFIX}"
@@ -48,288 +65,100 @@ SECRET_SETTINGS_NAME = f"django_settings-{SUFFIX}"
 SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
-@pytest.fixture
-def project_number() -> Iterator[str]:
-    projectnum = (
-        subprocess.run(
-            [
-                "gcloud",
-                "projects",
-                "list",
-                "--filter",
-                f"name={PROJECT}",
-                "--format",
-                "value(projectNumber)",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.strip()
-        .decode()
-    )
-    yield projectnum
-
-
-@pytest.fixture
-def postgres_host() -> Iterator[str]:
-    # Create database
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "databases",
-            "create",
-            POSTGRES_DATABASE,
-            "--instance",
-            POSTGRES_INSTANCE,
-            "--project",
-            PROJECT,
-        ],
-        check=True,
-    )
-    # Create User
-    # NOTE Creating a user via the tutorial method is not automatable.
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "users",
-            "create",
-            POSTGRES_USER,
-            "--password",
-            POSTGRES_PASSWORD,
-            "--instance",
-            POSTGRES_INSTANCE,
-            "--project",
-            PROJECT,
-        ],
-        check=True,
-    )
-    yield POSTGRES_INSTANCE
-
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "databases",
-            "delete",
-            POSTGRES_DATABASE,
-            "--instance",
-            POSTGRES_INSTANCE,
-            "--project",
-            PROJECT,
-            "--quiet",
-        ],
-        check=True,
-    )
-
-    subprocess.run(
-        [
-            "gcloud",
-            "sql",
-            "users",
-            "delete",
-            POSTGRES_USER,
-            "--instance",
-            POSTGRES_INSTANCE,
-            "--project",
-            PROJECT,
-            "--quiet",
-        ],
-        check=True,
-    )
-
-
-@pytest.fixture
-def media_bucket() -> Iterator[str]:
-    # Create storage bucket
-    subprocess.run(
-        ["gsutil", "mb", "-l", REGION, "-p", PROJECT, f"gs://{CLOUD_STORAGE_BUCKET}"],
-        check=True,
-    )
-
-    yield CLOUD_STORAGE_BUCKET
-
-    # Recursively delete assets and bucket (does not take a -p flag, apparently)
-    subprocess.run(
-        ["gsutil", "-m", "rm", "-r", f"gs://{CLOUD_STORAGE_BUCKET}"],
-        check=True,
-    )
-
-
-@pytest.fixture
-def secrets(project_number: str) -> Iterator[str]:
-    # Create a number of secrets and allow Google Cloud services access to them
-
-    def create_secret(name: str, value: str) -> None:
-        secret = client.create_secret(
-            request={
-                "parent": f"projects/{PROJECT}",
-                "secret": {"replication": {"automatic": {}}},
-                "secret_id": name,
-            }
-        )
-
-        client.add_secret_version(
-            request={"parent": secret.name, "payload": {"data": value.encode("UTF-8")}}
-        )
-
-    def allow_access(name: str, member: str) -> None:
-        subprocess.run(
-            [
-                "gcloud",
-                "secrets",
-                "add-iam-policy-binding",
-                name,
-                "--member",
-                member,
-                "--role",
-                "roles/secretmanager.secretAccessor",
-                "--project",
-                PROJECT,
-            ],
-            check=True,
-        )
-
-    client = sm.SecretManagerServiceClient()
-    secret_key = uuid.uuid4().hex[:56]
-    settings = f"""
-DATABASE_URL=postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@//cloudsql/{PROJECT}:{REGION}:{POSTGRES_INSTANCE}/{POSTGRES_DATABASE}
-GS_BUCKET_NAME={CLOUD_STORAGE_BUCKET}
-SECRET_KEY={secret_key}
-PASSWORD_NAME={SECRET_PASSWORD_NAME}
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
     """
+    Runs a shell command and returns its output.
+    Usage: run_shell_cmd(args)
+        args: an array of command line arguments
+    Example:
+        result = run_shell_command(["gcloud, "app", "deploy"])
+        print("The command's stdout was:", result.stdout)
 
-    create_secret(SECRET_SETTINGS_NAME, settings)
-    allow_access(
-        SECRET_SETTINGS_NAME,
-        f"serviceAccount:{project_number}-compute@developer.gserviceaccount.com",
-    )
-    allow_access(
-        SECRET_SETTINGS_NAME,
-        f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
-    )
+    Raises Exception with the stderr output of the last attempt on failure.
+    """
+    full_command = " ".join(args)
+    print("Running command:", full_command)
 
-    create_secret(SECRET_PASSWORD_NAME, ADMIN_PASSWORD)
-    allow_access(
-        SECRET_PASSWORD_NAME,
-        f"serviceAccount:{project_number}@cloudbuild.gserviceaccount.com",
-    )
+    try:
+        output = subprocess.run(
+            full_command,
+            capture_output=True,
+            shell=True,
+            check=True,
+        )
 
-    yield SECRET_SETTINGS_NAME
-
-    # delete secrets
-    subprocess.run(
-        [
-            "gcloud",
-            "secrets",
-            "delete",
-            SECRET_PASSWORD_NAME,
-            "--project",
-            PROJECT,
-            "--quiet",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        [
-            "gcloud",
-            "secrets",
-            "delete",
-            SECRET_SETTINGS_NAME,
-            "--project",
-            PROJECT,
-            "--quiet",
-        ],
-        check=True,
-    )
+        return output
+    except subprocess.CalledProcessError as e:
+        print("Command failed")
+        print(f"stderr was {e.stderr}")
+        raise e
 
 
 @pytest.fixture
-def container_image(postgres_host: str, media_bucket: str, secrets: str) -> Iterator[str]:
-    # Build container image for Cloud Run deployment
-    image_name = f"gcr.io/{PROJECT}/polls-{SUFFIX}"
-    service_name = f"polls-{SUFFIX}"
-    cloudbuild_config = "cloudmigrate.yaml"
-    subprocess.run(
+def deployed_service() -> str:
+
+    substitutions = [
+        f"_SERVICE={SERVICE},"
+        f"_PLATFORM={PLATFORM},"
+        f"_REGION={REGION},"
+        f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
+        f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_USER={POSTGRES_USER},"
+        f"_DB_PASS={POSTGRES_PASSWORD},"
+        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
+        f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
+        f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
+        f"_SECRET_PASSWORD_VALUE={ADMIN_PASSWORD},"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL}"
+    ]
+    if SAMPLE_VERSION:
+        substitutions.append(f",_VERSION={SAMPLE_VERSION}")
+
+    run_shell_cmd(
         [
             "gcloud",
             "builds",
             "submit",
+            "--project",
+            GOOGLE_CLOUD_PROJECT,
             "--config",
-            cloudbuild_config,
+            "./e2e_test_setup.yaml",
             "--substitutions",
-            (
-                f"_INSTANCE_NAME={postgres_host},"
-                f"_REGION={REGION},"
-                f"_SERVICE_NAME={service_name},"
-                f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME}"
-            ),
-            "--project",
-            PROJECT,
-        ],
-        check=True,
-    )
-    yield image_name
-
-    # Delete container image
-    subprocess.run(
-        [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            image_name,
-            "--quiet",
-            "--project",
-            PROJECT,
-        ],
-        check=True,
+        ]
+        + substitutions
     )
 
+    yield SERVICE
 
-@pytest.fixture
-def deployed_service(container_image: str) -> Iterator[str]:
-    # Deploy image to Cloud Run
-    service_name = f"polls-{SUFFIX}"
-    subprocess.run(
+    # Cleanup
+
+    substitutions = [
+        f"_SERVICE={SERVICE},"
+        f"_PLATFORM={PLATFORM},"
+        f"_REGION={REGION},"
+        f"_DB_USER={POSTGRES_USER},"
+        f"_DB_NAME={POSTGRES_DATABASE},"
+        f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
+        f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
+        f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
+        f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
+    ]
+    if SAMPLE_VERSION:
+        substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
+
+    run_shell_cmd(
         [
             "gcloud",
-            "run",
-            "deploy",
-            service_name,
-            "--image",
-            container_image,
-            "--platform=managed",
-            "--no-allow-unauthenticated",
-            "--region",
-            REGION,
-            "--add-cloudsql-instances",
-            f"{PROJECT}:{REGION}:{POSTGRES_INSTANCE}",
-            "--set-env-vars",
-            f"SETTINGS_NAME={SECRET_SETTINGS_NAME}",
+            "builds",
+            "submit",
             "--project",
-            PROJECT,
-        ],
-        check=True,
-    )
-    yield service_name
-
-    # Delete Cloud Run service
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "delete",
-            service_name,
-            "--platform=managed",
-            "--region=us-central1",
-            "--quiet",
-            "--project",
-            PROJECT,
-        ],
-        check=True,
+            GOOGLE_CLOUD_PROJECT,
+            "--config",
+            "./e2e_test_cleanup.yaml",
+            "--substitutions",
+        ]
+        + substitutions
     )
 
 
@@ -337,7 +166,7 @@ def deployed_service(container_image: str) -> Iterator[str]:
 def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     # Get Cloud Run service URL and auth token
     service_url = (
-        subprocess.run(
+        run_shell_cmd(
             [
                 "gcloud",
                 "run",
@@ -349,21 +178,23 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
                 "--region",
                 REGION,
                 "--format",
-                "value(status.url)",
+                "\"value(status.url)\"",
                 "--project",
-                PROJECT,
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
+                GOOGLE_CLOUD_PROJECT,
+            ]
         )
         .stdout.strip()
         .decode()
     )
     auth_token = (
-        subprocess.run(
-            ["gcloud", "auth", "print-identity-token", "--project", PROJECT],
-            stdout=subprocess.PIPE,
-            check=True,
+        run_shell_cmd(
+            [
+                "gcloud",
+                "auth",
+                "print-identity-token",
+                "--project",
+                GOOGLE_CLOUD_PROJECT,
+            ]
         )
         .stdout.strip()
         .decode()
@@ -402,5 +233,6 @@ def test_end_to_end(service_url_auth_token: List[str]) -> None:
 
     # Check Django admin landing page
     assert response.status_code == 200
+    assert "Please enter the correct username and password" not in body
     assert "Site administration" in body
     assert "Polls" in body
