@@ -28,11 +28,15 @@ def light_computation():
 
 # [START functions_tips_scopes]
 # [START cloudrun_tips_global_scope]
+import functions_framework
+
+
 # Global (instance-wide) scope
 # This computation runs at instance cold-start
 instance_var = heavy_computation()
 
 
+@functions_framework.http
 def scope_demo(request):
     """
     HTTP Cloud Function that declares a variable.
