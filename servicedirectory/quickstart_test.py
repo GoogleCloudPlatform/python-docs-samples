@@ -54,7 +54,6 @@ def namespace(
         client.delete_namespace(name=namespace.name)
 
 
-
 def test_list_namespace(namespace):
     google_cloud_namespaces = quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
     assert namespace.name in [_namespace.name for _namespace in google_cloud_namespaces]
