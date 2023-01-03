@@ -85,7 +85,7 @@ DAG_OWNER_NAME = "operations"
 # List of email address to send email alerts to if this job fails
 ALERT_EMAIL_ADDRESSES = []
 # Airflow version used by the environment
-AIRFLOW_VERSION = os.getenv("MAJOR_VERSION", "2.2.0").split(".")
+AIRFLOW_VERSION = airflow.version.version.split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
@@ -112,7 +112,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": DagRun.dag_id
 }, {
     "airflow_db_model": TaskInstance,
-    "age_check_column": TaskInstance.execution_date if AIRFLOW_VERSION < ['2', '2', '0'] else TaskInstance.start_date,
+    "age_check_column": TaskInstance.execution_date if AIRFLOW_VERSION < ["2", "2", "0"] else TaskInstance.start_date,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
@@ -124,30 +124,30 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": None
 }, {
     "airflow_db_model": XCom,
-    "age_check_column": XCom.execution_date if AIRFLOW_VERSION < ['2', '2', '5'] else XCom.timestamp,
+    "age_check_column": XCom.execution_date if AIRFLOW_VERSION < ["2", "2", "5"] else XCom.timestamp,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
-},, {
-                       "airflow_db_model": SlaMiss,
-                       "age_check_column": SlaMiss.execution_date,
-                       "keep_last": False,
-                       "keep_last_filters": None,
-                       "keep_last_group_by": None
-                   }, {
-                       "airflow_db_model": DagModel,
-                       "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ['2', '0', '2'] else DagModel.last_parsed_time,
-                       "keep_last": False,
-                       "keep_last_filters": None,
-                       "keep_last_group_by": None
-                   }]
+}, {
+    "airflow_db_model": SlaMiss,
+    "age_check_column": SlaMiss.execution_date,
+    "keep_last": False,
+    "keep_last_filters": None,
+    "keep_last_group_by": None
+}, {
+    "airflow_db_model": DagModel,
+    "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ["2", "0", "2"] else DagModel.last_parsed_time,
+    "keep_last": False,
+    "keep_last_filters": None,
+    "keep_last_group_by": None
+}]
 
 # Check for TaskReschedule model
 try:
     from airflow.models import TaskReschedule
     DATABASE_OBJECTS.append({
         "airflow_db_model": TaskReschedule,
-        "age_check_column": TaskReschedule.execution_date if AIRFLOW_VERSION < ['2', '2', '0'] else TaskReschedule.start_date,
+        "age_check_column": TaskReschedule.execution_date if AIRFLOW_VERSION < ["2", "2", "0"] else TaskReschedule.start_date,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None
@@ -362,8 +362,10 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata."
-                                    "Skipping...")
+            str(airflow_db_model) + " is not present in the metadata. "
+            "Skipping...")
+
+    session.close()
 
 
 for db_object in DATABASE_OBJECTS:
