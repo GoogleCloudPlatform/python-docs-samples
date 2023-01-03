@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_metadb_cleanup_airflow_1]
+# [START composer_metadb_cleanup]
 """
 A maintenance workflow that you can deploy into Airflow to periodically clean
 out the DagRun, TaskInstance, Log, XCom, Job DB and SlaMiss entries to avoid
@@ -378,4 +378,4 @@ for db_object in DATABASE_OBJECTS:
 
     print_configuration.set_downstream(cleanup_op)
 
-# [END composer_metadb_cleanup_airflow_1]
+# [END composer_metadb_cleanup]
