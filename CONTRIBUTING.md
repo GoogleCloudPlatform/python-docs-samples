@@ -9,7 +9,7 @@ please open an issue for discussion first.
 
 1. Submit an issue describing your proposed change to this repository.
 2. A repo owner will respond to your issue promptly. If you don't see a response within
-   a few days, please ping the owner assignd to your issue.
+   a few days, please ping the owner assigned to your issue.
 3. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
 4. Fork this repo, develop and test your code changes. Tests are required for all
