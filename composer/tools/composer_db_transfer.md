@@ -9,6 +9,12 @@ existing Composer environment with Airflow 2.0.1+.
 Dedicated tool is needed as in-place upgrade is not supported between those
 versions.
 
+## Deprecation notice
+
+This script has been deprecated and will be removed in the future. "Snapshots"
+are recommended tool to perform side-by-side upgrades of Cloud Composer
+environments (https://cloud.google.com/composer/docs/save-load-snapshots).
+
 ## Prerequisites
 
 1.  [Make sure you are authorized](https://cloud.google.com/sdk/gcloud/reference/auth/login)
