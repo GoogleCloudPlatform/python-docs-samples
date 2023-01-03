@@ -1,0 +1,1 @@
+fluent-logger==0.10.0
