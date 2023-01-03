@@ -18,6 +18,7 @@ import re
 import backoff
 from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import ServiceUnavailable
 import pytest
 
 import snippets
@@ -67,36 +68,42 @@ def test_get_delete_metric_descriptor(capsys, custom_metric_descriptor):
     assert "Deleted metric" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_metric_descriptors(capsys):
     snippets.list_metric_descriptors(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "logging.googleapis.com/byte_count" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_resources(capsys):
     snippets.list_monitored_resources(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "pubsub_topic" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_get_resources(capsys):
     snippets.get_monitored_resource_descriptor(PROJECT_ID, "pubsub_topic")
     out, _ = capsys.readouterr()
     assert "A topic in Google Cloud Pub/Sub" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_time_series(capsys, write_time_series):
     snippets.list_time_series(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "gce_instance" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_time_series_header(capsys, write_time_series):
     snippets.list_time_series_header(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "gce_instance" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_time_series_aggregate(capsys, write_time_series):
     snippets.list_time_series_aggregate(PROJECT_ID)
     out, _ = capsys.readouterr()
@@ -106,6 +113,7 @@ def test_list_time_series_aggregate(capsys, write_time_series):
     assert "end_time" in out
 
 
+@backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_time_series_reduce(capsys, write_time_series):
     snippets.list_time_series_reduce(PROJECT_ID)
     out, _ = capsys.readouterr()
