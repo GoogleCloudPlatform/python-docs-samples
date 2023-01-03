@@ -24,16 +24,22 @@ from google.cloud import documentai
 # project_id = 'YOUR_PROJECT_ID'
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
 # processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
+# processor_version = 'rc' # Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 # file_path = '/path/to/local/pdf'
 # mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 
 
 def process_document_ocr_sample(
-    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
 ) -> None:
     # Online processing request to Document AI
     document = process_document(
-        project_id, location, processor_id, file_path, mime_type
+        project_id, location, processor_id, processor_version, file_path, mime_type
     )
 
     # For a full list of Document object attributes, please reference this page:
@@ -52,19 +58,30 @@ def process_document_ocr_sample(
         print_lines(page.lines, text)
         print_tokens(page.tokens, text)
 
+        # Currently supported in version pretrained-ocr-v1.1-2022-09-12
+        if page.image_quality_scores:
+            print_image_quality_scores(page.image_quality_scores)
+
 
 def process_document(
-    project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
 ) -> documentai.Document:
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
-    # The full resource name of the processor, e.g.:
-    # projects/project_id/locations/location/processor/processor_id
+    # The full resource name of the processor version
+    # e.g. projects/{project_id}/locations/{location}/processors/{processor_id}/processorVersions/{processor_version_id}
     # You must create processors before running sample code.
-    name = client.processor_path(project_id, location, processor_id)
+    name = client.processor_version_path(
+        project_id, location, processor_id, processor_version
+    )
 
     # Read the file into memory
     with open(file_path, "rb") as image:
@@ -131,6 +148,16 @@ def print_tokens(tokens: Sequence[documentai.Document.Page.Token], text: str) ->
     last_token_break_type = tokens[-1].detected_break.type_.name
     print(f"        Last token text: {repr(last_token_text)}")
     print(f"        Last token break type: {repr(last_token_break_type)}")
+
+
+def print_image_quality_scores(
+    image_quality_scores: documentai.Document.Page.ImageQualityScores,
+) -> None:
+    print(f"    Quality score: {image_quality_scores.quality_score:.1%}")
+    print("    Detected defects:")
+
+    for detected_defect in image_quality_scores.detected_defects:
+        print(f"        {detected_defect.type_}: {detected_defect.confidence:.1%}")
 
 
 def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:

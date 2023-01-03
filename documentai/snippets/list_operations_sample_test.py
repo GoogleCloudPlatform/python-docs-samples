@@ -15,7 +15,7 @@
 
 import os
 
-from documentai.snippets import list_operations_sample
+from samples.snippets import list_operations_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

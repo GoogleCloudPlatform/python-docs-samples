@@ -17,7 +17,7 @@
 import re
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import RetryError
+from google.api_core.exceptions import InternalServerError, RetryError
 from google.cloud import documentai, storage
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -28,6 +28,7 @@ from google.cloud import documentai, storage
 # input_mime_type = "application/pdf"
 # gcs_output_bucket = "YOUR_OUTPUT_BUCKET_NAME" # Format: gs://bucket
 # gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX" # Format: directory/subdirectory/
+# field_mask = "text,entities,pages.pageNumber"  # Optional. The fields to return in the Document object.
 
 
 def batch_process_documents(
@@ -38,6 +39,7 @@ def batch_process_documents(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
+    field_mask: str = None,
     timeout: int = 400,
 ):
 
@@ -62,10 +64,11 @@ def batch_process_documents(
     #
 
     # Cloud Storage URI for the Output Directory
-    destination_uri = f"{gcs_output_bucket}/{gcs_output_uri_prefix}/"
+    # This must end with a trailing forward slash `/`
+    destination_uri = f"{gcs_output_bucket}/{gcs_output_uri_prefix}"
 
     gcs_output_config = documentai.DocumentOutputConfig.GcsOutputConfig(
-        gcs_uri=destination_uri
+        gcs_uri=destination_uri, field_mask=field_mask
     )
 
     # Where to write results
@@ -91,7 +94,7 @@ def batch_process_documents(
         print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result(timeout=timeout)
     # Catch exception when operation doesn't finish before timeout
-    except (RetryError) as e:
+    except (RetryError, InternalServerError) as e:
         print(e.message)
 
     # NOTE: Can also use callbacks for asynchronous processing
