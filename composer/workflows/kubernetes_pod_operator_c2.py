@@ -222,4 +222,3 @@ with models.DAG(
     )
     # [END composer_2_kubernetespodoperator_fullconfig]
     # [END composer_2_kubernetespodoperator]
-
