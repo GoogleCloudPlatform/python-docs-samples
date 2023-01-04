@@ -15,6 +15,7 @@
 # [START functions_tips_lazy_globals]
 # [START cloudrun_tips_global_lazy]
 import functions_framework
+
 # [END cloudrun_tips_global_lazy]
 # [END functions_tips_lazy_globals]
 
