@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START composer_2_kubernetespodoperator]
 """Example DAG using KubernetesPodOperator."""
 import datetime
 
