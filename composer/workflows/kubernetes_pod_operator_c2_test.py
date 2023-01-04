@@ -20,5 +20,5 @@ def test_dag_import():
     environment. This is a recommended confidence check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import c2-kubernetes_pod_operator as module
+    from . import kubernetes_pod_operator_c2 as module
     unit_testing.assert_has_valid_dag(module)
