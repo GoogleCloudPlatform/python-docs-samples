@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_tips_lazy_globals]
+# [START cloudrun_tips_global_lazy]
+import functions_framework
+# [END cloudrun_tips_global_lazy]
+# [END functions_tips_lazy_globals]
 
 from functools import reduce  # noqa I100
 
@@ -28,9 +33,6 @@ def function_specific_computation():
 
 # [START functions_tips_lazy_globals]
 # [START cloudrun_tips_global_lazy]
-import functions_framework
-
-
 # Always initialized (at cold-start)
 non_lazy_global = file_wide_computation()
 
