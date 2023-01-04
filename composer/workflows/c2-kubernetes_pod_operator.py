@@ -49,6 +49,7 @@ secret_volume = Secret(
     # Key in the form of service account file name
     key="service-account.json",
 )
+# [END composer_2_kubernetespodoperator_secretobject]
 # If you are running Airflow in more than one time zone
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
 # for best practices
@@ -68,7 +69,7 @@ with models.DAG(
     # no `config_file` parameter is specified. By default it will contain the
     # credentials for Cloud Composer's Google Kubernetes Engine cluster that is
     # created upon environment creation.
-
+    # [START composer_2_kubernetespodoperator_minconfig]
     kubernetes_min_pod = KubernetesPodOperator(
         # The ID specified for the task.
         task_id="pod-ex-minimum",
@@ -99,6 +100,8 @@ with models.DAG(
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
     )
+    # [END composer_2_kubernetespodoperator_minconfig]
+    # [START composer_2_kubernetespodoperator_templateconfig]
     kubernetes_template_ex = KubernetesPodOperator(
         task_id="ex-kube-templates",
         name="ex-kube-templates",
@@ -128,6 +131,8 @@ with models.DAG(
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
     )
+    # [END composer_2_kubernetespodoperator_templateconfig]
+    # [START composer_2_kubernetespodoperator_secretconfig]
     kubernetes_secret_vars_ex = KubernetesPodOperator(
         task_id="ex-kube-secrets",
         name="ex-kube-secrets",
@@ -149,6 +154,8 @@ with models.DAG(
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
     )
+    # [END composer_2_kubernetespodoperator_secretconfig]
+    # [START composer_2_kubernetespodoperator_fullconfig]
     kubernetes_full_pod = KubernetesPodOperator(
         task_id="ex-all-configs",
         name="pi",
@@ -214,3 +221,6 @@ with models.DAG(
         # https://cloud.google.com/composer/docs/using-gke-operator
         affinity={},
     )
+    # [END composer_2_kubernetespodoperator_fullconfig]
+    # [END composer_2_kubernetespodoperator]
+
