@@ -28,7 +28,7 @@ from kubernetes.client import models as k8s_models
 # Pod specification or in an image; putting it in a Secret object allows for
 # more control over how it is used, and reduces the risk of accidental
 # exposure.
-
+# [START composer_2_kubernetespodoperator_secretobject]
 secret_env = Secret(
     # Expose the secret as environment variable.
     deploy_type="env",
