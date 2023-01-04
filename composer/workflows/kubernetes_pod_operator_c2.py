@@ -161,7 +161,6 @@ with models.DAG(
         name="pi",
         namespace="composer-user-workloads",
         image="perl:5.34.0",
-        startup_timeout_seconds=600,
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
         cmds=["perl"],
@@ -173,8 +172,8 @@ with models.DAG(
         secrets=[],
         # Labels to apply to the Pod.
         labels={"pod-label": "label-name"},
-        # Timeout to start up the Pod, default is 120.
-        startup_timeout_seconds=120,
+        # Timeout to start up the Pod, default is 600.
+        startup_timeout_seconds=600,
         # The environment variables to be initialized in the container
         # env_vars are templated.
         env_vars={"EXAMPLE_VAR": "/example/value"},
