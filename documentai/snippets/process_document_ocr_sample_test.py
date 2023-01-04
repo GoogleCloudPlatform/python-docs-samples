@@ -20,7 +20,7 @@ from documentai.snippets import process_document_ocr_sample
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "52a38e080c1a7296"
-processor_version = "rc"
+processor_version = "pretrained-ocr-v1.1-2022-09-12"
 file_path = "resources/handwritten_form.pdf"
 mime_type = "application/pdf"
 
