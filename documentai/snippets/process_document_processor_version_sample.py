@@ -37,7 +37,7 @@ def process_document_processor_version_sample(
     mime_type: str,
     field_mask: str = None,
 ):
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)

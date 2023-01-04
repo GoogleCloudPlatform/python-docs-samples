@@ -16,7 +16,8 @@
 # [START documentai_cancel_operation]
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import FailedPrecondition, NotFound
+from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import NotFound
 from google.cloud import documentai
 from google.longrunning.operations_pb2 import CancelOperationRequest
 
@@ -26,7 +27,7 @@ from google.longrunning.operations_pb2 import CancelOperationRequest
 
 
 def cancel_operation_sample(location: str, operation_name: str):
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)

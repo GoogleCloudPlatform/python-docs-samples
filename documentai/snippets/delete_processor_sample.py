@@ -16,7 +16,6 @@
 # [START documentai_delete_processor]
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import NotFound
 from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -26,7 +25,7 @@ from google.cloud import documentai
 
 
 def delete_processor_sample(project_id: str, location: str, processor_id: str):
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
@@ -36,14 +35,11 @@ def delete_processor_sample(project_id: str, location: str, processor_id: str):
     processor_name = client.processor_path(project_id, location, processor_id)
 
     # Delete a processor
-    try:
-        operation = client.delete_processor(name=processor_name)
-        # Print operation details
-        print(operation.operation.name)
-        # Wait for operation to complete
-        operation.result()
-    except NotFound as e:
-        print(e.message)
+    operation = client.delete_processor(name=processor_name)
+    # Print operation details
+    print(operation.operation.name)
+    # Wait for operation to complete
+    operation.result()
 
 
 # [END documentai_delete_processor]

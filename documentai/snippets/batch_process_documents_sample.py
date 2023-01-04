@@ -17,8 +17,10 @@
 import re
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import InternalServerError, RetryError
-from google.cloud import documentai, storage
+from google.api_core.exceptions import InternalServerError
+from google.api_core.exceptions import RetryError
+from google.cloud import documentai
+from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -43,7 +45,7 @@ def batch_process_documents(
     timeout: int = 400,
 ):
 
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)

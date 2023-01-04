@@ -16,7 +16,8 @@
 # [START documentai_delete_processor_version]
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import FailedPrecondition, InvalidArgument
+from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import InvalidArgument
 from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -29,7 +30,7 @@ from google.cloud import documentai
 def delete_processor_version_sample(
     project_id: str, location: str, processor_id: str, processor_version_id: str
 ):
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
