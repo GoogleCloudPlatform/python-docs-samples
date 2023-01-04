@@ -14,6 +14,7 @@
 
 # [START functions_concepts_after_timeout]
 import time
+
 import functions_framework
 
 
