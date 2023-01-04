@@ -15,7 +15,10 @@
 # [START functions_concepts_after_timeout]
 import time
 
+import functions_framework
 
+
+@functions_framework.http
 def timeout(request):
     print('Function running...')
     time.sleep(120)
