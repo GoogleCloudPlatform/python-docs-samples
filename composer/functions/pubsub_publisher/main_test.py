@@ -15,7 +15,7 @@
 import pytest
 import mock
 
-import pubsub_function
+import main
 
 
 @pytest.fixture()
