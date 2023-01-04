@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
+# [START functions_tips_scopes]
+# [START cloudrun_tips_global_scope]
 import time
 
 import functions_framework
 
 
-# [START functions_tips_scopes]
-# [START cloudrun_tips_global_scope]
 # Placeholder
 def heavy_computation():
     return time.time()
