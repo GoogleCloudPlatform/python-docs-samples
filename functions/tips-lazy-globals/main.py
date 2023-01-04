@@ -19,8 +19,6 @@ import functions_framework
 # [END cloudrun_tips_global_lazy]
 # [END functions_tips_lazy_globals]
 
-from functools import reduce  # noqa I100
-
 
 # Placeholder
 def file_wide_computation():
