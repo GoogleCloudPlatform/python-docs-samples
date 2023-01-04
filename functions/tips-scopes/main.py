@@ -15,7 +15,11 @@
 
 import time
 
+import functions_framework
 
+
+# [START functions_tips_scopes]
+# [START cloudrun_tips_global_scope]
 # Placeholder
 def heavy_computation():
     return time.time()
@@ -24,11 +28,6 @@ def heavy_computation():
 # Placeholder
 def light_computation():
     return time.time()
-
-
-# [START functions_tips_scopes]
-# [START cloudrun_tips_global_scope]
-import functions_framework
 
 
 # Global (instance-wide) scope
