@@ -14,11 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Video Stitcher sample for updating a CDN key.
+"""Google Cloud Video Stitcher sample for updating a Media CDN or
+Cloud CDN key.
 Example usage:
     python update_cdn_key.py --project_id <project-id> --location <location> \
         --cdn_key_id <cdn_key_id> --hostname <hostname> \
-        [--gcdn_keyname <name> --gcdn_private_key <secret> | --akamai_token_key <token-key>]
+        --key_name <name> --private_key <key> [--is_cloud_cdn]
 """
 
 # [START videostitcher_update_cdn_key]
@@ -37,19 +38,23 @@ def update_cdn_key(
     location: str,
     cdn_key_id: str,
     hostname: str,
-    gcdn_keyname: str = None,
-    gcdn_private_key: str = None,
-    akamai_token_key: str = None,
+    key_name: str,
+    private_key: str,
+    is_cloud_cdn: bool,
 ) -> str:
-    """Updates a Google Cloud or Akamai CDN key.
+    """Updates a Media CDN or Cloud CDN key.
     Args:
         project_id: The GCP project ID.
         location: The location of the CDN key.
         cdn_key_id: The user-defined CDN key ID.
         hostname: The hostname to which this CDN key applies.
-        gcdn_keyname: Applies to a Google Cloud CDN key. A base64-encoded string secret.
-        gcdn_private_key: Applies to a Google Cloud CDN key. Public name of the key.
-        akamai_token_key: Applies to an Akamai CDN key. A base64-encoded string token key."""
+        key_name: For a Media CDN key, this is the keyset name.
+                  For a Cloud CDN key, this is the public name of the CDN key.
+        private_key: For a Media CDN key, this is a 64-byte Ed25519 private
+                     key encoded as a base64-encoded string.
+                     See https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn
+                     for more information. For a Cloud CDN key, this is a base64-encoded string secret.
+        is_cloud_cdn: If true, update a Cloud CDN key. If false, update a Media CDN key."""
 
     client = VideoStitcherServiceClient()
 
@@ -60,19 +65,18 @@ def update_cdn_key(
         hostname=hostname,
     )
 
-    if akamai_token_key is not None:
-        cdn_key.akamai_cdn_key = stitcher_v1.types.AkamaiCdnKey(
-            token_key=akamai_token_key,
-        )
-        update_mask = field_mask.FieldMask(paths=["hostname", "akamai_cdn_key"])
-    elif gcdn_keyname is not None:
+    if is_cloud_cdn:
         cdn_key.google_cdn_key = stitcher_v1.types.GoogleCdnKey(
-            key_name=gcdn_keyname,
-            private_key=gcdn_private_key,
+            key_name=key_name,
+            private_key=private_key,
         )
         update_mask = field_mask.FieldMask(paths=["hostname", "google_cdn_key"])
     else:
-        update_mask = field_mask.FieldMask(paths=["hostname"])
+        cdn_key.media_cdn_key = stitcher_v1.types.MediaCdnKey(
+            key_name=key_name,
+            private_key=private_key,
+        )
+        update_mask = field_mask.FieldMask(paths=["hostname", "media_cdn_key"])
 
     response = client.update_cdn_key(cdn_key=cdn_key, update_mask=update_mask)
     print(f"Updated CDN key: {response.name}")
@@ -87,6 +91,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--location",
         help="The location of the CDN key.",
+        required=True,
     )
     parser.add_argument(
         "--cdn_key_id",
@@ -99,24 +104,33 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--gcdn_keyname",
-        help="Applies to a Google Cloud CDN key. The base64-encoded string secret.",
+        "--key_name",
+        help="For a Media CDN key, this is the keyset name. For a Cloud CDN"
+        + " key, this is the public name of the CDN key.",
+        required=True,
     )
     parser.add_argument(
-        "--gcdn_private_key",
-        help="Applies to a Google Cloud CDN key. Public name of the key.",
+        "--private_key",
+        help="For a Media CDN key, this is a 64-byte Ed25519 private key"
+        + "encoded as a base64-encoded string. See"
+        + " https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn"
+        + " for more information. For a Cloud CDN key, this is a"
+        + " base64-encoded string secret.",
+        required=True,
     )
     parser.add_argument(
-        "--akamai_token_key",
-        help="Applies to an Akamai CDN key. The base64-encoded string token key.",
+        "--is_cloud_cdn",
+        action="store_true",
+        help="If included, create a Cloud CDN key. If absent, create a Media CDN key.",
     )
+
     args = parser.parse_args()
     update_cdn_key(
         args.project_id,
         args.location,
         args.cdn_key_id,
         args.hostname,
-        args.gcdn_keyname,
-        args.gcdn_private_key,
-        args.akamai_token_key,
+        args.key_name,
+        args.private_key,
+        args.is_cloud_cdn,
     )

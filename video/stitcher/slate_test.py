@@ -15,7 +15,7 @@
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.protobuf import timestamp_pb2
 import pytest
 
 import create_slate
@@ -23,11 +23,15 @@ import delete_slate
 import get_slate
 import list_slates
 import update_slate
+import utils
 
 location = "us-west1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-slate_id = f"my-python-test-slate-{uuid.uuid4()}"
+now = timestamp_pb2.Timestamp()
+now.GetCurrentTime()
+
+slate_id = f"python-test-slate-{uuid.uuid4().hex[:5]}-{now.seconds}"
 
 input_bucket_name = "cloud-samples-data/media/"
 slate_video_file_name = "ForBiggerEscapes.mp4"
@@ -41,18 +45,14 @@ updated_slate_uri = (
 
 def test_slate_operations(capsys: pytest.fixture) -> None:
 
+    utils.delete_stale_slates(project_id, location)
+
     slate_name_project_number = (
         f"projects/{project_number}/locations/{location}/slates/{slate_id}"
     )
     slate_name_project_id = (
         f"projects/{project_id}/locations/{location}/slates/{slate_id}"
     )
-
-    try:
-        delete_slate.delete_slate(project_id, location, slate_id)
-    except NotFound as e:
-        print(f"Ignoring NotFound, details: {e}")
-    out, _ = capsys.readouterr()
 
     create_slate.create_slate(project_id, location, slate_id, slate_uri)
     out, _ = capsys.readouterr()
