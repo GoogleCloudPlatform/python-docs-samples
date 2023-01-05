@@ -60,7 +60,7 @@ def process_document_splitter_sample(
 def process_document(
     project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
 ) -> documentai.Document:
-    # You must set the api_endpoint if you use a location other than 'us', e.g.:
+    # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
