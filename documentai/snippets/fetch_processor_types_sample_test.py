@@ -15,7 +15,7 @@
 
 import os
 
-from samples.snippets import fetch_processor_types_sample
+from documentai.snippets import fetch_processor_types_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

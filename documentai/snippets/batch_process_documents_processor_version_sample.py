@@ -17,8 +17,10 @@
 import re
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import InternalServerError, RetryError
-from google.cloud import documentai, storage
+from google.api_core.exceptions import InternalServerError
+from google.api_core.exceptions import RetryError
+from google.cloud import documentai
+from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'

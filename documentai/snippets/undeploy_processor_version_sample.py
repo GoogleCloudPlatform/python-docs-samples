@@ -16,7 +16,8 @@
 # [START documentai_undeploy_processor_version]
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import FailedPrecondition, InvalidArgument
+from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import InvalidArgument
 from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
