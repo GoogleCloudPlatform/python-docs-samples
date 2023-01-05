@@ -29,7 +29,8 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-IMAGE_NAME = f"gcr.io/{PROJECT}/image-proc-{SUFFIX}"
+AR_REPO_URL = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy"
+IMAGE_NAME = f"{AR_REPO_URL}/vision-e2e-test:{SUFFIX}"
 CLOUD_RUN_SERVICE = f"image-proc-{SUFFIX}"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
 OUTPUT_BUCKET = f"image-proc-output-{SUFFIX}"
@@ -44,28 +45,14 @@ def container_image():
             "gcloud",
             "builds",
             "submit",
-            "--tag",
-            IMAGE_NAME,
+            "--config",
+            "cloudbuild.yaml",
             "--project",
             PROJECT,
-            "--quiet",
+            f"--substitutions=_TAG={SUFFIX}"
         ]
     )
     yield IMAGE_NAME
-
-    # Delete container image
-    subprocess.check_call(
-        [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            IMAGE_NAME,
-            "--quiet",
-            "--project",
-            PROJECT,
-        ]
-    )
 
 
 @pytest.fixture

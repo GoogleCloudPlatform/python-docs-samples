@@ -1,0 +1,25 @@
+# Copyright 2023 Google LLC
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+  - id: "Docker build"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+    # TODO: replace _TAG with $BUILD_ID
+      ["build", "-t", "${_AR_REPO_URL}/vision-e2e-test:${_TAG}", "."]
+  - id: "Docker push to Artifact Registry"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_AR_REPO_URL}/vision-e2e-test:${_TAG}"]
+substitutions:
+  _AR_REPO_URL: us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy
+
+options:
+  dynamic_substitutions: true
