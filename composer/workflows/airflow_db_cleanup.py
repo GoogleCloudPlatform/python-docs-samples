@@ -47,32 +47,25 @@ The DAG is a fork of [teamclairvoyant repository.](https://github.com/teamclairv
 
 4. Put the DAG in your gcs bucket.
 """
-from datetime import datetime, timedelta
+from datetime import timedelta
 import logging
 import os
 
 import airflow
 from airflow import settings
+from airflow.version import version as airflow_version
 
-try:
-    from airflow.jobs import BaseJob
-except ImportError:
-    from airflow.jobs.base_job import BaseJob
-
+from airflow.jobs.base_job import BaseJob
 from airflow.models import DAG, DagModel, DagRun, Log, SlaMiss, \
     TaskInstance, Variable, XCom
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 import dateutil.parser
 from sqlalchemy import and_, func
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.orm import load_only
 
-try:
-    # airflow.utils.timezone is available from v1.10 onwards
-    from airflow.utils import timezone
-    now = timezone.utcnow
-except ImportError:
-    now = datetime.utcnow
+from airflow.utils import timezone
+now = timezone.utcnow
 
 # airflow-db-cleanup
 DAG_ID = os.path.basename(__file__).replace(".pyc", "").replace(".py", "")
@@ -84,7 +77,7 @@ DAG_OWNER_NAME = "operations"
 # List of email address to send email alerts to if this job fails
 ALERT_EMAIL_ADDRESSES = []
 # Airflow version used by the environment
-AIRFLOW_VERSION = airflow.version.version.split(".")
+AIRFLOW_VERSION = airflow_version[:-(len("+composer"))].split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
@@ -135,7 +128,7 @@ DATABASE_OBJECTS = [{
     "keep_last_group_by": None
 }, {
     "airflow_db_model": DagModel,
-    "age_check_column": DagModel.last_scheduler_run if AIRFLOW_VERSION < ["2", "0", "2"] else DagModel.last_parsed_time,
+    "age_check_column": DagModel.last_parsed_time,
     "keep_last": False,
     "keep_last_filters": None,
     "keep_last_group_by": None
@@ -293,77 +286,75 @@ def print_query(query, airflow_db_model, age_check_column):
 
 
 def cleanup_function(**context):
-    session = settings.Session()
+    with settings.Session() as session:
 
-    logging.info("Retrieving max_execution_date from XCom")
-    max_date = context["ti"].xcom_pull(
-        task_ids=print_configuration.task_id, key="max_date")
-    max_date = dateutil.parser.parse(max_date)  # stored as iso8601 str in xcom
+        logging.info("Retrieving max_execution_date from XCom")
+        max_date = context["ti"].xcom_pull(
+            task_ids=print_configuration.task_id, key="max_date")
+        max_date = dateutil.parser.parse(max_date)  # stored as iso8601 str in xcom
 
-    airflow_db_model = context["params"].get("airflow_db_model")
-    state = context["params"].get("state")
-    age_check_column = context["params"].get("age_check_column")
-    keep_last = context["params"].get("keep_last")
-    keep_last_filters = context["params"].get("keep_last_filters")
-    keep_last_group_by = context["params"].get("keep_last_group_by")
+        airflow_db_model = context["params"].get("airflow_db_model")
+        state = context["params"].get("state")
+        age_check_column = context["params"].get("age_check_column")
+        keep_last = context["params"].get("keep_last")
+        keep_last_filters = context["params"].get("keep_last_filters")
+        keep_last_group_by = context["params"].get("keep_last_group_by")
 
-    logging.info("Configurations:")
-    logging.info("max_date:                 " + str(max_date))
-    logging.info("enable_delete:            " + str(ENABLE_DELETE))
-    logging.info("session:                  " + str(session))
-    logging.info("airflow_db_model:         " + str(airflow_db_model))
-    logging.info("state:                    " + str(state))
-    logging.info("age_check_column:         " + str(age_check_column))
-    logging.info("keep_last:                " + str(keep_last))
-    logging.info("keep_last_filters:        " + str(keep_last_filters))
-    logging.info("keep_last_group_by:       " + str(keep_last_group_by))
+        logging.info("Configurations:")
+        logging.info("max_date:                 " + str(max_date))
+        logging.info("enable_delete:            " + str(ENABLE_DELETE))
+        logging.info("session:                  " + str(session))
+        logging.info("airflow_db_model:         " + str(airflow_db_model))
+        logging.info("state:                    " + str(state))
+        logging.info("age_check_column:         " + str(age_check_column))
+        logging.info("keep_last:                " + str(keep_last))
+        logging.info("keep_last_filters:        " + str(keep_last_filters))
+        logging.info("keep_last_group_by:       " + str(keep_last_group_by))
 
-    logging.info("")
+        logging.info("")
 
-    logging.info("Running Cleanup Process...")
+        logging.info("Running Cleanup Process...")
 
-    try:
+        try:
 
-        if context["params"].get("do_not_delete_by_dag_id"):
-            query = build_query(session, airflow_db_model, age_check_column,
-                                max_date, keep_last, keep_last_filters,
-                                keep_last_group_by)
-            if PRINT_DELETES:
-                print_query(query, airflow_db_model, age_check_column)
-            if ENABLE_DELETE:
-                logging.info("Performing Delete...")
-                query.delete(synchronize_session=False)
-            session.commit()
-        else:
-            dags = session.query(airflow_db_model.dag_id).distinct()
-            session.commit()
-
-            list_dags = [str(list(dag)[0]) for dag in dags]
-            for dag in list_dags:
+            if context["params"].get("do_not_delete_by_dag_id"):
                 query = build_query(session, airflow_db_model, age_check_column,
                                     max_date, keep_last, keep_last_filters,
                                     keep_last_group_by)
-                query = query.filter(airflow_db_model.dag_id == dag)
                 if PRINT_DELETES:
                     print_query(query, airflow_db_model, age_check_column)
                 if ENABLE_DELETE:
                     logging.info("Performing Delete...")
                     query.delete(synchronize_session=False)
                 session.commit()
+            else:
+                dags = session.query(airflow_db_model.dag_id).distinct()
+                session.commit()
 
-        if not ENABLE_DELETE:
-            logging.warn("You've opted to skip deleting the db entries. "
-                         "Set ENABLE_DELETE to True to delete entries!!!")
+                list_dags = [str(list(dag)[0]) for dag in dags]
+                for dag in list_dags:
+                    query = build_query(session, airflow_db_model, age_check_column,
+                                        max_date, keep_last, keep_last_filters,
+                                        keep_last_group_by)
+                    query = query.filter(airflow_db_model.dag_id == dag)
+                    if PRINT_DELETES:
+                        print_query(query, airflow_db_model, age_check_column)
+                    if ENABLE_DELETE:
+                        logging.info("Performing Delete...")
+                        query.delete(synchronize_session=False)
+                    session.commit()
 
-        logging.info("Finished Running Cleanup Process")
+            if not ENABLE_DELETE:
+                logging.warn("You've opted to skip deleting the db entries. "
+                             "Set ENABLE_DELETE to True to delete entries!!!")
 
-    except ProgrammingError as e:
-        logging.error(e)
-        logging.error(
-            str(airflow_db_model) + " is not present in the metadata. "
-            "Skipping...")
+            logging.info("Finished Running Cleanup Process")
 
-    session.close()
+        except ProgrammingError as e:
+            logging.error(e)
+            logging.error(
+                str(airflow_db_model) + " is not present in the metadata. "
+                "Skipping...")
 
 
 for db_object in DATABASE_OBJECTS:
