@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_cloud_delete_api_key]
+# [START apikeys_delete_api_key]
 
 from google.cloud import api_keys_v2
 
@@ -42,4 +42,4 @@ def delete_api_key(project_id: str, key_id: str) -> None:
     result = client.delete_key(delete_key_request).result()
     print(f"Successfully deleted the API key: {result.name}")
 
-# [END auth_cloud_delete_api_key]
+# [END apikeys_delete_api_key]

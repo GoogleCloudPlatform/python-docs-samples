@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_cloud_create_api_key]
+# [START apikeys_create_api_key]
 
 from google.cloud import api_keys_v2
 from google.cloud.api_keys_v2 import Key
@@ -53,4 +53,4 @@ def create_api_key(project_id: str) -> Key:
     # To restrict the usage of this API key, use the value in "response.name".
     return response
 
-# [END auth_cloud_create_api_key]
+# [END apikeys_create_api_key]

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_cloud_restrict_api_key_http]
+# [START apikeys_restrict_api_key_http]
 
 from google.cloud import api_keys_v2
 from google.cloud.api_keys_v2 import Key
@@ -64,4 +64,4 @@ def restrict_api_key_http(project_id: str, key_id: str) -> Key:
     # Use response.key_string to authenticate.
     return response
 
-# [END auth_cloud_restrict_api_key_http]
+# [END apikeys_restrict_api_key_http]

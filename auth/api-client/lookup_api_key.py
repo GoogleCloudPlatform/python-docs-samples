@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_cloud_lookup_api_key]
+# [START apikeys_lookup_api_key]
 
 from google.cloud import api_keys_v2
 
@@ -45,4 +45,4 @@ def lookup_api_key(api_key_string: str) -> None:
 
     print(f"Successfully retrieved the API key name: {lookup_key_response.name}")
 
-# [END auth_cloud_lookup_api_key]
+# [END apikeys_lookup_api_key]
