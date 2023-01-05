@@ -13,6 +13,10 @@
 # limitations under the License.
 
 # [START functions_concepts_requests]
+import functions_framework
+
+
+@functions_framework.http
 def make_request(request):
     """
     HTTP Cloud Function that makes another HTTP request.

@@ -74,7 +74,7 @@ steps:
 substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
-  _GITHUB_REPO: $(pull_request.pull_request.head.repo.full_name)
+  _GITHUB_REPO: $(pull_request.head.repo.full_name)
 
 options:
   dynamicSubstitutions: true
