@@ -382,6 +382,7 @@ def inspect_file(
         "info_types": info_types,
         "custom_info_types": custom_info_types,
         "min_likelihood": min_likelihood,
+        "include_quote": include_quote,
         "limits": {"max_findings_per_request": max_findings},
     }
 
