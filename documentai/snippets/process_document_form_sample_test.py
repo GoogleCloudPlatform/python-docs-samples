@@ -15,7 +15,7 @@
 
 import os
 
-from samples.snippets import process_document_form_sample
+from documentai.snippets import process_document_form_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

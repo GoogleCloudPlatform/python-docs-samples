@@ -15,7 +15,7 @@
 
 import os
 
-from samples.snippets import set_default_processor_version_sample
+from documentai.snippets import set_default_processor_version_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

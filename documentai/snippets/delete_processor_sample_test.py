@@ -15,8 +15,8 @@
 
 import os
 
+from documentai.snippets import delete_processor_sample
 import mock
-from samples.snippets import delete_processor_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
