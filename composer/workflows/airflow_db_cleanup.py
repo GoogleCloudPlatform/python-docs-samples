@@ -343,8 +343,7 @@ def cleanup_function(**context):
                 query = build_query(session, airflow_db_model, age_check_column,
                                     max_date, keep_last, keep_last_filters,
                                     keep_last_group_by)
-                query = query.filter(airflow_db_model.dag_id == dag
-                                     ).delete(synchronize_session=False)
+                query = query.filter(airflow_db_model.dag_id == dag)
                 if PRINT_DELETES:
                     print_query(query, airflow_db_model, age_check_column)
                 if ENABLE_DELETE:
