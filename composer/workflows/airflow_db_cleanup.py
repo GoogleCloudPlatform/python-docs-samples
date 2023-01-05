@@ -83,7 +83,7 @@ AIRFLOW_VERSION = airflow_version[:-(len("+composer"))].split(".")
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
     Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30))
 # Prints the database entries which will be getting deleted; set to False
-# to avoid printing large lists and slowdown process
+# to avoid printing large lists and slowdown processf
 PRINT_DELETES = False
 # Whether the job should delete the db entries or not. Included if you want to
 # temporarily avoid deleting the db entries.
@@ -286,75 +286,78 @@ def print_query(query, airflow_db_model, age_check_column):
 
 
 def cleanup_function(**context):
-    with settings.Session() as session:
+    session = settings.Session()
 
-        logging.info("Retrieving max_execution_date from XCom")
-        max_date = context["ti"].xcom_pull(
-            task_ids=print_configuration.task_id, key="max_date")
-        max_date = dateutil.parser.parse(max_date)  # stored as iso8601 str in xcom
+    logging.info("Retrieving max_execution_date from XCom")
+    max_date = context["ti"].xcom_pull(
+        task_ids=print_configuration.task_id, key="max_date")
+    max_date = dateutil.parser.parse(max_date)  # stored as iso8601 str in xcom
 
-        airflow_db_model = context["params"].get("airflow_db_model")
-        state = context["params"].get("state")
-        age_check_column = context["params"].get("age_check_column")
-        keep_last = context["params"].get("keep_last")
-        keep_last_filters = context["params"].get("keep_last_filters")
-        keep_last_group_by = context["params"].get("keep_last_group_by")
+    airflow_db_model = context["params"].get("airflow_db_model")
+    state = context["params"].get("state")
+    age_check_column = context["params"].get("age_check_column")
+    keep_last = context["params"].get("keep_last")
+    keep_last_filters = context["params"].get("keep_last_filters")
+    keep_last_group_by = context["params"].get("keep_last_group_by")
 
-        logging.info("Configurations:")
-        logging.info("max_date:                 " + str(max_date))
-        logging.info("enable_delete:            " + str(ENABLE_DELETE))
-        logging.info("session:                  " + str(session))
-        logging.info("airflow_db_model:         " + str(airflow_db_model))
-        logging.info("state:                    " + str(state))
-        logging.info("age_check_column:         " + str(age_check_column))
-        logging.info("keep_last:                " + str(keep_last))
-        logging.info("keep_last_filters:        " + str(keep_last_filters))
-        logging.info("keep_last_group_by:       " + str(keep_last_group_by))
+    logging.info("Configurations:")
+    logging.info("max_date:                 " + str(max_date))
+    logging.info("enable_delete:            " + str(ENABLE_DELETE))
+    logging.info("session:                  " + str(session))
+    logging.info("airflow_db_model:         " + str(airflow_db_model))
+    logging.info("state:                    " + str(state))
+    logging.info("age_check_column:         " + str(age_check_column))
+    logging.info("keep_last:                " + str(keep_last))
+    logging.info("keep_last_filters:        " + str(keep_last_filters))
+    logging.info("keep_last_group_by:       " + str(keep_last_group_by))
 
-        logging.info("")
+    logging.info("")
 
-        logging.info("Running Cleanup Process...")
+    logging.info("Running Cleanup Process...")
 
-        try:
+    try:
 
-            if context["params"].get("do_not_delete_by_dag_id"):
+        if context["params"].get("do_not_delete_by_dag_id"):
+            query = build_query(session, airflow_db_model, age_check_column,
+                                max_date, keep_last, keep_last_filters,
+                                keep_last_group_by)
+            if PRINT_DELETES:
+                print_query(query, airflow_db_model, age_check_column)
+            if ENABLE_DELETE:
+                logging.info("Performing Delete...")
+                query.delete(synchronize_session=False)
+            session.commit()
+        else:
+            dags = session.query(airflow_db_model.dag_id).distinct()
+            session.commit()
+
+            list_dags = [str(list(dag)[0]) for dag in dags]
+            for dag in list_dags:
                 query = build_query(session, airflow_db_model, age_check_column,
                                     max_date, keep_last, keep_last_filters,
                                     keep_last_group_by)
+                query = query.filter(airflow_db_model.dag_id == dag)
                 if PRINT_DELETES:
                     print_query(query, airflow_db_model, age_check_column)
                 if ENABLE_DELETE:
                     logging.info("Performing Delete...")
                     query.delete(synchronize_session=False)
                 session.commit()
-            else:
-                dags = session.query(airflow_db_model.dag_id).distinct()
-                session.commit()
 
-                list_dags = [str(list(dag)[0]) for dag in dags]
-                for dag in list_dags:
-                    query = build_query(session, airflow_db_model, age_check_column,
-                                        max_date, keep_last, keep_last_filters,
-                                        keep_last_group_by)
-                    query = query.filter(airflow_db_model.dag_id == dag)
-                    if PRINT_DELETES:
-                        print_query(query, airflow_db_model, age_check_column)
-                    if ENABLE_DELETE:
-                        logging.info("Performing Delete...")
-                        query.delete(synchronize_session=False)
-                    session.commit()
+        if not ENABLE_DELETE:
+            logging.warn("You've opted to skip deleting the db entries. "
+                         "Set ENABLE_DELETE to True to delete entries!!!")
 
-            if not ENABLE_DELETE:
-                logging.warn("You've opted to skip deleting the db entries. "
-                             "Set ENABLE_DELETE to True to delete entries!!!")
+        logging.info("Finished Running Cleanup Process")
 
-            logging.info("Finished Running Cleanup Process")
+    except ProgrammingError as e:
+        logging.error(e)
+        logging.error(
+            str(airflow_db_model) + " is not present in the metadata. "
+            "Skipping...")
 
-        except ProgrammingError as e:
-            logging.error(e)
-            logging.error(
-                str(airflow_db_model) + " is not present in the metadata. "
-                "Skipping...")
+    finally:
+        session.close()
 
 
 for db_object in DATABASE_OBJECTS:

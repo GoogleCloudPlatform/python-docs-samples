@@ -67,6 +67,7 @@ from sqlalchemy.orm import load_only
 try:
   # airflow.utils.timezone is available from v1.10 onwards
   from airflow.utils import timezone
+
   now = timezone.utcnow
 except ImportError:
   now = datetime.utcnow
@@ -141,6 +142,7 @@ DATABASE_OBJECTS = [{
 # Check for TaskReschedule model
 try:
   from airflow.models import TaskReschedule
+
   DATABASE_OBJECTS.append({
       "airflow_db_model": TaskReschedule,
       "age_check_column": TaskReschedule.execution_date,
@@ -155,6 +157,7 @@ except Exception as e:
 # Check for TaskFail model
 try:
   from airflow.models import TaskFail
+
   DATABASE_OBJECTS.append({
       "airflow_db_model": TaskFail,
       "age_check_column": TaskFail.execution_date,
@@ -169,6 +172,7 @@ except Exception as e:
 # Check for ImportError model
 try:
   from airflow.models import ImportError
+
   DATABASE_OBJECTS.append({
       "airflow_db_model": ImportError,
       "age_check_column": ImportError.timestamp,
@@ -241,14 +245,13 @@ print_configuration = PythonOperator(
 
 def build_query(session, airflow_db_model, age_check_column, max_date,
     keep_last, keep_last_filters=None, keep_last_group_by=None):
-
   query = session.query(airflow_db_model).options(
       load_only(age_check_column))
 
   logging.info("INITIAL QUERY : " + str(query))
 
   if not keep_last:
-    query = query.filter(age_check_column <= max_date,)
+    query = query.filter(age_check_column <= max_date, )
   else:
     subquery = session.query(func.max(DagRun.execution_date))
     # workaround for MySQL "table specified twice" issue
@@ -363,7 +366,6 @@ def cleanup_function(**context):
 
 
 for db_object in DATABASE_OBJECTS:
-
   cleanup_op = PythonOperator(
       task_id="cleanup_" + str(db_object["airflow_db_model"].__name__),
       python_callable=cleanup_function,
