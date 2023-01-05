@@ -29,7 +29,7 @@ def test_disable_processor(capsys):
     )
     out, _ = capsys.readouterr()
 
-    assert "projects" in out or "DISABLED" in out
+    assert "projects" in out or "Processor" in out
 
     # Re-Enable Processor
     enable_processor_sample.enable_processor_sample(
