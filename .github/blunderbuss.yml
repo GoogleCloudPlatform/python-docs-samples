@@ -84,6 +84,7 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: documentai'
   - 'api: language'
   - 'api: texttospeech'
   - 'api: retail'
@@ -184,6 +185,7 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
+  - 'api: documentai'
   - 'api: retail'
   to: 
   - GoogleCloudPlatform/dee-data-ai
