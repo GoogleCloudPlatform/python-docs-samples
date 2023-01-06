@@ -90,6 +90,7 @@ assign_issues_by:
   - GoogleCloudPlatform/api-iot
 - labels:
   - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
   - 'api: language'
   - 'api: texttospeech'
   - 'api: retail'
@@ -190,6 +191,7 @@ assign_prs_by:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
   - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
   - 'api: retail'
   to: 
   - GoogleCloudPlatform/dee-data-ai
