@@ -14,9 +14,9 @@
 
 import os
 
+from google.api_core.exceptions import InternalServerError, ServiceUnavailable
 import backoff
 import instantiate_inline_workflow_template
-from google.api_core.exceptions import InternalServerError, ServiceUnavailable
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"

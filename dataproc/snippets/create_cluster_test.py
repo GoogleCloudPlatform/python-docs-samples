@@ -15,12 +15,12 @@
 import os
 import uuid
 
-import backoff
-import create_cluster
-import pytest
 from google.api_core.exceptions import (InternalServerError, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
+import create_cluster
+import backoff
+import pytest
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"

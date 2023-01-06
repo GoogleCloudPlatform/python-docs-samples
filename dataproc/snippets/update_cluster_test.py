@@ -18,13 +18,13 @@
 import os
 import uuid
 
-import backoff
-import pytest
-import update_cluster
 from google.api_core.exceptions import (InternalServerError, NotFound,
                                         ServiceUnavailable)
 from google.cloud.dataproc_v1.services.cluster_controller.client import \
     ClusterControllerClient
+import backoff
+import pytest
+import update_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"

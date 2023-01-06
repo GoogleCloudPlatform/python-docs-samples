@@ -15,12 +15,12 @@
 import os
 import uuid
 
-import backoff
-import pytest
-import submit_job
 from google.api_core.exceptions import (InternalServerError, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
+import backoff
+import pytest
+import submit_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
