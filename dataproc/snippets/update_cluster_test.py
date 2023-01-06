@@ -15,18 +15,16 @@
 # This sample walks a user through updating the number of clusters using the Dataproc
 # client library.
 
-
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
-from google.cloud.dataproc_v1.services.cluster_controller.client import (
-    ClusterControllerClient,
-)
+import backoff
 import pytest
-
 import update_cluster
-
+from google.api_core.exceptions import (InternalServerError, NotFound,
+                                        ServiceUnavailable)
+from google.cloud.dataproc_v1.services.cluster_controller.client import \
+    ClusterControllerClient
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -73,7 +71,7 @@ def setup_teardown(cluster_client):
         except NotFound:
             print("Cluster already deleted")
 
-
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
     # Wrapper function for client library function
     update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
