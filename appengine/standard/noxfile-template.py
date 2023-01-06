@@ -36,8 +36,11 @@ import tempfile
 # their directory and modify it.
 
 TEST_CONFIG = {
-    # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7"],
+    # You can opt out specific Python versions from the test.
+    # To save resources, please consider testing 2 versions at most.
+    # Test min and max supported versions which are python 3.7 and 3.11
+    # Ignoring python 2.7 which is no longer supported.
+    "ignored_versions": ["2.7", "3.8", "3.9", "3.10"],
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
@@ -81,10 +84,10 @@ def get_pytest_env_vars():
 
 # DO NOT EDIT - automatically generated.
 # All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10"]
+ALL_VERSIONS = ["2.7", "3.7", "3.8", "3.9", "3.10", "3.11"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10"]
+IGNORED_VERSIONS = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 

@@ -21,8 +21,11 @@
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
 
 TEST_CONFIG_OVERRIDE = {
-    # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7"],
+    # You can opt out specific Python versions from the test.
+    # To save resources, please consider testing 2 versions at most.
+    # Test min and max supported versions which are python 3.7 and 3.11
+    # Ignoring python 2.7 which is no longer supported.
+    "ignored_versions": ["2.7", "3.8", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
