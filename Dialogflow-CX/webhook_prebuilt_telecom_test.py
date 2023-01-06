@@ -45,7 +45,6 @@ def test_detect_customeranomaly_current(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["anomaly_detect"] == "true"
         assert res["sessionInfo"]["parameters"]["total_bill"] == 1054.34
         assert res["sessionInfo"]["parameters"]["first_month"] == str(
@@ -73,12 +72,11 @@ def test_detect_customeranomaly_other(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         today = date.today()
         assert res["sessionInfo"]["parameters"]["anomaly_detect"] == "false"
         assert res["sessionInfo"]["parameters"]["total_bill"] == 1054.34
         assert res["sessionInfo"]["parameters"]["first_month"] == str(
-            today.replace(day=1, month=(today.month - 1))
+            today.replace(day=1, month=1 + ((today.month - 2) % 12))
         )
 
 
@@ -98,7 +96,6 @@ def test_validate_phoneline(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["phone_line_verified"] == "true"
 
 
@@ -118,7 +115,6 @@ def test_invalid_phoneline(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["phone_line_verified"] == "false"
 
 
@@ -138,7 +134,6 @@ def test_invalid_phoneline2(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["domestic_coverage"] == "true"
 
 
@@ -156,7 +151,6 @@ def test_cruiseplan_coverage(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["port_is_covered"] == "true"
 
 
@@ -174,7 +168,6 @@ def test_cruiseplan_notcovered(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["port_is_covered"] == "false"
 
 
@@ -192,7 +185,6 @@ def test_international_coverage1(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["coverage"] == "both"
 
 
@@ -210,7 +202,6 @@ def test_international_coverage2(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["coverage"] == "monthly_only"
 
 
@@ -228,7 +219,6 @@ def test_international_coverage3(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["coverage"] == "neither"
 
 
@@ -246,7 +236,6 @@ def test_cheapest_plan1(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["monthly_cost"] == 70
         assert res["sessionInfo"]["parameters"]["daily_cost"] == 400
         assert res["sessionInfo"]["parameters"]["suggested_plan"] == "monthly"
@@ -266,7 +255,6 @@ def test_cheapest_plan2(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["monthly_cost"] == 70
         assert res["sessionInfo"]["parameters"]["daily_cost"] == 200
         assert res["sessionInfo"]["parameters"]["suggested_plan"] == "monthly"
@@ -286,7 +274,6 @@ def test_cheapest_plan3(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["monthly_cost"] == 70
         assert res["sessionInfo"]["parameters"]["daily_cost"] == 50
         assert res["sessionInfo"]["parameters"]["suggested_plan"] == "daily"
@@ -306,7 +293,6 @@ def test_cheapest_plan4(app):
 
     with app.test_request_context(json=request):
         res = cxPrebuiltAgentsTelecom(flask.request)
-        print(res)
         assert res["sessionInfo"]["parameters"]["suggested_plan"] == "null"
 
 
