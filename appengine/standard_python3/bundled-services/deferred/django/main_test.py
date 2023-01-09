@@ -65,6 +65,12 @@ def version():
     result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
+    version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
+    
+    # Wait for app to initialize
+    for i in range(6):
+        if requests.get(f"https://{version_hostname}/counter/get").status != 200:
+            time.sleep(2 ** i)
 
     yield project_id, version_id
 
