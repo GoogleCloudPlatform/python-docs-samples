@@ -76,7 +76,8 @@ SCHEDULE_INTERVAL = "@daily"
 DAG_OWNER_NAME = "operations"
 # List of email address to send email alerts to if this job fails
 ALERT_EMAIL_ADDRESSES = []
-# Airflow version used by the environment
+# Airflow version used by the environment in list form, value stored in
+# airflow_version is in format e.g "2.3.4+composer"
 AIRFLOW_VERSION = airflow_version[:-(len("+composer"))].split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
