@@ -32,7 +32,6 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out specific Python versions from the test.
     # To save resources, please consider testing 2 versions at most.
     # Composer w/ Airflow 2 only supports Python 3.8
-    # Test min and max supported versions which are python 3.8 and 3.11
     # Ignoring python 2.7 which is no longer supported.
     "ignored_versions": ["2.7", "3.7", "3.9", "3.10”, “3.11"],
     # Old samples are opted out of enforcing Python type hints
