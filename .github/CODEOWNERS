@@ -32,7 +32,7 @@
 /cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers
-/composer/**/*                         @leahecole @rachael-ds @rafalbiegacz @GoogleCloudPlatform/python-samples-reviewers
+/composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 /containeranalysis/**/*                @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
@@ -43,6 +43,7 @@
 /dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
+/documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
 /eventarc/**/*                         @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers

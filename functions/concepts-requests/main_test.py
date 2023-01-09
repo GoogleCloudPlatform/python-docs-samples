@@ -26,6 +26,7 @@ import main
 def app():
     return flask.Flask(__name__)
 
+
 @responses.activate
 def test_make_request_200(app):
     responses.add(responses.GET, 'http://example.com',
