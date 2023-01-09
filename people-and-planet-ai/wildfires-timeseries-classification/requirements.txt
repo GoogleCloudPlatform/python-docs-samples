@@ -1,0 +1,4 @@
+apache-beam[gcp]==2.41.0
+earthengine-api==0.1.324
+folium==0.12.1.post1
+plotly==5.10.0
