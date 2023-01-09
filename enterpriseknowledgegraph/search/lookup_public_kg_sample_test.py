@@ -15,24 +15,20 @@
 
 import os
 
-import search_public_kg_sample
+import lookup_public_kg_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
-search_query = "Google"
+ids = ["c-024dcv3mk"]
 languages = ["en"]
-types = ["Organization"]
-limit = 1
 
 
-def test_search_public_kg(capsys):
-    search_public_kg_sample.search_public_kg_sample(
+def test_lookup_public_kg(capsys):
+    lookup_public_kg_sample.lookup_public_kg_sample(
         project_id=project_id,
         location=location,
-        search_query=search_query,
+        ids=ids,
         languages=languages,
-        types=types,
-        limit=limit,
     )
 
     out, _ = capsys.readouterr()
