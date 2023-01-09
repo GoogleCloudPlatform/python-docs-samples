@@ -35,7 +35,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 import pytest
 
-from new_service_account_ssh import main
+from oslogin_service_account_ssh import main
 
 PROJECT = google.auth.default()[1]
 ZONE = 'europe-north1-a'
@@ -196,9 +196,20 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     # Letting everything settle down...
     time.sleep(60)
 
-    main('uname -a', PROJECT, account=account,
-         hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
-         oslogin=oslogin_client)
+    try:
+        main('uname -a', PROJECT, account=account,
+             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+             oslogin=oslogin_client)
+    except AssertionError:
+        # We will try to restart the machine and try again.
+        compute_client = compute_v1.InstancesClient()
+        compute_client.stop_unary(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
+        time.sleep(5)
+        compute_client.start_unary(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
+        time.sleep(30)
+        main('uname -a', PROJECT, account=account,
+             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+             oslogin=oslogin_client)
     out, _ = capsys.readouterr()
 
     assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
