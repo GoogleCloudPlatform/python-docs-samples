@@ -17,11 +17,7 @@
 name = "weather-model"
 version = "1.0.0"
 dependencies = [
-    # The more recent versions of `datasets` have a version conflict
-    # with the `dill` version required by `apache-beam`.
-    # They assume `multiprocess>=0.70.10` is installed without version
-    # constraints, so pip won't find the correct version of `datasets`.
-    "datasets==2.5.2", # version required to be installed along `apache-beam`
+    "datasets==2.8.0",
     "transformers==4.25.1",
 ]
 
