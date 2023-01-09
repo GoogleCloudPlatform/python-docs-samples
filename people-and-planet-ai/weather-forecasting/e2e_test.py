@@ -40,7 +40,13 @@ def test_name(python_version: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def data_path_local() -> str:
+def install_local_packages() -> None:
+    packages = ["serving/weather-data", "serving/weather-model"]
+    conftest.run_cmd(["pip", "install"] + packages)
+
+
+@pytest.fixture(scope="session")
+def data_path_local(install_local_packages: None) -> str:
     path = "data"
     conftest.run_cmd(
         "python",
