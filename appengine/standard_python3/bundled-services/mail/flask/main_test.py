@@ -14,7 +14,6 @@
 
 import json
 import subprocess
-import time
 import uuid
 
 import backoff
@@ -37,8 +36,11 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
+    full_command = f"gcloud {command} --quiet --format=json"
+    print("Running command:", full_command)
+
     output = subprocess.run(
-        f"gcloud {command} --quiet --format=json",
+        full_command,
         capture_output=True,
         shell=True,
         check=True,
@@ -74,8 +76,8 @@ def test_send_receive(version):
 
     # Check that version is serving form in home page
     response = requests.get(f"https://{version_hostname}/")
-    assert response.status_code == 200
     assert '<form action="" method="POST">' in response.text
+    assert response.status_code == 200
 
     # Send valid mail
     response = requests.post(
@@ -86,23 +88,24 @@ def test_send_receive(version):
         },
     )
 
-    assert response.status_code == 201
     assert "Successfully sent mail" in response.text
-
-    # Give the mail some time to be delivered and logs to post
-    time.sleep(60)
+    assert response.status_code == 201
 
     # Fetch logs to check messages on received mail
-    entries = gcloud_cli(
-        f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
-    )
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=10)
+    def assert_logs():
+        entries = gcloud_cli(
+            f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
+        )
 
-    text_payloads = ""
-    for entry in entries:
-        if "textPayload" in entry:
-            text_payloads += entry["textPayload"]
-            text_payloads += "\n"
+        text_payloads = ""
+        for entry in entries:
+            if "textPayload" in entry:
+                text_payloads += entry["textPayload"]
+                text_payloads += "\n"
 
-    expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
-    assert expected in text_payloads
-    assert "This message should be delivered" in text_payloads
+        expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
+        assert expected in text_payloads
+        assert "This message should be delivered" in text_payloads
+
+    assert_logs()

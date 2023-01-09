@@ -20,7 +20,7 @@ import pytest
 
 
 # this fixture initializes the Airflow DB once per session
-# it is used by DAGs in both the blogs and workflows directories, 
+# it is used by DAGs in both the blogs and workflows directories,
 # unless there exists a conftest at a lower level
 @pytest.fixture(scope="session")
 def airflow_database():
