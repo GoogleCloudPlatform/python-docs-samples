@@ -53,12 +53,12 @@ import os
 
 import airflow
 from airflow import settings
-from airflow.version import version as airflow_version
-
 from airflow.jobs import BaseJob
 from airflow.models import DAG, DagModel, DagRun, Log, SlaMiss, \
     TaskInstance, Variable, XCom
 from airflow.operators.python_operator import PythonOperator
+from airflow.version import version as airflow_version
+
 import dateutil.parser
 from sqlalchemy import and_, func
 from sqlalchemy.exc import ProgrammingError
@@ -83,7 +83,7 @@ DAG_OWNER_NAME = "operations"
 ALERT_EMAIL_ADDRESSES = []
 # Airflow version used by the environment in list form, value stored in
 # airflow_version is in format e.g "1.10.15+composer"
-AIRFLOW_VERSION = airflow_version[:-(len("+composer"))].split(".")
+AIRFLOW_VERSION = airflow_version[:-len("+composer")].split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(

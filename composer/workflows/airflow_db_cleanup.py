@@ -53,18 +53,18 @@ import os
 
 import airflow
 from airflow import settings
-from airflow.version import version as airflow_version
-
 from airflow.jobs.base_job import BaseJob
 from airflow.models import DAG, DagModel, DagRun, Log, SlaMiss, \
     TaskInstance, Variable, XCom
 from airflow.operators.python import PythonOperator
+from airflow.utils import timezone
+from airflow.version import version as airflow_version
+
 import dateutil.parser
 from sqlalchemy import and_, func
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.orm import load_only
 
-from airflow.utils import timezone
 now = timezone.utcnow
 
 # airflow-db-cleanup
@@ -78,13 +78,13 @@ DAG_OWNER_NAME = "operations"
 ALERT_EMAIL_ADDRESSES = []
 # Airflow version used by the environment in list form, value stored in
 # airflow_version is in format e.g "2.3.4+composer"
-AIRFLOW_VERSION = airflow_version[:-(len("+composer"))].split(".")
+AIRFLOW_VERSION = airflow_version[:-len("+composer")].split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
     Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30))
 # Prints the database entries which will be getting deleted; set to False
-# to avoid printing large lists and slowdown processf
+# to avoid printing large lists and slowdown process
 PRINT_DELETES = False
 # Whether the job should delete the db entries or not. Included if you want to
 # temporarily avoid deleting the db entries.
