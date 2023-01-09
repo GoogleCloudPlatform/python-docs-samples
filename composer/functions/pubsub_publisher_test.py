@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import mock
+import pytest
 
 import pubsub_publisher
 
@@ -22,6 +22,7 @@ import pubsub_publisher
 def dump_request_args():
     class Request:
         args = {"message": "test with args"}
+
         def get_json(self):
             return self.args
 
@@ -32,15 +33,18 @@ def dump_request_args():
 def dump_request():
     class Request:
         args = None
+
         def get_json(self):
             return {"message": "test with no args"}
 
     return Request()
 
+
 @pytest.fixture()
 def dump_request_no_message():
     class Request:
         args = None
+
         def get_json(self):
             return {"no_message": "test with no message key"}
 
