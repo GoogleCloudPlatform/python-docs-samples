@@ -20,7 +20,7 @@
 # The source of truth:
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
-TEST_CONFIG_OVERRIDE = {    
+TEST_CONFIG_OVERRIDE = {
     # You can opt out specific Python versions from the test.
     # To save resources, please consider testing 2 versions at most.
     # We only run the cloud run tests in py38+ session.
