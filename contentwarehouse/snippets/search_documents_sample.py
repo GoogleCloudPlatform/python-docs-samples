@@ -43,11 +43,14 @@ def search_documents_sample(
     # projects/{project_number}/locations/{location}
     parent = client.common_location_path(project=project_number, location=location)
 
-    # Document Text Query
-    document_query = contentwarehouse.DocumentQuery(query=document_query_text)
-
     # File Type Filter
     file_type_filter = contentwarehouse.FileTypeFilter(file_type=file_type)
+
+    # Document Text Query
+    document_query = contentwarehouse.DocumentQuery(
+        query=document_query_text,
+        file_type_filter=file_type_filter,
+    )
 
     # Histogram Query
     histogram_query = contentwarehouse.HistogramQuery(
@@ -58,8 +61,7 @@ def search_documents_sample(
     request = contentwarehouse.SearchDocumentsRequest(
         parent=parent,
         document_query=document_query,
-        file_type_filter=file_type_filter,
-        histogram_query=histogram_query,
+        histogram_queries=[histogram_query],
     )
 
     # Make the request
