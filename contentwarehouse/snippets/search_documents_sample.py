@@ -94,22 +94,13 @@ def print_search_results(
 def print_histogram_results(
     histogram_query_results: MutableSequence[contentwarehouse.HistogramQueryResult],
 ) -> None:
-    HISTOGRAM_SEPARATOR = (
-        "+-----------------------------------------------------"
-        "-------------------+-----------------+"
-    )
-    HISTOGRAM_HEADER = (
-        "| Schema                                                 "
-        "                | Count           +"
-    )
     for histogram_query_result in histogram_query_results:
         print(
-            f"{histogram_query_result.histogram_query}:\n{HISTOGRAM_SEPARATOR}\n"
-            f"{HISTOGRAM_HEADER}\n{HISTOGRAM_SEPARATOR}"
+            f"Histogram Query: {histogram_query_result.histogram_query}\n"
+            f"| {'Schema':<70} | {'Count':<15} |"
         )
         for key, value in histogram_query_result.histogram.items():
-            print(f"| {key.ljust(70)} | " f"{str(value).ljust(15)} |")
-            print(f"{HISTOGRAM_SEPARATOR}")
+            print(f"| {key:<70} | {value:<15} |")
 
 
 # [END contentwarehouse_search_documents]
