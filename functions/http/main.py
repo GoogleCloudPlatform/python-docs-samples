@@ -12,6 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_http_cors]
+# [START functions_http_cors_auth]
+# [START functions_http_xml]
+# [START functions_http_form_data]
+import functions_framework
+
+# [END functions_http_form_data]
+# [END functions_http_xml]
+# [END functions_http_cors_auth]
+# [END functions_http_cors]
+
 # [START functions_http_xml]
 import json
 # [END functions_http_xml]
@@ -29,16 +40,6 @@ from werkzeug.utils import secure_filename
 import xmltodict
 # [END functions_http_xml]
 
-# [START functions_http_cors]
-# [START functions_http_cors_auth]
-# [START functions_http_xml]
-# [START functions_http_form_data]
-import functions_framework
-
-# [END functions_http_form_data]
-# [END functions_http_xml]
-# [END functions_http_cors_auth]
-# [END functions_http_cors]
 
 # [START functions_http_xml]
 @functions_framework.http
