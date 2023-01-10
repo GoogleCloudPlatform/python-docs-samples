@@ -34,6 +34,7 @@ import xmltodict
 # [START functions_http_xml]
 # [START functions_http_form_data]
 import functions_framework
+
 # [END functions_http_form_data]
 # [END functions_http_xml]
 # [END functions_http_cors_auth]
