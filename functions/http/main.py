@@ -29,9 +29,11 @@ from werkzeug.utils import secure_filename
 import xmltodict
 # [END functions_http_xml]
 
+# [START functions_http_form_data]
+import functions_framework
+# [END functions_http_form_data]
 
 # [START functions_http_xml]
-
 def parse_xml(request):
     """ Parses a document of type 'text/xml'
     Args:
@@ -56,6 +58,7 @@ def get_file_path(filename):
     return os.path.join(tempfile.gettempdir(), file_name)
 
 
+@functions_framework.http
 def parse_multipart(request):
     """ Parses a 'multipart/form-data' upload request
     Args:
