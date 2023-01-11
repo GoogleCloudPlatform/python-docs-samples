@@ -43,6 +43,7 @@ def model_path_gcs(bucket_name: str) -> str:
 
 @pytest.fixture(scope="session")
 def service_name(unique_name: str, location: str) -> Iterator[str]:
+    # The service itself is created in the notebook.
     yield unique_name
     conftest.cloud_run_cleanup(unique_name, location)
 
