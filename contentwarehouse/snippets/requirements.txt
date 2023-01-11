@@ -1,1 +1,1 @@
-google-cloud-contentwarehouse==0.2.1
+google-cloud-contentwarehouse==0.3.0
