@@ -16,6 +16,7 @@ import re
 from time import sleep
 
 from _pytest.capture import CaptureFixture
+from flaky import flaky
 import google.auth.transport.requests
 from google.cloud.api_keys_v2 import Key
 import pytest
@@ -46,7 +47,7 @@ def get_key_id(api_key_name: str):
     return api_key_name.rsplit("/")[-1]
 
 
-@pytest.mark.flaky(retries=3, delay=30)
+@flaky(max_runs=3, min_passes=1)
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
     authenticate_with_api_key.authenticate_with_api_key(PROJECT, api_key.key_string)
     out, err = capsys.readouterr()
