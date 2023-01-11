@@ -13,7 +13,10 @@
 # limitations under the License.
 #
 
+import pytest
+
 import os
+import uuid
 
 from documentai.snippets import train_processor_version_sample
 
@@ -21,13 +24,17 @@ import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_id = "aaaaaaaaa"
-processor_version_display_name = "new-processor-version"
-train_data_uri = "gs://bucket/directory/"
-test_data_uri = "gs://bucket/directory/"
+processor_id = "aadcbbfe0db33e46"
+train_data_uri = "gs://document-ai-workbench-python-integration/documents"
+test_data_uri = train_data_uri
 
 
-# Mocking request as training can take a long time
+@pytest.fixture(scope="function")
+def processor_version_display_name():
+    ephemeral_processor_version_display_name = f"new-processor-version-{uuid.uuid4()}"
+    yield ephemeral_processor_version_display_name, None
+
+
 @mock.patch(
     "google.cloud.documentai_v1beta3.DocumentProcessorServiceClient.train_processor_version"
 )
@@ -35,6 +42,7 @@ test_data_uri = "gs://bucket/directory/"
 @mock.patch("google.cloud.documentai_v1beta3.TrainProcessorVersionMetadata")
 @mock.patch("google.api_core.operation.Operation")
 def test_train_processor_version(
+    processor_version_display_name,
     operation_mock,
     train_processor_version_metadata_mock,
     train_processor_version_response_mock,
@@ -59,3 +67,21 @@ def test_train_processor_version(
     out, _ = capsys.readouterr()
 
     assert "operation" in out
+
+
+@pytest.mark.integration
+def _test_train_processor_version(processor_version_display_name, capsys):
+
+    train_processor_version_sample.train_processor_version_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version_display_name=processor_version_display_name,
+        train_data_uri=train_data_uri,
+        test_data_uri=test_data_uri,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "operation" in out
+    assert "New Processor Version" in out

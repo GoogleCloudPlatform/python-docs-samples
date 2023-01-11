@@ -75,5 +75,6 @@ def train_processor_version_sample(
     print(f"Training Set Validation: {metadata.training_dataset_validation}")
     print(f"Test Set Validation: {metadata.test_dataset_validation}")
 
+    # [END documentai_train_processor_version]
 
-# [END documentai_train_processor_version]
+    return response, metadata
