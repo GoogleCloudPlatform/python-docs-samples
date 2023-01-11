@@ -182,7 +182,7 @@ def run(
             | "🃏 Reshuffle" >> beam.Reshuffle()
             | "📑 Get example" >> beam.FlatMapTuple(try_get_example)
             | "🗂️ Batch examples" >> beam.BatchElements(min_batch_size)
-            | "📚 Write NPZ files" >> beam.Map(write_npz, data_path)
+            | "📝 Write NPZ files" >> beam.Map(write_npz, data_path)
         )
 
 

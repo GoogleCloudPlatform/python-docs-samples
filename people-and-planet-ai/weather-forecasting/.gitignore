@@ -1,6 +1,5 @@
 **/*.egg-info
 **/build
 **/dist
-/data
-/data-sample
-/local_model
+data/
+model/
