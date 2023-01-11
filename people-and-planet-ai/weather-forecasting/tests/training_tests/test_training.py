@@ -35,7 +35,7 @@ os.chdir(os.path.join("..", ".."))
 @pytest.fixture(scope="session")
 def test_name() -> str:
     # Many fixtures expect a fixture called `test_name`, so be sure to define it!
-    return "ppai/weather-dataset"
+    return "ppai/weather-training"
 
 
 @pytest.fixture(scope="session")
