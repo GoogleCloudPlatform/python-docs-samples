@@ -29,10 +29,24 @@ train_data_uri = "gs://document-ai-workbench-python-integration/documents"
 test_data_uri = train_data_uri
 
 
+class EphemeralProcessorFixture:
+
+    def __init__(self, processor_version_display_name):
+        self.processor_version_display_name = processor_version_display_name
+        self.processor_version = None
+
+    def teardown(self):
+        """TODO"""
+
+
 @pytest.fixture(scope="function")
-def processor_version_display_name():
-    ephemeral_processor_version_display_name = f"new-processor-version-{uuid.uuid4()}"
-    yield ephemeral_processor_version_display_name, None
+def ephemeral_processor_fixture():
+    _ephemeral_processor_fixture = EphemeralProcessorFixture(
+        f"new-processor-version-{uuid.uuid4()}"
+    )
+    yield _ephemeral_processor_fixture
+    _ephemeral_processor_fixture.teardown()
+
 
 
 @mock.patch(
@@ -70,18 +84,22 @@ def test_train_processor_version(
 
 
 @pytest.mark.integration
-def _test_train_processor_version(processor_version_display_name, capsys):
+def _test_train_processor_version(ephemeral_processor_fixture, capsys):
 
-    train_processor_version_sample.train_processor_version_sample(
+    response, metadata = train_processor_version_sample.train_processor_version_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
-        processor_version_display_name=processor_version_display_name,
+        processor_version_display_name=ephemeral_processor_fixture.processor_version_display_name,
         train_data_uri=train_data_uri,
         test_data_uri=test_data_uri,
     )
 
+    # ADD ASSERTIONS or delete:
     out, _ = capsys.readouterr()
+
+    ephemeral_processor_fixture.processor_version = response.processor_version
+
 
     assert "operation" in out
     assert "New Processor Version" in out
