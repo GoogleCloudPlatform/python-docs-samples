@@ -17,7 +17,9 @@ import os
 
 from contentwarehouse.snippets import quickstart_sample
 
-project_number = os.environ["GOOGLE_CLOUD_PROJECT"]
+from google.cloud import resourcemanager
+
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
 schema_display_name = "My Test Schema"
 property_name = (
@@ -31,6 +33,7 @@ document_property_value = "GOOG"
 
 
 def test_quickstart(capsys):
+    project_number = get_project_number(project_id)
     quickstart_sample.quickstart(
         project_number=project_number,
         location=location,
@@ -46,3 +49,11 @@ def test_quickstart(capsys):
 
     assert "Rule Engine Output" in out
     assert "Document Created" in out
+
+
+def get_project_number(project_id: str) -> str:
+    client = resourcemanager.ProjectsClient()
+    name = client.project_path(project=project_id)
+    project = client.get_project(name=name)
+    project_number = client.parse_project_path(project.name)["project"]
+    return project_number
