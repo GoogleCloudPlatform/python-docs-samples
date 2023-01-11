@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 import os
 import textwrap
 
@@ -33,21 +34,29 @@ def test_name() -> str:
     return "ppai/weather-dataset"
 
 
-def test_create_dataset(
-    project: str, bucket_name: str, location: str, unique_name: str
-) -> None:
-    dataflow_dataset_flags = " ".join(
-        [
-            '--runner="DataflowRunner"',
-            f"--job_name={unique_name}",
-            "--num-dates=1",
-            "--num-bins=2",
-            "--max-requests=2",
-        ]
-    )
+@pytest.fixture(scope="session")
+def model_path_gcs(bucket_name: str) -> str:
+    path_gcs = f"gs://{bucket_name}/model"
+    conftest.run_cmd("gsutil", "cp", "serving/model/*", path_gcs)
+    return path_gcs
 
+
+@pytest.fixture(scope="session")
+def service_name(unique_name: str, location: str) -> Iterator[str]:
+    yield unique_name
+    conftest.cloud_run_cleanup(unique_name, location)
+
+
+def test_predictions(
+    project: str,
+    bucket_name: str,
+    location: str,
+    identity_token: str,
+    service_name: str,
+    model_path_gcs: str,
+) -> None:
     conftest.run_notebook_parallel(
-        os.path.join("notebooks", "2-dataset.ipynb"),
+        os.path.join("notebooks", "4-predictions.ipynb"),
         prelude=textwrap.dedent(
             f"""\
             # Google Cloud resources.
@@ -57,14 +66,12 @@ def test_create_dataset(
             """
         ),
         sections={
-            "# 🗄 Create the dataset locally": {
-                "data_path": f"gs://{bucket_name}/test/weather/data-local",
-            },
-            "# ☁️ Create the dataset in Dataflow": {
+            "# 💻 Local predictions": {"variables": {"model_path_gcs": model_path_gcs}},
+            "# ☁️ Cloud Run predictions": {
                 "variables": {
-                    "data_path": f"gs://{bucket_name}/test/weather/data-dataflow",
-                },
-                "replace": {'--runner="DataflowRunner"': dataflow_dataset_flags},
+                    "service_name": service_name,
+                    "identity_token": identity_token,
+                }
             },
         },
     )

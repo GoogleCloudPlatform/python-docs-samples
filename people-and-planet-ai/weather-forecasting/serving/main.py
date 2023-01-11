@@ -25,6 +25,10 @@ app = Flask(__name__)
 MODEL = WeatherModel.from_pretrained("model")
 
 
+def to_bool(x: str) -> bool:
+    return True if x.lower() == "true" else False
+
+
 @app.route("/")
 def ping() -> dict:
     """Check that we can communicate with the service and get arguments."""
@@ -34,18 +38,20 @@ def ping() -> dict:
     }
 
 
-# predict/2019-09-02T18:00/25.507,-78.322
 @app.route("/predict/<iso_date>/<float(signed=True):lat>,<float(signed=True):lon>")
 def predict(iso_date: str, lat: float, lon: float) -> dict:
     # Optional HTTP request parameters.
     #   https://en.wikipedia.org/wiki/Query_string
     patch_size = request.args.get("patch-size", 128, type=int)
+    include_inputs = request.args.get("include-inputs", False, type=to_bool)
 
     date = datetime.fromisoformat(iso_date)
-    point = (lon, lat)
-    inputs = get_inputs_patch(date, point, patch_size).tolist()
-    predictions = MODEL.predict(inputs)
-    return {"inputs": inputs, "predictions": predictions.tolist()}
+    inputs = get_inputs_patch(date, (lon, lat), patch_size).tolist()
+    predictions = MODEL.predict(inputs).tolist()
+
+    if include_inputs:
+        return {"inputs": inputs, "predictions": predictions}
+    return {"predictions": predictions}
 
 
 if __name__ == "__main__":

@@ -40,7 +40,7 @@ def test_name() -> str:
 
 @pytest.fixture(scope="session")
 def data_path_gcs(bucket_name: str) -> str:
-    path_gcs = f"gs://{bucket_name}/data"
+    path_gcs = f"gs://{bucket_name}/test/weather/data-training"
     date = datetime(2019, 9, 2, 18)
     point = (-69.55, -39.82)
     patch_size = 8
@@ -80,6 +80,7 @@ def test_train_model(
                 "variables": {
                     "display_name": unique_name,
                     "data_path": data_path_gcs.replace("gs://", "/gcs/"),
+                    "model_path": f"/gcs/{bucket_name}/test/weather/model-vertex",
                     "epochs": 2,
                 }
             },

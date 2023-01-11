@@ -1,0 +1,2 @@
+../../serving/weather-data
+../../serving/weather-model

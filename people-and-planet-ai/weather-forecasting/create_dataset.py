@@ -16,7 +16,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterator
 from datetime import datetime, timedelta
 import logging
 import random
@@ -45,7 +45,7 @@ END_DATE = datetime.now() - timedelta(days=30)
 POLYGON = [(-140.0, 60.0), (-140.0, -60.0), (-10.0, -60.0), (-10.0, 60.0)]
 
 
-def sample_points(date: datetime, num_bins: int = NUM_BINS) -> Iterable[tuple]:
+def sample_points(date: datetime, num_bins: int = NUM_BINS) -> Iterator[tuple]:
     """Selects around the same number of points for every classification.
 
     Since our labels are numeric continuous values, we convert them into
@@ -115,7 +115,7 @@ def get_training_example(
     )
 
 
-def try_get_example(date: datetime, point: tuple) -> Iterable[tuple]:
+def try_get_example(date: datetime, point: tuple) -> Iterator[tuple]:
     """Wrapper over `get_training_examples` that allows it to simply log errors instead of crashing."""
     try:
         yield get_training_example(date, point)
