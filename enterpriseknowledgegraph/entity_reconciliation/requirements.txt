@@ -1,1 +1,1 @@
-google-cloud-enterpriseknowledgegraph==0.2.1
+google-cloud-enterpriseknowledgegraph==0.3.0
