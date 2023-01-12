@@ -99,3 +99,4 @@ with DAG(
                                      python_callable=_some_heavy_task)
 
     (some_heavy_task)
+# [END composer_pubsub_trigger_dag]
