@@ -16,6 +16,7 @@
     Usage: Replace <PROJECT_ID> with the project ID of your project.
 """
 
+# [START composer_pubsub_publisher_function]
 from google.cloud import pubsub_v1
 
 project = "<PROJECT_ID>"
