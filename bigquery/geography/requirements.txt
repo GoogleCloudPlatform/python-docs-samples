@@ -14,7 +14,7 @@ geopandas==0.12.2; python_version >= '3.8'
 google-api-core==2.11.0
 google-auth==2.16.0
 google-cloud-bigquery==3.4.1
-google-cloud-bigquery-storage==2.17.0
+google-cloud-bigquery-storage==2.18.0
 google-cloud-core==2.3.2
 google-crc32c==1.5.0
 google-resumable-media==2.4.0
@@ -42,4 +42,4 @@ Shapely==2.0.0
 six==1.16.0
 typing-extensions==4.4.0
 typing-inspect==0.8.0
-urllib3==1.26.13
+urllib3==1.26.14
