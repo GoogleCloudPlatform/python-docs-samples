@@ -56,3 +56,4 @@ def pubsub_publisher(request):
     print(future.result())
 
     return f"Message {data} with message_length {message_length} published to {topic_path}."
+# [END composer_pubsub_publisher_function]
