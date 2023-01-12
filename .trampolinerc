@@ -67,3 +67,5 @@ if [[ -z "${TRAMPOLINE_SHOW_COMMAND:-}" ]]; then
     # bulid and docker run commands.
     TRAMPOLINE_SHOW_COMMAND="true"
 fi
+
+TRAMPOLINE_VERBOSE="true"
