@@ -33,7 +33,7 @@ def test_name() -> str:
     return "ppai/weather-dataset"
 
 
-def test_create_dataset(
+def test_dataset(
     project: str, bucket_name: str, location: str, unique_name: str
 ) -> None:
     dataflow_dataset_flags = " ".join(
