@@ -16,6 +16,7 @@
     Usage: Replace <PROJECT_ID> with the project ID of your project
 """
 
+# [START composer_pubsub_trigger_dag]
 from __future__ import annotations
 
 from datetime import datetime
