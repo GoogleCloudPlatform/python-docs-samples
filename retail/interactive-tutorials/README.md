@@ -1,6 +1,6 @@
-#Retail Search Interactive Tutorials
+# Retail Search Interactive Tutorials
 
-##Run tutorials in Cloud Shell
+## Run tutorials in Cloud Shell
 
 To advance with the interactive tutorials, use Retail Search step-by-step manuals on the right side of the Cloud Shell IDE: 
 ![Interactive tutorials](images/tutorial1.png)
