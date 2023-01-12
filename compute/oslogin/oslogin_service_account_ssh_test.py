@@ -187,7 +187,8 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
 
     yield client.get(project=PROJECT, zone=ZONE, instance=instance.name)
 
-    client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
+    # The deletion of the instance has been moved to the test itself.
+    # client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
 
 def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
@@ -196,21 +197,21 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     # Letting everything settle down...
     time.sleep(60)
 
-    try:
-        main('uname -a', PROJECT, account=account,
-             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
-             oslogin=oslogin_client)
-    except AssertionError:
-        # We will try to restart the machine and try again.
-        compute_client = compute_v1.InstancesClient()
-        compute_client.stop_unary(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
-        time.sleep(5)
-        compute_client.start_unary(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
-        time.sleep(30)
-        main('uname -a', PROJECT, account=account,
-             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
-             oslogin=oslogin_client)
-    out, _ = capsys.readouterr()
+    main('uname -a', PROJECT, account=account,
+         hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+         oslogin=oslogin_client)
 
+    delete_instance = True
+
+    out, _ = capsys.readouterr()
     assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
-    assert assert_value in out
+    try:
+        assert assert_value in out
+    except AssertionError:
+        delete_instance = False
+    finally:
+        # If the assert passed, we can safely delete the instance. If it failed, we want to keep it around for
+        # manual inspection.
+        if delete_instance:
+            compute_client = compute_v1.InstancesClient()
+            compute_client.delete(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
