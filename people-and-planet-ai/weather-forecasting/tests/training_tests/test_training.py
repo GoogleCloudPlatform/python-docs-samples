@@ -76,13 +76,13 @@ def test_train_model(
             "# 🧠 Train the model locally": {
                 "variables": {"data_path_gcs": data_path_gcs, "epochs": 2}
             },
-            # "# ☁️ Train the model in Vertex AI": {
-            #     "variables": {
-            #         "display_name": unique_name,
-            #         "data_path": data_path_gcs.replace("gs://", "/gcs/"),
-            #         "model_path": f"/gcs/{bucket_name}/test/weather/model-vertex",
-            #         "epochs": 2,
-            #     }
-            # },
+            "# ☁️ Train the model in Vertex AI": {
+                "variables": {
+                    "display_name": unique_name,
+                    "data_path": data_path_gcs.replace("gs://", "/gcs/"),
+                    "model_path": f"/gcs/{bucket_name}/test/weather/model-vertex",
+                    "epochs": 2,
+                }
+            },
         },
     )
