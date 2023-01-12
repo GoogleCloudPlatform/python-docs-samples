@@ -42,18 +42,11 @@ def delete_processor_version_sample(
     )
 
     # Make DeleteProcessorVersion request
-    try:
-        operation = client.delete_processor_version(name=name)
-        # Print operation details
-        print(operation.operation.name)
-        # Wait for operation to complete
-        operation.result()
-    # Delete request will fail if the
-    # processor version doesn't exist
-    # or if a request is made on a pretrained processor version
-    # or the default processor version
-    except (FailedPrecondition, InvalidArgument) as e:
-        print(e.message)
+    operation = client.delete_processor_version(name=name)
+    # Print operation details
+    print(operation.operation.name)
+    # Wait for operation to complete
+    operation.result()
 
 
 # [END documentai_delete_processor_version]

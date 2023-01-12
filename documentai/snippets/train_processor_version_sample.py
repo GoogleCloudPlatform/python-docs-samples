@@ -77,4 +77,4 @@ def train_processor_version_sample(
 
     # [END documentai_train_processor_version]
 
-    return response, metadata
+    return response

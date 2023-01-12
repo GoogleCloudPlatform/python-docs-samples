@@ -48,5 +48,5 @@ def list_processor_versions_sample(project_id: str, location: str, processor_id:
         print(processor_version.state)
         print("")
 
-
-# [END documentai_list_processor_versions]
+    # [END documentai_list_processor_versions]
+    return processor_versions

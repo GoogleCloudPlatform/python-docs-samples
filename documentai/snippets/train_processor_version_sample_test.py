@@ -19,24 +19,59 @@ import os
 import uuid
 
 from documentai.snippets import train_processor_version_sample
+from documentai.snippets import delete_processor_version_sample
+from documentai.snippets import list_processor_versions_sample
+from documentai.snippets import get_processor_version_sample
 
 import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "aadcbbfe0db33e46"
-train_data_uri = "gs://document-ai-workbench-python-integration/documents"
+train_data_uri = "gs://document-ai-workbench-python-integration/train_test_data/"
 test_data_uri = train_data_uri
 
 
 class EphemeralProcessorFixture:
-
     def __init__(self, processor_version_display_name):
         self.processor_version_display_name = processor_version_display_name
         self.processor_version = None
 
     def teardown(self):
-        """TODO"""
+        if not self.processor_version:
+
+            processor_versions = (
+                list_processor_versions_sample.list_processor_versions_sample(
+                    project_id=project_id, location=location, processor_id=processor_id
+                )
+            )
+
+            for processor_version in processor_versions:
+                if (
+                    processor_version.display_name
+                    == self.processor_version_display_name
+                ):
+                    self.processor_version = processor_version.name.split("/")[-1]
+
+        while True:
+            processor_version = (
+                get_processor_version_sample.get_processor_version_sample(
+                    project_id=project_id,
+                    location=location,
+                    processor_id=processor_id,
+                    processor_version_id=self.processor_version,
+                )
+            )
+
+            if processor_version.state != processor_version.state.CREATING:
+                break
+
+        delete_processor_version_sample.delete_processor_version_sample(
+            project_id=project_id,
+            location=location,
+            processor_id=processor_id,
+            processor_version_id=self.processor_version,
+        )
 
 
 @pytest.fixture(scope="function")
@@ -44,9 +79,12 @@ def ephemeral_processor_fixture():
     _ephemeral_processor_fixture = EphemeralProcessorFixture(
         f"new-processor-version-{uuid.uuid4()}"
     )
-    yield _ephemeral_processor_fixture
-    _ephemeral_processor_fixture.teardown()
+    try:
+        yield _ephemeral_processor_fixture
+    except Exception as e:
+        pass
 
+    _ephemeral_processor_fixture.teardown()
 
 
 @mock.patch(
@@ -84,9 +122,9 @@ def test_train_processor_version(
 
 
 @pytest.mark.integration
-def _test_train_processor_version(ephemeral_processor_fixture, capsys):
+def test_train_processor_version_integration(ephemeral_processor_fixture):
 
-    response, metadata = train_processor_version_sample.train_processor_version_sample(
+    response = train_processor_version_sample.train_processor_version_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
@@ -95,11 +133,5 @@ def _test_train_processor_version(ephemeral_processor_fixture, capsys):
         test_data_uri=test_data_uri,
     )
 
-    # ADD ASSERTIONS or delete:
-    out, _ = capsys.readouterr()
-
+    # Populate attribute for teardown
     ephemeral_processor_fixture.processor_version = response.processor_version
-
-
-    assert "operation" in out
-    assert "New Processor Version" in out
