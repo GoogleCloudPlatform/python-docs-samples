@@ -37,8 +37,11 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
+    full_command = f"gcloud {command} --quiet --format=json"
+    print("Running command:", full_command)
+
     output = subprocess.run(
-        f"gcloud {command} --quiet --format=json",
+        full_command,
         capture_output=True,
         shell=True,
         check=True,
@@ -74,8 +77,8 @@ def test_upload_and_view(version):
 
     # Check that version is serving form in home page
     response = requests.get(f"https://{version_hostname}/")
-    assert response.status_code == 200
     assert '<form action="' in response.text
+    assert response.status_code == 200
 
     matches = re.search(r'action="(.*?)"', response.text)
     assert matches is not None
@@ -84,5 +87,5 @@ def test_upload_and_view(version):
     with open("./main.py", "rb") as f:
         response = requests.post(upload_url, files={"file": f})
 
-    assert response.status_code == 200
     assert b"from google.appengine.api" in response.content
+    assert response.status_code == 200

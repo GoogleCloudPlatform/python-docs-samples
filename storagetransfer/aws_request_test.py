@@ -24,7 +24,8 @@ import aws_request
 import aws_request_apiary
 
 
-@backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,), max_time=60)
+@backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,),
+                      max_time=60)
 def test_aws_request(
         capsys, project_id: str, aws_source_bucket: str,
         aws_access_key_id: str, aws_secret_access_key: str,

@@ -1,0 +1,33 @@
+{
+    "parent": "projects/${YOUR_GCP_PROJECT_ID}",
+    "model_configs":[
+        {
+           "input_config":{
+              "gcs_source":{
+                 "uri":"${REQUEST_MODEL_GCS_PATH}"
+              },
+              "data_format":"JSON"
+           },
+           "output_config":{
+              "gcs_destination":{
+                 "uri":"${MODEL_SOLUTION_GCS_PATH}"
+              },
+              "data_format":"JSON"
+           }
+        },
+        {
+           "input_config":{
+              "gcs_source":{
+                 "uri":"${REQUEST_MODEL_GCS_PATH}"
+              },
+              "data_format":"JSON"
+           },
+           "output_config":{
+              "gcs_destination":{
+                 "uri":"${MODEL_SOLUTION_GCS_PATH}"
+              },
+              "data_format":"JSON"
+           }
+        }
+     ]
+  }

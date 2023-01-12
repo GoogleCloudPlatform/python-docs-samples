@@ -1,0 +1,3 @@
+isort==5.10.1
+black==22.12.0
+google-cloud-compute==1.6.1

@@ -107,11 +107,11 @@ def run_tensorflow(
     import tensorflow as tf
 
     class LandCoverModel(ModelHandler[np.ndarray, np.ndarray, tf.keras.Model]):
-        def load_model(self) -> tf.keras.Model:  # noqa: ANN101
+        def load_model(self) -> tf.keras.Model:
             return tf.keras.models.load_model(model_path)
 
         def run_inference(
-            self,  # noqa: ANN101
+            self,
             batch: Sequence[np.ndarray],
             model: tf.keras.Model,
             inference_args: Optional[dict] = None,

@@ -1,0 +1,2 @@
+future==0.18.2
+google-cloud-texttospeech==2.12.3

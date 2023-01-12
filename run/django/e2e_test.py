@@ -20,6 +20,7 @@ import subprocess
 from typing import Iterator, List, Tuple
 import uuid
 
+import backoff
 import pytest
 import requests
 
@@ -64,6 +65,36 @@ SECRET_SETTINGS_NAME = f"django_settings-{SUFFIX}"
 SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
+    """
+    Runs a shell command and returns its output.
+    Usage: run_shell_cmd(args)
+        args: an array of command line arguments
+    Example:
+        result = run_shell_command(["gcloud, "app", "deploy"])
+        print("The command's stdout was:", result.stdout)
+
+    Raises Exception with the stderr output of the last attempt on failure.
+    """
+    full_command = " ".join(args)
+    print("Running command:", full_command)
+
+    try:
+        output = subprocess.run(
+            full_command,
+            capture_output=True,
+            shell=True,
+            check=True,
+        )
+
+        return output
+    except subprocess.CalledProcessError as e:
+        print("Command failed")
+        print(f"stderr was {e.stderr}")
+        raise e
+
+
 @pytest.fixture
 def deployed_service() -> str:
 
@@ -84,7 +115,7 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f",_VERSION={SAMPLE_VERSION}")
 
-    subprocess.check_call(
+    run_shell_cmd(
         [
             "gcloud",
             "builds",
@@ -116,7 +147,7 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
 
-    subprocess.check_call(
+    run_shell_cmd(
         [
             "gcloud",
             "builds",
@@ -135,7 +166,7 @@ def deployed_service() -> str:
 def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     # Get Cloud Run service URL and auth token
     service_url = (
-        subprocess.run(
+        run_shell_cmd(
             [
                 "gcloud",
                 "run",
@@ -147,27 +178,23 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
                 "--region",
                 REGION,
                 "--format",
-                "value(status.url)",
+                "\"value(status.url)\"",
                 "--project",
                 GOOGLE_CLOUD_PROJECT,
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
+            ]
         )
         .stdout.strip()
         .decode()
     )
     auth_token = (
-        subprocess.run(
+        run_shell_cmd(
             [
                 "gcloud",
                 "auth",
                 "print-identity-token",
                 "--project",
                 GOOGLE_CLOUD_PROJECT,
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
+            ]
         )
         .stdout.strip()
         .decode()
