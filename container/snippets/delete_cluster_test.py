@@ -39,6 +39,7 @@ def setup_and_tear_down() -> None:
         "initial_node_count": 2,
         "node_config": {"machine_type": "e2-standard-2"},
     }
+    # Nim: This is a placeholder change. I am looking into https://github.com/GoogleCloudPlatform/python-docs-samples/issues/8670.
     op = client.create_cluster({"parent": cluster_location, "cluster": cluster_def})
     op_id = f"{cluster_location}/operations/{op.name}"
 
