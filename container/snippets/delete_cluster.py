@@ -73,6 +73,8 @@ def poll_for_op_status(
 def delete_cluster(project_id: str, location: str, cluster_name: str) -> None:
     """Delete an existing GKE cluster in the given GCP Project and Zone"""
 
+    # Nim: This is a placeholder change.
+    # Nim: I am investigating python-docs-samples/issues/8670.
     # Initialize the Cluster management client.
     client = container_v1.ClusterManagerClient()
     # Create a fully qualified location identifier of form `projects/{project_id}/location/{zone}'.
