@@ -17,5 +17,5 @@
 name = "weather-data"
 version = "1.0.0"
 dependencies = [
-    "earthengine-api==0.1.335",
+    "earthengine-api==0.1.336",
 ]
