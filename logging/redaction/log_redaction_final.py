@@ -23,10 +23,30 @@ from apache_beam.error import PipelineError
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.transforms.window import FixedWindows
 
-from google.cloud import logging_v2
+from google.cloud import dlp_v2, logging_v2
 
 
-# TODO: Placeholder for inspection and de-identification configurations
+# For more details about info types format, please see
+# https://cloud.google.com/dlp/docs/reference/rest/v2/InspectConfig
+INSPECT_CFG = {
+  'info_types': [
+    {'name': 'US_SOCIAL_SECURITY_NUMBER'}
+  ]
+}
+
+# For more details about transformation format, please see
+# https://cloud.google.com/dlp/docs/reference/rest/v2/projects.deidentifyTemplates#DeidentifyTemplate.InfoTypeTransformations
+REDACTION_CFG = {
+  'info_type_transformations': {
+    'transformations': [
+      {
+        'primitive_transformation': {
+          'character_mask_config': {
+            'masking_character': '#'
+          }
+        }
+      }
+]}}   
 
 
 class PayloadAsJson(DoFn):
@@ -56,7 +76,57 @@ class BatchPayloads(CombineFn):
     return accumulator
 
 
-# TODO: Placeholder for LogRedaction class
+class LogRedaction(beam.DoFn):
+  '''Apply inspection and redaction to textPayload field of log entries'''
+
+  def __init__(self, project_id: str):
+    self.project_id = project_id
+    self.dlp_client = None
+
+  def _log_to_row(self, entry):
+    # Make `Row` from `textPayload`. For more details on the row, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Row
+    payload = entry['textPayload'] if entry.get('textPayload') else ''
+    return {'values': [{'string_value': payload}]}
+
+  def setup(self):
+    '''Initialize DLP client'''
+    if self.dlp_client:
+      return
+    self.dlp_client = dlp_v2.DlpServiceClient(client_options={'quota_project_id', self.project_id})
+    if not self.dlp_client:
+      logging.error('Cannot create Google DLP Client')
+      raise PipelineError('Cannot create Google DLP Client')
+
+  def process(self, logs):
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    table = {
+      'table': {
+        'headers': {'name': 'textPayload'},
+        'rows': map(self._log_to_row, logs)
+    }}
+
+    response = self.dlp_client.deidentify_content(
+      request={
+        'parent': f'projects/{self.project_id}',
+        'inspect_config': INSPECT_CFG,
+        'deidentify_config': REDACTION_CFG,
+        'item': table_item,
+      })
+
+    # replace payload with redacted version
+    modified_logs = []
+    for i in range(len(logs)):
+      redacted = dict(logs[i])
+      redacted['textPayload'] = response.item.table.rows[i].values[0].string_value
+      # you may consider changing insert ID if the project already has a copy
+      # of this log (e.g. redacted['insertId'] = 'deid-' + redacted['insertId'])
+      # For more details about insert ID, please see:
+      # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.insert_id
+      modified_logs.append(redacted)
+
+    yield modified_logs
 
 
 class IngestLogs(DoFn):
@@ -78,8 +148,8 @@ class IngestLogs(DoFn):
 
     logging_client = logging_v2.Client()
     if not logging_client:
-      logging.error('Cannot create GCP Logging Client')
-      raise PipelineError('Cannot create GCP Logging Client')
+      logging.error('Cannot create Google Logging Client')
+      raise PipelineError('Cannot create Google Logging Client')
     self.logger = logging_client.logger(self.destination_log_name)
     if not self.logger:
       logging.error('Google client library cannot create Logger object')
@@ -110,7 +180,7 @@ def run(pubsub_subscription: str,
     # Optimize Google API consumption and avoid possible throttling
     # by calling APIs for batched data and not per each element
     | 'Batch aggregated payloads' >> CombineGlobally(BatchPayloads()).without_defaults()
-    # TODO: Placeholder for redaction transformation
+    # TODO: Add redaction logic here
     | 'Ingest to output log' >> ParDo(IngestLogs(destination_log_name))
   )
   pipeline.run()
