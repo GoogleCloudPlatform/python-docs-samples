@@ -180,7 +180,7 @@ def run(pubsub_subscription: str,
     # Optimize Google API consumption and avoid possible throttling
     # by calling APIs for batched data and not per each element
     | 'Batch aggregated payloads' >> CombineGlobally(BatchPayloads()).without_defaults()
-    # TODO: Add redaction logic here
+    | 'Redact SSN info from logs' >> ParDo(LogRedaction(destination_log_name,split('/')[1]))
     | 'Ingest to output log' >> ParDo(IngestLogs(destination_log_name))
   )
   pipeline.run()
@@ -191,12 +191,12 @@ if __name__ == '__main__':
 
   parser = argparse.ArgumentParser()
   parser.add_argument(
-      '--input_pubsub_subscription',
+      '--pubsub_subscription',
       help='The Cloud Pub/Sub subscription to read from in the format '
       '"projects/<PROJECT_ID>/subscription/<SUBSCRIPTION_ID>".',
   )
   parser.add_argument(
-      '--output_log_name',
+      '--destination_log_name',
       help='The log name to ingest log entries in the format '
       '"projects/<PROJECT_ID>/logs/<LOG_ID>".',
   )
@@ -209,8 +209,8 @@ if __name__ == '__main__':
   known_args, pipeline_args = parser.parse_known_args()
 
   run(
-      known_args.input_pubsub_subscription,
-      known_args.output_log_name,
+      known_args.pubsub_subscription,
+      known_args.destination_log_name,
       known_args.window_size,
       pipeline_args,
   )

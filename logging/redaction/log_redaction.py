@@ -121,12 +121,12 @@ if __name__ == '__main__':
 
   parser = argparse.ArgumentParser()
   parser.add_argument(
-      '--input_pubsub_subscription',
+      '--pubsub_subscription',
       help='The Cloud Pub/Sub subscription to read from in the format '
       '"projects/<PROJECT_ID>/subscription/<SUBSCRIPTION_ID>".',
   )
   parser.add_argument(
-      '--output_log_name',
+      '--destination_log_name',
       help='The log name to ingest log entries in the format '
       '"projects/<PROJECT_ID>/logs/<LOG_ID>".',
   )
@@ -139,8 +139,8 @@ if __name__ == '__main__':
   known_args, pipeline_args = parser.parse_known_args()
 
   run(
-      known_args.input_pubsub_subscription,
-      known_args.output_log_name,
+      known_args.pubsub_subscription,
+      known_args.destination_log_name,
       known_args.window_size,
       pipeline_args,
   )
