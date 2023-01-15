@@ -56,7 +56,7 @@ class PayloadAsJson(DoFn):
 
 
 class BatchPayloads(CombineFn):
-  '''Opinionated way to batch all payloads in the window'''
+  '''Collect all items in the windowed collection into single batch'''
 
   def create_accumulator(self):
     return []
@@ -76,7 +76,7 @@ class BatchPayloads(CombineFn):
     return accumulator
 
 
-class LogRedaction(beam.DoFn):
+class LogRedaction(DoFn):
   '''Apply inspection and redaction to textPayload field of log entries'''
 
   def __init__(self, project_id: str):
@@ -93,7 +93,8 @@ class LogRedaction(beam.DoFn):
     '''Initialize DLP client'''
     if self.dlp_client:
       return
-    self.dlp_client = dlp_v2.DlpServiceClient(client_options={'quota_project_id', self.project_id})
+    # self.dlp_client = dlp_v2.DlpServiceClient(client_options={'quota_project_id', self.project_id})
+    self.dlp_client = dlp_v2.DlpServiceClient()
     if not self.dlp_client:
       logging.error('Cannot create Google DLP Client')
       raise PipelineError('Cannot create Google DLP Client')
@@ -103,7 +104,7 @@ class LogRedaction(beam.DoFn):
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
     table = {
       'table': {
-        'headers': {'name': 'textPayload'},
+        'headers': [{'name': 'textPayload'}],
         'rows': map(self._log_to_row, logs)
     }}
 
@@ -112,20 +113,18 @@ class LogRedaction(beam.DoFn):
         'parent': f'projects/{self.project_id}',
         'inspect_config': INSPECT_CFG,
         'deidentify_config': REDACTION_CFG,
-        'item': table_item,
+        'item': table,
       })
 
     # replace payload with redacted version
     modified_logs = []
-    for i in range(len(logs)):
-      redacted = dict(logs[i])
-      redacted['textPayload'] = response.item.table.rows[i].values[0].string_value
+    for i, log in enumerate(logs):
+      log['textPayload'] = response.item.table.rows[i].values[0].string_value
       # you may consider changing insert ID if the project already has a copy
-      # of this log (e.g. redacted['insertId'] = 'deid-' + redacted['insertId'])
+      # of this log (e.g. log['insertId'] = 'deid-' + log['insertId'])
       # For more details about insert ID, please see:
       # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.insert_id
-      modified_logs.append(redacted)
-
+      modified_logs.append(log)
     yield modified_logs
 
 
@@ -180,7 +179,7 @@ def run(pubsub_subscription: str,
     # Optimize Google API consumption and avoid possible throttling
     # by calling APIs for batched data and not per each element
     | 'Batch aggregated payloads' >> CombineGlobally(BatchPayloads()).without_defaults()
-    | 'Redact SSN info from logs' >> ParDo(LogRedaction(destination_log_name,split('/')[1]))
+    | 'Redact SSN info from logs' >> ParDo(LogRedaction(destination_log_name.split('/')[1]))
     | 'Ingest to output log' >> ParDo(IngestLogs(destination_log_name))
   )
   pipeline.run()
