@@ -16,7 +16,7 @@ import uuid
 
 from google.api_core.exceptions import NotFound
 import google.auth
-from google.cloud import kms_v1, compute_v1
+from google.cloud import compute_v1, kms_v1
 import pytest
 
 from ..disks.attach_disk import attach_disk
