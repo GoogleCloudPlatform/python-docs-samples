@@ -1,2 +1,2 @@
-google-cloud-build==3.9.3
+google-cloud-build==3.10.0
 google-auth==2.14.0
