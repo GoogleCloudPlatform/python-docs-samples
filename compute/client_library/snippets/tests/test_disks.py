@@ -16,7 +16,7 @@ import uuid
 
 from google.api_core.exceptions import NotFound
 import google.auth
-from google.cloud import kms_v1
+from google.cloud import kms_v1, compute_v1
 import pytest
 
 from ..disks.attach_disk import attach_disk
@@ -30,6 +30,7 @@ from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
 from ..disks.regional_delete import delete_regional_disk
+from ..disks.resize_disk import resize_disk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -257,3 +258,13 @@ def test_disk_attachment(autodelete_blank_disk, autodelete_regional_blank_disk, 
     instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
 
     assert len(list(instance.disks)) == 3
+
+
+def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
+    resize_disk(PROJECT, autodelete_blank_disk.self_link, 22)
+    resize_disk(PROJECT, autodelete_regional_blank_disk.self_link, 23)
+
+    disk_client = compute_v1.DisksClient()
+    regional_disk_client = compute_v1.RegionDisksClient()
+    assert disk_client.get(project=PROJECT, zone=ZONE, disk=autodelete_blank_disk.name).size_gb == 22
+    assert regional_disk_client.get(project=PROJECT, region=REGION, disk=autodelete_regional_blank_disk.name).size_gb == 23
