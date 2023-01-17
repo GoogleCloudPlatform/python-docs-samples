@@ -18,7 +18,7 @@
 from typing import Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
+from google.cloud import documentai_v1beta3 as documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -27,6 +27,7 @@ from google.cloud import documentai
 # processor_version = 'rc' # Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 # file_path = '/path/to/local/pdf'
 # mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+# enable_native_pdf_parsing = True # Use embedded text in PDF file
 
 
 def process_document_ocr_sample(
@@ -36,10 +37,17 @@ def process_document_ocr_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
+    enable_native_pdf_parsing: bool,
 ) -> None:
     # Online processing request to Document AI
     document = process_document(
-        project_id, location, processor_id, processor_version, file_path, mime_type
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        enable_native_pdf_parsing,
     )
 
     # For a full list of Document object attributes, please reference this page:
@@ -70,6 +78,7 @@ def process_document(
     processor_version: str,
     file_path: str,
     mime_type: str,
+    enable_native_pdf_parsing: bool,
 ) -> documentai.Document:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
@@ -90,8 +99,17 @@ def process_document(
     # Load Binary Data into Document AI RawDocument Object
     raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
 
+    # Options for processing
+    process_options = documentai.ProcessOptions(
+        ocr_config=documentai.OcrConfig(
+            enable_native_pdf_parsing=enable_native_pdf_parsing
+        )
+    )
+
     # Configure the process request
-    request = documentai.ProcessRequest(name=name, raw_document=raw_document)
+    request = documentai.ProcessRequest(
+        name=name, raw_document=raw_document, process_options=process_options
+    )
 
     result = client.process_document(request=request)
 
