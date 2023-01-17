@@ -85,6 +85,7 @@ assign_issues_by:
   - GoogleCloudPlatform/api-iot
 - labels:
   - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: language'
   - 'api: texttospeech'
@@ -187,6 +188,7 @@ assign_prs_by:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
   - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: retail'
   to: 

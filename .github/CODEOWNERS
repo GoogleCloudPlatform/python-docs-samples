@@ -46,6 +46,7 @@
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers 
 /eventarc/**/*                         @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
