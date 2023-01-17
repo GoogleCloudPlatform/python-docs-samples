@@ -17,14 +17,11 @@ import os
 
 from contentwarehouse.snippets import search_documents_sample
 
-from google.cloud import contentwarehouse
 from google.cloud import resourcemanager
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
 document_query_text = "document"
-file_type = contentwarehouse.FileTypeFilter.FileType.DOCUMENT
-histogram_query_text = 'count("DocumentSchemaId")'
 
 
 def test_search_documents(capsys):
@@ -33,8 +30,6 @@ def test_search_documents(capsys):
         project_number=project_number,
         location=location,
         document_query_text=document_query_text,
-        file_type=file_type,
-        histogram_query_text=histogram_query_text,
     )
     out, _ = capsys.readouterr()
 

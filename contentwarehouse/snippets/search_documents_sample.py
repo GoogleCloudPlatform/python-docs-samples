@@ -16,24 +16,18 @@
 
 # [START contentwarehouse_search_documents]
 
-from typing import MutableSequence
-
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_number = 'YOUR_PROJECT_NUMBER'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 # document_query_text = 'YOUR_DOCUMENT_QUERY'
-# file_type = contentwarehouse.FileTypeFilter.FileType.DOCUMENT # Options: DOCUMENT, FOLDER
-# histogram_query_text = 'YOUR_HISTOGRAM_QUERY' # e.g. 'count(\"DocumentSchemaId\")'
 
 
 def search_documents_sample(
     project_number: str,
     location: str,
     document_query_text: str,
-    file_type: contentwarehouse.FileTypeFilter.FileType,
-    histogram_query_text: str,
 ) -> None:
 
     # Create a client
@@ -44,7 +38,10 @@ def search_documents_sample(
     parent = client.common_location_path(project=project_number, location=location)
 
     # File Type Filter
-    file_type_filter = contentwarehouse.FileTypeFilter(file_type=file_type)
+    # Options: DOCUMENT, FOLDER
+    file_type_filter = contentwarehouse.FileTypeFilter(
+        file_type=contentwarehouse.FileTypeFilter.FileType.DOCUMENT
+    )
 
     # Document Text Query
     document_query = contentwarehouse.DocumentQuery(
@@ -54,7 +51,7 @@ def search_documents_sample(
 
     # Histogram Query
     histogram_query = contentwarehouse.HistogramQuery(
-        histogram_query=histogram_query_text
+        histogram_query='count("DocumentSchemaId")'
     )
 
     # Define request
@@ -67,17 +64,8 @@ def search_documents_sample(
     # Make the request
     response = client.search_documents(request=request)
 
-    # Handle the response
-    print_search_results(response.matching_documents)
-    print_histogram_results(response.histogram_query_results)
-
-
-def print_search_results(
-    matching_documents: MutableSequence[
-        contentwarehouse.SearchDocumentsResponse.MatchingDocument
-    ],
-) -> None:
-    for matching_document in matching_documents:
+    # Print search results
+    for matching_document in response.matching_documents:
         document = matching_document.document
         # Display name - schema display name.
         # Name.
@@ -90,11 +78,8 @@ def print_search_results(
             f"{matching_document.search_text_snippet}\n"
         )
 
-
-def print_histogram_results(
-    histogram_query_results: MutableSequence[contentwarehouse.HistogramQueryResult],
-) -> None:
-    for histogram_query_result in histogram_query_results:
+    # Print histogram
+    for histogram_query_result in response.histogram_query_results:
         print(
             f"Histogram Query: {histogram_query_result.histogram_query}\n"
             f"| {'Schema':<70} | {'Count':<15} |"
