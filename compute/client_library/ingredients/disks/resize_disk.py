@@ -25,7 +25,7 @@ from google.cloud import compute_v1
 # <INGREDIENT resize_disk>
 def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> NoReturn:
     """
-    Resizes a persistent disk to a new size in GB. After you resize the disk, you must
+    Resizes a persistent disk to a specified size in GB. After you resize the disk, you must
     also resize the file system so that the operating system can access the additional space.
 
     Args:

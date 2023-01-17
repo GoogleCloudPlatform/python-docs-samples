@@ -25,13 +25,17 @@ from google.cloud import compute_v1
 # <INGREDIENT attach_disk>
 def attach_disk(project_id: str, zone: str, instance_name: str, disk_link: str, mode: str = "READ_ONLY") -> NoReturn:
     """
-    Attaches a disk resource to a specified compute instance. The disk might be zonal or regional.
+    Attaches a non-boot persistent disk to a specified compute instance. The disk might be zonal or regional.
+
+    You need following permissions to execute this action:
+    https://cloud.google.com/compute/docs/disks/regional-persistent-disk#expandable-1
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
         zone:name of the zone in which the instance you want to use resides.
         instance_name: name of the compute instance you want to attach a disk to.
-        disk_link: full link to the disk you want to attach. This can be either regional or zonal disk.
+        disk_link: full or partial URL to a persistent disk that you want to attach. This can be either
+            regional or zonal disk.
             Expected formats:
                 * https://www.googleapis.com/compute/v1/projects/[project]/zones/[zone]/disks/[disk_name]
                 * /projects/[project]/zones/[zone]/disks/[disk_name]
