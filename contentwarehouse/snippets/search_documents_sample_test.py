@@ -13,9 +13,9 @@
 # limitations under the License.
 #
 
-from typing import Any
-
 import os
+
+import pytest
 
 from contentwarehouse.snippets import search_documents_sample
 from contentwarehouse.snippets import test_utilities
@@ -25,7 +25,7 @@ location = "us"  # Format is 'us' or 'eu'
 document_query_text = "document"
 
 
-def test_search_documents(capsys: Any) -> None:
+def test_search_documents(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     search_documents_sample.search_documents_sample(
         project_number=project_number,

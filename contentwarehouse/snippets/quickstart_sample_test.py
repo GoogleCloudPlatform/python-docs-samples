@@ -13,9 +13,9 @@
 # limitations under the License.
 #
 
-from typing import Any
-
 import os
+
+import pytest
 
 from contentwarehouse.snippets import quickstart_sample
 from contentwarehouse.snippets import test_utilities
@@ -24,7 +24,7 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
 
 
-def test_quickstart(capsys: Any) -> None:
+def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     quickstart_sample.quickstart(
         project_number=project_number,
