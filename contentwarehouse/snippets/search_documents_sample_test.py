@@ -13,6 +13,8 @@
 # limitations under the License.
 #
 
+from typing import Any
+
 import os
 
 from contentwarehouse.snippets import search_documents_sample
@@ -23,7 +25,7 @@ location = "us"  # Format is 'us' or 'eu'
 document_query_text = "document"
 
 
-def test_search_documents(capsys):
+def test_search_documents(capsys: Any) -> None:
     project_number = test_utilities.get_project_number(project_id)
     search_documents_sample.search_documents_sample(
         project_number=project_number,
