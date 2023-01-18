@@ -31,7 +31,7 @@ def to_bool(x: str) -> bool:
 
 @app.route("/")
 def ping() -> dict:
-    """Check that we can communicate with the service and get arguments."""
+    """Checks that we can communicate with the service and get arguments."""
     return {
         "response": "✅ I got your request!",
         "args": request.args,
