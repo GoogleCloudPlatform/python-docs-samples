@@ -15,10 +15,9 @@
 
 import os
 
-import pytest
-
 from contentwarehouse.snippets import quickstart_sample
 from contentwarehouse.snippets import test_utilities
+import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
