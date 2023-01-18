@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import datetime
-from typing import Iterator
+from typing import Iterator, List
 import uuid
 
 import google.auth
@@ -45,6 +45,22 @@ def random_table_id(dataset_id: str) -> str:
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
     return "{}.{}".format(dataset_id, random_table_id)
+
+
+@pytest.fixture
+def avro_source_uris() -> List[str]:
+    avro_source_uris = [
+        "gs://cloud-samples-data/bigquery/federated-formats-reference-file-schema/a-twitter.avro",
+        "gs://cloud-samples-data/bigquery/federated-formats-reference-file-schema/b-twitter.avro",
+        "gs://cloud-samples-data/bigquery/federated-formats-reference-file-schema/c-twitter.avro",
+    ]
+    return avro_source_uris
+
+
+@pytest.fixture
+def reference_file_schema_uri() -> str:
+    reference_file_schema_uri = "gs://cloud-samples-data/bigquery/federated-formats-reference-file-schema/b-twitter.avro"
+    return reference_file_schema_uri
 
 
 @pytest.fixture
