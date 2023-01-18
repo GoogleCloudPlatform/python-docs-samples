@@ -19,6 +19,13 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
+# If on kokoro, add btlr to the path
+if [ -n "$KOKORO_GFILE_DIR" ]; then
+  bltr_dir="$KOKORO_GFILE_DIR/v0.0.3/"
+  chmod +x "${bltr_dir}"btlr
+  export PATH="$PATH:$bltr_dir"
+fi
+
 DIFF_FROM=""
 
 # `--only-diff-main` will only run tests on project changes on the
@@ -95,12 +102,6 @@ fi
 
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
-
-# Import secrets for AWS integration testing. This can be used for products
-# such as Storage Transfer Service.
-if [[ -f "${KOKORO_GFILE_DIR}/aws-secrets.sh" ]]; then
-    source "${KOKORO_GFILE_DIR}/aws-secrets.sh"
-fi
 
 # For cloud-run session, we activate the service account for gcloud sdk.
 gcloud auth activate-service-account \
@@ -182,9 +183,9 @@ btlr_args+=(
     "${test_prog}"
 )
 
-echo "testing/btlr" "${btlr_args[@]}"
+echo "btlr" "${btlr_args[@]}"
 
-testing/btlr "${btlr_args[@]}"
+btlr "${btlr_args[@]}"
 
 RTN=$?
 cd "$ROOT"

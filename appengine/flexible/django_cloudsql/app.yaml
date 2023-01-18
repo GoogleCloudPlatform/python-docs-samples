@@ -22,6 +22,6 @@ beta_settings:
     cloud_sql_instances: PROJECT_ID:REGION:INSTANCE_NAME
 
 runtime_config:
-  python_version: 3
+  python_version: 3.7
 # [END gaeflex_py_django_app_yaml]
 # [END runtime]

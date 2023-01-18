@@ -15,12 +15,16 @@
 assign_issues_by:
 - labels:
   - 'api: appengine'
+  - 'api: cloudbuild'
+  - 'api: cloudscheduler'
+  - 'api: cloudtasks'
+  - 'api: containeranalysis'
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
-  - 'api: secretmanager'
+  - 'api: workflows'
   to:
-  - GoogleCloudPlatform/aap-dpes
+  - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: auth'
   to:
@@ -38,10 +42,6 @@ assign_issues_by:
   - 'api: cloudbilling'
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
-- labels:
-  - 'api: cloudbuild'
-  to:
-  - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: cloudsql'
   to:
@@ -83,6 +83,14 @@ assign_issues_by:
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
@@ -135,19 +143,27 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
-  - 'api: texttospeech'
-  to:
-  - GoogleCloudPlatform/dee-platform-ops
-- labels:
-  - 'api: datacatalog'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
   - 'api: kms'
   - 'api: cloudkms'
-  to: 
+  - 'api: secretmanager'
+  to:
   - GoogleCloudPlatform/dee-infra
 - labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: asset'
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
   - 'api: vision'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
@@ -169,22 +185,16 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
-  - 'api: clouderrorreporting'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
-  - 'api: talent'
-  to:
-  - GoogleCloudPlatform/python-samples-reviewers
-- labels:
+  - 'api: cloudsql'
   - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
-  - 'api: dataproc'
-  to:
-  - GoogleCloudPlatform/cloud-dpes
-
+  - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
+  - 'api: retail'
+  to: 
+  - GoogleCloudPlatform/dee-data-ai
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
