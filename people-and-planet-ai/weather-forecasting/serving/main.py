@@ -26,7 +26,7 @@ MODEL = WeatherModel.from_pretrained("model")
 
 
 def to_bool(x: str) -> bool:
-    return True if x.lower() == "true" else False
+    return x.lower() == "true"
 
 
 @app.route("/")
