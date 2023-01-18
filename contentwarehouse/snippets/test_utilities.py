@@ -13,22 +13,12 @@
 # limitations under the License.
 #
 
-import os
-
-from contentwarehouse.snippets import quickstart_sample
-from contentwarehouse.snippets import test_utilities
-
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"  # Format is 'us' or 'eu'
+from google.cloud import resourcemanager
 
 
-def test_quickstart(capsys):
-    project_number = test_utilities.get_project_number(project_id)
-    quickstart_sample.quickstart(
-        project_number=project_number,
-        location=location,
-    )
-    out, _ = capsys.readouterr()
-
-    assert "Rule Engine Output" in out
-    assert "Document Created" in out
+def get_project_number(project_id: str) -> str:
+    client = resourcemanager.ProjectsClient()
+    name = client.project_path(project=project_id)
+    project = client.get_project(name=name)
+    project_number = client.parse_project_path(project.name)["project"]
+    return project_number

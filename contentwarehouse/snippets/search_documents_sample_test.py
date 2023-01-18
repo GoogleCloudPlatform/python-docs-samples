@@ -16,8 +16,7 @@
 import os
 
 from contentwarehouse.snippets import search_documents_sample
-
-from google.cloud import resourcemanager
+from contentwarehouse.snippets import test_utilities
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
@@ -25,7 +24,7 @@ document_query_text = "document"
 
 
 def test_search_documents(capsys):
-    project_number = get_project_number(project_id)
+    project_number = test_utilities.get_project_number(project_id)
     search_documents_sample.search_documents_sample(
         project_number=project_number,
         location=location,
@@ -34,11 +33,3 @@ def test_search_documents(capsys):
     out, _ = capsys.readouterr()
 
     assert "document" in out
-
-
-def get_project_number(project_id: str) -> str:
-    client = resourcemanager.ProjectsClient()
-    name = client.project_path(project=project_id)
-    project = client.get_project(name=name)
-    project_number = client.parse_project_path(project.name)["project"]
-    return project_number
