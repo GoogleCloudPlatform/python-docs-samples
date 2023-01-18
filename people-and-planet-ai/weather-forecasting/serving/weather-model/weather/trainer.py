@@ -62,7 +62,7 @@ def read_dataset(data_path: str, train_test_ratio: float) -> DatasetDict:
 
 
 def augmented(dataset: Dataset) -> Dataset:
-    """Augment dataset by rotating and flipping the examples."""
+    """Augments dataset by rotating and flipping the examples."""
 
     def augment(values: list) -> np.ndarray:
         transformed = [
