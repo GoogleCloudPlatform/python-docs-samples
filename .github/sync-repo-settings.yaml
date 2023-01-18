@@ -48,6 +48,7 @@ branchProtectionRules:
     - "Kokoro CI - Python 3.8"
     - "cla/google"
     - "snippet-bot check"
+    - "Do Not Merge"
 # List of explicit permissions to add (additive only)
 permissionRules:
     # Team slug to add to repository permissions
