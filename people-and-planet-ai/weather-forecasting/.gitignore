@@ -1,6 +1,7 @@
 **/*.egg-info
 **/build
 **/dist
+checkpoints/
 data/
 data-training/
 model/
