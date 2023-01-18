@@ -1,2 +1,2 @@
-google-cloud-dialogflow==2.18.0
+google-cloud-dialogflow==2.19.0
 Flask==2.2.2
