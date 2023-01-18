@@ -45,6 +45,7 @@
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers 
 /eventarc/**/*                         @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
@@ -72,7 +73,7 @@
 /profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
-/retail/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
