@@ -64,6 +64,15 @@ def version():
     result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
+    version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
+
+    # Wait for app to initialize
+    @backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=3)
+    def wait_for_app(url):
+        r = requests.get(url)
+        r.raise_for_status()
+
+    wait_for_app(f"https://{version_hostname}/")
 
     yield project_id, version_id
 
