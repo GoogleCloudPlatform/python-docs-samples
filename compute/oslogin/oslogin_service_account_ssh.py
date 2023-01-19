@@ -149,9 +149,12 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
                 check=True,
                 env={'SSH_AUTH_SOCK': ''},
             )
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as err:
             time.sleep(30)
             tries += 1
+            if tries == 3:
+                print(f"Failed to execute SSH command (return code: {err.returncode}. Output received: {err.output}")
+                raise err
         else:
             return ssh.stdout
 
