@@ -48,8 +48,7 @@ def container_image():
             "--config",
             "cloudbuild.yaml",
             "--project",
-            PROJECT,
-            f"--substitutions=_TAG={SUFFIX}"
+            PROJECT
         ]
     )
     yield IMAGE_NAME
