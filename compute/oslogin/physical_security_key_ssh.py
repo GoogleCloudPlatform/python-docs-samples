@@ -55,7 +55,7 @@ def main(user_key, ip_address, dryrun, directory=None):
         .getLoginProfile(name="users/{}".format(user_key), view="SECURITY_KEY")
         .execute()
     )
-    security_keys = profile.get("securityKeys")
+    print(profile)
 
     if "posixAccounts" not in profile:
         print("You don't have a POSIX account configured.")
@@ -64,6 +64,14 @@ def main(user_key, ip_address, dryrun, directory=None):
     username = profile.get("posixAccounts")[0].get("username")
 
     # Write the SSH private key files.
+    security_keys = profile.get("securityKeys")
+
+    if security_keys is None:
+        print("It seems that the account you are using to authenticate does not have any security keys assigned to it.")
+        print("Please check your Application Default Credentials (https://cloud.google.com/docs/authentication/application-default-credentials).")
+        print("More info about security keys: https://support.google.com/accounts/answer/6103523?visit_id=637673282586358398-2383089289&rd=1")
+        return
+
     key_files = write_ssh_key_files(security_keys, directory)
 
     # Compose the SSH command.
