@@ -30,16 +30,15 @@ import pytest
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 AR_REPO_URL = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy"
-IMAGE_NAME = f"{AR_REPO_URL}/vision-e2e-test:{SUFFIX}"
-CLOUD_RUN_SERVICE = f"image-proc-{SUFFIX}"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
 OUTPUT_BUCKET = f"image-proc-output-{SUFFIX}"
 TOPIC = f"image_proc_{SUFFIX}"
 
 
 @pytest.fixture
-def container_image():
-    # Build container image for Cloud Run deployment
+def deployed_service(output_bucket):
+    # Deploy image to Cloud Run
+    service_name = f'image-proc-{SUFFIX}'
     subprocess.check_call(
         [
             "gcloud",
@@ -48,35 +47,13 @@ def container_image():
             "--config",
             "cloudbuild.yaml",
             "--project",
-            PROJECT
-        ]
-    )
-    yield IMAGE_NAME
-
-
-@pytest.fixture
-def deployed_service(container_image, output_bucket):
-    # Deploy image to Cloud Run
-
-    subprocess.check_call(
-        [
-            "gcloud",
-            "run",
-            "deploy",
-            CLOUD_RUN_SERVICE,
-            "--image",
-            container_image,
-            "--region=us-central1",
-            "--project",
             PROJECT,
-            "--platform=managed",
-            "--set-env-vars",
-            f"BLURRED_BUCKET_NAME={output_bucket.name}",
-            "--no-allow-unauthenticated",
+            f"--substitutions=_SERVICE_NAME={service_name},_BLURRED_BUCKET_NAME={output_bucket.name}"
         ]
     )
-
-    yield CLOUD_RUN_SERVICE
+    # TODO: yield the cloud run service name
+    
+    yield service_name
 
     subprocess.check_call(
         [
@@ -84,7 +61,7 @@ def deployed_service(container_image, output_bucket):
             "run",
             "services",
             "delete",
-            CLOUD_RUN_SERVICE,
+            service_name,
             "--platform=managed",
             "--region=us-central1",
             "--quiet",

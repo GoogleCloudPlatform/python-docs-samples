@@ -22,12 +22,13 @@ steps:
     args:
       - run
       - deploy
-      - image-proc-${BUILD_ID}
+      - ${_SERVICE_NAME}
       - --image=${_AR_REPO_URL}/vision-e2e-test:${BUILD_ID}
       - --region=${_DEPLOY_REGION}
       - --platform=managed
       - --update-env-vars=BLURRED_BUCKET_NAME=${_BLURRED_BUCKET_NAME}
       - --no-allow-unauthenticated
+
 substitutions:
   _AR_REPO_URL: us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy
   _DEPLOY_REGION: us-central1
