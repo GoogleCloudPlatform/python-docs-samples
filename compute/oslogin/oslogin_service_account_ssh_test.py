@@ -26,7 +26,7 @@ import json
 import time
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import BadRequest, NotFound
 import google.auth
 from google.cloud import compute_v1
 from google.cloud import oslogin_v1
@@ -35,7 +35,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 import pytest
 
-from new_service_account_ssh import main
+from oslogin_service_account_ssh import main
 
 PROJECT = google.auth.default()[1]
 ZONE = 'europe-north1-a'
@@ -119,7 +119,7 @@ def ssh_firewall():
     yield firewall_client.get(project=PROJECT, firewall=TEST_ID)
     try:
         firewall_client.delete(project=PROJECT, firewall=TEST_ID)
-    except NotFound:
+    except (NotFound, BadRequest):
         # That means the GCE Enforcer deleted it before us
         pass
 
@@ -187,7 +187,8 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
 
     yield client.get(project=PROJECT, zone=ZONE, instance=instance.name)
 
-    client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
+    # The deletion of the instance has been moved to the test itself.
+    # client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
 
 def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
@@ -199,7 +200,18 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     main('uname -a', PROJECT, account=account,
          hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
          oslogin=oslogin_client)
-    out, _ = capsys.readouterr()
 
+    delete_instance = True
+
+    out, _ = capsys.readouterr()
     assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
-    assert assert_value in out
+    try:
+        assert assert_value in out
+    except AssertionError:
+        delete_instance = False
+    finally:
+        # If the assert passed, we can safely delete the instance. If it failed, we want to keep it around for
+        # manual inspection.
+        if delete_instance:
+            compute_client = compute_v1.InstancesClient()
+            compute_client.delete(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
