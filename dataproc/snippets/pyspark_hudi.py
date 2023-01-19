@@ -48,6 +48,11 @@ def create_hudi_table(spark, table_name, table_uri):
     spark.sql(create_table_sql)
 
 
+def delete_hudi_table(spark, table_name):
+    """Deletes Hudi table."""
+    spark.sql(f'DROP TABLE IF EXISTS {table_name}')
+
+
 def generate_test_dataframe(spark, n_rows):
     """Generates test dataframe with Hudi's built-in data generator."""
     spark_context = spark.sparkContext
@@ -150,6 +155,9 @@ def main():
     print(f'Reading the Hudi table snapshot at {previous_commit} ...')
     output_df2 = read_hudi_table(spark, table_name, table_uri, previous_commit)
     output_df2.show(truncate=False)
+
+    print(f'Deleting Hudi table ...')
+    delete_hudi_table(spark, table_name)
 
     print('Stopping Spark session ...')
     spark.stop()
