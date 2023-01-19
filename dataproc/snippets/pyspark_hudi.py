@@ -156,7 +156,7 @@ def main():
     output_df2 = read_hudi_table(spark, table_name, table_uri, previous_commit)
     output_df2.show(truncate=False)
 
-    print(f'Deleting Hudi table ...')
+    print('Deleting Hudi table ...')
     delete_hudi_table(spark, table_name)
 
     print('Stopping Spark session ...')
