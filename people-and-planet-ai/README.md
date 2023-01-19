@@ -2,8 +2,8 @@
 
 ## 🦏 [Wildlife Insights -- _image-classification_](image-classification)
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/image-classification/README.ipynb)
-
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/image-classification/README.ipynb)
+>
 > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
 
 This model is trained to recognize animal species from
@@ -20,10 +20,12 @@ pictures.
 [AutoML]: https://cloud.google.com/vertex-ai/docs/beginner/beginners-guide
 [Vertex AI]: https://cloud.google.com/vertex-ai
 
+---
+
 ## 🗺 [Global Fishing Watch -- _timeseries-classification_](timeseries-classification)
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/timeseries-classification/README.ipynb)
-
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/timeseries-classification/README.ipynb)
+>
 > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/LnEhSVEJUuY/0.jpg)](https://youtu.be/LnEhSVEJUuY)
 
 This model is trained to classify if a ship is fishing or not every hour from their
@@ -41,10 +43,12 @@ location data.
 [Keras]: https://keras.io
 [Vertex AI]: https://cloud.google.com/vertex-ai
 
+---
+
 ## 🏭 [Coal Plant Predictions -- _geospatial-classification_](geospatial-classification)
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/geospatial-classification/README.ipynb)
-
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/geospatial-classification/README.ipynb)
+>
 > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/8amFK7T_n30/0.jpg)](https://youtu.be/8amFK7T_n30)
 
 This model uses satellite data to predict if a coal plant is turned on and producing carbon emissions. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
@@ -60,10 +64,12 @@ This model uses satellite data to predict if a coal plant is turned on and produ
 [TensorFlow]: https://www.tensorflow.org/
 [Vertex AI]: https://cloud.google.com/vertex-ai
 
+---
+
 ## 🌍 [Land cover classification -- _image segmentation_](land-cover-classification)
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/land-cover-classification/README.ipynb)
-
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/land-cover-classification/README.ipynb)
+>
 > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/zImQf91ffFo/0.jpg)](https://youtu.be/zImQf91ffFo)
 
 This model uses satellite data to classify what is on Earth. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
@@ -80,4 +86,23 @@ This model uses satellite data to classify what is on Earth. The satellite data 
 [Dataflow]: https://cloud.google.com/dataflow
 [Earth Engine]: https://earthengine.google.com/
 [TensorFlow]: https://www.tensorflow.org/
+[Vertex AI]: https://cloud.google.com/vertex-ai
+
+---
+
+## 🌦 Weather forecasting -- _timeseries regression_
+
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/weather-forecasting/README.ipynb)
+<!-- > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/TODO/0.jpg)](https://youtu.be/TODO) -->
+
+This model uses satellite data to forecast precipitation for the next 2 and 6 hours. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
+
+* **Model**: 2D Fully Convolutional Network in [PyTorch]
+* **Creating datasets**: [Sentinel-2] satellite data and [ESA WorldCover] from [Earth Engine] with [Dataflow]
+* **Training the model**: [PyTorch] in [Vertex AI]
+* **Getting predictions**: [PyTorch] locally
+
+[Dataflow]: https://cloud.google.com/dataflow
+[Earth Engine]: https://earthengine.google.com/
+[PyTorch]: https://pytorch.org/
 [Vertex AI]: https://cloud.google.com/vertex-ai
