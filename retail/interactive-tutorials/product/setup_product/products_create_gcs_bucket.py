@@ -28,7 +28,7 @@ def create_gcs_bucket(bucket_name=BUCKET_NAME):
     create_bucket(bucket_name)
 
     path_to_resources_dir = PurePath(
-        Path.home(), "cloudshell_open/python-retail/samples/interactive-tutorials/resources"
+        Path.home(), "cloudshell_open/python-docs-samples/retail/interactive-tutorials/resources"
     )
     upload_blob(bucket_name, str(path_to_resources_dir / "products.json"))
     upload_blob(bucket_name, str(path_to_resources_dir / "products_some_invalid.json"))
