@@ -55,10 +55,10 @@ def main(user_key, ip_address, dryrun, directory=None):
         .getLoginProfile(name="users/{}".format(user_key), view="SECURITY_KEY")
         .execute()
     )
-    print(profile)
 
     if "posixAccounts" not in profile:
         print("You don't have a POSIX account configured.")
+        print("Did you enable OSLogin on your compute instance?")
         return
 
     username = profile.get("posixAccounts")[0].get("username")
