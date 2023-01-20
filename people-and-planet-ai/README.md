@@ -92,8 +92,9 @@ This model uses satellite data to classify what is on Earth. The satellite data 
 
 ## 🌦 Weather forecasting -- _timeseries regression_
 
-> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/weather-forecasting/README.ipynb)
-<!-- > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/TODO/0.jpg)](https://youtu.be/TODO) -->
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/weather-forecasting/notebooks/1-overview.ipynb)
+>
+> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/6-UJzEXMvGY/0.jpg)](https://youtu.be/6-UJzEXMvGY)
 
 This model uses satellite data to forecast precipitation for the next 2 and 6 hours. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
 
