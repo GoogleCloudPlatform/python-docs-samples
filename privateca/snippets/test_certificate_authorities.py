@@ -15,8 +15,8 @@
 import re
 import typing
 import uuid
-import backoff
 
+import backoff
 import google.auth
 
 from create_ca_pool import create_ca_pool
@@ -39,8 +39,8 @@ CA_DURATION = 1000000
 def generate_name() -> str:
     return "i" + uuid.uuid4().hex[:10]
 
-@backoff.on_exception(backoff.expo,
-                      Exception, max_tries=3)
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_create_certificate(capsys: typing.Any) -> None:
     CA_POOL_NAME = generate_name()
     CA_NAME = generate_name()
