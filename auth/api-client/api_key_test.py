@@ -15,8 +15,8 @@ import os
 import re
 from time import sleep
 
-import backoff
 from _pytest.capture import CaptureFixture
+import backoff
 import google.auth.transport.requests
 from google.cloud.api_keys_v2 import Key
 import pytest
