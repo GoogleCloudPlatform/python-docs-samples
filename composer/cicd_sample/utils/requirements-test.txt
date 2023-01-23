@@ -1,4 +1,4 @@
 pytest==7.0.1
 requests==2.27.1
 google-api-core==2.8.2
-google-resumable-media==2.4.0
+google-resumable-media==2.4.1
