@@ -2,7 +2,7 @@
 
 Python samples for [Google Cloud Platform products][cloud].
 
-[![Build Status][py-2.7-shield]][py-2.7-link] [![Build Status][py-3.7-shield]][py-3.7-link] [![Build Status][py-3.8-shield]][py-3.8-link] [![Build Status][py-3.9-shield]][py-3.9-link] [![Build Status][py-3.10-shield]][py-3.10-link] [![Build Status][py-3.11-shield]][py-3.11-link]
+[![Build Status][py-2.7-shield]][py-2.7-link] [![Build Status][py-3.7-shield]][py-3.7-link] [![Build Status][py-3.8-shield]][py-3.8-link] [![Build Status][py-3.9-shield]][py-3.9-link] [![Build Status][py-3.10-shield]][py-3.10-link]
 
 ## Google Cloud Samples
 
@@ -77,5 +77,3 @@ Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
 [py-3.9-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.9.html
 [py-3.10-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-310.svg
 [py-3.10-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.10.html
-[py-3.11-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-311.svg
-[py-3.11-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.11.html
