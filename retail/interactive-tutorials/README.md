@@ -36,7 +36,7 @@ You can find the information about the Retail services in the [documentation](ht
 If you would like to have a closer look at the Retail API features and try them yourself,
 the best option is to use the [Interactive Tutorials](https://cloud.google.com/retail/docs/overview). The tutorials will be launched in the CloudShell environment, and you will be able to request the Retail services and check the response with minimum time and effort.
 
-The code samples in the directory **python-retail/samples/interactive-tutorials** are explicitly created for use with the Retail Interactive Tutorials.
+The code samples in the directory **python-docs-samples/retail/interactive-tutorials** are explicitly created for use with the Retail Interactive Tutorials.
 
 If, for some reason, you have decided to proceed with these code samples without the tutorial, please go through the following steps and set up the required preconditions.
 
@@ -133,9 +133,9 @@ To run Python code samples for the Retail API tutorial, you need to set up your 
 
 ## Import catalog data
 
-There is a python-retail/samples/interactive-tutorials/resources/products.json file with valid products prepared in the `resources` directory.
+There is a python-docs-samples/retail/interactive-tutorials/resources/products.json file with valid products prepared in the `resources` directory.
 
-The other file, python-retail/samples/interactive-tutorials/resources/products_some_invalid.json, contains both valid and invalid products. You will use it to check the error handling.
+The other file, python-docs-samples/retail/interactive-tutorials/resources/products_some_invalid.json, contains both valid and invalid products. You will use it to check the error handling.
 
 ### Upload catalog data to Cloud Storage
 
@@ -147,10 +147,10 @@ The bucket name must be unique. For convenience, you can name it `<YOUR_PROJECT_
     Go to the code samples directory, your starting point to run more commands.
 
     ```bash
-    cd python-retail/samples/interactive-tutorials
+    cd python-docs-samples/retail/interactive-tutorials
     ```
 
-1. To create the bucket and upload the JSON file, open python-retail/samples/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py file
+1. To create the bucket and upload the JSON file, open python-docs-samples/retail/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py file
 
 1. Go to the **product** directory and run the following command in the Terminal:
 
@@ -174,7 +174,7 @@ The bucket name must be unique. For convenience, you can name it `<YOUR_PROJECT_
 
 ### Import products to the Retail Catalog
 
-To import the prepared products to a catalog, open python-retail/samples/interactive-tutorials/product/import_products_gcs.py file and run the following command in the Terminal:
+To import the prepared products to a catalog, open python-docs-samples/retail/interactive-tutorials/product/import_products_gcs.py file and run the following command in the Terminal:
 
 ```bash
 python product/import_products_gcs.py
