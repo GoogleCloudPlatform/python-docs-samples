@@ -16,7 +16,7 @@
 
 {
   # Create a GCS bucket and upload the product data to the bucket
-  output=$(python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py)
+  output=$(python ~/cloudshell_open/python-docs-samples/retail/interactive-tutorials/product/setup_product/products_create_gcs_bucket.py)
 
   # Get the bucket name and store it in the env variable BUCKET_NAME
   temp="${output#*The gcs bucket }"
@@ -24,7 +24,7 @@
   export BUCKET_NAME=$bucket_name
 
   # Import products to the Retail catalog
-  python ~/cloudshell_open/python-retail/samples/interactive-tutorials/product/import_products_gcs.py
+  python ~/cloudshell_open/python-docs-samples/retail/interactive-tutorials/product/import_products_gcs.py
 } && {
   # Print success message
   echo "====================================="
