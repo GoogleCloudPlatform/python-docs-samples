@@ -51,8 +51,7 @@ def deployed_service(output_bucket):
             f"--substitutions=_SERVICE_NAME={service_name},_BLURRED_BUCKET_NAME={output_bucket.name}"
         ]
     )
-    # TODO: yield the cloud run service name
-    
+
     yield service_name
 
     subprocess.check_call(
