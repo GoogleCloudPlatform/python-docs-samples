@@ -47,7 +47,7 @@ def browse_table_data(table_id: str) -> None:
     print("Downloaded {} rows from table {}".format(len(rows), table_id))
 
     # Print row data in tabular format.
-    rows_iter = client.list_rows(table, max_results=10)
+    rows_iter = client.list_rows(table_id, max_results=10)
     format_string = "{!s:<16} " * len(rows_iter.schema)
     field_names = [field.name for field in rows_iter.schema]
     print(format_string.format(*field_names))  # Prints column headers.
