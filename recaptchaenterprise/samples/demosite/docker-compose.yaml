@@ -9,8 +9,8 @@ services:
         - "GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}"
         - "SITE_KEY=${SITE_KEY}"
         - "CHECKBOX_SITE_KEY=${CHECKBOX_SITE_KEY}"
-    command: gunicorn main:app --workers 4 --name main --reload -b 0.0.0.0:8000
-    ports: ["8000:8000"]
+    command: gunicorn main:app --workers 4 --name main --reload -b 0.0.0.0:8080
+    ports: ["8080:8080"]
     volumes:
       - "./app:/app"
     restart: always
