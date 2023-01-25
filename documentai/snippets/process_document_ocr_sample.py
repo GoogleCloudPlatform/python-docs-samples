@@ -18,7 +18,7 @@
 from typing import Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
+from google.cloud import documentai_v1beta3 as documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -39,7 +39,12 @@ def process_document_ocr_sample(
 ) -> None:
     # Online processing request to Document AI
     document = process_document(
-        project_id, location, processor_id, processor_version, file_path, mime_type
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
     )
 
     # For a full list of Document object attributes, please reference this page:
@@ -90,8 +95,17 @@ def process_document(
     # Load Binary Data into Document AI RawDocument Object
     raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
 
+    # Options for processing
+    # Currently supported in version pretrained-ocr-v1.2-2022-11-10
+    process_options = documentai.ProcessOptions(
+        # Use embedded text in PDF file
+        ocr_config=documentai.OcrConfig(enable_native_pdf_parsing=True)
+    )
+
     # Configure the process request
-    request = documentai.ProcessRequest(name=name, raw_document=raw_document)
+    request = documentai.ProcessRequest(
+        name=name, raw_document=raw_document, process_options=process_options
+    )
 
     result = client.process_document(request=request)
 
