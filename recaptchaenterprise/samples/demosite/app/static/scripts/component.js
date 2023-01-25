@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO: productionize dependencies; network cascade is too slow
 import {
   LitElement,
   css,
@@ -298,7 +299,7 @@ class RecaptchaDemo extends LitElement {
             var(--content-bottom),
           /* land */ var(--offset) var(--land-content-bottom),
           /* pink */ var(--offset) 75vh, /* purple */ var(--offset) 50vh,
-          /* blue */ var(--offset) -12vh;
+          /* blue */ var(--offset) 18vh;
       }
       .content .sticky-example {
         --content-bottom: calc(100vh - var(--castle-bottom));
@@ -329,7 +330,7 @@ class RecaptchaDemo extends LitElement {
               hsl(var(--content-glow), 85%) 0,
               transparent 44%
             )
-            center -12vh / 100vw 100vh no-repeat fixed,
+            center 18vh / 100vw 100vh no-repeat fixed,
           /* color */ hsl(var(--content-surface));
         transition: background-position var(--drawer-lapse) ease-out;
       }
@@ -372,11 +373,6 @@ class RecaptchaDemo extends LitElement {
         opacity: 0;
         transform: translateY(100%);
         transition-delay: 0, var(--half-lapse);
-      }
-      .sitemap-close-icon {
-        position: absolute;
-        /* TODO: icon position, nested bar? */
-        inset: 0.5rem 1rem auto auto;
       }
       .sitemap .links,
       .sitemap .h1,
@@ -496,7 +492,7 @@ class RecaptchaDemo extends LitElement {
         line-height: 1.65em;
       }
       /* Form */
-      /* TODO any form styles */
+      /* ... */
       /* Guide */
       .guide {
         overflow: hidden;
@@ -865,34 +861,25 @@ class RecaptchaDemo extends LitElement {
   }
 
   static properties = {
-    step: { type: String },
-    initialized: { type: Boolean, state: true, attribute: false },
     drawerOpen: { type: Boolean, state: true, attribute: false },
-    siteMapOpen: { type: Boolean, state: true, attribute: false },
-    /* TODO: update score/verdict when payload is standardized */
     score: { type: String },
+    siteMapOpen: { type: Boolean, state: true, attribute: false },
+    step: { type: String },
     verdict: { type: String },
   };
 
   constructor() {
     super();
     this.step = "home";
-    this.initialized = false;
     this.score = undefined;
     this.verdict = undefined;
     this.drawerOpen = true;
     this.siteMapOpen = false;
   }
 
-  willUpdate() {}
+  // willUpdate() {}
 
-  updated() {
-    if (!this.initialized) {
-      setTimeout(() => {
-        this.initialized = true;
-      }, 750);
-    }
-  }
+  // updated() {}
 
   toggleDrawer() {
     this.drawerOpen = !this.drawerOpen;
@@ -931,7 +918,6 @@ class RecaptchaDemo extends LitElement {
       ></slot>
     `;
 
-    // TODO update login/store form examples with comment
     const FORMS = {
       home: html`
         <section class="example home">
@@ -1071,14 +1057,12 @@ class RecaptchaDemo extends LitElement {
             <dd class="verdict-result">Human</dd>
           </dl>
         </div>
-        <!--
         <p>
           How would you interpret the score? For example, what does a score of
           0.4 mean vs 0.6? How would you handle the final score? For example,
           would you output an error, fail silently, use a "redemption path", or
           supplement with another product?
         </p>
-        -->
         <p>
           The 100+ signals ran on this page when it loaded and has a
           ${(this.score && Number(this.score.slice(0, 3))) * 100 || "???"}%
@@ -1111,14 +1095,12 @@ class RecaptchaDemo extends LitElement {
                 if you aren't making decisions based on what reCAPTCHA returns
                 here, it can still enhance signals later on.
               </p>
-              <!--
               <p>
                 What is this an example of (score when the page loads)? Why
                 would you verify when the page loads? What kind of key? Why? How
                 would you create? How would you load JS API? How would you set
                 up the challenge?
               </p>
-              -->
               <a
                 href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load"
                 target="_blank"
@@ -1131,23 +1113,19 @@ class RecaptchaDemo extends LitElement {
               <h1 class="h1">Result</h1>
               ${SCORE}
               <h2 class="h1">Response Details</h2>
-              <!--
               <p>
                 How would you fetch the token? For example, do you send a
                 client-side request to a backend? How would you create an
                 assessment? For example, do you require a backend to send a
                 request to Google?
               </p>
-              -->
               <code>
                 <pre>${CODE}</pre>
               </code>
-              <!--
               <a href="#" target="_blank">
                 <mwc-icon>description</mwc-icon>
                 <span>View log</span>
               </a>
-              -->
             </section>
           </div>
         </div>
@@ -1175,23 +1153,19 @@ class RecaptchaDemo extends LitElement {
               <h1 class="h1">Result</h1>
               ${SCORE}
               <h2 class="h1">Response Details</h2>
-              <!--
               <p>
                 How would you fetch the token? For example, do you send a
                 client-side request to a backend? How would you create an
                 assessment? For example, do you require a backend to send a
                 request to Google?
               </p>
-              -->
               <code>
                 <pre>${CODE}</pre>
               </code>
-              <!--
               <a href="#" target="_blank">
                 <mwc-icon>description</mwc-icon>
                 <span>View log</span>
               </a>
-              -->
             </section>
           </div>
         </div>
@@ -1221,23 +1195,19 @@ class RecaptchaDemo extends LitElement {
               <h1 class="h1">Result</h1>
               ${SCORE}
               <h2 class="h1">Response Details</h2>
-              <!--
               <p>
                 How would you fetch the token? For example, do you send a
                 client-side request to a backend? How would you create an
                 assessment? For example, do you require a backend to send a
                 request to Google?
               </p>
-              -->
               <code>
                 <pre>${CODE}</pre>
               </code>
-              <!--
               <a href="#" target="_blank">
                 <mwc-icon>description</mwc-icon>
                 <span>View log</span>
               </a>
-              -->
             </section>
           </div>
         </div>
@@ -1267,23 +1237,19 @@ class RecaptchaDemo extends LitElement {
               <h1 class="h1">Result</h1>
               ${SCORE}
               <h2 class="h1">Response Details</h2>
-              <!--
               <p>
                 How would you fetch the token? For example, do you send a
                 client-side request to a backend? How would you create an
                 assessment? For example, do you require a backend to send a
                 request to Google?
               </p>
-              -->
               <code>
                 <pre>${CODE}</pre>
               </code>
-              <!--
               <a href="#" target="_blank">
                 <mwc-icon>description</mwc-icon>
                 <span>View log</span>
               </a>
-              -->
             </section>
           </div>
         </div>
@@ -1311,23 +1277,19 @@ class RecaptchaDemo extends LitElement {
               <h1 class="h1">Result</h1>
               ${SCORE}
               <h2 class="h1">Response Details</h2>
-              <!--
               <p>
                 How would you fetch the token? For example, do you send a
                 client-side request to a backend? How would you create an
                 assessment? For example, do you require a backend to send a
                 request to Google?
               </p>
-              -->
               <code>
                 <pre>${CODE}</pre>
               </code>
-              <!--
               <a href="#" target="_blank">
                 <mwc-icon>description</mwc-icon>
                 <span>View log</span>
               </a>
-              -->
             </section>
           </div>
         </div>
