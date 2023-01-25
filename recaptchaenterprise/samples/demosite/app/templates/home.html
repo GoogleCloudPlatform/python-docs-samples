@@ -4,42 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!-- TODO: favicon -->
-    <title>Log in: reCAPTCHA Demo</title>
+    <title>Home: reCAPTCHA Demo</title>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
+    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-      async function handleToken(token) {
-        console.log("handleToken", token);
+      grecaptcha.enterprise.ready(async () => {
+        const token = await grecaptcha.enterprise.execute(
+          "{{context.site_key}}",
+          {
+            action: "home",
+          }
+        );
+        console.log("on page load", token);
         // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
         const score = await createAssessment({
-          action: "log_in",
+          action: "home",
           sitekey: "{{context.site_key}}",
           token,
         });
         useAssessment(score);
-      }
+      });
     </script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
   </head>
   <body>
-    <recaptcha-demo step="login">
-      <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
-      <button
-        class="g-recaptcha"
-        data-action="log_in"
-        data-callback="handleToken"
-        data-sitekey="{{context.site_key}}"
-        disabled="disabled"
-      >
-        Log in
-      </button>
-      <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
-    </recaptcha-demo>
+    <recaptcha-demo step="home"></recaptcha-demo>
   </body>
 </html>

@@ -1,77 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>reCAPTCHA-Enterprise</title>
-  <link rel="stylesheet" type="text/css" href="../static/home.css" />
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=explicit"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="../static/assessment.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-</head>
-<body>
-<div class="container">
-    <div class="row">
-         <div class="col s12 col m8 push-m2  col l6 push-l3">
-             <div class="card-panel white z-depth-5">
-                 <img id ="user-img" src="../static/recaptcha.png" alt="reCAPTCHA logo">
-                 <h3>Checkbox Key: Demo</h3>
-                  <div class="row">
-                    <form class="col s12" id="recaptcha_form">
-                      <div class="row">
-                        <div class="input-field col s12">
-                          <input id="firstname" type="text" class="validate" length="32" required>
-                          <label for="firstname">First name</label>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="input-field col s12">
-                          <input id="lastname" type="text" class="validate" length="32" required>
-                          <label for="lastname">Last name</label>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="input-field col s12">
-                          <input id="email-id" type="text" class="validate" length="100" required>
-                          <label for="email-id">Email</label>
-                        </div>
-                        </div>
-                      <div class="row">
-                        <div class="input-field col s12">
-                          <input id="password" type="password" class="validate" length="32" required>
-                          <label for="password">Password</label>
-                        </div>
-                      </div>
-                      <div class="row">
-                          <div class="col s12">
-                              <div id="recaptcha_render_div" data-action="signup" data-sitekey="{{context.checkbox_site_key}}"></div>
-                          </div>
-                      </div>
-                      <div class="row">
-                        <div class="col s12">
-                          <button id="submitBtn" class="btn waves-effect waves-light" name="action" type="submit" onclick="onloadCallback(event)">Sign up
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <a href="/">Already have an account?</a>
-             </div>
-         </div>
-    </div>
-    <div class="row">
-        <div class="col s12 col m8 push-m2  col l6 push-l3">
-             <div class="card-panel white z-depth-5">
-                 <div class="row">
-                    <div class="input-field col s12">
-                        <label for="scoreButton">reCAPTCHA score</label>
-                        <output class="waves-effect waves-light" id="scoreButton"></output>
-                    </div>
-                 </div>
-             </div>
-        </div>
-    </div>
-</div>
-</body>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- TODO: favicon -->
+    <title>Sign up: reCAPTCHA Demo</title>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <link href="../static/styles/global.css" rel="stylesheet" />
+    <script type="module" src="../static/scripts/component.js"></script>
+    <script type="text/javascript" src="../static/scripts/global.js"></script>
+    <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
+    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-2 -->
+    <script
+      async
+      defer
+      src="https://www.google.com/recaptcha/enterprise.js?onload=renderCheckbox&render=explicit"
+    ></script>
+    <script type="text/javascript">
+      function renderCheckbox() {
+        grecaptcha.enterprise.render("customizable-checkbox-element-id", {
+          action: "sign_up",
+          callback: handleResponse,
+          sitekey: "{{context.checkbox_site_key}}",
+        });
+      }
+      async function handleResponse(token) {
+        console.log("handleResponse", token);
+        // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+        const score = await createAssessment({
+          action: "sign_up",
+          sitekey: "{{context.checkbox_site_key}}",
+          token,
+        });
+        useAssessment(score);
+      }
+    </script>
+    <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
+  </head>
+  <body>
+    <recaptcha-demo step="signup">
+      <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
+      <div class="g-recaptcha" id="customizable-checkbox-element-id"></div>
+      <button type="submit">Sign up</button>
+      <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
+    </recaptcha-demo>
+  </body>
 </html>

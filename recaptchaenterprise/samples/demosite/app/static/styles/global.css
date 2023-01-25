@@ -1,0 +1,16 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  min-height: 100vh;
+  overscroll-behavior: none;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+recaptcha-demo:not(:defined) > * {
+  display: none;
+}
