@@ -147,6 +147,7 @@ assign_issues_by:
   - 'api: kms'
   - 'api: cloudkms'
   - 'api: secretmanager'
+  - 'api: privateca'
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
