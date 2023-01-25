@@ -15,12 +15,13 @@
 import os
 import uuid
 
-from google.api_core.exceptions import NotFound
+import backoff
+from google.api_core.exceptions import (InternalServerError, NotFound,
+                                        ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
 import create_cluster
-
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -49,6 +50,7 @@ def teardown():
         print("Cluster already deleted")
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_cluster_create(capsys):
     # Wrapper function for client library function
     create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
