@@ -22,7 +22,6 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_id = "90484cfdedb024f6"
 file_path = "resources/invoice.pdf"
 mime_type = "application/pdf"
-field_mask = "text,pages.pageNumber"
 
 
 def test_process_documents(capsys):
@@ -32,7 +31,6 @@ def test_process_documents(capsys):
         processor_id=processor_id,
         file_path=file_path,
         mime_type=mime_type,
-        field_mask=field_mask,
     )
     out, _ = capsys.readouterr()
 
