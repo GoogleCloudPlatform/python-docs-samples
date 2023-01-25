@@ -53,7 +53,8 @@
 /functions/**/*                        @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers
-/iam/**/*                              @GoogleCloudPlatform/python-samples-reviewers
+/iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
+/iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /iot/**/*                              @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
 /jobs/**/*                             @GoogleCloudPlatform/python-samples-reviewers
