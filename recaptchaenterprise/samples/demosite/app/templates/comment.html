@@ -19,32 +19,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <!-- TODO: favicon -->
-    <title>Sign up: reCAPTCHA Demo</title>
+    <title>Leave review: reCAPTCHA Demo</title>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-2 -->
+    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-1 -->
     <script
       async
       defer
-      src="https://www.google.com/recaptcha/enterprise.js?onload=renderCheckbox&render=explicit"
+      src="https://www.google.com/recaptcha/enterprise.js"
     ></script>
     <script type="text/javascript">
-      function renderCheckbox() {
-        grecaptcha.enterprise.render("customizable-checkbox-element-id", {
-          action: "sign_up",
-          callback: handleResponse,
-          sitekey: "{{context.checkbox_site_key}}",
-        });
-      }
       async function handleResponse(token) {
         console.log("handleResponse", token);
         // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
         const score = await createAssessment({
-          action: "sign_up",
+          action: "send_comment",
           sitekey: "{{context.checkbox_site_key}}",
           token,
         });
@@ -54,10 +47,15 @@
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
   </head>
   <body>
-    <recaptcha-demo step="signup">
+    <recaptcha-demo step="comment">
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
-      <div class="g-recaptcha" id="customizable-checkbox-element-id"></div>
-      <button type="submit">Sign up</button>
+      <div
+        class="g-recaptcha"
+        data-action="send_comment"
+        data-callback="handleResponse"
+        data-sitekey="{{context.checkbox_site_key}}"
+      ></div>
+      <button type="submit">Send comment</button>
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
     </recaptcha-demo>
   </body>
