@@ -1,5 +1,5 @@
-google-cloud-dlp==3.11.0
+google-cloud-dlp==3.11.1
 google-cloud-storage==2.7.0
-google-cloud-pubsub==2.13.12
-google-cloud-datastore==2.13.0
+google-cloud-pubsub==2.14.0
+google-cloud-datastore==2.13.2
 google-cloud-bigquery==3.4.2
