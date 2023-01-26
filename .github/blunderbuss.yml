@@ -79,6 +79,10 @@ assign_issues_by:
   to:
   - noerog
 - labels:
+  - 'api: iam'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: iot'
   - 'api: cloudiot'
   to:
@@ -143,6 +147,7 @@ assign_issues_by:
   - 'api: kms'
   - 'api: cloudkms'
   - 'api: secretmanager'
+  - 'api: privateca'
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
