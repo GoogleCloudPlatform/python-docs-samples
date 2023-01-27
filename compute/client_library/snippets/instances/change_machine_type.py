@@ -78,15 +78,14 @@ def change_machine_type(
     project_id: str, zone: str, instance_name: str, new_machine_type: str
 ) -> NoReturn:
     """
-    Changes the machine type of compute instance. The instance needs to be in `TERMINATED` state for this
-    to be successful.
+    Changes the machine type of a VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
         zone: name of the zone your instance belongs to.
-        instance_name: name of the instance your want to modify.
-        new_machine_type: the new machine type you want to use for the compute instance.
-            In example: `e2-standard-8`, `e2-custom-4-2048` or `m1-ultramem-40`
+        instance_name: name of the VM you want to modify.
+        new_machine_type: the new machine type you want to use for the VM.
+            For example: `e2-standard-8`, `e2-custom-4-2048` or `m1-ultramem-40`
             More about machine types: https://cloud.google.com/compute/docs/machine-resource
     """
     client = compute_v1.InstancesClient()
