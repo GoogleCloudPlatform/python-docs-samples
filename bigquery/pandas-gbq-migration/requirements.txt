@@ -6,4 +6,4 @@ pandas-gbq==0.16.0; python_version > '3.6'
 # pandas-gbq==0.14.1 is the latest compatible version for Python 3.6
 pandas-gbq==0.14.1; python_version < '3.7'
 grpcio==1.47.0
-pyarrow==6.0.1
+pyarrow==10.0.1
