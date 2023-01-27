@@ -82,9 +82,13 @@ def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> NoReturn:
     also resize the file system so that the operating system can access the additional space.
 
     Args:
-        project_id:
-        disk_link:
-        new_size_gb:
+        project_id: project ID or project number of the Cloud project you want to use.
+        disk_link: a link to the disk you want to resize.
+            This value uses the following format:
+                * https://www.googleapis.com/compute/v1/projects/{project_name}/zones/{zone}/disks/{disk_name}
+                * projects/{project_name}/zones/{zone}/disks/{disk_name}
+                * projects/{project_name}/regions/{region}/disks/{disk_name}
+        new_size_gb: the new size you want to set for the disk in gigabytes.
     """
     search_results = re.search(
         r"/projects/[\w_-]+/(?P<area_type>zones|regions)/"
@@ -112,8 +116,6 @@ def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> NoReturn:
 
     operation = disk_client.resize(request)
     wait_for_extended_operation(operation, "disk resize")
-
-    return
 
 
 # [END compute_disk_resize]

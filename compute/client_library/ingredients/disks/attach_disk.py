@@ -56,6 +56,4 @@ def attach_disk(project_id: str, zone: str, instance_name: str, disk_link: str, 
     operation = instances_client.attach_disk(request)
 
     wait_for_extended_operation(operation, "disk attachement")
-
-    return
 # </INGREDIENT>

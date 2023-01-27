@@ -115,8 +115,6 @@ def attach_disk(
 
     wait_for_extended_operation(operation, "disk attachement")
 
-    return
-
 
 # [END compute_disk_attach]
 # [END compute_regional_disk_attach]

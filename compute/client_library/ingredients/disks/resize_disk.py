@@ -29,31 +29,33 @@ def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> NoReturn:
     also resize the file system so that the operating system can access the additional space.
 
     Args:
-        project_id:
-        disk_link:
-        new_size_gb:
+        project_id: project ID or project number of the Cloud project you want to use.
+        disk_link: a link to the disk you want to resize.
+            This value uses the following format:
+                * https://www.googleapis.com/compute/v1/projects/{project_name}/zones/{zone}/disks/{disk_name}
+                * projects/{project_name}/zones/{zone}/disks/{disk_name}
+                * projects/{project_name}/regions/{region}/disks/{disk_name}
+        new_size_gb: the new size you want to set for the disk in gigabytes.
     """
     search_results = re.search(r"/projects/[\w_-]+/(?P<area_type>zones|regions)/"
                                r"(?P<area_name>[\w_-]+)/disks/(?P<disk_name>[\w_-]+)", disk_link)
 
-    if search_results['area_type'] == 'regions':
+    if search_results["area_type"] == "regions":
         disk_client = compute_v1.RegionDisksClient()
         request = compute_v1.ResizeRegionDiskRequest()
-        request.region = search_results['area_name']
+        request.region = search_results["area_name"]
         request.region_disks_resize_request_resource = compute_v1.RegionDisksResizeRequest()
         request.region_disks_resize_request_resource.size_gb = new_size_gb
     else:
         disk_client = compute_v1.DisksClient()
         request = compute_v1.ResizeDiskRequest()
-        request.zone = search_results['area_name']
+        request.zone = search_results["area_name"]
         request.disks_resize_request_resource = compute_v1.DisksResizeRequest()
         request.disks_resize_request_resource.size_gb = new_size_gb
 
-    request.disk = search_results['disk_name']
+    request.disk = search_results["disk_name"]
     request.project = project_id
 
     operation = disk_client.resize(request)
     wait_for_extended_operation(operation, "disk resize")
-
-    return
 # </INGREDIENT>
