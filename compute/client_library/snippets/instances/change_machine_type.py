@@ -78,7 +78,7 @@ def change_machine_type(
     project_id: str, zone: str, instance_name: str, new_machine_type: str
 ) -> NoReturn:
     """
-    Changes the machine type of a VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
+    Changes the machine type of VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
