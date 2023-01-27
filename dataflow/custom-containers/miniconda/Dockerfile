@@ -14,7 +14,7 @@
 
 # -- Builder stage
 # https://docs.docker.com/develop/develop-images/multistage-build/
-FROM continuumio/miniconda3:4.10.3-alpine AS builder
+FROM continuumio/miniconda3:22.11.1-alpine AS builder
 
 # Create a virtual environment and make it standalone with conda-pack.
 # https://conda.github.io/conda-pack
