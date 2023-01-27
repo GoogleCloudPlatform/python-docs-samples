@@ -79,6 +79,10 @@ assign_issues_by:
   to:
   - noerog
 - labels:
+  - 'api: iam'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: iot'
   - 'api: cloudiot'
   to:
@@ -114,6 +118,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: securitycenter'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: spanner'
   to:
   - GoogleCloudPlatform/api-spanner-python
@@ -143,6 +151,7 @@ assign_issues_by:
   - 'api: kms'
   - 'api: cloudkms'
   - 'api: secretmanager'
+  - 'api: privateca'
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
