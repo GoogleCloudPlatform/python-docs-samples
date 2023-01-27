@@ -26,7 +26,7 @@ from apache_beam.transforms.window import FixedWindows
 from google.cloud import logging_v2
 
 
-# TODO: Placeholder for inspection and de-identification configurations
+# TODO: Place inspection and de-identification configurations
 
 
 class PayloadAsJson(DoFn):
