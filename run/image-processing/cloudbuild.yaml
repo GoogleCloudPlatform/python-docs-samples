@@ -32,5 +32,6 @@ steps:
 substitutions:
   _AR_REPO_URL: us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy
   _DEPLOY_REGION: us-central1
+  _SERVICE_NAME: image-proc-${BUILD_ID}
 options:
   dynamic_substitutions: true
