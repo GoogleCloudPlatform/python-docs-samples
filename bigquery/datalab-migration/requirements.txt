@@ -5,4 +5,4 @@ google-cloud-bigquery[pandas,pyarrow]==2.34.4
 google-cloud-bigquery-storage==2.13.2
 datalab==1.2.1
 ipython==8.0.1
-pyarrow==11.0.0
+pyarrow==7.0.0
