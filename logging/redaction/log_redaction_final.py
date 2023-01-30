@@ -46,7 +46,9 @@ REDACTION_CFG = {
                     }
                 }
             }
-]}}   
+        ]
+    }
+}
 
 
 class PayloadAsJson(DoFn):
@@ -106,7 +108,8 @@ class LogRedaction(DoFn):
             'table': {
                 'headers': [{'name': 'textPayload'}],
                 'rows': map(self._log_to_row, logs)
-        }}
+            }
+        }
 
         response = self.dlp_client.deidentify_content(
             request={
@@ -134,7 +137,7 @@ class IngestLogs(DoFn):
     def __init__(self, destination_log_name):
         self.destination_log_name = destination_log_name
         self.logger = None
-    
+
     def _replace_log_name(self, entry):
         # update log name in the entry with destination log
         entry['logName'] = self.logger.name
@@ -162,9 +165,9 @@ class IngestLogs(DoFn):
 
 
 def run(pubsub_subscription: str,
-                destination_log_name: str,
-                window_size: float,
-                pipeline_args: List[str]=None) -> None:
+        destination_log_name: str,
+        window_size: float,
+        pipeline_args: List[str] = None) -> None:
     '''Runs Dataflow pipeline'''
 
     pipeline_options = PipelineOptions(
