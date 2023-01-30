@@ -7,7 +7,7 @@ click-plugins==1.1.1
 cligj==0.7.2
 dataclasses==0.8; python_version < '3.7'
 db-dtypes==1.0.5
-Fiona==1.8.22
+Fiona==1.9.0
 geojson==3.0.0
 geopandas===0.10.2; python_version == '3.7'
 geopandas==0.12.2; python_version >= '3.8'
