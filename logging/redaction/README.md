@@ -5,7 +5,7 @@
 > Cloud Shell button now opens this README. It will open the tutorial _AFTER_ its official launch.
 > Tests to validate the code samples will be added.
 
-This section contains a code that is used in the "Redact confidential information in logs" tutorial.
+This section contains code that is used in the "Redact confidential information in logs" tutorial.
 You can open the tutorial in Cloud Shell:
 
 [![Open in Cloud Shell][shell_img]][shell_link]
