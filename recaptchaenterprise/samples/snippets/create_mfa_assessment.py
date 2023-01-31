@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START recaptcha_enterprise_mfa_assessment]
+
 from google.cloud import recaptchaenterprise_v1
 from google.cloud.recaptchaenterprise_v1 import Assessment
 
@@ -19,26 +21,20 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 def create_mfa_assessment(
     project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str, hashed_account_id: str,
         email: str, phone_number: str
-) -> str:
-    """  MFA contains a series of workflow steps to be completed.
-          1. Trigger the usual recaptcha challenge in the UI and get the token. In addition to the token,
-          supply the hashedAccountId, email and/or phone number of the user.
-          2. Based on the recommended action, choose if you should trigger the MFA challenge.
-          3. If you decide to trigger MFA, send the requestToken back to the UI.
-          4. In the UI, call "grecaptcha.enterprise.challengeAccount" and pass the sitekey, request token,
-          and container id to render the challenge.
-          5. The result from this promise is sent to another call "verificationHandle.verifyAccount(pin)"
-          This call verifies if the pin has been entered correct.
-          6. The result from this call is sent to the backend to create a MFA assessment again.
-          The result of this assessment will tell if the MFA challenge has been successful.
+) -> None:
+    """  Creates an assessment to obtain Multi-Factor Authentication result.
+         If the result is unspecified, sends the request token to the caller to initiate MFA challenge.
     Args:
         project_id: GCloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
         token: The token obtained from the client on passing the recaptchaSiteKey.
-        recaptcha_action: Action name corresponding to the token.
-        hashed_account_id: one-way hash of the user id. HMAC SHA 256 + salt
-        email: email id of the user (to trigger email based MFA)
-        phone_number: contact number of the user (to trigger phone based MFA)
+               To get the token, integrate the recaptchaSiteKey with frontend. See,
+               https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#frontend_integration_score
+        recaptcha_action: The action name corresponding to the token.
+        hashed_account_id: Create hashedAccountId from user identifier.
+                           It's a one-way hash of the user identifier: HMAC SHA 256 + salt
+        email: Email id of the user to trigger the MFA challenge.
+        phone_number: Phone number of the user to trigger the MFA challenge.
     """
 
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
@@ -49,6 +45,7 @@ def create_mfa_assessment(
     event.token = token
     event.hashed_account_id = hashed_account_id
 
+    # Set the email address and the phone number to trigger/ verify the MFA challenge.
     endpoint_verification_info = recaptchaenterprise_v1.EndpointVerificationInfo()
     endpoint_verification_info.email_address = email
     endpoint_verification_info.phone_number = phone_number
@@ -67,15 +64,20 @@ def create_mfa_assessment(
     request.assessment = assessment
     request.parent = project_name
 
+    # Check integrity of the response.
     response = client.create_assessment(request)
     if not verify_response_integrity(response, recaptcha_action):
-        return ""
+        raise Exception("Failed to verify token integrity.")
 
     result = response.account_verification.latest_verification_result
+    # If the result is unspecified, send the request token to trigger MFA in the client.
+    # You can choose to send both the email and phone number's request token.
     if result == recaptchaenterprise_v1.types.AccountVerificationInfo.Result.RESULT_UNSPECIFIED:
-        # send request token back
-        return response.account_verification.endpoints[0].request_token
+        # Send the request token for assessment. The token is valid for 15 minutes.
+        print("Result unspecified. Triggering MFA challenge.")
+        # print(response.account_verification.endpoints[0].request_token)
 
+    # If the result is not unspecified, return the result.
     print(f"MFA result: {result}")
 
 
@@ -96,3 +98,4 @@ def verify_response_integrity(response: Assessment, recaptcha_action: str) -> bo
             + "not match the action you are expecting to score"
         )
         return False
+# [END recaptcha_enterprise_mfa_assessment]
