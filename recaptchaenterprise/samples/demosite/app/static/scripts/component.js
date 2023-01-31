@@ -27,7 +27,7 @@ import { classMap } from "https://unpkg.com/lit@2.4.1/directives/class-map.js?mo
 import "https://unpkg.com/@material/mwc-icon-button@0.27.0/mwc-icon-button.js?module";
 import "https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module";
 
-const STEPS = ["home", /* "game", */ "signup", "login", "store", "comment"];
+const STEPS = ["home", "signup", "login", "store", "comment", "game"];
 
 const ACTIONS = {
   comment: "send_comment",
@@ -35,6 +35,7 @@ const ACTIONS = {
   login: "log_in",
   signup: "sign_up",
   store: "check_out",
+  game: undefined,
 };
 
 const FORMS = {
@@ -43,6 +44,7 @@ const FORMS = {
   login: "FORM_LOGIN",
   signup: "FORM_SIGNUP",
   store: "FORM_STORE",
+  game: undefined,
 };
 
 const GUIDES = {
@@ -51,6 +53,16 @@ const GUIDES = {
   login: "GUIDE_LOGIN",
   signup: "GUIDE_SIGNUP",
   store: "GUIDE_STORE",
+  game: undefined,
+};
+
+const LABELS = {
+  comment: "Send comment",
+  home: "View examples",
+  login: "Log in",
+  signup: "Sign up",
+  store: "Buy now",
+  game: undefined,
 };
 
 const RESULTS = {
@@ -59,6 +71,7 @@ const RESULTS = {
   login: "RESULT_LOGIN",
   signup: "RESULT_SIGNUP",
   store: "RESULT_STORE",
+  game: undefined,
 };
 
 class RecaptchaDemo extends LitElement {
@@ -533,6 +546,12 @@ class RecaptchaDemo extends LitElement {
         opacity: 0;
         transform: scale(0.75) translateX(-100%);
       }
+      #bar .drawerIcon[disabled],
+      .drawerClosed #bar .drawerIcon[disabled],
+      .drawerOpen #bar .drawerIcon[disabled] {
+        --mdc-theme-text-disabled-on-light: hsl(var(--gray-40));
+        opacity: 0.74;
+      }
       .logo {
         align-items: center;
         display: flex;
@@ -811,14 +830,15 @@ class RecaptchaDemo extends LitElement {
       /* Guide Animation */
       @keyframes scoreBump {
         from {
-          transform: translateX(1) scale(1);
+          transform: scale(1) translate(0, 0);
         }
         to {
-          transform: translateX(1.1) scale(1.1);
+          transform: scale(1.14) translate(-2%, 0);
         }
       }
       #score {
-        animation: var(--full-lapse) ease-out 0s 1 normal both running scoreBump;
+        animation: var(--full-lapse) ease-out 0s 2 alternate both running
+          scoreBump;
         transform-origin: left center;
       }
       .unscored #score {
@@ -828,9 +848,9 @@ class RecaptchaDemo extends LitElement {
         animation-play-state: running;
       }
       #guide .response,
-      .unscored #verdict p,
-      .unscored .scoreExample {
-        transition: opaicty var(--half-lapse) ease-out 0s;
+      #verdict p,
+      .scoreExample {
+        transition: opacity var(--full-lapse) ease-out var(--half-lapse);
       }
       .unscored #guide .response,
       .unscored #verdict p,
@@ -1016,26 +1036,74 @@ class RecaptchaDemo extends LitElement {
         /* Active Round Glow */
         box-shadow: 2px 2px var(--size-xgigantic) 20px hsl(0, 0%, 0%, 12%);
       }
+      /* Game */
+      #game {
+        align-items: center;
+        display: flex;
+        font-size: 4rem;
+        inset: 0 0 0 0;
+        justify-content: center;
+        margin-top: -4rem;
+        position: absolute;
+      }
     `;
   }
 
   static properties = {
+    /* Initial */
     animating: { type: Boolean, state: true, attribute: false },
     drawerOpen: { type: Boolean, state: true, attribute: false },
-    score: { type: String },
     sitemapOpen: { type: Boolean, state: true, attribute: false },
     step: { type: String },
+    /* Result */
+    score: { type: String },
     verdict: { type: String },
   };
 
   constructor() {
     super();
+    /* Initial */
     this.animating = false;
     this.drawerOpen = true;
-    this.score = undefined;
     this.sitemapOpen = false;
-    this.step = "home";
+    this._step = "home";
+    this.step = this._step;
+    /* Result */
+    this._score = undefined;
+    this.score = this._score;
     this.verdict = undefined;
+  }
+
+  /* TODO: better/more reliable way to change button state */
+
+  set score(value) {
+    let oldValue = this._score;
+    this._score = value;
+    this.requestUpdate("score", oldValue);
+    const buttonElement = document.getElementsByTagName("button")[0];
+    if (buttonElement && this._score && this.step !== "comment") {
+      window.setTimeout(() => {
+        buttonElement.innerText = "Go to next demo";
+      }, 100);
+    }
+  }
+
+  get score() {
+    return this._score;
+  }
+
+  set step(value) {
+    let oldValue = this._step;
+    this._step = value;
+    this.requestUpdate("step", oldValue);
+    const buttonElement = document.getElementsByTagName("button")[0];
+    if (buttonElement && !this.score) {
+      buttonElement.innerText = LABELS[this._step];
+    }
+  }
+
+  get step() {
+    return this._step;
   }
 
   toggleDrawer() {
@@ -1046,6 +1114,17 @@ class RecaptchaDemo extends LitElement {
   toggleSiteMap() {
     this.animating = true;
     this.sitemapOpen = !this.sitemapOpen;
+  }
+
+  goToResult() {
+    const resultElement = this.shadowRoot.getElementById("result");
+    const topOffset =
+      Number(resultElement.getBoundingClientRect().top) +
+      Number(resultElement.ownerDocument.defaultView.pageYOffset);
+    window.setTimeout(() => {
+      window.location.hash = "#result";
+      window.scrollTo(0, topOffset);
+    }, 100);
   }
 
   goToNextStep() {
@@ -1071,18 +1150,20 @@ class RecaptchaDemo extends LitElement {
       this.goToNextStep();
       return;
     }
+    this.goToResult();
     // TODO: interrogate slotted button for callback?
   }
 
   get BAR() {
     return html`
-      <div id="bar">
+      <nav aria-label="Main Menu" id="bar">
         <mwc-icon-button
           @click=${this.toggleDrawer}
           aria-controls="drawer"
           aria-expanded="${this.drawerOpen ? "true" : "false"}"
           aria-label="Open the information panel"
           class="drawerIcon"
+          ?disabled=${this.step === "game"}
           icon="menu_open"
         ></mwc-icon-button>
         <div class="logo">
@@ -1102,7 +1183,7 @@ class RecaptchaDemo extends LitElement {
           class="sitemapIcon"
           icon="${this.sitemapOpen ? "close" : "menu"}"
         ></mwc-icon-button>
-      </div>
+      </nav>
     `;
   }
 
@@ -1119,9 +1200,10 @@ class RecaptchaDemo extends LitElement {
 
   get CONTENT() {
     return html`
-      <div id="content">
+      <main id="content">
         <div class="sticky">
           <div class="relative">
+            <!-- bar -->
             ${this.BAR}
             <!-- forms -->
             ${this[FORMS[this.step]]}
@@ -1129,13 +1211,13 @@ class RecaptchaDemo extends LitElement {
             ${this.SITEMAP}
           </div>
         </div>
-      </div>
+      </main>
     `;
   }
 
   get DRAWER() {
     return html`
-      <div id="drawer">
+      <aside id="drawer">
         <mwc-icon-button
           @click=${this.toggleDrawer}
           aria-controls="drawer"
@@ -1144,7 +1226,16 @@ class RecaptchaDemo extends LitElement {
           icon="close"
         ></mwc-icon-button>
         ${this[GUIDES[this.step]]}
-      </div>
+      </aside>
+    `;
+  }
+
+  get EXAMPLE() {
+    return html`
+      <!-- drawer -->
+      ${this.DRAWER}
+      <!-- content -->
+      ${this.CONTENT}
     `;
   }
 
@@ -1153,7 +1244,7 @@ class RecaptchaDemo extends LitElement {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Confident comments</h3></legend>
-          <p>Add reCAPTCHA Enterprise to comment and contact forms to prevent spam.</p>
+          <p>Add reCAPTCHA Enterprise to comment and contact forms to prevent spam. Click the "send comment" button to see the result.</p>
           <div class="fields">
           <label>
             <span>Comment</span>
@@ -1180,7 +1271,7 @@ class RecaptchaDemo extends LitElement {
           and have fun!
         </p>
         <button @click=${this.handleSubmit} class="button" type="button">
-          Continue
+          View examples
         </button>
       </section>
     `;
@@ -1191,7 +1282,10 @@ class RecaptchaDemo extends LitElement {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Locked log in</h3></legend>
-          <p>Add reCAPTCHA Enterprise to log in forms to secure accounts.</p>
+          <p>
+            Add reCAPTCHA Enterprise to log in forms to secure accounts. Click
+            the "log in" button to see the result.
+          </p>
           <div class="fields">
             <label>
               <span>Email</span>
@@ -1215,6 +1309,7 @@ class RecaptchaDemo extends LitElement {
           <legend><h3 class="h3">Secure Sign up</h3></legend>
           <p>
             Add reCAPTCHA Enterprise to sign up forms to verify new accounts.
+            Click the "sign up" button to see the result.
           </p>
           <div class="fields">
             <label>
@@ -1241,7 +1336,10 @@ class RecaptchaDemo extends LitElement {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Safe stores</h3></legend>
-          <p>Add reCAPTCHA to stores and check out wizards to prevent fraud.</p>
+          <p>
+            Add reCAPTCHA to stores and check out wizards to prevent fraud.
+            Click the "buy now" button to see the result.
+          </p>
           <div class="fields">
             <dl class="unstyled cart">
               <div class="item hydrant">
@@ -1288,7 +1386,21 @@ class RecaptchaDemo extends LitElement {
 
   // TODO: move game in
   get GAME() {
-    return html``;
+    return html`
+      <aside id="drawer"></aside>
+      <main id="content">
+        <div class="sticky">
+          <div class="relative">
+            <!-- bar -->
+            ${this.BAR}
+            <!-- game -->
+            <div id="game">Coming soon!</div>
+            <!-- sitemap -->
+            ${this.SITEMAP}
+          </div>
+        </div>
+      </main>
+    `;
   }
 
   get GUIDE_CODE() {
@@ -1325,9 +1437,9 @@ class RecaptchaDemo extends LitElement {
             <p>
               Add reCAPTCHA Enterprise verification on important user
               interactions like posting user comments. Verification can be added
-              to JavaScript events with a few lines of code. With a score-based
-              site key, you can include reCAPTCHA Enterprise throughout your
-              site without requiring users to solve CAPTCHA challenges.
+              to JavaScript events. With a score-based site key, you can include
+              reCAPTCHA Enterprise throughout your site without requiring users
+              to solve CAPTCHA challenges.
             </p>
             <a
               class="documentation"
@@ -1382,10 +1494,9 @@ class RecaptchaDemo extends LitElement {
             <p>
               Add reCAPTCHA Enterprise verification on important user
               interactions like logging into user accounts. Verification can be
-              added to JavaScript events with a few lines of code. With a
-              score-based site key, you can include reCAPTCHA Enterprise
-              throughout your site without requiring users to solve CAPTCHA
-              challenges.
+              added to JavaScript events. With a score-based site key, you can
+              include reCAPTCHA Enterprise throughout your site without
+              requiring users to solve CAPTCHA challenges.
             </p>
             <a
               class="documentation"
@@ -1419,14 +1530,8 @@ class RecaptchaDemo extends LitElement {
         <p>
           The 100+ signals ran on this page when it loaded and has a
           ${(this.score && Number(this.score.slice(0, 3))) * 100 || "???"}%
-          confidence that you're a human.
-        </p>
-        <p>
-          A score of 1.0 indicates that the interaction poses low risk and is
-          very likely legitimate, whereas 0.0 indicates that the interaction
-          poses high risk and might be fraudulent. Based on the score, you can
-          take an appropriate action in the background instead of blocking
-          traffic.
+          confidence that you're a human. Based on the score, you can take an
+          appropriate action in the background instead of blocking traffic.
         </p>
       </div>
     `;
@@ -1442,10 +1547,9 @@ class RecaptchaDemo extends LitElement {
             <p>
               Add reCAPTCHA Enterprise verification on important user
               interactions like signing up for new user accounts. Verification
-              can be added to simple HTML buttons with a few lines of code. With
-              a score-based site key, you can include reCAPTCHA Enterprise
-              throughout your site without requiring users to solve CAPTCHA
-              challenges.
+              can be added to simple HTML buttons. With a score-based site key,
+              you can include reCAPTCHA Enterprise throughout your site without
+              requiring users to solve CAPTCHA challenges.
             </p>
             <a
               class="documentation"
@@ -1471,9 +1575,9 @@ class RecaptchaDemo extends LitElement {
             <p>
               Add reCAPTCHA Enterprise verification on important user
               interactions like making purchases. Verification can be added to
-              JavaScript events with a few lines of code. With a score-based
-              site key, you can include reCAPTCHA Enterprise throughout your
-              site without requiring users to solve CAPTCHA challenges.
+              JavaScript events. With a score-based site key, you can include
+              reCAPTCHA Enterprise throughout your site without requiring users
+              to solve CAPTCHA challenges.
             </p>
             <a
               class="documentation"
@@ -1491,7 +1595,7 @@ class RecaptchaDemo extends LitElement {
 
   get RESULT_COMMENT() {
     return html`
-      <section class="text result">
+      <section id="result" class="text result">
         <h4 class="h1">Result</h4>
         ${this.GUIDE_SCORE}
         <p class="scoreExample">
@@ -1523,7 +1627,7 @@ class RecaptchaDemo extends LitElement {
 
   get RESULT_HOME() {
     return html`
-      <section class="text result">
+      <section id="result" class="text result">
         <h4 class="h1">Result</h4>
         ${this.GUIDE_SCORE}
         <p class="scoreExample">
@@ -1555,7 +1659,7 @@ class RecaptchaDemo extends LitElement {
 
   get RESULT_LOGIN() {
     return html`
-      <section class="text result">
+      <section id="result" class="text result">
         <h4 class="h1">Result</h4>
         ${this.GUIDE_SCORE}
         <p class="scoreExample">
@@ -1587,7 +1691,7 @@ class RecaptchaDemo extends LitElement {
 
   get RESULT_SIGNUP() {
     return html`
-      <section class="text result">
+      <section id="result" class="text result">
         <h4 class="h1">Result</h4>
         ${this.GUIDE_SCORE}
         <p class="scoreExample">For example, require email verification.</p>
@@ -1617,7 +1721,7 @@ class RecaptchaDemo extends LitElement {
 
   get RESULT_STORE() {
     return html`
-      <section class="text result">
+      <section id="result" class="text result">
         <h4 class="h1">Result</h4>
         ${this.GUIDE_SCORE}
         <p class="scoreExample">
@@ -1675,6 +1779,13 @@ class RecaptchaDemo extends LitElement {
   }
 
   render() {
+    let CONTENTS;
+    if (this.step === "game") {
+      CONTENTS = this.GAME;
+    } else {
+      CONTENTS = this.EXAMPLE;
+    }
+
     return html`
       <div
         @animationend=${this.handleAnimation}
@@ -1683,18 +1794,16 @@ class RecaptchaDemo extends LitElement {
         @transitionstart=${this.handleAnimation}
         class="${classMap({
           animating: this.animating,
-          drawerOpen: this.drawerOpen,
-          drawerClosed: !this.drawerOpen,
-          scored: this.scored && this.verdict,
+          drawerOpen: this.step !== "game" && this.drawerOpen,
+          drawerClosed: this.step === "game" || !this.drawerOpen,
+          scored: this.score && this.verdict,
           sitemapOpen: this.sitemapOpen,
           sitemapClosed: !this.sitemapOpen,
-          unscored: !this.scored || !this.verdict,
+          unscored: !this.score || !this.verdict,
         })}"
         id="demo"
       >
-        ${this.DRAWER}
-        <!-- content -->
-        ${this.CONTENT}
+        ${CONTENTS}
       </div>
     `;
   }
