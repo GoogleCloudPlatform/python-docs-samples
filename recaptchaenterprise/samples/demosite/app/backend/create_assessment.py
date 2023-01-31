@@ -1,9 +1,23 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from typing import List
 
 from google.cloud import recaptchaenterprise_v1
 
 
-def get_result(
+def create_assessment(
         project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
 ) -> [float, List[str]]:
     """ Create an assessment to analyze the risk of a UI action.
@@ -39,14 +53,6 @@ def get_result(
     # Check if the expected action was executed.
     if response.token_properties.action != recaptcha_action:
         raise ValueError(f"The action attribute in your reCAPTCHA tag does not match the action you are expecting to score. Please check your action attribute !")
-    else:
-        # Get the risk score and the reason(s)
-        # For more information on interpreting the assessment,
-        # see: https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment
-        for reason in response.risk_analysis.reasons:
-            print(reason)
-        print(
-            "The reCAPTCHA score for this token is: "
-            + str(response.risk_analysis.score)
-        )
+
+    # Return the risk score and the reason(s).
     return response.risk_analysis.score, response.risk_analysis.reasons
