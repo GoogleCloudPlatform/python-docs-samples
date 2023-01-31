@@ -18,34 +18,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- TODO: favicon -->
+    <link rel="icon" href="../static/images/icons/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      href="../static/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+    <link rel="manifest" href="../static/manifest.webmanifest" />
+    <meta name="msapplication-config" content="../static/browserconfig.xml" />
+    <link
+      rel="shortcut icon"
+      sizes="196x196"
+      href="../static/images/icons/favicon-196px.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-120px.png"
+      sizes="120x120"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-152px.png"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-180px.png"
+      sizes="180x180"
+    />
     <title>Sign up: reCAPTCHA Demo</title>
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+    />
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-2 -->
-    <script
-      async
-      defer
-      src="https://www.google.com/recaptcha/enterprise.js?onload=renderCheckbox&render=explicit"
-    ></script>
+    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-      function renderCheckbox() {
-        grecaptcha.enterprise.render("customizable-checkbox-element-id", {
-          action: "sign_up",
-          callback: handleResponse,
-          sitekey: "{{context.checkbox_site_key}}",
-        });
-      }
-      async function handleResponse(token) {
-        console.log("handleResponse", token);
+      async function handleToken(token) {
         // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
         const score = await createAssessment({
           action: "sign_up",
-          sitekey: "{{context.checkbox_site_key}}",
+          sitekey: "{{context.site_key}}",
           token,
         });
         useAssessment(score);
@@ -56,8 +77,15 @@
   <body>
     <recaptcha-demo step="signup">
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
-      <div class="g-recaptcha" id="customizable-checkbox-element-id"></div>
-      <button type="submit">Sign up</button>
+      <button
+        class="g-recaptcha"
+        data-action="sign_up"
+        data-callback="handleToken"
+        data-sitekey="{{context.site_key}}"
+        disabled="disabled"
+      >
+        Sign up
+      </button>
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
     </recaptcha-demo>
   </body>

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO: productionize dependencies; network cascade is too slow
 import {
   LitElement,
   css,
@@ -22,11 +23,56 @@ import {
 //   createRef,
 // } from "https://unpkg.com/lit@2.4.1/directives/ref.js?module";
 // import { asyncReplace } from "https://unpkg.com/lit@2.4.1/directives/async-replace.js?module";
-// import { classMap } from "https://unpkg.com/lit@2.4.1/directives/class-map.js?module";
+import { classMap } from "https://unpkg.com/lit@2.4.1/directives/class-map.js?module";
 import "https://unpkg.com/@material/mwc-icon-button@0.27.0/mwc-icon-button.js?module";
 import "https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module";
 
-const STEPS = ["home", /* "game", */ "signup", "login", "store", "comment"];
+const STEPS = ["home", "signup", "login", "store", "comment", "game"];
+
+const ACTIONS = {
+  comment: "send_comment",
+  home: "home",
+  login: "log_in",
+  signup: "sign_up",
+  store: "check_out",
+  game: undefined,
+};
+
+const FORMS = {
+  comment: "FORM_COMMENT",
+  home: "FORM_HOME",
+  login: "FORM_LOGIN",
+  signup: "FORM_SIGNUP",
+  store: "FORM_STORE",
+  game: undefined,
+};
+
+const GUIDES = {
+  comment: "GUIDE_COMMENT",
+  home: "GUIDE_HOME",
+  login: "GUIDE_LOGIN",
+  signup: "GUIDE_SIGNUP",
+  store: "GUIDE_STORE",
+  game: undefined,
+};
+
+const LABELS = {
+  comment: "Send comment",
+  home: "View examples",
+  login: "Log in",
+  signup: "Sign up",
+  store: "Buy now",
+  game: undefined,
+};
+
+const RESULTS = {
+  comment: "RESULT_COMMENT",
+  home: "RESULT_HOME",
+  login: "RESULT_LOGIN",
+  signup: "RESULT_SIGNUP",
+  store: "RESULT_STORE",
+  game: undefined,
+};
 
 class RecaptchaDemo extends LitElement {
   static get styles() {
@@ -43,77 +89,20 @@ class RecaptchaDemo extends LitElement {
         margin: 0;
         padding: 0;
       }
-      fieldset {
-        border: 0;
-        display: block;
-        margin: 0;
-        padding: 0;
-      }
-      legend {
-        display: block;
-        font: inherit;
-        margin: 0;
-        padding: 0;
-      }
-      label {
-        display: block;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-        line-height: 1;
-      }
-      label:not(:last-child) {
-        margin-bottom: var(--medium-space);
-      }
-      label > span {
-        display: block;
-        margin-bottom: var(--small-space);
-      }
-      input,
-      textarea {
-        background: hsl(var(--gray-60));
-        border: 0 solid transparent;
-        border-radius: 2px;
-        box-sizing: border-box;
-        color: inherit;
-        display: block;
-        font-family: sans-serif;
-        line-height: 1;
-        margin: 0;
-        padding: var(--small-space);
-        width: 100%;
-      }
-      a {
-        color: hsl(var(--blue-60));
-        display: block;
-        font-weight: bold;
-        text-decoration: none;
-      }
-      a:focus,
-      a:hover,
-      a:active {
-        text-decoration: underline;
-      }
       p,
       h1,
       h2,
-      h3 {
+      h3,
+      h4,
+      h5,
+      legend,
+      pre {
         font: inherit;
         margin: 0;
         padding: 0;
       }
-      /* Demo */
-      :host {
-        display: block;
-      }
-      :host,
-      .demo {
-        font-family: sans-serif;
-        height: 100%;
-        min-height: 100vh;
-        max-width: 100%;
-        width: 100%;
-      }
-      .demo {
+      /* Variables */
+      #demo {
         /* Blues */
         --blue-10: 217.2, 100%, 88.6%;
         --blue-20: 217.4, 100%, 75.5%;
@@ -148,42 +137,127 @@ class RecaptchaDemo extends LitElement {
         --green-50: 172.7, 60.2%, 37.5%;
         /* Custom Colors */
         --drawer-ditch: 227, 63%, 14%;
-        --drawer-glow: hsl(227, 63%, 14%, 18%);
+        --drawer-glow: hsl(227, 63%, 14%, 15%);
         --drawer-highlight: 240, 52%, 11%;
         --drawer-lowlight: 240, 52%, 1%;
         --drawer-surface: 240, 52%, 6%;
-        /*
-        --drawer-lowlight: 245, 100%, 50%;
-        --drawer-highlight: 0, 100%, 50%;
-        */
         --content-glow: 235, 69%, 18%;
         --content-surface: 227, 63%, 9%;
+        --highlight-text: white;
+        --lowlight-text: 218, 27%, 68%;
+        --link-normal: 221, 92%, 71%;
+        --link-focus: 221, 92%, 100%;
         /* Sizes */
-        --castle-bottom: 25vh;
-        --drawer-width: 34vw;
-        --example-width: 66vw;
+        --bar-height: 4.6rem;
+        --button-corners: 22px;
+        --castle-bottom: 24vh;
+        --drawer-width: 30vw;
+        --example-width: 70vw;
         --land-bottom: 10vh;
-        --large-space: 2rem;
-        --medium-space: 1.5rem;
-        --small-space: 0.75rem;
-        --xlarge-space: 2.25rem;
-        --xxlarge-space: 3rem;
+        --line-length: 36em;
+        --line-short: 1.38em;
+        --line-tall: 1.68em;
+        --size-gigantic: 5.2rem;
+        --size-huge: 2rem;
+        --size-jumbo: 3rem;
+        --size-large-em: 1.26em;
+        --size-large: 1.26rem;
+        --size-micro: 0.28rem;
+        --size-mini: 0.6rem;
+        --size-normal: 1rem;
+        --size-small: 0.8rem;
+        --size-xgigantic: 6.26rem;
+        --size-xhuge: 2.6rem;
+        --size-xlarge: 1.66rem;
         /* Timings */
         --drawer-lapse: 100ms;
         --full-lapse: 300ms;
         --half-lapse: 150ms;
+        --quick-lapse: 50ms;
       }
-      .demo {
-        color: white;
+      /* Links */
+      a {
+        color: hsl(var(--link-normal));
+        text-decoration: none;
+        vertical-align: bottom;
+      }
+      #guide a {
+        font-weight: normal;
+      }
+      a span {
+        display: inline;
+        white-space: break-space;
+      }
+      a mwc-icon {
+        --mdc-icon-size: var(--size-large-em);
+        bottom: -4px; /* TODO: magic numbers */
+        color: hsl(var(--link-focus));
+        position: relative;
+      }
+      a,
+      a span,
+      a mwc-icon {
+        transition: color var(--half-lapse) ease-out 0s,
+          text-decoration var(--half-lapse) ease-out 0s,
+          transform var(--half-lapse) ease-out 0s;
+      }
+      a span + mwc-icon,
+      a mwc-icon + span {
+        margin-left: var(--size-micro);
+      }
+      a:focus mwc-icon,
+      a:hover mwc-icon,
+      a:active mwc-icon {
+        transform: scale(1.1);
+      }
+      a:focus,
+      a:hover,
+      a:active {
+        color: hsl(var(--link-focus));
+      }
+      a:focus mwc-icon,
+      a:hover mwc-icon,
+      a:active mwc-con {
+        color: hsl(var(--link-normal));
+      }
+      #sitemap a:focus,
+      #sitemap a:hover,
+      #sitemap a:active {
+        color: var(--highlight-text);
+      }
+      #guide a:focus span,
+      #guide a:hover span,
+      #guide a:active span,
+      #sitemap a:focus,
+      #sitemap a:hover,
+      #sitemap a:active {
+        text-decoration: hsl(var(--link-focus)) dotted underline 1px;
+        text-underline-offset: 2px;
+      }
+      /* Demo */
+      :host {
+        display: block;
+      }
+      :host,
+      #demo {
+        font-family: sans-serif;
+        font-size: var(--size-normal);
+        height: 100%;
+        min-height: 100vh;
+        max-width: 100%;
+        width: 100%;
+      }
+      #demo {
+        color: var(--highlight-text);
         display: grid;
         grid-template-columns: var(--drawer-width) var(--example-width);
         grid-template-rows: 1fr;
-        transition: grid-template-columns var(--drawer-lapse) ease-out;
+        transition: grid-template-columns var(--drawer-lapse) ease-out 0s;
       }
-      .demo.drawer-closed {
+      #demo.drawerClosed {
         grid-template-columns: 0vw 100vw;
       }
-      .drawer {
+      #drawer {
         background: linear-gradient(
               to left,
               hsl(var(--drawer-ditch)) 1px,
@@ -192,62 +266,62 @@ class RecaptchaDemo extends LitElement {
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           radial-gradient(
               ellipse,
-              hsl(var(--drawer-lowlight), 75%) -10%,
+              hsl(var(--drawer-lowlight), 70%) -10%,
               transparent 69%
             )
             calc((100vw - (var(--drawer-width) / 2)) * -1) -50vh / 100vw 200vh no-repeat
             fixed,
           radial-gradient(
               ellipse,
-              hsl(var(--drawer-highlight), 75%) -10%,
+              hsl(var(--drawer-highlight), 70%) -10%,
               transparent 69%
             )
             calc(var(--drawer-width) / 2) -50vh / 100vw 200vh no-repeat fixed,
           linear-gradient(
               to right,
-              hsl(var(--drawer-lowlight), 25%) 0,
+              hsl(var(--drawer-lowlight), 20%) 0,
               transparent 50%
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to bottom,
-              hsl(var(--drawer-lowlight), 35%) 0,
+              hsl(var(--drawer-lowlight), 30%) 0,
               transparent 50%
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to left,
-              hsl(var(--drawer-highlight), 15%) 0,
+              hsl(var(--drawer-highlight), 10%) 0,
               transparent 25%
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to top,
-              hsl(var(--drawer-highlight), 15%) 0,
+              hsl(var(--drawer-highlight), 10%) 0,
               transparent 50%
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to right,
-              hsl(var(--drawer-lowlight), 85%) 2px,
+              hsl(var(--drawer-lowlight), 80%) 2px,
               transparent 2px
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to bottom,
-              hsl(var(--drawer-lowlight), 85%) 2px,
+              hsl(var(--drawer-lowlight), 80%) 2px,
               transparent 2px
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to left,
-              hsl(var(--drawer-highlight), 85%) 1px,
+              hsl(var(--drawer-highlight), 80%) 1px,
               transparent 1px
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
           linear-gradient(
               to top,
-              hsl(var(--drawer-highlight), 85%) 1px,
+              hsl(var(--drawer-highlight), 80%) 1px,
               transparent 1px
             )
             0 0 / var(--drawer-width) 100vh no-repeat fixed,
@@ -256,51 +330,58 @@ class RecaptchaDemo extends LitElement {
         position: relative;
         z-index: 25;
       }
-      .drawer > .drawer-close-icon {
-        inset: -2px 0 auto auto;
+      #drawer > .drawerCloseIcon {
+        inset: auto 0 auto auto;
         position: absolute;
-        transition: opacity var(--half-lapse) ease-out;
+        transition: opacity var(--half-lapse) ease-out 0s;
         z-index: 4;
       }
-      .drawer-closed .drawer > .drawer-close-icon {
+      .drawerClosed #drawer > .drawerCloseIcon {
         opacity: 0;
         transition-delay: 0;
       }
-      .drawer-open .drawer > .drawer-close-icon {
+      .drawerOpen #drawer > .drawerCloseIcon {
         opacity: 1;
         transition-delay: var(--half-lapse);
       }
       /* Content */
-      .content {
+      #content {
         /* This transform is required due to paint issues with animated elements in drawer
            However, using this also prevents background-attachment: fixed from functioning
            Therefore, background has to be moved to internal wrapper .sticky */
+        font-family: monospace;
         /* transform: translateZ(0); */
       }
-      .content {
-        font-family: monospace;
-      }
-      .content .sticky-example {
+      #content .sticky {
         /* Due to CSS grid and sticky restrictions, have to add internal wrapper
            to get sticky behavior, centering in viewport behavior, and fixed background */
+        position: sticky;
+        top: 0;
+      }
+      .animating #content .sticky {
+        overflow-y: hidden;
+      }
+      #content .relative {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
         justify-content: safe center;
-        min-height: 100vh;
-        position: sticky;
-        top: 0;
+        position: relative;
       }
-      .drawer-open .content .sticky-example {
+      #content .sticky,
+      #content .relative {
+        min-height: 100vh;
+      }
+      .drawerOpen #content .sticky {
         --offset: calc(50% + (var(--drawer-width) / 2));
         background-position:
           /* castle */ var(--offset)
             var(--content-bottom),
           /* land */ var(--offset) var(--land-content-bottom),
           /* pink */ var(--offset) 75vh, /* purple */ var(--offset) 50vh,
-          /* blue */ var(--offset) -12vh;
+          /* blue */ var(--offset) var(--bar-height);
       }
-      .content .sticky-example {
+      #content .sticky {
         --content-bottom: calc(100vh - var(--castle-bottom));
         --land-content-bottom: calc(100vh - var(--land-bottom));
         background: 
@@ -312,39 +393,34 @@ class RecaptchaDemo extends LitElement {
           /* pink */
             radial-gradient(
               ellipse at bottom,
-              hsl(var(--pink-40), 69%) 0,
+              hsl(var(--pink-40), 64%) 0,
               transparent 69%
             )
             center 75vh / 100vw 100vh no-repeat fixed,
           /* purple */
             radial-gradient(
               ellipse at bottom,
-              hsl(var(--purple-30), 69%) 0,
+              hsl(var(--purple-30), 64%) 0,
               transparent 69%
             )
             center 50vh / 200vw 100vh no-repeat fixed,
           /* blue */
             radial-gradient(
               circle,
-              hsl(var(--content-glow), 85%) 0,
+              hsl(var(--content-glow), 80%) 0,
               transparent 44%
             )
-            center -12vh / 100vw 100vh no-repeat fixed,
+            center var(--bar-height) / 100vw 100vh no-repeat fixed,
           /* color */ hsl(var(--content-surface));
-        transition: background-position var(--drawer-lapse) ease-out;
-      }
-      .content .h1,
-      .content .h2 {
-        font-family: "Press Start 2P", monospace;
-        line-height: 1.25em;
+        transition: background-position var(--drawer-lapse) ease-out 0s;
       }
       /* Sitemap */
-      .sitemap {
+      #sitemap {
         align-items: center;
         background: linear-gradient(
             345deg,
-            hsl(0, 0%, 0%, 25%) 5%,
-            hsl(var(--content-surface)) 60%
+            hsl(0, 0%, 0%, 15%) 5%,
+            hsl(var(--content-surface)) 58%
           ),
           hsl(var(--content-surface));
         box-sizing: border-box;
@@ -352,292 +428,347 @@ class RecaptchaDemo extends LitElement {
         flex-direction: column;
         font-family: monospace;
         justify-content: center;
-        inset: 4.5rem 0 0 0;
-        padding: var(--large-space);
-        position: fixed;
-        transition: transform var(--full-lapse) ease-out,
-          opacity var(--drawer-lapse) var(--half-lapse) ease-in,
-          padding-left var(--drawer-lapse) ease-out;
+        inset: var(--bar-height) 0 0 0;
+        margin-left: 0;
+        padding: var(--size-huge);
+        position: absolute;
+        transition: transform var(--full-lapse) ease-out 0s,
+          padding-left var(--drawer-lapse) ease-out 0s,
+          margin-left var(--drawer-lapse) ease-out 0s;
         z-index: 10;
       }
-      .drawer-open .sitemap {
-        padding-left: calc(var(--drawer-width) + var(--large-space));
+      #sitemap .fade {
+        transition: opacity var(--full-lapse) ease-in 0s;
       }
-      .sitemap-open {
-        opacity: 1;
+      .sitemapOpen #sitemap {
         transform: translateY(0);
-        transition-delay: 0, 0;
       }
-      .sitemap-closed {
-        opacity: 0;
+      .sitemapOpen #sitemap .fade {
+        opacity: 1;
+        transition-delay: var(--half-lapse);
+      }
+      .sitemapClosed #sitemap {
         transform: translateY(100%);
-        transition-delay: 0, var(--half-lapse);
       }
-      .sitemap-close-icon {
-        position: absolute;
-        /* TODO: icon position, nested bar? */
-        inset: 0.5rem 1rem auto auto;
+      .sitemapClosed #sitemap .fade {
+        opacity: 0;
       }
-      .sitemap .links,
-      .sitemap .h1,
-      .sitemap p {
-        max-width: 36rem;
+      .drawerOpen #sitemap {
+        --stack-size: calc(var(--drawer-width) + var(--size-huge));
+        margin-left: calc(var(--stack-size) * -1);
+        padding-left: var(--stack-size);
+      }
+      #demo:not(.animating).sitemapClosed #sitemap {
+        max-height: 0;
+        max-width: 0;
+        opacity: 0;
+        z-index: -4;
+      }
+      #sitemap .links,
+      #sitemap .h1,
+      #sitemap p {
+        max-width: var(--line-length);
         width: 100%;
       }
-      .sitemap .links {
+      #sitemap .links {
         display: grid;
         font-family: "Press Start 2P", monospace;
-        gap: 2em;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr;
-        margin-bottom: 4rem;
+        gap: var(--size-huge);
+        grid-template-areas: "row-1-1 row-1-2 row-1-3" "row-2-1 row-2-2 row-2-3" ". row-3-2 .";
+        grid-template-columns: auto auto auto;
+        grid-template-rows: auto auto;
+        margin-bottom: var(--size-gigantic);
       }
-      .sitemap .h1,
-      .sitemap p {
-        margin-bottom: 1rem;
+      #sitemap .h1,
+      #sitemap p {
+        line-height: var(--line-tall);
       }
-      .sitemap .h1 {
+      #sitemap .h1 {
+        color: var(--highlight-text);
+        font-size: var(--size-large);
         font-weight: bold;
+        margin-bottom: var(--size-small);
+      }
+      #sitemap p {
+        color: hsl(var(--lowlight-text));
+        margin-bottom: var(--size-normal);
+      }
+      #sitemap .game {
+        grid-area: row-1-1;
+      }
+      #sitemap .home {
+        grid-area: row-1-2;
+      }
+      #sitemap .comments {
+        grid-area: row-2-2;
+      }
+      #sitemap .login {
+        grid-area: row-3-2;
+      }
+      #sitemap .signup {
+        grid-area: row-1-3;
+      }
+      #sitemap .store {
+        grid-area: row-2-3;
       }
       /* Bar */
-      .bar {
+      #bar {
         align-items: center;
         background: hsl(var(--content-surface));
         display: flex;
-        gap: var(--medium-space);
+        gap: var(--size-xlarge);
         justify-content: space-between;
-        margin: 0 1rem var(--large-space) 0;
-        padding: 0.5rem 1rem 0.5rem 0;
+        margin: 0 var(--size-normal) var(--size-huge) 0;
+        padding: var(--size-mini) var(--size-normal) var(--size-mini) 0;
         position: sticky;
         top: 0;
         z-index: 20;
       }
-      .bar mwc-icon-button {
+      #bar mwc-icon-button {
         border: 0;
       }
-      .bar .drawer-icon {
+      #bar .drawerIcon {
         background: hsl(var(--drawer-surface));
         border: 0 solid hsl(var(--drawer-ditch));
         border-width: 1px 1px 1px 0;
         border-radius: 0 6px 6px 0;
         box-shadow: 0 0 6px 1px var(--drawer-glow);
         padding: 6px;
-        transition: transform var(--half-lapse) ease-in,
-          opacity var(--half-lapse) linear;
+        transition: transform var(--quick-lapse) ease-in 0s,
+          opacity var(--quick-lapse) linear 0s;
         transform-origin: left top;
+      }
+      .drawerClosed #bar .drawerIcon {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+      }
+      .drawerOpen #bar .drawerIcon {
+        opacity: 0;
+        transform: scale(0.75) translateX(-100%);
+      }
+      #bar .drawerIcon[disabled],
+      .drawerClosed #bar .drawerIcon[disabled],
+      .drawerOpen #bar .drawerIcon[disabled] {
+        --mdc-theme-text-disabled-on-light: hsl(var(--gray-40));
+        opacity: 0.74;
       }
       .logo {
         align-items: center;
         display: flex;
-        gap: var(--small-space);
+        font-family: "Press Start 2P", monospace;
+        gap: var(--size-small);
       }
-      .bar .drawer-icon.show {
-        opacity: 1;
-        transform: scale(1) translateX(0);
+      .logoWord {
+        align-items: flex-end;
+        display: flex;
+        gap: var(--size-large);
       }
-      .bar .drawer-icon.hide {
-        opacity: 0;
-        transform: scale(0.75) translateX(-100%);
+      .logo .h1 {
+        font-size: var(--size-large);
       }
-      .bar .h2 {
+      .logo .h2 {
         color: hsl(var(--gray-40));
-        font-size: 0.85rem;
+        font-size: var(--size-normal);
+      }
+      .logo .h2 abbr {
+        text-decoration: none;
       }
       /* Example */
-      .example {
+      #example {
         box-sizing: border-box;
         margin: auto;
-        max-width: 350px;
-        width: 100%;
-        padding-bottom: var(--xxlarge-space);
+        max-width: max(400px, var(--line-length));
+        padding-bottom: var(--size-jumbo);
       }
-      .example fieldset {
-        margin-bottom: var(--xxlarge-space);
+      #example fieldset {
+        margin-bottom: var(--size-jumbo);
         position: relative;
         z-index: 2;
       }
-      .example legend {
-        text-align: center;
-        width: 100%;
+      #example .fields {
+        margin: 0 auto;
+        max-width: 400px;
       }
-      .example p {
-        margin-bottom: var(--xxlarge-space);
+      #example legend {
       }
-      .example legend .h2 {
+      #example .h3 {
         background: linear-gradient(
               90deg,
               transparent 0%,
-              hsl(var(--purple-50), 25%) 20%,
-              hsl(var(--purple-50), 25%) 80%,
+              hsl(var(--content-glow)) 20%,
+              hsl(var(--content-glow)) 80%,
               transparent 100%
             )
             center bottom / 100% 1px no-repeat scroll,
-          radial-gradient(hsl(var(--purple-50), 25%), transparent 73%) center
+          radial-gradient(hsl(var(--content-glow), 50%), transparent 73%) center
             0.8em / 100% 100% no-repeat scroll,
           transparent;
-        margin: 0 -2em 1rem;
-        padding: 0 2em 1em;
-        text-shadow: 2px 2px 0 black;
+        color: var(--highlight-text);
+        font-family: "Press Start 2P", monospace;
+        font-size: var(--size-xlarge);
+        letter-spacing: 2px;
+        line-height: var(--size-large-em);
+        margin: 0 -3em var(--size-normal) -3em;
+        padding: 0 3em var(--size-normal);
+        text-transform: capitalize;
       }
-      .example fieldset p {
-        margin-bottom: var(--xlarge-space);
-      }
-      .example .h2 {
-        font-size: 80%;
-        line-height: 1.25em;
-        margin-bottom: var(--medium-space);
-        text-transform: uppercase;
-      }
-      .example.home .h2 {
-        font-size: 130%;
+      #example.home .h3 {
+        font-size: var(--size-huge);
         text-transform: none;
       }
-      .example p {
-        line-height: 1.65em;
+      #example .h3 {
+        text-shadow: -2px -2px 0 hsl(var(--content-glow)),
+          2px 2px 0 hsl(var(--content-surface));
+      }
+      #example p {
+        text-shadow: -1px -1px 0 hsl(var(--content-glow)),
+          1px 1px 0 hsl(var(--content-surface));
+      }
+      #example p {
+        color: hsl(var(--lowlight-text));
+        line-height: var(--line-tall);
+        margin-bottom: var(--bar-height);
+      }
+      #example.home p {
+        margin-bottom: var(--size-huge);
+      }
+      #example.home p:last-of-type {
+        margin-bottom: var(--size-jumbo);
       }
       /* Form */
-      /* TODO any form styles */
+      fieldset {
+        border: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+      legend {
+        display: block;
+        font: inherit;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+      label {
+        display: block;
+      }
+      label {
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+      label:not(:last-child) {
+        margin-bottom: var(--size-xlarge);
+      }
+      label > span {
+        display: block;
+        margin-bottom: var(--size-small);
+      }
+      input,
+      textarea {
+        background: hsl(var(--gray-60));
+        border: 0 solid transparent;
+        border-radius: 2px;
+        box-sizing: border-box;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        line-height: 1;
+        margin: 0;
+        padding: var(--size-small);
+        width: 100%;
+      }
+      textarea {
+        line-height: var(--line-short);
+        min-height: calc(var(--line-short) * 6);
+      }
       /* Guide */
-      .guide {
+      #guide {
+        color: hsl(var(--lowlight-text));
         overflow: hidden;
         transform: translateZ(0);
         width: 100%;
       }
-      .guide-mask {
+      .mask {
         width: var(--drawer-width);
       }
-      .guide .h1 {
-        border: 0 solid hsl(var(--drawer-ditch));
-        border-width: 1px 0;
-        letter-spacing: 0.5px;
-        padding: var(--small-space) var(--large-space);
-        text-transform: uppercase;
-      }
-      .guide .text:first-child .h1 {
-        border-top-color: transparent;
-      }
-      .guide .h1,
-      .guide .h2 {
+      #guide .h1,
+      #guide .h2 {
+        color: var(--highlight-text);
+        font-size: var(--size-large);
         font-weight: bold;
       }
-      .guide .h1 {
-        line-height: 1.2;
+      #guide .h1 {
+        border: 0 solid hsl(var(--drawer-ditch));
+        border-width: 1px 0;
+        letter-spacing: 1px;
+        line-height: 1;
+        padding: var(--size-small);
+        text-transform: uppercase;
       }
-      .guide .h2 {
-        line-height: 1.25em;
-        margin-bottom: var(--small-space);
+      #guide .text:first-child .h1 {
+        border-top-color: transparent;
+      }
+      #guide .h2 {
+        line-height: var(--size-large-em);
+        margin-bottom: var(--size-mini);
         text-transform: capitalize;
       }
-      .guide .h2,
-      .guide p,
-      .guide a {
-        padding: 0 var(--large-space);
+      #guide p {
+        color: hsl(var(--lowlight-text));
+        line-height: var(--line-short);
+        max-width: var(--line-length);
       }
-      .guide .h1,
-      .guide p,
-      .guide a,
-      .guide code {
-        margin-bottom: var(--large-space);
-      }
-      .guide p {
-        line-height: 1.35em;
-        max-width: 36em;
-      }
-      .guide code {
-        /* TODO: background color */
-        background: hsl(0, 0%, 100%, 4%);
+      #guide a,
+      #guide code,
+      #guide pre {
         display: block;
-        margin: 0 var(--large-space) var(--large-space);
-        min-height: 4rem;
-        padding: 1rem;
       }
-      a {
-        /* TODO: link color */
-        --link-color: 218;
-        align-items: center;
-        color: hsl(var(--link-color), 27%, 68%);
-        display: inline-flex;
+      #guide .h1,
+      #guide .text.result {
+        margin-bottom: var(--size-huge);
       }
-      a:focus,
-      a:hover,
-      a:active {
-        color: hsl(var(--link-color), 35%, 68%);
-        text-decoration: none;
+      #guide .text,
+      #guide #verdict + .scoreExample {
+        margin-bottom: var(--size-xhuge);
       }
-      a span {
-        transition: var(--full-lapse) ease-out;
+      #guide p,
+      #guide .code {
+        margin-bottom: var(--size-normal);
       }
-      .links a:focus,
-      .links a:hover,
-      .links a:active,
-      a:focus span,
-      a:hover span,
-      a:active span {
-        text-decoration: white dashed underline 1px;
-        text-underline-offset: 2px;
+      #guide .h2,
+      #guide p,
+      #guide a.documentation {
+        padding: 0 var(--size-xhuge);
       }
-      a mwc-icon {
-        --mdc-icon-size: 1em;
-        color: white;
-        flex: 0 0 auto;
-        text-decoration: none !important;
-        transition: var(--full-lapse) ease-out;
+      #guide .code {
+        /* TODO: code block background color */
+        color: var(--highlight-text);
+        background: hsl(0, 0%, 100%, 5%);
+        margin: 0 var(--size-xhuge) var(--size-xhuge);
+        padding: var(--size-small) var(--size-normal);
+        position: relative;
       }
-      a:focus mwc-icon,
-      a:hover mwc-icon,
-      a:active mwc-icon {
-        transform: scale(1.25);
-      }
-      a span + mwc-icon,
-      a mwc-icon + span {
-        margin-left: 0.5em;
-      }
-      /* Store Card */
-      dl.cart {
-        margin-bottom: var(--xxlarge-space);
-      }
-      .cart .item {
-        display: flex;
-        align-items: top;
-        justify-content: space-between;
-        margin-bottom: var(--medium-space);
-      }
-      .cart img {
-        height: auto;
-        width: 50px;
-      }
-      .cart .stoplight img {
-        margin-top: -13px; /* TODO: sigh magic numbers */
-      }
-      .cart dt {
-        flex: 0 0 5em;
-        margin-right: var(--medium-space);
-        padding-top: 13px;
-      }
-      .cart dd:not(:last-child) {
-        flex: 1 0 auto;
-        margin-top: calc(1em + 13px + var(--small-space));
-      }
-      .cart dd:last-child {
-        flex: 0 0 5em;
+      #guide a.log {
+        inset: auto var(--size-normal) var(--size-small) auto;
+        position: absolute;
       }
       /* Guide Score */
-      .score {
-        align-items: center;
+      #score {
+        align-items: flex-end;
         display: flex;
-        gap: 2rem;
-        margin: 0 var(--large-space) var(--large-space);
+        gap: var(--size-huge);
+        margin: 0 var(--size-xhuge) var(--line-short);
+        padding-top: var(--size-micro);
       }
-      .score dl {
-        /* TODO: score blue */
-        --custom-blue: 221, 91%, 65%;
+      #score dl {
         align-items: flex-start;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--size-small);
         line-height: 1;
       }
-      .score dt {
+      #score dt {
         height: 1px;
         left: -10000px;
         overflow: hidden;
@@ -645,36 +776,103 @@ class RecaptchaDemo extends LitElement {
         top: auto;
         width: 1px;
       }
-      .score dd {
-        font-size: 1.25rem;
-        line-height: 1.25em;
-        text-transform: uppercase;
-      }
-      dd.score-result {
-        color: hsl(var(--custom-blue));
-        font-size: 2.5rem;
+      dd.score {
+        color: hsl(var(--link-normal));
+        font-family: sans-serif;
+        font-size: var(--size-jumbo);
         font-weight: bold;
-        line-height: 1em;
+        line-height: 1;
         text-indent: -0.1em;
       }
-      dd.verdict-result {
+      dd.verdict {
+        color: var(--highlight-text);
         font-family: "Press Start 2P", monospace;
+        font-size: var(--size-xlarge);
+        line-height: 1;
+        text-transform: uppercase;
       }
-      .score img {
+      #score img {
+        height: calc(var(--size-jumbo) * 2);
         width: auto;
-        height: 5rem;
+      }
+      /* Store Cart */
+      dl.cart {
+        --stoplight-accent: 13px;
+        margin-bottom: var(--size-jumbo);
+      }
+      .cart .item {
+        display: flex;
+        align-items: top;
+        justify-content: space-between;
+        margin-bottom: var(--size-xlarge);
+      }
+      .cart img {
+        height: auto;
+        width: 50px;
+      }
+      .cart .stoplight img {
+        margin-top: calc(var(--stoplight-accent) * -1);
+      }
+      .cart dt {
+        flex: 0 0 var(--size-gigantic);
+        margin-right: var(--size-xlarge);
+        padding-top: var(--stoplight-accent);
+      }
+      .cart dd:not(:last-child) {
+        flex: 1 0 auto;
+        margin-top: calc(
+          var(--size-normal) + var(--stoplight-accent) + var(--size-small)
+        );
+      }
+      .cart dd:last-child {
+        flex: 0 0 var(--size-gigantic);
+      }
+      /* Guide Animation */
+      @keyframes scoreBump {
+        from {
+          transform: scale(1) translate(0, 0);
+        }
+        to {
+          transform: scale(1.14) translate(-2%, 0);
+        }
+      }
+      #score {
+        animation: var(--full-lapse) ease-out 0s 2 alternate both running
+          scoreBump;
+        transform-origin: left center;
+      }
+      .unscored #score {
+        animation-play-state: paused;
+      }
+      .scored #score {
+        animation-play-state: running;
+      }
+      #guide .response,
+      #verdict p,
+      .scoreExample {
+        transition: opacity var(--full-lapse) ease-out var(--half-lapse);
+      }
+      .unscored #guide .response,
+      .unscored #verdict p,
+      .unscored .scoreExample {
+        opacity: 0;
+      }
+      .scored #guide .response,
+      .scored #verdict p,
+      .scored .scoreExample {
+        opacity: 1;
       }
       /* Slotted Checkbox */
       ::slotted(div.g-recaptcha) {
         display: flex;
         justify-content: center;
-        margin: 0 auto var(--xlarge-space);
+        margin: 0 auto var(--size-xhuge);
         position: relative;
         z-index: 1;
       }
       /* Slotted Button / Button */
       .button {
-        margin-bottom: var(--xxlarge-space);
+        margin-bottom: var(--size-jumbo);
       }
       ::slotted(button),
       .button {
@@ -682,15 +880,15 @@ class RecaptchaDemo extends LitElement {
         background: transparent /* hsl(var(--blue-50)) */;
         border: 0;
         border-radius: 0;
-        color: inherit;
+        color: var(--highlight-text);
         cursor: pointer;
         display: inline-block;
-        font: inherit;
         font-family: "Press Start 2P", monospace;
-        font-size: 0.8rem;
-        margin: 0 auto var(--medium-space);
+        font-size: var(--size-small);
+        line-height: var(--size-large-em);
+        margin: 0 auto var(--size-xlarge);
         outline: 0;
-        padding: 1rem 32px;
+        padding: var(--size-normal) var(--size-huge);
         position: relative;
         text-transform: uppercase;
         width: 100%;
@@ -706,12 +904,10 @@ class RecaptchaDemo extends LitElement {
       .button::after,
       ::slotted(button)::before,
       .button::before {
-        /* TODO: timing variables */
-        transition: border 50ms ease-out 0s,
-          border-radius var(--half-lapse) ease-out 50ms,
-          background 100ms ease 0s, box-shadow 200ms ease-out 0s,
-          outline 50ms ease-out 0s, text-shadow 50ms ease-out 0s,
-          transform 100ms ease-out 0s;
+        /* TODO: timing variables? */
+        transition: border 50ms ease-out 0s, border-radius 50ms ease-out 0s,
+          background 100ms ease-in-out 50ms, box-shadow 150ms ease-out 50ms,
+          outline 50ms ease-out 0s, text-shadow 50ms ease-out 0s;
       }
       /* Button Layers */
       ::slotted(button)::after,
@@ -737,28 +933,7 @@ class RecaptchaDemo extends LitElement {
       .button:active {
         text-shadow: black 2px 2px, hsl(var(--gray-50)) 4px 4px;
       }
-      ::slotted(button:focus),
-      .button:focus,
-      ::slotted(button:hover),
-      .button:hover,
-      ::slotted(button:active),
-      .button:active {
-        transform: scale(1.12);
-      }
-      ::slotted(button:focus)::after,
-      .button:focus::after,
-      ::slotted(button:focus)::before,
-      .button:focus::before,
-      ::slotted(button:hover)::after,
-      .button:hover::after,
-      ::slotted(button:hover)::before,
-      .button:hover::before,
-      ::slotted(button:active)::after,
-      .button:active::after,
-      ::slotted(button:active)::before,
-      .button:active::before {
-        transform: scale(0.89);
-      }
+      
       */
       /* Button Shape */
       ::slotted(button)::before,
@@ -787,7 +962,7 @@ class RecaptchaDemo extends LitElement {
       ::slotted(button:active)::after,
       .button:active::after {
         /* Focus/Hover/Active Shape */
-        border-radius: 22px;
+        border-radius: var(--button-corners);
       }
       /* Button Background */
       ::slotted(button)::after,
@@ -842,73 +1017,128 @@ class RecaptchaDemo extends LitElement {
       ::slotted(button:hover)::after,
       .button:hover::after {
         /* Focus/Hover Square Glow */
-        box-shadow: 1px 2px 42px 2px hsl(var(--blue-50), 45%);
+        box-shadow: 1px 2px var(--size-jumbo) 2px hsl(var(--blue-50), 38%);
       }
       ::slotted(button:active)::after,
       .button:active::after {
         /* Active Square Glow */
-        box-shadow: 1px 2px 42px 2px rgba(0, 0, 0, 20%);
+        box-shadow: 1px 2px var(--size-jumbo) 2px hsl(0, 0%, 0%, 12%);
       }
       ::slotted(button:focus)::before,
       .button:focus::before,
       ::slotted(button:hover)::before,
       .button:hover::before {
         /* Focus/Hover Round Glow */
-        box-shadow: 2px 2px 100px 20px hsl(var(--blue-50), 45%);
+        box-shadow: 2px 2px var(--size-xgigantic) 20px hsl(var(--blue-50), 38%);
       }
       ::slotted(button:active)::before,
       .button:active::before {
         /* Active Round Glow */
-        box-shadow: 2px 2px 100px 20px rgba(0, 0, 0, 20%);
+        box-shadow: 2px 2px var(--size-xgigantic) 20px hsl(0, 0%, 0%, 12%);
+      }
+      /* Game */
+      #game {
+        align-items: center;
+        display: flex;
+        font-size: 4rem;
+        inset: 0 0 0 0;
+        justify-content: center;
+        margin-top: -4rem;
+        position: absolute;
       }
     `;
   }
 
   static properties = {
-    step: { type: String },
-    initialized: { type: Boolean, state: true, attribute: false },
+    /* Initial */
+    animating: { type: Boolean, state: true, attribute: false },
     drawerOpen: { type: Boolean, state: true, attribute: false },
-    siteMapOpen: { type: Boolean, state: true, attribute: false },
-    /* TODO: update score/verdict when payload is standardized */
+    sitemapOpen: { type: Boolean, state: true, attribute: false },
+    step: { type: String },
+    /* Result */
     score: { type: String },
     verdict: { type: String },
   };
 
   constructor() {
     super();
-    this.step = "home";
-    this.initialized = false;
-    this.score = undefined;
-    this.verdict = undefined;
+    /* Initial */
+    this.animating = false;
     this.drawerOpen = true;
-    this.siteMapOpen = false;
+    this.sitemapOpen = false;
+    this._step = "home";
+    this.step = this._step;
+    /* Result */
+    this._score = undefined;
+    this.score = this._score;
+    this.verdict = undefined;
   }
 
-  willUpdate() {}
+  /* TODO: better/more reliable way to change button state */
 
-  updated() {
-    if (!this.initialized) {
-      setTimeout(() => {
-        this.initialized = true;
-      }, 750);
+  set score(value) {
+    let oldValue = this._score;
+    this._score = value;
+    this.requestUpdate("score", oldValue);
+    const buttonElement = document.getElementsByTagName("button")[0];
+    if (buttonElement && this._score && this.step !== "comment") {
+      window.setTimeout(() => {
+        buttonElement.innerText = "Go to next demo";
+      }, 100);
     }
   }
 
+  get score() {
+    return this._score;
+  }
+
+  set step(value) {
+    let oldValue = this._step;
+    this._step = value;
+    this.requestUpdate("step", oldValue);
+    const buttonElement = document.getElementsByTagName("button")[0];
+    if (buttonElement && !this.score) {
+      buttonElement.innerText = LABELS[this._step];
+    }
+  }
+
+  get step() {
+    return this._step;
+  }
+
   toggleDrawer() {
+    this.animating = true;
     this.drawerOpen = !this.drawerOpen;
   }
 
   toggleSiteMap() {
-    this.siteMapOpen = !this.siteMapOpen;
+    this.animating = true;
+    this.sitemapOpen = !this.sitemapOpen;
+  }
+
+  goToResult() {
+    const resultElement = this.shadowRoot.getElementById("result");
+    const topOffset =
+      Number(resultElement.getBoundingClientRect().top) +
+      Number(resultElement.ownerDocument.defaultView.pageYOffset);
+    window.setTimeout(() => {
+      window.location.hash = "#result";
+      window.scrollTo(0, topOffset);
+    }, 100);
   }
 
   goToNextStep() {
     const nextIndex = STEPS.indexOf(this.step) + 1;
     const nextStep = STEPS[nextIndex];
     if (nextStep) {
-      // this.step = nextStep;
+      this.animating = true;
       window.location.assign(`${window.location.origin}\\${nextStep}`);
     }
+  }
+
+  handleAnimation(event) {
+    const currentlyRunning = this.shadowRoot.getAnimations({ subtree: true });
+    this.animating = Boolean(currentlyRunning?.length || 0);
   }
 
   handleSlotchange() {
@@ -920,44 +1150,197 @@ class RecaptchaDemo extends LitElement {
       this.goToNextStep();
       return;
     }
+    this.goToResult();
     // TODO: interrogate slotted button for callback?
   }
 
-  render() {
-    const BUTTON = html`
-      <slot
-        @click=${this.handleSubmit}
-        @slotchange=${this.handleSlotchange}
-      ></slot>
+  get BAR() {
+    return html`
+      <nav aria-label="Main Menu" id="bar">
+        <mwc-icon-button
+          @click=${this.toggleDrawer}
+          aria-controls="drawer"
+          aria-expanded="${this.drawerOpen ? "true" : "false"}"
+          aria-label="Open the information panel"
+          class="drawerIcon"
+          ?disabled=${this.step === "game"}
+          icon="menu_open"
+        ></mwc-icon-button>
+        <div class="logo">
+          <mwc-icon>location_searching</mwc-icon>
+          <div class="logoWord">
+            <h1 class="h1">BadFinder</h1>
+            <h2 class="h2">
+              reCAPTCHA <abbr title="Demonstration">Demo</abbr>
+            </h2>
+          </div>
+        </div>
+        <mwc-icon-button
+          @click=${this.toggleSiteMap}
+          aria-controls="sitemap"
+          aria-expanded="${this.sitemapOpen ? "true" : "false"}"
+          aria-label="${this.sitemapOpen ? "Show site map" : "Hide site map"}"
+          class="sitemapIcon"
+          icon="${this.sitemapOpen ? "close" : "menu"}"
+        ></mwc-icon-button>
+      </nav>
     `;
+  }
 
-    // TODO update login/store form examples with comment
-    const FORMS = {
-      home: html`
-        <section class="example home">
-          <h2 class="h2">Stop the bad</h2>
+  get BUTTON() {
+    return html`
+      <div class="fields">
+        <slot
+          @click=${this.handleSubmit}
+          @slotchange=${this.handleSlotchange}
+        ></slot>
+      </div>
+    `;
+  }
+
+  get CONTENT() {
+    return html`
+      <main id="content">
+        <div class="sticky">
+          <div class="relative">
+            <!-- bar -->
+            ${this.BAR}
+            <!-- forms -->
+            ${this[FORMS[this.step]]}
+            <!-- sitemap -->
+            ${this.SITEMAP}
+          </div>
+        </div>
+      </main>
+    `;
+  }
+
+  get DRAWER() {
+    return html`
+      <aside id="drawer">
+        <mwc-icon-button
+          @click=${this.toggleDrawer}
+          aria-controls="drawer"
+          aria-expanded="${this.drawerOpen ? "true" : "false"}"
+          class="drawerCloseIcon"
+          icon="close"
+        ></mwc-icon-button>
+        ${this[GUIDES[this.step]]}
+      </aside>
+    `;
+  }
+
+  get EXAMPLE() {
+    return html`
+      <!-- drawer -->
+      ${this.DRAWER}
+      <!-- content -->
+      ${this.CONTENT}
+    `;
+  }
+
+  get FORM_COMMENT() {
+    return html`
+      <form id="example">
+        <fieldset>
+          <legend><h3 class="h3">Confident comments</h3></legend>
+          <p>Add reCAPTCHA Enterprise to comment and contact forms to prevent spam. Click the "send comment" button to see the result.</p>
+          <div class="fields">
+          <label>
+            <span>Comment</span>
+            <textarea disabled />Good job protecting your users.</textarea>
+          </label>
+          </div>
+        </fieldset>
+        ${this.BUTTON}
+      </form>
+    `;
+  }
+
+  get FORM_HOME() {
+    return html`
+      <section id="example" class="home">
+        <h3 class="h3">Stop the bad</h3>
+        <p>
+          BadFinder is a pretend world that's kinda like the real world. It's
+          built to explore the different ways of using reCAPTCHA Enterprise to
+          protect web sites and applications.
+        </p>
+        <p>
+          Play the game, search the store, view the source, or just poke around
+          and have fun!
+        </p>
+        <button @click=${this.handleSubmit} class="button" type="button">
+          View examples
+        </button>
+      </section>
+    `;
+  }
+
+  get FORM_LOGIN() {
+    return html`
+      <form id="example">
+        <fieldset>
+          <legend><h3 class="h3">Locked log in</h3></legend>
           <p>
-            BadFinder is a pretend world that's kinda like the real world. It's
-            built to let developers explore ways of using reCAPTCHA to protect
-            your site. It can be deployed via a demosite here.
+            Add reCAPTCHA Enterprise to log in forms to secure accounts. Click
+            the "log in" button to see the result.
           </p>
+          <div class="fields">
+            <label>
+              <span>Email</span>
+              <input type="email" value="user@example.com" disabled />
+            </label>
+            <label>
+              <span>Password</span>
+              <input type="password" value="password" disabled />
+            </label>
+          </div>
+        </fieldset>
+        ${this.BUTTON}
+      </form>
+    `;
+  }
+
+  get FORM_SIGNUP() {
+    return html`
+      <form id="example">
+        <fieldset>
+          <legend><h3 class="h3">Secure Sign up</h3></legend>
           <p>
-            Play the game, search the store, pretend to a be a BadBad, or just
-            poke around and have fun!
+            Add reCAPTCHA Enterprise to sign up forms to verify new accounts.
+            Click the "sign up" button to see the result.
           </p>
-          <button @click=${this.handleSubmit} class="button" type="button">
-            Continue
-          </button>
-        </section>
-      `,
-      store: html`
-        <form class="example">
-          <fieldset>
-            <legend><h2 class="h2">Store example</h2></legend>
-            <p>
-              Some text prompting to solve the reCAPTCHA and/or click the button
-              to see the verdict.
-            </p>
+          <div class="fields">
+            <label>
+              <span>Email</span>
+              <input type="email" value="user@example.com" disabled />
+            </label>
+            <label>
+              <span>Password</span>
+              <input type="password" value="password" disabled />
+            </label>
+            <label>
+              <span>Confirm Password</span>
+              <input type="password" value="password" disabled />
+            </label>
+          </div>
+        </fieldset>
+        ${this.BUTTON}
+      </form>
+    `;
+  }
+
+  get FORM_STORE() {
+    return html`
+      <form id="example">
+        <fieldset>
+          <legend><h3 class="h3">Safe stores</h3></legend>
+          <p>
+            Add reCAPTCHA to stores and check out wizards to prevent fraud.
+            Click the "buy now" button to see the result.
+          </p>
+          <div class="fields">
             <dl class="unstyled cart">
               <div class="item hydrant">
                 <dt>
@@ -994,417 +1377,433 @@ class RecaptchaDemo extends LitElement {
               <span>Credit card</span>
               <input type="text" value="7777-8888-3333-2222" disabled />
             </label>
-          </fieldset>
-          ${BUTTON}
-        </form>
-      `,
-      login: html`
-        <form class="example">
-          <fieldset>
-            <legend><h2 class="h2">Login example</h2></legend>
-            <p>
-              Some text prompting to solve the reCAPTCHA and/or click the button
-              to see the verdict.
-            </p>
-            <label>
-              <span>Email</span>
-              <input type="email" value="user@example.com" disabled />
-            </label>
-            <label>
-              <span>Password</span>
-              <input type="password" value="password" disabled />
-            </label>
-          </fieldset>
-          ${BUTTON}
-        </form>
-      `,
-      comment: html`
-        <form class="example">
-          <fieldset>
-            <legend><h2 class="h2">Comment example</h2></legend>
-            <p>Some text prompting to solve the reCAPTCHA and/or click the button to see the verdict.</p>
-            <label>
-              <span>Comment</span>
-              <textarea disabled />Good job.</textarea>
-            </label>
-          </fieldset>
-          ${BUTTON}
-        </form>
-      `,
-      signup: html`
-        <form class="example">
-          <fieldset>
-            <legend><h2 class="h2">Signup example</h2></legend>
-            <p>
-              Some text prompting to solve the reCAPTCHA and/or click the button
-              to see the verdict.
-            </p>
-            <label>
-              <span>Email</span>
-              <input type="email" value="user@example.com" disabled />
-            </label>
-            <label>
-              <span>Password</span>
-              <input type="password" value="password" disabled />
-            </label>
-            <label>
-              <span>Confirm Password</span>
-              <input type="password" value="password" disabled />
-            </label>
-          </fieldset>
-          ${BUTTON}
-        </form>
-      `,
-    };
+          </div>
+        </fieldset>
+        ${this.BUTTON}
+      </form>
+    `;
+  }
 
-    // TODO undefined case when it expires
-    const SCORE = html`
-      <div>
-        <div class="score">
-          <img src="../static/images/human-color-unoptimized.svg" alt="Human" />
+  // TODO: move game in
+  get GAME() {
+    return html`
+      <aside id="drawer"></aside>
+      <main id="content">
+        <div class="sticky">
+          <div class="relative">
+            <!-- bar -->
+            ${this.BAR}
+            <!-- game -->
+            <div id="game">Coming soon!</div>
+            <!-- sitemap -->
+            ${this.SITEMAP}
+          </div>
+        </div>
+      </main>
+    `;
+  }
+
+  get GUIDE_CODE() {
+    return `
+    {
+      "event": {
+        "expectedAction": "${ACTIONS[this.step]}",
+        ...
+      },
+      ...
+      "riskAnalysis": {
+        "reasons": [],
+        "score": "${this.score || "?.?"}"
+      },
+      "tokenProperties": {
+        "action": "${ACTIONS[this.step]}",
+        ...
+        "invalidReason": null,
+        "valid": true
+      },
+    }`
+      .replace(/^([ ]+)[}](?!,)/m, "}")
+      .replace(/([ ]{6})/g, "  ")
+      .trim();
+  }
+
+  get GUIDE_COMMENT() {
+    return html`
+      <div id="guide">
+        <div class="mask">
+          <section class="text pattern">
+            <h4 class="h1">Pattern</h4>
+            <h5 class="h2">When users interact</h5>
+            <p>
+              Add reCAPTCHA Enterprise verification on important user
+              interactions like posting user comments. Verification can be added
+              to JavaScript events. With a score-based site key, you can include
+              reCAPTCHA Enterprise throughout your site without requiring users
+              to solve CAPTCHA challenges.
+            </p>
+            <a
+              class="documentation"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action"
+              target="_blank"
+              ><span>Learn more about scoring when users interact</span
+              ><mwc-icon>launch</mwc-icon></a
+            >
+          </section>
+          ${this[RESULTS[this.step]]}
+        </div>
+      </div>
+    `;
+  }
+
+  get GUIDE_HOME() {
+    return html`
+      <div id="guide">
+        <div class="mask">
+          <section class="text pattern">
+            <h4 class="h1">Pattern</h4>
+            <h5 class="h2">On page load</h5>
+            <p>
+              Try running reCAPTCHA Enterprise on every page load. With a
+              score-based site key, you can include reCAPTCHA Enterprise
+              throughout your site without requiring users to solve CAPTCHA
+              challenges. We recommend that you include reCAPTCHA Enterprise on
+              every page of your site because data about how real users and bots
+              transition between different pages and actions improves scores.
+            </p>
+            <a
+              class="documentation"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load"
+              target="_blank"
+              ><span>Learn more about scoring when the page loads</span
+              ><mwc-icon>launch</mwc-icon></a
+            >
+          </section>
+          ${this[RESULTS[this.step]]}
+        </div>
+      </div>
+    `;
+  }
+
+  get GUIDE_LOGIN() {
+    return html`
+      <div id="guide">
+        <div class="mask">
+          <section class="text pattern">
+            <h4 class="h1">Pattern</h4>
+            <h5 class="h2">When users interact</h5>
+            <p>
+              Add reCAPTCHA Enterprise verification on important user
+              interactions like logging into user accounts. Verification can be
+              added to JavaScript events. With a score-based site key, you can
+              include reCAPTCHA Enterprise throughout your site without
+              requiring users to solve CAPTCHA challenges.
+            </p>
+            <a
+              class="documentation"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action"
+              target="_blank"
+              ><span>Learn more about scoring when users interact</span
+              ><mwc-icon>launch</mwc-icon></a
+            >
+          </section>
+          ${this[RESULTS[this.step]]}
+        </div>
+      </div>
+    `;
+  }
+
+  // TODO: undefined case when it expires
+  get GUIDE_SCORE() {
+    return html`
+      <div id="verdict">
+        <div id="score">
+          <img alt="Human" src="../static/images/human-color-unoptimized.svg" />
           <dl class="unstyled">
             <dt>Score</dt>
-            <dd class="score-result">
-              ${(this.score && this.score.slice(0, 3)) || "???"}
+            <dd class="score">
+              ${(this.score && this.score.slice(0, 3)) || "?.?"}
             </dd>
             <dt>Verdict</dt>
-            <dd class="verdict-result">Human</dd>
+            <dd class="verdict">${(this.verdict && "Human") || "?????"}</dd>
           </dl>
         </div>
-        <!--
-        <p>
-          How would you interpret the score? For example, what does a score of
-          0.4 mean vs 0.6? How would you handle the final score? For example,
-          would you output an error, fail silently, use a "redemption path", or
-          supplement with another product?
-        </p>
-        -->
         <p>
           The 100+ signals ran on this page when it loaded and has a
           ${(this.score && Number(this.score.slice(0, 3))) * 100 || "???"}%
-          confidence that you're a human.
+          confidence that you're a human. Based on the score, you can take an
+          appropriate action in the background instead of blocking traffic.
         </p>
       </div>
     `;
+  }
 
-    const CODE = `
-    {
-      "success": true, 
-      "action": none 
-      "challenge_ts": timestamp, 
-      "hostname": string, 
-      "error-codes": [...]
-}`
-      .replace(/([ ]+)/g, " ")
-      .trim();
-
-    const GUIDES = {
-      home: html`
-        <div class="guide">
-          <div class="guide-mask">
-            <section class="text static">
-              <h1 class="h1">Pattern</h1>
-              <h2 class="h2">On page load</h2>
-              <p>
-                A common pattern for homepages,reCAPTCHA runs on page load - the
-                more pages that contain reCAPTCHA the better the signal, so even
-                if you aren't making decisions based on what reCAPTCHA returns
-                here, it can still enhance signals later on.
-              </p>
-              <!--
-              <p>
-                What is this an example of (score when the page loads)? Why
-                would you verify when the page loads? What kind of key? Why? How
-                would you create? How would you load JS API? How would you set
-                up the challenge?
-              </p>
-              -->
-              <a
-                href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load"
-                target="_blank"
-              >
-                <span>Learn more about scoring when the page loads</span>
-                <mwc-icon>launch</mwc-icon>
-              </a>
-            </section>
-            <section class="text">
-              <h1 class="h1">Result</h1>
-              ${SCORE}
-              <h2 class="h1">Response Details</h2>
-              <!--
-              <p>
-                How would you fetch the token? For example, do you send a
-                client-side request to a backend? How would you create an
-                assessment? For example, do you require a backend to send a
-                request to Google?
-              </p>
-              -->
-              <code>
-                <pre>${CODE}</pre>
-              </code>
-              <!--
-              <a href="#" target="_blank">
-                <mwc-icon>description</mwc-icon>
-                <span>View log</span>
-              </a>
-              -->
-            </section>
-          </div>
+  get GUIDE_SIGNUP() {
+    return html`
+      <div id="guide">
+        <div class="mask">
+          <section class="text pattern">
+            <h4 class="h1">Pattern</h4>
+            <h5 class="h2">On an HTML button</h5>
+            <p>
+              Add reCAPTCHA Enterprise verification on important user
+              interactions like signing up for new user accounts. Verification
+              can be added to simple HTML buttons. With a score-based site key,
+              you can include reCAPTCHA Enterprise throughout your site without
+              requiring users to solve CAPTCHA challenges.
+            </p>
+            <a
+              class="documentation"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button"
+              target="_blank"
+              ><span>Learn more about adding reCATPCHA on an HTML button</span
+              ><mwc-icon>launch</mwc-icon></a
+            >
+          </section>
+          ${this[RESULTS[this.step]]}
         </div>
-      `,
-      store: html`
-        <div class="guide">
-          <div class="guide-mask">
-            <section class="text static">
-              <h1 class="h1">Pattern</h1>
-              <h2 class="h2">When users interact</h2>
-              <p>
-                What is this an example of (score on programmatic user action)?
-                Why would you use an score programmatically on user interaction?
-                What kind of key? Why? How would you create? How would you load
-                JS API? How would you set up the challenge?
-              </p>
-              <a
-                href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action"
-                target="_blank"
-                ><span>Learn more about scoring when users interact</span>
-                <mwc-icon>launch</mwc-icon></a
-              >
-            </section>
-            <section class="text">
-              <h1 class="h1">Result</h1>
-              ${SCORE}
-              <h2 class="h1">Response Details</h2>
-              <!--
-              <p>
-                How would you fetch the token? For example, do you send a
-                client-side request to a backend? How would you create an
-                assessment? For example, do you require a backend to send a
-                request to Google?
-              </p>
-              -->
-              <code>
-                <pre>${CODE}</pre>
-              </code>
-              <!--
-              <a href="#" target="_blank">
-                <mwc-icon>description</mwc-icon>
-                <span>View log</span>
-              </a>
-              -->
-            </section>
-          </div>
-        </div>
-      `,
-      login: html`
-        <div class="guide">
-          <div class="guide-mask">
-            <section class="text static">
-              <h1 class="h1">Pattern</h1>
-              <h2 class="h2">On an HTML button</h2>
-              <p>
-                What is this an example of (score auto bind html button)? Why
-                would you use an score auto bound to an html button? What kind
-                of key? Why? How would you create? How would you load JS API?
-                How would you set up the challenge?
-              </p>
-              <a
-                href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button"
-                target="_blank"
-                ><span
-                  >Learn more about adding reCATPCHA on an HTML button</span
-                >
-                <mwc-icon>launch</mwc-icon></a
-              >
-            </section>
-            <section class="text">
-              <h1 class="h1">Result</h1>
-              ${SCORE}
-              <h2 class="h1">Response Details</h2>
-              <!--
-              <p>
-                How would you fetch the token? For example, do you send a
-                client-side request to a backend? How would you create an
-                assessment? For example, do you require a backend to send a
-                request to Google?
-              </p>
-              -->
-              <code>
-                <pre>${CODE}</pre>
-              </code>
-              <!--
-              <a href="#" target="_blank">
-                <mwc-icon>description</mwc-icon>
-                <span>View log</span>
-              </a>
-              -->
-            </section>
-          </div>
-        </div>
-      `,
-      comment: html`
-        <div class="guide">
-          <div class="guide-mask">
-            <section class="text static">
-              <h1 class="h1">Pattern</h1>
-              <h2 class="h2">Automatically render a checkbox</h2>
-              <p>
-                What is this an example of (checkbox automatically rendered)?
-                Why would you use a checkbox and automatically render it? What
-                kind of key? Why? How would you create? How would you load JS
-                API? How would you set up the challenge?
-              </p>
-              <a
-                href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-1"
-                target="_blank"
-                ><span
-                  >Learn more about automatically rendering checkboxes</span
-                >
-                <mwc-icon>launch</mwc-icon></a
-              >
-            </section>
-            <section class="text">
-              <h1 class="h1">Result</h1>
-              ${SCORE}
-              <h2 class="h1">Response Details</h2>
-              <!--
-              <p>
-                How would you fetch the token? For example, do you send a
-                client-side request to a backend? How would you create an
-                assessment? For example, do you require a backend to send a
-                request to Google?
-              </p>
-              -->
-              <code>
-                <pre>${CODE}</pre>
-              </code>
-              <!--
-              <a href="#" target="_blank">
-                <mwc-icon>description</mwc-icon>
-                <span>View log</span>
-              </a>
-              -->
-            </section>
-          </div>
-        </div>
-      `,
-      signup: html`
-        <div class="guide">
-          <div class="guide-mask">
-            <section class="text static">
-              <h1 class="h1">Pattern</h1>
-              <h2 class="h2">Explicitly render a checkbox</h2>
-              <p>
-                What is this an example of (checkbox explicitly rendered)? Why
-                would you use a checkbox and explicitly render it? What kind of
-                key? Why? How would you create? How would you load JS API? How
-                would you set up the challenge?
-              </p>
-              <a
-                href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages-with-checkbox#expandable-2"
-                target="_blank"
-                ><span>Learn more about explicitly rendering checkboxes</span>
-                <mwc-icon>launch</mwc-icon></a
-              >
-            </section>
-            <section class="text">
-              <h1 class="h1">Result</h1>
-              ${SCORE}
-              <h2 class="h1">Response Details</h2>
-              <!--
-              <p>
-                How would you fetch the token? For example, do you send a
-                client-side request to a backend? How would you create an
-                assessment? For example, do you require a backend to send a
-                request to Google?
-              </p>
-              -->
-              <code>
-                <pre>${CODE}</pre>
-              </code>
-              <!--
-              <a href="#" target="_blank">
-                <mwc-icon>description</mwc-icon>
-                <span>View log</span>
-              </a>
-              -->
-            </section>
-          </div>
-        </div>
-      `,
-    };
-
-    const BAR = html`
-      <div class="bar" id="bar">
-        <mwc-icon-button
-          icon="menu_open"
-          aria-controls="drawer"
-          aria-expanded="${this.drawerOpen ? "true" : "false"}"
-          aria-label="Open the information panel"
-          @click=${this.toggleDrawer}
-          class="drawer-icon ${this.drawerOpen ? "hide" : "show"}"
-        ></mwc-icon-button>
-        <div class="logo">
-          <mwc-icon>location_searching</mwc-icon>
-          <h1 class="h1">BadFinder</h1>
-          <h2 class="h2">reCAPTCHA Examples</h2>
-        </div>
-        <mwc-icon-button
-          icon="${this.siteMapOpen ? "close" : "menu"}"
-          aria-controls="sitemap"
-          aria-expanded="${this.siteMapOpen ? "true" : "false"}"
-          aria-label="${this.siteMapOpen ? "Show site map" : "Hide site map"}"
-          @click=${this.toggleSiteMap}
-          class="menu-icon ${this.siteMapOpen ? "show" : "hide"}"
-        ></mwc-icon-button>
       </div>
     `;
+  }
 
-    const SITEMAP = html`
-      <nav
-        id="sitemap"
-        class="sitemap ${this.siteMapOpen ? "sitemap-open" : "sitemap-closed"}"
-      >
-        <ul class="unstyled links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/game">Game</a></li>
-          <li><a href="/login">Log in</a></li>
-          <li><a href="/signup">Sign up</a></li>
-          <li><a href="/store">Store</a></li>
-          <li><a href="/comment">Comment</a></li>
-        </ul>
-        <h2 class="h1">About</h2>
-        <p>
-          BadFinder is a pretend world, built to give developers examples of
-          using reCAPTCHA to protect your site. It can be deployed via a
-          demosite here.
+  get GUIDE_STORE() {
+    return html`
+      <div id="guide">
+        <div class="mask">
+          <section class="text pattern">
+            <h4 class="h1">Pattern</h4>
+            <h5 class="h2">When users interact</h5>
+            <p>
+              Add reCAPTCHA Enterprise verification on important user
+              interactions like making purchases. Verification can be added to
+              JavaScript events. With a score-based site key, you can include
+              reCAPTCHA Enterprise throughout your site without requiring users
+              to solve CAPTCHA challenges.
+            </p>
+            <a
+              class="documentation"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action"
+              target="_blank"
+              ><span>Learn more about scoring when users interact</span
+              ><mwc-icon>launch</mwc-icon></a
+            >
+          </section>
+          ${this[RESULTS[this.step]]}
+        </div>
+      </div>
+    `;
+  }
+
+  get RESULT_COMMENT() {
+    return html`
+      <section id="result" class="text result">
+        <h4 class="h1">Result</h4>
+        ${this.GUIDE_SCORE}
+        <p class="scoreExample">
+          For example, send suspicious comments to moderation.
         </p>
-        <p>
-          You can play the game, search the store, pretend to a be a BadBad, or
-          just poke around and have fun!
+        <section class="response">
+          <h5 class="h1">Response Details</h5>
+          <p>
+            Use reCAPTCHA Enterprise to generate a token for the action. After
+            the token is generated, send the reCAPTCHA token to your backend and
+            create an assessment within two minutes.
+          </p>
+          <div class="code">
+            <code>
+              <pre>${this.GUIDE_CODE}</pre>
+            </code>
+            <a
+              class="log"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/create-assessment"
+              target="_blank"
+              ><mwc-icon>description</mwc-icon
+              ><span>Creating assessments</span></a
+            >
+          </div>
+        </section>
+      </section>
+    `;
+  }
+
+  get RESULT_HOME() {
+    return html`
+      <section id="result" class="text result">
+        <h4 class="h1">Result</h4>
+        ${this.GUIDE_SCORE}
+        <p class="scoreExample">
+          For example, filter scrapers from traffic statistics.
         </p>
+        <section class="response">
+          <h5 class="h1">Response Details</h5>
+          <p>
+            Use reCAPTCHA Enterprise to generate a token for the action. After
+            the token is generated, send the reCAPTCHA token to your backend and
+            create an assessment within two minutes.
+          </p>
+          <div class="code">
+            <code>
+              <pre>${this.GUIDE_CODE}</pre>
+            </code>
+            <a
+              class="log"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/create-assessment"
+              target="_blank"
+              ><mwc-icon>description</mwc-icon
+              ><span>Creating assessments</span></a
+            >
+          </div>
+        </section>
+      </section>
+    `;
+  }
+
+  get RESULT_LOGIN() {
+    return html`
+      <section id="result" class="text result">
+        <h4 class="h1">Result</h4>
+        ${this.GUIDE_SCORE}
+        <p class="scoreExample">
+          For example, require MFA (Multi Factor Authentication).
+        </p>
+        <section class="response">
+          <h5 class="h1">Response Details</h5>
+          <p>
+            Use reCAPTCHA Enterprise to generate a token for the action. After
+            the token is generated, send the reCAPTCHA token to your backend and
+            create an assessment within two minutes.
+          </p>
+          <div class="code">
+            <code>
+              <pre>${this.GUIDE_CODE}</pre>
+            </code>
+            <a
+              class="log"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/create-assessment"
+              target="_blank"
+              ><mwc-icon>description</mwc-icon
+              ><span>Creating assessments</span></a
+            >
+          </div>
+        </section>
+      </section>
+    `;
+  }
+
+  get RESULT_SIGNUP() {
+    return html`
+      <section id="result" class="text result">
+        <h4 class="h1">Result</h4>
+        ${this.GUIDE_SCORE}
+        <p class="scoreExample">For example, require email verification.</p>
+        <section class="response">
+          <h5 class="h1">Response Details</h5>
+          <p>
+            Use reCAPTCHA Enterprise to generate a token for the action. After
+            the token is generated, send the reCAPTCHA token to your backend and
+            create an assessment within two minutes.
+          </p>
+          <div class="code">
+            <code>
+              <pre>${this.GUIDE_CODE}</pre>
+            </code>
+            <a
+              class="log"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/create-assessment"
+              target="_blank"
+              ><mwc-icon>description</mwc-icon
+              ><span>Creating assessments</span></a
+            >
+          </div>
+        </section>
+      </section>
+    `;
+  }
+
+  get RESULT_STORE() {
+    return html`
+      <section id="result" class="text result">
+        <h4 class="h1">Result</h4>
+        ${this.GUIDE_SCORE}
+        <p class="scoreExample">
+          For example, queue risky transactions for manual review.
+        </p>
+        <section class="response">
+          <h5 class="h1">Response Details</h5>
+          <p>
+            Use reCAPTCHA Enterprise to generate a token for the action. After
+            the token is generated, send the reCAPTCHA token to your backend and
+            create an assessment within two minutes.
+          </p>
+          <div class="code">
+            <code>
+              <pre>${this.GUIDE_CODE}</pre>
+            </code>
+            <a
+              class="log"
+              href="https://cloud.google.com/recaptcha-enterprise/docs/create-assessment"
+              target="_blank"
+              ><mwc-icon>description</mwc-icon
+              ><span>Creating assessments</span></a
+            >
+          </div>
+        </section>
+      </section>
+    `;
+  }
+
+  get SITEMAP() {
+    return html`
+      <nav id="sitemap">
+        <div class="fade">
+          <ul class="unstyled links">
+            <li class="home"><a href="/">Home</a></li>
+            <li class="comments"><a href="/comment">Comments</a></li>
+            <li class="game"><a href="/game">The game</a></li>
+            <li class="login"><a href="/login">Log in</a></li>
+            <li class="signup"><a href="/signup">Sign up</a></li>
+            <li class="store"><a href="/store">Store</a></li>
+          </ul>
+          <h3 class="h1">About</h3>
+          <p>
+            BadFinder is a pretend world that's kinda like the real world. It's
+            built to explore the different ways of using reCAPTCHA Enterprise to
+            protect web sites and applications.
+          </p>
+          <p>
+            Play the game, search the store, view the source, or just poke
+            around and have fun!
+          </p>
+        </div>
       </nav>
     `;
+  }
+
+  render() {
+    let CONTENTS;
+    if (this.step === "game") {
+      CONTENTS = this.GAME;
+    } else {
+      CONTENTS = this.EXAMPLE;
+    }
 
     return html`
       <div
+        @animationend=${this.handleAnimation}
+        @animationstart=${this.handleAnimation}
+        @transitionend=${this.handleAnimation}
+        @transitionstart=${this.handleAnimation}
+        class="${classMap({
+          animating: this.animating,
+          drawerOpen: this.step !== "game" && this.drawerOpen,
+          drawerClosed: this.step === "game" || !this.drawerOpen,
+          scored: this.score && this.verdict,
+          sitemapOpen: this.sitemapOpen,
+          sitemapClosed: !this.sitemapOpen,
+          unscored: !this.score || !this.verdict,
+        })}"
         id="demo"
-        class="demo ${this.drawerOpen ? "drawer-open" : "drawer-closed"}"
       >
-        <div id="drawer" class="drawer">
-          <mwc-icon-button
-            icon="close"
-            aria-controls="drawer"
-            aria-expanded="${this.drawerOpen ? "true" : "false"}"
-            @click=${this.toggleDrawer}
-            class="drawer-close-icon ${this.drawerOpen ? "show" : "hide"}"
-          ></mwc-icon-button>
-          ${GUIDES[this.step]}
-        </div>
-        <div id="content" class="content">
-          <div class="sticky-example">${BAR} ${FORMS[this.step]}</div>
-        </div>
-        ${SITEMAP}
+        ${CONTENTS}
       </div>
     `;
   }
