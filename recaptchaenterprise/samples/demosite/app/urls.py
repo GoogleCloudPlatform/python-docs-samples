@@ -31,7 +31,7 @@ def signup() -> str:
     # TODO: These env variables should be made available through Cloud Run's env vars.
     context = {
         "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
-        "checkbox_site_key": os.environ["SITE_KEY"]
+        "site_key": os.environ["SITE_KEY"]
     }
     return render_template(template_name_or_list="signup.html", context=context)
 
@@ -54,9 +54,16 @@ def store() -> str:
 def comment() -> str:
     context = {
         "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
-        "checkbox_site_key": os.environ["SITE_KEY"]
+        "site_key": os.environ["SITE_KEY"]
     }
     return render_template(template_name_or_list="comment.html", context=context)
+
+def game() -> str:
+    context = {
+        "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
+        "site_key": os.environ["SITE_KEY"]
+    }
+    return render_template(template_name_or_list="game.html", context=context)
 
 def create_assessment() -> Response:
     json_data = json.loads(request.data)
