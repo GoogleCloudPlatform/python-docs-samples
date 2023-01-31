@@ -18,42 +18,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- TODO: favicon -->
-    <title>Log in: reCAPTCHA Demo</title>
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <link rel="icon" href="../static/images/icons/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      href="../static/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+    <link rel="manifest" href="../static/manifest.webmanifest" />
+    <meta name="msapplication-config" content="../static/browserconfig.xml" />
+    <link
+      rel="shortcut icon"
+      sizes="196x196"
+      href="../static/images/icons/favicon-196px.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-120px.png"
+      sizes="120x120"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-152px.png"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-180px.png"
+      sizes="180x180"
+    />
+    <title>Comments: reCAPTCHA Demo</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+    />
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- See https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
+    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-      async function handleToken(token) {
-        console.log("handleToken", token);
-        // See https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-        const score = await createAssessment({
-          action: "log_in",
-          sitekey: "{{context.site_key}}",
-          token,
+      function handleClick(event) {
+        event.preventDefault();
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute(
+            "{{context.site_key}}",
+            {
+              action: "log_in",
+            }
+          );
+          // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+          const score = await createAssessment({
+            action: "log_in",
+            sitekey: "{{context.site_key}}",
+            token,
+          });
+          useAssessment(score);
         });
-        useAssessment(score);
       }
     </script>
     <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
   </head>
   <body>
-    <recaptcha-demo step="login">
+    <recaptcha-demo step="comment">
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
-      <button
-        class="g-recaptcha"
-        data-action="log_in"
-        data-callback="handleToken"
-        data-sitekey="{{context.site_key}}"
-        disabled="disabled"
-      >
-        Log in
-      </button>
+      <button onclick="handleClick(event)">Send comment</button>
       <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
     </recaptcha-demo>
   </body>

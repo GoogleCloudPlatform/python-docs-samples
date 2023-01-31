@@ -12,44 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ATTENTION: reCAPTCHA Example (Part 3) Starts
+// SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+// SEE: If using a library or famework, can use event handlers its usual way
+
 function createAssessment({ action, sitekey, token }) {
-    const body = JSON.stringify({
-      recaptcha_cred: {
-        action,
-        sitekey,
-        token,
-      },
-    });
-    console.log({ body });
-    return fetch("/create_assessment", {
-      body,
-      method: "POST",
+  // SEE: Code for fetching the assessment from backend goes here
+  // SEE: Refer to demo app backend code for more information
+  // SEE: If using a library or framework, can fetch its usual way
+  return fetchDemoAssessment({ action, sitekey, token });
+}
+
+function useAssessment(score) {
+  // SEE: Code for handling the assessment goes here
+  showAssessmentInDemo(score);
+}
+
+// ATTENTION: reCAPTCHA Example (Part 3) Ends
+
+function fetchDemoAssessment({ action, sitekey, token }) {
+  const body = JSON.stringify({
+    recaptcha_cred: {
+      action,
+      sitekey,
+      token,
+    },
+  });
+  return fetch("/create_assessment", {
+    body,
+    method: "POST",
+  })
+    .then((response) => {
+      const { ok, body: { data = {} } = {} } = response;
+      if (ok) {
+        return response.json();
+      }
     })
-      .then((response) => {
-        const { ok, body: { data = {} } = {} } = response;
-        if (ok) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        return data;
-      })
-      .catch((error) => {
-        console.error(error);
-        throw new Error(error);
-      });
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+}
+
+function showAssessmentInDemo(score) {
+  if (score?.data?.score && score?.data?.verdict) {
+    const demoElement = document.querySelector("recaptcha-demo");
+    demoElement.setAttribute("score", score?.data?.score);
+    demoElement.setAttribute("verdict", score?.data?.verdict);
   }
-  
-  // TODO: possible global getToken with ready/execute
-  
-  function useAssessment(score) {
-    console.log("useAssessment", score);
-    document
-      .querySelector("recaptcha-demo")
-      .setAttribute("score", score.data.score);
-    document
-      .querySelector("recaptcha-demo")
-      .setAttribute("verdict", score.data.verdict);
-  }
-  
+}
+
+// TODO: possible global getToken with ready/execute
