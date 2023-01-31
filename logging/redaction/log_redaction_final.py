@@ -52,7 +52,7 @@ REDACTION_CFG = {
 
 
 class PayloadAsJson(DoFn):
-    '''Convert PubSub message payload to UTF-8 and return as Json'''
+    '''Convert PubSub message payload to UTF-8 and return as JSON'''
     def process(self, element):
         yield json.loads(element.decode('utf-8'))
 
@@ -68,10 +68,11 @@ class BatchPayloads(CombineFn):
         return accumulator
 
     def merge_accumulators(self, accumulators):
-        merged = []
-        for accumulator in accumulators:
-            for item in accumulator:
-                merged.append(item)
+        merged = [
+            item
+            for accumulator in accumulators
+            for item in accumulator
+        ]
         return merged
 
     def extract_output(self, accumulator):
@@ -88,14 +89,13 @@ class LogRedaction(DoFn):
     def _log_to_row(self, entry):
         # Make `Row` from `textPayload`. For more details on the row, please see
         # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Row
-        payload = entry['textPayload'] if entry.get('textPayload') else ''
+        payload = entry.get('textPayload', '')
         return {'values': [{'string_value': payload}]}
 
     def setup(self):
         '''Initialize DLP client'''
         if self.dlp_client:
             return
-        # self.dlp_client = dlp_v2.DlpServiceClient(client_options={'quota_project_id', self.project_id})
         self.dlp_client = dlp_v2.DlpServiceClient()
         if not self.dlp_client:
             logging.error('Cannot create Google DLP Client')
@@ -121,8 +121,8 @@ class LogRedaction(DoFn):
 
         # replace payload with redacted version
         modified_logs = []
-        for i, log in enumerate(logs):
-            log['textPayload'] = response.item.table.rows[i].values[0].string_value
+        for index, log in enumerate(logs):
+            log['textPayload'] = response.item.table.rows[index].values[0].string_value
             # you may consider changing insert ID if the project already has a copy
             # of this log (e.g. log['insertId'] = 'deid-' + log['insertId'])
             # For more details about insert ID, please see:
@@ -139,7 +139,7 @@ class IngestLogs(DoFn):
         self.logger = None
 
     def _replace_log_name(self, entry):
-        # update log name in the entry with destination log
+        # updates log name in the entry to logger name
         entry['logName'] = self.logger.name
         return entry
 
@@ -164,15 +164,19 @@ class IngestLogs(DoFn):
         yield logs
 
 
-def run(pubsub_subscription: str,
-        destination_log_name: str,
-        window_size: float,
-        pipeline_args: List[str] = None) -> None:
+def run(
+    pubsub_subscription: str,
+    destination_log_name: str,
+    window_size: float,
+    pipeline_args: List[str] = None
+) -> None:
     '''Runs Dataflow pipeline'''
 
     pipeline_options = PipelineOptions(
-                pipeline_args, streaming=True, save_main_session=True
-        )
+        pipeline_args,
+        streaming=True,
+        save_main_session=True
+    )
     pipeline = Pipeline(options=pipeline_options)
     _ = (
         pipeline
@@ -193,26 +197,26 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-            '--pubsub_subscription',
-            help='The Cloud Pub/Sub subscription to read from in the format '
-            '"projects/<PROJECT_ID>/subscription/<SUBSCRIPTION_ID>".',
+        '--pubsub_subscription',
+        help='The Cloud Pub/Sub subscription to read from in the format '
+        '"projects/<PROJECT_ID>/subscription/<SUBSCRIPTION_ID>".',
     )
     parser.add_argument(
-            '--destination_log_name',
-            help='The log name to ingest log entries in the format '
-            '"projects/<PROJECT_ID>/logs/<LOG_ID>".',
+        '--destination_log_name',
+        help='The log name to ingest log entries in the format '
+        '"projects/<PROJECT_ID>/logs/<LOG_ID>".',
     )
     parser.add_argument(
-            '--window_size',
-            type=float,
-            default=60.0,
-            help='Output file\'s window size in seconds.',
+        '--window_size',
+        type=float,
+        default=60.0,
+        help='Output file\'s window size in seconds.',
     )
     known_args, pipeline_args = parser.parse_known_args()
 
     run(
-            known_args.pubsub_subscription,
-            known_args.destination_log_name,
-            known_args.window_size,
-            pipeline_args,
+        known_args.pubsub_subscription,
+        known_args.destination_log_name,
+        known_args.window_size,
+        pipeline_args,
     )
