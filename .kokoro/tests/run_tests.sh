@@ -19,6 +19,13 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
+# If on kokoro, add btlr to the path
+if [ -n "$KOKORO_GFILE_DIR" ]; then
+  bltr_dir="$KOKORO_GFILE_DIR/v0.0.3/"
+  chmod +x "${bltr_dir}"btlr
+  export PATH="$PATH:$bltr_dir"
+fi
+
 DIFF_FROM=""
 
 # `--only-diff-main` will only run tests on project changes on the
@@ -176,9 +183,9 @@ btlr_args+=(
     "${test_prog}"
 )
 
-echo "testing/btlr" "${btlr_args[@]}"
+echo "btlr" "${btlr_args[@]}"
 
-testing/btlr "${btlr_args[@]}"
+btlr "${btlr_args[@]}"
 
 RTN=$?
 cd "$ROOT"

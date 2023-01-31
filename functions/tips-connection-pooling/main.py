@@ -13,12 +13,14 @@
 # limitations under the License.
 
 # [START functions_tips_connection_pooling]
+import functions_framework
 import requests
 
 # Create a global HTTP session (which provides connection pooling)
 session = requests.Session()
 
 
+@functions_framework.http
 def connection_pooling(request):
     """
     HTTP Cloud Function that uses a connection pool to make HTTP requests.
