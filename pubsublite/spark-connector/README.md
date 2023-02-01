@@ -93,9 +93,11 @@ Get the connector's uber jar from this [public Cloud Storage location]. Alternat
 1. Go to [Cloud Console for Dataproc].
 
 1. Go to Clusters, then [Create Cluster].
-   > **Note:** When setting up the cluster, you must choose
-   > [Dataproc Image Version 1.5] under ___Versioning___ because
-   > the connector currently only supports Spark 2.4.8.
+   > **Note:** Choose [Dataproc Image Version 1.5]
+   > under ___Versioning___ for Spark 2.4.8.
+   > Choose [Dataproc Image Version 2.0] for Spark 3.
+   > The latest connector works with Spark 3.
+   > See [compatibility].
    > Additionally, in ___Manage security (optional)___, you
    > must enable the cloud-platform scope for your cluster by
    > checking "Allow API access to all Google Cloud services in
@@ -109,7 +111,7 @@ Get the connector's uber jar from this [public Cloud Storage location]. Alternat
 
     gcloud dataproc clusters create $CLUSTER_ID \
       --region $DATAPROC_REGION \
-      --image-version 1.5-debian10 \
+      --image-version 2.0-debian10 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --enable-component-gateway
     ```
@@ -187,3 +189,5 @@ Here is an example output: <!--TODO: update attributes field output with the nex
 
 [Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd
 [Dataproc Image Version 1.5]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-1.5
+[Dataproc Image Version 2.0]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-2.0
+[compatability]: gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar

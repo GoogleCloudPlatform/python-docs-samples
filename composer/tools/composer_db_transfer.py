@@ -26,10 +26,17 @@ import time
 import typing
 import uuid
 
-SCRIPT_VERSION = "1.3"
+SCRIPT_VERSION = "1.5"
 
 USAGE = r"""This script handles database transfer for Cloud Composer
 (Airflow 1.10.14/15 -> Airflow 2.0.1+).
+
+DEPRECATION NOTICE
+
+  This script has been deprecated and will be removed in the future.
+  "Snapshots" are recommended tool to perform side-by-side upgrades of
+  Cloud Composer environments
+  (https://cloud.google.com/composer/docs/save-load-snapshots).
 
 EXPORT
 
@@ -133,18 +140,21 @@ class Command:
         """Executes shell command and returns its output."""
 
         p = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=use_shell
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=use_shell
         )
         if log_command:
             logger.info("Executing shell command: %s", command)
-        (res, _) = p.communicate(input=command_input)
+        (res, err) = p.communicate(input=command_input)
+        res_string = str(res.decode().strip("\n"))
         if p.returncode:
             logged_command = f' "{command}"' if log_command else ""
+            err_string = str(err.decode().strip("\n"))
             error_message = (
-                f"Failed to run shell command{logged_command}, " f"details: {res}"
+                f"Failed to run shell command{logged_command}, "
+                f"details:\nstdout = {res_string}\nstderr = {err_string}"
             )
             raise Command.CommandExecutionError(error_message)
-        return str(res.decode().strip("\n"))
+        return res_string
 
 
 class DatabaseUtils:
@@ -178,12 +188,18 @@ class DatabaseUtils:
         )
 
     @staticmethod
+    def nullify(column: str) -> str:
+        """Returns a value representing NULL no matter what provided value is."""
+        del column
+        return f'"{DatabaseUtils.null_string}"'
+
+    @staticmethod
     def blob(column: str) -> str:
         """Returns SQL expression processing blob column for export."""
         big_enough_length_to_hold_hex_representation_of_blob = 150000
         return (
             f'CASE WHEN {column} IS NULL THEN "{DatabaseUtils.null_string}" '
-            fr'ELSE CONCAT("\\\x", CAST(HEX({column}) '
+            rf'ELSE CONCAT("\\\x", CAST(HEX({column}) '
             f"as char({big_enough_length_to_hold_hex_representation_of_blob}))) "
             "END"
         )
@@ -346,7 +362,14 @@ tables = [
             DatabaseUtils.nullable("pickle_id"),
             DatabaseUtils.nullable("fileloc"),
             DatabaseUtils.nullable("owners"),
-            DatabaseUtils.nullable("description"),
+            # Description might be a multi-line string.
+            # PostgreSQL is not able to consume CSV files with rows containing
+            # multi-line strings in a form produced by MySQL. Some
+            # post-processing might be a possible solution, but introducing
+            # additional complexity is not justified as the description is
+            # going to be re-created anyways once a DAG is parsed in a target
+            # environment.
+            DatabaseUtils.nullify("description"),
             DatabaseUtils.nullable("default_view"),
             DatabaseUtils.nullable("schedule_interval"),
             DatabaseUtils.nullable("root_dag_id"),
@@ -3455,6 +3478,10 @@ class DatabaseImporter(DatabasePorter):
             "${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
             f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
+            "export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://"
+            "${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}"
+            f"/{DatabaseImporter.TEMPORARY_DATABASE_NAME} && "
             "export AIRFLOW__CORE__FERNET_KEY="
             f"{self.fernet_key},{self.fernet_key_from_source_environment} "
             "&& airflow rotate-fernet-key"
@@ -3496,6 +3523,10 @@ class DatabaseImporter(DatabasePorter):
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
             f"{DatabaseImporter.TEMPORARY_DATABASE_NAME}"
         )
 
@@ -3524,7 +3555,7 @@ class DatabaseImporter(DatabasePorter):
             "airflow connections add airflow_db "
             "--conn-type postgres "
             "--conn-login $SQL_USER "
-            "--conn-password $SQL_PASSWORD "
+            '--conn-password="$SQL_PASSWORD" '
             f"--conn-host {self.sql_proxy} "
             f"--conn-port {DatabaseImporter.SQL_PROXY_PORT} "
             f"--conn-schema {self.sql_database}",
@@ -3537,7 +3568,12 @@ class DatabaseImporter(DatabasePorter):
             "export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
             "//${SQL_USER}:${SQL_PASSWORD}@"
             f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
-            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} && airflow db upgrade"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2:"
+            "//${SQL_USER}:${SQL_PASSWORD}@"
+            f"{self.sql_proxy}:{DatabaseImporter.SQL_PROXY_PORT}/"
+            f"{DatabaseImporter.TEMPORARY_DATABASE_NAME} "
+            "&& airflow db upgrade"
         )
         output = EnvironmentUtils.execute_command_in_a_pod(
             self.worker_pod_namespace,

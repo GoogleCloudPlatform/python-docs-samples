@@ -142,7 +142,7 @@ with models.DAG(
         task_id='ex-pod-affinity',
         name='ex-pod-affinity',
         namespace='default',
-        image='perl',
+        image='perl:5.34.0',
         cmds=['perl'],
         arguments=['-Mbignum=bpi', '-wle', 'print bpi(2000)'],
         # affinity allows you to constrain which nodes your pod is eligible to
@@ -184,7 +184,7 @@ with models.DAG(
         task_id='ex-all-configs',
         name='pi',
         namespace='default',
-        image='perl',
+        image='perl:5.34.0',
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
         cmds=['perl'],
@@ -211,8 +211,8 @@ with models.DAG(
         # Can be a large range of data, and can include characters that are not
         # permitted by labels.
         annotations={'key1': 'value1'},
-        # Resource specifications for Pod, this will allow you to set both cpu
-        # and memory limits and requirements.
+        # Optional resource specifications for Pod, this will allow you to
+        # set both cpu and memory limits and requirements.
         # Prior to Airflow 1.10.4, resource specifications were
         # passed as a Pod Resources Class object,
         # If using this example on a version of Airflow prior to 1.10.4,

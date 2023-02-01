@@ -1,7 +1,7 @@
 Flask==2.1.0
-SQLAlchemy==1.4.36
+gunicorn==20.1.0
 python-tds==1.11.0
+pyopenssl==23.0.0
+SQLAlchemy==1.4.38
+cloud-sql-python-connector==1.1.0
 sqlalchemy-pytds==0.3.4
-pyodbc==4.0.32
-pyopenssl==22.0.0
-

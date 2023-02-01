@@ -88,7 +88,7 @@ test their code.
     ```console
     $ pyenv install 3.9.12
     ```
-    *  3.10.12 (latest 3.10.x release)
+    *  3.10.4 (latest 3.10.x release)
     ```console
     $ pyenv install 3.10.4
     ```

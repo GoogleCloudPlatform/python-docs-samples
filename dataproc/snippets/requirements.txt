@@ -1,0 +1,8 @@
+
+backoff==2.2.1
+grpcio==1.50.0
+google-auth==2.14.0
+google-auth-httplib2==0.1.0
+google-cloud==0.34.0
+google-cloud-storage==2.5.0
+google-cloud-dataproc==5.0.3

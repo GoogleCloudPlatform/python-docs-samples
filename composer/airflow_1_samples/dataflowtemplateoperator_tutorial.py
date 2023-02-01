@@ -36,9 +36,9 @@ from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 from airflow.utils.dates import days_ago
 
-bucket_path = models.Variable.get("bucket_path")
-project_id = models.Variable.get("project_id")
-gce_zone = models.Variable.get("gce_zone")
+bucket_path = "{{var.value.bucket_path}}"
+project_id = "{{var.value.project_id}}"
+gce_zone = "{{var.value.gce_zone}}"
 
 
 default_args = {

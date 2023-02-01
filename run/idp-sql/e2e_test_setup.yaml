@@ -20,7 +20,8 @@ steps:
   args:
     - '-c'
     - |
-      WAIT=30 ./retry.sh "gcloud sql databases create ${_DB_NAME} \
+      sleep 120 # To reduce conflict with other sample SQL creation
+      WAIT=120 ./retry.sh "gcloud sql databases create ${_DB_NAME} \
         --instance ${_DB_INSTANCE} \
         --project $PROJECT_ID"
 

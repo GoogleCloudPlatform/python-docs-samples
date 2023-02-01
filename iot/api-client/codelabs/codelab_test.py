@@ -20,9 +20,9 @@ import thermostat
 
 # Check colors exist
 def test_check_colors(capsys):
-    assert(bcolors.OKBLUE is not None)
-    assert(bcolors.FAIL is not None)
-    assert(bcolors.CEND is not None)
+    assert bcolors.OKBLUE is not None
+    assert bcolors.FAIL is not None
+    assert bcolors.CEND is not None
 
 
 # Check error code returns reasonable justifications

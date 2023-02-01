@@ -1,11 +1,7 @@
-# Don't upgrade to 2.0.0 until opentelemtry-instrumentation-flask is okay with it
-Flask==1.1.4
-itsdangerous==1.1.0
-markupsafe==1.1.1
-opentelemetry-exporter-gcp-trace==1.3.0
-opentelemetry-propagator-gcp==1.3.0
-opentelemetry-instrumentation-flask==0.20b0
-grpcio==1.45.0
-httpretty==1.1.4
-google-cloud-monitoring==2.9.1
-google-cloud-trace==1.6.1
+Flask==2.2.2
+gunicorn==20.1.0
+opentelemetry-exporter-gcp-trace==1.4.0
+opentelemetry-propagator-gcp==1.4.0
+opentelemetry-instrumentation-flask==0.34b0
+opentelemetry-instrumentation-requests==0.34b0
+google-cloud-trace==1.7.2

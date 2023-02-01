@@ -1,6 +1,7 @@
-Django==4.0.4
+Django==4.0.4; python_version >= '3.8'
+Django==3.2.14; python_version < '3.8'
 gunicorn==20.1.0
-psycopg2-binary==2.9.3
-django-environ==0.8.1
-google-cloud-secret-manager==2.10.0
-django-storages[google]==1.12.3
+psycopg2-binary==2.9.4
+django-environ==0.9.0
+google-cloud-secret-manager==2.12.0
+django-storages[google]==1.13

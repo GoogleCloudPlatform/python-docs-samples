@@ -10,7 +10,9 @@ product:
     data with cloud-based applications.
 
 required_api_url: https://console.cloud.google.com/apis/library/healthcare.googleapis.com
-required_role: Healthcare Consent Store Administrator
+required_roles:
+- Healthcare Consent Store Administrator
+- Healthcare Attribute Definition Editor
 
 setup:
 - auth
@@ -19,6 +21,10 @@ setup:
 samples:
 - name: Consent
   file: consent_stores.py
+  show_help: True
+
+- name: AttributeDefinitions
+  file: attribute_definitions.py
   show_help: True
 
 cloud_client_library: true

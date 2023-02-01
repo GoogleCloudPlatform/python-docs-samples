@@ -1,0 +1,15 @@
+{
+    "type": "email",
+    "displayName": "Email joe.",
+    "description": "test_notification_channel.json",
+    "labels": {
+        "email_address": "joe@example.com"
+    },
+    "userLabels": {
+        "office": "california_westcoast_usa",
+        "division": "fulfillment",
+        "role": "operations",
+        "level": "5"
+    },
+    "enabled": true
+}

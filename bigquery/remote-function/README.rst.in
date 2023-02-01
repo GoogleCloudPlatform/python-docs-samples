@@ -1,0 +1,19 @@
+# This file is used to generate README.rst
+# python3 ../../scripts/readme-gen/readme_gen.py README.rst.in
+
+product:
+  name: BigQuery Remote Function
+  short_name: BigQuery Remote Function
+  url: https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions
+  description: >
+    BigQuery Remote Function allows you to analyze structured and unstructured data by integrating services outside BigQuery including Vision, Document AI, Speech-to-Text etc.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Vision
+  file: vision/vision_function.py
+
+cloud_client_library: true

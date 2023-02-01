@@ -26,16 +26,18 @@ from airflow.operators import dummy_operator
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_dag_args = {
-    'start_date': yesterday,
+    "start_date": yesterday,
 }
 
 with models.DAG(
-        'composer_sample_cycle',
-        schedule_interval=datetime.timedelta(days=1),
-        default_args=default_dag_args) as dag:
-    start = dummy_operator.DummyOperator(task_id='start')
-    end = dummy_operator.DummyOperator(task_id='end')
+    "composer_sample_cycle",
+    schedule_interval=datetime.timedelta(days=1),
+    default_args=default_dag_args,
+) as dag:
+    start = dummy_operator.DummyOperator(task_id="start")
+    end = dummy_operator.DummyOperator(task_id="end")
     variable_example = bash_operator.BashOperator(
-        task_id='variable_example',
-        bash_command='echo project_id=' + models.Variable.get('gcp_project'))
+        task_id="variable_example",
+        bash_command="echo project_id=" + "{{var.value.gcp_project}}",
+    )
     start >> variable_example >> end

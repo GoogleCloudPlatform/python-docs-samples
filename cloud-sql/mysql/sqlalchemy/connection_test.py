@@ -12,110 +12,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from contextlib import contextmanager
 import logging
 import os
-from typing import Dict
-import uuid
+
+from flask.testing import FlaskClient
 
 import pytest
-import sqlalchemy
 
-import main
-
+import app
 
 logger = logging.getLogger()
 
 
-@pytest.mark.usefixtures("tcp_db_connection")
-def test_tcp_connection(tcp_db_connection):
-    assert tcp_db_connection is not None
-
-
-@pytest.mark.usefixtures("unix_db_connection")
-def test_unix_connection(unix_db_connection):
-    assert unix_db_connection is not None
-
-
-@pytest.mark.usefixtures("tcp_db_connection")
-def test_get(tcp_db_connection):
-    main.create_tables()
-    context = main.get_index_context()
-    assert isinstance(context, dict)
-    assert len(context.get("recent_votes")) >= 0
-    assert context.get("tab_count") >= 0
-    assert context.get("space_count") >= 0
-
-
-env_map = {
-    "MYSQL_USER": "DB_USER",
-    "MYSQL_PASSWORD": "DB_PASS",
-    "MYSQL_DATABASE": "DB_NAME",
-    "MYSQL_INSTANCE": "INSTANCE_CONNECTION_NAME",
-}
+# load proper environment variables
+def setup_test_env():
+    os.environ["DB_USER"] = os.environ["MYSQL_USER"]
+    os.environ["DB_PASS"] = os.environ["MYSQL_PASSWORD"]
+    os.environ["DB_NAME"] = os.environ["MYSQL_DATABASE"]
+    os.environ["DB_PORT"] = os.environ["MYSQL_PORT"]
+    os.environ["INSTANCE_UNIX_SOCKET"] = os.environ["MYSQL_UNIX_SOCKET"]
+    os.environ["INSTANCE_HOST"] = os.environ["MYSQL_INSTANCE_HOST"]
+    os.environ["INSTANCE_CONNECTION_NAME"] = os.environ["MYSQL_INSTANCE"]
 
 
 @pytest.fixture(scope="module")
-def tcp_db_connection():
-    tcp_env_map = {key: value for key, value in env_map.items()}
-    tcp_env_map["MYSQL_HOST"] = "DB_HOST"
+def client() -> FlaskClient:
+    setup_test_env()
+    app.app.testing = True
+    client = app.app.test_client()
 
-    with mapped_env_variables(tcp_env_map):
-        yield from _common_setup()
-
-
-@pytest.fixture(scope="module")
-def unix_db_connection():
-    with mapped_env_variables(env_map):
-        yield from _common_setup()
+    return client
 
 
-def _common_setup():
-    pool = main.init_connection_engine()
-
-    table_name: str = uuid.uuid4().hex
-
-    try:
-        with pool.connect() as conn:
-            conn.execute(
-                f"CREATE TABLE IF NOT EXISTS `{table_name}`"
-                "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-                "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
-            )
-    except sqlalchemy.exc.OperationalError as e:
-        logger.warning(
-            "Could not connect to the production database. "
-            "If running tests locally, is the cloud_sql_proxy currently running?"
-        )
-        # If there is cloud sql proxy log, dump the contents.
-        home_dir = os.environ.get("HOME", "")
-        log_file = f"{home_dir}/cloud_sql_proxy.log"
-        if home_dir and os.path.isfile(log_file):
-            print(f"Dumping the contents of {log_file}")
-            with open(log_file, "r") as f:
-                print(f.read())
-        raise e
-
-    yield pool
-
-    with pool.connect() as conn:
-        conn.execute(f"DROP TABLE IF EXISTS `{table_name}`")
+def test_get_votes(client: FlaskClient) -> None:
+    response = client.get("/")
+    text = "Tabs VS Spaces"
+    body = response.text
+    assert response.status_code == 200
+    assert text in body
 
 
-@contextmanager
-def mapped_env_variables(env_map: Dict):
-    """Copies values in the environment to other values, also in
-    the environment.
+def test_cast_vote(client: FlaskClient) -> None:
+    response = client.post("/votes", data={"team": "SPACES"})
+    text = "Vote successfully cast for 'SPACES'"
+    body = response.text
+    assert response.status_code == 200
+    assert text in body
 
-    In `env_map`, keys are source environment variables and values
-    are destination environment variables.
-    """
-    for key, value in env_map.items():
-        os.environ[value] = os.environ[key]
 
-    try:
-        yield
-    finally:
-        for variable_name in env_map.values():
-            if os.environ.get(variable_name):
-                del os.environ[variable_name]
+def test_unix_connection(client: FlaskClient) -> None:
+    del os.environ["INSTANCE_HOST"]
+    app.db = app.init_connection_pool()
+    assert "unix_socket" in str(app.db.url)
+    test_get_votes(client)
+    test_cast_vote(client)
+
+
+def test_connector_connection(client: FlaskClient) -> None:
+    del os.environ["INSTANCE_UNIX_SOCKET"]
+    app.db = app.init_connection_pool()
+    assert str(app.db.url) == "mysql+pymysql://"
+    test_get_votes(client)
+    test_cast_vote(client)

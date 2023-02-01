@@ -1,4 +1,0 @@
-google-cloud-trace==0.24.1
-opencensus==0.9.0
-opencensus-ext-stackdriver==0.8.0
-Flask==2.1.0

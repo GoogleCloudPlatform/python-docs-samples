@@ -1,3 +1,7 @@
-google-api-python-client==2.41.0
+google-api-python-client==2.47.0
 google-auth-httplib2==0.1.0
-google-auth==2.6.2
+google-auth==2.15.0
+google-cloud-api-keys==0.2.0
+google-cloud-compute==1.5.1
+google-cloud-language==2.6.1
+google-cloud-storage==2.5.0

@@ -36,7 +36,7 @@ class CleanupClient(datastore.Client):
             )
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def client():
     client = CleanupClient(PROJECT)
     yield client

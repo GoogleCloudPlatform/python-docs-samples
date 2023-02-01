@@ -52,7 +52,7 @@ For production applications running on Google Cloud Platform, you have
 the following options:
 
 * Use [Cloud SQL](https://cloud.google.com/sql), a fully-managed MySQL database.
-  There is a [Flask CloudSQL](../cloudsql) sample that should be straightfoward
+  There is a [Flask CloudSQL](../cloudsql) sample that should be straightforward
   to adapt to Django.
 * Use any database of your choice hosted on
   [Google Compute Engine](https://cloud.google.com/compute). The

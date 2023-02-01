@@ -15,7 +15,13 @@ ignoreFiles:
   - "**/constraints.txt"
   - "**/constraints-test.txt"
   - "**/apt.txt"
-  
+  - "**/ghcnd-stations.txt"
+  - "texttospeech/snippets/resources/example.txt"
+  - "texttospeech/snippets/resources/hello.txt"
+  - "language/**/resources/*.txt"
+  - "language/snippets/classify_text/resources/texts/*.txt"
+
+ignoreLicenseYear: true
 
 sourceFileExtensions:
   - "ts"
