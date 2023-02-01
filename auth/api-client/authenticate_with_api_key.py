@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_cloud_authenticate_api_key]
+# [START apikeys_authenticate_api_key]
 
 from google.cloud import language_v1
 
@@ -46,4 +46,4 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
     print(f"Sentiment: {sentiment.score}, {sentiment.magnitude}")
     print("Successfully authenticated using the API key")
 
-# [END auth_cloud_authenticate_api_key]
+# [END apikeys_authenticate_api_key]
