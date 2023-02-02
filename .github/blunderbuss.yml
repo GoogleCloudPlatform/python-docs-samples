@@ -144,7 +144,9 @@ assign_issues_by:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc
 - labels:
+  - 'api: logging'
   - 'api: monitoring'
+  - 'api: trace'
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
