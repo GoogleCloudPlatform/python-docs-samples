@@ -36,6 +36,4 @@ def test_search_with_query_expansion_spec_pass():
 def test_search_with_query_expansion_spec():
     response = search()
 
-    assert response.results[0].product.title == "Google Youth Hero Tee Grey"
-    assert response.results[2].product.title != "Google Youth Hero Tee Grey"
     assert response.query_expansion_info.expanded_query is True

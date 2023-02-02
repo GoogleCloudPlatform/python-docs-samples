@@ -79,11 +79,17 @@ assign_issues_by:
   to:
   - noerog
 - labels:
+  - 'api: iam'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: iot'
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: language'
   - 'api: texttospeech'
@@ -112,6 +118,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: securitycenter'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: spanner'
   to:
   - GoogleCloudPlatform/api-spanner-python
@@ -134,13 +144,16 @@ assign_issues_by:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc
 - labels:
+  - 'api: logging'
   - 'api: monitoring'
+  - 'api: trace'
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
   - 'api: kms'
   - 'api: cloudkms'
   - 'api: secretmanager'
+  - 'api: privateca'
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
@@ -185,6 +198,8 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: retail'
   to: 
