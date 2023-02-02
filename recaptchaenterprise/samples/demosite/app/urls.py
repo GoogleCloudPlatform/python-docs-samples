@@ -15,9 +15,9 @@
 import json
 import os
 
-from flask import render_template, request, Response
+from flask import render_template, request, Response, jsonify
 
-from backend.recaptcha import execute_create_assessment
+from backend import create_assessment
 
 context = {
     "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
@@ -50,5 +50,19 @@ def game() -> str:
 
 
 def create_assessment() -> Response:
-    json_data = json.loads(request.data)
-    return execute_create_assessment(os.environ["GOOGLE_CLOUD_PROJECT"], json_data)
+    try:
+        json_data = json.loads(request.data)
+        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+        credentials = json_data["recaptcha_cred"]
+
+        # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
+        create_assessment.create_assessment(project_id,
+                                            credentials["sitekey"],
+                                            credentials["token"],
+                                            credentials["action"])
+        # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
+    except ValueError as e:
+        return jsonify({'data': {"error_msg": str(e.__dict__)}, "success": "false"})
+    except Exception as e:
+        return jsonify(
+            {'data': {"error_msg": f"Something happened! Please try again ! {e.__dict__}"}, "success": "false"})
