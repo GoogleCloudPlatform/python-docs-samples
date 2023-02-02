@@ -89,7 +89,6 @@ def list_time_series(project_id):
 
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
-    interval = monitoring_v3.TimeInterval()
 
     now = time.time()
     seconds = int(now)

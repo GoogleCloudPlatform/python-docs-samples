@@ -118,6 +118,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: securitycenter'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: spanner'
   to:
   - GoogleCloudPlatform/api-spanner-python
@@ -140,7 +144,9 @@ assign_issues_by:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc
 - labels:
+  - 'api: logging'
   - 'api: monitoring'
+  - 'api: trace'
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
