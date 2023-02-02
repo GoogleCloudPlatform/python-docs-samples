@@ -13,7 +13,7 @@ geopandas===0.10.2; python_version == '3.7'
 geopandas==0.12.2; python_version >= '3.8'
 google-api-core==2.11.0
 google-auth==2.16.0
-google-cloud-bigquery==3.4.2
+google-cloud-bigquery==3.5.0
 google-cloud-bigquery-storage==2.18.1
 google-cloud-core==2.3.2
 google-crc32c==1.5.0
