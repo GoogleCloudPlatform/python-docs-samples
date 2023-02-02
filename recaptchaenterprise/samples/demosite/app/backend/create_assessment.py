@@ -14,6 +14,7 @@
 
 from typing import List
 
+from flask import jsonify
 from google.cloud import recaptchaenterprise_v1
 
 
@@ -27,6 +28,8 @@ def create_assessment(
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
     """
+    sample_threshold_score = 0.50
+    # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Starts -->
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
 
     # Set the properties of the event to be tracked.
@@ -48,11 +51,18 @@ def create_assessment(
 
     # Check if the token is valid.
     if not response.token_properties.valid:
-        raise ValueError(f"The Create Assessment call failed because the token was invalid for the following reasons: {response.token_properties.invalid_reason}")
+        raise ValueError(
+            f"The Create Assessment call failed because the token was invalid for the following reasons: "
+            f"{response.token_properties.invalid_reason}")
 
     # Check if the expected action was executed.
     if response.token_properties.action != recaptcha_action:
-        raise ValueError(f"The action attribute in your reCAPTCHA tag does not match the action you are expecting to score. Please check your action attribute !")
+        raise ValueError(
+            "The action attribute in your reCAPTCHA tag does not match the action you are expecting to score. "
+            "Please check your action attribute !")
+    # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Ends -->
 
-    # Return the risk score and the reason(s).
-    return response.risk_analysis.score, response.risk_analysis.reasons
+    # Return the risk score.
+    verdict = "Not a human" if response.risk_analysis.score < sample_threshold_score else "Human"
+    return jsonify(
+        {'data': {"score": "{:.12f}".format(response.risk_analysis.score), "verdict": verdict}, "success": "true"})
