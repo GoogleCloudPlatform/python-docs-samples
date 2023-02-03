@@ -22,7 +22,7 @@
 # [START compute_regional_disk_attach]
 # [START compute_disk_attach]
 import sys
-from typing import Any, NoReturn
+from typing import Any, Literal
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -80,8 +80,8 @@ def attach_disk(
     zone: str,
     instance_name: str,
     disk_link: str,
-    mode: str = "READ_ONLY",
-) -> NoReturn:
+    mode: Literal["READ_ONLY", "READ_WRITE"],
+) -> None:
     """
     Attaches a non-boot persistent disk to a specified compute instance. The disk might be zonal or regional.
 

@@ -23,7 +23,7 @@
 # [START compute_disk_resize]
 import re
 import sys
-from typing import Any, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -76,7 +76,7 @@ def wait_for_extended_operation(
     return result
 
 
-def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> NoReturn:
+def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> None:
     """
     Resizes a persistent disk to a specified size in GB. After you resize the disk, you must
     also resize the file system so that the operating system can access the additional space.
