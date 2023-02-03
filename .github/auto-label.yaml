@@ -60,6 +60,7 @@ path:
     monitoring: "monitoring"
     notebooks: "notebooks"
     optimization: "cloudoptimization"
+    people-and-planet-ai: "people-and-planet-ai"
     profiler: "cloudprofiler"
     pubsub: "pubsub"
     pubsublite: "pubsublite"
