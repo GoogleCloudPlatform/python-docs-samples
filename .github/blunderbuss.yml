@@ -154,6 +154,7 @@ assign_issues_by:
   - 'api: cloudkms'
   - 'api: secretmanager'
   - 'api: privateca'
+  - 'api: recaptchaenterprise'  
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
@@ -172,7 +173,6 @@ assign_issues_by:
   - 'api: dataproc'
   - 'api: clouderrorreporting'
   - 'api: talent'
-  - 'api: recaptchaenterprise'
   - 'api: vision'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
