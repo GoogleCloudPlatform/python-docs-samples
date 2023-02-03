@@ -44,8 +44,12 @@ def change_machine_type(project_id: str, zone: str, instance_name: str, new_mach
 
     machine_type = compute_v1.InstancesSetMachineTypeRequest()
     machine_type.machine_type = f"projects/{project_id}/zones/{zone}/machineTypes/{new_machine_type}"
-    operation = client.set_machine_type(project=project_id, zone=zone, instance=instance_name,
-                                        instances_set_machine_type_request_resource=machine_type)
+    operation = client.set_machine_type(
+        project=project_id,
+        zone=zone,
+        instance=instance_name,
+        instances_set_machine_type_request_resource=machine_type,
+    )
 
     wait_for_extended_operation(operation, "changing machine type")
 
