@@ -16,13 +16,18 @@ import logging
 import os
 
 from flask.testing import FlaskClient
-
+from google.auth import default
 import pytest
+import requests
 
 import app
 
 logger = logging.getLogger()
 
+
+CA_FILENAME = "certs/ca.pem"
+SQLADMIN_API_ENDPOINT = "https://sqladmin.googleapis.com"
+SQLADMIN_API_VERSION = "v1beta4"
 
 # load proper environment variables
 def setup_test_env():
@@ -33,6 +38,26 @@ def setup_test_env():
     os.environ["INSTANCE_HOST"] = os.environ["SQLSERVER_INSTANCE_HOST"]
     os.environ["INSTANCE_CONNECTION_NAME"] = os.environ["SQLSERVER_INSTANCE"]
 
+    project, _, instance = os.environ["INSTANCE_CONNECTION_NAME"].split(":")
+    download_ca_cert(project, instance)
+    os.environ["DB_ROOT_CERT"] = CA_FILENAME
+
+
+def download_ca_cert(project, instance):
+    """ Download server CA cert"""
+    scopes = ["https://www.googleapis.com/auth/sqlservice.admin"]
+    credentials, _ = default(scopes=scopes)
+    headers = {
+        "Authorization": f"Bearer {credentials.token}",
+    }
+    url = (f"{SQLADMIN_API_ENDPOINT}/sql/{SQLADMIN_API_VERSION}"
+           f"/projects/{project}/instances/{instance}/connectSettings")
+
+    resp = requests.get(url, headers=headers, raise_for_status=True)
+    server_ca_cert = resp.json()["serverCaCert"]["cert"]
+
+    with open(CA_FILENAME, "w+") as ca_out:
+        ca_out.write(server_ca_cert)
 
 @pytest.fixture(scope="module")
 def client() -> FlaskClient:
