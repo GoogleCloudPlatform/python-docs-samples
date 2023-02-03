@@ -31,6 +31,7 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -62,13 +63,13 @@ def app() -> Flask:
 
 @pytest.fixture(scope="module")
 def browser() -> WebDriver:
-    chrome_options = webdriver.ChromeOptions()
+    chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1420,1080")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                               chrome_options=chrome_options)
+                               options=chrome_options)
     yield browser
     browser.close()
 
