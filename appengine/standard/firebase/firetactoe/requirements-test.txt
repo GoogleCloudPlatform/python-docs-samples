@@ -1,4 +1,4 @@
 # pin pytest to 4.6.11 for Python2.
 pytest==4.6.11; python_version < '3.0'
 WebTest==2.0.35; python_version < '3.0'
-mock==5.0.1; python_version < "3"
+mock===3.0.5; python_version < "3"
