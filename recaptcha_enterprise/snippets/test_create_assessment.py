@@ -29,9 +29,9 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 import pytest
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
