@@ -17,7 +17,7 @@ import os
 
 from flask import render_template, request, Response, jsonify
 
-from backend import create_assessment
+from backend import create_recaptcha_assessment
 
 context = {
     "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
@@ -56,7 +56,7 @@ def create_assessment() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        create_assessment.create_assessment(project_id,
+        return create_recaptcha_assessment.create_assessment(project_id,
                                             credentials["sitekey"],
                                             credentials["token"],
                                             credentials["action"])
