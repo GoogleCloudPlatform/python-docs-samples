@@ -40,6 +40,11 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # For deployments that connect directly to a Cloud SQL instance without
     # using the Cloud SQL Proxy, configuring SSL certificates will ensure the
     # connection is encrypted.
+
+    # If your SQL Server instance requires SSL, you need to download the CA 
+    # certificate for your instance and include cafile={path to downloaded 
+    # certificate} and validate_host=False, even when using the proxy. 
+    # This is a workaround for a known issue.
     if os.environ.get("DB_ROOT_CERT"):  # e.g. '/path/to/my/server-ca.pem'
         connect_args = {
             "cafile" : os.environ["DB_ROOT_CERT"],
