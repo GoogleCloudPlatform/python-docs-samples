@@ -31,8 +31,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -86,7 +87,6 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str) -> None:
     operation = firewall_client.delete(project=project_id, firewall=firewall_rule_name)
 
     wait_for_extended_operation(operation, "firewall rule deletion")
-    return
 
 
 # [END compute_firewall_delete]

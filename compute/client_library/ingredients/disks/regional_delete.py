@@ -16,14 +16,13 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import sys
 from typing import NoReturn
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT delete_regional_disk>
-def delete_regional_disk(project_id: str, region: str, disk_name: str) -> NoReturn:
+def delete_regional_disk(project_id: str, region: str, disk_name: str) -> None:
     """
     Deletes a disk from a project.
 
@@ -35,5 +34,4 @@ def delete_regional_disk(project_id: str, region: str, disk_name: str) -> NoRetu
     disk_client = compute_v1.RegionDisksClient()
     operation = disk_client.delete(project=project_id, region=region, disk=disk_name)
     wait_for_extended_operation(operation, "regional disk deletion")
-    return
 # </INGREDIENT>
