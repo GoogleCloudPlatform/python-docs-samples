@@ -17,13 +17,16 @@
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 
-from typing import NoReturn
-
 from google.cloud import compute_v1
 
 
 # <INGREDIENT change_machine_type>
-def change_machine_type(project_id: str, zone: str, instance_name: str, new_machine_type: str) -> NoReturn:
+def change_machine_type(
+        project_id: str,
+        zone: str,
+        instance_name: str,
+        new_machine_type: str
+) -> None:
     """
     Changes the machine type of VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
 
@@ -52,6 +55,4 @@ def change_machine_type(project_id: str, zone: str, instance_name: str, new_mach
     )
 
     wait_for_extended_operation(operation, "changing machine type")
-
-    return
 # </INGREDIENT>

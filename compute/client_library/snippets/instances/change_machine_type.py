@@ -21,7 +21,7 @@
 
 # [START compute_change_machine_type]
 import sys
-from typing import Any, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -76,7 +76,7 @@ def wait_for_extended_operation(
 
 def change_machine_type(
     project_id: str, zone: str, instance_name: str, new_machine_type: str
-) -> NoReturn:
+) -> None:
     """
     Changes the machine type of VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
 
@@ -109,8 +109,6 @@ def change_machine_type(
     )
 
     wait_for_extended_operation(operation, "changing machine type")
-
-    return
 
 
 # [END compute_change_machine_type]
