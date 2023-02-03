@@ -53,7 +53,7 @@ def download_ca_cert(project, instance):
     url = (f"{SQLADMIN_API_ENDPOINT}/sql/{SQLADMIN_API_VERSION}"
            f"/projects/{project}/instances/{instance}/connectSettings")
 
-    resp = requests.get(url, headers=headers, raise_for_status=True)
+    resp = requests.get(url, headers=headers)
     server_ca_cert = resp.json()["serverCaCert"]["cert"]
 
     with open(CA_FILENAME, "w+") as ca_out:
