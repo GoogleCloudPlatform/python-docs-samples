@@ -16,6 +16,7 @@
 # [START functions_tips_gcp_apis]
 import os
 
+import functions_framework
 from google.cloud import pubsub_v1
 
 
@@ -23,6 +24,7 @@ from google.cloud import pubsub_v1
 pubsub = pubsub_v1.PublisherClient()
 
 
+@functions_framework.http
 def gcp_api_call(request):
     """
     HTTP Cloud Function that uses a cached client library instance to

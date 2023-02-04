@@ -31,7 +31,7 @@ _tmpdir = tempfile.TemporaryDirectory()
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # Skipping for Python 3.9 due to numpy compilation failure.
-    "ignored_versions": ["2.7", "3.9", "3.10", "3.11"],
+    "ignored_versions": ["2.7", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
