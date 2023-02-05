@@ -106,9 +106,9 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
             "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
         )
         # Count number of votes for tabs
-        tab_count = conn.execute(stmt, parameters={"candidate":"TABS"}).scalar()
+        tab_count = conn.execute(stmt, parameters={"candidate": "TABS"}).scalar()
         # Count number of votes for spaces
-        space_count = conn.execute(stmt, parameters={"candidate":"SPACES"}).scalar()
+        space_count = conn.execute(stmt, parameters={"candidate": "SPACES"}).scalar()
     return {
         "recent_votes": votes,
         "space_count": space_count,
@@ -136,7 +136,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
-            conn.execute(stmt, parameters={"time_cast":time_cast, "candidate":team})
+            conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team})
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
