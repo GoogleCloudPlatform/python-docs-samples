@@ -252,8 +252,8 @@ def test_disk_attachment(autodelete_blank_disk, autodelete_regional_blank_disk, 
 
     assert len(list(instance.disks)) == 1
 
-    attach_disk(PROJECT, ZONE, instance.name, autodelete_blank_disk.self_link)
-    attach_disk(PROJECT, ZONE, instance.name, autodelete_regional_blank_disk.self_link)
+    attach_disk(PROJECT, ZONE, instance.name, autodelete_blank_disk.self_link, 'READ_ONLY')
+    attach_disk(PROJECT, ZONE, instance.name, autodelete_regional_blank_disk.self_link, 'READ_WRITE')
 
     instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
 
