@@ -17,6 +17,7 @@ import os
 
 from flask.testing import FlaskClient
 from google.auth import default
+import google.auth.transport.requests
 import pytest
 import requests
 
@@ -47,6 +48,11 @@ def download_ca_cert(project, instance):
     """ Download server CA cert"""
     scopes = ["https://www.googleapis.com/auth/sqlservice.admin"]
     credentials, _ = default(scopes=scopes)
+
+    if not credentials.valid:
+        request = google.auth.transport.requests.Request()
+        credentials.refresh(request)
+        
     headers = {
         "Authorization": f"Bearer {credentials.token}",
     }
