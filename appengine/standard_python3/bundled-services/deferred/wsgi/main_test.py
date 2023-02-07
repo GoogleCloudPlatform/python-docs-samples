@@ -37,8 +37,11 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
+    full_command = f"gcloud {command} --quiet --format=json"
+    print("Running command:", full_command)
+
     output = subprocess.run(
-        f"gcloud {command} --quiet --format=json",
+        full_command,
         capture_output=True,
         shell=True,
         check=True,
@@ -62,6 +65,15 @@ def version():
     result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
+    version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
+
+    # Wait for app to initialize
+    @backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=3)
+    def wait_for_app(url):
+        r = requests.get(url)
+        r.raise_for_status()
+
+    wait_for_app(f"https://{version_hostname}/counter/get")
 
     yield project_id, version_id
 
@@ -74,8 +86,8 @@ def test_upload_and_view(version):
 
     # Initial value of counter should be 0
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "0"
+    assert response.status_code == 200
 
     # Request counter be incremented
     response = requests.get(f"https://{version_hostname}/counter/increment")
@@ -84,23 +96,23 @@ def test_upload_and_view(version):
     # counter should be 10 almost immediately. ALMOST immediately
     time.sleep(10)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "10"
+    assert response.status_code == 200
 
     # After 20 seconds, counter should be 20
     time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "20"
+    assert response.status_code == 200
 
     # After 40 seconds, counter should be 30
     time.sleep(20)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "30"
+    assert response.status_code == 200
 
     # counter should stay at 30 unless another request to increment it is set
     time.sleep(10)
     response = requests.get(f"https://{version_hostname}/counter/get")
-    assert response.status_code == 200
     assert response.text == "30"
+    assert response.status_code == 200
