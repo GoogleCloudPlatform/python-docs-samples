@@ -29,9 +29,16 @@ def release_temporary_hold(bucket_name, blob_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
+    metageneration_match_precondition = None
+
+    # Optional: set a metageneration-match precondition to avoid potential race
+    # conditions and data corruptions. The request to patch is aborted if the
+    # object's metageneration does not match your precondition.
+    blob.reload()  # Fetch blob metadata to use in metageneration_match_precondition.
+    metageneration_match_precondition = blob.metageneration
 
     blob.temporary_hold = False
-    blob.patch()
+    blob.patch(if_metageneration_match=metageneration_match_precondition)
 
     print("Temporary hold was release for #{blob_name}")
 
