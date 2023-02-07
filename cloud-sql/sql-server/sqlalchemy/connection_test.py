@@ -61,7 +61,6 @@ def download_ca_cert(project, instance):
            f"/projects/{project}/instances/{instance}/connectSettings")
 
     resp = requests.get(url, headers=headers)
-    print(resp.json())
     server_ca_cert = resp.json()["serverCaCert"]["cert"]
 
     with open(CA_FILENAME, "w+") as ca_out:
