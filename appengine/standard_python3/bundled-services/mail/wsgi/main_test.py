@@ -116,7 +116,7 @@ def test_send_receive(version):
             if "textPayload" in entry:
                 text_payloads += entry["textPayload"]
                 text_payloads += "\n"
-                
+
         if "Received" in text_payloads:
             break
 
