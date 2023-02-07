@@ -30,6 +30,7 @@ CA_FILENAME = "certs/ca.pem"
 SQLADMIN_API_ENDPOINT = "https://sqladmin.googleapis.com"
 SQLADMIN_API_VERSION = "v1beta4"
 
+
 # load proper environment variables
 def setup_test_env():
     os.environ["DB_USER"] = os.environ["SQLSERVER_USER"]
@@ -52,7 +53,7 @@ def download_ca_cert(project, instance):
     if not credentials.valid:
         request = google.auth.transport.requests.Request()
         credentials.refresh(request)
-        
+
     headers = {
         "Authorization": f"Bearer {credentials.token}",
     }
@@ -65,6 +66,7 @@ def download_ca_cert(project, instance):
 
     with open(CA_FILENAME, "w+") as ca_out:
         ca_out.write(server_ca_cert)
+
 
 @pytest.fixture(scope="module")
 def client() -> FlaskClient:

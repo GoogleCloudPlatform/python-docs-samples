@@ -42,8 +42,8 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     connector = Connector(ip_type)
 
     connect_args = {}
-    # If your SQL Server instance requires SSL, you need to download the CA 
-    # certificate for your instance and include cafile={path to downloaded 
+    # If your SQL Server instance requires SSL, you need to download the CA
+    # certificate for your instance and include cafile={path to downloaded
     # certificate} and validate_host=False. This is a workaround for a known issue.
     if os.environ.get("DB_ROOT_CERT"):  # e.g. '/path/to/my/server-ca.pem'
         connect_args = {
