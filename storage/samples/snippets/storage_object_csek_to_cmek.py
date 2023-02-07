@@ -33,12 +33,22 @@ def object_csek_to_cmek(bucket_name, blob_name, encryption_key, kms_key_name):
 
     current_encryption_key = base64.b64decode(encryption_key)
     source_blob = bucket.blob(blob_name, encryption_key=current_encryption_key)
-
     destination_blob = bucket.blob(blob_name, kms_key_name=kms_key_name)
-    token, rewritten, total = destination_blob.rewrite(source_blob)
+    generation_match_precondition = None
+    token = None
 
-    while token is not None:
-        token, rewritten, total = destination_blob.rewrite(source_blob, token=token)
+    # Optional: set a generation-match precondition to avoid potential race conditions
+    # and data corruptions. The request to rewrite is aborted if the object's
+    # generation number does not match your precondition.
+    source_blob.reload()  # Fetch blob metadata to use in generation_match_precondition.
+    generation_match_precondition = source_blob.generation
+
+    while True:
+        token, bytes_rewritten, total_bytes = destination_blob.rewrite(
+            source_blob, token=token, if_generation_match=generation_match_precondition
+        )
+        if token is None:
+            break
 
     print(
         "Blob {} in bucket {} is now managed by the KMS key {} instead of a customer-supplied encryption key".format(

@@ -235,14 +235,16 @@ def test_upload_blob_from_stream(test_bucket, capsys):
 
 
 def test_upload_blob_with_kms(test_bucket):
+    blob_name = f"test_upload_with_kms_{uuid.uuid4().hex}"
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
         storage_upload_with_kms_key.upload_blob_with_kms(
-            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY
+            test_bucket.name, source_file.name, blob_name, KMS_KEY,
         )
         bucket = storage.Client().bucket(test_bucket.name)
-        kms_blob = bucket.get_blob("test_upload_blob_encrypted")
+        kms_blob = bucket.get_blob(blob_name)
         assert kms_blob.kms_key_name.startswith(KMS_KEY)
+    test_bucket.delete_blob(blob_name)
 
 
 def test_async_upload(bucket, capsys):
@@ -390,7 +392,7 @@ def test_move_blob(test_bucket_create, test_blob):
         print(f"test_move_blob not found in bucket {test_bucket_create.name}")
 
     storage_move_file.move_blob(
-        bucket.name, test_blob.name, test_bucket_create.name, "test_move_blob"
+        bucket.name, test_blob.name, test_bucket_create.name, "test_move_blob",
     )
 
     assert test_bucket_create.get_blob("test_move_blob") is not None
@@ -406,7 +408,7 @@ def test_copy_blob(test_blob):
         pass
 
     storage_copy_file.copy_blob(
-        bucket.name, test_blob.name, bucket.name, "test_copy_blob"
+        bucket.name, test_blob.name, bucket.name, "test_copy_blob",
     )
 
     assert bucket.get_blob("test_copy_blob") is not None
@@ -545,7 +547,7 @@ def test_define_bucket_website_configuration(test_bucket):
 def test_object_get_kms_key(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         storage_upload_with_kms_key.upload_blob_with_kms(
-            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY
+            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY,
         )
     kms_key = storage_object_get_kms_key.object_get_kms_key(
         test_bucket.name, "test_upload_blob_encrypted"
@@ -562,7 +564,7 @@ def test_storage_compose_file(test_bucket):
 
     with tempfile.NamedTemporaryFile() as dest_file:
         destination = storage_compose_file.compose_file(
-            test_bucket.name, source_files[0], source_files[1], dest_file.name
+            test_bucket.name, source_files[0], source_files[1], dest_file.name,
         )
         composed = destination.download_as_string()
 
@@ -602,7 +604,7 @@ def test_change_default_storage_class(test_bucket, capsys):
 
 def test_change_file_storage_class(test_blob, capsys):
     blob = storage_change_file_storage_class.change_file_storage_class(
-        test_blob.bucket.name, test_blob.name
+        test_blob.bucket.name, test_blob.name,
     )
     out, _ = capsys.readouterr()
     assert f"Blob {blob.name} in bucket {blob.bucket.name}" in out

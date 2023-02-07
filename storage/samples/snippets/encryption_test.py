@@ -47,15 +47,18 @@ def test_generate_encryption_key(capsys):
 
 
 def test_upload_encrypted_blob():
+    blob_name = f"test_upload_encrypted_{uuid.uuid4().hex}"
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
 
         storage_upload_encrypted_file.upload_encrypted_blob(
             BUCKET,
             source_file.name,
-            "test_encrypted_upload_blob",
+            blob_name,
             TEST_ENCRYPTION_KEY,
         )
+    bucket = storage.Client().bucket(BUCKET)
+    bucket.delete_blob(blob_name)
 
 
 @pytest.fixture(scope="module")

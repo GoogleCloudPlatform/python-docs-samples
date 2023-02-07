@@ -36,13 +36,22 @@ def copy_file_archived_generation(
     source_blob = source_bucket.blob(blob_name)
     destination_bucket = storage_client.bucket(destination_bucket_name)
 
+    # Optional: set a generation-match precondition to avoid potential race conditions
+    # and data corruptions. The request to copy is aborted if the object's
+    # generation number does not match your precondition. For a destination
+    # object that does not yet exist, set the if_generation_match precondition to 0.
+    # If the destination object already exists in your bucket, set instead a
+    # generation-match precondition using its generation number.
+    destination_generation_match_precondition = 0
+
+    # source_generation selects a specific revision of the source object, as opposed to the latest version.
     blob_copy = source_bucket.copy_blob(
-        source_blob, destination_bucket, destination_blob_name, source_generation=generation
+        source_blob, destination_bucket, destination_blob_name, source_generation=generation, if_generation_match=destination_generation_match_precondition
     )
 
     print(
         "Generation {} of the blob {} in bucket {} copied to blob {} in bucket {}.".format(
-            source_blob.generation,
+            generation,
             source_blob.name,
             source_bucket.name,
             blob_copy.name,

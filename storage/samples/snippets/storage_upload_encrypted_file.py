@@ -36,6 +36,10 @@ def upload_encrypted_blob(
     The file will be encrypted by Google Cloud Storage and only
     retrievable using the provided encryption key.
     """
+    # bucket_name = "your-bucket-name"
+    # source_file_name = "local/path/to/file"
+    # destination_blob_name = "storage-object-name"
+    # base64_encryption_key = "TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g="
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -48,7 +52,15 @@ def upload_encrypted_blob(
         destination_blob_name, encryption_key=encryption_key
     )
 
-    blob.upload_from_filename(source_file_name)
+    # Optional: set a generation-match precondition to avoid potential race conditions
+    # and data corruptions. The request to upload is aborted if the object's
+    # generation number does not match your precondition. For a destination
+    # object that does not yet exist, set the if_generation_match precondition to 0.
+    # If the destination object already exists in your bucket, set instead a
+    # generation-match precondition using its generation number.
+    generation_match_precondition = 0
+
+    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
 
     print(
         f"File {source_file_name} uploaded to {destination_blob_name}."

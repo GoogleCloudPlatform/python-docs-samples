@@ -32,9 +32,19 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
     destination = bucket.blob(destination_blob_name)
     destination.content_type = "text/plain"
 
-    # sources is a list of Blob instances, up to the max of 32 instances per request
-    sources = [bucket.get_blob(first_blob_name), bucket.get_blob(second_blob_name)]
-    destination.compose(sources)
+    # Note sources is a list of Blob instances, up to the max of 32 instances per request
+    sources = [bucket.blob(first_blob_name), bucket.blob(second_blob_name)]
+
+    # Optional: set a generation-match precondition to avoid potential race conditions
+    # and data corruptions. The request to compose is aborted if the object's
+    # generation number does not match your precondition. For a destination
+    # object that does not yet exist, set the if_generation_match precondition to 0.
+    # If the destination object already exists in your bucket, set instead a
+    # generation-match precondition using its generation number.
+    # There is also an `if_source_generation_match` parameter, which is not used in this example.
+    destination_generation_match_precondition = 0
+
+    destination.compose(sources, if_generation_match=destination_generation_match_precondition)
 
     print(
         "New composite object {} in the bucket {} was created by combining {} and {}".format(
