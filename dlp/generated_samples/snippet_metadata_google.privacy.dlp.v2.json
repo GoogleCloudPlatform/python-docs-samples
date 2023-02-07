@@ -1,0 +1,5503 @@
+{
+  "clientLibrary": {
+    "apis": [
+      {
+        "id": "google.privacy.dlp.v2",
+        "version": "v2"
+      }
+    ],
+    "language": "PYTHON",
+    "name": "google-cloud-dlp",
+    "version": "0.1.0"
+  },
+  "snippets": [
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.activate_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ActivateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ActivateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ActivateJobTriggerRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "activate_job_trigger"
+      },
+      "description": "Sample for ActivateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_activate_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ActivateJobTrigger_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_activate_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.activate_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ActivateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ActivateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ActivateJobTriggerRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "activate_job_trigger"
+      },
+      "description": "Sample for ActivateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_activate_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ActivateJobTrigger_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_activate_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.cancel_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CancelDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CancelDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CancelDlpJobRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "cancel_dlp_job"
+      },
+      "description": "Sample for CancelDlpJob",
+      "file": "dlp_v2_generated_dlp_service_cancel_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CancelDlpJob_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_cancel_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.cancel_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CancelDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CancelDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CancelDlpJobRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "cancel_dlp_job"
+      },
+      "description": "Sample for CancelDlpJob",
+      "file": "dlp_v2_generated_dlp_service_cancel_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CancelDlpJob_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_cancel_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.create_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateDeidentifyTemplateRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "deidentify_template",
+            "type": "google.cloud.dlp_v2.types.DeidentifyTemplate"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "create_deidentify_template"
+      },
+      "description": "Sample for CreateDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_create_deidentify_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDeidentifyTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_deidentify_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.create_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateDeidentifyTemplateRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "deidentify_template",
+            "type": "google.cloud.dlp_v2.types.DeidentifyTemplate"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "create_deidentify_template"
+      },
+      "description": "Sample for CreateDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_create_deidentify_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDeidentifyTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_deidentify_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.create_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateDlpJobRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "inspect_job",
+            "type": "google.cloud.dlp_v2.types.InspectJobConfig"
+          },
+          {
+            "name": "risk_job",
+            "type": "google.cloud.dlp_v2.types.RiskAnalysisJobConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "create_dlp_job"
+      },
+      "description": "Sample for CreateDlpJob",
+      "file": "dlp_v2_generated_dlp_service_create_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDlpJob_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.create_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateDlpJobRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "inspect_job",
+            "type": "google.cloud.dlp_v2.types.InspectJobConfig"
+          },
+          {
+            "name": "risk_job",
+            "type": "google.cloud.dlp_v2.types.RiskAnalysisJobConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "create_dlp_job"
+      },
+      "description": "Sample for CreateDlpJob",
+      "file": "dlp_v2_generated_dlp_service_create_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateDlpJob_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.create_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateInspectTemplateRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "inspect_template",
+            "type": "google.cloud.dlp_v2.types.InspectTemplate"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "create_inspect_template"
+      },
+      "description": "Sample for CreateInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_create_inspect_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateInspectTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_inspect_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.create_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateInspectTemplateRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "inspect_template",
+            "type": "google.cloud.dlp_v2.types.InspectTemplate"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "create_inspect_template"
+      },
+      "description": "Sample for CreateInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_create_inspect_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateInspectTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_inspect_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.create_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateJobTriggerRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "job_trigger",
+            "type": "google.cloud.dlp_v2.types.JobTrigger"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "create_job_trigger"
+      },
+      "description": "Sample for CreateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_create_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateJobTrigger_async",
+      "segments": [
+        {
+          "end": 55,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 55,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 49,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 52,
+          "start": 50,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 56,
+          "start": 53,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.create_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateJobTriggerRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "job_trigger",
+            "type": "google.cloud.dlp_v2.types.JobTrigger"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "create_job_trigger"
+      },
+      "description": "Sample for CreateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_create_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateJobTrigger_sync",
+      "segments": [
+        {
+          "end": 55,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 55,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 49,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 52,
+          "start": 50,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 56,
+          "start": 53,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.create_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateStoredInfoTypeRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.dlp_v2.types.StoredInfoTypeConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "create_stored_info_type"
+      },
+      "description": "Sample for CreateStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_create_stored_info_type_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateStoredInfoType_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_stored_info_type_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.create_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.CreateStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "CreateStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.CreateStoredInfoTypeRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.dlp_v2.types.StoredInfoTypeConfig"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "create_stored_info_type"
+      },
+      "description": "Sample for CreateStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_create_stored_info_type_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_CreateStoredInfoType_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_create_stored_info_type_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.deidentify_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeidentifyContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeidentifyContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeidentifyContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyContentResponse",
+        "shortName": "deidentify_content"
+      },
+      "description": "Sample for DeidentifyContent",
+      "file": "dlp_v2_generated_dlp_service_deidentify_content_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeidentifyContent_async",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_deidentify_content_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.deidentify_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeidentifyContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeidentifyContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeidentifyContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyContentResponse",
+        "shortName": "deidentify_content"
+      },
+      "description": "Sample for DeidentifyContent",
+      "file": "dlp_v2_generated_dlp_service_deidentify_content_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeidentifyContent_sync",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_deidentify_content_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.delete_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_deidentify_template"
+      },
+      "description": "Sample for DeleteDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_delete_deidentify_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDeidentifyTemplate_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_deidentify_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.delete_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_deidentify_template"
+      },
+      "description": "Sample for DeleteDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_delete_deidentify_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDeidentifyTemplate_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_deidentify_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.delete_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_dlp_job"
+      },
+      "description": "Sample for DeleteDlpJob",
+      "file": "dlp_v2_generated_dlp_service_delete_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDlpJob_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.delete_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_dlp_job"
+      },
+      "description": "Sample for DeleteDlpJob",
+      "file": "dlp_v2_generated_dlp_service_delete_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteDlpJob_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.delete_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_inspect_template"
+      },
+      "description": "Sample for DeleteInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_delete_inspect_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteInspectTemplate_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_inspect_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.delete_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_inspect_template"
+      },
+      "description": "Sample for DeleteInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_delete_inspect_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteInspectTemplate_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_inspect_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.delete_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_job_trigger"
+      },
+      "description": "Sample for DeleteJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_delete_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteJobTrigger_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.delete_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_job_trigger"
+      },
+      "description": "Sample for DeleteJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_delete_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteJobTrigger_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.delete_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_stored_info_type"
+      },
+      "description": "Sample for DeleteStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_delete_stored_info_type_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteStoredInfoType_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_stored_info_type_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.delete_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.DeleteStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "DeleteStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.DeleteStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "delete_stored_info_type"
+      },
+      "description": "Sample for DeleteStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_delete_stored_info_type_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_DeleteStoredInfoType_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_delete_stored_info_type_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.finish_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.FinishDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "FinishDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.FinishDlpJobRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "finish_dlp_job"
+      },
+      "description": "Sample for FinishDlpJob",
+      "file": "dlp_v2_generated_dlp_service_finish_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_FinishDlpJob_async",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_finish_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.finish_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.FinishDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "FinishDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.FinishDlpJobRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "shortName": "finish_dlp_job"
+      },
+      "description": "Sample for FinishDlpJob",
+      "file": "dlp_v2_generated_dlp_service_finish_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_FinishDlpJob_sync",
+      "segments": [
+        {
+          "end": 49,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 49,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 50,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_finish_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.get_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "get_deidentify_template"
+      },
+      "description": "Sample for GetDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_get_deidentify_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetDeidentifyTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_deidentify_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.get_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "get_deidentify_template"
+      },
+      "description": "Sample for GetDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_get_deidentify_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetDeidentifyTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_deidentify_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.get_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "get_dlp_job"
+      },
+      "description": "Sample for GetDlpJob",
+      "file": "dlp_v2_generated_dlp_service_get_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetDlpJob_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.get_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DlpJob",
+        "shortName": "get_dlp_job"
+      },
+      "description": "Sample for GetDlpJob",
+      "file": "dlp_v2_generated_dlp_service_get_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetDlpJob_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.get_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "get_inspect_template"
+      },
+      "description": "Sample for GetInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_get_inspect_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetInspectTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_inspect_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.get_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "get_inspect_template"
+      },
+      "description": "Sample for GetInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_get_inspect_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetInspectTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_inspect_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.get_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "get_job_trigger"
+      },
+      "description": "Sample for GetJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_get_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetJobTrigger_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.get_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "get_job_trigger"
+      },
+      "description": "Sample for GetJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_get_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetJobTrigger_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.get_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "get_stored_info_type"
+      },
+      "description": "Sample for GetStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_get_stored_info_type_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetStoredInfoType_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_stored_info_type_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.get_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.GetStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "GetStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.GetStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "get_stored_info_type"
+      },
+      "description": "Sample for GetStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_get_stored_info_type_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_GetStoredInfoType_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_get_stored_info_type_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.hybrid_inspect_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.HybridInspectDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "HybridInspectDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.HybridInspectDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.HybridInspectResponse",
+        "shortName": "hybrid_inspect_dlp_job"
+      },
+      "description": "Sample for HybridInspectDlpJob",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectDlpJob_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.hybrid_inspect_dlp_job",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.HybridInspectDlpJob",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "HybridInspectDlpJob"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.HybridInspectDlpJobRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.HybridInspectResponse",
+        "shortName": "hybrid_inspect_dlp_job"
+      },
+      "description": "Sample for HybridInspectDlpJob",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectDlpJob_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_hybrid_inspect_dlp_job_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.hybrid_inspect_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.HybridInspectJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "HybridInspectJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.HybridInspectJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.HybridInspectResponse",
+        "shortName": "hybrid_inspect_job_trigger"
+      },
+      "description": "Sample for HybridInspectJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectJobTrigger_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.hybrid_inspect_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.HybridInspectJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "HybridInspectJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.HybridInspectJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.HybridInspectResponse",
+        "shortName": "hybrid_inspect_job_trigger"
+      },
+      "description": "Sample for HybridInspectJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_HybridInspectJobTrigger_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_hybrid_inspect_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.inspect_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.InspectContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "InspectContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.InspectContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectContentResponse",
+        "shortName": "inspect_content"
+      },
+      "description": "Sample for InspectContent",
+      "file": "dlp_v2_generated_dlp_service_inspect_content_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_InspectContent_async",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_inspect_content_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.inspect_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.InspectContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "InspectContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.InspectContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectContentResponse",
+        "shortName": "inspect_content"
+      },
+      "description": "Sample for InspectContent",
+      "file": "dlp_v2_generated_dlp_service_inspect_content_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_InspectContent_sync",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_inspect_content_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_deidentify_templates",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListDeidentifyTemplates",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListDeidentifyTemplates"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListDeidentifyTemplatesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListDeidentifyTemplatesAsyncPager",
+        "shortName": "list_deidentify_templates"
+      },
+      "description": "Sample for ListDeidentifyTemplates",
+      "file": "dlp_v2_generated_dlp_service_list_deidentify_templates_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListDeidentifyTemplates_async",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_deidentify_templates_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_deidentify_templates",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListDeidentifyTemplates",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListDeidentifyTemplates"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListDeidentifyTemplatesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListDeidentifyTemplatesPager",
+        "shortName": "list_deidentify_templates"
+      },
+      "description": "Sample for ListDeidentifyTemplates",
+      "file": "dlp_v2_generated_dlp_service_list_deidentify_templates_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListDeidentifyTemplates_sync",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_deidentify_templates_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_dlp_jobs",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListDlpJobs",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListDlpJobs"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListDlpJobsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListDlpJobsAsyncPager",
+        "shortName": "list_dlp_jobs"
+      },
+      "description": "Sample for ListDlpJobs",
+      "file": "dlp_v2_generated_dlp_service_list_dlp_jobs_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListDlpJobs_async",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_dlp_jobs_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_dlp_jobs",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListDlpJobs",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListDlpJobs"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListDlpJobsRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListDlpJobsPager",
+        "shortName": "list_dlp_jobs"
+      },
+      "description": "Sample for ListDlpJobs",
+      "file": "dlp_v2_generated_dlp_service_list_dlp_jobs_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListDlpJobs_sync",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_dlp_jobs_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_info_types",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListInfoTypes",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListInfoTypes"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListInfoTypesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.ListInfoTypesResponse",
+        "shortName": "list_info_types"
+      },
+      "description": "Sample for ListInfoTypes",
+      "file": "dlp_v2_generated_dlp_service_list_info_types_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListInfoTypes_async",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_info_types_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_info_types",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListInfoTypes",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListInfoTypes"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListInfoTypesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.ListInfoTypesResponse",
+        "shortName": "list_info_types"
+      },
+      "description": "Sample for ListInfoTypes",
+      "file": "dlp_v2_generated_dlp_service_list_info_types_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListInfoTypes_sync",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_info_types_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_inspect_templates",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListInspectTemplates",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListInspectTemplates"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListInspectTemplatesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListInspectTemplatesAsyncPager",
+        "shortName": "list_inspect_templates"
+      },
+      "description": "Sample for ListInspectTemplates",
+      "file": "dlp_v2_generated_dlp_service_list_inspect_templates_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListInspectTemplates_async",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_inspect_templates_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_inspect_templates",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListInspectTemplates",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListInspectTemplates"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListInspectTemplatesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListInspectTemplatesPager",
+        "shortName": "list_inspect_templates"
+      },
+      "description": "Sample for ListInspectTemplates",
+      "file": "dlp_v2_generated_dlp_service_list_inspect_templates_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListInspectTemplates_sync",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_inspect_templates_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_job_triggers",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListJobTriggers",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListJobTriggers"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListJobTriggersRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListJobTriggersAsyncPager",
+        "shortName": "list_job_triggers"
+      },
+      "description": "Sample for ListJobTriggers",
+      "file": "dlp_v2_generated_dlp_service_list_job_triggers_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListJobTriggers_async",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_job_triggers_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_job_triggers",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListJobTriggers",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListJobTriggers"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListJobTriggersRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListJobTriggersPager",
+        "shortName": "list_job_triggers"
+      },
+      "description": "Sample for ListJobTriggers",
+      "file": "dlp_v2_generated_dlp_service_list_job_triggers_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListJobTriggers_sync",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_job_triggers_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.list_stored_info_types",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListStoredInfoTypes",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListStoredInfoTypes"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListStoredInfoTypesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListStoredInfoTypesAsyncPager",
+        "shortName": "list_stored_info_types"
+      },
+      "description": "Sample for ListStoredInfoTypes",
+      "file": "dlp_v2_generated_dlp_service_list_stored_info_types_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListStoredInfoTypes_async",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_stored_info_types_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.list_stored_info_types",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ListStoredInfoTypes",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ListStoredInfoTypes"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ListStoredInfoTypesRequest"
+          },
+          {
+            "name": "parent",
+            "type": "str"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.services.dlp_service.pagers.ListStoredInfoTypesPager",
+        "shortName": "list_stored_info_types"
+      },
+      "description": "Sample for ListStoredInfoTypes",
+      "file": "dlp_v2_generated_dlp_service_list_stored_info_types_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ListStoredInfoTypes_sync",
+      "segments": [
+        {
+          "end": 52,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 52,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 53,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_list_stored_info_types_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.redact_image",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.RedactImage",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "RedactImage"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.RedactImageRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.RedactImageResponse",
+        "shortName": "redact_image"
+      },
+      "description": "Sample for RedactImage",
+      "file": "dlp_v2_generated_dlp_service_redact_image_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_RedactImage_async",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_redact_image_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.redact_image",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.RedactImage",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "RedactImage"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.RedactImageRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.RedactImageResponse",
+        "shortName": "redact_image"
+      },
+      "description": "Sample for RedactImage",
+      "file": "dlp_v2_generated_dlp_service_redact_image_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_RedactImage_sync",
+      "segments": [
+        {
+          "end": 50,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 50,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 44,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 47,
+          "start": 45,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 51,
+          "start": 48,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_redact_image_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.reidentify_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ReidentifyContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ReidentifyContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ReidentifyContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.ReidentifyContentResponse",
+        "shortName": "reidentify_content"
+      },
+      "description": "Sample for ReidentifyContent",
+      "file": "dlp_v2_generated_dlp_service_reidentify_content_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ReidentifyContent_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_reidentify_content_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.reidentify_content",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.ReidentifyContent",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "ReidentifyContent"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.ReidentifyContentRequest"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.ReidentifyContentResponse",
+        "shortName": "reidentify_content"
+      },
+      "description": "Sample for ReidentifyContent",
+      "file": "dlp_v2_generated_dlp_service_reidentify_content_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_ReidentifyContent_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_reidentify_content_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.update_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "deidentify_template",
+            "type": "google.cloud.dlp_v2.types.DeidentifyTemplate"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "update_deidentify_template"
+      },
+      "description": "Sample for UpdateDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_update_deidentify_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateDeidentifyTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_deidentify_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.update_deidentify_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateDeidentifyTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateDeidentifyTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateDeidentifyTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "deidentify_template",
+            "type": "google.cloud.dlp_v2.types.DeidentifyTemplate"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.DeidentifyTemplate",
+        "shortName": "update_deidentify_template"
+      },
+      "description": "Sample for UpdateDeidentifyTemplate",
+      "file": "dlp_v2_generated_dlp_service_update_deidentify_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateDeidentifyTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_deidentify_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.update_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "inspect_template",
+            "type": "google.cloud.dlp_v2.types.InspectTemplate"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "update_inspect_template"
+      },
+      "description": "Sample for UpdateInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_update_inspect_template_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateInspectTemplate_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_inspect_template_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.update_inspect_template",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateInspectTemplate",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateInspectTemplate"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateInspectTemplateRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "inspect_template",
+            "type": "google.cloud.dlp_v2.types.InspectTemplate"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.InspectTemplate",
+        "shortName": "update_inspect_template"
+      },
+      "description": "Sample for UpdateInspectTemplate",
+      "file": "dlp_v2_generated_dlp_service_update_inspect_template_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateInspectTemplate_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_inspect_template_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.update_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "job_trigger",
+            "type": "google.cloud.dlp_v2.types.JobTrigger"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "update_job_trigger"
+      },
+      "description": "Sample for UpdateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_update_job_trigger_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateJobTrigger_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_job_trigger_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.update_job_trigger",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateJobTrigger",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateJobTrigger"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateJobTriggerRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "job_trigger",
+            "type": "google.cloud.dlp_v2.types.JobTrigger"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.JobTrigger",
+        "shortName": "update_job_trigger"
+      },
+      "description": "Sample for UpdateJobTrigger",
+      "file": "dlp_v2_generated_dlp_service_update_job_trigger_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateJobTrigger_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_job_trigger_sync.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "async": true,
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient",
+          "shortName": "DlpServiceAsyncClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceAsyncClient.update_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.dlp_v2.types.StoredInfoTypeConfig"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "update_stored_info_type"
+      },
+      "description": "Sample for UpdateStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_update_stored_info_type_async.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateStoredInfoType_async",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_stored_info_type_async.py"
+    },
+    {
+      "canonical": true,
+      "clientMethod": {
+        "client": {
+          "fullName": "google.cloud.dlp_v2.DlpServiceClient",
+          "shortName": "DlpServiceClient"
+        },
+        "fullName": "google.cloud.dlp_v2.DlpServiceClient.update_stored_info_type",
+        "method": {
+          "fullName": "google.privacy.dlp.v2.DlpService.UpdateStoredInfoType",
+          "service": {
+            "fullName": "google.privacy.dlp.v2.DlpService",
+            "shortName": "DlpService"
+          },
+          "shortName": "UpdateStoredInfoType"
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "type": "google.cloud.dlp_v2.types.UpdateStoredInfoTypeRequest"
+          },
+          {
+            "name": "name",
+            "type": "str"
+          },
+          {
+            "name": "config",
+            "type": "google.cloud.dlp_v2.types.StoredInfoTypeConfig"
+          },
+          {
+            "name": "update_mask",
+            "type": "google.protobuf.field_mask_pb2.FieldMask"
+          },
+          {
+            "name": "retry",
+            "type": "google.api_core.retry.Retry"
+          },
+          {
+            "name": "timeout",
+            "type": "float"
+          },
+          {
+            "name": "metadata",
+            "type": "Sequence[Tuple[str, str]"
+          }
+        ],
+        "resultType": "google.cloud.dlp_v2.types.StoredInfoType",
+        "shortName": "update_stored_info_type"
+      },
+      "description": "Sample for UpdateStoredInfoType",
+      "file": "dlp_v2_generated_dlp_service_update_stored_info_type_sync.py",
+      "language": "PYTHON",
+      "origin": "API_DEFINITION",
+      "regionTag": "dlp_v2_generated_DlpService_UpdateStoredInfoType_sync",
+      "segments": [
+        {
+          "end": 51,
+          "start": 27,
+          "type": "FULL"
+        },
+        {
+          "end": 51,
+          "start": 27,
+          "type": "SHORT"
+        },
+        {
+          "end": 40,
+          "start": 38,
+          "type": "CLIENT_INITIALIZATION"
+        },
+        {
+          "end": 45,
+          "start": 41,
+          "type": "REQUEST_INITIALIZATION"
+        },
+        {
+          "end": 48,
+          "start": 46,
+          "type": "REQUEST_EXECUTION"
+        },
+        {
+          "end": 52,
+          "start": 49,
+          "type": "RESPONSE_HANDLING"
+        }
+      ],
+      "title": "dlp_v2_generated_dlp_service_update_stored_info_type_sync.py"
+    }
+  ]
+}
