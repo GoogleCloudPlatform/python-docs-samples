@@ -27,9 +27,11 @@ _PROCESSOR_ID = "YOUR_PROCESSOR_ID"
 @functions_framework.http
 def document_ocr(request: flask.Request) -> flask.Response:
     """BigQuery remote function to process document using OCR.
+
     Args:
         request: HTTP request from BigQuery
         https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#input_format
+
     Returns:
         HTTP response to BigQuery
         https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#output_format
