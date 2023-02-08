@@ -16,8 +16,6 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Literal
-
 from google.cloud import compute_v1
 
 
@@ -27,7 +25,7 @@ def attach_disk(
         zone: str,
         instance_name: str,
         disk_link: str,
-        mode: Literal['READ_ONLY', 'READ_WRITE']
+        mode: str
 ) -> None:
     """
     Attaches a non-boot persistent disk to a specified compute instance. The disk might be zonal or regional.
