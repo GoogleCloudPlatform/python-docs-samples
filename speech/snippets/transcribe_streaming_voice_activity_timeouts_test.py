@@ -42,7 +42,7 @@ def test_transcribe_streaming_voice_activity_timeouts(capsys):
         os.path.join(RESOURCES, "audio_silence_padding.wav"),
     )
 
-    assert len(responses) == 0
+    assert len(responses) == 2
 
     recognizer_id_2 = "recognizer-2-" + str(uuid4())
     responses = transcribe_streaming_voice_activity_timeouts.transcribe_streaming_voice_activity_timeouts(
