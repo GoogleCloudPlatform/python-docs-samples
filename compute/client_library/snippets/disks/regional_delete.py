@@ -21,7 +21,7 @@
 
 # [START compute_regional_disk_delete]
 import sys
-from typing import Any, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
