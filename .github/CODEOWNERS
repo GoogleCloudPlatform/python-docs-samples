@@ -44,7 +44,7 @@
 /dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/dialogflow-cx/**/*                    @GoogleCloudPlatform/python-samples-reviewers
+/dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
