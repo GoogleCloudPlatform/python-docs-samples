@@ -21,7 +21,7 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT delete_instance_template>
-def delete_instance_template(project_id: str, template_name: str):
+def delete_instance_template(project_id: str, template_name: str) -> None:
     """
     Delete an instance template.
 
@@ -34,5 +34,4 @@ def delete_instance_template(project_id: str, template_name: str):
         project=project_id, instance_template=template_name
     )
     wait_for_extended_operation(operation, "instance template deletion")
-    return
 # </INGREDIENT>
