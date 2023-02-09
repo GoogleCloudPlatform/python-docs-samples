@@ -20,8 +20,6 @@
 
 
 # [START compute_snapshot_get]
-from typing import Iterable
-
 from google.cloud import compute_v1
 
 

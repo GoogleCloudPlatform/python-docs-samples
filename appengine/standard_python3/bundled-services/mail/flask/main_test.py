@@ -14,7 +14,6 @@
 
 import json
 import subprocess
-import time
 import uuid
 
 import backoff
@@ -65,6 +64,15 @@ def version():
     result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
+    version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
+
+    # Wait for app to initialize
+    @backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=3)
+    def wait_for_app(url):
+        r = requests.get(url)
+        r.raise_for_status()
+
+    wait_for_app(f"https://{version_hostname}/")
 
     yield project_id, version_id
 
@@ -92,20 +100,21 @@ def test_send_receive(version):
     assert "Successfully sent mail" in response.text
     assert response.status_code == 201
 
-    # Give the mail some time to be delivered and logs to post
-    time.sleep(60)
-
     # Fetch logs to check messages on received mail
-    entries = gcloud_cli(
-        f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
-    )
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=10)
+    def assert_logs():
+        entries = gcloud_cli(
+            f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
+        )
 
-    text_payloads = ""
-    for entry in entries:
-        if "textPayload" in entry:
-            text_payloads += entry["textPayload"]
-            text_payloads += "\n"
+        text_payloads = ""
+        for entry in entries:
+            if "textPayload" in entry:
+                text_payloads += entry["textPayload"]
+                text_payloads += "\n"
 
-    expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
-    assert expected in text_payloads
-    assert "This message should be delivered" in text_payloads
+        expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
+        assert expected in text_payloads
+        assert "This message should be delivered" in text_payloads
+
+    assert_logs()

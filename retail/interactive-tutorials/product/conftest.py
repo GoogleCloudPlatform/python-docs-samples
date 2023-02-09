@@ -16,7 +16,7 @@ import pytest
 import test_utils.prefixer
 
 prefixer = test_utils.prefixer.Prefixer(
-    "python-retail", "samples/interactive-tutorials/product"
+    "python-docs-samples", "retail/interactive-tutorials/product"
 )
 
 
