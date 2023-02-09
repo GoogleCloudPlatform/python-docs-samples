@@ -19,9 +19,9 @@ from google.cloud import recaptchaenterprise_v1
 
 
 def create_assessment(
-        project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
+    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
 ) -> [float, List[str]]:
-    """ Create an assessment to analyze the risk of a UI action.
+    """Create an assessment to analyze the risk of a UI action.
     Args:
         project_id: GCloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
@@ -53,16 +53,29 @@ def create_assessment(
     if not response.token_properties.valid:
         raise ValueError(
             f"The Create Assessment call failed because the token was invalid for the following reasons: "
-            f"{response.token_properties.invalid_reason}")
+            f"{response.token_properties.invalid_reason}"
+        )
 
     # Check if the expected action was executed.
     if response.token_properties.action != recaptcha_action:
         raise ValueError(
             "The action attribute in your reCAPTCHA tag does not match the action you are expecting to score. "
-            "Please check your action attribute !")
+            "Please check your action attribute !"
+        )
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Ends -->
 
     # Return the risk score.
-    verdict = "Not a human" if response.risk_analysis.score < sample_threshold_score else "Human"
+    verdict = (
+        "Not a human"
+        if response.risk_analysis.score < sample_threshold_score
+        else "Human"
+    )
     return jsonify(
-        {'data': {"score": "{:.1f}".format(response.risk_analysis.score), "verdict": verdict}, "success": "true"})
+        {
+            "data": {
+                "score": "{:.1f}".format(response.risk_analysis.score),
+                "verdict": verdict,
+            },
+            "success": "true",
+        }
+    )

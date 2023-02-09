@@ -24,7 +24,9 @@ app.add_url_rule(rule="/login", methods=["GET"], view_func=urls.login)
 app.add_url_rule(rule="/comment", methods=["GET"], view_func=urls.comment)
 app.add_url_rule(rule="/signup", methods=["GET"], view_func=urls.signup)
 app.add_url_rule(rule="/game", methods=["GET"], view_func=urls.game)
-app.add_url_rule(rule="/create_assessment", methods=["POST"], view_func=urls.create_assessment)
+app.add_url_rule(
+    rule="/create_assessment", methods=["POST"], view_func=urls.create_assessment
+)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=8080, debug=True)
