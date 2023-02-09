@@ -16,15 +16,13 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import time
-
 from google.cloud import compute_v1
 
 
 # <INGREDIENT start_instance_with_encryption_key>
 def start_instance_with_encryption_key(
     project_id: str, zone: str, instance_name: str, key: bytes
-):
+) -> None:
     """
     Starts a stopped Google Compute Engine instance (with encrypted disks).
     Args:
@@ -59,5 +57,4 @@ def start_instance_with_encryption_key(
     )
 
     wait_for_extended_operation(operation, "instance start (with encrypted disk)")
-    return
 # </INGREDIENT>

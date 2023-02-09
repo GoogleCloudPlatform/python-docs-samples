@@ -31,8 +31,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -74,7 +75,7 @@ def wait_for_extended_operation(
     return result
 
 
-def delete_instance_template(project_id: str, template_name: str):
+def delete_instance_template(project_id: str, template_name: str) -> None:
     """
     Delete an instance template.
 
@@ -87,7 +88,6 @@ def delete_instance_template(project_id: str, template_name: str):
         project=project_id, instance_template=template_name
     )
     wait_for_extended_operation(operation, "instance template deletion")
-    return
 
 
 # [END compute_template_delete]

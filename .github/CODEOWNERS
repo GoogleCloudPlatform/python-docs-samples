@@ -44,10 +44,11 @@
 /dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
-/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers 
+/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /eventarc/**/*                         @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
@@ -82,6 +83,7 @@
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
