@@ -94,6 +94,8 @@ assign_issues_by:
   - 'api: language'
   - 'api: texttospeech'
   - 'api: retail'
+  - 'api: dialogflow'
+  - 'api: speech'
   to:
   - GoogleCloudPlatform/dee-data-ai
 - labels:
@@ -144,7 +146,9 @@ assign_issues_by:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc
 - labels:
+  - 'api: logging'
   - 'api: monitoring'
+  - 'api: trace'
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:

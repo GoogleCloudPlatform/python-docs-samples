@@ -101,19 +101,24 @@ def test_send_receive(version):
     assert "Successfully sent mail" in response.text
     assert response.status_code == 201
 
-    # Give the mail some time to be delivered and logs to post
-    time.sleep(60)
+    # External mail delivery and receipt can take varying lengths of time
+    for check in range(3):
+        # Give the mail some time to be delivered and logs to post
+        time.sleep(60)
 
-    # Fetch logs to check messages on received mail
-    entries = gcloud_cli(
-        f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
-    )
+        # Fetch logs to check messages on received mail
+        entries = gcloud_cli(
+            f'logging read "resource.type=gae_app AND resource.labels.version_id={version_id}"'
+        )
 
-    text_payloads = ""
-    for entry in entries:
-        if "textPayload" in entry:
-            text_payloads += entry["textPayload"]
-            text_payloads += "\n"
+        text_payloads = ""
+        for entry in entries:
+            if "textPayload" in entry:
+                text_payloads += entry["textPayload"]
+                text_payloads += "\n"
+
+        if "Received" in text_payloads:
+            break
 
     expected = f"Received greeting for valid-user@{version_id}-dot-{project_id}.appspotmail.com"
     assert expected in text_payloads

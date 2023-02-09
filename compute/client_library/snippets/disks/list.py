@@ -20,8 +20,7 @@
 
 
 # [START compute_disk_list]
-import sys
-from typing import Iterable, NoReturn
+from typing import Iterable
 
 from google.cloud import compute_v1
 
