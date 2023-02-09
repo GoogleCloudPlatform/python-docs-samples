@@ -15,13 +15,13 @@
 import json
 import os
 
-from flask import render_template, request, Response, jsonify
-
 from backend import create_recaptcha_assessment
+
+from flask import jsonify, render_template, request, Response
 
 context = {
     "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
-    "site_key": os.environ["SITE_KEY"]
+    "site_key": os.environ["SITE_KEY"],
 }
 
 
@@ -56,13 +56,21 @@ def create_assessment() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        return create_recaptcha_assessment.create_assessment(project_id,
-                                                             context.get("site_key"),
-                                                             credentials["token"],
-                                                             credentials["action"])
+        return create_recaptcha_assessment.create_assessment(
+            project_id,
+            context.get("site_key"),
+            credentials["token"],
+            credentials["action"],
+        )
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
     except ValueError as e:
-        return jsonify({'data': {"error_msg": str(e.__dict__)}, "success": "false"})
+        return jsonify({"data": {"error_msg": str(e.__dict__)}, "success": "false"})
     except Exception as e:
         return jsonify(
-            {'data': {"error_msg": f"Something happened! Please try again ! {e.__dict__}"}, "success": "false"})
+            {
+                "data": {
+                    "error_msg": f"Something happened! Please try again ! {e.__dict__}"
+                },
+                "success": "false",
+            }
+        )
