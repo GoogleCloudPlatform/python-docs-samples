@@ -13,8 +13,8 @@
 #  limitations under the License.
 # flake8: noqa
 
-# <REGION compute_instances_operation_extended_wait>
+# <REGION compute_operation_extended_wait>
 # <IMPORTS/>
 
 # <INGREDIENT wait_for_extended_operation/>
-# </REGION compute_instances_operation_extended_wait>
+# </REGION compute_operation_extended_wait>

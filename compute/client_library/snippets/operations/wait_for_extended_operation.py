@@ -19,7 +19,7 @@
 # directory and apply your changes there.
 
 
-# [START compute_instances_operation_extended_wait]
+# [START compute_operation_extended_wait]
 import sys
 from typing import Any
 
@@ -74,4 +74,4 @@ def wait_for_extended_operation(
     return result
 
 
-# [END compute_instances_operation_extended_wait]
+# [END compute_operation_extended_wait]
