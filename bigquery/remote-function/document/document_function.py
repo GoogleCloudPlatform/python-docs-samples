@@ -17,16 +17,19 @@ import urllib.request
 
 import flask
 import functions_framework
+from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
 
 _PROJECT_ID = "YOUR_PROJECT_ID"
-_LOCATION = "us"
+_LOCATION = "us"  # Change to "eu"
 _PROCESSOR_ID = "YOUR_PROCESSOR_ID"
 
 
 @functions_framework.http
 def document_ocr(request: flask.Request) -> flask.Response:
-    """BigQuery remote function to process document using OCR.
+    """BigQuery remote function to process document using Document AI OCR.
+    For complete Document AI use cases:
+    https://cloud.google.com/document-ai/docs/samples/documentai-process-ocr-document
 
     Args:
         request: HTTP request from BigQuery
@@ -37,7 +40,9 @@ def document_ocr(request: flask.Request) -> flask.Response:
         https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#output_format
     """
     try:
-        client = documentai.DocumentProcessorServiceClient()
+        client = documentai.DocumentProcessorServiceClient(
+            client_options=ClientOptions(
+                api_endpoint=f"{_LOCATION}-documentai.googleapis.com"))
         processor_name = client.processor_path(
             _PROJECT_ID, _LOCATION, _PROCESSOR_ID)
         calls = request.get_json()['calls']
@@ -48,8 +53,8 @@ def document_ocr(request: flask.Request) -> flask.Response:
             results = client.process_document(
                 {'name': processor_name, 'raw_document': {
                     'content': content, 'mime_type': content_type}})
-            replies.append(results.document.text)
+            replies.append({'text': results.document.text})
         return flask.make_response(flask.jsonify({'replies': replies}))
-    except Exception as e:
+    except Exception as e:  # Check error message if GoogleAPIException
         return flask.make_response(flask.jsonify({'errorMessage': str(e)}), 400)
 # [END bigquery_remote_function_document]

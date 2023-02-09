@@ -20,6 +20,23 @@ import pytest
 
 import document_function
 
+_BIGQUERY_REQUEST_JSON = {
+    'calls':
+    [
+        ['https://storage.googleapis.com/bucket/apple',
+         'application/pdf'],
+        ['https://storage.googleapis.com/bucket/banana',
+         'application/pdf'],
+    ]
+}
+_BIGQUERY_RESPONSE_JSON = {
+    'replies':
+    [
+        {'text': 'apple'},
+        {'text': 'banana'},
+    ]
+}
+
 
 # Create a fake "app" for generating test request contexts.
 @pytest.fixture(scope="module")
@@ -42,16 +59,10 @@ def test_document_function(
             {'document': {'text': 'banana'}})])
     mock_documentai.DocumentProcessorServiceClient = mock.Mock(
         return_value=mock.Mock(process_document=process_document_mock))
-    with app.test_request_context(
-            json={'calls': [
-                ['https://storage.googleapis.com/bucket/apple', 'application/pdf'],
-                ['https://storage.googleapis.com/bucket/banana', 'application/pdf']
-            ]}):
+    with app.test_request_context(json=_BIGQUERY_REQUEST_JSON):
         response = document_function.document_ocr(flask.request)
         assert response.status_code == 200
-        assert len(response.get_json()['replies']) == 2
-        assert 'apple' in str(response.get_json()['replies'][0])
-        assert 'banana' in str(response.get_json()['replies'][1])
+        assert response.get_json() == _BIGQUERY_RESPONSE_JSON
 
 
 @mock.patch('document_function.urllib.request')
@@ -65,11 +76,7 @@ def test_document_function_error(
     process_document_mock = mock.Mock(side_effect=Exception('API error'))
     mock_documentai.DocumentProcessorServiceClient = mock.Mock(
         return_value=mock.Mock(process_document=process_document_mock))
-    with app.test_request_context(
-            json={'calls': [
-                ['https://storage.googleapis.com/bucket/apple', 'application/pdf'],
-                ['https://storage.googleapis.com/bucket/banana', 'application/pdf']
-            ]}):
+    with app.test_request_context(json=_BIGQUERY_REQUEST_JSON):
         response = document_function.document_ocr(flask.request)
         assert response.status_code == 400
         assert 'API error' in str(response.get_data())
