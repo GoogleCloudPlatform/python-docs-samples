@@ -15,7 +15,7 @@
 from unittest import mock
 
 import flask
-from google.cloud import vision_v1
+from google.cloud import vision
 import pytest
 
 import vision_function
@@ -27,16 +27,19 @@ def app() -> flask.Flask:
     return flask.Flask(__name__)
 
 
-@mock.patch('vision_function.vision_v1')
-def test_vision_function(mock_vision_v1: object, app: flask.Flask) -> None:
+@mock.patch('vision_function.urllib.request')
+@mock.patch('vision_function.vision')
+def test_vision_function(mock_vision: object, mock_request: object,
+                         app: flask.Flask) -> None:
+    mock_request.urlopen = mock.Mock(read=mock.Mock(return_value=b'filedata'))
     label_detection_mock = mock.Mock(side_effect=[
-        vision_v1.AnnotateImageResponse(
+        vision.AnnotateImageResponse(
             {'label_annotations': [{'description': 'apple'}]}),
-        vision_v1.AnnotateImageResponse(
+        vision.AnnotateImageResponse(
             {'label_annotations': [{'description': 'banana'}]})])
-    mock_vision_v1.ImageAnnotatorClient = mock.Mock(
+    mock_vision.ImageAnnotatorClient = mock.Mock(
         return_value=mock.Mock(label_detection=label_detection_mock))
-    mock_vision_v1.AnnotateImageResponse = vision_v1.AnnotateImageResponse
+    mock_vision.AnnotateImageResponse = vision.AnnotateImageResponse
     with app.test_request_context(
             json={'calls': [['https://storage.googleapis.com/bucket/apple'],
                             ['https://storage.googleapis.com/bucket/banana']]}):
@@ -47,11 +50,13 @@ def test_vision_function(mock_vision_v1: object, app: flask.Flask) -> None:
         assert 'banana' in str(response.get_json()['replies'][1])
 
 
-@mock.patch('vision_function.vision_v1')
-def test_vision_function_error(
-        mock_vision_v1: object, app: flask.Flask) -> None:
+@mock.patch('vision_function.urllib.request')
+@mock.patch('vision_function.vision')
+def test_vision_function_error(mock_vision: object, mock_request: object,
+                               app: flask.Flask) -> None:
+    mock_request.urlopen = mock.Mock(read=mock.Mock(return_value=b'filedata'))
     label_detection_mock = mock.Mock(side_effect=Exception('API error'))
-    mock_vision_v1.ImageAnnotatorClient = mock.Mock(
+    mock_vision.ImageAnnotatorClient = mock.Mock(
         return_value=mock.Mock(label_detection=label_detection_mock))
     with app.test_request_context(
             json={'calls': [['https://storage.googleapis.com/bucket/apple'],
