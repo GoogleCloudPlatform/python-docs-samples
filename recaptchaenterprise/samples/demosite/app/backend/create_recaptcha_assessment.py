@@ -65,4 +65,4 @@ def create_assessment(
     # Return the risk score.
     verdict = "Not a human" if response.risk_analysis.score < sample_threshold_score else "Human"
     return jsonify(
-        {'data': {"score": "{:.12f}".format(response.risk_analysis.score), "verdict": verdict}, "success": "true"})
+        {'data': {"score": "{:.1f}".format(response.risk_analysis.score), "verdict": verdict}, "success": "true"})
