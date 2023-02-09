@@ -15,9 +15,10 @@
 import json
 import os
 
+from flask import jsonify, render_template, request, Response
+
 from backend import create_recaptcha_assessment
 
-from flask import jsonify, render_template, request, Response
 
 context = {
     "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
