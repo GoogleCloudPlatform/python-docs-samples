@@ -1555,7 +1555,7 @@ class RecaptchaDemo extends LitElement {
               class="documentation"
               href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button"
               target="_blank"
-              ><span>Learn more about adding reCATPCHA on an HTML button</span
+              ><span>Learn more about adding reCAPTCHA on an HTML button</span
               ><mwc-icon>launch</mwc-icon></a
             >
           </section>
