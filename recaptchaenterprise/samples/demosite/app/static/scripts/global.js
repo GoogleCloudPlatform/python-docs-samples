@@ -16,11 +16,11 @@
 // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
 // SEE: If using a library or famework, can use event handlers its usual way
 
-function createAssessment({ action, sitekey, token }) {
+function createAssessment({ action, token }) {
   // SEE: Code for fetching the assessment from backend goes here
   // SEE: Refer to demo app backend code for more information
   // SEE: If using a library or framework, can fetch its usual way
-  return fetchDemoAssessment({ action, sitekey, token });
+  return fetchDemoAssessment({ action, token });
 }
 
 function useAssessment(score) {
@@ -30,11 +30,10 @@ function useAssessment(score) {
 
 // ATTENTION: reCAPTCHA Example (Part 3) Ends
 
-function fetchDemoAssessment({ action, sitekey, token }) {
+function fetchDemoAssessment({ action, token }) {
   const body = JSON.stringify({
     recaptcha_cred: {
       action,
-      sitekey,
       token,
     },
   });

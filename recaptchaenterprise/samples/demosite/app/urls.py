@@ -57,9 +57,9 @@ def create_assessment() -> Response:
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         return create_recaptcha_assessment.create_assessment(project_id,
-                                            credentials["sitekey"],
-                                            credentials["token"],
-                                            credentials["action"])
+                                                             context.get("site_key"),
+                                                             credentials["token"],
+                                                             credentials["action"])
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
     except ValueError as e:
         return jsonify({'data': {"error_msg": str(e.__dict__)}, "success": "false"})
