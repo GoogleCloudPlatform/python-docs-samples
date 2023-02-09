@@ -74,7 +74,6 @@
           // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
           const score = await createAssessment({
             action: "check_out",
-            sitekey: "{{context.site_key}}",
             token,
           });
           useAssessment(score);
