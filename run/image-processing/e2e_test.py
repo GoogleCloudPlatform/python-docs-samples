@@ -29,68 +29,30 @@ import pytest
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-IMAGE_NAME = f"gcr.io/{PROJECT}/image-proc-{SUFFIX}"
-CLOUD_RUN_SERVICE = f"image-proc-{SUFFIX}"
+AR_REPO_URL = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
 OUTPUT_BUCKET = f"image-proc-output-{SUFFIX}"
 TOPIC = f"image_proc_{SUFFIX}"
 
 
 @pytest.fixture
-def container_image():
-    # Build container image for Cloud Run deployment
+def deployed_service(output_bucket):
+    # Deploy image to Cloud Run
+    service_name = f'image-proc-{SUFFIX}'
     subprocess.check_call(
         [
             "gcloud",
             "builds",
             "submit",
-            "--tag",
-            IMAGE_NAME,
+            "--config",
+            "cloudbuild.yaml",
             "--project",
             PROJECT,
-            "--quiet",
-        ]
-    )
-    yield IMAGE_NAME
-
-    # Delete container image
-    subprocess.check_call(
-        [
-            "gcloud",
-            "container",
-            "images",
-            "delete",
-            IMAGE_NAME,
-            "--quiet",
-            "--project",
-            PROJECT,
+            f"--substitutions=_SERVICE_NAME={service_name},_BLURRED_BUCKET_NAME={output_bucket.name}"
         ]
     )
 
-
-@pytest.fixture
-def deployed_service(container_image, output_bucket):
-    # Deploy image to Cloud Run
-
-    subprocess.check_call(
-        [
-            "gcloud",
-            "run",
-            "deploy",
-            CLOUD_RUN_SERVICE,
-            "--image",
-            container_image,
-            "--region=us-central1",
-            "--project",
-            PROJECT,
-            "--platform=managed",
-            "--set-env-vars",
-            f"BLURRED_BUCKET_NAME={output_bucket.name}",
-            "--no-allow-unauthenticated",
-        ]
-    )
-
-    yield CLOUD_RUN_SERVICE
+    yield service_name
 
     subprocess.check_call(
         [
@@ -98,7 +60,7 @@ def deployed_service(container_image, output_bucket):
             "run",
             "services",
             "delete",
-            CLOUD_RUN_SERVICE,
+            service_name,
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
