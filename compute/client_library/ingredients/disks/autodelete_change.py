@@ -16,15 +16,12 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import sys
-from typing import NoReturn
-
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT set_disk_autodelete>
-def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_name: str, autodelete: bool) -> NoReturn:
+def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_name: str, autodelete: bool) -> None:
     """
     Set the autodelete flag of a disk to given value.
 
@@ -49,5 +46,4 @@ def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_nam
     operation = instance_client.update(project=project_id, zone=zone, instance=instance_name, instance_resource=instance)
 
     wait_for_extended_operation(operation, "disk update")
-    return
 # </INGREDIENT>
