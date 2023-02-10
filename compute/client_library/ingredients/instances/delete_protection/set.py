@@ -42,5 +42,4 @@ def set_delete_protection(
 
     operation = instance_client.set_deletion_protection(request)
     wait_for_extended_operation(operation, "changing delete protection setting")
-    return
 # </INGREDIENT>

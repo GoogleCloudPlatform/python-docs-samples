@@ -95,6 +95,7 @@ assign_issues_by:
   - 'api: texttospeech'
   - 'api: retail'
   - 'api: dialogflow'
+  - 'api: speech'
   to:
   - GoogleCloudPlatform/dee-data-ai
 - labels:
