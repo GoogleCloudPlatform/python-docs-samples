@@ -29,7 +29,7 @@ from ..instances.stop import stop_instance
 
 PROJECT = google.auth.default()[1]
 
-INSTANCE_ZONE = "europe-central2-b"
+INSTANCE_ZONE = "europe-west2-b"
 
 KEY = "".join(random.sample(string.ascii_letters, 32))
 KEY_B64 = base64.b64encode(
