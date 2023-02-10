@@ -27,6 +27,7 @@ import pytest
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+region = 'us-central1'
 
 
 @pytest.fixture
@@ -35,7 +36,6 @@ def deployed_service():
     service_name = f'filesystem-{SUFFIX}'
     connector = os.environ['CONNECTOR']
     ip_address = os.environ['IP_ADDRESS']
-    region = 'us-central1'
 
     subprocess.check_call(
         [
