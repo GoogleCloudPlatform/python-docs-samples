@@ -67,7 +67,7 @@ def deployed_service():
         ]
     )
 
-        subprocess.check_call(
+    subprocess.check_call(
         [
             'gcloud',
             'artifacts',
