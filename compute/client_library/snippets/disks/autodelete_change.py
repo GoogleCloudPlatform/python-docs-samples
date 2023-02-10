@@ -21,7 +21,7 @@
 
 # [START compute_disk_autodelete_change]
 import sys
-from typing import Any, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -31,8 +31,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -76,7 +77,7 @@ def wait_for_extended_operation(
 
 def set_disk_autodelete(
     project_id: str, zone: str, instance_name: str, disk_name: str, autodelete: bool
-) -> NoReturn:
+) -> None:
     """
     Set the autodelete flag of a disk to given value.
 
@@ -110,7 +111,6 @@ def set_disk_autodelete(
     )
 
     wait_for_extended_operation(operation, "disk update")
-    return
 
 
 # [END compute_disk_autodelete_change]
