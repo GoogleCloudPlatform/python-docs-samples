@@ -38,7 +38,7 @@ import pytest
 from oslogin_service_account_ssh import main
 
 PROJECT = google.auth.default()[1]
-ZONE = 'europe-west1-a'
+ZONE = 'europe-north1-a'
 TEST_ID = f'oslogin-test-{uuid.uuid4().hex[:10]}'
 FIREWALL_TAG = 'ssh-oslogin-test'
 
