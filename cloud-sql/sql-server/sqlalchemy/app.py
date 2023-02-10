@@ -95,9 +95,9 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(
+        recent_votes = conn.execute(sqlalchemy.text(
             "SELECT TOP(5) candidate, time_cast FROM votes ORDER BY time_cast DESC"
-        ).fetchall()
+        )).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append({"candidate": row[0], "time_cast": row[1]})
@@ -106,11 +106,9 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
             "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
         )
         # Count number of votes for tabs
-        tab_result = conn.execute(stmt, candidate="TABS").fetchone()
-        tab_count = tab_result[0]
+        tab_count = conn.execute(stmt, parameters={"candidate": "TABS"}).scalar()
         # Count number of votes for spaces
-        space_result = conn.execute(stmt, candidate="SPACES").fetchone()
-        space_count = space_result[0]
+        space_count = conn.execute(stmt, parameters={"candidate": "SPACES"}).scalar()
     return {
         "recent_votes": votes,
         "space_count": space_count,
@@ -138,7 +136,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
-            conn.execute(stmt, time_cast=time_cast, candidate=team)
+            conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team})
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.

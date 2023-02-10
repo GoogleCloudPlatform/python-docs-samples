@@ -35,5 +35,4 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str) -> None:
     )
 
     wait_for_extended_operation(operation, "firewall rule deletion")
-    return
 # </INGREDIENT>
