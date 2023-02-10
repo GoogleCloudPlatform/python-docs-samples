@@ -21,7 +21,7 @@ from ..instances.spot.create import create_spot_instance
 from ..instances.spot.is_spot_vm import is_spot_vm
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "europe-central2-c"
+INSTANCE_ZONE = "europe-west2-c"
 
 
 @pytest.fixture
