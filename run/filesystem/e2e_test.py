@@ -35,6 +35,7 @@ def deployed_service():
     service_name = f'filesystem-{SUFFIX}'
     connector = os.environ['CONNECTOR']
     ip_address = os.environ['IP_ADDRESS']
+    region = 'us-central1'
 
     subprocess.check_call(
         [
@@ -58,10 +59,23 @@ def deployed_service():
             'services',
             'delete',
             service_name,
-            '--region=us-central1',
+            f'--region={region}',
             '--platform=managed',
             '--quiet',
-            "--async",
+            '--project',
+            PROJECT,
+        ]
+    )
+
+        subprocess.check_call(
+        [
+            'gcloud',
+            'artifacts',
+            'docker',
+            'images',
+            'delete',
+            f'{region}-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy/{service_name}',
+            '--quiet',
             '--project',
             PROJECT,
         ]
@@ -79,7 +93,7 @@ def service_url_auth_token(deployed_service):
                 'services',
                 'describe',
                 deployed_service,
-                '--region=us-central1',
+                f'--region={region}',
                 '--platform=managed',
                 '--format=value(status.url)',
                 '--project',
