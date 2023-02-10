@@ -3,4 +3,4 @@ google-cloud-containeranalysis==2.10.0
 grafeas==1.6.1
 pytest==7.2.0
 flaky==3.7.0
-mock==4.0.3
+mock==5.0.1
