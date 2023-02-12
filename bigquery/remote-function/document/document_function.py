@@ -28,6 +28,7 @@ _PROCESSOR_ID = "YOUR_PROCESSOR_ID"
 @functions_framework.http
 def document_ocr(request: flask.Request) -> flask.Response:
     """BigQuery remote function to process document using Document AI OCR.
+
     For complete Document AI use cases:
     https://cloud.google.com/document-ai/docs/samples/documentai-process-ocr-document
 

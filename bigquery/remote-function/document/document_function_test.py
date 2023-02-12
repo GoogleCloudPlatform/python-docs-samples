@@ -49,7 +49,7 @@ def app() -> flask.Flask:
 def test_document_function(
     mock_documentai: object,
     mock_request: object,
-    app: flask.Flask
+    app: flask.Flask,
 ) -> None:
     mock_request.urlopen = mock.Mock(read=mock.Mock(return_value=b'filedata'))
     process_document_mock = mock.Mock(side_effect=[
@@ -70,7 +70,7 @@ def test_document_function(
 def test_document_function_error(
     mock_documentai: object,
     mock_request: object,
-    app: flask.Flask
+    app: flask.Flask,
 ) -> None:
     mock_request.urlopen = mock.Mock(read=mock.Mock(return_value=b'filedata'))
     process_document_mock = mock.Mock(side_effect=Exception('API error'))
