@@ -4,5 +4,5 @@ gunicorn==20.1.0
 six==1.16.0
 pyyaml==6.0
 requests==2.27.1
-google-auth==2.6.2
-google-auth-oauthlib==0.5.3
+google-auth==2.16.0
+google-auth-oauthlib==1.0.0
