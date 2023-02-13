@@ -14,18 +14,19 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-import multiprocessing
 import os
 import platform
 import re
 import subprocess
-from unittest import mock
+import sys
+import textwrap
 import uuid
 from collections.abc import Callable, Iterable
+from datetime import datetime
+from unittest import mock
 
-from google.cloud import storage
 import pytest
+from google.cloud import storage
 
 
 @pytest.fixture(scope="session")
@@ -65,7 +66,7 @@ def unique_name(test_name: str, unique_id: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def bucket_name(test_name: str, location: str, unique_id: str) -> str:
+def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
     # Override for local testing.
     if "GOOGLE_CLOUD_BUCKET" in os.environ:
         bucket_name = os.environ["GOOGLE_CLOUD_BUCKET"]
@@ -192,7 +193,6 @@ def aiplatform_cleanup(model_name: str, location: str, versions: list[str]) -> N
     )
 
 
-
 def run_notebook(
     ipynb_file: str,
     prelude: str = "",
@@ -203,8 +203,9 @@ def run_notebook(
     skip_shell_commands: bool = False,
     until_end: bool = False,
 ) -> None:
-    import nbclient
     import nbformat
+    from nbclient.client import NotebookClient
+    from nbclient.exceptions import CellExecutionError
 
     def notebook_filter_section(
         start: str,
@@ -262,13 +263,7 @@ def run_notebook(
             cmd = "pass"
             cell["source"] = shell_command_re.sub(cmd, cell["source"])
         else:
-            cmd = [
-                "import subprocess",
-                "_cmd = f'''\\1'''",
-                "print(f'>> {_cmd}')",
-                "subprocess.run(_cmd, shell=True, check=True)",
-            ]
-            cell["source"] = shell_command_re.sub("\n".join(cmd), cell["source"])
+            cell["source"] = shell_command_re.sub(r"_run(f'''\1''')", cell["source"])
 
         # Apply variable substitutions.
         for regex, new_value in compiled_substitutions:
@@ -278,18 +273,57 @@ def run_notebook(
         for old, new in replace.items():
             cell["source"] = cell["source"].replace(old, new)
 
+        # Clear outputs.
+        cell["outputs"] = []
+
     # Prepend the prelude cell.
-    nb.cells = [nbformat.v4.new_code_cell(prelude)] + nb.cells
+    prelude_src = textwrap.dedent(
+        """\
+        def _run(cmd):
+            import subprocess as _sp
+            import sys as _sys
+            _p = _sp.run(cmd, shell=True, stdout=_sp.PIPE, stderr=_sp.PIPE)
+            _stdout = _p.stdout.decode('utf-8').strip()
+            _stderr = _p.stderr.decode('utf-8').strip()
+            if _stdout:
+                print(f'➜ !{cmd}')
+                print(_stdout)
+            if _stderr:
+                print(f'➜ !{cmd}', file=_sys.stderr)
+                print(_stderr, file=_sys.stderr)
+            if _p.returncode:
+                raise RuntimeError('\\n'.join([
+                    f"Command returned non-zero exit status {_p.returncode}.",
+                    f"-------- command --------",
+                    f"{cmd}",
+                    f"-------- stderr --------",
+                    f"{_stderr}",
+                    f"-------- stdout --------",
+                    f"{_stdout}",
+                ]))
+        """
+        + prelude
+    )
+    nb.cells = [nbformat.v4.new_code_cell(prelude_src)] + nb.cells
 
     # Run the notebook.
     error = ""
-    client = nbclient.NotebookClient(nb)
+    client = NotebookClient(nb)
     try:
         client.execute()
-    except nbclient.exceptions.CellExecutionError as e:
+    except CellExecutionError as e:
         # Remove colors and other escape characters to make it easier to read in the logs.
         #   https://stackoverflow.com/a/33925425
-        error = re.sub(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]", "", str(e))
+        color_chars = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]")
+        error = color_chars.sub("", str(e))
+        for cell in nb.cells:
+            if cell["cell_type"] != "code":
+                continue
+            for output in cell["outputs"]:
+                if output.get("name") == "stdout":
+                    print(color_chars.sub("", output["text"]))
+                elif output.get("name") == "stderr":
+                    print(color_chars.sub("", output["text"]), file=sys.stderr)
 
     if error:
         raise RuntimeError(
@@ -299,22 +333,26 @@ def run_notebook(
 
 def run_notebook_parallel(
     ipynb_file: str,
-    prelude: str,
-    sections: list[str],
-    variables: dict[str, dict] = {},
-    replace: dict[str, dict[str, str]] = {},
-    skip_shell_commands: list[str] = [],
+    sections: dict[str, dict],
+    prelude: str = "",
+    variables: dict = {},
+    replace: dict[str, str] = {},
+    skip_shell_commands: bool = False,
 ) -> None:
+    import multiprocessing
+
     args = [
         {
             "ipynb_file": ipynb_file,
             "section": section,
-            "prelude": prelude,
-            "variables": variables.get(section, {}),
-            "replace": replace.get(section, {}),
-            "skip_shell_commands": section in skip_shell_commands,
+            "prelude": params.get("prelude", prelude),
+            "variables": {**variables, **params.get("variables", {})},
+            "replace": {**replace, **params.get("replace", {})},
+            "skip_shell_commands": params.get(
+                "skip_shell_commands", skip_shell_commands
+            ),
         }
-        for section in sections
+        for section, params in sections.items()
     ]
     with multiprocessing.Pool(len(args)) as pool:
         pool.map(_run_notebook_section, args)

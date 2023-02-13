@@ -1,0 +1,6 @@
+pytest==7.2.0
+pytest-parallel==0.1.1
+flaky==3.7.0
+google-cloud-storage==2.5.0
+google-cloud-kms==2.13.0
+py==1.11.0

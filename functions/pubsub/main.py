@@ -20,9 +20,12 @@ import os
 from google.cloud import pubsub_v1
 
 
+# TODO(developer): set this environment variable
+PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+
+
 # Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 
 
 # Publishes a message to a Cloud Pub/Sub topic.

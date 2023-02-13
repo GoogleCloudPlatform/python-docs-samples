@@ -1,0 +1,7 @@
+Flask==2.2.2
+gunicorn==20.1.0
+torch==1.13.1
+
+# Local packages.
+./weather-data
+./weather-model
