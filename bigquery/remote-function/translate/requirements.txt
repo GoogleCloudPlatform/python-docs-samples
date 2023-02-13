@@ -1,0 +1,3 @@
+Flask==2.2.2
+functions-framework==3.*
+google-cloud-translate==3.*
