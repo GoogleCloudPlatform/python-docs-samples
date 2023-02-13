@@ -56,7 +56,6 @@ def handle_translation(request: flask.Request) -> flask.Response:
     translated = translate_text([call[0] for call in calls], project, target)
 
     return flask.jsonify({"replies": translated})
-
   except Exception as err:
     return flask.make_response(
         flask.jsonify({"errorMessage": f"Unexpected {err=}"}),
