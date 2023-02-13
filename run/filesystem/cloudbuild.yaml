@@ -17,7 +17,7 @@ steps:
       - run
       - deploy
       - ${_SERVICE_NAME}
-      - --source .
+      - --source=.
       - --execution-environment=gen2
       - --vpc-connector=${_CONNECTOR}
       - --update-env-vars=FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE}
