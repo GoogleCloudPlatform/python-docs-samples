@@ -25,7 +25,7 @@ from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
 
 PROJECT = google.auth.default()[1]
-ZONE = 'europe-north1-c'
+ZONE = 'europe-west1-c'
 
 
 @pytest.fixture
