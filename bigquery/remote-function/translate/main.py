@@ -25,73 +25,81 @@ translate_client = translate.TranslationServiceClient()
 # Register an HTTP function with the Functions Framework
 @functions_framework.http
 def handle_translation(request: flask.Request) -> flask.Response:
-  """BigQuery remote function to translate input text.
+    """BigQuery remote function to translate input text.
 
-  Args:
-      request: HTTP request from BigQuery
-      https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#input_format
+    Args:
+        request: HTTP request from BigQuery
+        https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#input_format
 
-  Returns:
-      HTTP response to BigQuery
-      https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#output_format
-  """
-  try:
-    # Parse request data as JSON
-    request_json = request.get_json()
-    # Get the project of the query
-    caller = request_json["caller"]
-    project = extract_project_from_caller(caller)
-    if project == None:
-      return flask.make_response(
-          flask.jsonify(
-              {"errorMessage": f"project can't be extracted from {caller=}."}
-          ),
-          400,
-      )
-    # Get the target language code, default is "es"
-    context = request_json["userDefinedContext"]
-    target = context.get("target_language", "es")
+    Returns:
+        HTTP response to BigQuery
+        https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions#output_format
+    """
+    try:
+        # Parse request data as JSON
+        request_json = request.get_json()
+        # Get the project of the query
+        caller = request_json["caller"]
+        project = extract_project_from_caller(caller)
+        if project is None:
+            return flask.make_response(
+                flask.jsonify(
+                    {
+                        "errorMessage": (
+                            f"project can't be extracted from {caller=}."
+                        )
+                    }
+                ),
+                400,
+            )
+        # Get the target language code, default is "es"
+        context = request_json["userDefinedContext"]
+        target = context.get("target_language", "es")
 
-    calls = request_json["calls"]
-    translated = translate_text([call[0] for call in calls], project, target)
+        calls = request_json["calls"]
+        translated = translate_text(
+            [call[0] for call in calls], project, target
+        )
 
-    return flask.jsonify({"replies": translated})
-  except Exception as err:
-    return flask.make_response(
-        flask.jsonify({"errorMessage": f"Unexpected {err=}"}),
-        400,
-    )
+        return flask.jsonify({"replies": translated})
+    except Exception as err:
+        return flask.make_response(
+            flask.jsonify({"errorMessage": f"Unexpected {err=}"}),
+            400,
+        )
 
 
 def extract_project_from_caller(job: str) -> str:
-  """Extract project id from full resource name of a BigQuery job.
+    """Extract project id from full resource name of a BigQuery job.
 
-  Args:
-      job: full resource name of a BigQuery job, like
-        "//bigquery.googleapi.com/projects/<project>/jobs/<job_id>"
+    Args:
+        job: full resource name of a BigQuery job, like
+          "//bigquery.googleapi.com/projects/<project>/jobs/<job_id>"
 
-  Returns:
-      project id which is contained in the full resource name of the job.
-  """
-  path = job.split("/")
-  return path[4] if len(path) > 4 else None
+    Returns:
+        project id which is contained in the full resource name of the job.
+    """
+    path = job.split("/")
+    return path[4] if len(path) > 4 else None
 
 
 def translate_text(calls: list[str], project: str, target: str) -> list[str]:
-  location = "us-central1"
-  parent = f"projects/{project}/locations/{location}"
-  # Call the Translation API, passing a list of values and the target language
-  response = translate_client.translate_text(
-      request={
-          "parent": parent,
-          "contents": calls,
-          "target_language_code": target,
-          "mime_type": "text/plain",
-      },
-      retry=Retry(),
-  )
-  # Convert the translated value to a list and return it
-  return [translation.translated_text for translation in response.translations]
+    location = "us-central1"
+    parent = f"projects/{project}/locations/{location}"
+    # Call the Translation API, passing a list of values and the target language
+    response = translate_client.translate_text(
+        request={
+            "parent": parent,
+            "contents": calls,
+            "target_language_code": target,
+            "mime_type": "text/plain",
+        },
+        retry=Retry(),
+    )
+    # Convert the translated value to a list and return it
+    return [
+        translation.translated_text for translation in response.translations
+    ]
 
 
 # [END bigquery_remote_function_translation]
