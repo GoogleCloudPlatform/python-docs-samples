@@ -137,7 +137,7 @@ def create_tables() -> None:
     db = init_connection_engine()
     # Create pet_votes table if it doesn't already exist
     with db.connect() as conn:
-        conn.execute(
+        conn.execute(sqlalchemy.text(
             "CREATE TABLE IF NOT EXISTS pet_votes"
             "( vote_id SERIAL NOT NULL, "
             "time_cast timestamp NOT NULL, "
@@ -145,17 +145,17 @@ def create_tables() -> None:
             "uid VARCHAR(128) NOT NULL, "
             "PRIMARY KEY (vote_id)"
             ");"
-        )
+        ))
 
 
 def get_index_context() -> Dict:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(
+        recent_votes = conn.execute(sqlalchemy.text(
             "SELECT candidate, time_cast FROM pet_votes "
             "ORDER BY time_cast DESC LIMIT 5"
-        ).fetchall()
+        )).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append(
@@ -168,11 +168,9 @@ def get_index_context() -> Dict:
             "SELECT COUNT(vote_id) FROM pet_votes WHERE candidate=:candidate"
         )
         # Count number of votes for cats
-        cats_result = conn.execute(stmt, candidate="CATS").fetchone()
-        cats_count = cats_result[0]
+        cats_count = conn.execute(stmt, candidate="CATS").scalar()
         # Count number of votes for dogs
-        dogs_result = conn.execute(stmt, candidate="DOGS").fetchone()
-        dogs_count = dogs_result[0]
+        dogs_count = conn.execute(stmt, candidate="DOGS").scalar()
     return {
         "dogs_count": dogs_count,
         "recent_votes": votes,
@@ -190,7 +188,7 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.connect() as conn:
-        conn.execute(stmt, time_cast=time_cast, candidate=team, uid=uid)
+        conn.execute(stmt, parameters={"time_cast":time_cast, "candidate":team, "uid":uid})
     logger.info("Vote for %s saved.", team)
 
 
