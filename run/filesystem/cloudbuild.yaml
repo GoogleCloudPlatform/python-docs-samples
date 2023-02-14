@@ -10,13 +10,6 @@
 # limitations under the License.
 
 steps:
-  - id: "Docker build"
-    name: "gcr.io/cloud-builders/docker"
-    args:
-      ["build", "-t", "${_AR_REPO_URL}/filesystem-e2e-test:${BUILD_ID}", "."]
-  - id: "Docker push to Artifact Registry"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_AR_REPO_URL}/filesystem-e2e-test:${BUILD_ID}"]
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
     args:
@@ -24,7 +17,7 @@ steps:
       - run
       - deploy
       - ${_SERVICE_NAME}
-      - --image=${_AR_REPO_URL}/filesystem-e2e-test:${BUILD_ID}
+      - --source=.
       - --execution-environment=gen2
       - --vpc-connector=${_CONNECTOR}
       - --update-env-vars=FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE}
@@ -32,9 +25,8 @@ steps:
       - --no-allow-unauthenticated
 
 substitutions:
+  _SERVICE_NAME: filesystem
   _DEPLOY_REGION: us-central1
   _FILESHARE: vol1
-  _AR_REPO_URL: us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy
-
-options:
-  dynamic_substitutions: true
+  _CONNECTOR: my-run-connector
+  _FILESTORE_IP_ADDRESS: 0.0.0.0
