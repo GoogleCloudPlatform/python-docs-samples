@@ -39,8 +39,8 @@ from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
 
 PROJECT = google.auth.default()[1]
-ZONE = 'europe-west1-c'
-REGION = 'europe-west1'
+ZONE = 'europe-west2-c'
+REGION = 'europe-west2'
 KMS_KEYRING_NAME = 'compute-test-keyring'
 KMS_KEY_NAME = 'compute-test-key'
 
