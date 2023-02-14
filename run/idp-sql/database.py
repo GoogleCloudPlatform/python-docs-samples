@@ -188,7 +188,7 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.connect() as conn:
-        conn.execute(stmt, parameters={"time_cast":time_cast, "candidate":team, "uid":uid})
+        conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team, "uid": uid})
     logger.info("Vote for %s saved.", team)
 
 
