@@ -26,7 +26,7 @@ from ..instances.from_instance_template.create_from_template_with_overrides impo
 )
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "europe-north1-c"
+INSTANCE_ZONE = "europe-west1-c"
 
 
 @pytest.fixture

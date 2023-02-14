@@ -31,7 +31,7 @@ from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
 
 PROJECT = google.auth.default()[1]
-ZONE = 'europe-central2-c'
+ZONE = 'europe-west2-c'
 
 
 @pytest.fixture
