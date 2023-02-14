@@ -22,7 +22,7 @@ from ..instances.preemptible.is_preemptible import is_preemptible
 from ..instances.preemptible.preemption_history import list_zone_operations
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "europe-central2-c"
+INSTANCE_ZONE = "europe-west2-c"
 
 
 @pytest.fixture

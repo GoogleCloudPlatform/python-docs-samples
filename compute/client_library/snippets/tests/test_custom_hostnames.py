@@ -22,7 +22,7 @@ from ..instances.custom_hostname.get import get_hostname
 from ..instances.delete import delete_instance
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "europe-north1-c"
+INSTANCE_ZONE = "europe-west1-c"
 
 
 @pytest.fixture
