@@ -23,6 +23,7 @@ services:
         - "GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}"
         - "SITE_KEY=${SITE_KEY}"
     command: gunicorn main:app --workers 4 --name main --reload -b 0.0.0.0:8080
+    user: "${DOCKER_COMPOSE_USER}"
     ports: ["8080:8080"]
     volumes:
       - "./app:/app"
