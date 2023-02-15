@@ -16,8 +16,6 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import time
-
 from google.cloud import compute_v1
 
 
@@ -42,6 +40,4 @@ def resume_instance(project_id: str, zone: str, instance_name: str) -> None:
     )
 
     wait_for_extended_operation(operation, "instance resumption")
-    return
 # </INGREDIENT>
-

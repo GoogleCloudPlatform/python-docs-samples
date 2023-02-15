@@ -54,11 +54,11 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
 # create 'votes' table in database if it does not already exist
 def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
     with db.connect() as conn:
-        conn.execute(
+        conn.execute(sqlalchemy.text(
             "CREATE TABLE IF NOT EXISTS votes "
             "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
             "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
-        )
+        ))
 
 
 # This global variable is declared with a value of `None`, instead of calling
@@ -96,9 +96,9 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
 
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(
+        recent_votes = conn.execute(sqlalchemy.text(
             "SELECT candidate, time_cast FROM votes ORDER BY time_cast DESC LIMIT 5"
-        ).fetchall()
+        )).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append({"candidate": row[0], "time_cast": row[1]})
@@ -107,11 +107,9 @@ def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
             "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
         )
         # Count number of votes for tabs
-        tab_result = conn.execute(stmt, candidate="TABS").fetchone()
-        tab_count = tab_result[0]
+        tab_count = conn.execute(stmt, parameters={"candidate": "TABS"}).scalar()
         # Count number of votes for spaces
-        space_result = conn.execute(stmt, candidate="SPACES").fetchone()
-        space_count = space_result[0]
+        space_count = conn.execute(stmt, parameters={"candidate": "SPACES"}).scalar()
 
     return {
         "space_count": space_count,
@@ -140,7 +138,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
-            conn.execute(stmt, time_cast=time_cast, candidate=team)
+            conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team})
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.

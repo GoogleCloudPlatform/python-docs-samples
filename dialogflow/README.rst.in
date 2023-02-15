@@ -1,0 +1,43 @@
+# This file is used to generate README.rst
+
+product:
+  name: Dialogflow Enterprise Edition  API
+  short_name: Dialogflow API
+  url: https://cloud.google.com/dialogflow-enterprise/docs/
+  description: >
+    The `Dialogflow Enterprise Edition API`_ enables you to create conversational experiences across devices and platforms.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Detect Intent Text
+  file: detect_intent_texts.py
+  show_help: True
+- name: Detect Intent Audio
+  file: detect_intent_audio.py
+  show_help: True
+- name: Detect Intent Stream
+  file: detect_intent_stream.py
+  show_help: True
+- name: Detect Intent Knowledge Base
+  file: detect_intent_knowledge.py
+  show_help: True
+- name: Detect Intent with Sentiment Analysis
+  file: detect_intent_with_sentiment_analysis.py
+  show_help: True
+- name: Detect Intent with Text to Speech Response
+  file: detect_intent_with_texttospeech_response.py
+  show_help: True
+- name: Intent Management
+  file: intent_management.py
+  show_help: True
+- name: Knowledge Base Management
+  file: knowledge_base_management.py
+  show_help: True
+- name: Document Management
+  file: document_management.py
+  show_help: True
+
+cloud_client_library: true

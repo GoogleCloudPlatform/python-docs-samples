@@ -373,7 +373,6 @@ analyze_op = PythonOperator(
     provide_context=True,
     dag=dag)
 
-
 for db_object in DATABASE_OBJECTS:
 
     cleanup_op = PythonOperator(

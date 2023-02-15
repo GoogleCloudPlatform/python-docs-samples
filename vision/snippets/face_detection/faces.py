@@ -97,7 +97,7 @@ if __name__ == '__main__':
         '--out', dest='output', default='out.jpg',
         help='the name of the output file.')
     parser.add_argument(
-        '--max-results', dest='max_results', default=4,
+        '--max-results', dest='max_results', default=4, type=int,
         help='the max results of face detection.')
     args = parser.parse_args()
 
