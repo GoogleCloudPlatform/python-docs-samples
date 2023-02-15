@@ -15,12 +15,16 @@
 assign_issues_by:
 - labels:
   - 'api: appengine'
+  - 'api: cloudbuild'
+  - 'api: cloudscheduler'
+  - 'api: cloudtasks'
+  - 'api: containeranalysis'
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
-  - 'api: secretmanager'
+  - 'api: workflows'
   to:
-  - GoogleCloudPlatform/aap-dpes
+  - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: auth'
   to:
@@ -39,12 +43,7 @@ assign_issues_by:
   to:
   - GoogleCloudPlatform/billing-samples-maintainers
 - labels:
-  - 'api: cloudbuild'
-  to:
-  - GoogleCloudPlatform/torus-dpe
-- labels:
   - 'api: cloudsql'
-  - 'api: cloudtasks'
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
@@ -61,10 +60,6 @@ assign_issues_by:
   - 'api: container'
   to:
   - GoogleCloudPlatform/dee-platform-ops
-- labels:
-  - 'api: containeranalysis'
-  to:
-  - GoogleCloudPlatform/aap-dpes
 - labels:
   - 'api: datascienceonramp'
   to:
@@ -84,15 +79,23 @@ assign_issues_by:
   to:
   - noerog
 - labels:
+  - 'api: iam'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: iot'
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
 - labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: language'
   - 'api: texttospeech'
   - 'api: retail'
+  - 'api: dialogflow'
+  - 'api: speech'
   to:
   - GoogleCloudPlatform/dee-data-ai
 - labels:
@@ -117,6 +120,10 @@ assign_issues_by:
   to:
   - anguillanneuf
 - labels:
+  - 'api: securitycenter'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: spanner'
   to:
   - GoogleCloudPlatform/api-spanner-python
@@ -139,12 +146,16 @@ assign_issues_by:
   - GoogleCloudPlatform/python-samples-reviewers
   - ivanmkc
 - labels:
+  - 'api: logging'
   - 'api: monitoring'
+  - 'api: trace'
   to:
   - GoogleCloudPlatform/dee-observability
 - labels:
   - 'api: kms'
   - 'api: cloudkms'
+  - 'api: secretmanager'
+  - 'api: privateca'
   to:
   - GoogleCloudPlatform/dee-infra
 - labels:
@@ -189,6 +200,8 @@ assign_prs_by:
   to:
   - GoogleCloudPlatform/infra-db-dpes
 - labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: retail'
   to: 

@@ -55,15 +55,24 @@ def main(user_key, ip_address, dryrun, directory=None):
         .getLoginProfile(name="users/{}".format(user_key), view="SECURITY_KEY")
         .execute()
     )
-    security_keys = profile.get("securityKeys")
 
     if "posixAccounts" not in profile:
         print("You don't have a POSIX account configured.")
+        print("Please make sure that you have enabled OS Login for your VM.")
         return
 
     username = profile.get("posixAccounts")[0].get("username")
 
     # Write the SSH private key files.
+    security_keys = profile.get("securityKeys")
+
+    if security_keys is None:
+        print("The account you are using to authenticate does not have any security keys assigned to it.")
+        print("Please check your Application Default Credentials "
+              "(https://cloud.google.com/docs/authentication/application-default-credentials).")
+        print("More info about using security keys: https://cloud.google.com/compute/docs/oslogin/security-keys")
+        return
+
     key_files = write_ssh_key_files(security_keys, directory)
 
     # Compose the SSH command.
