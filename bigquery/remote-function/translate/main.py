@@ -53,7 +53,7 @@ def handle_translation(request: flask.Request) -> flask.Response:
                 400,
             )
         # Get the target language code, default is "es"
-        context = request_json["userDefinedContext"]
+        context = request_json.get("userDefinedContext", {})
         target = context.get("target_language", "es")
 
         calls = request_json["calls"]
