@@ -17,7 +17,10 @@ import pytest
 from . import quickstart
 
 
-def test_quickstart(capsys: pytest.CaptureFixture, project_id: str) -> None:
-    quickstart.main(project_id)
+@pytest.mark.parametrize("transport", ["grpc", "rest"])
+def test_quickstart(
+    capsys: pytest.CaptureFixture, project_id: str, transport: str
+) -> None:
+    quickstart.main(project_id=project_id, transport=transport)
     out, _ = capsys.readouterr()
     assert " reservations processed." in out
