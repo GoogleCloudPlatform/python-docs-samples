@@ -42,11 +42,12 @@ def delete_ca(ca_pool_name: str) -> None:
             client.disable_certificate_authority(request=request)
 
         # Delete CA.
-        delete_ca_request = privateca_v1.DeleteCertificateAuthorityRequest()
-        delete_ca_request.name = ca.name
-        delete_ca_request.ignore_active_certificates = True
-        delete_ca_request.skip_grace_period = True
-        client.delete_certificate_authority(request=delete_ca_request).result(timeout=300)
+        if ca_state != privateca_v1.CertificateAuthority.State.DELETED:
+            delete_ca_request = privateca_v1.DeleteCertificateAuthorityRequest()
+            delete_ca_request.name = ca.name
+            delete_ca_request.ignore_active_certificates = True
+            delete_ca_request.skip_grace_period = True
+            client.delete_certificate_authority(request=delete_ca_request).result(timeout=300)
 
 
 def delete_capool() -> None:
