@@ -74,7 +74,6 @@ def generate_name() -> str:
 
 @pytest.fixture
 def ca_pool():
-    delete_stale_resources()
     CA_POOL_NAME = generate_name()
 
     create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
