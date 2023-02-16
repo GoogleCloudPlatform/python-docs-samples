@@ -15,8 +15,9 @@
 import uuid
 
 import google.auth
-import pytest
 from google.cloud.security import privateca_v1
+import pytest
+
 
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
@@ -47,7 +48,9 @@ def delete_ca(ca_pool_name: str) -> None:
             delete_ca_request.name = ca.name
             delete_ca_request.ignore_active_certificates = True
             delete_ca_request.skip_grace_period = True
-            client.delete_certificate_authority(request=delete_ca_request).result(timeout=300)
+            client.delete_certificate_authority(request=delete_ca_request).result(
+                timeout=300
+            )
 
 
 def delete_capool() -> None:
