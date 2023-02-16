@@ -18,7 +18,7 @@ import uuid
 
 import google.auth
 
-from privateca.snippets.conftest import delete_stale_resources
+from conftest import delete_stale_resources
 
 from create_ca_pool import create_ca_pool
 from delete_ca_pool import delete_ca_pool
