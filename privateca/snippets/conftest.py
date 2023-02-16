@@ -16,6 +16,7 @@ import uuid
 
 import google.auth
 import pytest
+from google.cloud.security import privateca_v1
 
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
@@ -31,12 +32,49 @@ ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000
 
 
+def delete_ca(ca_pool_name: str) -> None:
+    client = privateca_v1.CertificateAuthorityServiceClient()
+    for ca in client.list_certificate_authorities(parent=ca_pool_name):
+        # Check if the CA is enabled.
+        ca_state = client.get_certificate_authority(name=ca.name).state
+        if ca_state == privateca_v1.CertificateAuthority.State.ENABLED:
+            request = privateca_v1.DisableCertificateAuthorityRequest(name=ca.name)
+            client.disable_certificate_authority(request=request)
+
+        # Delete CA.
+        delete_ca_request = privateca_v1.DeleteCertificateAuthorityRequest()
+        delete_ca_request.name = ca.name
+        delete_ca_request.ignore_active_certificates = True
+        delete_ca_request.skip_grace_period = True
+        client.delete_certificate_authority(request=delete_ca_request).result(timeout=300)
+
+
+def delete_capool() -> None:
+    client = privateca_v1.CertificateAuthorityServiceClient()
+    location_path = client.common_location_path(PROJECT, LOCATION)
+    request = privateca_v1.ListCaPoolsRequest(parent=location_path)
+    # List CA pools.
+    for ca_pool in client.list_ca_pools(request=request):
+        ca_pool_name = ca_pool.name
+        # Delete CA.
+        delete_ca(ca_pool_name)
+        # Delete CA pool.
+        delete_ca_pool_request = privateca_v1.DeleteCaPoolRequest()
+        delete_ca_pool_request.name = ca_pool_name
+        client.delete_ca_pool(request=delete_ca_pool_request).result(timeout=300)
+
+
+def delete_stale_resources() -> None:
+    delete_capool()
+
+
 def generate_name() -> str:
     return "test-" + uuid.uuid4().hex[:10]
 
 
 @pytest.fixture
 def ca_pool():
+    delete_stale_resources()
     CA_POOL_NAME = generate_name()
 
     create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
