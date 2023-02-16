@@ -17,9 +17,10 @@ import pytest
 from . import quickstart
 
 
+@pytest.mark.parametrize("transport", ["grpc", "rest"])
 def test_quickstart(
-    capsys: pytest.CaptureFixture, project_id: str, location: str
+    capsys: pytest.CaptureFixture, project_id: str, location: str, transport: str
 ) -> None:
-    quickstart.main(project_id, location)
+    quickstart.main(project_id, location, transport)
     out, _ = capsys.readouterr()
     assert "List of connections in project" in out

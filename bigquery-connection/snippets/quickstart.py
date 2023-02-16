@@ -17,9 +17,11 @@
 from google.cloud import bigquery_connection_v1 as bq_connection
 
 
-def main(project_id: str = "your-project-id", location: str = "US") -> None:
+def main(
+    project_id: str = "your-project-id", location: str = "US", transport: str = "grpc"
+) -> None:
     """Prints details and summary information about connections for a given admin project and location"""
-    client = bq_connection.ConnectionServiceClient()
+    client = bq_connection.ConnectionServiceClient(transport=transport)
     print(f"List of connections in project {project_id} in location {location}")
     req = bq_connection.ListConnectionsRequest(
         parent=client.common_location_path(project_id, location)
