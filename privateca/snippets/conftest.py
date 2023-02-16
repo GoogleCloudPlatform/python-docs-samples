@@ -14,10 +14,10 @@
 
 import uuid
 
+from google.api_core.exceptions import FailedPrecondition
 import google.auth
 from google.cloud.security import privateca_v1
 import pytest
-
 
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
@@ -63,9 +63,12 @@ def delete_capool() -> None:
         # Delete CA.
         delete_ca(ca_pool_name)
         # Delete CA pool.
-        delete_ca_pool_request = privateca_v1.DeleteCaPoolRequest()
-        delete_ca_pool_request.name = ca_pool_name
-        client.delete_ca_pool(request=delete_ca_pool_request).result(timeout=300)
+        try:
+            delete_ca_pool_request = privateca_v1.DeleteCaPoolRequest()
+            delete_ca_pool_request.name = ca_pool_name
+            client.delete_ca_pool(request=delete_ca_pool_request).result(timeout=300)
+        except FailedPrecondition:
+            continue
 
 
 def delete_stale_resources() -> None:
