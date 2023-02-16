@@ -28,6 +28,7 @@ def main() -> None:
     username = "my-username"  # set database username
     password = "my-password"  # set database password
     cloud_sql_conn_name = ""  # set the name of your connection
+    transport = "grpc"  # Set the transport to either "grpc" or "rest"
 
     cloud_sql_credential = bq_connection.CloudSqlCredential(
         {
@@ -43,16 +44,17 @@ def main() -> None:
             "credential": cloud_sql_credential,
         }
     )
-    create_mysql_connection(project_id, location, cloud_sql_properties)
+    create_mysql_connection(project_id, location, cloud_sql_properties, transport)
 
 
 def create_mysql_connection(
     project_id: str,
     location: str,
     cloud_sql_properties: bq_connection.CloudSqlProperties,
+    transport: str,
 ) -> None:
     connection = bq_connection.types.Connection({"cloud_sql": cloud_sql_properties})
-    client = bq_connection.ConnectionServiceClient()
+    client = bq_connection.ConnectionServiceClient(transport=transport)
     parent = client.common_location_path(project_id, location)
     request = bq_connection.CreateConnectionRequest(
         {"parent": parent, "connection": connection}
