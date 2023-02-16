@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START bigquery_remote_function_translation]
+from typing import List
+
 import flask
 import functions_framework
 from google.api_core.retry import Retry
@@ -83,7 +85,7 @@ def extract_project_from_caller(job: str) -> str:
     return path[4] if len(path) > 4 else None
 
 
-def translate_text(calls: list[str], project: str, target: str) -> list[str]:
+def translate_text(calls: List[str], project: str, target: str) -> List[str]:
     location = "us-central1"
     parent = f"projects/{project}/locations/{location}"
     # Call the Translation API, passing a list of values and the target language
