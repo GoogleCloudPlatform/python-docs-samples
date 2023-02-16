@@ -58,6 +58,7 @@ def connection_id(
         pass
 
 
+@pytest.mark.parametrize("transport", ["grpc", "rest"])
 def test_create_mysql_connection(
     capsys: pytest.CaptureFixture,
     mysql_username: str,
@@ -66,6 +67,7 @@ def test_create_mysql_connection(
     cloud_sql_conn_name: str,
     project_id: str,
     location: str,
+    transport: str,
 ) -> None:
     cloud_sql_credential = bq_connection.CloudSqlCredential(
         {
@@ -85,6 +87,7 @@ def test_create_mysql_connection(
         project_id=project_id,
         location=location,
         cloud_sql_properties=cloud_sql_properties,
+        transport=transport,
     )
     out, _ = capsys.readouterr()
     assert "Created connection successfully:" in out
