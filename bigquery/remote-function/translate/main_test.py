@@ -22,34 +22,38 @@ import pytest
 # Create a fake "app" for generating test request contexts.
 @pytest.fixture(scope='module')
 def app() -> flask.Flask:
-  return flask.Flask(__name__)
+    return flask.Flask(__name__)
 
 
 @mock.patch('main.translate_client')
 def test_main(mock_translate: object, app: flask.Flask) -> None:
-  import main
+    import main
 
-  mock_translate.translate_text.return_value = translate.TranslateTextResponse(
-      {
-          'translations': [
-              {'translated_text': 'Hola'},
-              {'translated_text': 'Mundo'},
-          ]
-      }
-  )
+    mock_translate.translate_text.return_value = (
+        translate.TranslateTextResponse(
+            {
+                'translations': (
+                    [
+                        {'translated_text': 'Hola'},
+                        {'translated_text': 'Mundo'},
+                    ]
+                )
+            }
+        )
+    )
 
-  with app.test_request_context(
-      json={
-          'caller': (
-              '//bigquery.googleapis.com/projects/test-project/jobs/job-id'
-          ),
-          'userDefinedContext': {},
-          'calls': [
-              ['Hello'],
-              ['World'],
-          ],
-      }
-  ):
-    response = main.handle_translation(flask.request)
-    assert response.status_code == 200
-    assert response.get_json()['replies'] == ['Hola', 'Mundo']
+    with app.test_request_context(
+        json={
+            'caller': (
+                '//bigquery.googleapis.com/projects/test-project/jobs/job-id'
+            ),
+            'userDefinedContext': {},
+            'calls': [
+                ['Hello'],
+                ['World'],
+            ],
+        }
+    ):
+        response = main.handle_translation(flask.request)
+        assert response.status_code == 200
+        assert response.get_json()['replies'] == ['Hola', 'Mundo']
