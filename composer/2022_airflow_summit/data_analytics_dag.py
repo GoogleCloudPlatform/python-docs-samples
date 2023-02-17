@@ -33,14 +33,14 @@ BQ_NORMALIZED_TABLE_NAME = "holidays_weather_normalized"
 
 # Dataproc configs
 BUCKET_NAME = "{{var.value.gcs_bucket}}"
-PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
 
-# TODO(coleleah): update batch config to have things brad said and not use jar
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
+    "runtime_config": {
+        "version": "1.1"
+    },
     "pyspark_batch": {
-        "jar_file_uris": [PYSPARK_JAR],
         "main_python_file_uri": PROCESSING_PYTHON_FILE,
         "args": [
             BUCKET_NAME,
