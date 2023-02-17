@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This file is only used for packaging and deployment purposes.
+
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
 FROM python:3.10-slim
