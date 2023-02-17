@@ -556,6 +556,7 @@ def inspect_gcs_file(
 
                 # Now that the job is done, fetch the results and print them.
                 job = dlp.get_dlp_job(request={"name": operation.name})
+                print(f"Job name: {job.name}")
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(
@@ -723,6 +724,7 @@ def inspect_datastore(
 
                 # Now that the job is done, fetch the results and print them.
                 job = dlp.get_dlp_job(request={"name": operation.name})
+                print(f"Job name: {job.name}")
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(
@@ -893,6 +895,7 @@ def inspect_bigquery(
 
                 # Now that the job is done, fetch the results and print them.
                 job = dlp.get_dlp_job(request={"name": operation.name})
+                print(f"Job name: {job.name}")
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
                         print(

@@ -92,6 +92,7 @@ def numerical_risk_analysis(
 
             # Now that the job is done, fetch the results and print them.
             job = dlp.get_dlp_job(request={"name": operation.name})
+            print(f"Job name: {job.name}")
             results = job.risk_details.numerical_stats_result
             print(
                 "Value Range: [{}, {}]".format(
@@ -204,6 +205,7 @@ def categorical_risk_analysis(
 
             # Now that the job is done, fetch the results and print them.
             job = dlp.get_dlp_job(request={"name": operation.name})
+            print(f"Job name: {job.name}")
             histogram_buckets = (
                 job.risk_details.categorical_stats_result.value_frequency_histogram_buckets  # noqa: E501
             )
@@ -334,6 +336,7 @@ def k_anonymity_analysis(
 
             # Now that the job is done, fetch the results and print them.
             job = dlp.get_dlp_job(request={"name": operation.name})
+            print(f"Job name: {job.name}")
             histogram_buckets = (
                 job.risk_details.k_anonymity_result.equivalence_class_histogram_buckets
             )
@@ -472,6 +475,7 @@ def l_diversity_analysis(
 
             # Now that the job is done, fetch the results and print them.
             job = dlp.get_dlp_job(request={"name": operation.name})
+            print(f"Job name: {job.name}")
             histogram_buckets = (
                 job.risk_details.l_diversity_result.sensitive_value_frequency_histogram_buckets  # noqa: E501
             )
@@ -629,6 +633,7 @@ def k_map_estimate_analysis(
 
             # Now that the job is done, fetch the results and print them.
             job = dlp.get_dlp_job(request={"name": operation.name})
+            print(f"Job name: {job.name}")
             histogram_buckets = (
                 job.risk_details.k_map_estimation_result.k_map_estimation_histogram
             )

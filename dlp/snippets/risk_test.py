@@ -16,6 +16,7 @@ import os
 import uuid
 
 import google.cloud.bigquery
+import google.cloud.dlp_v2
 import google.cloud.pubsub
 import pytest
 
@@ -34,6 +35,7 @@ STRING_BOOLEAN_FIELD = "Gender"
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
 BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
+DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
 
 # Create new custom topic/subscription
@@ -174,6 +176,11 @@ def test_numerical_risk_analysis(topic_id, subscription_id, bigquery_project, ca
 
     out, _ = capsys.readouterr()
     assert "Value Range:" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -192,6 +199,11 @@ def test_categorical_risk_analysis_on_string_field(
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -210,6 +222,11 @@ def test_categorical_risk_analysis_on_number_field(
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -229,6 +246,11 @@ def test_k_anonymity_analysis_single_field(
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -248,6 +270,11 @@ def test_k_anonymity_analysis_multiple_fields(
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -269,6 +296,11 @@ def test_l_diversity_analysis_single_field(
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Sensitive value" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -290,6 +322,11 @@ def test_l_diversity_analysis_multiple_field(
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Sensitive value" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
@@ -311,6 +348,11 @@ def test_k_map_estimate_analysis_single_field(
     assert "Anonymity range:" in out
     assert "Size:" in out
     assert "Values" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
@@ -332,6 +374,11 @@ def test_k_map_estimate_analysis_multiple_field(
     assert "Anonymity range:" in out
     assert "Size:" in out
     assert "Values" in out
+    assert "Job name:" in out
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)

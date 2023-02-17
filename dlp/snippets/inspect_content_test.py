@@ -43,6 +43,8 @@ BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
 TIMEOUT = 900  # 15 minutes
 
+DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
+
 
 @pytest.fixture(scope="module")
 def bucket():
@@ -334,6 +336,11 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -361,6 +368,11 @@ def test_inspect_gcs_file_with_custom_info_types(
         out, _ = capsys.readouterr()
 
         assert "Info type: EMAIL_ADDRESS" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -381,6 +393,11 @@ def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
         out, _ = capsys.readouterr()
 
         assert "No findings" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -400,6 +417,11 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
 
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -420,6 +442,11 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
         out, _ = capsys.readouterr()
 
         assert "Info type: EMAIL_ADDRESS" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -439,6 +466,11 @@ def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys)
 
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -460,6 +492,11 @@ def test_inspect_datastore_no_results(
 
         out, _ = capsys.readouterr()
         assert "No findings" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
 
@@ -479,5 +516,10 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
 
         out, _ = capsys.readouterr()
         assert "Inspection operation started" in out
+        assert "Job name:" in out
+        for line in str(out).split("\n"):
+            if "Job name" in line:
+                job_name = line.split(":")[1].strip()
+                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
         cancel_operation(out)
