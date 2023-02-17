@@ -313,16 +313,16 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
-def cancel_operation(out):
-    if "Inspection operation started" in out:
-        # Cancel the operation
-        operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
-        client = google.cloud.dlp_v2.DlpServiceClient()
-        client.cancel_dlp_job(request={"name": operation_id})
+def delete_dlp_job(out):
+    for line in str(out).split("\n"):
+        if "Job name" in line:
+            job_name = line.split(":")[1].strip()
+            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_gcs_file(
             GCLOUD_PROJECT,
@@ -337,18 +337,15 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_file_with_custom_info_types(
     bucket, topic_id, subscription_id, capsys
 ):
+    out = ""
     try:
         dictionaries = ["gary@somedomain.com"]
         regexes = ["\\(\\d{3}\\) \\d{3}-\\d{4}"]
@@ -369,16 +366,13 @@ def test_inspect_gcs_file_with_custom_info_types(
 
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_gcs_file(
             GCLOUD_PROJECT,
@@ -394,16 +388,13 @@ def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
 
         assert "No findings" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_gcs_file(
             GCLOUD_PROJECT,
@@ -418,16 +409,13 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_gcs_file(
             GCLOUD_PROJECT,
@@ -443,16 +431,13 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
 
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_datastore(
             GCLOUD_PROJECT,
@@ -467,18 +452,15 @@ def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys)
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore_no_results(
     datastore_project, topic_id, subscription_id, capsys
 ):
+    out = ""
     try:
         inspect_content.inspect_datastore(
             GCLOUD_PROJECT,
@@ -493,15 +475,13 @@ def test_inspect_datastore_no_results(
         out, _ = capsys.readouterr()
         assert "No findings" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
 
 
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
+    out = ""
     try:
         inspect_content.inspect_bigquery(
             GCLOUD_PROJECT,
@@ -517,9 +497,5 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
         out, _ = capsys.readouterr()
         assert "Inspection operation started" in out
         assert "Job name:" in out
-        for line in str(out).split("\n"):
-            if "Job name" in line:
-                job_name = line.split(":")[1].strip()
-                DLP_CLIENT.delete_dlp_job(name=job_name)
     finally:
-        cancel_operation(out)
+        delete_dlp_job(out)
