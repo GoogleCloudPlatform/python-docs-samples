@@ -57,11 +57,10 @@ def test_dataproc_batch(test_bucket, bq_dataset):
     BATCH_ID = f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
         "runtime_config": {
-            "version": "1.1" # will need to be updated to 2.0+ after its release
+            "version": "1.1"  # will need to be updated to 2.0+ after its release
         },
         "pyspark_batch": {
             "main_python_file_uri": PROCESSING_PYTHON_FILE,
-
             "args": [
                 PROJECT_ID,
                 f"{BQ_DATASET}.{BQ_READ_TABLE}",
@@ -186,7 +185,6 @@ def bq_dataset(test_bucket):
 
 
 def test_process(test_dataproc_batch):
-
     print(test_dataproc_batch)
 
     # check that the results table is there now

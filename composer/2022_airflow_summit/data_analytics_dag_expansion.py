@@ -42,7 +42,7 @@ PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process_expansion.p
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
     "runtime_config": {
-        "version": "1.1" # Will need to be changed to 2.0+ when that's GA
+        "version": "1.1"  # Will need to be changed to 2.0+ when that's GA
     },
     "pyspark_batch": {
         "main_python_file_uri": PROCESSING_PYTHON_FILE,
@@ -83,7 +83,6 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
 ) as dag:
-
     create_batch = dataproc.DataprocCreateBatchOperator(
         task_id="create_batch",
         project_id=PROJECT_NAME,
@@ -110,7 +109,6 @@ with models.DAG(
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
-
         for year in range(1997, 2022):
             # BigQuery configs
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
