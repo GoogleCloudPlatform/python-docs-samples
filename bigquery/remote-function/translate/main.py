@@ -111,7 +111,7 @@ def translate_text(
         request={
             "parent": parent,
             "contents": calls,
-            "target_language_code": target,
+            "target_language_code": target_language_code,
             "mime_type": "text/plain",
         },
         retry=Retry(),
