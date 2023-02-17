@@ -57,3 +57,29 @@ def test_main(mock_translate: object, app: flask.Flask) -> None:
         response = main.handle_translation(flask.request)
         assert response.status_code == 200
         assert response.get_json()['replies'] == ['Hola', 'Mundo']
+
+
+@mock.patch('main.translate_client')
+def test_translate_client_error(
+    mock_translate: object, app: flask.Flask
+) -> None:
+    import main
+
+    mock_translate.translate_text.side_effect = Exception('API error')
+
+    with app.test_request_context(
+        json={
+            'caller': (
+                '//bigquery.googleapis.com/projects/test-project/jobs/job-id'
+            ),
+            'userDefinedContext': {},
+            'calls': [
+                ['Hello'],
+                ['World'],
+            ],
+        }
+    ):
+        response = main.handle_translation(flask.request)
+        assert response.status_code == 400
+        assert 'errorMessage' in response.get_json()
+        assert response.get_json()['errorMessage'].endswith('API error')
