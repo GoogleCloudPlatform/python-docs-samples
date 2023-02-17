@@ -38,7 +38,7 @@ PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/data_analytics_process.py"
 BATCH_ID = "data-processing-{{ ts_nodash | lower}}"  # Dataproc serverless only allows lowercase characters
 BATCH_CONFIG = {
     "runtime_config": {
-        "version": "1.1"  # Will need to be changed to 2.0+ when that's GA
+        "version": "1.1"
     },
     "pyspark_batch": {
         "main_python_file_uri": PROCESSING_PYTHON_FILE,
