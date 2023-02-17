@@ -86,7 +86,7 @@ def extract_project_from_caller(job: str) -> str:
 
 
 def translate_text(calls: List[str], project: str, target: str) -> List[str]:
-    location = "us-central1"
+    location = "<your location>"
     parent = f"projects/{project}/locations/{location}"
     # Call the Translation API, passing a list of values and the target language
     response = translate_client.translate_text(
