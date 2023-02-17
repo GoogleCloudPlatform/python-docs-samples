@@ -48,7 +48,7 @@ def handle_translation(request: flask.Request) -> flask.Response:
                 flask.jsonify(
                     {
                         "errorMessage": (
-                            f"project can't be extracted from {caller=}."
+                            f"project can't be extracted from \"caller\": {caller}."
                         )
                     }
                 ),
@@ -66,7 +66,7 @@ def handle_translation(request: flask.Request) -> flask.Response:
         return flask.jsonify({"replies": translated})
     except Exception as err:
         return flask.make_response(
-            flask.jsonify({"errorMessage": f"Unexpected {err=}"}),
+            flask.jsonify({"errorMessage": f"Unexpected error {type(err)}:{err}"}),
             400,
         )
 
