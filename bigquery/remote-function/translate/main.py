@@ -48,7 +48,8 @@ def handle_translation(request: flask.Request) -> flask.Response:
                 flask.jsonify(
                     {
                         "errorMessage": (
-                            f"project can't be extracted from \"caller\": {caller}."
+                            'project can\'t be extracted from "caller":'
+                            f" {caller}."
                         )
                     }
                 ),
@@ -66,7 +67,9 @@ def handle_translation(request: flask.Request) -> flask.Response:
         return flask.jsonify({"replies": translated})
     except Exception as err:
         return flask.make_response(
-            flask.jsonify({"errorMessage": f"Unexpected error {type(err)}:{err}"}),
+            flask.jsonify(
+                {"errorMessage": f"Unexpected error {type(err)}:{err}"}
+            ),
             400,
         )
 
@@ -85,7 +88,22 @@ def extract_project_from_caller(job: str) -> str:
     return path[4] if len(path) > 4 else None
 
 
-def translate_text(calls: List[str], project: str, target_language_code: str) -> List[str]:
+def translate_text(
+    calls: List[str], project: str, target_language_code: str
+) -> List[str]:
+    """Translates the input text to specified language using Translation API.
+
+    Args:
+        calls: a list of input text to translate.
+        project: the project where the translate service will be used.
+        target_language_code: The ISO-639 language code to use for translation
+          of the input text. See
+          https://cloud.google.com/translate/docs/advanced/discovering-supported-languages-v3#supported-target
+            for the supported language list.
+
+    Returns:
+        a list of translated text.
+    """
     location = "<your location>"
     parent = f"projects/{project}/locations/{location}"
     # Call the Translation API, passing a list of values and the target language
