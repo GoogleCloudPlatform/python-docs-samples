@@ -22,9 +22,16 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_kms_encrypted_disk>
-def create_kms_encrypted_disk(project_id: str, zone: str, disk_name: str, disk_type: str,
-                              disk_size_gb: int, kms_key_name: str,
-                              disk_link: Optional[str] = None, image_link: Optional[str] = None) -> compute_v1.Disk:
+def create_kms_encrypted_disk(
+        project_id: str,
+        zone: str,
+        disk_name: str,
+        disk_type: str,
+        disk_size_gb: int,
+        kms_key_name: str,
+        disk_link: Optional[str] = None,
+        image_link: Optional[str] = None
+) -> compute_v1.Disk:
     """
     Creates a zonal disk in a project. If you do not provide values for disk_link or image_link,
     an empty disk will be created.

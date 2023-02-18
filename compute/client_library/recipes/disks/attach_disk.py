@@ -1,4 +1,4 @@
-#  Copyright 2022 Google LLC
+#  Copyright 2023 Google LLC
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -11,9 +11,15 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
-# folder for complete code samples that are ready to be used.
-# Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 
+# <REGION compute_regional_disk_attach>
+# <REGION compute_disk_attach>
+# <IMPORTS/>
+
+# <INGREDIENT wait_for_extended_operation />
+
+# <INGREDIENT attach_disk />
+
+# </REGION compute_disk_attach>
+# </REGION compute_regional_disk_attach>

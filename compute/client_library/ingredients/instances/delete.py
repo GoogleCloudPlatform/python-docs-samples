@@ -16,9 +16,6 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-import sys
-import time
-
 from google.cloud import compute_v1
 
 
@@ -40,5 +37,4 @@ def delete_instance(project_id: str, zone: str, machine_name: str) -> None:
     )
     wait_for_extended_operation(operation, "instance deletion")
     print(f"Instance {machine_name} deleted.")
-    return
 # </INGREDIENT>
