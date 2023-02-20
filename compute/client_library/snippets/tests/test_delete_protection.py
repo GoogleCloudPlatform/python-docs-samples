@@ -22,7 +22,7 @@ from ..instances.delete_protection.get import get_delete_protection
 from ..instances.delete_protection.set import set_delete_protection
 
 PROJECT = google.auth.default()[1]
-INSTANCE_ZONE = "europe-central2-a"
+INSTANCE_ZONE = "europe-west2-a"
 
 
 @pytest.fixture
