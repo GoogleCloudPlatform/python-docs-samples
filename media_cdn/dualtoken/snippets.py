@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START  mediacdn_dual_token_sign_token]
+import base64
 import datetime
 import hashlib
 import hmac
-import base64
+
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
 
@@ -168,5 +170,4 @@ def sign_token(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
     return "~".join(tokens)
-
-
+# [end  mediacdn_dual_token_sign_token]
