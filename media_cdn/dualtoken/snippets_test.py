@@ -23,8 +23,8 @@ import pytest
 import snippets
 
 
-startTime = datetime.datetime.strptime("2022-09-13T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
-expiresTime = datetime.datetime.strptime("2022-09-13T12:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+startTime = datetime.datetime.strptime("2022-09-13T00:00:00Z", "%Y-%m-%dT%H:%M:%S%z")
+expiresTime = datetime.datetime.strptime("2022-09-13T12:00:00Z", "%Y-%m-%dT%H:%M:%S%z")
 sessionID = "test-id"
 data = "test-data"
 ipRanges = "203.0.113.0/24,2001:db8:4a7f:a732/64"
