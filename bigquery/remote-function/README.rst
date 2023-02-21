@@ -68,10 +68,12 @@ Samples
 
 - `Vision`_: this sample can detect and extract objects from input images.
 - `Document`_: this sample can extract text from input documents.
+- `Translate`_: this sample can translate input text to other languages.
 
 
 .. _Vision: vision/
 .. _Document: document/
+.. _Translate: translate/
 
 The client library
 -------------------------------------------------------------------------------
