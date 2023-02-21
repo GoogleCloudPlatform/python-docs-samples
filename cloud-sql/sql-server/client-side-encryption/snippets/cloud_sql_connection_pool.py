@@ -45,7 +45,7 @@ def init_tcp_connection_engine(
     pool = sqlalchemy.create_engine(
         # This allows us to use the pytds sqlalchemy dialect, but also set the
         # bytes_to_unicode flag to False, which is not supported by the dialect
-        "mssql+pytds://localhost",
+        "mssql+pytds://",
         creator=connect_with_pytds,
     )
 
