@@ -773,7 +773,7 @@ def inspect_bigquery(
     custom_regexes=None,
     min_likelihood=None,
     max_findings=None,
-    timeout=300,
+    timeout=500,
 ):
     """Uses the Data Loss Prevention API to analyze BigQuery data.
     Args:
