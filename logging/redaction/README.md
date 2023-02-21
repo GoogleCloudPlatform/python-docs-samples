@@ -4,9 +4,9 @@ This is a sample of the [DataFlow] pipeline that detects and masks US Social Sec
 The folder contains the following files:
 
 * [Dockerfile] to use for a customized a DataFlow job container in order to save initialization time
-* [boilerplate code][boilerplate] that implements a pipeline for streaming log entries from [PubSub] to a destination Log bucket
+* [Boilerplate code][boilerplate] that implements a pipeline for streaming log entries from [PubSub] to a destination Log bucket
 * [Final version][final] of the pipeline that includes all modifications to the [boilerplate] code that are required to implement log redaction
-* [requirements] file to be install the DataFlow job's environment with missing component(s)
+* [Requirements] file to be install the DataFlow job's environment with missing component(s)
 
 If you have a Google Cloud account and an access to a GCP project you can launch an interactive tutorial in Cloud Console and see how the sample works.
 To run the tutorial press the button below.
