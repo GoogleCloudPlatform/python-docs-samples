@@ -1,4 +1,4 @@
-#  Copyright 2022 Google LLC
+#  Copyright 2023 Google LLC
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -13,8 +13,13 @@
 #  limitations under the License.
 # flake8: noqa
 
-# <REGION compute_instances_operation_check>
+# <REGION compute_regional_disk_attach>
+# <REGION compute_disk_attach>
 # <IMPORTS/>
 
-# <INGREDIENT wait_for_operation/>
-# </REGION compute_instances_operation_check>
+# <INGREDIENT wait_for_extended_operation />
+
+# <INGREDIENT attach_disk />
+
+# </REGION compute_disk_attach>
+# </REGION compute_regional_disk_attach>
