@@ -1,0 +1,85 @@
+<!--
+  Copyright 2023 Google LLC
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="../static/images/icons/favicon.ico" sizes="any" />
+    <link
+      rel="icon"
+      href="../static/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+    <link rel="manifest" href="../static/manifest.webmanifest" />
+    <meta name="msapplication-config" content="../static/browserconfig.xml" />
+    <link
+      rel="shortcut icon"
+      sizes="196x196"
+      href="../static/images/icons/favicon-196px.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-120px.png"
+      sizes="120x120"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-152px.png"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="../static/images/icons/favicon-180px.png"
+      sizes="180x180"
+    />
+    <title>Home: reCAPTCHA Demo</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+    />
+    <link href="../static/styles/global.css" rel="stylesheet" />
+    <script type="module" src="../static/scripts/component.js"></script>
+    <script type="text/javascript" src="../static/scripts/global.js"></script>
+    <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
+    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
+    <script type="text/javascript">
+      grecaptcha.enterprise.ready(async () => {
+        const token = await grecaptcha.enterprise.execute(
+          "{{context.site_key}}",
+          {
+            action: "home",
+          }
+        );
+        // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+        const score = await createAssessment({
+          action: "home",
+          token,
+        });
+        useAssessment(score);
+      });
+    </script>
+    <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
+  </head>
+  <body>
+    <recaptcha-demo step="home"></recaptcha-demo>
+  </body>
+</html>
