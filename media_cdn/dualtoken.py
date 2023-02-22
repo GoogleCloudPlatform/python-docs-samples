@@ -170,5 +170,4 @@ def sign_token(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
     return "~".join(tokens)
-# [end  mediacdn_dual_token_sign_token]
-
+# [END  mediacdn_dual_token_sign_token]

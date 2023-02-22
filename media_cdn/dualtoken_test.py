@@ -202,4 +202,3 @@ def test_sign_token_for_sha256_all_params(capsys: pytest.LogCaptureFixture) -> N
         ip_ranges=ipRanges,
     )
     assert result == expected
-
