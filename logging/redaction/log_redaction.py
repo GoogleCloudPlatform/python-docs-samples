@@ -105,6 +105,9 @@ def run(
         streaming=True,
         save_main_session=True
     )
+
+    # TODO: Read job's deployment region
+
     pipeline = Pipeline(options=pipeline_options)
     _ = (
         pipeline

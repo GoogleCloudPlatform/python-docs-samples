@@ -137,6 +137,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
             conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team})
+            conn.commit()
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
