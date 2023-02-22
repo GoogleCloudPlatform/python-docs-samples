@@ -95,6 +95,6 @@ def test_cast_vote(client: FlaskClient) -> None:
 def test_connector_connection(client: FlaskClient) -> None:
     del os.environ["INSTANCE_HOST"]
     app.db = app.init_connection_pool()
-    assert str(app.db.url) == "mssql+pytds://localhost"
+    assert str(app.db.url) == "mssql+pytds://"
     test_get_votes(client)
     test_cast_vote(client)
