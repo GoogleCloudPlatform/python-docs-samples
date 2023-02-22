@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START  mediacdn_dualtoken_sign_token]
+# [START mediacdn_dualtoken_sign_token]
 import base64
 import datetime
 import hashlib
@@ -170,4 +170,4 @@ def sign_token(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
     return "~".join(tokens)
-# [END  mediacdn_dualtoken_sign_token]
+# [END mediacdn_dualtoken_sign_token]
