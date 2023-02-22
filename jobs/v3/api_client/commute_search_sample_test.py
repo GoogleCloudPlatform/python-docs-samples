@@ -15,8 +15,8 @@
 import re
 
 import backoff
-import pytest
 from googleapiclient.errors import HttpError
+import pytest
 
 import commute_search_sample
 
