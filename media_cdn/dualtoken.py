@@ -66,7 +66,7 @@ def sign_token(
         headers: header name and value to include in the signed token in name=value format.  May be specified more than once.
                     For example: [{'name': 'foo', 'value': 'bar'}, {'name': 'baz', 'value': 'qux'}]
         ip_ranges: A list of comma separated ip ranges. Both IPv4 and IPv6 ranges are acceptable.
-                    For example: b"203.0.113.0/24,2001:db8:4a7f:a732/64"
+                    For example: "203.0.113.0/24,2001:db8:4a7f:a732/64"
 
     Returns:
         The Signed URL appended with the query parameters based on the
