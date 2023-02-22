@@ -134,6 +134,7 @@ def datastore_project():
 
     cleanup()
 
+
 @pytest.fixture(scope="module")
 def bigquery_project():
     # Adds test Bigquery data, yields the project ID and then tears down.
