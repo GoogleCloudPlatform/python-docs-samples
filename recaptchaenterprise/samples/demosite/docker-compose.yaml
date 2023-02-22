@@ -16,6 +16,7 @@ version: "3"
 services:
   livereload:
     image: demosite-livereload
+    container_name: demosite-livereload
     build:
       context: "app"
       dockerfile: Dockerfile
