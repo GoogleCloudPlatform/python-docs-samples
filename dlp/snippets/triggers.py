@@ -181,7 +181,7 @@ def delete_trigger(project, trigger_id):
     print("Trigger {} successfully deleted.".format(trigger_resource))
 
 
-# [END dlp_delete_triggers]
+# [END dlp_delete_trigger]
 
 
 if __name__ == "__main__":

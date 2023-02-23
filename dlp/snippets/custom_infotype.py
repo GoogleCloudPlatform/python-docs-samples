@@ -568,7 +568,7 @@ def inspect_string_without_overlap(project, content_string):
 # [END dlp_inspect_string_without_overlap]
 
 
-# [START inspect_with_person_name_w_custom_hotword]
+# [START dlp_inspect_with_person_name_w_custom_hotword]
 def inspect_with_person_name_w_custom_hotword(
     project, content_string, custom_hotword="patient"
 ):
@@ -638,7 +638,7 @@ def inspect_with_person_name_w_custom_hotword(
         print("No findings.")
 
 
-# [END inspect_with_person_name_w_custom_hotword]
+# [END dlp_inspect_with_person_name_w_custom_hotword]
 
 
 # [START dlp_inspect_string_multiple_rules]
