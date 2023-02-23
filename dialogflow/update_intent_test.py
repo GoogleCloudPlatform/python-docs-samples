@@ -33,7 +33,7 @@ def create_intent(project_id):
 
     intent = Intent()
 
-    intent.display_name = "fake_intent_{}".format(uuid.uuid4())
+    intent.display_name = f"fake_intent_{uuid.uuid4()}"
 
     intents = intents_client.create_intent(request={"parent": parent, "intent": intent})
 
