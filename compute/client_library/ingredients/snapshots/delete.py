@@ -16,13 +16,11 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import NoReturn
-
 from google.cloud import compute_v1
 
 
 # <INGREDIENT delete_snapshot>
-def delete_snapshot(project_id: str, snapshot_name: str) -> NoReturn:
+def delete_snapshot(project_id: str, snapshot_name: str) -> None:
     """
     Delete a snapshot of a disk.
 
@@ -35,6 +33,4 @@ def delete_snapshot(project_id: str, snapshot_name: str) -> NoReturn:
     operation = snapshot_client.delete(project=project_id, snapshot=snapshot_name)
 
     wait_for_extended_operation(operation, "snapshot deletion")
-
-    return
 # </INGREDIENT>

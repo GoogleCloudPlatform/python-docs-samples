@@ -27,7 +27,7 @@ from ..instances.suspend import suspend_instance
 
 PROJECT = google.auth.default()[1]
 
-INSTANCE_ZONE = "europe-central2-b"
+INSTANCE_ZONE = "europe-west2-b"
 
 
 def _get_status(instance: compute_v1.Instance) -> compute_v1.Instance.Status:

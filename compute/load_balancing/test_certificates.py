@@ -49,10 +49,10 @@ def autodelete_certificate_name(api_service):
 def autodelete_regional_certificate_name(api_service):
     cert_name = "test-certificate-" + uuid.uuid4().hex[:10]
 
-    yield cert_name, "europe-central2"
+    yield cert_name, "europe-west2"
 
     api_service.regionSslCertificates().delete(
-        project=PROJECT_ID, sslCertificate=cert_name, region="europe-central2"
+        project=PROJECT_ID, sslCertificate=cert_name, region="europe-west2"
     ).execute()
 
 
