@@ -63,7 +63,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
         return conn
 
     pool = sqlalchemy.create_engine(
-        "mssql+pytds://localhost",
+        "mssql+pytds://",
         creator=getconn,
         # [START_EXCLUDE]
         # Pool size is the maximum number of permanent connections to keep.
