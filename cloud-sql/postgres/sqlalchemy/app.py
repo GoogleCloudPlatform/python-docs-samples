@@ -59,6 +59,7 @@ def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
             "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
             "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
         ))
+        conn.commit()
 
 
 # This global variable is declared with a value of `None`, instead of calling
@@ -139,6 +140,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
             conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team})
+            conn.commit()
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
