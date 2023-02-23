@@ -214,4 +214,3 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
         else:
             # The test failed due to some other reason.
             raise err
-
