@@ -207,7 +207,7 @@ def wait_for_ready(client, key_version_name):
         key_version = client.get_crypto_key_version(request={'name': key_version_name})
         if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
             return
-        time.sleep(0.1*(i**2))
+        time.sleep((i+1)**2)
     pytest.fail('{} not ready'.format(key_version_name))
 
 
