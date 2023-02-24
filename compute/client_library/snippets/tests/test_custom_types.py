@@ -187,9 +187,9 @@ def test_from_str_creation():
     assert cmt.core_count == 2
 
     cmt = CustomMachineType.from_str(
-        "zones/europe-central2-b/machineTypes/custom-2-2048"
+        "zones/europe-west2-b/machineTypes/custom-2-2048"
     )
-    assert cmt.zone == "europe-central2-b"
+    assert cmt.zone == "europe-west2-b"
     assert cmt.memory_mb == 2048
     assert cmt.extra_memory_used is False
     assert cmt.cpu_series is CustomMachineType.CPUSeries.N1
@@ -197,7 +197,7 @@ def test_from_str_creation():
 
     try:
         CustomMachineType.from_str(
-            "zones/europe-central2-b/machineTypes/n8-custom-2-1024"
+            "zones/europe-west2-b/machineTypes/n8-custom-2-1024"
         )
     except RuntimeError as err:
         assert err.args[0] == "Unknown CPU series."
