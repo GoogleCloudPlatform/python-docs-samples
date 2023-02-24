@@ -203,7 +203,7 @@ def symmetric_key_id(client, project_id, location_id, key_ring_id):
 
 
 def wait_for_ready(client, key_version_name):
-    for i in range(5):
+    for i in range(4):
         key_version = client.get_crypto_key_version(request={'name': key_version_name})
         if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
             return
