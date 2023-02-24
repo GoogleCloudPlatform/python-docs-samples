@@ -10,6 +10,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+"""
+Tests for the KMS samples.
+
+The service account running the tests needs to have the following roles:
+ * roles/cloudkms.admin
+ * roles/cloudkms.cryptoKeyEncrypterDecrypter
+ * roles/cloudkms.cryptoOperator
+ * roles/cloudkms.publicKeyViewer
+ * roles/cloudkms.signerVerifier
+"""
 
 import datetime
 import hashlib

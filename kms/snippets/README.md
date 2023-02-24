@@ -34,6 +34,17 @@ To run this sample:
 
 More information about the Cloud KMS quickstart is available at https://cloud.google.com/kms/docs/quickstart
 
+## Test permissions
+
+The service account running the tests needs to have the following roles:
+ * roles/cloudkms.admin
+ * roles/cloudkms.cryptoKeyEncrypterDecrypter
+ * roles/cloudkms.cryptoOperator
+ * roles/cloudkms.publicKeyViewer
+ * roles/cloudkms.signerVerifier
+
+
+
 ## Additional Information
 
 These samples use the [Google Cloud Client Library for Python][client_library_python].
