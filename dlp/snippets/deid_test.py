@@ -31,7 +31,7 @@ WRAPPED_KEY = (
     "rotx7Chxz/4z7SIpXFOBY61z0/U="
 )
 KEY_NAME = (
-    "projects/python-docs-samples-tests/locations/global/keyRings/"
+    f"projects/{GCLOUD_PROJECT}/locations/global/keyRings/"
     "dlp-test/cryptoKeys/dlp-test"
 )
 SURROGATE_TYPE = "SSN_TOKEN"
