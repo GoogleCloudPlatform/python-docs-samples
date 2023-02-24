@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2022 Google, Inc.
+# Copyright 2023 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ at https://cloud.google.com/media-cdn/docs.
 
 # [START mediacdn_sign_url]
 # [START mediacdn_sign_cookie]
+# [START mediacdn_sign_url_prefix]
 import base64
 import datetime
 
@@ -33,6 +34,7 @@ from six.moves import urllib
 
 # [END mediacdn_sign_cookie]
 # [END mediacdn_sign_url]
+# [END mediacdn_sign_url_prefix]
 
 
 # [START mediacdn_sign_url]
@@ -72,9 +74,11 @@ def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime
             url=url_to_sign, signature=signature)
 
     return signed_url
+# [END mediacdn_sign_url]
 
 
-def sign_url_prefix(url: str, url_prefix, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+# [START mediacdn_sign_url_prefix]
+def sign_url_prefix(url: str, url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:
@@ -113,7 +117,7 @@ def sign_url_prefix(url: str, url_prefix, key_name: str, base64_key: str, expira
             policy=policy,
             signature=signature)
     return signed_url
-# [END mediacdn_sign_url]
+# [END mediacdn_sign_url_prefix]
 
 
 # [START mediacdn_sign_cookie]
