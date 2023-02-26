@@ -22,39 +22,39 @@ import pytest
 
 from update_intent import update_intent
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+PROJECT_ID: str = os.getenv("GOOGLE_CLOUD_PROJECT")
 pytest.INTENT_ID = None
+intent_suffix: str = str(uuid.uuid4())
 
+def create_intent(project_id: str) -> str:
+    intents_client: IntentsClient = IntentsClient()
 
-def create_intent(project_id):
-    intents_client = IntentsClient()
+    parent: str = AgentsClient.agent_path(project_id)
 
-    parent = AgentsClient.agent_path(project_id)
+    intent: Intent = Intent()
 
-    intent = Intent()
+    intent.display_name = f"fake_intent_{intent_suffix}"
 
-    intent.display_name = "fake_intent"
-
-    intents = intents_client.create_intent(request={"parent": parent, "intent": intent})
+    intents: Intent = intents_client.create_intent(request={"parent": parent, "intent": intent})
 
     return intents.name.split("/")[4]
 
 
 @pytest.fixture(scope="function", autouse=True)
-def setup_teardown():
+def setup_teardown() -> None:
     pytest.INTENT_ID = create_intent(project_id=PROJECT_ID)
     print("Created Intent in setUp")
 
 
-def test_update_intent():
+def test_update_intent() -> None:
 
-    fake_intent = "fake_intent_{}".format(uuid.uuid4())
+    fake_intent: str = f"fake_intent_{intent_suffix}"
 
-    actualResponse = update_intent(PROJECT_ID, pytest.INTENT_ID, fake_intent)
-    expectedResponse = fake_intent
+    actual_response: Intent = update_intent(PROJECT_ID, pytest.INTENT_ID, fake_intent)
+    expected_response: str = fake_intent
 
-    intents_client = IntentsClient()
+    intents_client: IntentsClient = IntentsClient()
 
-    intents_client.delete_intent(name=actualResponse.name)
+    intents_client.delete_intent(name=actual_response.name)
 
-    assert actualResponse.display_name == expectedResponse
+    assert actual_response.display_name == expected_response
