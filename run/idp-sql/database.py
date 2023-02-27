@@ -147,7 +147,7 @@ def create_tables() -> None:
         ))
 
 
-def get_index_context() -> Dict[str, int]:
+def get_index_context() -> Dict[str, Any]:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
@@ -167,9 +167,9 @@ def get_index_context() -> Dict[str, int]:
             "SELECT COUNT(vote_id) FROM pet_votes WHERE candidate=:candidate"
         )
         # Count number of votes for cats
-        cats_count = conn.execute(stmt, candidate="CATS").scalar()
+        cats_count = conn.execute(stmt, parameters={"candidate": "CATS"}).scalar()
         # Count number of votes for dogs
-        dogs_count = conn.execute(stmt, candidate="DOGS").scalar()
+        dogs_count = conn.execute(stmt, parameters={"candidate": "DOGS"}).scalar()
     return {
         "dogs_count": dogs_count,
         "recent_votes": votes,
