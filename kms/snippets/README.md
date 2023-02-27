@@ -43,8 +43,6 @@ The service account running the tests needs to have the following roles:
  * roles/cloudkms.publicKeyViewer
  * roles/cloudkms.signerVerifier
 
-
-
 ## Additional Information
 
 These samples use the [Google Cloud Client Library for Python][client_library_python].
