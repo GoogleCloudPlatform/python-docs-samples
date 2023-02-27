@@ -24,7 +24,6 @@ from update_intent import update_intent
 
 PROJECT_ID: str = os.getenv("GOOGLE_CLOUD_PROJECT")
 pytest.INTENT_ID = None
-INTENT_SUFFIX: str = str(uuid.uuid4())
 
 
 def create_intent(project_id: str) -> str:
@@ -34,9 +33,11 @@ def create_intent(project_id: str) -> str:
 
     intent: Intent = Intent()
 
-    intent.display_name = f"fake_intent_{INTENT_SUFFIX}"
+    intent.display_name = f"fake_intent_{uuid.uuid4()}"
 
-    intents: Intent = intents_client.create_intent(request={"parent": parent, "intent": intent})
+    intents: Intent = intents_client.create_intent(
+        request={"parent": parent, "intent": intent}
+    )
 
     return intents.name.split("/")[4]
 
@@ -49,10 +50,13 @@ def setup_teardown() -> None:
 
 def test_update_intent() -> None:
 
-    fake_intent: str = f"fake_intent_{INTENT_SUFFIX}"
+    # A new display name with an updated suffix
+    new_display_name: str = f"fake_intent_{uuid.uuid4()}"
 
-    actual_response: Intent = update_intent(PROJECT_ID, pytest.INTENT_ID, fake_intent)
-    expected_response: str = fake_intent
+    actual_response: Intent = update_intent(
+        PROJECT_ID, pytest.INTENT_ID, new_display_name
+    )
+    expected_response: str = new_display_name
 
     intents_client: IntentsClient = IntentsClient()
 
