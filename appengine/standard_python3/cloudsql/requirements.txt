@@ -1,5 +1,5 @@
 flask==2.1.0
 # psycopg2==2.8.4
-psycopg2-binary==2.9.4 # you will need either the binary or the regular - for more info see http://initd.org/psycopg/docs/install.html
+psycopg2-binary==2.9.5 # you will need either the binary or the regular - for more info see http://initd.org/psycopg/docs/install.html
 PyMySQL==1.0.2
 SQLAlchemy==1.4.38
