@@ -158,19 +158,19 @@ def deployed_service() -> str:
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
 
-    subprocess.check_call(
-        [
-            "gcloud",
-            "builds",
-            "submit",
-            "--project",
-            GOOGLE_CLOUD_PROJECT,
-            "--config",
-            "./e2e_test_cleanup.yaml",
-            "--substitutions",
-        ]
-        + substitutions
-    )
+    # subprocess.check_call(
+    #     [
+    #         "gcloud",
+    #         "builds",
+    #         "submit",
+    #         "--project",
+    #         GOOGLE_CLOUD_PROJECT,
+    #         "--config",
+    #         "./e2e_test_cleanup.yaml",
+    #         "--substitutions",
+    #     ]
+    #     + substitutions
+    # )
 
 
 @pytest.fixture
