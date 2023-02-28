@@ -93,3 +93,6 @@
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
 /privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+
+# Self-service
+/dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
