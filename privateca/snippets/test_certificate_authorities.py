@@ -40,7 +40,7 @@ def generate_name() -> str:
     return "i" + uuid.uuid4().hex[:10]
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+@backoff.on_exception(backoff.expo, Exception, max_tries=5)
 def test_create_certificate(capsys: typing.Any) -> None:
     CA_POOL_NAME = generate_name()
     CA_NAME = generate_name()
@@ -113,6 +113,7 @@ def test_update_certificate_authority(
     assert "Successfully updated the labels !" in out
 
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=5)
 def test_create_monitor_ca_policy(capsys: typing.Any) -> None:
     create_ca_monitor_policy(PROJECT)
 

@@ -38,7 +38,7 @@ def generate_name() -> str:
     return "test-" + uuid.uuid4().hex[:10]
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+@backoff.on_exception(backoff.expo, Exception, max_tries=5)
 def test_subordinate_certificate_authority(
     certificate_authority, capsys: typing.Any
 ) -> None:
