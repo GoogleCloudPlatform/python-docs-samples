@@ -187,8 +187,7 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
 
     yield client.get(project=PROJECT, zone=ZONE, instance=instance.name)
 
-    # The deletion of the instance has been moved to the test itself.
-    # client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
+    client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
 
 def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
@@ -201,17 +200,17 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
          hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
          oslogin=oslogin_client)
 
-    delete_instance = True
-
     out, _ = capsys.readouterr()
     assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
     try:
         assert assert_value in out
-    except AssertionError:
-        delete_instance = False
-    finally:
-        # If the assert passed, we can safely delete the instance. If it failed, we want to keep it around for
-        # manual inspection.
-        if delete_instance:
-            compute_client = compute_v1.InstancesClient()
-            compute_client.delete(project=PROJECT, zone=ZONE, instance=oslogin_instance.name)
+    except AssertionError as err:
+        fw_client = compute_v1.FirewallsClient()
+        try:
+            fw_client.get(project=PROJECT, firewall=TEST_ID)
+        except NotFound:
+            # The test probably failed due to the firewall rule being removed too soon.
+            pytest.skip("The test was interrupted by removal of SSH firewall rule.")
+        else:
+            # The test failed due to some other reason.
+            raise err
