@@ -148,8 +148,9 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
                 text=True,
                 check=True,
                 env={'SSH_AUTH_SOCK': ''},
+                timeout=10
             )
-        except subprocess.CalledProcessError as err:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as err:
             time.sleep(30)
             tries += 1
             if tries == 3:
