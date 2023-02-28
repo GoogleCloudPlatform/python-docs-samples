@@ -15,8 +15,8 @@
 
 import os
 
-from contentwarehouse.snippets import update_document_schema_sample
 from contentwarehouse.snippets import test_utilities
+from contentwarehouse.snippets import update_document_schema_sample
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
