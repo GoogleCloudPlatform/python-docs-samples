@@ -14,7 +14,7 @@
 
 import datetime
 import os
-from typing import Dict
+from typing import Any, Dict, Type
 
 import sqlalchemy
 from sqlalchemy.orm import close_all_sessions
@@ -30,12 +30,12 @@ from middleware import logger
 db = None
 
 
-def init_connection_engine() -> Dict[str, int]:
+def init_connection_engine() -> sqlalchemy.engine.base.Engine:
     if os.getenv("TRAMPOLINE_CI", None):
         logger.info("Using NullPool for testing")
-        db_config = {"poolclass": NullPool}
+        db_config: Dict[str, Any] = {"poolclass": NullPool}
     else:
-        db_config = {
+        db_config: Dict[str, Any] = {
             # Pool size is the maximum number of permanent connections to keep.
             "pool_size": 5,
             # Temporarily exceeds the set pool_size if no connections are available.
@@ -61,7 +61,7 @@ def init_connection_engine() -> Dict[str, int]:
 
 
 def init_tcp_connection_engine(
-    db_config: Dict[str, str]
+    db_config: Dict[str, Type[NullPool]]
 ) -> sqlalchemy.engine.base.Engine:
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
@@ -94,7 +94,7 @@ def init_tcp_connection_engine(
 
 # [START cloudrun_user_auth_sql_connect]
 def init_unix_connection_engine(
-    db_config: Dict[str, str]
+    db_config: Dict[str, int]
 ) -> sqlalchemy.engine.base.Engine:
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
@@ -113,9 +113,8 @@ def init_unix_connection_engine(
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
             query={
-                "unix_sock": "{}/{}/.s.PGSQL.5432".format(
-                    db_socket_dir, cloud_sql_connection_name  # e.g. "/cloudsql"
-                )  # i.e "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
+                "unix_sock": f"{db_socket_dir}/{cloud_sql_connection_name}/.s.PGSQL.5432"
+                # e.g. "/cloudsql", "<PROJECT-NAME>:<INSTANCE-REGION>:<INSTANCE-NAME>"
             },
         ),
         **db_config,
@@ -136,8 +135,8 @@ def create_tables() -> None:
     global db
     db = init_connection_engine()
     # Create pet_votes table if it doesn't already exist
-    with db.connect() as conn:
-        conn.execute(
+    with db.begin() as conn:
+        conn.execute(sqlalchemy.text(
             "CREATE TABLE IF NOT EXISTS pet_votes"
             "( vote_id SERIAL NOT NULL, "
             "time_cast timestamp NOT NULL, "
@@ -145,17 +144,17 @@ def create_tables() -> None:
             "uid VARCHAR(128) NOT NULL, "
             "PRIMARY KEY (vote_id)"
             ");"
-        )
+        ))
 
 
-def get_index_context() -> Dict:
+def get_index_context() -> Dict[str, Any]:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(
+        recent_votes = conn.execute(sqlalchemy.text(
             "SELECT candidate, time_cast FROM pet_votes "
             "ORDER BY time_cast DESC LIMIT 5"
-        ).fetchall()
+        )).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append(
@@ -168,11 +167,9 @@ def get_index_context() -> Dict:
             "SELECT COUNT(vote_id) FROM pet_votes WHERE candidate=:candidate"
         )
         # Count number of votes for cats
-        cats_result = conn.execute(stmt, candidate="CATS").fetchone()
-        cats_count = cats_result[0]
+        cats_count = conn.execute(stmt, parameters={"candidate": "CATS"}).scalar()
         # Count number of votes for dogs
-        dogs_result = conn.execute(stmt, candidate="DOGS").fetchone()
-        dogs_count = dogs_result[0]
+        dogs_count = conn.execute(stmt, parameters={"candidate": "DOGS"}).scalar()
     return {
         "dogs_count": dogs_count,
         "recent_votes": votes,
@@ -189,8 +186,8 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
-    with db.connect() as conn:
-        conn.execute(stmt, time_cast=time_cast, candidate=team, uid=uid)
+    with db.begin() as conn:
+        conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team, "uid": uid})
     logger.info("Vote for %s saved.", team)
 
 

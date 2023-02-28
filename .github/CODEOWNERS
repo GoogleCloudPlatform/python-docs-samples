@@ -15,9 +15,9 @@
 /.kokoro/                              @GoogleCloudPlatform/python-samples-owners
 /*                                     @GoogleCloudPlatform/python-samples-owners
 
-/appengine/**/*                        @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*        @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
 /auth/**/*                             @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
@@ -35,7 +35,7 @@
 /composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
-/containeranalysis/**/*                @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
+/containeranalysis/**/*                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /contentwarehouse/**/*                 @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
 /datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
@@ -49,10 +49,10 @@
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
 /enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/eventarc/**/*                         @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
+/eventarc/**/*                         @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/functions/**/*                        @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
+/functions/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers
 /iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
@@ -78,10 +78,11 @@
 /profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
+/recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
-/run/**/*                              @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
-/run/django/**/*                       @glasnt @GoogleCloudPlatform/aap-dpes  @GoogleCloudPlatform/python-samples-reviewers
-/secretmanager/**/*                    @GoogleCloudPlatform/aap-dpes @GoogleCloudPlatform/python-samples-reviewers
+/run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
+/run/django/**/*                       @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
+/secretmanager/**/*                    @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
