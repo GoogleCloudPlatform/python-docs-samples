@@ -40,7 +40,14 @@ def generate_name() -> str:
     return "i" + uuid.uuid4().hex[:10]
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=5)
+# We are hitting 5 CAs per minute limit which can't be changed
+# We set the backoff function to use 4 as base - this way the 3rd try
+# should wait for 64 seconds and avoid per minute quota
+def backoff_expo_wrapper():
+    return backoff.expo(base=4)
+
+
+@backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
 def test_create_certificate(capsys: typing.Any) -> None:
     CA_POOL_NAME = generate_name()
     CA_NAME = generate_name()
@@ -113,7 +120,7 @@ def test_update_certificate_authority(
     assert "Successfully updated the labels !" in out
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=5)
+@backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
 def test_create_monitor_ca_policy(capsys: typing.Any) -> None:
     create_ca_monitor_policy(PROJECT)
 
