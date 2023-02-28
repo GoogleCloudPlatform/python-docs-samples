@@ -117,7 +117,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
+  && for PYTHON_VERSION in 2.7.18 3.7.16 3.8.16 3.9.16 3.10.9 3.11.1; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -201,5 +201,22 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Install Chrome.
+RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
+  && cat /tmp/google.pub | apt-key add -; rm /tmp/google.pub \
+  && echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
+  && mkdir -p /usr/share/desktop-directories \
+  && apt-get -y update && apt-get install -y google-chrome-stable
+
+# Disable the SUID sandbox so that Chrome can launch without being in a privileged container.
+RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome \
+  && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome \
+  && chmod 755 /opt/google/chrome/google-chrome
+
+# Install Chrome Driver.
+RUN mkdir -p /opt/selenium \
+  && curl http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
+  && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver;
 
 CMD ["python3"]
