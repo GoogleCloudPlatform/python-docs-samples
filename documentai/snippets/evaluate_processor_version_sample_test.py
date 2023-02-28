@@ -28,9 +28,9 @@ gcs_input_uri = "gs://bucket/directory/"
 
 # Mocking request as evaluation can take a long time
 @mock.patch(
-    "google.cloud.documentai_v1beta3.DocumentProcessorServiceClient.evaluate_processor_version"
+    "google.cloud.documentai.DocumentProcessorServiceClient.evaluate_processor_version"
 )
-@mock.patch("google.cloud.documentai_v1beta3.EvaluateProcessorVersionResponse")
+@mock.patch("google.cloud.documentai.EvaluateProcessorVersionResponse")
 @mock.patch("google.api_core.operation.Operation")
 def test_evaluate_processor_version(
     operation_mock,
