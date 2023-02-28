@@ -17,15 +17,16 @@
 # [START contentwarehouse_create_folder_link_document]
 
 from google.cloud import contentwarehouse
-import sys
 
-#TODO(developer): Uncomment these variables before running the sample.
-#project_number = "629397236107"
-#location = "us" # Format is 'us' or 'eu'
-#user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
+# TODO(developer): Uncomment these variables before running the sample.
+# project_number = "629397236107"
+# location = "us" # Format is 'us' or 'eu'
+# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
-def create_folder_link_document(project_number: str, location: str, user_id: str) -> None:
 
+def create_folder_link_document(
+    project_number: str, location: str, user_id: str
+) -> None:
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
@@ -40,7 +41,7 @@ def create_folder_link_document(project_number: str, location: str, user_id: str
         parent=parent,
         document_schema=contentwarehouse.DocumentSchema(
             display_name="Test Folder Schema ",
-            document_is_folder = True,
+            document_is_folder=True,
         ),
     )
 
@@ -60,7 +61,11 @@ def create_folder_link_document(project_number: str, location: str, user_id: str
 
     # Define Request to create Folder
     create_folder_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=folder, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        parent=parent,
+        document=folder,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Create a Folder for the given schema
@@ -117,7 +122,11 @@ def create_folder_link_document(project_number: str, location: str, user_id: str
 
     # Define Request
     create_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        parent=parent,
+        document=document,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Create a Document for the given schema
@@ -129,35 +138,41 @@ def create_folder_link_document(project_number: str, location: str, user_id: str
 
     link_client = contentwarehouse.DocumentLinkServiceClient()
 
-    #Create Document Link
+    # Create Document Link
     link = contentwarehouse.DocumentLink(
-        source_document_reference = contentwarehouse.DocumentReference(
-            document_name = folder_response.document.name,
+        source_document_reference=contentwarehouse.DocumentReference(
+            document_name=folder_response.document.name,
         ),
-        target_document_reference = contentwarehouse.DocumentReference(
-            document_name = document_response.document.name,
+        target_document_reference=contentwarehouse.DocumentReference(
+            document_name=document_response.document.name,
         ),
     )
     # Define Request to link document to folder
     request = contentwarehouse.CreateDocumentLinkRequest(
         parent=folder_response.document.name,
         document_link=link,
-        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Make the document to folder link request
     create_link_response = link_client.create_document_link(request=request)
 
     print(f"Link Created: {create_link_response}")
-    
-    #Define Request to list liked documents to folder
+
+    # Define Request to list liked documents to folder
     request = contentwarehouse.ListLinkedTargetsRequest(
         parent=folder_response.document.name,
-        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Make list linked documents request
     link_response = link_client.list_linked_targets(request=request)
 
     print(f"Validate Link Created: {link_response}")
+
+
 # [END contentwarehouse_create_folder_link_document]

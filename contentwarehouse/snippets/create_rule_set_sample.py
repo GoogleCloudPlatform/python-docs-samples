@@ -18,46 +18,37 @@
 
 from google.cloud import contentwarehouse
 
-#TODO(developer): Uncomment these variables before running the sample.
-#project_number = "629397236107"
-#location = "us" # Format is 'us' or 'eu'
+# TODO(developer): Uncomment these variables before running the sample.
+# project_number = "629397236107"
+# location = "us" # Format is 'us' or 'eu'
+
 
 def create_rule_set(project_number: str, location: str) -> None:
-    
     # Create a client
     client = contentwarehouse.RuleSetServiceClient()
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
-    parent = client.common_location_path(
-        project=project_number, location=location
-    )
+    parent = client.common_location_path(project=project_number, location=location)
 
-    enable_hard_delete = contentwarehouse.DeleteDocumentAction(
-        enable_hard_delete = True
-        )
+    enable_hard_delete = contentwarehouse.DeleteDocumentAction(enable_hard_delete=True)
 
-    actions = contentwarehouse.Action(
-        delete_document_action = enable_hard_delete
-        )
+    actions = contentwarehouse.Action(delete_document_action=enable_hard_delete)
 
     rules = contentwarehouse.Rule(
-            trigger_type= "ON_CREATE",
-            condition= "documentType == \'W9\' && STATE ==\'CA\'",
-            actions= [actions],
-        )
+        trigger_type="ON_CREATE",
+        condition="documentType == 'W9' && STATE =='CA'",
+        actions=[actions],
+    )
 
     rule_set = contentwarehouse.RuleSet(
-            description= "W9: Basic validation check rules.",
-            source= "My Organization",
-            rules= [rules]
-        )
+        description="W9: Basic validation check rules.",
+        source="My Organization",
+        rules=[rules],
+    )
 
     # Initialize request argument(s)
-    request = contentwarehouse.CreateRuleSetRequest(
-        parent=parent,
-        rule_set=rule_set
-    )
+    request = contentwarehouse.CreateRuleSetRequest(parent=parent, rule_set=rule_set)
 
     # Make the request
     response = client.create_rule_set(request=request)
@@ -76,4 +67,6 @@ def create_rule_set(project_number: str, location: str) -> None:
     # Handle the response
     for response in page_result:
         print(f"Rule Sets: {response}")
+
+
 # [END contentwarehouse_create_rule_set]

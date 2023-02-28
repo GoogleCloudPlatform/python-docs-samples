@@ -19,12 +19,12 @@
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-#project_number = "629397236107"
-#location = "us" # Format is 'us' or 'eu'
-#user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
+# project_number = "629397236107"
+# location = "us" # Format is 'us' or 'eu'
+# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
+
 
 def update_document_schema(project_number: str, location: str, user_id: str) -> None:
-
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
@@ -81,7 +81,11 @@ def update_document_schema(project_number: str, location: str, user_id: str) -> 
 
     # Define Create Document Request
     create_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        parent=parent,
+        document=document,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Create a Document for the given schema
@@ -90,7 +94,6 @@ def update_document_schema(project_number: str, location: str, user_id: str) -> 
     # Read the output
     print(f"Rule Engine Output: {response.rule_engine_output}")
     print(f"Document Created: {response.document}")
-
 
     # Define Schema Property of Text Type with updated values
     updated_property_definition = contentwarehouse.PropertyDefinition(
@@ -132,7 +135,11 @@ def update_document_schema(project_number: str, location: str, user_id: str) -> 
 
     # Define Create Document Request
     create_new_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=new_document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
+        parent=parent,
+        document=new_document,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Create a Document for the given schema
@@ -141,5 +148,6 @@ def update_document_schema(project_number: str, location: str, user_id: str) -> 
     # Read the output
     print(f"Rule Engine Output: {response.rule_engine_output}")
     print(f"Document 2 Created: {response.document}")
+
 
 # [END contentwarehouse_update_document_schema]
