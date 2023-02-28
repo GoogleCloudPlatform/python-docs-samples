@@ -146,7 +146,7 @@ with models.DAG(
         # container to use. env_vars is templated.
         env_vars={
             "EXAMPLE_VAR": "/example/value",
-            "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json ",
+            "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json",
         },
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.
