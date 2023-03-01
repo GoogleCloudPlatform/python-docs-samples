@@ -48,7 +48,7 @@ def verify_google_idtoken(idtoken: str, audience="iap.googleapis.com",
     request = google.auth.transport.requests.Request()
     # Set the parameters and verify the token.
     # Setting "certs_url" is optional. When verifying a Google ID token, this is set by default.
-    result = id_token.verify_token(idtoken, request, audience)
+    result = id_token.verify_token(idtoken, request, audience, clock_skew_in_seconds=10)
 
     # Verify that the token contains subject and email claims.
     # Get the User id.
