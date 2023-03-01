@@ -15,7 +15,7 @@
 import main
 
 
-def test_index():
+def test_index() -> str:
     main.app.testing = True
     client = main.app.test_client()
 
