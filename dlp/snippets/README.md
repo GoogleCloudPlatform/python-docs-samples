@@ -1,7 +1,5 @@
-# Google Data Loss Prevention
+# Cloud Data Loss Prevention
 
 Docs: https://cloud.google.com/dlp/docs/
 
-`Google Data Loss Prevention` provides programmatic access to a powerful
-detection engine for personally identifiable information and other
-privacy-sensitive data in unstructured data streams.
+`Cloud Data Loss Prevention` enables enterprises to automatically discover, classify, and protect their most sensitive data elements.
