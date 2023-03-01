@@ -26,8 +26,8 @@ import argparse
 from google.cloud import storage_transfer
 
 
-def create_one_time_transfer(project_id: str, source_bucket: str,
-                             sink_bucket: str):
+def create_one_time_transfer(project_id: str = "my_project_id", source_bucket: str = "my_source_bucket",
+                             sink_bucket: str = "my_sink_bucket"):
     """Creates a one-time transfer job."""
 
     client = storage_transfer.StorageTransferServiceClient()
