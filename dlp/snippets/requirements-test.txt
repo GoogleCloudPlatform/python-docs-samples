@@ -1,0 +1,4 @@
+backoff==2.2.1
+pytest==7.2.1
+flaky==3.7.0
+mock==5.0.1
