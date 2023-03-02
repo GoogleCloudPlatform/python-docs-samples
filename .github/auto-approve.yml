@@ -4,4 +4,4 @@ rules:
 - author: "renovate-bot"
 
 # Title for PRs from renovate-bot MUST start with `fix(deps):` or `chore(deps)"`.
-  title: "^(fix|chore)\\(deps\\):"
+  title: "^(fix|chore)\\(deps\\):(?!.*(airflow)).*$"
