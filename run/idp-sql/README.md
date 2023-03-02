@@ -63,7 +63,6 @@ connection.
 
 [Instructions to launch proxy with TCP](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/cloud-sql/postgres/sqlalchemy#launch-proxy-with-tcp)
 
-
 ## Testing
 
 Tests expect the Cloud SQL instance to already be created and environment Variables
@@ -71,13 +70,13 @@ to be set.
 
 ### Unit tests
 
-```
+```sh
 pytest test_app.py
 ```
 
 ### System Tests
 
-```
+```sh
 export GOOGLE_CLOUD_PROJECT=<YOUR_PROJECT_ID>
 export CLOUD_SQL_CONNECTION_NAME=<YOUR_CLOUD_SQL_CONNECTION_NAME>
 export DB_PASSWORD=<POSTGRESQL_PASSWORD>
