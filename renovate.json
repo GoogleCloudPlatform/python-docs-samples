@@ -1,14 +1,21 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
   "masterIssue": true,
+  "labels": ["automerge"],
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
+    "fileMatch": [
+      "requirements-test.txt",
+      "requirements-composer.txt",
+      "constraints.txt",
+      "constraints-test.txt"
+    ]
   },
-  "ignorePaths" : ["composer/**/constraints.txt", "composer/blog/**/constraints.txt", "composer/airflow_1_samples/requirements.txt"],
+  "ignorePaths": [
+    "composer/**/constraints.txt",
+    "composer/airflow_1_samples/requirements.txt"
+  ],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
