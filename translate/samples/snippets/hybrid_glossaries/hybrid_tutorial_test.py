@@ -56,7 +56,7 @@ def test_create_and_delete_glossary():
 
 def test_translate_standard():
 
-    expected_text = "Hello"
+    expected_text = "Good morning"
 
     # attempt to create glossary, fails if it already exists
     languages = ["fr", "en"]

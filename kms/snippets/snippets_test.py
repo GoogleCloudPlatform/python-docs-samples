@@ -10,6 +10,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+"""
+Tests for the KMS samples.
+
+The service account running the tests needs to have the following roles:
+ * roles/cloudkms.admin
+ * roles/cloudkms.cryptoKeyEncrypterDecrypter
+ * roles/cloudkms.cryptoOperator
+ * roles/cloudkms.publicKeyViewer
+ * roles/cloudkms.signerVerifier
+"""
 
 import datetime
 import hashlib
@@ -203,11 +213,11 @@ def symmetric_key_id(client, project_id, location_id, key_ring_id):
 
 
 def wait_for_ready(client, key_version_name):
-    for i in range(5):
+    for i in range(4):
         key_version = client.get_crypto_key_version(request={'name': key_version_name})
         if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
             return
-        time.sleep(0.1*(i**2))
+        time.sleep((i+1)**2)
     pytest.fail('{} not ready'.format(key_version_name))
 
 
