@@ -14,7 +14,7 @@
 #
 
 
-# [START contentwarehouse_fetch_acl
+# [START contentwarehouse_fetch_acl]
 
 from google.cloud import contentwarehouse
 
