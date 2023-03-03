@@ -65,7 +65,7 @@ path:
     profiler: "cloudprofiler"
     pubsub: "pubsub"
     pubsublite: "pubsublite"
-    recaptchaenterprise: "recaptchaenterprise"
+    recaptcha_enterprise: "recaptchaenterprise"
     retail: "retail"
     run: "run"
     scheduler: "cloudscheduler"
