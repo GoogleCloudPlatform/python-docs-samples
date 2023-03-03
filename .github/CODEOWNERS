@@ -79,7 +79,7 @@
 /pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 /recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/recaptcha_enterprise/demosite/*       @Sita04 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers
+/recaptcha_enterprise/demosite/*       @Sita04 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
