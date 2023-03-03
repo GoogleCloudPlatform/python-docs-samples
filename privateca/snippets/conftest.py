@@ -42,7 +42,8 @@ def delete_ca(ca_pool_name: str) -> None:
             client.disable_certificate_authority(request=request)
 
         # Delete CA.
-        if ca.state != privateca_v1.CertificateAuthority.State.DELETED:
+        ca_state = client.get_certificate_authority(name=ca.name).state
+        if ca_state != privateca_v1.CertificateAuthority.State.DELETED:
             delete_ca_request = privateca_v1.DeleteCertificateAuthorityRequest()
             delete_ca_request.name = ca.name
             delete_ca_request.ignore_active_certificates = True
