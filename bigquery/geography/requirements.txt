@@ -12,7 +12,7 @@ geojson==3.0.1
 geopandas===0.10.2; python_version == '3.7'
 geopandas==0.12.2; python_version >= '3.8'
 google-api-core==2.11.0
-google-auth==2.16.1
+google-auth==2.16.2
 google-cloud-bigquery==3.6.0
 google-cloud-bigquery-storage==2.19.0
 google-cloud-core==2.3.2
