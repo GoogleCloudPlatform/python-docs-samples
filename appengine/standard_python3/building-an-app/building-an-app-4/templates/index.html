@@ -22,8 +22,10 @@
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-auth-compat.js"></script>
+  <!-- [START gae_python38_auth_include_firebaseui] -->
   <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
+  <!-- [END gae_python38_auth_include_firebaseui] -->
   <script>
     // TODO(DEVELOPER): Paste your firebaseConfig{} snippet here. Follow these instructions to
     // find your config object: https://support.google.com/firebase/answer/7015592#web
@@ -38,10 +40,8 @@
 </head>
 <body>
 
-<!-- [START gae_python38_auth_firebase_html] -->
-<!-- [START gae_python3_auth_firebase_html] -->
 <h1>Datastore and Firebase Auth Example</h1>
-
+<!-- [START gae_python38_auth_firebase_html] -->
 <div id="firebaseui-auth-container"></div>
 
 <button id="sign-out" hidden=true>Sign Out</button>
@@ -61,7 +61,6 @@
     <p>Error: {{ error_message }}</p>
   {% endif %}
 </div>
-<!-- [END gae_python3_auth_firebase_html] -->
 <!-- [END gae_python38_auth_firebase_html] -->
 </body>
 </html>
