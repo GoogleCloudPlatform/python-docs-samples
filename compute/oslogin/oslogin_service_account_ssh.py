@@ -16,7 +16,7 @@
 # [START compute_oslogin_ssh]
 """
 Example of using the OS Login API to apply public SSH keys for a service
-account, and use that service account to execute commands on a remote
+account, and use that service account to run commands on a remote
 instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
@@ -155,9 +155,9 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
             tries += 1
             if tries == 3:
                 if isinstance(subprocess.CalledProcessError, err):
-                    print(f"Failed to execute SSH command (return code: {err.returncode}. Output received: {err.output}")
+                    print(f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}")
                 else:
-                    print("Failed to execute SSH - timed out.")
+                    print("Failed to run SSH - timed out.")
                 raise err
         else:
             return ssh.stdout
