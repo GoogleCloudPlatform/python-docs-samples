@@ -178,6 +178,10 @@ assign_issues_by:
   - 'api: vision'
   to:
   - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: dlp'
+  to:
+  - GoogleCloudPlatform/googleapis-dlp
 
 assign_prs_by:
 - labels:
@@ -207,6 +211,11 @@ assign_prs_by:
   - 'api: retail'
   to: 
   - GoogleCloudPlatform/dee-data-ai
+- labels:
+  - 'api: dlp'
+  to:
+  - GoogleCloudPlatform/googleapis-dlp
+
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
