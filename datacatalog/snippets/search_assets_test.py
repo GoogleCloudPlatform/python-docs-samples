@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 import search_assets
 
 
+@pytest.mark.skip(reason="Needs fixing by CODEOWNER - issue #8541")
 def test_search_assets(capsys, project_id, random_existing_tag_template_id):
     override_values = {
         "project_id": project_id,

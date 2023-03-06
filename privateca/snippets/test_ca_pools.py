@@ -18,6 +18,8 @@ import uuid
 
 import google.auth
 
+from conftest import delete_stale_resources
+
 from create_ca_pool import create_ca_pool
 from delete_ca_pool import delete_ca_pool
 from list_ca_pools import list_ca_pools
@@ -25,6 +27,8 @@ from update_ca_pool_issuance_policy import update_ca_pool_issuance_policy
 
 PROJECT = google.auth.default()[1]
 LOCATION = "us-central1"
+
+delete_stale_resources()
 
 
 def generate_name() -> str:

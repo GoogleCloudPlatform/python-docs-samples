@@ -38,7 +38,14 @@ def generate_name() -> str:
     return "test-" + uuid.uuid4().hex[:10]
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+# We are hitting 5 CAs per minute limit which can't be changed
+# We set the backoff function to use 4 as base - this way the 3rd try
+# should wait for 64 seconds and avoid per minute quota
+def backoff_expo_wrapper():
+    return backoff.expo(base=4)
+
+
+@backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
 def test_subordinate_certificate_authority(
     certificate_authority, capsys: typing.Any
 ) -> None:
