@@ -83,3 +83,10 @@ path:
     vision: "vision"
     webrisk: "webrisk"
     workflows: "workflows"
+
+path:
+  pullrequest: true
+  labelprefix: "asset: "
+  paths:
+    recaptcha_enterprise:
+      demosite: "flagship"
