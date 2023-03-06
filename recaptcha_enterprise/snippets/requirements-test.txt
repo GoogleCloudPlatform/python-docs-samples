@@ -1,0 +1,5 @@
+selenium==4.8.2
+Flask==2.2.2
+pytest==7.2.1
+pytest-flask==1.2.0
+webdriver-manager==3.8.5
