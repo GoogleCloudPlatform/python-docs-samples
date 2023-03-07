@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC All Rights Reserved.
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_flex_storage_app]
+# [START gae_flex_ubuntu_storage_app]
 import logging
 import os
 from typing import Union
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host="127.0.0.1", port=8080, debug=True)
-# [END gae_flex_storage_app]
+# [END gae_flex_ubuntu_storage_app]
