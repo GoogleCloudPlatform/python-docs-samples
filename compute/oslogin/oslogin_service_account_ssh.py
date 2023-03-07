@@ -154,7 +154,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
             time.sleep(30)
             tries += 1
             if tries == 3:
-                if isinstance(subprocess.CalledProcessError, err):
+                if isinstance(err, subprocess.CalledProcessError):
                     print(f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}")
                 else:
                     print("Failed to run SSH - timed out.")
