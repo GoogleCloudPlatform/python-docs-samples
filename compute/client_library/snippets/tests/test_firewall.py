@@ -88,7 +88,15 @@ def test_create(autodelete_firewall_name):
 def test_patch_rule(firewall_rule):
     fw_client = compute_v1.FirewallsClient()
     assert firewall_rule.priority == 1000
-    patch_firewall_priority(PROJECT, firewall_rule.name, 500)
+    try:
+        patch_firewall_priority(PROJECT, firewall_rule.name, 500)
+    except google.api_core.exceptions.BadRequest as err:
+        if err.code == 400 and "is not ready" in err.message:
+            # We can ignore this, this is most likely GCE Enforcer removing the rule before us.
+            return
+        else:
+            # Something else went wrong, let's escalate it.
+            raise err
     time.sleep(2)
     updated_firewall_rule = fw_client.get(project=PROJECT, firewall=firewall_rule.name)
     assert updated_firewall_rule.priority == 500
