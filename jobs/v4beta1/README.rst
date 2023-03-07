@@ -1,3 +1,3 @@
 These samples have been moved.
 
-https://github.com/googleapis/python-talent/tree/main/samples
+https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/talent
