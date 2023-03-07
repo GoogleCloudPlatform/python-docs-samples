@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@ env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
-  python_version: 3
+  operating_system: "ubuntu22"
+  # We also support 3.8, 3.9 and 3.10.
+  # See https://cloud.google.com/appengine/docs/flexible/python/runtime#interpreter for more info.
+  runtime_version: "3.11"
 
 # This sample incurs costs to run on the App Engine flexible environment. 
 # The settings below are to reduce costs during testing and are not appropriate
