@@ -20,11 +20,9 @@
  * @param {string} inJson input Pub/Sub JSON message (stringified)
  */
  function process(inJson) {
-    // Nashorn engine is only ECMAScript 5.1 (ES5) compliant. Newer ES6
-    // JavaScript keywords like `let` or `const` will cause syntax errors.
-    var obj = JSON.parse(inJson);
-    var includePubsubMessage = obj.data && obj.attributes;
-    var data = includePubsubMessage ? obj.data : obj;
+    const obj = JSON.parse(inJson);
+    const includePubsubMessage = obj.data && obj.attributes;
+    const data = includePubsubMessage ? obj.data : obj;
 
     if (!data.hasOwnProperty('url')) {
       throw new Error("No url found");
