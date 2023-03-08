@@ -17,12 +17,12 @@ env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
-  operating_system: "ubuntu22"
   # We also support 3.8, 3.9 and 3.10.
   # See https://cloud.google.com/appengine/docs/flexible/python/runtime#interpreter for more info.
   runtime_version: "3.11"
+  operating_system: "ubuntu22"
 
 #[START gae_flex_storage_yaml]
 env_variables:
-  CLOUD_STORAGE_BUCKET: your-bucket-name
+  CLOUD_STORAGE_BUCKET: [your-bucket-name]
 #[END gae_flex_storage_yaml]

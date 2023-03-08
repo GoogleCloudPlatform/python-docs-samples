@@ -20,7 +20,7 @@ import flask.testing
 from google.cloud import storage
 import pytest
 import requests
-from six import BytesIO
+import io.BytesIO
 
 import main
 
