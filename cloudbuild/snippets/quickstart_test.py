@@ -14,8 +14,8 @@
 
 
 import pytest
-import time
 import quickstart
+import time
 
 
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:
