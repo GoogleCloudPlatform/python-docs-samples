@@ -41,9 +41,9 @@ def quickstart() -> None:
     # The following build steps will output "hello world"
     # For more information on build configuration, see
     # https://cloud.google.com/build/docs/configuring-builds/create-basic-configuration
-    build.steps = [{"name": "ubuntu",
-                    "entrypoint": "bash",
-                    "args": ["-c", "echo hello world"]}]
+    build.steps = [
+        {"name": "ubuntu", "entrypoint": "bash", "args": ["-c", "echo hello world"]}
+    ]
 
     operation = client.create_build(project_id=project_id, build=build)
     # Print the in-progress operation
@@ -53,6 +53,8 @@ def quickstart() -> None:
     result = operation.result()
     # Print the completed status
     print("RESULT:", result.status)
+
+
 # [END cloudbuild_quickstart]
 
 

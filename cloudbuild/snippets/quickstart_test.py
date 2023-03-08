@@ -14,13 +14,17 @@
 
 
 import pytest
-
+import time
 import quickstart
 
 
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     quickstart.quickstart()
     out, _ = capsys.readouterr()
+
+    # Wait 5 seconds
+    time.sleep(5)
+
     # Prints in-progress message
     assert "hello world" in out
     # Prints final status

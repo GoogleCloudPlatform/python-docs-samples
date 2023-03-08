@@ -35,6 +35,5 @@ TEST_CONFIG_OVERRIDE = {
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {
-    },
+    "envs": {},
 }
