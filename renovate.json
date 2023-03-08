@@ -3,7 +3,6 @@
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
   "masterIssue": true,
-  "labels": ["automerge"],
   "pip_requirements": {
     "fileMatch": [
       "requirements-test.txt",

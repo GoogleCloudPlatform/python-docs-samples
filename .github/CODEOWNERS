@@ -10,90 +10,90 @@
 
 # python-samples-owners is in charge of infrastructure (Kokoro, noxfiles, etc.) in this repository
 # python-samples-reviewers reviews Python sample code for adherence to sample guidelines
-*                                      @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/python-samples-reviewers
-/.github/                              @GoogleCloudPlatform/python-samples-owners
-/.kokoro/                              @GoogleCloudPlatform/python-samples-owners
-/*                                     @GoogleCloudPlatform/python-samples-owners
+*                                      @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/.github/                              @GoogleCloudPlatform/python-samples-owners @yoshi-approver
+/.kokoro/                              @GoogleCloudPlatform/python-samples-owners @yoshi-approver
+/*                                     @GoogleCloudPlatform/python-samples-owners @yoshi-approver
 
-/appengine/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard_python3/spanner/*        @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
-/asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
-/auth/**/*                             @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
-/automl/**/*                           @GoogleCloudPlatform/ml-apis @GoogleCloudPlatform/python-samples-reviewers
-/batch/**/*                            @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
-/bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
-/billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
-/blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers
-/cdn/**/*                              @mpwarres @GoogleCloudPlatform/python-samples-reviewers
-/cloudbuild/**/*                       @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers
-/composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
-/compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
-/containeranalysis/**/*                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/contentwarehouse/**/*                 @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
-/data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
-/datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers
-/dataflow/**/*                         @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
-/datalabeling/**/*                     @GoogleCloudPlatform/python-samples-reviewers @ivanmkc
-/dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers
-/datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
-/documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
-/endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
-/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/eventarc/**/*                         @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
-/firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/functions/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
-/healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers
-/iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
-/iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers
-/iot/**/*                              @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
-/jobs/**/*                             @GoogleCloudPlatform/python-samples-reviewers
-/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/kubernetes_engine/**/*                @GoogleCloudPlatform/python-samples-reviewers
-/kubernetes_engine/django_tutorial/**/*    @glasnt @GoogleCloudPlatform/python-samples-reviewers
-/language/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/logging/**/*                          @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
-/media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
-/memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
-/ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers
-/monitoring/**/*                       @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
-/monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
-/monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
-/notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers
-/optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers
-/people-and-planet-ai/**/*             @davidcavazos @GoogleCloudPlatform/python-samples-reviewers
-/profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers
-/pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
-/pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
-/recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
-/run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/run/django/**/*                       @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/secretmanager/**/*                    @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
-/storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
-/texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/trace/**/*                            @ymotongpoo @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
-/translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers
-/talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
-/vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
-/workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
-/privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/appengine/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers  @yoshi-approver
+/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/appengine/standard_python3/spanner/*        @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/auth/**/*                             @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/automl/**/*                           @GoogleCloudPlatform/ml-apis @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/batch/**/*                            @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/cdn/**/*                              @mpwarres @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/cloudbuild/**/*                       @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/containeranalysis/**/*                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/contentwarehouse/**/*                 @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/datacatalog/**/*                      @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/dataflow/**/*                         @davidcavazos @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/datalabeling/**/*                     @GoogleCloudPlatform/python-samples-reviewers @ivanmkc @yoshi-approver
+/dataproc/**/*                         @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/datastore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/eventarc/**/*                         @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/functions/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/iot/**/*                              @gcseh @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/jobs/**/*                             @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/kubernetes_engine/**/*                @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/kubernetes_engine/django_tutorial/**/*    @glasnt @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/language/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/logging/**/*                          @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/monitoring/**/*                       @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/people-and-planet-ai/**/*             @davidcavazos @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/run/django/**/*                       @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/secretmanager/**/*                    @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/trace/**/*                            @ymotongpoo @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/translate/**/*                        @nicain @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 
 # Self-service
-/dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
+/dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
