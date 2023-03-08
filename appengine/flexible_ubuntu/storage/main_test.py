@@ -20,7 +20,7 @@ import flask.testing
 from google.cloud import storage
 import pytest
 import requests
-import io.BytesIO
+import io
 
 import main
 
@@ -50,7 +50,7 @@ def test_upload(client: flask.testing.FlaskClient, blob_name: str) -> None:
     # Upload a simple file
     file_content = b"This is some test content."
 
-    r = client.post("/upload", data={"file": (BytesIO(file_content), blob_name)})
+    r = client.post("/upload", data={"file": (io.BytesIO(file_content), blob_name)})
 
     assert r.status_code == 200
 
