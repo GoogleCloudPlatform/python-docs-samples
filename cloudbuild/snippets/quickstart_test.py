@@ -19,6 +19,7 @@ import quickstart
 
 import time
 
+
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     quickstart.quickstart()
     out, _ = capsys.readouterr()
