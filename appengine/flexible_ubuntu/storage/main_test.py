@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
 import os
 import uuid
 
@@ -19,8 +20,8 @@ import flask
 import flask.testing
 from google.cloud import storage
 import pytest
+
 import requests
-import io
 
 import main
 
