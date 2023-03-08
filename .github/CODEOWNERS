@@ -75,11 +75,12 @@
 /optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /people-and-planet-ai/**/*             @davidcavazos @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /profiler/**/*                         @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
-/retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/recaptcha_enterprise/demosite/*       @Sita04 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /run/django/**/*                       @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /secretmanager/**/*                    @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
@@ -93,7 +94,7 @@
 /talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
-/privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
 
 # Self-service
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
+/retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers @yoshi-approver
