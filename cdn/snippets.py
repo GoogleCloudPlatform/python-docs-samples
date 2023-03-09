@@ -114,7 +114,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
             signature=signature)
 
     print(signed_url)
-# [START cloudcdn_sign_url_prefix]
+# [END cloudcdn_sign_url_prefix]
 # [END sign_url]
 
 
