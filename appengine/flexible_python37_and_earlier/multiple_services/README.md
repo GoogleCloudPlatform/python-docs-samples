@@ -3,21 +3,18 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/multiple_services/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/multiple_services/README.md
 
 This example demonstrates how to deploy multiple python services to [App Engine flexible environment](https://cloud.google.com/appengine/docs/flexible/)
 
 ## To Run Locally
 
-Use [virtualenv](https://virtualenv.pypa.io/en/stable/) to set up each
-service's environment and start the each service in a separate terminal.
-
 Open a terminal and start the first service:
 
 ```Bash
 $ cd gateway-service
-$ virtualenv -p python3 env
-$ source env/bin/activate
+$ # follow https://cloud.google.com/python/docs/setup to set up a Python
+development environment
 $ pip install -r requirements.txt
 $ python main.py
 ```
@@ -26,8 +23,7 @@ In a separate terminal, start the second service:
 
 ```Bash
 $ cd static-service
-$ virtualenv -p python3 env
-$ source env/bin/activate
+$ # follow https://cloud.google.com/python/docs/setup to set up a Python
 $ pip install -r requirements.txt
 $ python main.py
 ```

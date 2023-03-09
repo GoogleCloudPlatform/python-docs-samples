@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/pubsub/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/pubsub/README.md
 
 This demonstrates how to send and receive messages using [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
 
@@ -32,10 +32,9 @@ When running locally, you can use the [Google Cloud SDK](https://cloud.google.co
 
     $ gcloud init
 
-Install dependencies, preferably with a virtualenv:
+Install dependencies, please follow https://cloud.google.com/python/docs/setup
+to set up a Python development environment. Then run:
 
-    $ virtualenv env
-    $ source env/bin/activate
     $ pip install -r requirements.txt
 
 Then set environment variables before starting your application:

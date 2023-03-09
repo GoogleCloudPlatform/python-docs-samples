@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/hello_world_django/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/hello_world_django/README.md
 
 This is a basic hello world [Django](https://www.djangoproject.com/) example
 for [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
@@ -24,6 +24,9 @@ long as it listens for web traffic on port `$PORT` and is declared in
 [`requirements.txt`](requirements.txt).
 
 ## How this was created
+
+To set up Python development environment, please follow
+https://cloud.google.com/python/docs/setup.
 
 This project was created using standard Django commands:
 

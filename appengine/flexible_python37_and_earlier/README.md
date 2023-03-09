@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/README.md
 
 These are samples for using Python on Google App Engine Flexible Environment. These samples are typically referenced from the [docs](https://cloud.google.com/appengine/docs).
 
@@ -28,15 +28,12 @@ In general, the samples typically require:
 
    ```
    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-   cd python-docs-samples/appengine/flexible
+   cd python-docs-samples/appengine/flexible_python37_and_earlier
    ```
 
-4. Open a sample folder, create a virtualenv, install dependencies, and run the sample:
+4. Follow https://cloud.google.com/python/docs/setup to set up a Python development environment. Then run:
 
    ```
-   cd hello-world
-   virtualenv env
-   source env/bin/activate
    pip install -r requirements.txt
    python main.py
    ```
@@ -66,8 +63,8 @@ Some samples in this repositories may have special deployment instructions. Refe
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../LICENSE)
+* See [LICENSE](../../LICENSE)
