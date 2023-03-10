@@ -1,4 +1,0 @@
-Django==4.0.4; python_version >= '3.8'
-Django==3.2.14; python_version < '3.8'
-gunicorn==20.1.0; python_version > '3.0'
-gunicorn==19.10.0; python_version < '3.0'
