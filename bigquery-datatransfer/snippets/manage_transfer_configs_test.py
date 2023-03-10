@@ -62,6 +62,18 @@ def test_schedule_backfill(capsys, transfer_config_name):
     assert len(runs) == 4
 
 
+def test_schedule_backfill_manual_transfer(capsys, transfer_config_name):
+    runs = manage_transfer_configs.schedule_backfill_manual_transfer(
+        {"transfer_config_name": transfer_config_name}
+    )
+    out, _ = capsys.readouterr()
+    assert "Started manual transfer runs:" in out
+    # Run IDs should include the transfer name in their path.
+    assert transfer_config_name in out
+    # Check that there are three runs for between 2 and 5 days ago.
+    assert len(runs) == 3
+
+
 def test_delete_config(capsys, transfer_config_name):
     # transfer_config_name fixture in conftest.py calls the delete config
     # sample. To conserve limited BQ-DTS quota we only make basic checks.
