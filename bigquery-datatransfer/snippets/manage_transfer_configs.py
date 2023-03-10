@@ -147,6 +147,62 @@ def schedule_backfill(override_values={}):
     return response.runs
 
 
+def schedule_backfill_manual_transfer(override_values={}):
+    # [START bigquerydatatransfer_start_manual_transfer]
+    import datetime
+
+    from google.cloud.bigquery_datatransfer_v1 import (
+        DataTransferServiceClient,
+        StartManualTransferRunsRequest,
+    )
+
+    # Create a client object
+    client = DataTransferServiceClient()
+
+    # Replace with your transfer configuration name
+    transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
+    # [END bigquerydatatransfer_start_manual_transfer]
+    # To facilitate testing, we replace values with alternatives
+    # provided by the testing harness.
+    transfer_config_name = override_values.get(
+        "transfer_config_name", transfer_config_name
+    )
+    # [START bigquerydatatransfer_start_manual_transfer]
+    now = datetime.datetime.now(datetime.timezone.utc)
+    start_time = now - datetime.timedelta(days=5)
+    end_time = now - datetime.timedelta(days=2)
+
+    # Some data sources, such as scheduled_query only support daily run.
+    # Truncate start_time and end_time to midnight time (00:00AM UTC).
+    start_time = datetime.datetime(
+        start_time.year, start_time.month, start_time.day, tzinfo=datetime.timezone.utc
+    )
+    end_time = datetime.datetime(
+        end_time.year, end_time.month, end_time.day, tzinfo=datetime.timezone.utc
+    )
+
+    requested_time_range = StartManualTransferRunsRequest.TimeRange(
+        start_time=start_time,
+        end_time=end_time,
+    )
+
+    # Initialize request argument(s)
+    request = StartManualTransferRunsRequest(
+        parent=transfer_config_name,
+        requested_time_range=requested_time_range,
+    )
+
+    # Make the request
+    response = client.start_manual_transfer_runs(request=request)
+
+    # Handle the response
+    print("Started manual transfer runs:")
+    for run in response.runs:
+        print(f"backfill: {run.run_time} run: {run.name}")
+    # [END bigquerydatatransfer_start_manual_transfer]
+    return response.runs
+
+
 def delete_config(override_values={}):
     # [START bigquerydatatransfer_delete_transfer]
     import google.api_core.exceptions
