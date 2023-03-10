@@ -45,7 +45,6 @@ BQ_READ_TABLE = f"data-analytics-process-test-joined-{TEST_ID}".replace("-", "_"
 BQ_WRITE_TABLE = f"data-analytics-process-test-normalized-{TEST_ID}".replace("-", "_")
 TABLE_ID = f"{PROJECT_ID}.{BQ_DATASET}.{BQ_READ_TABLE}"
 
-PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 
 
@@ -57,8 +56,10 @@ def test_dataproc_batch(test_bucket, bq_dataset):
 
     BATCH_ID = f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
+        "runtime_config": {
+            "version": "1.1"
+        },
         "pyspark_batch": {
-            "jar_file_uris": [PYSPARK_JAR],
             "main_python_file_uri": PROCESSING_PYTHON_FILE,
             "args": [
                 PROJECT_ID,
@@ -184,7 +185,6 @@ def bq_dataset(test_bucket):
 
 
 def test_process(test_dataproc_batch):
-
     print(test_dataproc_batch)
 
     # check that the results table is there now

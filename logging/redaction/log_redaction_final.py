@@ -20,7 +20,7 @@ from typing import List
 
 from apache_beam import CombineFn, CombineGlobally, DoFn, io, ParDo, Pipeline, WindowInto
 from apache_beam.error import PipelineError
-from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.options.pipeline_options import GoogleCloudOptions, PipelineOptions
 from apache_beam.transforms.window import FixedWindows
 
 from google.cloud import dlp_v2, logging_v2
@@ -82,8 +82,9 @@ class BatchPayloads(CombineFn):
 class LogRedaction(DoFn):
     '''Apply inspection and redaction to textPayload field of log entries'''
 
-    def __init__(self, project_id: str):
+    def __init__(self, region, project_id: str):
         self.project_id = project_id
+        self.region = region
         self.dlp_client = None
 
     def _log_to_row(self, entry):
@@ -113,7 +114,7 @@ class LogRedaction(DoFn):
 
         response = self.dlp_client.deidentify_content(
             request={
-                'parent': f'projects/{self.project_id}',
+                'parent': f'projects/{self.project_id}/locations/{self.region}',
                 'inspect_config': INSPECT_CFG,
                 'deidentify_config': REDACTION_CFG,
                 'item': table,
@@ -177,6 +178,13 @@ def run(
         streaming=True,
         save_main_session=True
     )
+
+    region = "us-central1"
+    try:
+        region = pipeline_options.view_as(GoogleCloudOptions).region
+    except AttributeError:
+        pass
+
     pipeline = Pipeline(options=pipeline_options)
     _ = (
         pipeline
@@ -186,7 +194,7 @@ def run(
         # Optimize Google API consumption and avoid possible throttling
         # by calling APIs for batched data and not per each element
         | 'Batch aggregated payloads' >> CombineGlobally(BatchPayloads()).without_defaults()
-        | 'Redact SSN info from logs' >> ParDo(LogRedaction(destination_log_name.split('/')[1]))
+        | 'Redact SSN info from logs' >> ParDo(LogRedaction(region, destination_log_name.split('/')[1]))
         | 'Ingest to output log' >> ParDo(IngestLogs(destination_log_name))
     )
     pipeline.run()

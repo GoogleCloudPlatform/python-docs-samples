@@ -41,6 +41,4 @@ def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: 
     )
 
     wait_for_extended_operation(operation, "firewall rule patching")
-    return
 # </INGREDIENT>
-

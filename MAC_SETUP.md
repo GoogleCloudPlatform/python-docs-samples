@@ -76,21 +76,25 @@ test their code.
     ```console
     $ pyenv install 3.6.13
     ```
-    *  3.7.13 (latest 3.7.x release)
+    *  3.7.16 (latest 3.7.x release)
     ```console
-    $ pyenv install 3.7.13
+    $ pyenv install 3.7.16
     ```
-    *  3.8.13 (latest 3.8.x release)
+    *  3.8.16 (latest 3.8.x release)
     ```console
-    $ pyenv install 3.8.13
+    $ pyenv install 3.8.16
     ```
-    *  3.9.12 (latest 3.9.x release)
+    *  3.9.16 (latest 3.9.x release)
     ```console
-    $ pyenv install 3.9.12
+    $ pyenv install 3.9.16
     ```
-    *  3.10.4 (latest 3.10.x release)
+    *  3.10.9 (latest 3.10.x release)
     ```console
-    $ pyenv install 3.10.4
+    $ pyenv install 3.10.9
+    ```
+    *  3.11.1 (latest 3.11.x release)
+    ```console
+    $ pyenv install 3.11.1
     ```
     
     > ℹ️ *Note*: If you are using an M1 Mac,
