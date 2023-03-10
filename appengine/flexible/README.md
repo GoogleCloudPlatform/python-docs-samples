@@ -8,7 +8,7 @@
 These are samples for using Python on Google App Engine Flexible Environment. These samples are typically referenced from the [docs](https://cloud.google.com/appengine/docs).
 
 For code samples of Python version 3.7 and earlier, please check
-https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible_python37_and_earlier.
+https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible.
 
 See our other [Google Cloud Platform github repos](https://github.com/GoogleCloudPlatform) for sample applications and
 scaffolding for other frameworks and use cases.
