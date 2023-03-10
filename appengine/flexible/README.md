@@ -7,6 +7,9 @@
 
 These are samples for using Python on Google App Engine Flexible Environment. These samples are typically referenced from the [docs](https://cloud.google.com/appengine/docs).
 
+For code samples of Python version 3.7 and earlier, please check
+https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible_python37_and_earlier.
+
 See our other [Google Cloud Platform github repos](https://github.com/GoogleCloudPlatform) for sample applications and
 scaffolding for other frameworks and use cases.
 
@@ -31,12 +34,9 @@ In general, the samples typically require:
    cd python-docs-samples/appengine/flexible
    ```
 
-4. Open a sample folder, create a virtualenv, install dependencies, and run the sample:
+4. Follow https://cloud.google.com/python/docs/setup to set up a Python development environment. Then run:
 
    ```
-   cd hello-world
-   virtualenv env
-   source env/bin/activate
    pip install -r requirements.txt
    python main.py
    ```
@@ -66,8 +66,8 @@ Some samples in this repositories may have special deployment instructions. Refe
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../LICENSE)
+* See [LICENSE](../../LICENSE)
