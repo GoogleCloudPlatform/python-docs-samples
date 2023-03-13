@@ -16,7 +16,7 @@
 #   https://www.tensorflow.org/install/source#gpu
 # For a list of all the nvidia images:
 #   https://ngc.nvidia.com/catalog/containers/nvidia:cuda/tags
-FROM nvcr.io/nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+FROM nvcr.io/nvidia/cuda:12.0.1-cudnn8-runtime-ubuntu20.04
 
 WORKDIR /pipeline
 
