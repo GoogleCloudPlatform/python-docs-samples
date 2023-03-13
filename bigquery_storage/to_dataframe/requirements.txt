@@ -1,6 +1,6 @@
 google-auth==2.16.2
 google-cloud-bigquery-storage==2.19.0
-google-cloud-bigquery==3.6.0
+google-cloud-bigquery==3.7.0
 pyarrow==11.0.0
 ipython===7.31.1; python_version == '3.7'
 ipython===8.10.0; python_version == '3.8'
