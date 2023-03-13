@@ -24,4 +24,4 @@ def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     # Prints in-progress message
     assert "hello world" in out
     # Prints final status
-    assert f"{cloudbuild_v1.types.Build.Status.SUCCESS}" in out
+    assert f"{quickstart.cloudbuild_v1.types.Build.Status.SUCCESS}" in out
