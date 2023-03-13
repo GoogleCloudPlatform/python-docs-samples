@@ -1,0 +1,3 @@
+pytest==7.0.1
+retrying==1.3.4
+websocket-client==1.2.2
