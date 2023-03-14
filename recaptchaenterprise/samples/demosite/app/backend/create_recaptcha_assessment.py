@@ -16,11 +16,12 @@ from typing import List
 
 from flask import jsonify
 from google.cloud import recaptchaenterprise_v1
+from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_assessment(
     project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
-) -> [float, List[str]]:
+) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
         project_id: GCloud Project ID
@@ -28,7 +29,7 @@ def create_assessment(
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
     """
-    sample_threshold_score = 0.50
+
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Starts -->
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
 
@@ -64,18 +65,4 @@ def create_assessment(
         )
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Ends -->
 
-    # Return the risk score.
-    verdict = (
-        "Bad"
-        if response.risk_analysis.score < sample_threshold_score
-        else "Not Bad"
-    )
-    return jsonify(
-        {
-            "data": {
-                "score": "{:.1f}".format(response.risk_analysis.score),
-                "verdict": verdict,
-            },
-            "success": "true",
-        }
-    )
+    return response
