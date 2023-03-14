@@ -15,9 +15,9 @@
 import json
 import os
 
-from flask import jsonify, render_template, request, Response
-
 from backend import create_recaptcha_assessment
+
+from flask import jsonify, render_template, request, Response
 
 SAMPLE_THRESHOLD_SCORE = 0.50
 
@@ -40,8 +40,6 @@ def on_signup() -> Response:
         json_data = json.loads(request.data)
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         credentials = json_data["recaptcha_cred"]
-        username = json_data["username"]
-        password = json_data["password"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
@@ -56,6 +54,8 @@ def on_signup() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == credentials["action"]:
             # Write new username and password to users database.
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             verdict = "Not Bad"
             pass
@@ -87,8 +87,6 @@ def on_login() -> Response:
         json_data = json.loads(request.data)
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         credentials = json_data["recaptcha_cred"]
-        username = json_data["username"]
-        password = json_data["password"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
@@ -103,6 +101,8 @@ def on_login() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == credentials["action"]:
             # Check if the login credentials exist and match.
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             verdict = "Not Bad"
             pass
@@ -179,8 +179,6 @@ def on_comment_submit() -> Response:
         json_data = json.loads(request.data)
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         credentials = json_data["recaptcha_cred"]
-        username = json_data["username"]
-        password = json_data["password"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
