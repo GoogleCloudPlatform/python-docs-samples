@@ -15,9 +15,9 @@
 import json
 import os
 
-from backend import create_recaptcha_assessment
-
 from flask import jsonify, render_template, request, Response
+
+from backend import create_recaptcha_assessment
 
 SAMPLE_THRESHOLD_SCORE = 0.50
 
