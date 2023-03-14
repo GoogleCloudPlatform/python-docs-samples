@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
-
-from flask import jsonify
 from google.cloud import recaptchaenterprise_v1
+from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_assessment(
     project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
-) -> [float, List[str]]:
+) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
         project_id: GCloud Project ID
@@ -28,7 +26,7 @@ def create_assessment(
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
     """
-    sample_threshold_score = 0.50
+
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Starts -->
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
 
@@ -48,34 +46,6 @@ def create_assessment(
     request.parent = project_name
 
     response = client.create_assessment(request)
-
-    # Check if the token is valid.
-    if not response.token_properties.valid:
-        raise ValueError(
-            f"The Create Assessment call failed because the token was invalid for the following reasons: "
-            f"{response.token_properties.invalid_reason}"
-        )
-
-    # Check if the expected action was executed.
-    if response.token_properties.action != recaptcha_action:
-        raise ValueError(
-            "The action attribute in your reCAPTCHA tag does not match the action you are expecting to score. "
-            "Please check your action attribute !"
-        )
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Ends -->
 
-    # Return the risk score.
-    verdict = (
-        "Bad"
-        if response.risk_analysis.score < sample_threshold_score
-        else "Not Bad"
-    )
-    return jsonify(
-        {
-            "data": {
-                "score": "{:.1f}".format(response.risk_analysis.score),
-                "verdict": verdict,
-            },
-            "success": "true",
-        }
-    )
+    return response
