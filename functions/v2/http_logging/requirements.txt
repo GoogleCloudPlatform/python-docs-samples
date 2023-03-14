@@ -1,2 +1,2 @@
-google-cloud-logging==3.1.2
+google-cloud-logging==3.2.5
 functions-framework==3.2.0
