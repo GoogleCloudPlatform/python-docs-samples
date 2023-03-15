@@ -16,7 +16,7 @@
 # [START compute_oslogin_ssh]
 """
 Example of using the OS Login API to apply public SSH keys for a service
-account, and use that service account to execute commands on a remote
+account, and use that service account to run commands on a remote
 instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
@@ -43,19 +43,19 @@ def execute(
     raise_errors: Optional[bool] = True
 ) -> Tuple[int, str]:
     """
-    Executes an external command (wrapper for Python subprocess).
+    Run an external command (wrapper for Python subprocess).
 
     Args:
-        cmd: The command to be executed.
-        cwd: Directory in which to execute the command.
+        cmd: The command to be run.
+        cwd: Directory in which to run the command.
         capture_output: Should the command output be captured and returned or just ignored.
         env: Environmental variables passed to the child process.
-        raise_errors: Should errors in executed command raise exceptions.
+        raise_errors: Should errors in run command raise exceptions.
 
     Returns:
         Return code and captured output.
     """
-    print(f'Executing command: {cmd}')
+    print(f'Running command: {cmd}')
     process = subprocess.run(
         cmd,
         cwd=cwd,
@@ -126,7 +126,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
         hostname: Hostname of the machine you want to run the command on.
 
     Returns:
-        Output of the executed command.
+        Output of the run command.
     """
     ssh_command = [
         'ssh',
@@ -136,7 +136,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
         f'{username}@{hostname}',
         cmd,
     ]
-    print(f"Executing ssh command: {' '.join(ssh_command)}")
+    print(f"Running ssh command: {' '.join(ssh_command)}")
     tries = 0
     while tries < 3:
         try:
@@ -154,7 +154,10 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
             time.sleep(30)
             tries += 1
             if tries == 3:
-                print(f"Failed to execute SSH command (return code: {err.returncode}. Output received: {err.output}")
+                if isinstance(err, subprocess.CalledProcessError):
+                    print(f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}")
+                else:
+                    print("Failed to run SSH - timed out.")
                 raise err
         else:
             return ssh.stdout
