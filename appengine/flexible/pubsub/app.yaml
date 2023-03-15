@@ -17,7 +17,7 @@ env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
-  python_version: 3
+  operating_system: "ubuntu22"
 
 # [START gae_flex_pubsub_env]
 env_variables:
