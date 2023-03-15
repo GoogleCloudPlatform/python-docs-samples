@@ -31,9 +31,11 @@ def create_rule_set(project_number: str, location: str) -> None:
     # projects/{project_number}/locations/{location}
     parent = client.common_location_path(project=project_number, location=location)
 
-    enable_hard_delete = contentwarehouse.DeleteDocumentAction(enable_hard_delete=True)
-
-    actions = contentwarehouse.Action(delete_document_action=enable_hard_delete)
+    actions = contentwarehouse.Action(
+        delete_document_action=contentwarehouse.DeleteDocumentAction(
+            enable_hard_delete=True
+        )
+    )
 
     rules = contentwarehouse.Rule(
         trigger_type="ON_CREATE",
