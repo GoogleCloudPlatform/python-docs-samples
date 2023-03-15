@@ -20,7 +20,7 @@ from contentwarehouse.snippets import test_utilities
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"  # Format is 'us' or 'eu'
+location = "us"
 
 
 def test_create_rule_set(capsys: pytest.CaptureFixture) -> None:

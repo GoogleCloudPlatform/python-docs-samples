@@ -19,7 +19,7 @@
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_number = "629397236107"
+# project_number = "YOUR_PROJECT_NUMBER"
 # location = "us" # Format is 'us' or 'eu'
 # user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 

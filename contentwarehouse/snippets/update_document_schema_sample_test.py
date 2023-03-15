@@ -20,8 +20,8 @@ from contentwarehouse.snippets import update_document_schema_sample
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"  # Format is 'us' or 'eu'
-user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
+location = "us"
+user_id = "user:xxxx@example.com"
 
 
 def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
