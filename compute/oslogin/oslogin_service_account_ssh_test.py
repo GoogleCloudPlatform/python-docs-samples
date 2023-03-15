@@ -185,7 +185,12 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
     # Wait for everything to propagate
     time.sleep(5)
 
-    yield client.get(project=PROJECT, zone=ZONE, instance=instance.name)
+    for attempt in range(5):
+        instance = client.get(project=PROJECT, zone=ZONE, instance=instance.name)
+        if instance.status != "RUNNING":
+            time.sleep(5)
+
+    yield instance
 
     client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
