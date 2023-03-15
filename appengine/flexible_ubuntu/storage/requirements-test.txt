@@ -1,2 +1,0 @@
-pytest==7.0.1
-google-cloud-storage==2.1.0;
