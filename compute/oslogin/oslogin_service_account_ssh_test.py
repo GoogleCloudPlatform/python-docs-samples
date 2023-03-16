@@ -182,13 +182,14 @@ def oslogin_instance(ssh_firewall, oslogin_service_account):
     policy.bindings = [binding]
     client.set_iam_policy(project=PROJECT, zone=ZONE, resource=TEST_ID, zone_set_policy_request_resource=policy)
 
-    # Wait for everything to propagate
-    time.sleep(5)
-
     for attempt in range(5):
+        time.sleep(5)
         instance = client.get(project=PROJECT, zone=ZONE, instance=instance.name)
-        if instance.status != "RUNNING":
-            time.sleep(5)
+        if instance.status == "RUNNING":
+            break
+
+    if instance.status != "RUNNING":
+        raise Exception(f"Unhealthy instance status: {instance.status}")
 
     yield instance
 
