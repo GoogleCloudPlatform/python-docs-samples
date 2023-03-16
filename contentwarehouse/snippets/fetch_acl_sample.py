@@ -22,7 +22,7 @@ from google.cloud import contentwarehouse
 # project_number = 'YOUR_PROJECT_NUMBER'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 # document_id = 'YOUR_DOCUMENT_ID'
-# user_id = 'YOUR_SERVICE_ACCOUNT' # Format is "user:xxxx@example.com"
+# user_id = 'user:YOUR_SERVICE_ACCOUNT' # Format is "user:xxxx@example.com"
 
 
 def fetch_acl(
@@ -31,29 +31,40 @@ def fetch_acl(
     user_id: str,
     document_id: str = ''
 ) -> None:
+    """Function to fetch access control policies
+    on project or document level.
 
+    Args:
+        project_number: GCP project number.
+        location: GCP project location.
+        user_id: Service account.
+        document_id: Document id.
+    """
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
 
-    # The full resource name of the location, e.g.:
-    # projects/{project_number}/locations/{location}
-    parent = client.common_location_path(
-    project=project_number, location=location
-    )
+    # Initialize request argument(s)
+    # Fetch document acl if document id is specified
+    # else fetch acl on project level
+    if document_id:
+        # The full resource name of the document, e.g.:
+        # projects/{project_number}/locations/{location}/documents/{document_id}
+        resource = client.document_path(project_number, location, document_id)
+    else:
+        # The full resource name of the project, e.g.:
+        # projects/{project_number}
+        resource = client.common_project_path(project_number)
 
     # Define request
-    request = contentwarehouse.FetchAclRequest()
+    request = contentwarehouse.FetchAclRequest(
+        resource=resource,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        )
+    )
 
-    # Initialize request argument(s)
-    # Fetch document acl is document id is specified
-    # else fetch acl on project level
-    if len(document_id)!=0:
-        request.resource = f"{parent}/documents/{document_id}"
-    else:
-        request.resource = f"projects/{project_number}"
-
-    request.request_metadata.user_info.id = user_id
-    print(client.fetch_acl(request))
+    response = client.fetch_acl(request)
+    print(response)
 
 
 # [END contentwarehouse_fetch_acl]
