@@ -192,6 +192,7 @@ def test_replace_channels(capsys, pochan):
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
+@pytest.mark.skip(reason="Needs fixing by CODEOWNER - issue #8975")
 def test_backup_and_restore(capsys, pochan):
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.

@@ -1,0 +1,4 @@
+Flask==2.1.0; python_version > '3.6'
+Flask==2.0.3; python_version < '3.7'
+gunicorn==20.1.0
+twilio==7.9.3

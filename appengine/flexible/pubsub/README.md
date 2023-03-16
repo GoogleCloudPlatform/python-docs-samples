@@ -32,10 +32,9 @@ When running locally, you can use the [Google Cloud SDK](https://cloud.google.co
 
     $ gcloud init
 
-Install dependencies, preferably with a virtualenv:
+Install dependencies, please follow https://cloud.google.com/python/docs/setup
+to set up a Python development environment. Then run:
 
-    $ virtualenv env
-    $ source env/bin/activate
     $ pip install -r requirements.txt
 
 Then set environment variables before starting your application:
