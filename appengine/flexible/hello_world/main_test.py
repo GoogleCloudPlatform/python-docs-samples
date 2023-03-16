@@ -1,4 +1,4 @@
-# Copyright 2015 Google LLC.
+# Copyright 2015 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 import main
 
 
-def test_index():
+def test_index() -> str:
     main.app.testing = True
     client = main.app.test_client()
 
