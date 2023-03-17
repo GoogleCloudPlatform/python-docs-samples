@@ -132,7 +132,7 @@ def _create_firewall():
             firewall_client.delete(project=PROJECT, firewall=TEST_ID)
         except (NotFound, BadRequest):
             # That means the GCE Enforcer deleted it before us
-            print("GCE Enforcer already deleted the rule") 
+            print("GCE Enforcer already deleted the rule")
 
 
 @pytest.fixture()
