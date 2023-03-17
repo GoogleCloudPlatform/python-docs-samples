@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import random
 import re
 import typing
 import uuid
@@ -43,8 +43,11 @@ def generate_name() -> str:
 # We are hitting 5 CAs per minute limit which can't be changed
 # We set the backoff function to use 4 as base - this way the 3rd try
 # should wait for 64 seconds and avoid per minute quota
+# Adding some random amount of time to the backoff timer, so that we
+# don't try to call the API at the same time in different tests running
+# simultaneously.
 def backoff_expo_wrapper():
-    return backoff.expo(base=4)
+    return (exp*(1+random.random()) for exp in backoff.expo(base=4))
 
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
