@@ -23,8 +23,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 import google.auth
 
-from create_certificate import create_certificate
 from conftest import LOCATION
+from create_certificate import create_certificate
 from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
 from filter_certificates import filter_certificates

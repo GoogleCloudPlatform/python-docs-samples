@@ -22,9 +22,9 @@ import google.auth
 import google.cloud.security.privateca_v1 as privateca_v1
 
 from activate_subordinate_ca import activate_subordinate_ca
+from conftest import LOCATION
 from create_certificate_csr import create_certificate_csr
 from create_subordinate_ca import create_subordinate_ca
-from conftest import LOCATION
 from revoke_certificate import revoke_certificate
 
 PROJECT = google.auth.default()[1]

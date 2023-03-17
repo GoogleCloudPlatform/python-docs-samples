@@ -19,9 +19,9 @@ import uuid
 import backoff
 import google.auth
 
+from conftest import LOCATION
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
-from conftest import LOCATION
 from delete_ca_pool import delete_ca_pool
 from delete_certificate_authority import delete_certificate_authority
 from disable_certificate_authority import disable_certificate_authority
