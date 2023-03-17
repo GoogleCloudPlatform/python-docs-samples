@@ -24,7 +24,11 @@ def test_index():
     assert r.status_code == 200
     assert 'Downloaded text matches uploaded text' in r.data.decode('utf-8')
 
+    if os.environ['CLOUD_STORAGE_BUCKET'] is None:
+        os.environ['CLOUD_STORAGE_BUCKET'] = "python-docs-samples-tests-public"
+        
     bucket_name = os.environ['CLOUD_STORAGE_BUCKET']
+        
     blob_name = os.environ.get('BLOB_NAME', 'storage-migration-test-blob')
     assert '    {}/{}'.format(bucket_name, blob_name) in r.data.decode('utf-8')
     assert 'Blob {} deleted.'.format(blob_name) in r.data.decode('utf-8')
