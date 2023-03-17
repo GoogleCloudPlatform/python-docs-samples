@@ -47,7 +47,10 @@ def generate_name() -> str:
 # don't try to call the API at the same time in different tests running
 # simultaneously.
 def backoff_expo_wrapper():
-    return (exp*(1+random.random()) for exp in backoff.expo(base=4))
+    for exp in backoff.expo(base=4):
+        if exp is None:
+            yield None
+        yield exp * (1 + random.random())
 
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
