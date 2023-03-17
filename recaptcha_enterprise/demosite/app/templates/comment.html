@@ -58,10 +58,13 @@
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
-    <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/2) Starts -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
+        async function send_comment({ action, token }) {
+            return fetchDemoAssessment({ SUBMIT_ACTIONS["comment"], action, token });
+        }
       function handleClick(event) {
         event.preventDefault();
         grecaptcha.enterprise.ready(async () => {
@@ -71,8 +74,8 @@
               action: "send_comment",
             }
           );
-          // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-          const score = await createAssessment({
+          // See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+          const score = await send_comment({
             action: "send_comment",
             token,
           });
@@ -80,13 +83,13 @@
         });
       }
     </script>
-    <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/2) Ends -->
   </head>
   <body>
     <recaptcha-demo step="comment">
-      <!-- ATTENTION: reCAPTCHA Example (Part 2) Starts -->
+      <!-- ATTENTION: reCAPTCHA Example (Client Part 2/2) Starts -->
       <button onclick="handleClick(event)">Send comment</button>
-      <!-- ATTENTION: reCAPTCHA Example (Part 2) Ends -->
+      <!-- ATTENTION: reCAPTCHA Example (Client Part 2/2) Ends -->
     </recaptcha-demo>
   </body>
 </html>

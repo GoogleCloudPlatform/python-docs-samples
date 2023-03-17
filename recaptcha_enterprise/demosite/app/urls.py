@@ -19,6 +19,8 @@ from flask import jsonify, render_template, request, Response
 
 from backend import create_recaptcha_assessment
 
+# Sample threshold score for classification of bad / not bad action. The threshold score
+# can be used to trigger secondary actions like MFA.
 SAMPLE_THRESHOLD_SCORE = 0.50
 
 context = {
@@ -57,12 +59,12 @@ def on_signup() -> Response:
             # username = json_data["username"]
             # password = json_data["password"]
             # Business logic.
+            # Classify the action as not bad.
             verdict = "Not Bad"
-            pass
         else:
             # If any of the above condition fails, trigger email/ phone verification flow.
+            # Classify the action as bad.
             verdict = "Bad"
-            pass
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
         # Return the risk score.
@@ -104,12 +106,12 @@ def on_login() -> Response:
             # username = json_data["username"]
             # password = json_data["password"]
             # Business logic.
+            # Classify the action as not bad.
             verdict = "Not Bad"
-            pass
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
+            # Classify the action as bad.
             verdict = "Bad"
-            pass
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
         # Return the risk score.
@@ -149,12 +151,12 @@ def on_store_checkout() -> Response:
                 assessment_response.token_properties.action == credentials["action"]:
             # Check if the cart contains items and proceed to checkout and payment.
             # Business logic.
+            # Classify the action as not bad.
             verdict = "Not Bad"
-            pass
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
+            # Classify the action as bad.
             verdict = "Bad"
-            pass
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
         # Return the risk score.
@@ -194,12 +196,12 @@ def on_comment_submit() -> Response:
                 assessment_response.token_properties.action == credentials["action"]:
             # Check if comment has safe language and proceed to store in database.
             # Business logic.
+            # Classify the action as not bad.
             verdict = "Not Bad"
-            pass
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
+            # Classify the action as bad.
             verdict = "Bad"
-            pass
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
         # Return the risk score.

@@ -12,34 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ATTENTION: reCAPTCHA Example (Part 3) Starts
-// SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-// SEE: If using a library or famework, can use event handlers its usual way
-
-function createAssessment({ action, token }) {
-  // SEE: Code for fetching the assessment from backend goes here
-  // SEE: Refer to demo app backend code for more information
-  // SEE: If using a library or framework, can fetch its usual way
-  return fetchDemoAssessment({ action, token });
-}
-
-function useAssessment(score) {
-  // SEE: Code for handling the assessment goes here
-  showAssessmentInDemo(score);
-}
-
-// ATTENTION: reCAPTCHA Example (Part 3) Ends
-
-function fetchDemoAssessment({ action, token }) {
+function fetchDemoAssessment({ url, action, token }) {
+  // Code for fetching the assessment from backend goes here.
+  // Refer to demo app backend code for more information.
+  // See if using a library or framework, can use event handlers its usual way.
+  // See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
   const body = JSON.stringify({
     recaptcha_cred: {
       action,
       token,
     },
   });
-  return fetch("/create_assessment", {
+  return fetch(`/${url}`, {
     body,
     method: "POST",
+    headers: new Headers({'content-type': 'application/json'}),
   })
     .then((response) => {
       const { ok, body: { data = {} } = {} } = response;
@@ -53,6 +40,11 @@ function fetchDemoAssessment({ action, token }) {
     .catch((error) => {
       throw new Error(error);
     });
+}
+
+function useAssessment(score) {
+  // Code for handling the assessment goes here.
+  showAssessmentInDemo(score);
 }
 
 function showAssessmentInDemo(score) {

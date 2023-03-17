@@ -38,6 +38,15 @@ const ACTIONS = {
   game: undefined,
 };
 
+export const SUBMIT_ACTIONS = {
+  comment: "on_comment_submit",
+  home: undefined,
+  login: "on_login",
+  signup: "on_signup",
+  store: "on_store_checkout",
+  game: undefined,
+};
+
 const FORMS = {
   comment: "FORM_COMMENT",
   home: "FORM_HOME",
