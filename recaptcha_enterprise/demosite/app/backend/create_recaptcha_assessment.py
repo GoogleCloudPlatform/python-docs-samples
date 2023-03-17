@@ -21,7 +21,7 @@ def create_assessment(
 ) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
-        project_id: GCloud Project ID
+        project_id: Google Cloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
