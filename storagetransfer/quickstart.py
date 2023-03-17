@@ -26,8 +26,9 @@ import argparse
 from google.cloud import storage_transfer
 
 
-def create_one_time_transfer(project_id: str, source_bucket: str,
-                             sink_bucket: str):
+def create_one_time_transfer(project_id: str = "my_project_id",
+                             source_bucket: str = "my_source_bucket",
+                             sink_bucket: str = "my_sink_bucket"):
     """Creates a one-time transfer job."""
 
     client = storage_transfer.StorageTransferServiceClient()
@@ -72,16 +73,19 @@ if __name__ == "__main__":
     parser.add_argument(
         '--project-id',
         help='The ID of the Google Cloud Platform Project that owns the job',
-        required=True)
+        required=False)
     parser.add_argument(
         '--source-bucket',
         help='S3 source bucket name',
-        required=True)
+        required=False)
     parser.add_argument(
         '--sink-bucket',
         help='Cloud Storage bucket name',
-        required=True)
+        required=False)
 
     args = parser.parse_args()
 
-    create_one_time_transfer(**vars(args))
+    if args.project_id is None and args.source_bucket is None and args.sink_bucket is None:
+        create_one_time_transfer()
+    else:
+        create_one_time_transfer(**vars(args))

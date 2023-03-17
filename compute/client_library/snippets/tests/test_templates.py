@@ -30,7 +30,7 @@ from ..instance_templates.list import list_instance_templates
 
 PROJECT = google.auth.default()[1]
 
-INSTANCE_ZONE = "europe-central2-b"
+INSTANCE_ZONE = "europe-west2-b"
 
 
 @pytest.fixture

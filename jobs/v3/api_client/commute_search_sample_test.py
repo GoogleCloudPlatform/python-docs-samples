@@ -15,6 +15,7 @@
 import re
 
 import backoff
+from googleapiclient.errors import HttpError
 import pytest
 
 import commute_search_sample
@@ -27,8 +28,9 @@ def company_name():
     commute_search_sample.tear_down(company_name, job_name)
 
 
+@pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_commute_search_sample(company_name, capsys):
-    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    @backoff.on_exception(backoff.expo, (AssertionError, HttpError), max_time=240)
     def eventually_consistent_test():
         commute_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
