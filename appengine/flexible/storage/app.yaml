@@ -17,9 +17,9 @@ env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
-  python_version: 3
+  operating_system: "ubuntu22"
 
 #[START gae_flex_storage_yaml]
 env_variables:
-    CLOUD_STORAGE_BUCKET: your-bucket-name
+  CLOUD_STORAGE_BUCKET: [your-bucket-name]
 #[END gae_flex_storage_yaml]
