@@ -107,7 +107,7 @@ def _create_firewall():
     """
     Creates a firewall allowing SSH connections to the test instance.
 
-    This is not done as a fixute, to minimize the time between firewall
+    This is not done as a fixture to minimize the time between firewall
     rule creation and the SSH connection attempt. This way we minimize the
     chance of GCE Enforcer deleting the rule before the connection attempt.
     """
