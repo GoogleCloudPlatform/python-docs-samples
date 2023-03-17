@@ -21,6 +21,7 @@ import google.auth
 
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
+from conftest import LOCATION
 from delete_ca_pool import delete_ca_pool
 from delete_certificate_authority import delete_certificate_authority
 from disable_certificate_authority import disable_certificate_authority
@@ -30,7 +31,6 @@ from undelete_certificate_authority import undelete_certificate_authority
 from update_certificate_authority import update_ca_label
 
 PROJECT = google.auth.default()[1]
-LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000

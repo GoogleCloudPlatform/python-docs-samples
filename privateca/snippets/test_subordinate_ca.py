@@ -24,10 +24,10 @@ import google.cloud.security.privateca_v1 as privateca_v1
 from activate_subordinate_ca import activate_subordinate_ca
 from create_certificate_csr import create_certificate_csr
 from create_subordinate_ca import create_subordinate_ca
+from conftest import LOCATION
 from revoke_certificate import revoke_certificate
 
 PROJECT = google.auth.default()[1]
-LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = CERTIFICATE_LIFETIME = 1000000
