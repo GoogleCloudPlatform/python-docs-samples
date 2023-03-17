@@ -22,7 +22,9 @@ The Project Editor legacy role is not sufficient because it does not grant
 several necessary permissions.
 """
 import base64
+import contextlib
 import json
+import subprocess
 import time
 import uuid
 
@@ -100,8 +102,15 @@ def oslogin_service_account():
         pass
 
 
-@pytest.fixture()
-def ssh_firewall():
+@contextlib.contextmanager
+def _create_firewall():
+    """
+    Creates a firewall allowing SSH connections to the test instance.
+
+    This is not done as a fixture to minimize the time between firewall
+    rule creation and the SSH connection attempt. This way we minimize the
+    chance of GCE Enforcer deleting the rule before the connection attempt.
+    """
     request = compute_v1.InsertFirewallRequest()
     request.project = PROJECT
     request.firewall_resource = compute_v1.Firewall()
@@ -116,16 +125,18 @@ def ssh_firewall():
     firewall_client = compute_v1.FirewallsClient()
     firewall_client.insert(request).result()
 
-    yield firewall_client.get(project=PROJECT, firewall=TEST_ID)
     try:
-        firewall_client.delete(project=PROJECT, firewall=TEST_ID)
-    except (NotFound, BadRequest):
-        # That means the GCE Enforcer deleted it before us
-        pass
+        yield firewall_client.get(project=PROJECT, firewall=TEST_ID)
+    finally:
+        try:
+            firewall_client.delete(project=PROJECT, firewall=TEST_ID)
+        except (NotFound, BadRequest):
+            # That means the GCE Enforcer deleted it before us
+            print("GCE Enforcer already deleted the rule")
 
 
 @pytest.fixture()
-def oslogin_instance(ssh_firewall, oslogin_service_account):
+def oslogin_instance(oslogin_service_account):
     instance = compute_v1.Instance()
     instance.name = TEST_ID
 
@@ -202,15 +213,16 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     # Letting everything settle down...
     time.sleep(60)
 
-    main('uname -a', PROJECT, account=account,
-         hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
-         oslogin=oslogin_client)
+    with _create_firewall():
+        main('uname -a', PROJECT, account=account,
+             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+             oslogin=oslogin_client)
 
     out, _ = capsys.readouterr()
     assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
     try:
         assert assert_value in out
-    except AssertionError as err:
+    except (AssertionError, subprocess.TimeoutExpired) as err:
         fw_client = compute_v1.FirewallsClient()
         try:
             fw_client.get(project=PROJECT, firewall=TEST_ID)
