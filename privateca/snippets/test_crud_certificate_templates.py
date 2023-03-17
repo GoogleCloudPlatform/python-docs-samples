@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
 import re
 import typing
 import uuid
@@ -24,7 +25,7 @@ from list_certificate_templates import list_certificate_templates
 from update_certificate_template import update_certificate_template
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
+LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000

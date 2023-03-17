@@ -27,7 +27,7 @@ from create_subordinate_ca import create_subordinate_ca
 from revoke_certificate import revoke_certificate
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
+LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = CERTIFICATE_LIFETIME = 1000000
