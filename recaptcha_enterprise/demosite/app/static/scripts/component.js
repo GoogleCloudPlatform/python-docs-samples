@@ -29,7 +29,7 @@ import "https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module";
 
 const STEPS = ["home", "signup", "login", "store", "comment", "game"];
 
-const ACTIONS = {
+export const RECAPTCHA_ACTIONS = {
   comment: "send_comment",
   home: "home",
   login: "log_in",
@@ -38,9 +38,9 @@ const ACTIONS = {
   game: undefined,
 };
 
-export const SUBMIT_ACTIONS = {
+export const SUBMIT_URLS = {
   comment: "on_comment_submit",
-  home: undefined,
+  home: "on_homepage_load",
   login: "on_login",
   signup: "on_signup",
   store: "on_store_checkout",
@@ -1416,7 +1416,7 @@ class RecaptchaDemo extends LitElement {
     return `
     {
       "event": {
-        "expectedAction": "${ACTIONS[this.step]}",
+        "expectedAction": "${RECAPTCHA_ACTIONS[this.step]}",
         ...
       },
       ...
@@ -1425,7 +1425,7 @@ class RecaptchaDemo extends LitElement {
         "score": "${this.score || "?.?"}"
       },
       "tokenProperties": {
-        "action": "${ACTIONS[this.step]}",
+        "action": "${RECAPTCHA_ACTIONS[this.step]}",
         ...
         "invalidReason": null,
         "valid": true

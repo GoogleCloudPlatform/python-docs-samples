@@ -62,9 +62,6 @@
     <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-        async function send_comment({ action, token }) {
-            return fetchDemoAssessment({ SUBMIT_ACTIONS["comment"], action, token });
-        }
       function handleClick(event) {
         event.preventDefault();
         grecaptcha.enterprise.ready(async () => {
@@ -74,12 +71,7 @@
               action: "send_comment",
             }
           );
-          // See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-          const score = await send_comment({
-            action: "send_comment",
-            token,
-          });
-          useAssessment(score);
+          comment({token});
         });
       }
     </script>

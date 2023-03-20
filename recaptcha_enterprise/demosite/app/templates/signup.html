@@ -62,16 +62,8 @@
     <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-        async function signup({ action, token }) {
-            return fetchDemoAssessment({ SUBMIT_ACTIONS["signup"], action, token });
-        }
       async function handleToken(token) {
-        // See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-        const score = await signup({
-          action: "sign_up",
-          token,
-        });
-        useAssessment(score);
+        signup({token});
       }
     </script>
     <!-- ATTENTION: reCAPTCHA Example (Client Part 1/2) Ends -->
