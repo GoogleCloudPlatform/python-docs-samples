@@ -21,6 +21,7 @@ from query_filter_or import query_filter_or
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
+
 @pytest.fixture()
 def entities():
     client = datastore.Client(project=PROJECT_ID)
@@ -39,6 +40,7 @@ def entities():
 
     client.delete(task1)
     client.delete(task2)
+
 
 def test_query_filter_or(capsys, entities):
     query_filter_or(project_id=PROJECT_ID)

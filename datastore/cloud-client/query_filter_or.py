@@ -16,6 +16,7 @@
 from google.cloud import datastore
 from google.cloud.datastore import query
 
+
 def query_filter_or(project_id: str) -> None:
 
     client = datastore.Client(project=project_id)
