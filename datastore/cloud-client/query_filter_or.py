@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START datastore_query_filter_or]
-import os
-
 from google.cloud import datastore
 from google.cloud.datastore import query
 
