@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {SUBMIT_URLS, RECAPTCHA_ACTIONS} from "./component.js";
+import {SUBMIT_URLS} from "./component.js";
 
 function homepage({token}) {
   const json_body = JSON.stringify({
     recaptcha_cred: {
-      action : RECAPTCHA_ACTIONS.home,
       token : token,
     },
   });
@@ -32,7 +31,6 @@ function homepage({token}) {
 function signup({token}) {
   const json_body = JSON.stringify({
     recaptcha_cred: {
-      action : RECAPTCHA_ACTIONS.signup,
       token : token,
       // Do not pass plain text credentials here. Always encrypt and follow security standards.
       username: "",
@@ -50,7 +48,6 @@ function signup({token}) {
 function login({token}) {
   const json_body = JSON.stringify({
     recaptcha_cred: {
-      action : RECAPTCHA_ACTIONS.login,
       token : token,
       // Do not pass plain text credentials here. Always encrypt and follow security standards.
       username: "",
@@ -68,7 +65,6 @@ function login({token}) {
 function store({token}) {
   const json_body = JSON.stringify({
     recaptcha_cred: {
-      action : RECAPTCHA_ACTIONS.store,
       token : token,
       items: {},
     },
@@ -84,7 +80,6 @@ function store({token}) {
 function comment({token}) {
   const json_body = JSON.stringify({
     recaptcha_cred: {
-      action : RECAPTCHA_ACTIONS.comment,
       token : token,
       comment: "",
     },
