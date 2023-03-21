@@ -1418,7 +1418,6 @@ class RecaptchaDemo extends LitElement {
       "tokenProperties": {
         "action": "${ACTIONS[this.step]}",
         ...
-        "invalidReason": null,
         "valid": true
       },
     }`
