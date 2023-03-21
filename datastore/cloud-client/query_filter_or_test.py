@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import os
-import pytest
 
 from google.cloud import datastore
+import pytest
 
 from query_filter_or import query_filter_or
 
