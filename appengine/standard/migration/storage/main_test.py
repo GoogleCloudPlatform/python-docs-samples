@@ -20,6 +20,9 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
+    if os.environ.get('CLOUD_STORAGE_BUCKET') is None:
+        os.environ['CLOUD_STORAGE_BUCKET'] = "python-docs-samples-tests-public"
+
     r = client.get('/')
     assert r.status_code == 200
     assert 'Downloaded text matches uploaded text' in r.data.decode('utf-8')

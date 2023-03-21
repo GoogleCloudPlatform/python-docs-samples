@@ -14,7 +14,9 @@
 
 import uuid
 
+import backoff
 from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import ServiceUnavailable
 import google.auth
 from google.cloud.security import privateca_v1
 import pytest
@@ -71,6 +73,7 @@ def delete_capool() -> None:
             continue
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def delete_stale_resources() -> None:
     delete_capool()
 
