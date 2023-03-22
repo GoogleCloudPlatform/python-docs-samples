@@ -36,13 +36,15 @@ def get():
     blob.upload_from_string(text_to_store)
     response_text += 'Stored text in a blob.\n\n'
 
-    return response
-
     stored_contents = blob.download_as_bytes()
     if stored_contents == text_to_store:
         response_text += 'Downloaded text matches uploaded text.\n\n'
     else:
         response_text += 'Downloaded text DOES NOT MATCH uploaded text!\n\n'
+
+    response = make_response(response_text, 200)
+    response.mimetype = 'text/plain'
+    return response
 
     response_text += 'Blobs in the bucket:\n'
     for blob in client.list_blobs(bucket_name):
