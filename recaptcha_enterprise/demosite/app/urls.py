@@ -36,10 +36,12 @@ config.read("../config.ini")
 assert "recaptcha_actions" in config
 
 
+# Return homepage template.
 def home() -> str:
     return render_template(template_name_or_list="home.html", context=context)
 
 
+# On homepage load, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_homepage_load() -> Response:
     try:
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -82,10 +84,12 @@ def on_homepage_load() -> Response:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
+# Return signup template.
 def signup() -> str:
     return render_template(template_name_or_list="signup.html", context=context)
 
 
+# On signup button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_signup() -> Response:
     try:
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -130,10 +134,12 @@ def on_signup() -> Response:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
+# Return login template.
 def login() -> str:
     return render_template(template_name_or_list="login.html", context=context)
 
 
+# On login button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_login() -> Response:
     try:
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -178,10 +184,12 @@ def on_login() -> Response:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
+# Return store template.
 def store() -> str:
     return render_template(template_name_or_list="store.html", context=context)
 
 
+# On checkout button click in store page, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_store_checkout() -> Response:
     try:
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -225,10 +233,12 @@ def on_store_checkout() -> Response:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
+# Return comment template.
 def comment() -> str:
     return render_template(template_name_or_list="comment.html", context=context)
 
 
+# On comment submit, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_comment_submit() -> Response:
     try:
         project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -272,5 +282,6 @@ def on_comment_submit() -> Response:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
+# Return game template.
 def game() -> str:
     return render_template(template_name_or_list="game.html", context=context)
