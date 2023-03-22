@@ -151,7 +151,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
                 timeout=10
             )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as err:
-            time.sleep(30)
+            time.sleep(10)
             tries += 1
             if tries == 3:
                 if isinstance(err, subprocess.CalledProcessError):
