@@ -1,2 +1,4 @@
 google-cloud-dialogflow==2.19.1
 Flask==2.2.2
+pyaudio
+termcolor
