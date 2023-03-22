@@ -51,6 +51,10 @@ def get():
         response_text += '    ' + blob.id + '\n'
     response_text += '\n'
 
+    response = make_response(response_text, 200)
+    response.mimetype = 'text/plain'
+    return response
+
     bucket.delete_blob(blob_name)
     response_text += 'Blob ' + blob_name + ' deleted.\n'
 
