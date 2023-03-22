@@ -47,8 +47,8 @@ def get():
     return response
 
     response_text += 'Blobs in the bucket:\n'
-    for blob in client.list_blobs(bucket_name):
-        response_text += '    ' + blob.id + '\n'
+    #for blob in client.list_blobs(bucket_name):
+    #    response_text += '    ' + blob.id + '\n'
     response_text += '\n'
 
     bucket.delete_blob(blob_name)
