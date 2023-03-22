@@ -1,0 +1,13 @@
+# Explicitly listing more packages than just the direct script dependencies to
+# avoid PIP taking too long while resolving dependencies.
+# See https://pip.pypa.io/en/stable/topics/dependency-resolution/#backtracking
+google-api-core==2.11.0
+google-auth==2.16.2
+google-cloud-core==2.3.2
+google-crc32c==1.5.0
+google-resumable-media==2.4.1
+googleapis-common-protos==1.59.0
+grpc-google-iam-v1==0.12.6
+grpcio==1.51.3
+grpcio-status==1.51.3
+protobuf==4.22.1
