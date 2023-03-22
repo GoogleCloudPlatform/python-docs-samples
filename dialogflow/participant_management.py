@@ -177,7 +177,7 @@ def analyze_content_audio_stream(
 # [END dialogflow_analyze_content_audio_stream]
 
 
-# [START ccai_streaming_analyze_content_audio]
+# [START dialogflow_streaming_analyze_content_audio]
 def streaming_analyze_content_audio(participant_name,
                                     sample_rate_herz,
                                     stream,
@@ -224,4 +224,4 @@ def streaming_analyze_content_audio(participant_name,
         timeout=timeout)
 
 
-# [END ccai_streaming_analyze_content_audio]
+# [END dialogflow_streaming_analyze_content_audio]
