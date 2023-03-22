@@ -105,50 +105,8 @@ def update_credentials_with_service_account(override_values={}):
     return transfer_config
 
 
-def schedule_backfill(override_values={}):
-    # [START bigquerydatatransfer_schedule_backfill]
-    import datetime
-
-    from google.cloud import bigquery_datatransfer
-
-    transfer_client = bigquery_datatransfer.DataTransferServiceClient()
-
-    transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
-    # [END bigquerydatatransfer_schedule_backfill]
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    transfer_config_name = override_values.get(
-        "transfer_config_name", transfer_config_name
-    )
-    # [START bigquerydatatransfer_schedule_backfill]
-    now = datetime.datetime.now(datetime.timezone.utc)
-    start_time = now - datetime.timedelta(days=5)
-    end_time = now - datetime.timedelta(days=2)
-
-    # Some data sources, such as scheduled_query only support daily run.
-    # Truncate start_time and end_time to midnight time (00:00AM UTC).
-    start_time = datetime.datetime(
-        start_time.year, start_time.month, start_time.day, tzinfo=datetime.timezone.utc
-    )
-    end_time = datetime.datetime(
-        end_time.year, end_time.month, end_time.day, tzinfo=datetime.timezone.utc
-    )
-
-    response = transfer_client.schedule_transfer_runs(
-        parent=transfer_config_name,
-        start_time=start_time,
-        end_time=end_time,
-    )
-
-    print("Started transfer runs:")
-    for run in response.runs:
-        print(f"backfill: {run.run_time} run: {run.name}")
-    # [END bigquerydatatransfer_schedule_backfill]
-    return response.runs
-
-
 def schedule_backfill_manual_transfer(override_values={}):
-    # [START bigquerydatatransfer_start_manual_transfer]
+    # [START bigquerydatatransfer_schedule_backfill]
     import datetime
 
     from google.cloud.bigquery_datatransfer_v1 import (
@@ -161,13 +119,13 @@ def schedule_backfill_manual_transfer(override_values={}):
 
     # Replace with your transfer configuration name
     transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
-    # [END bigquerydatatransfer_start_manual_transfer]
+    # [END bigquerydatatransfer_schedule_backfill]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     transfer_config_name = override_values.get(
         "transfer_config_name", transfer_config_name
     )
-    # [START bigquerydatatransfer_start_manual_transfer]
+    # [START bigquerydatatransfer_schedule_backfill]
     now = datetime.datetime.now(datetime.timezone.utc)
     start_time = now - datetime.timedelta(days=5)
     end_time = now - datetime.timedelta(days=2)
@@ -199,7 +157,7 @@ def schedule_backfill_manual_transfer(override_values={}):
     print("Started manual transfer runs:")
     for run in response.runs:
         print(f"backfill: {run.run_time} run: {run.name}")
-    # [END bigquerydatatransfer_start_manual_transfer]
+    # [END bigquerydatatransfer_schedule_backfill]
     return response.runs
 
 

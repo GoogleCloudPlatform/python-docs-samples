@@ -50,18 +50,6 @@ def test_update_credentials_with_service_account(
     assert transfer_config_name in out
 
 
-def test_schedule_backfill(capsys, transfer_config_name):
-    runs = manage_transfer_configs.schedule_backfill(
-        {"transfer_config_name": transfer_config_name}
-    )
-    out, _ = capsys.readouterr()
-    assert "Started transfer runs:" in out
-    # Run IDs should include the transfer name in their path.
-    assert transfer_config_name in out
-    # Check that there are runs for 5, 4, 3, and 2 days ago.
-    assert len(runs) == 4
-
-
 def test_schedule_backfill_manual_transfer(capsys, transfer_config_name):
     runs = manage_transfer_configs.schedule_backfill_manual_transfer(
         {"transfer_config_name": transfer_config_name}
