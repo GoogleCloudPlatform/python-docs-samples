@@ -30,19 +30,18 @@ Then started to talk in English, you should see transcription shows up as you sp
 Say "Quit" or "Exit" to stop.
 """
 
-import time
+import os
 import re
 import sys
-import os
+
+from google.api_core.exceptions import DeadlineExceeded
+
+import pyaudio
+
+from six.moves import queue
 
 import conversation_management
 import participant_management
-
-import pyaudio
-from six.moves import queue
-from google.api_core import client_options
-from google.api_core.exceptions import DeadlineExceeded
-from google.cloud import dialogflow_v2beta1 as dialogflow
 
 PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 CONVERSATION_PROFILE_ID = os.getenv('CONVERSATION_PROFILE')
