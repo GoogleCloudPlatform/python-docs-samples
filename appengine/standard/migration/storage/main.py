@@ -58,10 +58,6 @@ def get():
     response.mimetype = 'text/plain'
     return response
 
-    response = make_response(response_text, 200)
-    response.mimetype = 'text/plain'
-    return response
-
 
 if __name__ == '__main__':
     # This is used when running locally.
