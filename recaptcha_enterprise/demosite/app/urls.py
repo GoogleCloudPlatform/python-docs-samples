@@ -44,14 +44,13 @@ def home() -> str:
 # On homepage load, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_homepage_load() -> Response:
     try:
-        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         recaptcha_action = config["recaptcha_actions"]["home"]
         json_data = json.loads(request.data)
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
-            project_id,
+            context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
             recaptcha_action,
@@ -92,14 +91,13 @@ def signup() -> str:
 # On signup button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_signup() -> Response:
     try:
-        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         recaptcha_action = config["recaptcha_actions"]["signup"]
         json_data = json.loads(request.data)
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
-            project_id,
+            context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
             recaptcha_action,
@@ -142,14 +140,13 @@ def login() -> str:
 # On login button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_login() -> Response:
     try:
-        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         recaptcha_action = config["recaptcha_actions"]["login"]
         json_data = json.loads(request.data)
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
-            project_id,
+            context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
             recaptcha_action,
@@ -192,14 +189,13 @@ def store() -> str:
 # On checkout button click in store page, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_store_checkout() -> Response:
     try:
-        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         recaptcha_action = config["recaptcha_actions"]["store"]
         json_data = json.loads(request.data)
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
-            project_id,
+            context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
             recaptcha_action,
@@ -241,14 +237,13 @@ def comment() -> str:
 # On comment submit, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_comment_submit() -> Response:
     try:
-        project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
         recaptcha_action = config["recaptcha_actions"]["comment"]
         json_data = json.loads(request.data)
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_recaptcha_assessment.create_assessment(
-            project_id,
+            context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
             recaptcha_action,
