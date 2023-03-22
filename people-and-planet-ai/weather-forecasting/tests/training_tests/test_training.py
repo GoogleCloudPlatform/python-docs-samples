@@ -55,6 +55,7 @@ def data_path_gcs(bucket_name: str) -> str:
     return path_gcs
 
 
+@pytest.mark.xfail(reason="temporary API service issues")
 def test_train_model(
     project: str,
     bucket_name: str,
