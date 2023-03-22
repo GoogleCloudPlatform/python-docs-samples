@@ -52,7 +52,7 @@
 /eventarc/**/*                         @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/functions/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers  @GoogleCloudPlatform/functions-framework-google
+/functions/**/*                        @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/functions-framework-google
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers
 /iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
