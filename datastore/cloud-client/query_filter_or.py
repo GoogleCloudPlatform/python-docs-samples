@@ -16,8 +16,17 @@
 from google.cloud import datastore
 from google.cloud.datastore import query
 
+"""
+Builds a union (OR) query filter.
 
+See https://cloud.google.com/python/docs/reference/datastore/latest before running code.
+"""
 def query_filter_or(project_id: str) -> None:
+    """Builds a union of two queries (OR) filter
+    
+    Arguments:
+        project_id: your Google Cloud Project ID 
+    """
 
     client = datastore.Client(project=project_id)
 
