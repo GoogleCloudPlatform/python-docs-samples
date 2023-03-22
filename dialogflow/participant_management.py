@@ -177,7 +177,7 @@ def analyze_content_audio_stream(
 # [END dialogflow_analyze_content_audio_stream]
 
 
-# [START streaming_analyze_content_audio]
+# [START ccai_streaming_analyze_content_audio]
 def streaming_analyze_content_audio(participant_name,
                                     sample_rate_herz,
                                     stream,
@@ -189,7 +189,10 @@ def streaming_analyze_content_audio(participant_name,
     Args:
         participant_name: resource name of the participant.
         sample_rate_herz: herz rate of the sample.
-        audio_generator: a sequence of audio data.
+        stream: the stream to process.
+        timeout: the timeout of one stream.
+        language_code: the language code of the audio
+        single_utterance: whether to use single_utterance.
     """
     from google.cloud import dialogflow_v2beta1 as dialogflow_beta
     client = dialogflow_beta.ParticipantsClient()
@@ -221,4 +224,4 @@ def streaming_analyze_content_audio(participant_name,
         timeout=timeout)
 
 
-# [END streaming_analyze_content_audio]
+# [END ccai_streaming_analyze_content_audio]
