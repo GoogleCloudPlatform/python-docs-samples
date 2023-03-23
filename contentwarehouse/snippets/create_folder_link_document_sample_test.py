@@ -16,19 +16,20 @@
 
 import os
 
-from contentwarehousesamples import create_folder_link_document_sample
-from contentwarehousesamples import test_utilities
+from contentwarehouse.snippets import create_folder_link_document_sample
+from contentwarehouse.snippets import test_utilities
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
-
+user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
 def test_create_folder_link_document(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     create_folder_link_document_sample.create_folder_link_document(
         project_number=project_number,
         location=location,
+        user_id=user_id,
     )
     out, _ = capsys.readouterr()
 

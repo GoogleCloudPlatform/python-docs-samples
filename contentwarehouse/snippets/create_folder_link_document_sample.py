@@ -21,8 +21,9 @@ import sys
 # TODO(developer): Uncomment these variables before running the sample.
 # project_number = "YOUR_PROJECT_NUMBER"
 # location = "us" # Format is 'us' or 'eu'
+# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
-def create_folder(project_number: str, location: str) -> contentwarehouse.Document:
+def create_folder(project_number: str, location: str, user_id: str) -> contentwarehouse.Document:
     
     # Create a Schema Service client
     document_schema_client=contentwarehouse.DocumentSchemaServiceClient()
@@ -58,7 +59,7 @@ def create_folder(project_number: str, location: str) -> contentwarehouse.Docume
 
     # Define Request to create Folder
     create_folder_request=contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=folder, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
+        parent=parent, document=folder, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
     )
 
     # Create a Folder for the given schema
@@ -70,7 +71,7 @@ def create_folder(project_number: str, location: str) -> contentwarehouse.Docume
 
     return folder_response
 
-def create_document(project_number: str, location: str) -> contentwarehouse.Document:
+def create_document(project_number: str, location: str, user_id: str) -> contentwarehouse.Document:
 
     # Create a Schema Service client
     document_schema_client=contentwarehouse.DocumentSchemaServiceClient()
@@ -128,7 +129,7 @@ def create_document(project_number: str, location: str) -> contentwarehouse.Docu
 
     # Define Request
     create_document_request=contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
+        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
     )
 
     # Create a Document for the given schema
@@ -141,7 +142,7 @@ def create_document(project_number: str, location: str) -> contentwarehouse.Docu
     return document_response
 
 
-def create_folder_link_document(project_number: str, location: str) -> None:
+def create_folder_link_document(project_number: str, location: str, user_id: str) -> None:
 
     # Function call to create a folder
     folder=create_folder(project_number,location)
@@ -166,18 +167,18 @@ def create_folder_link_document(project_number: str, location: str) -> None:
     create_document_link_request = contentwarehouse.CreateDocumentLinkRequest(
         parent=folder.document.name,
         document_link=link,
-        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
+        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
     )
 
     # Make the Document Link request
     create_link_response = link_client.create_document_link(request=create_document_link_request)
-    
+
     print(f"Link Created: {create_link_response}")
 
     # Initialize list linked targets request
     linked_targets_request = contentwarehouse.ListLinkedTargetsRequest(
         parent=folder.document.name,
-        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
+        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id=user_id))
     )
 
     # Make the request
