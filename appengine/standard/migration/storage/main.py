@@ -42,10 +42,6 @@ def get():
     else:
         response_text += 'Downloaded text DOES NOT MATCH uploaded text!\n\n'
 
-    response = make_response(response_text, 200)
-    response.mimetype = 'text/plain'
-    return response
-
     response_text += 'Blobs in the bucket:\n'
     for blob in client.list_blobs(bucket_name):
         response_text += '    ' + blob.name + '\n'
