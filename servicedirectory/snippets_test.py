@@ -17,7 +17,9 @@
 from os import environ
 import uuid
 
-from google.api_core import exceptions
+import backoff
+from google.api_core.exceptions import (InternalServerError, NotFound,
+                                        ServiceUnavailable)
 from google.cloud import servicedirectory_v1
 
 import quickstart
@@ -42,17 +44,19 @@ def teardown_module():
         if namespace_name in namespace.name:
             try:
                 client.delete_namespace(name=namespace_name)
-            except exceptions.NotFound:
+            except NotFound:
                 print("Namespace already deleted")
             break
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_create_namespace():
     response = snippets.create_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
 
     assert NAMESPACE_ID in response.name
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_create_service():
     response = snippets.create_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
                                        SERVICE_ID)
@@ -60,13 +64,14 @@ def test_create_service():
     assert SERVICE_ID in response.name
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_create_endpoint():
     response = snippets.create_endpoint(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
                                         SERVICE_ID, ENDPOINT_ID, ADDRESS, PORT)
 
     assert ENDPOINT_ID in response.name
 
-
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_resolve_service():
     response = snippets.resolve_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
                                         SERVICE_ID)
@@ -75,6 +80,7 @@ def test_resolve_service():
     assert ENDPOINT_ID in response.service.endpoints[0].name
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_delete_endpoint(capsys):
     snippets.delete_endpoint(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID,
                              ENDPOINT_ID)
@@ -83,6 +89,7 @@ def test_delete_endpoint(capsys):
     assert ENDPOINT_ID in out
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_delete_service(capsys):
     snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
 
@@ -90,6 +97,7 @@ def test_delete_service(capsys):
     assert SERVICE_ID in out
 
 
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_delete_namespace(capsys):
     snippets.delete_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
 
