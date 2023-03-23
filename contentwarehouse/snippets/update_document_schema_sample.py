@@ -26,20 +26,19 @@ from google.cloud import contentwarehouse
 def update_document_schema(project_number: str, location: str, document_schema_name: str) -> None:
 
     # Create a Schema Service client
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client=contentwarehouse.DocumentSchemaServiceClient()
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
-    parent = document_schema_client.common_location_path(
+    parent=document_schema_client.common_location_path(
         project=project_number, location=location
     )
 
     # Create a Document Service client
-    document_client = contentwarehouse.DocumentServiceClient()
+    document_client=contentwarehouse.DocumentServiceClient()
 
-    #ONLY A HANDFULL CAN BE ADDED https://cloud.google.com/document-warehouse/docs/manage-document-schemas#update_a_schema
     # Define Schema Property of Text Type with updated values
-    updated_property_definition = contentwarehouse.PropertyDefinition(
+    updated_property_definition=contentwarehouse.PropertyDefinition(
         name="stock_symbol",  # Must be unique within a document schema (case insensitive)
         display_name="Searchable text",
         is_searchable=True,
@@ -49,7 +48,7 @@ def update_document_schema(project_number: str, location: str, document_schema_n
     )
 
     # Define Update Document Schema Request
-    update_document_schema_request = contentwarehouse.UpdateDocumentSchemaRequest(
+    update_document_schema_request=contentwarehouse.UpdateDocumentSchemaRequest(
         name=document_schema_name,
         document_schema=contentwarehouse.DocumentSchema(
             display_name="My Test Schema",
@@ -58,18 +57,18 @@ def update_document_schema(project_number: str, location: str, document_schema_n
     )
 
     # Update Document schema
-    updated_document_schema = document_schema_client.update_document_schema(
+    updated_document_schema=document_schema_client.update_document_schema(
         request=update_document_schema_request
     )
 
     # Define Document Property Value for new document
-    updated_document_property = contentwarehouse.Property(
+    updated_document_property=contentwarehouse.Property(
         name=updated_document_schema.property_definitions[0].name,
         text_values=contentwarehouse.TextArray(values=["GOOG"]),
     )
 
     # Define New Document
-    new_document = contentwarehouse.Document(
+    new_document=contentwarehouse.Document(
         display_name="My Test Document Updated Schema",
         document_schema_name=updated_document_schema.name,
         plain_text="This is a sample of a document's text.",
@@ -77,16 +76,15 @@ def update_document_schema(project_number: str, location: str, document_schema_n
     )
 
     # Define Request
-    create_new_document_request = contentwarehouse.CreateDocumentRequest(
+    create_new_document_request=contentwarehouse.CreateDocumentRequest(
         parent=parent, document=new_document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
     )
 
     # Create a Document for the given schema
-    response = document_client.create_document(request=create_new_document_request)
+    response=document_client.create_document(request=create_new_document_request)
 
     # Read the output
     print(f"Rule Engine Output: {response.rule_engine_output}")
     print(f"Document Created: {response.document}")
-
 
 # [END contentwarehouse_update_document_schema]
