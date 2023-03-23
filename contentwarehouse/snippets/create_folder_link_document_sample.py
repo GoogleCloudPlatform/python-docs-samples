@@ -17,16 +17,13 @@
 # [START contentwarehouse_create_folder_link_document]
 
 from google.cloud import contentwarehouse
-
-# TODO(developer): Uncomment these variables before running the sample.
+import sys
+#TODO(developer): Uncomment these variables before running the sample.
 # project_number = "YOUR_PROJECT_NUMBER"
 # location = "us" # Format is 'us' or 'eu'
-# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
-
-def create_folder_link_document(
-    project_number: str, location: str, user_id: str
-) -> None:
+def create_folder(project_number: str, location: str) -> contentwarehouse.Document:
+    
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
@@ -41,7 +38,7 @@ def create_folder_link_document(
         parent=parent,
         document_schema=contentwarehouse.DocumentSchema(
             display_name="Test Folder Schema ",
-            document_is_folder=True,
+            document_is_folder = True,
         ),
     )
 
@@ -61,11 +58,7 @@ def create_folder_link_document(
 
     # Define Request to create Folder
     create_folder_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent,
-        document=folder,
-        request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id)
-        ),
+        parent=parent, document=folder, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
     )
 
     # Create a Folder for the given schema
@@ -74,6 +67,19 @@ def create_folder_link_document(
     # Read the output
     print(f"Rule Engine Output: {folder_response.rule_engine_output}")
     print(f"Folder Created: {folder_response.document}")
+
+    return folder_response
+
+def create_document(project_number: str, location: str) -> contentwarehouse.Document:
+
+    # Create a Schema Service client
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+
+    # The full resource name of the location, e.g.:
+    # projects/{project_number}/locations/{location}
+    parent = document_schema_client.common_location_path(
+        project=project_number, location=location
+    )
 
     # Define Schema Property of Text Type
     property_definition = contentwarehouse.PropertyDefinition(
@@ -122,11 +128,7 @@ def create_folder_link_document(
 
     # Define Request
     create_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent,
-        document=document,
-        request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id)
-        ),
+        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
     )
 
     # Create a Document for the given schema
@@ -136,43 +138,50 @@ def create_folder_link_document(
     print(f"Rule Engine Output: {document_response.rule_engine_output}")
     print(f"Document Created: {document_response.document}")
 
+    return document_response
+
+
+def create_folder_link_document(project_number: str, location: str) -> None:
+
+    #Function call to create a folder
+    folder = create_folder(project_number,location)
+
+    #Function call to create a Document
+    document = create_document(project_number,location)
+
+    # Create a Link Service client
     link_client = contentwarehouse.DocumentLinkServiceClient()
 
-    # Create Document Link
+    # Initialize request argument(s)
     link = contentwarehouse.DocumentLink(
-        source_document_reference=contentwarehouse.DocumentReference(
-            document_name=folder_response.document.name,
+        source_document_reference = contentwarehouse.DocumentReference(
+            document_name = folder.document.name,
         ),
-        target_document_reference=contentwarehouse.DocumentReference(
-            document_name=document_response.document.name,
+        target_document_reference = contentwarehouse.DocumentReference(
+            document_name = document.document.name,
         ),
     )
-    # Define Request to link document to folder
-    request = contentwarehouse.CreateDocumentLinkRequest(
-        parent=folder_response.document.name,
+    
+    # Initialize document link request
+    create_document_link_request = contentwarehouse.CreateDocumentLinkRequest(
+        parent=folder.document.name,
         document_link=link,
-        request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id)
-        ),
+        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
     )
 
-    # Make the document to folder link request
-    create_link_response = link_client.create_document_link(request=request)
+    # Make the Document Link request
+    create_link_response = link_client.create_document_link(request=create_document_link_request)
 
     print(f"Link Created: {create_link_response}")
-
-    # Define Request to list linked documents to folder
-    request = contentwarehouse.ListLinkedTargetsRequest(
-        parent=folder_response.document.name,
-        request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id)
-        ),
+    
+    # Initialize list linked targets request
+    linked_targets_request = contentwarehouse.ListLinkedTargetsRequest(
+        parent=folder.document.name,
+        request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
     )
 
-    # Make list linked documents request
-    link_response = link_client.list_linked_targets(request=request)
+    # Make the request
+    linked_targets_response = link_client.list_linked_targets(request=linked_targets_request)
 
-    print(f"Validate Link Created: {link_response}")
-
-
+    print(f"Validate Link Created: {linked_targets_response}")
 # [END contentwarehouse_create_folder_link_document]
