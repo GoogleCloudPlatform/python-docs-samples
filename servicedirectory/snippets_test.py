@@ -71,6 +71,7 @@ def test_create_endpoint():
 
     assert ENDPOINT_ID in response.name
 
+
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_resolve_service():
     response = snippets.resolve_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,

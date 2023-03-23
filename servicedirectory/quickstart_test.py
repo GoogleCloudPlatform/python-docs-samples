@@ -18,8 +18,7 @@ from os import environ
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable)
+from google.api_core.exceptions import (InternalServerError, ServiceUnavailable)
 from google.cloud import servicedirectory_v1
 
 import pytest
@@ -51,6 +50,7 @@ def namespace(client):
         yield namespace
     finally:
         client.delete_namespace(name=namespace.name)
+
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
 def test_list_namespace(namespace):
