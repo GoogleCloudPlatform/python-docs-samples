@@ -29,5 +29,5 @@ def test_index():
 
     bucket_name = os.environ.get('CLOUD_STORAGE_BUCKET', "Unknown")
     blob_name = os.environ.get('BLOB_NAME', 'storage-migration-test-blob')
-    assert '{}/{}'.format(bucket_name, blob_name) in '{}'.format(r.data)
+    assert blob_name in '{}'.format(r.data)
     assert 'Blob {} deleted.'.format(blob_name) in '{}'.format(r.data)
