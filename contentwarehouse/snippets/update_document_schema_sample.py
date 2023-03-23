@@ -38,15 +38,6 @@ def update_document_schema(
         document_schema=document_schema_id,
     )
 
-    # The full resource name of the location, e.g.:
-    # projects/{project_number}/locations/{location}
-    parent = document_schema_client.common_location_path(
-        project=project_number, location=location
-    )
-
-    # Create a Document Service client
-    document_client = contentwarehouse.DocumentServiceClient()
-
     # Define Schema Property of Text Type with updated values
     updated_property_definition = contentwarehouse.PropertyDefinition(
         name="stock_symbol",  # Must be unique within a document schema (case insensitive)
