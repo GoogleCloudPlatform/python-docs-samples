@@ -27,7 +27,6 @@ def test_index():
     assert r.status_code == 200
     assert 'Downloaded text matches uploaded text' in r.data.decode('utf-8')
 
-    bucket_name = os.environ.get('CLOUD_STORAGE_BUCKET', "Unknown")
     blob_name = os.environ.get('BLOB_NAME', 'storage-migration-test-blob')
     assert blob_name in '{}'.format(r.data)
     assert 'Blob {} deleted.'.format(blob_name) in '{}'.format(r.data)
