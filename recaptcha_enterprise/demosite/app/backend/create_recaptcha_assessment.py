@@ -17,14 +17,14 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_assessment(
-    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
+    project_id: str, recaptcha_site_key: str, token: str
 ) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
         project_id: Google Cloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
         token: The token obtained from the client on passing the recaptchaSiteKey.
-        recaptcha_action: Action name corresponding to the token.
+    Returns: Assessment response.
     """
 
     # <!-- ATTENTION: reCAPTCHA Example (Server Part 2/2) Starts -->
