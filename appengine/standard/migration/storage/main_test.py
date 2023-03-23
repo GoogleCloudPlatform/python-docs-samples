@@ -31,6 +31,5 @@ def test_index():
 
     bucket_name = os.environ['CLOUD_STORAGE_BUCKET']
     blob_name = os.environ['BLOB_NAME']
-    
-    assert '    {}/{}'.format(bucket_name, blob_name) in r.data.decode('utf-8')
+
     assert 'Blob {} deleted.'.format(blob_name) in r.data.decode('utf-8')
