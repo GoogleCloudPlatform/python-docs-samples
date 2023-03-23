@@ -24,7 +24,7 @@ location = "us"
 document_schema_name = "YOUR_SCHEMA_NAME"
 
 
-def test_quickstart(capsys: pytest.CaptureFixture) -> None:
+def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     update_document_schema_sample.update_document_schema(
         project_number=project_number,
