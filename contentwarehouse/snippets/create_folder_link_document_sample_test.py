@@ -1,3 +1,4 @@
+
 # # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +16,12 @@
 
 import os
 
-from contentwarehouse.snippets import create_folder_link_document_sample
-from contentwarehouse.snippets import test_utilities
+from contentwarehousesamples import create_folder_link_document_sample
+from contentwarehousesamples import test_utilities
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"
-user_id = "user:xxxx@example.com"
+location = "us"  # Format is 'us' or 'eu'
 
 
 def test_create_folder_link_document(capsys: pytest.CaptureFixture) -> None:
@@ -29,7 +29,6 @@ def test_create_folder_link_document(capsys: pytest.CaptureFixture) -> None:
     create_folder_link_document_sample.create_folder_link_document(
         project_number=project_number,
         location=location,
-        user_id=user_id,
     )
     out, _ = capsys.readouterr()
 
