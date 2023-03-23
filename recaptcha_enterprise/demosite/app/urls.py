@@ -17,7 +17,7 @@ import os
 
 from flask import jsonify, render_template, request, Response
 
-from backend import create_recaptcha_assessment
+from backend.create_recaptcha_assessment import create_assessment
 
 # Sample threshold score for classification of bad / not bad action. The threshold score
 # can be used to trigger secondary actions like MFA.
@@ -49,7 +49,7 @@ def on_homepage_load() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_recaptcha_assessment.create_assessment(
+        assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
@@ -95,7 +95,7 @@ def on_signup() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_recaptcha_assessment.create_assessment(
+        assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
@@ -143,7 +143,7 @@ def on_login() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_recaptcha_assessment.create_assessment(
+        assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
@@ -191,7 +191,7 @@ def on_store_checkout() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_recaptcha_assessment.create_assessment(
+        assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
@@ -238,7 +238,7 @@ def on_comment_submit() -> Response:
         credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_recaptcha_assessment.create_assessment(
+        assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
             credentials["token"],
