@@ -23,8 +23,6 @@ from google.cloud import contentwarehouse
 # location = "us" # Format is 'us' or 'eu'
 # document_schema_name = "YOUR_SCHEMA_NAME" # Format is "projects/YOUR_PROJECT_NUMBER/locations/us/documentSchemas/SCHEMA_NAME"
 
-
-
 def update_document_schema(project_number: str, location: str, document_schema_name: str) -> None:
 
     # Create a Schema Service client
