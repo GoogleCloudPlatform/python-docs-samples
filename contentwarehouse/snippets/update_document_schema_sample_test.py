@@ -1,4 +1,3 @@
-
 # # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +15,13 @@
 
 import os
 
-from contentwarehouse.snippets import update_document_schema_sample
 from contentwarehouse.snippets import test_utilities
+from contentwarehouse.snippets import update_document_schema_sample
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"  # Format is 'us' or 'eu'
-document_schema_name = "YOUR_SCHEMA_NAME" # Format is "projects/YOUR_PROJECT_NUMBER/locations/us/documentSchemas/SCHEMA_NAME"
+location = "us"
+document_schema_name = "YOUR_SCHEMA_NAME"
 
 
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:

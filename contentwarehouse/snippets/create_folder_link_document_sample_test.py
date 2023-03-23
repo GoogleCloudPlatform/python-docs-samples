@@ -1,4 +1,3 @@
-
 # # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +21,8 @@ import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
-user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
+user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
+
 
 def test_create_folder_link_document(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
