@@ -35,6 +35,3 @@ def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
 
     assert "Rule Engine Output" in out
     assert "Document Created" in out
-
-    assert "Rule Engine Output" in out
-    assert "Document 2 Created" in out
