@@ -145,10 +145,10 @@ def create_document(project_number: str, location: str, user_id: str) -> content
 def create_folder_link_document(project_number: str, location: str, user_id: str) -> None:
 
     # Function call to create a folder
-    folder=create_folder(project_number,location)
+    folder=create_folder(project_number,location,user_id)
 
     # Function call to create a Document
-    document=create_document(project_number,location)
+    document=create_document(project_number,location,user_id)
 
     # Create a Link Service client
     link_client = contentwarehouse.DocumentLinkServiceClient()
