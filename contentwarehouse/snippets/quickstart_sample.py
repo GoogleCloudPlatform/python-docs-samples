@@ -24,7 +24,6 @@ from google.cloud import contentwarehouse
 
 
 def quickstart(project_number: str, location: str) -> None:
-
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
