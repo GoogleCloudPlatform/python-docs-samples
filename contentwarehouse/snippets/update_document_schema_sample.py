@@ -67,30 +67,7 @@ def update_document_schema(project_number: str, location: str, document_schema_i
         request=update_document_schema_request
     )
 
-    # Define Document Property Value for new document
-    updated_document_property=contentwarehouse.Property(
-        name=updated_document_schema.property_definitions[0].name,
-        text_values=contentwarehouse.TextArray(values=["GOOG"]),
-    )
-
-    # Define New Document
-    new_document=contentwarehouse.Document(
-        display_name="My Test Document Updated Schema",
-        document_schema_name=updated_document_schema.name,
-        plain_text="This is a sample of a document's text.",
-        properties=[updated_document_property],
-    )
-
-    # Define Request
-    create_new_document_request=contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=new_document, request_metadata=contentwarehouse.RequestMetadata(user_info=contentwarehouse.UserInfo(id="user:valentinhuerta@google.com"))
-    )
-
-    # Create a Document for the given schema
-    response=document_client.create_document(request=create_new_document_request)
-
     # Read the output
-    print(f"Rule Engine Output: {response.rule_engine_output}")
-    print(f"Document Created: {response.document}")
+    print(f"Updated Document Schema: {updated_document_schema}")
 
 # [END contentwarehouse_update_document_schema]

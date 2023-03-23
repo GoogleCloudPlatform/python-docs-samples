@@ -23,7 +23,6 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 document_schema_id = "0gc5eijqsb18g"
 
-
 def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     update_document_schema_sample.update_document_schema(
@@ -33,5 +32,5 @@ def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
     )
     out, _ = capsys.readouterr()
 
-    assert "Rule Engine Output" in out
-    assert "Document Created" in out
+    assert "Updated Document Schema" in out
+
