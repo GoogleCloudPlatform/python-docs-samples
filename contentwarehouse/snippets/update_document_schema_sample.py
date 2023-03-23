@@ -23,28 +23,32 @@ from google.cloud import contentwarehouse
 # location = "us" # Format is 'us' or 'eu'
 # document_schema_id = "YOUR_SCHEMA_ID"
 
-def update_document_schema(project_number: str, location: str, document_schema_id: str) -> None:
 
+def update_document_schema(
+    project_number: str, location: str, document_schema_id: str
+) -> None:
     # Create a Schema Service client
-    document_schema_client=contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}
-    document_schema_path=document_schema_client.document_schema_path(
-        project=project_number, location=location, document_schema=document_schema_id,
+    document_schema_path = document_schema_client.document_schema_path(
+        project=project_number,
+        location=location,
+        document_schema=document_schema_id,
     )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
-    parent=document_schema_client.common_location_path(
+    parent = document_schema_client.common_location_path(
         project=project_number, location=location
     )
 
     # Create a Document Service client
-    document_client=contentwarehouse.DocumentServiceClient()
+    document_client = contentwarehouse.DocumentServiceClient()
 
     # Define Schema Property of Text Type with updated values
-    updated_property_definition=contentwarehouse.PropertyDefinition(
+    updated_property_definition = contentwarehouse.PropertyDefinition(
         name="stock_symbol",  # Must be unique within a document schema (case insensitive)
         display_name="Searchable text",
         is_searchable=True,
@@ -54,7 +58,7 @@ def update_document_schema(project_number: str, location: str, document_schema_i
     )
 
     # Define Update Document Schema Request
-    update_document_schema_request=contentwarehouse.UpdateDocumentSchemaRequest(
+    update_document_schema_request = contentwarehouse.UpdateDocumentSchemaRequest(
         name=document_schema_path,
         document_schema=contentwarehouse.DocumentSchema(
             display_name="My Test Schema",
@@ -63,11 +67,12 @@ def update_document_schema(project_number: str, location: str, document_schema_i
     )
 
     # Update Document schema
-    updated_document_schema=document_schema_client.update_document_schema(
+    updated_document_schema = document_schema_client.update_document_schema(
         request=update_document_schema_request
     )
 
     # Read the output
     print(f"Updated Document Schema: {updated_document_schema}")
+
 
 # [END contentwarehouse_update_document_schema]
