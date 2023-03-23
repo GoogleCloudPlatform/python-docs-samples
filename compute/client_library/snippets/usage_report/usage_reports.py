@@ -127,6 +127,7 @@ def set_usage_export_bucket(
 
 # [END compute_usage_report_set]
 
+
 # [START compute_usage_report_get]
 def get_usage_export_bucket(project_id: str) -> compute_v1.UsageExportLocation:
     """
