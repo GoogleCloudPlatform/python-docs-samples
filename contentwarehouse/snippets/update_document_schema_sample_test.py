@@ -21,7 +21,7 @@ import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
-document_schema_name = "YOUR_SCHEMA_NAME"
+document_schema_id = "0gc5eijqsb18g"
 
 
 def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
@@ -29,7 +29,7 @@ def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
     update_document_schema_sample.update_document_schema(
         project_number=project_number,
         location=location,
-        document_schema_name=document_schema_name,
+        document_schema_id=document_schema_id,
     )
     out, _ = capsys.readouterr()
 
