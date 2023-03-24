@@ -34,7 +34,7 @@ app.add_url_rule(
     rule="/on_login", methods=["POST"], view_func=urls.on_login
 )
 app.add_url_rule(
-    rule="/on_signup", methods=["POST"], view_func=urls.signup
+    rule="/on_signup", methods=["POST"], view_func=urls.on_signup
 )
 app.add_url_rule(
     rule="/on_store_checkout", methods=["POST"], view_func=urls.on_store_checkout

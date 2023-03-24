@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: productionize dependencies; network cascade is too slow
 import {
   LitElement,
   css,
@@ -35,15 +34,6 @@ export const RECAPTCHA_ACTIONS = {
   login: "log_in",
   signup: "sign_up",
   store: "check_out",
-  game: undefined,
-};
-
-export const SUBMIT_URLS = {
-  comment: "on_comment_submit",
-  home: "on_homepage_load",
-  login: "on_login",
-  signup: "on_signup",
-  store: "on_store_checkout",
   game: undefined,
 };
 
