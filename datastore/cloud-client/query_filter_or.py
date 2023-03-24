@@ -44,5 +44,4 @@ def query_filter_or(project_id: str) -> None:
     results = or_query.fetch()
     for result in results:
         print(result["description"])
-
 # [END datastore_query_filter_or]
