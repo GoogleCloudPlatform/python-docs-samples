@@ -32,7 +32,7 @@ context = {
 # should be mapped in the config file. This will be used to verify if the token obtained during assessment
 # corresponds to the claimed action.
 config = configparser.ConfigParser()
-config.read("../config.ini")
+config.read("config.ini")
 assert "recaptcha_actions" in config
 
 
