@@ -18,9 +18,9 @@ from google.cloud import api_keys_v2
 from google.cloud.api_keys_v2 import Key
 
 
-def create_api_key(project_id: str) -> Key:
+def create_api_key(project_id: str, suffix: str) -> Key:
     """
-    Creates and restrict an API key.
+    Creates and restrict an API key with name ending in "suffix".
 
     TODO(Developer):
     1. Before running this sample,
@@ -38,7 +38,7 @@ def create_api_key(project_id: str) -> Key:
     client = api_keys_v2.ApiKeysClient()
 
     key = api_keys_v2.Key()
-    key.display_name = "My first API key"
+    key.display_name = f"My first API key - {suffix}"
 
     # Initialize request and set arguments.
     request = api_keys_v2.CreateKeyRequest()
