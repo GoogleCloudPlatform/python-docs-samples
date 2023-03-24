@@ -29,7 +29,6 @@ def search_documents_sample(
     location: str,
     document_query_text: str,
 ) -> None:
-
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
 
