@@ -25,4 +25,5 @@ def test_create_count_query(capsys):
     create_count_query(project_id=PROJECT_ID)
     out, _ = capsys.readouterr()
 
+    assert "Alias of results from query: all" in out
     assert "Number of" in out
