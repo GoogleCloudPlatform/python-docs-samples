@@ -14,6 +14,7 @@
 import os
 import re
 from time import sleep
+import uuid
 
 from _pytest.capture import CaptureFixture
 import backoff
@@ -35,9 +36,10 @@ CREDENTIALS, PROJECT = google.auth.default()
 SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def api_key():
-    api_key = create_api_key.create_api_key(PROJECT)
+    suffix = uuid.uuid4().hex
+    api_key = create_api_key.create_api_key(PROJECT, suffix)
     sleep(300)
     yield api_key
     delete_api_key.delete_api_key(PROJECT, get_key_id(api_key.name))
