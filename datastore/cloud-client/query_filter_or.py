@@ -23,6 +23,7 @@ See https://cloud.google.com/python/docs/reference/datastore/latest before runni
 from google.cloud import datastore
 from google.cloud.datastore import query
 
+
 def query_filter_or(project_id: str) -> None:
     """Builds a union of two queries (OR) filter.
 
