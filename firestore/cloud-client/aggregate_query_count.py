@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START firestore_count_query]
-from google.cloud import firestore
-from google.cloud.firestore_v1 import aggregation
-
 """
 Creates an aggregate query (COUNT) that returns the number of results in the query.
 
 See https://cloud.google.com/python/docs/reference/firestore/latest before running this sample.
 """
+
+# [START firestore_count_query]
+from google.cloud import firestore
+from google.cloud.firestore_v1 import aggregation
 
 
 def create_count_query(project_id: str) -> None:
@@ -42,6 +42,4 @@ def create_count_query(project_id: str) -> None:
     for result in results:
         print(f"Alias of results from query: {result[0].alias}")
         print(f"Number of results from query: {result[0].value}")
-
-
 # [END firestore_count_query]
