@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START datastore_query_filter_or]
-from google.cloud import datastore
-from google.cloud.datastore import query
-
 """
 Builds a union (OR) query filter.
 
@@ -23,13 +19,16 @@ See https://cloud.google.com/python/docs/reference/datastore/latest before runni
 """
 
 
+# [START datastore_query_filter_or]
+from google.cloud import datastore
+from google.cloud.datastore import query
+
 def query_filter_or(project_id: str) -> None:
     """Builds a union of two queries (OR) filter.
 
     Arguments:
         project_id: your Google Cloud Project ID
     """
-
     client = datastore.Client(project=project_id)
 
     or_query = client.query(kind="Task")
@@ -45,6 +44,5 @@ def query_filter_or(project_id: str) -> None:
     results = or_query.fetch()
     for result in results:
         print(result["description"])
-
 
 # [END datastore_query_filter_or]
