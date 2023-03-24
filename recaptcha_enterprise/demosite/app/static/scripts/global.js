@@ -36,7 +36,8 @@ async function homepage({token}) {
 }
 
 async function signup({token}) {
-  // Do not pass plain text credentials here. Always encrypt and follow security standards.
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
   const json_body = JSON.stringify({
     recaptcha_cred: {
       token: token,
@@ -53,7 +54,8 @@ async function signup({token}) {
 }
 
 async function login({token}) {
-  // Do not pass plain text credentials here. Always encrypt and follow security standards.
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
   const json_body = JSON.stringify({
     recaptcha_cred: {
       token: token,
@@ -70,6 +72,8 @@ async function login({token}) {
 }
 
 async function store({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
   const json_body = JSON.stringify({
     recaptcha_cred: {
       token: token,
@@ -85,6 +89,8 @@ async function store({token}) {
 }
 
 async function comment({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
   const json_body = JSON.stringify({
     recaptcha_cred: {
       token: token,
