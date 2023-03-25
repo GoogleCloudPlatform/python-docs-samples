@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def get():
     bucket_name = os.environ['CLOUD_STORAGE_BUCKET']
-    blob_name = os.environ.get('BLOB_NAME', 'storage-migration-test-blob')
+    blob_name = os.environ['BLOB_NAME']
 
     client = storage.Client()
     bucket = client.bucket(bucket_name)
@@ -41,11 +41,6 @@ def get():
         response_text += 'Downloaded text matches uploaded text.\n\n'
     else:
         response_text += 'Downloaded text DOES NOT MATCH uploaded text!\n\n'
-
-    response_text += 'Blobs in the bucket:\n'
-    for blob in client.list_blobs(bucket_name):
-        response_text += '    ' + blob.id + '\n'
-    response_text += '\n'
 
     bucket.delete_blob(blob_name)
     response_text += 'Blob ' + blob_name + ' deleted.\n'
