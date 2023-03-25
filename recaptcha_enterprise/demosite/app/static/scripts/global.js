@@ -12,47 +12,126 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ATTENTION: reCAPTCHA Example (Part 3) Starts
-// SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-// SEE: If using a library or famework, can use event handlers its usual way
+const SUBMIT_URLS = {
+  comment: "on_comment_submit",
+  home: "on_homepage_load",
+  login: "on_login",
+  signup: "on_signup",
+  store: "on_store_checkout",
+  game: undefined,
+};
 
-function createAssessment({ action, token }) {
-  // SEE: Code for fetching the assessment from backend goes here
-  // SEE: Refer to demo app backend code for more information
-  // SEE: If using a library or framework, can fetch its usual way
-  return fetchDemoAssessment({ action, token });
+async function homepage({token}) {
+  const json_body = JSON.stringify({
+    recaptcha_cred: {
+      token: token,
+    },
+  });
+  // Fetch the demo assessment from backend.
+  const score = await fetchDemoAssessment({
+    url: SUBMIT_URLS.home,
+    json_body: json_body,
+  });
+  useAssessment(score);
+}
+
+async function signup({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
+  const json_body = JSON.stringify({
+    recaptcha_cred: {
+      token: token,
+      username: "",
+      password: "",
+    },
+  });
+  // Fetch the demo assessment from backend.
+  const score = await fetchDemoAssessment({
+    url: SUBMIT_URLS.signup,
+    json_body: json_body,
+  });
+  useAssessment(score);
+}
+
+async function login({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
+  const json_body = JSON.stringify({
+    recaptcha_cred: {
+      token: token,
+      username: "",
+      password: "",
+    },
+  });
+  // Fetch the demo assessment from backend.
+  const score = await fetchDemoAssessment({
+    url: SUBMIT_URLS.login,
+    json_body: json_body,
+  });
+  useAssessment(score);
+}
+
+async function store({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
+  const json_body = JSON.stringify({
+    recaptcha_cred: {
+      token: token,
+      items: {}.toString(),
+    },
+  });
+  // Fetch the demo assessment from backend.
+  const score = await fetchDemoAssessment({
+    url: SUBMIT_URLS.store,
+    json_body: json_body,
+  });
+  useAssessment(score);
+}
+
+async function comment({token}) {
+  // Do not pass plain text credentials. Always encrypt and follow security standards.
+  // Obtain the values from your form data.
+  const json_body = JSON.stringify({
+    recaptcha_cred: {
+      token: token,
+      comment: "",
+    },
+  });
+  // Fetch the demo assessment from backend.
+  const score = await fetchDemoAssessment({
+    url: SUBMIT_URLS.comment,
+    json_body: json_body,
+  });
+  useAssessment(score);
+}
+
+function fetchDemoAssessment({ url, json_body}) {
+  // Code for fetching the assessment from backend goes here.
+  // Refer to demo app backend code for more information.
+  // See if using a library or framework, can use event handlers its usual way.
+  // See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
+  return fetch(`/${url}`, {
+    body: json_body,
+    method: "POST",
+    headers: new Headers({'content-type': 'application/json'}),
+  })
+      .then((response) => {
+        const { ok, body: { data = {} } = {} } = response;
+        if (ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
 }
 
 function useAssessment(score) {
-  // SEE: Code for handling the assessment goes here
+  // Code for handling the assessment goes here.
   showAssessmentInDemo(score);
-}
-
-// ATTENTION: reCAPTCHA Example (Part 3) Ends
-
-function fetchDemoAssessment({ action, token }) {
-  const body = JSON.stringify({
-    recaptcha_cred: {
-      action,
-      token,
-    },
-  });
-  return fetch("/create_assessment", {
-    body,
-    method: "POST",
-  })
-    .then((response) => {
-      const { ok, body: { data = {} } = {} } = response;
-      if (ok) {
-        return response.json();
-      }
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
 }
 
 function showAssessmentInDemo(score) {
@@ -62,5 +141,3 @@ function showAssessmentInDemo(score) {
     demoElement.setAttribute("verdict", score?.data?.verdict);
   }
 }
-
-// TODO: possible global getToken with ready/execute
