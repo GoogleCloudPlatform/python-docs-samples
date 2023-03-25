@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: productionize dependencies; network cascade is too slow
 import {
   LitElement,
   css,
@@ -29,7 +28,7 @@ import "https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module";
 
 const STEPS = ["home", "signup", "login", "store", "comment", "game"];
 
-const ACTIONS = {
+export const RECAPTCHA_ACTIONS = {
   comment: "send_comment",
   home: "home",
   login: "log_in",
@@ -1407,7 +1406,7 @@ class RecaptchaDemo extends LitElement {
     return `
     {
       "event": {
-        "expectedAction": "${ACTIONS[this.step]}",
+        "expectedAction": "${RECAPTCHA_ACTIONS[this.step]}",
         ...
       },
       ...
@@ -1416,9 +1415,8 @@ class RecaptchaDemo extends LitElement {
         "score": "${this.score || "?.?"}"
       },
       "tokenProperties": {
-        "action": "${ACTIONS[this.step]}",
+        "action": "${RECAPTCHA_ACTIONS[this.step]}",
         ...
-        "invalidReason": null,
         "valid": true
       },
     }`
