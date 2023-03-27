@@ -18,6 +18,7 @@ import uuid
 
 from _pytest.capture import CaptureFixture
 import backoff
+from google.api_core.exceptions import InvalidArgument
 import google.auth.transport.requests
 from google.cloud.api_keys_v2 import Key
 import pytest
@@ -50,7 +51,7 @@ def get_key_id(api_key_name: str):
 
 
 @backoff.on_exception(backoff.expo,
-                      Exception, max_tries=3)
+                      InvalidArgument, max_tries=3)
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
     authenticate_with_api_key.authenticate_with_api_key(PROJECT, api_key.key_string)
     out, err = capsys.readouterr()
