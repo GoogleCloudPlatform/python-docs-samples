@@ -20,11 +20,10 @@ import os
 import re
 import uuid
 
-import backoff
 from _pytest.capture import CaptureFixture
-import pytest
-
+import backoff
 from google.api_core.exceptions import ServiceUnavailable
+import pytest
 
 import snippets_bigquery_export
 
