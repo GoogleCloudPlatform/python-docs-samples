@@ -93,8 +93,8 @@ def verify_response_integrity(response: Assessment, recaptcha_action: str) -> bo
     # Check if the expected action was executed.
     if response.token_properties.action != recaptcha_action:
         print(
-            f"The action attribute in your reCAPTCHA tag does "
-            f"not match the action you are expecting to score"
+            "The action attribute in your reCAPTCHA tag does "
+            "not match the action you are expecting to score"
         )
         return False
 # [END recaptcha_enterprise_mfa_assessment]
