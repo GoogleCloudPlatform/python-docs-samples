@@ -17,10 +17,14 @@ import backoff
 
 from google.api_core import exceptions
 from google.api_core.retry import Retry
+
+
 from google.cloud import datastore
 
 import pytest
+
 import snippets
+
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
@@ -35,6 +39,7 @@ _RETRIABLE_TYPES = [
 
 def is_retryable(exc):
     return isinstance(exc, _RETRIABLE_TYPES)
+
 
 retry_policy = Retry(predicate=is_retryable)
 
