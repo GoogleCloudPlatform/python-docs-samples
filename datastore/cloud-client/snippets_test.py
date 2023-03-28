@@ -22,7 +22,7 @@ import snippets
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-from google.api_core import exception
+from google.api_core import exceptions
 from google.api_core.retry import Retry
 
 
