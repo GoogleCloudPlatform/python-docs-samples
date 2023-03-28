@@ -14,16 +14,15 @@
 import os
 
 import backoff
-from google.cloud import datastore
-import pytest
-
-import snippets
-
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-
 
 from google.api_core import exceptions
 from google.api_core.retry import Retry
+from google.cloud import datastore
+
+import pytest
+import snippets
+
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 _RETRIABLE_TYPES = [
