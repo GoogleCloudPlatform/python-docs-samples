@@ -67,14 +67,14 @@ def create_mfa_assessment(
     # Check integrity of the response.
     response = client.create_assessment(request)
     if not verify_response_integrity(response, recaptcha_action):
-        raise Exception("Failed to verify token integrity.")
+        raise RuntimeError("Failed to verify token integrity.")
 
     result = response.account_verification.latest_verification_result
     # If the result is unspecified, send the request token to trigger MFA in the client.
     # You can choose to send both the email and phone number's request token.
     if result == recaptchaenterprise_v1.types.AccountVerificationInfo.Result.RESULT_UNSPECIFIED:
+        print("Result unspecified. Trigger MFA challenge in the client by passing the request token.")
         # Send the request token for assessment. The token is valid for 15 minutes.
-        print("Result unspecified. Triggering MFA challenge.")
         # print(response.account_verification.endpoints[0].request_token)
 
     # If the result is not unspecified, return the result.
@@ -85,17 +85,16 @@ def verify_response_integrity(response: Assessment, recaptcha_action: str) -> bo
     # Check if the token is valid.
     if not response.token_properties.valid:
         print(
-            "The CreateAssessment call failed because the token was "
-            + "invalid for for the following reasons: "
-            + str(response.token_properties.invalid_reason)
-        )
+            f"The CreateAssessment call failed because the token was "
+            f"invalid for the following reasons: "
+            f"{response.token_properties.invalid_reason}")
         return False
 
     # Check if the expected action was executed.
     if response.token_properties.action != recaptcha_action:
         print(
-            "The action attribute in your reCAPTCHA tag does"
-            + "not match the action you are expecting to score"
+            f"The action attribute in your reCAPTCHA tag does "
+            f"not match the action you are expecting to score"
         )
         return False
 # [END recaptcha_enterprise_mfa_assessment]
