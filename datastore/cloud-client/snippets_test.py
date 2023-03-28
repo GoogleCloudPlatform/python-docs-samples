@@ -22,6 +22,23 @@ import snippets
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
+from google.api_core.retry import Retry
+
+
+_RETRIABLE_TYPES = [
+   exceptions.TooManyRequests,  # 429
+   exceptions.InternalServerError,  # 500
+   exceptions.BadGateway,  # 502
+   exceptions.ServiceUnavailable,  # 503
+]
+
+
+def is_retryable(exc):
+    return isinstance(exc, _RETRIABLE_TYPES)
+
+retry_policy = Retry(predicate=is_retryable)
+
+
 class CleanupClient(datastore.Client):
     def __init__(self, *args, **kwargs):
         super(CleanupClient, self).__init__(*args, **kwargs)
@@ -29,11 +46,12 @@ class CleanupClient(datastore.Client):
         self.keys_to_delete = []
 
     def cleanup(self):
-        with self.batch():
-            self.delete_multi(
-                list(set([x.key for x in self.entities_to_delete if x]))
-                + list(set(self.keys_to_delete))
-            )
+        batch = self.batch()
+        self.delete_multi(
+            list(set([x.key for x in self.entities_to_delete if x]))
+            + list(set(self.keys_to_delete))
+        )
+        batch.commit(retry=retry_policy)
 
 
 @pytest.fixture
