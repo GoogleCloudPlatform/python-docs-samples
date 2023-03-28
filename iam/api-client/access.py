@@ -28,7 +28,7 @@ import googleapiclient.discovery
 # [START iam_get_policy]
 def get_policy(project_id, version=1):
     """Gets IAM policy for a project."""
-
+    print('Triggerin tests')
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
         scopes=["https://www.googleapis.com/auth/cloud-platform"],

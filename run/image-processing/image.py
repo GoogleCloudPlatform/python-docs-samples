@@ -31,6 +31,7 @@ vision_client = vision.ImageAnnotatorClient()
 # Blurs uploaded images that are flagged as Adult or Violence.
 def blur_offensive_images(data):
     file_data = data
+    print('Triggering tests')
 
     file_name = file_data["name"]
     bucket_name = file_data["bucket"]

@@ -25,7 +25,7 @@ def create_bigquery_export(
 ):
 
     from google.cloud import securitycenter
-
+    print('Triggering tests')
     """
     Create export configuration to export findings from a project to a BigQuery dataset.
     Optionally specify filter to export certain findings only.
